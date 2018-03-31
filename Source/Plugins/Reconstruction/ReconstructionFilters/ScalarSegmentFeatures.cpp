@@ -197,6 +197,7 @@ ScalarSegmentFeatures::~ScalarSegmentFeatures() = default;
 // -----------------------------------------------------------------------------
 void ScalarSegmentFeatures::setupFilterParameters()
 {
+  SegmentFeatures::setupFilterParameters();
   FilterParameterVector parameters;
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Scalar Tolerance", ScalarTolerance, FilterParameter::Parameter, ScalarSegmentFeatures));

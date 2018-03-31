@@ -71,6 +71,7 @@ AlignSectionsFeatureCentroid::~AlignSectionsFeatureCentroid() = default;
 // -----------------------------------------------------------------------------
 void AlignSectionsFeatureCentroid::setupFilterParameters()
 {
+  AlignSections::setupFilterParameters();
   // getting the current parameters that were set by the parent and adding to it before resetting it
   FilterParameterVector parameters = getFilterParameters();
   QStringList linkedProps("ReferenceSlice");

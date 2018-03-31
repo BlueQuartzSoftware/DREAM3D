@@ -83,6 +83,7 @@ AlignSectionsMisorientation::~AlignSectionsMisorientation() = default;
 void AlignSectionsMisorientation::setupFilterParameters()
 {
   // getting the current parameters that were set by the parent and adding to it before resetting it
+  AlignSections::setupFilterParameters();
   FilterParameterVector parameters = getFilterParameters();
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Misorientation Tolerance (Degrees)", MisorientationTolerance, FilterParameter::Parameter, AlignSectionsMisorientation));
   QStringList linkedProps("GoodVoxelsArrayPath");

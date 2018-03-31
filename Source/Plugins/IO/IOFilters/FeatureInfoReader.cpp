@@ -84,6 +84,7 @@ FeatureInfoReader::~FeatureInfoReader() = default;
 // -----------------------------------------------------------------------------
 void FeatureInfoReader::setupFilterParameters()
 {
+  FileReader::setupFilterParameters();
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input Feature Info File", InputFile, FilterParameter::Parameter, FeatureInfoReader, "*.txt"));
   QStringList linkedProps;

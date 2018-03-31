@@ -80,6 +80,7 @@ SineParamsSegmentFeatures::~SineParamsSegmentFeatures() = default;
 // -----------------------------------------------------------------------------
 void SineParamsSegmentFeatures::setupFilterParameters()
 {
+  SegmentFeatures::setupFilterParameters();
   FilterParameterVector parameters;
 
   QStringList linkedProps("GoodVoxelsArrayPath");

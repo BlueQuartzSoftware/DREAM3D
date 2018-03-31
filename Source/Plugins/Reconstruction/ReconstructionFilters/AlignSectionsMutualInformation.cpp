@@ -83,6 +83,7 @@ AlignSectionsMutualInformation::~AlignSectionsMutualInformation() = default;
 void AlignSectionsMutualInformation::setupFilterParameters()
 {
   // getting the current parameters that were set by the parent and adding to it before resetting it
+  AlignSections::setupFilterParameters();
   FilterParameterVector parameters = getFilterParameters();
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Misorientation Tolerance", MisorientationTolerance, FilterParameter::Parameter, AlignSectionsMutualInformation));
   QStringList linkedProps("GoodVoxelsArrayPath");

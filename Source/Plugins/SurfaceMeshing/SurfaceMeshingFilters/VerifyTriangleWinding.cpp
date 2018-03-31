@@ -254,6 +254,7 @@ VerifyTriangleWinding::~VerifyTriangleWinding() = default;
 // -----------------------------------------------------------------------------
 void VerifyTriangleWinding::setupFilterParameters()
 {
+  SurfaceMeshFilter::setupFilterParameters();
   FilterParameterVector parameters;
 
   parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));

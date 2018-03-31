@@ -74,6 +74,7 @@ VASPReader::~VASPReader() = default;
 // -----------------------------------------------------------------------------
 void VASPReader::setupFilterParameters()
 {
+  FileReader::setupFilterParameters();
   FilterParameterVector parameters;
 
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, VASPReader, "*"));

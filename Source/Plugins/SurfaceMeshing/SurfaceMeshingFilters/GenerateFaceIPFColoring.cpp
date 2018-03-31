@@ -230,6 +230,7 @@ GenerateFaceIPFColoring::~GenerateFaceIPFColoring() = default;
 // -----------------------------------------------------------------------------
 void GenerateFaceIPFColoring::setupFilterParameters()
 {
+  SurfaceMeshFilter::setupFilterParameters();
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {

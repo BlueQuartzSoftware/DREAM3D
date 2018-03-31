@@ -124,6 +124,7 @@ TriangleNormalFilter::~TriangleNormalFilter() = default;
 // -----------------------------------------------------------------------------
 void TriangleNormalFilter::setupFilterParameters()
 {
+  SurfaceMeshFilter::setupFilterParameters();
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   {

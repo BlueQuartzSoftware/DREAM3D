@@ -69,6 +69,7 @@ DxWriter::~DxWriter() = default;
 // -----------------------------------------------------------------------------
 void DxWriter::setupFilterParameters()
 {
+  FileWriter::setupFilterParameters();
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, DxWriter, "*.dx", "Open DX Visualization"));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Add Surface Layer", AddSurfaceLayer, FilterParameter::Parameter, DxWriter));

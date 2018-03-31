@@ -67,6 +67,7 @@ AlignSectionsFeature::~AlignSectionsFeature() = default;
 void AlignSectionsFeature::setupFilterParameters()
 {
   // getting the current parameters that were set by the parent and adding to it before resetting it
+  AlignSections::setupFilterParameters();
   FilterParameterVector parameters = getFilterParameters();
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {

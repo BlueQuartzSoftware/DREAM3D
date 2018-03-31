@@ -88,6 +88,7 @@ EBSDSegmentFeatures::~EBSDSegmentFeatures() = default;
 // -----------------------------------------------------------------------------
 void EBSDSegmentFeatures::setupFilterParameters()
 {
+  SegmentFeatures::setupFilterParameters();
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Misorientation Tolerance (Degrees)", MisorientationTolerance, FilterParameter::Parameter, EBSDSegmentFeatures));
   QStringList linkedProps("GoodVoxelsArrayPath");

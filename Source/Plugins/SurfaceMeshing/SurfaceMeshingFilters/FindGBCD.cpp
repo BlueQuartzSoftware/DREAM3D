@@ -394,6 +394,7 @@ FindGBCD::~FindGBCD() = default;
 // -----------------------------------------------------------------------------
 void FindGBCD::setupFilterParameters()
 {
+  SurfaceMeshFilter::setupFilterParameters();
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_FLOAT_FP("GBCD Resolution (Degrees)", GBCDRes, FilterParameter::Parameter, FindGBCD));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));

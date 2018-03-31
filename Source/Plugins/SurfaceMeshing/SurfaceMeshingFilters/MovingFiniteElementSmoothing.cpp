@@ -152,6 +152,7 @@ MovingFiniteElementSmoothing::~MovingFiniteElementSmoothing() = default;
 // -----------------------------------------------------------------------------
 void MovingFiniteElementSmoothing::setupFilterParameters()
 {
+  SurfaceMeshFilter::setupFilterParameters();
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Iteration Steps", IterationSteps, FilterParameter::Uncategorized, MovingFiniteElementSmoothing));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Apply Node Contraints", NodeConstraints, FilterParameter::Uncategorized, MovingFiniteElementSmoothing));

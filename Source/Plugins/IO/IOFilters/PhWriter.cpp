@@ -68,6 +68,7 @@ PhWriter::~PhWriter() = default;
 // -----------------------------------------------------------------------------
 void PhWriter::setupFilterParameters()
 {
+  FileWriter::setupFilterParameters();
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, PhWriter, "*.ph", "CMU Feature Growth"));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));

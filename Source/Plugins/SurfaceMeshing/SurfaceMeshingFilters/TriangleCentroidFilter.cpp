@@ -111,6 +111,7 @@ TriangleCentroidFilter::~TriangleCentroidFilter() = default;
 // -----------------------------------------------------------------------------
 void TriangleCentroidFilter::setupFilterParameters()
 {
+  SurfaceMeshFilter::setupFilterParameters();
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   {

@@ -93,6 +93,7 @@ FeatureFaceCurvatureFilter::~FeatureFaceCurvatureFilter() = default;
 // -----------------------------------------------------------------------------
 void FeatureFaceCurvatureFilter::setupFilterParameters()
 {
+  SurfaceMeshFilter::setupFilterParameters();
   QVector<FilterParameter::Pointer> parameters;
 
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Neighborhood Ring Count", NRing, FilterParameter::Parameter, FeatureFaceCurvatureFilter));

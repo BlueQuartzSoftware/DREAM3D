@@ -74,6 +74,8 @@ BinaryNodesTrianglesReader::~BinaryNodesTrianglesReader() = default;
 // -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::setupFilterParameters()
 {
+  SurfaceMeshFilter::setupFilterParameters();
+
   FilterParameterVector parameters;
 
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Binary Nodes Input File", BinaryNodesFile, FilterParameter::Parameter, BinaryNodesTrianglesReader, "*.raw", "Raw Files"));

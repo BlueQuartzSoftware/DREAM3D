@@ -125,6 +125,7 @@ TriangleAreaFilter::~TriangleAreaFilter() = default;
 // -----------------------------------------------------------------------------
 void TriangleAreaFilter::setupFilterParameters()
 {
+  SurfaceMeshFilter::setupFilterParameters();
   FilterParameterVector parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   {

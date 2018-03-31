@@ -186,6 +186,7 @@ GenerateFaceSchuhMisorientationColoring::~GenerateFaceSchuhMisorientationColorin
 // -----------------------------------------------------------------------------
 void GenerateFaceSchuhMisorientationColoring::setupFilterParameters()
 {
+  SurfaceMeshFilter::setupFilterParameters();
   FilterParameterVector parameters;
 
   {

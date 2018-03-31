@@ -79,6 +79,7 @@ INLWriter::~INLWriter() = default;
 // -----------------------------------------------------------------------------
 void INLWriter::setupFilterParameters()
 {
+  FileWriter::setupFilterParameters();
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, INLWriter, "*.txt", "INL Format"));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));

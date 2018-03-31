@@ -195,7 +195,7 @@ private:
 
   QVector<LaueOps::Pointer> m_OrientationOps;
 
-  float m_AxisToleranceRad;
+  float m_AxisToleranceRad = 0.0f;
 
   /**
    * @brief updateFeatureInstancePointers Updates raw Feature pointers

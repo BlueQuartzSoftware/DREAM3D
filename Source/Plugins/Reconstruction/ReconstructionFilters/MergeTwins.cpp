@@ -64,18 +64,9 @@ MergeTwins::MergeTwins()
 , m_CellParentIdsArrayName(SIMPL::CellData::ParentIds)
 , m_FeatureParentIdsArrayName(SIMPL::FeatureData::ParentIds)
 , m_ActiveArrayName(SIMPL::FeatureData::Active)
-, m_FeatureIds(nullptr)
-, m_AvgQuats(nullptr)
-, m_FeaturePhases(nullptr)
-, m_CrystalStructures(nullptr)
-, m_Active(nullptr)
-, m_CellParentIds(nullptr)
-, m_FeatureParentIds(nullptr)
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
-
-  m_AxisToleranceRad = 0.0f;
-
+  initialize();
 }
 
 // -----------------------------------------------------------------------------
@@ -88,6 +79,7 @@ MergeTwins::~MergeTwins() = default;
 // -----------------------------------------------------------------------------
 void MergeTwins::setupFilterParameters()
 {
+  GroupFeatures::setupFilterParameters();
   FilterParameterVector parameters = getFilterParameters();
 
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Axis Tolerance (Degrees)", AxisTolerance, FilterParameter::Parameter, MergeTwins));
@@ -150,7 +142,7 @@ void MergeTwins::updateFeatureInstancePointers()
   if(nullptr != m_ActivePtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_Active = m_ActivePtr.lock()->getPointer(0);
-  } /* Now assign the raw pointer to data from the DataArray<T> object */
+  }
 }
 
 // -----------------------------------------------------------------------------

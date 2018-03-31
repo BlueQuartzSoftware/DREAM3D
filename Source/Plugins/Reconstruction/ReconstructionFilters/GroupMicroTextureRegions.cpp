@@ -99,6 +99,8 @@ GroupMicroTextureRegions::~GroupMicroTextureRegions() = default;
 // -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::setupFilterParameters()
 {
+  GroupFeatures::setupFilterParameters();
+
   FilterParameterVector parameters = getFilterParameters();
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("Group C-Axes With Running Average", UseRunningAverage, FilterParameter::Parameter, GroupMicroTextureRegions));
