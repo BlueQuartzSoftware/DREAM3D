@@ -42,12 +42,6 @@ set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 # they will show up in IDEs
 set(TEST_NAMES
   FixNonmanifoldVoxelsTest
-  FixNonmanifoldVoxelsTest
-  FixNonmanifoldVoxelsTest
-  FixNonmanifoldVoxelsTest
-  FixNonmanifoldVoxelsTest
-  FixNonmanifoldVoxelsTest
-
 )
 #------------------------------------------------------------------------------
 # Include this file from the CMP Project

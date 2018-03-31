@@ -99,6 +99,104 @@ void FixNonmanifoldVoxels::execute()
     return;
   }
 
+  DataArrayPath featurePath = getFeatureIdsArrayPath();
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(featurePath.getDataContainerName());
+
+  size_t udims[3] = {0, 0, 0};
+  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
+
+  int64_t dims[3] = {
+      static_cast<int64_t>(udims[0]),
+      static_cast<int64_t>(udims[1]),
+      static_cast<int64_t>(udims[2]),
+  };
+
+  int64_t maxId = dims[0] * dims[1] * dims[2];
+  int64_t plane = (dims[0] * dims[1]);
+  int64_t row = (dims[0]);
+
+  int64_t neighpointsIndices[20] = {
+      // Top Plane of indices
+      -plane - row - 1,
+      -plane - row,
+      -plane - row + 1,
+      -plane - 1,
+      -plane + 1,
+      -plane + row - 1,
+      -plane + row,
+      -plane + row + 1,
+      // Middle plane of indices
+      -row - 1,
+      -row + 1,
+
+      row - 1,
+      row + 1,
+      // Bottom Plane of indices
+      +plane - row - 1,
+      +plane - row,
+      +plane - row + 1,
+      +plane - 1,
+      +plane + 1,
+      +plane + row - 1,
+      +plane + row,
+      +plane + row + 1,
+  };
+  std::cout << "Dims: " << dims[0] << ", " << dims[1] << ", " << dims[2] << std::endl;
+  std::cout << "-----------------------------------------------" << std::endl;
+  std::cout << neighpointsIndices[0] << " " << neighpointsIndices[1] << " " << neighpointsIndices[2] << std::endl;
+  std::cout << neighpointsIndices[3] << " "
+            << " XX " << neighpointsIndices[4] << std::endl;
+  std::cout << neighpointsIndices[5] << " " << neighpointsIndices[6] << " " << neighpointsIndices[7] << std::endl;
+  std::cout << "-----------------------------------------------" << std::endl;
+  std::cout << neighpointsIndices[8] << " "
+            << " XX "
+            << " " << neighpointsIndices[9] << std::endl;
+  std::cout << " XX "
+            << " "
+            << " XX "
+            << " "
+            << " XX " << std::endl;
+  std::cout << neighpointsIndices[10] << " "
+            << " XX "
+            << " " << neighpointsIndices[11] << std::endl;
+  std::cout << "-----------------------------------------------" << std::endl;
+  std::cout << neighpointsIndices[12] << " " << neighpointsIndices[13] << " " << neighpointsIndices[14] << std::endl;
+  std::cout << neighpointsIndices[15] << " "
+            << " XX "
+            << " " << neighpointsIndices[16] << std::endl;
+  std::cout << neighpointsIndices[17] << " " << neighpointsIndices[18] << " " << neighpointsIndices[19] << std::endl;
+
+  for(int64_t z = 0; z < dims[2]; z++)
+  {
+
+    for(int64_t y = 0; y < dims[1]; y++)
+    {
+      if(getCancel())
+      {
+        break;
+      }
+      for(int64_t x = 0; x < dims[0]; x++)
+      {
+        int64_t curIdx = (z * plane) + (y * row) + x;
+        int32_t featureId = m_FeatureIds[static_cast<size_t>(curIdx)];
+
+        for(size_t i = 0; i < 20; i++)
+        {
+          int64_t neighIdx = curIdx + neighpointsIndices[i];
+          // Validate we are within the array bounds
+          if(neighIdx >= 0 && neighIdx < maxId)
+          {
+            int32_t neighFeatId = m_FeatureIds[static_cast<size_t>(neighIdx)];
+            if(neighFeatId == featureId)
+            {
+              // std::cout << "Nonmanifold Voxel at " << x << ", " << y << ", " << z << " Feature Id: " << featureId << std::endl;
+            }
+          }
+        }
+      }
+    }
+  }
+
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
