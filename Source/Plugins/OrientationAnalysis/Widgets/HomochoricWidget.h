@@ -60,7 +60,7 @@ class HomochoricWidget : public OrientationWidget, private Ui::HomochoricWidget
     QVector<double> getValues();
 
     HomochoricWidget(const HomochoricWidget&) = delete; // Copy Constructor Not Implemented
-    void operator=(const HomochoricWidget&) = delete;   // Operator '=' Not Implemented
+    void operator=(const HomochoricWidget&) = delete;   // Move assignment Not Implemented
 };
 
 #endif /* EBSDREFERENCEFRAMEWIDGET_H_ */

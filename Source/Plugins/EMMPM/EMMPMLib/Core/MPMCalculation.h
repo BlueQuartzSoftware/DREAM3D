@@ -88,7 +88,7 @@ class EMMPMLib_EXPORT MPMCalculation : public Observable
                   real_t* yk);
 
     MPMCalculation(const MPMCalculation&) = delete; // Copy Constructor Not Implemented
-    void operator=(const MPMCalculation&) = delete; // Operator '=' Not Implemented
+    void operator=(const MPMCalculation&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* _MPMCalculation_H_ */

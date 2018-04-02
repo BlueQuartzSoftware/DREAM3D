@@ -304,5 +304,5 @@ public:
 
 private:
   CtfCachingTest(const CtfCachingTest&); // Copy Constructor Not Implemented
-  void operator=(const CtfCachingTest&); // Operator '=' Not Implemented
+  void operator=(const CtfCachingTest&); // Move assignment Not Implemented
 };

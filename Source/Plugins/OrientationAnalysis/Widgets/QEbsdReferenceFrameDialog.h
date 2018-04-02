@@ -123,7 +123,7 @@ private:
   QImage m_DisplayedImage;
 
   QEbsdReferenceFrameDialog(const QEbsdReferenceFrameDialog&) = delete; // Copy Constructor Not Implemented
-  void operator=(const QEbsdReferenceFrameDialog&);            // Operator '=' Not Implemented
+  void operator=(const QEbsdReferenceFrameDialog&);                     // Move assignment Not Implemented
 };
 
 #endif /* EBSDREFERENCEFRAMEWIDGET_H_ */

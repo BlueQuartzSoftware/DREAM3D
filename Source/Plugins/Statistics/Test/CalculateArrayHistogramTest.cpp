@@ -257,5 +257,5 @@ public:
 
 private:
   CalculateArrayHistogramTest(const CalculateArrayHistogramTest&); // Copy Constructor Not Implemented
-  void operator=(const CalculateArrayHistogramTest&);              // Operator '=' Not Implemented
+  void operator=(const CalculateArrayHistogramTest&);              // Move assignment Not Implemented
 };

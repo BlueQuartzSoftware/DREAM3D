@@ -168,7 +168,7 @@ private:
 public:
   IdentifySample(const IdentifySample&) = delete; // Copy Constructor Not Implemented
   IdentifySample(IdentifySample&&) = delete;      // Move Constructor
-  IdentifySample& operator=(const IdentifySample&) = delete; // Copy Assignment
+  IdentifySample& operator=(const IdentifySample&) = delete; // Copy Assignment Not Implemented
   IdentifySample& operator=(IdentifySample&&) = delete;      // Move Assignment
 };
 

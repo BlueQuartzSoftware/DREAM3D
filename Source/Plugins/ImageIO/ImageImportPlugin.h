@@ -181,7 +181,7 @@ class ImageIOPlugin : public QObject, public ISIMPLibPlugin
     bool                m_DidLoad;
 
     ImageIOPlugin(const ImageIOPlugin&) = delete;  // Copy Constructor Not Implemented
-    void operator=(const ImageIOPlugin&) = delete; // Operator '=' Not Implemented
+    void operator=(const ImageIOPlugin&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* _ImageIOPlugin_H_ */

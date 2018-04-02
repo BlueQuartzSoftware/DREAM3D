@@ -596,7 +596,7 @@ protected:
 
 private:
   Texture(const Texture&);        // Copy Constructor Not Implemented
-  void operator=(const Texture&); // Operator '=' Not Implemented
+  void operator=(const Texture&); // Move assignment Not Implemented
 };
 
 #endif /* TEXTURE_H_ */

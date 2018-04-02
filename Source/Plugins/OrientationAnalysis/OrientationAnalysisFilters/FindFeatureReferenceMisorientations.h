@@ -198,7 +198,7 @@ private:
 public:
   FindFeatureReferenceMisorientations(const FindFeatureReferenceMisorientations&) = delete; // Copy Constructor Not Implemented
   FindFeatureReferenceMisorientations(FindFeatureReferenceMisorientations&&) = delete;      // Move Constructor
-  void operator=(const FindFeatureReferenceMisorientations&);                      // Operator '=' Not Implemented
+  void operator=(const FindFeatureReferenceMisorientations&);                               // Move assignment Not Implemented
 };
 
 #endif /* FindFeatureReferenceMisorientations_H_ */

@@ -216,7 +216,7 @@ class EbsdToH5EbsdWidget : public FilterParameterWidget, private Ui::EbsdToH5Ebs
     bool     m_DidCausePreflight = false;
 
     EbsdToH5EbsdWidget(const EbsdToH5EbsdWidget&) = delete; // Copy Constructor Not Implemented
-    void operator=(const EbsdToH5EbsdWidget&) = delete;     // Operator '=' Not Implemented
+    void operator=(const EbsdToH5EbsdWidget&) = delete;     // Move assignment Not Implemented
 };
 
 #endif /* EbsdImportWIDGET_H_ */

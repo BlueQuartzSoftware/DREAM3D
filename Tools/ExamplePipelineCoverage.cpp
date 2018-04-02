@@ -419,7 +419,7 @@ class AnalyzePrebuiltPipelines
     QJsonDocument                 m_JsonDoc;
     
     AnalyzePrebuiltPipelines(const AnalyzePrebuiltPipelines&) = delete; // Copy Constructor Not Implemented
-    void operator=(const AnalyzePrebuiltPipelines&) = delete; // Operator '=' Not Implemented
+    void operator=(const AnalyzePrebuiltPipelines&) = delete;           // Move assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------

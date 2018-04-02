@@ -66,7 +66,7 @@ class BetaOps : public DistributionAnalysisOps
 
   private:
     BetaOps(const BetaOps&) = delete;        // Copy Constructor Not Implemented
-    void operator=(const BetaOps&) = delete; // Operator '=' Not Implemented
+    void operator=(const BetaOps&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* _BETAOPS_H_ */

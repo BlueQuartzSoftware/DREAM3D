@@ -185,7 +185,7 @@ class OrientationLib_EXPORT HexagonalLowOps : public LaueOps
 
   private:
     HexagonalLowOps(const HexagonalLowOps&) = delete; // Copy Constructor Not Implemented
-    void operator=(const HexagonalLowOps&) = delete;  // Operator '=' Not Implemented
+    void operator=(const HexagonalLowOps&) = delete;  // Move assignment Not Implemented
 };
 
 #endif /* HexagonalLowOPS_H_ */

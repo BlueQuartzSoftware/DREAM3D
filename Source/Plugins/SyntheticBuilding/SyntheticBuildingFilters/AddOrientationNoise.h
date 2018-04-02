@@ -171,7 +171,7 @@ private:
 public:
   AddOrientationNoise(const AddOrientationNoise&) = delete; // Copy Constructor Not Implemented
   AddOrientationNoise(AddOrientationNoise&&) = delete;      // Move Constructor
-  void operator=(const AddOrientationNoise&);      // Operator '=' Not Implemented
+  void operator=(const AddOrientationNoise&);               // Move assignment Not Implemented
 };
 
 #endif /* AddOrientationNoise_H_ */

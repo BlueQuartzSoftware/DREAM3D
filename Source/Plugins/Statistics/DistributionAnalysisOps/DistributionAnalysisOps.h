@@ -69,7 +69,7 @@ class DistributionAnalysisOps
 
   private:
     DistributionAnalysisOps(const DistributionAnalysisOps&) = delete; // Copy Constructor Not Implemented
-    void operator=(const DistributionAnalysisOps&) = delete;          // Operator '=' Not Implemented
+    void operator=(const DistributionAnalysisOps&) = delete;          // Move assignment Not Implemented
 };
 
 #endif /* _DistributionAnalysisOps_H_ */

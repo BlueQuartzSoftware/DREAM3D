@@ -209,7 +209,7 @@ class EbsdLib_EXPORT EbsdReader
 
   private:
     EbsdReader(const EbsdReader&) = delete;     // Copy Constructor Not Implemented
-    void operator=(const EbsdReader&) = delete; // Operator '=' Not Implemented
+    void operator=(const EbsdReader&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* EBSDREADER_H_ */

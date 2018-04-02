@@ -195,7 +195,7 @@ private:
 public:
   ImportImageStack(const ImportImageStack&) = delete; // Copy Constructor Not Implemented
   ImportImageStack(ImportImageStack&&) = delete;      // Move Constructor
-  void operator=(const ImportImageStack&);   // Operator '=' Not Implemented
+  void operator=(const ImportImageStack&);            // Move assignment Not Implemented
 };
 
 #endif /* ImportImageStack_H_ */

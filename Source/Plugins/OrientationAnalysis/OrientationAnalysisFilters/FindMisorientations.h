@@ -192,7 +192,7 @@ private:
 public:
   FindMisorientations(const FindMisorientations&) = delete; // Copy Constructor Not Implemented
   FindMisorientations(FindMisorientations&&) = delete;      // Move Constructor
-  void operator=(const FindMisorientations&);      // Operator '=' Not Implemented
+  void operator=(const FindMisorientations&);               // Move assignment Not Implemented
 };
 
 #endif /* FindMisorientations_H_ */

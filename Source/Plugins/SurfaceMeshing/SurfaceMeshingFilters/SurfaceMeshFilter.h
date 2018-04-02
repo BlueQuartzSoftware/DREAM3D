@@ -83,11 +83,11 @@ signals:
 protected:
   SurfaceMeshFilter();
 
-private:
 public:
   SurfaceMeshFilter(const SurfaceMeshFilter&) = delete; // Copy Constructor Not Implemented
   SurfaceMeshFilter(SurfaceMeshFilter&&) = delete;      // Move Constructor
-  void operator=(const SurfaceMeshFilter&);    // Operator '=' Not Implemented
+  SurfaceMeshFilter& operator=(const SurfaceMeshFilter&) = delete; // Copy Assignment Not Implemented
+  SurfaceMeshFilter& operator=(SurfaceMeshFilter&&) = delete;      //
 };
 
 #endif /* _SurfaceMeshFilter_H_ */

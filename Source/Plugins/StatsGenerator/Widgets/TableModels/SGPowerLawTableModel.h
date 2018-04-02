@@ -139,7 +139,7 @@ class SGPowerLawTableModel : public SGAbstractTableModel
     QVector<QColor> m_Colors;
 
     SGPowerLawTableModel(const SGPowerLawTableModel&) = delete; // Copy Constructor Not Implemented
-    void operator=(const SGPowerLawTableModel&) = delete;       // Operator '=' Not Implemented
+    void operator=(const SGPowerLawTableModel&) = delete;       // Move assignment Not Implemented
 };
 
 #endif /* _SG_POWER_LAW_TABLEMODEL_H_ */

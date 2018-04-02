@@ -210,7 +210,7 @@ private:
 public:
   GeneratePrecipitateStatsData(const GeneratePrecipitateStatsData&) = delete; // Copy Constructor Not Implemented
   GeneratePrecipitateStatsData(GeneratePrecipitateStatsData&&) = delete;      // Move Constructor
-  void operator=(const GeneratePrecipitateStatsData&);               // Operator '=' Not Implemented
+  void operator=(const GeneratePrecipitateStatsData&);                        // Move assignment Not Implemented
 };
 
 #endif /* _GeneratePrecipitateStatsData_H_ */

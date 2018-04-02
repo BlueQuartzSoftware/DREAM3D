@@ -184,7 +184,7 @@ private:
 public:
   SurfaceMeshToNonconformalVtk(const SurfaceMeshToNonconformalVtk&) = delete; // Copy Constructor Not Implemented
   SurfaceMeshToNonconformalVtk(SurfaceMeshToNonconformalVtk&&) = delete;      // Move Constructor
-  void operator=(const SurfaceMeshToNonconformalVtk&);               // Operator '=' Not Implemented
+  void operator=(const SurfaceMeshToNonconformalVtk&);                        // Move assignment Not Implemented
 };
 
 #endif /* _SurfaceMeshToNonconformalVtk_H_ */

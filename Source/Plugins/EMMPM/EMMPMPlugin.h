@@ -155,7 +155,7 @@ class EMMPMPlugin : public QObject, public ISIMPLibPlugin
     bool                m_DidLoad;
 
     EMMPMPlugin(const EMMPMPlugin&) = delete;    // Copy Constructor Not Implemented
-    void operator=(const EMMPMPlugin&) = delete; // Operator '=' Not Implemented
+    void operator=(const EMMPMPlugin&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* _EMMPM_H_ */

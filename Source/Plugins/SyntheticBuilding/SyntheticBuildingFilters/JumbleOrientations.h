@@ -179,7 +179,7 @@ private:
 public:
   JumbleOrientations(const JumbleOrientations&) = delete; // Copy Constructor Not Implemented
   JumbleOrientations(JumbleOrientations&&) = delete;      // Move Constructor
-  void operator=(const JumbleOrientations&);     // Operator '=' Not Implemented
+  void operator=(const JumbleOrientations&);              // Move assignment Not Implemented
 };
 
 #endif /* JumbleOrientations_H_ */

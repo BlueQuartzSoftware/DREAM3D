@@ -230,7 +230,8 @@ private:
 public:
   FindTriangleGeomShapes(const FindTriangleGeomShapes&) = delete; // Copy Constructor Not Implemented
   FindTriangleGeomShapes(FindTriangleGeomShapes&&) = delete;      // Move Constructor
-  void operator=(const FindTriangleGeomShapes&);         // Operator '=' Not Implemented
+  FindTriangleGeomShapes& operator=(const FindTriangleGeomShapes&) = delete; // Copy Assignment Not Implemented
+  FindTriangleGeomShapes& operator=(FindTriangleGeomShapes&&) = delete;      // Move Assignme
 };
 
 #endif /* _findtrianglegeomshapes_h_ */

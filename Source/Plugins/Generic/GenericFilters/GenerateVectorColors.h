@@ -173,7 +173,7 @@ private:
 public:
   GenerateVectorColors(const GenerateVectorColors&) = delete; // Copy Constructor Not Implemented
   GenerateVectorColors(GenerateVectorColors&&) = delete;      // Move Constructor
-  void operator=(const GenerateVectorColors&);       // Operator '=' Not Implemented
+  void operator=(const GenerateVectorColors&);                // Move assignment Not Implemented
 };
 
 #endif /* _GenerateVectorColors_H_ */

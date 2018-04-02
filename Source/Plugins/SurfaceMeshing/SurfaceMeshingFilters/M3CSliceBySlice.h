@@ -350,7 +350,8 @@ private:
 public:
   M3CSliceBySlice(const M3CSliceBySlice&) = delete; // Copy Constructor Not Implemented
   M3CSliceBySlice(M3CSliceBySlice&&) = delete;      // Move Constructor
-  void operator=(const M3CSliceBySlice&);  // Operator '=' Not Implemented
+  M3CSliceBySlice& operator=(const M3CSliceBySlice&) = delete; // Copy Assignment Not Implemented
+  M3CSliceBySlice& operator=(M3CSliceBySlice&&) = delete;
 };
 
 #endif

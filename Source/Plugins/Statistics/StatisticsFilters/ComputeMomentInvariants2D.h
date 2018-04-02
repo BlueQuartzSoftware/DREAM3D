@@ -150,7 +150,7 @@ private:
 public:
   ComputeMomentInvariants2D(const ComputeMomentInvariants2D&) = delete; // Copy Constructor Not Implemented
   ComputeMomentInvariants2D(ComputeMomentInvariants2D&&) = delete;      // Move Constructor
-  void operator=(const ComputeMomentInvariants2D&);            // Operator '=' Not Implemented
+  void operator=(const ComputeMomentInvariants2D&);                     // Move assignment Not Implemented
 };
 
 #endif /* _ComputeMomentInvariants2D_H_ */

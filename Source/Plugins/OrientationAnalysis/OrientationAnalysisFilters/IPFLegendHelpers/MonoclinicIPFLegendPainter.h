@@ -54,7 +54,7 @@ protected:
 
 private:
   MonoclinicIPFLegendPainter(const MonoclinicIPFLegendPainter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const MonoclinicIPFLegendPainter&);             // Operator '=' Not Implemented
+  void operator=(const MonoclinicIPFLegendPainter&);                      // Move assignment Not Implemented
 };
 
 #endif /* _monoclinicIPFLegendPainter_H_ */

@@ -211,7 +211,7 @@ private:
   ImageGeom* m_CachedGeometry = nullptr;
 
   SPParksDumpReader(const SPParksDumpReader&) = delete; // Copy Constructor Not Implemented
-  void operator=(const SPParksDumpReader&);    // Operator '=' Not Implemented
+  void operator=(const SPParksDumpReader&);             // Move assignment Not Implemented
 };
 
 #endif /* _SPParksDumpReader_H_ */

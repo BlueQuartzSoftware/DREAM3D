@@ -531,5 +531,5 @@ public:
 
 private:
   PhIOTest(const PhIOTest&);       // Copy Constructor Not Implemented
-  void operator=(const PhIOTest&); // Operator '=' Not Implemented
+  void operator=(const PhIOTest&); // Move assignment Not Implemented
 };

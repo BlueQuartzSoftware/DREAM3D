@@ -167,7 +167,7 @@ private:
 public:
   AppendImageGeometryZSlice(const AppendImageGeometryZSlice&) = delete; // Copy Constructor Not Implemented
   AppendImageGeometryZSlice(AppendImageGeometryZSlice&&) = delete;      // Move Constructor
-  void operator=(const AppendImageGeometryZSlice&);            // Operator '=' Not Implemented
+  void operator=(const AppendImageGeometryZSlice&);                     // Move assignment Not Implemented
 };
 
 #endif /* _AppendZSlice_H_ */

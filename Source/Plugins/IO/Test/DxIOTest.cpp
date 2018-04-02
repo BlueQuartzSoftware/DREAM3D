@@ -532,5 +532,5 @@ public:
 
 private:
   DxIOTest(const DxIOTest&);       // Copy Constructor Not Implemented
-  void operator=(const DxIOTest&); // Operator '=' Not Implemented
+  void operator=(const DxIOTest&); // Move assignment Not Implemented
 };

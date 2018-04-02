@@ -480,5 +480,5 @@ public:
 
 private:
   FindSizesTest(const FindSizesTest&);  // Copy Constructor Not Implemented
-  void operator=(const FindSizesTest&); // Operator '=' Not Implemented
+  void operator=(const FindSizesTest&); // Move assignment Not Implemented
 };

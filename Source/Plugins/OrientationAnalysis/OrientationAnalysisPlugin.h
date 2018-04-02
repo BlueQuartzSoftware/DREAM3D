@@ -185,7 +185,7 @@ class OrientationAnalysisPlugin : public QObject, public ISIMPLibPlugin
     bool                m_DidLoad;
 
     OrientationAnalysisPlugin(const OrientationAnalysisPlugin&) = delete; // Copy Constructor Not Implemented
-    void operator=(const OrientationAnalysisPlugin&) = delete;            // Operator '=' Not Implemented
+    void operator=(const OrientationAnalysisPlugin&) = delete;            // Move assignment Not Implemented
 };
 
 #endif /* _OrientationAnalysis_H_ */

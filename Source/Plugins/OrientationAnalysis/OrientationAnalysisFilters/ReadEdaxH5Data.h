@@ -267,7 +267,7 @@ private:
 public:
   ReadEdaxH5Data(const ReadEdaxH5Data&) = delete; // Copy Constructor Not Implemented
   ReadEdaxH5Data(ReadEdaxH5Data&&) = delete;      // Move Constructor
-  ReadEdaxH5Data& operator=(const ReadEdaxH5Data&) = delete; // Copy Assignment
+  ReadEdaxH5Data& operator=(const ReadEdaxH5Data&) = delete; // Copy Assignment Not Implemented
   ReadEdaxH5Data& operator=(ReadEdaxH5Data&&) = delete;      // Move Assignment
 };
 

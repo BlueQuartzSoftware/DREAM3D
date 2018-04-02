@@ -191,7 +191,7 @@ class  YSChoiAbaqusReader : public FileReader
     void updateEnsembleInstancePointers();
 
     YSChoiAbaqusReader(const YSChoiAbaqusReader&) = delete; // Copy Constructor Not Implemented
-    void operator=(const YSChoiAbaqusReader&) = delete;     // Operator '=' Not Implemented
+    void operator=(const YSChoiAbaqusReader&) = delete;     // Move assignment Not Implemented
 };
 
 #endif /* YSChoiAbaqusReader_H_ */

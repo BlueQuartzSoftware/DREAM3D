@@ -150,7 +150,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(uint8_t, OutputImage)
 
   MultiEmmpmFilter(const MultiEmmpmFilter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const MultiEmmpmFilter&);   // Operator '=' Not Implemented
+  void operator=(const MultiEmmpmFilter&);            // Move assignment Not Implemented
 };
 
 #endif /* _MultiEmmpmFilter_H_ */

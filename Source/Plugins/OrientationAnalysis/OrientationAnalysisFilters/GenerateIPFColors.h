@@ -192,7 +192,7 @@ private:
 public:
   GenerateIPFColors(const GenerateIPFColors&) = delete; // Copy Constructor Not Implemented
   GenerateIPFColors(GenerateIPFColors&&) = delete;      // Move Constructor
-  void operator=(const GenerateIPFColors&);    // Operator '=' Not Implemented
+  void operator=(const GenerateIPFColors&);             // Move assignment Not Implemented
 };
 
 #endif /* _GenerateIPFColors_H_ */

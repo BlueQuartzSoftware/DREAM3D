@@ -193,7 +193,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, NumCells)
 
   MinSize(const MinSize&);        // Copy Constructor Not Implemented
-  MinSize& operator=(const MinSize&) = delete; // Copy Assignment
+  MinSize& operator=(const MinSize&) = delete; // Copy Assignment Not Implemented
   MinSize& operator=(MinSize&&) = delete;      // Move Assignment
 };
 

@@ -189,7 +189,7 @@ class OrientationLib_EXPORT HexagonalOps : public LaueOps
 
   private:
     HexagonalOps(const HexagonalOps&) = delete;   // Copy Constructor Not Implemented
-    void operator=(const HexagonalOps&) = delete; // Operator '=' Not Implemented
+    void operator=(const HexagonalOps&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* HEXAGONALOPS_H_ */

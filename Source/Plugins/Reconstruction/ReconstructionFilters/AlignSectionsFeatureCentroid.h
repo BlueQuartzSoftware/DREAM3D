@@ -150,7 +150,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
   AlignSectionsFeatureCentroid(const AlignSectionsFeatureCentroid&) = delete; // Copy Constructor Not Implemented
-  void operator=(const AlignSectionsFeatureCentroid&);               // Operator '=' Not Implemented
+  void operator=(const AlignSectionsFeatureCentroid&);                        // Move assignment Not Implemented
 };
 
 #endif /* AlignSectionsFeatureCentroid_H_ */

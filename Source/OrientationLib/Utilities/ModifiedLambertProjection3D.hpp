@@ -337,7 +337,7 @@ class ModifiedLambertProjection3D
 
   private:
     ModifiedLambertProjection3D(const ModifiedLambertProjection3D&); // Copy Constructor Not Implemented
-    void operator=(const ModifiedLambertProjection3D&); // Operator '=' Not Implemented
+    void operator=(const ModifiedLambertProjection3D&);              // Move assignment Not Implemented
 };
 
 #endif /* _ModifiedLamberProjection3D_H_ */

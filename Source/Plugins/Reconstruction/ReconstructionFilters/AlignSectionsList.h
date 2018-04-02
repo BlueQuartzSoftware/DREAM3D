@@ -145,7 +145,7 @@ protected:
 
 private:
   AlignSectionsList(const AlignSectionsList&) = delete; // Copy Constructor Not Implemented
-  void operator=(const AlignSectionsList&);    // Operator '=' Not Implemented
+  void operator=(const AlignSectionsList&);             // Move assignment Not Implemented
 };
 
 #endif /* AlignSectionsList_H_ */

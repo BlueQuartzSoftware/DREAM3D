@@ -207,7 +207,7 @@ private:
 public:
   FindEllipsoidError(const FindEllipsoidError&) = delete; // Copy Constructor Not Implemented
   FindEllipsoidError(FindEllipsoidError&&) = delete;      // Move Constructor
-  void operator=(const FindEllipsoidError&);     // Operator '=' Not Implemented
+  void operator=(const FindEllipsoidError&);              // Move assignment Not Implemented
 };
 
 #endif /* FindEllipsoidError_H_ */

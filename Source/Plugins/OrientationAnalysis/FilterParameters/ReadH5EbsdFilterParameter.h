@@ -89,7 +89,7 @@ protected:
 
 private:
   ReadH5EbsdFilterParameter(const ReadH5EbsdFilterParameter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ReadH5EbsdFilterParameter&);            // Operator '=' Not Implemented
+  void operator=(const ReadH5EbsdFilterParameter&);                     // Move assignment Not Implemented
 };
 
 #endif /* _ImportVectorImageStackFilterParameter_H_ */

@@ -166,7 +166,8 @@ private:
 public:
   FindTriangleGeomCentroids(const FindTriangleGeomCentroids&) = delete; // Copy Constructor Not Implemented
   FindTriangleGeomCentroids(FindTriangleGeomCentroids&&) = delete;      // Move Constructor
-  void operator=(const FindTriangleGeomCentroids&);            // Operator '=' Not Implemented
+  FindTriangleGeomCentroids& operator=(const FindTriangleGeomCentroids&) = delete; // Copy Assignment Not Implemented
+  FindTriangleGeomCentroids& operator=(FindTriangleGeomCentroids&&) = delete;      // Move Assignment
 };
 
 #endif /* _findtrianglegeomcentroids_h_ */

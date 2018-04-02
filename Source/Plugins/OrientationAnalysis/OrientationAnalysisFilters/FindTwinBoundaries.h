@@ -201,7 +201,7 @@ private:
 public:
   FindTwinBoundaries(const FindTwinBoundaries&) = delete; // Copy Constructor Not Implemented
   FindTwinBoundaries(FindTwinBoundaries&&) = delete;      // Move Constructor
-  void operator=(const FindTwinBoundaries&);     // Operator '=' Not Implemented
+  void operator=(const FindTwinBoundaries&);              // Move assignment Not Implemented
 };
 
 #endif /* FindTwinBoundaries_H_ */

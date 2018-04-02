@@ -163,7 +163,7 @@ private:
   void updateVertexInstancePointers();
 
   SampleSurfaceMeshSpecifiedPoints(const SampleSurfaceMeshSpecifiedPoints&) = delete; // Copy Constructor Not Implemented
-  void operator=(const SampleSurfaceMeshSpecifiedPoints&);                   // Operator '=' Not Implemented
+  void operator=(const SampleSurfaceMeshSpecifiedPoints&);                            // Move assignment Not Implemented
 };
 
 #endif /* _SampleSurfaceMeshSpecifiedPoints_H_ */

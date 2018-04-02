@@ -179,7 +179,7 @@ private:
 public:
   ErodeDilateMask(const ErodeDilateMask&) = delete; // Copy Constructor Not Implemented
   ErodeDilateMask(ErodeDilateMask&&) = delete;      // Move Constructor
-  void operator=(const ErodeDilateMask&);  // Operator '=' Not Implemented
+  void operator=(const ErodeDilateMask&);           // Move assignment Not Implemented
 };
 
 #endif /* ErodeDilateMask_H_ */

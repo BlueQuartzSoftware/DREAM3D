@@ -185,7 +185,7 @@ class GenericPlugin : public QObject, public ISIMPLibPlugin
     bool                m_DidLoad;
 
     GenericPlugin(const GenericPlugin&) = delete;  // Copy Constructor Not Implemented
-    void operator=(const GenericPlugin&) = delete; // Operator '=' Not Implemented
+    void operator=(const GenericPlugin&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* _Generic_H_ */

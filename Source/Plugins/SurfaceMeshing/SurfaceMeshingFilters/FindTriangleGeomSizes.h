@@ -176,7 +176,8 @@ private:
 public:
   FindTriangleGeomSizes(const FindTriangleGeomSizes&) = delete; // Copy Constructor Not Implemented
   FindTriangleGeomSizes(FindTriangleGeomSizes&&) = delete;      // Move Constructor
-  void operator=(const FindTriangleGeomSizes&);        // Operator '=' Not Implemented
+  FindTriangleGeomSizes& operator=(const FindTriangleGeomSizes&) = delete; // Copy Assignment Not Implemented
+  FindTriangleGeomSizes& operator=(FindTriangleGeomSizes&&) = delete;      // Move assignment Not Implemented
 };
 
 #endif /* _FindTriangleGeomSizes_H_ */

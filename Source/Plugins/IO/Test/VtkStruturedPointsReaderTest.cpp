@@ -276,5 +276,5 @@ public:
 
 private:
   VtkStruturedPointsReaderTest(const VtkStruturedPointsReaderTest&); // Copy Constructor Not Implemented
-  void operator=(const VtkStruturedPointsReaderTest&);               // Operator '=' Not Implemented
+  void operator=(const VtkStruturedPointsReaderTest&);               // Move assignment Not Implemented
 };

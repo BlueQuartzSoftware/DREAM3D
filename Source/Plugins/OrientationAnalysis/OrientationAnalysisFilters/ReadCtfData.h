@@ -250,7 +250,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(float, LatticeConstants)
 
   ReadCtfData(const ReadCtfData&);    // Copy Constructor Not Implemented
-  ReadCtfData& operator=(const ReadCtfData&) = delete; // Copy Assignment
+  ReadCtfData& operator=(const ReadCtfData&) = delete; // Copy Assignment Not Implemented
   ReadCtfData& operator=(ReadCtfData&&) = delete;      // Move Assignment
 };
 

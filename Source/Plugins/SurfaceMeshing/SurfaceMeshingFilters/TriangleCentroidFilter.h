@@ -53,7 +53,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(TriangleCentroidFilter)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(TriangleCentroidFilter, SurfaceMeshFilter)
 
-  virtual ~TriangleCentroidFilter();
+  ~TriangleCentroidFilter() override;
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleCentroidsArrayPath)
   Q_PROPERTY(DataArrayPath SurfaceMeshTriangleCentroidsArrayPath READ getSurfaceMeshTriangleCentroidsArrayPath WRITE setSurfaceMeshTriangleCentroidsArrayPath)
@@ -138,8 +138,11 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleCentroids)
 
+public:
   TriangleCentroidFilter(const TriangleCentroidFilter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const TriangleCentroidFilter&);         // Operator '=' Not Implemented
+  TriangleCentroidFilter(TriangleCentroidFilter&&) = delete;      // Move Constructor
+  TriangleCentroidFilter& operator=(const TriangleCentroidFilter&) = delete; // Copy Assignment Not Implemented
+  TriangleCentroidFilter& operator=(TriangleCentroidFilter&&) = delete;      // Move assignment Not Implemented
 };
 
 #endif /* _TriangleCentroidFilter_H_ */

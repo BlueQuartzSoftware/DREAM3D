@@ -84,7 +84,7 @@ class  PrecipitateRolledPreset : public AbstractMicrostructurePreset
 
   private:
     PrecipitateRolledPreset(const PrecipitateRolledPreset&) = delete; // Copy Constructor Not Implemented
-    void operator=(const PrecipitateRolledPreset&) = delete;          // Operator '=' Not Implemented
+    void operator=(const PrecipitateRolledPreset&) = delete;          // Move assignment Not Implemented
 };
 
 DECLARE_FACTORY_CLASS(PrecipitateRolledPresetFactory, PrecipitateRolledPreset, "Precipitate Rolled")

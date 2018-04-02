@@ -202,7 +202,7 @@ private:
 public:
   FitCorrelatedFeatureData(const FitCorrelatedFeatureData&) = delete; // Copy Constructor Not Implemented
   FitCorrelatedFeatureData(FitCorrelatedFeatureData&&) = delete;      // Move Constructor
-  void operator=(const FitCorrelatedFeatureData&);           // Operator '=' Not Implemented
+  void operator=(const FitCorrelatedFeatureData&);                    // Move assignment Not Implemented
 };
 
 #endif /* FitCorrelatedFeatureData_H_ */

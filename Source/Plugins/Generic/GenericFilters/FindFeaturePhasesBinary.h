@@ -173,7 +173,7 @@ private:
 public:
   FindFeaturePhasesBinary(const FindFeaturePhasesBinary&) = delete; // Copy Constructor Not Implemented
   FindFeaturePhasesBinary(FindFeaturePhasesBinary&&) = delete;      // Move Constructor
-  void operator=(const FindFeaturePhasesBinary&);          // Operator '=' Not Implemented
+  void operator=(const FindFeaturePhasesBinary&);                   // Move assignment Not Implemented
 };
 
 #endif /* FindFeaturePhasesBinary_H_ */

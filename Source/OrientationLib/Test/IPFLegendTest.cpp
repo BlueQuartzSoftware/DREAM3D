@@ -151,5 +151,5 @@ public:
 
 private:
   IPFLegendTest(const IPFLegendTest&);  // Copy Constructor Not Implemented
-  void operator=(const IPFLegendTest&); // Operator '=' Not Implemented
+  void operator=(const IPFLegendTest&); // Move assignment Not Implemented
 };

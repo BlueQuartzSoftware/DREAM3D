@@ -54,7 +54,7 @@ protected:
 
 private:
   CubicLowIPFLegendPainter(const CubicLowIPFLegendPainter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const CubicLowIPFLegendPainter&);           // Operator '=' Not Implemented
+  void operator=(const CubicLowIPFLegendPainter&);                    // Move assignment Not Implemented
 };
 
 #endif /* _cubicLowipflegendpainter_H_ */

@@ -196,7 +196,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, NumNeighbors)
 
   MinNeighbors(const MinNeighbors&);   // Copy Constructor Not Implemented
-  MinNeighbors& operator=(const MinNeighbors&) = delete; // Copy Assignment
+  MinNeighbors& operator=(const MinNeighbors&) = delete; // Copy Assignment Not Implemented
   MinNeighbors& operator=(MinNeighbors&&) = delete;      // Move Assignment
 };
 

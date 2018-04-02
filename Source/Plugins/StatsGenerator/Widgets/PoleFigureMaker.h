@@ -144,7 +144,7 @@ class PoleFigureMaker
     bool m_KernelWeightsInited;
 
     PoleFigureMaker(const PoleFigureMaker&) = delete; // Copy Constructor Not Implemented
-    void operator=(const PoleFigureMaker&) = delete;  // Operator '=' Not Implemented
+    void operator=(const PoleFigureMaker&) = delete;  // Move assignment Not Implemented
 };
 
 

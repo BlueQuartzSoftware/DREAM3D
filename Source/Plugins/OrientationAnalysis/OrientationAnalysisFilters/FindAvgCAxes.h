@@ -172,7 +172,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(float, AvgCAxes)
 
   FindAvgCAxes(const FindAvgCAxes&);   // Copy Constructor Not Implemented
-  FindAvgCAxes& operator=(const FindAvgCAxes&) = delete; // Copy Assignment
+  FindAvgCAxes& operator=(const FindAvgCAxes&) = delete; // Copy Assignment Not Implemented
   FindAvgCAxes& operator=(FindAvgCAxes&&) = delete;      // Move Assignment
 };
 

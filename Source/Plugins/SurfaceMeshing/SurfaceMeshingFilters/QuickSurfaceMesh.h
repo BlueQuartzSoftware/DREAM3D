@@ -211,7 +211,8 @@ private:
 public:
   QuickSurfaceMesh(const QuickSurfaceMesh&) = delete; // Copy Constructor Not Implemented
   QuickSurfaceMesh(QuickSurfaceMesh&&) = delete;      // Move Constructor
-  void operator=(const QuickSurfaceMesh&);   // Operator '=' Not Implemented
+  QuickSurfaceMesh& operator=(const QuickSurfaceMesh&) = delete; // Copy Assignment Not Implemented
+  QuickSurfaceMesh& operator=(QuickSurfaceMesh&&) = delete;      // Move assignment Not Implemented
 };
 
 #endif /* QuickSurfaceMesh_H_ */

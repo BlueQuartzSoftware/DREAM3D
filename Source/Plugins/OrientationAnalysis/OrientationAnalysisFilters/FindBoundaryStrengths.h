@@ -200,7 +200,7 @@ private:
 public:
   FindBoundaryStrengths(const FindBoundaryStrengths&) = delete; // Copy Constructor Not Implemented
   FindBoundaryStrengths(FindBoundaryStrengths&&) = delete;      // Move Constructor
-  void operator=(const FindBoundaryStrengths&);        // Operator '=' Not Implemented
+  void operator=(const FindBoundaryStrengths&);                 // Move assignment Not Implemented
 };
 
 #endif /* FindBoundaryStrengths_H_ */

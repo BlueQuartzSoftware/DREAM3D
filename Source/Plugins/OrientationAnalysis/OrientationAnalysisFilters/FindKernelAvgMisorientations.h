@@ -187,7 +187,7 @@ private:
 public:
   FindKernelAvgMisorientations(const FindKernelAvgMisorientations&) = delete; // Copy Constructor Not Implemented
   FindKernelAvgMisorientations(FindKernelAvgMisorientations&&) = delete;      // Move Constructor
-  void operator=(const FindKernelAvgMisorientations&);               // Operator '=' Not Implemented
+  void operator=(const FindKernelAvgMisorientations&);                        // Move assignment Not Implemented
 };
 
 #endif /* FindKernelAvgMisorientations_H_ */

@@ -166,7 +166,7 @@ private:
 public:
   RegularizeZSpacing(const RegularizeZSpacing&) = delete; // Copy Constructor Not Implemented
   RegularizeZSpacing(RegularizeZSpacing&&) = delete;      // Move Constructor
-  void operator=(const RegularizeZSpacing&);     // Operator '=' Not Implemented
+  void operator=(const RegularizeZSpacing&);              // Move assignment Not Implemented
 };
 
 #endif /* RegularizeZSpacing_H_ */

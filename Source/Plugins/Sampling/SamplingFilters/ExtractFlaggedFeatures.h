@@ -174,7 +174,7 @@ private:
 public:
   ExtractFlaggedFeatures(const ExtractFlaggedFeatures&) = delete; // Copy Constructor Not Implemented
   ExtractFlaggedFeatures(ExtractFlaggedFeatures&&) = delete;      // Move Constructor
-  void operator=(const ExtractFlaggedFeatures&);         // Operator '=' Not Implemented
+  void operator=(const ExtractFlaggedFeatures&);                  // Move assignment Not Implemented
 };
 
 #endif /* ExtractFlaggedFeatures_H_ */

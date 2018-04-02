@@ -40,7 +40,7 @@ public:
     QString cpyCtr = QString("%1(const %1&) = delete;").arg(baseName);
     QString mvCtr = QString("%1(%1&&) = delete;                 // Move Constructor").arg(baseName);
     QString cpyAssign = QString("void operator=(const %1&) = delete;").arg(baseName);
-    QString cpyAssignRepl = QString("%1& operator=(const %1&) = delete; // Copy Assignment").arg(baseName);
+    QString cpyAssignRepl = QString("%1& operator=(const %1&) = delete; // Copy Assignment Not Implemented").arg(baseName);
     QString mvAssign = QString("%1& operator=(%1&&) = delete;      // Move Assignment").arg(baseName);
 
     while(sourceLines.hasNext())

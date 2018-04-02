@@ -200,7 +200,7 @@ private:
 public:
   WriteStatsGenOdfAngleFile(const WriteStatsGenOdfAngleFile&) = delete; // Copy Constructor Not Implemented
   WriteStatsGenOdfAngleFile(WriteStatsGenOdfAngleFile&&) = delete;      // Move Constructor
-  void operator=(const WriteStatsGenOdfAngleFile&);            // Operator '=' Not Implemented
+  void operator=(const WriteStatsGenOdfAngleFile&);                     // Move assignment Not Implemented
 };
 
 #endif /* _WriteStatsGenOdfAngleFile_H_ */

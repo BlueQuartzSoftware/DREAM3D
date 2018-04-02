@@ -340,5 +340,5 @@ public:
 
 private:
   ComputeMomentInvariants2DTest(const ComputeMomentInvariants2DTest&); // Copy Constructor Not Implemented
-  void operator=(const ComputeMomentInvariants2DTest&);                // Operator '=' Not Implemented
+  void operator=(const ComputeMomentInvariants2DTest&);                // Move assignment Not Implemented
 };

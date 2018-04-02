@@ -222,7 +222,7 @@ private:
   size_t m_TotalRandomNumbersGenerated;
 
   GroupMicroTextureRegions(const GroupMicroTextureRegions&) = delete; // Copy Constructor Not Implemented
-  void operator=(const GroupMicroTextureRegions&);           // Operator '=' Not Implemented
+  void operator=(const GroupMicroTextureRegions&);                    // Move assignment Not Implemented
 };
 
 #endif /* GroupMicroTextureRegions_H_ */

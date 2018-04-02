@@ -184,7 +184,7 @@ private:
 public:
   RemoveFlaggedFeatures(const RemoveFlaggedFeatures&) = delete; // Copy Constructor Not Implemented
   RemoveFlaggedFeatures(RemoveFlaggedFeatures&&) = delete;      // Move Constructor
-  void operator=(const RemoveFlaggedFeatures&);        // Operator '=' Not Implemented
+  void operator=(const RemoveFlaggedFeatures&);                 // Move assignment Not Implemented
 };
 
 #endif /* RemoveFlaggedFeatures_H_ */

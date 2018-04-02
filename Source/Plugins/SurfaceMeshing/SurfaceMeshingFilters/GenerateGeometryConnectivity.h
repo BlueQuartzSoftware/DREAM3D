@@ -53,97 +53,99 @@ public:
   SIMPL_FILTER_NEW_MACRO(GenerateGeometryConnectivity)
    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GenerateGeometryConnectivity, SurfaceMeshFilter)
 
-  virtual ~GenerateGeometryConnectivity();
+   ~GenerateGeometryConnectivity() override;
 
-  SIMPL_FILTER_PARAMETER(QString, SurfaceDataContainerName)
-  Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+   SIMPL_FILTER_PARAMETER(QString, SurfaceDataContainerName)
+   Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(bool, GenerateVertexTriangleLists)
-  Q_PROPERTY(bool GenerateVertexTriangleLists READ getGenerateVertexTriangleLists WRITE setGenerateVertexTriangleLists)
+   SIMPL_FILTER_PARAMETER(bool, GenerateVertexTriangleLists)
+   Q_PROPERTY(bool GenerateVertexTriangleLists READ getGenerateVertexTriangleLists WRITE setGenerateVertexTriangleLists)
 
-  SIMPL_FILTER_PARAMETER(bool, GenerateTriangleNeighbors)
-  Q_PROPERTY(bool GenerateTriangleNeighbors READ getGenerateTriangleNeighbors WRITE setGenerateTriangleNeighbors)
+   SIMPL_FILTER_PARAMETER(bool, GenerateTriangleNeighbors)
+   Q_PROPERTY(bool GenerateTriangleNeighbors READ getGenerateTriangleNeighbors WRITE setGenerateTriangleNeighbors)
 
-  /**
-   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-   */
-  const QString getCompiledLibraryName() const override;
+   /**
+    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+    */
+   const QString getCompiledLibraryName() const override;
 
-  /**
-   * @brief getBrandingString Returns the branding string for the filter, which is a tag
-   * used to denote the filter's association with specific plugins
-   * @return Branding string
-  */
-  const QString getBrandingString() const override;
+   /**
+    * @brief getBrandingString Returns the branding string for the filter, which is a tag
+    * used to denote the filter's association with specific plugins
+    * @return Branding string
+    */
+   const QString getBrandingString() const override;
 
-  /**
-   * @brief getFilterVersion Returns a version string for this filter. Default
-   * value is an empty string.
-   * @return
-   */
-  const QString getFilterVersion() const override;
+   /**
+    * @brief getFilterVersion Returns a version string for this filter. Default
+    * value is an empty string.
+    * @return
+    */
+   const QString getFilterVersion() const override;
 
-  /**
-   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-   */
-  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+   /**
+    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+    */
+   AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
-  /**
-   * @brief getGroupName Reimplemented from @see AbstractFilter class
-   */
-  const QString getGroupName() const override;
+   /**
+    * @brief getGroupName Reimplemented from @see AbstractFilter class
+    */
+   const QString getGroupName() const override;
 
-  /**
-   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-   */
-  const QString getSubGroupName() const override;
+   /**
+    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+    */
+   const QString getSubGroupName() const override;
 
-  /**
-   * @brief getUuid Return the unique identifier for this filter.
-   * @return A QUuid object.
-   */
-  const QUuid getUuid() override;
+   /**
+    * @brief getUuid Return the unique identifier for this filter.
+    * @return A QUuid object.
+    */
+   const QUuid getUuid() override;
 
-  /**
-   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-   */
-  const QString getHumanLabel() const override;
+   /**
+    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+    */
+   const QString getHumanLabel() const override;
 
-  /**
-   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-   */
-  void setupFilterParameters() override;
+   /**
+    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+    */
+   void setupFilterParameters() override;
 
-  /**
-   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-   */
-  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+   /**
+    * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+    */
+   void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
-  /**
-   * @brief execute Reimplemented from @see AbstractFilter class
-   */
-  void execute() override;
+   /**
+    * @brief execute Reimplemented from @see AbstractFilter class
+    */
+   void execute() override;
 
-  /**
-  * @brief preflight Reimplemented from @see AbstractFilter class
-  */
-  void preflight() override;
+   /**
+    * @brief preflight Reimplemented from @see AbstractFilter class
+    */
+   void preflight() override;
 
-protected:
-  GenerateGeometryConnectivity();
-  /**
-   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-   */
-  void dataCheck();
+ protected:
+   GenerateGeometryConnectivity();
+   /**
+    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+    */
+   void dataCheck();
 
-  /**
-   * @brief Initializes all the private instance variables.
-   */
-  void initialize();
+   /**
+    * @brief Initializes all the private instance variables.
+    */
+   void initialize();
 
-private:
-  GenerateGeometryConnectivity(const GenerateGeometryConnectivity&) = delete; // Copy Constructor Not Implemented
-  void operator=(const GenerateGeometryConnectivity&);               // Operator '=' Not Implemented
+ public:
+   GenerateGeometryConnectivity(const GenerateGeometryConnectivity&) = delete;            // Copy Constructor Not Implemented
+   GenerateGeometryConnectivity(GenerateGeometryConnectivity&&) = delete;                 // Move Constructor
+   GenerateGeometryConnectivity& operator=(const GenerateGeometryConnectivity&) = delete; // Copy Assignment Not Implemented
+   GenerateGeometryConnectivity& operator=(GenerateGeometryConnectivity&&) = delete;      // Move assignment Not Implemented
 };
 
 #endif /* _GenerateGeometryConnectivity_H_ */

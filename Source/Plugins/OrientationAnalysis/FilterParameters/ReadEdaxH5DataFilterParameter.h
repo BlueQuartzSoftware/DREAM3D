@@ -79,7 +79,7 @@ protected:
 
 private:
   ReadEdaxH5DataFilterParameter(const ReadEdaxH5DataFilterParameter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ReadEdaxH5DataFilterParameter&) = delete;                // Operator '=' Not Implemented
+  void operator=(const ReadEdaxH5DataFilterParameter&) = delete;                // Move assignment Not Implemented
 };
 
 #endif /* _ImportVectorImageStackFilterParameter_H_ */

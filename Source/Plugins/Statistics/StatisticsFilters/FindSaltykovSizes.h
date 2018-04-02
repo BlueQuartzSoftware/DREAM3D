@@ -206,7 +206,7 @@ private:
 public:
   FindSaltykovSizes(const FindSaltykovSizes&) = delete; // Copy Constructor Not Implemented
   FindSaltykovSizes(FindSaltykovSizes&&) = delete;      // Move Constructor
-  void operator=(const FindSaltykovSizes&);    // Operator '=' Not Implemented
+  void operator=(const FindSaltykovSizes&);             // Move assignment Not Implemented
 };
 
 #endif /* FindSaltykovSizes_H_ */

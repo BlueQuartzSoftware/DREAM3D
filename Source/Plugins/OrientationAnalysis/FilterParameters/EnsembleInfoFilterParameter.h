@@ -143,7 +143,7 @@ protected:
 
 private:
   EnsembleInfoFilterParameter(const EnsembleInfoFilterParameter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const EnsembleInfoFilterParameter&);              // Operator '=' Not Implemented
+  void operator=(const EnsembleInfoFilterParameter&);                       // Move assignment Not Implemented
 };
 
 #endif /* _EnsembleInfoFilterParameter_H_ */

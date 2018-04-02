@@ -147,7 +147,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
   AlignSectionsFeature(const AlignSectionsFeature&) = delete; // Copy Constructor Not Implemented
-  void operator=(const AlignSectionsFeature&);       // Operator '=' Not Implemented
+  void operator=(const AlignSectionsFeature&);                // Move assignment Not Implemented
 };
 
 #endif /* AlignSectionsFeature_H_ */

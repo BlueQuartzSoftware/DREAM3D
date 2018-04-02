@@ -107,7 +107,7 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
     QString m_key;
 
     CtfHeaderEntry(const CtfHeaderEntry&) = delete; // Copy Constructor Not Implemented
-    void operator=(const CtfHeaderEntry&) = delete; // Operator '=' Not Implemented
+    void operator=(const CtfHeaderEntry&) = delete; // Move assignment Not Implemented
 };
 
 /**
@@ -157,7 +157,7 @@ class CtfStringHeaderEntry : public EbsdHeaderEntry
     QString m_key;
 
     CtfStringHeaderEntry(const CtfStringHeaderEntry&) = delete; // Copy Constructor Not Implemented
-    void operator=(const CtfStringHeaderEntry&) = delete;       // Operator '=' Not Implemented
+    void operator=(const CtfStringHeaderEntry&) = delete;       // Move assignment Not Implemented
 };
 
 

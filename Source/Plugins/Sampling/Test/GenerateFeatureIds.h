@@ -119,7 +119,7 @@ private:
 public:
   GenerateFeatureIds(const GenerateFeatureIds&) = delete; // Copy Constructor Not Implemented
   GenerateFeatureIds(GenerateFeatureIds&&) = delete;      // Move Constructor
-  void operator=(const GenerateFeatureIds&);     // Operator '=' Not Implemented
+  void operator=(const GenerateFeatureIds&);              // Move assignment Not Implemented
 };
 
 /**
@@ -222,7 +222,7 @@ protected:
 
 private:
   CreateDataContainer(const CreateDataContainer&) = delete; // Copy Constructor Not Implemented
-  void operator=(const CreateDataContainer&);      // Operator '=' Not Implemented
+  void operator=(const CreateDataContainer&);               // Move assignment Not Implemented
 };
 
 #endif /* _GenerateFeatureIds_H_ */

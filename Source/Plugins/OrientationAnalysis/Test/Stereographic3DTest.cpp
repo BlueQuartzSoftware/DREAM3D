@@ -104,5 +104,5 @@ public:
 
 private:
   Stereographic3DTest(const Stereographic3DTest&); // Copy Constructor Not Implemented
-  void operator=(const Stereographic3DTest&);      // Operator '=' Not Implemented
+  void operator=(const Stereographic3DTest&);      // Move assignment Not Implemented
 };

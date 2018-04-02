@@ -53,7 +53,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(TriangleAreaFilter)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(TriangleAreaFilter, SurfaceMeshFilter)
 
-  virtual ~TriangleAreaFilter();
+  ~TriangleAreaFilter() override;
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleAreasArrayPath)
   Q_PROPERTY(DataArrayPath SurfaceMeshTriangleAreasArrayPath READ getSurfaceMeshTriangleAreasArrayPath WRITE setSurfaceMeshTriangleAreasArrayPath)
@@ -138,8 +138,11 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleAreas)
 
+public:
   TriangleAreaFilter(const TriangleAreaFilter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const TriangleAreaFilter&);     // Operator '=' Not Implemented
+  TriangleAreaFilter(TriangleAreaFilter&&) = delete;      // Move Constructor
+  TriangleAreaFilter& operator=(const TriangleAreaFilter&) = delete; // Copy Assignment Not Implemented
+  TriangleAreaFilter& operator=(TriangleAreaFilter&&) = delete;      //       // Move assignment Not Implemented
 };
 
 #endif /* _TriangleAreaFilter_H_ */

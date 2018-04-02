@@ -203,7 +203,7 @@ private:
   void updateFeatureInstancePointers();
 
   MergeTwins(const MergeTwins&);     // Copy Constructor Not Implemented
-  void operator=(const MergeTwins&) = delete; // Operator '=' Not Implemented
+  void operator=(const MergeTwins&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* MergeTwins_H_ */

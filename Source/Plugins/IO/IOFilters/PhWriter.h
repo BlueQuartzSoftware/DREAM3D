@@ -143,7 +143,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
   PhWriter(const PhWriter&);       // Copy Constructor Not Implemented
-  void operator=(const PhWriter&) = delete; // Operator '=' Not Implemented
+  void operator=(const PhWriter&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* PhWriter_H_ */

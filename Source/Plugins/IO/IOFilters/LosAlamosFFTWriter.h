@@ -152,7 +152,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
 
   LosAlamosFFTWriter(const LosAlamosFFTWriter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const LosAlamosFFTWriter&);     // Operator '=' Not Implemented
+  void operator=(const LosAlamosFFTWriter&);              // Move assignment Not Implemented
 };
 
 #endif /* _LosAlamosFFTWriter_H_ */

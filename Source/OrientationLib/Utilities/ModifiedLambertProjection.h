@@ -188,7 +188,7 @@ class OrientationLib_EXPORT ModifiedLambertProjection
     DoubleArrayType::Pointer m_SouthSquare;
 
     ModifiedLambertProjection(const ModifiedLambertProjection&) = delete; // Copy Constructor Not Implemented
-    void operator=(const ModifiedLambertProjection&) = delete;            // Operator '=' Not Implemented
+    void operator=(const ModifiedLambertProjection&) = delete;            // Move assignment Not Implemented
 };
 
 

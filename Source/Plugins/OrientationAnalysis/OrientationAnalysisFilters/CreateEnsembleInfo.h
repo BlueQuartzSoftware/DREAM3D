@@ -182,7 +182,7 @@ private:
 public:
   CreateEnsembleInfo(const CreateEnsembleInfo&) = delete; // Copy Constructor Not Implemented
   CreateEnsembleInfo(CreateEnsembleInfo&&) = delete;      // Move Constructor
-  void operator=(const CreateEnsembleInfo&);     // Operator '=' Not Implemented
+  void operator=(const CreateEnsembleInfo&);              // Move assignment Not Implemented
 };
 
 #endif /* _CreateEnsembleInfo_H_ */

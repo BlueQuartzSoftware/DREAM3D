@@ -143,7 +143,7 @@ class EbsdLib_EXPORT EbsdImporter
 
   private:
     EbsdImporter(const EbsdImporter&) = delete;   // Copy Constructor Not Implemented
-    void operator=(const EbsdImporter&) = delete; // Operator '=' Not Implemented
+    void operator=(const EbsdImporter&) = delete; // Move assignment Not Implemented
 };
 
 

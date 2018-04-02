@@ -229,7 +229,7 @@ private:
 public:
   EstablishMatrixPhase(const EstablishMatrixPhase&) = delete; // Copy Constructor Not Implemented
   EstablishMatrixPhase(EstablishMatrixPhase&&) = delete;      // Move Constructor
-  void operator=(const EstablishMatrixPhase&);       // Operator '=' Not Implemented
+  void operator=(const EstablishMatrixPhase&);                // Move assignment Not Implemented
 };
 
 #endif /* EstablishMatrixPhase_H_ */

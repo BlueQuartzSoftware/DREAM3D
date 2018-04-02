@@ -170,7 +170,7 @@ private:
 public:
   ReplaceElementAttributesWithNeighborValues(const ReplaceElementAttributesWithNeighborValues&) = delete; // Copy Constructor Not Implemented
   ReplaceElementAttributesWithNeighborValues(ReplaceElementAttributesWithNeighborValues&&) = delete;      // Move Constructor
-  void operator=(const ReplaceElementAttributesWithNeighborValues&);                             // Operator '=' Not Implemented
+  void operator=(const ReplaceElementAttributesWithNeighborValues&);                                      // Move assignment Not Implemented
 };
 
 #endif /* _ReplaceElementAttributesWithNeighborValues_H_ */

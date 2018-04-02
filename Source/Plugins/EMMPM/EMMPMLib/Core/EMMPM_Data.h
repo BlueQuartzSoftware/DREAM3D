@@ -192,7 +192,7 @@ class EMMPMLib_EXPORT EMMPM_Data
     EMMPM_Data();
   private:
     EMMPM_Data(const EMMPM_Data&) = delete;     // Copy Constructor Not Implemented
-    void operator=(const EMMPM_Data&) = delete; // Operator '=' Not Implemented
+    void operator=(const EMMPM_Data&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* EMMPM_STRUCTURES_H_ */

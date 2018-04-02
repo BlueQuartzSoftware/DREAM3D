@@ -991,5 +991,5 @@ public:
 
 private:
   CropVolumeTest(const CropVolumeTest&); // Copy Constructor Not Implemented
-  void operator=(const CropVolumeTest&); // Operator '=' Not Implemented
+  void operator=(const CropVolumeTest&); // Move assignment Not Implemented
 };

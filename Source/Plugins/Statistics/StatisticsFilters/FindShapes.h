@@ -223,7 +223,7 @@ private:
   double m_ScaleFactor;
 
   FindShapes(const FindShapes&);     // Copy Constructor Not Implemented
-  FindShapes& operator=(const FindShapes&) = delete; // Copy Assignment
+  FindShapes& operator=(const FindShapes&) = delete; // Copy Assignment Not Implemented
   FindShapes& operator=(FindShapes&&) = delete;      // Move Assignment
 };
 

@@ -190,7 +190,7 @@ private:
   EnsembleInfoTableModel* createEnsembleInfoModel();
 
   EnsembleInfoCreationWidget(const EnsembleInfoCreationWidget&) = delete; // Copy Constructor Not Implemented
-  void operator=(const EnsembleInfoCreationWidget&);             // Operator '=' Not Implemented
+  void operator=(const EnsembleInfoCreationWidget&);                      // Move assignment Not Implemented
 };
 
 #endif /* _EnsembleInfoCreationWidget_H_ */

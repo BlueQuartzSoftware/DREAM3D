@@ -54,7 +54,7 @@ protected:
 
 private:
   HexagonalIPFLegendPainter(const HexagonalIPFLegendPainter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const HexagonalIPFLegendPainter&);            // Operator '=' Not Implemented
+  void operator=(const HexagonalIPFLegendPainter&);                     // Move assignment Not Implemented
 };
 
 #endif /* _hexagonalipflegendpainter_H_ */

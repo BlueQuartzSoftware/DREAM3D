@@ -186,7 +186,7 @@ class SyntheticBuildingPlugin : public QObject, public ISIMPLibPlugin
     bool                m_DidLoad;
 
     SyntheticBuildingPlugin(const SyntheticBuildingPlugin&) = delete; // Copy Constructor Not Implemented
-    void operator=(const SyntheticBuildingPlugin&) = delete;          // Operator '=' Not Implemented
+    void operator=(const SyntheticBuildingPlugin&) = delete;          // Move assignment Not Implemented
 };
 
 #endif /* _SyntheticBuilding_H_ */

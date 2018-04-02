@@ -184,7 +184,7 @@ private:
 public:
   BadDataNeighborOrientationCheck(const BadDataNeighborOrientationCheck&) = delete; // Copy Constructor Not Implemented
   BadDataNeighborOrientationCheck(BadDataNeighborOrientationCheck&&) = delete;      // Move Constructor
-  void operator=(const BadDataNeighborOrientationCheck&);                  // Operator '=' Not Implemented
+  void operator=(const BadDataNeighborOrientationCheck&);                           // Move assignment Not Implemented
 };
 
 #endif /* BadDataNeighborOrientationCheck_H_ */

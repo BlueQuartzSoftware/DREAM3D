@@ -176,7 +176,7 @@ private:
 public:
   FindBoundaryElementFractions(const FindBoundaryElementFractions&) = delete; // Copy Constructor Not Implemented
   FindBoundaryElementFractions(FindBoundaryElementFractions&&) = delete;      // Move Constructor
-  void operator=(const FindBoundaryElementFractions&);               // Operator '=' Not Implemented
+  void operator=(const FindBoundaryElementFractions&);                        // Move assignment Not Implemented
 };
 
 #endif /* FindBoundaryElementFractions_H_ */

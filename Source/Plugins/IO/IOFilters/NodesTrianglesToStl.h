@@ -187,7 +187,7 @@ private:
 public:
   NodesTrianglesToStl(const NodesTrianglesToStl&) = delete; // Copy Constructor Not Implemented
   NodesTrianglesToStl(NodesTrianglesToStl&&) = delete;      // Move Constructor
-  void operator=(const NodesTrianglesToStl&);      // Operator '=' Not Implemented
+  void operator=(const NodesTrianglesToStl&);               // Move assignment Not Implemented
 };
 
 #endif /* NodesTrianglesToStl_H_ */

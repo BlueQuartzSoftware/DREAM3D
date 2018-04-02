@@ -175,7 +175,7 @@ private:
 public:
   SegmentFeatures(const SegmentFeatures&) = delete; // Copy Constructor Not Implemented
   SegmentFeatures(SegmentFeatures&&) = delete;      // Move Constructor
-  void operator=(const SegmentFeatures&);  // Operator '=' Not Implemented
+  void operator=(const SegmentFeatures&);           // Move assignment Not Implemented
 };
 
 #endif /* SegmentFeatures_H_ */

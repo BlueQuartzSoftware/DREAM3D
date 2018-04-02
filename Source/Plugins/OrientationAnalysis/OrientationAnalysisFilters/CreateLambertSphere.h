@@ -251,7 +251,7 @@ private:
 public:
   CreateLambertSphere(const CreateLambertSphere&) = delete; // Copy Constructor Not Implemented
   CreateLambertSphere(CreateLambertSphere&&) = delete;      // Move Constructor
-  void operator=(const CreateLambertSphere&);      // Operator '=' Not Implemented
+  void operator=(const CreateLambertSphere&);               // Move assignment Not Implemented
 };
 
 #endif /* _createLambertSphere_H_ */

@@ -74,7 +74,7 @@ protected:
 
 private:
   ImportVectorImageStackFilterParameter(const ImportVectorImageStackFilterParameter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ImportVectorImageStackFilterParameter&) = delete;                        // Operator '=' Not Implemented
+  void operator=(const ImportVectorImageStackFilterParameter&) = delete;                        // Move assignment Not Implemented
 };
 
 #endif /* _ImportVectorImageStackFilterParameter_H_ */

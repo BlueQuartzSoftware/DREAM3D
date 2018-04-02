@@ -176,7 +176,7 @@ class EbsdLib_EXPORT H5AngReader : public AngReader
     bool                  m_ReadAllArrays;
 
     H5AngReader(const H5AngReader&) = delete;    // Copy Constructor Not Implemented
-    void operator=(const H5AngReader&) = delete; // Operator '=' Not Implemented
+    void operator=(const H5AngReader&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* _H5ANGREADER_H_ */

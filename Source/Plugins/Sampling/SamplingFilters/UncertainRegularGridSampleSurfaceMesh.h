@@ -177,7 +177,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
   UncertainRegularGridSampleSurfaceMesh(const UncertainRegularGridSampleSurfaceMesh&) = delete; // Copy Constructor Not Implemented
-  void operator=(const UncertainRegularGridSampleSurfaceMesh&);                        // Operator '=' Not Implemented
+  void operator=(const UncertainRegularGridSampleSurfaceMesh&);                                 // Move assignment Not Implemented
 };
 
 #endif /* UncertainRegularGridSampleSurfaceMesh_H_ */

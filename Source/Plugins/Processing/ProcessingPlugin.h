@@ -186,7 +186,7 @@ class ProcessingPlugin : public QObject, public ISIMPLibPlugin
     bool                m_DidLoad;
 
     ProcessingPlugin(const ProcessingPlugin&) = delete; // Copy Constructor Not Implemented
-    void operator=(const ProcessingPlugin&) = delete;   // Operator '=' Not Implemented
+    void operator=(const ProcessingPlugin&) = delete;   // Move assignment Not Implemented
 };
 
 #endif /* _Processing_H_ */

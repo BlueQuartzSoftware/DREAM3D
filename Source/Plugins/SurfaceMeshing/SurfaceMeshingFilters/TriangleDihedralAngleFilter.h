@@ -53,7 +53,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(TriangleDihedralAngleFilter)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(TriangleDihedralAngleFilter, SurfaceMeshFilter)
 
-  virtual ~TriangleDihedralAngleFilter();
+  ~TriangleDihedralAngleFilter() override;
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleDihedralAnglesArrayPath)
   Q_PROPERTY(DataArrayPath SurfaceMeshTriangleDihedralAnglesArrayPath READ getSurfaceMeshTriangleDihedralAnglesArrayPath WRITE setSurfaceMeshTriangleDihedralAnglesArrayPath)
@@ -138,8 +138,11 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleDihedralAngles)
 
+public:
   TriangleDihedralAngleFilter(const TriangleDihedralAngleFilter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const TriangleDihedralAngleFilter&);              // Operator '=' Not Implemented
+  TriangleDihedralAngleFilter(TriangleDihedralAngleFilter&&) = delete;      // Move Constructor
+  TriangleDihedralAngleFilter& operator=(const TriangleDihedralAngleFilter&) = delete; // Copy Assignment Not Implemented
+  TriangleDihedralAngleFilter& operator=(TriangleDihedralAngleFilter&&) = delete;      // Move assignment Not Implemented
 };
 
 #endif /* _TriangleDihedralAngleFilter_H_ */

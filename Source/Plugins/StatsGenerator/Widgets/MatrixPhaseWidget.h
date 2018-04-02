@@ -94,7 +94,7 @@ class MatrixPhaseWidget : public StatsGenWidget, private Ui::MatrixPhaseWidget
     QwtPlotGrid*         m_grid;
 
     MatrixPhaseWidget(const MatrixPhaseWidget&) = delete; // Copy Constructor Not Implemented
-    void operator=(const MatrixPhaseWidget&) = delete;    // Operator '=' Not Implemented
+    void operator=(const MatrixPhaseWidget&) = delete;    // Move assignment Not Implemented
 };
 
 #endif /* MatrixPhaseWidget_H_ */

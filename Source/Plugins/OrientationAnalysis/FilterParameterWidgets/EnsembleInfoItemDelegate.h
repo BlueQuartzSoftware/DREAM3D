@@ -85,7 +85,7 @@ private:
   int m_NumberOfPhases;
 
   EnsembleInfoItemDelegate(const EnsembleInfoItemDelegate&) = delete; // Copy Constructor Not Implemented
-  void operator=(const EnsembleInfoItemDelegate&);           // Operator '=' Not Implemented
+  void operator=(const EnsembleInfoItemDelegate&);                    // Move assignment Not Implemented
 };
 
 #endif /*  */

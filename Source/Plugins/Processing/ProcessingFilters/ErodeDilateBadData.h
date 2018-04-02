@@ -182,7 +182,7 @@ private:
 public:
   ErodeDilateBadData(const ErodeDilateBadData&) = delete; // Copy Constructor Not Implemented
   ErodeDilateBadData(ErodeDilateBadData&&) = delete;      // Move Constructor
-  void operator=(const ErodeDilateBadData&);     // Operator '=' Not Implemented
+  void operator=(const ErodeDilateBadData&);              // Move assignment Not Implemented
 };
 
 #endif /* ErodeDilateBadData_H_ */

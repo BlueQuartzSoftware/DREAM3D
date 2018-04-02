@@ -171,7 +171,7 @@ private:
 public:
   FindCAxisLocations(const FindCAxisLocations&) = delete; // Copy Constructor Not Implemented
   FindCAxisLocations(FindCAxisLocations&&) = delete;      // Move Constructor
-  void operator=(const FindCAxisLocations&);     // Operator '=' Not Implemented
+  void operator=(const FindCAxisLocations&);              // Move assignment Not Implemented
 };
 
 #endif /* FindCAxisLocations_H_ */

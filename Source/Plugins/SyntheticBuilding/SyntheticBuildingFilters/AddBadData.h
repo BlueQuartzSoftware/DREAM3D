@@ -178,7 +178,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, GBEuclideanDistances)
 
   AddBadData(const AddBadData&);     // Copy Constructor Not Implemented
-  AddBadData& operator=(const AddBadData&) = delete; // Copy Assignment
+  AddBadData& operator=(const AddBadData&) = delete; // Copy Assignment Not Implemented
   AddBadData& operator=(AddBadData&&) = delete;      // Move Assignment
 };
 

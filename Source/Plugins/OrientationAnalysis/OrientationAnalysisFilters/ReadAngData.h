@@ -230,7 +230,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(float, LatticeConstants)
 
   ReadAngData(const ReadAngData&);    // Copy Constructor Not Implemented
-  ReadAngData& operator=(const ReadAngData&) = delete; // Copy Assignment
+  ReadAngData& operator=(const ReadAngData&) = delete; // Copy Assignment Not Implemented
   ReadAngData& operator=(ReadAngData&&) = delete;      // Move Assignment
 };
 

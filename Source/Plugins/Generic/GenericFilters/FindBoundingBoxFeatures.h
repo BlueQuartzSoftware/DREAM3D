@@ -187,7 +187,7 @@ private:
 public:
   FindBoundingBoxFeatures(const FindBoundingBoxFeatures&) = delete; // Copy Constructor Not Implemented
   FindBoundingBoxFeatures(FindBoundingBoxFeatures&&) = delete;      // Move Constructor
-  void operator=(const FindBoundingBoxFeatures&);          // Operator '=' Not Implemented
+  void operator=(const FindBoundingBoxFeatures&);                   // Move assignment Not Implemented
 };
 
 #endif /* FindBoundingBoxFeatures_H_ */

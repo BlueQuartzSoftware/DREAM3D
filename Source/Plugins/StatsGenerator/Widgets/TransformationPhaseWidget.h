@@ -142,7 +142,7 @@ class TransformationPhaseWidget : public StatsGenWidget, private Ui::Transformat
     AbstractMicrostructurePreset::Pointer m_MicroPreset;
 
     TransformationPhaseWidget(const TransformationPhaseWidget&) = delete; // Copy Constructor Not Implemented
-    void operator=(const TransformationPhaseWidget&) = delete;            // Operator '=' Not Implemented
+    void operator=(const TransformationPhaseWidget&) = delete;            // Move assignment Not Implemented
 };
 
 #endif /* TransformationPhaseWidget_H_ */

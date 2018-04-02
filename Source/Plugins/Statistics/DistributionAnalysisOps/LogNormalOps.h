@@ -67,7 +67,7 @@ class LogNormalOps : public DistributionAnalysisOps
 
   private:
     LogNormalOps(const LogNormalOps&) = delete;   // Copy Constructor Not Implemented
-    void operator=(const LogNormalOps&) = delete; // Operator '=' Not Implemented
+    void operator=(const LogNormalOps&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* _LogNormalOps_H_ */

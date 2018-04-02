@@ -66,7 +66,7 @@ class EMMPMLib_EXPORT InitializationFunction
 
   private:
     InitializationFunction(const InitializationFunction&) = delete; // Copy Constructor Not Implemented
-    void operator=(const InitializationFunction&) = delete;         // Operator '=' Not Implemented
+    void operator=(const InitializationFunction&) = delete;         // Move assignment Not Implemented
 };
 
 
@@ -92,7 +92,7 @@ class EMMPMLib_EXPORT BasicInitialization : public InitializationFunction
 
   private:
     BasicInitialization(const BasicInitialization&) = delete; // Copy Constructor Not Implemented
-    void operator=(const BasicInitialization&) = delete;      // Operator '=' Not Implemented
+    void operator=(const BasicInitialization&) = delete;      // Move assignment Not Implemented
 };
 
 /**
@@ -117,7 +117,7 @@ class EMMPMLib_EXPORT UserDefinedAreasInitialization : public InitializationFunc
 
   private:
     UserDefinedAreasInitialization(const UserDefinedAreasInitialization&) = delete; // Copy Constructor Not Implemented
-    void operator=(const UserDefinedAreasInitialization&) = delete;                 // Operator '=' Not Implemented
+    void operator=(const UserDefinedAreasInitialization&) = delete;                 // Move assignment Not Implemented
 };
 
 
@@ -143,7 +143,7 @@ class EMMPMLib_EXPORT XtArrayInitialization : public InitializationFunction
 
   private:
     XtArrayInitialization(const XtArrayInitialization&) = delete; // Copy Constructor Not Implemented
-    void operator=(const XtArrayInitialization&) = delete;        // Operator '=' Not Implemented
+    void operator=(const XtArrayInitialization&) = delete;        // Move assignment Not Implemented
 };
 
 /**
@@ -168,7 +168,7 @@ class EMMPMLib_EXPORT GradientVariablesInitialization : public InitializationFun
 
   private:
     GradientVariablesInitialization(const GradientVariablesInitialization&) = delete; // Copy Constructor Not Implemented
-    void operator=(const GradientVariablesInitialization&) = delete;                  // Operator '=' Not Implemented
+    void operator=(const GradientVariablesInitialization&) = delete;                  // Move assignment Not Implemented
 };
 
 /**
@@ -199,7 +199,7 @@ class EMMPMLib_EXPORT CurvatureInitialization : public InitializationFunction
 
   private:
     CurvatureInitialization(const CurvatureInitialization&) = delete; // Copy Constructor Not Implemented
-    void operator=(const CurvatureInitialization&) = delete;          // Operator '=' Not Implemented
+    void operator=(const CurvatureInitialization&) = delete;          // Move assignment Not Implemented
 };
 
 

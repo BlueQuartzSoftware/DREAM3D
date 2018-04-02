@@ -200,7 +200,7 @@ private:
 public:
   ImportVectorImageStack(const ImportVectorImageStack&) = delete; // Copy Constructor Not Implemented
   ImportVectorImageStack(ImportVectorImageStack&&) = delete;      // Move Constructor
-  void operator=(const ImportVectorImageStack&);         // Operator '=' Not Implemented
+  void operator=(const ImportVectorImageStack&);                  // Move assignment Not Implemented
 };
 
 #endif /* ImportVectorImageStack_H_ */

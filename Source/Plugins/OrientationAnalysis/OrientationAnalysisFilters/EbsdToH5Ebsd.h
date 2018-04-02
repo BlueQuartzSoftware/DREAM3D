@@ -183,7 +183,7 @@ protected:
 
 private:
   EbsdToH5Ebsd(const EbsdToH5Ebsd&);   // Copy Constructor Not Implemented
-  EbsdToH5Ebsd& operator=(const EbsdToH5Ebsd&) = delete; // Copy Assignment
+  EbsdToH5Ebsd& operator=(const EbsdToH5Ebsd&) = delete; // Copy Assignment Not Implemented
   EbsdToH5Ebsd& operator=(EbsdToH5Ebsd&&) = delete;      // Move Assignment
 };
 

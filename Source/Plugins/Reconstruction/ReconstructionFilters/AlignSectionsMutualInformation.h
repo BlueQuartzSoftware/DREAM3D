@@ -177,7 +177,7 @@ private:
   uint64_t m_RandomSeed;
 
   AlignSectionsMutualInformation(const AlignSectionsMutualInformation&) = delete; // Copy Constructor Not Implemented
-  void operator=(const AlignSectionsMutualInformation&);                 // Operator '=' Not Implemented
+  void operator=(const AlignSectionsMutualInformation&);                          // Move assignment Not Implemented
 };
 
 #endif /* AlignSectionsMutualInformation_H_ */

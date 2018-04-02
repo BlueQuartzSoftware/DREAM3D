@@ -191,7 +191,7 @@ private:
 public:
   FindOrientationFieldCurl(const FindOrientationFieldCurl&) = delete; // Copy Constructor Not Implemented
   FindOrientationFieldCurl(FindOrientationFieldCurl&&) = delete;      // Move Constructor
-  void operator=(const FindOrientationFieldCurl&);           // Operator '=' Not Implemented
+  void operator=(const FindOrientationFieldCurl&);                    // Move assignment Not Implemented
 };
 
 #endif /* FindOrientationFieldCurl_H_ */

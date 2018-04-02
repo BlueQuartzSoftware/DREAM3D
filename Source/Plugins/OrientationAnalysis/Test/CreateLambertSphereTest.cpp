@@ -164,5 +164,5 @@ public:
 
 private:
   CreateLambertSphereTest(const CreateLambertSphereTest&); // Copy Constructor Not Implemented
-  void operator=(const CreateLambertSphereTest&);          // Operator '=' Not Implemented
+  void operator=(const CreateLambertSphereTest&);          // Move assignment Not Implemented
 };

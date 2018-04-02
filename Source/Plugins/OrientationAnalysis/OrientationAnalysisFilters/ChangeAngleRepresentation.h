@@ -165,7 +165,7 @@ private:
 public:
   ChangeAngleRepresentation(const ChangeAngleRepresentation&) = delete; // Copy Constructor Not Implemented
   ChangeAngleRepresentation(ChangeAngleRepresentation&&) = delete;      // Move Constructor
-  void operator=(const ChangeAngleRepresentation&);            // Operator '=' Not Implemented
+  void operator=(const ChangeAngleRepresentation&);                     // Move assignment Not Implemented
 };
 
 #endif /* ChangeAngleRepresentation_H_ */

@@ -192,7 +192,7 @@ private:
   NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;
 
   FindNeighbors(const FindNeighbors&);  // Copy Constructor Not Implemented
-  FindNeighbors& operator=(const FindNeighbors&) = delete; // Copy Assignment
+  FindNeighbors& operator=(const FindNeighbors&) = delete; // Copy Assignment Not Implemented
   FindNeighbors& operator=(FindNeighbors&&) = delete;      // Move Assignment
 };
 

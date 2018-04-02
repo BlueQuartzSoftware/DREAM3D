@@ -61,7 +61,7 @@ class VerifyTriangleWinding : public SurfaceMeshFilter
     SIMPL_FILTER_NEW_MACRO(VerifyTriangleWinding)
     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(VerifyTriangleWinding, SurfaceMeshFilter)
 
-    virtual ~VerifyTriangleWinding();
+    ~VerifyTriangleWinding() override;
     SIMPL_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     SIMPL_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeFacesArrayName)
@@ -163,8 +163,11 @@ class VerifyTriangleWinding : public SurfaceMeshFilter
 
     bool m_DoNodeFaceConnectivityFilter;
 
+  public:
     VerifyTriangleWinding(const VerifyTriangleWinding&) = delete; // Copy Constructor Not Implemented
-    void operator=(const VerifyTriangleWinding&) = delete;        // Operator '=' Not Implemented
+    VerifyTriangleWinding(VerifyTriangleWinding&&) = delete;      // Move Constructor
+    VerifyTriangleWinding& operator=(const VerifyTriangleWinding&) = delete; // Copy Assignment Not Implemented
+    VerifyTriangleWinding& operator=(VerifyTriangleWinding&&) = delete;      // Move Assignment
 };
 
 #endif /* _VerifyTriangleWinding_H_ */

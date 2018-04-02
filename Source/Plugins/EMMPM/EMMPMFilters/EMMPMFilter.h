@@ -245,7 +245,7 @@ private:
   EMMPM_Data::Pointer m_Data;
 
   EMMPMFilter(const EMMPMFilter&);    // Copy Constructor Not Implemented
-  EMMPMFilter& operator=(const EMMPMFilter&) = delete; // Copy Assignment
+  EMMPMFilter& operator=(const EMMPMFilter&) = delete; // Copy Assignment Not Implemented
   EMMPMFilter& operator=(EMMPMFilter&&) = delete;      // Move Assignment
 };
 

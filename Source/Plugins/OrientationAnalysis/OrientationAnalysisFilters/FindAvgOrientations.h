@@ -187,7 +187,7 @@ private:
 public:
   FindAvgOrientations(const FindAvgOrientations&) = delete; // Copy Constructor Not Implemented
   FindAvgOrientations(FindAvgOrientations&&) = delete;      // Move Constructor
-  void operator=(const FindAvgOrientations&);      // Operator '=' Not Implemented
+  void operator=(const FindAvgOrientations&);               // Move assignment Not Implemented
 };
 
 #endif /* FindAvgOrientations_H_ */

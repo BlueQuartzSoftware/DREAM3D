@@ -131,5 +131,5 @@ public:
 
 private:
   SampleSurfaceMeshSpecifiedPointsTest(const SampleSurfaceMeshSpecifiedPointsTest&); // Copy Constructor Not Implemented
-  void operator=(const SampleSurfaceMeshSpecifiedPointsTest&);                       // Operator '=' Not Implemented
+  void operator=(const SampleSurfaceMeshSpecifiedPointsTest&);                       // Move assignment Not Implemented
 };

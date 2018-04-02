@@ -112,7 +112,7 @@
 
     private:
       EbsdHeaderEntry(const EbsdHeaderEntry&) = delete; // Copy Constructor Not Implemented
-      void operator=(const EbsdHeaderEntry&) = delete;  // Operator '=' Not Implemented
+      void operator=(const EbsdHeaderEntry&) = delete;  // Move assignment Not Implemented
   };
 
 

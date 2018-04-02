@@ -190,7 +190,7 @@ private:
 public:
   NodesTrianglesToVtk(const NodesTrianglesToVtk&) = delete; // Copy Constructor Not Implemented
   NodesTrianglesToVtk(NodesTrianglesToVtk&&) = delete;      // Move Constructor
-  void operator=(const NodesTrianglesToVtk&);      // Operator '=' Not Implemented
+  void operator=(const NodesTrianglesToVtk&);               // Move assignment Not Implemented
 };
 
 #endif /* NodesTrianglesToVtk_H_ */

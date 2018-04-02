@@ -60,7 +60,7 @@ class QuatWidget : public OrientationWidget, private Ui::QuatWidget
     QVector<double> getValues();
 
     QuatWidget(const QuatWidget&) = delete;     // Copy Constructor Not Implemented
-    void operator=(const QuatWidget&) = delete; // Operator '=' Not Implemented
+    void operator=(const QuatWidget&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* EBSDREFERENCEFRAMEWIDGET_H_ */

@@ -193,7 +193,7 @@ private:
   QFile m_InStream;
 
   DxReader(const DxReader&);       // Copy Constructor Not Implemented
-  void operator=(const DxReader&) = delete; // Operator '=' Not Implemented
+  void operator=(const DxReader&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* DxReader_H_ */

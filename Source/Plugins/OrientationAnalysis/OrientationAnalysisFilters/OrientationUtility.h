@@ -127,7 +127,7 @@ private:
 public:
   OrientationUtility(const OrientationUtility&) = delete; // Copy Constructor Not Implemented
   OrientationUtility(OrientationUtility&&) = delete;      // Move Constructor
-  void operator=(const OrientationUtility&);     // Operator '=' Not Implemented
+  void operator=(const OrientationUtility&);              // Move assignment Not Implemented
 };
 
 #endif /* _OrientationUtility_H_ */

@@ -141,7 +141,7 @@ class EbsdLib_EXPORT H5CtfReader : public CtfReader
     bool                  m_ReadAllArrays;
 
     H5CtfReader(const H5CtfReader&) = delete;    // Copy Constructor Not Implemented
-    void operator=(const H5CtfReader&) = delete; // Operator '=' Not Implemented
+    void operator=(const H5CtfReader&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* _H5CTFREADER_H_ */

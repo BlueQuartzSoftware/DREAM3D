@@ -371,5 +371,5 @@ private:
   QString m_ReadImageFilterName = QString("ItkReadImage");
 
   EMMPMSegmentationTest(const EMMPMSegmentationTest&); // Copy Constructor Not Implemented
-  void operator=(const EMMPMSegmentationTest&);        // Operator '=' Not Implemented
+  void operator=(const EMMPMSegmentationTest&);        // Move assignment Not Implemented
 };

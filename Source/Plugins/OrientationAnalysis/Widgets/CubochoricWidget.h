@@ -62,7 +62,7 @@ class CubochoricWidget : public OrientationWidget, private Ui::CubochoricWidget
     QVector<double> getValues();
 
     CubochoricWidget(const CubochoricWidget&) = delete; // Copy Constructor Not Implemented
-    void operator=(const CubochoricWidget&) = delete;   // Operator '=' Not Implemented
+    void operator=(const CubochoricWidget&) = delete;   // Move assignment Not Implemented
 };
 
 #endif /* EBSDREFERENCEFRAMEWIDGET_H_ */

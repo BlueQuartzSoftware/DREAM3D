@@ -182,7 +182,7 @@ private:
 public:
   FindMicroTextureRegions(const FindMicroTextureRegions&) = delete; // Copy Constructor Not Implemented
   FindMicroTextureRegions(FindMicroTextureRegions&&) = delete;      // Move Constructor
-  void operator=(const FindMicroTextureRegions&);          // Operator '=' Not Implemented
+  void operator=(const FindMicroTextureRegions&);                   // Move assignment Not Implemented
 };
 
 #endif /* FindMicroTextureRegions_H_ */

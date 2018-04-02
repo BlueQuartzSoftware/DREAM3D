@@ -167,7 +167,7 @@ private:
 public:
   FindVolFractions(const FindVolFractions&) = delete; // Copy Constructor Not Implemented
   FindVolFractions(FindVolFractions&&) = delete;      // Move Constructor
-  void operator=(const FindVolFractions&);   // Operator '=' Not Implemented
+  void operator=(const FindVolFractions&);            // Move assignment Not Implemented
 };
 
 #endif /* FindVolFractions_H_ */

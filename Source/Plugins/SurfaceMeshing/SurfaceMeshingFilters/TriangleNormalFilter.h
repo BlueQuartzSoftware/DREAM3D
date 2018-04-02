@@ -53,7 +53,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(TriangleNormalFilter)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(TriangleNormalFilter, SurfaceMeshFilter)
 
-  virtual ~TriangleNormalFilter();
+  ~TriangleNormalFilter() override;
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleNormalsArrayPath)
   Q_PROPERTY(DataArrayPath SurfaceMeshTriangleNormalsArrayPath READ getSurfaceMeshTriangleNormalsArrayPath WRITE setSurfaceMeshTriangleNormalsArrayPath)
@@ -138,8 +138,11 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleNormals)
 
+public:
   TriangleNormalFilter(const TriangleNormalFilter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const TriangleNormalFilter&);       // Operator '=' Not Implemented
+  TriangleNormalFilter(TriangleNormalFilter&&) = delete;      // Move Constructor
+  TriangleNormalFilter& operator=(const TriangleNormalFilter&) = delete; // Copy Assignment Not Implemented
+  TriangleNormalFilter& operator=(TriangleNormalFilter&&) = delete;      // Move assignment Not Implemented
 };
 
 #endif /* _TriangleNormalFilter_H_ */

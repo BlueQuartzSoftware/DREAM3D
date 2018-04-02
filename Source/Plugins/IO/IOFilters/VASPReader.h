@@ -180,7 +180,7 @@ class VASPReader : public FileReader
     int totalAtoms;
 
     VASPReader(const VASPReader&) = delete;     // Copy Constructor Not Implemented
-    void operator=(const VASPReader&) = delete; // Operator '=' Not Implemented
+    void operator=(const VASPReader&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* VASPReader_H_ */

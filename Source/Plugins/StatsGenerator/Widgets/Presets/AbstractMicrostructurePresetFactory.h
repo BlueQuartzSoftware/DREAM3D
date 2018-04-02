@@ -140,7 +140,7 @@ class  AbstractMicrostructurePresetFactory
 
   private:
     AbstractMicrostructurePresetFactory(const     AbstractMicrostructurePresetFactory&); // Copy Constructor Not Implemented
-    void operator=(const     AbstractMicrostructurePresetFactory&); // Operator '=' Not Implemented
+    void operator=(const AbstractMicrostructurePresetFactory&);                          // Move assignment Not Implemented
 };
 
 #endif /* ABSTRACTMICROSTRUCTUREPRESETFACTORY_H_ */

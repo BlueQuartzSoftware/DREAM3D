@@ -294,5 +294,5 @@ public:
 
 private:
   WriteImagesTest(const WriteImagesTest&); // Copy Constructor Not Implemented
-  void operator=(const WriteImagesTest&);  // Operator '=' Not Implemented
+  void operator=(const WriteImagesTest&);  // Move assignment Not Implemented
 };

@@ -171,7 +171,7 @@ private:
 public:
   FindFeatureCentroids(const FindFeatureCentroids&) = delete; // Copy Constructor Not Implemented
   FindFeatureCentroids(FindFeatureCentroids&&) = delete;      // Move Constructor
-  void operator=(const FindFeatureCentroids&);       // Operator '=' Not Implemented
+  void operator=(const FindFeatureCentroids&);                // Move assignment Not Implemented
 };
 
 #endif /* FindFeatureCentroids_H_ */

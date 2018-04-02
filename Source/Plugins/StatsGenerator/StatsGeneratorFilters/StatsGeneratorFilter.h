@@ -215,7 +215,7 @@ private:
 public:
   StatsGeneratorFilter(const StatsGeneratorFilter&) = delete; // Copy Constructor Not Implemented
   StatsGeneratorFilter(StatsGeneratorFilter&&) = delete;      // Move Constructor
-  void operator=(const StatsGeneratorFilter&);       // Operator '=' Not Implemented
+  void operator=(const StatsGeneratorFilter&);                // Move assignment Not Implemented
 };
 
 

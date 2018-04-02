@@ -193,7 +193,7 @@ private:
 public:
   NeighborOrientationCorrelation(const NeighborOrientationCorrelation&) = delete; // Copy Constructor Not Implemented
   NeighborOrientationCorrelation(NeighborOrientationCorrelation&&) = delete;      // Move Constructor
-  void operator=(const NeighborOrientationCorrelation&);                 // Operator '=' Not Implemented
+  void operator=(const NeighborOrientationCorrelation&);                          // Move assignment Not Implemented
 };
 
 #endif /* NeighborOrientationCorrelation_H_ */

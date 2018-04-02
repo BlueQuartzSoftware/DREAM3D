@@ -203,7 +203,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(uint8_t, Colors)
 
   WriteImages(const WriteImages&);    // Copy Constructor Not Implemented
-  WriteImages& operator=(const WriteImages&) = delete; // Copy Assignment
+  WriteImages& operator=(const WriteImages&) = delete; // Copy Assignment Not Implemented
   WriteImages& operator=(WriteImages&&) = delete;      // Move Assignment
 };
 

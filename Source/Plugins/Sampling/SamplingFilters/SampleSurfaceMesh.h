@@ -176,7 +176,7 @@ private:
 public:
   SampleSurfaceMesh(const SampleSurfaceMesh&) = delete; // Copy Constructor Not Implemented
   SampleSurfaceMesh(SampleSurfaceMesh&&) = delete;      // Move Constructor
-  void operator=(const SampleSurfaceMesh&);    // Operator '=' Not Implemented
+  void operator=(const SampleSurfaceMesh&);             // Move assignment Not Implemented
 };
 
 #endif /* SampleSurfaceMesh_H_ */

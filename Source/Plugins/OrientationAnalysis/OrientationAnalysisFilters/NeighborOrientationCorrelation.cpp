@@ -105,7 +105,7 @@ private:
   AttributeMatrix* m_AttrMat = nullptr;
   int32_t m_VoxelArrayIndex = 0;
 
-  void operator=(const NeighborOrientationCorrelationTransferDataImpl&) = delete; // Operator '=' Not Implemented
+  void operator=(const NeighborOrientationCorrelationTransferDataImpl&) = delete; // Move assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------

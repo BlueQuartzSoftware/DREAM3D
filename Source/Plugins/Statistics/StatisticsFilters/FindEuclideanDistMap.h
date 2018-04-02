@@ -216,7 +216,7 @@ private:
 public:
   FindEuclideanDistMap(const FindEuclideanDistMap&) = delete; // Copy Constructor Not Implemented
   FindEuclideanDistMap(FindEuclideanDistMap&&) = delete;      // Move Constructor
-  void operator=(const FindEuclideanDistMap&);       // Operator '=' Not Implemented
+  void operator=(const FindEuclideanDistMap&);                // Move assignment Not Implemented
 };
 
 #endif /* FINDEUCLIDEANDISTMAP_H_ */

@@ -170,7 +170,7 @@ private:
 public:
   ErodeDilateCoordinationNumber(const ErodeDilateCoordinationNumber&) = delete; // Copy Constructor Not Implemented
   ErodeDilateCoordinationNumber(ErodeDilateCoordinationNumber&&) = delete;      // Move Constructor
-  void operator=(const ErodeDilateCoordinationNumber&);                // Operator '=' Not Implemented
+  void operator=(const ErodeDilateCoordinationNumber&);                         // Move assignment Not Implemented
 };
 
 #endif /* _ErodeDilateCoordination_Number_H_ */

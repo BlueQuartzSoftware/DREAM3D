@@ -54,7 +54,7 @@ protected:
 
 private:
   TrigonalLowIPFLegendPainter(const TrigonalLowIPFLegendPainter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const TrigonalLowIPFLegendPainter&);              // Operator '=' Not Implemented
+  void operator=(const TrigonalLowIPFLegendPainter&);                       // Move assignment Not Implemented
 };
 
 #endif /* _trigonalLowipflegendpainter_H_ */

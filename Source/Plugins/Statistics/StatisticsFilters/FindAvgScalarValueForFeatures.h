@@ -176,7 +176,7 @@ private:
 public:
   FindAvgScalarValueForFeatures(const FindAvgScalarValueForFeatures&) = delete; // Copy Constructor Not Implemented
   FindAvgScalarValueForFeatures(FindAvgScalarValueForFeatures&&) = delete;      // Move Constructor
-  void operator=(const FindAvgScalarValueForFeatures&);                // Operator '=' Not Implemented
+  void operator=(const FindAvgScalarValueForFeatures&);                         // Move assignment Not Implemented
 };
 
 #endif /* FindAvgScalarValueForFeatures_H_ */

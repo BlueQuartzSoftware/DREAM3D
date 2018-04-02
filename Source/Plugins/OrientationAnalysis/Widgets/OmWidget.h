@@ -60,7 +60,7 @@ class OmWidget : public OrientationWidget, private Ui::OmWidget
     QVector<double> getValues();
 
     OmWidget(const OmWidget&) = delete;       // Copy Constructor Not Implemented
-    void operator=(const OmWidget&) = delete; // Operator '=' Not Implemented
+    void operator=(const OmWidget&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* EBSDREFERENCEFRAMEWIDGET_H_ */

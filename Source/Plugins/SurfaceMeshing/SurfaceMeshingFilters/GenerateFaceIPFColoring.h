@@ -53,7 +53,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(GenerateFaceIPFColoring)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GenerateFaceIPFColoring, SurfaceMeshFilter)
 
-  virtual ~GenerateFaceIPFColoring();
+  ~GenerateFaceIPFColoring() override;
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
@@ -160,8 +160,11 @@ private:
 
   DEFINE_DATAARRAY_VARIABLE(uint8_t, SurfaceMeshFaceIPFColors)
 
+public:
   GenerateFaceIPFColoring(const GenerateFaceIPFColoring&) = delete; // Copy Constructor Not Implemented
-  void operator=(const GenerateFaceIPFColoring&);          // Operator '=' Not Implemented
+  GenerateFaceIPFColoring(GenerateFaceIPFColoring&&) = delete;      // Move Constructor
+  GenerateFaceIPFColoring& operator=(const GenerateFaceIPFColoring&) = delete; // Copy Assignment Not Implemented
+  GenerateFaceIPFColoring& operator=(GenerateFaceIPFColoring&&) = delete;      // Move assignment Not Implemented
 };
 
 #endif /* _GenerateFaceIPFColoring_H_ */

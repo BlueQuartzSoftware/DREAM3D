@@ -132,7 +132,7 @@ class EMMPMLib_EXPORT EMMPMUtilities
 
   private:
     EMMPMUtilities(const EMMPMUtilities&) = delete; // Copy Constructor Not Implemented
-    void operator=(const EMMPMUtilities&) = delete; // Operator '=' Not Implemented
+    void operator=(const EMMPMUtilities&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* EM_H_ */

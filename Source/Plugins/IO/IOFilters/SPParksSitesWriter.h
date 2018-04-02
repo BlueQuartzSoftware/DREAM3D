@@ -144,7 +144,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
   SPParksSitesWriter(const SPParksSitesWriter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const SPParksSitesWriter&);     // Operator '=' Not Implemented
+  void operator=(const SPParksSitesWriter&);              // Move assignment Not Implemented
 };
 
 #endif /* _SPParksSitesWriter_H_ */

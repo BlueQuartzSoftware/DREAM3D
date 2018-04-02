@@ -71,7 +71,7 @@ class OrientationWidget : public QWidget
 
   private:
     OrientationWidget(const OrientationWidget&) = delete; // Copy Constructor Not Implemented
-    void operator=(const OrientationWidget&) = delete;    // Operator '=' Not Implemented
+    void operator=(const OrientationWidget&) = delete;    // Move assignment Not Implemented
 };
 
 #endif /* EBSDREFERENCEFRAMEWIDGET_H_ */

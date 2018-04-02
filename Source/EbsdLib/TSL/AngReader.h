@@ -161,8 +161,7 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
     void parseDataLine(QByteArray& line, size_t i);
 
     AngReader(const AngReader&);    // Copy Constructor Not Implemented
-    void operator=(const AngReader&);  // Operator '=' Not Implemented
-
+    void operator=(const AngReader&); // Move assignment Not Implemented
 };
 
 #endif /* ANGREADER_H_ */

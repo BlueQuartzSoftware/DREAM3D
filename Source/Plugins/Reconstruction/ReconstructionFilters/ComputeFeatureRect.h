@@ -142,7 +142,7 @@ private:
 public:
   ComputeFeatureRect(const ComputeFeatureRect&) = delete; // Copy Constructor Not Implemented
   ComputeFeatureRect(ComputeFeatureRect&&) = delete;      // Move Constructor
-  void operator=(const ComputeFeatureRect&);     // Operator '=' Not Implemented
+  void operator=(const ComputeFeatureRect&);              // Move assignment Not Implemented
 };
 
 #endif /* _ComputeFeatureRect_H_ */
