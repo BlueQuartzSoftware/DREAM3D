@@ -173,7 +173,8 @@ private:
 public:
   EstablishShapeTypes(const EstablishShapeTypes&) = delete; // Copy Constructor Not Implemented
   EstablishShapeTypes(EstablishShapeTypes&&) = delete;      // Move Constructor
-  void operator=(const EstablishShapeTypes&);               // Move assignment Not Implemented
+  EstablishShapeTypes& operator=(const EstablishShapeTypes&) = delete; // Copy Assignment Not Implemented
+  EstablishShapeTypes& operator=(EstablishShapeTypes&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* _EstablishShapeTypes_H_ */

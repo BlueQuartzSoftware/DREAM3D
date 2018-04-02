@@ -208,7 +208,8 @@ private:
 public:
   FindFeatureClustering(const FindFeatureClustering&) = delete; // Copy Constructor Not Implemented
   FindFeatureClustering(FindFeatureClustering&&) = delete;      // Move Constructor
-  void operator=(const FindFeatureClustering&);                 // Move assignment Not Implemented
+  FindFeatureClustering& operator=(const FindFeatureClustering&) = delete; // Copy Assignment Not Implemented
+  FindFeatureClustering& operator=(FindFeatureClustering&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* FindFeatureClustering_H_ */

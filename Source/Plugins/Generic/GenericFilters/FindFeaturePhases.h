@@ -171,7 +171,8 @@ private:
 public:
   FindFeaturePhases(const FindFeaturePhases&) = delete; // Copy Constructor Not Implemented
   FindFeaturePhases(FindFeaturePhases&&) = delete;      // Move Constructor
-  void operator=(const FindFeaturePhases&);             // Move assignment Not Implemented
+  FindFeaturePhases& operator=(const FindFeaturePhases&) = delete; // Copy Assignment Not Implemented
+  FindFeaturePhases& operator=(FindFeaturePhases&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* FindFeaturePhases_H_ */

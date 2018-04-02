@@ -201,7 +201,8 @@ private:
 public:
   GoldfeatherReader(const GoldfeatherReader&) = delete; // Copy Constructor Not Implemented
   GoldfeatherReader(GoldfeatherReader&&) = delete;      // Move Constructor
-  void operator=(const GoldfeatherReader&);             // Move assignment Not Implemented
+  GoldfeatherReader& operator=(const GoldfeatherReader&) = delete; // Copy Assignment Not Implemented
+  GoldfeatherReader& operator=(GoldfeatherReader&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* _GoldfeatherReader_H_ */

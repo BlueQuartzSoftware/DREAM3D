@@ -536,7 +536,8 @@ private:
 public:
   InsertPrecipitatePhases(const InsertPrecipitatePhases&) = delete; // Copy Constructor Not Implemented
   InsertPrecipitatePhases(InsertPrecipitatePhases&&) = delete;      // Move Constructor
-  void operator=(const InsertPrecipitatePhases&);                   // Move assignment Not Implemented
+  InsertPrecipitatePhases& operator=(const InsertPrecipitatePhases&) = delete; // Copy Assignment Not Implemented
+  InsertPrecipitatePhases& operator=(InsertPrecipitatePhases&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* InsertPrecipitatePhases_H_ */

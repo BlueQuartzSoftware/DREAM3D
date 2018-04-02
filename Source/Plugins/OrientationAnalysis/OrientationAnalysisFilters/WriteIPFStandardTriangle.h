@@ -195,7 +195,8 @@ private:
 public:
   WriteIPFStandardTriangle(const WriteIPFStandardTriangle&) = delete; // Copy Constructor Not Implemented
   WriteIPFStandardTriangle(WriteIPFStandardTriangle&&) = delete;      // Move Constructor
-  void operator=(const WriteIPFStandardTriangle&);                    // Move assignment Not Implemented
+  WriteIPFStandardTriangle& operator=(const WriteIPFStandardTriangle&) = delete; // Copy Assignment Not Implemented
+  WriteIPFStandardTriangle& operator=(WriteIPFStandardTriangle&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* _WriteIPFStandardTriangle_H_ */

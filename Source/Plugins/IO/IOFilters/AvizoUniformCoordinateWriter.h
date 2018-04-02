@@ -202,7 +202,8 @@ private:
 public:
   AvizoUniformCoordinateWriter(const AvizoUniformCoordinateWriter&) = delete; // Copy Constructor Not Implemented
   AvizoUniformCoordinateWriter(AvizoUniformCoordinateWriter&&) = delete;      // Move Constructor
-  void operator=(const AvizoUniformCoordinateWriter&);                        // Move assignment Not Implemented
+  AvizoUniformCoordinateWriter& operator=(const AvizoUniformCoordinateWriter&) = delete; // Copy Assignment Not Implemented
+  AvizoUniformCoordinateWriter& operator=(AvizoUniformCoordinateWriter&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* AvizoUniformCoordinateWriter_H_ */

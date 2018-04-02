@@ -196,7 +196,8 @@ private:
 public:
   AbaqusSurfaceMeshWriter(const AbaqusSurfaceMeshWriter&) = delete; // Copy Constructor Not Implemented
   AbaqusSurfaceMeshWriter(AbaqusSurfaceMeshWriter&&) = delete;      // Move Constructor
-  void operator=(const AbaqusSurfaceMeshWriter&);                   // Move assignment Not Implemented
+  AbaqusSurfaceMeshWriter& operator=(const AbaqusSurfaceMeshWriter&) = delete; // Copy Assignment Not Implemented
+  AbaqusSurfaceMeshWriter& operator=(AbaqusSurfaceMeshWriter&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* _AbaqusSurfaceMeshWriter_H_ */

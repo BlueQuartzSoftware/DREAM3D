@@ -211,7 +211,8 @@ private:
 public:
   InitializeSyntheticVolume(const InitializeSyntheticVolume&) = delete; // Copy Constructor Not Implemented
   InitializeSyntheticVolume(InitializeSyntheticVolume&&) = delete;      // Move Constructor
-  void operator=(const InitializeSyntheticVolume&);                     // Move assignment Not Implemented
+  InitializeSyntheticVolume& operator=(const InitializeSyntheticVolume&) = delete; // Copy Assignment Not Implemented
+  InitializeSyntheticVolume& operator=(InitializeSyntheticVolume&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* _InitializeSyntheticVolume_H_ */

@@ -196,7 +196,8 @@ private:
 public:
   FindSlipTransmissionMetrics(const FindSlipTransmissionMetrics&) = delete; // Copy Constructor Not Implemented
   FindSlipTransmissionMetrics(FindSlipTransmissionMetrics&&) = delete;      // Move Constructor
-  void operator=(const FindSlipTransmissionMetrics&);                       // Move assignment Not Implemented
+  FindSlipTransmissionMetrics& operator=(const FindSlipTransmissionMetrics&) = delete; // Copy Assignment Not Implemented
+  FindSlipTransmissionMetrics& operator=(FindSlipTransmissionMetrics&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* FindSlipTransmissionMetrics_H_ */

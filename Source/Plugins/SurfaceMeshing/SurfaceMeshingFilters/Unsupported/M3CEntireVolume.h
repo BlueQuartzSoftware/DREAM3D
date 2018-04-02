@@ -206,7 +206,8 @@ private:
 public:
   M3CEntireVolume(const M3CEntireVolume&) = delete; // Copy Constructor Not Implemented
   M3CEntireVolume(M3CEntireVolume&&) = delete;      // Move Constructor
-  void operator=(const M3CEntireVolume&);           // Move assignment Not Implemented
+  M3CEntireVolume& operator=(const M3CEntireVolume&) = delete; // Copy Assignment Not Implemented
+  M3CEntireVolume& operator=(M3CEntireVolume&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* _M3CEntireVolume_H_ */

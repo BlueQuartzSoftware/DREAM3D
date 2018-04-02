@@ -221,7 +221,8 @@ private:
 public:
   CropImageGeometry(const CropImageGeometry&) = delete; // Copy Constructor Not Implemented
   CropImageGeometry(CropImageGeometry&&) = delete;      // Move Constructor
-  void operator=(const CropImageGeometry&);             // Move assignment Not Implemented
+  CropImageGeometry& operator=(const CropImageGeometry&) = delete; // Copy Assignment Not Implemented
+  CropImageGeometry& operator=(CropImageGeometry&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* CropImageGeometry_H_ */

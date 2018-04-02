@@ -185,7 +185,8 @@ private:
 public:
   ConvertColorToGrayScale(const ConvertColorToGrayScale&) = delete; // Copy Constructor Not Implemented
   ConvertColorToGrayScale(ConvertColorToGrayScale&&) = delete;      // Move Constructor
-  void operator=(const ConvertColorToGrayScale&);                   // Move assignment Not Implemented
+  ConvertColorToGrayScale& operator=(const ConvertColorToGrayScale&) = delete; // Copy Assignment Not Implemented
+  ConvertColorToGrayScale& operator=(ConvertColorToGrayScale&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* ConvertColorToGrayScale_H_ */

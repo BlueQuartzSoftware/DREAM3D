@@ -182,7 +182,8 @@ private:
 public:
   ChangeResolution(const ChangeResolution&) = delete; // Copy Constructor Not Implemented
   ChangeResolution(ChangeResolution&&) = delete;      // Move Constructor
-  void operator=(const ChangeResolution&);            // Move assignment Not Implemented
+  ChangeResolution& operator=(const ChangeResolution&) = delete; // Copy Assignment Not Implemented
+  ChangeResolution& operator=(ChangeResolution&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* CHANGERESOLUTION_H_ */

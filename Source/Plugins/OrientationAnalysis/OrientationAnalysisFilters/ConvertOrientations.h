@@ -173,7 +173,8 @@ private:
 public:
   ConvertOrientations(const ConvertOrientations&) = delete; // Copy Constructor Not Implemented
   ConvertOrientations(ConvertOrientations&&) = delete;      // Move Constructor
-  void operator=(const ConvertOrientations&);               // Move assignment Not Implemented
+  ConvertOrientations& operator=(const ConvertOrientations&) = delete; // Copy Assignment Not Implemented
+  ConvertOrientations& operator=(ConvertOrientations&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* ConvertOrientations_H_ */

@@ -236,7 +236,8 @@ private:
 public:
   WritePoleFigure(const WritePoleFigure&) = delete; // Copy Constructor Not Implemented
   WritePoleFigure(WritePoleFigure&&) = delete;      // Move Constructor
-  void operator=(const WritePoleFigure&);           // Move assignment Not Implemented
+  WritePoleFigure& operator=(const WritePoleFigure&) = delete; // Copy Assignment Not Implemented
+  WritePoleFigure& operator=(WritePoleFigure&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* _WritePoleFigure_H_ */

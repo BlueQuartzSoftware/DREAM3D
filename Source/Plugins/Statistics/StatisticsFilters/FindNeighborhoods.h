@@ -189,7 +189,8 @@ private:
 public:
   FindNeighborhoods(const FindNeighborhoods&) = delete; // Copy Constructor Not Implemented
   FindNeighborhoods(FindNeighborhoods&&) = delete;      // Move Constructor
-  void operator=(const FindNeighborhoods&);    // Operator '=' Not Implemented
+  FindNeighborhoods& operator=(const FindNeighborhoods&) = delete; // Copy Assignment Not Implemented
+  FindNeighborhoods& operator=(FindNeighborhoods&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* FINDNEIGHBORHOODS_H_ */

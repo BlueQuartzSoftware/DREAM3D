@@ -205,7 +205,8 @@ private:
 public:
   CorrelateValuesWithVectorDirection(const CorrelateValuesWithVectorDirection&) = delete; // Copy Constructor Not Implemented
   CorrelateValuesWithVectorDirection(CorrelateValuesWithVectorDirection&&) = delete;      // Move Constructor
-  void operator=(const CorrelateValuesWithVectorDirection&);                              // Move assignment Not Implemented
+  CorrelateValuesWithVectorDirection& operator=(const CorrelateValuesWithVectorDirection&) = delete; // Copy Assignment Not Implemented
+  CorrelateValuesWithVectorDirection& operator=(CorrelateValuesWithVectorDirection&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* CorrelateValuesWithVectorDirection_H_ */

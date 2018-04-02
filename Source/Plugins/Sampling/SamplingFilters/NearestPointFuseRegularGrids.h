@@ -163,7 +163,8 @@ private:
 public:
   NearestPointFuseRegularGrids(const NearestPointFuseRegularGrids&) = delete; // Copy Constructor Not Implemented
   NearestPointFuseRegularGrids(NearestPointFuseRegularGrids&&) = delete;      // Move Constructor
-  void operator=(const NearestPointFuseRegularGrids&);                        // Move assignment Not Implemented
+  NearestPointFuseRegularGrids& operator=(const NearestPointFuseRegularGrids&) = delete; // Copy Assignment Not Implemented
+  NearestPointFuseRegularGrids& operator=(NearestPointFuseRegularGrids&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* NearestPointFuseRegularGrids_H_ */

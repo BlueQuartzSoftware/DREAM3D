@@ -275,7 +275,8 @@ private:
 public:
   VtkStructuredPointsReader(const VtkStructuredPointsReader&) = delete; // Copy Constructor Not Implemented
   VtkStructuredPointsReader(VtkStructuredPointsReader&&) = delete;      // Move Constructor
-  void operator=(const VtkStructuredPointsReader&);                     // Move assignment Not Implemented
+  VtkStructuredPointsReader& operator=(const VtkStructuredPointsReader&) = delete; // Copy Assignment Not Implemented
+  VtkStructuredPointsReader& operator=(VtkStructuredPointsReader&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* VtkStructuredPointsReader_H_ */

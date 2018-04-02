@@ -178,7 +178,8 @@ private:
 public:
   GBCDTriangleDumper(const GBCDTriangleDumper&) = delete; // Copy Constructor Not Implemented
   GBCDTriangleDumper(GBCDTriangleDumper&&) = delete;      // Move Constructor
-  void operator=(const GBCDTriangleDumper&);              // Move assignment Not Implemented
+  GBCDTriangleDumper& operator=(const GBCDTriangleDumper&) = delete; // Copy Assignment Not Implemented
+  GBCDTriangleDumper& operator=(GBCDTriangleDumper&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* _GBCDTriangleDumper_H_ */

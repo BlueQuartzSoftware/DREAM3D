@@ -189,7 +189,8 @@ private:
 public:
   GenerateEulerColors(const GenerateEulerColors&) = delete; // Copy Constructor Not Implemented
   GenerateEulerColors(GenerateEulerColors&&) = delete;      // Move Constructor
-  void operator=(const GenerateEulerColors&);               // Move assignment Not Implemented
+  GenerateEulerColors& operator=(const GenerateEulerColors&) = delete; // Copy Assignment Not Implemented
+  GenerateEulerColors& operator=(GenerateEulerColors&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* _GenerateEulerColors_H_ */

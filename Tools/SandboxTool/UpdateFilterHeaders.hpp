@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 #include <QtCore/QString>
 
 #include "Sandbox.h"
@@ -15,10 +17,10 @@ public:
     QString contents;
     QFileInfo fi(hFile);
 
-    //  if (fi.baseName().compare("IdentifySample") != 0)
-    //  {
-    //    return false;
-    //  }
+    //    if (fi.baseName().compare("FindNumFeatures") != 0)
+    //    {
+    //      return;
+    //    }
 
     {
       // Read the Source File
@@ -38,24 +40,33 @@ public:
 
     QString baseName = fi.baseName();
     QString cpyCtr = QString("%1(const %1&) = delete;").arg(baseName);
-    QString mvCtr = QString("%1(%1&&) = delete;                 // Move Constructor").arg(baseName);
+    QString mvCtr = QString("%1(%1&&) = delete;").arg(baseName);
     QString cpyAssign = QString("void operator=(const %1&) = delete;").arg(baseName);
-    QString cpyAssignRepl = QString("%1& operator=(const %1&) = delete; // Copy Assignment Not Implemented").arg(baseName);
-    QString mvAssign = QString("%1& operator=(%1&&) = delete;      // Move Assignment").arg(baseName);
+    QString cpyAssignRepl = QString("    %1& operator=(const %1&) = delete; // Copy Assignment Not Implemented").arg(baseName);
+    QString mvAssign = QString("    %1& operator=(%1&&) = delete;      // Move Assignment Not Implemented").arg(baseName);
+    QString mvAssign1 = QString("void operator=(const %1&);").arg(baseName);
 
     while(sourceLines.hasNext())
     {
       QString line = sourceLines.next();
       if(line.contains(cpyCtr) && isFilter)
       {
-        outLines.push_back("  public:");
+        // outLines.push_back("  public:");
         outLines.push_back(line);
-        outLines.push_back(mvCtr);
+        // outLines.push_back(mvCtr);
+        didReplace = true;
       }
       else if(line.contains(cpyAssign) && isFilter)
       {
         outLines.push_back(cpyAssignRepl);
         outLines.push_back(mvAssign);
+        didReplace = true;
+      }
+      else if(line.contains(mvAssign1) && isFilter)
+      {
+        outLines.push_back(cpyAssignRepl);
+        outLines.push_back(mvAssign);
+        didReplace = true;
       }
       else if(line.contains("virtual const QString getCompiledLibraryName() const override"))
       {
@@ -159,6 +170,7 @@ public:
       }
       else if(line.contains(": public AbstractFilter"))
       {
+        std::cout << "isFilter = True" << std::endl;
         isFilter = true;
         outLines.push_back(line);
       }
@@ -168,10 +180,10 @@ public:
       }
     }
 
-    //  if(didReplace)
-    //  {
-    //    std::cout << hFile.toStdString() << std::endl;
-    //  }
+    if(didReplace)
+    {
+      std::cout << hFile.toStdString() << std::endl;
+    }
 
     writeOutput(didReplace, outLines, hFile);
   }

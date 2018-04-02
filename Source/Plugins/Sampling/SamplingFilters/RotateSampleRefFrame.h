@@ -171,7 +171,8 @@ private:
 public:
   RotateSampleRefFrame(const RotateSampleRefFrame&) = delete; // Copy Constructor Not Implemented
   RotateSampleRefFrame(RotateSampleRefFrame&&) = delete;      // Move Constructor
-  void operator=(const RotateSampleRefFrame&);                // Move assignment Not Implemented
+  RotateSampleRefFrame& operator=(const RotateSampleRefFrame&) = delete; // Copy Assignment Not Implemented
+  RotateSampleRefFrame& operator=(RotateSampleRefFrame&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* RotateSampleRefFrame_H_ */

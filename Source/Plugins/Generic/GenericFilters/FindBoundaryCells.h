@@ -172,7 +172,8 @@ private:
 public:
   FindBoundaryCells(const FindBoundaryCells&) = delete; // Copy Constructor Not Implemented
   FindBoundaryCells(FindBoundaryCells&&) = delete;      // Move Constructor
-  void operator=(const FindBoundaryCells&);             // Move assignment Not Implemented
+  FindBoundaryCells& operator=(const FindBoundaryCells&) = delete; // Copy Assignment Not Implemented
+  FindBoundaryCells& operator=(FindBoundaryCells&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* FindBoundaryCells_H_ */

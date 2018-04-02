@@ -204,7 +204,8 @@ private:
 public:
   SurfaceMeshToVtk(const SurfaceMeshToVtk&) = delete; // Copy Constructor Not Implemented
   SurfaceMeshToVtk(SurfaceMeshToVtk&&) = delete;      // Move Constructor
-  void operator=(const SurfaceMeshToVtk&);            // Move assignment Not Implemented
+  SurfaceMeshToVtk& operator=(const SurfaceMeshToVtk&) = delete; // Copy Assignment Not Implemented
+  SurfaceMeshToVtk& operator=(SurfaceMeshToVtk&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* _SurfaceMeshToVtk_H_ */

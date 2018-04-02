@@ -138,7 +138,8 @@ private:
 public:
   GenerateNodeTriangleConnectivity(const GenerateNodeTriangleConnectivity&) = delete; // Copy Constructor Not Implemented
   GenerateNodeTriangleConnectivity(GenerateNodeTriangleConnectivity&&) = delete;      // Move Constructor
-  void operator=(const GenerateNodeTriangleConnectivity&);                            // Move assignment Not Implemented
+  GenerateNodeTriangleConnectivity& operator=(const GenerateNodeTriangleConnectivity&) = delete; // Copy Assignment Not Implemented
+  GenerateNodeTriangleConnectivity& operator=(GenerateNodeTriangleConnectivity&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* _GenerateNodeTriangleConnectivity_H_ */

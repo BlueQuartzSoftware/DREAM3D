@@ -248,7 +248,8 @@ private:
 public:
   VtkRectilinearGridWriter(const VtkRectilinearGridWriter&) = delete; // Copy Constructor Not Implemented
   VtkRectilinearGridWriter(VtkRectilinearGridWriter&&) = delete;      // Move Constructor
-  void operator=(const VtkRectilinearGridWriter&);                    // Move assignment Not Implemented
+  VtkRectilinearGridWriter& operator=(const VtkRectilinearGridWriter&) = delete; // Copy Assignment Not Implemented
+  VtkRectilinearGridWriter& operator=(VtkRectilinearGridWriter&&) = delete;      // Move Assignment Not Implemented
 
   void write(const QString& file);
 };

@@ -140,7 +140,8 @@ private:
 public:
   FindDifferenceMap(const FindDifferenceMap&) = delete; // Copy Constructor Not Implemented
   FindDifferenceMap(FindDifferenceMap&&) = delete;      // Move Constructor
-  void operator=(const FindDifferenceMap&);             // Move assignment Not Implemented
+  FindDifferenceMap& operator=(const FindDifferenceMap&) = delete; // Copy Assignment Not Implemented
+  FindDifferenceMap& operator=(FindDifferenceMap&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* _FindDifferenceMap_H_ */

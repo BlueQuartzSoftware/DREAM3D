@@ -313,7 +313,8 @@ private:
 public:
   MatchCrystallography(const MatchCrystallography&) = delete; // Copy Constructor Not Implemented
   MatchCrystallography(MatchCrystallography&&) = delete;      // Move Constructor
-  void operator=(const MatchCrystallography&);                // Move assignment Not Implemented
+  MatchCrystallography& operator=(const MatchCrystallography&) = delete; // Copy Assignment Not Implemented
+  MatchCrystallography& operator=(MatchCrystallography&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* MATCHCRYSTALLOGRAPHY_H_ */

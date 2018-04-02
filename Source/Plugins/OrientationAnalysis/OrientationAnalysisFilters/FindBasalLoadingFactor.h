@@ -179,7 +179,8 @@ private:
 public:
   FindBasalLoadingFactor(const FindBasalLoadingFactor&) = delete; // Copy Constructor Not Implemented
   FindBasalLoadingFactor(FindBasalLoadingFactor&&) = delete;      // Move Constructor
-  void operator=(const FindBasalLoadingFactor&);                  // Move assignment Not Implemented
+  FindBasalLoadingFactor& operator=(const FindBasalLoadingFactor&) = delete; // Copy Assignment Not Implemented
+  FindBasalLoadingFactor& operator=(FindBasalLoadingFactor&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* FindBasalLoadingFactor_H_ */

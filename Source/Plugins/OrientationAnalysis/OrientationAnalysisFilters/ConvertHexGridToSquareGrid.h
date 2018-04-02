@@ -199,7 +199,8 @@ private:
 public:
   ConvertHexGridToSquareGrid(const ConvertHexGridToSquareGrid&) = delete; // Copy Constructor Not Implemented
   ConvertHexGridToSquareGrid(ConvertHexGridToSquareGrid&&) = delete;      // Move Constructor
-  void operator=(const ConvertHexGridToSquareGrid&);                      // Move assignment Not Implemented
+  ConvertHexGridToSquareGrid& operator=(const ConvertHexGridToSquareGrid&) = delete; // Copy Assignment Not Implemented
+  ConvertHexGridToSquareGrid& operator=(ConvertHexGridToSquareGrid&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* ConvertHexGridToSquareGrid_H_ */

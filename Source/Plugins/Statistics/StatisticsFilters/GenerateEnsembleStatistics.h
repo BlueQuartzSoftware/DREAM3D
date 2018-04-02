@@ -358,7 +358,8 @@ private:
 public:
   GenerateEnsembleStatistics(const GenerateEnsembleStatistics&) = delete; // Copy Constructor Not Implemented
   GenerateEnsembleStatistics(GenerateEnsembleStatistics&&) = delete;      // Move Constructor
-  void operator=(const GenerateEnsembleStatistics&);                      // Move assignment Not Implemented
+  GenerateEnsembleStatistics& operator=(const GenerateEnsembleStatistics&) = delete; // Copy Assignment Not Implemented
+  GenerateEnsembleStatistics& operator=(GenerateEnsembleStatistics&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* GenerateEnsembleStatistics_H_ */

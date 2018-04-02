@@ -165,7 +165,8 @@ private:
 public:
   Stereographic3D(const Stereographic3D&) = delete; // Copy Constructor Not Implemented
   Stereographic3D(Stereographic3D&&) = delete;      // Move Constructor
-  void operator=(const Stereographic3D&);           // Move assignment Not Implemented
+  Stereographic3D& operator=(const Stereographic3D&) = delete; // Copy Assignment Not Implemented
+  Stereographic3D& operator=(Stereographic3D&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* _Stereographic3D_H_ */

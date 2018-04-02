@@ -199,7 +199,8 @@ private:
 public:
   GeneratePrimaryStatsData(const GeneratePrimaryStatsData&) = delete; // Copy Constructor Not Implemented
   GeneratePrimaryStatsData(GeneratePrimaryStatsData&&) = delete;      // Move Constructor
-  void operator=(const GeneratePrimaryStatsData&);                    // Move assignment Not Implemented
+  GeneratePrimaryStatsData& operator=(const GeneratePrimaryStatsData&) = delete; // Copy Assignment Not Implemented
+  GeneratePrimaryStatsData& operator=(GeneratePrimaryStatsData&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* _GeneratePrimaryStatsData_H_ */

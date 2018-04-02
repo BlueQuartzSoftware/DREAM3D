@@ -202,7 +202,8 @@ private:
 public:
   FindTwinBoundarySchmidFactors(const FindTwinBoundarySchmidFactors&) = delete; // Copy Constructor Not Implemented
   FindTwinBoundarySchmidFactors(FindTwinBoundarySchmidFactors&&) = delete;      // Move Constructor
-  void operator=(const FindTwinBoundarySchmidFactors&);                         // Move assignment Not Implemented
+  FindTwinBoundarySchmidFactors& operator=(const FindTwinBoundarySchmidFactors&) = delete; // Copy Assignment Not Implemented
+  FindTwinBoundarySchmidFactors& operator=(FindTwinBoundarySchmidFactors&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* FindTwinBoundarySchmidFactors_H_ */

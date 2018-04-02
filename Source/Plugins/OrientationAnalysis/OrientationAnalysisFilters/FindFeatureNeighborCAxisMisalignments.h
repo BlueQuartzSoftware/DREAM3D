@@ -192,7 +192,8 @@ private:
 public:
   FindFeatureNeighborCAxisMisalignments(const FindFeatureNeighborCAxisMisalignments&) = delete; // Copy Constructor Not Implemented
   FindFeatureNeighborCAxisMisalignments(FindFeatureNeighborCAxisMisalignments&&) = delete;      // Move Constructor
-  void operator=(const FindFeatureNeighborCAxisMisalignments&);                                 // Move assignment Not Implemented
+  FindFeatureNeighborCAxisMisalignments& operator=(const FindFeatureNeighborCAxisMisalignments&) = delete; // Copy Assignment Not Implemented
+  FindFeatureNeighborCAxisMisalignments& operator=(FindFeatureNeighborCAxisMisalignments&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* FindFeatureNeighborCAxisMisalignments_H_ */

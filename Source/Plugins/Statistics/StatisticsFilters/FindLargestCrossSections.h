@@ -175,7 +175,8 @@ private:
 public:
   FindLargestCrossSections(const FindLargestCrossSections&) = delete; // Copy Constructor Not Implemented
   FindLargestCrossSections(FindLargestCrossSections&&) = delete;      // Move Constructor
-  void operator=(const FindLargestCrossSections&);                    // Move assignment Not Implemented
+  FindLargestCrossSections& operator=(const FindLargestCrossSections&) = delete; // Copy Assignment Not Implemented
+  FindLargestCrossSections& operator=(FindLargestCrossSections&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* FindLargestCrossSections_H_ */
