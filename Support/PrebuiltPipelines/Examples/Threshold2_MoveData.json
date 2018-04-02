@@ -1,0 +1,269 @@
+{
+    "00": {
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Pipeline Annotation",
+        "Filter_Name": "PipelineAnnotation",
+        "Filter_Uuid": "{8cc2198b-6a9d-5bf4-b8c0-b0878bb57f10}",
+        "Summary": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This pipeline shows using the newer threshold objects filter and moving data around in the data structure.</p></body></html>"
+    },
+    "01": {
+        "CellAttributeMatrixName": "CellData",
+        "CellEnsembleAttributeMatrixName": "CellEnsembleData",
+        "DataContainerName": "ImageDataContainer",
+        "FilterVersion": "6.4.323",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Import EDAX EBSD Data (.ang)",
+        "Filter_Name": "ReadAngData",
+        "Filter_Uuid": "{b8e128a8-c2a3-5e6c-a7ad-e4fb864e5d40}",
+        "InputFile": "Data/SmallIN100/Slice_1.ang"
+    },
+    "02": {
+        "CellAttributeMatrixPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "6.4.323",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Rotate Sample Reference Frame",
+        "Filter_Name": "RotateSampleRefFrame",
+        "Filter_Uuid": "{e25d9b4c-2b37-578c-b1de-cf7032b5ef19}",
+        "RotationAngle": 180,
+        "RotationAxis": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+        }
+    },
+    "03": {
+        "CellEulerAnglesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "EulerAngles",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "6.4.323",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Rotate Euler Reference Frame",
+        "Filter_Name": "RotateEulerRefFrame",
+        "Filter_Uuid": "{ef9420b2-8c46-55f3-8ae4-f53790639de4}",
+        "RotationAngle": 90,
+        "RotationAxis": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+        }
+    },
+    "04": {
+        "DestinationArrayName": "Mask",
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Threshold Objects 2",
+        "Filter_Name": "MultiThresholdObjects2",
+        "Filter_Uuid": "{686d5393-2b02-5c86-b887-dd81a8ae80f2}",
+        "SelectedThresholds": {
+            "Attribute Matrix Name": "CellData",
+            "Data Container Name": "ImageDataContainer",
+            "Thresholds": [
+                {
+                    "Attribute Array Name": "Confidence Index",
+                    "Comparison Operator": 1,
+                    "Comparison Value": 0.1,
+                    "Union Operator": 0
+                },
+                {
+                    "Attribute Array Name": "Image Quality",
+                    "Comparison Operator": 1,
+                    "Comparison Value": 400,
+                    "Union Operator": 0
+                }
+            ]
+        }
+    },
+    "05": {
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Pipeline Annotation",
+        "Filter_Name": "PipelineAnnotation",
+        "Filter_Uuid": "{8cc2198b-6a9d-5bf4-b8c0-b0878bb57f10}",
+        "Summary": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">These next filters show creating a new DataContainer and AttributeMatrix, then we move some data arrays from the ImageDataContainer/CellData Attribute Matrix to the new attributeMatrix using the &quot;Move Multi Data&quot; filter and the &quot;Move Data&quot; filter.</p></body></html>"
+    },
+    "06": {
+        "CreatedDataContainer": "Extra_DataContainer",
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Create Data Container",
+        "Filter_Name": "CreateDataContainer",
+        "Filter_Uuid": "{816fbe6b-7c38-581b-b149-3f839fb65b93}"
+    },
+    "07": {
+        "AttributeMatrixType": 13,
+        "CreatedAttributeMatrix": {
+            "Attribute Matrix Name": "Positions",
+            "Data Array Name": "",
+            "Data Container Name": "Extra_DataContainer"
+        },
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Create Attribute Matrix",
+        "Filter_Name": "CreateAttributeMatrix",
+        "Filter_Uuid": "{93375ef0-7367-5372-addc-baa019b1b341}",
+        "TupleDimensions": {
+            "Column Headers": [
+                "0",
+                "1",
+                "2"
+            ],
+            "DefaultColCount": 0,
+            "DefaultRowCount": 0,
+            "HasDynamicCols": true,
+            "HasDynamicRows": false,
+            "MinColCount": 0,
+            "MinRowCount": 0,
+            "Row Headers": [
+                "0"
+            ],
+            "Table Data": [
+                [
+                    189,
+                    201,
+                    1
+                ]
+            ]
+        }
+    },
+    "08": {
+        "AttributeMatrixDestination": {
+            "Attribute Matrix Name": "Positions",
+            "Data Array Name": "",
+            "Data Container Name": "Extra_DataContainer"
+        },
+        "AttributeMatrixSources": [
+            {
+                "Attribute Matrix Name": "Positions",
+                "Data Array Name": "",
+                "Data Container Name": "ImageDataContainer"
+            }
+        ],
+        "DataArraySources": [
+            {
+                "Attribute Matrix Name": "CellData",
+                "Data Array Name": "X Position",
+                "Data Container Name": "ImageDataContainer"
+            },
+            {
+                "Attribute Matrix Name": "CellData",
+                "Data Array Name": "Y Position",
+                "Data Container Name": "ImageDataContainer"
+            }
+        ],
+        "DataContainerDestination": "Extra_DataContainer",
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Move Multi Data",
+        "Filter_Name": "MoveMultiData",
+        "Filter_Uuid": "{e3702900-a6c1-59e1-9180-b57557a7b193}",
+        "WhatToMove": 1
+    },
+    "09": {
+        "AttributeMatrixDestination": {
+            "Attribute Matrix Name": "Positions",
+            "Data Array Name": "",
+            "Data Container Name": "Extra_DataContainer"
+        },
+        "AttributeMatrixSource": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": ""
+        },
+        "DataArraySource": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "SEM Signal",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "DataContainerDestination": "",
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Move Data",
+        "Filter_Name": "MoveData",
+        "Filter_Uuid": "{fe2cbe09-8ae1-5bea-9397-fd5741091fdb}",
+        "WhatToMove": 1
+    },
+    "10": {
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Pipeline Annotation",
+        "Filter_Name": "PipelineAnnotation",
+        "Filter_Uuid": "{8cc2198b-6a9d-5bf4-b8c0-b0878bb57f10}",
+        "Summary": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This next part simply changes (arbitrarily) the Origin and Resolution of the Image Geometry that the data resides on.</p></body></html>"
+    },
+    "11": {
+        "ChangeOrigin": 1,
+        "ChangeResolution": 1,
+        "DataContainerName": "ImageDataContainer",
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Set Origin & Resolution (Image)",
+        "Filter_Name": "SetOriginResolutionImageGeom",
+        "Filter_Uuid": "{6d3a3852-6251-5d2e-b749-6257fd0d8951}",
+        "Origin": {
+            "x": 50,
+            "y": 25,
+            "z": 10
+        },
+        "Resolution": {
+            "x": 1,
+            "y": 1,
+            "z": 25
+        }
+    },
+    "12": {
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Write DREAM.3D Data File",
+        "Filter_Name": "DataContainerWriter",
+        "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
+        "OutputFile": "Data/Output/Example/OriginChange.dream3d",
+        "WriteTimeSeries": 0,
+        "WriteXdmfFile": 1
+    },
+    "13": {
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Pipeline Annotation",
+        "Filter_Name": "PipelineAnnotation",
+        "Filter_Uuid": "{8cc2198b-6a9d-5bf4-b8c0-b0878bb57f10}",
+        "Summary": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This next part simply scales the image geometry by some arbitrary amount.</p></body></html>"
+    },
+    "14": {
+        "ApplyToSurfaceMesh": 0,
+        "ApplyToVoxelVolume": 1,
+        "DataContainerName": "ImageDataContainer",
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Change Scaling of Volume",
+        "Filter_Name": "ScaleVolume",
+        "Filter_Uuid": "{3cf44c27-9149-5548-945a-deef1dc994a8}",
+        "ScaleFactor": {
+            "x": 2,
+            "y": 2,
+            "z": 2
+        },
+        "SurfaceDataContainerName": ""
+    },
+    "15": {
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Write DREAM.3D Data File",
+        "Filter_Name": "DataContainerWriter",
+        "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
+        "OutputFile": "Data/Output/Example/ScaleVolume.dream3d",
+        "WriteTimeSeries": 0,
+        "WriteXdmfFile": 1
+    },
+    "PipelineBuilder": {
+        "Name": "Threshold2_MoveData",
+        "Number_Filters": 16,
+        "Version": 6
+    }
+}

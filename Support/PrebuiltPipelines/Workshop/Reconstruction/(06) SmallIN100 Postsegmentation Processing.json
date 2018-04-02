@@ -3,7 +3,7 @@
         "FilterVersion": "1.0.600",
         "Filter_Human_Label": "Read DREAM.3D Data File",
         "Filter_Name": "DataContainerReader",
-        "InputFile": "Data/Output/SmallIN100Cleaned.dream3d",
+        "InputFile": "Data/Output/Reconstruction/05_SmallIN100_Segmentation.dream3d",
         "InputFileDataContainerArrayProxy": {
             "Data Containers": [
                 {
@@ -430,7 +430,7 @@
         "FilterVersion": "1.0.600",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
-        "OutputFile": "Data/Output/SmallIN100Cleaned.dream3d",
+        "OutputFile": "Data/Output/Reconstruction/06_SmallIN100_Postsegmentation.dream3d",
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {

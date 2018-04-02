@@ -13,7 +13,7 @@
         "Filter_Human_Label": "Import Orientation File(s) to H5EBSD",
         "Filter_Name": "EbsdToH5Ebsd",
         "InputPath": "Data/SmallIN100",
-        "OutputFile": "Data/Output/SmallIN100.h5ebsd",
+        "OutputFile": "Data/Output/Reconstruction/SmallIN100.h5ebsd",
         "PaddingDigits": 1,
         "RefFrameZDir": 1,
         "SampleTransformation": {

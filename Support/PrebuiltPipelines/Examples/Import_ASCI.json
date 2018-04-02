@@ -1,0 +1,466 @@
+{
+    "0": {
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Pipeline Annotation",
+        "Filter_Name": "PipelineAnnotation",
+        "Filter_Uuid": "{8cc2198b-6a9d-5bf4-b8c0-b0878bb57f10}",
+        "Summary": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This pipeline shows how to import column oriented data into DREAM.3D.</p>\n<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"># Create DataContainer #</p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">We need somewhere to store the data</p>\n<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"># Create Geometry #</p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">Create the proper geometry that the data is stored on</p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /># Import ASCII Data #</p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This imports all the data from the .ang file into DREAM.3D. **Note that there is a filter specific for this and you should use that filter. We are just using that file because it is a convenient file that is distributed with DREAM.3D**</p>\n<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"># Combine Attribute Arrrays #</p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This will take the phi1, PHI, phi2 arrays and combine them into a single 3 Component AttributeArray</p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /># Delete Data #</p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This filter will remove the individual phi1, PHI, phi2 arrays since they were copied into the Eulers array</p></body></html>"
+    },
+    "1": {
+        "CreatedDataContainer": "DataContainer",
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Create Data Container",
+        "Filter_Name": "CreateDataContainer",
+        "Filter_Uuid": "{816fbe6b-7c38-581b-b149-3f839fb65b93}"
+    },
+    "2": {
+        "ArrayHandling": 0,
+        "BoxDimensions": "X Range: 0 to 47.25 (Delta: 47.25)\nY Range: 0 to 50.25 (Delta: 50.25)\nZ Range: 0 to 1 (Delta: 1)",
+        "DataContainerName": "DataContainer",
+        "Dimensions": {
+            "x": 189,
+            "y": 201,
+            "z": 1
+        },
+        "EdgeAttributeMatrixName": "EdgeData",
+        "FaceAttributeMatrixName0": "FaceData",
+        "FaceAttributeMatrixName1": "FaceData",
+        "FilterVersion": "1.0.51",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Create Geometry",
+        "Filter_Name": "CreateGeometry",
+        "Filter_Uuid": "{9ac220b9-14f9-581a-9bac-5714467589cc}",
+        "GeometryType": 0,
+        "ImageCellAttributeMatrixName": "CellData",
+        "Origin": {
+            "x": 0,
+            "y": 0,
+            "z": 0
+        },
+        "RectGridCellAttributeMatrixName": "CellData",
+        "Resolution": {
+            "x": 0.25,
+            "y": 0.25,
+            "z": 1
+        },
+        "SharedEdgeListArrayPath": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": ""
+        },
+        "SharedQuadListArrayPath": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": ""
+        },
+        "SharedTetListArrayPath": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": ""
+        },
+        "SharedTriListArrayPath": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": ""
+        },
+        "SharedVertexListArrayPath0": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": ""
+        },
+        "SharedVertexListArrayPath1": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": ""
+        },
+        "SharedVertexListArrayPath2": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": ""
+        },
+        "SharedVertexListArrayPath3": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": ""
+        },
+        "SharedVertexListArrayPath4": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": ""
+        },
+        "TetCellAttributeMatrixName": "CellData",
+        "TreatWarningsAsErrors": 0,
+        "VertexAttributeMatrixName0": "VertexData",
+        "VertexAttributeMatrixName1": "VertexData",
+        "VertexAttributeMatrixName2": "VertexData",
+        "VertexAttributeMatrixName3": "VertexData",
+        "VertexAttributeMatrixName4": "VertexData",
+        "XBoundsArrayPath": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": ""
+        },
+        "YBoundsArrayPath": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": ""
+        },
+        "ZBoundsArrayPath": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": ""
+        }
+    },
+    "3": {
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Import ASCII Data",
+        "Filter_Name": "ReadASCIIData",
+        "Filter_Uuid": "{bdb978bc-96bf-5498-972c-b509c38b8d50}",
+        "Wizard_AttributeMatrixType": 3,
+        "Wizard_AutomaticAM": false,
+        "Wizard_BeginIndex": 33,
+        "Wizard_ConsecutiveDelimiters": 1,
+        "Wizard_DataHeaders": [
+            "phi1",
+            "Phi",
+            "phi2",
+            "x",
+            "y",
+            "Image Quality",
+            "Confidence Index",
+            "Phase",
+            "SEM Signal",
+            "Fit"
+        ],
+        "Wizard_DataTypes": [
+            "float",
+            "float",
+            "float",
+            "float",
+            "float",
+            "float",
+            "float",
+            "int32_t",
+            "float",
+            "float"
+        ],
+        "Wizard_Delimiters": " ",
+        "Wizard_HeaderIsCustom": true,
+        "Wizard_HeaderLine": -1,
+        "Wizard_HeaderUseDefaults": false,
+        "Wizard_InputFilePath": "Data/SmallIN100/Slice_1.ang",
+        "Wizard_NumberOfLines": 38021,
+        "Wizard_SelectedPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "",
+            "Data Container Name": "DataContainer"
+        },
+        "Wizard_TupleDims": [
+            37989
+        ]
+    },
+    "4": {
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Combine Attribute Arrays",
+        "Filter_Name": "CombineAttributeArrays",
+        "Filter_Uuid": "{a6b50fb0-eb7c-5d9b-9691-825d6a4fe772}",
+        "NormalizeData": 0,
+        "SelectedDataArrayPaths": [
+            {
+                "Attribute Matrix Name": "CellData",
+                "Data Array Name": "phi1",
+                "Data Container Name": "DataContainer"
+            },
+            {
+                "Attribute Matrix Name": "CellData",
+                "Data Array Name": "Phi",
+                "Data Container Name": "DataContainer"
+            },
+            {
+                "Attribute Matrix Name": "CellData",
+                "Data Array Name": "phi2",
+                "Data Container Name": "DataContainer"
+            }
+        ],
+        "StackedDataArrayName": "Eulers"
+    },
+    "5": {
+        "DataArraysToRemove": {
+            "Data Containers": [
+                {
+                    "Attribute Matricies": [
+                        {
+                            "Data Arrays": [
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "Confidence Index",
+                                    "Object Type": "float",
+                                    "Path": "DataContainer/CellData/",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        3
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "Eulers",
+                                    "Object Type": "float",
+                                    "Path": "DataContainer/CellData/",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "Fit",
+                                    "Object Type": "float",
+                                    "Path": "DataContainer/CellData/",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "Image Quality",
+                                    "Object Type": "float",
+                                    "Path": "DataContainer/CellData/",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "Phase",
+                                    "Object Type": "int32_t",
+                                    "Path": "DataContainer/CellData/",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "Phi",
+                                    "Object Type": "float",
+                                    "Path": "DataContainer/CellData/",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "SEM Signal",
+                                    "Object Type": "float",
+                                    "Path": "DataContainer/CellData/",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "phi1",
+                                    "Object Type": "float",
+                                    "Path": "DataContainer/CellData/",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "phi2",
+                                    "Object Type": "float",
+                                    "Path": "DataContainer/CellData/",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "x",
+                                    "Object Type": "float",
+                                    "Path": "DataContainer/CellData/",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 0,
+                                    "Name": "y",
+                                    "Object Type": "float",
+                                    "Path": "DataContainer/CellData/",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        1
+                                    ],
+                                    "Version": 2
+                                }
+                            ],
+                            "Flag": 0,
+                            "Name": "CellData",
+                            "Type": 3
+                        }
+                    ],
+                    "Flag": 0,
+                    "Name": "DataContainer",
+                    "Type": 0
+                }
+            ]
+        },
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Delete Data",
+        "Filter_Name": "RemoveArrays",
+        "Filter_Uuid": "{7b1c8f46-90dd-584a-b3ba-34e16958a7d0}"
+    },
+    "6": {
+        "CellEnsembleAttributeMatrixName": "EnsembleAttributeMatrix",
+        "CrystalStructuresArrayName": "CrystalStructures",
+        "DataContainerName": "DataContainer",
+        "Ensemble": [
+            {
+                "CrystalStructure": 1,
+                "PhaseName": "Nickel",
+                "PhaseType": 0
+            }
+        ],
+        "FilterVersion": "6.4.323",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Create Ensemble Info",
+        "Filter_Name": "CreateEnsembleInfo",
+        "Filter_Uuid": "{2a0bfcd3-2517-5117-b164-964dfac8fe22}",
+        "PhaseNamesArrayName": "PhaseNames",
+        "PhaseTypesArrayName": "PhaseTypes"
+    },
+    "7": {
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Replace Value in Array",
+        "Filter_Name": "ReplaceValueInArray",
+        "Filter_Uuid": "{a37f2e24-7400-5005-b9a7-b2224570cbe9}",
+        "RemoveValue": 0,
+        "ReplaceValue": 1,
+        "SelectedArray": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Phase",
+            "Data Container Name": "DataContainer"
+        }
+    },
+    "8": {
+        "CellEulerAnglesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Eulers",
+            "Data Container Name": "DataContainer"
+        },
+        "CellIPFColorsArrayName": "IPFColor",
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Phase",
+            "Data Container Name": "DataContainer"
+        },
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "EnsembleAttributeMatrix",
+            "Data Array Name": "CrystalStructures",
+            "Data Container Name": "DataContainer"
+        },
+        "FilterVersion": "6.4.323",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Generate IPF Colors",
+        "Filter_Name": "GenerateIPFColors",
+        "Filter_Uuid": "{a50e6532-8075-5de5-ab63-945feb0de7f7}",
+        "GoodVoxelsArrayPath": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": ""
+        },
+        "ReferenceDir": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+        },
+        "UseGoodVoxels": 0
+    },
+    "9": {
+        "FileName": "Data/Output/Example/Import_ASCII_IPF.png",
+        "FilterVersion": "1.0.406",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "ITK::Image Writer",
+        "Filter_Name": "ITKImageWriter",
+        "Filter_Uuid": "{11473711-f94d-5d96-b749-ec36a81ad338}",
+        "ImageArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "IPFColor",
+            "Data Container Name": "DataContainer"
+        }
+    },
+    "PipelineBuilder": {
+        "Name": "Import_ASCI",
+        "Number_Filters": 10,
+        "Version": 6
+    }
+}

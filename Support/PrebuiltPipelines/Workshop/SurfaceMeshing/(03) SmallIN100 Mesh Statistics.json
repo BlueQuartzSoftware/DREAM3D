@@ -2,7 +2,7 @@
     "0": {
         "Filter_Human_Label": "Read DREAM.3D Data File",
         "Filter_Name": "DataContainerReader",
-        "InputFile": "Data/Output/SmallIN100Mesh.dream3d",
+        "InputFile": "Data/Output/SurfaceMesh/SmallIN100_Smoothed.dream3d",
         "InputFileDataContainerArrayProxy": {
             "Data Containers": [
                 {
@@ -507,7 +507,7 @@
         "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
-        "OutputFile": "Data/Output/SmallIN100Mesh.dream3d",
+        "OutputFile": "Data/Output/SurfaceMesh/SmallIN100_MeshStats.dream3d",
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
