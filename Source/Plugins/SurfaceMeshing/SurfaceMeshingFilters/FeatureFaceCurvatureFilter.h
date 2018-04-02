@@ -51,7 +51,7 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     Q_OBJECT
   public:
     SIMPL_SHARED_POINTERS(FeatureFaceCurvatureFilter)
-    SIMPL_STATIC_NEW_MACRO(FeatureFaceCurvatureFilter)
+    SIMPL_FILTER_NEW_MACRO(FeatureFaceCurvatureFilter)
      SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FeatureFaceCurvatureFilter, SurfaceMeshFilter)
 
     virtual ~FeatureFaceCurvatureFilter();

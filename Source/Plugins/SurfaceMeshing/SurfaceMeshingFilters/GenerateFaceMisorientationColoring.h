@@ -50,7 +50,7 @@ class GenerateFaceMisorientationColoring : public SurfaceMeshFilter
   Q_OBJECT
 public:
   SIMPL_SHARED_POINTERS(GenerateFaceMisorientationColoring)
-  SIMPL_STATIC_NEW_MACRO(GenerateFaceMisorientationColoring)
+  SIMPL_FILTER_NEW_MACRO(GenerateFaceMisorientationColoring)
    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GenerateFaceMisorientationColoring, SurfaceMeshFilter)
 
   virtual ~GenerateFaceMisorientationColoring();

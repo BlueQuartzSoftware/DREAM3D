@@ -50,8 +50,8 @@ class GenerateFaceIPFColoring : public SurfaceMeshFilter
   Q_OBJECT
 public:
   SIMPL_SHARED_POINTERS(GenerateFaceIPFColoring)
-  SIMPL_STATIC_NEW_MACRO(GenerateFaceIPFColoring)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GenerateFaceIPFColoring, SurfaceMeshFilter)
+  SIMPL_FILTER_NEW_MACRO(GenerateFaceIPFColoring)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GenerateFaceIPFColoring, SurfaceMeshFilter)
 
   virtual ~GenerateFaceIPFColoring();
 

@@ -59,7 +59,7 @@ class BinaryNodesTrianglesReader : public SurfaceMeshFilter
     Q_OBJECT
   public:
     SIMPL_SHARED_POINTERS(BinaryNodesTrianglesReader)
-    SIMPL_STATIC_NEW_MACRO(BinaryNodesTrianglesReader)
+    SIMPL_FILTER_NEW_MACRO(BinaryNodesTrianglesReader)
      SIMPL_TYPE_MACRO_SUPER_OVERRIDE(BinaryNodesTrianglesReader, SurfaceMeshFilter)
 
     virtual ~BinaryNodesTrianglesReader();

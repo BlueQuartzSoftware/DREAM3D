@@ -52,7 +52,7 @@ class LaplacianSmoothing : public SurfaceMeshFilter
   Q_OBJECT
 public:
   SIMPL_SHARED_POINTERS(LaplacianSmoothing)
-  SIMPL_STATIC_NEW_MACRO(LaplacianSmoothing)
+  SIMPL_FILTER_NEW_MACRO(LaplacianSmoothing)
    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(LaplacianSmoothing, SurfaceMeshFilter)
 
   virtual ~LaplacianSmoothing();

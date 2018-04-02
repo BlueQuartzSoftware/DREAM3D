@@ -50,7 +50,7 @@ class ReverseTriangleWinding : public SurfaceMeshFilter
   Q_OBJECT
 public:
   SIMPL_SHARED_POINTERS(ReverseTriangleWinding)
-  SIMPL_STATIC_NEW_MACRO(ReverseTriangleWinding)
+  SIMPL_FILTER_NEW_MACRO(ReverseTriangleWinding)
    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ReverseTriangleWinding, SurfaceMeshFilter)
 
   virtual ~ReverseTriangleWinding();

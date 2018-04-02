@@ -63,7 +63,7 @@ class MovingFiniteElementSmoothing : public SurfaceMeshFilter
     Q_OBJECT
   public:
     SIMPL_SHARED_POINTERS(MovingFiniteElementSmoothing)
-    SIMPL_STATIC_NEW_MACRO(MovingFiniteElementSmoothing)
+    SIMPL_FILTER_NEW_MACRO(MovingFiniteElementSmoothing)
      SIMPL_TYPE_MACRO_SUPER_OVERRIDE(MovingFiniteElementSmoothing, SurfaceMeshFilter)
 
     virtual ~MovingFiniteElementSmoothing();

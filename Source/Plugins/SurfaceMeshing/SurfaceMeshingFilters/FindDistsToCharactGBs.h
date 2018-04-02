@@ -61,7 +61,7 @@ public:
   static const double INF_DIST;
 
   SIMPL_SHARED_POINTERS(FindDistsToCharactGBs)
-  SIMPL_STATIC_NEW_MACRO(FindDistsToCharactGBs)
+  SIMPL_FILTER_NEW_MACRO(FindDistsToCharactGBs)
    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindDistsToCharactGBs, SurfaceMeshFilter)
 
   virtual ~FindDistsToCharactGBs();

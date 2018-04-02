@@ -60,7 +60,7 @@ class GenerateFaceSchuhMisorientationColoring : public SurfaceMeshFilter
     Q_OBJECT
   public:
     SIMPL_SHARED_POINTERS(GenerateFaceSchuhMisorientationColoring)
-    SIMPL_STATIC_NEW_MACRO(GenerateFaceSchuhMisorientationColoring)
+    SIMPL_FILTER_NEW_MACRO(GenerateFaceSchuhMisorientationColoring)
      SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GenerateFaceSchuhMisorientationColoring, SurfaceMeshFilter)
 
     virtual ~GenerateFaceSchuhMisorientationColoring();

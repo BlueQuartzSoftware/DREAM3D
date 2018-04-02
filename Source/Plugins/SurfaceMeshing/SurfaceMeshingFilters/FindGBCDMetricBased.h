@@ -65,7 +65,7 @@ class FindGBCDMetricBased : public SurfaceMeshFilter
 
 public:
   SIMPL_SHARED_POINTERS(FindGBCDMetricBased)
-  SIMPL_STATIC_NEW_MACRO(FindGBCDMetricBased)
+  SIMPL_FILTER_NEW_MACRO(FindGBCDMetricBased)
    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindGBCDMetricBased, AbstractFilter)
 
   virtual ~FindGBCDMetricBased();
