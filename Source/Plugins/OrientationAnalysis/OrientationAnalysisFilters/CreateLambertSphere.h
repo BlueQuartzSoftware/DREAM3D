@@ -95,6 +95,9 @@ public:
   SIMPL_FILTER_PARAMETER(bool, CreateQuadGeometry)
   Q_PROPERTY(bool CreateQuadGeometry READ getCreateQuadGeometry WRITE setCreateQuadGeometry)
 
+  SIMPL_FILTER_PARAMETER(bool, UseExistingImage)
+  Q_PROPERTY(bool UseExistingImage READ getUseExistingImage WRITE setUseExistingImage)
+  
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */

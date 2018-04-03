@@ -1,21 +1,24 @@
 {
     "0": {
         "CreatedDataContainer": "ImageDataContainer",
-        "FilterVersion": "1.0.160",
+        "FilterVersion": "1.0.345",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Data Container",
-        "Filter_Name": "CreateDataContainer"
+        "Filter_Name": "CreateDataContainer",
+        "Filter_Uuid": "{816fbe6b-7c38-581b-b149-3f839fb65b93}"
     },
     "1": {
+        "BoxDimensions": "X Range: 0 to 101 (Delta: 101)\nY Range: 0 to 101 (Delta: 101)\nZ Range: 0 to 1 (Delta: 1)",
         "Dimensions": {
             "x": 101,
             "y": 101,
             "z": 1
         },
-        "FilterVersion": "1.0.160",
+        "FilterVersion": "1.0.345",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Geometry (Image)",
         "Filter_Name": "CreateImageGeometry",
+        "Filter_Uuid": "{f2132744-3abb-5d66-9cd9-c9a233b5c4aa}",
         "Origin": {
             "x": 0,
             "y": 0,
@@ -35,10 +38,11 @@
             "Data Array Name": "",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.160",
+        "FilterVersion": "1.0.345",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Attribute Matrix",
         "Filter_Name": "CreateAttributeMatrix",
+        "Filter_Uuid": "{93375ef0-7367-5372-addc-baa019b1b341}",
         "TupleDimensions": {
             "Column Headers": [
                 "0",
@@ -64,10 +68,11 @@
         }
     },
     "3": {
-        "FilterVersion": "1.0.160",
+        "FilterVersion": "1.0.345",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Data Array",
         "Filter_Name": "CreateDataArray",
+        "Filter_Uuid": "{77f392fb-c1eb-57da-a1b1-e7acf9239fb8}",
         "InitializationRange": {
             "Max": 0,
             "Min": 0
@@ -87,22 +92,25 @@
         "CreateQuadGeometry": 1,
         "CreateTriangleGeometry": 1,
         "CreateVertexGeometry": 1,
-        "FilterVersion": "6.4.162",
+        "FilterVersion": "6.4.325",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Sphere (Lambert Projection Technique)",
         "Filter_Name": "CreateLambertSphere",
+        "Filter_Uuid": "{c4398303-db7d-506e-81ea-08f253895ccb}",
         "Hemisphere": 0,
         "ImageDataArrayPath": {
             "Attribute Matrix Name": "CellAttributeMatrix",
             "Data Array Name": "ScalarValues",
             "Data Container Name": "ImageDataContainer"
-        }
+        },
+        "UseExistingImage": 0
     },
     "5": {
-        "FilterVersion": "1.0.160",
+        "FilterVersion": "1.0.345",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
+        "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
         "OutputFile": "Data/Output/LambertSphere.dream3d",
         "WriteTimeSeries": 0,
         "WriteXdmfFile": 1
