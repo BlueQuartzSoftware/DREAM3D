@@ -52,8 +52,7 @@
 //
 // -----------------------------------------------------------------------------
 ConvertHexGridToSquareGrid::ConvertHexGridToSquareGrid()
-: AbstractFilter()
-, m_ZStartIndex(0)
+: m_ZStartIndex(0)
 , m_ZEndIndex(0)
 , m_XResolution(1.0f)
 , m_YResolution(1.0f)
@@ -69,7 +68,6 @@ ConvertHexGridToSquareGrid::ConvertHexGridToSquareGrid()
 , m_HeaderIsComplete(false)
 , m_HexGridStack(0) // this is just a dummy variable
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

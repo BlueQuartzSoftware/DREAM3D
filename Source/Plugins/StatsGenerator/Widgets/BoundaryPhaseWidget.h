@@ -96,7 +96,7 @@ class BoundaryPhaseWidget : public StatsGenWidget, private Ui::BoundaryPhaseWidg
     QwtPlotGrid*         m_grid;
 
     BoundaryPhaseWidget(const BoundaryPhaseWidget&) = delete; // Copy Constructor Not Implemented
-    void operator=(const BoundaryPhaseWidget&) = delete;      // Operator '=' Not Implemented
+    void operator=(const BoundaryPhaseWidget&) = delete;      // Move assignment Not Implemented
 };
 
 #endif /* BoundaryPhaseWidget_H_ */

@@ -58,7 +58,7 @@ protected:
 
 private:
   OrientationUtilityFilterParameter(const OrientationUtilityFilterParameter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const OrientationUtilityFilterParameter&) = delete;                    // Operator '=' Not Implemented
+  void operator=(const OrientationUtilityFilterParameter&) = delete;                    // Move assignment Not Implemented
 };
 
 #endif /* _ImportVectorImageStackFilterParameter_H_ */

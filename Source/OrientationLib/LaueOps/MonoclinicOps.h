@@ -183,7 +183,7 @@ class OrientationLib_EXPORT MonoclinicOps : public LaueOps
                         float& n1, float& n2, float& n3);
   private:
     MonoclinicOps(const MonoclinicOps&) = delete;  // Copy Constructor Not Implemented
-    void operator=(const MonoclinicOps&) = delete; // Operator '=' Not Implemented
+    void operator=(const MonoclinicOps&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* MonoclinicOPS_H_ */

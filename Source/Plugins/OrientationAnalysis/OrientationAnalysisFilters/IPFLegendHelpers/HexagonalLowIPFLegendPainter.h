@@ -54,7 +54,7 @@ protected:
 
 private:
   HexagonalLowIPFLegendPainter(const HexagonalLowIPFLegendPainter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const HexagonalLowIPFLegendPainter&);               // Operator '=' Not Implemented
+  void operator=(const HexagonalLowIPFLegendPainter&);                        // Move assignment Not Implemented
 };
 
 #endif /* _hexagonalLowipflegendpainter_H_ */

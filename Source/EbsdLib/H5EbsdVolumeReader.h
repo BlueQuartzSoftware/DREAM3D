@@ -151,7 +151,7 @@ class EbsdLib_EXPORT H5EbsdVolumeReader : public H5EbsdVolumeInfo
     bool                  m_ReadAllArrays;
 
     H5EbsdVolumeReader(const H5EbsdVolumeReader&) = delete; // Copy Constructor Not Implemented
-    void operator=(const H5EbsdVolumeReader&) = delete;     // Operator '=' Not Implemented
+    void operator=(const H5EbsdVolumeReader&) = delete;     // Move assignment Not Implemented
 };
 
 

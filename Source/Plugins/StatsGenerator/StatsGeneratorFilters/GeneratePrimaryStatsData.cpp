@@ -36,8 +36,7 @@
 //
 // -----------------------------------------------------------------------------
 GeneratePrimaryStatsData::GeneratePrimaryStatsData()
-: AbstractFilter()
-, m_PhaseName("Primary Phase")
+: m_PhaseName("Primary Phase")
 , m_PhaseIndex(-1)
 , m_CrystalSymmetry(1)
 , m_MicroPresetModel(0)
@@ -54,7 +53,6 @@ GeneratePrimaryStatsData::GeneratePrimaryStatsData()
 , m_SelectedEnsembleAttributeMatrix()
 {
   initialize();
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

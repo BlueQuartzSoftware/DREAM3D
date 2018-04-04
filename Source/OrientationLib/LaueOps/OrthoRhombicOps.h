@@ -188,7 +188,7 @@ class OrientationLib_EXPORT OrthoRhombicOps : public LaueOps
 
   private:
     OrthoRhombicOps(const OrthoRhombicOps&) = delete; // Copy Constructor Not Implemented
-    void operator=(const OrthoRhombicOps&) = delete;  // Operator '=' Not Implemented
+    void operator=(const OrthoRhombicOps&) = delete;  // Move assignment Not Implemented
 };
 
 #endif /* ORTHORHOMBICOPS_H_ */

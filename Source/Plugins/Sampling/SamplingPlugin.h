@@ -155,7 +155,7 @@ class SamplingPlugin : public QObject, public ISIMPLibPlugin
     bool                m_DidLoad;
 
     SamplingPlugin(const SamplingPlugin&) = delete; // Copy Constructor Not Implemented
-    void operator=(const SamplingPlugin&) = delete; // Operator '=' Not Implemented
+    void operator=(const SamplingPlugin&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* _Sampling_H_ */

@@ -236,8 +236,7 @@ private:
 //
 // -----------------------------------------------------------------------------
 ConvertColorToGrayScale::ConvertColorToGrayScale()
-: AbstractFilter()
-, m_ConversionAlgorithm(0)
+: m_ConversionAlgorithm(0)
 , m_ColorChannel(0)
 , m_CreateNewAttributeMatrix(false)
 , m_OutputAttributeMatrixName("GrayScaleData")
@@ -248,7 +247,6 @@ ConvertColorToGrayScale::ConvertColorToGrayScale()
   m_ColorWeights.y = 0.7154f;
   m_ColorWeights.z = 0.0721f;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

@@ -131,8 +131,7 @@ template <typename Node, typename T> double AngleLineCurvature(Node& n0, Node& n
 //
 // -----------------------------------------------------------------------------
 MovingFiniteElementSmoothing::MovingFiniteElementSmoothing()
-: SurfaceMeshFilter()
-, m_IterationSteps(1)
+: m_IterationSteps(1)
 , m_NodeConstraints(true)
 , m_ConstrainSurfaceNodes(true)
 , m_ConstrainQuadPoints(true)
@@ -141,7 +140,6 @@ MovingFiniteElementSmoothing::MovingFiniteElementSmoothing()
 , m_SurfaceMeshNodeTypeArrayName(SIMPL::VertexData::SurfaceMeshNodeType)
 , m_SurfaceMeshNodeType(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -154,6 +152,7 @@ MovingFiniteElementSmoothing::~MovingFiniteElementSmoothing() = default;
 // -----------------------------------------------------------------------------
 void MovingFiniteElementSmoothing::setupFilterParameters()
 {
+  SurfaceMeshFilter::setupFilterParameters();
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Iteration Steps", IterationSteps, FilterParameter::Uncategorized, MovingFiniteElementSmoothing));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Apply Node Contraints", NodeConstraints, FilterParameter::Uncategorized, MovingFiniteElementSmoothing));
@@ -224,7 +223,7 @@ void MovingFiniteElementSmoothing::dataCheck()
     QVector<size_t> dims(1, 1);
     m_SurfaceMeshNodeTypePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath(),
                                                                                                                   dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_SurfaceMeshNodeTypePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    if(nullptr != m_SurfaceMeshNodeTypePtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */

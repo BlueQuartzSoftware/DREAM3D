@@ -185,7 +185,7 @@ class ReconstructionPlugin : public QObject, public ISIMPLibPlugin
     bool                m_DidLoad;
 
     ReconstructionPlugin(const ReconstructionPlugin&) = delete; // Copy Constructor Not Implemented
-    void operator=(const ReconstructionPlugin&) = delete;       // Operator '=' Not Implemented
+    void operator=(const ReconstructionPlugin&) = delete;       // Move assignment Not Implemented
 };
 
 #endif /* _Reconstruction_H_ */

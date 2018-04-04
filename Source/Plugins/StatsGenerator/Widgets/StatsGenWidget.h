@@ -112,7 +112,7 @@ class StatsGenWidget : public QWidget
 
   private:
     StatsGenWidget(const StatsGenWidget&) = delete; // Copy Constructor Not Implemented
-    void operator=(const StatsGenWidget&) = delete; // Operator '=' Not Implemented
+    void operator=(const StatsGenWidget&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* StatsGenWidget_H_ */

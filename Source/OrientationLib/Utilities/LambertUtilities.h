@@ -73,7 +73,7 @@ class OrientationLib_EXPORT LambertUtilities
 
   private:
     LambertUtilities(const LambertUtilities&) = delete; // Copy Constructor Not Implemented
-    void operator=(const LambertUtilities&) = delete;   // Operator '=' Not Implemented
+    void operator=(const LambertUtilities&) = delete;   // Move assignment Not Implemented
 };
 
 #endif /* _labert_utilities_H_ */

@@ -93,7 +93,7 @@ class  IOSupport : public Observable
 
   private:
     IOSupport(const IOSupport&) = delete;      // Copy Constructor Not Implemented
-    void operator=(const IOSupport&) = delete; // Operator '=' Not Implemented
+    void operator=(const IOSupport&) = delete; // Move assignment Not Implemented
 };
 
 

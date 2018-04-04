@@ -185,7 +185,7 @@ class IOPlugin : public QObject, public ISIMPLibPlugin
     bool                m_DidLoad;
 
     IOPlugin(const IOPlugin&) = delete;       // Copy Constructor Not Implemented
-    void operator=(const IOPlugin&) = delete; // Operator '=' Not Implemented
+    void operator=(const IOPlugin&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* _IOPlugin_H_ */

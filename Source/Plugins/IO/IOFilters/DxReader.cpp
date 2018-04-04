@@ -79,8 +79,7 @@ DxReaderPrivate::DxReaderPrivate(DxReader* ptr)
 //
 // -----------------------------------------------------------------------------
 DxReader::DxReader()
-: FileReader()
-, m_VolumeDataContainerName(SIMPL::Defaults::ImageDataContainerName)
+: m_VolumeDataContainerName(SIMPL::Defaults::ImageDataContainerName)
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_InputFile("")
 , m_FileWasRead(false)
@@ -100,7 +99,6 @@ DxReader::DxReader()
   m_Dims[1] = 0;
   m_Dims[2] = 0;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -120,6 +118,8 @@ SIMPL_PIMPL_PROPERTY_DEF(DxReader, QDateTime, LastRead)
 // -----------------------------------------------------------------------------
 void DxReader::setupFilterParameters()
 {
+  FileReader::setupFilterParameters();
+
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, DxReader, "*.dx"));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, DxReader));
@@ -153,7 +153,7 @@ void DxReader::updateCellInstancePointers()
 {
   setErrorCondition(0);
   setWarningCondition(0);
-  if(nullptr != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_FeatureIdsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -278,7 +278,7 @@ void DxReader::dataCheck()
   QVector<size_t> cDims(1, 1);
   tempPath.update(getVolumeDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims);
-  if(nullptr != m_FeatureIdsPtr.lock().get())
+  if(nullptr != m_FeatureIdsPtr.lock())
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   }

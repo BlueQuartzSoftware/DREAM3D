@@ -84,7 +84,7 @@ class EbsdLib_EXPORT EbsdTransform
 
   private:
     EbsdTransform(const EbsdTransform&) = delete;  // Copy Constructor Not Implemented
-    void operator=(const EbsdTransform&) = delete; // Operator '=' Not Implemented
+    void operator=(const EbsdTransform&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* EBSDTRANSFORM_H_ */

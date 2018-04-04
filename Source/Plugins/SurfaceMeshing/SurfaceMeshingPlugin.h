@@ -185,7 +185,7 @@ class SurfaceMeshingPlugin : public QObject, public ISIMPLibPlugin
     bool                m_DidLoad;
 
     SurfaceMeshingPlugin(const SurfaceMeshingPlugin&) = delete; // Copy Constructor Not Implemented
-    void operator=(const SurfaceMeshingPlugin&) = delete;       // Operator '=' Not Implemented
+    void operator=(const SurfaceMeshingPlugin&) = delete;       // Move assignment Not Implemented
 };
 
 #endif /* _SurfaceMeshing_H_ */

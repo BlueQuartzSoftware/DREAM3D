@@ -204,7 +204,7 @@ class ImportVectorImageStackWidget : public FilterParameterWidget, private Ui::I
     bool     m_DidCausePreflight = false;
 
     ImportVectorImageStackWidget(const ImportVectorImageStackWidget&) = delete; // Copy Constructor Not Implemented
-    void operator=(const ImportVectorImageStackWidget&) = delete;               // Operator '=' Not Implemented
+    void operator=(const ImportVectorImageStackWidget&) = delete;               // Move assignment Not Implemented
 };
 
 #endif /* ImportVectorImageStackWidget_H_ */

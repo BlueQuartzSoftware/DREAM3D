@@ -323,5 +323,5 @@ public:
 
 private:
   FindEuclideanDistMapTest(const FindEuclideanDistMapTest&); // Copy Constructor Not Implemented
-  void operator=(const FindEuclideanDistMapTest&);           // Operator '=' Not Implemented
+  void operator=(const FindEuclideanDistMapTest&);           // Move assignment Not Implemented
 };

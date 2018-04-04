@@ -52,11 +52,9 @@
 //
 // -----------------------------------------------------------------------------
 LammpsFileWriter::LammpsFileWriter()
-: AbstractFilter()
-, m_VertexDataContainerName(SIMPL::Defaults::VertexDataContainerName)
+: m_VertexDataContainerName(SIMPL::Defaults::VertexDataContainerName)
 , m_LammpsFile("")
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

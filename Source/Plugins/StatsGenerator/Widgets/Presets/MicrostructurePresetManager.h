@@ -132,7 +132,7 @@ class  MicrostructurePresetManager
     AbstractMicrostructurePresetFactory::Collection  _factories;
 
     MicrostructurePresetManager(const MicrostructurePresetManager&) = delete; // Copy Constructor Not Implemented
-    void operator=(const MicrostructurePresetManager&) = delete;              // Operator '=' Not Implemented
+    void operator=(const MicrostructurePresetManager&) = delete;              // Move assignment Not Implemented
 };
 
 #endif /* MICROSTRUCTUREPRESETMANAGER_H_ */

@@ -67,7 +67,7 @@ class PowerLawOps : public DistributionAnalysisOps
 
   private:
     PowerLawOps(const PowerLawOps&) = delete;    // Copy Constructor Not Implemented
-    void operator=(const PowerLawOps&) = delete; // Operator '=' Not Implemented
+    void operator=(const PowerLawOps&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* _PowerLawOps_H_ */

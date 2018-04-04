@@ -295,5 +295,5 @@ public:
 
 private:
   FindTriangleGeomSizesTest(const FindTriangleGeomSizesTest&); // Copy Constructor Not Implemented
-  void operator=(const FindTriangleGeomSizesTest&);            // Operator '=' Not Implemented
+  void operator=(const FindTriangleGeomSizesTest&);            // Move assignment Not Implemented
 };

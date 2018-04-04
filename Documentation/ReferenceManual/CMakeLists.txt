@@ -149,6 +149,33 @@ if(SIMPL_USE_MKDOCS)
           mkdocs
   )
 
+  if(APPLE)
+    set(MKDOCS_EXECUTABLE "${DREAM3DDocRoot}/ReferenceManual/mkdocs")
+    file(WRITE "${MKDOCS_EXECUTABLE}" "#!/usr/bin/python\n")
+    file(APPEND "${MKDOCS_EXECUTABLE}" "# -*- coding: utf-8 -*-\n")
+    file(APPEND "${MKDOCS_EXECUTABLE}" "import re\n")
+    file(APPEND "${MKDOCS_EXECUTABLE}" "import sys\n")
+    file(APPEND "${MKDOCS_EXECUTABLE}" "from mkdocs.__main__ import cli\n")
+    file(APPEND "${MKDOCS_EXECUTABLE}" "if __name__ == '__main__':\n")
+    file(APPEND "${MKDOCS_EXECUTABLE}" "  sys.argv[0] = re.sub(r'(-script\.pyw?|\.exe)?$', '', sys.argv[0])\n")
+    file(APPEND "${MKDOCS_EXECUTABLE}" "  sys.exit(cli())\n")
+    file(APPEND "${MKDOCS_EXECUTABLE}" "\n")
+    execute_process(COMMAND "/bin/chmod" ug+rwx ${MKDOCS_EXECUTABLE}
+                  OUTPUT_VARIABLE chmod_output              
+                  RESULT_VARIABLE chmod_result
+                  ERROR_VARIABLE chmod_error
+                  WORKING_DIRECTORY ${DREAM3DDocRoot}/ReferenceManual    
+    )
+    message(STATUS "chmod_output: ${chmod_output}")
+    message(STATUS "chmod_result: ${chmod_result}")
+    message(STATUS "chmod_error: ${chmod_error}")
+  endif()
+  
+  message(STATUS "MKDOCS_EXECUTABLE: ${MKDOCS_EXECUTABLE}")
+  message(STATUS "PYTHON_EXECUTABLE: ${PYTHON_EXECUTABLE}")
+
+
+
   set(docsStampFile "${DREAM3DDocRoot}/MkDocsGeneration.stamp")
   string(TIMESTAMP mkdocsTimeStamp %Y:%m:%d:%H:%M:%S)
   #----------------------------------------------------------------------------
@@ -156,6 +183,7 @@ if(SIMPL_USE_MKDOCS)
   # to run during the compile process.
   file(WRITE "${docsStampFile}" "${mkdocsTimeStamp}")
 
+  
   file(APPEND "${docsCmakeFile}" "\n\n")
   file(APPEND "${docsCmakeFile}" "#--------------------------------------------------------------\n")
   file(APPEND "${docsCmakeFile}" "# Execute the 'mkdocs' python command to generate the docs\n")
@@ -170,10 +198,12 @@ if(SIMPL_USE_MKDOCS)
   file(APPEND "${docsCmakeFile}" "  if(NOT \"\${mkdocs_gen_result}\" STREQUAL \"0\")\n")
   file(APPEND "${docsCmakeFile}" "    message(STATUS \"MKDOCS: mkdocs_gen_result: \${mkdocs_gen_result}\")\n")
   file(APPEND "${docsCmakeFile}" "    message(STATUS \"MKDOCS: mkdocs_gen_error:  \${mkdocs_gen_error}\")\n")
+  file(APPEND "${docsCmakeFile}" "    message(STATUS \"MKDOCS_EXECUTABLE:  ${MKDOCS_EXECUTABLE}\")\n")
+  file(APPEND "${docsCmakeFile}" "    message(STATUS \"PYTHON_EXECUTABLE:  ${PYTHON_EXECUTABLE}\")\n")
   file(APPEND "${docsCmakeFile}" "    #message(STATUS \"**************************************************************************\")\n")
   file(APPEND "${docsCmakeFile}" "    #message(STATUS \"MKDOCS: mkdocs_gen_output: \${mkdocs_gen_output}\")\n")
   file(APPEND "${docsCmakeFile}" "    #message(STATUS \"**************************************************************************\")\n")
-  file(APPEND "${docsCmakeFile}" "    message(FATAL_ERROR \"\${CMAKE_CURRENT_LIST_FILE}:00:00: error: \${mkdocs_gen_error}   \${mkdocs_gen_output}\")\n")
+  file(APPEND "${docsCmakeFile}" "    message(FATAL_ERROR \"\${CMAKE_CURRENT_LIST_FILE}:00:00: error: mkdocs_gen_error=\${mkdocs_gen_error}   mkdocs_gen_output=\${mkdocs_gen_output}\")\n")
   file(APPEND "${docsCmakeFile}" "  else()\n")
   file(APPEND "${docsCmakeFile}" "    file(REMOVE \"${docsStampFile}\")\n")
   file(APPEND "${docsCmakeFile}" "  endif()\n")

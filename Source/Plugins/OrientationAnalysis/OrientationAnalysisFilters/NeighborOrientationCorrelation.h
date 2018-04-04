@@ -58,10 +58,10 @@ class NeighborOrientationCorrelation : public AbstractFilter
     PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(NeighborOrientationCorrelation)
-  SIMPL_STATIC_NEW_MACRO(NeighborOrientationCorrelation)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(NeighborOrientationCorrelation, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(NeighborOrientationCorrelation)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(NeighborOrientationCorrelation, AbstractFilter)
 
-  virtual ~NeighborOrientationCorrelation();
+  ~NeighborOrientationCorrelation() override;
 
   SIMPL_FILTER_PARAMETER(float, MisorientationTolerance)
   Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
@@ -89,67 +89,67 @@ public:
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getCompiledLibraryName() const override;
+  const QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  virtual const QString getBrandingString() const override;
+  const QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  virtual const QString getFilterVersion() const override;
+  const QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
    */
-  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getGroupName() const override;
+  const QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getSubGroupName() const override;
+  const QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  virtual const QUuid getUuid() override;
+  const QUuid getUuid() override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getHumanLabel() const override;
+  const QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void setupFilterParameters() override;
+  void setupFilterParameters() override;
 
   /**
    * @brief readFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
   /**
    * @brief execute Reimplemented from @see AbstractFilter class
    */
-  virtual void execute() override;
+  void execute() override;
 
   /**
   * @brief preflight Reimplemented from @see AbstractFilter class
   */
-  virtual void preflight() override;
+  void preflight() override;
 
 signals:
   /**
@@ -198,8 +198,11 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
   DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
 
+public:
   NeighborOrientationCorrelation(const NeighborOrientationCorrelation&) = delete; // Copy Constructor Not Implemented
-  void operator=(const NeighborOrientationCorrelation&);                 // Operator '=' Not Implemented
+  NeighborOrientationCorrelation(NeighborOrientationCorrelation&&) = delete;      // Move Constructor
+  NeighborOrientationCorrelation& operator=(const NeighborOrientationCorrelation&) = delete; // Copy Assignment Not Implemented
+  NeighborOrientationCorrelation& operator=(NeighborOrientationCorrelation&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* NeighborOrientationCorrelation_H_ */

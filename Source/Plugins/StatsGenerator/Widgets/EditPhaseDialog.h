@@ -95,7 +95,7 @@ class EditPhaseDialog : public QDialog, private Ui::EditPhaseDialog
     QDoubleValidator* m_PptFractionValidator = nullptr;
 
     EditPhaseDialog(const EditPhaseDialog&) = delete; // Copy Constructor Not Implemented
-    void operator=(const EditPhaseDialog&) = delete;  // Operator '=' Not Implemented
+    void operator=(const EditPhaseDialog&) = delete;  // Move assignment Not Implemented
 };
 
 #endif /* EDITPHASEDIALOG_H_ */

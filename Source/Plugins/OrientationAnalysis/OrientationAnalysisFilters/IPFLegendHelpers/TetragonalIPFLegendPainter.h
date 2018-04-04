@@ -54,7 +54,7 @@ protected:
 
 private:
   TetragonalIPFLegendPainter(const TetragonalIPFLegendPainter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const TetragonalIPFLegendPainter&);             // Operator '=' Not Implemented
+  void operator=(const TetragonalIPFLegendPainter&);                      // Move assignment Not Implemented
 };
 
 #endif /* _tetragonalipflegendpainter_H_ */

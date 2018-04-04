@@ -53,13 +53,11 @@
 //
 // -----------------------------------------------------------------------------
 NodesTrianglesToStl::NodesTrianglesToStl()
-: AbstractFilter()
-, m_NodesFile("")
+: m_NodesFile("")
 , m_TrianglesFile("")
 , m_OutputStlDirectory("")
 , m_OutputStlPrefix("")
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

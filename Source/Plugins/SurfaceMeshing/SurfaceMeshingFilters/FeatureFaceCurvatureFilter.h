@@ -68,131 +68,131 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleCentroidsArrayPath READ getSurfaceMeshTriangleCentroidsArrayPath WRITE setSurfaceMeshTriangleCentroidsArrayPath)
   public:
     SIMPL_SHARED_POINTERS(FeatureFaceCurvatureFilter)
-    SIMPL_STATIC_NEW_MACRO(FeatureFaceCurvatureFilter)
+    SIMPL_FILTER_NEW_MACRO(FeatureFaceCurvatureFilter)
      SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FeatureFaceCurvatureFilter, SurfaceMeshFilter)
 
-    virtual ~FeatureFaceCurvatureFilter();
+     ~FeatureFaceCurvatureFilter() override;
 
-    typedef std::vector<int64_t> FaceIds_t;
-    typedef std::map<int32_t, FaceIds_t> SharedFeatureFaces_t;
+     typedef std::vector<int64_t> FaceIds_t;
+     typedef std::map<int32_t, FaceIds_t> SharedFeatureFaces_t;
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FaceAttributeMatrixPath)
-    Q_PROPERTY(DataArrayPath FaceAttributeMatrixPath READ getFaceAttributeMatrixPath WRITE setFaceAttributeMatrixPath)
+     SIMPL_FILTER_PARAMETER(DataArrayPath, FaceAttributeMatrixPath)
+     Q_PROPERTY(DataArrayPath FaceAttributeMatrixPath READ getFaceAttributeMatrixPath WRITE setFaceAttributeMatrixPath)
 
-    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature1sArrayName)
-    Q_PROPERTY(QString SurfaceMeshPrincipalCurvature1sArrayName READ getSurfaceMeshPrincipalCurvature1sArrayName WRITE setSurfaceMeshPrincipalCurvature1sArrayName)
+     SIMPL_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature1sArrayName)
+     Q_PROPERTY(QString SurfaceMeshPrincipalCurvature1sArrayName READ getSurfaceMeshPrincipalCurvature1sArrayName WRITE setSurfaceMeshPrincipalCurvature1sArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature2sArrayName)
-    Q_PROPERTY(QString SurfaceMeshPrincipalCurvature2sArrayName READ getSurfaceMeshPrincipalCurvature2sArrayName WRITE setSurfaceMeshPrincipalCurvature2sArrayName)
+     SIMPL_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature2sArrayName)
+     Q_PROPERTY(QString SurfaceMeshPrincipalCurvature2sArrayName READ getSurfaceMeshPrincipalCurvature2sArrayName WRITE setSurfaceMeshPrincipalCurvature2sArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshPrincipalDirection1sArrayName)
-    Q_PROPERTY(QString SurfaceMeshPrincipalDirection1sArrayName READ getSurfaceMeshPrincipalDirection1sArrayName WRITE setSurfaceMeshPrincipalDirection1sArrayName)
+     SIMPL_FILTER_PARAMETER(QString, SurfaceMeshPrincipalDirection1sArrayName)
+     Q_PROPERTY(QString SurfaceMeshPrincipalDirection1sArrayName READ getSurfaceMeshPrincipalDirection1sArrayName WRITE setSurfaceMeshPrincipalDirection1sArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshPrincipalDirection2sArrayName)
-    Q_PROPERTY(QString SurfaceMeshPrincipalDirection2sArrayName READ getSurfaceMeshPrincipalDirection2sArrayName WRITE setSurfaceMeshPrincipalDirection2sArrayName)
+     SIMPL_FILTER_PARAMETER(QString, SurfaceMeshPrincipalDirection2sArrayName)
+     Q_PROPERTY(QString SurfaceMeshPrincipalDirection2sArrayName READ getSurfaceMeshPrincipalDirection2sArrayName WRITE setSurfaceMeshPrincipalDirection2sArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshGaussianCurvaturesArrayName)
-    Q_PROPERTY(QString SurfaceMeshGaussianCurvaturesArrayName READ getSurfaceMeshGaussianCurvaturesArrayName WRITE setSurfaceMeshGaussianCurvaturesArrayName)
+     SIMPL_FILTER_PARAMETER(QString, SurfaceMeshGaussianCurvaturesArrayName)
+     Q_PROPERTY(QString SurfaceMeshGaussianCurvaturesArrayName READ getSurfaceMeshGaussianCurvaturesArrayName WRITE setSurfaceMeshGaussianCurvaturesArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, SurfaceMeshMeanCurvaturesArrayName)
-    Q_PROPERTY(QString SurfaceMeshMeanCurvaturesArrayName READ getSurfaceMeshMeanCurvaturesArrayName WRITE setSurfaceMeshMeanCurvaturesArrayName)
+     SIMPL_FILTER_PARAMETER(QString, SurfaceMeshMeanCurvaturesArrayName)
+     Q_PROPERTY(QString SurfaceMeshMeanCurvaturesArrayName READ getSurfaceMeshMeanCurvaturesArrayName WRITE setSurfaceMeshMeanCurvaturesArrayName)
 
-    SIMPL_FILTER_PARAMETER(int, NRing)
-    Q_PROPERTY(int NRing READ getNRing WRITE setNRing)
+     SIMPL_FILTER_PARAMETER(int, NRing)
+     Q_PROPERTY(int NRing READ getNRing WRITE setNRing)
 
-    SIMPL_FILTER_PARAMETER(bool, ComputePrincipalDirectionVectors)
-    Q_PROPERTY(bool ComputePrincipalDirectionVectors READ getComputePrincipalDirectionVectors WRITE setComputePrincipalDirectionVectors)
+     SIMPL_FILTER_PARAMETER(bool, ComputePrincipalDirectionVectors)
+     Q_PROPERTY(bool ComputePrincipalDirectionVectors READ getComputePrincipalDirectionVectors WRITE setComputePrincipalDirectionVectors)
 
-    SIMPL_FILTER_PARAMETER(bool, ComputeMeanCurvature)
-    Q_PROPERTY(bool ComputeMeanCurvature READ getComputeMeanCurvature WRITE setComputeMeanCurvature)
+     SIMPL_FILTER_PARAMETER(bool, ComputeMeanCurvature)
+     Q_PROPERTY(bool ComputeMeanCurvature READ getComputeMeanCurvature WRITE setComputeMeanCurvature)
 
-    SIMPL_FILTER_PARAMETER(bool, ComputeGaussianCurvature)
-    Q_PROPERTY(bool ComputeGaussianCurvature READ getComputeGaussianCurvature WRITE setComputeGaussianCurvature)
+     SIMPL_FILTER_PARAMETER(bool, ComputeGaussianCurvature)
+     Q_PROPERTY(bool ComputeGaussianCurvature READ getComputeGaussianCurvature WRITE setComputeGaussianCurvature)
 
-    SIMPL_FILTER_PARAMETER(bool, UseNormalsForCurveFitting)
-    Q_PROPERTY(bool UseNormalsForCurveFitting READ getUseNormalsForCurveFitting WRITE setUseNormalsForCurveFitting)
+     SIMPL_FILTER_PARAMETER(bool, UseNormalsForCurveFitting)
+     Q_PROPERTY(bool UseNormalsForCurveFitting READ getUseNormalsForCurveFitting WRITE setUseNormalsForCurveFitting)
 
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
-    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
-    Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+     /**
+      * @brief This returns the group that the filter belonds to. You can select
+      * a different group if you want. The string returned here will be displayed
+      * in the GUI for the filter
+      */
+     SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFeatureFaceIdsArrayPath)
-    Q_PROPERTY(DataArrayPath SurfaceMeshFeatureFaceIdsArrayPath READ getSurfaceMeshFeatureFaceIdsArrayPath WRITE setSurfaceMeshFeatureFaceIdsArrayPath)
+     SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFeatureFaceIdsArrayPath)
+     Q_PROPERTY(DataArrayPath SurfaceMeshFeatureFaceIdsArrayPath READ getSurfaceMeshFeatureFaceIdsArrayPath WRITE setSurfaceMeshFeatureFaceIdsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
-    Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
+     SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
+     Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleCentroidsArrayPath)
-    Q_PROPERTY(DataArrayPath SurfaceMeshTriangleCentroidsArrayPath READ getSurfaceMeshTriangleCentroidsArrayPath WRITE setSurfaceMeshTriangleCentroidsArrayPath)
+     SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleCentroidsArrayPath)
+     Q_PROPERTY(DataArrayPath SurfaceMeshTriangleCentroidsArrayPath READ getSurfaceMeshTriangleCentroidsArrayPath WRITE setSurfaceMeshTriangleCentroidsArrayPath)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName() const override;
+     /**
+      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+      */
+     const QString getCompiledLibraryName() const override;
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString() const override;
+     /**
+      * @brief getBrandingString Returns the branding string for the filter, which is a tag
+      * used to denote the filter's association with specific plugins
+      * @return Branding string
+      */
+     const QString getBrandingString() const override;
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion() const override;
+     /**
+      * @brief getFilterVersion Returns a version string for this filter. Default
+      * value is an empty string.
+      * @return
+      */
+     const QString getFilterVersion() const override;
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+     /**
+      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+      */
+     AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName() const override;
+     /**
+      * @brief getGroupName Reimplemented from @see AbstractFilter class
+      */
+     const QString getGroupName() const override;
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName() const override;
+     /**
+      * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+      */
+     const QString getSubGroupName() const override;
 
-    /**
-     * @brief getUuid Return the unique identifier for this filter.
-     * @return A QUuid object.
-     */
-    virtual const QUuid getUuid() override;
+     /**
+      * @brief getUuid Return the unique identifier for this filter.
+      * @return A QUuid object.
+      */
+     const QUuid getUuid() override;
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel() const override;
+     /**
+      * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+      */
+     const QString getHumanLabel() const override;
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters() override;
+     /**
+      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+      */
+     void setupFilterParameters() override;
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+     /**
+      * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+      */
+     void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute() override;
+     /**
+      * @brief execute Reimplemented from @see AbstractFilter class
+      */
+     void execute() override;
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight() override;
+     /**
+      * @brief preflight Reimplemented from @see AbstractFilter class
+      */
+     void preflight() override;
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
     virtual void tbbTaskProgress();
@@ -228,8 +228,11 @@ class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
     int32_t  m_TotalFeatureFaces;
     int32_t  m_CompletedFeatureFaces;
 
+  public:
     FeatureFaceCurvatureFilter(const FeatureFaceCurvatureFilter&) = delete; // Copy Constructor Not Implemented
-    void operator=(const FeatureFaceCurvatureFilter&) = delete;             // Operator '=' Not Implemented
+    FeatureFaceCurvatureFilter(FeatureFaceCurvatureFilter&&) = delete;      // Move Constructor
+    FeatureFaceCurvatureFilter& operator=(const FeatureFaceCurvatureFilter&) = delete; // Copy Assignment Not Implemented
+    FeatureFaceCurvatureFilter& operator=(FeatureFaceCurvatureFilter&&) = delete;      // Move Assignment
 };
 
 #endif /* FeatureFaceCurvatureFilter_H_ */

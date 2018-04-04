@@ -52,8 +52,7 @@
 //
 // -----------------------------------------------------------------------------
 CalculateArrayHistogram::CalculateArrayHistogram()
-: AbstractFilter()
-, m_SelectedArrayPath("", "", "")
+: m_SelectedArrayPath("", "", "")
 , m_NumberOfBins(-1)
 , m_MinRange(0.0f)
 , m_MaxRange(1.0f)
@@ -66,7 +65,6 @@ CalculateArrayHistogram::CalculateArrayHistogram()
 , m_InDataArray(nullptr)
 , m_NewDataArray(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -178,7 +176,7 @@ void CalculateArrayHistogram::dataCheck()
   {
     return;
   }
-  if(nullptr != m_InDataArrayPtr.lock().get())
+  if(nullptr != m_InDataArrayPtr.lock())
   {
     int32_t cDims = m_InDataArrayPtr.lock()->getNumberOfComponents();
     if(cDims != 1)
@@ -218,7 +216,7 @@ void CalculateArrayHistogram::dataCheck()
   // histogram array
   m_NewDataArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter>(
       this, tempPath, 0, cDims);                /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_NewDataArrayPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_NewDataArrayPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_NewDataArray = m_NewDataArrayPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */

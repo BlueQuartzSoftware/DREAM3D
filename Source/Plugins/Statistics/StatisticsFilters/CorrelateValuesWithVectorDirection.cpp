@@ -47,8 +47,7 @@
 //
 // -----------------------------------------------------------------------------
 CorrelateValuesWithVectorDirection::CorrelateValuesWithVectorDirection()
-: AbstractFilter()
-, m_CorrelatedDataArrayPath("", "", "")
+: m_CorrelatedDataArrayPath("", "", "")
 , m_VectorDataArrayPath("", "", "")
 , m_Logfile("CorrelateValuesWithVectorDirection.log")
 , m_VectorData(nullptr)
@@ -57,7 +56,6 @@ CorrelateValuesWithVectorDirection::CorrelateValuesWithVectorDirection()
 , m_StepSize(sqrt(SIMPLib::Constants::k_2Pi) / 72.0)
 {
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -117,7 +115,7 @@ void CorrelateValuesWithVectorDirection::dataCheck()
   QVector<size_t> dims(1, 3);
   m_VectorDataPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getVectorDataArrayPath(),
                                                                                                       dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_VectorDataPtr.lock().get())                                                                /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_VectorDataPtr.lock())                                                                      /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_VectorData = m_VectorDataPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */

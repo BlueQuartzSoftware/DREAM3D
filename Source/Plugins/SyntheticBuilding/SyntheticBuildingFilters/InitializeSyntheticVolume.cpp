@@ -76,8 +76,7 @@
 //
 // -----------------------------------------------------------------------------
 InitializeSyntheticVolume::InitializeSyntheticVolume()
-: AbstractFilter()
-, m_DataContainerName(SIMPL::Defaults::SyntheticVolumeDataContainerName)
+: m_DataContainerName(SIMPL::Defaults::SyntheticVolumeDataContainerName)
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_EnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName)
 , m_InputStatsArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::Statistics)
@@ -101,7 +100,6 @@ InitializeSyntheticVolume::InitializeSyntheticVolume()
 
   m_EstimatedPrimaryFeatures = "";
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

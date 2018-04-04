@@ -2157,7 +2157,7 @@ class OrientationTransforms
 
   private:
     OrientationTransforms(const OrientationTransforms&); // Copy Constructor Not Implemented
-    void operator=(const OrientationTransforms&); // Operator '=' Not Implemented
+    void operator=(const OrientationTransforms&);        // Move assignment Not Implemented
 };
 
 

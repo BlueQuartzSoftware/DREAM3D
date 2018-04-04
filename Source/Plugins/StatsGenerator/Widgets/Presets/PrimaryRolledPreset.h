@@ -90,7 +90,7 @@ class  PrimaryRolledPreset : public AbstractMicrostructurePreset
 
   private:
     PrimaryRolledPreset(const PrimaryRolledPreset&) = delete; // Copy Constructor Not Implemented
-    void operator=(const PrimaryRolledPreset&) = delete;      // Operator '=' Not Implemented
+    void operator=(const PrimaryRolledPreset&) = delete;      // Move assignment Not Implemented
 };
 
 DECLARE_FACTORY_CLASS(PrimaryRolledPresetFactory, PrimaryRolledPreset, "Primary Rolled")

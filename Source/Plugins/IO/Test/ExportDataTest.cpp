@@ -317,5 +317,5 @@ public:
 
 private:
   ExportDataTest(const ExportDataTest&); // Copy Constructor Not Implemented
-  void operator=(const ExportDataTest&); // Operator '=' Not Implemented
+  void operator=(const ExportDataTest&); // Move assignment Not Implemented
 };

@@ -97,10 +97,8 @@ public:
 //
 // -----------------------------------------------------------------------------
 ReverseTriangleWinding::ReverseTriangleWinding()
-: SurfaceMeshFilter()
-, m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
+: m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -113,6 +111,7 @@ ReverseTriangleWinding::~ReverseTriangleWinding() = default;
 // -----------------------------------------------------------------------------
 void ReverseTriangleWinding::setupFilterParameters()
 {
+  SurfaceMeshFilter::setupFilterParameters();
   FilterParameterVector parameters;
   {
     DataContainerSelectionFilterParameter::RequirementType req;

@@ -352,5 +352,5 @@ public:
 
 private:
   AngCachingTest(const AngCachingTest&); // Copy Constructor Not Implemented
-  void operator=(const AngCachingTest&); // Operator '=' Not Implemented
+  void operator=(const AngCachingTest&); // Move assignment Not Implemented
 };

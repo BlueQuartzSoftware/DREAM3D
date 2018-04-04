@@ -245,8 +245,7 @@ class OrientationConverter
     
   private:
     OrientationConverter(const OrientationConverter&) = delete; // Copy Constructor Not Implemented
-    void operator=( const OrientationConverter& ) = delete; // Operator '=' Not Implemented
-    
+    void operator=(const OrientationConverter&) = delete;       // Move assignment Not Implemented
 };
 
 
@@ -589,7 +588,7 @@ class EulerConverter : public OrientationConverter<T>
   private:
     
     EulerConverter(const EulerConverter&) = delete; // Copy Constructor Not Implemented
-    void operator=(const EulerConverter&) = delete; // Operator '=' Not Implemented
+    void operator=(const EulerConverter&) = delete; // Move assignment Not Implemented
 };
 
 /* =============================================================================
@@ -778,7 +777,7 @@ class OrientationMatrixConverter : public OrientationConverter<T>
   private:
     
     OrientationMatrixConverter(const OrientationMatrixConverter&) = delete; // Copy Constructor Not Implemented
-    void operator=( const OrientationMatrixConverter& ) = delete; // Operator '=' Not Implemented
+    void operator=(const OrientationMatrixConverter&) = delete;             // Move assignment Not Implemented
 };
 
 
@@ -944,7 +943,7 @@ class QuaternionConverter : public OrientationConverter<T>
   private:
     
     QuaternionConverter(const QuaternionConverter&) = delete; // Copy Constructor Not Implemented
-    void operator=( const QuaternionConverter& ) = delete; // Operator '=' Not Implemented
+    void operator=(const QuaternionConverter&) = delete;      // Move assignment Not Implemented
 };
 
 
@@ -1107,7 +1106,7 @@ class AxisAngleConverter : public OrientationConverter<T>
   private:
     
     AxisAngleConverter(const AxisAngleConverter&) = delete; // Copy Constructor Not Implemented
-    void operator=(const AxisAngleConverter&) = delete; // Operator '=' Not Implemented
+    void operator=(const AxisAngleConverter&) = delete;     // Move assignment Not Implemented
 };
 
 /* =============================================================================
@@ -1272,7 +1271,7 @@ class RodriguesConverter : public OrientationConverter<T>
   private:
     
     RodriguesConverter(const RodriguesConverter&) = delete; // Copy Constructor Not Implemented
-    void operator=(const RodriguesConverter&) = delete; // Operator '=' Not Implemented
+    void operator=(const RodriguesConverter&) = delete;     // Move assignment Not Implemented
 };
 
 
@@ -1439,7 +1438,7 @@ class HomochoricConverter : public OrientationConverter<T>
   private:
     
     HomochoricConverter(const HomochoricConverter&) = delete; // Copy Constructor Not Implemented
-    void operator=(const HomochoricConverter&) = delete; // Operator '=' Not Implemented
+    void operator=(const HomochoricConverter&) = delete;      // Move assignment Not Implemented
 };
 
 
@@ -1605,7 +1604,7 @@ class CubochoricConverter : public OrientationConverter<T>
   private:
     
     CubochoricConverter(const CubochoricConverter&) = delete; // Copy Constructor Not Implemented
-    void operator=(const CubochoricConverter&) = delete; // Operator '=' Not Implemented
+    void operator=(const CubochoricConverter&) = delete;      // Move assignment Not Implemented
 };
 
 #endif /* _orientationConverter_H_ */

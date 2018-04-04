@@ -98,7 +98,7 @@ class EbsdLib_EXPORT CtfPhase
 
   private:
     CtfPhase(const CtfPhase&) = delete;       // Copy Constructor Not Implemented
-    void operator=(const CtfPhase&) = delete; // Operator '=' Not Implemented
+    void operator=(const CtfPhase&) = delete; // Move assignment Not Implemented
 };
 #endif /* _CTFPHASE_H_ */
 

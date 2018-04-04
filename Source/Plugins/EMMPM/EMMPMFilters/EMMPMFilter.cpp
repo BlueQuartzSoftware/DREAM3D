@@ -65,21 +65,20 @@
 //
 // -----------------------------------------------------------------------------
 EMMPMFilter::EMMPMFilter()
-: AbstractFilter(),
-  m_InputDataArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ImageData),
-  m_UseOneBasedValues(true),
-  m_NumClasses(2),
-  m_ExchangeEnergy(0.5f),
-  m_HistogramLoops(5),
-  m_SegmentationLoops(5),
-  m_UseSimulatedAnnealing(false),
-  m_GradientBetaE(1.0f),
-  m_CurvatureBetaC(1.0f),
-  m_CurvatureRMax(15.0f),
-  m_CurvatureEMLoopDelay(1),
-  m_OutputDataArrayPath("", "", ""),
-  m_EmmpmInitType(EMMPM_Basic),
-  m_Data(EMMPM_Data::New())
+: m_InputDataArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ImageData)
+, m_UseOneBasedValues(true)
+, m_NumClasses(2)
+, m_ExchangeEnergy(0.5f)
+, m_HistogramLoops(5)
+, m_SegmentationLoops(5)
+, m_UseSimulatedAnnealing(false)
+, m_GradientBetaE(1.0f)
+, m_CurvatureBetaC(1.0f)
+, m_CurvatureRMax(15.0f)
+, m_CurvatureEMLoopDelay(1)
+, m_OutputDataArrayPath("", "", "")
+, m_EmmpmInitType(EMMPM_Basic)
+, m_Data(EMMPM_Data::New())
 {
   std::vector<std::vector<double> > tableData(2, std::vector<double>(4));
   tableData[0][0] = 0;
@@ -100,7 +99,6 @@ EMMPMFilter::EMMPMFilter()
   cHeaders << "Chem. Pntl" << "Min Std Dev" << "Mean" << "Std Dev";
   m_EMMPMTableData.setColHeaders(cHeaders);
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -214,14 +212,14 @@ void EMMPMFilter::dataCheck()
   QVector<size_t> cDims(1, 1); // We need a single component, gray scale image
   m_InputImagePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getInputDataArrayPath(),
                                                                                                         cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_InputImagePtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_InputImagePtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_InputImage = m_InputImagePtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to Data from the DataArray<T> object */
 
   m_OutputImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(
       this, getOutputDataArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_OutputImagePtr.lock().get())   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_OutputImagePtr.lock())         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_OutputImage = m_OutputImagePtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to Data from the DataArray<T> object */

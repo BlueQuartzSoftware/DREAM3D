@@ -57,12 +57,10 @@
 //
 // -----------------------------------------------------------------------------
 MultiEmmpmFilter::MultiEmmpmFilter()
-: EMMPMFilter()
-, m_OutputAttributeMatrixName("MultiArrayEMMPMOutput")
+: m_OutputAttributeMatrixName("MultiArrayEMMPMOutput")
 , m_OutputArrayPrefix("Segmented_")
 , m_UsePreviousMuSigma(true)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -75,6 +73,7 @@ MultiEmmpmFilter::~MultiEmmpmFilter() = default;
 // -----------------------------------------------------------------------------
 void MultiEmmpmFilter::setupFilterParameters()
 {
+  EMMPMFilter::setupFilterParameters();
   FilterParameterVector parameters = getFilterParameters();
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("Use Mu/Sigma from Previous Image as Initialization for Current Image", UsePreviousMuSigma, FilterParameter::Parameter, MultiEmmpmFilter));

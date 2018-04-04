@@ -49,8 +49,7 @@
 //
 // -----------------------------------------------------------------------------
 FindAvgScalarValueForFeatures::FindAvgScalarValueForFeatures()
-: AbstractFilter()
-, m_SelectedCellArrayPath("", "", "")
+: m_SelectedCellArrayPath("", "", "")
 , m_FeatureIdsArrayPath("", "", "")
 , m_NewFeatureArrayArrayPath("", "", "")
 , m_InDataArray(nullptr)
@@ -58,7 +57,6 @@ FindAvgScalarValueForFeatures::FindAvgScalarValueForFeatures()
 , m_NewFeatureArray(nullptr)
 {
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -119,7 +117,7 @@ void FindAvgScalarValueForFeatures::dataCheck()
   QVector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
                                                                                                         cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_FeatureIdsPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_FeatureIdsPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -127,7 +125,7 @@ void FindAvgScalarValueForFeatures::dataCheck()
   cDims[0] = 1;
   m_NewFeatureArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
       this, getNewFeatureArrayArrayPath(), 0.0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_NewFeatureArrayPtr.lock().get())      /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_NewFeatureArrayPtr.lock())            /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_NewFeatureArray = m_NewFeatureArrayPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -137,7 +135,7 @@ void FindAvgScalarValueForFeatures::dataCheck()
   {
     return;
   }
-  if(nullptr != m_InDataArrayPtr.lock().get())
+  if(nullptr != m_InDataArrayPtr.lock())
   {
     int32_t cDims = m_InDataArrayPtr.lock()->getNumberOfComponents();
     if(cDims != 1)

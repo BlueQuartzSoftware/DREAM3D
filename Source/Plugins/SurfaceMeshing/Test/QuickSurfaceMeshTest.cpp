@@ -542,5 +542,5 @@ public:
 
 private:
   QuickSurfaceMeshTest(const QuickSurfaceMeshTest&); // Copy Constructor Not Implemented
-  void operator=(const QuickSurfaceMeshTest&);       // Operator '=' Not Implemented
+  void operator=(const QuickSurfaceMeshTest&);       // Move assignment Not Implemented
 };

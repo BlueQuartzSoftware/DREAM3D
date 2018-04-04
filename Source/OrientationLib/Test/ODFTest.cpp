@@ -149,5 +149,5 @@ public:
 
 private:
   ODFTest(const ODFTest&);        // Copy Constructor Not Implemented
-  void operator=(const ODFTest&); // Operator '=' Not Implemented
+  void operator=(const ODFTest&); // Move assignment Not Implemented
 };

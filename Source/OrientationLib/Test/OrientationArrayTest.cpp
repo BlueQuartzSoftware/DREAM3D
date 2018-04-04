@@ -1118,5 +1118,5 @@ Orientation Matrix               : | -1.0000   0.0000   0.0000 |
 
 private:
   OrientationArrayTest(const OrientationArrayTest&); // Copy Constructor Not Implemented
-  void operator=(const OrientationArrayTest&);       // Operator '=' Not Implemented
+  void operator=(const OrientationArrayTest&);       // Move assignment Not Implemented
 };

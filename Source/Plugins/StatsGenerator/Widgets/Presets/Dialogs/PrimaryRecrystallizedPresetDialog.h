@@ -66,7 +66,7 @@ class PrimaryRecrystallizedPresetDialog : public QDialog
     QLineEdit* percentRecystallized;
 
     PrimaryRecrystallizedPresetDialog(const PrimaryRecrystallizedPresetDialog&) = delete; // Copy Constructor Not Implemented
-    void operator=(const PrimaryRecrystallizedPresetDialog&) = delete;                    // Operator '=' Not Implemented
+    void operator=(const PrimaryRecrystallizedPresetDialog&) = delete;                    // Move assignment Not Implemented
 };
 
 #endif /* PrimaryRecrystallizedPresetDialog_H_ */

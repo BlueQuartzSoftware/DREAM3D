@@ -7,7 +7,7 @@
         "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Import H5EBSD File",
         "Filter_Name": "ReadH5Ebsd",
-        "InputFile": "Data/Output/SmallIN100.h5ebsd",
+        "InputFile": "Data/Output/Reconstruction/SmallIN100.h5ebsd",
         "RefFrameZDir": 1,
         "SelectedArrayNames": [
             "Phases",
@@ -146,7 +146,7 @@
         "FilterVersion": "1.0.858",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
-        "OutputFile": "Data/Output/SmallIN100.dream3d",
+        "OutputFile": "Data/Output/Reconstruction/03_SmallIN100_Aligned.dream3d",
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {

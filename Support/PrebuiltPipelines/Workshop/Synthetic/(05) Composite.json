@@ -267,7 +267,7 @@
         "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
-        "OutputFile": "Data/Output/CompositeOut.dream3d",
+        "OutputFile": "Data/Output/Synthetic/05_CompositeOut.dream3d",
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {

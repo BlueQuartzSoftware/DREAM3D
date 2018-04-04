@@ -3,7 +3,7 @@
         "FilterVersion": "1.0.600",
         "Filter_Human_Label": "Read DREAM.3D Data File",
         "Filter_Name": "DataContainerReader",
-        "InputFile": "Data/Output/SmallIN100Cleaned.dream3d",
+        "InputFile": "Data/Output/Statistics/SmallIN100_CrystalStats.dream3d",
         "InputFileDataContainerArrayProxy": {
             "Data Containers": [
                 {
@@ -1184,7 +1184,7 @@
         "FilterVersion": "1.0.600",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
-        "OutputFile": "Data/Output/SmallIN100Synthetic.dream3d",
+        "OutputFile": "Data/Output/Synthetic/06_SmallIN100Synthetic.dream3d",
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {

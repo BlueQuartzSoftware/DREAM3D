@@ -332,5 +332,5 @@ public:
 
 private:
   EnsembleInfoReaderTest(const EnsembleInfoReaderTest&); // Copy Constructor Not Implemented
-  void operator=(const EnsembleInfoReaderTest&);         // Operator '=' Not Implemented
+  void operator=(const EnsembleInfoReaderTest&);         // Move assignment Not Implemented
 };

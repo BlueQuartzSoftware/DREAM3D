@@ -186,7 +186,7 @@ class StatisticsPlugin : public QObject, public ISIMPLibPlugin
     bool                m_DidLoad;
 
     StatisticsPlugin(const StatisticsPlugin&) = delete; // Copy Constructor Not Implemented
-    void operator=(const StatisticsPlugin&) = delete;   // Operator '=' Not Implemented
+    void operator=(const StatisticsPlugin&) = delete;   // Move assignment Not Implemented
 };
 
 #endif /* _Statistics_H_ */

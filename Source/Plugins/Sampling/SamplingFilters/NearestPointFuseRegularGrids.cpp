@@ -49,11 +49,9 @@
 //
 // -----------------------------------------------------------------------------
 NearestPointFuseRegularGrids::NearestPointFuseRegularGrids()
-: AbstractFilter()
-, m_ReferenceCellAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, "")
+: m_ReferenceCellAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, "")
 , m_SamplingCellAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, "")
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

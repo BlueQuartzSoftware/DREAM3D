@@ -136,7 +136,7 @@ class EbsdLib_EXPORT HKLFamily
 
   private:
     HKLFamily(const HKLFamily&) = delete;      // Copy Constructor Not Implemented
-    void operator=(const HKLFamily&) = delete; // Operator '=' Not Implemented
+    void operator=(const HKLFamily&) = delete; // Move assignment Not Implemented
 };
 
 
@@ -199,7 +199,7 @@ class EbsdLib_EXPORT AngPhase
 
   private:
     AngPhase(const AngPhase&) = delete;       // Copy Constructor Not Implemented
-    void operator=(const AngPhase&) = delete; // Operator '=' Not Implemented
+    void operator=(const AngPhase&) = delete; // Move assignment Not Implemented
 };
 
 

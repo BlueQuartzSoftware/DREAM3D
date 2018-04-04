@@ -47,16 +47,13 @@
 //
 // -----------------------------------------------------------------------------
 GroupFeatures::GroupFeatures()
-: AbstractFilter()
-, m_ContiguousNeighborListArrayPath("", "", "")
+: m_ContiguousNeighborListArrayPath("", "", "")
 , m_NonContiguousNeighborListArrayPath("", "", "")
 , m_UseNonContiguousNeighbors(false)
 , m_PatchGrouping(false)
 {
   m_ContiguousNeighborList = NeighborList<int32_t>::NullPointer();
   m_NonContiguousNeighborList = NeighborList<int32_t>::NullPointer();
-
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

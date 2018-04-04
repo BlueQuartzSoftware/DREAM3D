@@ -99,7 +99,7 @@ class EMMPMLib_EXPORT EMMPMInputParser
 
   private:
     EMMPMInputParser(const EMMPMInputParser&) = delete; // Copy Constructor Not Implemented
-    void operator=(const EMMPMInputParser&) = delete;   // Operator '=' Not Implemented
+    void operator=(const EMMPMInputParser&) = delete;   // Move assignment Not Implemented
 };
 
 #endif /* _EMMPMINPUTPARSER_H_ */

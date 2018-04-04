@@ -83,7 +83,7 @@ class PrimaryEquiaxedPreset : public AbstractMicrostructurePreset
 
   private:
     PrimaryEquiaxedPreset(const PrimaryEquiaxedPreset&) = delete; // Copy Constructor Not Implemented
-    void operator=(const PrimaryEquiaxedPreset&) = delete;        // Operator '=' Not Implemented
+    void operator=(const PrimaryEquiaxedPreset&) = delete;        // Move assignment Not Implemented
 };
 
 DECLARE_FACTORY_CLASS(PrimaryEquiaxedPresetFactory, PrimaryEquiaxedPreset, "Primary Equiaxed" )

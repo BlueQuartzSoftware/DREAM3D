@@ -67,7 +67,7 @@ class OrientationUtilityCalculator : public QWidget
     bool                                                        m_HasErrors;
 
     OrientationUtilityCalculator(const OrientationUtilityCalculator&) = delete; // Copy Constructor Not Implemented
-    void operator=(const OrientationUtilityCalculator&) = delete;               // Operator '=' Not Implemented
+    void operator=(const OrientationUtilityCalculator&) = delete;               // Move assignment Not Implemented
 };
 
 #endif /* EBSDREFERENCEFRAMEWIDGET_H_ */

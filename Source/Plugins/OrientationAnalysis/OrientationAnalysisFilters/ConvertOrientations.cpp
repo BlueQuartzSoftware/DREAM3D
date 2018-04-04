@@ -50,11 +50,9 @@
 //
 // -----------------------------------------------------------------------------
 ConvertOrientations::ConvertOrientations()
-: AbstractFilter()
-, m_InputType(0)
+: m_InputType(0)
 , m_OutputType(1)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

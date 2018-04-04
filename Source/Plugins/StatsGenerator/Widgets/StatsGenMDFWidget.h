@@ -101,7 +101,7 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
     QString          m_OpenDialogLastFilePath; // Must be last in the list
 
     StatsGenMDFWidget(const StatsGenMDFWidget&) = delete; // Copy Constructor Not Implemented
-    void operator=(const StatsGenMDFWidget&) = delete;    // Operator '=' Not Implemented
+    void operator=(const StatsGenMDFWidget&) = delete;    // Move assignment Not Implemented
 };
 
 #endif /* _STATSGENMDFWIDGET_H_ */

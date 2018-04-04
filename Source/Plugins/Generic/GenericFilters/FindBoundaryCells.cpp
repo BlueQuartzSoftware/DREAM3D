@@ -52,15 +52,13 @@
 //
 // -----------------------------------------------------------------------------
 FindBoundaryCells::FindBoundaryCells()
-: AbstractFilter()
-, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
+: m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 , m_BoundaryCellsArrayName(SIMPL::CellData::BoundaryCells)
 , m_IgnoreFeatureZero(true)
 , m_IncludeVolumeBoundary(false)
 , m_FeatureIds(nullptr)
 , m_BoundaryCells(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -123,7 +121,7 @@ void FindBoundaryCells::dataCheck()
   QVector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
                                                                                                         cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_FeatureIdsPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_FeatureIdsPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   }
@@ -131,7 +129,7 @@ void FindBoundaryCells::dataCheck()
   tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getBoundaryCellsArrayName());
   m_BoundaryCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter, int8_t>(
       this, tempPath, 0, cDims);
-  if(nullptr != m_BoundaryCellsPtr.lock().get())
+  if(nullptr != m_BoundaryCellsPtr.lock())
   {
     m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0);
   }

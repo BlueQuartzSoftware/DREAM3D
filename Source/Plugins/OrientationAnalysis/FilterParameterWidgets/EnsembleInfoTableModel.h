@@ -164,7 +164,7 @@ private:
   EnsembleInfo m_EnsembleInfo;
 
   EnsembleInfoTableModel(const EnsembleInfoTableModel&) = delete; // Copy Constructor Not Implemented
-  void operator=(const EnsembleInfoTableModel&);         // Operator '=' Not Implemented
+  void operator=(const EnsembleInfoTableModel&);                  // Move assignment Not Implemented
 };
 
 #endif /* QUALITYMETRICTABLEMODEL_H_ */

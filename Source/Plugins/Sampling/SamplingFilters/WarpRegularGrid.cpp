@@ -54,8 +54,7 @@
 //
 // -----------------------------------------------------------------------------
 WarpRegularGrid::WarpRegularGrid()
-: AbstractFilter()
-, m_NewDataContainerName(SIMPL::Defaults::NewImageDataContainerName)
+: m_NewDataContainerName(SIMPL::Defaults::NewImageDataContainerName)
 , m_CellAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, "")
 , m_PolyOrder(0)
 , m_SaveAsNewDataContainer(false)
@@ -83,7 +82,6 @@ WarpRegularGrid::WarpRegularGrid()
   m_FourthOrderBCoeff.c02 = 0.0f, m_FourthOrderBCoeff.c11 = 0.0f, m_FourthOrderBCoeff.c10 = 1.0f;
   m_FourthOrderBCoeff.c01 = 1.0f, m_FourthOrderBCoeff.c00 = 0.0f;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

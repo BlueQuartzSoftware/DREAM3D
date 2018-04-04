@@ -138,5 +138,5 @@ public:
 
 private:
   SO3SamplerTest(const SO3SamplerTest&); // Copy Constructor Not Implemented
-  void operator=(const SO3SamplerTest&); // Operator '=' Not Implemented
+  void operator=(const SO3SamplerTest&); // Move assignment Not Implemented
 };

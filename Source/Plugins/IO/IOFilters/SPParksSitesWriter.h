@@ -52,8 +52,8 @@ class SPParksSitesWriter : public FileWriter
     PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(SPParksSitesWriter)
-  SIMPL_STATIC_NEW_MACRO(SPParksSitesWriter)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(SPParksSitesWriter, FileWriter)
+  SIMPL_FILTER_NEW_MACRO(SPParksSitesWriter)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(SPParksSitesWriter, FileWriter)
 
   virtual ~SPParksSitesWriter();
 
@@ -63,62 +63,62 @@ public:
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getCompiledLibraryName() const override;
+  const QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  virtual const QString getBrandingString() const override;
+  const QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  virtual const QString getFilterVersion() const override;
+  const QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
    */
-  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getGroupName() const override;
+  const QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getSubGroupName() const override;
+  const QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  virtual const QUuid getUuid() override;
+  const QUuid getUuid() override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  virtual const QString getHumanLabel() const override;
+  const QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void setupFilterParameters() override;
+  void setupFilterParameters() override;
 
   /**
    * @brief readFilterParameters Reimplemented from @see AbstractFilter class
    */
-  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
   /**
   * @brief preflight Reimplemented from @see AbstractFilter class
   */
-  virtual void preflight() override;
+  void preflight() override;
 
 protected:
   SPParksSitesWriter();
@@ -146,7 +146,7 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
   SPParksSitesWriter(const SPParksSitesWriter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const SPParksSitesWriter&);     // Operator '=' Not Implemented
+  void operator=(const SPParksSitesWriter&);              // Move assignment Not Implemented
 };
 
 #endif /* _SPParksSitesWriter_H_ */

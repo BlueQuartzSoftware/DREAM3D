@@ -183,7 +183,7 @@ class EbsdLib_EXPORT H5OIMReader : public AngReader
     bool                  m_ReadAllArrays;
 
     H5OIMReader(const H5OIMReader&) = delete;    // Copy Constructor Not Implemented
-    void operator=(const H5OIMReader&) = delete; // Operator '=' Not Implemented
+    void operator=(const H5OIMReader&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* _H5OIMReader_H_ */

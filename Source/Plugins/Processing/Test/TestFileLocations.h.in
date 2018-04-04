@@ -1,5 +1,4 @@
-#ifndef _@PROJECT_NAME@FileLocation_h_
-#define _@PROJECT_NAME@FileLocation_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -24,4 +23,13 @@ namespace UnitTest
   
 }
 
-#endif
+namespace UnitTest
+{
+
+  namespace FixNonmanifoldVoxelsTest
+  {
+   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
+   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+  }
+}
+

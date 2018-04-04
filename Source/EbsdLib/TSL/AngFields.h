@@ -80,7 +80,7 @@ class EbsdLib_EXPORT AngFields : public AbstractEbsdFields
 
   private:
     AngFields(const AngFields&) = delete;      // Copy Constructor Not Implemented
-    void operator=(const AngFields&) = delete; // Operator '=' Not Implemented
+    void operator=(const AngFields&) = delete; // Move assignment Not Implemented
 };
 
 

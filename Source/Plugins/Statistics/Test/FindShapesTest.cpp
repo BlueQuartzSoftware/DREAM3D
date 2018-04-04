@@ -355,5 +355,5 @@ public:
 
 private:
   FindShapesTest(const FindShapesTest&); // Copy Constructor Not Implemented
-  void operator=(const FindShapesTest&); // Operator '=' Not Implemented
+  void operator=(const FindShapesTest&); // Move assignment Not Implemented
 };

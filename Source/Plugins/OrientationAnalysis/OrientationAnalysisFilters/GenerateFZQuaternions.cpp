@@ -115,8 +115,7 @@ private:
 //
 // -----------------------------------------------------------------------------
 GenerateFZQuaternions::GenerateFZQuaternions()
-: AbstractFilter()
-, m_CellPhasesArrayPath("", "", "")
+: m_CellPhasesArrayPath("", "", "")
 , m_QuatsArrayPath("", "", "")
 , m_CrystalStructuresArrayPath("", "", "")
 , m_UseGoodVoxels(false)
@@ -130,7 +129,6 @@ GenerateFZQuaternions::GenerateFZQuaternions()
 {
   initialize();
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -198,7 +196,7 @@ void GenerateFZQuaternions::dataCheck()
   QVector<size_t> cDims(1, 1);
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(),
                                                                                                         cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_CellPhasesPtr.lock().get())                                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_CellPhasesPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -209,7 +207,7 @@ void GenerateFZQuaternions::dataCheck()
 
   cDims[0] = 4;
   m_QuatsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuatsArrayPath(), cDims);
-  if(nullptr != m_QuatsPtr.lock().get())
+  if(nullptr != m_QuatsPtr.lock())
   {
     m_Quats = m_QuatsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -217,14 +215,14 @@ void GenerateFZQuaternions::dataCheck()
   cDims[0] = 1;
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(),
                                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_CrystalStructuresPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 4;
   m_FZQuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getFZQuatsArrayPath(), 0, cDims);
-  if(nullptr != m_FZQuatsPtr.lock().get())
+  if(nullptr != m_FZQuatsPtr.lock())
   {
     m_FZQuats = m_FZQuatsPtr.lock()->getPointer(0);
   }
@@ -235,7 +233,7 @@ void GenerateFZQuaternions::dataCheck()
     cDims[0] = 1;
     m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_GoodVoxelsPtr.lock().get())                                                                /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    if(nullptr != m_GoodVoxelsPtr.lock())                                                                      /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */

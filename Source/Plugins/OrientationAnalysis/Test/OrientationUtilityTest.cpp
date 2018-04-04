@@ -134,5 +134,5 @@ public:
 
 private:
   OrientationUtilityTest(const OrientationUtilityTest&); // Copy Constructor Not Implemented
-  void operator=(const OrientationUtilityTest&);         // Operator '=' Not Implemented
+  void operator=(const OrientationUtilityTest&);         // Move assignment Not Implemented
 };

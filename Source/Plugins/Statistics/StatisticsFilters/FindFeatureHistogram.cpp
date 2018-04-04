@@ -51,8 +51,7 @@
 //
 // -----------------------------------------------------------------------------
 FindFeatureHistogram::FindFeatureHistogram()
-: AbstractFilter()
-, m_SelectedFeatureArrayPath("", "", "")
+: m_SelectedFeatureArrayPath("", "", "")
 , m_NumberOfBins(1)
 , m_RemoveBiasedFeatures(false)
 , m_FeaturePhasesArrayPath("", "", "")
@@ -62,7 +61,6 @@ FindFeatureHistogram::FindFeatureHistogram()
 , m_NewEnsembleArray(nullptr)
 , m_FeaturePhases(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -142,7 +140,7 @@ void FindFeatureHistogram::dataCheck()
   QVector<size_t> dims(1, 1);
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(),
                                                                                                            dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_FeaturePhasesPtr.lock().get())                                                                  /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_FeaturePhasesPtr.lock())                                                                        /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -158,7 +156,7 @@ void FindFeatureHistogram::dataCheck()
   dims[0] = numComp;
   m_NewEnsembleArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int>, AbstractFilter>(
       this, getNewEnsembleArrayArrayPath(), 0, dims); /* Assigns the shared_ptr<>(this, tempPath, 0, dims); Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_NewEnsembleArrayPtr.lock().get())   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_NewEnsembleArrayPtr.lock())         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_NewEnsembleArray = m_NewEnsembleArrayPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -168,7 +166,7 @@ void FindFeatureHistogram::dataCheck()
     dims[0] = 1;
     m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(),
                                                                                                            dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_BiasedFeaturesPtr.lock().get())                                                               /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    if(nullptr != m_BiasedFeaturesPtr.lock())                                                                     /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */

@@ -296,5 +296,5 @@ public:
 
 private:
   FindTriangleGeomCentroidsTest(const FindTriangleGeomCentroidsTest&); // Copy Constructor Not Implemented
-  void operator=(const FindTriangleGeomCentroidsTest&);                // Operator '=' Not Implemented
+  void operator=(const FindTriangleGeomCentroidsTest&);                // Move assignment Not Implemented
 };

@@ -64,7 +64,7 @@ public:
 
 private:
   IPFLegendPainter(const IPFLegendPainter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const IPFLegendPainter&);    // Operator '=' Not Implemented
+  void operator=(const IPFLegendPainter&);            // Move assignment Not Implemented
 };
 
 #endif /* _ipflegendpainter_H_ */

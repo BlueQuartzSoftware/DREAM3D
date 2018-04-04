@@ -1,5 +1,4 @@
-DREAM.3D Data Structure 
-=========
+# DREAM.3D Data Structure #
 
 ## Overview ##
 
@@ -19,6 +18,7 @@ The above node types are commonly referred to as _objects_, while the data store
 -----
 
 ## Geometry ##
+
 A special kind of object is known as the **Geometry**, which defines the spatial organization of the data. The **Data Container** objects are responsible for holding **Geometries**. In general, this means that the distinguishing characteristic between two **Data Containers** is their associated **Geometry** objects. **Geometries** are generally classified by the _topology_ of their unit **Element**, which is the smallest building block of the geometry. **Elements** can have 4 different dimensionalities: 0 (points), 1 (lines), 2 (polygons), and 3 (polyhedra). In the DREAM.3D ontology, these are generally referred to as **Vertices**, **Edges**, **Faces**, and **Cells**. 
 
 -----
@@ -27,9 +27,10 @@ A special kind of object is known as the **Geometry**, which defines the spatial
 
 -----
 
-Data attributes can be associated with any of these element types, as long as that association makes sense for the given element topology. For example, a triangulated surface mesh can have **Vertex**, **Edge**, and **Face** data associated with it, but not **Cell** data, since a triangle has a 2-dimensional topology. To help the user keep track of the **Geometry** type associated with a particular **Data Container**, DREAM.3D sets default names of **Data Containers** to be prefixed with the **Geometry** type when applicable. For example, a **Data Container** containing an **Image Geometry** would have a default name **ImageDataContainer**. Of course, you can [rename](@ref renamedatacontainer) **Data Containers** if you prefer a different data scheme.
+Data attributes can be associated with any of these element types, as long as that association makes sense for the given element topology. For example, a triangulated surface mesh can have **Vertex**, **Edge**, and **Face** data associated with it, but not **Cell** data, since a triangle has a 2-dimensional topology. To help the user keep track of the **Geometry** type associated with a particular **Data Container**, DREAM.3D sets default names of **Data Containers** to be prefixed with the **Geometry** type when applicable. For example, a **Data Container** containing an **Image Geometry** would have a default name **ImageDataContainer**. Of course, you can [rename](../../Filters/CoreFilters/RenameDataContainer) **Data Containers** if you prefer a different data scheme.
 
 ### Currently Implemented Geometries ###
+
 | Name             | Topology |  Associated Data | Description |
 |------------------|------|------------------------|-----------|
 | Unknown | N/A | Any | A null geometry, used if the underlying data have no spatial layout |

@@ -61,12 +61,12 @@ class WritePoleFigure : public AbstractFilter
     PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
     PYB11_PROPERTY(int GenerationAlgorithm READ getGenerationAlgorithm WRITE setGenerationAlgorithm)
     //  PYB11_PROPERTY(bool UseDiscreteHeatMap READ getUseDiscreteHeatMap WRITE setUseDiscreteHeatMap)
-  public:
-    SIMPL_SHARED_POINTERS(WritePoleFigure)
-    SIMPL_STATIC_NEW_MACRO(WritePoleFigure)
-    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(WritePoleFigure, AbstractFilter)
+public:
+  SIMPL_SHARED_POINTERS(WritePoleFigure)
+  SIMPL_FILTER_NEW_MACRO(WritePoleFigure)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(WritePoleFigure, AbstractFilter)
 
-    virtual ~WritePoleFigure();
+  ~WritePoleFigure() override;
 
     enum ImageFormatType
     {
@@ -127,70 +127,70 @@ class WritePoleFigure : public AbstractFilter
     //  SIMPL_FILTER_PARAMETER(bool, UseDiscreteHeatMap)
     //  Q_PROPERTY(bool UseDiscreteHeatMap READ getUseDiscreteHeatMap WRITE setUseDiscreteHeatMap)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getCompiledLibraryName() const override;
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  const QString getCompiledLibraryName() const override;
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-    */
-    virtual const QString getBrandingString() const override;
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+  */
+  const QString getBrandingString() const override;
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    virtual const QString getFilterVersion() const override;
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  const QString getFilterVersion() const override;
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getGroupName() const override;
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  const QString getGroupName() const override;
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getSubGroupName() const override;
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  const QString getSubGroupName() const override;
 
-    /**
-     * @brief getUuid Return the unique identifier for this filter.
-     * @return A QUuid object.
-     */
-    virtual const QUuid getUuid() override;
+  /**
+   * @brief getUuid Return the unique identifier for this filter.
+   * @return A QUuid object.
+   */
+  const QUuid getUuid() override;
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    virtual const QString getHumanLabel() const override;
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  const QString getHumanLabel() const override;
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters() override;
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  void setupFilterParameters() override;
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute() override;
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  void execute() override;
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight() override;
+  /**
+  * @brief preflight Reimplemented from @see AbstractFilter class
+  */
+  void preflight() override;
 
   signals:
     /**
@@ -248,8 +248,11 @@ class WritePoleFigure : public AbstractFilter
     DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
     DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
-    WritePoleFigure(const WritePoleFigure&) = delete; // Copy Constructor Not Implemented
-    void operator=(const WritePoleFigure&);           // Operator '=' Not Implemented
+public:
+  WritePoleFigure(const WritePoleFigure&) = delete; // Copy Constructor Not Implemented
+  WritePoleFigure(WritePoleFigure&&) = delete;      // Move Constructor
+  WritePoleFigure& operator=(const WritePoleFigure&) = delete; // Copy Assignment Not Implemented
+  WritePoleFigure& operator=(WritePoleFigure&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* _WritePoleFigure_H_ */

@@ -94,6 +94,5 @@ class TextureTest
     }
   private:
     TextureTest(const TextureTest&); // Copy Constructor Not Implemented
-    void operator=(const TextureTest&); // Operator '=' Not Implemented
-
+    void operator=(const TextureTest&); // Move assignment Not Implemented
 };

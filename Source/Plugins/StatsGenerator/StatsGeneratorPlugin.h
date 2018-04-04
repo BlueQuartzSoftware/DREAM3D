@@ -157,7 +157,7 @@ class StatsGeneratorPlugin : public QObject, public ISIMPLibPlugin
     bool                m_DidLoad;
 
     StatsGeneratorPlugin(const StatsGeneratorPlugin&) = delete; // Copy Constructor Not Implemented
-    void operator=(const StatsGeneratorPlugin&) = delete;       // Operator '=' Not Implemented
+    void operator=(const StatsGeneratorPlugin&) = delete;       // Move assignment Not Implemented
 };
 
 #endif /* _StatsGenerator_H_ */

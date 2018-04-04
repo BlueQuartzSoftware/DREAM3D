@@ -63,7 +63,7 @@ class GenericDataParser
 
   private:
     GenericDataParser(const GenericDataParser&); // Copy Constructor Not Implemented
-    void operator=(const GenericDataParser&); // Operator '=' Not Implemented
+    void operator=(const GenericDataParser&);    // Move assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -116,7 +116,7 @@ class GenericInt32Parser : public GenericDataParser
     Int32ArrayType::Pointer m_Ptr;
 
     GenericInt32Parser(const GenericInt32Parser&); // Copy Constructor Not Implemented
-    void operator=(const GenericInt32Parser&); // Operator '=' Not Implemented
+    void operator=(const GenericInt32Parser&);     // Move assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -171,7 +171,7 @@ class GenericFloatParser : public GenericDataParser
     FloatArrayType::Pointer m_Ptr;
 
     GenericFloatParser(const GenericFloatParser&); // Copy Constructor Not Implemented
-    void operator=(const GenericFloatParser&); // Operator '=' Not ImplementedOperator '=' Not Implemented
+    void operator=(const GenericFloatParser&);     // Move assignment Not ImplementedOperator '=' Not Implemented
 };
 
 

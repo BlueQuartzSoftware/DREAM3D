@@ -41,12 +41,10 @@
 //
 // -----------------------------------------------------------------------------
 GenerateNodeTriangleConnectivity::GenerateNodeTriangleConnectivity()
-: AbstractFilter()
-, m_SurfaceMeshUniqueEdgesArrayName(SIMPL::CellData::SurfaceMeshUniqueEdges)
+: m_SurfaceMeshUniqueEdgesArrayName(SIMPL::CellData::SurfaceMeshUniqueEdges)
 , m_SurfaceMeshTriangleEdgesArrayName(SIMPL::CellData::SurfaceMeshTriangleEdges)
 , m_SurfaceMeshTriangleEdges(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -116,7 +114,7 @@ void GenerateNodeTriangleConnectivity::dataCheck()
       int size = sm->getFaces()->GetNumberOfTuples();
       m_SurfaceMeshTriangleEdgesPtr = sattrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, m_CellAttributeMatrixName, m_SurfaceMeshTriangleEdgesArrayName, 0, size,
                                                                                                                   3); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-      if(nullptr != m_SurfaceMeshTriangleEdgesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+      if(nullptr != m_SurfaceMeshTriangleEdgesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
       {
         m_SurfaceMeshTriangleEdges = m_SurfaceMeshTriangleEdgesPtr.lock()->getPointer(0);
       } /* Now assign the raw pointer to data from the DataArray<T> object */

@@ -58,8 +58,7 @@
 //
 // -----------------------------------------------------------------------------
 ImportVectorImageStack::ImportVectorImageStack()
-: AbstractFilter()
-, m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
+: m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_StartIndex(0)
 , m_EndIndex(0)
@@ -74,7 +73,6 @@ ImportVectorImageStack::ImportVectorImageStack()
 , m_VectorData(nullptr)
 {
   initialize();
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -278,7 +276,7 @@ void ImportVectorImageStack::dataCheck()
     tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getVectorDataArrayName());
     m_VectorDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(
         this, tempPath, 0, arraydims);          /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_VectorDataPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    if(nullptr != m_VectorDataPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_VectorData = m_VectorDataPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -314,7 +312,7 @@ void ImportVectorImageStack::dataCheck()
   //  tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getVectorDataArrayName() );
   //  m_VectorDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, arraydims); /* Assigns the shared_ptr<> to an instance
   //  variable that is a weak_ptr<> */
-  //  if( nullptr != m_VectorDataPtr.lock().get() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  //  if(nullptr != m_VectorDataPtr.lock() ) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   //  { m_VectorData = m_VectorDataPtr.lock()->getPointer(0); } /* Now assign the raw pointer to data from the DataArray<T> object */
 }
 

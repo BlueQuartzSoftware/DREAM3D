@@ -154,7 +154,7 @@ class StatsGenODFWidget : public QWidget, private Ui::StatsGenAxisODFWidget
     QString m_OpenDialogLastFilePath; // Must be last in the list
 
     StatsGenODFWidget(const StatsGenODFWidget&) = delete; // Copy Constructor Not Implemented
-    void operator=(const StatsGenODFWidget&) = delete;    // Operator '=' Not Implemented
+    void operator=(const StatsGenODFWidget&) = delete;    // Move assignment Not Implemented
 };
 
 #endif /* _STATSGENODFWIDGET_H_ */

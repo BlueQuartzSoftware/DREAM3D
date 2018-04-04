@@ -224,7 +224,7 @@ class OrientationLib_EXPORT LaueOps
 
   private:
     LaueOps(const LaueOps&) = delete;        // Copy Constructor Not Implemented
-    void operator=(const LaueOps&) = delete; // Operator '=' Not Implemented
+    void operator=(const LaueOps&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* _laueOps_H_ */

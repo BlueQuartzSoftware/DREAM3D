@@ -134,7 +134,7 @@ private:
   bool m_ResetData = false;
 
   PrimaryPhaseWidget(const PrimaryPhaseWidget&) = delete; // Copy Constructor Not Implemented
-  void operator=(const PrimaryPhaseWidget&);     // Operator '=' Not Implemented
+  void operator=(const PrimaryPhaseWidget&);              // Move assignment Not Implemented
 };
 
 #endif /* PRIMARYPHASEWIDGET_H_ */

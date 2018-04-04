@@ -162,7 +162,7 @@ class StatsGenRDFWidget : public QWidget
     bool validateInput();
 
     StatsGenRDFWidget(const StatsGenRDFWidget&) = delete; // Copy Constructor Not Implemented
-    void operator=(const StatsGenRDFWidget&) = delete;    // Operator '=' Not Implemented
+    void operator=(const StatsGenRDFWidget&) = delete;    // Move assignment Not Implemented
 };
 
 #endif /* _StatsGenRDFWidget_H_ */

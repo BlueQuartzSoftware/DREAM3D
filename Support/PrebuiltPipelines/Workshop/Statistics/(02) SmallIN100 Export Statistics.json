@@ -2,7 +2,7 @@
     "0": {
         "Filter_Human_Label": "Read DREAM.3D Data File",
         "Filter_Name": "DataContainerReader",
-        "InputFile": "Data/Output/SmallIN100Cleaned.dream3d",
+        "InputFile": "Data/Output/Statistics/SmallIN100_Morph.dream3d",
         "InputFileDataContainerArrayProxy": {
             "Data Containers": [
                 {
@@ -544,7 +544,7 @@
             "Data Array Name": "",
             "Data Container Name": "ImageDataContainer"
         },
-        "FeatureDataFile": "Data/Output/SmallIN100Cleaned.csv",
+        "FeatureDataFile": "Data/Statistics/SmallIN100_Morph/FeatureStatistics.csv",
         "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Write Feature Data as CSV File",
         "Filter_Name": "FeatureDataCSVWriter",

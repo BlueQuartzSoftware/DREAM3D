@@ -213,5 +213,5 @@ public:
 
 private:
   AngleFileIOTest(const AngleFileIOTest&); // Copy Constructor Not Implemented
-  void operator=(const AngleFileIOTest&);  // Operator '=' Not Implemented
+  void operator=(const AngleFileIOTest&);  // Move assignment Not Implemented
 };

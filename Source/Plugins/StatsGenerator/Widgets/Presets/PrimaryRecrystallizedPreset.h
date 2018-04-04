@@ -86,7 +86,7 @@ class   PrimaryRecrystallizedPreset : public AbstractMicrostructurePreset
 
   private:
     PrimaryRecrystallizedPreset(const PrimaryRecrystallizedPreset&) = delete; // Copy Constructor Not Implemented
-    void operator=(const PrimaryRecrystallizedPreset&) = delete;              // Operator '=' Not Implemented
+    void operator=(const PrimaryRecrystallizedPreset&) = delete;              // Move assignment Not Implemented
 };
 
 DECLARE_FACTORY_CLASS(PrimaryRecrystallizedPresetFactory, PrimaryRecrystallizedPreset, "Recrystallized" )

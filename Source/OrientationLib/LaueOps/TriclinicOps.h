@@ -183,7 +183,7 @@ class OrientationLib_EXPORT TriclinicOps : public LaueOps
                         float& n1, float& n2, float& n3);
   private:
     TriclinicOps(const TriclinicOps&) = delete;   // Copy Constructor Not Implemented
-    void operator=(const TriclinicOps&) = delete; // Operator '=' Not Implemented
+    void operator=(const TriclinicOps&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* TriclinicOPS_H_ */

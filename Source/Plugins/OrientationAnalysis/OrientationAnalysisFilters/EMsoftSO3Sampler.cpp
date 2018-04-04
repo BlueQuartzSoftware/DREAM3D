@@ -54,8 +54,7 @@
 //
 // -----------------------------------------------------------------------------
 EMsoftSO3Sampler::EMsoftSO3Sampler()
-: AbstractFilter()
-, m_sampleModeSelector(0)
+: m_sampleModeSelector(0)
 , m_PointGroup(32)
 , m_Numsp(5)
 , m_MisOr(3.0)
@@ -73,7 +72,6 @@ EMsoftSO3Sampler::EMsoftSO3Sampler()
   m_RefOrFull.y = 0.0;
   m_RefOrFull.z = 0.0;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -245,7 +243,7 @@ void EMsoftSO3Sampler::dataCheck()
   tempPath.update(getDataContainerName(), getEMsoftAttributeMatrixName(), getEulerAnglesArrayName());
   m_EulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0.0f,
                                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_EulerAnglesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_EulerAnglesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_EulerAngles = m_EulerAnglesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */

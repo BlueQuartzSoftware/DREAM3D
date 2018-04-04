@@ -81,10 +81,10 @@ class M3CSliceBySlice : public AbstractFilter
   // PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(M3CSliceBySlice)
-  SIMPL_STATIC_NEW_MACRO(M3CSliceBySlice)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(M3CSliceBySlice, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(M3CSliceBySlice)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(M3CSliceBySlice, AbstractFilter)
 
-  virtual ~M3CSliceBySlice();
+  ~M3CSliceBySlice() override;
   SIMPL_FILTER_PARAMETER(QString, SurfaceDataContainerName)
   Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
   SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
@@ -100,28 +100,28 @@ public:
   SIMPL_FILTER_PARAMETER(bool, DeleteTempFiles)
   Q_PROPERTY(bool DeleteTempFiles READ getDeleteTempFiles WRITE setDeleteTempFiles)
 
-  virtual void preflight() override;
+  void preflight() override;
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  virtual const QString getCompiledLibraryName() const override;
-  virtual AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
-  virtual const QString getGroupName() const override;
-  virtual const QString getSubGroupName() const override;
+  const QString getCompiledLibraryName() const override;
+  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+  const QString getGroupName() const override;
+  const QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  virtual const QUuid getUuid() override;
-  virtual const QString getHumanLabel() const override;
+  const QUuid getUuid() override;
+  const QString getHumanLabel() const override;
 
-  virtual void setupFilterParameters() override; /**
-*@brief This method will read the options from a file
-*@param reader The reader that is used to read the options from a file
-*/
-  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  void setupFilterParameters() override; /**
+                                          *@brief This method will read the options from a file
+                                          *@param reader The reader that is used to read the options from a file
+                                          */
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
   void execute();
 
@@ -355,8 +355,11 @@ private:
 
   void dataCheck();
 
+public:
   M3CSliceBySlice(const M3CSliceBySlice&) = delete; // Copy Constructor Not Implemented
-  void operator=(const M3CSliceBySlice&);  // Operator '=' Not Implemented
+  M3CSliceBySlice(M3CSliceBySlice&&) = delete;      // Move Constructor
+  M3CSliceBySlice& operator=(const M3CSliceBySlice&) = delete; // Copy Assignment Not Implemented
+  M3CSliceBySlice& operator=(M3CSliceBySlice&&) = delete;
 };
 
 #endif

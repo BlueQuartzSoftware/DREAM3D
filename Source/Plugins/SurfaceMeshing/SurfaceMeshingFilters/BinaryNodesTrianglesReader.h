@@ -59,66 +59,68 @@ class BinaryNodesTrianglesReader : public SurfaceMeshFilter
     Q_OBJECT
   public:
     SIMPL_SHARED_POINTERS(BinaryNodesTrianglesReader)
-    SIMPL_STATIC_NEW_MACRO(BinaryNodesTrianglesReader)
+    SIMPL_FILTER_NEW_MACRO(BinaryNodesTrianglesReader)
      SIMPL_TYPE_MACRO_SUPER_OVERRIDE(BinaryNodesTrianglesReader, SurfaceMeshFilter)
 
-    virtual ~BinaryNodesTrianglesReader();
+     ~BinaryNodesTrianglesReader() override;
 
-    SIMPL_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-    SIMPL_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
-    SIMPL_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
+     SIMPL_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
+     SIMPL_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
+     SIMPL_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
 
-    SIMPL_INSTANCE_STRING_PROPERTY(FaceLabelsArrayName)
-    SIMPL_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypesArrayName)
+     SIMPL_INSTANCE_STRING_PROPERTY(FaceLabelsArrayName)
+     SIMPL_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypesArrayName)
 
-    SIMPL_INSTANCE_STRING_PROPERTY(BinaryNodesFile)
-    SIMPL_INSTANCE_STRING_PROPERTY(BinaryTrianglesFile)
+     SIMPL_INSTANCE_STRING_PROPERTY(BinaryNodesFile)
+     SIMPL_INSTANCE_STRING_PROPERTY(BinaryTrianglesFile)
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void setupFilterParameters() override;
+     /**
+      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+      */
+     void setupFilterParameters() override;
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+     /**
+      * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+      */
+     void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    virtual void execute() override;
+     /**
+      * @brief execute Reimplemented from @see AbstractFilter class
+      */
+     void execute() override;
 
-    /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-    virtual void preflight() override;
+     /**
+      * @brief preflight Reimplemented from @see AbstractFilter class
+      */
+     void preflight() override;
 
-  protected:
-    BinaryNodesTrianglesReader();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+   protected:
+     BinaryNodesTrianglesReader();
+     /**
+      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+      */
+     void dataCheck();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+     /**
+      * @brief Initializes all the private instance variables.
+      */
+     void initialize();
 
+     void updateVertexInstancePointers();
 
-    void updateVertexInstancePointers();
+     void updateFaceInstancePointers();
 
-    void updateFaceInstancePointers();
+     int read();
 
-    int read();
+   private:
+     DEFINE_DATAARRAY_VARIABLE(int8_t, SurfaceMeshNodeTypes)
+     DEFINE_DATAARRAY_VARIABLE(int32_t, FaceLabels)
 
-  private:
-    DEFINE_DATAARRAY_VARIABLE(int8_t, SurfaceMeshNodeTypes)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FaceLabels)
-
-    BinaryNodesTrianglesReader(const BinaryNodesTrianglesReader&) = delete; // Copy Constructor Not Implemented
-    void operator=(const BinaryNodesTrianglesReader&) = delete;             // Operator '=' Not Implemented
+   public:
+     BinaryNodesTrianglesReader(const BinaryNodesTrianglesReader&) = delete;            // Copy Constructor Not Implemented
+     BinaryNodesTrianglesReader(BinaryNodesTrianglesReader&&) = delete;                 // Move Constructor
+     BinaryNodesTrianglesReader& operator=(const BinaryNodesTrianglesReader&) = delete; // Copy Assignment Not Implemented
+     BinaryNodesTrianglesReader& operator=(BinaryNodesTrianglesReader&&) = delete;      // Move Assignment
 };
 
 #endif /* _BinaryNodesTrianglesReader_H_ */

@@ -166,8 +166,7 @@ private:
 //
 // -----------------------------------------------------------------------------
 RotateSampleRefFrame::RotateSampleRefFrame()
-: AbstractFilter()
-, m_CellAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, "")
+: m_CellAttributeMatrixPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, "")
 , m_RotationAngle(0.0)
 , m_SliceBySlice(false)
 {
@@ -175,7 +174,6 @@ RotateSampleRefFrame::RotateSampleRefFrame()
   m_RotationAxis.y = 0.0;
   m_RotationAxis.z = 1.0;
 
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

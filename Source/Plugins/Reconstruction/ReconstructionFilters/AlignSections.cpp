@@ -154,20 +154,18 @@ private:
   std::vector<int64_t> m_yshifts;
   int32_t m_VoxelArrayIndex = 0;
 
-  void operator=(const AlignSectionsTransferDataImpl&) = delete; // Operator '=' Not Implemented
+  void operator=(const AlignSectionsTransferDataImpl&) = delete; // Move assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 AlignSections::AlignSections()
-: AbstractFilter()
-, m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
+: m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_WriteAlignmentShifts(false)
 , m_AlignmentShiftFileName("")
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

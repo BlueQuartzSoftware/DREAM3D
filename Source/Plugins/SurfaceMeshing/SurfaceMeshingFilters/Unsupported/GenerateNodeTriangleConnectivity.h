@@ -61,10 +61,10 @@ class GenerateNodeTriangleConnectivity : public AbstractFilter
   Q_OBJECT
 public:
   SIMPL_SHARED_POINTERS(GenerateNodeTriangleConnectivity)
-  SIMPL_STATIC_NEW_MACRO(GenerateNodeTriangleConnectivity)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GenerateNodeTriangleConnectivity, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(GenerateNodeTriangleConnectivity)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GenerateNodeTriangleConnectivity, AbstractFilter)
 
-  virtual ~GenerateNodeTriangleConnectivity();
+  ~GenerateNodeTriangleConnectivity() override;
 
   /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
   SIMPL_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
@@ -94,24 +94,24 @@ public:
   * @brief This method will instantiate all the end user settable options/parameters
   * for this filter
   */
-  virtual void setupFilterParameters() override;
+  void setupFilterParameters() override;
 
   /**
   * @brief This method will read the options from a file
   * @param reader The reader that is used to read the options from a file
   */
-  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
   /**
   * @brief Reimplemented from @see AbstractFilter class
   */
-  virtual void execute() override;
+  void execute() override;
 
   /**
   * @brief This function runs some sanity checks on the DataContainer and inputs
   * in an attempt to ensure the filter can process the inputs.
   */
-  virtual void preflight() override;
+  void preflight() override;
 
 protected:
   GenerateNodeTriangleConnectivity();
@@ -135,8 +135,11 @@ private:
    */
   void generateConnectivity();
 
+public:
   GenerateNodeTriangleConnectivity(const GenerateNodeTriangleConnectivity&) = delete; // Copy Constructor Not Implemented
-  void operator=(const GenerateNodeTriangleConnectivity&);                   // Operator '=' Not Implemented
+  GenerateNodeTriangleConnectivity(GenerateNodeTriangleConnectivity&&) = delete;      // Move Constructor
+  GenerateNodeTriangleConnectivity& operator=(const GenerateNodeTriangleConnectivity&) = delete; // Copy Assignment Not Implemented
+  GenerateNodeTriangleConnectivity& operator=(GenerateNodeTriangleConnectivity&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* _GenerateNodeTriangleConnectivity_H_ */

@@ -64,7 +64,7 @@ class DataParser
 
   private:
     DataParser(const DataParser&); // Copy Constructor Not Implemented
-    void operator=(const DataParser&); // Operator '=' Not Implemented
+    void operator=(const DataParser&); // Move assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -133,7 +133,7 @@ class Int32Parser : public DataParser
 
 
     Int32Parser(const Int32Parser&); // Copy Constructor Not Implemented
-    void operator=(const Int32Parser&); // Operator '=' Not Implemented
+    void operator=(const Int32Parser&); // Move assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -199,7 +199,7 @@ class FloatParser : public DataParser
   private:
 
     FloatParser(const FloatParser&); // Copy Constructor Not Implemented
-    void operator=(const FloatParser&); // Operator '=' Not Implemented
+    void operator=(const FloatParser&); // Move assignment Not Implemented
 };
 
 

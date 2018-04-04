@@ -73,7 +73,7 @@ class RolledPresetDialog : public QDialog
     QLineEdit* C;
 
     RolledPresetDialog(const RolledPresetDialog&) = delete; // Copy Constructor Not Implemented
-    void operator=(const RolledPresetDialog&) = delete;     // Operator '=' Not Implemented
+    void operator=(const RolledPresetDialog&) = delete;     // Move assignment Not Implemented
 };
 
 #endif /* RolledPresetDialog_H_ */

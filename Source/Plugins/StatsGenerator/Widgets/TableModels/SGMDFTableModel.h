@@ -182,7 +182,7 @@ class SGMDFTableModel : public QAbstractTableModel
     QVector<float> m_Weights;
 
     SGMDFTableModel(const SGMDFTableModel&) = delete; // Copy Constructor Not Implemented
-    void operator=(const SGMDFTableModel&) = delete;  // Operator '=' Not Implemented
+    void operator=(const SGMDFTableModel&) = delete;  // Move assignment Not Implemented
 };
 
 #endif /* SGMDFTABLEMODEL_H_ */

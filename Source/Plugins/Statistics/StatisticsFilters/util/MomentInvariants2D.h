@@ -254,7 +254,7 @@ class MomentInvariants2D
 
   private:
     MomentInvariants2D(const MomentInvariants2D&) = delete; // Copy Constructor Not Implemented
-    void operator=(const MomentInvariants2D&) = delete;     // Operator '=' Not Implemented
+    void operator=(const MomentInvariants2D&) = delete;     // Move assignment Not Implemented
 };
 
 

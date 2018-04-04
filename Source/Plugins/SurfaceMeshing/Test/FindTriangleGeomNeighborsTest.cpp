@@ -484,5 +484,5 @@ public:
 
 private:
   FindTriangleGeomNeighborsTest(const FindTriangleGeomNeighborsTest&); // Copy Constructor Not Implemented
-  void operator=(const FindTriangleGeomNeighborsTest&);                // Operator '=' Not Implemented
+  void operator=(const FindTriangleGeomNeighborsTest&);                // Move assignment Not Implemented
 };

@@ -442,5 +442,5 @@ public:
 
 private:
   FindDifferenceMapTest(const FindDifferenceMapTest&); // Copy Constructor Not Implemented
-  void operator=(const FindDifferenceMapTest&);        // Operator '=' Not Implemented
+  void operator=(const FindDifferenceMapTest&);        // Move assignment Not Implemented
 };

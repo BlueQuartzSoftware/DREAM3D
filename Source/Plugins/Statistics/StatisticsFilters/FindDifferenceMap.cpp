@@ -118,15 +118,13 @@ public:
 //
 // -----------------------------------------------------------------------------
 FindDifferenceMap::FindDifferenceMap()
-: AbstractFilter()
-, m_FirstInputArrayPath("", "", "")
+: m_FirstInputArrayPath("", "", "")
 , m_SecondInputArrayPath("", "", "")
 , m_DifferenceMapArrayPath("", "", "DifferenceMap")
 , m_FirstInputArray(nullptr)
 , m_SecondInputArray(nullptr)
 , m_DifferenceMap(nullptr)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

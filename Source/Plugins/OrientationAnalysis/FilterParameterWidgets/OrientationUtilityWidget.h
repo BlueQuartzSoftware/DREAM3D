@@ -95,7 +95,7 @@ class OrientationUtilityWidget : public FilterParameterWidget, private Ui::Orien
     QList<OrientationWidget*>                                     m_OrientationWidgets;
 
     OrientationUtilityWidget(const OrientationUtilityWidget&) = delete; // Copy Constructor Not Implemented
-    void operator=(const OrientationUtilityWidget&) = delete;           // Operator '=' Not Implemented
+    void operator=(const OrientationUtilityWidget&) = delete;           // Move assignment Not Implemented
 };
 
 #endif /* EbsdImportWIDGET_H_ */

@@ -54,7 +54,7 @@ protected:
 
 private:
   OrthorhombicIPFLegendPainter(const OrthorhombicIPFLegendPainter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const OrthorhombicIPFLegendPainter&);               // Operator '=' Not Implemented
+  void operator=(const OrthorhombicIPFLegendPainter&);                        // Move assignment Not Implemented
 };
 
 #endif /* _orthorhombicIPFLegendPainter_H_ */

@@ -54,7 +54,7 @@ protected:
 
 private:
   TriclinicIPFLegendPainter(const TriclinicIPFLegendPainter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const TriclinicIPFLegendPainter&);            // Operator '=' Not Implemented
+  void operator=(const TriclinicIPFLegendPainter&);                     // Move assignment Not Implemented
 };
 
 #endif /* _triclinicipflegendpainter_H_ */

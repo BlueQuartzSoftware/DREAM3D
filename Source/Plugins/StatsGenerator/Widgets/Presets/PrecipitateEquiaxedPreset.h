@@ -85,7 +85,7 @@ class  PrecipitateEquiaxedPreset : public AbstractMicrostructurePreset
 
   private:
     PrecipitateEquiaxedPreset(const PrecipitateEquiaxedPreset&) = delete; // Copy Constructor Not Implemented
-    void operator=(const PrecipitateEquiaxedPreset&) = delete;            // Operator '=' Not Implemented
+    void operator=(const PrecipitateEquiaxedPreset&) = delete;            // Move assignment Not Implemented
 };
 
 DECLARE_FACTORY_CLASS(PrecipitateEquiaxedPresetFactory, PrecipitateEquiaxedPreset, "Precipitate Equiaxed" )

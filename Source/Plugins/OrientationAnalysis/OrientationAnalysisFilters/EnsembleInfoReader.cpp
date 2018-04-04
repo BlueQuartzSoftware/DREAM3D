@@ -54,8 +54,7 @@
 //
 // -----------------------------------------------------------------------------
 EnsembleInfoReader::EnsembleInfoReader()
-: FileReader()
-, m_DataContainerName("")
+: m_DataContainerName("")
 , m_CellEnsembleAttributeMatrixName("EnsembleAttributeMatrix")
 , m_InputFile("")
 , m_CrystalStructuresArrayName(SIMPL::EnsembleData::CrystalStructures)
@@ -65,7 +64,6 @@ EnsembleInfoReader::EnsembleInfoReader()
 , m_ptype(PhaseType::Type::Unknown)
 , m_crystruct(999)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -78,6 +76,7 @@ EnsembleInfoReader::~EnsembleInfoReader() = default;
 // -----------------------------------------------------------------------------
 void EnsembleInfoReader::setupFilterParameters()
 {
+  FileReader::setupFilterParameters();
   FilterParameterVector parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input Ensemble Info File", InputFile, FilterParameter::Parameter, EnsembleInfoReader, "*.ini *.txt"));
   {
@@ -113,13 +112,13 @@ void EnsembleInfoReader::updateEnsembleInstancePointers()
   setErrorCondition(0);
   setWarningCondition(0);
 
-  if(nullptr != m_CrystalStructuresPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_CrystalStructuresPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
     m_CrystalStructuresPtr.lock()->initializeWithValue(Ebsd::CrystalStructure::UnknownCrystalStructure);
 
   }                                           /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(nullptr != m_PhaseTypesPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_PhaseTypesPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
     m_PhaseTypesPtr.lock()->initializeWithValue(static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown));
@@ -205,7 +204,7 @@ void EnsembleInfoReader::dataCheck()
   tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName());
   m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(
       this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_CrystalStructuresPtr.lock().get())                           /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_CrystalStructuresPtr.lock())                                 /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -213,7 +212,7 @@ void EnsembleInfoReader::dataCheck()
   tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getPhaseTypesArrayName());
   m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(
       this, tempPath, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_PhaseTypesPtr.lock().get())                     /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_PhaseTypesPtr.lock())                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */

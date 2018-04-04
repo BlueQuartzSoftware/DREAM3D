@@ -1,5 +1,5 @@
- EMsoftSO3Sampler 
-=============
+# EMsoftSO3Sampler #
+
 
 ## Group (Subgroup) ##
 
@@ -30,7 +30,7 @@ Details on the misorientation sampling approach can be found in the following pa
 Crystallographic point groups are identified by an integer from 1 to 32 according to the International Tables for Crystallography (Volume A). The valid numbers, along with the corresponding Hermann-Mauguin point group symbols (HM Sym), are listed here, along with the point group symbol between double quotation marks, the corresponding rotation group and its order M (in bold face):
 
 | Laue Group | ID,HM Sym,Rot.Grp(Order) | ID,HM Sym,Rot.Grp(Order) | ID,HM Sym,Rot.Grp(Order) | ID,HM Sym,Rot.Grp(Order) | ID,HM Sym,Rot.Grp(Order) | ID,HM Sym,Rot.Grp(Order) | ID,HM Sym,Rot.Grp(Order) |
-|------|------|------|------|------|
+|------|------|------|------|------|------|------|------|
 | Triclinic | [1], "1", **1(1)** | [2], "-1", **1(1)** | | | | | |
 | Monoclinic | [3], "2", **2(2)**| [4], "m", **2(2)**| [5], "2/m", **2(2)**| | | | |
 | Orthorhombic | [6], "222" , **222(4)**| [7], "mm2" , **222(4)**| [8], "mmm" , **222(4)**| | | | |

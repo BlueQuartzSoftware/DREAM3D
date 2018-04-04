@@ -177,7 +177,7 @@ class OrientationLib_EXPORT OrientationMath
 
   private:
     OrientationMath(const OrientationMath&) = delete; // Copy Constructor Not Implemented
-    void operator=(const OrientationMath&) = delete;  // Operator '=' Not Implemented
+    void operator=(const OrientationMath&) = delete;  // Move assignment Not Implemented
 };
 
 #endif /* _OrientationMath_H_ */

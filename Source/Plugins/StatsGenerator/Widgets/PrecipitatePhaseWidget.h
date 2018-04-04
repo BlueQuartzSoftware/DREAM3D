@@ -106,7 +106,7 @@ class PrecipitatePhaseWidget : public PrimaryPhaseWidget
     StatsGenRDFWidget* m_RdfPlot = nullptr;
 
     PrecipitatePhaseWidget(const PrecipitatePhaseWidget&) = delete; // Copy Constructor Not Implemented
-    void operator=(const PrecipitatePhaseWidget&) = delete;         // Operator '=' Not Implemented
+    void operator=(const PrecipitatePhaseWidget&) = delete;         // Move assignment Not Implemented
 };
 
 #endif /* PrecipitatePhaseWidget_H_ */

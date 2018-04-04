@@ -72,7 +72,7 @@ protected:
 
 private:
   StatsGeneratorFilterParameter(const StatsGeneratorFilterParameter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const StatsGeneratorFilterParameter&);                // Operator '=' Not Implemented
+  void operator=(const StatsGeneratorFilterParameter&);                         // Move assignment Not Implemented
 };
 
 #endif /* _statsgeneratorfilterparameter_h_ */

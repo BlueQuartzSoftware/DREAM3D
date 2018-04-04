@@ -195,5 +195,5 @@ public:
 
 private:
   OrientationConverterTest(const OrientationConverterTest&); // Copy Constructor Not Implemented
-  void operator=(const OrientationConverterTest&);           // Operator '=' Not Implemented
+  void operator=(const OrientationConverterTest&);           // Move assignment Not Implemented
 };

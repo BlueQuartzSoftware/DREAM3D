@@ -85,5 +85,5 @@ public:
 
 private:
   GenerateFZQuaternionsTest(const GenerateFZQuaternionsTest&); // Copy Constructor Not Implemented
-  void operator=(const GenerateFZQuaternionsTest&);            // Operator '=' Not Implemented
+  void operator=(const GenerateFZQuaternionsTest&);            // Move assignment Not Implemented
 };

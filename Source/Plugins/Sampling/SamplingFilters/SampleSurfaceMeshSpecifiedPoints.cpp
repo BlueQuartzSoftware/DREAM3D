@@ -50,13 +50,11 @@
 //
 // -----------------------------------------------------------------------------
 SampleSurfaceMeshSpecifiedPoints::SampleSurfaceMeshSpecifiedPoints()
-: SampleSurfaceMesh()
-, m_InputFilePath("")
+: m_InputFilePath("")
 , m_OutputFilePath("")
 , m_FeatureIds(nullptr)
 , m_NumPoints(0)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -69,6 +67,7 @@ SampleSurfaceMeshSpecifiedPoints::~SampleSurfaceMeshSpecifiedPoints() = default;
 // -----------------------------------------------------------------------------
 void SampleSurfaceMeshSpecifiedPoints::setupFilterParameters()
 {
+  SampleSurfaceMesh::setupFilterParameters();
   FilterParameterVector parameters = getFilterParameters();
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Specified Points File", InputFilePath, FilterParameter::Parameter, SampleSurfaceMeshSpecifiedPoints, "*.raw, *.bin"));
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Sampled Values File", OutputFilePath, FilterParameter::Parameter, SampleSurfaceMeshSpecifiedPoints, "*.txt"));
@@ -94,7 +93,7 @@ void SampleSurfaceMeshSpecifiedPoints::updateVertexInstancePointers()
 {
   setErrorCondition(0);
   setWarningCondition(0);
-  if(nullptr != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_FeatureIdsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -147,7 +146,7 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
   tempPath.update("SpecifiedPoints", "SpecifiedPointsData", "FeatureIds");
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
       this, tempPath, 0, cDims);              /* Assigns the shared_ptr<>(this, tempPath, -301, dims);  Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_FeatureIdsPtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  if(nullptr != m_FeatureIdsPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */

@@ -194,5 +194,5 @@ public:
 
 private:
   ComputeFeatureRectTest(const ComputeFeatureRectTest&); // Copy Constructor Not Implemented
-  void operator=(const ComputeFeatureRectTest&);         // Operator '=' Not Implemented
+  void operator=(const ComputeFeatureRectTest&);         // Move assignment Not Implemented
 };

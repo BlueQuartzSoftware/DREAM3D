@@ -172,7 +172,7 @@ class SGRDFTableModel : public QAbstractTableModel
     QVector<float> m_Frequencies;
 
     SGRDFTableModel(const SGRDFTableModel&) = delete; // Copy Constructor Not Implemented
-    void operator=(const SGRDFTableModel&) = delete;  // Operator '=' Not Implemented
+    void operator=(const SGRDFTableModel&) = delete;  // Move assignment Not Implemented
 };
 
 #endif /* _SGRDFTableModel_H_ */

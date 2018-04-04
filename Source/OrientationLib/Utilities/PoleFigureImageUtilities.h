@@ -91,7 +91,7 @@ class OrientationLib_EXPORT PoleFigureImageUtilities
     bool m_KernelWeightsInited;
 
     PoleFigureImageUtilities(const PoleFigureImageUtilities&) = delete; // Copy Constructor Not Implemented
-    void operator=(const PoleFigureImageUtilities&) = delete;           // Operator '=' Not Implemented
+    void operator=(const PoleFigureImageUtilities&) = delete;           // Move assignment Not Implemented
 };
 
 

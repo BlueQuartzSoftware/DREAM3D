@@ -1,0 +1,241 @@
+{
+    "00": {
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Pipeline Annotation",
+        "Filter_Name": "PipelineAnnotation",
+        "Filter_Uuid": "{8cc2198b-6a9d-5bf4-b8c0-b0878bb57f10}",
+        "Summary": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This pipeline shows some miscellaneous filters that can be used in a pipeline.</p>\n<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">The only thing that this particular &quot;Filter&quot; does is allow you, the user/developer of the pipeline, to do is provide your self notes about the purpose of a particular section of pipeline or an entire pipeline.</p>\n<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p>\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">For example in this pipeline we are going to read some EBSD data, rename a few things and show other filters being used.</p></body></html>"
+    },
+    "01": {
+        "CellAttributeMatrixName": "CellData",
+        "CellEnsembleAttributeMatrixName": "CellEnsembleData",
+        "DataContainerName": "ImageDataContainer",
+        "FilterVersion": "6.4.323",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Import EDAX EBSD Data (.ang)",
+        "Filter_Name": "ReadAngData",
+        "Filter_Uuid": "{b8e128a8-c2a3-5e6c-a7ad-e4fb864e5d40}",
+        "InputFile": "Data/SmallIN100/Slice_1.ang"
+    },
+    "02": {
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Rename Data Container",
+        "Filter_Name": "RenameDataContainer",
+        "Filter_Uuid": "{d53c808f-004d-5fac-b125-0fffc8cc78d6}",
+        "NewDataContainerName": "Small IN100 Slice 1",
+        "SelectedDataContainerName": "ImageDataContainer"
+    },
+    "03": {
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Rename Attribute Matrix",
+        "Filter_Name": "RenameAttributeMatrix",
+        "Filter_Uuid": "{ee29e6d6-1f59-551b-9350-a696523261d5}",
+        "NewAttributeMatrix": "EBSD_Data",
+        "SelectedAttributeMatrixPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "",
+            "Data Container Name": "Small IN100 Slice 1"
+        }
+    },
+    "04": {
+        "CellAttributeMatrixPath": {
+            "Attribute Matrix Name": "EBSD_Data",
+            "Data Array Name": "",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "FilterVersion": "6.4.323",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Rotate Sample Reference Frame",
+        "Filter_Name": "RotateSampleRefFrame",
+        "Filter_Uuid": "{e25d9b4c-2b37-578c-b1de-cf7032b5ef19}",
+        "RotationAngle": 180,
+        "RotationAxis": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+        }
+    },
+    "05": {
+        "CellEulerAnglesArrayPath": {
+            "Attribute Matrix Name": "EBSD_Data",
+            "Data Array Name": "EulerAngles",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "FilterVersion": "6.4.323",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Rotate Euler Reference Frame",
+        "Filter_Name": "RotateEulerRefFrame",
+        "Filter_Uuid": "{ef9420b2-8c46-55f3-8ae4-f53790639de4}",
+        "RotationAngle": 90,
+        "RotationAxis": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+        }
+    },
+    "06": {
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Create String Array",
+        "Filter_Name": "CreateStringArray",
+        "Filter_Uuid": "{e6b9a566-c5eb-5e3a-87de-7fe65d1d12b6}",
+        "InitializationValue": "A description of the phase",
+        "NewArray": {
+            "Attribute Matrix Name": "CellEnsembleData",
+            "Data Array Name": "Description",
+            "Data Container Name": "Small IN100 Slice 1"
+        }
+    },
+    "07": {
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Pipeline Annotation",
+        "Filter_Name": "PipelineAnnotation",
+        "Filter_Uuid": "{8cc2198b-6a9d-5bf4-b8c0-b0878bb57f10}",
+        "Summary": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This next section shows applying a color table to the Confidence Index and then saving the image</p></body></html>"
+    },
+    "08": {
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Generate Color Table",
+        "Filter_Name": "GenerateColorTable",
+        "Filter_Uuid": "{0d0a6535-6565-51c5-a3fc-fbc00008606d}",
+        "RGB_ArrayName": "Confidence_Index_Jet",
+        "SelectedDataArrayPath": {
+            "Attribute Matrix Name": "EBSD_Data",
+            "Data Array Name": "Confidence Index",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "SelectedPresetControlPoints": [
+            -1,
+            0,
+            0,
+            0.5625,
+            -0.777778,
+            0,
+            0,
+            1,
+            -0.269841,
+            0,
+            1,
+            1,
+            -0.015873,
+            0.5,
+            1,
+            0.5,
+            0.238095,
+            1,
+            1,
+            0,
+            0.746032,
+            1,
+            0,
+            0,
+            1,
+            0.5,
+            0,
+            0
+        ],
+        "SelectedPresetName": "jet"
+    },
+    "09": {
+        "FileName": "Data/Output/Example/Small_IN100_Slice_1_CI_Jet.png",
+        "FilterVersion": "1.0.406",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "ITK::Image Writer",
+        "Filter_Name": "ITKImageWriter",
+        "Filter_Uuid": "{11473711-f94d-5d96-b749-ec36a81ad338}",
+        "ImageArrayPath": {
+            "Attribute Matrix Name": "EBSD_Data",
+            "Data Array Name": "Confidence_Index_Jet",
+            "Data Container Name": "Small IN100 Slice 1"
+        }
+    },
+    "10": {
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Pipeline Annotation",
+        "Filter_Name": "PipelineAnnotation",
+        "Filter_Uuid": "{8cc2198b-6a9d-5bf4-b8c0-b0878bb57f10}",
+        "Summary": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This next section shows extracting the &quot;phi1&quot; Euler angle, applying the &quot;Jet&quot; color table and then saving the image.</p></body></html>"
+    },
+    "11": {
+        "CompNumber": 0,
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Extract Component as Attribute Array",
+        "Filter_Name": "ExtractComponentAsArray",
+        "Filter_Uuid": "{79d59b85-01e8-5c4a-a6e1-3fd3e2ceffb4}",
+        "NewArrayArrayName": "phi1",
+        "SelectedArrayPath": {
+            "Attribute Matrix Name": "EBSD_Data",
+            "Data Array Name": "EulerAngles",
+            "Data Container Name": "Small IN100 Slice 1"
+        }
+    },
+    "12": {
+        "FilterVersion": "1.0.341",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Generate Color Table",
+        "Filter_Name": "GenerateColorTable",
+        "Filter_Uuid": "{0d0a6535-6565-51c5-a3fc-fbc00008606d}",
+        "RGB_ArrayName": "phi1_Jet",
+        "SelectedDataArrayPath": {
+            "Attribute Matrix Name": "EBSD_Data",
+            "Data Array Name": "phi1",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "SelectedPresetControlPoints": [
+            -1,
+            0,
+            0,
+            0.5625,
+            -0.777778,
+            0,
+            0,
+            1,
+            -0.269841,
+            0,
+            1,
+            1,
+            -0.015873,
+            0.5,
+            1,
+            0.5,
+            0.238095,
+            1,
+            1,
+            0,
+            0.746032,
+            1,
+            0,
+            0,
+            1,
+            0.5,
+            0,
+            0
+        ],
+        "SelectedPresetName": "jet"
+    },
+    "13": {
+        "FileName": "Data/Output/Example/Small_IN100_Slice_1_phi1_Jet.png",
+        "FilterVersion": "1.0.406",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "ITK::Image Writer",
+        "Filter_Name": "ITKImageWriter",
+        "Filter_Uuid": "{11473711-f94d-5d96-b749-ec36a81ad338}",
+        "ImageArrayPath": {
+            "Attribute Matrix Name": "EBSD_Data",
+            "Data Array Name": "phi1_Jet",
+            "Data Container Name": "Small IN100 Slice 1"
+        }
+    },
+    "PipelineBuilder": {
+        "Name": "Misc_Filters",
+        "Number_Filters": 14,
+        "Version": 6
+    }
+}

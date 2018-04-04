@@ -69,8 +69,7 @@ void delay(int seconds)
 //
 // -----------------------------------------------------------------------------
 InitializeData::InitializeData()
-: AbstractFilter()
-, m_XMin(0)
+: m_XMin(0)
 , m_YMin(0)
 , m_ZMin(0)
 , m_XMax(0)
@@ -79,7 +78,6 @@ InitializeData::InitializeData()
 , m_InitType(Manual)
 , m_InitValue(0)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------

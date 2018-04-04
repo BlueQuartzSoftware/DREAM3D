@@ -125,7 +125,7 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
     int   m_FileVersion;
 
     H5CtfImporter(const H5CtfImporter&) = delete;  // Copy Constructor Not Implemented
-    void operator=(const H5CtfImporter&) = delete; // Operator '=' Not Implemented
+    void operator=(const H5CtfImporter&) = delete; // Move assignment Not Implemented
 };
 
 #endif /* _H5CTFIMPORTER_H_ */

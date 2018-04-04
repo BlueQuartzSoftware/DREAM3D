@@ -68,10 +68,10 @@ class M3CEntireVolume : public AbstractFilter
   Q_OBJECT
 public:
   SIMPL_SHARED_POINTERS(M3CEntireVolume)
-  SIMPL_STATIC_NEW_MACRO(M3CEntireVolume)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(M3CEntireVolume, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(M3CEntireVolume)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(M3CEntireVolume, AbstractFilter)
 
-  virtual ~M3CEntireVolume();
+  ~M3CEntireVolume() override;
 
   //------ Created Surface Mesh Cell Data
   SIMPL_INSTANCE_STRING_PROPERTY(SurfaceMeshEdgesArrayName)
@@ -105,24 +105,24 @@ public:
   * @brief This method will instantiate all the end user settable options/parameters
   * for this filter
   */
-  virtual void setupFilterParameters() override;
+  void setupFilterParameters() override;
 
   /**
   * @brief This method will read the options from a file
   * @param reader The reader that is used to read the options from a file
   */
-  virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
   /**
   * @brief Reimplemented from @see AbstractFilter class
   */
-  virtual void execute() override;
+  void execute() override;
 
   /**
   * @brief This function runs some sanity checks on the DataContainer and inputs
   * in an attempt to ensure the filter can process the inputs.
   */
-  virtual void preflight() override;
+  void preflight() override;
 
 protected:
   M3CEntireVolume();
@@ -203,8 +203,11 @@ private:
 
   void cleanupUnusedNodesTriangles(SurfaceMesh::M3C::Node* nodes, SurfaceMesh::M3C::Triangle* triangles);
 
+public:
   M3CEntireVolume(const M3CEntireVolume&) = delete; // Copy Constructor Not Implemented
-  void operator=(const M3CEntireVolume&);  // Operator '=' Not Implemented
+  M3CEntireVolume(M3CEntireVolume&&) = delete;      // Move Constructor
+  M3CEntireVolume& operator=(const M3CEntireVolume&) = delete; // Copy Assignment Not Implemented
+  M3CEntireVolume& operator=(M3CEntireVolume&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* _M3CEntireVolume_H_ */

@@ -137,7 +137,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
     QPoint                  m_ContextMenuPoint;
 
     StatsGenPlotWidget(const StatsGenPlotWidget&) = delete; // Copy Constructor Not Implemented
-    void operator=(const StatsGenPlotWidget&) = delete;     // Operator '=' Not Implemented
+    void operator=(const StatsGenPlotWidget&) = delete;     // Move assignment Not Implemented
 };
 
 #endif /* _STATSGENPLOTWIDGET_H_ */
