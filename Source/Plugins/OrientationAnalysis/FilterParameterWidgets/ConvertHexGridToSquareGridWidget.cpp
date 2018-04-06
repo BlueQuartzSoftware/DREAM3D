@@ -424,11 +424,12 @@ void ConvertHexGridToSquareGridWidget::generateExampleInputFile()
 
   int start = m_ZStartIndex->value();
   int end = m_ZEndIndex->value();
+  int increment = 1;
   bool hasMissingFiles = false;
 
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList =
-      FilePathGenerator::GenerateFileList(start, end, hasMissingFiles, true, m_InputDir->text(), m_FilePrefix->text(), m_FileSuffix->text(), m_FileExt->text(), m_TotalDigits->value());
+      FilePathGenerator::GenerateFileList(start, end, increment, hasMissingFiles, true, m_InputDir->text(), m_FilePrefix->text(), m_FileSuffix->text(), m_FileExt->text(), m_TotalDigits->value());
   m_FileListView->clear();
   QIcon greenDot = QIcon(QString(":/bullet_ball_green.png"));
   QIcon redDot = QIcon(QString(":/bullet_ball_red.png"));

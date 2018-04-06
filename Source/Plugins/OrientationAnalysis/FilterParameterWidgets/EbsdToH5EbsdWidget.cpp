@@ -536,9 +536,10 @@ void EbsdToH5EbsdWidget::generateExampleEbsdInputFile()
   int start = m_ZStartIndex->value();
   int end = m_ZEndIndex->value();
   bool hasMissingFiles = false;
+  int increment = 1;
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = FilePathGenerator::GenerateFileList(start, end, hasMissingFiles, m_StackLowToHigh->isChecked(), m_LineEdit->text(), m_FilePrefix->text(), m_FileSuffix->text(),
+  QVector<QString> fileList = FilePathGenerator::GenerateFileList(start, end, increment, hasMissingFiles, m_StackLowToHigh->isChecked(), m_LineEdit->text(), m_FilePrefix->text(), m_FileSuffix->text(),
                                                                   m_FileExt->text(), m_TotalDigits->value());
   m_FileListView->clear();
   QIcon greenDot = QIcon(QString(":/bullet_ball_green.png"));
@@ -582,9 +583,10 @@ void EbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
   int start = m_ZStartIndex->value();
   int end = m_ZEndIndex->value();
   bool hasMissingFiles = false;
+  int increment = 1;
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = FilePathGenerator::GenerateFileList(start, end, hasMissingFiles, m_StackLowToHigh->isChecked(), m_LineEdit->text(), m_FilePrefix->text(), m_FileSuffix->text(),
+  QVector<QString> fileList = FilePathGenerator::GenerateFileList(start, end, increment, hasMissingFiles, m_StackLowToHigh->isChecked(), m_LineEdit->text(), m_FilePrefix->text(), m_FileSuffix->text(),
                                                                   m_FileExt->text(), m_TotalDigits->value());
   if(fileList.size() == 0)
   {

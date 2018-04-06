@@ -146,9 +146,10 @@ void ConvertHexGridToSquareGrid::dataCheck()
   }
 
   bool hasMissingFiles = false;
+  int increment = 1;
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex, hasMissingFiles, true, m_InputPath, m_FilePrefix, m_FileSuffix, m_FileExtension, m_PaddingDigits);
+  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex, increment, hasMissingFiles, true, m_InputPath, m_FilePrefix, m_FileSuffix, m_FileExtension, m_PaddingDigits);
   if(fileList.size() == 0)
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
@@ -271,9 +272,11 @@ void ConvertHexGridToSquareGrid::execute()
   herr_t err = 0;
   bool hasMissingFiles = false;
   bool stackLowToHigh = true;
+  int increment = 1;
+
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList =
-      FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex, hasMissingFiles, stackLowToHigh, m_InputPath, m_FilePrefix, m_FileSuffix, m_FileExtension, m_PaddingDigits);
+      FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex, increment, hasMissingFiles, stackLowToHigh, m_InputPath, m_FilePrefix, m_FileSuffix, m_FileExtension, m_PaddingDigits);
 
   // Loop on Each EBSD File
   float total = static_cast<float>(m_ZEndIndex - m_ZStartIndex);
