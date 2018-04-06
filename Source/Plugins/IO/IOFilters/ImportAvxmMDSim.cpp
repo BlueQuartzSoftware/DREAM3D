@@ -7,17 +7,17 @@
 #include <QtCore/QFileInfo>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/SIMPLibVersion.h"
-#include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
+#include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ImportAvxmMDSim::ImportAvxmMDSim() :
-    AbstractFilter()
+ImportAvxmMDSim::ImportAvxmMDSim()
+: AbstractFilter()
 {
   initialize();
 }
@@ -64,7 +64,7 @@ void ImportAvxmMDSim::dataCheck()
 
   QString ss;
 
-  if (m_SeparatorChoice < 0 || m_SeparatorChoice > 1)
+  if(m_SeparatorChoice < 0 || m_SeparatorChoice > 1)
   {
     ss = QObject::tr("The separator is set to an unknown type.");
     setErrorCondition(-13000);
@@ -92,8 +92,9 @@ void ImportAvxmMDSim::dataCheck()
   }
 
   // Now generate all the file names the user is asking for and populate the table
-  m_FilePathList = FilePathGenerator::GenerateFileList(m_InputFileListInfo.StartIndex, m_InputFileListInfo.EndIndex, m_InputFileListInfo.IncrementIndex, hasMissingFiles, orderAscending, m_InputFileListInfo.InputPath,
-                                                                  m_InputFileListInfo.FilePrefix, m_InputFileListInfo.FileSuffix, m_InputFileListInfo.FileExtension, m_InputFileListInfo.PaddingDigits);
+  m_FilePathList = FilePathGenerator::GenerateFileList(m_InputFileListInfo.StartIndex, m_InputFileListInfo.EndIndex, m_InputFileListInfo.IncrementIndex, hasMissingFiles, orderAscending,
+                                                       m_InputFileListInfo.InputPath, m_InputFileListInfo.FilePrefix, m_InputFileListInfo.FileSuffix, m_InputFileListInfo.FileExtension,
+                                                       m_InputFileListInfo.PaddingDigits);
   if(m_FilePathList.size() == 0)
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
@@ -110,7 +111,7 @@ void ImportAvxmMDSim::dataCheck()
     return;
   }
 
-  for (int i = 0; i < m_FilePathList.size(); i++)
+  for(int i = 0; i < m_FilePathList.size(); i++)
   {
     QString filePath = m_FilePathList[i];
     QFileInfo fi(filePath);
@@ -131,12 +132,12 @@ void ImportAvxmMDSim::dataCheck()
 void ImportAvxmMDSim::preflight()
 {
   // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
-  setInPreflight(true); // Set the fact that we are preflighting.
-  emit preflightAboutToExecute(); // Emit this signal so that other widgets can do one file update
+  setInPreflight(true);              // Set the fact that we are preflighting.
+  emit preflightAboutToExecute();    // Emit this signal so that other widgets can do one file update
   emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
-  dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
-  emit preflightExecuted(); // We are done preflighting this filter
-  setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+  dataCheck();                       // Run our DataCheck to make sure everthing is setup correctly
+  emit preflightExecuted();          // We are done preflighting this filter
+  setInPreflight(false);             // Inform the system this filter is NOT in preflight mode anymore.
 }
 
 // -----------------------------------------------------------------------------
@@ -146,11 +147,17 @@ void ImportAvxmMDSim::execute()
 {
   initialize();
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
-
-  for (int i = 0; i < m_FilePathList.size(); i++)
+  if(getErrorCondition() < 0)
   {
-    if (getCancel()) { return; }
+    return;
+  }
+
+  for(int i = 0; i < m_FilePathList.size(); i++)
+  {
+    if(getCancel())
+    {
+      return;
+    }
 
     QString filePath = m_FilePathList[i];
 
@@ -171,14 +178,17 @@ void ImportAvxmMDSim::execute()
 
     FloatArrayType::Pointer verts = FloatArrayType::CreateArray(lines.size(), QVector<size_t>(1, 3), "SharedVertexList");
 
-    for (size_t j = 0; j < lines.size(); j++)
+    for(size_t j = 0; j < lines.size(); j++)
     {
-      if (getCancel()) { return; }
+      if(getCancel())
+      {
+        return;
+      }
 
       QString line = lines[j];
 
       QStringList tokens;
-      if (m_SeparatorChoice == static_cast<int>(SeparatorType::Tab))
+      if(m_SeparatorChoice == static_cast<int>(SeparatorType::Tab))
       {
         tokens = line.split('\t');
       }
@@ -187,7 +197,7 @@ void ImportAvxmMDSim::execute()
         tokens = line.split(' ');
       }
 
-      if (tokens.size() != 4)
+      if(tokens.size() != 4)
       {
         QString ss = QObject::tr("Unexpected column size in file '%1'.  Expected 4 columns, but found %2 at line %3.").arg(filePath).arg(tokens.size()).arg(j + 1);
         setErrorCondition(-13004);
@@ -196,7 +206,7 @@ void ImportAvxmMDSim::execute()
       }
 
       std::string typeStr = tokens[0].toStdString();
-      if (typeStr.size() != 1)
+      if(typeStr.size() != 1)
       {
         QString ss = QObject::tr("Unexpected type specifier in file '%1'.  Found '%2' at line %3, column %4.  Expected 'l' or 's'.").arg(filePath).arg(typeStr.c_str()).arg(i + 1).arg(j + 1);
         setErrorCondition(-13004);
@@ -210,7 +220,7 @@ void ImportAvxmMDSim::execute()
       bool ok = false;
 
       float x = tokens[1].toFloat(&ok);
-      if (ok == true)
+      if(ok == true)
       {
         verts->setComponent(j, 0, x);
       }
@@ -218,7 +228,7 @@ void ImportAvxmMDSim::execute()
       ok = false;
 
       float y = tokens[2].toFloat(&ok);
-      if (ok == true)
+      if(ok == true)
       {
         verts->setComponent(j, 1, y);
       }
@@ -226,7 +236,7 @@ void ImportAvxmMDSim::execute()
       ok = false;
 
       float z = tokens[3].toFloat(&ok);
-      if (ok == true)
+      if(ok == true)
       {
         verts->setComponent(j, 2, z);
       }
@@ -242,7 +252,7 @@ void ImportAvxmMDSim::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QStringList ImportAvxmMDSim::readLines(const QString &filePath)
+QStringList ImportAvxmMDSim::readLines(const QString& filePath)
 {
   QStringList result;
   if(filePath.isEmpty())
@@ -254,7 +264,7 @@ QStringList ImportAvxmMDSim::readLines(const QString &filePath)
   {
     QTextStream in(&inputFile);
 
-    while (!in.atEnd())
+    while(!in.atEnd())
     {
       QString line = in.readLine();
       result.push_back(line);
@@ -282,7 +292,7 @@ AbstractFilter::Pointer ImportAvxmMDSim::newFilterInstance(bool copyFilterParame
 //
 // -----------------------------------------------------------------------------
 const QString ImportAvxmMDSim::getCompiledLibraryName() const
-{ 
+{
   return Core::CoreBaseName;
 }
 
@@ -309,7 +319,7 @@ const QString ImportAvxmMDSim::getFilterVersion() const
 //
 // -----------------------------------------------------------------------------
 const QString ImportAvxmMDSim::getGroupName() const
-{ 
+{
   return SIMPL::FilterGroups::CoreFilters;
 }
 
@@ -317,7 +327,7 @@ const QString ImportAvxmMDSim::getGroupName() const
 //
 // -----------------------------------------------------------------------------
 const QString ImportAvxmMDSim::getSubGroupName() const
-{ 
+{
   return SIMPL::FilterSubGroups::InputFilters;
 }
 
@@ -325,10 +335,9 @@ const QString ImportAvxmMDSim::getSubGroupName() const
 //
 // -----------------------------------------------------------------------------
 const QString ImportAvxmMDSim::getHumanLabel() const
-{ 
+{
   return "ImportAvxmMDSim";
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -337,4 +346,3 @@ const QUuid ImportAvxmMDSim::getUuid()
 {
   return QUuid("{71e18332-4db1-5554-85e6-ae8db5826587}");
 }
-
