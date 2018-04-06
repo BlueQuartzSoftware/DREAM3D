@@ -148,10 +148,11 @@ void EbsdToH5Ebsd::dataCheck()
 
   bool hasMissingFiles = false;
   const bool stackLowToHigh = true;
+  int increment = 1;
 
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList =
-      FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex, hasMissingFiles, stackLowToHigh, m_InputPath, m_FilePrefix, m_FileSuffix, m_FileExtension, m_PaddingDigits);
+      FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex, increment, hasMissingFiles, stackLowToHigh, m_InputPath, m_FilePrefix, m_FileSuffix, m_FileExtension, m_PaddingDigits);
 
   if(fileList.size() == 0)
   {
@@ -321,13 +322,14 @@ void EbsdToH5Ebsd::execute()
 
   bool hasMissingFiles = false;
   const bool stackLowToHigh = true;
+  int increment = 1;
 
   // if( SIMPL::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
   // else if (SIMPL::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
 
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList =
-      FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex, hasMissingFiles, stackLowToHigh, m_InputPath, m_FilePrefix, m_FileSuffix, m_FileExtension, m_PaddingDigits);
+      FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex, increment, hasMissingFiles, stackLowToHigh, m_InputPath, m_FilePrefix, m_FileSuffix, m_FileExtension, m_PaddingDigits);
 
   EbsdImporter::Pointer fileImporter;
 
