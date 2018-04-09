@@ -534,7 +534,7 @@ int QEbsdReferenceFrameDialog::createArrayColors(DataContainerArray::Pointer dca
 
   colorTableFilter->setDataContainerArray(dca);
   colorTableFilter->setSelectedDataArrayPath(dataArrayPath);
-  colorTableFilter->setRGB_ArrayName(outputArrayName);
+  colorTableFilter->setRgbArrayName(outputArrayName);
   colorTableFilter->setSelectedPresetControlPoints(controlPointsArray);
   colorTableFilter->setSelectedPresetName("Grayscale");
   colorTableFilter->execute();
