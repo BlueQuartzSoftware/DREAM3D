@@ -140,6 +140,7 @@ void ImportImageStack::initialize()
   m_InputFileListInfo.FileExtension = QString("tif");
   m_InputFileListInfo.StartIndex = 0;
   m_InputFileListInfo.EndIndex = 0;
+  m_InputFileListInfo.IncrementIndex = 1;
   m_InputFileListInfo.PaddingDigits = 0;
 }
 
