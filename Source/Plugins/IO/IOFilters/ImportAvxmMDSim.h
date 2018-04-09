@@ -12,7 +12,7 @@
 /**
  * @brief The ImportAvxmMDSim class. See [Filter documentation](@ref ImportAvxmMDSim) for details.
  */
-class SIMPLib_EXPORT ImportAvxmMDSim : public AbstractFilter
+class ImportAvxmMDSim : public AbstractFilter
 {
   Q_OBJECT
 
