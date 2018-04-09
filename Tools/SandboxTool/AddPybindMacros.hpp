@@ -14,20 +14,20 @@ public:
   {
     QString filterName;
     QString contents;
-    {
-      // Read the Source File
-      QFileInfo fi(absPath);
-      if(fi.baseName().compare("DataContainerReader") != 0)
-      {
-        return;
-      }
-      filterName = fi.baseName();
-      QFile source(absPath);
-      source.open(QFile::ReadOnly);
-      contents = source.readAll();
-      source.close();
-    }
-
+    
+    // Read the Source File
+    QFileInfo fi(absPath);
+    //      if(fi.baseName().compare("DataContainerReader") != 0)
+    //      {
+    //        return;
+    //      }
+    filterName = fi.baseName();
+    QFile source(absPath);
+    source.open(QFile::ReadOnly);
+    contents = source.readAll();
+    source.close();
+    
+    
     qDebug() << absPath;
 
     QStringList names;
@@ -69,6 +69,10 @@ public:
       if(line.contains("Q_OBJECT"))
       {
         qObjectMacroLine = currentLine + 1;
+        QString str;
+        QTextStream out(&str);
+        out << "    PYB11_CREATE_BINDINGS(" << fi.baseName() << " SUPERCLASS AbstractFilter)";
+        pybindLines.append(str);
       }
 
       outLines.push_back(line2);
