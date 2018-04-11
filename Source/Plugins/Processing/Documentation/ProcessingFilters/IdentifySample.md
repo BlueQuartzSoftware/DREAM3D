@@ -1,5 +1,5 @@
-Isolate Largest Feature (Identify Sample) 
-=============
+# Isolate Largest Feature (Identify Sample) #
+
 
 ## Group (Subgroup) ##
 
@@ -9,7 +9,7 @@ Processing (Cleanup)
 
 Often when performing a serial sectioning experiment (especially in the FIB-SEM), the sample is *overscanned* resulting in a border of *bad* data around the sample.  This **Filter** attempts to _identify_ the sample within the overscanned volume.  The **Filter** makes the assumption that there is only one contiguous set of **Cells** that belong to the sample. The **Filter** requires that the user has already *thresheld* the data to determine which **Cells** are *good* and which are *bad*.  The algorithm for the identification of the sample is then as follows:
 
-1. Search for the largest contiguous set of *good* **Cells**. (This is assumed to be the sample)  
+1. Search for the largest contiguous set of *good* **Cells**. (This is assumed to be the sample)
 2. Change all other *good* **Cells**  to be *bad* **Cells**.  (This removes the "speckling" of what was *thresheld* as *good* data in the outer border region)
 
 If _Fill Holes_ is set to *true*:
@@ -17,6 +17,12 @@ If _Fill Holes_ is set to *true*:
 4. Change all other *bad* **Cells**  to be *good* **Cells**.  (This removes the "speckling" of what was *thresheld* as *bad* data inside of the sample).
 
 *Note:* if there are in fact "holes" in the sample, then this **Filter** will "close" them (if _Fill Holes_ is set to true) by calling all the **Cells** "inside" the sample *good*.  If the user wants to reidentify those holes, then reuse the threshold **Filter** with the criteria of *GoodVoxels = 1* and whatever original criteria identified the "holes", as this will limit applying those original criteria to within the sample and not the outer border region.
+
+| Name | Description |
+|------|-------------|
+|![](Images/Small_IN100.png) | Good dataset to use this filter |
+|![](Images/aptr12_001_0.png) | **NOT** a good data set to use because there is **no** overscan of the sample. |
+
 
 ## Parameters ##
 
