@@ -315,7 +315,7 @@ void FindSurfaceAreaToVolume::execute()
   }
 
 
-  const float thirdRootPi = std::powf(SIMPLib::Constants::k_Pif, 0.333333f);
+  const float thirdRootPi = std::pow(SIMPLib::Constants::k_Pif, 0.333333f);
   for(size_t i = 1; i < static_cast<size_t>(numFeatures); i++)
   {
     float featureVolume = voxelVol * m_NumCells[i];
