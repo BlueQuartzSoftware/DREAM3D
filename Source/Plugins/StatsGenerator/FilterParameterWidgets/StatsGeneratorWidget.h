@@ -36,6 +36,7 @@
 #ifndef _statsGeneratorWidget_h_
 #define _statsGeneratorWidget_h_
 
+#include <vector>
 
 #include <QtCore/QObject>
 
@@ -73,11 +74,13 @@ class StatsGeneratorWidget : public FilterParameterWidget, private Ui::StatsGene
     Q_OBJECT
 
   public:
-    StatsGeneratorWidget(FilterParameter* parameter, AbstractFilter* filter = nullptr, QWidget* parent = nullptr);
+    explicit StatsGeneratorWidget(FilterParameter* parameter, AbstractFilter* filter = nullptr, QWidget* parent = nullptr);
     virtual ~StatsGeneratorWidget();
 
     void adjustWindowTitle();
-    void displayDialogBox(QString title, QString text, QMessageBox::Icon icon);
+    void displayDialogBox(const QString& title, const QString& text, QMessageBox::Icon icon);
+
+    void loadData() override;
 
   protected slots:
 
@@ -112,7 +115,7 @@ class StatsGeneratorWidget : public FilterParameterWidget, private Ui::StatsGene
      * @param outFilePath The file path to check
      * @param lineEdit The QLineEdit object to modify visuals of (Usually by placing a red line around the QLineEdit widget)
      */
-    bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
+    bool verifyPathExists(const QString& outFilePath, QLineEdit* lineEdit);
 
     /**
      * @brief Verifies that a parent path exists on the file system.
@@ -132,6 +135,11 @@ class StatsGeneratorWidget : public FilterParameterWidget, private Ui::StatsGene
     StatsGeneratorFilter*          m_Filter;
 
     QString m_OpenDialogLastFilePath; // Must be last in the list
+
+    std::vector<StatsGenWidget*> m_LoadDataWidgets;
+    bool m_NeedDataLoad = false;
+    AttributeMatrix::Pointer m_CellEnsembleAttrMat = AttributeMatrix::NullPointer();
+
     StatsGeneratorWidget(const StatsGeneratorWidget&) = delete; // Copy Constructor Not Implemented
     void operator=(const StatsGeneratorWidget&) = delete;       // Move assignment Not Implemented
 };

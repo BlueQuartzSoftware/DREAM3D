@@ -68,8 +68,7 @@
 #include "StatsGenerator/StatsGeneratorFilters/StatsGeneratorFilter.h"
 #include "StatsGenerator/Widgets/EditPhaseDialog.h"
 
-
-//
+#include "StatsGenerator/Widgets/StatsProgressWidget.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -105,16 +104,11 @@ void StatsGeneratorWidget::setupGui()
   saveJsonBtn->hide();
   // openStatsFile->hide();
 
-  // Catch when the filter is about to execute the preflight
-  connect(getFilter(), SIGNAL(preflightAboutToExecute()), this, SLOT(beforePreflight()));
-
-  // Catch when the filter is finished running the preflight
-  connect(getFilter(), SIGNAL(preflightExecuted()), this, SLOT(afterPreflight()));
-
-  // Catch when the filter wants its values updated
-  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)), this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
-
   phaseTabs->clear();
+
+  m_NeedDataLoad = false;
+  m_LoadDataWidgets.clear();
+  m_LoadDataWidgets.push_back(nullptr);
 
   StatsDataArray::Pointer sda = m_Filter->getStatsDataArray();
   if((sda && sda->getNumberOfTuples() == 0) || !sda)
@@ -132,20 +126,92 @@ void StatsGeneratorWidget::setupGui()
   }
   else
   {
+    m_NeedDataLoad = true;
     size_t ensembles = sda->getNumberOfTuples();
-    QProgressDialog progress("Opening Stats File....", "Cancel", 0, ensembles, this);
-    progress.setWindowModality(Qt::WindowModal);
-    progress.setMinimumDuration(0);
 
     QVector<size_t> tDims(1, ensembles);
-    AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellEnsembleAttributeMatrixName, AttributeMatrix::Type::CellEnsemble);
-    cellEnsembleAttrMat->addAttributeArray(sda->getName(), sda);
+    m_CellEnsembleAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellEnsembleAttributeMatrixName, AttributeMatrix::Type::CellEnsemble);
+    m_CellEnsembleAttrMat->addAttributeArray(sda->getName(), sda);
     UInt32ArrayType::Pointer phaseTypes = m_Filter->getPhaseTypes();
-    cellEnsembleAttrMat->addAttributeArray(phaseTypes->getName(), phaseTypes);
+    m_CellEnsembleAttrMat->addAttributeArray(phaseTypes->getName(), phaseTypes);
     UInt32ArrayType::Pointer crystalStructures = m_Filter->getCrystalStructures();
-    cellEnsembleAttrMat->addAttributeArray(crystalStructures->getName(), crystalStructures);
+    m_CellEnsembleAttrMat->addAttributeArray(crystalStructures->getName(), crystalStructures);
 
     for(size_t phase = 1; phase < ensembles; ++phase)
+    {
+
+      StatsData::Pointer statsData = sda->getStatsData(phase);
+
+      if(phaseTypes->getValue(phase) == static_cast<PhaseType::EnumType>(PhaseType::Type::Boundary))
+      {
+        BoundaryPhaseWidget* w = new BoundaryPhaseWidget(this);
+        phaseTabs->addTab(w, w->getTabTitle());
+        connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
+        m_LoadDataWidgets.push_back(w);
+      }
+      else if(phaseTypes->getValue(phase) == static_cast<PhaseType::EnumType>(PhaseType::Type::Matrix))
+      {
+        MatrixPhaseWidget* w = new MatrixPhaseWidget(this);
+        phaseTabs->addTab(w, w->getTabTitle());
+        connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
+        m_LoadDataWidgets.push_back(w);
+      }
+      if(phaseTypes->getValue(phase) == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
+      {
+        PrecipitatePhaseWidget* w = new PrecipitatePhaseWidget(this);
+        phaseTabs->addTab(w, w->getTabTitle());
+        connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
+        m_LoadDataWidgets.push_back(w);
+      }
+      if(phaseTypes->getValue(phase) == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
+      {
+        PrimaryPhaseWidget* w = new PrimaryPhaseWidget(this);
+        phaseTabs->addTab(w, w->getTabTitle());
+        connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
+        m_LoadDataWidgets.push_back(w);
+      }
+      if(phaseTypes->getValue(phase) == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
+      {
+        TransformationPhaseWidget* w = new TransformationPhaseWidget(this);
+        phaseTabs->addTab(w, w->getTabTitle());
+        connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
+        m_LoadDataWidgets.push_back(w);
+      }
+      else
+      {
+      }
+    }
+    // progress.setValue(ensembles);
+
+    // Now delete the first Phase from the Combo which was left over from something else
+    phaseTabs->setCurrentIndex(0);
+  }
+
+  // Catch when the filter is about to execute the preflight
+  connect(getFilter(), SIGNAL(preflightAboutToExecute()), this, SLOT(beforePreflight()));
+
+  // Catch when the filter is finished running the preflight
+  connect(getFilter(), SIGNAL(preflightExecuted()), this, SLOT(afterPreflight()));
+
+  // Catch when the filter wants its values updated
+  connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)), this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGeneratorWidget::loadData()
+{
+  if(m_NeedDataLoad)
+  {
+    size_t ensembles = m_LoadDataWidgets.size();
+    StatsProgressWidget progress("Opening Stats File....", "Cancel", nullptr);
+    progress.setVisible(true);
+    progress.show();
+    qApp->processEvents();
+
+    int phase = 0;
+    for(auto w : m_LoadDataWidgets)
     {
       progress.setValue(phase);
 
@@ -153,57 +219,20 @@ void StatsGeneratorWidget::setupGui()
       {
         return;
       }
-      StatsData::Pointer statsData = sda->getStatsData(phase);
 
-      if(phaseTypes->getValue(phase) == static_cast<PhaseType::EnumType>(PhaseType::Type::Boundary))
+      if(nullptr != w)
       {
-        progress.setLabelText("Opening Boundaray Phase...");
-        BoundaryPhaseWidget* w = new BoundaryPhaseWidget(this);
-        w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
-        phaseTabs->addTab(w, w->getTabTitle());
-        connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
-      }
-      else if(phaseTypes->getValue(phase) == static_cast<PhaseType::EnumType>(PhaseType::Type::Matrix))
-      {
-        progress.setLabelText("Opening Matrix Phase...");
-        MatrixPhaseWidget* w = new MatrixPhaseWidget(this);
-        w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
-        phaseTabs->addTab(w, w->getTabTitle());
-        connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
-      }
-      if(phaseTypes->getValue(phase) == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
-      {
-        progress.setLabelText("Opening Precipitate Phase...");
-        PrecipitatePhaseWidget* w = new PrecipitatePhaseWidget(this);
-        w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
-        phaseTabs->addTab(w, w->getTabTitle());
-        connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
-      }
-      if(phaseTypes->getValue(phase) == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary))
-      {
-        progress.setLabelText("Opening Primary Phase...");
-        PrimaryPhaseWidget* w = new PrimaryPhaseWidget(this);
+        progress.setLabelText("Opening Phase...");
         connect(w, SIGNAL(progressText(const QString&)), &progress, SLOT(setLabelText(const QString&)));
-        w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
-        phaseTabs->addTab(w, w->getTabTitle());
-        connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
+        QString progTitle = QString("%1/%2: Extracting Phase Type: %3").arg(phase).arg(ensembles - 1).arg(w->getTabTitle());
+        progress.setProgTitle(progTitle);
+        w->extractStatsData(m_CellEnsembleAttrMat, static_cast<int>(phase));
       }
-      if(phaseTypes->getValue(phase) == static_cast<PhaseType::EnumType>(PhaseType::Type::Transformation))
-      {
-        progress.setLabelText("Opening Transformation Phase...");
-        TransformationPhaseWidget* w = new TransformationPhaseWidget(this);
-        w->extractStatsData(cellEnsembleAttrMat, static_cast<int>(phase));
-        phaseTabs->addTab(w, w->getTabTitle());
-        connect(w, SIGNAL(dataChanged()), this, SIGNAL(parametersChanged()));
-      }
-      else
-      {
-      }
+      phase++;
     }
-    progress.setValue(ensembles);
-
-    // Now delete the first Phase from the Combo which was left over from something else
-    phaseTabs->setCurrentIndex(0);
+    m_NeedDataLoad = false;
+    m_LoadDataWidgets.clear();
+    m_CellEnsembleAttrMat = AttributeMatrix::NullPointer();
   }
 }
 
@@ -225,20 +254,20 @@ void StatsGeneratorWidget::filterNeedsInputParameters(AbstractFilter* filter)
   if(nullptr != statsGenFilter)
   {
     DataContainerArray::Pointer dca = generateDataContainerArray();
-    if(nullptr == dca.get())
+    if(nullptr == dca)
     {
       return;
     }
     DataContainer::Pointer dc = dca->getDataContainer(SIMPL::Defaults::StatsGenerator);
     AttributeMatrix::Pointer cellEnsembleAttrMat = dc->getAttributeMatrix(SIMPL::Defaults::CellEnsembleAttributeMatrixName);
-    if(nullptr == cellEnsembleAttrMat.get())
+    if(nullptr == cellEnsembleAttrMat)
     {
       return;
     }
     IDataArray::Pointer iDataArray = cellEnsembleAttrMat->getAttributeArray(SIMPL::EnsembleData::Statistics);
 
     StatsDataArray::Pointer statsDataArray = std::dynamic_pointer_cast<StatsDataArray>(iDataArray);
-    if(nullptr == statsDataArray.get())
+    if(nullptr == statsDataArray)
     {
       return;
     }
@@ -304,7 +333,7 @@ void StatsGeneratorWidget::on_addPhase_clicked()
 {
   // Ensure the Current StatsGenWidget has generated its data first:
   StatsGenWidget* sgwidget = qobject_cast<StatsGenWidget*>(phaseTabs->currentWidget());
-  if(false == sgwidget->getDataHasBeenGenerated())
+  if(!sgwidget->getDataHasBeenGenerated())
   {
     int r = QMessageBox::warning(this, tr("StatsGenerator"), tr("Data for the current phase has NOT been generated.\nDo you want to generate it now?"), QMessageBox::Ok | QMessageBox::Cancel);
     if(r == QMessageBox::Ok)
@@ -576,16 +605,6 @@ void StatsGeneratorWidget::on_phaseTabs_tabCloseRequested(int index)
       sgwidget->setObjectName(sgwidget->getComboString());
     }
 
-#if 0
-    StatsGenWidget* widget = m_StatsGenWidgets[0];
-
-    verticalLayout_2->removeWidget(m_StatsGenWidget);
-    m_StatsGenWidget->hide();
-    m_StatsGenWidget->deleteLater();
-    m_StatsGenWidget = widget;
-    verticalLayout_2->addWidget(m_StatsGenWidget);
-    m_StatsGenWidget->show();
-#endif
   }
   setWindowModified(true);
   emit parametersChanged();
@@ -612,7 +631,7 @@ bool StatsGeneratorWidget::verifyOutputPathParentExists(QString outFilePath, QLi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool StatsGeneratorWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
+bool StatsGeneratorWidget::verifyPathExists(const QString& outFilePath, QLineEdit* lineEdit)
 {
   QFileInfo fileinfo(outFilePath);
   if(false == fileinfo.exists())
@@ -631,19 +650,6 @@ bool StatsGeneratorWidget::verifyPathExists(QString outFilePath, QLineEdit* line
 // -----------------------------------------------------------------------------
 void StatsGeneratorWidget::on_actionSaveAs_triggered()
 {
-#if 0
-  QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
-  QString h5file = QFileDialog::getSaveFileName(this, tr("Save DREAM.3D File"),
-                                                proposedFile,
-                                                tr("DREAM.3D Files (*.dream3d)") );
-  if ( true == h5file.isEmpty() ) { return;  }
-  m_FilePath = h5file;
-  QFileInfo fi (m_FilePath);
-  QString ext = fi.suffix();
-  m_OpenDialogLastDirectory = fi.path();
-  m_FileSelected = true;
-  on_saveH5Btn_clicked();
-#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -818,13 +824,13 @@ void StatsGeneratorWidget::on_openStatsFile_clicked()
 {
   QString proposedFile = m_OpenDialogLastFilePath + QDir::separator() + "Untitled.dream3d";
   QString h5file = QFileDialog::getOpenFileName(this, tr("Open Statistics File"), proposedFile, tr("DREAM3D Files (*.dream3d);;H5Stats Files(*.h5stats);;HDF5 Files(*.h5 *.hdf5);;All Files(*.*)"));
-  if(true == h5file.isEmpty())
+  if(h5file.isEmpty())
   {
     return;
   }
 
   // Make sure the file path is not empty and does exist on the system
-  if(true == h5file.isEmpty())
+  if(h5file.isEmpty())
   {
     QString ss = QObject::tr("Input file was empty").arg(h5file);
     QMessageBox::critical(this, QString("File Open Error"), ss, QMessageBox::Ok);
@@ -832,7 +838,7 @@ void StatsGeneratorWidget::on_openStatsFile_clicked()
   }
 
   QFileInfo fi(h5file);
-  if(fi.exists() == false)
+  if(!fi.exists())
   {
     QString ss = QObject::tr("Input file does not exist").arg(fi.absoluteFilePath());
     QMessageBox::critical(this, QString("File Open Error"), ss, QMessageBox::Ok);
@@ -971,7 +977,7 @@ void StatsGeneratorWidget::on_openStatsFile_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorWidget::displayDialogBox(QString title, QString text, QMessageBox::Icon icon)
+void StatsGeneratorWidget::displayDialogBox(const QString& title, const QString& text, QMessageBox::Icon icon)
 {
 
   QMessageBox msgBox;

@@ -796,9 +796,11 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool p
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int index)
 {
+
   emit progressText(QString("Primary Phase extracting statistics..."));
   setWidgetListEnabled(true);
   setPhaseIndex(index);
+  qApp->processEvents();
 
   IDataArray::Pointer iDataArray = attrMat->getAttributeArray(SIMPL::EnsembleData::CrystalStructures);
   PhaseType::EnumType* attributeArray = std::dynamic_pointer_cast<UInt32ArrayType>(iDataArray)->getPointer(0);

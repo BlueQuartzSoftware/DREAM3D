@@ -19,6 +19,7 @@ set(DREAM3D_WIDGETS
   StatsGenRDFWidget
   TextureDialog
   TransformationPhaseWidget
+  StatsProgressWidget
 )
 
 foreach(FPW ${DREAM3D_WIDGETS})
