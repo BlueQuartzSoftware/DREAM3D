@@ -1,5 +1,5 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
+* Copyright (c) 2009-2018 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
 * are permitted provided that the following conditions are met:
@@ -36,8 +36,10 @@
 #include "FindSurfaceAreaToVolume.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -50,11 +52,10 @@
 // -----------------------------------------------------------------------------
 FindSurfaceAreaToVolume::FindSurfaceAreaToVolume()
 : m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_NumCellsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::NumCells)
+, m_NumCellsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::NumElements)
 , m_SurfaceAreaVolumeRatioArrayName(SIMPL::FeatureData::SurfaceAreaVol)
-, m_FeatureIds(nullptr)
-, m_NumCells(nullptr)
-, m_SurfaceAreaVolumeRatio(nullptr)
+, m_SphericityArrayName("Sphericity")
+, m_CalculateSphericity(true)
 {
 }
 
@@ -62,6 +63,7 @@ FindSurfaceAreaToVolume::FindSurfaceAreaToVolume()
 //
 // -----------------------------------------------------------------------------
 FindSurfaceAreaToVolume::~FindSurfaceAreaToVolume() = default;
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -83,6 +85,12 @@ void FindSurfaceAreaToVolume::setupFilterParameters()
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Surface Area to Volume Ratio", SurfaceAreaVolumeRatioArrayName, FilterParameter::CreatedArray, FindSurfaceAreaToVolume));
+  
+  QStringList linkedProps("SphericityArrayName");
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Sphericity", CalculateSphericity, FilterParameter::Parameter, FindSurfaceAreaToVolume, linkedProps));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Sphericity Array Name", SphericityArrayName, FilterParameter::CreatedArray, FindSurfaceAreaToVolume));
+
+  
   setFilterParameters(parameters);
 }
 
@@ -139,6 +147,16 @@ void FindSurfaceAreaToVolume::dataCheck()
   {
     m_SurfaceAreaVolumeRatio = m_SurfaceAreaVolumeRatioPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  if(getCalculateSphericity())
+  {
+    tempPath.setDataArrayName(getSphericityArrayName());
+    m_SphericityPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims);
+    if(nullptr != m_SphericityPtr.lock())
+    {
+      m_Sphericity = m_SphericityPtr.lock()->getPointer(0);
+    }   
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -188,7 +206,7 @@ void FindSurfaceAreaToVolume::execute()
     }
   }
 
-  if(mismatchedFeatures == true)
+  if(mismatchedFeatures)
   {
     QString ss = QObject::tr("The number of Features in the NumCells array (%1) is larger than the largest Feature Id in the FeatureIds array").arg(numFeatures);
     setErrorCondition(-5555);
@@ -208,13 +226,16 @@ void FindSurfaceAreaToVolume::execute()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
+  std::tie(xRes, yRes, zRes) = imageGeom->getResolution();
 
   int64_t xPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
   int64_t yPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
   int64_t zPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
 
-  std::vector<float> featureSurfaceArea(numFeatures);
+  float voxelVol = xRes * yRes * zRes;
+
+  std::vector<float> featureSurfaceArea(static_cast<size_t>(numFeatures), 0.0f);
 
   int64_t neighpoints[6] = {0, 0, 0, 0, 0, 0};
   neighpoints[0] = -xPoints * yPoints;
@@ -270,7 +291,7 @@ void FindSurfaceAreaToVolume::execute()
             {
               good = false;
             }
-            if(good == true && m_FeatureIds[neighbor] != feature)
+            if(good && m_FeatureIds[neighbor] != feature)
             {
               if(l == 0 || l == 5) // XY face shared
               {
@@ -293,9 +314,14 @@ void FindSurfaceAreaToVolume::execute()
     }
   }
 
-  for(int32_t i = 1; i < numFeatures; i++)
+
+  const float thirdRootPi = std::powf(SIMPLib::Constants::k_Pif, 0.333333f);
+  for(size_t i = 1; i < static_cast<size_t>(numFeatures); i++)
   {
-    m_SurfaceAreaVolumeRatio[i] = featureSurfaceArea[i] / (m_NumCells[i] * xRes * yRes * zRes);
+    float featureVolume = voxelVol * m_NumCells[i];
+    m_SurfaceAreaVolumeRatio[i] = featureSurfaceArea[i] / featureVolume;
+    // Calc the sphericity
+    m_Sphericity[i] = (thirdRootPi * std::pow( (6.0f * featureVolume), 0.66666f)) / featureSurfaceArea[i];
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -307,7 +333,7 @@ void FindSurfaceAreaToVolume::execute()
 AbstractFilter::Pointer FindSurfaceAreaToVolume::newFilterInstance(bool copyFilterParameters) const
 {
   FindSurfaceAreaToVolume::Pointer filter = FindSurfaceAreaToVolume::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }
@@ -369,5 +395,5 @@ const QString FindSurfaceAreaToVolume::getSubGroupName() const
 // -----------------------------------------------------------------------------
 const QString FindSurfaceAreaToVolume::getHumanLabel() const
 {
-  return "Find Surface Area to Volume";
+  return "Find Surface Area to Volume & Sphericity";
 }
