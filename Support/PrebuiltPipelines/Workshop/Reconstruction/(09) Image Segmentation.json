@@ -1,10 +1,20 @@
 {
-    "0": {
+    "00": {
+        "FilterVersion": "1.0.359",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Pipeline Annotation",
+        "Filter_Name": "PipelineAnnotation",
+        "Filter_Uuid": "{8cc2198b-6a9d-5bf4-b8c0-b0878bb57f10}",
+        "Summary": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'.SF NS Text'; font-size:13pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">This example pipeline shows how to read in a 3D stack of images, segment them and perform some basic size statistics on the segmented features. Since this data set is from an image there is no phase data which is created in a filter and phase data is also generated during the pipeline. Note the technique for accomplishing this as it is handy to do for other pipelines.</p></body></html>"
+    },
+    "01": {
         "CellAttributeMatrixName": "CellData",
         "DataContainerName": "ImageDataContainer",
-        "FilterVersion": "1.0.351",
-        "Filter_Human_Label": "ITK::Import Images (3D Stack) (KW)",
+        "FilterVersion": "1.0.412",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "ITK::Import Images (3D Stack)",
         "Filter_Name": "ITKImportImageStack",
+        "Filter_Uuid": "{cf7d7497-9573-5102-bedd-38f86a6cdfd4}",
         "ImageDataArrayName": "ImageData",
         "InputFileListInfo": {
             "EndIndex": 174,
@@ -28,11 +38,13 @@
             "z": 1
         }
     },
-    "1": {
+    "02": {
         "DestinationArrayName": "Mask",
-        "FilterVersion": "6.4.415",
+        "FilterVersion": "1.0.359",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Threshold Objects",
         "Filter_Name": "MultiThresholdObjects",
+        "Filter_Uuid": "{014b7300-cf36-5ede-a751-5faf9b119dae}",
         "SelectedThresholds": [
             {
                 "Attribute Array Name": "ImageData",
@@ -43,13 +55,15 @@
             }
         ]
     },
-    "2": {
+    "03": {
         "ActiveArrayName": "Active",
         "CellFeatureAttributeMatrixName": "CellFeatureData",
         "FeatureIdsArrayName": "FeatureIds",
-        "FilterVersion": "6.4.415",
+        "FilterVersion": "6.4.332",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Segment Features (Scalar)",
         "Filter_Name": "ScalarSegmentFeatures",
+        "Filter_Uuid": "{2c5edebf-95d8-511f-b787-90ee2adf485c}",
         "GoodVoxelsArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "Mask",
@@ -63,7 +77,7 @@
         "ScalarTolerance": 10,
         "UseGoodVoxels": 1
     },
-    "3": {
+    "04": {
         "EquivalentDiametersArrayName": "EquivalentDiameters",
         "FeatureAttributeMatrixName": {
             "Attribute Matrix Name": "CellFeatureData",
@@ -75,39 +89,185 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.4.415",
+        "FilterVersion": "6.4.332",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Find Feature Sizes",
         "Filter_Name": "FindSizes",
+        "Filter_Uuid": "{656f144c-a120-5c3b-bee5-06deab438588}",
         "NumElementsArrayName": "NumElements",
         "SaveElementSizes": 0,
         "VolumesArrayName": "Volumes"
     },
-    "4": {
+    "05": {
         "CreatedArrayName": "EquivalentDiameters",
         "FeatureIdsArrayPath": {
             "Attribute Matrix Name": "CellData",
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.803",
+        "FilterVersion": "1.0.359",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Create Element Array from Feature Array",
         "Filter_Name": "CopyFeatureArrayToElementArray",
+        "Filter_Uuid": "{99836b75-144b-5126-b261-b411133b5e8a}",
         "SelectedFeatureArrayPath": {
             "Attribute Matrix Name": "CellFeatureData",
             "Data Array Name": "EquivalentDiameters",
             "Data Container Name": "ImageDataContainer"
         }
     },
-    "5": {
-        "FilterVersion": "1.0.803",
+    "06": {
+        "FilterVersion": "1.0.359",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Create Data Array",
+        "Filter_Name": "CreateDataArray",
+        "Filter_Uuid": "{77f392fb-c1eb-57da-a1b1-e7acf9239fb8}",
+        "InitializationRange": {
+            "Max": 0,
+            "Min": 0
+        },
+        "InitializationType": 0,
+        "InitializationValue": "1",
+        "NewArray": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "NumberOfComponents": 1,
+        "ScalarType": 4
+    },
+    "07": {
+        "ConditionalArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Mask",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "1.0.359",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Replace Value in Array (Conditional)",
+        "Filter_Name": "ConditionalSetValue",
+        "Filter_Uuid": "{47cafe63-83cc-5826-9521-4fb5bea684ef}",
+        "ReplaceValue": 2,
+        "SelectedArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "ImageDataContainer"
+        }
+    },
+    "08": {
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FeatureIdsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "FeatureIds",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FeaturePhasesArrayPath": {
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "6.4.332",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Find Feature Phases",
+        "Filter_Name": "FindFeaturePhases",
+        "Filter_Uuid": "{6334ce16-cea5-5643-83b5-9573805873fa}"
+    },
+    "09": {
+        "CentroidsArrayPath": {
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "Centroids",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FeatureIdsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "FeatureIds",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "6.4.332",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Find Feature Centroids",
+        "Filter_Name": "FindFeatureCentroids",
+        "Filter_Uuid": "{6f8ca36f-2995-5bd3-8672-6b0b80d5b2ca}"
+    },
+    "10": {
+        "CellEnsembleAttributeMatrixName": "EnsembleAttributeMatrix",
+        "CrystalStructuresArrayName": "CrystalStructures",
+        "DataContainerName": "ImageDataContainer",
+        "Ensemble": [
+            {
+                "CrystalStructure": 1,
+                "PhaseName": "Matrix",
+                "PhaseType": 3
+            },
+            {
+                "CrystalStructure": 1,
+                "PhaseName": "Pores",
+                "PhaseType": 1
+            }
+        ],
+        "FilterVersion": "6.4.332",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Create Ensemble Info",
+        "Filter_Name": "CreateEnsembleInfo",
+        "Filter_Uuid": "{2a0bfcd3-2517-5117-b164-964dfac8fe22}",
+        "PhaseNamesArrayName": "PhaseNames",
+        "PhaseTypesArrayName": "PhaseTypes"
+    },
+    "11": {
+        "BiasedFeaturesArrayPath": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": ""
+        },
+        "CellEnsembleAttributeMatrixName": {
+            "Attribute Matrix Name": "EnsembleAttributeMatrix",
+            "Data Array Name": "",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "CentroidsArrayPath": {
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "Centroids",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "ClusteringListArrayName": "ClusteringList",
+        "EquivalentDiametersArrayPath": {
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "EquivalentDiameters",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FeaturePhasesArrayPath": {
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "Phases",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "6.4.332",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Find Feature Clustering",
+        "Filter_Name": "FindFeatureClustering",
+        "Filter_Uuid": "{a1e9cf6d-2d1b-573e-98b8-0314c993d2b6}",
+        "MaxMinArrayName": "RDFMaxMinDistances",
+        "NewEnsembleArrayArrayName": "RDF",
+        "NumberOfBins": 10,
+        "PhaseNumber": 2,
+        "RemoveBiasedFeatures": 0
+    },
+    "12": {
+        "FilterVersion": "1.0.359",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
+        "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
         "OutputFile": "Data/Output/ImagesStack/Images.dream3d",
+        "WriteTimeSeries": 0,
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
         "Name": "(09) Image Segmentation",
-        "Number_Filters": 6,
+        "Number_Filters": 13,
         "Version": 6
     }
 }
