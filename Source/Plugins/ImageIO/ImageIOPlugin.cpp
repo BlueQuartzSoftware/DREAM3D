@@ -246,6 +246,11 @@ void ImageIOPlugin::readSettings(QSettings& prefs)
 {
 }
 
-#include "ImageIOFilters/RegisterKnownFilters.cpp"
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImageIOPlugin::registerFilterWidgets(FilterWidgetManager* fwm)
+{
+}
 
-#include "ImageIO/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
+#include "ImageIOFilters/RegisterKnownFilters.cpp"

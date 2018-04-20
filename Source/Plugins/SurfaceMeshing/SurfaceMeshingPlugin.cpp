@@ -247,5 +247,11 @@ void SurfaceMeshingPlugin::readSettings(QSettings& prefs)
 {
 }
 
-#include "SurfaceMeshing/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceMeshingPlugin::registerFilterWidgets(FilterWidgetManager* fwm)
+{
+}
+
 #include "SurfaceMeshingFilters/RegisterKnownFilters.cpp"

@@ -2138,7 +2138,7 @@ SIMPL::Rgb CubicOps::generateMisorientationColor(const QuatF& q, const QuatF& re
     s = s / v;
   }
 
-  SIMPL::Rgb rgb = ColorUtilities::convertHSVtoRgb(h, s, v);
+  SIMPL::Rgb rgb = ColorUtilities::ConvertHSVtoRgb(h, s, v);
 
   //now standard 0-255 rgb, needs rotation
   return RgbColor::dRgb(255 - RgbColor::dGreen(rgb), RgbColor::dBlue(rgb), RgbColor::dRed(rgb), 0);

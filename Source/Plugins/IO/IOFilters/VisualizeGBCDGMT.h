@@ -36,8 +36,6 @@
 #ifndef _visualizegbcdgmt_h_
 #define _visualizegbcdgmt_h_
 
-// Needed for AxisAngle_t
-#include "EbsdLib/EbsdConstants.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"

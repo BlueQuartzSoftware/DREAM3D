@@ -129,7 +129,7 @@ set_property(GLOBAL PROPERTY PluginNumFilters ${PluginNumFilters})
 set(DREAM3D_BASE_PLUGINS
   EMMPM
   Generic
-  ImageIO
+  #ImageIO
   IO
   OrientationAnalysis
   Processing
@@ -138,7 +138,7 @@ set(DREAM3D_BASE_PLUGINS
   Statistics
   SurfaceMeshing
   SyntheticBuilding
-  StatsGenerator
+  #StatsGenerator
 )
 
 get_filename_component(DREAM3D_PARENT_DIR  ${DREAM3DProj_SOURCE_DIR} DIRECTORY)

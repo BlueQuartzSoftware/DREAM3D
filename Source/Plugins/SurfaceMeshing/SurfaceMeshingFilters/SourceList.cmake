@@ -18,17 +18,10 @@ SIMPL_START_FILTER_GROUP(
 # List your public filters here
 
 set(_PublicFilters
-  FindGBCD
-  FindGBCDMetricBased
-  FindGBPDMetricBased
-  FindDistsToCharactGBs
   FindTriangleGeomCentroids
   FindTriangleGeomNeighbors
   FindTriangleGeomShapes
   FindTriangleGeomSizes
-  GenerateFaceIPFColoring
-  GenerateFaceMisorientationColoring
-  GenerateGeometryConnectivity
   LaplacianSmoothing
   QuickSurfaceMesh
   ReverseTriangleWinding
@@ -37,6 +30,7 @@ set(_PublicFilters
   TriangleCentroidFilter
   TriangleDihedralAngleFilter
   TriangleNormalFilter
+  GenerateGeometryConnectivity
 )
 
 if(EIGEN_FOUND)
@@ -65,7 +59,7 @@ endforeach()
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
 
-  GenerateFaceSchuhMisorientationColoring
+  
   # These filters require extensive updates to comply with the IGeometry design
   #M3CSliceBySlice
   #MovingFiniteElementSmoothing

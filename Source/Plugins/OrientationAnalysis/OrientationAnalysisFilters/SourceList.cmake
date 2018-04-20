@@ -49,12 +49,18 @@ set(_PublicFilters
   ReadH5Ebsd
   ReplaceElementAttributesWithNeighborValues
   RotateEulerRefFrame
-  WriteIPFStandardTriangle
-  WritePoleFigure
+  #WriteIPFStandardTriangle
+  #WritePoleFigure
   WriteStatsGenOdfAngleFile
   OrientationUtility
   Stereographic3D
   GenerateFZQuaternions
+  FindGBCD
+  FindGBCDMetricBased
+  FindGBPDMetricBased
+  FindDistsToCharactGBs
+  GenerateFaceIPFColoring
+  GenerateFaceMisorientationColoring
 )
 
 
@@ -76,7 +82,7 @@ endforeach()
 # This is the list of Private Filters. These filters are available from other filters but the user will not
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
-
+  GenerateFaceSchuhMisorientationColoring
   FindBasalLoadingFactor
 
   FindLocalAverageCAxisMisalignments
@@ -97,25 +103,28 @@ foreach(f ${_PrivateFilters} )
 endforeach()
 
 
-ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} IPFLegendHelpers/IPFLegendPainter.h)
-ADD_SIMPL_SUPPORT_SOURCE(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} IPFLegendHelpers/IPFLegendPainter.cpp)
+if(0)
+  ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} IPFLegendHelpers/IPFLegendPainter.h)
+  ADD_SIMPL_SUPPORT_SOURCE(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} IPFLegendHelpers/IPFLegendPainter.cpp)
+  
+  macro(addIpfHelper ClassName)
+    ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} IPFLegendHelpers/${ClassName}IPFLegendPainter.h)
+    ADD_SIMPL_SUPPORT_SOURCE(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} IPFLegendHelpers/${ClassName}IPFLegendPainter.cpp)
+  endmacro()
+  
+  addIpfHelper(Hexagonal)
+  addIpfHelper(Cubic)
+  addIpfHelper(HexagonalLow)
+  addIpfHelper(CubicLow)
+  addIpfHelper(Triclinic)
+  addIpfHelper(Monoclinic)
+  addIpfHelper(Orthorhombic)
+  addIpfHelper(TetragonalLow)
+  addIpfHelper(Tetragonal)
+  addIpfHelper(TrigonalLow)
+  addIpfHelper(Trigonal)
+endif()
 
-macro(addIpfHelper ClassName)
-  ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} IPFLegendHelpers/${ClassName}IPFLegendPainter.h)
-  ADD_SIMPL_SUPPORT_SOURCE(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} IPFLegendHelpers/${ClassName}IPFLegendPainter.cpp)
-endmacro()
-
-addIpfHelper(Hexagonal)
-addIpfHelper(Cubic)
-addIpfHelper(HexagonalLow)
-addIpfHelper(CubicLow)
-addIpfHelper(Triclinic)
-addIpfHelper(Monoclinic)
-addIpfHelper(Orthorhombic)
-addIpfHelper(TetragonalLow)
-addIpfHelper(Tetragonal)
-addIpfHelper(TrigonalLow)
-addIpfHelper(Trigonal)
 
 #---------------------
 # This macro must come last after we are done adding all the filters and support files.

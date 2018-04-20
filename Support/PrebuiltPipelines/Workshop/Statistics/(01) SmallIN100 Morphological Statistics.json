@@ -1,8 +1,10 @@
 {
     "0": {
-        "FilterVersion": "1.0.600",
+        "FilterVersion": "1.0.359",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Read DREAM.3D Data File",
         "Filter_Name": "DataContainerReader",
+        "Filter_Uuid": "{043cbde5-3878-5718-958f-ae75714df0df}",
         "InputFile": "Data/Output/Reconstruction/SmallIN100_Final.dream3d",
         "InputFileDataContainerArrayProxy": {
             "Data Containers": [
@@ -224,7 +226,7 @@
                                         3
                                     ],
                                     "Flag": 2,
-                                    "Name": "AvgEuler",
+                                    "Name": "AvgEulerAngles",
                                     "Object Type": "DataArray<float>",
                                     "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
                                     "Tuple Dimensions": [
@@ -381,9 +383,11 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.287",
+        "FilterVersion": "6.4.332",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Find Feature Centroids",
-        "Filter_Name": "FindFeatureCentroids"
+        "Filter_Name": "FindFeatureCentroids",
+        "Filter_Uuid": "{6f8ca36f-2995-5bd3-8672-6b0b80d5b2ca}"
     },
     "2": {
         "EquivalentDiametersArrayName": "EquivalentDiameters",
@@ -397,9 +401,11 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.287",
+        "FilterVersion": "6.4.332",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Find Feature Sizes",
         "Filter_Name": "FindSizes",
+        "Filter_Uuid": "{656f144c-a120-5c3b-bee5-06deab438588}",
         "NumElementsArrayName": "NumElements",
         "SaveElementSizes": 0,
         "VolumesArrayName": "Size Volumes"
@@ -423,9 +429,11 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.287",
+        "FilterVersion": "6.4.332",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Find Feature Shapes",
         "Filter_Name": "FindShapes",
+        "Filter_Uuid": "{3b0ababf-9c8d-538d-96af-e40775c4f0ab}",
         "Omega3sArrayName": "Omega3s",
         "VolumesArrayName": "Shape Volumes"
     },
@@ -441,9 +449,11 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.287",
+        "FilterVersion": "6.4.332",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
+        "Filter_Uuid": "{97cf66f8-7a9b-5ec2-83eb-f8c4c8a17bac}",
         "NeighborListArrayName": "NeighborList",
         "NumNeighborsArrayName": "NumNeighbors",
         "SharedSurfaceAreaListArrayName": "SharedSurfaceAreaList",
@@ -467,15 +477,17 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.287",
+        "FilterVersion": "6.4.332",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Find Feature Neighborhoods",
         "Filter_Name": "FindNeighborhoods",
+        "Filter_Uuid": "{697ed3de-db33-5dd1-a64b-04fb71e7d63e}",
         "MultiplesOfAverage": 1,
         "NeighborhoodListArrayName": "NeighborhoodList",
         "NeighborhoodsArrayName": "Neighborhoods"
     },
     "6": {
-        "CalcOnlyManhattanDist": 0,
+        "CalcManhattanDist": 1,
         "DoBoundaries": 1,
         "DoQuadPoints": 1,
         "DoTripleLines": 1,
@@ -484,25 +496,50 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "6.3.287",
+        "FilterVersion": "6.4.332",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Find Euclidean Distance Map",
         "Filter_Name": "FindEuclideanDistMap",
-        "GBEuclideanDistancesArrayName": "GBEuclideanDistances",
+        "Filter_Uuid": "{933e4b2d-dd61-51c3-98be-00548ba783a3}",
+        "GBDistancesArrayName": "GBManhattanDistances",
         "NearestNeighborsArrayName": "NearestNeighbors",
-        "QPEuclideanDistancesArrayName": "QPEuclideanDistances",
+        "QPDistancesArrayName": "QPManhattanDistances",
         "SaveNearestNeighbors": 0,
-        "TJEuclideanDistancesArrayName": "TJEuclideanDistances"
+        "TJDistancesArrayName": "TJManhattanDistances"
     },
     "7": {
-        "FilterVersion": "1.0.600",
+        "CalculateSphericity": 1,
+        "FeatureIdsArrayPath": {
+            "Attribute Matrix Name": "CellData",
+            "Data Array Name": "FeatureIds",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "6.4.332",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Find Surface Area to Volume & Sphericity",
+        "Filter_Name": "FindSurfaceAreaToVolume",
+        "Filter_Uuid": "{5d586366-6b59-566e-8de1-57aa9ae8a91c}",
+        "NumCellsArrayPath": {
+            "Attribute Matrix Name": "CellFeatureData",
+            "Data Array Name": "NumElements",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "SphericityArrayName": "Sphericity",
+        "SurfaceAreaVolumeRatioArrayName": "SurfaceAreaVolumeRatio"
+    },
+    "8": {
+        "FilterVersion": "1.0.359",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
+        "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
         "OutputFile": "Data/Output/Statistics/SmallIN100_Morph.dream3d",
+        "WriteTimeSeries": 0,
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
         "Name": "(01) SmallIN100 Morphological Statistics",
-        "Number_Filters": 8,
+        "Number_Filters": 9,
         "Version": 6
     }
 }

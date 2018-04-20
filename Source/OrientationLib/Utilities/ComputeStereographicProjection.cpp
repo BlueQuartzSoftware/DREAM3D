@@ -31,11 +31,9 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ComputeStereographicProjection.h"
 
-#if 1
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
 
-#endif
 
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 

@@ -486,6 +486,10 @@ void CropImageGeometry::execute()
   QList<QString> voxelArrayNames = cellAttrMat->getAttributeArrayNames();
   for(int64_t i = 0; i < ZP; i++)
   {
+    if(getCancel())
+    {
+      break;
+    }
     QString ss = QObject::tr("Cropping Volume || Slice %1 of %2 Complete").arg(i).arg(ZP);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     planeold = (i + m_ZMin) * (srcCellDataContainer->getGeometryAs<ImageGeom>()->getXPoints() * srcCellDataContainer->getGeometryAs<ImageGeom>()->getYPoints());
@@ -507,6 +511,10 @@ void CropImageGeometry::execute()
         }
       }
     }
+  }
+  if(getCancel())
+  {
+    return;
   }
   destCellDataContainer->getGeometryAs<ImageGeom>()->setDimensions(static_cast<size_t>(XP), static_cast<size_t>(YP), static_cast<size_t>(ZP));
   totalPoints = destCellDataContainer->getGeometryAs<ImageGeom>()->getNumberOfElements();
@@ -553,6 +561,11 @@ void CropImageGeometry::execute()
     // Find the unique set of feature ids
     for(int64_t i = 0; i < totalPoints; ++i)
     {
+      if(getCancel())
+      {
+        break;
+      }
+
       int32_t currentFeatureId = m_FeatureIds[i];
       if(currentFeatureId < totalFeatures)
       {

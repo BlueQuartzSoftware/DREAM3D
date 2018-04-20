@@ -247,5 +247,11 @@ void SamplingPlugin::readSettings(QSettings& prefs)
 {
 }
 
-#include "Sampling/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SamplingPlugin::registerFilterWidgets(FilterWidgetManager* fwm)
+{
+}
+
 #include "SamplingFilters/RegisterKnownFilters.cpp"

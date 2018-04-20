@@ -1,41 +1,41 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "ImportImageStack.h"
 
-#include <QtGui/QImageReader>
+//#include <QtGui/QImageReader>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -140,6 +140,7 @@ void ImportImageStack::initialize()
   m_InputFileListInfo.FileExtension = QString("tif");
   m_InputFileListInfo.StartIndex = 0;
   m_InputFileListInfo.EndIndex = 0;
+  m_InputFileListInfo.IncrementIndex = 1;
   m_InputFileListInfo.PaddingDigits = 0;
 }
 
@@ -198,8 +199,9 @@ void ImportImageStack::dataCheck()
   }
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_InputFileListInfo.StartIndex, m_InputFileListInfo.EndIndex, hasMissingFiles, orderAscending, m_InputFileListInfo.InputPath,
-                                                                  m_InputFileListInfo.FilePrefix, m_InputFileListInfo.FileSuffix, m_InputFileListInfo.FileExtension, m_InputFileListInfo.PaddingDigits);
+  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_InputFileListInfo.StartIndex, m_InputFileListInfo.EndIndex, m_InputFileListInfo.IncrementIndex, hasMissingFiles, orderAscending,
+                                                                  m_InputFileListInfo.InputPath, m_InputFileListInfo.FilePrefix, m_InputFileListInfo.FileSuffix, m_InputFileListInfo.FileExtension,
+                                                                  m_InputFileListInfo.PaddingDigits);
   if(fileList.size() == 0)
   {
     ss.clear();
@@ -218,10 +220,13 @@ void ImportImageStack::dataCheck()
   }
   else
   {
+    int32_t err = 0;
+    int64_t dims[3] = {0, 0, 0};
+#if 0
     // If we have RGB or RGBA Images then we are going to have to change things a bit.
     // We should read the file and see what we have? Of course Qt is going to read it up into
     // an RGB array by default
-    int32_t err = 0;
+    
     QImageReader reader((fileList[0]));
     QSize imageDims = reader.size();
     int64_t dims[3] = {imageDims.width(), imageDims.height(), fileList.size()};
@@ -229,6 +234,7 @@ void ImportImageStack::dataCheck()
  * Note that this does not guarantee the user has enough left, just that the
  * size of the volume can fit in the address space of the program
  */
+#endif
 #if(CMP_SIZEOF_SSIZE_T == 4)
     int64_t max = std::numeric_limits<size_t>::max();
 #else
@@ -282,7 +288,7 @@ void ImportImageStack::dataCheck()
     m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
 
     size_t pixelBytes = 0;
-
+#if 0
     QImage::Format format = reader.imageFormat();
     switch(format)
     {
@@ -312,11 +318,12 @@ void ImportImageStack::dataCheck()
     // This would be for a gray scale image
     tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getImageDataArrayName());
     m_ImageDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(
-        this, tempPath, 0, cDims);             /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_ImageDataPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+        this, tempPath, 0, cDims);       /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_ImageDataPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_ImageData = m_ImageDataPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
+#endif
   }
 }
 
@@ -379,8 +386,9 @@ void ImportImageStack::execute()
   }
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_InputFileListInfo.StartIndex, m_InputFileListInfo.EndIndex, hasMissingFiles, orderAscending, m_InputFileListInfo.InputPath,
-                                                                  m_InputFileListInfo.FilePrefix, m_InputFileListInfo.FileSuffix, m_InputFileListInfo.FileExtension, m_InputFileListInfo.PaddingDigits);
+  QVector<QString> fileList = FilePathGenerator::GenerateFileList(m_InputFileListInfo.StartIndex, m_InputFileListInfo.EndIndex, m_InputFileListInfo.IncrementIndex, hasMissingFiles, orderAscending,
+                                                                  m_InputFileListInfo.InputPath, m_InputFileListInfo.FilePrefix, m_InputFileListInfo.FileSuffix, m_InputFileListInfo.FileExtension,
+                                                                  m_InputFileListInfo.PaddingDigits);
   if(fileList.size() == 0)
   {
     QString ss = QObject::tr("No files have been selected for import");
@@ -393,10 +401,10 @@ void ImportImageStack::execute()
     QString imageFName = *filepath;
     QString ss = QObject::tr("Importing file %1").arg(imageFName);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+#if 0
     QImageReader reader(imageFName);
     QImage image(imageFName);
     if(image.isNull() == true)
-    {
       setErrorCondition(-14000);
       notifyErrorMessage(getHumanLabel(), "Failed to load image file", getErrorCondition());
       return;
@@ -468,6 +476,7 @@ void ImportImageStack::execute()
     {
       return;
     }
+#endif
   }
 
   m->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(data->getName(), data);

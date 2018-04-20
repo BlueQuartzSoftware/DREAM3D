@@ -201,22 +201,6 @@ target_include_directories(${PROJECT_NAME}
                             # ${SIMPLProj_BINARY_DIR}
 )
 
-set(OrientationLib_LINK_LIBRARIES "")
-if(${OrientationLib_ENABLE_HDF5})
-  set(OrientationLib_LINK_LIBRARIES
-    ${OrientationLib_LINK_LIBRARIES}
-    EbsdLib
-    )
-endif()
-
-if(Qt5_FOUND)
-  set(OrientationLib_LINK_LIBRARIES
-     ${OrientationLib_LINK_LIBRARIES}
-     Qt5::Core
-     Qt5::Gui
-    )
-endif()
-
  # On mac systems, we likely have to link against the vecLib framework
 if(APPLE)
   find_library(LAPACK_LIB Accelerate)
@@ -228,7 +212,12 @@ if(WIN32 AND BUILD_SHARED_LIBS)
 endif()
   
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
-target_link_libraries(${PROJECT_NAME} SIMPLib ${OrientationLib_LINK_LIBRARIES} ${LAPACK_LIB})
+target_link_libraries(${PROJECT_NAME} 
+                        SIMPLib 
+                        EbsdLib
+                        ${LAPACK_LIB}
+                        
+)
 
 
 set(install_dir "tools")

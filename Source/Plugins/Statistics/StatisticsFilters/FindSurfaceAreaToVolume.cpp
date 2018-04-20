@@ -1,46 +1,48 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2018 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "FindSurfaceAreaToVolume.h"
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -50,11 +52,10 @@
 // -----------------------------------------------------------------------------
 FindSurfaceAreaToVolume::FindSurfaceAreaToVolume()
 : m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_NumCellsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::NumCells)
+, m_NumCellsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::NumElements)
 , m_SurfaceAreaVolumeRatioArrayName(SIMPL::FeatureData::SurfaceAreaVol)
-, m_FeatureIds(nullptr)
-, m_NumCells(nullptr)
-, m_SurfaceAreaVolumeRatio(nullptr)
+, m_SphericityArrayName("Sphericity")
+, m_CalculateSphericity(true)
 {
 }
 
@@ -62,6 +63,7 @@ FindSurfaceAreaToVolume::FindSurfaceAreaToVolume()
 //
 // -----------------------------------------------------------------------------
 FindSurfaceAreaToVolume::~FindSurfaceAreaToVolume() = default;
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -83,6 +85,11 @@ void FindSurfaceAreaToVolume::setupFilterParameters()
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Surface Area to Volume Ratio", SurfaceAreaVolumeRatioArrayName, FilterParameter::CreatedArray, FindSurfaceAreaToVolume));
+
+  QStringList linkedProps("SphericityArrayName");
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Sphericity", CalculateSphericity, FilterParameter::Parameter, FindSurfaceAreaToVolume, linkedProps));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Sphericity Array Name", SphericityArrayName, FilterParameter::CreatedArray, FindSurfaceAreaToVolume));
+
   setFilterParameters(parameters);
 }
 
@@ -139,6 +146,16 @@ void FindSurfaceAreaToVolume::dataCheck()
   {
     m_SurfaceAreaVolumeRatio = m_SurfaceAreaVolumeRatioPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  if(getCalculateSphericity())
+  {
+    tempPath.setDataArrayName(getSphericityArrayName());
+    m_SphericityPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims);
+    if(nullptr != m_SphericityPtr.lock())
+    {
+      m_Sphericity = m_SphericityPtr.lock()->getPointer(0);
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -188,7 +205,7 @@ void FindSurfaceAreaToVolume::execute()
     }
   }
 
-  if(mismatchedFeatures == true)
+  if(mismatchedFeatures)
   {
     QString ss = QObject::tr("The number of Features in the NumCells array (%1) is larger than the largest Feature Id in the FeatureIds array").arg(numFeatures);
     setErrorCondition(-5555);
@@ -208,13 +225,16 @@ void FindSurfaceAreaToVolume::execute()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
+  std::tie(xRes, yRes, zRes) = imageGeom->getResolution();
 
   int64_t xPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
   int64_t yPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
   int64_t zPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
 
-  std::vector<float> featureSurfaceArea(numFeatures);
+  float voxelVol = xRes * yRes * zRes;
+
+  std::vector<float> featureSurfaceArea(static_cast<size_t>(numFeatures), 0.0f);
 
   int64_t neighpoints[6] = {0, 0, 0, 0, 0, 0};
   neighpoints[0] = -xPoints * yPoints;
@@ -270,7 +290,7 @@ void FindSurfaceAreaToVolume::execute()
             {
               good = false;
             }
-            if(good == true && m_FeatureIds[neighbor] != feature)
+            if(good && m_FeatureIds[neighbor] != feature)
             {
               if(l == 0 || l == 5) // XY face shared
               {
@@ -293,9 +313,13 @@ void FindSurfaceAreaToVolume::execute()
     }
   }
 
-  for(int32_t i = 1; i < numFeatures; i++)
+  const float thirdRootPi = std::pow(SIMPLib::Constants::k_Pif, 0.333333f);
+  for(size_t i = 1; i < static_cast<size_t>(numFeatures); i++)
   {
-    m_SurfaceAreaVolumeRatio[i] = featureSurfaceArea[i] / (m_NumCells[i] * xRes * yRes * zRes);
+    float featureVolume = voxelVol * m_NumCells[i];
+    m_SurfaceAreaVolumeRatio[i] = featureSurfaceArea[i] / featureVolume;
+    // Calc the sphericity
+    m_Sphericity[i] = (thirdRootPi * std::pow((6.0f * featureVolume), 0.66666f)) / featureSurfaceArea[i];
   }
 
   notifyStatusMessage(getHumanLabel(), "Complete");
@@ -307,7 +331,7 @@ void FindSurfaceAreaToVolume::execute()
 AbstractFilter::Pointer FindSurfaceAreaToVolume::newFilterInstance(bool copyFilterParameters) const
 {
   FindSurfaceAreaToVolume::Pointer filter = FindSurfaceAreaToVolume::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }
@@ -369,5 +393,5 @@ const QString FindSurfaceAreaToVolume::getSubGroupName() const
 // -----------------------------------------------------------------------------
 const QString FindSurfaceAreaToVolume::getHumanLabel() const
 {
-  return "Find Surface Area to Volume";
+  return "Find Surface Area to Volume & Sphericity";
 }

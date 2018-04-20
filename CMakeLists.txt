@@ -353,7 +353,10 @@ install(FILES ${PROJECT_BINARY_DIR}/DREAM3D/DREAM3DLicense.txt
 
 
 # Include some directories for the compiler
-#include_directories(${PROJECT_BINARY_DIR})
+
+# -----------------------------------------------------------------------
+# -- Build the EbsdLib Library
+#add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/libharu ${PROJECT_BINARY_DIR}/libharu)
 
 # -----------------------------------------------------------------------
 # -- Build the EbsdLib Library

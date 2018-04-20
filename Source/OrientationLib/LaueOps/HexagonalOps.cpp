@@ -1896,7 +1896,7 @@ SIMPL::Rgb HexagonalOps::generateMisorientationColor(const QuatF& q, const QuatF
     v = 0.5f + x11 / 2;
   }
 
-  SIMPL::Rgb rgb = ColorUtilities::convertHSVtoRgb(h, s, v);
+  SIMPL::Rgb rgb = ColorUtilities::ConvertHSVtoRgb(h, s, v);
 
   //now standard 0-255 rgb, needs inversion
   return RgbColor::dRgb(255 - RgbColor::dRed(rgb), 255 - RgbColor::dGreen(rgb), 255 - RgbColor::dBlue(rgb), 0);

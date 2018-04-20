@@ -66,6 +66,12 @@ public:
   SIMPL_FILTER_PARAMETER(QString, SurfaceAreaVolumeRatioArrayName)
   Q_PROPERTY(QString SurfaceAreaVolumeRatioArrayName READ getSurfaceAreaVolumeRatioArrayName WRITE setSurfaceAreaVolumeRatioArrayName)
 
+  SIMPL_FILTER_PARAMETER(QString, SphericityArrayName)
+  Q_PROPERTY(QString SphericityArrayName READ getSphericityArrayName WRITE setSphericityArrayName)
+
+  SIMPL_FILTER_PARAMETER(bool, CalculateSphericity)
+  Q_PROPERTY(bool CalculateSphericity READ getCalculateSphericity WRITE setCalculateSphericity)
+
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
@@ -169,8 +175,8 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
   DEFINE_DATAARRAY_VARIABLE(int32_t, NumCells)
-
   DEFINE_DATAARRAY_VARIABLE(float, SurfaceAreaVolumeRatio)
+  DEFINE_DATAARRAY_VARIABLE(float, Sphericity)
 
 public:
   FindSurfaceAreaToVolume(const FindSurfaceAreaToVolume&) = delete; // Copy Constructor Not Implemented

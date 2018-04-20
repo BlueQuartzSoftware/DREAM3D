@@ -107,6 +107,7 @@ class OrientationLib_EXPORT PoleFigureUtilities
      */
     static void CreateColorImage(DoubleArrayType* data, PoleFigureConfiguration_t& config, UInt8ArrayType* image);
 
+  private:
     /**
      * @brief GenerateHexPoleFigures
      * @param eulers
@@ -116,11 +117,8 @@ class OrientationLib_EXPORT PoleFigureUtilities
      * @param intensity1010 [output]
      * @param intensity1120 [output]
      */
-    static void GenerateHexPoleFigures(FloatArrayType* eulers, int lambertDimension, int poleFigureDim,
-                                       DoubleArrayType::Pointer& intensity0001,
-                                       DoubleArrayType::Pointer& intensity1010,
-                                       DoubleArrayType::Pointer& intensity1120);
-
+    void GenerateHexPoleFigures(FloatArrayType* eulers, int lambertDimension, int poleFigureDim, DoubleArrayType::Pointer& intensity0001, DoubleArrayType::Pointer& intensity1010,
+                                DoubleArrayType::Pointer& intensity1120);
 
     /**
      * @brief GenerateHexPoleFigures
@@ -131,12 +129,8 @@ class OrientationLib_EXPORT PoleFigureUtilities
      * @param intensity010 [output]
      * @param intensity001 [output]
      */
-    static void GenerateOrthoPoleFigures(FloatArrayType* eulers, int lambertDimension, int poleFigureDim,
-                                         DoubleArrayType::Pointer& intensity100,
-                                         DoubleArrayType::Pointer& intensity010,
-                                         DoubleArrayType::Pointer& intensity001);
-
-
+    void GenerateOrthoPoleFigures(FloatArrayType* eulers, int lambertDimension, int poleFigureDim, DoubleArrayType::Pointer& intensity100, DoubleArrayType::Pointer& intensity010,
+                                  DoubleArrayType::Pointer& intensity001);
 
   private:
     PoleFigureUtilities(const PoleFigureUtilities&) = delete; // Copy Constructor Not Implemented

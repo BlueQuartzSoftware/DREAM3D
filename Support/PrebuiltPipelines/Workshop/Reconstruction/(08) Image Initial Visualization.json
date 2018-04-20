@@ -11,6 +11,7 @@
             "FileExtension": "tif",
             "FilePrefix": "slice_",
             "FileSuffix": "",
+            "IncrementIndex": 1,
             "InputPath": "Data/Image",
             "Ordering": 0,
             "PaddingDigits": 2,

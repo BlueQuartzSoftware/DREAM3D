@@ -19,7 +19,6 @@ SIMPL_START_FILTER_GROUP(
 
 set(_PublicFilters
   ImportImageStack
-  ImportVectorImageStack
   WriteImages
 )
 

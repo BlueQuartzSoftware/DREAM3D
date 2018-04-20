@@ -216,6 +216,11 @@ void EMMPMPlugin::readSettings(QSettings& prefs)
 {
 }
 
-#include "EMMPMFilters/RegisterKnownFilters.cpp"
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EMMPMPlugin::registerFilterWidgets(FilterWidgetManager* fwm)
+{
+}
 
-#include "FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
+#include "EMMPMFilters/RegisterKnownFilters.cpp"

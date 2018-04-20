@@ -388,6 +388,7 @@ int32_t WriteImages::writeRGBImage(size_t slice, size_t dB, size_t dA, size_t* d
     return getErrorCondition();
   }
 
+#if 0
   QImage image(dB, dA, QImage::Format_RGB32);
   if(image.isNull())
   {
@@ -437,6 +438,7 @@ int32_t WriteImages::writeRGBImage(size_t slice, size_t dB, size_t dA, size_t* d
     setErrorCondition(-1007);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
+#endif
   return err;
 }
 
@@ -483,7 +485,7 @@ int32_t WriteImages::writeGrayscaleImage(size_t slice, size_t dB, size_t dA, siz
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return getErrorCondition();
   }
-
+#if 0
   QImage image(dB, dA, QImage::Format_Grayscale8);
   if(image.isNull())
   {
@@ -530,6 +532,7 @@ int32_t WriteImages::writeGrayscaleImage(size_t slice, size_t dB, size_t dA, siz
     setErrorCondition(-1007);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
+#endif
   return err;
 }
 
