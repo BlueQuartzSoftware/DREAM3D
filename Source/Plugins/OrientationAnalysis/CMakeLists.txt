@@ -9,6 +9,8 @@ set(${PLUGIN_NAME}_VERSION_MINOR "0")
 get_filename_component(${PLUGIN_NAME}_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
 set(${PLUGIN_NAME}_BINARY_DIR "${DREAM3DProj_BINARY_DIR}/Plugins/${PLUGIN_NAME}")
 
+find_package(libharu)
+
 # --------------------------------------------------------------------
 # Look for Qt 5 as we need it for the plugin GUI to be generated
 if(NOT Qt5Core_FOUND)
@@ -182,6 +184,7 @@ target_include_directories(${plug_target_name}
                               ${PLUGINS_SOURCE_DIR}
                               ${PLUGINS_BINARY_DIR}
                               ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters
+                              ${libharu_INCLUDE_DIRS}
 )
 # --------------------------------------------------------------------
 # Set some additional properties of the plugin like its output name
@@ -200,6 +203,7 @@ target_link_libraries(${plug_target_name}
                     SIMPLib
                     EbsdLib
                     OrientationLib
+                    libharu::hpdf
 )
 
 

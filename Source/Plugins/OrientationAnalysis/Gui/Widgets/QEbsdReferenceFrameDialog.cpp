@@ -749,7 +749,7 @@ QImage QEbsdReferenceFrameDialog::paintImage(QImage image)
   int pxHigh = 0;
   int pxWide = 0;
 
-  QFont font("Ariel", 16, QFont::Bold);
+  QFont font("Arial", 16, QFont::Bold);
   {
     QPainter painter;
     QImage pImage(100, 100, QImage::Format_ARGB32_Premultiplied);

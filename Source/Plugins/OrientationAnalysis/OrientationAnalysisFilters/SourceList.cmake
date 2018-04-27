@@ -50,7 +50,7 @@ set(_PublicFilters
   ReplaceElementAttributesWithNeighborValues
   RotateEulerRefFrame
   #WriteIPFStandardTriangle
-  #WritePoleFigure
+  WritePoleFigure
   WriteStatsGenOdfAngleFile
   OrientationUtility
   Stereographic3D

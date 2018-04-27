@@ -73,7 +73,8 @@ public:
       TifImageType = 0,
       BmpImageType = 1,
       PngImageType = 2,
-      JpgImageType = 3
+      JpgImageType = 3,
+      PdfImageType = 4,
     };
 
     using EnumType = int;
@@ -124,6 +125,10 @@ public:
     SIMPL_FILTER_PARAMETER(int, GenerationAlgorithm)
     Q_PROPERTY(int GenerationAlgorithm READ getGenerationAlgorithm WRITE setGenerationAlgorithm)
 
+    SIMPL_FILTER_PARAMETER(QString, Title)
+    Q_PROPERTY(QString Title READ getTitle WRITE setTitle)
+        
+    
     //  SIMPL_FILTER_PARAMETER(bool, UseDiscreteHeatMap)
     //  Q_PROPERTY(bool UseDiscreteHeatMap READ getUseDiscreteHeatMap WRITE setUseDiscreteHeatMap)
 
@@ -232,14 +237,14 @@ public:
      * @param label Name of file
      * @return Generated output path
      */
-    QString generateImagePath(QString label);
+    QString generateImagePath(const QString &label);
 
     /**
      * @brief writeImage Writes the pole figure image to a file
      * @param image Image to write
      * @param label Name of file
      */
-    void writeImage(QImage image, QString label);
+    //void writeImage(QImage image, QString label);
 
   private:
     bool m_UseDiscreteHeatMap = false;

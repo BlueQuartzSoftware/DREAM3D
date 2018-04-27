@@ -210,14 +210,14 @@ QImage PoleFigureImageUtilities::GenerateScalarBar(int imageWidth, int imageHeig
 
   // Draw the Text Labels of the Scale Bar
   int startFontPtSize = 10;
-  QFont font("Ariel", startFontPtSize, QFont::Bold);
+  QFont font("Arial", startFontPtSize, QFont::Bold);
 
   QFontMetrics metrics(font);
   int fontPixelsHeight = metrics.height();
   while(fontPixelsHeight < colorHeight * 2)
   {
     startFontPtSize++;
-    font = QFont("Ariel", startFontPtSize, QFont::Bold);
+    font = QFont("Arial", startFontPtSize, QFont::Bold);
     metrics = QFontMetrics(font);
     fontPixelsHeight = metrics.height();
   }
@@ -241,7 +241,7 @@ QImage PoleFigureImageUtilities::GenerateScalarBar(int imageWidth, int imageHeig
   while(endOfStringYPos < imageWidth)
   {
     startFontPtSize++;
-    font = QFont("Ariel", startFontPtSize, QFont::Bold);
+    font = QFont("Arial", startFontPtSize, QFont::Bold);
     metrics = QFontMetrics(font);
     QString label("Upper & Lower");
     QString label2 = QString("Samples: ") + QString::number(config.eulers->getNumberOfTuples());
@@ -254,7 +254,7 @@ QImage PoleFigureImageUtilities::GenerateScalarBar(int imageWidth, int imageHeig
     endOfStringYPos = topLeft.x() + (imageWidth * scaleBarRelativeWidth) + 10 + labelWidth;
   }
   startFontPtSize--;
-  font = QFont("Ariel", startFontPtSize, QFont::Bold);
+  font = QFont("Arial", startFontPtSize, QFont::Bold);
   metrics = QFontMetrics(font);
   QString label("Upper & Lower");
   QString label2 = QString("Samples: ") + QString::number(config.eulers->getNumberOfTuples());
@@ -292,7 +292,7 @@ QImage PoleFigureImageUtilities::PaintPoleFigureOverlay(int imageWidth, int imag
   // Pole figure was 512 Pixels square.
   int fontPtSize = imageHeight / 32;
 
-  QFont font("Ariel", fontPtSize, QFont::Bold);
+  QFont font("Arial", fontPtSize, QFont::Bold);
   QFontMetrics metrics(font);
   pxHigh = metrics.height();
   pxWide = metrics.width(QString("Y"));
@@ -340,7 +340,7 @@ QImage PoleFigureImageUtilities::PaintPoleFigureOverlay(int imageWidth, int imag
   while(labelWidth < maxWidth)
   {
     fontPtSize++;
-    font = QFont("Ariel", fontPtSize, QFont::Bold);
+    font = QFont("Arial", fontPtSize, QFont::Bold);
     metrics = QFontMetrics(font);
     labelWidth = metrics.width(label); // Figure out which string is longer (pixel wise)
   }
