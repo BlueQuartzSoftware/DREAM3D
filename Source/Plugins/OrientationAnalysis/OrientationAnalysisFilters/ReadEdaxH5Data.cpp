@@ -52,6 +52,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "OrientationAnalysis/FilterParameters/ReadEdaxH5DataFilterParameter.h"
+#include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 /**
  * @brief The ReadEdaxH5DataPrivate class is a private implementation of the ReadEdaxH5Data class

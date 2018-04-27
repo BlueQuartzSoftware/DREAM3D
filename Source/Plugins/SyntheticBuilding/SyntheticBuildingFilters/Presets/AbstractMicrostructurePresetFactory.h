@@ -43,6 +43,7 @@
 
 #include "AbstractMicrostructurePreset.h"
 
+
 /**
  * @def DECLARE_FACTORY_CLASS(name, type, display)
  * @brief This macro is used to quickly create the Factory class for a custom

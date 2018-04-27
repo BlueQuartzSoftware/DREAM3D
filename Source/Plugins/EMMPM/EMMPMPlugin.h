@@ -11,14 +11,17 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 
 
+#include "EMMPM/EMMPMDLLExport.h"
+
 /**
- * @class EMMPMPlugin EMMPMPlugin.h SurfaceMeshing/EMMPMPlugin.h
+ * @class EMMPMPlugin EMMPMPlugin.hSurfaceMeshing/EMMPMPlugin.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class EMMPMPlugin : public QObject, public ISIMPLibPlugin
+class EMMPM_EXPORT EMMPMPlugin : public QObject, public ISIMPLibPlugin
+
 {
     Q_OBJECT
     Q_INTERFACES(ISIMPLibPlugin)

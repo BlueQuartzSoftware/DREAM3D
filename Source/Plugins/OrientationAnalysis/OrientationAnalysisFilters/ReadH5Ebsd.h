@@ -44,12 +44,14 @@
 
 #include "EbsdLib/H5EbsdVolumeReader.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 class H5EbsdVolumeReader;
 
 /**
  * @brief The ReadH5Ebsd class. See [Filter documentation](@ref readh5ebsd) for details.
  */
-class ReadH5Ebsd : public AbstractFilter
+class OrientationAnalysis_EXPORT ReadH5Ebsd : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ReadH5Ebsd SUPERCLASS AbstractFilter)

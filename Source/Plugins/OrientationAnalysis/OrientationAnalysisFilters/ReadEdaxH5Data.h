@@ -45,7 +45,7 @@
 #include "EbsdLib/TSL/AngPhase.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
-#include "OrientationAnalysis/OrientationAnalysisVersion.h"
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
 class H5OIMReader;
 
@@ -55,7 +55,7 @@ class ReadEdaxH5DataPrivate;
 /**
  * @brief The ReadEdaxH5Data class. See [Filter documentation](@ref readedaxh5data) for details.
  */
-class ReadEdaxH5Data : public AbstractFilter
+class OrientationAnalysis_EXPORT ReadEdaxH5Data : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ReadEdaxH5Data SUPERCLASS AbstractFilter)

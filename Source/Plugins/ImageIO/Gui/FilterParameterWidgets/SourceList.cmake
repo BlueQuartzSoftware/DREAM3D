@@ -21,7 +21,7 @@ file(APPEND ${RegisterKnownFilterParameterWidgetsFile} "/* This file will be dir
 file(APPEND ${RegisterKnownFilterParameterWidgetsFile} "#include \"SVWidgetsLib/Core/FilterWidgetManager.h\"\n")
 file(APPEND ${RegisterKnownFilterParameterWidgetsFile} "#include \"SVWidgetsLib/Core/PipelineFilterWidgetFactory.hpp\"\n")
 file(APPEND ${RegisterKnownFilterParameterWidgetsFile} "#include \"${PLUGIN_NAME}/Gui/FilterParameterWidgets/FilterParameterWidgets.h\"\n\n")
-file(APPEND ${RegisterKnownFilterParameterWidgetsFile} "\nvoid ${PLUGIN_NAME}Plugin::registerFilterWidgets(FilterWidgetManager* idManager)\n{\n")
+file(APPEND ${RegisterKnownFilterParameterWidgetsFile} "\nvoid ${PLUGIN_NAME}GuiPlugin::registerFilterWidgets(FilterWidgetManager* idManager)\n{\n")
 
 
 # --------------------------------------------------------------------

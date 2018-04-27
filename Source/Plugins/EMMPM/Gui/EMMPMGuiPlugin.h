@@ -10,7 +10,13 @@ class EMMPMGuiPlugin : public EMMPMPlugin
 
 public:
   EMMPMGuiPlugin();
-  ~EMMPMGuiPlugin() override;
+   ~EMMPMGuiPlugin() override;
+  
+  /**
+   * @brief Register all the filters with the FilterWidgetFactory
+   */
+  void registerFilterWidgets(FilterWidgetManager* fwm) override;
+  
 
 public:
   EMMPMGuiPlugin(const EMMPMGuiPlugin&) = delete;            // Copy Constructor Not Implemented

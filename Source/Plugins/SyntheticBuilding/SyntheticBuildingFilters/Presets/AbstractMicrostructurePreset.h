@@ -40,6 +40,7 @@
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Utilities/ColorTable.h"
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
 
 /**
  * @class AbstractMicrostructurePreset AbstractMicrostructurePreset.h StatsGenerator/Presets/AbstractMicrostructurePreset.h
@@ -52,7 +53,7 @@
  * @date May 23, 2011
  * @version 1.0
  */
-class AbstractMicrostructurePreset
+class SyntheticBuilding_EXPORT AbstractMicrostructurePreset
 {
 public:
   SIMPL_SHARED_POINTERS(AbstractMicrostructurePreset)

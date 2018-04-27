@@ -45,6 +45,7 @@
 //-- StatsGen Includes
 #include "AbstractMicrostructurePreset.h"
 #include "AbstractMicrostructurePresetFactory.h"
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
 
 /**
  * @class PrecipitateRolledPreset PrecipitateRolledPreset.h StatsGenerator/Presets/PrecipitateRolledPreset.h
@@ -54,7 +55,7 @@
  * @date May 23, 2011
  * @version 1.0
  */
-class PrecipitateRolledPreset : public AbstractMicrostructurePreset
+class SyntheticBuilding_EXPORT PrecipitateRolledPreset : public AbstractMicrostructurePreset
 {
 public:
   SIMPL_SHARED_POINTERS(PrecipitateRolledPreset)

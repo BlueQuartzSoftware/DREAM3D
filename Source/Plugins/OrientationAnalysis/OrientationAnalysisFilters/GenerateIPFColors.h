@@ -41,10 +41,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The GenerateIPFColors class. See [Filter documentation](@ref generateipfcolors) for details.
  */
-class GenerateIPFColors : public AbstractFilter
+class OrientationAnalysis_EXPORT GenerateIPFColors : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(GenerateIPFColors SUPERCLASS AbstractFilter)

@@ -44,10 +44,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The EbsdToH5Ebsd class. See [Filter documentation](@ref ebsdtoh5ebsd) for details.
  */
-class EbsdToH5Ebsd : public AbstractFilter
+class OrientationAnalysis_EXPORT EbsdToH5Ebsd : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(EbsdToH5Ebsd SUPERCLASS AbstractFilter)

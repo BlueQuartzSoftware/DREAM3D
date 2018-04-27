@@ -38,9 +38,11 @@
 
 #include "SIMPLib/Common/PhaseType.h"
 
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
+
 class StatsData;
 
-class StatsGeneratorUtilities
+class SyntheticBuilding_EXPORT StatsGeneratorUtilities
 {
 public:
   virtual ~StatsGeneratorUtilities();

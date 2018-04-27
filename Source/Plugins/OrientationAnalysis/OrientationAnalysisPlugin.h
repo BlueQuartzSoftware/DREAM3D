@@ -42,14 +42,17 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
- * @class OrientationAnalysisPlugin OrientationAnalysisPlugin.h SurfaceMeshing/OrientationAnalysisPlugin.h
+ * @class OrientationAnalysisPlugin OrientationAnalysisPlugin.hSurfaceMeshing/OrientationAnalysisPlugin.h
  * @brief
  *
  * @date May 10, 2012
  * @version 1.0
  */
-class OrientationAnalysisPlugin : public QObject, public ISIMPLibPlugin
+class OrientationAnalysis_EXPORT OrientationAnalysisPlugin : public QObject, public ISIMPLibPlugin
+
 {
     Q_OBJECT
     Q_INTERFACES(ISIMPLibPlugin)

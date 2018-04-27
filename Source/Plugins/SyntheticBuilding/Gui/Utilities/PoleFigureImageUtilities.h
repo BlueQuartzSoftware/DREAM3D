@@ -56,7 +56,7 @@
  *
  * @version 2.0
  */
-class OrientationLib_EXPORT PoleFigureImageUtilities
+class PoleFigureImageUtilities
 {
 public:
   PoleFigureImageUtilities();

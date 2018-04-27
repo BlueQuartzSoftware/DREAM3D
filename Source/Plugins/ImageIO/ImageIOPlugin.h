@@ -41,14 +41,17 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 
 
+#include "ImageIO/ImageIODLLExport.h"
+
 /**
- * @class ImageIOPlugin ImageIOPlugin.h SurfaceMeshing/ImageIOPlugin.h
+ * @class ImageIOPlugin ImageIOPlugin.hSurfaceMeshing/ImageIOPlugin.h
  * @brief
  *
  * @date May 10, 2012
  * @version 1.0
  */
-class ImageIOPlugin : public QObject, public ISIMPLibPlugin
+class ImageIO_EXPORT ImageIOPlugin : public QObject, public ISIMPLibPlugin
+
 {
     Q_OBJECT
     Q_INTERFACES(ISIMPLibPlugin)

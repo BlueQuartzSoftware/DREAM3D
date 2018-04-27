@@ -10,7 +10,13 @@ class OrientationAnalysisGuiPlugin : public OrientationAnalysisPlugin
 
 public:
   OrientationAnalysisGuiPlugin();
-  ~OrientationAnalysisGuiPlugin() override;
+   ~OrientationAnalysisGuiPlugin() override;
+  
+  /**
+   * @brief Register all the filters with the FilterWidgetFactory
+   */
+  void registerFilterWidgets(FilterWidgetManager* fwm) override;
+  
 
 public:
   OrientationAnalysisGuiPlugin(const OrientationAnalysisGuiPlugin&) = delete;            // Copy Constructor Not Implemented

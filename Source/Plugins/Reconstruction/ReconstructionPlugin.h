@@ -42,14 +42,17 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
- * @class ReconstructionPlugin ReconstructionPlugin.h Reconstruction/ReconstructionPlugin.h
+ * @class ReconstructionPlugin ReconstructionPlugin.hReconstruction/ReconstructionPlugin.h
  * @brief
  *
  * @date May 10, 2012
  * @version 1.0
  */
-class ReconstructionPlugin : public QObject, public ISIMPLibPlugin
+class Reconstruction_EXPORT ReconstructionPlugin : public QObject, public ISIMPLibPlugin
+
 {
     Q_OBJECT
     Q_INTERFACES(ISIMPLibPlugin)

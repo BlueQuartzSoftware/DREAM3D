@@ -41,15 +41,16 @@
 
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 
+#include "Generic/GenericDLLExport.h"
 
 /**
- * @class GenericPlugin GenericPlugin.h SurfaceMeshing/GenericPlugin.h
+ * @class GenericPlugin GenericPlugin.hSurfaceMeshing/GenericPlugin.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class GenericPlugin : public QObject, public ISIMPLibPlugin
+class Generic_EXPORT GenericPlugin : public QObject, public ISIMPLibPlugin
 {
     Q_OBJECT
     Q_INTERFACES(ISIMPLibPlugin)

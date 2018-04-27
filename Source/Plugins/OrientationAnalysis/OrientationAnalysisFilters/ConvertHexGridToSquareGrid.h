@@ -44,10 +44,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The ConvertHexGridToSquareGrid class. See [Filter documentation](@ref converthexgridtosquaregrid) for details.
  */
-class ConvertHexGridToSquareGrid : public AbstractFilter
+class OrientationAnalysis_EXPORT ConvertHexGridToSquareGrid : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ConvertHexGridToSquareGrid SUPERCLASS AbstractFilter)

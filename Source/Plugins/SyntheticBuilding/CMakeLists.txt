@@ -19,7 +19,8 @@ if(NOT Qt5Core_FOUND)
     message(FATAL_ERROR "Qt 5 is Needed for plugin ${PLUGIN_NAME}Plugin.")
 endif()
 
-set(CMP_TOP_HEADER_FILE "${PLUGIN_NAME}Plugin.h")
+set(CMP_TOP_HEADER_FILE "")
+
 set(VERSION_HEADER_FILE_NAME "${PLUGIN_NAME}Version.h")
 set(VERSION_SOURCE_FILE_NAME "${PLUGIN_NAME}Version.cpp")
 set(${PLUGIN_NAME}_VERSION_MAJOR "${DREAM3DProj_VERSION_MAJOR}")
@@ -165,6 +166,11 @@ cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Qrc" "${${PLUGIN_NAME}_Generated_RC_SRC
 # NOT any widget codes. This must be this way for Python bindings.
 set(plug_target_name ${PLUGIN_NAME}Server)
 add_library(${plug_target_name} SHARED)
+
+#-- Configure the DLL export header file
+configure_file(${SIMPLib_SOURCE_DIR}/Plugin/PluginDLLExport.h.in
+                ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}DLLExport.h)
+
 target_sources(${plug_target_name}
   PRIVATE
   # -- Add in the filter sources
@@ -181,6 +187,10 @@ target_sources(${plug_target_name}
   # -- Add in our generated Version source files
   ${${PLUGIN_NAME}_BINARY_DIR}/${VERSION_HEADER_FILE_NAME}
   ${${PLUGIN_NAME}_BINARY_DIR}/${VERSION_SOURCE_FILE_NAME}
+
+  # -- Add in the DLL Export Header File
+  ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}DLLExport.h
+
 )
 
 #------------------------------- 

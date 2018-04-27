@@ -43,14 +43,17 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 
 
+#include "Processing/ProcessingDLLExport.h"
+
 /**
- * @class ProcessingPlugin ProcessingPlugin.h Processing/ProcessingPlugin.h
+ * @class ProcessingPlugin ProcessingPlugin.hProcessing/ProcessingPlugin.h
  * @brief
  *
  * @date May 10, 2012
  * @version 1.0
  */
-class ProcessingPlugin : public QObject, public ISIMPLibPlugin
+class Processing_EXPORT ProcessingPlugin : public QObject, public ISIMPLibPlugin
+
 {
     Q_OBJECT
     Q_INTERFACES(ISIMPLibPlugin)

@@ -45,6 +45,7 @@
 //-- StatsGen Includes
 #include "AbstractMicrostructurePreset.h"
 #include "AbstractMicrostructurePresetFactory.h"
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
 
 /**
  * @class PrimaryRecrystallizedPreset PrimaryRecrystallizedPreset.h StatsGenerator/Presets/PrimaryRecrystallizedPreset.h
@@ -54,7 +55,7 @@
  * @date May 23, 2011
  * @version 1.0
  */
-class PrimaryRecrystallizedPreset : public AbstractMicrostructurePreset
+class SyntheticBuilding_EXPORT PrimaryRecrystallizedPreset : public AbstractMicrostructurePreset
 {
 public:
   SIMPL_SHARED_POINTERS(PrimaryRecrystallizedPreset)

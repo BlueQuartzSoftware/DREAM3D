@@ -10,7 +10,13 @@ class ImageIOGuiPlugin : public ImageIOPlugin
 
 public:
   ImageIOGuiPlugin();
-  ~ImageIOGuiPlugin() override;
+   ~ImageIOGuiPlugin() override;
+  
+  /**
+   * @brief Register all the filters with the FilterWidgetFactory
+   */
+  void registerFilterWidgets(FilterWidgetManager* fwm) override;
+  
 
 public:
   ImageIOGuiPlugin(const ImageIOGuiPlugin&) = delete;            // Copy Constructor Not Implemented

@@ -10,7 +10,13 @@ class GenericGuiPlugin : public GenericPlugin
 
 public:
   GenericGuiPlugin();
-  ~GenericGuiPlugin() override;
+   ~GenericGuiPlugin() override;
+  
+  /**
+   * @brief Register all the filters with the FilterWidgetFactory
+   */
+  void registerFilterWidgets(FilterWidgetManager* fwm) override;
+  
 
 public:
   GenericGuiPlugin(const GenericGuiPlugin&) = delete;            // Copy Constructor Not Implemented

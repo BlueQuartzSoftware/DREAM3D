@@ -42,14 +42,17 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 
 
+#include "IO/IODLLExport.h"
+
 /**
- * @class IOPlugin IOPlugin.h SurfaceMeshing/IOPlugin.h
+ * @class IOPlugin IOPlugin.hSurfaceMeshing/IOPlugin.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class IOPlugin : public QObject, public ISIMPLibPlugin
+class IO_EXPORT IOPlugin : public QObject, public ISIMPLibPlugin
+
 {
     Q_OBJECT
     Q_INTERFACES(ISIMPLibPlugin)

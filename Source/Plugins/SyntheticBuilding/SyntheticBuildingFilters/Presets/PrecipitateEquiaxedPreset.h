@@ -45,6 +45,7 @@
 //-- StatsGen Includes
 #include "AbstractMicrostructurePreset.h"
 #include "AbstractMicrostructurePresetFactory.h"
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
 
 /**
  * @class PrecipitateEquiaxedPreset PrecipitateEquiaxedPreset.h StatsGenerator/Presets/PrecipitateEquiaxedPreset.h
@@ -54,7 +55,7 @@
  * @date May 23, 2011
  * @version 1.0
  */
-class PrecipitateEquiaxedPreset : public AbstractMicrostructurePreset
+class SyntheticBuilding_EXPORT PrecipitateEquiaxedPreset : public AbstractMicrostructurePreset
 {
 public:
   SIMPL_SHARED_POINTERS(PrecipitateEquiaxedPreset)

@@ -10,7 +10,13 @@ class IOGuiPlugin : public IOPlugin
 
 public:
   IOGuiPlugin();
-  ~IOGuiPlugin() override;
+   ~IOGuiPlugin() override;
+  
+  /**
+   * @brief Register all the filters with the FilterWidgetFactory
+   */
+  void registerFilterWidgets(FilterWidgetManager* fwm) override;
+  
 
 public:
   IOGuiPlugin(const IOGuiPlugin&) = delete;            // Copy Constructor Not Implemented

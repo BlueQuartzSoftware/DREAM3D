@@ -10,7 +10,13 @@ class ReconstructionGuiPlugin : public ReconstructionPlugin
 
 public:
   ReconstructionGuiPlugin();
-  ~ReconstructionGuiPlugin() override;
+   ~ReconstructionGuiPlugin() override;
+  
+  /**
+   * @brief Register all the filters with the FilterWidgetFactory
+   */
+  void registerFilterWidgets(FilterWidgetManager* fwm) override;
+  
 
 public:
   ReconstructionGuiPlugin(const ReconstructionGuiPlugin&) = delete;            // Copy Constructor Not Implemented

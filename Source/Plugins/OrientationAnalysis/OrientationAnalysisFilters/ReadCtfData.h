@@ -45,6 +45,7 @@
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
 struct Ctf_Private_Data
 {
@@ -66,7 +67,7 @@ class ReadCtfDataPrivate;
 /**
  * @brief The ReadCtfData class. See [Filter documentation](@ref readctfdata) for details.
  */
-class ReadCtfData : public AbstractFilter
+class OrientationAnalysis_EXPORT ReadCtfData : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ReadCtfData SUPERCLASS AbstractFilter)
