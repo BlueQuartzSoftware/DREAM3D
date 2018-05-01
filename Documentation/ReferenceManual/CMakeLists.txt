@@ -40,7 +40,7 @@ set(RefManual_Docs_Tutorials
     CroppingData
     EBSDReconstruction
     SurfaceMeshing
-    SyntheticSinglePhase 
+    SyntheticSinglePhase
   )
 
 set(RefManual_Docs_UsingDREAM3D
@@ -52,12 +52,12 @@ set(RefManual_Docs_UsingDREAM3D
     UserInterface
   )
 
-set(RefManual_Groups 
-      AuxiliaryTools 
-      Developer 
-      ReleaseNotes 
-      SupportedFileFormats 
-      Tutorials 
+set(RefManual_Groups
+      AuxiliaryTools
+      Developer
+      ReleaseNotes
+      SupportedFileFormats
+      Tutorials
       UsingDREAM3D
     )
 
@@ -95,10 +95,10 @@ if(SIMPL_USE_MKDOCS)
   else()
     set(HTML_OUTPUT_DIR "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Help/DREAM3D")
   endif()
- 
- 
+
+
   configure_file(${DREAM3DProj_SOURCE_DIR}/Documentation/mkdocs.yml
-    ${DREAM3DDocRoot}/mkdocs/mkdocs.yml 
+    ${DREAM3DDocRoot}/mkdocs/mkdocs.yml
     )
 
   set(docsCmakeFile "${DREAM3DDocRoot}/MkDocsGeneration.cmake")
@@ -112,34 +112,34 @@ if(SIMPL_USE_MKDOCS)
       string(REPLACE "/${DocGroup}Filters" "/Documentation/SIMPLibFilters" tempstring ${${DocGroup}_SOURCE_DIR})
       #message(STATUS "tempstring: ${tempstring}")
       file(APPEND "${docsCmakeFile}" "file(COPY \n       \"${tempstring}/${DocGroup}Filters\"
-     DESTINATION 
+     DESTINATION
      \"${docsDestDir}/Filters\")\n")
     else()
       file(APPEND "${docsCmakeFile}" "file(COPY \n      \"${${DocGroup}_SOURCE_DIR}/Documentation/${DocGroup}Filters\"
-     DESTINATION 
+     DESTINATION
       \"${docsDestDir}/Filters\")\n")
-    #   file(APPEND "${docsCmakeFile}" 
+    #   file(APPEND "${docsCmakeFile}"
     #  "file(RENAME
     #  \"${docsDestDir}/Filters/${DocGroup}Filters\"
-    #  \"${docsDestDir}/Filters/${DocGroup}\")\n") 
+    #  \"${docsDestDir}/Filters/${DocGroup}\")\n")
     endif()
   endforeach()
 
   foreach(DocGroup ${RefManual_Groups})
     file(APPEND "${docsCmakeFile}" "# ${DocGroup}\n")
     file(APPEND "${docsCmakeFile}" "file(COPY \n       \"${DREAM3DProj_SOURCE_DIR}/Documentation/ReferenceManual/${DocGroup}\"
-     DESTINATION 
+     DESTINATION
      \"${docsDestDir}\")\n")
   endforeach()
-  
+
   file(APPEND "${docsCmakeFile}" "# Main Index File\n")
   file(APPEND "${docsCmakeFile}" "file(COPY \n       \"${DREAM3DProj_SOURCE_DIR}/Documentation/ReferenceManual/Index.md\"
-     DESTINATION 
+     DESTINATION
      \"${docsDestDir}\")\n")
-  file(APPEND "${docsCmakeFile}" "file(RENAME \"${docsDestDir}/Index.md\" \"${docsDestDir}/index.md\")\n")   
+  file(APPEND "${docsCmakeFile}" "file(RENAME \"${docsDestDir}/Index.md\" \"${docsDestDir}/index.md\")\n")
 
   file(APPEND "${docsCmakeFile}" "file(COPY \n       \"${BrandedSIMPLView_DIR}/icons/DREAM3D (PNG)/128x128.png\"
-     DESTINATION 
+     DESTINATION
      \"${docsDestDir}\")\n")
   file(APPEND "${docsCmakeFile}" "file(RENAME \"${docsDestDir}/128x128.png\" \"${docsDestDir}/logo.png\")\n")
 
@@ -161,20 +161,41 @@ if(SIMPL_USE_MKDOCS)
     file(APPEND "${MKDOCS_EXECUTABLE}" "  sys.exit(cli())\n")
     file(APPEND "${MKDOCS_EXECUTABLE}" "\n")
     execute_process(COMMAND "/bin/chmod" ug+rwx ${MKDOCS_EXECUTABLE}
-                  OUTPUT_VARIABLE chmod_output              
+                  OUTPUT_VARIABLE chmod_output
                   RESULT_VARIABLE chmod_result
                   ERROR_VARIABLE chmod_error
-                  WORKING_DIRECTORY ${DREAM3DDocRoot}/ReferenceManual    
+                  WORKING_DIRECTORY ${DREAM3DDocRoot}/ReferenceManual
     )
     message(STATUS "chmod_output: ${chmod_output}")
     message(STATUS "chmod_result: ${chmod_result}")
     message(STATUS "chmod_error: ${chmod_error}")
+
+  else()
+    # Find Python Executable
+    if("${PYTHON_EXECUTABLE}" STREQUAL "")
+        find_program(PYTHON_EXECUTABLE
+                      NAMES python python.exe python3 python3.exe)
+    endif()
+
+    # Now try to find mkdocs based off the path for python?
+    if(EXISTS ${PYTHON_EXECUTABLE})
+      get_filename_component(PYTHON_DIR ${PYTHON_EXECUTABLE} DIRECTORY)
+      find_program(MKDOCS_EXECUTABLE
+                  NAMES mkdocs mkdocs.exe
+                  PATHS ${PYTHON_DIR}/Scripts
+                  )
+    endif()
   endif()
-  
-  message(STATUS "MKDOCS_EXECUTABLE: ${MKDOCS_EXECUTABLE}")
+
   message(STATUS "PYTHON_EXECUTABLE: ${PYTHON_EXECUTABLE}")
+  if("${PYTHON_EXECUTABLE}" STREQUAL "PYTHON_EXECUTABLE-NOTFOUND")
+    message(FATAL_ERROR "Python was not found. Please set the 'PYTHON_EXECUTABLE' variable manually")
+  endif()
 
-
+  message(STATUS "MKDOCS_EXECUTABLE: ${MKDOCS_EXECUTABLE}")
+  if("${MKDOCS_EXECUTABLE}" STREQUAL "MKDOCS_EXECUTABLE-NOTFOUND")
+    message(FATAL_ERROR "Python Module 'mkdocs' was not found. Please use 'pip install mkdocs mkdocs-material' to install it correctly.")
+  endif()
 
   set(docsStampFile "${DREAM3DDocRoot}/MkDocsGeneration.stamp")
   string(TIMESTAMP mkdocsTimeStamp %Y:%m:%d:%H:%M:%S)
@@ -183,14 +204,14 @@ if(SIMPL_USE_MKDOCS)
   # to run during the compile process.
   file(WRITE "${docsStampFile}" "${mkdocsTimeStamp}")
 
-  
+
   file(APPEND "${docsCmakeFile}" "\n\n")
   file(APPEND "${docsCmakeFile}" "#--------------------------------------------------------------\n")
   file(APPEND "${docsCmakeFile}" "# Execute the 'mkdocs' python command to generate the docs\n")
   file(APPEND "${docsCmakeFile}" "if(EXISTS \"${docsStampFile}\")\n")
   file(APPEND "${docsCmakeFile}" "  message(STATUS \"MKDOCS: Generating documentation. This can take a while.....\")\n")
   file(APPEND "${docsCmakeFile}" "  execute_process(COMMAND \"${MKDOCS_EXECUTABLE}\" build\n")
-  file(APPEND "${docsCmakeFile}" "                OUTPUT_VARIABLE mkdocs_gen_output\n")               
+  file(APPEND "${docsCmakeFile}" "                OUTPUT_VARIABLE mkdocs_gen_output\n")
   file(APPEND "${docsCmakeFile}" "                RESULT_VARIABLE mkdocs_gen_result\n")
   file(APPEND "${docsCmakeFile}" "                ERROR_VARIABLE mkdocs_gen_error\n")
   file(APPEND "${docsCmakeFile}" "                WORKING_DIRECTORY \"${DREAM3DDocRoot}/mkdocs\"\n")
@@ -215,7 +236,7 @@ if(SIMPL_USE_MKDOCS)
   #----------------------------------------------------------------------------
   # Add the custom target to run mkdocs
   add_custom_target(DREAM3D_MKDOCS_GENERATION ALL
-    COMMAND "${CMAKE_COMMAND}" -P "${docsCmakeFile}"    
+    COMMAND "${CMAKE_COMMAND}" -P "${docsCmakeFile}"
     COMMENT "using mkdocs to generate the documentation"
   )
 
@@ -252,7 +273,7 @@ if(SIMPL_USE_DISCOUNT)
     set(NEED_COMMA_DOC_GROUP 0)
     foreach(DocGroup ${DREAM3DDoc_GROUPS})
       #message(STATUS "  DocGroup: ${${DocGroup}_SOURCE_DIR}" )
-      
+
       if(NEED_COMMA_DOC_GROUP)
         file(APPEND "${PluginJsonFile}" " ,\n")
       endif()
@@ -260,7 +281,7 @@ if(SIMPL_USE_DISCOUNT)
         set(NEED_COMMA_DOC_GROUP 1)
       endif()
       file(APPEND "${PluginJsonFile}" "  \"${DocGroup}\": { \n")
-      
+
       if(${DocGroup} STREQUAL "Core" OR ${DocGroup} STREQUAL "Test")
         get_filename_component(core_PARENT ${${DocGroup}_SOURCE_DIR} DIRECTORY)
 
@@ -269,16 +290,16 @@ if(SIMPL_USE_DISCOUNT)
         if(EXISTS "${core_PARENT}/Documentation/SIMPLibFilters/${DocGroup}Filters/Images")
           file(APPEND "${PluginJsonFile}" "    \"IMAGES_DIR\": \"Documentation/SIMPLibFilters/${DocGroup}Filters/Images\",\n")
         endif()
-              
+
       else()
         file(APPEND "${PluginJsonFile}" "    \"SOURCE_DIR\": \"${${DocGroup}_SOURCE_DIR}\",\n")
         file(APPEND "${PluginJsonFile}" "    \"DOC_DIR\": \"Documentation/${DocGroup}Filters\",\n")
         if(EXISTS "${${DocGroup}_SOURCE_DIR}/Documentation/${DocGroup}Filters/Images")
           file(APPEND "${PluginJsonFile}" "    \"IMAGES_DIR\": \"Documentation/${DocGroup}Filters/Images\",\n")
         endif()
-      
+
       endif()
-      
+
 
       file(APPEND "${PluginJsonFile}" "    \"FILTERS\": [\n")
 
@@ -292,10 +313,10 @@ if(SIMPL_USE_DISCOUNT)
           set(NEED_COMMA_DOC_ITEM 1)
         endif()
 
-        if(${DocGroup} STREQUAL "Core" OR ${DocGroup} STREQUAL "Test")         
+        if(${DocGroup} STREQUAL "Core" OR ${DocGroup} STREQUAL "Test")
           string(REPLACE "/${DocGroup}Filters" "/Documentation/SIMPLibFilters/${DocGroup}Filters" tempstring ${${DocGroup}_SOURCE_DIR})
-          string(REPLACE "${tempstring}/" "" tempstring ${docListItem})          
-          string(REPLACE "Filters" "" tempstring ${tempstring})          
+          string(REPLACE "${tempstring}/" "" tempstring ${docListItem})
+          string(REPLACE "Filters" "" tempstring ${tempstring})
           string(REPLACE "Plugins/${DocGroup}/" "" filterName ${tempstring})
           string(REPLACE ".md" "" filterName ${filterName})
           file(APPEND "${PluginJsonFile}" "        \"${filterName}\"")
@@ -331,7 +352,7 @@ if(SIMPL_USE_DISCOUNT)
         file(APPEND "${PluginJsonFile}" "      \"IMAGES_DIR\": \"${DocGroup}/Images\",\n")
       endif()
       file(APPEND "${PluginJsonFile}" "      \"FILTERS\": [\n")
-      
+
       set(NEED_COMMA_DOC_ITEM 0)
       foreach(docListItem ${RefManual_Docs_${DocGroup}})
         if(NEED_COMMA_DOC_ITEM)
@@ -361,14 +382,14 @@ if(SIMPL_USE_DISCOUNT)
     file(APPEND "${PluginJsonFile}" "\n}\n")
 
     # configure_file(${DREAM3DProj_SOURCE_DIR}/Documentation/mkdocs.yml
-    #   ${DREAM3DDocRoot}/mkdocs.yml 
+    #   ${DREAM3DDocRoot}/mkdocs.yml
     #   )
 
     # configure_file("${BrandedSIMPLView_DIR}/icons/DREAM3D (PNG)/128x128.png"
     #   ${DREAM3DDocRoot}/ReferenceManual/logo.png COPYONLY
     #   )
 
-    get_filename_component(WORKSPACE_DIR "${DREAM3DProj_SOURCE_DIR}" DIRECTORY)  
+    get_filename_component(WORKSPACE_DIR "${DREAM3DProj_SOURCE_DIR}" DIRECTORY)
     if(EXISTS "${WORKSPACE_DIR}/DREAM3DSuperbuild")
       add_custom_target(SUPERBUILD_DOC_FOLDER_COPY ALL
         COMMAND ${CMAKE_COMMAND} -E copy_directory "${WORKSPACE_DIR}/DREAM3DSuperbuild/docs"
@@ -389,7 +410,7 @@ if(SIMPL_USE_DISCOUNT)
 
 
     add_executable(GenerateHTMLDocs
-      ${DREAM3DProj_SOURCE_DIR}/Documentation/Tools/GenerateHTMLDocs.cpp 
+      ${DREAM3DProj_SOURCE_DIR}/Documentation/Tools/GenerateHTMLDocs.cpp
       ${DREAM3DProj_BINARY_DIR}/Documentation/ReferenceManual/DocToolsConfiguration.h
     )
     target_include_directories(GenerateHTMLDocs INTERFACE discount::libmarkdown)
@@ -411,7 +432,7 @@ if(SIMPL_USE_DISCOUNT)
     if(APPLE)
 
     else()
-      install(DIRECTORY ${HTML_OUTPUT_DIR}/ 
+      install(DIRECTORY ${HTML_OUTPUT_DIR}/
               DESTINATION "."
       )
     endif()
