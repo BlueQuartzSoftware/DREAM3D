@@ -73,6 +73,8 @@
 
 #include "SIMPLib/Math/SIMPLibMath.h"
 
+#include "SVWidgetsLib/QtSupport/QtSStyles.h"
+
 #include "OrientationLib/LaueOps/CubicOps.h"
 #include "OrientationLib/LaueOps/HexagonalOps.h"
 #include "OrientationLib/LaueOps/LaueOps.h"
@@ -129,6 +131,13 @@ void StatsGenMDFWidget::setupGui()
   QAbstractItemDelegate* aid = m_MDFTableModel->getItemDelegate();
   m_MDFTableView->setItemDelegate(aid);
   m_PlotCurve = new QwtPlotCurve;
+  
+  // Apple the Style to the buttons
+  addMDFRowBtn->setStyleSheet(QtSStyles::StyleSheetForButton(addMDFRowBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::AddImagePath));  
+  deleteMDFRowBtn->setStyleSheet(QtSStyles::StyleSheetForButton(deleteMDFRowBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::DeleteImagePath));
+  loadMDFBtn->setStyleSheet(QtSStyles::StyleSheetForButton(loadMDFBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::LoadImagePath));
+  m_MDFUpdateBtn->setStyleSheet(QtSStyles::StyleSheetForButton(m_MDFUpdateBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::ReloadImagePath));
+
 }
 
 // -----------------------------------------------------------------------------

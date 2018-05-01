@@ -59,10 +59,12 @@
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/StatsData/TransformationStatsData.h"
-
 #include "SIMPLib/CoreFilters/DataContainerReader.h"
 #include "SIMPLib/CoreFilters/DataContainerWriter.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
+
+#include "SVWidgetsLib/QtSupport/QtSStyles.h"
+
 
 #include "SyntheticBuilding/FilterParameters/StatsGeneratorFilterParameter.h"
 #include "SyntheticBuilding/Gui/Widgets/EditPhaseDialog.h"
@@ -97,12 +99,6 @@ StatsGeneratorWidget::~StatsGeneratorWidget() = default;
 // -----------------------------------------------------------------------------
 void StatsGeneratorWidget::setupGui()
 {
-  // Hide the debugging buttons
-  updatePipelineBtn->hide();
-  saveH5Btn->hide();
-  saveJsonBtn->hide();
-  // openStatsFile->hide();
-
   phaseTabs->clear();
 
   m_NeedDataLoad = false;
@@ -194,6 +190,22 @@ void StatsGeneratorWidget::setupGui()
 
   // Catch when the filter wants its values updated
   connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)), this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
+  
+  editPhase->setStyleSheet(QtSStyles::StyleSheetForButton(editPhase->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::CogImagePath));
+  addPhase->setStyleSheet(QtSStyles::StyleSheetForButton(addPhase->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::AddImagePath));
+  deletePhase->setStyleSheet(QtSStyles::StyleSheetForButton(deletePhase->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::DeleteImagePath));
+
+  updatePipelineBtn->setStyleSheet(QtSStyles::StyleSheetForButton(updatePipelineBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::ReloadImagePath));
+  openStatsFile->setStyleSheet(QtSStyles::StyleSheetForButton(openStatsFile->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::LoadImagePath));
+  saveJsonBtn->setStyleSheet(QtSStyles::StyleSheetForButton(saveJsonBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::ReloadImagePath));
+  saveH5Btn->setStyleSheet(QtSStyles::StyleSheetForButton(saveH5Btn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::HDFImagePath));
+
+
+  // Hide the debugging buttons
+  updatePipelineBtn->hide();
+  saveJsonBtn->hide();
+  saveH5Btn->hide();
+
 }
 
 // -----------------------------------------------------------------------------

@@ -107,7 +107,7 @@ font-weight: bold;
       <number>0</number>
      </property>
      <item>
-      <widget class="QPushButton" name="addComparison">
+      <widget class="QPushButton" name="addBtn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -138,10 +138,6 @@ font-weight: bold;
        <property name="text">
         <string/>
        </property>
-       <property name="icon">
-        <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-         <normaloff>:/add.png</normaloff>:/add.png</iconset>
-       </property>
        <property name="iconSize">
         <size>
          <width>24</width>
@@ -154,7 +150,7 @@ font-weight: bold;
       </widget>
      </item>
      <item>
-      <widget class="QPushButton" name="removeComparison">
+      <widget class="QPushButton" name="deleteBtn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
@@ -181,10 +177,6 @@ font-weight: bold;
        </property>
        <property name="text">
         <string/>
-       </property>
-       <property name="icon">
-        <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-         <normaloff>:/delete.png</normaloff>:/delete.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -215,7 +207,7 @@ font-weight: bold;
   </layout>
  </widget>
  <resources>
-  <include location="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc"/>
+  <include location="../../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc"/>
  </resources>
  <connections/>
 </ui>

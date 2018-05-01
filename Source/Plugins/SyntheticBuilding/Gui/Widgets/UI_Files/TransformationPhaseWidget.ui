@@ -534,8 +534,8 @@ font-size: 12px;
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>98</width>
-            <height>38</height>
+            <width>769</width>
+            <height>568</height>
            </rect>
           </property>
           <layout class="QVBoxLayout" name="verticalLayout">
@@ -579,12 +579,6 @@ font-size: 12px;
  </widget>
  <customwidgets>
   <customwidget>
-   <class>QwtPlot</class>
-   <extends>QFrame</extends>
-   <header>qwt_plot.h</header>
-   <container>1</container>
-  </customwidget>
-  <customwidget>
    <class>StatsGenWidget</class>
    <extends>QWidget</extends>
    <header location="global">StatsGenWidget.h</header>
@@ -606,6 +600,12 @@ font-size: 12px;
    <class>StatsGenAxisODFWidget</class>
    <extends>QWidget</extends>
    <header location="global">StatsGenAxisODFWidget.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QwtPlot</class>
+   <extends>QFrame</extends>
+   <header>qwt_plot.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -154,12 +154,12 @@ protected slots:
   /**
    * @brief on_addComparison_clicked
    */
-  void on_addComparison_clicked();
+  void on_addBtn_clicked();
 
   /**
    * @brief on_removeComparison_clicked
    */
-  void on_removeComparison_clicked();
+  void on_deleteBtn_clicked();
 
   /**
    * @brief tableDataWasChanged

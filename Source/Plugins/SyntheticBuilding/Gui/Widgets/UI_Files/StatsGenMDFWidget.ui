@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>434</width>
-    <height>328</height>
+    <width>994</width>
+    <height>386</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -27,12 +27,34 @@
     <number>4</number>
    </property>
    <property name="spacing">
-    <number>6</number>
+    <number>4</number>
    </property>
+   <item row="2" column="0" colspan="2">
+    <widget class="QwtPlot" name="m_MDFPlot">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>0</horstretch>
+       <verstretch>3</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string>Enter values in the table above to adjust this plot.</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QwtPlot
+{
+background-color: rgb(0, 0, 0);
+}</string>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::Box</enum>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="1">
     <widget class="QTableView" name="m_MDFTableView">
      <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Preferred">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
        <horstretch>10</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
@@ -41,6 +63,12 @@
       <size>
        <width>300</width>
        <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>16777215</height>
       </size>
      </property>
      <property name="verticalScrollMode">
@@ -55,7 +83,7 @@
     </widget>
    </item>
    <item row="0" column="0">
-    <layout class="QVBoxLayout" name="verticalLayout" stretch="0,0,0,0,0">
+    <layout class="QVBoxLayout" name="verticalLayout">
      <property name="spacing">
       <number>6</number>
      </property>
@@ -64,6 +92,12 @@
      </property>
      <item>
       <widget class="QPushButton" name="addMDFRowBtn">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
        <property name="minimumSize">
         <size>
          <width>24</width>
@@ -76,21 +110,8 @@
          <height>24</height>
         </size>
        </property>
-       <property name="toolTip">
-        <string>Add MDF Weight</string>
-       </property>
        <property name="text">
         <string/>
-       </property>
-       <property name="icon">
-        <iconset>
-         <normaloff>:/add.png</normaloff>:/add.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>24</width>
-         <height>24</height>
-        </size>
        </property>
        <property name="flat">
         <bool>true</bool>
@@ -117,21 +138,8 @@
          <height>24</height>
         </size>
        </property>
-       <property name="toolTip">
-        <string>Delete MDF Weight</string>
-       </property>
        <property name="text">
         <string/>
-       </property>
-       <property name="icon">
-        <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/delete.png</normaloff>:/delete.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>24</width>
-         <height>24</height>
-        </size>
        </property>
        <property name="flat">
         <bool>true</bool>
@@ -141,7 +149,7 @@
      <item>
       <widget class="QPushButton" name="loadMDFBtn">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -158,21 +166,8 @@
          <height>24</height>
         </size>
        </property>
-       <property name="toolTip">
-        <string>Import MDF data from a file.</string>
-       </property>
        <property name="text">
         <string/>
-       </property>
-       <property name="icon">
-        <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/folder_out.png</normaloff>:/folder_out.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>24</width>
-         <height>24</height>
-        </size>
        </property>
        <property name="flat">
         <bool>true</bool>
@@ -182,7 +177,7 @@
      <item>
       <widget class="QPushButton" name="m_MDFUpdateBtn">
        <property name="sizePolicy">
-        <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+        <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
          <horstretch>0</horstretch>
          <verstretch>0</verstretch>
         </sizepolicy>
@@ -199,24 +194,8 @@
          <height>24</height>
         </size>
        </property>
-       <property name="toolTip">
-        <string>Refresh MDF Plot</string>
-       </property>
        <property name="text">
         <string/>
-       </property>
-       <property name="icon">
-        <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/refresh.png</normaloff>:/refresh.png</iconset>
-       </property>
-       <property name="iconSize">
-        <size>
-         <width>24</width>
-         <height>24</height>
-        </size>
-       </property>
-       <property name="default">
-        <bool>false</bool>
        </property>
        <property name="flat">
         <bool>true</bool>
@@ -241,28 +220,6 @@
      </item>
     </layout>
    </item>
-   <item row="2" column="0" colspan="2">
-    <widget class="QwtPlot" name="m_MDFPlot">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>3</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="toolTip">
-      <string>Enter values in the table above to adjust this plot.</string>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QwtPlot
-{
-background-color: rgb(0, 0, 0);
-}</string>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::Box</enum>
-     </property>
-    </widget>
-   </item>
   </layout>
  </widget>
  <customwidgets>
@@ -274,7 +231,7 @@ background-color: rgb(0, 0, 0);
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../../../../Resources/icons/images/Icons.qrc"/>
+  <include location="../../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc"/>
  </resources>
  <connections/>
 </ui>

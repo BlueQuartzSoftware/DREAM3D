@@ -127,7 +127,7 @@
             <x>0</x>
             <y>0</y>
             <width>721</width>
-            <height>151</height>
+            <height>144</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -218,7 +218,7 @@
          <item row="0" column="0">
           <widget class="QPushButton" name="m_CalculateODFBtn">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -240,10 +240,6 @@
            </property>
            <property name="text">
             <string/>
-           </property>
-           <property name="icon">
-            <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-             <normaloff>:/reload@2x.png</normaloff>:/reload@2x.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -315,7 +311,7 @@
          <item row="0" column="1">
           <widget class="QPushButton" name="savePoleFigureImage">
            <property name="sizePolicy">
-            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+            <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
@@ -337,10 +333,6 @@
            </property>
            <property name="text">
             <string/>
-           </property>
-           <property name="icon">
-            <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-             <normaloff>:/data-transfer-download@2x.png</normaloff>:/data-transfer-download@2x.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -568,15 +560,15 @@
              <item>
               <widget class="QPushButton" name="addODFTextureBtn">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
                </property>
                <property name="minimumSize">
                 <size>
-                 <width>16</width>
-                 <height>16</height>
+                 <width>24</width>
+                 <height>24</height>
                 </size>
                </property>
                <property name="maximumSize">
@@ -590,10 +582,6 @@
                </property>
                <property name="text">
                 <string/>
-               </property>
-               <property name="icon">
-                <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-                 <normaloff>:/add.png</normaloff>:/add.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -609,7 +597,7 @@
              <item>
               <widget class="QPushButton" name="deleteODFTextureBtn">
                <property name="sizePolicy">
-                <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+                <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
                  <verstretch>0</verstretch>
                 </sizepolicy>
@@ -631,10 +619,6 @@
                </property>
                <property name="text">
                 <string/>
-               </property>
-               <property name="icon">
-                <iconset resource="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-                 <normaloff>:/delete.png</normaloff>:/delete.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -900,7 +884,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc"/>
+  <include location="../../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc"/>
  </resources>
  <connections/>
 </ui>

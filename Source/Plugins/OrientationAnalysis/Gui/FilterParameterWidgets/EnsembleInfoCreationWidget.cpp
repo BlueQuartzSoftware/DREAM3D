@@ -44,9 +44,8 @@
 
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidgetUtils.hpp"
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidgetsDialogs.h"
+#include "SVWidgetsLib/QtSupport/QtSStyles.h"
 
-// Include the MOC generated file for this class
-//
 
 // -----------------------------------------------------------------------------
 //
@@ -127,9 +126,13 @@ void EnsembleInfoCreationWidget::setupGui()
   EnsembleInfo info = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<EnsembleInfo>();
   m_EnsembleInfoTableModel->setTableData(info);
 
+  addBtn->setStyleSheet(QtSStyles::StyleSheetForButton(addBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::AddImagePath));
+  deleteBtn->setStyleSheet(QtSStyles::StyleSheetForButton(deleteBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::DeleteImagePath));
+ 
+ 
 #if 0
   // is the filter parameter tied to a boolean property of the Filter Instance, if it is then we need to make the check box visible
-  if(getFilterParameter()->isConditional() == true)
+  if(getFilterParameter()->isConditional())
   {
     bool boolProp = getFilter()->property(getFilterParameter()->getConditionalProperty().toLatin1().constData() ).toBool();
     conditionalCB->setChecked(boolProp);
@@ -224,15 +227,15 @@ QStringList EnsembleInfoCreationWidget::generateAttributeArrayList(const QString
 // -----------------------------------------------------------------------------
 QString EnsembleInfoCreationWidget::checkStringValues(QString curDcName, QString filtDcName)
 {
-  if(curDcName.isEmpty() == true && filtDcName.isEmpty() == false)
+  if(curDcName.isEmpty() && !filtDcName.isEmpty())
   {
     return filtDcName;
   }
-  else if(curDcName.isEmpty() == false && filtDcName.isEmpty() == true)
+  else if(!curDcName.isEmpty() && filtDcName.isEmpty())
   {
     return curDcName;
   }
-  else if(curDcName.isEmpty() == false && filtDcName.isEmpty() == false && m_DidCausePreflight == true)
+  else if(!curDcName.isEmpty() && !filtDcName.isEmpty() && m_DidCausePreflight)
   {
     return curDcName;
   }
@@ -266,7 +269,7 @@ void EnsembleInfoCreationWidget::widgetChanged(const QString& text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EnsembleInfoCreationWidget::on_addComparison_clicked()
+void EnsembleInfoCreationWidget::on_addBtn_clicked()
 {
   if(!m_EnsembleInfoTableModel->insertRow(m_EnsembleInfoTableModel->rowCount()))
   {
@@ -283,7 +286,7 @@ void EnsembleInfoCreationWidget::on_addComparison_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EnsembleInfoCreationWidget::on_removeComparison_clicked()
+void EnsembleInfoCreationWidget::on_deleteBtn_clicked()
 {
   QItemSelectionModel* selectionModel = ensemblePhasesTableView->selectionModel();
 
@@ -356,7 +359,7 @@ void EnsembleInfoCreationWidget::beforePreflight()
   {
     return;
   }
-  if(m_DidCausePreflight == true)
+  if(m_DidCausePreflight)
   {
     // std::cout << "***  EnsembleInfoCreationWidget already caused a preflight, just returning" << std::endl;
     return;

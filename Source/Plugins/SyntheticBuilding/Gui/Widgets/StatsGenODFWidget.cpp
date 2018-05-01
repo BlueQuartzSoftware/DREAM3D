@@ -68,6 +68,7 @@
 #include "EbsdLib/TSL/AngReader.h"
 
 #include "SVWidgetsLib/Widgets/ProgressDialog.h"
+#include "SVWidgetsLib/QtSupport/QtSStyles.h"
 
 #include "OrientationLib/IO/AngleFileLoader.h"
 #include "OrientationLib/Texture/StatsGen.hpp"
@@ -385,6 +386,13 @@ void StatsGenODFWidget::setupGui()
   m_ODFGroup.addButton(m_ODFParametersBtn);
   m_ODFGroup.addButton(m_MDFParametersBtn);
 
+  // Style the buttons
+  addODFTextureBtn->setStyleSheet(QtSStyles::StyleSheetForButton(addODFTextureBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::AddImagePath));  
+  deleteODFTextureBtn->setStyleSheet(QtSStyles::StyleSheetForButton(deleteODFTextureBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::DeleteImagePath));
+  m_CalculateODFBtn->setStyleSheet(QtSStyles::StyleSheetForButton(m_CalculateODFBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::ReloadImagePath));
+  savePoleFigureImage->setStyleSheet(QtSStyles::StyleSheetForButton(savePoleFigureImage->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::SaveImagePath));
+  
+  
   on_m_ODFParametersBtn_clicked(true);
 }
 
