@@ -227,7 +227,7 @@ void Stereographic3D::execute()
     return;
   }
 
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }

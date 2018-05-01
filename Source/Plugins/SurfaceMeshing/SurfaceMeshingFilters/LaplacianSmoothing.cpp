@@ -315,7 +315,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
   double dlta = 0.0;
   for(int32_t q = 0; q < m_IterationSteps; q++)
   {
-    if(getCancel() == true)
+    if(getCancel())
     {
       return -1;
     }
@@ -361,7 +361,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
     if(m_UseTaubinSmoothing)
     {
 
-      if(getCancel() == true)
+      if(getCancel())
       {
         return -1;
       }

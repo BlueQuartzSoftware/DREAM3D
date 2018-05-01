@@ -278,7 +278,7 @@ void EMsoftSO3Sampler::execute()
     return;
   }
 
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }

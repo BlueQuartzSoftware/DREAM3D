@@ -376,7 +376,7 @@ void MatchCrystallography::execute()
   ss = QObject::tr("Determining Volumes");
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   determine_volumes();
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -384,7 +384,7 @@ void MatchCrystallography::execute()
   ss = QObject::tr("Determining Boundary Areas");
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   determine_boundary_areas();
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -401,7 +401,7 @@ void MatchCrystallography::execute()
       {
         return;
       }
-      if(getCancel() == true)
+      if(getCancel())
       {
         return;
       }
@@ -413,7 +413,7 @@ void MatchCrystallography::execute()
       {
         return;
       }
-      if(getCancel() == true)
+      if(getCancel())
       {
         return;
       }
@@ -421,7 +421,7 @@ void MatchCrystallography::execute()
       ss = QObject::tr("Measuring Misorientations of Phase %1").arg(i);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       measure_misorientations(i);
-      if(getCancel() == true)
+      if(getCancel())
       {
         return;
       }
@@ -429,7 +429,7 @@ void MatchCrystallography::execute()
       ss = QObject::tr("Matching Crystallography of Phase %1").arg(i);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       matchCrystallography(i);
-      if(getCancel() == true)
+      if(getCancel())
       {
         return;
       }
@@ -825,7 +825,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
     badtrycount++;
     random = static_cast<float>(rg.genrand_res53());
 
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }
@@ -923,7 +923,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
           }
         }
       }
-      if(getCancel() == true)
+      if(getCancel())
       {
         return;
       }
@@ -1113,13 +1113,13 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
         }
       }
     }
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }
   }
 
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }

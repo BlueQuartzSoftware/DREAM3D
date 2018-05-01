@@ -450,7 +450,7 @@ void EbsdToH5Ebsd::execute()
 
     indices.push_back(static_cast<int32_t>(z));
     ++z;
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }

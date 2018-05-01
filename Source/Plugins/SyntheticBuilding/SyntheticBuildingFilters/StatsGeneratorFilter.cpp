@@ -313,7 +313,7 @@ void StatsGeneratorFilter::execute()
   size_t count = m_StatsDataArray->getNumberOfTuples();
   for(size_t c = 0; c < count; c++)
   {
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }

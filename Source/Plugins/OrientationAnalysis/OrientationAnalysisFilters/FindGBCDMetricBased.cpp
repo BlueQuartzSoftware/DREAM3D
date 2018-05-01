@@ -897,7 +897,7 @@ void FindGBCDMetricBased::execute()
 
   for(int ptIdx_WholeSph = 0; ptIdx_WholeSph < numSamplPts_WholeSph; ptIdx_WholeSph++)
   {
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }
@@ -960,7 +960,7 @@ void FindGBCDMetricBased::execute()
 
   for(size_t i = 0; i < numMeshTris; i = i + trisChunkSize)
   {
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }
@@ -1031,7 +1031,7 @@ void FindGBCDMetricBased::execute()
 
   for(int32_t i = 0; i < samplPtsX.size(); i = i + pointsChunkSize)
   {
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }

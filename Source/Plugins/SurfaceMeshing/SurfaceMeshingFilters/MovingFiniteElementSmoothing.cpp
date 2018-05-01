@@ -340,7 +340,7 @@ void MovingFiniteElementSmoothing::execute()
   input1.close();
 #endif
 
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -493,7 +493,7 @@ void MovingFiniteElementSmoothing::execute()
   }
 #endif
 
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -564,7 +564,7 @@ void MovingFiniteElementSmoothing::execute()
   }
 #endif
 
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -715,7 +715,7 @@ void MovingFiniteElementSmoothing::execute()
   // update loop
   for(size_t updates = begin; updates <= static_cast<size_t>(final); ++updates)
   {
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }

@@ -639,7 +639,7 @@ void FindGBCD::execute()
   QString ss = QObject::tr("Calculating GBCD || 0/%1 Completed").arg(totalFaces);
   for(size_t i = 0; i < totalFaces; i = i + faceChunkSize)
   {
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }
@@ -675,7 +675,7 @@ void FindGBCD::execute()
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
 
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }

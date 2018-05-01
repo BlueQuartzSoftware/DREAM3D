@@ -843,7 +843,7 @@ void FindGBPDMetricBased::execute()
 
   for(int ptIdx_WholeSph = 0; ptIdx_WholeSph < numSamplPts_WholeSph; ptIdx_WholeSph++)
   {
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }
@@ -865,7 +865,7 @@ void FindGBPDMetricBased::execute()
   // now, select the points from the SST
   for(int ptIdx_HemiSph = 0; ptIdx_HemiSph < samplPtsX_HemiSph.size(); ptIdx_HemiSph++)
   {
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }
@@ -1039,7 +1039,7 @@ void FindGBPDMetricBased::execute()
 
   for(size_t i = 0; i < numMeshTris; i = i + trisChunkSize)
   {
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }
@@ -1110,7 +1110,7 @@ void FindGBPDMetricBased::execute()
 
   for(int32_t i = 0; i < samplPtsX.size(); i = i + pointsChunkSize)
   {
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }

@@ -276,7 +276,7 @@ void GenerateFZQuaternions::execute()
     return;
   }
 
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }

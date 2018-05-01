@@ -377,7 +377,7 @@ void VerifyTriangleWinding::execute()
   {
     facesPtr->findFacesContainingVert();
   }
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -385,7 +385,7 @@ void VerifyTriangleWinding::execute()
   {
     facesPtr->findFaceNeighbors();
   }
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -624,7 +624,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   // Start looping on all the Face Labels (Feature Ids) values
   while(labelObjectsToVisit.empty() == false)
   {
-    if(getCancel() == true)
+    if(getCancel())
     {
       return -1;
     }

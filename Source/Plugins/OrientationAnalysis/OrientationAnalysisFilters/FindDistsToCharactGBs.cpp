@@ -503,7 +503,7 @@ void FindDistsToCharactGBs::execute()
 
   for(int64_t i = 0; i < numMeshTris; i = i + trisChunkSize)
   {
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }

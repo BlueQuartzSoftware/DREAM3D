@@ -472,7 +472,7 @@ void ImportImageStack::execute()
     }
 
     ++z;
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }

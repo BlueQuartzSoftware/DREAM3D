@@ -275,7 +275,7 @@ void FindNeighbors::execute()
       millis = QDateTime::currentMSecsSinceEpoch();
     }
 
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }
@@ -299,7 +299,7 @@ void FindNeighbors::execute()
       millis = QDateTime::currentMSecsSinceEpoch();
     }
 
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }
@@ -386,7 +386,7 @@ void FindNeighbors::execute()
       millis = QDateTime::currentMSecsSinceEpoch();
     }
 
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }

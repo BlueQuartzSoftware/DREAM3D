@@ -538,7 +538,7 @@ void M3CSliceBySlice::execute()
     // notifyProgressValue((i * 90 / sliceCount));
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
-    if(getCancel() == true)
+    if(getCancel())
     {
 
       ss = QObject::tr("Cancelling filter");

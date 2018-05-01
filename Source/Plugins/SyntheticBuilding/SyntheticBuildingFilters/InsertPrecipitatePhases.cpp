@@ -614,7 +614,7 @@ void InsertPrecipitatePhases::execute()
     {
       return;
     }
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }
@@ -623,7 +623,7 @@ void InsertPrecipitatePhases::execute()
   if(m_HavePrecips == true)
   {
     load_precipitates();
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }
@@ -631,14 +631,14 @@ void InsertPrecipitatePhases::execute()
 
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Precipitates || Assigning Voxels");
   assign_voxels();
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
 
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Precipitates || Filling Gaps");
   assign_gaps();
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -839,7 +839,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     m_PrecipitatePhaseFractions[i] = static_cast<float>(m_PrecipitatePhaseFractions[i] / totalprecipitatefractions);
   }
 
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -889,7 +889,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     }
   }
 
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -922,7 +922,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
           QString ss = QObject::tr("Packing Precipitates || Generating Feature #%1").arg(currentnumfeatures);
           notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
-          if(getCancel() == true)
+          if(getCancel())
           {
             return;
           }
@@ -942,7 +942,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     }
   }
 
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -1150,7 +1150,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   //      //    insert_precipitate(i);
   //      good = check_for_overlap(i, exclusionZonesPtr);
   //      iterCount++;
-  //      if(getCancel() == true) { return; }
+  //      if(getCancel()) { return; }
   //    }
   //    if (getCancel() == true) { return; }
   //    update_exclusionZones(i, -1000, exclusionZonesPtr);
@@ -2790,7 +2790,7 @@ void InsertPrecipitatePhases::assign_gaps()
                        .arg(gapVoxelCount);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }
