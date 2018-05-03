@@ -44,11 +44,11 @@
 #include <QtWidgets/QMessageBox>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
 #include "SVWidgetsLib/SVWidgetsLib.h"
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
-#include "SVWidgetsLib/Widgets/SVPipelineFilterWidget.h"
 
 #include "StatsGenerator/Widgets/StatsGenWidget.h"
 #include "StatsGenerator/Widgets/PrimaryPhaseWidget.h"

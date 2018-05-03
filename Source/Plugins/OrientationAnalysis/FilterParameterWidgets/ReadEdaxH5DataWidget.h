@@ -41,7 +41,6 @@
 
 #include "SVWidgetsLib/SVWidgetsLib.h"
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
-#include "SVWidgetsLib/Widgets/SVPipelineFilterWidget.h"
 
 #include "OrientationAnalysis/ui_ReadEdaxH5DataWidget.h"
 
