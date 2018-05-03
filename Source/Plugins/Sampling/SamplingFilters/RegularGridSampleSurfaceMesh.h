@@ -52,8 +52,8 @@ class RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
   Q_OBJECT
 public:
   SIMPL_SHARED_POINTERS(RegularGridSampleSurfaceMesh)
-  SIMPL_STATIC_NEW_MACRO(RegularGridSampleSurfaceMesh)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(RegularGridSampleSurfaceMesh, AbstractFilter)
+  SIMPL_FILTER_NEW_MACRO(RegularGridSampleSurfaceMesh)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(RegularGridSampleSurfaceMesh, AbstractFilter)
 
   virtual ~RegularGridSampleSurfaceMesh();
 
