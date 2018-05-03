@@ -213,6 +213,7 @@ PluginProperties(TARGET_NAME ${plug_target_name}
                 OUTPUT_NAME ${PLUGIN_NAME}
                 BINARY_DIR "${DREAM3D_BINARY_DIR}"
                 PLUGIN_FILE "${CMP_PLUGIN_LIST_FILE}"
+                INSTALL_DEST "."
 )
 
 target_link_libraries(${plug_target_name}
