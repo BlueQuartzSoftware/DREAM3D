@@ -149,6 +149,16 @@ The **Filter Input View** contains all the parameters for the selected **Filter*
 	- _Created Arrays_ are data structure objects that the **Filter** will create during its execution
 + **Current Structure** Displays the state of the data structure as it would look after the selected **Filter** has executed
 
+_Drag and Drop_:
+
+With the new _Data Container_, _Attribute Matrix_, and _Data Array_ selection, the previous selection buttons have been replaced with a new drag and drop interface with the **Data Structure**.  Mousing over one of these widgets will filter the **Data Structure** to mark which paths are compatible with the **Filter Parameter's** requirements.  Clicking on this button will hold the filtering until mousing over another selection widget or completing a drag.  Drags can be performed from the selection widget to a corresponding path in the **Data Structure**, from the **Data Structure** to a selection widget, or between two compatible selection widgets.
+
+Dragging either from a selection widget to the **Data Structure** or from the **Data Structure** to a selection widget will assign the value in the **Data Structure** to the selection widget.  Dragging from one selection widget to another will copy the value from the first widget into the second.
+
+Whenever a drag is performed from a selection widget, a custom icon is created with the parameter's name.  When dragging from the Data Structure, a custom icon is created with the item's path.  In both of these cases, the icon will be colored according to the type of path (_Data Container_, _Attribute Matrix_, _Data Array_).
+
+To help label what type of data is required by a selection widget, each widget is decorated with a colored tab on the right side.  This tab corresponds to the color used for filtering the same type of data in the **Data Structure**.
+
 #### Viewing A Filter's Help Page ####
 To view the help page for the selected **Filter**, press the _?_ icon.
 
@@ -161,6 +171,12 @@ To view the help page for the selected **Filter**, press the _?_ icon.
 ![Data Structure](Images/OverView-DataStructure.png)
 
 The **Data Structure** displays the current data structure of the pipeline, including all data containers, attribute matrices, and data arrays that exist in the current pipeline's data container array.  This tool is a good way to tell at-a-glance the current structure of your data when clicking on filters in the pipeline.
+
+_Drag and Drop_:
+
+With the new _Data Container_, _Attribute Matrix_, and _Data Array_ selection interface, users can now drag paths from the Data Structure and drag them into a corresponding selection widget.  When mousing over or dragging an item from the Data Structure, selection widgets in the **Filter Input View** will be filtered out to clearly display which **Filter Parameters** can accept the target path.
+
+In addition, because paths created by a **Filter** cannot also be its inputs, the **Data Structure** marks which paths are new by changing the item's text color and marking it with a star.  These items cannot be dragged and will have an empty outline if they would otherwise be acceptable inputs to a path selection widget.
 
 ---
 
