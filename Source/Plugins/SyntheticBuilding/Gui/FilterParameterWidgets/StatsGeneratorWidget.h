@@ -48,7 +48,6 @@
 
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 #include "SVWidgetsLib/SVWidgetsLib.h"
-#include "SVWidgetsLib/Widgets/SVPipelineFilterWidget.h"
 
 #include "SyntheticBuilding/Gui/Widgets/BoundaryPhaseWidget.h"
 #include "SyntheticBuilding/Gui/Widgets/MatrixPhaseWidget.h"
@@ -61,6 +60,7 @@
 
 class StatsGeneratorFilter;
 class StatsGeneratorFilterParameter;
+class DataContainerArray;
 
 /**
  * @class StatsGeneratorWidget StatsGeneratorWidget.h StatsGenerator/StatsGeneratorWidget.h
@@ -127,7 +127,7 @@ protected:
    * @brief generateDataContainerArray
    * @return
    */
-  DataContainerArray::Pointer generateDataContainerArray();
+  std::shared_ptr<DataContainerArray> generateDataContainerArray();
 
 private:
   StatsGeneratorFilterParameter* m_FilterParameter;

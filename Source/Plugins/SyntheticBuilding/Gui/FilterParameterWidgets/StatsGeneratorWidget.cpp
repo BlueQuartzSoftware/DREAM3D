@@ -53,6 +53,7 @@
 #include "H5Support/H5Utilities.h"
 #include "H5Support/QH5Utilities.h"
 
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/StatsData/BoundaryStatsData.h"
 #include "SIMPLib/StatsData/MatrixStatsData.h"
