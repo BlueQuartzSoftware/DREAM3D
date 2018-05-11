@@ -16,7 +16,7 @@ DREAM.3D allows the user to spawn as many _main windows_ as desired. To open a n
 
 In order to keep the size of the DREAM.3D exeuctable manageable, most of the libraries it depends on are distributed as loose files. This means that the actual DREAM.3D exeuctable **cannot be moved** outside of the folder it came in **unless all other contents of that folder are moved with it**.
 
-The DREAM.3D window is created almost entirely out of draggable widgets, allowing the user to rearrange and nest them as desired.  For nested tabs, as shown below in Area 1, these widgets can be dragged individually through their named tabs at the bottom.  Individual widgets can be dragged through their title bars.  The only widget that cannot be moved or part of a group is the Filter Input View.
+The DREAM.3D window is created almost entirely out of dockable widgets, allowing the user to rearrange and nest them as desired.  For nested tabs, as shown below in Area 1, these widgets can be dragged individually through their named tabs at the bottom.  Individual widgets can be dragged through their title bars.  The only widget that cannot be moved or part of a group is the Filter Input View.
 
 ---
 
