@@ -1,7 +1,7 @@
 Overview of the User Interface 
 =========
 
-DREAM.3D has 4 main sections of its user interface:
+DREAM.3D has 6 main sections of its user interface:
 
 1. [DREAM.3D Toolbox](#dream3dtoolbox) (contains [Filter List](#filterlist), [Filter Library](#filterlibrary), and [Bookmarks](#bookmarks))
 2. [Pipeline View](#pipelineview)
@@ -15,6 +15,8 @@ The **Pipeline Error Table** can be _undocked_ from the main window and moved ar
 DREAM.3D allows the user to spawn as many _main windows_ as desired. To open a new DREAM.3D instance, click the _New..._ option in the _File_ menu. Each instance of DREAM.3D can act independently, and the user is allowed to run different **Pipelines** in each _main window_ at the same time.
 
 In order to keep the size of the DREAM.3D exeuctable manageable, most of the libraries it depends on are distributed as loose files. This means that the actual DREAM.3D exeuctable **cannot be moved** outside of the folder it came in **unless all other contents of that folder are moved with it**.
+
+The DREAM.3D window is created almost entirely out of draggable widgets, allowing the user to rearrange and nest them as desired.  For nested tabs, as shown below in Area 1, these widgets can be dragged individually through their named tabs at the bottom.  Individual widgets can be dragged through their title bars.  The only widget that cannot be moved or part of a group is the Filter Input View.
 
 ---
 
@@ -70,8 +72,6 @@ The **Bookmarks** section is where the user can _bookmark_ any **Pipelines** tha
 ![Bookmarks Contextual Menu](Images/OverView-BookmarksViewMenu1.png)
 
 ![Bookmarks Contextual Menu](Images/OverView-BookmarksViewMenu2.png)
-
-![Bookmarks Contextual Menu](Images/OverView-BookmarksViewMenu3.png)
 
 ### Interacting With Bookmarks ###
 To add a bookmark to **Bookmarks**, open the *Bookmarks* menu and choose *Add Bookmark*. Users can also use the **Bookmarks Contextual Menu** to add a bookmark by right clicking on an existing virtual folder or empty space and selecting *Add Bookmark*. **Bookmarks** and virtual folders can be renamed by right clicking on them and selecting the *Rename Bookmark* or *Rename Folder* option. To update a bookmark in **Bookmarks**, use the **Bookmarks Contextual Menu** by right clicking on a bookmark and select *Update Pipeline*. The **Bookmark** that was right clicked will be updated with the pipeline that is currently in the **Pipeline View**. To remove a **Bookmark** or virtual folder from **Bookmarks**, use the **Bookmarks Contextual Menu** by right clicking on a bookmark or virtual folder and select *Remove Bookmark* or *Remove Folder*. This procedure _does not_ delete the **Pipeline** files themselves, but only removes them from the **Bookmarks View**.
@@ -149,7 +149,7 @@ The **Filter Input View** contains all the parameters for the selected **Filter*
 	- _Created Arrays_ are data structure objects that the **Filter** will create during its execution
 + **Current Structure** Displays the state of the data structure as it would look after the selected **Filter** has executed
 
-_Drag and Drop_:
+**Drag and Drop**:
 
 With the new _Data Container_, _Attribute Matrix_, and _Data Array_ selection, the previous selection buttons have been replaced with a new drag and drop interface with the **Data Structure**.  Mousing over one of these widgets will filter the **Data Structure** to mark which paths are compatible with the **Filter Parameter's** requirements.  Clicking on this button will hold the filtering until mousing over another selection widget or completing a drag.  Drags can be performed from the selection widget to a corresponding path in the **Data Structure**, from the **Data Structure** to a selection widget, or between two compatible selection widgets.
 
@@ -168,11 +168,13 @@ To view the help page for the selected **Filter**, press the _?_ icon.
 ## Data Structure ##
 </a>
 
-![Data Structure](Images/OverView-DataStructure.png)
+![Data Structure with Created Paths](Images/OverView-DataStructure1.png)
+
+![Data Structure with Data Array Filtering](Images/OverView-DataStructure2.png)
 
 The **Data Structure** displays the current data structure of the pipeline, including all data containers, attribute matrices, and data arrays that exist in the current pipeline's data container array.  This tool is a good way to tell at-a-glance the current structure of your data when clicking on filters in the pipeline.
 
-_Drag and Drop_:
+**Drag and Drop**:
 
 With the new _Data Container_, _Attribute Matrix_, and _Data Array_ selection interface, users can now drag paths from the Data Structure and drag them into a corresponding selection widget.  When mousing over or dragging an item from the Data Structure, selection widgets in the **Filter Input View** will be filtered out to clearly display which **Filter Parameters** can accept the target path.
 
