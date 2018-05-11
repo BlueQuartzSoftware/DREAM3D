@@ -12,6 +12,7 @@ public:
 
   void operator()(const QString& absPath)
   {
+    qDebug() << "Start: " << absPath;
     QString filterName;
     QString contents;
     
@@ -21,6 +22,11 @@ public:
     //      {
     //        return;
     //      }
+    if(!fi.exists())
+    {
+      return;
+    }
+
     filterName = fi.baseName();
     QFile source(absPath);
     source.open(QFile::ReadOnly);
@@ -28,7 +34,7 @@ public:
     source.close();
     
     
-    qDebug() << absPath;
+    //qDebug() << absPath;
 
     QStringList names;
     bool didReplace = false;
@@ -42,9 +48,12 @@ public:
     QString instanceString = "SIMPL_INSTANCE_PROPERTY";
     QStringList cppCodeLines;
     QVector<QString> outLines;
-    QStringList list = contents.split(QRegExp("\\n"));
+    QStringList list = contents.split(QRegExp("\\r\\n"));
     QStringListIterator sourceLines(list);
     QStringList includes;
+
+    int classDeclLine = -1;
+    QString classDeclStr = QString("class %1 : public").arg(filterName, 1);
 
     while(sourceLines.hasNext())
     {
@@ -60,9 +69,9 @@ public:
         QString paramVarName = tokens[1];
         QString pybindMacro;
         QTextStream out(&pybindMacro);
-        out << "    PYB11_PROPERTY(" << paramType << " " << paramVarName << " READ get" << paramVarName << " WRITE set" << paramVarName << ")";
+       // out << "    PYB11_PROPERTY(" << paramType << " " << paramVarName << " READ get" << paramVarName << " WRITE set" << paramVarName << ")";
         pybindLines.append(pybindMacro);
-        qDebug() << pybindMacro;
+       // qDebug() << pybindMacro;
         didReplace = true;
       }
 
@@ -71,16 +80,34 @@ public:
         qObjectMacroLine = currentLine + 1;
         QString str;
         QTextStream out(&str);
-        out << "    PYB11_CREATE_BINDINGS(" << fi.baseName() << " SUPERCLASS AbstractFilter)";
+       // out << "    PYB11_CREATE_BINDINGS(" << fi.baseName() << " SUPERCLASS AbstractFilter)";
         pybindLines.append(str);
+      }
+
+      if(line.contains(classDeclStr))
+      {
+        classDeclLine = currentLine;
       }
 
       outLines.push_back(line2);
       currentLine++;
     }
 
-    outLines.insert(qObjectMacroLine, pybindLines.join("\n"));
+    if(classDeclLine > 0)
+    {
+      QDir d(absPath);
+      d.cdUp();
+      d.cdUp();
+      //qDebug() << d.dirName() << "_EXPORT";
+      QString replace = QString("class %1_EXPORT %2 : public").arg(d.dirName(), 1).arg(filterName, 2);
+      QString orig = outLines[classDeclLine];
+      orig = orig.replace(classDeclStr, replace);
+      qDebug() << orig;
+      outLines[classDeclLine] = orig;
+      didReplace = true;
+    }
 
+    //outLines.insert(qObjectMacroLine, pybindLines.join("\n"));
     writeOutput(didReplace, outLines, absPath);
   }
 };
