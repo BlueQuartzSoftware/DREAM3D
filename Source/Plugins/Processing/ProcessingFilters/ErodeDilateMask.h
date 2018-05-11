@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Processing/ProcessingDLLExport.h"
+
 /**
  * @brief The ErodeDilateMask class. See [Filter documentation](@ref erodedilatemask) for details.
  */
-class ErodeDilateMask : public AbstractFilter
+class Processing_EXPORT ErodeDilateMask : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ErodeDilateMask SUPERCLASS AbstractFilter)

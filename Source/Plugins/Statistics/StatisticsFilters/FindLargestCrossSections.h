@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @brief The FindLargestCrossSections class. See [Filter documentation](@ref findlargestcrosssections) for details.
  */
-class FindLargestCrossSections : public AbstractFilter
+class Statistics_EXPORT FindLargestCrossSections : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindLargestCrossSections SUPERCLASS AbstractFilter)

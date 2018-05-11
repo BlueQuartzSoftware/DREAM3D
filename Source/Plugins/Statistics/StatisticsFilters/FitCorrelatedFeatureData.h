@@ -51,6 +51,8 @@
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @class FitCorrelatedFeatureData FitCorrelatedFeatureData.h /FilterCategoryFilters/FitCorrelatedFeatureData.h
  * @brief
@@ -58,7 +60,7 @@
  * @date
  * @version 1.0
  */
-class FitCorrelatedFeatureData : public AbstractFilter
+class Statistics_EXPORT FitCorrelatedFeatureData : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FitCorrelatedFeatureData SUPERCLASS AbstractFilter)

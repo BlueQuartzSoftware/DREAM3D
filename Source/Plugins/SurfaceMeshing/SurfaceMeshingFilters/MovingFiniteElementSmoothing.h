@@ -45,6 +45,8 @@
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @class MovingFiniteElementSmoothing MovingFiniteElementSmoothing.h /Code/Filters/MovingFiniteElementSmoothing.h
  * @brief The Moving Finite Element (MFE) algorithm is based on Kuprat's work on Gradient Weighted Moving
@@ -58,7 +60,7 @@
  * @date
  * @version 1.0
  */
-class MovingFiniteElementSmoothing : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT MovingFiniteElementSmoothing : public SurfaceMeshFilter
 {
     Q_OBJECT
     PYB11_CREATE_BINDINGS(MovingFiniteElementSmoothing SUPERCLASS SurfaceMeshFilter)

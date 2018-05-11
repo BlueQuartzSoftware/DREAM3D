@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @brief The FindEuclideanDistMap class. See [Filter documentation](@ref findeuclideandistmap) for details.
  */
-class FindEuclideanDistMap : public AbstractFilter
+class Statistics_EXPORT FindEuclideanDistMap : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindEuclideanDistMap SUPERCLASS AbstractFilter)

@@ -9,10 +9,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The OrientationUtility class. See [Filter documentation](@ref orientationutility) for details.
  */
-class OrientationUtility : public AbstractFilter
+class OrientationAnalysis_EXPORT OrientationUtility : public AbstractFilter
 {
   Q_OBJECT
 

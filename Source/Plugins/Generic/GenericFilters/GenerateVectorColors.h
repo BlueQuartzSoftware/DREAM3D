@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Generic/GenericDLLExport.h"
+
 /**
  * @brief The GenerateVectorColors class. See [Filter documentation](@ref generatevectorcolors) for details.
  */
-class GenerateVectorColors : public AbstractFilter
+class Generic_EXPORT GenerateVectorColors : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(GenerateVectorColors SUPERCLASS AbstractFilter)

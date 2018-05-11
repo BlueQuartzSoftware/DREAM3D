@@ -42,10 +42,12 @@
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The AlignSectionsFeatureCentroid class. See [Filter documentation](@ref alignsectionsfeaturecentroid) for details.
  */
-class AlignSectionsFeatureCentroid : public AlignSections
+class Reconstruction_EXPORT AlignSectionsFeatureCentroid : public AlignSections
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(AlignSectionsFeatureCentroid SUPERCLASS AlignSections)

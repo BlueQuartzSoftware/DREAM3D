@@ -44,10 +44,12 @@
 #include "EMMPM/EMMPMLib/Core/EMMPM_Data.h"
 #include "EMMPMLib/Core/EMMPM_Constants.h"
 
+#include "EMMPM/EMMPMDLLExport.h"
+
 /**
  * @brief The EMMPMFilter class. See [Filter documentation](@ref emmpmfilter) for details.
  */
-class EMMPMFilter : public AbstractFilter
+class EMMPM_EXPORT EMMPMFilter : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(EMMPMFilter SUPERCLASS AbstractFilter)

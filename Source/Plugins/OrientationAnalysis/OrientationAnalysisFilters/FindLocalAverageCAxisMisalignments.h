@@ -46,6 +46,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @class FindLocalAverageCAxisMisalignments FindLocalAverageCAxisMisalignments.h Plugins/Statistics/StatisticsFilters/FindLocalAverageCAxisMisalignments.h
  * @brief
@@ -53,7 +55,7 @@
  * @date Jan 30, 2014
  * @version 5.0
  */
-class FindLocalAverageCAxisMisalignments : public AbstractFilter
+class OrientationAnalysis_EXPORT FindLocalAverageCAxisMisalignments : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindLocalAverageCAxisMisalignments SUPERCLASS AbstractFilter)

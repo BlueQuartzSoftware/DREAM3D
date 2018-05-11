@@ -11,10 +11,12 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The GenerateFZQuaternions class. See [Filter documentation](@ref generatefzquaternions) for details.
  */
-class GenerateFZQuaternions : public AbstractFilter
+class OrientationAnalysis_EXPORT GenerateFZQuaternions : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(GenerateFZQuaternions SUPERCLASS AbstractFilter)

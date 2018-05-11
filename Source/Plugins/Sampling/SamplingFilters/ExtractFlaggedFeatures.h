@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Sampling/SamplingDLLExport.h"
+
 /**
  * @brief The ExtractFlaggedFeatures class. See [Filter documentation](@ref extractflaggedfeatures) for details.
  */
-class ExtractFlaggedFeatures : public AbstractFilter
+class Sampling_EXPORT ExtractFlaggedFeatures : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ExtractFlaggedFeatures SUPERCLASS AbstractFilter)

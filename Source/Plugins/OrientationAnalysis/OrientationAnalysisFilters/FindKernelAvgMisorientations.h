@@ -43,10 +43,12 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The FindKernelAvgMisorientations class. See [Filter documentation](@ref findkernelavgmisorientations) for details.
  */
-class FindKernelAvgMisorientations : public AbstractFilter
+class OrientationAnalysis_EXPORT FindKernelAvgMisorientations : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindKernelAvgMisorientations SUPERCLASS AbstractFilter)

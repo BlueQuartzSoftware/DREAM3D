@@ -43,10 +43,12 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The FindBoundaryStrengths class. See [Filter documentation](@ref findboundarystrengths) for details.
  */
-class FindBoundaryStrengths : public AbstractFilter
+class OrientationAnalysis_EXPORT FindBoundaryStrengths : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindBoundaryStrengths SUPERCLASS AbstractFilter)

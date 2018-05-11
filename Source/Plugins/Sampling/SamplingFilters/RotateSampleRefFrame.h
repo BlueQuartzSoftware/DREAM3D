@@ -41,10 +41,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Sampling/SamplingDLLExport.h"
+
 /**
  * @brief The RotateSampleRefFrame class. See [Filter documentation](@ref rotatesamplerefframe) for details.
  */
-class RotateSampleRefFrame : public AbstractFilter
+class Sampling_EXPORT RotateSampleRefFrame : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(RotateSampleRefFrame SUPERCLASS AbstractFilter)

@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The ReadStlFile class. See [Filter documentation](@ref readstlfile) for details.
  */
-class ReadStlFile : public AbstractFilter
+class IO_EXPORT ReadStlFile : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ReadStlFile SUPERCLASS AbstractFilter)

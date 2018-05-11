@@ -43,11 +43,13 @@
 
 #include "Plugins/Reconstruction/ReconstructionConstants.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The GroupFeatures class. This class serves as a superclass for other classes
  * in the Reconstruction plugin.
  */
-class GroupFeatures : public AbstractFilter
+class Reconstruction_EXPORT GroupFeatures : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(GroupFeatures SUPERCLASS AbstractFilter)

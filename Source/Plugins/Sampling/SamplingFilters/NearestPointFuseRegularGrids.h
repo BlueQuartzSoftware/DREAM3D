@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Sampling/SamplingDLLExport.h"
+
 /**
  * @brief The NearestPointFuseRegularGrids class. See [Filter documentation](@ref nearestpointfuseregulargrids) for details.
  */
-class NearestPointFuseRegularGrids : public AbstractFilter
+class Sampling_EXPORT NearestPointFuseRegularGrids : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(NearestPointFuseRegularGrids SUPERCLASS AbstractFilter)

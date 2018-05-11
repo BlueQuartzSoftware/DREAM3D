@@ -43,6 +43,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @class GenerateRodriguesColors GenerateRodriguesColors.h DREAM3DLib/GenericFilters/GenerateRodriguesColors.h
  * @brief This filter generates colors for each voxel based on the "Standard" IPF Triangle.
@@ -50,7 +52,7 @@
  * @date Feb 6, 2013
  * @version 1.0
  */
-class GenerateRodriguesColors : public AbstractFilter
+class OrientationAnalysis_EXPORT GenerateRodriguesColors : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(GenerateRodriguesColors SUPERCLASS AbstractFilter)

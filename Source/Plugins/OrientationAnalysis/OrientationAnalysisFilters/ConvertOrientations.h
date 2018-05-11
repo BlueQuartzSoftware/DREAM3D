@@ -43,10 +43,12 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The ConvertOrientations class. See [Filter documentation](@ref convertorientations) for details.
  */
-class ConvertOrientations : public AbstractFilter
+class OrientationAnalysis_EXPORT ConvertOrientations : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ConvertOrientations SUPERCLASS AbstractFilter)

@@ -46,10 +46,12 @@
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
 
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
+
 /**
  * @brief The MatchCrystallography class. See [Filter documentation](@ref matchcrystallography) for details.
  */
-class MatchCrystallography : public AbstractFilter
+class SyntheticBuilding_EXPORT MatchCrystallography : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(MatchCrystallography SUPERCLASS AbstractFilter)

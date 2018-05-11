@@ -40,10 +40,12 @@
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The EMsoftSO3Sampler class. See [Filter documentation](@ref emsoftso3sampler) for details.
  */
-class EMsoftSO3Sampler : public AbstractFilter
+class OrientationAnalysis_EXPORT EMsoftSO3Sampler : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(EMsoftSO3Sampler SUPERCLASS AbstractFilter)

@@ -41,10 +41,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The AbaqusHexahedronWriter class. See [Filter documentation](@ref abaqushexahedronwriter) for details.
  */
-class AbaqusHexahedronWriter : public AbstractFilter
+class IO_EXPORT AbaqusHexahedronWriter : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(AbaqusHexahedronWriter SUPERCLASS AbstractFilter)

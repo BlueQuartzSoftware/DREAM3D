@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Generic/GenericDLLExport.h"
+
 /**
  * @brief The FindBoundingBoxFeatures class. See [Filter documentation](@ref findboundingboxfeatures) for details.
  */
-class FindBoundingBoxFeatures : public AbstractFilter
+class Generic_EXPORT FindBoundingBoxFeatures : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindBoundingBoxFeatures SUPERCLASS AbstractFilter)

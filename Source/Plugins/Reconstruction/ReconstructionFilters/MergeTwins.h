@@ -46,10 +46,12 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The MergeTwins class. See [Filter documentation](@ref mergetwins) for details.
  */
-class MergeTwins : public GroupFeatures
+class Reconstruction_EXPORT MergeTwins : public GroupFeatures
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(MergeTwins SUPERCLASS GroupFeatures)

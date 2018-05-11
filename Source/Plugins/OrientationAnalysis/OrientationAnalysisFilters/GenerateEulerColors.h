@@ -44,6 +44,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @class GenerateEulerColors GenerateEulerColors.h DREAM3DLib/GenericFilters/GenerateEulerColors.h
  * @brief This filter generates colors for each voxel based on the "Standard" IPF Triangle.
@@ -51,7 +53,7 @@
  * @date Feb 6, 2013
  * @version 1.0
  */
-class GenerateEulerColors : public AbstractFilter
+class OrientationAnalysis_EXPORT GenerateEulerColors : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(GenerateEulerColors SUPERCLASS AbstractFilter)

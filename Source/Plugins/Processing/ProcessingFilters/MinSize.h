@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Processing/ProcessingDLLExport.h"
+
 /**
  * @brief The MinSize class. See [Filter documentation](@ref minsize) for details.
  */
-class MinSize : public AbstractFilter
+class Processing_EXPORT MinSize : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(MinSize SUPERCLASS AbstractFilter)

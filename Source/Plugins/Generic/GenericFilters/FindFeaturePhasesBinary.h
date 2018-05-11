@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Generic/GenericDLLExport.h"
+
 /**
  * @brief The FindFeaturePhasesBinary class. See [Filter documentation](@ref findfeaturephasesbinary) for details.
  */
-class FindFeaturePhasesBinary : public AbstractFilter
+class Generic_EXPORT FindFeaturePhasesBinary : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindFeaturePhasesBinary SUPERCLASS AbstractFilter)

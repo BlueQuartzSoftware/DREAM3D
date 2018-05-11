@@ -43,10 +43,12 @@
 
 #include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 
+#include "Sampling/SamplingDLLExport.h"
+
 /**
  * @brief The SampleSurfaceMeshSpecifiedPoints class. See [Filter documentation](@ref samplesurfacemeshspecifiedpoints) for details.
  */
-class SampleSurfaceMeshSpecifiedPoints : public SampleSurfaceMesh
+class Sampling_EXPORT SampleSurfaceMeshSpecifiedPoints : public SampleSurfaceMesh
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(SampleSurfaceMeshSpecifiedPoints SUPERCLASS SampleSurfaceMesh)

@@ -42,10 +42,12 @@
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @brief The ReverseTriangleWinding class. See [Filter documentation](@ref reversetrianglewinding) for details.
  */
-class ReverseTriangleWinding : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT ReverseTriangleWinding : public SurfaceMeshFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ReverseTriangleWinding SUPERCLASS SurfaceMeshFilter)

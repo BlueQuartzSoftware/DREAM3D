@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @brief The CalculateArrayHistogram class. See [Filter documentation](@ref calculatearrayhistogram) for details.
  */
-class CalculateArrayHistogram : public AbstractFilter
+class Statistics_EXPORT CalculateArrayHistogram : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(CalculateArrayHistogram SUPERCLASS AbstractFilter)

@@ -43,10 +43,12 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The FindFeatureNeighborCAxisMisalignments class. See [Filter documentation](@ref findfeatureneighborcaxismisalignments) for details.
  */
-class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
+class OrientationAnalysis_EXPORT FindFeatureNeighborCAxisMisalignments : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindFeatureNeighborCAxisMisalignments SUPERCLASS AbstractFilter)

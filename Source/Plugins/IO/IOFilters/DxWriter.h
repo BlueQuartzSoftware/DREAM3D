@@ -41,10 +41,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The DxWriter class. See [Filter documentation](@ref dxreader) for details.
  */
-class DxWriter : public FileWriter
+class IO_EXPORT DxWriter : public FileWriter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(DxWriter SUPERCLASS FileWriter)

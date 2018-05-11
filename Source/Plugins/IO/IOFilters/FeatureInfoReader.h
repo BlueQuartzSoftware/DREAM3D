@@ -41,10 +41,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The FeatureInfoReader class. See [Filter documentation](@ref featureinforeader) for details.
  */
-class FeatureInfoReader : public FileReader
+class IO_EXPORT FeatureInfoReader : public FileReader
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FeatureInfoReader SUPERCLASS FileReader)

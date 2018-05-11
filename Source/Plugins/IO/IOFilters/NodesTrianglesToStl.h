@@ -44,6 +44,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @class CMUNodesTrianglesToStl CMUNodesTrianglesToStl.h MFESurfaceSmoothing/CMUNodesTrianglesToStl.h
  * @brief Converts the Nodes and Triangles files produced by the CMU SurfaceMeshing
@@ -52,7 +54,7 @@
  * @date Jul 17, 2012
  * @version 1.0
  */
-class NodesTrianglesToStl : public AbstractFilter
+class IO_EXPORT NodesTrianglesToStl : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(NodesTrianglesToStl SUPERCLASS AbstractFilter)

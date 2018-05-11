@@ -42,10 +42,12 @@
 
 class LaueOps;
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The WriteIPFStandardTriangle class. See [Filter documentation](@ref writeipfstandardtriangle) for details.
  */
-class WriteIPFStandardTriangle : public AbstractFilter
+class OrientationAnalysis_EXPORT WriteIPFStandardTriangle : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(WriteIPFStandardTriangle SUPERCLASS AbstractFilter)

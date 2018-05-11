@@ -44,6 +44,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @class SurfaceMeshToVtk SurfaceMeshToVtk.h IOFilters/Code/IOFiltersFilters/SurfaceMeshToVtk.h
  * @brief This class creates a VTK Polydata file written in the VTK Legacy file format.
@@ -51,7 +53,7 @@
  * @date
  * @version 1.0
  */
-class SurfaceMeshToVtk : public AbstractFilter
+class IO_EXPORT SurfaceMeshToVtk : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(SurfaceMeshToVtk SUPERCLASS AbstractFilter)

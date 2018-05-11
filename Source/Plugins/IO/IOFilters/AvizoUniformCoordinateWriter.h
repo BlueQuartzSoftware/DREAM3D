@@ -47,6 +47,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @class AvizoUniformCoordinateWriter AvizoUniformCoordinateWriter.h DREAM3DLib/IOFilters/AvizoUniformCoordinateWriter.h
  * @brief Writes out a native Avizo Uniform Coordinate file
@@ -54,7 +56,7 @@
  * @date Aug 9, 2012
  * @version 1.0
  */
-class AvizoUniformCoordinateWriter : public AbstractFilter
+class IO_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(AvizoUniformCoordinateWriter SUPERCLASS AbstractFilter)

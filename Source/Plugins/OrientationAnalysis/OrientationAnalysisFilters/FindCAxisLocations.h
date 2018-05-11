@@ -42,10 +42,12 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The FindCAxisLocations class. See [Filter documentation](@ref findcaxislocations) for details.
  */
-class FindCAxisLocations : public AbstractFilter
+class OrientationAnalysis_EXPORT FindCAxisLocations : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindCAxisLocations SUPERCLASS AbstractFilter)

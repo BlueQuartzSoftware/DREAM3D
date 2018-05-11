@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @brief The FitFeatureData class. See [Filter documentation](@ref minneighbors) for details.
  */
-class FitFeatureData : public AbstractFilter
+class Statistics_EXPORT FitFeatureData : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FitFeatureData SUPERCLASS AbstractFilter)

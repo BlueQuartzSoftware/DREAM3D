@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Generic/GenericDLLExport.h"
+
 /**
  * @brief The FindBoundaryCells class. See [Filter documentation](@ref findboundarycells) for details.
  */
-class FindBoundaryCells : public AbstractFilter
+class Generic_EXPORT FindBoundaryCells : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindBoundaryCells SUPERCLASS AbstractFilter)

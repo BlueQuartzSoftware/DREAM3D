@@ -9,10 +9,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @brief The ComputeMomentInvariants2D class. See [Filter documentation](@ref computemomentinvariants2d) for details.
  */
-class ComputeMomentInvariants2D : public AbstractFilter
+class Statistics_EXPORT ComputeMomentInvariants2D : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ComputeMomentInvariants2D SUPERCLASS AbstractFilter)

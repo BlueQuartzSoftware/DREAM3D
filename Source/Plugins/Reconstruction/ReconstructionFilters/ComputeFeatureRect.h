@@ -9,10 +9,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The ComputeFeatureRect class. See [Filter documentation](@ref computefeaturerect) for details.
  */
-class ComputeFeatureRect : public AbstractFilter
+class Reconstruction_EXPORT ComputeFeatureRect : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ComputeFeatureRect SUPERCLASS AbstractFilter)

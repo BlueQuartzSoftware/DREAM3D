@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @brief The FindSurfaceAreaToVolume class. See [Filter documentation](@ref findsurfaceareatovolume) for details.
  */
-class FindSurfaceAreaToVolume : public AbstractFilter
+class Statistics_EXPORT FindSurfaceAreaToVolume : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindSurfaceAreaToVolume SUPERCLASS AbstractFilter)

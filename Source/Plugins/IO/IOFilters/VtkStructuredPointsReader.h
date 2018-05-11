@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The VtkStructuredPointsReader class. See [Filter documentation](@ref vtkstructuredpointsreader) for details.
  */
-class VtkStructuredPointsReader : public AbstractFilter
+class IO_EXPORT VtkStructuredPointsReader : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(VtkStructuredPointsReader SUPERCLASS AbstractFilter)

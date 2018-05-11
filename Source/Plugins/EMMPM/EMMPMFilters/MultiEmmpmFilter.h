@@ -42,10 +42,12 @@
 
 #include "EMMPMFilter.h"
 
+#include "EMMPM/EMMPMDLLExport.h"
+
 /**
  * @brief The MultiEmmpmFilter class. See [Filter documentation](@ref multiemmpmfilter) for details.
  */
-class MultiEmmpmFilter : public EMMPMFilter
+class EMMPM_EXPORT MultiEmmpmFilter : public EMMPMFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(MultiEmmpmFilter SUPERCLASS EMMPMFilter)

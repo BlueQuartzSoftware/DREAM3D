@@ -50,6 +50,8 @@
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @class FindFeatureHistogram FindFeatureHistogram.h /FilterCategoryFilters/FindFeatureHistogram.h
  * @brief
@@ -57,7 +59,7 @@
  * @date
  * @version 1.0
  */
-class FindFeatureHistogram : public AbstractFilter
+class Statistics_EXPORT FindFeatureHistogram : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindFeatureHistogram SUPERCLASS AbstractFilter)

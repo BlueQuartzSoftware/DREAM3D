@@ -42,10 +42,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The IdentifyMicroTextureRegions class. See [Filter documentation](@ref identifymicrotextureregions) for details.
  */
-class IdentifyMicroTextureRegions : public AbstractFilter
+class Reconstruction_EXPORT IdentifyMicroTextureRegions : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(IdentifyMicroTextureRegions SUPERCLASS AbstractFilter)

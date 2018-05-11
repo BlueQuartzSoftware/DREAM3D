@@ -41,10 +41,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @brief The FindFeatureClustering class. See [Filter documentation](@ref findfeatureclustering) for details.
  */
-class FindFeatureClustering : public AbstractFilter
+class Statistics_EXPORT FindFeatureClustering : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindFeatureClustering SUPERCLASS AbstractFilter)

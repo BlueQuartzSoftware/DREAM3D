@@ -48,6 +48,8 @@
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @class M3CSliceBySlice M3CSliceBySlice.h DREAM3DLic/SurfaceMeshingFilters/M3CSliceBySlice.h
  * @brief This filter was contributed by Dr. Sukbin Lee of Carnegi-Mellon University and uses a "MultiMaterial Marching
@@ -68,7 +70,7 @@
  * @date
  * @version 1.0
  */
-class M3CSliceBySlice : public AbstractFilter
+class SurfaceMeshing_EXPORT M3CSliceBySlice : public AbstractFilter
 {
   Q_OBJECT
   //  PYB11_CREATE_BINDINGS(M3CSliceBySlice SUPERCLASS AbstractFilter)

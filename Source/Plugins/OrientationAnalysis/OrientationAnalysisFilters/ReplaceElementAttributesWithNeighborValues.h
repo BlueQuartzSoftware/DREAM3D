@@ -39,10 +39,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The ReplaceElementAttributesWithNeighborValues class. See [Filter documentation](@ref ReplaceElementAttributesWithNeighborValues) for details.
  */
-class ReplaceElementAttributesWithNeighborValues : public AbstractFilter
+class OrientationAnalysis_EXPORT ReplaceElementAttributesWithNeighborValues : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ReplaceElementAttributesWithNeighborValues SUPERCLASS AbstractFilter)

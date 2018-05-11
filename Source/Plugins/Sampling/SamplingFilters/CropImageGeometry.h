@@ -42,10 +42,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Sampling/SamplingDLLExport.h"
+
 /**
  * @brief The CropImageGeometry class. See [Filter documentation](@ref CropImageGeometry) for details.
  */
-class CropImageGeometry : public AbstractFilter
+class Sampling_EXPORT CropImageGeometry : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(CropImageGeometry SUPERCLASS AbstractFilter)

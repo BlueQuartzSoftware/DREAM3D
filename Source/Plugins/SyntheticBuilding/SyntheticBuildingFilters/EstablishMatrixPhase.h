@@ -41,10 +41,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
+
 /**
  * @brief The EstablishMatrixPhase class. See [Filter documentation](@ref establishmatrixphase) for details.
  */
-class EstablishMatrixPhase : public AbstractFilter
+class SyntheticBuilding_EXPORT EstablishMatrixPhase : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(EstablishMatrixPhase SUPERCLASS AbstractFilter)

@@ -43,10 +43,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Sampling/SamplingDLLExport.h"
+
 /**
  * @brief The WarpRegularGrid class. See [Filter documentation](@ref warpregulargrid) for details.
  */
-class WarpRegularGrid : public AbstractFilter
+class Sampling_EXPORT WarpRegularGrid : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(WarpRegularGrid SUPERCLASS AbstractFilter)

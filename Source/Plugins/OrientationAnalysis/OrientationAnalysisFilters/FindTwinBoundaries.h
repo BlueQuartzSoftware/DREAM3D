@@ -42,10 +42,12 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The FindTwinBoundaries class. See [Filter documentation](@ref findtwinboundaries) for details.
  */
-class FindTwinBoundaries : public AbstractFilter
+class OrientationAnalysis_EXPORT FindTwinBoundaries : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindTwinBoundaries SUPERCLASS AbstractFilter)

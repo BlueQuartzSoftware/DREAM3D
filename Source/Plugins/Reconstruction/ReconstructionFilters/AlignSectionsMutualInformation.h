@@ -44,10 +44,12 @@
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The AlignSectionsMutualInformation class. See [Filter documentation](@ref alignsectionsmutualinformation) for details.
  */
-class AlignSectionsMutualInformation : public AlignSections
+class Reconstruction_EXPORT AlignSectionsMutualInformation : public AlignSections
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(AlignSectionsMutualInformation SUPERCLASS AlignSections)

@@ -43,10 +43,12 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The FindSchmids class. See [Filter documentation](@ref findschmids) for details.
  */
-class FindSchmids : public AbstractFilter
+class OrientationAnalysis_EXPORT FindSchmids : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindSchmids SUPERCLASS AbstractFilter)

@@ -44,10 +44,12 @@
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The AlignSectionsMisorientation class. See [Filter documentation](@ref alignsectionsmisorientation) for details.
  */
-class AlignSectionsMisorientation : public AlignSections
+class Reconstruction_EXPORT AlignSectionsMisorientation : public AlignSections
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(AlignSectionsMisorientation SUPERCLASS AlignSections)

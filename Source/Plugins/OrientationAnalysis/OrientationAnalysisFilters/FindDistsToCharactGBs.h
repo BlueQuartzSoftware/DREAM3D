@@ -48,10 +48,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The FindDistsToCharactGBs class. See [Filter documentation](@ref finddiststocharactgbs) for details.
  */
-class FindDistsToCharactGBs : public AbstractFilter
+class OrientationAnalysis_EXPORT FindDistsToCharactGBs : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(FindDistsToCharactGBs SUPERCLASS AbstractFilter)

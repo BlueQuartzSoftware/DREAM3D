@@ -45,10 +45,12 @@
 
 #include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The GroupMicroTextureRegions class. See [Filter documentation](@ref groupmicrotextureregions) for details.
  */
-class GroupMicroTextureRegions : public GroupFeatures
+class Reconstruction_EXPORT GroupMicroTextureRegions : public GroupFeatures
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(GroupMicroTextureRegions SUPERCLASS GroupFeatures)

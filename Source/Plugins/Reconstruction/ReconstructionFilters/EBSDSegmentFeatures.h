@@ -46,10 +46,12 @@
 
 #include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The EBSDSegmentFeatures class. See [Filter documentation](@ref ebsdsegmentfeatures) for details.
  */
-class EBSDSegmentFeatures : public SegmentFeatures
+class Reconstruction_EXPORT EBSDSegmentFeatures : public SegmentFeatures
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(EBSDSegmentFeatures SUPERCLASS SegmentFeatures)

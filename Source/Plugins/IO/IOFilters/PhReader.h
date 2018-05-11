@@ -45,10 +45,12 @@
 // our PIMPL private class
 class PhReaderPrivate;
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The PhReader class. See [Filter documentation](@ref phreader) for details.
  */
-class PhReader : public FileReader
+class IO_EXPORT PhReader : public FileReader
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(PhReader SUPERCLASS FileReader)

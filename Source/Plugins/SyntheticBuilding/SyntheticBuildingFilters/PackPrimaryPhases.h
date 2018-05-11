@@ -55,10 +55,12 @@ typedef struct
   int32_t m_Neighborhoods;
 } Feature_t;
 
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
+
 /**
  * @brief The PackPrimaryPhases class. See [Filter documentation](@ref packprimaryphases) for details.
  */
-class PackPrimaryPhases : public AbstractFilter
+class SyntheticBuilding_EXPORT PackPrimaryPhases : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(PackPrimaryPhases SUPERCLASS AbstractFilter)

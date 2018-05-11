@@ -46,10 +46,12 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The VisualizeGBCDPoleFigure class. See [Filter documentation](@ref visualizegbcdpolefigure) for details.
  */
-class VisualizeGBCDPoleFigure : public AbstractFilter
+class IO_EXPORT VisualizeGBCDPoleFigure : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(VisualizeGBCDPoleFigure SUPERCLASS AbstractFilter)

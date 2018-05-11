@@ -59,10 +59,12 @@ typedef struct
   int m_Neighborhoods;
 } Precip_t;
 
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
+
 /**
  * @brief The InsertPrecipitatePhases class. See [Filter documentation](@ref insertprecipitatephases) for details.
  */
-class InsertPrecipitatePhases : public AbstractFilter
+class SyntheticBuilding_EXPORT InsertPrecipitatePhases : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(InsertPrecipitatePhases SUPERCLASS AbstractFilter)

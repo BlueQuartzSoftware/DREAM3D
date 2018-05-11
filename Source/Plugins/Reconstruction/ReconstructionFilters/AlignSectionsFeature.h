@@ -45,10 +45,12 @@
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The AlignSectionsFeature class. See [Filter documentation](@ref alignsectionsfeature) for details.
  */
-class AlignSectionsFeature : public AlignSections
+class Reconstruction_EXPORT AlignSectionsFeature : public AlignSections
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(AlignSectionsFeature SUPERCLASS AlignSections)

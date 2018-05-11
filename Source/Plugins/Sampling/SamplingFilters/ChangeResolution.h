@@ -41,10 +41,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Sampling/SamplingDLLExport.h"
+
 /**
  * @brief The ChangeResolution class. See [Filter documentation](@ref changeresolution) for details.
  */
-class ChangeResolution : public AbstractFilter
+class Sampling_EXPORT ChangeResolution : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ChangeResolution SUPERCLASS AbstractFilter)

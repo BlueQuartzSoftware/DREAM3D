@@ -14,10 +14,12 @@ class StatsDataArray;
 class StringDataArray;
 class PrimaryStatsData;
 
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
+
 /**
  * @brief The GeneratePrimaryStatsData class. See [Filter documentation](@ref generateprimarystatsdata) for details.
  */
-class GeneratePrimaryStatsData : public AbstractFilter
+class SyntheticBuilding_EXPORT GeneratePrimaryStatsData : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(GeneratePrimaryStatsData SUPERCLASS AbstractFilter)

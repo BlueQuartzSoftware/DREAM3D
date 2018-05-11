@@ -52,6 +52,8 @@
 
 class CompareFunctor;
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @class SineParamsSegmentFeatures SineParamsSegmentFeatures.h DREAM3DLib/ReconstructionFilters/SineParamsSegmentFeatures.h
  * @brief
@@ -59,7 +61,7 @@ class CompareFunctor;
  * @date Nov 19, 2011
  * @version 1.0
  */
-class SineParamsSegmentFeatures : public SegmentFeatures
+class Reconstruction_EXPORT SineParamsSegmentFeatures : public SegmentFeatures
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(SineParamsSegmentFeatures SUPERCLASS SegmentFeatures)

@@ -42,10 +42,12 @@
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @brief The TriangleCentroidFilter class. See [Filter documentation](@ref changeresolution) for details.
  */
-class TriangleCentroidFilter : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT TriangleCentroidFilter : public SurfaceMeshFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(TriangleCentroidFilter SUPERCLASS SurfaceMeshFilter)

@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @brief The FindTriangleGeomSizes class. See [Filter documentation](@ref findtrianglegeomsizes) for details.
  */
-class FindTriangleGeomSizes : public AbstractFilter
+class SurfaceMeshing_EXPORT FindTriangleGeomSizes : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindTriangleGeomSizes SUPERCLASS AbstractFilter)

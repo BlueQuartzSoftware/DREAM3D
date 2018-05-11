@@ -41,10 +41,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The SPParksSitesWriter class. See [Filter documentation](@ref spparkswriter) for details.
  */
-class SPParksSitesWriter : public FileWriter
+class IO_EXPORT SPParksSitesWriter : public FileWriter
 {
 
   Q_OBJECT

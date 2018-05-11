@@ -42,10 +42,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The LosAlamosFFTWriter class. See [Filter documentation](@ref losalamosfftwriter) for details.
  */
-class LosAlamosFFTWriter : public FileWriter
+class IO_EXPORT LosAlamosFFTWriter : public FileWriter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(LosAlamosFFTWriter SUPERCLASS FileWriter)

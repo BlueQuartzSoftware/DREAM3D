@@ -42,10 +42,12 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The BadDataNeighborOrientationCheck class. See [Filter documentation](@ref baddataneighbororientationcheck) for details.
  */
-class BadDataNeighborOrientationCheck : public AbstractFilter
+class OrientationAnalysis_EXPORT BadDataNeighborOrientationCheck : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(BadDataNeighborOrientationCheck SUPERCLASS AbstractFilter)

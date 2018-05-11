@@ -9,10 +9,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @brief The FindDifferenceMap class. See [Filter documentation](@ref finddifferencemap) for details.
  */
-class FindDifferenceMap : public AbstractFilter
+class Statistics_EXPORT FindDifferenceMap : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindDifferenceMap SUPERCLASS AbstractFilter)

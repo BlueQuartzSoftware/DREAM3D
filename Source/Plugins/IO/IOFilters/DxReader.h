@@ -47,10 +47,12 @@
 // our PIMPL private class
 class DxReaderPrivate;
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The DxReader class. See [Filter documentation](@ref dxreader) for details.
  */
-class DxReader : public FileReader
+class IO_EXPORT DxReader : public FileReader
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(DxReader SUPERCLASS FileReader)

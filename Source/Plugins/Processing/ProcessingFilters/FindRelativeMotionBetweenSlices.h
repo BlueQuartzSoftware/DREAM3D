@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Processing/ProcessingDLLExport.h"
+
 /**
  * @brief The FindRelativeMotionBetweenSlices class. See [Filter documentation](@ref findrelativemotionbetweenslices) for details.
  */
-class FindRelativeMotionBetweenSlices : public AbstractFilter
+class Processing_EXPORT FindRelativeMotionBetweenSlices : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindRelativeMotionBetweenSlices SUPERCLASS AbstractFilter)

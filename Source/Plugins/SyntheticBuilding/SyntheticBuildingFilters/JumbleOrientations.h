@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
+
 /**
  * @brief The JumbleOrientations class. See [Filter documentation](@ref jumbleorientations) for details.
  */
-class JumbleOrientations : public AbstractFilter
+class SyntheticBuilding_EXPORT JumbleOrientations : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(JumbleOrientations SUPERCLASS AbstractFilter)

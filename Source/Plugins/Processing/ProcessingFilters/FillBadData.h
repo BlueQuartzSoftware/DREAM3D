@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Processing/ProcessingDLLExport.h"
+
 /**
  * @brief The FillBadData class. See [Filter documentation](@ref fillbaddata) for details.
  */
-class FillBadData : public AbstractFilter
+class Processing_EXPORT FillBadData : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FillBadData SUPERCLASS AbstractFilter)

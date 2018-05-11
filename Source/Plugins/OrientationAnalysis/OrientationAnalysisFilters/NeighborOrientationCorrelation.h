@@ -42,10 +42,12 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The NeighborOrientationCorrelation class. See [Filter documentation](@ref neighbororientationcorrelation) for details.
  */
-class NeighborOrientationCorrelation : public AbstractFilter
+class OrientationAnalysis_EXPORT NeighborOrientationCorrelation : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(NeighborOrientationCorrelation SUPERCLASS AbstractFilter)

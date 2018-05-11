@@ -50,10 +50,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The FindGBPDMetricBased class. See [Filter documentation](@ref findgbpdmetricbased) for details.
  */
-class FindGBPDMetricBased : public AbstractFilter
+class OrientationAnalysis_EXPORT FindGBPDMetricBased : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(FindGBPDMetricBased SUPERCLASS AbstractFilter)

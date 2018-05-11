@@ -46,10 +46,12 @@
 
 #include "Statistics/DistributionAnalysisOps/DistributionAnalysisOps.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @brief The GenerateEnsembleStatistics class. See [Filter documentation](@ref generateensemblestatistics) for details.
  */
-class GenerateEnsembleStatistics : public AbstractFilter
+class Statistics_EXPORT GenerateEnsembleStatistics : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(GenerateEnsembleStatistics SUPERCLASS AbstractFilter)

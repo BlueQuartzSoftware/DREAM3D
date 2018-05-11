@@ -45,10 +45,12 @@
 
 class CompareFunctor;
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The ScalarSegmentFeatures class. See [Filter documentation](@ref scalarsegmentfeatures) for details.
  */
-class ScalarSegmentFeatures : public SegmentFeatures
+class Reconstruction_EXPORT ScalarSegmentFeatures : public SegmentFeatures
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ScalarSegmentFeatures SUPERCLASS SegmentFeatures)

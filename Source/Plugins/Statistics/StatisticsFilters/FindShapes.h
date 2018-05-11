@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @brief The FindShapes class. See [Filter documentation](@ref findshapes) for details.
  */
-class FindShapes : public AbstractFilter
+class Statistics_EXPORT FindShapes : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindShapes SUPERCLASS AbstractFilter)

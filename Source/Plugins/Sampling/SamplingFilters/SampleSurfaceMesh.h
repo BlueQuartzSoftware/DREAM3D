@@ -41,10 +41,12 @@
 #include "SIMPLib/Geometry/VertexGeom.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Sampling/SamplingDLLExport.h"
+
 /**
  * @brief The SampleSurfaceMesh class serves as a superclass for filters to sample IGeometry surface mesh objects.
  */
-class SampleSurfaceMesh : public AbstractFilter
+class Sampling_EXPORT SampleSurfaceMesh : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(SampleSurfaceMesh SUPERCLASS AbstractFilter)

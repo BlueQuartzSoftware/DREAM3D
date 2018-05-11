@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The AbaqusSurfaceMeshWriter class. See [Filter documentation](@ref abaqussurfacemeshwriter) for details.
  */
-class AbaqusSurfaceMeshWriter : public AbstractFilter
+class IO_EXPORT AbaqusSurfaceMeshWriter : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(AbaqusSurfaceMeshWriter SUPERCLASS AbstractFilter)

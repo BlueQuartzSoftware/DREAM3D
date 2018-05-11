@@ -44,10 +44,12 @@
 
 #include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 
+#include "Sampling/SamplingDLLExport.h"
+
 /**
  * @brief The RegularGridSampleSurfaceMesh class. See [Filter documentation](@ref regulargridsamplesurfacemesh) for details.
  */
-class RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
+class Sampling_EXPORT RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(RegularGridSampleSurfaceMesh SUPERCLASS SampleSurfaceMesh)

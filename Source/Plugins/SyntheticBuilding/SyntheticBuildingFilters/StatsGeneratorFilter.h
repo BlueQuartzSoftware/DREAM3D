@@ -42,10 +42,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
+
 /**
  * @brief The StatsGeneratorFilter class. See [Filter documentation](@ref statsgeneratorfilter) for details.
  */
-class StatsGeneratorFilter : public AbstractFilter
+class SyntheticBuilding_EXPORT StatsGeneratorFilter : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(StatsGeneratorFilter SUPERCLASS AbstractFilter)

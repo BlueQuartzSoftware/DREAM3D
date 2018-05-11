@@ -39,11 +39,13 @@
 
 class QuadGeom;
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The CreateLambertSphere fitler creates an equal area mesh on a unit
  * sphere.
  */
-class CreateLambertSphere : public AbstractFilter
+class OrientationAnalysis_EXPORT CreateLambertSphere : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(CreateLambertSphere SUPERCLASS AbstractFilter)

@@ -41,10 +41,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @brief The FindTriangleGeomNeighbors class. See [Filter documentation](@ref findtrianglegeomneighbors) for details.
  */
-class FindTriangleGeomNeighbors : public AbstractFilter
+class SurfaceMeshing_EXPORT FindTriangleGeomNeighbors : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindTriangleGeomNeighbors SUPERCLASS AbstractFilter)

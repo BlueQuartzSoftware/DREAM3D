@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @brief The FindBoundaryElementFractions class. See [Filter documentation](@ref findboundaryelementfractions) for details.
  */
-class FindBoundaryElementFractions : public AbstractFilter
+class Statistics_EXPORT FindBoundaryElementFractions : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindBoundaryElementFractions SUPERCLASS AbstractFilter)

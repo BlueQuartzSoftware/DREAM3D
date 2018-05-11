@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Processing/ProcessingDLLExport.h"
+
 /**
  * @brief The ErodeDilateCoordinationNumber class. See [Filter documentation](@ref erodedilatecoordinationnumber) for details.
  */
-class ErodeDilateCoordinationNumber : public AbstractFilter
+class Processing_EXPORT ErodeDilateCoordinationNumber : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ErodeDilateCoordinationNumber SUPERCLASS AbstractFilter)

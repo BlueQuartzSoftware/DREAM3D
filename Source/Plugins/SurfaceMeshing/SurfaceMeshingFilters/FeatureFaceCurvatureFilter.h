@@ -43,10 +43,12 @@
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @brief The FeatureFaceCurvatureFilter class. See [Filter documentation](@ref featurefacecurvaturefilter) for details.
  */
-class FeatureFaceCurvatureFilter : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT FeatureFaceCurvatureFilter : public SurfaceMeshFilter
 {
     Q_OBJECT
     PYB11_CREATE_BINDINGS(FeatureFaceCurvatureFilter SUPERCLASS SurfaceMeshFilter)

@@ -43,6 +43,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @class WriteStatsGenOdfAngleFile WriteStatsGenOdfAngleFile.h /IOFilters/WriteStatsGenOdfAngleFile.h
  * @brief
@@ -50,7 +52,7 @@
  * @date
  * @version 1.0
  */
-class WriteStatsGenOdfAngleFile : public AbstractFilter
+class OrientationAnalysis_EXPORT WriteStatsGenOdfAngleFile : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(WriteStatsGenOdfAngleFile SUPERCLASS AbstractFilter)

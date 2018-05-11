@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The WriteStlFile class. See [Filter documentation](@ref surfacemeshtostl) for details.
  */
-class WriteStlFile : public AbstractFilter
+class IO_EXPORT WriteStlFile : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(WriteStlFile SUPERCLASS AbstractFilter)

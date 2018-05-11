@@ -41,10 +41,12 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @brief The FindSizes class. See [Filter documentation](@ref findsizes) for details.
  */
-class FindSizes : public AbstractFilter
+class Statistics_EXPORT FindSizes : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindSizes SUPERCLASS AbstractFilter)

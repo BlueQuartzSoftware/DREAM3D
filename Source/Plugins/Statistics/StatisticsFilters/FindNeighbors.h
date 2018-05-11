@@ -41,10 +41,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @brief The FindNeighbors class. See [Filter documentation](@ref findneighbors) for details.
  */
-class FindNeighbors : public AbstractFilter
+class Statistics_EXPORT FindNeighbors : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindNeighbors SUPERCLASS AbstractFilter)

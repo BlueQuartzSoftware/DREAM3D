@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Processing/ProcessingDLLExport.h"
+
 /**
  * @brief The RemoveFlaggedFeatures class. See [Filter documentation](@ref removeflaggedfeatures) for details.
  */
-class RemoveFlaggedFeatures : public AbstractFilter
+class Processing_EXPORT RemoveFlaggedFeatures : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(RemoveFlaggedFeatures SUPERCLASS AbstractFilter)

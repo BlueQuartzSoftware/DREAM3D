@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @brief The FindAvgScalarValueForFeatures class. See [Filter documentation](@ref findavgscalarvalueforfeatures) for details.
  */
-class FindAvgScalarValueForFeatures : public AbstractFilter
+class Statistics_EXPORT FindAvgScalarValueForFeatures : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindAvgScalarValueForFeatures SUPERCLASS AbstractFilter)

@@ -47,6 +47,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @class FindOrientationFieldCurl FindOrientationFieldCurl.h DREAM3DLib/GenericFilters/FindOrientationFieldCurl.h
  * @brief
@@ -54,7 +56,7 @@
  * @date Nov 19, 2011
  * @version 1.0
  */
-class FindOrientationFieldCurl : public AbstractFilter
+class OrientationAnalysis_EXPORT FindOrientationFieldCurl : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindOrientationFieldCurl SUPERCLASS AbstractFilter)

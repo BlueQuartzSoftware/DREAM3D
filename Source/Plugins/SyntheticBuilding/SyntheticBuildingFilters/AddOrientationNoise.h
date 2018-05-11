@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
+
 /**
  * @brief The AddOrientationNoise class. See [Filter documentation](@ref addorientationnoise) for details.
  */
-class AddOrientationNoise : public AbstractFilter
+class SyntheticBuilding_EXPORT AddOrientationNoise : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(AddOrientationNoise SUPERCLASS AbstractFilter)

@@ -42,10 +42,12 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The FindFeatureReferenceMisorientations class. See [Filter documentation](@ref findfeaturereferencemisorientations) for details.
  */
-class FindFeatureReferenceMisorientations : public AbstractFilter
+class OrientationAnalysis_EXPORT FindFeatureReferenceMisorientations : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindFeatureReferenceMisorientations SUPERCLASS AbstractFilter)

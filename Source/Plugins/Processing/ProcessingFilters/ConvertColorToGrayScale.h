@@ -41,10 +41,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Processing/ProcessingDLLExport.h"
+
 /**
  * @brief The ConvertColorToGrayScale class. See [Filter documentation](@ref ConvertColorToGrayScale) for details.
  */
-class ConvertColorToGrayScale : public AbstractFilter
+class Processing_EXPORT ConvertColorToGrayScale : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ConvertColorToGrayScale SUPERCLASS AbstractFilter)

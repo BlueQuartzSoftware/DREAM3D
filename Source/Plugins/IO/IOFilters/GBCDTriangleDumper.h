@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The GBCDTriangleDumper class. See [Filter documentation](@ref gbcdtriangledumper) for details.
  */
-class GBCDTriangleDumper : public AbstractFilter
+class IO_EXPORT GBCDTriangleDumper : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(GBCDTriangleDumper SUPERCLASS AbstractFilter)

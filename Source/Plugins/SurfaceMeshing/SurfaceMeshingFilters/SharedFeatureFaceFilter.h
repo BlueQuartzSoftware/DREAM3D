@@ -42,10 +42,12 @@
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @brief The SharedFeatureFaceFilter class. See [Filter documentation](@ref sharedfeaturefacefilter) for details.
  */
-class SharedFeatureFaceFilter : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT SharedFeatureFaceFilter : public SurfaceMeshFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(SharedFeatureFaceFilter SUPERCLASS SurfaceMeshFilter)

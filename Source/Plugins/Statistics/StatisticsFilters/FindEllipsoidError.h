@@ -48,6 +48,8 @@
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @class FindEllipsoidError FindEllipsoidError.h DREAM3DLib/GenericFilters/FindEllipsoidError.h
  * @brief
@@ -55,7 +57,7 @@
  * @date Nov 19, 2011
  * @version 1.0
  */
-class FindEllipsoidError : public AbstractFilter
+class Statistics_EXPORT FindEllipsoidError : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindEllipsoidError SUPERCLASS AbstractFilter)

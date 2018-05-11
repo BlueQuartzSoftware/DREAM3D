@@ -43,10 +43,12 @@
 
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The CreateEnsembleInfo class. See [Filter documentation](@ref createensembleinfo) for details.
  */
-class CreateEnsembleInfo : public AbstractFilter
+class OrientationAnalysis_EXPORT CreateEnsembleInfo : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(CreateEnsembleInfo SUPERCLASS AbstractFilter)

@@ -44,10 +44,12 @@
 
 #include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 
+#include "Sampling/SamplingDLLExport.h"
+
 /**
  * @brief The UncertainRegularGridSampleSurfaceMesh class. See [Filter documentation](@ref uncertainregulargridsamplesurfacemesh) for details.
  */
-class UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
+class Sampling_EXPORT UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(UncertainRegularGridSampleSurfaceMesh SUPERCLASS SampleSurfaceMesh)

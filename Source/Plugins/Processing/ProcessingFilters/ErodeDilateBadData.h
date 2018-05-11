@@ -43,10 +43,12 @@
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
 
+#include "Processing/ProcessingDLLExport.h"
+
 /**
  * @brief The ErodeDilateBadData class. See [Filter documentation](@ref erodedilatebaddata) for details.
  */
-class ErodeDilateBadData : public AbstractFilter
+class Processing_EXPORT ErodeDilateBadData : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ErodeDilateBadData SUPERCLASS AbstractFilter)

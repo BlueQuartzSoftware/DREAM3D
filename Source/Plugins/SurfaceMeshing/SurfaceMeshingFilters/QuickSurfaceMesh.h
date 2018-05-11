@@ -43,10 +43,12 @@
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @brief The QuickSurfaceMesh class. See [Filter documentation](@ref quicksurfacemesh) for details.
  */
-class QuickSurfaceMesh : public AbstractFilter
+class SurfaceMeshing_EXPORT QuickSurfaceMesh : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(QuickSurfaceMesh SUPERCLASS AbstractFilter)

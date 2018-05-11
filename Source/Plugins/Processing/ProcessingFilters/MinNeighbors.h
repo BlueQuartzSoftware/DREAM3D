@@ -43,10 +43,12 @@
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
 
+#include "Processing/ProcessingDLLExport.h"
+
 /**
  * @brief The MinNeighbors class. See [Filter documentation](@ref minneighbors) for details.
  */
-class MinNeighbors : public AbstractFilter
+class Processing_EXPORT MinNeighbors : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(MinNeighbors SUPERCLASS AbstractFilter)

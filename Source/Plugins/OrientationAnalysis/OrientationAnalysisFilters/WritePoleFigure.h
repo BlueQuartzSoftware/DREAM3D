@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The WritePoleFigure class. See [Filter documentation](@ref writepolefigure) for details.
  */
-class WritePoleFigure : public AbstractFilter
+class OrientationAnalysis_EXPORT WritePoleFigure : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(WritePoleFigure SUPERCLASS AbstractFilter)

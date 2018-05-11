@@ -42,10 +42,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The EnsembleInfoReader class. See [Filter documentation](@ref dxreader) for details.
  */
-class EnsembleInfoReader : public FileReader
+class OrientationAnalysis_EXPORT EnsembleInfoReader : public FileReader
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(EnsembleInfoReader SUPERCLASS FileReader)

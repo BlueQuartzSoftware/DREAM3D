@@ -42,10 +42,12 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The FindAvgCAxes class. See [Filter documentation](@ref findavgcaxes) for details.
  */
-class FindAvgCAxes : public AbstractFilter
+class OrientationAnalysis_EXPORT FindAvgCAxes : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindAvgCAxes SUPERCLASS AbstractFilter)

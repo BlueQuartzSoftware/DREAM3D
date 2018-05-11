@@ -43,10 +43,12 @@
 
 #include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The VectorSegmentFeatures class. See [Filter documentation](@ref vectorsegmentfeatures) for details.
  */
-class VectorSegmentFeatures : public SegmentFeatures
+class Reconstruction_EXPORT VectorSegmentFeatures : public SegmentFeatures
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(VectorSegmentFeatures SUPERCLASS SegmentFeatures)

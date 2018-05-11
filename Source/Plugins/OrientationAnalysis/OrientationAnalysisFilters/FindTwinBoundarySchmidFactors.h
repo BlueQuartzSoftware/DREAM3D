@@ -43,10 +43,12 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The FindTwinBoundarySchmidFactors class. See [Filter documentation](@ref findtwinboundaryschmidfactors) for details.
  */
-class FindTwinBoundarySchmidFactors : public AbstractFilter
+class OrientationAnalysis_EXPORT FindTwinBoundarySchmidFactors : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindTwinBoundarySchmidFactors SUPERCLASS AbstractFilter)

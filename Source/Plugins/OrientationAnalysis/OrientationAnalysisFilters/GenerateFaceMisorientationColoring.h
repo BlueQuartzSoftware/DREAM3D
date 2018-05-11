@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The GenerateFaceMisorientationColoring class. See [Filter documentation](@ref generatefacemisorientationcoloring) for details.
  */
-class GenerateFaceMisorientationColoring : public AbstractFilter
+class OrientationAnalysis_EXPORT GenerateFaceMisorientationColoring : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(GenerateFaceMisorientationColoring SUPERCLASS AbstractFilter)

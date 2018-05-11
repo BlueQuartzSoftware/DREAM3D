@@ -41,10 +41,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The PhWriter class. See [Filter documentation](@ref phwriter) for details.
  */
-class PhWriter : public FileWriter
+class IO_EXPORT PhWriter : public FileWriter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(PhWriter SUPERCLASS FileWriter)

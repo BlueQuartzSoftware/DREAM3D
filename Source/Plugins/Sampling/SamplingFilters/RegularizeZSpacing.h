@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Sampling/SamplingDLLExport.h"
+
 /**
  * @brief The RegularizeZSpacing class. See [Filter documentation](@ref regularizezspacing) for details.
  */
-class RegularizeZSpacing : public AbstractFilter
+class Sampling_EXPORT RegularizeZSpacing : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(RegularizeZSpacing SUPERCLASS AbstractFilter)

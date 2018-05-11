@@ -47,6 +47,8 @@
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @class QuiltCellData QuiltCellData.h /FilterCategoryFilters/QuiltCellData.h
  * @brief
@@ -54,7 +56,7 @@
  * @date
  * @version 1.0
  */
-class QuiltCellData : public AbstractFilter
+class Statistics_EXPORT QuiltCellData : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(QuiltCellData SUPERCLASS AbstractFilter)

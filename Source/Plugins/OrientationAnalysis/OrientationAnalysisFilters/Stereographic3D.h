@@ -37,10 +37,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The Stereographic3D class. See [Filter documentation](@ref stereographic3d) for details.
  */
-class Stereographic3D : public AbstractFilter
+class OrientationAnalysis_EXPORT Stereographic3D : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(Stereographic3D SUPERCLASS AbstractFilter)

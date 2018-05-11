@@ -41,10 +41,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The RotateEulerRefFrame class. See [Filter documentation](@ref rotateeulerrefframe) for details.
  */
-class RotateEulerRefFrame : public AbstractFilter
+class OrientationAnalysis_EXPORT RotateEulerRefFrame : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(RotateEulerRefFrame SUPERCLASS AbstractFilter)

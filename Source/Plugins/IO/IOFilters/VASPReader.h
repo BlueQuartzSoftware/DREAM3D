@@ -47,6 +47,8 @@
 #include "SIMPLib/CoreFilters/FileReader.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @class VASPReader VASPReader.h DREAM3DLib/IO/VASPReader.h
  * @brief
@@ -54,7 +56,7 @@
  * @date Sep 28, 2011
  * @version $Revision$
  */
-class VASPReader : public FileReader
+class IO_EXPORT VASPReader : public FileReader
 {
     Q_OBJECT
     PYB11_CREATE_BINDINGS(VASPReader SUPERCLASS FileReader)

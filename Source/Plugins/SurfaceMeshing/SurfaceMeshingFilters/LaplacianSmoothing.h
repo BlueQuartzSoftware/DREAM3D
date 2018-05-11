@@ -44,10 +44,12 @@
 
 #define OUTPUT_DEBUG_VTK_FILES 1
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @brief The LaplacianSmoothing class. See [Filter documentation](@ref laplaciansmoothing) for details.
  */
-class LaplacianSmoothing : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(LaplacianSmoothing SUPERCLASS SurfaceMeshFilter)

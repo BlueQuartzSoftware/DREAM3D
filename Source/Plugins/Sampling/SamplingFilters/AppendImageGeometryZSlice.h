@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Sampling/SamplingDLLExport.h"
+
 /**
  * @brief The AppendImageGeometryZSlice class. See [Filter documentation](@ref appendzslice) for details.
  */
-class AppendImageGeometryZSlice : public AbstractFilter
+class Sampling_EXPORT AppendImageGeometryZSlice : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(AppendImageGeometryZSlice SUPERCLASS AbstractFilter)

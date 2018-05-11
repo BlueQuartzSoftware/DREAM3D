@@ -42,10 +42,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The INLWriter class. See [Filter documentation](@ref inlwriter) for details.
  */
-class INLWriter : public FileWriter
+class OrientationAnalysis_EXPORT INLWriter : public FileWriter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(INLWriter SUPERCLASS FileWriter)

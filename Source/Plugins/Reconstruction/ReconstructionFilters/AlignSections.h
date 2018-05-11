@@ -40,11 +40,13 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The AlignSections class. This class serves as a superclass for other classes
  * in the Reconstruction plugin.
  */
-class AlignSections : public AbstractFilter
+class Reconstruction_EXPORT AlignSections : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(AlignSections SUPERCLASS AbstractFilter)

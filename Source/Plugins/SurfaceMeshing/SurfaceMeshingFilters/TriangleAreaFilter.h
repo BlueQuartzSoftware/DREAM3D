@@ -42,10 +42,12 @@
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @brief The TriangleAreaFilter class. See [Filter documentation](@ref triangleareafilter) for details.
  */
-class TriangleAreaFilter : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT TriangleAreaFilter : public SurfaceMeshFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(TriangleAreaFilter SUPERCLASS SurfaceMeshFilter)

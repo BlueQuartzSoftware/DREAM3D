@@ -43,6 +43,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @class GenerateFaceMisorientationColors GenerateFaceMisorientationColors.h DREAM3DLib/ProcessingFilters/GenerateFaceMisorientationColors.h
  * @brief This filter calculates the normal of each triangle in the surface mesh. The calculated normals have been
@@ -52,7 +54,7 @@
  * @date March 12, 2014
  * @version 1.0
  */
-class GenerateFaceSchuhMisorientationColoring : public AbstractFilter
+class OrientationAnalysis_EXPORT GenerateFaceSchuhMisorientationColoring : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(GenerateFaceSchuhMisorientationColoring SUPERCLASS AbstractFilter)

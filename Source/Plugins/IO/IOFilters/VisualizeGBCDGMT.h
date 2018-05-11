@@ -44,10 +44,12 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The VisualizeGBCDGMT class. See [Filter documentation](@ref visualizegbcdgmt) for details.
  */
-class VisualizeGBCDGMT : public AbstractFilter
+class IO_EXPORT VisualizeGBCDGMT : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(VisualizeGBCDGMT SUPERCLASS AbstractFilter)

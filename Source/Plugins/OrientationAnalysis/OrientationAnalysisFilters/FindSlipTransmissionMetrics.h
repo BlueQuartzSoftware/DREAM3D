@@ -43,10 +43,12 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The FindSlipTransmissionMetrics class. See [Filter documentation](@ref findsliptransmissionmetrics) for details.
  */
-class FindSlipTransmissionMetrics : public AbstractFilter
+class OrientationAnalysis_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindSlipTransmissionMetrics SUPERCLASS AbstractFilter)

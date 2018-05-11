@@ -36,6 +36,8 @@
 #ifndef _insertatoms_h_
 #define _insertatoms_h_
 
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
+
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -44,7 +46,7 @@
 /**
  * @brief The InsertAtoms class. See [Filter documentation](@ref insertatoms) for details.
  */
-class InsertAtoms : public AbstractFilter
+class SyntheticBuilding_EXPORT InsertAtoms : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(InsertAtoms SUPERCLASS AbstractFilter)

@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @brief The FindVolFractions class. See [Filter documentation](@ref findvolfractions) for details.
  */
-class FindVolFractions : public AbstractFilter
+class Statistics_EXPORT FindVolFractions : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindVolFractions SUPERCLASS AbstractFilter)

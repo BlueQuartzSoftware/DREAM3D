@@ -41,10 +41,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
+
 /**
  * @brief The EstablishShapeTypes class. See [Filter documentation](@ref establishshapetypes) for details.
  */
-class EstablishShapeTypes : public AbstractFilter
+class SyntheticBuilding_EXPORT EstablishShapeTypes : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(EstablishShapeTypes SUPERCLASS AbstractFilter)

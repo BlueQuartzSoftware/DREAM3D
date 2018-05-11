@@ -40,10 +40,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Processing/ProcessingDLLExport.h"
+
 /**
  * @brief The FindProjectedImageStatistics class. See [Filter documentation](@ref findprojectedimagestatistics) for details.
  */
-class FindProjectedImageStatistics : public AbstractFilter
+class Processing_EXPORT FindProjectedImageStatistics : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindProjectedImageStatistics SUPERCLASS AbstractFilter)

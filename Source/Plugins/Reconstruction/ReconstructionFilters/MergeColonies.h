@@ -44,10 +44,12 @@
 
 #include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The MergeColonies class. See [Filter documentation](@ref mergecolonies) for details.
  */
-class MergeColonies : public GroupFeatures
+class Reconstruction_EXPORT MergeColonies : public GroupFeatures
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(MergeColonies SUPERCLASS GroupFeatures)

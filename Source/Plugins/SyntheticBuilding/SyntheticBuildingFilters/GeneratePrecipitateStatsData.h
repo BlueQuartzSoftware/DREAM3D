@@ -16,10 +16,12 @@ class StatsDataArray;
 class StringDataArray;
 class PrecipitateStatsData;
 
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
+
 /**
  * @brief The GeneratePrecipitateStatsData class. See [Filter documentation](@ref GeneratePrecipitateStatsData) for details.
  */
-class GeneratePrecipitateStatsData : public AbstractFilter
+class SyntheticBuilding_EXPORT GeneratePrecipitateStatsData : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(GeneratePrecipitateStatsData SUPERCLASS AbstractFilter)

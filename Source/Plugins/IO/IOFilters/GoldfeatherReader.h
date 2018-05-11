@@ -44,6 +44,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @class GoldfeatherReader GoldfeatherReader.h /IOFilters/GoldfeatherReader.h
  * @brief
@@ -51,7 +53,7 @@
  * @date
  * @version 1.0
  */
-class GoldfeatherReader : public AbstractFilter
+class IO_EXPORT GoldfeatherReader : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(GoldfeatherReader SUPERCLASS AbstractFilter)

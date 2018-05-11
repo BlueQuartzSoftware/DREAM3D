@@ -43,10 +43,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Processing/ProcessingDLLExport.h"
+
 /**
  * @brief The InitializeData class. See [Filter documentation](@ref initializedata) for details.
  */
-class InitializeData : public AbstractFilter
+class Processing_EXPORT InitializeData : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(InitializeData SUPERCLASS AbstractFilter)

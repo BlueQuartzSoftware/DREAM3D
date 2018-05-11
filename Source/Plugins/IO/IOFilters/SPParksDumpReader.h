@@ -51,11 +51,12 @@
 //Forward Declare classes.
 class ImageGeom;
 
+#include "IO/IODLLExport.h"
 
 /**
  * @brief The SPParksDumpReader class. See [Filter documentation](@ref spparkstextreader) for details.
  */
-class SPParksDumpReader : public FileReader
+class IO_EXPORT SPParksDumpReader : public FileReader
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(SPParksDumpReader SUPERCLASS FileReader)
