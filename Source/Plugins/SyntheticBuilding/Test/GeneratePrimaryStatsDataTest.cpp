@@ -82,7 +82,7 @@ public:
      */
     //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    int foo = -1;
+    int foo = 0;
     DREAM3D_REQUIRE_EQUAL(foo, 0)
 
     return EXIT_SUCCESS;
