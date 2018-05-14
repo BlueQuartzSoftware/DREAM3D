@@ -442,6 +442,10 @@ void drawScalarBar(HPDF_Page page, const PoleFigureConfiguration_t &config,
                           float fontPtSize,
                           HPDF_Font font)
 {
+  if(config.discrete)
+  {
+    return;
+  }
   int numColors = config.numColors;
 
   // Get all the colors that we will need
