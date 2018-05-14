@@ -47,8 +47,10 @@
 #include "SIMPLib/CoreFilters/FileReader.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
-class  YSChoiAbaqusReader : public FileReader
+
+class OrientationAnalysis_EXPORT YSChoiAbaqusReader : public FileReader
 {
     Q_OBJECT
     PYB11_CREATE_BINDINGS(YSChoiAbaqusReader SUPERCLASS FileReader)

@@ -63,13 +63,13 @@
 class SurfaceMeshing_EXPORT MovingFiniteElementSmoothing : public SurfaceMeshFilter
 {
     Q_OBJECT
-    PYB11_CREATE_BINDINGS(MovingFiniteElementSmoothing SUPERCLASS SurfaceMeshFilter)
-    PYB11_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps)
-    PYB11_PROPERTY(bool NodeConstraints READ getNodeConstraints WRITE setNodeConstraints)
-    PYB11_PROPERTY(bool ConstrainSurfaceNodes READ getConstrainSurfaceNodes WRITE setConstrainSurfaceNodes)
-    PYB11_PROPERTY(bool ConstrainQuadPoints READ getConstrainQuadPoints WRITE setConstrainQuadPoints)
-    PYB11_PROPERTY(bool SmoothTripleLines READ getSmoothTripleLines WRITE setSmoothTripleLines)
-    PYB11_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
+    // PYB11_CREATE_BINDINGS(MovingFiniteElementSmoothing SUPERCLASS SurfaceMeshFilter)
+    // PYB11_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps)
+    // PYB11_PROPERTY(bool NodeConstraints READ getNodeConstraints WRITE setNodeConstraints)
+    // PYB11_PROPERTY(bool ConstrainSurfaceNodes READ getConstrainSurfaceNodes WRITE setConstrainSurfaceNodes)
+    // PYB11_PROPERTY(bool ConstrainQuadPoints READ getConstrainQuadPoints WRITE setConstrainQuadPoints)
+    // PYB11_PROPERTY(bool SmoothTripleLines READ getSmoothTripleLines WRITE setSmoothTripleLines)
+    // PYB11_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
   public:
     SIMPL_SHARED_POINTERS(MovingFiniteElementSmoothing)
     SIMPL_FILTER_NEW_MACRO(MovingFiniteElementSmoothing)
