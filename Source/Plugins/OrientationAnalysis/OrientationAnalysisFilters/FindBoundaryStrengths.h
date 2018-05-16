@@ -43,12 +43,24 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The FindBoundaryStrengths class. See [Filter documentation](@ref findboundarystrengths) for details.
  */
-class FindBoundaryStrengths : public AbstractFilter
+class OrientationAnalysis_EXPORT FindBoundaryStrengths : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindBoundaryStrengths SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(FloatVec3_t Loading READ getLoading WRITE setLoading)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+    PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+    PYB11_PROPERTY(QString SurfaceMeshF1sArrayName READ getSurfaceMeshF1sArrayName WRITE setSurfaceMeshF1sArrayName)
+    PYB11_PROPERTY(QString SurfaceMeshF1sptsArrayName READ getSurfaceMeshF1sptsArrayName WRITE setSurfaceMeshF1sptsArrayName)
+    PYB11_PROPERTY(QString SurfaceMeshF7sArrayName READ getSurfaceMeshF7sArrayName WRITE setSurfaceMeshF7sArrayName)
+    PYB11_PROPERTY(QString SurfaceMeshmPrimesArrayName READ getSurfaceMeshmPrimesArrayName WRITE setSurfaceMeshmPrimesArrayName)
 public:
   SIMPL_SHARED_POINTERS(FindBoundaryStrengths)
   SIMPL_FILTER_NEW_MACRO(FindBoundaryStrengths)

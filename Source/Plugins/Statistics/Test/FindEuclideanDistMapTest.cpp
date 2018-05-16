@@ -103,8 +103,7 @@ public:
   {
     DataContainerArray::Pointer dca = DataContainerArray::New();
 
-    DataContainer::Pointer m = DataContainer::New();
-    m->setName(k_FeatureIdsArrayPath.getDataContainerName());
+    DataContainer::Pointer m = DataContainer::New(k_FeatureIdsArrayPath.getDataContainerName());
     ImageGeom::Pointer geom = ImageGeom::CreateGeometry("ImageGeometry");
     m->setGeometry(geom);
     geom->setDimensions(tDims.data());

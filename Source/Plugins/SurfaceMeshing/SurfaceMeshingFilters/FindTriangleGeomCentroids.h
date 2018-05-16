@@ -40,12 +40,18 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @brief The FindTriangleGeomCentroids class. See [Filter documentation](@ref findtrianglegeomcentroids) for details.
  */
-class FindTriangleGeomCentroids : public AbstractFilter
+class SurfaceMeshing_EXPORT FindTriangleGeomCentroids : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindTriangleGeomCentroids SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
+    PYB11_PROPERTY(DataArrayPath FaceLabelsArrayPath READ getFaceLabelsArrayPath WRITE setFaceLabelsArrayPath)
+    PYB11_PROPERTY(QString CentroidsArrayName READ getCentroidsArrayName WRITE setCentroidsArrayName)
 
 public:
   SIMPL_SHARED_POINTERS(FindTriangleGeomCentroids)

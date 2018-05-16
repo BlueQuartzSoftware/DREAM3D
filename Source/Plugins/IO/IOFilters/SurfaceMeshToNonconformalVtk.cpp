@@ -125,7 +125,7 @@ void SurfaceMeshToNonconformalVtk::dataCheck()
     notifyErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
   }
 
-  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0)
   {
     return;

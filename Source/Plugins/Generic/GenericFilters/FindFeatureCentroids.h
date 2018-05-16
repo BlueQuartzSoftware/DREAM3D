@@ -40,12 +40,17 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Generic/GenericDLLExport.h"
+
 /**
  * @brief The FindFeatureCentroids class.  See [Filter documentation](@ref findfeaturecentroids) for details.
  */
-class FindFeatureCentroids : public AbstractFilter
+class Generic_EXPORT FindFeatureCentroids : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindFeatureCentroids SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(FindFeatureCentroids)
   SIMPL_FILTER_NEW_MACRO(FindFeatureCentroids)

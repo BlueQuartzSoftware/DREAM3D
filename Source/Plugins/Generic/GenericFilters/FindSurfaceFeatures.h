@@ -40,12 +40,17 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Generic/GenericDLLExport.h"
+
 /**
  * @brief The FindSurfaceFeatures class. See [Filter documentation](@ref findsurfacefeatures) for details.
  */
-class FindSurfaceFeatures : public AbstractFilter
+class Generic_EXPORT FindSurfaceFeatures : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindSurfaceFeatures SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(DataArrayPath SurfaceFeaturesArrayPath READ getSurfaceFeaturesArrayPath WRITE setSurfaceFeaturesArrayPath)
 public:
   SIMPL_SHARED_POINTERS(FindSurfaceFeatures)
   SIMPL_FILTER_NEW_MACRO(FindSurfaceFeatures)

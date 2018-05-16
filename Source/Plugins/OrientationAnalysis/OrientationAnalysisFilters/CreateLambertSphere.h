@@ -39,13 +39,30 @@
 
 class QuadGeom;
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The CreateLambertSphere fitler creates an equal area mesh on a unit
  * sphere.
  */
-class CreateLambertSphere : public AbstractFilter
+class OrientationAnalysis_EXPORT CreateLambertSphere : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(CreateLambertSphere SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(int Hemisphere READ getHemisphere WRITE setHemisphere)
+    PYB11_PROPERTY(DataArrayPath ImageDataArrayPath READ getImageDataArrayPath WRITE setImageDataArrayPath)
+    PYB11_PROPERTY(QString QuadDataContainerName READ getQuadDataContainerName WRITE setQuadDataContainerName)
+    PYB11_PROPERTY(QString TriangleDataContainerName READ getTriangleDataContainerName WRITE setTriangleDataContainerName)
+    PYB11_PROPERTY(QString EdgeDataContainerName READ getEdgeDataContainerName WRITE setEdgeDataContainerName)
+    PYB11_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+    PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
+    PYB11_PROPERTY(QString EdgeAttributeMatrixName READ getEdgeAttributeMatrixName WRITE setEdgeAttributeMatrixName)
+    PYB11_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
+    //  PYB11_PROPERTY(QString ImageFaceDataArrayName READ getImageFaceDataArrayName WRITE setImageFaceDataArrayName)
+    PYB11_PROPERTY(bool CreateVertexGeometry READ getCreateVertexGeometry WRITE setCreateVertexGeometry)
+    PYB11_PROPERTY(bool CreateEdgeGeometry READ getCreateEdgeGeometry WRITE setCreateEdgeGeometry)
+    PYB11_PROPERTY(bool CreateTriangleGeometry READ getCreateTriangleGeometry WRITE setCreateTriangleGeometry)
+    PYB11_PROPERTY(bool CreateQuadGeometry READ getCreateQuadGeometry WRITE setCreateQuadGeometry)
 public:
   SIMPL_SHARED_POINTERS(CreateLambertSphere)
   SIMPL_FILTER_NEW_MACRO(CreateLambertSphere)

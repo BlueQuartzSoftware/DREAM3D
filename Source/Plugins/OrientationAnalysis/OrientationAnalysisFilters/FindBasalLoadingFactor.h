@@ -46,6 +46,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @class FindBasalLoadingFactor FindBasalLoadingFactor.h DREAM3DLib/GenericFilters/FindBasalLoadingFactor.h
  * @brief
@@ -53,9 +55,13 @@
  * @date Sep 16, 2013
  * @version 1.0
  */
-class FindBasalLoadingFactor : public AbstractFilter
+class OrientationAnalysis_EXPORT FindBasalLoadingFactor : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindBasalLoadingFactor SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+    PYB11_PROPERTY(DataArrayPath BasalLoadingFactorArrayPath READ getBasalLoadingFactorArrayPath WRITE setBasalLoadingFactorArrayPath)
+    PYB11_PROPERTY(FloatVec3_t LoadingDirection READ getLoadingDirection WRITE setLoadingDirection)
 public:
   SIMPL_SHARED_POINTERS(FindBasalLoadingFactor)
   SIMPL_FILTER_NEW_MACRO(FindBasalLoadingFactor)

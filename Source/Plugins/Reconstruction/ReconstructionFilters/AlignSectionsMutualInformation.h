@@ -44,12 +44,21 @@
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The AlignSectionsMutualInformation class. See [Filter documentation](@ref alignsectionsmutualinformation) for details.
  */
-class AlignSectionsMutualInformation : public AlignSections
+class Reconstruction_EXPORT AlignSectionsMutualInformation : public AlignSections
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(AlignSectionsMutualInformation SUPERCLASS AlignSections)
+    PYB11_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
+    PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
+    PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
+    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 public:
   SIMPL_SHARED_POINTERS(AlignSectionsMutualInformation)
   SIMPL_FILTER_NEW_MACRO(AlignSectionsMutualInformation)

@@ -629,12 +629,12 @@ void GenerateEnsembleStatistics::dataCheck()
   }
 
   // now create and add the stats array itself
-  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellEnsembleAttributeMatrixPath().getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, getCellEnsembleAttributeMatrixPath().getDataContainerName());
   if(getErrorCondition() < 0 || m == nullptr)
   {
     return;
   }
-  AttributeMatrix::Pointer attrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixPath().getAttributeMatrixName(), -301);
+  AttributeMatrix::Pointer attrMat = m->getPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixPath().getAttributeMatrixName(), -301);
   if(getErrorCondition() < 0 || attrMat == nullptr)
   {
     return;

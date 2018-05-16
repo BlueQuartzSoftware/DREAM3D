@@ -15,7 +15,8 @@ if(NOT Qt5Core_FOUND)
     message(FATAL_ERROR "Qt 5 is Needed for plugin ${PLUGIN_NAME}Plugin.")
 endif()
 
-set(CMP_TOP_HEADER_FILE "${PLUGIN_NAME}Plugin.h")
+set(CMP_TOP_HEADER_FILE "")
+
 set(VERSION_HEADER_FILE_NAME "${PLUGIN_NAME}Version.h")
 set(VERSION_SOURCE_FILE_NAME "${PLUGIN_NAME}Version.cpp")
 set(${PLUGIN_NAME}_VERSION_MAJOR "${DREAM3DProj_VERSION_MAJOR}")
@@ -58,8 +59,7 @@ set(Project_SRCS "")
 
 # Add in our Filter classes
 include(${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters/SourceList.cmake)
-# Add in our Plugin Specific FilterParameterWidgets
-include(${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets/SourceList.cmake)
+
 # -- Include all the resources
 include(${${PLUGIN_NAME}_SOURCE_DIR}/Resources/SourceList.cmake)
 
@@ -116,13 +116,7 @@ set(${PLUGIN_NAME}_HDRS
   ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Constants.h
 )
 
-set(${PLUGIN_NAME}_MOC_HDRS
-  ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Plugin.h
-)
 
-set(${PLUGIN_NAME}_SRCS
- ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Plugin.cpp
-)
 
 set(${PLUGIN_NAME}_MISC_HDRS
 
@@ -134,8 +128,6 @@ cmp_IDE_SOURCE_PROPERTIES( "" "${${PLUGIN_NAME}_MOC_HDRS};${${PLUGIN_NAME}_HDRS}
 set(${PLUGIN_NAME}_GEN_HDRS
    ${AllFiltersHeaderFile}
    ${RegisterKnownFiltersFile}
-   ${AllFilterParameterWidgetsHeaderFile}
-   ${RegisterKnownFilterParameterWidgetsFile}
 )
 
 # --------------------------------------------------------------------
@@ -162,90 +154,88 @@ cmp_IDE_SOURCE_PROPERTIES( "Generated/Qt_Qrc" "${${PLUGIN_NAME}_Generated_RC_SRC
 
 
 # --------------------------------------------------------------------
-#
-# --------------------------------------------------------------------
-set(${PLUGIN_NAME}_MODULE_SRCS
-  ${${PLUGIN_NAME}_Project_SRCS}  # These sources come from the SourceList.cmake file and include .h/.cpp/moc/uic files
-  ${${PLUGIN_NAME}_HDRS}
-  ${${PLUGIN_NAME}_SRCS}
-  ${${PLUGIN_NAME}_MOC_HDRS}
-  ${${PLUGIN_NAME}_MISC_HDRS}
-  ${${PLUGIN_NAME}_Generated_MOC_SRCS}
-  # -- Add in the Filter Parameter Widgets
-  ${${PLUGIN_NAME}_ParameterWidgets_HDRS}
-  ${${PLUGIN_NAME}_ParameterWidgets_SRCS}
-  ${${PLUGIN_NAME}_ParameterWidgets_UIS}
-  ${${PLUGIN_NAME}_ParameterWidgets_Generated_MOC_SRCS}
-  ${${PLUGIN_NAME}_ParameterWidgets_Generated_UI_HDRS}
-  # -- Add in the plain Widgets
-  ${${PLUGIN_NAME}_Widgets_HDRS}
-  ${${PLUGIN_NAME}_Widgets_SRCS}
-  ${${PLUGIN_NAME}_Widgets_UIS}
-  ${${PLUGIN_NAME}_Widgets_Generated_MOC_SRCS}
-  ${${PLUGIN_NAME}_Widgets_Generated_UI_HDRS}
-  ${${PLUGIN_NAME}_GEN_HDRS}
-  # -- Add in the miscellaneous resources (license, plugin info, ...)
-  ${${PLUGIN_NAME}_Generated_RC_SRCS}
-  # -- Add in our Generated Version Files
+# Create a shared library that contains just code dependent on SIMPL but
+# NOT any widget codes. This must be this way for Python bindings.
+set(plug_target_name ${PLUGIN_NAME}Server)
+add_library(${plug_target_name} SHARED)
+
+#-- Configure the DLL export header file
+configure_file(${SIMPLib_SOURCE_DIR}/Plugin/PluginDLLExport.h.in
+                ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}DLLExport.h)
+
+target_sources(${plug_target_name}
+  PRIVATE
+  # -- Add in the filter sources
+  ${${PLUGIN_NAME}_Project_SRCS}
+
+  # -- Add in the FilterParameter source files
+  ${${PLUGIN_NAME}_FilterParameters_SRCS}
+  ${${PLUGIN_NAME}_FilterParameters_HDRS}
+
+  # -- Add in the plugin interface definition source files
+  ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Plugin.cpp
+  ${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Plugin.h
+
+  # -- Add in our generated Version source files
   ${${PLUGIN_NAME}_BINARY_DIR}/${VERSION_HEADER_FILE_NAME}
   ${${PLUGIN_NAME}_BINARY_DIR}/${VERSION_SOURCE_FILE_NAME}
+
+  # -- Add in the DLL Export Header File
+  ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}DLLExport.h
+
 )
 
-# --------------------------------------------------------------------
-# Setup output Directory for the plugin
-if(NOT MSVC)
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY_SAVE ${CMAKE_LIBRARY_OUTPUT_DIRECTORY})
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/Plugins  )
-endif()
-
-
-
-add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_MODULE_SRCS})
-CMP_AddDefinitions(TARGET ${PLUGIN_NAME})
-set_target_properties(${PLUGIN_NAME} PROPERTIES FOLDER ${PLUGIN_NAME}Plugin)
-#-------------------------------
-#
-target_include_directories(${PLUGIN_NAME}
-                            PUBLIC
+#------------------------------- 
+# 
+target_include_directories(${plug_target_name}
+                          PUBLIC
                               ${${PLUGIN_NAME}_BINARY_DIR}
                               ${${PLUGIN_NAME}_SOURCE_DIR}
                               ${PLUGINS_SOURCE_DIR}
                               ${PLUGINS_BINARY_DIR}
                               ${${PLUGIN_NAME}_BINARY_DIR}/${PLUGIN_NAME}Filters
 )
-#-------------------------------
-#
-target_include_directories(${PLUGIN_NAME}
-                          PUBLIC
-                            ${${PLUGIN_NAME}_SOURCE_DIR}/Widgets
-                            ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameterWidgets
-                            ${${PLUGIN_NAME}_BINARY_DIR}/Widgets
-                            ${${PLUGIN_NAME}_BINARY_DIR}/FilterParameterWidgets
-)
-
-
 # --------------------------------------------------------------------
 # Set some additional properties of the plugin like its output name
-PluginProperties(${PLUGIN_NAME} "_debug" "${DREAM3D_VERSION}"
-                "${DREAM3D_BINARY_DIR}" "${CMP_PLUGIN_LIST_FILE}")
-target_link_libraries(${PLUGIN_NAME}
-                    Qt5::Core
-                    SIMPLib
-                    OrientationLib
-                    Qt5::Gui
-                    Qt5::Widgets
-                    SVWidgetsLib
+PluginProperties(TARGET_NAME ${plug_target_name}
+                DEBUG_EXTENSION "_debug"
+                VERSION "${DREAM3D_VERSION}"
+                LIB_SUFFIX ".plugin"
+                FOLDER ${PLUGIN_NAME}
+                OUTPUT_NAME ${PLUGIN_NAME}
+                BINARY_DIR "${DREAM3D_BINARY_DIR}"
+                PLUGIN_FILE "${CMP_PLUGIN_LIST_FILE}"
+                INSTALL_DEST "."
 )
 
-# --------------------------------------------------------------------
-# Put back the output directory
-if(NOT MSVC)
-  set(CMAKE_LIBRARY_OUTPUT_DIRECTORY  ${CMAKE_LIBRARY_OUTPUT_DIRECTORY_SAVE}  )
+target_link_libraries(${plug_target_name}
+                    Qt5::Core
+                    SIMPLib
+)
+# -------------------------------------------------------------------- 
+# If Testing is enabled, turn on the Unit Tests 
+if(SIMPL_BUILD_TESTING) 
+  include(${${PLUGIN_NAME}_SOURCE_DIR}/Test/CMakeLists.txt) 
+endif() 
+ 
+# -------------------------------------------------------------------- 
+# If Python Wrapping is enabled then generate the Python module code 
+if(SIMPL_WRAP_PYTHON)
+  include("${SIMPLProj_SOURCE_DIR}/Wrapping/Tools/Pybind11/cmake/WrappingFunctions.cmake")
+  string(TOLOWER ${PLUGIN_NAME} PLUGIN_NAME_lower) 
+  CreatePybind11Module(MODULE_NAME ${PLUGIN_NAME} 
+                    SOURCE_DIR "${${PLUGIN_NAME}_SOURCE_DIR}/${PLUGIN_NAME}Filters" 
+                    PATH_TO_STRIP "${PLUGIN_NAME}/${PLUGIN_NAME}Filters" 
+                    OUTPUT_PATH "${${PLUGIN_NAME}_BINARY_DIR}/Wrapping/PythonCore" 
+                    BINARY_DIR "${${PLUGIN_NAME}_BINARY_DIR}" 
+                    MODULE_TEMPLATE_FILE "${SIMPLProj_SOURCE_DIR}/Wrapping/Tools/Pybind11/Templates/PluginModuleCodeTemplate.cpp" 
+                    MODULE_LINK_LIBRARIES ${plug_target_name} 
+  )
 endif()
 
 
-if(SIMPL_BUILD_TESTING)
-  include(${${PLUGIN_NAME}_SOURCE_DIR}/Test/CMakeLists.txt)
-endif()
 
+
+# -- Include the GUI Plugin codes
+include(${${PLUGIN_NAME}_SOURCE_DIR}/Gui/CMakeLists.txt)
 

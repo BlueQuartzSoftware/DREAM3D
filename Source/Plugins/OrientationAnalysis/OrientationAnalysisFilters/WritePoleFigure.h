@@ -40,12 +40,29 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The WritePoleFigure class. See [Filter documentation](@ref writepolefigure) for details.
  */
-class WritePoleFigure : public AbstractFilter
+class OrientationAnalysis_EXPORT WritePoleFigure : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(WritePoleFigure SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
+    PYB11_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
+    PYB11_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
+    PYB11_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
+    PYB11_PROPERTY(int LambertSize READ getLambertSize WRITE setLambertSize)
+    PYB11_PROPERTY(int NumColors READ getNumColors WRITE setNumColors)
+    PYB11_PROPERTY(int ImageLayout READ getImageLayout WRITE setImageLayout)
+    PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+    PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
+    PYB11_PROPERTY(int GenerationAlgorithm READ getGenerationAlgorithm WRITE setGenerationAlgorithm)
+    //  PYB11_PROPERTY(bool UseDiscreteHeatMap READ getUseDiscreteHeatMap WRITE setUseDiscreteHeatMap)
 public:
   SIMPL_SHARED_POINTERS(WritePoleFigure)
   SIMPL_FILTER_NEW_MACRO(WritePoleFigure)
@@ -53,64 +70,69 @@ public:
 
   ~WritePoleFigure() override;
 
-  enum ImageFormatType
-  {
-    TifImageType = 0,
-    BmpImageType = 1,
-    PngImageType = 2,
-    JpgImageType = 3
-  };
+    enum ImageFormatType
+    {
+      TifImageType = 0,
+      BmpImageType = 1,
+      PngImageType = 2,
+      JpgImageType = 3,
+      PdfImageType = 4,
+    };
 
-  using EnumType = int;
+    using EnumType = int;
 
-  enum class Algorithm : EnumType
-  {
-    LambertProjection = 0, //!<
-    Discrete = 1,          //!<
-    Unknown = 2,           //!
-  };
+    enum class Algorithm : EnumType
+    {
+      LambertProjection = 0, //!<
+      Discrete = 1,          //!<
+      Unknown = 2,           //!
+    };
 
-  SIMPL_FILTER_PARAMETER(QString, ImagePrefix)
-  Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
+    SIMPL_FILTER_PARAMETER(QString, ImagePrefix)
+    Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
 
-  SIMPL_FILTER_PARAMETER(QString, OutputPath)
-  Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
+    SIMPL_FILTER_PARAMETER(QString, OutputPath)
+    Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
 
-  SIMPL_FILTER_PARAMETER(int, ImageFormat)
-  Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
+    SIMPL_FILTER_PARAMETER(int, ImageFormat)
+    Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
 
-  SIMPL_FILTER_PARAMETER(int, ImageSize)
-  Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
+    SIMPL_FILTER_PARAMETER(int, ImageSize)
+    Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
 
-  SIMPL_FILTER_PARAMETER(int, LambertSize)
-  Q_PROPERTY(int LambertSize READ getLambertSize WRITE setLambertSize)
+    SIMPL_FILTER_PARAMETER(int, LambertSize)
+    Q_PROPERTY(int LambertSize READ getLambertSize WRITE setLambertSize)
 
-  SIMPL_FILTER_PARAMETER(int, NumColors)
-  Q_PROPERTY(int NumColors READ getNumColors WRITE setNumColors)
+    SIMPL_FILTER_PARAMETER(int, NumColors)
+    Q_PROPERTY(int NumColors READ getNumColors WRITE setNumColors)
 
-  SIMPL_FILTER_PARAMETER(int, ImageLayout)
-  Q_PROPERTY(int ImageLayout READ getImageLayout WRITE setImageLayout)
+    SIMPL_FILTER_PARAMETER(int, ImageLayout)
+    Q_PROPERTY(int ImageLayout READ getImageLayout WRITE setImageLayout)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
-  Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+    Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-  Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-  Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
-  Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+    Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
-  Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
+    SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
+    Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
-  SIMPL_FILTER_PARAMETER(int, GenerationAlgorithm)
-  Q_PROPERTY(int GenerationAlgorithm READ getGenerationAlgorithm WRITE setGenerationAlgorithm)
+    SIMPL_FILTER_PARAMETER(int, GenerationAlgorithm)
+    Q_PROPERTY(int GenerationAlgorithm READ getGenerationAlgorithm WRITE setGenerationAlgorithm)
 
-//  SIMPL_FILTER_PARAMETER(bool, UseDiscreteHeatMap)
-//  Q_PROPERTY(bool UseDiscreteHeatMap READ getUseDiscreteHeatMap WRITE setUseDiscreteHeatMap)
+    SIMPL_FILTER_PARAMETER(QString, Title)
+    Q_PROPERTY(QString Title READ getTitle WRITE setTitle)
+        
+    
+    //  SIMPL_FILTER_PARAMETER(bool, UseDiscreteHeatMap)
+    //  Q_PROPERTY(bool UseDiscreteHeatMap READ getUseDiscreteHeatMap WRITE setUseDiscreteHeatMap)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -177,61 +199,61 @@ public:
   */
   void preflight() override;
 
-signals:
-  /**
-   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-   * be pushed from a user-facing control (such as a widget)
-   * @param filter Filter instance pointer
-   */
-  void updateFilterParameters(AbstractFilter* filter);
+  signals:
+    /**
+     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+     * be pushed from a user-facing control (such as a widget)
+     * @param filter Filter instance pointer
+     */
+    void updateFilterParameters(AbstractFilter* filter);
 
-  /**
-   * @brief parametersChanged Emitted when any Filter parameter is changed internally
-   */
-  void parametersChanged();
+    /**
+     * @brief parametersChanged Emitted when any Filter parameter is changed internally
+     */
+    void parametersChanged();
 
-  /**
-   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-   */
-  void preflightAboutToExecute();
+    /**
+     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+     */
+    void preflightAboutToExecute();
 
-  /**
-   * @brief preflightExecuted Emitted just after calling dataCheck()
-   */
-  void preflightExecuted();
+    /**
+     * @brief preflightExecuted Emitted just after calling dataCheck()
+     */
+    void preflightExecuted();
 
-protected:
-  WritePoleFigure();
-  /**
-   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-   */
-  void dataCheck();
+  protected:
+    WritePoleFigure();
+    /**
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+     */
+    void dataCheck();
 
-  /**
-   * @brief Initializes all the private instance variables.
-   */
-  void initialize();
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
 
-  /**
-   * @brief generateImagePath Generates the path to write the image
-   * @param label Name of file
-   * @return Generated output path
-   */
-  QString generateImagePath(QString label);
+    /**
+     * @brief generateImagePath Generates the path to write the image
+     * @param label Name of file
+     * @return Generated output path
+     */
+    QString generateImagePath(const QString &label);
 
-  /**
-   * @brief writeImage Writes the pole figure image to a file
-   * @param image Image to write
-   * @param label Name of file
-   */
-  void writeImage(QImage image, QString label);
+    /**
+     * @brief writeImage Writes the pole figure image to a file
+     * @param image Image to write
+     * @param label Name of file
+     */
+    //void writeImage(QImage image, QString label);
 
-private:
-  bool m_UseDiscreteHeatMap = false;
-  DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-  DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
+  private:
+    bool m_UseDiscreteHeatMap = false;
+    DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
+    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+    DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
 public:
   WritePoleFigure(const WritePoleFigure&) = delete; // Copy Constructor Not Implemented

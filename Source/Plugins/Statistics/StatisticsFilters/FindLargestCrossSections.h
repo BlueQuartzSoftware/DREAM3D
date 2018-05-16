@@ -40,12 +40,18 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @brief The FindLargestCrossSections class. See [Filter documentation](@ref findlargestcrosssections) for details.
  */
-class FindLargestCrossSections : public AbstractFilter
+class Statistics_EXPORT FindLargestCrossSections : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindLargestCrossSections SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(DataArrayPath LargestCrossSectionsArrayPath READ getLargestCrossSectionsArrayPath WRITE setLargestCrossSectionsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(FindLargestCrossSections)
   SIMPL_FILTER_NEW_MACRO(FindLargestCrossSections)

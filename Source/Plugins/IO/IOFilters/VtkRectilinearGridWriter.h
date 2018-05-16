@@ -46,6 +46,8 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/VTKUtils/VTKWriterMacros.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @class VTKRectilinearGridFileWriter VTKRectilinearGridFileWriter.h DREAM3D/Common/VTKUtils/VTKRectilinearGridFileWriter.h
  * @brief This is the main class to call when you want to write voxel based data
@@ -58,9 +60,13 @@
  * @date Jun 13, 2011
  * @version 1.0
  */
-class VtkRectilinearGridWriter : public AbstractFilter
+class IO_EXPORT VtkRectilinearGridWriter : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(VtkRectilinearGridWriter SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
+    PYB11_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
+    PYB11_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
 public:
   SIMPL_SHARED_POINTERS(VtkRectilinearGridWriter)
   SIMPL_FILTER_NEW_MACRO(VtkRectilinearGridWriter)

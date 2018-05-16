@@ -247,5 +247,11 @@ void ProcessingPlugin::readSettings(QSettings& prefs)
 {
 }
 
-#include "Processing/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ProcessingPlugin::registerFilterWidgets(FilterWidgetManager* fwm)
+{
+}
+
 #include "ProcessingFilters/RegisterKnownFilters.cpp"

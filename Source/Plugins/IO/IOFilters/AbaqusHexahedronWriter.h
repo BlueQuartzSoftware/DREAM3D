@@ -41,12 +41,20 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The AbaqusHexahedronWriter class. See [Filter documentation](@ref abaqushexahedronwriter) for details.
  */
-class AbaqusHexahedronWriter : public AbstractFilter
+class IO_EXPORT AbaqusHexahedronWriter : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(AbaqusHexahedronWriter SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
+    PYB11_PROPERTY(QString FilePrefix READ getFilePrefix WRITE setFilePrefix)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(int HourglassStiffness READ getHourglassStiffness WRITE setHourglassStiffness)
+    PYB11_PROPERTY(QString JobName READ getJobName WRITE setJobName)
 
 public:
   SIMPL_SHARED_POINTERS(AbaqusHexahedronWriter)

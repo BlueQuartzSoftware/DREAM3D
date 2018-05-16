@@ -40,13 +40,21 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The AlignSections class. This class serves as a superclass for other classes
  * in the Reconstruction plugin.
  */
-class AlignSections : public AbstractFilter
+class Reconstruction_EXPORT AlignSections : public AbstractFilter
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(AlignSections SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  PYB11_PROPERTY(bool WriteAlignmentShifts READ getWriteAlignmentShifts WRITE WriteAlignmentShifts)
+  PYB11_PROPERTY(QString AlignmentShiftFileName READ getAlignmentShiftFileName WRITE setAlignmentShiftFileName)
+
 public:
   SIMPL_SHARED_POINTERS(AlignSections)
   SIMPL_FILTER_NEW_MACRO(AlignSections)
@@ -54,15 +62,15 @@ public:
 
   ~AlignSections() override;
 
-  SIMPL_INSTANCE_STRING_PROPERTY(DataContainerName)
+  SIMPL_FILTER_PARAMETER(QString, DataContainerName)
   Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-  SIMPL_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
+  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
 
-  SIMPL_INSTANCE_PROPERTY(bool, WriteAlignmentShifts)
+  SIMPL_FILTER_PARAMETER(bool, WriteAlignmentShifts)
   Q_PROPERTY(bool WriteAlignmentShifts READ getWriteAlignmentShifts WRITE setWriteAlignmentShifts)
 
-  SIMPL_INSTANCE_STRING_PROPERTY(AlignmentShiftFileName)
+  SIMPL_FILTER_PARAMETER(QString, AlignmentShiftFileName)
   Q_PROPERTY(QString AlignmentShiftFileName READ getAlignmentShiftFileName WRITE setAlignmentShiftFileName)
 
   void updateProgress(size_t p);

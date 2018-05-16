@@ -43,12 +43,17 @@
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
 
+#include "Processing/ProcessingDLLExport.h"
+
 /**
  * @brief The IdentifySample class. See [Filter documentation](@ref identifysample) for details.
  */
-class IdentifySample : public AbstractFilter
+class Processing_EXPORT IdentifySample : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(IdentifySample SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(bool FillHoles READ getFillHoles WRITE setFillHoles)
+    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(IdentifySample)
   SIMPL_FILTER_NEW_MACRO(IdentifySample)

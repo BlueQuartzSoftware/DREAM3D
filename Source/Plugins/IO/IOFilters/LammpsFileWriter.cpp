@@ -111,7 +111,7 @@ void LammpsFileWriter::dataCheck()
     notifyErrorMessage(getHumanLabel(), "Lammps Output file is Not set correctly", -1003);
   }
 
-  DataContainer::Pointer v = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_VertexDataContainerName);
+  DataContainer::Pointer v = getDataContainerArray()->getPrereqDataContainer(this, m_VertexDataContainerName);
   if(getErrorCondition() < 0)
   {
     return;

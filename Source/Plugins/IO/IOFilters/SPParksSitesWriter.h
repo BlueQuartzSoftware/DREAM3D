@@ -41,13 +41,17 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The SPParksSitesWriter class. See [Filter documentation](@ref spparkswriter) for details.
  */
-class SPParksSitesWriter : public FileWriter
+class IO_EXPORT SPParksSitesWriter : public FileWriter
 {
 
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(SPParksSitesWriter SUPERCLASS FileWriter)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(SPParksSitesWriter)
   SIMPL_FILTER_NEW_MACRO(SPParksSitesWriter)

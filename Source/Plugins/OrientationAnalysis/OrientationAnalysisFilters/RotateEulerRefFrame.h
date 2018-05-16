@@ -41,12 +41,18 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The RotateEulerRefFrame class. See [Filter documentation](@ref rotateeulerrefframe) for details.
  */
-class RotateEulerRefFrame : public AbstractFilter
+class OrientationAnalysis_EXPORT RotateEulerRefFrame : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(RotateEulerRefFrame SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(FloatVec3_t RotationAxis READ getRotationAxis WRITE setRotationAxis)
+    PYB11_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle)
+    PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 public:
   SIMPL_SHARED_POINTERS(RotateEulerRefFrame)
   SIMPL_FILTER_NEW_MACRO(RotateEulerRefFrame)

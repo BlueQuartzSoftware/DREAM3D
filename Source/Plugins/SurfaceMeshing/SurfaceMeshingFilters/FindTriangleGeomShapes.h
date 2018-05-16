@@ -40,12 +40,23 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @brief The FindTriangleGeomShapes class. See [Filter documentation](@ref findtrianglegeomshapes) for details.
  */
-class FindTriangleGeomShapes : public AbstractFilter
+class SurfaceMeshing_EXPORT FindTriangleGeomShapes : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindTriangleGeomShapes SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
+    PYB11_PROPERTY(DataArrayPath FaceLabelsArrayPath READ getFaceLabelsArrayPath WRITE setFaceLabelsArrayPath)
+    PYB11_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
+    PYB11_PROPERTY(DataArrayPath VolumesArrayPath READ getVolumesArrayPath WRITE setVolumesArrayPath)
+    PYB11_PROPERTY(QString Omega3sArrayName READ getOmega3sArrayName WRITE setOmega3sArrayName)
+    PYB11_PROPERTY(QString AxisLengthsArrayName READ getAxisLengthsArrayName WRITE setAxisLengthsArrayName)
+    PYB11_PROPERTY(QString AxisEulerAnglesArrayName READ getAxisEulerAnglesArrayName WRITE setAxisEulerAnglesArrayName)
+    PYB11_PROPERTY(QString AspectRatiosArrayName READ getAspectRatiosArrayName WRITE setAspectRatiosArrayName)
 public:
   SIMPL_SHARED_POINTERS(FindTriangleGeomShapes)
   SIMPL_FILTER_NEW_MACRO(FindTriangleGeomShapes)

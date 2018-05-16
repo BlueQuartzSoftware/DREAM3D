@@ -1450,9 +1450,9 @@ SIMPL::Rgb HexagonalOps::generateRodriguesColor(float r1, float r2, float r3)
 // -----------------------------------------------------------------------------
 QVector<UInt8ArrayType::Pointer> HexagonalOps::generatePoleFigure(PoleFigureConfiguration_t& config)
 {
-  QString label0 = QString("%1 <0001>").arg(getSymmetryName());
-  QString label1 = QString("%1 <1010>").arg(getSymmetryName());
-  QString label2 = QString("%1 <1120>").arg(getSymmetryName());
+  QString label0 = QString("<0001>");
+  QString label1 = QString("<1010>");
+  QString label2 = QString("<1120>");
   if(config.labels.size() > 0) { label0 = config.labels.at(0); }
   if(config.labels.size() > 1) { label1 = config.labels.at(1); }
   if(config.labels.size() > 2) { label2 = config.labels.at(2); }
@@ -1896,7 +1896,7 @@ SIMPL::Rgb HexagonalOps::generateMisorientationColor(const QuatF& q, const QuatF
     v = 0.5f + x11 / 2;
   }
 
-  SIMPL::Rgb rgb = ColorUtilities::convertHSVtoRgb(h, s, v);
+  SIMPL::Rgb rgb = ColorUtilities::ConvertHSVtoRgb(h, s, v);
 
   //now standard 0-255 rgb, needs inversion
   return RgbColor::dRgb(255 - RgbColor::dRed(rgb), 255 - RgbColor::dGreen(rgb), 255 - RgbColor::dBlue(rgb), 0);

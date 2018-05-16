@@ -43,14 +43,17 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
- * @class StatisticsPlugin StatisticsPlugin.h Statistics/StatisticsPlugin.h
+ * @class StatisticsPlugin StatisticsPlugin.hStatistics/StatisticsPlugin.h
  * @brief
  *
  * @date May 10, 2012
  * @version 1.0
  */
-class StatisticsPlugin : public QObject, public ISIMPLibPlugin
+class Statistics_EXPORT StatisticsPlugin : public QObject, public ISIMPLibPlugin
+
 {
     Q_OBJECT
     Q_INTERFACES(ISIMPLibPlugin)

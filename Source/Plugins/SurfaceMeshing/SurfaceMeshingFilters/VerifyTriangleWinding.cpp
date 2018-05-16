@@ -286,7 +286,7 @@ void VerifyTriangleWinding::initialize()
 // -----------------------------------------------------------------------------
 void VerifyTriangleWinding::dataCheck()
 {
-  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName(), false);
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName(), false);
   if(getErrorCondition() < 0)
   {
     return;
@@ -377,7 +377,7 @@ void VerifyTriangleWinding::execute()
   {
     facesPtr->findFacesContainingVert();
   }
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -385,7 +385,7 @@ void VerifyTriangleWinding::execute()
   {
     facesPtr->findFaceNeighbors();
   }
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -624,7 +624,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   // Start looping on all the Face Labels (Feature Ids) values
   while(labelObjectsToVisit.empty() == false)
   {
-    if(getCancel() == true)
+    if(getCancel())
     {
       return -1;
     }

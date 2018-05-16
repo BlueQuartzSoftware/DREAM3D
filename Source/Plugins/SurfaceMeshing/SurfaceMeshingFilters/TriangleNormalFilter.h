@@ -42,12 +42,16 @@
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @brief The TriangleNormalFilter class. See [Filter documentation](@ref trianglenormalfilter) for details.
  */
-class TriangleNormalFilter : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT TriangleNormalFilter : public SurfaceMeshFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(TriangleNormalFilter SUPERCLASS SurfaceMeshFilter)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleNormalsArrayPath READ getSurfaceMeshTriangleNormalsArrayPath WRITE setSurfaceMeshTriangleNormalsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(TriangleNormalFilter)
   SIMPL_FILTER_NEW_MACRO(TriangleNormalFilter)

@@ -43,7 +43,6 @@ set(OrientationLib_Utilities_HDRS
   ${OrientationLib_SOURCE_DIR}/Utilities/ModifiedLambertProjection.h
   ${OrientationLib_SOURCE_DIR}/Utilities/ModifiedLambertProjectionArray.h
   ${OrientationLib_SOURCE_DIR}/Utilities/ModifiedLambertProjection3D.hpp
-  ${OrientationLib_SOURCE_DIR}/Utilities/PoleFigureImageUtilities.h
   ${OrientationLib_SOURCE_DIR}/Utilities/ComputeStereographicProjection.h
   ${OrientationLib_SOURCE_DIR}/Utilities/LambertUtilities.h
 )
@@ -52,7 +51,6 @@ set(OrientationLib_Utilities_SRCS
   ${OrientationLib_SOURCE_DIR}/Utilities/PoleFigureUtilities.cpp
   ${OrientationLib_SOURCE_DIR}/Utilities/ModifiedLambertProjection.cpp
   ${OrientationLib_SOURCE_DIR}/Utilities/ModifiedLambertProjectionArray.cpp
-  ${OrientationLib_SOURCE_DIR}/Utilities/PoleFigureImageUtilities.cpp
   ${OrientationLib_SOURCE_DIR}/Utilities/PoleFigureData.cpp
   ${OrientationLib_SOURCE_DIR}/Utilities/ComputeStereographicProjection.cpp
   ${OrientationLib_SOURCE_DIR}/Utilities/LambertUtilities.cpp

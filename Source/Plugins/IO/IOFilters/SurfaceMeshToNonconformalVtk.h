@@ -44,6 +44,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @class SurfaceMeshToNonconformalVtk SurfaceMeshToNonconformalVtk.h IOFilters/Code/IOFiltersFilters/SurfaceMeshToNonconformalVtk.h
  * @brief This class creates a VTK Polydata file written in the VTK Legacy file format.
@@ -51,9 +53,14 @@
  * @date
  * @version 1.0
  */
-class SurfaceMeshToNonconformalVtk : public AbstractFilter
+class IO_EXPORT SurfaceMeshToNonconformalVtk : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(SurfaceMeshToNonconformalVtk SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile)
+    PYB11_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
 public:
   SIMPL_SHARED_POINTERS(SurfaceMeshToNonconformalVtk)
   SIMPL_FILTER_NEW_MACRO(SurfaceMeshToNonconformalVtk)

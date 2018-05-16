@@ -247,5 +247,11 @@ void StatisticsPlugin::readSettings(QSettings& prefs)
 {
 }
 
-#include "Statistics/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatisticsPlugin::registerFilterWidgets(FilterWidgetManager* fwm)
+{
+}
+
 #include "StatisticsFilters/RegisterKnownFilters.cpp"

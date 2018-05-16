@@ -115,7 +115,7 @@ endforeach()
 AddSIMPLUnitTest(TESTNAME ${PLUGIN_NAME}UnitTest
   SOURCES ${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp ${${PLUGIN_NAME}_TEST_SRCS}
   FOLDER "${PLUGIN_NAME}Plugin/Test"
-  LINK_LIBRARIES ${OrientationLib_Link_Libs}
+  LINK_LIBRARIES ${OrientationLib_Link_Libs} Qt5::Gui
   INCLUDE_DIRS
     ${${PLUGIN_NAME}_SOURCE_DIR}/Test
     ${${PLUGIN_NAME}_BINARY_DIR}/Test

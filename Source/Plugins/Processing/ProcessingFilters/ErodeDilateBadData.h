@@ -43,12 +43,21 @@
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
 
+#include "Processing/ProcessingDLLExport.h"
+
 /**
  * @brief The ErodeDilateBadData class. See [Filter documentation](@ref erodedilatebaddata) for details.
  */
-class ErodeDilateBadData : public AbstractFilter
+class Processing_EXPORT ErodeDilateBadData : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(ErodeDilateBadData SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)
+    PYB11_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations)
+    PYB11_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn)
+    PYB11_PROPERTY(bool YDirOn READ getYDirOn WRITE setYDirOn)
+    PYB11_PROPERTY(bool ZDirOn READ getZDirOn WRITE setZDirOn)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(ErodeDilateBadData)
   SIMPL_FILTER_NEW_MACRO(ErodeDilateBadData)

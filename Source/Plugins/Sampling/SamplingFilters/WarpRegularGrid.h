@@ -43,12 +43,25 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Sampling/SamplingDLLExport.h"
+
 /**
  * @brief The WarpRegularGrid class. See [Filter documentation](@ref warpregulargrid) for details.
  */
-class WarpRegularGrid : public AbstractFilter
+class Sampling_EXPORT WarpRegularGrid : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(WarpRegularGrid SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+    PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
+    PYB11_PROPERTY(int PolyOrder READ getPolyOrder WRITE setPolyOrder)
+    PYB11_PROPERTY(Float2ndOrderPoly_t SecondOrderACoeff READ getSecondOrderACoeff WRITE setSecondOrderACoeff)
+    PYB11_PROPERTY(Float2ndOrderPoly_t SecondOrderBCoeff READ getSecondOrderBCoeff WRITE setSecondOrderBCoeff)
+    PYB11_PROPERTY(Float3rdOrderPoly_t ThirdOrderACoeff READ getThirdOrderACoeff WRITE setThirdOrderACoeff)
+    PYB11_PROPERTY(Float3rdOrderPoly_t ThirdOrderBCoeff READ getThirdOrderBCoeff WRITE setThirdOrderBCoeff)
+    PYB11_PROPERTY(Float4thOrderPoly_t FourthOrderACoeff READ getFourthOrderACoeff WRITE setFourthOrderACoeff)
+    PYB11_PROPERTY(Float4thOrderPoly_t FourthOrderBCoeff READ getFourthOrderBCoeff WRITE setFourthOrderBCoeff)
+    PYB11_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
 public:
   SIMPL_SHARED_POINTERS(WarpRegularGrid)
   SIMPL_FILTER_NEW_MACRO(WarpRegularGrid)

@@ -45,6 +45,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @class CMUSmoothingToVtk CMUSmoothingToVtk.h NeverMind/Code/NeverMindFilters/CMUSmoothingToVtk.h
  * @brief Converts the Nodes and Triangles files produced by the CMU SurfaceMeshing
@@ -53,9 +55,12 @@
  * @date
  * @version 1.0
  */
-class LammpsFileWriter : public AbstractFilter
+class IO_EXPORT LammpsFileWriter : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(LammpsFileWriter SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+    PYB11_PROPERTY(QString LammpsFile READ getLammpsFile WRITE setLammpsFile)
 public:
   SIMPL_SHARED_POINTERS(LammpsFileWriter)
   SIMPL_FILTER_NEW_MACRO(LammpsFileWriter)

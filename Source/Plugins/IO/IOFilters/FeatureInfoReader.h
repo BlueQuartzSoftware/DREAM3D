@@ -41,12 +41,25 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The FeatureInfoReader class. See [Filter documentation](@ref featureinforeader) for details.
  */
-class FeatureInfoReader : public FileReader
+class IO_EXPORT FeatureInfoReader : public FileReader
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FeatureInfoReader SUPERCLASS FileReader)
+    PYB11_PROPERTY(DataArrayPath CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+    PYB11_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
+    PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+    PYB11_PROPERTY(bool CreateCellLevelArrays READ getCreateCellLevelArrays WRITE setCreateCellLevelArrays)
+    PYB11_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(QString CellPhasesArrayName READ getCellPhasesArrayName WRITE setCellPhasesArrayName)
+    PYB11_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
+    PYB11_PROPERTY(QString FeaturePhasesArrayName READ getFeaturePhasesArrayName WRITE setFeaturePhasesArrayName)
+    PYB11_PROPERTY(QString FeatureEulerAnglesArrayName READ getFeatureEulerAnglesArrayName WRITE setFeatureEulerAnglesArrayName)
 public:
   SIMPL_SHARED_POINTERS(FeatureInfoReader)
   SIMPL_FILTER_NEW_MACRO(FeatureInfoReader)

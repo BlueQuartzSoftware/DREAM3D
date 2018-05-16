@@ -47,6 +47,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @class AvizoRectilinearCoordinateWriter AvizoRectilinearCoordinateWriter.h DREAM3DLib/IOFilters/AvizoRectilinearCoordinateWriter.h
  * @brief Writes out a native Avizo Rectilinear Coordinate file
@@ -54,9 +56,14 @@
  * @date Aug 9, 2012
  * @version 1.0
  */
-class AvizoRectilinearCoordinateWriter : public AbstractFilter
+class IO_EXPORT AvizoRectilinearCoordinateWriter : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(AvizoRectilinearCoordinateWriter SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
+    PYB11_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
+    PYB11_PROPERTY(QString Units READ getUnits WRITE setUnits)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(AvizoRectilinearCoordinateWriter)
   SIMPL_FILTER_NEW_MACRO(AvizoRectilinearCoordinateWriter)

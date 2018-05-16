@@ -44,15 +44,23 @@
 #include "EbsdLib/TSL/AngPhase.h"
 #include "EbsdLib/TSL/AngReader.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 // our PIMPL private class
 class ReadAngDataPrivate;
 
 /**
  * @brief The ReadAngData class. See [Filter documentation](@ref readangdata) for details.
  */
-class ReadAngData : public AbstractFilter
+class OrientationAnalysis_EXPORT ReadAngData : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(ReadAngData SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+    PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+    PYB11_PROPERTY(bool FileWasRead READ getFileWasRead WRITE setFileWasRead)
+    PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   Q_DECLARE_PRIVATE(ReadAngData)
 public:
   SIMPL_SHARED_POINTERS(ReadAngData)

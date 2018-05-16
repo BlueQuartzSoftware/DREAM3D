@@ -47,6 +47,8 @@
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @class BinaryNodesTrianglesReader BinaryNodesTrianglesReader.h /SurfaceMeshingFilters/BinaryNodesTrianglesReader.h
  * @brief
@@ -54,7 +56,7 @@
  * @date
  * @version 1.0
  */
-class BinaryNodesTrianglesReader : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT BinaryNodesTrianglesReader : public SurfaceMeshFilter
 {
     Q_OBJECT
   public:

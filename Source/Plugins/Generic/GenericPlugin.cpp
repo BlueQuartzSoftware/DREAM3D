@@ -248,6 +248,11 @@ void GenericPlugin::readSettings(QSettings& prefs)
 {
 }
 
-#include "GenericFilters/RegisterKnownFilters.cpp"
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GenericPlugin::registerFilterWidgets(FilterWidgetManager* fwm)
+{
+}
 
-#include "Generic/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
+#include "GenericFilters/RegisterKnownFilters.cpp"

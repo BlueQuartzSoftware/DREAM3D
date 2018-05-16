@@ -44,6 +44,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @class SurfaceMeshToVtk SurfaceMeshToVtk.h IOFilters/Code/IOFiltersFilters/SurfaceMeshToVtk.h
  * @brief This class creates a VTK Polydata file written in the VTK Legacy file format.
@@ -51,9 +53,17 @@
  * @date
  * @version 1.0
  */
-class SurfaceMeshToVtk : public AbstractFilter
+class IO_EXPORT SurfaceMeshToVtk : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(SurfaceMeshToVtk SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile)
+    PYB11_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
+    PYB11_PROPERTY(bool WriteConformalMesh READ getWriteConformalMesh WRITE setWriteConformalMesh)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
+    PYB11_PROPERTY(QVector<DataArrayPath> SelectedFaceArrays READ getSelectedFaceArrays WRITE setSelectedFaceArrays)
+    PYB11_PROPERTY(QVector<DataArrayPath> SelectedVertexArrays READ getSelectedVertexArrays WRITE setSelectedVertexArrays)
 public:
   SIMPL_SHARED_POINTERS(SurfaceMeshToVtk)
   SIMPL_FILTER_NEW_MACRO(SurfaceMeshToVtk)

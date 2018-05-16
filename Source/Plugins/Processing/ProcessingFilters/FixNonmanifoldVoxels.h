@@ -8,10 +8,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Processing/ProcessingDLLExport.h"
+
 /**
  * @brief The FixNonmanifoldVoxels class. See [Filter documentation](@ref fixnonmanifoldvoxels) for details.
  */
-class FixNonmanifoldVoxels : public AbstractFilter
+class Processing_EXPORT FixNonmanifoldVoxels : public AbstractFilter
 {
   Q_OBJECT
 

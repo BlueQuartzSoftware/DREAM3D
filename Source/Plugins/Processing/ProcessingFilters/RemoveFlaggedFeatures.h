@@ -40,12 +40,18 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Processing/ProcessingDLLExport.h"
+
 /**
  * @brief The RemoveFlaggedFeatures class. See [Filter documentation](@ref removeflaggedfeatures) for details.
  */
-class RemoveFlaggedFeatures : public AbstractFilter
+class Processing_EXPORT RemoveFlaggedFeatures : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(RemoveFlaggedFeatures SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(bool FillRemovedFeatures READ getFillRemovedFeatures WRITE setFillRemovedFeatures)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(DataArrayPath FlaggedFeaturesArrayPath READ getFlaggedFeaturesArrayPath WRITE setFlaggedFeaturesArrayPath)
 public:
   SIMPL_SHARED_POINTERS(RemoveFlaggedFeatures)
   SIMPL_FILTER_NEW_MACRO(RemoveFlaggedFeatures)

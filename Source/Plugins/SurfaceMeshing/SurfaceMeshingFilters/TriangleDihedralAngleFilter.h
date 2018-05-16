@@ -42,12 +42,16 @@
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @brief The TriangleDihedralAngleFilter class. See [Filter documentation](@ref triangledihedralanglefilter) for details.
  */
-class TriangleDihedralAngleFilter : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT TriangleDihedralAngleFilter : public SurfaceMeshFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(TriangleDihedralAngleFilter SUPERCLASS SurfaceMeshFilter)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleDihedralAnglesArrayPath READ getSurfaceMeshTriangleDihedralAnglesArrayPath WRITE setSurfaceMeshTriangleDihedralAnglesArrayPath)
 public:
   SIMPL_SHARED_POINTERS(TriangleDihedralAngleFilter)
   SIMPL_FILTER_NEW_MACRO(TriangleDihedralAngleFilter)

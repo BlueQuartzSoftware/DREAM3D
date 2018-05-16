@@ -40,12 +40,25 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @brief The CalculateArrayHistogram class. See [Filter documentation](@ref calculatearrayhistogram) for details.
  */
-class CalculateArrayHistogram : public AbstractFilter
+class Statistics_EXPORT CalculateArrayHistogram : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(CalculateArrayHistogram SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
+    PYB11_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
+    PYB11_PROPERTY(double MinRange READ getMinRange WRITE setMinRange)
+    PYB11_PROPERTY(double MaxRange READ getMaxRange WRITE setMaxRange)
+    PYB11_PROPERTY(bool UserDefinedRange READ getUserDefinedRange WRITE setUserDefinedRange)
+    PYB11_PROPERTY(bool Normalize READ getNormalize WRITE setNormalize)
+    PYB11_PROPERTY(QString NewAttributeMatrixName READ getNewAttributeMatrixName WRITE setNewAttributeMatrixName)
+    PYB11_PROPERTY(QString NewDataArrayName READ getNewDataArrayName WRITE setNewDataArrayName)
+    PYB11_PROPERTY(bool NewDataContainer READ getNewDataContainer WRITE setNewDataContainer)
+    PYB11_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
 public:
   SIMPL_SHARED_POINTERS(CalculateArrayHistogram)
   SIMPL_FILTER_NEW_MACRO(CalculateArrayHistogram)

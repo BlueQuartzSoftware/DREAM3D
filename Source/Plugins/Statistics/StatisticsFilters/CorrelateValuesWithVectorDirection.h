@@ -47,6 +47,8 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 /**
@@ -56,9 +58,12 @@
  * @date Nov 19, 2011
  * @version 1.0
  */
-class CorrelateValuesWithVectorDirection : public AbstractFilter
+class Statistics_EXPORT CorrelateValuesWithVectorDirection : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(CorrelateValuesWithVectorDirection SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath CorrelatedDataArrayPath READ getCorrelatedDataArrayPath WRITE setCorrelatedDataArrayPath)
+    PYB11_PROPERTY(DataArrayPath VectorDataArrayPath READ getVectorDataArrayPath WRITE setVectorDataArrayPath)
 public:
   SIMPL_SHARED_POINTERS(CorrelateValuesWithVectorDirection)
   SIMPL_FILTER_NEW_MACRO(CorrelateValuesWithVectorDirection)

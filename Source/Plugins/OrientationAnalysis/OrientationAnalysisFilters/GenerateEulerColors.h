@@ -44,6 +44,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @class GenerateEulerColors GenerateEulerColors.h DREAM3DLib/GenericFilters/GenerateEulerColors.h
  * @brief This filter generates colors for each voxel based on the "Standard" IPF Triangle.
@@ -51,9 +53,16 @@
  * @date Feb 6, 2013
  * @version 1.0
  */
-class GenerateEulerColors : public AbstractFilter
+class OrientationAnalysis_EXPORT GenerateEulerColors : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(GenerateEulerColors SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+    PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+    PYB11_PROPERTY(QString CellEulerColorsArrayName READ getCellEulerColorsArrayName WRITE setCellEulerColorsArrayName)
+    PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 public:
   SIMPL_SHARED_POINTERS(GenerateEulerColors)
   SIMPL_FILTER_NEW_MACRO(GenerateEulerColors)

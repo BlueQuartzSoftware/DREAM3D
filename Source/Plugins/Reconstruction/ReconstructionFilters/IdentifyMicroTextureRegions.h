@@ -42,12 +42,24 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The IdentifyMicroTextureRegions class. See [Filter documentation](@ref identifymicrotextureregions) for details.
  */
-class IdentifyMicroTextureRegions : public AbstractFilter
+class Reconstruction_EXPORT IdentifyMicroTextureRegions : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(IdentifyMicroTextureRegions SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
+    PYB11_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance)
+    PYB11_PROPERTY(float MinMTRSize READ getMinMTRSize WRITE setMinMTRSize)
+    PYB11_PROPERTY(float MinVolFrac READ getMinVolFrac WRITE setMinVolFrac)
+    PYB11_PROPERTY(DataArrayPath CAxisLocationsArrayPath READ getCAxisLocationsArrayPath WRITE setCAxisLocationsArrayPath)
+    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+    PYB11_PROPERTY(QString MTRIdsArrayName READ getMTRIdsArrayName WRITE setMTRIdsArrayName)
+    PYB11_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 public:
   SIMPL_SHARED_POINTERS(IdentifyMicroTextureRegions)
   SIMPL_FILTER_NEW_MACRO(IdentifyMicroTextureRegions)

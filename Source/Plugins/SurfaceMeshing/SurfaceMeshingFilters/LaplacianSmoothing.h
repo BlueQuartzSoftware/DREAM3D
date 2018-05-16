@@ -44,12 +44,27 @@
 
 #define OUTPUT_DEBUG_VTK_FILES 1
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @brief The LaplacianSmoothing class. See [Filter documentation](@ref laplaciansmoothing) for details.
  */
-class LaplacianSmoothing : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(LaplacianSmoothing SUPERCLASS SurfaceMeshFilter)
+    PYB11_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+    PYB11_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps)
+    PYB11_PROPERTY(float Lambda READ getLambda WRITE setLambda)
+    PYB11_PROPERTY(float SurfacePointLambda READ getSurfacePointLambda WRITE setSurfacePointLambda)
+    PYB11_PROPERTY(float TripleLineLambda READ getTripleLineLambda WRITE setTripleLineLambda)
+    PYB11_PROPERTY(float QuadPointLambda READ getQuadPointLambda WRITE setQuadPointLambda)
+    PYB11_PROPERTY(float SurfaceTripleLineLambda READ getSurfaceTripleLineLambda WRITE setSurfaceTripleLineLambda)
+    PYB11_PROPERTY(float SurfaceQuadPointLambda READ getSurfaceQuadPointLambda WRITE setSurfaceQuadPointLambda)
+    PYB11_PROPERTY(bool UseTaubinSmoothing READ getUseTaubinSmoothing WRITE setUseTaubinSmoothing)
+    PYB11_PROPERTY(float MuFactor READ getMuFactor WRITE setMuFactor)
 public:
   SIMPL_SHARED_POINTERS(LaplacianSmoothing)
   SIMPL_FILTER_NEW_MACRO(LaplacianSmoothing)

@@ -1,3 +1,0 @@
-#include "SGLogNormalItemDelegate.h"
-
-

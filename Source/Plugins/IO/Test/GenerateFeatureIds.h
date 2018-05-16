@@ -15,6 +15,7 @@
 class GenerateFeatureIds : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(GenerateFeatureIds SUPERCLASS AbstractFilter)
 public:
   SIMPL_SHARED_POINTERS(GenerateFeatureIds)
   SIMPL_FILTER_NEW_MACRO(GenerateFeatureIds)
@@ -93,12 +94,12 @@ private:
   {
     setErrorCondition(0);
     setWarningCondition(0);
-    DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+    DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, getDataContainerName());
     if(getErrorCondition() < 0)
     {
       return;
     }
-    AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), -301);
+    AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix(this, getCellAttributeMatrixName(), -301);
     if(getErrorCondition() < 0)
     {
       return;
@@ -130,6 +131,10 @@ public:
 class CreateDataContainer : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(GenerateFeatureIds SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(int64_t XDim READ getXDim WRITE setXDim)
+    PYB11_PROPERTY(int64_t YDim READ getYDim WRITE setYDim)
+    PYB11_PROPERTY(int64_t ZDim READ getZDim WRITE setZDim)
 public:
   SIMPL_SHARED_POINTERS(CreateDataContainer)
   SIMPL_FILTER_NEW_MACRO(CreateDataContainer)
@@ -203,7 +208,7 @@ protected:
   */
   void dataCheck()
   {
-    DataContainer::Pointer m = DataContainer::New();
+    DataContainer::Pointer m = DataContainer::New("DataContainer");
     ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
     m->setGeometry(image);
 

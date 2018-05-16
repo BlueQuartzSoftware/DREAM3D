@@ -358,7 +358,7 @@ void ChangeResolution::execute()
 
   for(size_t i = 0; i < m_ZP; i++)
   {
-    if(getCancel() == true)
+    if(getCancel())
     {
       break;
     }

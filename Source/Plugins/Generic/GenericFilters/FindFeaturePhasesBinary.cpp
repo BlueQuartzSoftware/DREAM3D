@@ -166,7 +166,7 @@ void FindFeaturePhasesBinary::dataCheck()
   QString cellFeatureDataContainer = getFeaturePhasesArrayPath().getDataContainerName();
   getDataContainerArray()
       ->getDataContainer(cellFeatureDataContainer)
-      ->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
+      ->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
 }
 
 // -----------------------------------------------------------------------------

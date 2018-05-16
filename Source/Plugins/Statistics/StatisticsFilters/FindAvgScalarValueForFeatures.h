@@ -40,12 +40,18 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @brief The FindAvgScalarValueForFeatures class. See [Filter documentation](@ref findavgscalarvalueforfeatures) for details.
  */
-class FindAvgScalarValueForFeatures : public AbstractFilter
+class Statistics_EXPORT FindAvgScalarValueForFeatures : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindAvgScalarValueForFeatures SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(DataArrayPath NewFeatureArrayArrayPath READ getNewFeatureArrayArrayPath WRITE setNewFeatureArrayArrayPath)
 public:
   SIMPL_SHARED_POINTERS(FindAvgScalarValueForFeatures)
   SIMPL_FILTER_NEW_MACRO(FindAvgScalarValueForFeatures)

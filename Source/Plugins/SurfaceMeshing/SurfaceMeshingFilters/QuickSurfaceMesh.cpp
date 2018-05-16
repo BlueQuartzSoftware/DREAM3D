@@ -238,8 +238,8 @@ void QuickSurfaceMesh::dataCheck()
   }
 
   QVector<size_t> tDims(1, 0);
-  sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
-  sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face);
+  sm->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
+  sm->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face);
 
   // Create a Triangle Geometry
   SharedVertexList::Pointer vertices = TriangleGeom::CreateSharedVertexList(0);
@@ -293,7 +293,7 @@ void QuickSurfaceMesh::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  sm->createNonPrereqAttributeMatrix<AbstractFilter>(this, getFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::FaceFeature);
+  sm->createNonPrereqAttributeMatrix(this, getFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::FaceFeature);
 }
 
 // -----------------------------------------------------------------------------

@@ -43,12 +43,17 @@
 
 #include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 
+#include "Sampling/SamplingDLLExport.h"
+
 /**
  * @brief The SampleSurfaceMeshSpecifiedPoints class. See [Filter documentation](@ref samplesurfacemeshspecifiedpoints) for details.
  */
-class SampleSurfaceMeshSpecifiedPoints : public SampleSurfaceMesh
+class Sampling_EXPORT SampleSurfaceMeshSpecifiedPoints : public SampleSurfaceMesh
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(SampleSurfaceMeshSpecifiedPoints SUPERCLASS SampleSurfaceMesh)
+    PYB11_PROPERTY(QString InputFilePath READ getInputFilePath WRITE setInputFilePath)
+    PYB11_PROPERTY(QString OutputFilePath READ getOutputFilePath WRITE setOutputFilePath)
 public:
   SIMPL_SHARED_POINTERS(SampleSurfaceMeshSpecifiedPoints)
   SIMPL_FILTER_NEW_MACRO(SampleSurfaceMeshSpecifiedPoints)

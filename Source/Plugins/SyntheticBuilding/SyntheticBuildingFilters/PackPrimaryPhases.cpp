@@ -650,17 +650,17 @@ void PackPrimaryPhases::dataCheck()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
   QVector<size_t> tDims(1, 0);
-  m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
+  m->createNonPrereqAttributeMatrix(this, getOutputCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
 
   PackPrimaryPhases::SaveMethod saveMethod = static_cast<PackPrimaryPhases::SaveMethod>(getSaveGeometricDescriptions());
   if(saveMethod == PackPrimaryPhases::SaveMethod::SaveToNew)
   {
-    m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getNewAttributeMatrixPath().getAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
+    m->createNonPrereqAttributeMatrix(this, getNewAttributeMatrixPath().getAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
   }
   else if(saveMethod == PackPrimaryPhases::SaveMethod::AppendToExisting)
   {
     int err = 0;
-    m->getPrereqAttributeMatrix<AbstractFilter>(this, getSelectedAttributeMatrixPath().getAttributeMatrixName(), err);
+    m->getPrereqAttributeMatrix(this, getSelectedAttributeMatrixPath().getAttributeMatrixName(), err);
   }
 
   AttributeMatrix::Pointer outEnsembleAttrMat = AttributeMatrix::NullPointer();
@@ -671,7 +671,7 @@ void PackPrimaryPhases::dataCheck()
   else
   {
     tDims[0] = m_PhaseTypesPtr.lock()->getNumberOfTuples();
-    outEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
+    outEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getOutputCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
   }
 
   tempPath = getOutputCellAttributeMatrixPath();
@@ -853,7 +853,7 @@ void PackPrimaryPhases::execute()
     {
       return;
     }
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }
@@ -863,7 +863,7 @@ void PackPrimaryPhases::execute()
   {
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Loading Features");
     loadFeatures();
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }
@@ -875,14 +875,14 @@ void PackPrimaryPhases::execute()
   {
     return;
   }
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
 
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Features || Assigning Gaps");
   assignGapsOnly();
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -1219,7 +1219,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
     }
   }
 
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -1273,7 +1273,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
         iter = 0;
         gid++;
       }
-      if(getCancel() == true)
+      if(getCancel())
       {
         return;
       }
@@ -1316,7 +1316,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
           iter = 0;
           gid++;
         }
-        if(getCancel() == true)
+        if(getCancel())
         {
           return;
         }
@@ -1333,7 +1333,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
   // need to update pointers after resize, buut do not need to run full data check because pointers are still valid
   updateFeatureInstancePointers();
 
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -1386,7 +1386,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
     }
   }
 
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -1404,7 +1404,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
   int32_t progFeatureInc = static_cast<int32_t>(totalFeatures * 0.01f);
   for(size_t i = m_FirstPrimaryFeature; i < totalFeatures; i++)
   {
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }
@@ -1531,7 +1531,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
       lastIteration = iteration;
     }
 
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }
@@ -2839,7 +2839,7 @@ void PackPrimaryPhases::assignVoxels()
 
   // need to update pointers after resize, but do not need to run full data check because pointers are still valid
   updateFeatureInstancePointers();
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -3011,7 +3011,7 @@ void PackPrimaryPhases::assignGapsOnly()
       QString ss = QObject::tr("Assign Gaps || Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(iterationCounter).arg(gapVoxelCount);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }
@@ -3213,7 +3213,7 @@ void PackPrimaryPhases::cleanupFeatures()
     }
   }
   assignGapsOnly();
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }

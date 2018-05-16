@@ -50,6 +50,8 @@
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @class FindFeatureHistogram FindFeatureHistogram.h /FilterCategoryFilters/FindFeatureHistogram.h
  * @brief
@@ -57,9 +59,16 @@
  * @date
  * @version 1.0
  */
-class FindFeatureHistogram : public AbstractFilter
+class Statistics_EXPORT FindFeatureHistogram : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindFeatureHistogram SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
+    PYB11_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
+    PYB11_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
+    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
+    PYB11_PROPERTY(DataArrayPath NewEnsembleArrayArrayPath READ getNewEnsembleArrayArrayPath WRITE setNewEnsembleArrayArrayPath)
 public:
   SIMPL_SHARED_POINTERS(FindFeatureHistogram)
   SIMPL_FILTER_NEW_MACRO(FindFeatureHistogram)

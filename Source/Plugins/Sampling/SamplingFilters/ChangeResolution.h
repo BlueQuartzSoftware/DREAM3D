@@ -41,12 +41,22 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Sampling/SamplingDLLExport.h"
+
 /**
  * @brief The ChangeResolution class. See [Filter documentation](@ref changeresolution) for details.
  */
-class ChangeResolution : public AbstractFilter
+class Sampling_EXPORT ChangeResolution : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(ChangeResolution SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+    PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
+    PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
+    PYB11_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
+    PYB11_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
+    PYB11_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(ChangeResolution)
   SIMPL_FILTER_NEW_MACRO(ChangeResolution)

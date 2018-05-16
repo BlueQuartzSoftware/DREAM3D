@@ -40,12 +40,21 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Processing/ProcessingDLLExport.h"
+
 /**
  * @brief The ErodeDilateMask class. See [Filter documentation](@ref erodedilatemask) for details.
  */
-class ErodeDilateMask : public AbstractFilter
+class Processing_EXPORT ErodeDilateMask : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(ErodeDilateMask SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)
+    PYB11_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations)
+    PYB11_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn)
+    PYB11_PROPERTY(bool YDirOn READ getYDirOn WRITE setYDirOn)
+    PYB11_PROPERTY(bool ZDirOn READ getZDirOn WRITE setZDirOn)
+    PYB11_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
 public:
   SIMPL_SHARED_POINTERS(ErodeDilateMask)
   SIMPL_FILTER_NEW_MACRO(ErodeDilateMask)

@@ -42,12 +42,16 @@
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @brief The TriangleAreaFilter class. See [Filter documentation](@ref triangleareafilter) for details.
  */
-class TriangleAreaFilter : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT TriangleAreaFilter : public SurfaceMeshFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(TriangleAreaFilter SUPERCLASS SurfaceMeshFilter)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleAreasArrayPath READ getSurfaceMeshTriangleAreasArrayPath WRITE setSurfaceMeshTriangleAreasArrayPath)
 public:
   SIMPL_SHARED_POINTERS(TriangleAreaFilter)
   SIMPL_FILTER_NEW_MACRO(TriangleAreaFilter)

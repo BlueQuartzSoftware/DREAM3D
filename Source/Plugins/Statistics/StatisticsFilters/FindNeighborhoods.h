@@ -41,12 +41,21 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @brief The FindNeighborhoods class. See [Filter documentation](@ref findneighborhoods) for details.
  */
-class FindNeighborhoods : public AbstractFilter
+class Statistics_EXPORT FindNeighborhoods : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindNeighborhoods SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString NeighborhoodListArrayName READ getNeighborhoodListArrayName WRITE setNeighborhoodListArrayName)
+    PYB11_PROPERTY(float MultiplesOfAverage READ getMultiplesOfAverage WRITE setMultiplesOfAverage)
+    PYB11_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
+    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
+    PYB11_PROPERTY(QString NeighborhoodsArrayName READ getNeighborhoodsArrayName WRITE setNeighborhoodsArrayName)
 public:
   SIMPL_SHARED_POINTERS(FindNeighborhoods)
   SIMPL_FILTER_NEW_MACRO(FindNeighborhoods)

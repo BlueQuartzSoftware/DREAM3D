@@ -40,12 +40,20 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The GBCDTriangleDumper class. See [Filter documentation](@ref gbcdtriangledumper) for details.
  */
-class GBCDTriangleDumper : public AbstractFilter
+class IO_EXPORT GBCDTriangleDumper : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(GBCDTriangleDumper SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceAreasArrayPath READ getSurfaceMeshFaceAreasArrayPath WRITE setSurfaceMeshFaceAreasArrayPath)
+    PYB11_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
 public:
   SIMPL_SHARED_POINTERS(GBCDTriangleDumper)
   SIMPL_FILTER_NEW_MACRO(GBCDTriangleDumper)

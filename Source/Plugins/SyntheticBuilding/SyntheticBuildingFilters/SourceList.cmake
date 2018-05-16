@@ -26,6 +26,9 @@ set(_PublicFilters
   JumbleOrientations
   MatchCrystallography
   PackPrimaryPhases
+  StatsGeneratorFilter
+  GeneratePrimaryStatsData
+  GeneratePrecipitateStatsData
 )
 
 
@@ -56,6 +59,21 @@ foreach(f ${_PrivateFilters} )
                         ${_filterGroupName} ${f}
                         ${${PLUGIN_NAME}_SOURCE_DIR}/Documentation/${_filterGroupName}/${f}.md FALSE ${${PLUGIN_NAME}_BINARY_DIR})
 endforeach()
+
+
+#-------------
+# These are files that need to be compiled into DREAM3DLib but are NOT filters
+ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} StatsGeneratorUtilities.h)
+ADD_SIMPL_SUPPORT_SOURCE(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} StatsGeneratorUtilities.cpp)
+
+ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName}/Presets AbstractMicrostructurePreset )
+ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName}/Presets MicrostructurePresetManager )
+ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName}/Presets PrecipitateEquiaxedPreset )
+ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName}/Presets PrecipitateRolledPreset )
+ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName}/Presets PrimaryEquiaxedPreset )
+ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName}/Presets PrimaryRecrystallizedPreset )
+ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName}/Presets PrimaryRolledPreset )
+
 
 
 

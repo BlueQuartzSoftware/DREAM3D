@@ -43,12 +43,28 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The FindSchmids class. See [Filter documentation](@ref findschmids) for details.
  */
-class FindSchmids : public AbstractFilter
+class OrientationAnalysis_EXPORT FindSchmids : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindSchmids SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+    PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+    PYB11_PROPERTY(QString SchmidsArrayName READ getSchmidsArrayName WRITE setSchmidsArrayName)
+    PYB11_PROPERTY(QString SlipSystemsArrayName READ getSlipSystemsArrayName WRITE setSlipSystemsArrayName)
+    PYB11_PROPERTY(QString PolesArrayName READ getPolesArrayName WRITE setPolesArrayName)
+    PYB11_PROPERTY(QString PhisArrayName READ getPhisArrayName WRITE setPhisArrayName)
+    PYB11_PROPERTY(QString LambdasArrayName READ getLambdasArrayName WRITE setLambdasArrayName)
+    PYB11_PROPERTY(FloatVec3_t LoadingDirection READ getLoadingDirection WRITE setLoadingDirection)
+    PYB11_PROPERTY(bool StoreAngleComponents READ getStoreAngleComponents WRITE setStoreAngleComponents)
+    PYB11_PROPERTY(bool OverrideSystem READ getOverrideSystem WRITE setOverrideSystem)
+    PYB11_PROPERTY(FloatVec3_t SlipPlane READ getSlipPlane WRITE setSlipPlane)
+    PYB11_PROPERTY(FloatVec3_t SlipDirection READ getSlipDirection WRITE setSlipDirection)
 public:
   SIMPL_SHARED_POINTERS(FindSchmids)
   SIMPL_FILTER_NEW_MACRO(FindSchmids)

@@ -213,7 +213,7 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
     m_Node2Triangle[tri.node_id[1]].insert(i);
     m_Node2Triangle[tri.node_id[2]].insert(i);
   }
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -235,7 +235,7 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
       curPercent += 5.0f;
     }
     progIndex++;
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }

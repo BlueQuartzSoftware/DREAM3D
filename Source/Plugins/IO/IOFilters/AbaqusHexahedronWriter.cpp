@@ -224,7 +224,7 @@ void AbaqusHexahedronWriter::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  else if(getCancel() == true) // Filter has been cancelled
+  else if(getCancel()) // Filter has been cancelled
   {
     deleteFile(fileNames); // delete files
     return;
@@ -238,7 +238,7 @@ void AbaqusHexahedronWriter::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  else if(getCancel() == true) // Filter has been cancelled
+  else if(getCancel()) // Filter has been cancelled
   {
     deleteFile(fileNames); // delete files
     return;
@@ -252,7 +252,7 @@ void AbaqusHexahedronWriter::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  else if(getCancel() == true) // Filter has been cancelled
+  else if(getCancel()) // Filter has been cancelled
   {
     deleteFile(fileNames); // delete files
     return;
@@ -266,7 +266,7 @@ void AbaqusHexahedronWriter::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  else if(getCancel() == true) // Filter has been cancelled
+  else if(getCancel()) // Filter has been cancelled
   {
     deleteFile(fileNames); // delete files
     return;
@@ -280,7 +280,7 @@ void AbaqusHexahedronWriter::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  else if(getCancel() == true) // Filter has been cancelled
+  else if(getCancel()) // Filter has been cancelled
   {
     deleteFile(fileNames); // delete files
     return;
@@ -344,7 +344,7 @@ int32_t AbaqusHexahedronWriter::writeNodes(const QList<QString>& fileNames, size
             ss << " || Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);
             notifyStatusMessage(getHumanLabel(), buf);
             millis = QDateTime::currentMSecsSinceEpoch();
-            if(getCancel() == true) // Filter has been cancelled
+            if(getCancel()) // Filter has been cancelled
             {
               fclose(f);
               return 1;
@@ -420,7 +420,7 @@ int32_t AbaqusHexahedronWriter::writeElems(const QList<QString>& fileNames, size
             ss << " || Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);
             notifyStatusMessage(getHumanLabel(), buf);
             millis = QDateTime::currentMSecsSinceEpoch();
-            if(getCancel() == true) // Filter has been cancelled
+            if(getCancel()) // Filter has been cancelled
             {
               fclose(f);
               return 1;
@@ -521,7 +521,7 @@ int32_t AbaqusHexahedronWriter::writeElset(const QList<QString>& fileNames, size
         ss << " || Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);
         notifyStatusMessage(getHumanLabel(), buf);
         millis = QDateTime::currentMSecsSinceEpoch();
-        if(getCancel() == true) // Filter has been cancelled
+        if(getCancel()) // Filter has been cancelled
         {
           fclose(f);
           return 1;

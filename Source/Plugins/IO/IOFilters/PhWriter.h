@@ -41,12 +41,16 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The PhWriter class. See [Filter documentation](@ref phwriter) for details.
  */
-class PhWriter : public FileWriter
+class IO_EXPORT PhWriter : public FileWriter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(PhWriter SUPERCLASS FileWriter)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(PhWriter)
   SIMPL_FILTER_NEW_MACRO(PhWriter)

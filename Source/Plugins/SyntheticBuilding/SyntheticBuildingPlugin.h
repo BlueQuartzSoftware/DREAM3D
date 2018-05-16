@@ -43,14 +43,17 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 
 
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
+
 /**
- * @class SyntheticBuildingPlugin SyntheticBuildingPlugin.h SyntheticBuilding/SyntheticBuildingPlugin.h
+ * @class SyntheticBuildingPlugin SyntheticBuildingPlugin.hSyntheticBuilding/SyntheticBuildingPlugin.h
  * @brief
  *
  * @date May 10, 2012
  * @version 1.0
  */
-class SyntheticBuildingPlugin : public QObject, public ISIMPLibPlugin
+class SyntheticBuilding_EXPORT SyntheticBuildingPlugin : public QObject, public ISIMPLibPlugin
+
 {
     Q_OBJECT
     Q_INTERFACES(ISIMPLibPlugin)

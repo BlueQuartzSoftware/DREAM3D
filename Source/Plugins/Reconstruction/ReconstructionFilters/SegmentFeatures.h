@@ -43,11 +43,13 @@
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The SegmentFeatures class. This class serves as a superclass for other classes
  * in the Reconstruction plugin.
  */
-class SegmentFeatures : public AbstractFilter
+class Reconstruction_EXPORT SegmentFeatures : public AbstractFilter
 {
   Q_OBJECT
 public:

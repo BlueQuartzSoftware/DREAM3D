@@ -41,12 +41,19 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Sampling/SamplingDLLExport.h"
+
 /**
  * @brief The RotateSampleRefFrame class. See [Filter documentation](@ref rotatesamplerefframe) for details.
  */
-class RotateSampleRefFrame : public AbstractFilter
+class Sampling_EXPORT RotateSampleRefFrame : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(RotateSampleRefFrame SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
+    PYB11_PROPERTY(FloatVec3_t RotationAxis READ getRotationAxis WRITE setRotationAxis)
+    PYB11_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle)
+    PYB11_PROPERTY(bool SliceBySlice READ getSliceBySlice WRITE setSliceBySlice)
 public:
   SIMPL_SHARED_POINTERS(RotateSampleRefFrame)
   SIMPL_FILTER_NEW_MACRO(RotateSampleRefFrame)

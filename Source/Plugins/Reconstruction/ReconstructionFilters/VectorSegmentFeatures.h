@@ -43,12 +43,22 @@
 
 #include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The VectorSegmentFeatures class. See [Filter documentation](@ref vectorsegmentfeatures) for details.
  */
-class VectorSegmentFeatures : public SegmentFeatures
+class Reconstruction_EXPORT VectorSegmentFeatures : public SegmentFeatures
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(VectorSegmentFeatures SUPERCLASS SegmentFeatures)
+    PYB11_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
+    PYB11_PROPERTY(DataArrayPath SelectedVectorArrayPath READ getSelectedVectorArrayPath WRITE setSelectedVectorArrayPath)
+    PYB11_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
+    PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
+    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+    PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+    PYB11_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 public:
   SIMPL_SHARED_POINTERS(VectorSegmentFeatures)
   SIMPL_FILTER_NEW_MACRO(VectorSegmentFeatures)

@@ -42,12 +42,24 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The FindFeatureReferenceMisorientations class. See [Filter documentation](@ref findfeaturereferencemisorientations) for details.
  */
-class FindFeatureReferenceMisorientations : public AbstractFilter
+class OrientationAnalysis_EXPORT FindFeatureReferenceMisorientations : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindFeatureReferenceMisorientations SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+    PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
+    PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+    PYB11_PROPERTY(DataArrayPath GBEuclideanDistancesArrayPath READ getGBEuclideanDistancesArrayPath WRITE setGBEuclideanDistancesArrayPath)
+    PYB11_PROPERTY(QString FeatureAvgMisorientationsArrayName READ getFeatureAvgMisorientationsArrayName WRITE setFeatureAvgMisorientationsArrayName)
+    PYB11_PROPERTY(QString FeatureReferenceMisorientationsArrayName READ getFeatureReferenceMisorientationsArrayName WRITE setFeatureReferenceMisorientationsArrayName)
+    PYB11_PROPERTY(int ReferenceOrientation READ getReferenceOrientation WRITE setReferenceOrientation)
 public:
   SIMPL_SHARED_POINTERS(FindFeatureReferenceMisorientations)
   SIMPL_FILTER_NEW_MACRO(FindFeatureReferenceMisorientations)

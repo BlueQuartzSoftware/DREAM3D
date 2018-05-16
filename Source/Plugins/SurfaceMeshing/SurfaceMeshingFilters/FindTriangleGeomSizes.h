@@ -40,12 +40,18 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @brief The FindTriangleGeomSizes class. See [Filter documentation](@ref findtrianglegeomsizes) for details.
  */
-class FindTriangleGeomSizes : public AbstractFilter
+class SurfaceMeshing_EXPORT FindTriangleGeomSizes : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindTriangleGeomSizes SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath FaceLabelsArrayPath READ getFaceLabelsArrayPath WRITE setFaceLabelsArrayPath)
+    PYB11_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
+    PYB11_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
 
 public:
   SIMPL_SHARED_POINTERS(FindTriangleGeomSizes)

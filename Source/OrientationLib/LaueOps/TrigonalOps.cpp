@@ -805,9 +805,9 @@ SIMPL::Rgb TrigonalOps::generateRodriguesColor(float r1, float r2, float r3)
 // -----------------------------------------------------------------------------
 QVector<UInt8ArrayType::Pointer> TrigonalOps::generatePoleFigure(PoleFigureConfiguration_t& config)
 {
-  QString label0 = QString("%1 <0001>").arg(getSymmetryName());
-  QString label1 = QString("%1 <0-110>").arg(getSymmetryName());
-  QString label2 = QString("%1 <1-100>").arg(getSymmetryName());
+  QString label0 = QString("<0001>");
+  QString label1 = QString("<0-110>");
+  QString label2 = QString("<1-100>");
   if(config.labels.size() > 0) { label0 = config.labels.at(0); }
   if(config.labels.size() > 1) { label1 = config.labels.at(1); }
   if(config.labels.size() > 2) { label2 = config.labels.at(2); }

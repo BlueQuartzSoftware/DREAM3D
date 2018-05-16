@@ -36,8 +36,6 @@
 #ifndef _visualizegbcdgmt_h_
 #define _visualizegbcdgmt_h_
 
-// Needed for AxisAngle_t
-#include "EbsdLib/EbsdConstants.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
@@ -46,12 +44,20 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The VisualizeGBCDGMT class. See [Filter documentation](@ref visualizegbcdgmt) for details.
  */
-class VisualizeGBCDGMT : public AbstractFilter
+class IO_EXPORT VisualizeGBCDGMT : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(VisualizeGBCDGMT SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
+    PYB11_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
+    PYB11_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
+    PYB11_PROPERTY(DataArrayPath GBCDArrayPath READ getGBCDArrayPath WRITE setGBCDArrayPath)
+    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 public:
   SIMPL_SHARED_POINTERS(VisualizeGBCDGMT)
   SIMPL_FILTER_NEW_MACRO(VisualizeGBCDGMT)

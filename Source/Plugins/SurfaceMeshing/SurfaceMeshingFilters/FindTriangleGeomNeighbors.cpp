@@ -193,7 +193,7 @@ void FindTriangleGeomNeighbors::execute()
       millis = QDateTime::currentMSecsSinceEpoch();
     }
 
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }
@@ -212,7 +212,7 @@ void FindTriangleGeomNeighbors::execute()
       millis = QDateTime::currentMSecsSinceEpoch();
     }
 
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }
@@ -252,7 +252,7 @@ void FindTriangleGeomNeighbors::execute()
       millis = QDateTime::currentMSecsSinceEpoch();
     }
 
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }

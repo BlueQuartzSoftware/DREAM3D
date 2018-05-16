@@ -196,7 +196,7 @@ void MovingFiniteElementSmoothing::dataCheck()
   setErrorCondition(0);
   setWarningCondition(0);
 
-  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath().getDataContainerName(), false);
+  DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer(this, getSurfaceMeshNodeTypeArrayPath().getDataContainerName(), false);
   if(getErrorCondition() < 0)
   {
     return;
@@ -340,7 +340,7 @@ void MovingFiniteElementSmoothing::execute()
   input1.close();
 #endif
 
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -493,7 +493,7 @@ void MovingFiniteElementSmoothing::execute()
   }
 #endif
 
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -564,7 +564,7 @@ void MovingFiniteElementSmoothing::execute()
   }
 #endif
 
-  if(getCancel() == true)
+  if(getCancel())
   {
     return;
   }
@@ -715,7 +715,7 @@ void MovingFiniteElementSmoothing::execute()
   // update loop
   for(size_t updates = begin; updates <= static_cast<size_t>(final); ++updates)
   {
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }

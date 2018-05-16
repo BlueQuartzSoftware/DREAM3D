@@ -42,12 +42,18 @@
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @brief The GenerateGeometryConnectivity class. See [Filter documentation](@ref generategeometryconnectivity) for details.
  */
-class GenerateGeometryConnectivity : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT GenerateGeometryConnectivity : public SurfaceMeshFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(GenerateGeometryConnectivity SUPERCLASS SurfaceMeshFilter)
+    PYB11_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+    PYB11_PROPERTY(bool GenerateVertexTriangleLists READ getGenerateVertexTriangleLists WRITE setGenerateVertexTriangleLists)
+    PYB11_PROPERTY(bool GenerateTriangleNeighbors READ getGenerateTriangleNeighbors WRITE setGenerateTriangleNeighbors)
 public:
   SIMPL_SHARED_POINTERS(GenerateGeometryConnectivity)
   SIMPL_FILTER_NEW_MACRO(GenerateGeometryConnectivity)

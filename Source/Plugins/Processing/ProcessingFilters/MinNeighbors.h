@@ -43,12 +43,21 @@
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
 
+#include "Processing/ProcessingDLLExport.h"
+
 /**
  * @brief The MinNeighbors class. See [Filter documentation](@ref minneighbors) for details.
  */
-class MinNeighbors : public AbstractFilter
+class Processing_EXPORT MinNeighbors : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(MinNeighbors SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(int MinNumNeighbors READ getMinNumNeighbors WRITE setMinNumNeighbors)
+    PYB11_PROPERTY(bool ApplyToSinglePhase READ getApplyToSinglePhase WRITE setApplyToSinglePhase)
+    PYB11_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath NumNeighborsArrayPath READ getNumNeighborsArrayPath WRITE setNumNeighborsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(MinNeighbors)
   SIMPL_FILTER_NEW_MACRO(MinNeighbors)

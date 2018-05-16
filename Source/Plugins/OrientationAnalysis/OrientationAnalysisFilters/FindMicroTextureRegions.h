@@ -39,6 +39,8 @@
 #include <QtCore/QString>
 #include <vector>
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
@@ -51,9 +53,14 @@
  * @date Sep 3, 2013
  * @version 1.0
  */
-class FindMicroTextureRegions : public AbstractFilter
+class OrientationAnalysis_EXPORT FindMicroTextureRegions : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindMicroTextureRegions SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(QString MicroTextureRegionNumCellsArrayName READ getMicroTextureRegionNumCellsArrayName WRITE setMicroTextureRegionNumCellsArrayName)
+    PYB11_PROPERTY(QString MicroTextureRegionFractionOccupiedArrayName READ getMicroTextureRegionFractionOccupiedArrayName WRITE setMicroTextureRegionFractionOccupiedArrayName)
 public:
   SIMPL_SHARED_POINTERS(FindMicroTextureRegions)
   SIMPL_FILTER_NEW_MACRO(FindMicroTextureRegions)

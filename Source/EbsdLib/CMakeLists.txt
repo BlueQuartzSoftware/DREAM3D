@@ -253,7 +253,7 @@ if(BUILD_SHARED_LIBS AND NOT APPLE)
 		COMPONENT Applications
 		RUNTIME DESTINATION ${install_dir}
 		LIBRARY DESTINATION ${lib_install_dir}
-		ARCHIVE DESTINATION ${lib_install_dir}
+		ARCHIVE DESTINATION lib
 		BUNDLE DESTINATION "."
 	)
 endif()

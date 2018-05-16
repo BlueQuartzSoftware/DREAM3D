@@ -171,7 +171,7 @@ void CropImageGeometry::dataCheck()
 
   // Validate the incoming DataContainer, Geometry, and AttributeMatrix ; bail if any do not exist since we plan on using them later on in the dataCheck
   // Error messages are handled by the getPrereq functions
-  DataContainer::Pointer srcCellDataContainer = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
+  DataContainer::Pointer srcCellDataContainer = getDataContainerArray()->getPrereqDataContainer(this, getCellAttributeMatrixPath().getDataContainerName());
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
   AttributeMatrix::Pointer srcCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellAttributeMatrixPath(), -301);
   if(getErrorCondition() < 0)
@@ -350,7 +350,7 @@ void CropImageGeometry::dataCheck()
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
 
-    AttributeMatrix::Pointer cellFeatureAttrMat = srcCellDataContainer->getPrereqAttributeMatrix<AbstractFilter>(nullptr, getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), -56);
+    AttributeMatrix::Pointer cellFeatureAttrMat = srcCellDataContainer->getPrereqAttributeMatrix(nullptr, getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), -56);
     if(nullptr == cellFeatureAttrMat.get())
     {
       QString ss = QObject::tr("The AttributeMatrix '%1' is invalid. Does it exist? Is it the correct type?. The AttributeMatrix defines where the segmented features are stored.")
@@ -394,7 +394,7 @@ void CropImageGeometry::execute()
   // dataCheck();
   // if(getErrorCondition() < 0) { return; }
 
-  DataContainer::Pointer srcCellDataContainer = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
+  DataContainer::Pointer srcCellDataContainer = getDataContainerArray()->getPrereqDataContainer(this, getCellAttributeMatrixPath().getDataContainerName());
   AttributeMatrix::Pointer cellAttrMat = srcCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   DataContainer::Pointer destCellDataContainer = srcCellDataContainer;
 
@@ -486,7 +486,10 @@ void CropImageGeometry::execute()
   QList<QString> voxelArrayNames = cellAttrMat->getAttributeArrayNames();
   for(int64_t i = 0; i < ZP; i++)
   {
-    if(getCancel()) { break; }
+    if(getCancel())
+    {
+      break;
+    }
     QString ss = QObject::tr("Cropping Volume || Slice %1 of %2 Complete").arg(i).arg(ZP);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     planeold = (i + m_ZMin) * (srcCellDataContainer->getGeometryAs<ImageGeom>()->getXPoints() * srcCellDataContainer->getGeometryAs<ImageGeom>()->getYPoints());
@@ -509,7 +512,10 @@ void CropImageGeometry::execute()
       }
     }
   }
-  if(getCancel()) { return; }
+  if(getCancel())
+  {
+    return;
+  }
   destCellDataContainer->getGeometryAs<ImageGeom>()->setDimensions(static_cast<size_t>(XP), static_cast<size_t>(YP), static_cast<size_t>(ZP));
   totalPoints = destCellDataContainer->getGeometryAs<ImageGeom>()->getNumberOfElements();
   QVector<size_t> tDims(3, 0);
@@ -555,8 +561,11 @@ void CropImageGeometry::execute()
     // Find the unique set of feature ids
     for(int64_t i = 0; i < totalPoints; ++i)
     {
-      if(getCancel()) { break; }
-      
+      if(getCancel())
+      {
+        break;
+      }
+
       int32_t currentFeatureId = m_FeatureIds[i];
       if(currentFeatureId < totalFeatures)
       {

@@ -40,12 +40,19 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Processing/ProcessingDLLExport.h"
+
 /**
  * @brief The FillBadData class. See [Filter documentation](@ref fillbaddata) for details.
  */
-class FillBadData : public AbstractFilter
+class Processing_EXPORT FillBadData : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FillBadData SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(bool StoreAsNewPhase READ getStoreAsNewPhase WRITE setStoreAsNewPhase)
+    PYB11_PROPERTY(int MinAllowedDefectSize READ getMinAllowedDefectSize WRITE setMinAllowedDefectSize)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 public:
   SIMPL_SHARED_POINTERS(FillBadData)
   SIMPL_FILTER_NEW_MACRO(FillBadData)

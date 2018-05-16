@@ -1,18 +1,21 @@
 #pragma once
 
 #include <iostream>
+#include <set>
 
 #include <QtCore/QString>
 
 #include "Sandbox.h"
-static QSet<QString> qobjectClasses;
+static std::set<QString> qobjectClasses;
 
 class CheckClassForSuperClass : public Sandbox
 {
 
 public:
   CheckClassForSuperClass() = default;
-
+  
+  std::set<QString> getQObjectClasses() { return qobjectClasses; }
+  
   void operator()(const QString& hFile)
   {
     QString contents;
@@ -44,7 +47,7 @@ public:
       if(line.contains(": public AbstractFilter"))
       {
         //"main -> parse -> execute;"
-        if(!qobjectClasses.contains(fi.baseName()))
+        if(qobjectClasses.find(fi.baseName()) == qobjectClasses.end())
         {
           qobjectClasses.insert(fi.baseName());
           std::cout << "AbstractFilter -> " << fi.baseName().toStdString() << ";" << std::endl;
@@ -61,7 +64,7 @@ public:
           // QString adjustQSubClass = qsubclass;
           if(tokens.contains(qsubclass) && qsubclass != fi.baseName())
           {
-            if(!qobjectClasses.contains(fi.baseName()))
+            if(qobjectClasses.find(fi.baseName()) == qobjectClasses.end())
             {
               qobjectClasses.insert(fi.baseName());
               std::cout << qsubclass.trimmed().toStdString() << " -> " << fi.baseName().toStdString() << ";" << std::endl;
@@ -72,20 +75,20 @@ public:
 
         outLines.push_back(line);
       }
-      else if(line.contains("SIMPL_STATIC_NEW_MACRO") && isFilter)
-      {
-        QString replaceString = line;
-        replaceString = replaceString.replace("SIMPL_STATIC_NEW_MACRO", "SIMPL_FILTER_NEW_MACRO");
-        outLines.push_back(replaceString);
-        didReplace = true;
-      }
+//      else if(line.contains("SIMPL_STATIC_NEW_MACRO") && isFilter)
+//      {
+//        QString replaceString = line;
+//        replaceString = replaceString.replace("SIMPL_STATIC_NEW_MACRO", "SIMPL_FILTER_NEW_MACRO");
+//        outLines.push_back(replaceString);
+//        didReplace = true;
+//      }
       else
       {
         outLines.push_back(line);
       }
     }
 
-    writeOutput(didReplace, outLines, hFile);
+    //writeOutput(didReplace, outLines, hFile);
     index++;
   }
 };

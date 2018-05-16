@@ -169,8 +169,6 @@ set(EMMPMLib_PROJECT_SRCS
     ${EMMPMLib_Core_Generated_MOC_SRCS}
 )
 
-
-
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${EMMPMLib_PROJECT_SRCS})
 CMP_AddDefinitions(TARGET ${PROJECT_NAME})
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
@@ -210,7 +208,7 @@ if(BUILD_SHARED_LIBS AND NOT APPLE)
     COMPONENT Applications
     RUNTIME DESTINATION ${install_dir}
     LIBRARY DESTINATION ${lib_install_dir}
-    ARCHIVE DESTINATION ${lib_install_dir}
+    ARCHIVE DESTINATION lib
     BUNDLE DESTINATION "."
   )
 endif()

@@ -40,12 +40,17 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @brief The FindNumFeatures class. See [Filter documentation](@ref findnumfeatures) for details.
  */
-class FindNumFeatures : public AbstractFilter
+class Statistics_EXPORT FindNumFeatures : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindNumFeatures SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath NumFeaturesArrayPath READ getNumFeaturesArrayPath WRITE setNumFeaturesArrayPath)
 public:
   SIMPL_SHARED_POINTERS(FindNumFeatures)
   SIMPL_FILTER_NEW_MACRO(FindNumFeatures)

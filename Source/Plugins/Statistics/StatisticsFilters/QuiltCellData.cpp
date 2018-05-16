@@ -175,7 +175,7 @@ void QuiltCellData::dataCheck()
   }
 
   // Next check the existing DataContainer/AttributeMatrix
-  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, m_SelectedCellArrayPath.getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, m_SelectedCellArrayPath.getDataContainerName());
   if(getErrorCondition() < 0)
   {
     return;
@@ -227,7 +227,7 @@ void QuiltCellData::dataCheck()
   tDims[0] = m2->getGeometryAs<ImageGeom>()->getXPoints();
   tDims[1] = m2->getGeometryAs<ImageGeom>()->getYPoints();
   tDims[2] = m2->getGeometryAs<ImageGeom>()->getZPoints();
-  AttributeMatrix::Pointer newCellAttrMat = m2->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+  AttributeMatrix::Pointer newCellAttrMat = m2->createNonPrereqAttributeMatrix(this, getOutputAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
   if(getErrorCondition() < 0 || nullptr == newCellAttrMat.get())
   {
     return;

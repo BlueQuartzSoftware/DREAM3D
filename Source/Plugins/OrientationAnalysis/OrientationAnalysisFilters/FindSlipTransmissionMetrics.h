@@ -43,12 +43,23 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The FindSlipTransmissionMetrics class. See [Filter documentation](@ref findsliptransmissionmetrics) for details.
  */
-class FindSlipTransmissionMetrics : public AbstractFilter
+class OrientationAnalysis_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindSlipTransmissionMetrics SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
+    PYB11_PROPERTY(QString F1ListArrayName READ getF1ListArrayName WRITE setF1ListArrayName)
+    PYB11_PROPERTY(QString F1sptListArrayName READ getF1sptListArrayName WRITE setF1sptListArrayName)
+    PYB11_PROPERTY(QString F7ListArrayName READ getF7ListArrayName WRITE setF7ListArrayName)
+    PYB11_PROPERTY(QString mPrimeListArrayName READ getmPrimeListArrayName WRITE setmPrimeListArrayName)
+    PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 public:
   SIMPL_SHARED_POINTERS(FindSlipTransmissionMetrics)
   SIMPL_FILTER_NEW_MACRO(FindSlipTransmissionMetrics)

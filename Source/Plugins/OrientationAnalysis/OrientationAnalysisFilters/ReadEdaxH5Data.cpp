@@ -52,6 +52,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 
 #include "OrientationAnalysis/FilterParameters/ReadEdaxH5DataFilterParameter.h"
+#include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 /**
  * @brief The ReadEdaxH5DataPrivate class is a private implementation of the ReadEdaxH5Data class
@@ -199,14 +200,14 @@ void ReadEdaxH5Data::dataCheck()
   m->setGeometry(image);
 
   QVector<size_t> tDims(3, 0);
-  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
   if(getErrorCondition() < 0)
   {
     return;
   }
   tDims.resize(1);
   tDims[0] = 0;
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix<AbstractFilter>(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
   if(getErrorCondition() < 0)
   {
     return;

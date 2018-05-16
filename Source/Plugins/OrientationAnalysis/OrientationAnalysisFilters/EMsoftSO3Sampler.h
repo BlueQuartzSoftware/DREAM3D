@@ -40,12 +40,26 @@
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/OrientationMath/OrientationArray.hpp"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The EMsoftSO3Sampler class. See [Filter documentation](@ref emsoftso3sampler) for details.
  */
-class EMsoftSO3Sampler : public AbstractFilter
+class OrientationAnalysis_EXPORT EMsoftSO3Sampler : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(EMsoftSO3Sampler SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(int sampleModeSelector READ getsampleModeSelector WRITE setsampleModeSelector)
+    PYB11_PROPERTY(int PointGroup READ getPointGroup WRITE setPointGroup)
+    PYB11_PROPERTY(int Numsp READ getNumsp WRITE setNumsp)
+    PYB11_PROPERTY(double MisOr READ getMisOr WRITE setMisOr)
+    PYB11_PROPERTY(FloatVec3_t RefOr READ getRefOr WRITE setRefOr)
+    PYB11_PROPERTY(double MisOrFull READ getMisOrFull WRITE setMisOrFull)
+    PYB11_PROPERTY(FloatVec3_t RefOrFull READ getRefOrFull WRITE setRefOrFull)
+    PYB11_PROPERTY(bool OffsetGrid READ getOffsetGrid WRITE setOffsetGrid)
+    PYB11_PROPERTY(QString EulerAnglesArrayName READ getEulerAnglesArrayName WRITE setEulerAnglesArrayName)
+    PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    PYB11_PROPERTY(QString EMsoftAttributeMatrixName READ getEMsoftAttributeMatrixName WRITE setEMsoftAttributeMatrixName)
 
 public:
   SIMPL_SHARED_POINTERS(EMsoftSO3Sampler)

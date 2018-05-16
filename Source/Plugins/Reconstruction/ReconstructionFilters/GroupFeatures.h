@@ -43,13 +43,20 @@
 
 #include "Plugins/Reconstruction/ReconstructionConstants.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The GroupFeatures class. This class serves as a superclass for other classes
  * in the Reconstruction plugin.
  */
-class GroupFeatures : public AbstractFilter
+class Reconstruction_EXPORT GroupFeatures : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(GroupFeatures SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath ContiguousNeighborListArrayPath READ getContiguousNeighborListArrayPath WRITE setContiguousNeighborListArrayPath)
+    PYB11_PROPERTY(DataArrayPath NonContiguousNeighborListArrayPath READ getNonContiguousNeighborListArrayPath WRITE setNonContiguousNeighborListArrayPath)
+    PYB11_PROPERTY(bool UseNonContiguousNeighbors READ getUseNonContiguousNeighbors WRITE setUseNonContiguousNeighbors)
+    PYB11_PROPERTY(bool PatchGrouping READ getPatchGrouping WRITE setPatchGrouping)
 public:
   SIMPL_SHARED_POINTERS(GroupFeatures)
   SIMPL_FILTER_NEW_MACRO(GroupFeatures)

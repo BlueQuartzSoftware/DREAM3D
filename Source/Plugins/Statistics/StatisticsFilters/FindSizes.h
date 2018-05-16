@@ -41,12 +41,21 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @brief The FindSizes class. See [Filter documentation](@ref findsizes) for details.
  */
-class FindSizes : public AbstractFilter
+class Statistics_EXPORT FindSizes : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindSizes SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
+    PYB11_PROPERTY(QString EquivalentDiametersArrayName READ getEquivalentDiametersArrayName WRITE setEquivalentDiametersArrayName)
+    PYB11_PROPERTY(QString NumElementsArrayName READ getNumElementsArrayName WRITE setNumElementsArrayName)
+    PYB11_PROPERTY(bool SaveElementSizes READ getSaveElementSizes WRITE setSaveElementSizes)
 public:
   SIMPL_SHARED_POINTERS(FindSizes)
   SIMPL_FILTER_NEW_MACRO(FindSizes)

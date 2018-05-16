@@ -36,6 +36,8 @@
 #ifndef _insertatoms_h_
 #define _insertatoms_h_
 
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
+
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -44,9 +46,17 @@
 /**
  * @brief The InsertAtoms class. See [Filter documentation](@ref insertatoms) for details.
  */
-class InsertAtoms : public AbstractFilter
+class SyntheticBuilding_EXPORT InsertAtoms : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(InsertAtoms SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+    PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
+    PYB11_PROPERTY(FloatVec3_t LatticeConstants READ getLatticeConstants WRITE setLatticeConstants)
+    PYB11_PROPERTY(int Basis READ getBasis WRITE setBasis)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+    PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+    PYB11_PROPERTY(QString AtomFeatureLabelsArrayName READ getAtomFeatureLabelsArrayName WRITE setAtomFeatureLabelsArrayName)
 public:
   SIMPL_SHARED_POINTERS(InsertAtoms)
   SIMPL_FILTER_NEW_MACRO(InsertAtoms)

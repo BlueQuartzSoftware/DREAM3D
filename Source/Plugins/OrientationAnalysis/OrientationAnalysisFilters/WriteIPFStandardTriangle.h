@@ -42,12 +42,18 @@
 
 class LaueOps;
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The WriteIPFStandardTriangle class. See [Filter documentation](@ref writeipfstandardtriangle) for details.
  */
-class WriteIPFStandardTriangle : public AbstractFilter
+class OrientationAnalysis_EXPORT WriteIPFStandardTriangle : public AbstractFilter
 {
   Q_OBJECT
+  // PYB11_CREATE_BINDINGS(WriteIPFStandardTriangle SUPERCLASS AbstractFilter)
+  // PYB11_PROPERTY(int LaueClass READ getLaueClass WRITE setLaueClass)
+  // PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
+  // PYB11_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
 public:
   SIMPL_SHARED_POINTERS(WriteIPFStandardTriangle)
   SIMPL_FILTER_NEW_MACRO(WriteIPFStandardTriangle)

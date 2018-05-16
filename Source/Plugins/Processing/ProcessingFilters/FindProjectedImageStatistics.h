@@ -40,12 +40,22 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Processing/ProcessingDLLExport.h"
+
 /**
  * @brief The FindProjectedImageStatistics class. See [Filter documentation](@ref findprojectedimagestatistics) for details.
  */
-class FindProjectedImageStatistics : public AbstractFilter
+class Processing_EXPORT FindProjectedImageStatistics : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindProjectedImageStatistics SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
+    PYB11_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
+    PYB11_PROPERTY(QString ProjectedImageMinArrayName READ getProjectedImageMinArrayName WRITE setProjectedImageMinArrayName)
+    PYB11_PROPERTY(QString ProjectedImageMaxArrayName READ getProjectedImageMaxArrayName WRITE setProjectedImageMaxArrayName)
+    PYB11_PROPERTY(QString ProjectedImageAvgArrayName READ getProjectedImageAvgArrayName WRITE setProjectedImageAvgArrayName)
+    PYB11_PROPERTY(QString ProjectedImageStdArrayName READ getProjectedImageStdArrayName WRITE setProjectedImageStdArrayName)
+    PYB11_PROPERTY(QString ProjectedImageVarArrayName READ getProjectedImageVarArrayName WRITE setProjectedImageVarArrayName)
 public:
   SIMPL_SHARED_POINTERS(FindProjectedImageStatistics)
   SIMPL_FILTER_NEW_MACRO(FindProjectedImageStatistics)

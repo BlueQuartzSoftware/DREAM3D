@@ -41,12 +41,18 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
+
 /**
  * @brief The EstablishShapeTypes class. See [Filter documentation](@ref establishshapetypes) for details.
  */
-class EstablishShapeTypes : public AbstractFilter
+class SyntheticBuilding_EXPORT EstablishShapeTypes : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(EstablishShapeTypes SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
+    PYB11_PROPERTY(QString ShapeTypesArrayName READ getShapeTypesArrayName WRITE setShapeTypesArrayName)
+    PYB11_PROPERTY(ShapeType::Types ShapeTypeData READ getShapeTypeData WRITE setShapeTypeData)
 public:
   SIMPL_SHARED_POINTERS(EstablishShapeTypes)
   SIMPL_FILTER_NEW_MACRO(EstablishShapeTypes)

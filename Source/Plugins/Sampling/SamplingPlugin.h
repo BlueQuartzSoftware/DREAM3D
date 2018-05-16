@@ -11,14 +11,17 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 
 
+#include "Sampling/SamplingDLLExport.h"
+
 /**
- * @class SamplingPlugin SamplingPlugin.h Sampling/SamplingPlugin.h
+ * @class SamplingPlugin SamplingPlugin.hSampling/SamplingPlugin.h
  * @brief
  *
  * @date May 10, 2012
  * @version 1.0
  */
-class SamplingPlugin : public QObject, public ISIMPLibPlugin
+class Sampling_EXPORT SamplingPlugin : public QObject, public ISIMPLibPlugin
+
 {
     Q_OBJECT
     Q_INTERFACES(ISIMPLibPlugin)

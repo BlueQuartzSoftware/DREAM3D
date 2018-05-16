@@ -44,12 +44,23 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The ConvertHexGridToSquareGrid class. See [Filter documentation](@ref converthexgridtosquaregrid) for details.
  */
-class ConvertHexGridToSquareGrid : public AbstractFilter
+class OrientationAnalysis_EXPORT ConvertHexGridToSquareGrid : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(ConvertHexGridToSquareGrid SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString InputPath READ getInputPath WRITE setInputPath)
+    PYB11_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
+    PYB11_PROPERTY(QString OutputPrefix READ getOutputPrefix WRITE setOutputPrefix)
+    PYB11_PROPERTY(QString FilePrefix READ getFilePrefix WRITE setFilePrefix)
+    PYB11_PROPERTY(QString FileSuffix READ getFileSuffix WRITE setFileSuffix)
+    PYB11_PROPERTY(QString FileExtension READ getFileExtension WRITE setFileExtension)
+    PYB11_PROPERTY(int PaddingDigits READ getPaddingDigits WRITE setPaddingDigits)
+    PYB11_PROPERTY(int HexGridStack READ getHexGridStack WRITE setHexGridStack)
 public:
   SIMPL_SHARED_POINTERS(ConvertHexGridToSquareGrid)
   SIMPL_FILTER_NEW_MACRO(ConvertHexGridToSquareGrid)

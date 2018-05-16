@@ -41,12 +41,22 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The GenerateIPFColors class. See [Filter documentation](@ref generateipfcolors) for details.
  */
-class GenerateIPFColors : public AbstractFilter
+class OrientationAnalysis_EXPORT GenerateIPFColors : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(GenerateIPFColors SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(FloatVec3_t ReferenceDir READ getReferenceDir WRITE setReferenceDir)
+    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+    PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
+    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+    PYB11_PROPERTY(QString CellIPFColorsArrayName READ getCellIPFColorsArrayName WRITE setCellIPFColorsArrayName)
 public:
   SIMPL_SHARED_POINTERS(GenerateIPFColors)
   SIMPL_FILTER_NEW_MACRO(GenerateIPFColors)

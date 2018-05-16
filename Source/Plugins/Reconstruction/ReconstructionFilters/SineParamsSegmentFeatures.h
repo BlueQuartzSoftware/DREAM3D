@@ -52,6 +52,8 @@
 
 class CompareFunctor;
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @class SineParamsSegmentFeatures SineParamsSegmentFeatures.h DREAM3DLib/ReconstructionFilters/SineParamsSegmentFeatures.h
  * @brief
@@ -59,9 +61,16 @@ class CompareFunctor;
  * @date Nov 19, 2011
  * @version 1.0
  */
-class SineParamsSegmentFeatures : public SegmentFeatures
+class Reconstruction_EXPORT SineParamsSegmentFeatures : public SegmentFeatures
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(SineParamsSegmentFeatures SUPERCLASS SegmentFeatures)
+    PYB11_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
+    PYB11_PROPERTY(DataArrayPath SineParamsArrayPath READ getSineParamsArrayPath WRITE setSineParamsArrayPath)
+    PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
+    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+    PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+    PYB11_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 public:
   SIMPL_SHARED_POINTERS(SineParamsSegmentFeatures)
   SIMPL_FILTER_NEW_MACRO(SineParamsSegmentFeatures)

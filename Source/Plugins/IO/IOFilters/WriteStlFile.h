@@ -40,12 +40,20 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The WriteStlFile class. See [Filter documentation](@ref surfacemeshtostl) for details.
  */
-class WriteStlFile : public AbstractFilter
+class IO_EXPORT WriteStlFile : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(WriteStlFile SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory)
+    PYB11_PROPERTY(QString OutputStlPrefix READ getOutputStlPrefix WRITE setOutputStlPrefix)
+    PYB11_PROPERTY(bool GroupByPhase READ getGroupByPhase WRITE setGroupByPhase)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshFacePhasesArrayPath READ getSurfaceMeshFacePhasesArrayPath WRITE setSurfaceMeshFacePhasesArrayPath)
 public:
   SIMPL_SHARED_POINTERS(WriteStlFile)
   SIMPL_FILTER_NEW_MACRO(WriteStlFile)

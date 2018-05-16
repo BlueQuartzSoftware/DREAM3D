@@ -47,12 +47,22 @@
 // our PIMPL private class
 class DxReaderPrivate;
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The DxReader class. See [Filter documentation](@ref dxreader) for details.
  */
-class DxReader : public FileReader
+class IO_EXPORT DxReader : public FileReader
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(DxReader SUPERCLASS FileReader)
+    PYB11_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
+    PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+    PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+    PYB11_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+    PYB11_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
+    PYB11_PROPERTY(bool FileWasRead READ getFileWasRead WRITE setFileWasRead)
+    PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
   Q_DECLARE_PRIVATE(DxReader)
 public:
   SIMPL_SHARED_POINTERS(DxReader)

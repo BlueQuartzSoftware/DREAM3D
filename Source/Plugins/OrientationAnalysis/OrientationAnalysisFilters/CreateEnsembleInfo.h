@@ -43,12 +43,21 @@
 
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The CreateEnsembleInfo class. See [Filter documentation](@ref createensembleinfo) for details.
  */
-class CreateEnsembleInfo : public AbstractFilter
+class OrientationAnalysis_EXPORT CreateEnsembleInfo : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(CreateEnsembleInfo SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+    PYB11_PROPERTY(EnsembleInfo Ensemble READ getEnsemble WRITE setEnsemble)
+    PYB11_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
+    PYB11_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
+    PYB11_PROPERTY(QString PhaseNamesArrayName READ getPhaseNamesArrayName WRITE setPhaseNamesArrayName)
 public:
   SIMPL_SHARED_POINTERS(CreateEnsembleInfo)
   SIMPL_FILTER_NEW_MACRO(CreateEnsembleInfo)

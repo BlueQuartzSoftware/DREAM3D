@@ -40,12 +40,20 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
+
 /**
  * @brief The AddBadData class. See [Filter documentation](@ref addbaddata) for details.
  */
-class AddBadData : public AbstractFilter
+class SyntheticBuilding_EXPORT AddBadData : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(AddBadData SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath GBEuclideanDistancesArrayPath READ getGBEuclideanDistancesArrayPath WRITE setGBEuclideanDistancesArrayPath)
+    PYB11_PROPERTY(bool PoissonNoise READ getPoissonNoise WRITE setPoissonNoise)
+    PYB11_PROPERTY(float PoissonVolFraction READ getPoissonVolFraction WRITE setPoissonVolFraction)
+    PYB11_PROPERTY(bool BoundaryNoise READ getBoundaryNoise WRITE setBoundaryNoise)
+    PYB11_PROPERTY(float BoundaryVolFraction READ getBoundaryVolFraction WRITE setBoundaryVolFraction)
 public:
   SIMPL_SHARED_POINTERS(AddBadData)
   SIMPL_FILTER_NEW_MACRO(AddBadData)

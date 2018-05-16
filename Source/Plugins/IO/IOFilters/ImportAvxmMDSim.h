@@ -9,10 +9,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The ImportAvxmMDSim class. See [Filter documentation](@ref ImportAvxmMDSim) for details.
  */
-class ImportAvxmMDSim : public AbstractFilter
+class IO_EXPORT ImportAvxmMDSim : public AbstractFilter
 {
   Q_OBJECT
 

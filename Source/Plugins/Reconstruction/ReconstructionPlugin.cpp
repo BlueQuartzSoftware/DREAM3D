@@ -247,5 +247,11 @@ void ReconstructionPlugin::readSettings(QSettings& prefs)
 {
 }
 
-#include "Reconstruction/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReconstructionPlugin::registerFilterWidgets(FilterWidgetManager* fwm)
+{
+}
+
 #include "ReconstructionFilters/RegisterKnownFilters.cpp"

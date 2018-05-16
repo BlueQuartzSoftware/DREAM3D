@@ -316,7 +316,7 @@ void ConvertHexGridToSquareGrid::execute()
       QString msg = "Converting File: " + ebsdFName;
       notifyStatusMessage(getHumanLabel(), msg.toLatin1().data());
     }
-    if(getCancel() == true)
+    if(getCancel())
     {
       break;
     }

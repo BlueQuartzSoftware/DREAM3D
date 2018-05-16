@@ -40,12 +40,18 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Sampling/SamplingDLLExport.h"
+
 /**
  * @brief The RegularizeZSpacing class. See [Filter documentation](@ref regularizezspacing) for details.
  */
-class RegularizeZSpacing : public AbstractFilter
+class Sampling_EXPORT RegularizeZSpacing : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(RegularizeZSpacing SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
+    PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+    PYB11_PROPERTY(float NewZRes READ getNewZRes WRITE setNewZRes)
 public:
   SIMPL_SHARED_POINTERS(RegularizeZSpacing)
   SIMPL_FILTER_NEW_MACRO(RegularizeZSpacing)

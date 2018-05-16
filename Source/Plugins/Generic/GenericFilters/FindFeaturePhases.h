@@ -40,12 +40,18 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Generic/GenericDLLExport.h"
+
 /**
  * @brief The FindFeaturePhases class. See [Filter documentation](@ref findfeaturephases) for details.
  */
-class FindFeaturePhases : public AbstractFilter
+class Generic_EXPORT FindFeaturePhases : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindFeaturePhases SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 public:
   SIMPL_SHARED_POINTERS(FindFeaturePhases)
   SIMPL_FILTER_NEW_MACRO(FindFeaturePhases)

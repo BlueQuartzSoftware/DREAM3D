@@ -40,12 +40,17 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The ChangeAngleRepresentation class. See [Filter documentation](@ref changeanglerepresentation) for details.
  */
-class ChangeAngleRepresentation : public AbstractFilter
+class OrientationAnalysis_EXPORT ChangeAngleRepresentation : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(ChangeAngleRepresentation SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(int ConversionType READ getConversionType WRITE setConversionType)
+    PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 public:
   SIMPL_SHARED_POINTERS(ChangeAngleRepresentation)
   SIMPL_FILTER_NEW_MACRO(ChangeAngleRepresentation)

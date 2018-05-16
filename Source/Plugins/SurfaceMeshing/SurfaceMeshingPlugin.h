@@ -42,14 +42,17 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
- * @class SurfaceMeshingPlugin SurfaceMeshingPlugin.h SurfaceMeshing/SurfaceMeshingPlugin.h
+ * @class SurfaceMeshingPlugin SurfaceMeshingPlugin.hSurfaceMeshing/SurfaceMeshingPlugin.h
  * @brief
  *
  * @date May 10, 2012
  * @version 1.0
  */
-class SurfaceMeshingPlugin : public QObject, public ISIMPLibPlugin
+class SurfaceMeshing_EXPORT SurfaceMeshingPlugin : public QObject, public ISIMPLibPlugin
+
 {
     Q_OBJECT
     Q_INTERFACES(ISIMPLibPlugin)

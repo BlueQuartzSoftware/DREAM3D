@@ -141,7 +141,7 @@ void ComputeFeatureRect::execute()
   // Store the coordinates in the corners array
   for(uint32_t z = 0; z < zDim; z++)
   {
-    if(getCancel() == true)
+    if(getCancel())
     {
       return;
     }

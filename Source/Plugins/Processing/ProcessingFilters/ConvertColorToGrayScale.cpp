@@ -72,9 +72,7 @@ public:
   , m_NumComp(comp)
   {
   }
-  virtual ~LuminosityImpl()
-  {
-  }
+  virtual ~LuminosityImpl() = default;
 
   void convert(size_t start, size_t end) const
   {
@@ -111,9 +109,7 @@ public:
   , m_NumComp(comp)
   {
   }
-  virtual ~AverageImpl()
-  {
-  }
+  virtual ~AverageImpl() = default;
 
   void convert(size_t start, size_t end) const
   {
@@ -155,9 +151,7 @@ public:
   , m_NumComp(comp)
   {
   }
-  virtual ~LightnessImpl()
-  {
-  }
+  virtual ~LightnessImpl() = default;
 
   void convert(size_t start, size_t end) const
   {
@@ -207,9 +201,7 @@ public:
   , m_Channel(channel)
   {
   }
-  virtual ~SingleChannelImpl()
-  {
-  }
+  virtual ~SingleChannelImpl() = default;
 
   void convert(size_t start, size_t end) const
   {
@@ -353,7 +345,7 @@ void ConvertColorToGrayScale::dataCheck()
   {
     QVector<size_t> tDims = inAM->getTupleDimensions();
 
-    outAM = dc->createNonPrereqAttributeMatrix<AbstractFilter>(this, getOutputAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+    outAM = dc->createNonPrereqAttributeMatrix(this, getOutputAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
     if(getErrorCondition() < 0 || nullptr == outAM.get())
     {
       return;
@@ -379,7 +371,7 @@ void ConvertColorToGrayScale::dataCheck()
     QVector<size_t> outCDims(1, 1);
     if(outAM.get() == nullptr)
     {
-      outAM = dc->getPrereqAttributeMatrix<ConvertColorToGrayScale>(this, inputAMPath.getAttributeMatrixName(), -62105);
+      outAM = dc->getPrereqAttributeMatrix(this, inputAMPath.getAttributeMatrixName(), -62105);
     }
     outAM->createAndAddAttributeArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, newName, 0, outCDims);
     DataArrayPath newPath(dc->getName(), outAM->getName(), newName);

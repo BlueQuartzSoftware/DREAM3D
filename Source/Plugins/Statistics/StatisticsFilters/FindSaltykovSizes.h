@@ -44,6 +44,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @class FindSaltykovSizes FindSaltykovSizes.h DREAM3DLib/GenericFilters/FindSaltykovSizes.h
  * @brief
@@ -51,9 +53,12 @@
  * @date Dec 9, 2014
  * @version 5.2
  */
-class FindSaltykovSizes : public AbstractFilter
+class Statistics_EXPORT FindSaltykovSizes : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindSaltykovSizes SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
+    PYB11_PROPERTY(DataArrayPath SaltykovEquivalentDiametersArrayPath READ getSaltykovEquivalentDiametersArrayPath WRITE setSaltykovEquivalentDiametersArrayPath)
 public:
   SIMPL_SHARED_POINTERS(FindSaltykovSizes)
   SIMPL_FILTER_NEW_MACRO(FindSaltykovSizes)

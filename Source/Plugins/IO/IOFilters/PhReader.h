@@ -45,12 +45,22 @@
 // our PIMPL private class
 class PhReaderPrivate;
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The PhReader class. See [Filter documentation](@ref phreader) for details.
  */
-class PhReader : public FileReader
+class IO_EXPORT PhReader : public FileReader
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(PhReader SUPERCLASS FileReader)
+    PYB11_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
+    PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+    PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+    PYB11_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+    PYB11_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
+    PYB11_PROPERTY(bool FileWasRead READ getFileWasRead WRITE setFileWasRead)
+    PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
   Q_DECLARE_PRIVATE(PhReader)
 public:
   SIMPL_SHARED_POINTERS(PhReader)

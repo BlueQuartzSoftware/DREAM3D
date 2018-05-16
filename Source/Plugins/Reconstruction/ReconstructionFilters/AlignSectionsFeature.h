@@ -45,12 +45,16 @@
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The AlignSectionsFeature class. See [Filter documentation](@ref alignsectionsfeature) for details.
  */
-class AlignSectionsFeature : public AlignSections
+class Reconstruction_EXPORT AlignSectionsFeature : public AlignSections
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(AlignSectionsFeature SUPERCLASS AlignSections)
+    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(AlignSectionsFeature)
   SIMPL_FILTER_NEW_MACRO(AlignSectionsFeature)

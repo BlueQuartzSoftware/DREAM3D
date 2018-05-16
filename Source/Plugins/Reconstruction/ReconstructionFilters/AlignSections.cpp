@@ -344,7 +344,7 @@ void AlignSections::execute()
         notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
         prog = prog + progIncrement;
       }
-      if(getCancel() == true)
+      if(getCancel())
       {
         return;
       }

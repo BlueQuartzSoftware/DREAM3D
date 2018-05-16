@@ -129,7 +129,7 @@ void AlignSectionsList::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), false);
+  DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer(this, getDataContainerName(), false);
   ImageGeom::Pointer geom = dc->getGeometryAs<ImageGeom>();
   if(nullptr == geom.get())
   {

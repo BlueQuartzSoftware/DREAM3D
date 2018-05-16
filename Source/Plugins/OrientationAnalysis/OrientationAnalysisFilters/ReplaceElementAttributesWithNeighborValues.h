@@ -39,12 +39,19 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The ReplaceElementAttributesWithNeighborValues class. See [Filter documentation](@ref ReplaceElementAttributesWithNeighborValues) for details.
  */
-class ReplaceElementAttributesWithNeighborValues : public AbstractFilter
+class OrientationAnalysis_EXPORT ReplaceElementAttributesWithNeighborValues : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(ReplaceElementAttributesWithNeighborValues SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence)
+    PYB11_PROPERTY(bool Loop READ getLoop WRITE setLoop)
+    PYB11_PROPERTY(DataArrayPath ConfidenceIndexArrayPath READ getConfidenceIndexArrayPath WRITE setConfidenceIndexArrayPath)
+    PYB11_PROPERTY(int SelectedComparison READ getSelectedComparison WRITE setSelectedComparison)
 public:
   SIMPL_SHARED_POINTERS(ReplaceElementAttributesWithNeighborValues)
   SIMPL_FILTER_NEW_MACRO(ReplaceElementAttributesWithNeighborValues)

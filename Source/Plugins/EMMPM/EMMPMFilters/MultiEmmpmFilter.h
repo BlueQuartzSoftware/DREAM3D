@@ -42,12 +42,19 @@
 
 #include "EMMPMFilter.h"
 
+#include "EMMPM/EMMPMDLLExport.h"
+
 /**
  * @brief The MultiEmmpmFilter class. See [Filter documentation](@ref multiemmpmfilter) for details.
  */
-class MultiEmmpmFilter : public EMMPMFilter
+class EMMPM_EXPORT MultiEmmpmFilter : public EMMPMFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(MultiEmmpmFilter SUPERCLASS EMMPMFilter)
+    PYB11_PROPERTY(QVector<DataArrayPath> InputDataArrayVector READ getInputDataArrayVector WRITE setInputDataArrayVector)
+    PYB11_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
+    PYB11_PROPERTY(QString OutputArrayPrefix READ getOutputArrayPrefix WRITE setOutputArrayPrefix)
+    PYB11_PROPERTY(bool UsePreviousMuSigma READ getUsePreviousMuSigma WRITE setUsePreviousMuSigma)
 
 public:
   SIMPL_SHARED_POINTERS(MultiEmmpmFilter)

@@ -247,6 +247,11 @@ void OrientationAnalysisPlugin::readSettings(QSettings& prefs)
 {
 }
 
-#include "OrientationAnalysisFilters/RegisterKnownFilters.cpp"
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OrientationAnalysisPlugin::registerFilterWidgets(FilterWidgetManager* fwm)
+{
+}
 
-#include "OrientationAnalysis/FilterParameterWidgets/RegisterKnownFilterParameterWidgets.cpp"
+#include "OrientationAnalysisFilters/RegisterKnownFilters.cpp"

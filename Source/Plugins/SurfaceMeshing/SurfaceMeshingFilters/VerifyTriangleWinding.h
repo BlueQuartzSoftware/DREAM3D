@@ -46,6 +46,8 @@
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @class VerifyTriangleWinding VerifyTriangleWinding.h /SurfaceMeshFilters/VerifyTriangleWinding.h
  * @brief
@@ -53,9 +55,11 @@
  * @date
  * @version 1.0
  */
-class VerifyTriangleWinding : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
 {
     Q_OBJECT
+  //  PYB11_CREATE_BINDINGS(VerifyTriangleWinding SUPERCLASS SurfaceMeshFilter)
+  //  PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
   public:
     SIMPL_SHARED_POINTERS(VerifyTriangleWinding)
     SIMPL_FILTER_NEW_MACRO(VerifyTriangleWinding)

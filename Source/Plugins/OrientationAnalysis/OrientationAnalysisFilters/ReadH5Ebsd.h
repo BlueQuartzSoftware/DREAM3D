@@ -44,14 +44,25 @@
 
 #include "EbsdLib/H5EbsdVolumeReader.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 class H5EbsdVolumeReader;
 
 /**
  * @brief The ReadH5Ebsd class. See [Filter documentation](@ref readh5ebsd) for details.
  */
-class ReadH5Ebsd : public AbstractFilter
+class OrientationAnalysis_EXPORT ReadH5Ebsd : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(ReadH5Ebsd SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+    PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+    PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+    PYB11_PROPERTY(int ZStartIndex READ getZStartIndex WRITE setZStartIndex)
+    PYB11_PROPERTY(int ZEndIndex READ getZEndIndex WRITE setZEndIndex)
+    PYB11_PROPERTY(bool UseTransformations READ getUseTransformations WRITE setUseTransformations)
+    PYB11_PROPERTY(int AngleRepresentation READ getAngleRepresentation WRITE setAngleRepresentation)
 public:
   SIMPL_SHARED_POINTERS(ReadH5Ebsd)
   SIMPL_FILTER_NEW_MACRO(ReadH5Ebsd)

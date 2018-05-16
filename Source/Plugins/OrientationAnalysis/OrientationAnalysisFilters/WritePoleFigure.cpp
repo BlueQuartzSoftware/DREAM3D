@@ -49,6 +49,7 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Utilities/ColorTable.h"
 
 #include "OrientationLib/LaueOps/CubicLowOps.h"
 #include "OrientationLib/LaueOps/CubicOps.h"
@@ -62,12 +63,25 @@
 #include "OrientationLib/LaueOps/TrigonalLowOps.h"
 #include "OrientationLib/LaueOps/TrigonalOps.h"
 
-#include "OrientationLib/Utilities/PoleFigureImageUtilities.h"
-
 #include "EbsdLib/EbsdConstants.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
+
+#include "hpdf.h"
+#include <setjmp.h>
+
+jmp_buf env;
+
+void error_handler  (HPDF_STATUS   error_no,
+                HPDF_STATUS   detail_no,
+                void* /* user_data */)
+{
+    printf ("ERROR: error_no=%04X, detail_no=%u\n", static_cast<HPDF_UINT>(error_no),
+                static_cast<HPDF_UINT>(detail_no) );
+    longjmp(env, 1);
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -105,6 +119,9 @@ WritePoleFigure::~WritePoleFigure() = default;
 void WritePoleFigure::setupFilterParameters()
 {
   FilterParameterVector parameters;
+  
+  
+   parameters.push_back(SIMPL_NEW_STRING_FP("Figure Title", Title, FilterParameter::Parameter, WritePoleFigure));
 
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
@@ -141,10 +158,11 @@ void WritePoleFigure::setupFilterParameters()
     parameter->setSetterCallback(SIMPL_BIND_SETTER(WritePoleFigure, this, ImageFormat));
     parameter->setGetterCallback(SIMPL_BIND_GETTER(WritePoleFigure, this, ImageFormat));
 
-    QVector<QString> choices;
-    choices.push_back("tif");
-    choices.push_back("bmp");
-    choices.push_back("png");
+    QVector<QString> choices;    
+//    choices.push_back("tif");
+//    choices.push_back("bmp");
+//    choices.push_back("png");
+    choices.push_back("pdf");
     parameter->setChoices(choices);
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
@@ -233,12 +251,12 @@ void WritePoleFigure::dataCheck()
 
   QDir path(getOutputPath());
 
-  if(m_OutputPath.isEmpty() == true)
+  if(m_OutputPath.isEmpty())
   {
     setErrorCondition(-1003);
     notifyErrorMessage(getHumanLabel(), "The output directory must be set", getErrorCondition());
   }
-  else if(path.exists() == false)
+  else if(!path.exists())
   {
     setWarningCondition(-1004);
     QString ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
@@ -278,7 +296,7 @@ void WritePoleFigure::dataCheck()
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(getUseGoodVoxels() == true)
+  if(getUseGoodVoxels())
   {
     // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
     cDims[0] = 1;
@@ -328,29 +346,33 @@ template <typename Ops> QVector<UInt8ArrayType::Pointer> makePoleFigures(PoleFig
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString WritePoleFigure::generateImagePath(QString label)
+QString WritePoleFigure::generateImagePath(const QString &label)
 {
   QString path = m_OutputPath + "/" + m_ImagePrefix + label;
-  if(m_ImageFormat == TifImageType)
+//  if(m_ImageFormat == TifImageType)
+//  {
+//    path.append(".tif");
+//  }
+//  else if(m_ImageFormat == BmpImageType)
+//  {
+//    path.append(".bmp");
+//  }
+//  else if(m_ImageFormat == PngImageType)
+//  {
+//    path.append(".png");
+//  }
+//  else if(m_ImageFormat == JpgImageType)
+//  {
+//    path.append(".jpg");
+//  }
+//  else if(m_ImageFormat == PdfImageType)
   {
-    path.append(".tif");
-  }
-  else if(m_ImageFormat == BmpImageType)
-  {
-    path.append(".bmp");
-  }
-  else if(m_ImageFormat == PngImageType)
-  {
-    path.append(".png");
-  }
-  else if(m_ImageFormat == JpgImageType)
-  {
-    path.append(".jpg");
+    path.append(".pdf");
   }
   path = QDir::toNativeSeparators(path);
   QFileInfo fi(path);
   QDir parent(fi.absolutePath());
-  if(parent.exists() == false)
+  if(!parent.exists())
   {
     parent.mkpath(fi.absolutePath());
   }
@@ -361,6 +383,7 @@ QString WritePoleFigure::generateImagePath(QString label)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+#if 0
 void WritePoleFigure::writeImage(QImage image, QString label)
 {
   QString filename = generateImagePath(label);
@@ -373,6 +396,150 @@ void WritePoleFigure::writeImage(QImage image, QString label)
     QString ss = QObject::tr("The Pole Figure image file '%1' was not saved").arg(filename);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
+}
+#endif
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+UInt8ArrayType::Pointer flipAndMirrorPoleFigure(UInt8ArrayType* src, const PoleFigureConfiguration_t config)
+{
+  UInt8ArrayType::Pointer converted = UInt8ArrayType::CreateArray(static_cast<size_t>(config.imageDim * config.imageDim), 
+                                                                  QVector<size_t>(1,3), 
+                                                                  src->getName());
+  // We need to flip the image "vertically", which means the bottom row becomes
+  // the top row and convert from BGRA to RGB ordering (This is a Little Endian code)
+  // If this is ever compiled on a BIG ENDIAN machine the colors will be off.
+  for(int y = 0; y < config.imageDim; y++)
+  {
+    int destY = config.imageDim - 1 - y;
+    for(int x = 0; x < config.imageDim; x++)
+    {
+      size_t indexSrc = static_cast<size_t>(y * config.imageDim + x);
+      size_t indexDest = static_cast<size_t>(destY * config.imageDim + x);
+      
+      uint8_t* argb = src->getTuplePointer(indexSrc);
+      uint8_t* dest = converted->getTuplePointer(indexDest);
+      
+      dest[0] = argb[2];
+      dest[1] = argb[1];
+      dest[2] = argb[0];
+    }
+  }
+  return converted;
+}
+
+#define FLIP_Y(y,height)\
+(height)-(y)
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void drawScalarBar(HPDF_Page page, const PoleFigureConfiguration_t &config, 
+                          const std::pair<HPDF_REAL, HPDF_REAL> &position,
+                          float margins,
+                          float fontPtSize,
+                          HPDF_Font font)
+{
+  if(config.discrete)
+  {
+    return;
+  }
+  int numColors = config.numColors;
+
+  // Get all the colors that we will need
+  QVector<SIMPL::Rgb> colorTable(numColors);
+  QVector<float> colors(3 * numColors, 0.0);
+  SIMPLColorTable::GetColorTable(numColors, colors); // Generate the color table values
+  float r = 0.0, g = 0.0, b = 0.0;
+  for(int i = 0; i < numColors; i++) // Convert them to QRgbColor values
+  {
+    r = colors[3 * i];
+    g = colors[3 * i + 1];
+    b = colors[3 * i + 2];
+    colorTable[i] = RgbColor::dRgb(r * 255, g * 255, b * 255, 255);
+  }
+
+  // Now start from the bottom and draw colored lines up the scale bar
+  // A Slight Indentation for the scalar bar
+  float scaleBarRelativeWidth = 0.10f;
+  
+  int imageHeight = config.imageDim;
+  int imageWidth = config.imageDim;
+  float colorHeight = (static_cast<float>(imageHeight)) / static_cast<float>(numColors);
+  
+  using RectF = std::pair<float, float>;
+
+  RectF rect = std::make_pair(imageWidth * scaleBarRelativeWidth, colorHeight*1.00000f);  
+  
+  // Draw some more information to the right of the Scale Bar
+  // Draw the Max Value
+  QString maxStr = QString::number(config.maxScale, 'f', 3);
+  HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);
+  HPDF_Page_SetGrayStroke (page, 0.00f);
+  HPDF_Page_BeginText (page);
+  HPDF_Page_SetFontAndSize (page, font, fontPtSize);
+  HPDF_Page_MoveTextPos (page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + (numColors-2)*rect.second);
+  HPDF_Page_ShowText (page, maxStr.toLatin1());
+  HPDF_Page_EndText (page);
+  // Draw the Min value
+  QString minStr = QString::number(config.minScale, 'f', 3);
+  HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);
+  HPDF_Page_SetGrayStroke (page, 0.00f);
+  HPDF_Page_BeginText (page);
+  HPDF_Page_SetFontAndSize (page, font, fontPtSize);
+  HPDF_Page_MoveTextPos (page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize);
+  HPDF_Page_ShowText (page, minStr.toLatin1());
+  HPDF_Page_EndText (page);
+  
+  // Draw the Number of Samples
+  QString label("Upper & Lower");
+  HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);
+  HPDF_Page_SetGrayStroke (page, 0.00f);
+  HPDF_Page_BeginText (page);
+  HPDF_Page_SetFontAndSize (page, font, fontPtSize);
+  HPDF_Page_MoveTextPos (page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second*numColors/2.0f);
+  HPDF_Page_ShowText (page, label.toLatin1());
+  HPDF_Page_EndText (page);
+
+  QString label2 = QString("Samples: ") + QString::number(config.eulers->getNumberOfTuples());
+  HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);
+  HPDF_Page_SetGrayStroke (page, 0.00f);
+  HPDF_Page_BeginText (page);
+  HPDF_Page_SetFontAndSize (page, font, fontPtSize);
+  HPDF_Page_MoveTextPos (page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second*numColors/2.0f - (fontPtSize*1.10f) );
+  HPDF_Page_ShowText (page, label2.toLatin1());
+  HPDF_Page_EndText (page);
+
+
+
+  HPDF_Page_SetGrayStroke (page, 0.30f);
+  for(int i = 0; i < numColors; i++)
+  {
+    SIMPL::Rgb c = colorTable[i];
+    HPDF_REAL r, g, b;
+    std::tie(r, g, b) = RgbColor::fRgb(c);
+    
+    HPDF_REAL x = position.first + margins;
+    HPDF_REAL y = position.second + margins + fontPtSize + (i * colorHeight);
+    
+    
+    HPDF_Page_SetRGBFill(page, r, g, b);
+    HPDF_Page_Rectangle(page, x, y, rect.first, rect.second);
+    HPDF_Page_Fill(page);
+    
+    HPDF_Page_SetRGBStroke(page, r, g, b);
+    HPDF_Page_Rectangle(page, x, y, rect.first, rect.second);
+    HPDF_Page_Stroke(page);
+
+  }
+  
+  HPDF_Page_SetGrayStroke (page, 0.0f);
+  HPDF_Page_MoveTo   (page, position.first + margins, position.second + margins + fontPtSize);
+  HPDF_Page_Rectangle(page, position.first + margins, position.second + margins + fontPtSize, 
+                      rect.first, numColors * rect.second);
+  HPDF_Page_Stroke(page);
 }
 
 // -----------------------------------------------------------------------------
@@ -418,7 +585,7 @@ void WritePoleFigure::execute()
     {
       if(m_CellPhases[i] == phase)
       {
-        if(m_UseGoodVoxels == false || m_GoodVoxels[i] == true)
+        if(!m_UseGoodVoxels || m_GoodVoxels[i])
         {
           count++;
         }
@@ -435,7 +602,7 @@ void WritePoleFigure::execute()
     {
       if(m_CellPhases[i] == phase)
       {
-        if(m_UseGoodVoxels == false || m_GoodVoxels[i] == true)
+        if(!m_UseGoodVoxels || m_GoodVoxels[i])
         {
           eu[count * 3] = m_CellEulerAngles[i * 3];
           eu[count * 3 + 1] = m_CellEulerAngles[i * 3 + 1];
@@ -472,7 +639,7 @@ void WritePoleFigure::execute()
 
     QString ss = QObject::tr("Generating Pole Figures for Phase %1").arg(phase);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-
+    
     switch(m_CrystalStructures[phase])
     {
     case Ebsd::CrystalStructure::Cubic_High:
@@ -522,14 +689,166 @@ void WritePoleFigure::execute()
 
     if(figures.size() == 3)
     {
-      QImage combinedImage = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config, getImageLayout());
-      writeImage(combinedImage, label);
+      // QImage combinedImage = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config, getImageLayout());
+      //writeImage(combinedImage, label);
+      
+      QString filename = generateImagePath(label);
+      
+      HPDF_Doc  pdf = HPDF_New (error_handler, nullptr);
+      
+      HPDF_SetCompressionMode (pdf, HPDF_COMP_ALL);
+      
+      /* create default-font */
+      HPDF_Font font = HPDF_GetFont (pdf, "Helvetica", nullptr);
+      
+      const HPDF_BYTE buf[1] = { 'X' };
+      
+      HPDF_TextWidth textWidth = HPDF_Font_TextWidth(font, buf, 1);
+      
+      HPDF_REAL pageWidth = 0.0f;
+      HPDF_REAL pageHeight = 0.0f;
+      
+
+      
+      HPDF_UINT imageWidth = static_cast<HPDF_UINT>(config.imageDim);
+      HPDF_UINT imageHeight = static_cast<HPDF_UINT>(config.imageDim);
+      HPDF_REAL fontPtSize = imageHeight / 16.0f;
+      HPDF_REAL margins = imageHeight / 32.0f;
+
+      HPDF_REAL xCharWidth = textWidth.width * fontPtSize / 1000;
+      
+      // Each Pole Figure gets it's own Square mini canvas to draw into.
+      HPDF_REAL subCanvasWidth = margins + imageWidth + xCharWidth + margins;
+      HPDF_REAL subCanvasHeight = margins + fontPtSize + imageHeight + fontPtSize*2 + margins*2;
+
+      
+      QVector<std::pair<HPDF_REAL, HPDF_REAL>> imagePositions(4);
+      if(m_ImageLayout == SIMPL::Layout::Horizontal)
+      {
+        pageWidth = subCanvasWidth * 4;
+        pageHeight = subCanvasHeight;
+        imagePositions[0] = std::make_pair(0, 0);
+        imagePositions[1] = std::make_pair(subCanvasWidth, 0);
+        imagePositions[2] = std::make_pair(subCanvasWidth * 2, 0);
+        imagePositions[3] = std::make_pair(subCanvasWidth * 3, 0);
+      }
+      else if(m_ImageLayout == SIMPL::Layout::Vertical)
+      {
+        pageWidth = subCanvasWidth;
+        pageHeight = subCanvasHeight * 4.0f;
+        imagePositions[0] = std::make_pair(0, subCanvasHeight * 3);
+        imagePositions[1] = std::make_pair(0, subCanvasHeight * 2);
+        imagePositions[2] = std::make_pair(0, subCanvasHeight * 1);
+        imagePositions[3] = std::make_pair(0, 0);
+      }
+      else if(m_ImageLayout == SIMPL::Layout::Square)
+      {
+        pageWidth =subCanvasWidth * 2;
+        pageHeight = subCanvasHeight * 2;
+        imagePositions[0] = std::make_pair(0, subCanvasHeight); // Upper Left
+        imagePositions[1] = std::make_pair(subCanvasWidth, subCanvasHeight); // Upper Right
+        imagePositions[2] = std::make_pair(0, 0); // Lower Left
+        imagePositions[3] = std::make_pair(subCanvasWidth, 0); // Lower Right
+      }
+      
+      pageHeight = pageHeight + margins + fontPtSize;
+      
+      /* add a new page object. */
+      HPDF_Page page = HPDF_AddPage (pdf);
+      HPDF_Page_SetWidth (page, pageWidth);
+      HPDF_Page_SetHeight (page, pageHeight);
+      
+      QVector<HPDF_Image> pdfImages(figures.size());
+      HPDF_ColorSpace colorSpace = HPDF_CS_DEVICE_RGB;
+      for (int a = 0; a < figures.size(); a++)
+      {
+        figures[a] = flipAndMirrorPoleFigure(figures[a].get(), config);
+        HPDF_Image image = HPDF_LoadRawImageFromMem(pdf,
+                                                    figures[a]->getPointer(0),
+                                                    static_cast<HPDF_UINT>(config.imageDim),
+                                                    static_cast<HPDF_UINT>(config.imageDim),
+                                                    colorSpace,
+                                                    8);
+        pdfImages[a] = image;                                            
+      }
+      
+      
+      // Create the Scalar Bar image
+      //QImage scalarBar = PoleFigureImageUtilities::GenerateScalarBar(img0.width(), imageHeight, config); 
+      
+      for(int i = 0; i < 3; i++)
+      {
+        HPDF_REAL x = 0.0f;
+        HPDF_REAL y = 0.0f;
+        
+        std::tie(x, y) = imagePositions[i];
+        
+        /* Draw image to the canvas. (normal-mode with actual size.)*/
+        HPDF_Page_DrawImage (page, pdfImages[i], x + margins, y+ margins+fontPtSize, imageWidth, imageHeight);
+        
+        HPDF_Page_BeginText (page);
+        HPDF_Page_SetFontAndSize (page, font, fontPtSize);
+        HPDF_Page_MoveTextPos (page, x + margins, y+margins+fontPtSize+imageHeight+fontPtSize+ margins);
+        HPDF_Page_ShowText (page, figures[i]->getName().toLatin1());
+        HPDF_Page_EndText (page);
+        
+        HPDF_REAL lineWidth = imageWidth / 512.0f;
+        if(lineWidth < 1.0f)
+        {
+          lineWidth = 1.0f;
+        }
+        HPDF_Page_SetLineWidth (page, lineWidth);
+        HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);
+        HPDF_Page_SetGrayStroke (page, 0.30f);
+        HPDF_Page_Circle (page, x + margins + imageWidth/2.0f, y+ margins + fontPtSize + imageWidth/2.0f, imageWidth/2.0f);
+        // Draw the Horizontal Axis
+        HPDF_Page_MoveTo (page, x + margins, y+ margins + fontPtSize + imageWidth/2.0f);
+        HPDF_Page_LineTo (page, x + margins + imageWidth, y+ margins + fontPtSize + imageWidth/2.0f);
+        // Draw the Vertical Axis
+        HPDF_Page_MoveTo (page, x + margins + imageWidth/2.0f, y + margins + fontPtSize);
+        HPDF_Page_LineTo (page, x + margins + imageWidth/2.0f, y + margins + fontPtSize + imageHeight);    
+        HPDF_Page_Stroke (page);
+        
+        // Label the X Axis
+        HPDF_Page_BeginText (page);
+        HPDF_Page_SetFontAndSize (page, font, fontPtSize);
+        HPDF_Page_MoveTextPos (page, x + margins + imageWidth, y+margins+fontPtSize+imageHeight/2.0f - fontPtSize*.33f);
+        HPDF_Page_ShowText (page, " X");
+        HPDF_Page_EndText (page);
+        
+        // Label the Y Axis
+        HPDF_Page_BeginText (page);
+        HPDF_Page_SetFontAndSize (page, font, fontPtSize);
+        HPDF_Page_MoveTextPos (page, x + margins + imageWidth/2.0f - xCharWidth/2.0f, y+margins + fontPtSize + imageHeight + fontPtSize*0.10f);
+        HPDF_Page_ShowText (page, "Y");
+        HPDF_Page_EndText (page);
+      }
+      
+      std::vector<QString> laueNames = LaueOps::GetLaueNames();
+      uint32_t laueIndex = m_CrystalStructures[phase];
+      // Draw the title onto the canvas
+      QString fullTitle = QString("%1: Phase: %2, %3").arg(getTitle()).arg(phase).arg(laueNames[laueIndex]);
+      HPDF_Page_BeginText (page);
+      HPDF_Page_SetFontAndSize (page, font, fontPtSize);
+      HPDF_Page_MoveTextPos (page, margins, pageHeight - margins/2.0f - fontPtSize);
+      HPDF_Page_ShowText (page, fullTitle.toLatin1());
+      HPDF_Page_EndText (page);  
+      
+      // Now draw the Color Scalar Bar if needed.
+      drawScalarBar(page, config, imagePositions[3], margins, fontPtSize, font);
+      
+      /* save the document to a file */
+      HPDF_SaveToFile (pdf, filename.toLatin1());
+      
+      /* clean up */
+      HPDF_Free (pdf);
     }
   }
-
+  
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
+
 
 // -----------------------------------------------------------------------------
 //
@@ -537,7 +856,7 @@ void WritePoleFigure::execute()
 AbstractFilter::Pointer WritePoleFigure::newFilterInstance(bool copyFilterParameters) const
 {
   WritePoleFigure::Pointer filter = WritePoleFigure::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

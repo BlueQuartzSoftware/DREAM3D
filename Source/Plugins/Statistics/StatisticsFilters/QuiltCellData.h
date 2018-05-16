@@ -47,6 +47,8 @@
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @class QuiltCellData QuiltCellData.h /FilterCategoryFilters/QuiltCellData.h
  * @brief
@@ -54,9 +56,16 @@
  * @date
  * @version 1.0
  */
-class QuiltCellData : public AbstractFilter
+class Statistics_EXPORT QuiltCellData : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(QuiltCellData SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
+    PYB11_PROPERTY(IntVec3_t QuiltStep READ getQuiltStep WRITE setQuiltStep)
+    PYB11_PROPERTY(IntVec3_t PatchSize READ getPatchSize WRITE setPatchSize)
+    PYB11_PROPERTY(QString OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName)
+    PYB11_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
+    PYB11_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName)
 public:
   SIMPL_SHARED_POINTERS(QuiltCellData)
   SIMPL_FILTER_NEW_MACRO(QuiltCellData)

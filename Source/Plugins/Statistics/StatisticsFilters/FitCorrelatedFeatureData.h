@@ -51,6 +51,8 @@
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
+#include "Statistics/StatisticsDLLExport.h"
+
 /**
  * @class FitCorrelatedFeatureData FitCorrelatedFeatureData.h /FilterCategoryFilters/FitCorrelatedFeatureData.h
  * @brief
@@ -58,9 +60,18 @@
  * @date
  * @version 1.0
  */
-class FitCorrelatedFeatureData : public AbstractFilter
+class Statistics_EXPORT FitCorrelatedFeatureData : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FitCorrelatedFeatureData SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
+    PYB11_PROPERTY(DataArrayPath CorrelatedFeatureArrayPath READ getCorrelatedFeatureArrayPath WRITE setCorrelatedFeatureArrayPath)
+    PYB11_PROPERTY(unsigned int DistributionType READ getDistributionType WRITE setDistributionType)
+    PYB11_PROPERTY(int NumberOfCorrelatedBins READ getNumberOfCorrelatedBins WRITE setNumberOfCorrelatedBins)
+    PYB11_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
+    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
+    PYB11_PROPERTY(DataArrayPath NewEnsembleArrayArrayPath READ getNewEnsembleArrayArrayPath WRITE setNewEnsembleArrayArrayPath)
 public:
   SIMPL_SHARED_POINTERS(FitCorrelatedFeatureData)
   SIMPL_FILTER_NEW_MACRO(FitCorrelatedFeatureData)

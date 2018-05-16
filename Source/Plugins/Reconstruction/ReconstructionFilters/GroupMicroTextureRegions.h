@@ -45,12 +45,26 @@
 
 #include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The GroupMicroTextureRegions class. See [Filter documentation](@ref groupmicrotextureregions) for details.
  */
-class GroupMicroTextureRegions : public GroupFeatures
+class Reconstruction_EXPORT GroupMicroTextureRegions : public GroupFeatures
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(GroupMicroTextureRegions SUPERCLASS GroupFeatures)
+    PYB11_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
+    PYB11_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance)
+    PYB11_PROPERTY(bool UseRunningAverage READ getUseRunningAverage WRITE setUseRunningAverage)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath VolumesArrayPath READ getVolumesArrayPath WRITE setVolumesArrayPath)
+    PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+    PYB11_PROPERTY(QString CellParentIdsArrayName READ getCellParentIdsArrayName WRITE setCellParentIdsArrayName)
+    PYB11_PROPERTY(QString FeatureParentIdsArrayName READ getFeatureParentIdsArrayName WRITE setFeatureParentIdsArrayName)
+    PYB11_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 public:
   SIMPL_SHARED_POINTERS(GroupMicroTextureRegions)
   SIMPL_FILTER_NEW_MACRO(GroupMicroTextureRegions)

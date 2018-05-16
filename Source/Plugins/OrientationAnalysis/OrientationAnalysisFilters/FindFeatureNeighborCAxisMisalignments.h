@@ -43,12 +43,22 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The FindFeatureNeighborCAxisMisalignments class. See [Filter documentation](@ref findfeatureneighborcaxismisalignments) for details.
  */
-class FindFeatureNeighborCAxisMisalignments : public AbstractFilter
+class OrientationAnalysis_EXPORT FindFeatureNeighborCAxisMisalignments : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindFeatureNeighborCAxisMisalignments SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(bool FindAvgMisals READ getFindAvgMisals WRITE setFindAvgMisals)
+    PYB11_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
+    PYB11_PROPERTY(QString CAxisMisalignmentListArrayName READ getCAxisMisalignmentListArrayName WRITE setCAxisMisalignmentListArrayName)
+    PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+    PYB11_PROPERTY(QString AvgCAxisMisalignmentsArrayName READ getAvgCAxisMisalignmentsArrayName WRITE setAvgCAxisMisalignmentsArrayName)
 public:
   SIMPL_SHARED_POINTERS(FindFeatureNeighborCAxisMisalignments)
   SIMPL_FILTER_NEW_MACRO(FindFeatureNeighborCAxisMisalignments)

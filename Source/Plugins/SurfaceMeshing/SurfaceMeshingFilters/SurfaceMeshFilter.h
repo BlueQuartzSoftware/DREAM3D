@@ -43,11 +43,13 @@
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @brief The SurfaceMeshFilter class. This class serves as a superclass for other classes
  * in the SurfaceMeshing plugin.
  */
-class SurfaceMeshFilter : public AbstractFilter
+class SurfaceMeshing_EXPORT SurfaceMeshFilter : public AbstractFilter
 {
   Q_OBJECT
 public:

@@ -42,12 +42,20 @@
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
+#include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
+
 /**
  * @brief The SharedFeatureFaceFilter class. See [Filter documentation](@ref sharedfeaturefacefilter) for details.
  */
-class SharedFeatureFaceFilter : public SurfaceMeshFilter
+class SurfaceMeshing_EXPORT SharedFeatureFaceFilter : public SurfaceMeshFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(SharedFeatureFaceFilter SUPERCLASS SurfaceMeshFilter)
+    PYB11_PROPERTY(QString FaceFeatureAttributeMatrixName READ getFaceFeatureAttributeMatrixName WRITE setFaceFeatureAttributeMatrixName)
+    PYB11_PROPERTY(QString SurfaceMeshFeatureFaceIdsArrayName READ getSurfaceMeshFeatureFaceIdsArrayName WRITE setSurfaceMeshFeatureFaceIdsArrayName)
+    PYB11_PROPERTY(QString SurfaceMeshFeatureFaceLabelsArrayName READ getSurfaceMeshFeatureFaceLabelsArrayName WRITE setSurfaceMeshFeatureFaceLabelsArrayName)
+    PYB11_PROPERTY(QString SurfaceMeshFeatureFaceNumTrianglesArrayName READ getSurfaceMeshFeatureFaceNumTrianglesArrayName WRITE setSurfaceMeshFeatureFaceNumTrianglesArrayName)
+    PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 public:
   SIMPL_SHARED_POINTERS(SharedFeatureFaceFilter)
   SIMPL_FILTER_NEW_MACRO(SharedFeatureFaceFilter)

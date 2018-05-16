@@ -42,12 +42,17 @@
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 
+#include "Reconstruction/ReconstructionDLLExport.h"
+
 /**
  * @brief The AlignSectionsList class. See [Filter documentation](@ref alignsectionslist) for details.
  */
-class AlignSectionsList : public AlignSections
+class Reconstruction_EXPORT AlignSectionsList : public AlignSections
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(AlignSectionsList SUPERCLASS AlignSections)
+    PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+    PYB11_PROPERTY(bool DREAM3DAlignmentFile READ getDREAM3DAlignmentFile WRITE setDREAM3DAlignmentFile)
 public:
   SIMPL_SHARED_POINTERS(AlignSectionsList)
   SIMPL_FILTER_NEW_MACRO(AlignSectionsList)

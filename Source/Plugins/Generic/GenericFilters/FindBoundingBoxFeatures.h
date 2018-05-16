@@ -40,12 +40,20 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Generic/GenericDLLExport.h"
+
 /**
  * @brief The FindBoundingBoxFeatures class. See [Filter documentation](@ref findboundingboxfeatures) for details.
  */
-class FindBoundingBoxFeatures : public AbstractFilter
+class Generic_EXPORT FindBoundingBoxFeatures : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(FindBoundingBoxFeatures SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(bool CalcByPhase READ getCalcByPhase WRITE setCalcByPhase)
+    PYB11_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
+    PYB11_PROPERTY(DataArrayPath PhasesArrayPath READ getPhasesArrayPath WRITE setPhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath SurfaceFeaturesArrayPath READ getSurfaceFeaturesArrayPath WRITE setSurfaceFeaturesArrayPath)
+    PYB11_PROPERTY(QString BiasedFeaturesArrayName READ getBiasedFeaturesArrayName WRITE setBiasedFeaturesArrayName)
 public:
   SIMPL_SHARED_POINTERS(FindBoundingBoxFeatures)
   SIMPL_FILTER_NEW_MACRO(FindBoundingBoxFeatures)

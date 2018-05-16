@@ -42,12 +42,18 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "IO/IODLLExport.h"
+
 /**
  * @brief The LosAlamosFFTWriter class. See [Filter documentation](@ref losalamosfftwriter) for details.
  */
-class LosAlamosFFTWriter : public FileWriter
+class IO_EXPORT LosAlamosFFTWriter : public FileWriter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(LosAlamosFFTWriter SUPERCLASS FileWriter)
+    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+    PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 public:
   SIMPL_SHARED_POINTERS(LosAlamosFFTWriter)
   SIMPL_FILTER_NEW_MACRO(LosAlamosFFTWriter)

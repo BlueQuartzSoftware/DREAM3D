@@ -40,12 +40,19 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "Generic/GenericDLLExport.h"
+
 /**
  * @brief The GenerateVectorColors class. See [Filter documentation](@ref generatevectorcolors) for details.
  */
-class GenerateVectorColors : public AbstractFilter
+class Generic_EXPORT GenerateVectorColors : public AbstractFilter
 {
   Q_OBJECT
+    PYB11_CREATE_BINDINGS(GenerateVectorColors SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath VectorsArrayPath READ getVectorsArrayPath WRITE setVectorsArrayPath)
+    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+    PYB11_PROPERTY(QString CellVectorColorsArrayName READ getCellVectorColorsArrayName WRITE setCellVectorColorsArrayName)
+    PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 public:
   SIMPL_SHARED_POINTERS(GenerateVectorColors)
   SIMPL_FILTER_NEW_MACRO(GenerateVectorColors)

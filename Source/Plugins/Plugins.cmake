@@ -114,7 +114,7 @@ function(DREAM3D_ADD_PLUGINS)
                                  PLUGIN_SOURCE_DIR ${${d3dPlugin}_SOURCE_DIR})
       else()
           set(${d3dPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "" FORCE)
-          message(FATAL_ERROR "Plugin: The directory for plugin ${d3dPlugin} was not found. Please set this directory manually")
+          message(FATAL_ERROR "Plugin: The directory for plugin ${d3dPlugin} was not found. Use -D${d3dPlugin}_SOURCE_DIR=/Path/To/PluginDir")
       endif()
 
     endforeach()
@@ -129,7 +129,7 @@ set_property(GLOBAL PROPERTY PluginNumFilters ${PluginNumFilters})
 set(DREAM3D_BASE_PLUGINS
   EMMPM
   Generic
-  ImageIO
+  #ImageIO
   IO
   OrientationAnalysis
   Processing
@@ -138,7 +138,7 @@ set(DREAM3D_BASE_PLUGINS
   Statistics
   SurfaceMeshing
   SyntheticBuilding
-  StatsGenerator
+  #StatsGenerator
 )
 
 get_filename_component(DREAM3D_PARENT_DIR  ${DREAM3DProj_SOURCE_DIR} DIRECTORY)
