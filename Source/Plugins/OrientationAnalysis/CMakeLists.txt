@@ -9,6 +9,7 @@ set(${PLUGIN_NAME}_VERSION_MINOR "0")
 get_filename_component(${PLUGIN_NAME}_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
 set(${PLUGIN_NAME}_BINARY_DIR "${DREAM3DProj_BINARY_DIR}/Plugins/${PLUGIN_NAME}")
 
+messag(STATUS "libharu_DIR: ${libharu_DIR}")
 find_package(libharu)
 
 # --------------------------------------------------------------------
