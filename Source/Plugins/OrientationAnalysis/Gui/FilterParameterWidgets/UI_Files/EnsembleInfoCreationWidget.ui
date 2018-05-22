@@ -138,6 +138,10 @@ font-weight: bold;
        <property name="text">
         <string/>
        </property>
+       <property name="icon">
+        <iconset resource="../../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
+         <normaloff>:/add.png</normaloff>:/add.png</iconset>
+       </property>
        <property name="iconSize">
         <size>
          <width>24</width>
@@ -177,6 +181,10 @@ font-weight: bold;
        </property>
        <property name="text">
         <string/>
+       </property>
+       <property name="icon">
+        <iconset resource="../../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
+         <normaloff>:/delete_plain.png</normaloff>:/delete_plain.png</iconset>
        </property>
        <property name="iconSize">
         <size>

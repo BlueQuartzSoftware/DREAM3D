@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>731</width>
-    <height>532</height>
+    <width>721</width>
+    <height>404</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -126,8 +126,8 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>721</width>
-            <height>144</height>
+            <width>711</width>
+            <height>104</height>
            </rect>
           </property>
           <property name="sizePolicy">
@@ -216,7 +216,7 @@
           </spacer>
          </item>
          <item row="0" column="0">
-          <widget class="QPushButton" name="m_CalculateODFBtn">
+          <widget class="SVIconPushButton" name="m_CalculateODFBtn">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -240,6 +240,10 @@
            </property>
            <property name="text">
             <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="../../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
+             <normaloff>:/refresh.png</normaloff>:/refresh.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -309,7 +313,7 @@
           </widget>
          </item>
          <item row="0" column="1">
-          <widget class="QPushButton" name="savePoleFigureImage">
+          <widget class="SVIconPushButton" name="savePoleFigureImage">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
              <horstretch>0</horstretch>
@@ -333,6 +337,10 @@
            </property>
            <property name="text">
             <string/>
+           </property>
+           <property name="icon">
+            <iconset resource="../../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
+             <normaloff>:/data-transfer-download.png</normaloff>:/data-transfer-download.png</iconset>
            </property>
            <property name="iconSize">
             <size>
@@ -558,7 +566,7 @@
               <number>0</number>
              </property>
              <item>
-              <widget class="QPushButton" name="addODFTextureBtn">
+              <widget class="SVIconPushButton" name="addODFTextureBtn">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -583,6 +591,10 @@
                <property name="text">
                 <string/>
                </property>
+               <property name="icon">
+                <iconset resource="../../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
+                 <normaloff>:/add.png</normaloff>:/add.png</iconset>
+               </property>
                <property name="iconSize">
                 <size>
                  <width>24</width>
@@ -595,7 +607,7 @@
               </widget>
              </item>
              <item>
-              <widget class="QPushButton" name="deleteODFTextureBtn">
+              <widget class="SVIconPushButton" name="deleteODFTextureBtn">
                <property name="sizePolicy">
                 <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
                  <horstretch>0</horstretch>
@@ -619,6 +631,10 @@
                </property>
                <property name="text">
                 <string/>
+               </property>
+               <property name="icon">
+                <iconset resource="../../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
+                 <normaloff>:/delete_plain.png</normaloff>:/delete_plain.png</iconset>
                </property>
                <property name="iconSize">
                 <size>
@@ -859,7 +875,7 @@
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="Line" name="line_2">
+    <widget class="Line" name="horizontalLine">
      <property name="frameShadow">
       <enum>QFrame::Plain</enum>
      </property>
@@ -871,6 +887,11 @@
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>SVIconPushButton</class>
+   <extends>QPushButton</extends>
+   <header location="global">SVControlWidgets.h</header>
+  </customwidget>
   <customwidget>
    <class>QtSFSDropLineEdit</class>
    <extends>QLineEdit</extends>

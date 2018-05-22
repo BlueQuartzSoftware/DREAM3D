@@ -42,7 +42,7 @@
 
 #include <QtGui/QDoubleValidator>
 
-#include "SVWidgetsLib/QtSupport/QtSStyles.h"
+#include "SVWidgetsLib/Widgets/SVStyle.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -149,15 +149,15 @@ void RolledPresetDialog::checkInputs(const QString& text)
   float c = getC();
   if(a >= b && b >= c)
   {
-    QtSStyles::LineEditClearStyle(A);
-    QtSStyles::LineEditClearStyle(B);
-    QtSStyles::LineEditClearStyle(C);
+    SVStyle::Instance()->LineEditClearStyle(A);
+    SVStyle::Instance()->LineEditClearStyle(B);
+    SVStyle::Instance()->LineEditClearStyle(C);
   }
   else
   {
-    QtSStyles::LineEditRedErrorStyle(A);
-    QtSStyles::LineEditRedErrorStyle(B);
-    QtSStyles::LineEditRedErrorStyle(C);
+    SVStyle::Instance()->LineEditRedErrorStyle(A);
+    SVStyle::Instance()->LineEditRedErrorStyle(B);
+    SVStyle::Instance()->LineEditRedErrorStyle(C);
   }
 }
 

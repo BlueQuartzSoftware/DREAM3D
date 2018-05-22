@@ -45,7 +45,7 @@
     <number>6</number>
    </property>
    <item row="0" column="0">
-    <widget class="QPushButton" name="editPhase">
+    <widget class="SVIconPushButton" name="editPhase">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -95,7 +95,7 @@
     </widget>
    </item>
    <item row="5" column="0">
-    <widget class="QPushButton" name="saveJsonBtn">
+    <widget class="SVIconPushButton" name="saveJsonBtn">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -136,7 +136,7 @@
     </widget>
    </item>
    <item row="2" column="0">
-    <widget class="QPushButton" name="deletePhase">
+    <widget class="SVIconPushButton" name="deletePhase">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -183,7 +183,7 @@
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="QPushButton" name="updatePipelineBtn">
+    <widget class="SVIconPushButton" name="updatePipelineBtn">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -224,7 +224,7 @@
     </widget>
    </item>
    <item row="1" column="0">
-    <widget class="QPushButton" name="addPhase">
+    <widget class="SVIconPushButton" name="addPhase">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -271,7 +271,7 @@
     </widget>
    </item>
    <item row="6" column="0">
-    <widget class="QPushButton" name="saveH5Btn">
+    <widget class="SVIconPushButton" name="saveH5Btn">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -332,7 +332,7 @@
       <bool>false</bool>
      </property>
      <property name="tabsClosable">
-      <bool>true</bool>
+      <bool>false</bool>
      </property>
      <property name="movable">
       <bool>false</bool>
@@ -345,7 +345,7 @@
     </widget>
    </item>
    <item row="4" column="0">
-    <widget class="QPushButton" name="openStatsFile">
+    <widget class="SVIconPushButton" name="openStatsFile">
      <property name="sizePolicy">
       <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
        <horstretch>0</horstretch>
@@ -477,6 +477,11 @@
   </action>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>SVIconPushButton</class>
+   <extends>QPushButton</extends>
+   <header location="global">SVControlWidgets.h</header>
+  </customwidget>
   <customwidget>
    <class>StatsGenWidget</class>
    <extends>QWidget</extends>
