@@ -89,6 +89,9 @@ endforeach()
 
 STRING(REPLACE "|" ";" TestMainFunctors ${TestMainFunctors}   )
 
+set(QT_APPLICATION_CLASS_HEADER "#include <QtCore/QCoreApplication>")
+set(QT_APPLICATION_CLASS "QCoreApplication")
+
 configure_file(${SIMPLProj_SOURCE_DIR}/Source/SIMPLib/Testing/TestMain.cpp.in
                ${${PLUGIN_NAME}Test_BINARY_DIR}/${PLUGIN_NAME}UnitTest.cpp @ONLY)
 
