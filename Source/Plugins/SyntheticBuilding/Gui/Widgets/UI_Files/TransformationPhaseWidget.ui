@@ -241,7 +241,7 @@ font-size: 12px;
           </widget>
          </item>
          <item row="2" column="4">
-          <widget class="QDoubleSpinBox" name="m_BinStepSize">
+          <widget class="SVDoubleSpinBox" name="m_BinStepSize">
            <property name="sizePolicy">
             <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
              <horstretch>0</horstretch>
@@ -579,6 +579,17 @@ font-size: 12px;
  </widget>
  <customwidgets>
   <customwidget>
+   <class>SVDoubleSpinBox</class>
+   <extends>QDoubleSpinBox</extends>
+   <header location="global">SVControlWidgets.h</header>
+  </customwidget>
+  <customwidget>
+   <class>QwtPlot</class>
+   <extends>QFrame</extends>
+   <header>qwt_plot.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>StatsGenWidget</class>
    <extends>QWidget</extends>
    <header location="global">StatsGenWidget.h</header>
@@ -600,12 +611,6 @@ font-size: 12px;
    <class>StatsGenAxisODFWidget</class>
    <extends>QWidget</extends>
    <header location="global">StatsGenAxisODFWidget.h</header>
-  </customwidget>
-  <customwidget>
-   <class>QwtPlot</class>
-   <extends>QFrame</extends>
-   <header>qwt_plot.h</header>
-   <container>1</container>
   </customwidget>
  </customwidgets>
  <resources/>

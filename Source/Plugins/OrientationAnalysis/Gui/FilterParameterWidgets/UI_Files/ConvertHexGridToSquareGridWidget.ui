@@ -213,7 +213,7 @@ font-size: 11px;
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QSpinBox" name="m_ZStartIndex">
+      <widget class="SVSpinBox" name="m_ZStartIndex">
        <property name="minimumSize">
         <size>
          <width>75</width>
@@ -248,7 +248,7 @@ font-size: 11px;
       </widget>
      </item>
      <item row="1" column="3">
-      <widget class="QSpinBox" name="m_ZEndIndex">
+      <widget class="SVSpinBox" name="m_ZEndIndex">
        <property name="minimumSize">
         <size>
          <width>75</width>
@@ -283,7 +283,7 @@ font-size: 11px;
       </widget>
      </item>
      <item row="1" column="5">
-      <widget class="QSpinBox" name="m_TotalDigits">
+      <widget class="SVSpinBox" name="m_TotalDigits">
        <property name="toolTip">
         <string>The number of digits to allow for the slice index.</string>
        </property>
@@ -567,6 +567,11 @@ font-size: 11px;
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>SVSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header location="global">SVControlWidgets.h</header>
+  </customwidget>
   <customwidget>
    <class>QtSFSDropLineEdit</class>
    <extends>QLineEdit</extends>

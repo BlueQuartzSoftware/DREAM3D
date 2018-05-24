@@ -130,7 +130,7 @@ font-size: 10px;
        </widget>
       </item>
       <item row="0" column="4">
-       <widget class="QDoubleSpinBox" name="m_BinStepSize">
+       <widget class="SVDoubleSpinBox" name="m_BinStepSize">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -396,6 +396,11 @@ font-size: 10px;
  </widget>
  <customwidgets>
   <customwidget>
+   <class>SVDoubleSpinBox</class>
+   <extends>QDoubleSpinBox</extends>
+   <header location="global">SVControlWidgets.h</header>
+  </customwidget>
+  <customwidget>
    <class>QwtPlot</class>
    <extends>QFrame</extends>
    <header>qwt_plot.h</header>
@@ -410,8 +415,6 @@ font-size: 10px;
   <tabstop>m_MaxSigmaCutOff</tabstop>
   <tabstop>distributionTypeCombo</tabstop>
  </tabstops>
- <resources>
-  <include location="../../../../../Resources/icons/images/Icons.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
