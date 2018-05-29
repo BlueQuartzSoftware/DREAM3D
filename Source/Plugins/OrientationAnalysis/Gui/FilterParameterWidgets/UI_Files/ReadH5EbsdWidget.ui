@@ -126,18 +126,6 @@ font-size: 10px;
        </item>
        <item row="0" column="1">
         <widget class="QLabel" name="m_XRes">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <italic>true</italic>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
-}</string>
-         </property>
          <property name="text">
           <string>--</string>
          </property>
@@ -171,18 +159,6 @@ font-size: 10px;
        </item>
        <item row="1" column="1">
         <widget class="QLabel" name="m_YRes">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <italic>true</italic>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
-}</string>
-         </property>
          <property name="text">
           <string>--</string>
          </property>
@@ -213,18 +189,6 @@ font-size: 10px;
        </item>
        <item row="2" column="1">
         <widget class="QLabel" name="m_ZRes">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <italic>true</italic>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
-}</string>
-         </property>
          <property name="text">
           <string>--</string>
          </property>
@@ -271,18 +235,6 @@ font-size: 10px;
        </item>
        <item row="0" column="1">
         <widget class="QLabel" name="m_XDim">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <italic>true</italic>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
-}</string>
-         </property>
          <property name="text">
           <string>--</string>
          </property>
@@ -316,18 +268,6 @@ font-size: 10px;
        </item>
        <item row="1" column="1">
         <widget class="QLabel" name="m_YDim">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <italic>true</italic>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
-}</string>
-         </property>
          <property name="text">
           <string>--</string>
          </property>
@@ -361,18 +301,6 @@ font-size: 10px;
        </item>
        <item row="2" column="1">
         <widget class="QLabel" name="m_ZDim">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <italic>true</italic>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
-}</string>
-         </property>
          <property name="text">
           <string>--</string>
          </property>
@@ -425,18 +353,6 @@ font-size: 10px;
        </item>
        <item row="0" column="1">
         <widget class="QLabel" name="m_EbsdManufacturer">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <italic>true</italic>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
-}</string>
-         </property>
          <property name="text">
           <string>XXX</string>
          </property>
@@ -473,18 +389,6 @@ font-size: 10px;
        </item>
        <item row="1" column="1">
         <widget class="QLabel" name="m_SampleTransformationLabel">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <italic>true</italic>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
-}</string>
-         </property>
          <property name="text">
           <string>false</string>
          </property>
@@ -521,18 +425,6 @@ font-size: 10px;
        </item>
        <item row="2" column="1">
         <widget class="QLabel" name="m_EulerTransformationLabel">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <italic>true</italic>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
-}</string>
-         </property>
          <property name="text">
           <string>false</string>
          </property>
@@ -559,18 +451,6 @@ font-size: 10px;
        </property>
        <item row="0" column="1">
         <widget class="QLabel" name="m_ZMin">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <italic>true</italic>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
-}</string>
-         </property>
          <property name="text">
           <string>--</string>
          </property>
@@ -604,18 +484,6 @@ font-size: 10px;
        </item>
        <item row="1" column="1">
         <widget class="QLabel" name="m_ZMax">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <italic>true</italic>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
-}</string>
-         </property>
          <property name="text">
           <string>--</string>
          </property>
@@ -649,18 +517,6 @@ font-size: 10px;
        </item>
        <item row="2" column="1">
         <widget class="QLabel" name="m_RefFrameZDir">
-         <property name="font">
-          <font>
-           <pointsize>-1</pointsize>
-           <italic>true</italic>
-          </font>
-         </property>
-         <property name="styleSheet">
-          <string notr="true">QLabel {
-	font-size: 11px;
-	font-style: italic;
-}</string>
-         </property>
          <property name="text">
           <string>Unknown</string>
          </property>
