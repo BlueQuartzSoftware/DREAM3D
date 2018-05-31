@@ -203,7 +203,7 @@ void EbsdToH5EbsdWidget::setupMenuField()
 
   QMenu* lineEditMenu = new QMenu(m_LineEdit);
   m_LineEdit->setButtonMenu(QtSLineEdit::Left, lineEditMenu);
-  QLatin1String iconPath = QLatin1String(":/caret-bottom.png");
+  QLatin1String iconPath = QLatin1String(":/SIMPL/icons/images/caret-bottom.png");
 
   m_LineEdit->setButtonVisible(QtSLineEdit::Left, true);
 
@@ -537,8 +537,8 @@ void EbsdToH5EbsdWidget::generateExampleEbsdInputFile()
   QVector<QString> fileList = FilePathGenerator::GenerateFileList(start, end, increment, hasMissingFiles, m_StackLowToHigh->isChecked(), m_LineEdit->text(), m_FilePrefix->text(), m_FileSuffix->text(),
                                                                   m_FileExt->text(), m_TotalDigits->value());
   m_FileListView->clear();
-  QIcon greenDot = QIcon(QString(":/bullet_ball_green.png"));
-  QIcon redDot = QIcon(QString(":/bullet_ball_red.png"));
+  QIcon greenDot = QIcon(QString(":/SIMPL/icons/images/bullet_ball_green.png"));
+  QIcon redDot = QIcon(QString(":/SIMPL/icons/images/bullet_ball_red.png"));
   for(QVector<QString>::size_type i = 0; i < fileList.size(); ++i)
   {
     QString filePath(fileList.at(i));

@@ -77,8 +77,8 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-       <normaloff>:/cog.png</normaloff>:/cog.png</iconset>
+      <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
+       <normaloff>:/SIMPL/icons/images/cog.png</normaloff>:/cog.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -121,8 +121,8 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-       <normaloff>:/data-transfer-download.png</normaloff>:/data-transfer-download.png</iconset>
+      <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
+       <normaloff>:/SIMPL/icons/images/data-transfer-download.png</normaloff>:/data-transfer-download.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -168,8 +168,8 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-       <normaloff>:/delete.png</normaloff>:/delete.png</iconset>
+      <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
+       <normaloff>:/SIMPL/icons/images/delete.png</normaloff>:/delete.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -209,8 +209,8 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-       <normaloff>:/reload.png</normaloff>:/reload.png</iconset>
+      <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
+       <normaloff>:/SIMPL/icons/images/reload.png</normaloff>:/reload.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -256,8 +256,8 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-       <normaloff>:/add.png</normaloff>:/add.png</iconset>
+      <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
+       <normaloff>:/SIMPL/icons/images/add.png</normaloff>:/add.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -297,8 +297,8 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-       <normaloff>:/data-transfer-hdf.png</normaloff>:/data-transfer-hdf.png</iconset>
+      <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
+       <normaloff>:/SIMPL/icons/images/data-transfer-hdf.png</normaloff>:/data-transfer-hdf.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -371,8 +371,8 @@
       <string/>
      </property>
      <property name="icon">
-      <iconset resource="../../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-       <normaloff>:/data-transfer-upload.png</normaloff>:/data-transfer-upload.png</iconset>
+      <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
+       <normaloff>:/SIMPL/icons/images/data-transfer-upload.png</normaloff>:/data-transfer-upload.png</iconset>
      </property>
      <property name="iconSize">
       <size>
@@ -490,7 +490,7 @@
   </customwidget>
  </customwidgets>
  <resources>
-  <include location="../../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc"/>
+  <include location="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc"/>
  </resources>
  <connections/>
 </ui>

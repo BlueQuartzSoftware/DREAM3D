@@ -139,8 +139,8 @@ font-weight: bold;
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-         <normaloff>:/add.png</normaloff>:/add.png</iconset>
+        <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
+         <normaloff>:/SIMPL/icons/images/add.png</normaloff>:/add.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -183,8 +183,8 @@ font-weight: bold;
         <string/>
        </property>
        <property name="icon">
-        <iconset resource="../../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc">
-         <normaloff>:/delete_plain.png</normaloff>:/delete_plain.png</iconset>
+        <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
+         <normaloff>:/SIMPL/icons/images/delete_plain.png</normaloff>:/delete_plain.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -215,7 +215,7 @@ font-weight: bold;
   </layout>
  </widget>
  <resources>
-  <include location="../../../../../../ExternalProjects/SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc"/>
+  <include location="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc"/>
  </resources>
  <connections/>
 </ui>

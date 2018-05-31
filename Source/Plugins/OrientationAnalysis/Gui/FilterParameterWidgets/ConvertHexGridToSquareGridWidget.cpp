@@ -431,8 +431,8 @@ void ConvertHexGridToSquareGridWidget::generateExampleInputFile()
   QVector<QString> fileList =
       FilePathGenerator::GenerateFileList(start, end, increment, hasMissingFiles, true, m_InputDir->text(), m_FilePrefix->text(), m_FileSuffix->text(), m_FileExt->text(), m_TotalDigits->value());
   m_FileListView->clear();
-  QIcon greenDot = QIcon(QString(":/bullet_ball_green.png"));
-  QIcon redDot = QIcon(QString(":/bullet_ball_red.png"));
+  QIcon greenDot = QIcon(QString(":/SIMPL/icons/images/bullet_ball_green.png"));
+  QIcon redDot = QIcon(QString(":/SIMPL/icons/images/bullet_ball_red.png"));
   for(QVector<QString>::size_type i = 0; i < fileList.size(); ++i)
   {
     QString filePath(fileList.at(i));
