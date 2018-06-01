@@ -242,8 +242,8 @@ void CreateLambertSphere::dataCheck()
     VertexGeom::Pointer vertGeom = VertexGeom::CreateGeometry(m_Vertices, "VertexGeometry");
     vertDC->setGeometry(vertGeom);
     
-//    QVector<size_t> tDims = {static_cast<size_t>(totalVerts)};
-//    vertDC->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
+    QVector<size_t> tDims = {static_cast<size_t>(totalVerts)};
+    vertDC->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
     
 //    QVector<size_t> cDims = {1};
 //    DataArrayPath path(getVertexDataContainerName(), getVertexAttributeMatrixName(), m_VertexDataName);

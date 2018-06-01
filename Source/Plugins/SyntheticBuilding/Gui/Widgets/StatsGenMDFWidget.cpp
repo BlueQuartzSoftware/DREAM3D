@@ -73,7 +73,7 @@
 
 #include "SIMPLib/Math/SIMPLibMath.h"
 
-#include "SVWidgetsLib/QtSupport/QtSStyles.h"
+#include "SVWidgetsLib/Widgets/SVStyle.h"
 
 #include "OrientationLib/LaueOps/CubicOps.h"
 #include "OrientationLib/LaueOps/HexagonalOps.h"
@@ -133,10 +133,10 @@ void StatsGenMDFWidget::setupGui()
   m_PlotCurve = new QwtPlotCurve;
   
   // Apple the Style to the buttons
-  addMDFRowBtn->setStyleSheet(QtSStyles::StyleSheetForButton(addMDFRowBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::AddImagePath));  
-  deleteMDFRowBtn->setStyleSheet(QtSStyles::StyleSheetForButton(deleteMDFRowBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::DeleteImagePath));
-  loadMDFBtn->setStyleSheet(QtSStyles::StyleSheetForButton(loadMDFBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::LoadImagePath));
-  m_MDFUpdateBtn->setStyleSheet(QtSStyles::StyleSheetForButton(m_MDFUpdateBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::ReloadImagePath));
+  addMDFRowBtn->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(addMDFRowBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::AddImagePath));  
+  deleteMDFRowBtn->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(deleteMDFRowBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::DeleteImagePath));
+  loadMDFBtn->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(loadMDFBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::LoadImagePath));
+  m_MDFUpdateBtn->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(m_MDFUpdateBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::ReloadImagePath));
 
 }
 

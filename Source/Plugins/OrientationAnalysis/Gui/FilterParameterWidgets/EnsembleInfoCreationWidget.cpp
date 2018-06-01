@@ -40,11 +40,11 @@
 #include <QtWidgets/QMenu>
 
 #include "SVWidgetsLib/Core/SVWidgetsLibConstants.h"
-#include "SVWidgetsLib/QtSupport/QtSStyles.h"
+#include "SVWidgetsLib/Widgets/SVStyle.h"
 
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidgetUtils.hpp"
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidgetsDialogs.h"
-#include "SVWidgetsLib/QtSupport/QtSStyles.h"
+#include "SVWidgetsLib/Widgets/SVStyle.h"
 
 
 // -----------------------------------------------------------------------------
@@ -126,8 +126,8 @@ void EnsembleInfoCreationWidget::setupGui()
   EnsembleInfo info = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<EnsembleInfo>();
   m_EnsembleInfoTableModel->setTableData(info);
 
-  addBtn->setStyleSheet(QtSStyles::StyleSheetForButton(addBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::AddImagePath));
-  deleteBtn->setStyleSheet(QtSStyles::StyleSheetForButton(deleteBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::DeleteImagePath));
+//  addBtn->setStyleSheet(SVStyle::StyleSheetForButton(addBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::AddImagePath));
+//  deleteBtn->setStyleSheet(SVStyle::StyleSheetForButton(deleteBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::DeleteImagePath));
  
  
 #if 0

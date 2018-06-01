@@ -11,6 +11,11 @@ namespace BrandedStrings
   static const QString DistributionName("OpenSource Edition");
 
   static const QString ApplicationName("DREAM3D");
+
+  static const QString DefaultStyleSheet(":/SIMPL/StyleSheets/Default.css");
+  static const QString DefaultColorFontFile(":/SIMPL/StyleSheets/Default.json");
+
+  static const QStringList ExtraFonts;
 }
 
 #endif /* _BrandedStrings_H_ */

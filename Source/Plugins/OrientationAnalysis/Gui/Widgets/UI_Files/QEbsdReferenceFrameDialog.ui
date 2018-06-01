@@ -403,7 +403,7 @@ font-size: 10px;
        </property>
        <property name="icon">
         <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/information.png</normaloff>:/information.png</iconset>
+         <normaloff>:/SIMPL/icons/images/information.png</normaloff>:/information.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -488,7 +488,7 @@ font-size: 10px;
        </property>
        <property name="icon">
         <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/zoom_in.png</normaloff>:/zoom_in.png</iconset>
+         <normaloff>:/SIMPL/icons/images/zoom_in.png</normaloff>:/zoom_in.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -529,7 +529,7 @@ font-size: 10px;
        </property>
        <property name="icon">
         <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/zoom_out.png</normaloff>:/zoom_out.png</iconset>
+         <normaloff>:/SIMPL/icons/images/zoom_out.png</normaloff>:/zoom_out.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -570,7 +570,7 @@ font-size: 10px;
        </property>
        <property name="icon">
         <iconset resource="../../../../../Resources/icons/images/Icons.qrc">
-         <normaloff>:/fit_to_window.png</normaloff>:/fit_to_window.png</iconset>
+         <normaloff>:/SIMPL/icons/images/fit_to_window.png</normaloff>:/fit_to_window.png</iconset>
        </property>
        <property name="iconSize">
         <size>

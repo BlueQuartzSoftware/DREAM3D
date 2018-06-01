@@ -77,21 +77,21 @@ font-size: 11px;
       </widget>
      </item>
      <item row="3" column="1">
-      <widget class="QSpinBox" name="m_ZPoints">
+      <widget class="SVSpinBox" name="m_ZPoints">
        <property name="maximum">
         <number>10000</number>
        </property>
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QSpinBox" name="m_YPoints">
+      <widget class="SVSpinBox" name="m_YPoints">
        <property name="maximum">
         <number>10000</number>
        </property>
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QSpinBox" name="m_XPoints">
+      <widget class="SVSpinBox" name="m_XPoints">
        <property name="maximum">
         <number>10000</number>
        </property>
@@ -137,7 +137,7 @@ font-size: 11px;
       </widget>
      </item>
      <item row="1" column="4">
-      <widget class="QDoubleSpinBox" name="m_XResolution">
+      <widget class="SVDoubleSpinBox" name="m_XResolution">
        <property name="decimals">
         <number>4</number>
        </property>
@@ -153,7 +153,7 @@ font-size: 11px;
       </widget>
      </item>
      <item row="2" column="4">
-      <widget class="QDoubleSpinBox" name="m_YResolution">
+      <widget class="SVDoubleSpinBox" name="m_YResolution">
        <property name="decimals">
         <number>4</number>
        </property>
@@ -169,7 +169,7 @@ font-size: 11px;
       </widget>
      </item>
      <item row="3" column="4">
-      <widget class="QDoubleSpinBox" name="m_ZResolution">
+      <widget class="SVDoubleSpinBox" name="m_ZResolution">
        <property name="decimals">
         <number>4</number>
        </property>
@@ -200,7 +200,7 @@ font-size: 11px;
          <rect>
           <x>0</x>
           <y>0</y>
-          <width>293</width>
+          <width>295</width>
           <height>118</height>
          </rect>
         </property>
@@ -369,6 +369,11 @@ font-size: 11px;
  </widget>
  <customwidgets>
   <customwidget>
+   <class>SVSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header location="global">SVControlWidgets.h</header>
+  </customwidget>
+  <customwidget>
    <class>QtSFSDropLineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">QtSFSDropLineEdit.h</header>
@@ -378,6 +383,11 @@ font-size: 11px;
    <extends>QWidget</extends>
    <header>SVWidgetsLib/FilterParameterWidgets/DataArraySelectionWidget.h</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SVDoubleSpinBox</class>
+   <extends>QDoubleSpinBox</extends>
+   <header location="global">SVControlWidgets.h</header>
   </customwidget>
  </customwidgets>
  <tabstops>

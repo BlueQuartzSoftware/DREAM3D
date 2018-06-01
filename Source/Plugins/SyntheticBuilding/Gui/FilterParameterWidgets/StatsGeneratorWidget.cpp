@@ -64,7 +64,7 @@
 #include "SIMPLib/CoreFilters/DataContainerWriter.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
 
-#include "SVWidgetsLib/QtSupport/QtSStyles.h"
+#include "SVWidgetsLib/Widgets/SVStyle.h"
 
 
 #include "SyntheticBuilding/FilterParameters/StatsGeneratorFilterParameter.h"
@@ -192,14 +192,14 @@ void StatsGeneratorWidget::setupGui()
   // Catch when the filter wants its values updated
   connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)), this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
   
-  editPhase->setStyleSheet(QtSStyles::StyleSheetForButton(editPhase->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::CogImagePath));
-  addPhase->setStyleSheet(QtSStyles::StyleSheetForButton(addPhase->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::AddImagePath));
-  deletePhase->setStyleSheet(QtSStyles::StyleSheetForButton(deletePhase->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::DeleteImagePath));
+  editPhase->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(editPhase->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::CogImagePath));
+  addPhase->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(addPhase->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::AddImagePath));
+  deletePhase->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(deletePhase->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::DeleteImagePath));
 
-  updatePipelineBtn->setStyleSheet(QtSStyles::StyleSheetForButton(updatePipelineBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::ReloadImagePath));
-  openStatsFile->setStyleSheet(QtSStyles::StyleSheetForButton(openStatsFile->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::LoadImagePath));
-  saveJsonBtn->setStyleSheet(QtSStyles::StyleSheetForButton(saveJsonBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::ReloadImagePath));
-  saveH5Btn->setStyleSheet(QtSStyles::StyleSheetForButton(saveH5Btn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::HDFImagePath));
+  updatePipelineBtn->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(updatePipelineBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::ReloadImagePath));
+  openStatsFile->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(openStatsFile->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::LoadImagePath));
+  saveJsonBtn->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(saveJsonBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::ReloadImagePath));
+  saveH5Btn->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(saveH5Btn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::HDFImagePath));
 
 
   // Hide the debugging buttons

@@ -110,8 +110,8 @@ font-size: 150%;
        </item>
        <item>
         <layout class="QGridLayout" name="widgetLayout">
-         <item row="0" column="0">
-          <widget class="QLabel" name="label">
+         <item row="2" column="3">
+          <widget class="QLabel" name="label_5">
            <property name="styleSheet">
             <string notr="true">QLabel
 {
@@ -120,67 +120,28 @@ font-size: 12px;
 }</string>
            </property>
            <property name="text">
-            <string>Mu:</string>
+            <string>Bin Step Size:</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="m_Mu_SizeDistribution">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>60</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>1.0</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="6" rowspan="3">
-          <spacer name="horizontalSpacer">
+         <item row="0" column="2" rowspan="3">
+          <spacer name="horizontalSpacer_2">
            <property name="orientation">
             <enum>Qt::Horizontal</enum>
            </property>
+           <property name="sizeType">
+            <enum>QSizePolicy::Fixed</enum>
+           </property>
            <property name="sizeHint" stdset="0">
             <size>
-             <width>40</width>
+             <width>12</width>
              <height>20</height>
             </size>
            </property>
           </spacer>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_2">
-           <property name="styleSheet">
-            <string notr="true">QLabel
-{
-font-weight: bold;
-font-size: 12px;
-}</string>
-           </property>
-           <property name="text">
-            <string>Bins to be Created:</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
          </item>
          <item row="2" column="1">
           <widget class="QLabel" name="m_NumberBinsGenerated">
@@ -204,39 +165,6 @@ font-size: 12px;
            </property>
            <property name="text">
             <string>0</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2" rowspan="3">
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>12</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="2" column="3">
-          <widget class="QLabel" name="label_5">
-           <property name="styleSheet">
-            <string notr="true">QLabel
-{
-font-weight: bold;
-font-size: 12px;
-}</string>
-           </property>
-           <property name="text">
-            <string>Bin Step Size:</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
            </property>
           </widget>
          </item>
@@ -285,6 +213,78 @@ font-size: 12px;
            </property>
            <property name="text">
             <string>Sigma:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_2">
+           <property name="styleSheet">
+            <string notr="true">QLabel
+{
+font-weight: bold;
+font-size: 12px;
+}</string>
+           </property>
+           <property name="text">
+            <string>Bins to be Created:</string>
+           </property>
+           <property name="alignment">
+            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="5" rowspan="3">
+          <spacer name="horizontalSpacer">
+           <property name="orientation">
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item row="0" column="1">
+          <widget class="QLineEdit" name="m_Mu_SizeDistribution">
+           <property name="sizePolicy">
+            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="minimumSize">
+            <size>
+             <width>60</width>
+             <height>0</height>
+            </size>
+           </property>
+           <property name="maximumSize">
+            <size>
+             <width>60</width>
+             <height>16777215</height>
+            </size>
+           </property>
+           <property name="text">
+            <string>1.0</string>
+           </property>
+          </widget>
+         </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label">
+           <property name="styleSheet">
+            <string notr="true">QLabel
+{
+font-weight: bold;
+font-size: 12px;
+}</string>
+           </property>
+           <property name="text">
+            <string>Mu:</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
@@ -397,26 +397,6 @@ font-size: 12px;
            </property>
            <property name="text">
             <string>5</string>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="5">
-          <widget class="QLabel" name="label_9">
-           <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap>:/MaxCutOff_Eqn.png</pixmap>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="5">
-          <widget class="QLabel" name="label_10">
-           <property name="text">
-            <string/>
-           </property>
-           <property name="pixmap">
-            <pixmap>:/MinCutOff_Eqn.png</pixmap>
            </property>
           </widget>
          </item>
