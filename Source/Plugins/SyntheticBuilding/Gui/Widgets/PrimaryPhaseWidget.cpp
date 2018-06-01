@@ -309,7 +309,7 @@ StatsGenFeatureSizeWidget* PrimaryPhaseWidget::getFeatureSizeWidget()
 // -----------------------------------------------------------------------------
 QTabWidget* PrimaryPhaseWidget::getTabWidget()
 {
-  return tabWidget;
+  return primaryPhaseTabWidget;
 }
 
 // -----------------------------------------------------------------------------
@@ -534,10 +534,10 @@ QString PrimaryPhaseWidget::getComboString()
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::setTabsPlotTabsEnabled(bool b)
 {
-  qint32 count = this->tabWidget->count();
+  qint32 count = this->primaryPhaseTabWidget->count();
   for(qint32 i = 1; i < count; ++i)
   {
-    this->tabWidget->setTabEnabled(i, b);
+    this->primaryPhaseTabWidget->setTabEnabled(i, b);
   }
 }
 

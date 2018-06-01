@@ -78,8 +78,9 @@ public:
     for(std::vector<QString>::size_type i = 0; i < names.size(); i++)
     {
 
-      QString outputFile = UnitTest::TestTempDir + QDir::separator() + QString::number(i) + "_" + names[i] + ".png";
-      QVariant var;
+      std::cout << "Laue System IPF Triangle: " << names[i].toStdString() << std::endl;
+      QString outputFile = UnitTest::TestTempDir + QDir::separator() + QString::number(i) + "_" + names[i].replace("/", "_") + ".png";
+      std::cout << "  Output File: " << outputFile.toStdString() << std::endl;
 
       bool propWasSet = filter->setProperty("LaueClass", static_cast<int>(i));
       DREAM3D_REQUIRE_EQUAL(propWasSet, true);

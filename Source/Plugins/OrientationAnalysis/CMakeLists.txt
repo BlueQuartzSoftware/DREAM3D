@@ -9,6 +9,7 @@ set(${PLUGIN_NAME}_VERSION_MINOR "0")
 get_filename_component(${PLUGIN_NAME}_SOURCE_DIR "${CMAKE_CURRENT_LIST_DIR}" ABSOLUTE)
 set(${PLUGIN_NAME}_BINARY_DIR "${DREAM3DProj_BINARY_DIR}/Plugins/${PLUGIN_NAME}")
 
+message(STATUS "libharu_DIR: ${libharu_DIR}")
 find_package(libharu)
 
 # --------------------------------------------------------------------
@@ -211,6 +212,7 @@ PluginProperties(TARGET_NAME ${plug_target_name}
 
 target_link_libraries(${plug_target_name}
                     Qt5::Core
+                    Qt5::Gui
                     SIMPLib
                     EbsdLib
                     OrientationLib

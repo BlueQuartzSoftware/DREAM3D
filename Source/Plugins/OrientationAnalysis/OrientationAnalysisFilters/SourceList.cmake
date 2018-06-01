@@ -49,7 +49,7 @@ set(_PublicFilters
   ReadH5Ebsd
   ReplaceElementAttributesWithNeighborValues
   RotateEulerRefFrame
-  #WriteIPFStandardTriangle
+  WriteIPFStandardTriangle
   WritePoleFigure
   WriteStatsGenOdfAngleFile
   OrientationUtility
@@ -103,7 +103,7 @@ foreach(f ${_PrivateFilters} )
 endforeach()
 
 
-if(0)
+if(1)
   ADD_SIMPL_SUPPORT_HEADER(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} IPFLegendHelpers/IPFLegendPainter.h)
   ADD_SIMPL_SUPPORT_SOURCE(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName} IPFLegendHelpers/IPFLegendPainter.cpp)
   

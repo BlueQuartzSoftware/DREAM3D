@@ -27,7 +27,7 @@
     <number>4</number>
    </property>
    <item>
-    <widget class="QTabWidget" name="tabWidget">
+    <widget class="QTabWidget" name="primaryPhaseTabWidget">
      <property name="tabPosition">
       <enum>QTabWidget::West</enum>
      </property>
@@ -368,7 +368,7 @@
  <tabstops>
   <tabstop>microstructurePresetCombo</tabstop>
   <tabstop>m_GenerateDefaultData</tabstop>
-  <tabstop>tabWidget</tabstop>
+  <tabstop>primaryPhaseTabWidget</tabstop>
  </tabstops>
  <resources/>
  <connections/>
