@@ -40,5 +40,4 @@ SIMPL_GenerateUnitTestFile(PLUGIN_NAME ${PLUGIN_NAME}
                                         ${${PLUGIN_NAME}Test_SOURCE_DIR}
                                         ${${PLUGIN_NAME}Test_BINARY_DIR}
                                         ${${PLUGIN_NAME}_PARENT_BINARY_DIR}
-                            USE_QTGUI
                            )
