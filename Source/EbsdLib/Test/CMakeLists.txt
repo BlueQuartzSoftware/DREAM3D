@@ -89,7 +89,6 @@ endforeach()
 
 STRING(REPLACE "|" ";" TestMainFunctors ${TestMainFunctors}   )
 
-
 set(QT_APPLICATION_CLASS_HEADER "#include <QtCore/QCoreApplication>")
 set(QT_APPLICATION_CLASS "QCoreApplication")
 
