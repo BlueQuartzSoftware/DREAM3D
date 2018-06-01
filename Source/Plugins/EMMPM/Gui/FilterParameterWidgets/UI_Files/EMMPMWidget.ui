@@ -103,7 +103,7 @@
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QSpinBox" name="m_NumClasses">
+      <widget class="SVSpinBox" name="m_NumClasses">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
          <horstretch>0</horstretch>
@@ -215,7 +215,7 @@
       </widget>
      </item>
      <item row="1" column="1">
-      <widget class="QSpinBox" name="m_EmIterations">
+      <widget class="SVSpinBox" name="m_EmIterations">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
          <horstretch>0</horstretch>
@@ -283,7 +283,7 @@
       </widget>
      </item>
      <item row="1" column="3">
-      <widget class="QSpinBox" name="m_MpmIterations">
+      <widget class="SVSpinBox" name="m_MpmIterations">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
          <horstretch>0</horstretch>
@@ -366,8 +366,13 @@
    </item>
   </layout>
  </widget>
- <resources>
-  <include location="../../../../../../SIMPL/Source/SVWidgetsLib/icons/images/Icons.qrc"/>
- </resources>
+ <customwidgets>
+  <customwidget>
+   <class>SVSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header location="global">SVControlWidgets.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
  <connections/>
 </ui>

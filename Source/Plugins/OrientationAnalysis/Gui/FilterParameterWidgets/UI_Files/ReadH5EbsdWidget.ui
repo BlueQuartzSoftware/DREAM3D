@@ -571,7 +571,7 @@ font-size: 10px;
    <item>
     <layout class="QGridLayout" name="widgetLayout">
      <item row="2" column="2">
-      <widget class="QSpinBox" name="m_ZEndIndex">
+      <widget class="SVSpinBox" name="m_ZEndIndex">
        <property name="minimumSize">
         <size>
          <width>75</width>
@@ -640,7 +640,7 @@ font-size: 11px;
       </widget>
      </item>
      <item row="1" column="2">
-      <widget class="QSpinBox" name="m_ZStartIndex">
+      <widget class="SVSpinBox" name="m_ZStartIndex">
        <property name="minimumSize">
         <size>
          <width>75</width>
@@ -695,6 +695,11 @@ font-size: 11px;
    <class>QtSLineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">QtSLineEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SVSpinBox</class>
+   <extends>QSpinBox</extends>
+   <header location="global">SVControlWidgets.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
