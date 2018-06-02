@@ -189,7 +189,6 @@ void EbsdToH5EbsdWidget::keyPressEvent(QKeyEvent* event)
   if(event->key() == Qt::Key_Escape)
   {
     m_LineEdit->setText(m_CurrentText);
-    m_LineEdit->setStyleSheet("");
     m_LineEdit->setToolTip("");
   }
 }
@@ -402,7 +401,6 @@ void EbsdToH5EbsdWidget::on_m_LineEdit_textChanged(const QString& text)
     QString outPath = dir.absolutePath() + QDir::separator() + dirname + "_Output" + QDir::separator() + dirname + ".h5ebsd";
     outPath = QDir::toNativeSeparators(outPath);
     m_OutputFile->setText(outPath);
-    verifyPathExists(m_OutputFile->text(), m_OutputFile);
     generateExampleEbsdInputFile();
     m_LineEdit->blockSignals(true);
     m_LineEdit->setText(QDir::toNativeSeparators(m_LineEdit->text()));
