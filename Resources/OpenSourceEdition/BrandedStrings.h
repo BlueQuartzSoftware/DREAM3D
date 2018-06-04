@@ -16,5 +16,6 @@ namespace BrandedStrings
   static const QString DefaultColorFontFile(":/SIMPL/StyleSheets/Default.json");
 
   static const QStringList ExtraFonts;
+  static const QStringList ThemeNames;
 }
 
