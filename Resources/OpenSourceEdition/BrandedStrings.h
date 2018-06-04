@@ -1,7 +1,7 @@
-#ifndef _BrandedStrings_H_
-#define _BrandedStrings_H_
+#pragma once
 
 #include <QtCore/QString>
+#include <QtCore/QStringList>
 
 namespace BrandedStrings
 {
@@ -17,6 +17,4 @@ namespace BrandedStrings
 
   static const QStringList ExtraFonts;
 }
-
-#endif /* _BrandedStrings_H_ */
 
