@@ -13,7 +13,10 @@ namespace BrandedStrings
   static const QString ApplicationName("DREAM3D");
 
   static const QString DefaultStyleDirectory(":/SIMPL/StyleSheets");
-  static const QString DefaultThemeName("Default");
+
+  static const QStringList LoadedThemeNames;
+
+  static const QString DefaultThemeName;
 
   static const QStringList ExtraFonts;
 }
