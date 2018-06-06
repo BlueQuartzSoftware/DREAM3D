@@ -54,7 +54,7 @@ cmake_minimum_required(VERSION 3.8.0)
 
 #------------------------------------------------------------------------------
 # Create the Top level Project
-project(DREAM3DProj VERSION 6.5.0.0)
+project(DREAM3DProj VERSION 6.4.0.0)
 set(PROJECT_CODE_DIR ${PROJECT_SOURCE_DIR}/Source)
 
 # ---------- Setup output Directories -------------------------
