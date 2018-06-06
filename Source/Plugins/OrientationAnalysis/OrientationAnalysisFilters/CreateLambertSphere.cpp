@@ -70,6 +70,7 @@ CreateLambertSphere::CreateLambertSphere()
 , m_CreateEdgeGeometry(true)
 , m_CreateTriangleGeometry(true)
 , m_CreateQuadGeometry(true)
+, m_UseExistingImage(true)
 {
 }
 
@@ -99,37 +100,37 @@ void CreateLambertSphere::setupFilterParameters()
 
   
   {
-    QStringList linkedProperties;// = {"VertexDataContainerName", "VertexAttributeMatrixName"};
+    QStringList linkedProperties = {"VertexDataContainerName", "VertexAttributeMatrixName"};
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Vertex Geometry", CreateVertexGeometry, FilterParameter::Parameter, CreateLambertSphere, linkedProperties));
-//    parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output Vertex DataContainer Name", VertexDataContainerName, FilterParameter::Parameter, CreateLambertSphere));
+    parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output Vertex DataContainer Name", VertexDataContainerName, FilterParameter::Parameter, CreateLambertSphere));
 //    parameters.push_back(SIMPL_NEW_STRING_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, FilterParameter::Parameter, CreateLambertSphere));
   }
   
   {
-    QStringList linkedProperties;// = {"EdgeDataContainerName", "EdgeAttributeMatrixName"};
+    QStringList linkedProperties = {"EdgeDataContainerName", "EdgeAttributeMatrixName"};
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Edge Geometry", CreateEdgeGeometry, FilterParameter::Parameter, CreateLambertSphere, linkedProperties));
-//    parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output Edge DataContainer Name", EdgeDataContainerName, FilterParameter::Parameter, CreateLambertSphere));
+    parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output Edge DataContainer Name", EdgeDataContainerName, FilterParameter::Parameter, CreateLambertSphere));
 //    parameters.push_back(SIMPL_NEW_STRING_FP("Edge Attribute Matrix", EdgeAttributeMatrixName, FilterParameter::Parameter, CreateLambertSphere));
   }
   
   {
-    QStringList linkedProperties;// = {"TriangleDataContainerName"};
+    QStringList linkedProperties = {"TriangleDataContainerName"};
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Triangle Geometry", CreateTriangleGeometry, FilterParameter::Parameter, CreateLambertSphere, linkedProperties));
-//    parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output Triangle DataContainer Name", TriangleDataContainerName, FilterParameter::Parameter, CreateLambertSphere));
+    parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output Triangle DataContainer Name", TriangleDataContainerName, FilterParameter::Parameter, CreateLambertSphere));
   }
   
   {
-    QStringList linkedProperties;// = {"QuadDataContainerName", "FaceAttributeMatrixName", "ImageFaceDataArrayName"};
+    QStringList linkedProperties = {"QuadDataContainerName", "FaceAttributeMatrixName", "ImageFaceDataArrayName"};
     parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Quad Geometry", CreateQuadGeometry, FilterParameter::Parameter, CreateLambertSphere, linkedProperties));
-//    parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output Quad DataContainer Name", QuadDataContainerName, FilterParameter::Parameter, CreateLambertSphere));
+    parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output Quad DataContainer Name", QuadDataContainerName, FilterParameter::Parameter, CreateLambertSphere));
 //    parameters.push_back(SIMPL_NEW_STRING_FP("Quad Attribute Matrix", FaceAttributeMatrixName, FilterParameter::Parameter, CreateLambertSphere));
 //    parameters.push_back(SIMPL_NEW_STRING_FP("Quad Face ArrayName", ImageFaceDataArrayName, FilterParameter::Parameter, CreateLambertSphere));
   }
   
    {
     // Option to map an existing image
-    QStringList linkedProperties = {"ImageDataArrayPath"};
-    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Existing Image", UseExistingImage, FilterParameter::Parameter, CreateLambertSphere, linkedProperties));
+  //  QStringList linkedProperties = {"ImageDataArrayPath"};
+  //  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Existing Image", UseExistingImage, FilterParameter::Parameter, CreateLambertSphere, linkedProperties));
  
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt8, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Image Data", ImageDataArrayPath, FilterParameter::RequiredArray, CreateLambertSphere, req));
