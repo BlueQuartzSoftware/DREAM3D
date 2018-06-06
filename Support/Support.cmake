@@ -49,11 +49,11 @@ set(SYNTHETIC_STATS_FILES
 list(GET SYNTHETIC_STATS_FILES 0 data_file)
 
 if(EXISTS ${data_file})
-  if(APPLE)
-    set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}/Resources/Data")
-  else()
+  # if(APPLE)
+  #   set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}/Resources/Data")
+  # else()
     set(INSTALL_DESTINATION "Data")
-  endif()
+  # endif()
 
   install(FILES ${SYNTHETIC_STATS_FILES}
           DESTINATION ${INSTALL_DESTINATION}
