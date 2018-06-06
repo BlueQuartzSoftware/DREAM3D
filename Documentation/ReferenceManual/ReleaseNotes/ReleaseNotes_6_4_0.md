@@ -1,5 +1,4 @@
-Version 6.4 Release Notes 
-===========
+# Version 6.4 Release Notes #
 
 These release notes summarize the major changes for each officially released version of DREAM.3D. The official bug report is located at the [DREAM.3D GitHub issues page](https://github.com/bluequartzsoftware/DREAM3D/issues).
 
@@ -10,59 +9,6 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 [DREAM.3D Users List](https://groups.google.com/forum/?/dream3d-users#!forum/dream3d-users)
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
-
-## Version 6.4.xxx ##
-
-### New Filters ###
-
-+ DREAM3D Issue #752: Add filter to reduce orientations to their fundamental zone.
-+ Add ability to create discrete pole figures instead of Lambert based pole figures.
-
-### Fixed DREAM3D Issues ###
-
-+ Fix a regression where incorrect static_cast<> would cause black pole figures.
-+ Fix memory leak in the LaueOps classes when multi-threading.
-+ Improve the output of the "IPF Legends" filter.
-+ Enable Tetragonal High, Tetragonal Low, Trigonal High & Trigonal Low Laue Group for Pole Figure generation
-+ DREAM3D Issue #760: DREAM.3D will crash when adjusting the RDF input values of the StatsGenerator filter
-+ DREAM3D Issue #758: CMake code in the plugins are not generating any unit test code
-+ DREAM3D Issue #756: Figure out how to remove the JQuery.js file that Doxygen includes.
-+ Fixing bug where choosing the Precipitate Rolled Preset in StatsGenerator would not display a dialog box.
-+ DREAM3D Issue #755: Implement a read only preflight updated value that states the range and delta for each axis in synthetic volume. This allows better feedback to the user that they are hitting specific size targets that they have in mind.
-+ Add information parameter that shows the size of the image geometry in real length units.
-+ Enable  pole figures that were disabled due to no way to verify the results. Results have been verified by an outside source.
-+ Fix and improve labels on the IPF Legends.
-+ Fix memory leak when multi-threading in the LaueOps classes.
-+ Add cancel checks for the EMsoftSO3Sampler filter
-
-
-### Fixed SIMPLView Issues ###
-
-+ SIMPLView Issue #29: Updated the Show / Hide on Error preference values
-
-### Fixed SIMPL Issues ###
-
-+ Add new filter that allows the user to Summarize a pipeline
-+ Update all filter documentation with section stating which Example Pipelines the filter appears in
-+ Clean up Memory leak in IssuesWidget due to no delete on the member pointer variable that represents the UI.
-+ Fix many issues with over flows of int32 values and other crashes within the RadialDistribution Function class
-+ Fix issue where filters in pipelines that have 10 or more filters would not be read correctly and interpreted as unknown filters.
-+ Added UUID to every filter. Loading pipelines now prefers to use the UUID, then falls back to the C++ classname
-+ Convert the PipelineView Widget into a Dockable Widget
-+ SIMPL Issue #164: Importing a .dream3d file does not select all DataArrays for importing
-+ SIMPL Issue #158: SIMPLib Unit test template file does not use the correct CMake variable
-+ SIMPL Issue #154: ImageGeom header throws warnings
-+ SIMPL Issue #144: Create a "Pipeline Summary" filter
-+ ImageGeom & RectGridGeom: Fix crash issue where the number of Z Dimensions need to be greater than the number of processors.
-+ SIMPL Issue #147: Fix bug where the index was left off a pointer comparison.
-+ SIMPL Issue #145: Fixing issue where the Cell Attribute Matrix was not written out for Rectilinear Grids
-+ Fix ImportAsciDataArray failing when reading boolean data from a file.
-+ SIMPL Issue #141: Add information parameter that shows the size of the image geometry in real length units.
-+ Fix memory leak in ImportHDF5Dataset
-+ Modernizing the CMake codes to use target specific properties where possible instead of global properties
-+ Removing SafePointerDowncast and other old school C++ codes and updating to newer C++ 11/14 standards instead.
-+ Fix GenerateColorTableTest unit test that was failing
-+ SIMPL Issue #29: Updating ReadASCIIData to allow the filter to read strings.
 
 ## Version 6.4.197 ##
 
