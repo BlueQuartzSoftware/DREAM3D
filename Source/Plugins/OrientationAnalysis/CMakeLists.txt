@@ -12,6 +12,11 @@ set(${PLUGIN_NAME}_BINARY_DIR "${DREAM3DProj_BINARY_DIR}/Plugins/${PLUGIN_NAME}"
 message(STATUS "libharu_DIR: ${libharu_DIR}")
 find_package(libharu)
 
+get_property(SIMPLibSearchDirs GLOBAL PROPERTY SIMPLibSearchDirs)
+if(NOT "${SIMPLibSearchDirs}" STREQUAL "")
+  file(APPEND "${SIMPLibSearchDirs}" "${libharu_LIB_DIRS};")
+endif()
+
 # --------------------------------------------------------------------
 # Look for Qt 5 as we need it for the plugin GUI to be generated
 if(NOT Qt5Core_FOUND)
