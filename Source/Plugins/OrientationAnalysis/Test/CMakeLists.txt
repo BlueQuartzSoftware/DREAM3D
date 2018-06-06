@@ -13,7 +13,7 @@ set(TEST_NAMES
   CtfCachingTest
   AngleFileIOTest
   OrientationUtilityTest
-  WriteIPFStandardTriangleTest
+#  WriteIPFStandardTriangleTest
 )
 
 if(SIMPL_USE_ITK)
