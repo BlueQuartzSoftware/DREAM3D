@@ -744,9 +744,21 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
   {
     ph = tokens[7].toInt(&ok);
     if(!ok)
-    {
+    { 
       setErrorCode(-2508);
       m_ErrorColumn = 7;
+      // Some have floats instead of integers so lets try that.
+      float f = tokens[7].toFloat(&ok);
+      if(!ok)
+      {
+        setErrorCode(-2588);
+        m_ErrorColumn = 7;
+      }
+      else
+      {
+        setErrorCode(0);
+        ph = static_cast<int32_t>(f);
+      }
     }
     m_PhaseData[offset] = ph;
   }
