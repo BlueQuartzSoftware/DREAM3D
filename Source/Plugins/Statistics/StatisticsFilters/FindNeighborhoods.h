@@ -80,7 +80,11 @@ public:
 
   SIMPL_FILTER_PARAMETER(QString, NeighborhoodsArrayName)
   Q_PROPERTY(QString NeighborhoodsArrayName READ getNeighborhoodsArrayName WRITE setNeighborhoodsArrayName)
-
+  
+  
+  void updateNeighborHood(size_t sourceIndex, size_t targetIndex);
+  void updateProgress(size_t numCompleted, size_t totalFeatures);
+  
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
@@ -194,7 +198,8 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, Neighborhoods)
 
   NeighborList<int32_t>::WeakPointer m_NeighborhoodList;
-
+  std::vector<std::vector<int32_t>> m_LocalNeighborhoodList;
+  size_t m_NumCompleted = 0;
 public:
   FindNeighborhoods(const FindNeighborhoods&) = delete; // Copy Constructor Not Implemented
   FindNeighborhoods(FindNeighborhoods&&) = delete;      // Move Constructor
