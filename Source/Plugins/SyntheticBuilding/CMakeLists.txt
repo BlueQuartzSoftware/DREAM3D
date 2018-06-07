@@ -206,7 +206,10 @@ target_include_directories(${plug_target_name}
 # --------------------------------------------------------------------
 # Set some additional properties of the plugin like its output name
 set(${plug_target_name}_install_dest "./Plugins")
-if(NOT APPLE AND NOT WIN32)
+if(WIN32)
+  set(${plug_target_name}_install_dest ".")
+endif()
+if(NOT APPLE AND UNIX)
   set(${plug_target_name}_install_dest "lib")
 endif()
 
