@@ -205,6 +205,11 @@ target_include_directories(${plug_target_name}
 )
 # --------------------------------------------------------------------
 # Set some additional properties of the plugin like its output name
+set(${plug_target_name}_install_dest "./Plugins")
+if(NOT APPLE AND NOT WIN32)
+  set(${plug_target_name}_install_dest "lib")
+endif()
+
 PluginProperties(TARGET_NAME ${plug_target_name}
                 DEBUG_EXTENSION "_debug"
                 VERSION "${DREAM3D_VERSION}"
@@ -213,7 +218,7 @@ PluginProperties(TARGET_NAME ${plug_target_name}
                 OUTPUT_NAME ${PLUGIN_NAME}
                 BINARY_DIR "${DREAM3D_BINARY_DIR}"
                 PLUGIN_FILE "${CMP_PLUGIN_LIST_FILE}"
-                INSTALL_DEST "./Plugins"
+                INSTALL_DEST "${${plug_target_name}_install_dest}"
 )
 
 target_link_libraries(${plug_target_name}
