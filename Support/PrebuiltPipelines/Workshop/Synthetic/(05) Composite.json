@@ -181,13 +181,13 @@
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "OutputCellEnsembleAttributeMatrixName": "CellEnsembleData",
-        "OutputCellFeatureAttributeMatrixName": "CellFeatureData",
+        "OutputCellFeatureAttributeMatrixName": "Grain Data",
         "UseMask": 0
     },
     "4": {
         "BoundaryCellsArrayName": "BoundaryCells",
         "CellFeatureAttributeMatrixPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
@@ -224,7 +224,7 @@
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "FeaturePhasesArrayPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "Phases",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },

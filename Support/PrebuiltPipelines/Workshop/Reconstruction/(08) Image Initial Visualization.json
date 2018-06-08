@@ -1,7 +1,7 @@
 {
     "0": {
-        "CellAttributeMatrixName": "CellData",
-        "DataContainerName": "ImageDataContainer",
+        "CellAttributeMatrixName": "Optical Data",
+        "DataContainerName": "RoboMet.3D Image Stack",
         "FilterVersion": "1.0.351",
         "Filter_Human_Label": "ITK::Import Images (3D Stack) (KW)",
         "Filter_Name": "ITKImportImageStack",

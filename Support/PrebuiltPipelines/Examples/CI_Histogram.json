@@ -1,8 +1,8 @@
 {
     "0": {
-        "CellAttributeMatrixName": "CellData",
-        "CellEnsembleAttributeMatrixName": "CellEnsembleData",
-        "DataContainerName": "ImageDataContainer",
+        "CellAttributeMatrixName": "EBSD Scan Data",
+        "CellEnsembleAttributeMatrixName": "Phase Data",
+        "DataContainerName": "Small IN100 Slice 1",
         "FilterVersion": "6.4.500",
         "Filter_Human_Label": "Import EDAX EBSD Data (.ang)",
         "Filter_Name": "ReadAngData",
@@ -10,9 +10,9 @@
     },
     "1": {
         "CellAttributeMatrixPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100 Slice 1"
         },
         "FilterVersion": "6.4.500",
         "Filter_Human_Label": "Rotate Sample Reference Frame",
@@ -26,9 +26,9 @@
     },
     "2": {
         "CellEulerAnglesArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "EulerAngles",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100 Slice 1"
         },
         "FilterVersion": "6.4.500",
         "Filter_Human_Label": "Rotate Euler Reference Frame",
@@ -48,27 +48,27 @@
         "SelectedThresholds": [
             {
                 "Attribute Array Name": "Confidence Index",
-                "Attribute Matrix Name": "CellData",
+                "Attribute Matrix Name": "EBSD Scan Data",
                 "Comparison Operator": 0,
                 "Comparison Value": 0,
-                "Data Container Name": "ImageDataContainer"
+                "Data Container Name": "Small IN100 Slice 1"
             }
         ]
     },
     "4": {
         "ConditionalArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Mask",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100 Slice 1"
         },
         "FilterVersion": "1.0.953",
         "Filter_Human_Label": "Replace Value in Array (Conditional)",
         "Filter_Name": "ConditionalSetValue",
         "ReplaceValue": 0,
         "SelectedArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Confidence Index",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100 Slice 1"
         }
     },
     "5": {
@@ -84,9 +84,9 @@
         "Normalize": 0,
         "NumberOfBins": 50,
         "SelectedArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Confidence Index",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100 Slice 1"
         },
         "UserDefinedRange": 0
     },
@@ -102,7 +102,7 @@
             {
                 "Attribute Matrix Name": "Histograms",
                 "Data Array Name": "CI_Histogram",
-                "Data Container Name": "ImageDataContainer"
+                "Data Container Name": "Small IN100 Slice 1"
             }
         ]
     },

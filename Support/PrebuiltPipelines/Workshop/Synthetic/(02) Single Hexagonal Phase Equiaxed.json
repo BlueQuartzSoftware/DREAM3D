@@ -188,7 +188,7 @@
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "OutputCellEnsembleAttributeMatrixName": "CellEnsembleData",
-        "OutputCellFeatureAttributeMatrixName": "CellFeatureData",
+        "OutputCellFeatureAttributeMatrixName": "Grain Data",
         "PeriodicBoundaries": 0,
         "UseMask": 0,
         "VtkOutputFile": "",
@@ -197,7 +197,7 @@
     "4": {
         "BoundaryCellsArrayName": "BoundaryCells",
         "CellFeatureAttributeMatrixPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
@@ -231,7 +231,7 @@
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "FeaturePhasesArrayPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "Phases",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
@@ -245,7 +245,7 @@
         },
         "MaxIterations": 100000,
         "NeighborListArrayPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "NeighborList",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
@@ -260,12 +260,12 @@
             "Data Container Name": "StatsGeneratorDataContainer"
         },
         "SharedSurfaceAreaListArrayPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "SharedSurfaceAreaList",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "SurfaceFeaturesArrayPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "SurfaceFeatures",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
@@ -307,7 +307,7 @@
         "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
-        "OutputFile": "Data/OutputData/Output/Synthetic/02_HexagonalSingleEquiaxedOut.dream3d",
+        "OutputFile": "Data/Output/Synthetic/02_HexagonalSingleEquiaxedOut.dream3d",
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {

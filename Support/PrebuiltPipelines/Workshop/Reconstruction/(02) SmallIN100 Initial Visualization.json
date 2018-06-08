@@ -1,9 +1,9 @@
 {
     "0": {
         "AngleRepresentation": 0,
-        "CellAttributeMatrixName": "CellData",
-        "CellEnsembleAttributeMatrixName": "CellEnsembleData",
-        "DataContainerName": "ImageDataContainer",
+        "CellAttributeMatrixName": "EBSD Scan Data",
+        "CellEnsembleAttributeMatrixName": "Phase Data",
+        "DataContainerName": "Small IN100",
         "FilterVersion": "6.4.440",
         "Filter_Human_Label": "Import H5EBSD File",
         "Filter_Name": "ReadH5Ebsd",

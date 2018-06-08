@@ -1,7 +1,7 @@
 {
     "0": {
         "CalculatedArray": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Roe_0",
             "Data Container Name": "ImageDataContainer"
         },
@@ -10,7 +10,7 @@
         "Filter_Name": "ArrayCalculator",
         "InfixEquation": "(EulerAngles[0] * 180 / 3.1415927) - 90",
         "SelectedAttributeMatrix": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "",
             "Data Container Name": "ImageDataContainer"
         },
@@ -18,7 +18,7 @@
     },
     "1": {
         "CalculatedArray": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Roe_1",
             "Data Container Name": "ImageDataContainer"
         },
@@ -27,7 +27,7 @@
         "Filter_Name": "ArrayCalculator",
         "InfixEquation": "(EulerAngles[1] * 180 / 3.1415927)",
         "SelectedAttributeMatrix": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "",
             "Data Container Name": "ImageDataContainer"
         },
@@ -35,7 +35,7 @@
     },
     "2": {
         "CalculatedArray": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Roe_2",
             "Data Container Name": "ImageDataContainer"
         },
@@ -44,7 +44,7 @@
         "Filter_Name": "ArrayCalculator",
         "InfixEquation": "90-(EulerAngles[2] * 180 / 3.1415927)",
         "SelectedAttributeMatrix": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "",
             "Data Container Name": "ImageDataContainer"
         },
@@ -57,17 +57,17 @@
         "NormalizeData": 0,
         "SelectedDataArrayPaths": [
             {
-                "Attribute Matrix Name": "CellData",
+                "Attribute Matrix Name": "EBSD Scan Data",
                 "Data Array Name": "Roe_0",
                 "Data Container Name": "ImageDataContainer"
             },
             {
-                "Attribute Matrix Name": "CellData",
+                "Attribute Matrix Name": "EBSD Scan Data",
                 "Data Array Name": "Roe_1",
                 "Data Container Name": "ImageDataContainer"
             },
             {
-                "Attribute Matrix Name": "CellData",
+                "Attribute Matrix Name": "EBSD Scan Data",
                 "Data Array Name": "Roe_2",
                 "Data Container Name": "ImageDataContainer"
             }
