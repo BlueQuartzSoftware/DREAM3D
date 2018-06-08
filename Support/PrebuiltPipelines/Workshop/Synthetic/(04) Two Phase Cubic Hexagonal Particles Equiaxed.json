@@ -279,7 +279,7 @@
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "OutputCellEnsembleAttributeMatrixName": "CellEnsembleData",
-        "OutputCellFeatureAttributeMatrixName": "CellFeatureData",
+        "OutputCellFeatureAttributeMatrixName": "Grain Data",
         "PeriodicBoundaries": 0,
         "UseMask": 0,
         "VtkOutputFile": "",
@@ -314,7 +314,7 @@
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "FeaturePhasesArrayPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "Phases",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
@@ -356,7 +356,7 @@
     "6": {
         "BoundaryCellsArrayName": "BoundaryCells",
         "CellFeatureAttributeMatrixPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
@@ -390,7 +390,7 @@
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "FeaturePhasesArrayPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "Phases",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
@@ -404,7 +404,7 @@
         },
         "MaxIterations": 100000,
         "NeighborListArrayPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "NeighborList",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
@@ -419,12 +419,12 @@
             "Data Container Name": "StatsGeneratorDataContainer"
         },
         "SharedSurfaceAreaListArrayPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "SharedSurfaceAreaList",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },
         "SurfaceFeaturesArrayPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "SurfaceFeatures",
             "Data Container Name": "SyntheticVolumeDataContainer"
         },

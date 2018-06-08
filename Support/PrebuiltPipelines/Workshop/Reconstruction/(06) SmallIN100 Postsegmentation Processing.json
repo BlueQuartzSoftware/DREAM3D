@@ -17,7 +17,7 @@
                                     "Flag": 2,
                                     "Name": "Confidence Index",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -30,7 +30,7 @@
                                     "Flag": 2,
                                     "Name": "EulerAngles",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         3
                                     ],
@@ -43,7 +43,7 @@
                                     "Flag": 2,
                                     "Name": "FeatureIds",
                                     "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -56,7 +56,7 @@
                                     "Flag": 2,
                                     "Name": "Fit",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -69,7 +69,7 @@
                                     "Flag": 2,
                                     "Name": "IPFColor",
                                     "Object Type": "DataArray<uint8_t>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         3
                                     ],
@@ -82,7 +82,7 @@
                                     "Flag": 2,
                                     "Name": "Image Quality",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -95,7 +95,7 @@
                                     "Flag": 2,
                                     "Name": "Mask",
                                     "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -108,7 +108,7 @@
                                     "Flag": 2,
                                     "Name": "Phases",
                                     "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -121,7 +121,7 @@
                                     "Flag": 2,
                                     "Name": "Quats",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         4
                                     ],
@@ -134,7 +134,7 @@
                                     "Flag": 2,
                                     "Name": "SEM Signal",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -142,7 +142,7 @@
                                 }
                             ],
                             "Flag": 2,
-                            "Name": "CellData",
+                            "Name": "EBSD Scan Data",
                             "Type": 3
                         },
                         {
@@ -154,7 +154,7 @@
                                     "Flag": 2,
                                     "Name": "CrystalStructures",
                                     "Object Type": "DataArray<uint32_t>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellEnsembleData",
+                                    "Path": "/DataContainers/Small IN100/Phase Data",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -167,7 +167,7 @@
                                     "Flag": 2,
                                     "Name": "LatticeConstants",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellEnsembleData",
+                                    "Path": "/DataContainers/Small IN100/Phase Data",
                                     "Tuple Dimensions": [
                                         6
                                     ],
@@ -180,7 +180,7 @@
                                     "Flag": 2,
                                     "Name": "MaterialName",
                                     "Object Type": "StringDataArray",
-                                    "Path": "/DataContainers/ImageDataContainer/CellEnsembleData",
+                                    "Path": "/DataContainers/Small IN100/Phase Data",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -188,7 +188,7 @@
                                 }
                             ],
                             "Flag": 2,
-                            "Name": "CellEnsembleData",
+                            "Name": "Phase Data",
                             "Type": 11
                         },
                         {
@@ -200,7 +200,7 @@
                                     "Flag": 2,
                                     "Name": "Active",
                                     "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellFeatureData",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -208,12 +208,12 @@
                                 }
                             ],
                             "Flag": 2,
-                            "Name": "CellFeatureData",
+                            "Name": "Grain Data",
                             "Type": 7
                         }
                     ],
                     "Flag": 2,
-                    "Name": "ImageDataContainer",
+                    "Name": "Small IN100",
                     "Type": 0
                 }
             ]
@@ -222,19 +222,19 @@
     },
     "1": {
         "CellPhasesArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Phases",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "FeatureIdsArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "FeatureIds",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "FeaturePhasesArrayPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "Phases",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Phases",
@@ -242,50 +242,50 @@
     },
     "2": {
         "AvgEulerAnglesArrayPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "AvgEuler",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "AvgQuatsArrayPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "AvgQuats",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "CellPhasesArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Phases",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "CrystalStructuresArrayPath": {
-            "Attribute Matrix Name": "CellEnsembleData",
+            "Attribute Matrix Name": "Phase Data",
             "Data Array Name": "CrystalStructures",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "FeatureIdsArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "FeatureIds",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Average Orientations",
         "Filter_Name": "FindAvgOrientations",
         "QuatsArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Quats",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         }
     },
     "3": {
         "BoundaryCellsArrayName": "BoundaryCells",
         "CellFeatureAttributeMatrixPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "FeatureIdsArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "FeatureIds",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Neighbors",
@@ -301,37 +301,37 @@
         "ActiveArrayName": "Active",
         "AngleTolerance": 2,
         "AvgQuatsArrayPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "AvgQuats",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "AxisTolerance": 3,
         "CellParentIdsArrayName": "ParentIds",
         "ContiguousNeighborListArrayPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "NeighborList2",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "CrystalStructuresArrayPath": {
-            "Attribute Matrix Name": "CellEnsembleData",
+            "Attribute Matrix Name": "Phase Data",
             "Data Array Name": "CrystalStructures",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "FeatureIdsArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "FeatureIds",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "FeatureParentIdsArrayName": "ParentIds",
         "FeaturePhasesArrayPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "Phases",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Merge Twins",
         "Filter_Name": "MergeTwins",
-        "NewCellFeatureAttributeMatrixName": "NewCellFeatureData",
+        "NewCellFeatureAttributeMatrixName": "NewGrain Data",
         "NonContiguousNeighborListArrayPath": {
             "Attribute Matrix Name": "",
             "Data Array Name": "",
@@ -342,14 +342,14 @@
     "5": {
         "EquivalentDiametersArrayName": "EquivalentDiameters",
         "FeatureAttributeMatrixName": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "FeatureIdsArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "FeatureIds",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Sizes",
@@ -361,37 +361,37 @@
     "6": {
         "ApplyToSinglePhase": 0,
         "FeatureIdsArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "FeatureIds",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "FeaturePhasesArrayPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "Phases",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Minimum Size",
         "Filter_Name": "MinSize",
         "MinAllowedFeatureSize": 16,
         "NumCellsArrayPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "NumElements",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "PhaseNumber": 0
     },
     "7": {
         "BoundaryCellsArrayName": "BoundaryCells",
         "CellFeatureAttributeMatrixPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "FeatureIdsArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "FeatureIds",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Find Feature Neighbors",
@@ -406,23 +406,23 @@
     "8": {
         "ApplyToSinglePhase": 0,
         "FeatureIdsArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "FeatureIds",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "FeaturePhasesArrayPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "Phases",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "FilterVersion": "6.3.287",
         "Filter_Human_Label": "Minimum Number of Neighbors",
         "Filter_Name": "MinNeighbors",
         "MinNumNeighbors": 2,
         "NumNeighborsArrayPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "NumNeighbors",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "PhaseNumber": 0
     },

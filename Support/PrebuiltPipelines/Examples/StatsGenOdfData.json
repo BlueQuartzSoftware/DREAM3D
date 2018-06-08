@@ -1,8 +1,8 @@
 {
     "0": {
-        "CellAttributeMatrixName": "CellData",
-        "CellEnsembleAttributeMatrixName": "CellEnsembleData",
-        "DataContainerName": "ImageDataContainer",
+        "CellAttributeMatrixName": "EBSD Scan Data",
+        "CellEnsembleAttributeMatrixName": "Phase Data",
+        "DataContainerName": "Small IN100 Slice 1",
         "FilterVersion": "6.4.5",
         "Filter_Human_Label": "Import EDAX EBSD Data (.ang)",
         "Filter_Name": "ReadAngData",
@@ -10,9 +10,9 @@
     },
     "1": {
         "CellEulerAnglesArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "EulerAngles",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100 Slice 1"
         },
         "FilterVersion": "6.4.5",
         "Filter_Human_Label": "Rotate Euler Reference Frame",
@@ -26,9 +26,9 @@
     },
     "2": {
         "CellAttributeMatrixPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100 Slice 1"
         },
         "FilterVersion": "6.4.5",
         "Filter_Human_Label": "Rotate Sample Reference Frame",
@@ -48,39 +48,39 @@
         "SelectedThresholds": [
             {
                 "Attribute Array Name": "Confidence Index",
-                "Attribute Matrix Name": "CellData",
+                "Attribute Matrix Name": "EBSD Scan Data",
                 "Comparison Operator": 1,
                 "Comparison Value": 0.10000000149011612,
-                "Data Container Name": "ImageDataContainer"
+                "Data Container Name": "Small IN100 Slice 1"
             },
             {
                 "Attribute Array Name": "Image Quality",
-                "Attribute Matrix Name": "CellData",
+                "Attribute Matrix Name": "EBSD Scan Data",
                 "Comparison Operator": 1,
                 "Comparison Value": 120,
-                "Data Container Name": "ImageDataContainer"
+                "Data Container Name": "Small IN100 Slice 1"
             }
         ]
     },
     "4": {
         "CellEulerAnglesArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "EulerAngles",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100 Slice 1"
         },
         "CellPhasesArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Phases",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100 Slice 1"
         },
         "ConvertToDegrees": 1,
         "FilterVersion": "6.4.5",
         "Filter_Human_Label": "Export StatsGenerator ODF Angle File",
         "Filter_Name": "WriteStatsGenOdfAngleFile",
         "GoodVoxelsArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Mask",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100 Slice 1"
         },
         "OutputFile": "Data/Output/StatsGenODF.txt",
         "UseGoodVoxels": 1

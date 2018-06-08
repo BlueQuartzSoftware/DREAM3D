@@ -1,8 +1,8 @@
 {
     "0": {
-        "CellAttributeMatrixName": "CellData",
-        "CellEnsembleAttributeMatrixName": "CellEnsembleData",
-        "DataContainerName": "ImageDataContainer",
+        "CellAttributeMatrixName": "EBSD Scan Data",
+        "CellEnsembleAttributeMatrixName": "Phase Data",
+        "DataContainerName": "Cugrid_after 2nd_15kv_2kx_2",
         "FilterVersion": "6.4.167",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Import Oxford Instr. EBSD Data (.ctf)",
@@ -11,9 +11,9 @@
     },
     "1": {
         "CellAttributeMatrixPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
         "FilterVersion": "6.4.167",
         "Filter_Enabled": true,
@@ -28,9 +28,9 @@
     },
     "2": {
         "CellEulerAnglesArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "EulerAngles",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
         "ConversionType": 0,
         "FilterVersion": "6.4.167",
@@ -40,25 +40,25 @@
     },
     "3": {
         "CellAttributeMatrixPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
         "CellFeatureAttributeMatrixPath": {
-            "Attribute Matrix Name": "CellFeatureData",
+            "Attribute Matrix Name": "Grain Data",
             "Data Array Name": "",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
         "FeatureIdsArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "FeatureIds",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
         "FilterVersion": "6.4.167",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Crop Geometry (Image)",
         "Filter_Name": "CropImageGeometry",
-        "NewDataContainerName": "NewImageDataContainer",
+        "NewDataContainerName": "NewCugrid_after 2nd_15kv_2kx_2",
         "RenumberFeatures": 0,
         "SaveAsNewDataContainer": 0,
         "UpdateOrigin": 1,
@@ -78,38 +78,38 @@
         "SelectedThresholds": [
             {
                 "Attribute Array Name": "Error",
-                "Attribute Matrix Name": "CellData",
+                "Attribute Matrix Name": "EBSD Scan Data",
                 "Comparison Operator": 2,
                 "Comparison Value": 0,
-                "Data Container Name": "ImageDataContainer"
+                "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
             }
         ]
     },
     "5": {
         "CellEulerAnglesArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "EulerAngles",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
         "CellIPFColorsArrayName": "IPF_Exposed_001",
         "CellPhasesArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Phases",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
         "CrystalStructuresArrayPath": {
-            "Attribute Matrix Name": "CellEnsembleData",
+            "Attribute Matrix Name": "Phase Data",
             "Data Array Name": "CrystalStructures",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
         "FilterVersion": "6.4.167",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
         "GoodVoxelsArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Mask",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
         "ReferenceDir": {
             "x": 0,
@@ -125,35 +125,35 @@
         "Filter_Human_Label": "ITK::Image Writer",
         "Filter_Name": "ITKImageWriter",
         "ImageArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "IPF_Exposed_001",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         }
     },
     "7": {
         "CellEulerAnglesArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "EulerAngles",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
         "CellPhasesArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Phases",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
         "CrystalStructuresArrayPath": {
-            "Attribute Matrix Name": "CellEnsembleData",
+            "Attribute Matrix Name": "Phase Data",
             "Data Array Name": "CrystalStructures",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
         "FilterVersion": "6.4.167",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Export Pole Figure Images",
         "Filter_Name": "WritePoleFigure",
         "GoodVoxelsArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Mask",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
         "ImageFormat": 0,
         "ImageLayout": 2,

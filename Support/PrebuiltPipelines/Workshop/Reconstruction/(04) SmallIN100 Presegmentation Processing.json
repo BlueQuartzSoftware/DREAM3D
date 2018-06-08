@@ -16,7 +16,7 @@
                                     "Flag": 2,
                                     "Name": "Confidence Index",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -29,7 +29,7 @@
                                     "Flag": 2,
                                     "Name": "EulerAngles",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         3
                                     ],
@@ -42,7 +42,7 @@
                                     "Flag": 2,
                                     "Name": "Fit",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -55,7 +55,7 @@
                                     "Flag": 2,
                                     "Name": "IPFColor",
                                     "Object Type": "DataArray<uint8_t>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         3
                                     ],
@@ -68,7 +68,7 @@
                                     "Flag": 2,
                                     "Name": "Image Quality",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -81,7 +81,7 @@
                                     "Flag": 2,
                                     "Name": "Mask",
                                     "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -94,7 +94,7 @@
                                     "Flag": 2,
                                     "Name": "Phases",
                                     "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -107,7 +107,7 @@
                                     "Flag": 2,
                                     "Name": "Quats",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         4
                                     ],
@@ -120,7 +120,7 @@
                                     "Flag": 2,
                                     "Name": "SEM Signal",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellData",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -128,7 +128,7 @@
                                 }
                             ],
                             "Flag": 2,
-                            "Name": "CellData",
+                            "Name": "EBSD Scan Data",
                             "Type": 3
                         },
                         {
@@ -140,7 +140,7 @@
                                     "Flag": 2,
                                     "Name": "CrystalStructures",
                                     "Object Type": "DataArray<uint32_t>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellEnsembleData",
+                                    "Path": "/DataContainers/Small IN100/Phase Data",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -153,7 +153,7 @@
                                     "Flag": 2,
                                     "Name": "LatticeConstants",
                                     "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/ImageDataContainer/CellEnsembleData",
+                                    "Path": "/DataContainers/Small IN100/Phase Data",
                                     "Tuple Dimensions": [
                                         6
                                     ],
@@ -166,7 +166,7 @@
                                     "Flag": 2,
                                     "Name": "PhaseName",
                                     "Object Type": "StringDataArray",
-                                    "Path": "/DataContainers/ImageDataContainer/CellEnsembleData",
+                                    "Path": "/DataContainers/Small IN100/Phase Data",
                                     "Tuple Dimensions": [
                                         1
                                     ],
@@ -174,12 +174,12 @@
                                 }
                             ],
                             "Flag": 2,
-                            "Name": "CellEnsembleData",
+                            "Name": "Phase Data",
                             "Type": 11
                         }
                     ],
                     "Flag": 2,
-                    "Name": "ImageDataContainer",
+                    "Name": "Small IN100",
                     "Type": 0
                 }
             ]
@@ -188,46 +188,46 @@
     },
     "1": {
         "CellPhasesArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Phases",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "CrystalStructuresArrayPath": {
-            "Attribute Matrix Name": "CellEnsembleData",
+            "Attribute Matrix Name": "Phase Data",
             "Data Array Name": "CrystalStructures",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Neighbor Orientation Comparison (Bad Data)",
         "Filter_Name": "BadDataNeighborOrientationCheck",
         "GoodVoxelsArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Mask",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "MisorientationTolerance": 5,
         "NumberOfNeighbors": 4,
         "QuatsArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Quats",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         }
     },
     "2": {
         "CellPhasesArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Phases",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "ConfidenceIndexArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Confidence Index",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "CrystalStructuresArrayPath": {
-            "Attribute Matrix Name": "CellEnsembleData",
+            "Attribute Matrix Name": "Phase Data",
             "Data Array Name": "CrystalStructures",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Neighbor Orientation Correlation",
@@ -236,9 +236,9 @@
         "MinConfidence": 0.20000000298023224,
         "MisorientationTolerance": 5,
         "QuatsArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Quats",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         }
     },
     "3": {
@@ -254,7 +254,7 @@
                                     "Flag": 0,
                                     "Name": "Confidence Index",
                                     "Object Type": "float",
-                                    "Path": "ImageDataContainer/CellData/",
+                                    "Path": "Small IN100/EBSD Scan Data/",
                                     "Tuple Dimensions": [
                                     ],
                                     "Version": 2
@@ -265,7 +265,7 @@
                                     "Flag": 0,
                                     "Name": "EulerAngles",
                                     "Object Type": "float",
-                                    "Path": "ImageDataContainer/CellData/",
+                                    "Path": "Small IN100/EBSD Scan Data/",
                                     "Tuple Dimensions": [
                                     ],
                                     "Version": 2
@@ -276,7 +276,7 @@
                                     "Flag": 0,
                                     "Name": "Fit",
                                     "Object Type": "float",
-                                    "Path": "ImageDataContainer/CellData/",
+                                    "Path": "Small IN100/EBSD Scan Data/",
                                     "Tuple Dimensions": [
                                     ],
                                     "Version": 2
@@ -287,7 +287,7 @@
                                     "Flag": 2,
                                     "Name": "IPFColor",
                                     "Object Type": "uint8_t",
-                                    "Path": "ImageDataContainer/CellData/",
+                                    "Path": "Small IN100/EBSD Scan Data/",
                                     "Tuple Dimensions": [
                                     ],
                                     "Version": 2
@@ -298,7 +298,7 @@
                                     "Flag": 0,
                                     "Name": "Image Quality",
                                     "Object Type": "float",
-                                    "Path": "ImageDataContainer/CellData/",
+                                    "Path": "Small IN100/EBSD Scan Data/",
                                     "Tuple Dimensions": [
                                     ],
                                     "Version": 2
@@ -309,7 +309,7 @@
                                     "Flag": 0,
                                     "Name": "Mask",
                                     "Object Type": "bool",
-                                    "Path": "ImageDataContainer/CellData/",
+                                    "Path": "Small IN100/EBSD Scan Data/",
                                     "Tuple Dimensions": [
                                     ],
                                     "Version": 2
@@ -320,7 +320,7 @@
                                     "Flag": 0,
                                     "Name": "Phases",
                                     "Object Type": "int32_t",
-                                    "Path": "ImageDataContainer/CellData/",
+                                    "Path": "Small IN100/EBSD Scan Data/",
                                     "Tuple Dimensions": [
                                     ],
                                     "Version": 2
@@ -331,7 +331,7 @@
                                     "Flag": 0,
                                     "Name": "Quats",
                                     "Object Type": "float",
-                                    "Path": "ImageDataContainer/CellData/",
+                                    "Path": "Small IN100/EBSD Scan Data/",
                                     "Tuple Dimensions": [
                                     ],
                                     "Version": 2
@@ -342,14 +342,14 @@
                                     "Flag": 0,
                                     "Name": "SEM Signal",
                                     "Object Type": "float",
-                                    "Path": "ImageDataContainer/CellData/",
+                                    "Path": "Small IN100/EBSD Scan Data/",
                                     "Tuple Dimensions": [
                                     ],
                                     "Version": 2
                                 }
                             ],
                             "Flag": 0,
-                            "Name": "CellData",
+                            "Name": "EBSD Scan Data",
                             "Type": 3
                         },
                         {
@@ -360,7 +360,7 @@
                                     "Flag": 0,
                                     "Name": "CrystalStructures",
                                     "Object Type": "uint32_t",
-                                    "Path": "ImageDataContainer/CellEnsembleData/",
+                                    "Path": "Small IN100/Phase Data/",
                                     "Tuple Dimensions": [
                                     ],
                                     "Version": 2
@@ -371,7 +371,7 @@
                                     "Flag": 0,
                                     "Name": "LatticeConstants",
                                     "Object Type": "float",
-                                    "Path": "ImageDataContainer/CellEnsembleData/",
+                                    "Path": "Small IN100/Phase Data/",
                                     "Tuple Dimensions": [
                                     ],
                                     "Version": 2
@@ -382,19 +382,19 @@
                                     "Flag": 0,
                                     "Name": "MaterialName",
                                     "Object Type": "StringDataArray",
-                                    "Path": "ImageDataContainer/CellEnsembleData/",
+                                    "Path": "Small IN100/Phase Data/",
                                     "Tuple Dimensions": [
                                     ],
                                     "Version": 2
                                 }
                             ],
                             "Flag": 0,
-                            "Name": "CellEnsembleData",
+                            "Name": "Phase Data",
                             "Type": 11
                         }
                     ],
                     "Flag": 0,
-                    "Name": "ImageDataContainer",
+                    "Name": "Small IN100",
                     "Type": 0
                 }
             ]
@@ -405,28 +405,28 @@
     },
     "4": {
         "CellEulerAnglesArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "EulerAngles",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "CellIPFColorsArrayName": "IPFColor",
         "CellPhasesArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Phases",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "CrystalStructuresArrayPath": {
-            "Attribute Matrix Name": "CellEnsembleData",
+            "Attribute Matrix Name": "Phase Data",
             "Data Array Name": "CrystalStructures",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
         "GoodVoxelsArrayPath": {
-            "Attribute Matrix Name": "CellData",
+            "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Mask",
-            "Data Container Name": "ImageDataContainer"
+            "Data Container Name": "Small IN100"
         },
         "ReferenceDir": {
             "x": 0,
