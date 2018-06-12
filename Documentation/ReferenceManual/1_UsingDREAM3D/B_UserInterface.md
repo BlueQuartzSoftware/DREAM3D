@@ -1,5 +1,5 @@
-Overview of the User Interface 
-=========
+# Overview of the User Interface #
+
 
 DREAM.3D has 6 main sections of its user interface:
 
@@ -118,18 +118,18 @@ It is possible to undo and redo actions such as adding, removing, moving, and cl
 
 Each filter in the pipeline will have a specific background color. The colors are tied to the main group that the filter has been grouped under. The user may actually find the coloring of the filters useful as a way to easily find your way back to a particular filter.
 
-* Core
-* Generic
-* IO
-* Processing
-* Reconstruction
-* Sampling
-* Statistics
-* Synthetic Building
-* Surface Meshing
-* Utilities
-* Custom
-* Unsupported.
++ Core
++ Generic
++ IO
++ Processing
++ Reconstruction
++ Sampling
++ Statistics
++ Synthetic Building
++ Surface Meshing
++ Utilities
++ Custom
++ Unsupported.
 
 ![Filter Group Colors](Images/FilterColors.png)
 
@@ -144,9 +144,9 @@ Each filter in the pipeline will have a specific background color. The colors ar
 The **Filter Input View** contains all the parameters for the selected **Filter**. There are two sections: **Variables** and **Current Structure**:
 
 + **Variables**: Contains **Filter** _Parameters_, _Required Arrays_, and _Created Arrays_:
-	- _Parameters_ are generally inputs that influence the functionality of the **Filter**
-	- _Required Arrays_ are data structure objects that are needed for the **Filter** to function
-	- _Created Arrays_ are data structure objects that the **Filter** will create during its execution
+  + _Parameters_ are generally inputs that influence the functionality of the **Filter**
+  + _Required Arrays_ are data structure objects that are needed for the **Filter** to function
+  + _Created Arrays_ are data structure objects that the **Filter** will create during its execution
 + **Current Structure** Displays the state of the data structure as it would look after the selected **Filter** has executed
 
 **Drag and Drop**:
@@ -160,6 +160,7 @@ Whenever a drag is performed from a selection widget, a custom icon is created w
 To help label what type of data is required by a selection widget, each widget is decorated with a colored tab on the right side.  This tab corresponds to the color used for filtering the same type of data in the **Data Structure**.
 
 #### Viewing A Filter's Help Page ####
+
 To view the help page for the selected **Filter**, press the _?_ icon.
 
 ---
@@ -191,6 +192,7 @@ In addition, because paths created by a **Filter** cannot also be its inputs, th
 The **Pipeline Output Log** displays any output messages associated with GUI actions or **Filters** that are actively being used in the **Pipeline View**.
 
 Messages are added to the output log when:
+
 1. A filter is added, removed, or moved in the **Pipeline View**.
 2. An action is undone or redone using the **Undo** and **Redo** menu commands.
 3. A pipeline is opened.
@@ -208,4 +210,5 @@ Messages are added to the output log when:
 The **Pipeline Error Table** displays any errors and/or warnings associated with **Filters** that are actively being used in the **Pipeline View**.
 
 #### Preflights and Table Repopulation ####
+
 This section gets repopulated every time the **Pipeline** runs its **Preflight** process, which makes sure that the **Pipeline** will have all the necessary data available to execute normally.  The **Preflight** process is run any time the user modifies the **Pipeline View** or **Filter Input View** sections.
