@@ -5,7 +5,7 @@
 DREAM.3D is written in C\++ and the developers utilize features from the C\+\+11 specification.
 Therefore, any C\+\+ compiler that is used **MUST** be C\+\+11 compliant.
 
-A compiler suite (Visual Studio, Xcode, GCC, etc.) for your operating system is necessary. 
+A compiler suite (Visual Studio, Xcode, GCC, etc.) for your operating system is necessary.
 The following table lists the compilers that DREAM.3D is commonly compiled against.
 
 Find your current OS and download the appropriate compiler.
@@ -14,8 +14,7 @@ Find your current OS and download the appropriate compiler.
 
 | Compiler Version | Notes |
 | ---------------- | ----- |
-| Visual Studio 2015 Pro & Community | Developer will need to compile all dependent libraries |
-
+| Visual Studio 2017 Pro & Community |  |
 
 ## OS X ##
 
@@ -23,9 +22,8 @@ Mac OS X 10.10 (Yosemite), 10.11 (El Capitan), and 10.12 (Sierra) are supported
 
 | Compiler Version | Notes |
 | ---------------- | ----- |
-| Xcode 7.2 | OS X 10.10 |
-| Xcode 7.3 | OS X 10.11 |
-| Xcode 8.2 | OS X 10.12 |
+| Xcode 8.x | OS X 10.12 |
+| Xcode 9.x | OS X 10.13 |
 
 ## Linux ##
 
@@ -41,12 +39,11 @@ There are many Linux distributions in use. Below is the list of the minimum comp
 + DREAM.3D will *NOT* compile or run on SUSE Enterprise Linux 11 SP4.
 + DREAM.3D will *NOT* compile or run on Red Hat Enterprise Linux 6.x
 
-
 ## 32 Bit Support ##
 
 DREAM.3D and its libraries are compiled as a 64 bit application on all operating systems.
 
-32-bit support has been removed and is no longer under active development. Assumptions are made during the development process that the application is running as a 64 bit application.
+32-bit support has been removed and is no longer under *ANY* development. Assumptions are made during the development process that the application is running as a 64 bit application.
 
 ---
 **Next Page (Windows)**: <a href="https://github.com/bluequartzsoftware/DREAM3DSuperbuild/blob/develop/docs/Making_an_SDK_Windows.md">Making an SDK</a>

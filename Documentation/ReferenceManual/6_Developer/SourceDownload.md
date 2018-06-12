@@ -1,4 +1,4 @@
-# Downloading the Source Code for DREAM.3D # 
+# Downloading the Source Code for DREAM.3D #
 
 **Note**: If you used the DREAM.3D Superbuild to build your SDK, you can skip this page.  The DREAM.3D Superbuild automatically downloads the source code for you.
 
@@ -53,7 +53,8 @@ DREAM.3D is publicly available on Github, and can be downloaded using [Git](http
     
     /Users/[*YOUR-HOME-DIRECTORY*]/Workspace/DREAM3D/ExternalProjects/SIMPLView
 
-#### Windows 8.1/10 ####
+#### Windows 10 ####
+
 1. Make a new directory called **Workspace** in your user directory.  The **Workspace** directory's path should be **C:\\Users\\[*YOUR-USER-DIRECTORY*]\\Workspace**.
 
 2. Open the git-bash application that was installed when you downloaded and installed Git.

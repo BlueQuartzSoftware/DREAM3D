@@ -31,7 +31,7 @@ The develop will need to decide where they would like all the dependent librarie
 
 ## Base Applications - Git ##
 
-Version 2.x is recommended
+Version 2.x is required
 
 | Operating System | Recommended Location |
 |------------------|----------------------|
@@ -41,7 +41,7 @@ Version 2.x is recommended
 
 ## Base Application - CMake ##
 
-Version 3.7 or greater is recommended
+Version 3.11 or greater is recommended
 
 | Operating System | Recommended Location |
 |------------------|----------------------|
@@ -93,14 +93,14 @@ DREAM.3D depends on several 3rd party libraries to be installed and ready to lin
 |  Package   | Minimum Version | Download Location |
 |  ------	| ------	| ------	|
 | Git | 2.8.x | [http://www.git-scm.com](http://www.git-scm.com) |
-| CMake | 3.5.1 | [http://www.cmake.org/cmake/resources/software.html](http://www.cmake.org/cmake/resources/software.html) |
+| CMake | 3.11.1 | [http://www.cmake.org/cmake/resources/software.html](http://www.cmake.org/cmake/resources/software.html) |
 | Doxygen | 1.8.11 | [http://www.stack.nl/~dimitri/doxygen/download.html](http://www.stack.nl/~dimitri/doxygen/download.html) |
-| HDF5 | 1.8.16 | [http://www.hdfgroup.org/HDF5/release/obtain5.html](http://www.hdfgroup.org/HDF5/release/obtain5.html) |
+| HDF5 | 1.8.20 | [http://www.hdfgroup.org/HDF5/release/obtain5.html](http://www.hdfgroup.org/HDF5/release/obtain5.html) |
 | Eigen | 3.2.9 | [Eigen Home Page](http://eigen.tuxfamily.org/index.php?title=Main_Page) |
-| Intel Threading Building Blocks | tbb44\_20160526oss | [http://threadingbuildingblocks.org/download](http://threadingbuildingblocks.org/download) |
-| Qt | 5.6.2 (Qt 4.x will NOT work) |  The developer should obtain a precompiled package from [http://www.qt.io](http://www.qt.io) and install that version rather than trying to compile Qt itself. Visual Studio uses should get Qt 5.6.2 at the minimum.  |
-| Qwt | 6.1.2 | Obtain from [https://sourceforge.net/projects/qwt/files](https://sourceforge.net/projects/qwt/files) |
-| ITK | 4.11.0 | [ITK.org](http://www.itk.org) 4.11.0 is the earliest version compatible with HDF5 1.8.16 |
+| Intel Threading Building Blocks | tbb44\_2018 oss | [http://threadingbuildingblocks.org/download](http://threadingbuildingblocks.org/download) |
+| Qt | 5.10.1 (Qt 4.x will NOT work) |  The developer should obtain a precompiled package from [http://www.qt.io](http://www.qt.io) and install that version rather than trying to compile Qt itself. Visual Studio uses should get Qt 5.6.2 at the minimum.  |
+| Qwt | 6.1.3 | Obtain from [https://sourceforge.net/projects/qwt/files](https://sourceforge.net/projects/qwt/files) |
+| ITK | 4.13.0 | [ITK.org](http://www.itk.org) 4.13.0 is the earliest version compatible with HDF5 1.8.20 |
 
 ---
 **Next Page (Windows)**: [Configuring and Building DREAM.3D on Windows](@ref windows_configure_and_build_dream3d).

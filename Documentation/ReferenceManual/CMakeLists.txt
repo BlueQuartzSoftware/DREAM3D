@@ -31,9 +31,9 @@ set(RefManual_Docs_ReleaseNotes
 
 set(RefManual_Docs_SupportedFileFormats
     H5EbsdFile
-    MiscFileFormats
-    NativeDREAM3DFileFormat
-    XdmfForVisualization
+    Misc_File_Formats
+    Native_DREAM3D_File_Format
+    Xdmf_For_Visualization
   )
 
 set(RefManual_Docs_Tutorials
@@ -44,21 +44,21 @@ set(RefManual_Docs_Tutorials
   )
 
 set(RefManual_Docs_UsingDREAM3D
-    Acknowledgements
-    Contributors
-    CreatingPipeline
-    DataStructure
-    ImportExportPipelines
-    UserInterface
+    A_DataStructure
+    B_UserInterface
+    C_CreatingPipeline
+    D_ImportExportPipelines
+    E_Contributors
+    F_Acknowledgements
   )
 
 set(RefManual_Groups
-      AuxiliaryTools
-      Developer
-      ReleaseNotes
-      SupportedFileFormats
-      Tutorials
-      UsingDREAM3D
+      1_UsingDREAM3D
+      2_Tutorials
+      3_SupportedFileFormats
+      4_AuxiliaryTools
+      5_ReleaseNotes
+      6_Developer
     )
 
 # --------------------------------------------------------------------------
