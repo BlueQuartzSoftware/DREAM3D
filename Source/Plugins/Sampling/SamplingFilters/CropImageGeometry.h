@@ -226,7 +226,7 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
   
-  IntVec3_t m_OldDimensions ;
+  IntVec3_t m_OldDimensions;
   FloatVec3_t m_OldResolution;
   FloatVec3_t m_OldOrigin;
   

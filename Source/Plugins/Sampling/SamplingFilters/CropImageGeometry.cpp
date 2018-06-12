@@ -676,10 +676,12 @@ QString CropImageGeometry::getOldBoxDimensions()
   QString desc;
   QTextStream ss(&desc);
 
-  ss << "X Range: " << m_OldOrigin.x << " to " << (m_OldOrigin.x + (m_OldDimensions.x * m_OldResolution.x)) << " (Delta: " << (m_OldDimensions.x * m_OldResolution.x) << ")\n";
-  ss << "Y Range: " << m_OldOrigin.y << " to " << (m_OldOrigin.y + (m_OldDimensions.y * m_OldResolution.y)) << " (Delta: " << (m_OldDimensions.y * m_OldResolution.y) << ")\n";
-  ss << "Z Range: " << m_OldOrigin.z << " to " << (m_OldOrigin.z + (m_OldDimensions.z * m_OldResolution.z)) << " (Delta: " << (m_OldDimensions.z * m_OldResolution.z) << ")";
-
+  ss << "X Range: " << m_OldOrigin.x << " to " << (m_OldOrigin.x + (m_OldDimensions.x * m_OldResolution.x)) << " (Delta: " << (m_OldDimensions.x * m_OldResolution.x) << ") " 
+  << m_OldDimensions.x << " Voxels\n";
+  ss << "Y Range: " << m_OldOrigin.y << " to " << (m_OldOrigin.y + (m_OldDimensions.y * m_OldResolution.y)) << " (Delta: " << (m_OldDimensions.y * m_OldResolution.y) << ") "
+  << m_OldDimensions.y << " Voxels\n";
+  ss << "Z Range: " << m_OldOrigin.z << " to " << (m_OldOrigin.z + (m_OldDimensions.z * m_OldResolution.z)) << " (Delta: " << (m_OldDimensions.z * m_OldResolution.z) << ") "
+  << m_OldDimensions.z << " Voxels";
   return desc;
 }
 
@@ -691,10 +693,12 @@ QString CropImageGeometry::getNewBoxDimensions()
   QString desc;
   QTextStream ss(&desc);
 
-  ss << "X Range: " << m_NewOrigin.x << " to " << (m_NewOrigin.x + (m_NewDimensions.x * m_NewResolution.x)) << " (Delta: " << (m_NewDimensions.x * m_NewResolution.x) << ")\n";
-  ss << "Y Range: " << m_NewOrigin.y << " to " << (m_NewOrigin.y + (m_NewDimensions.y * m_NewResolution.y)) << " (Delta: " << (m_NewDimensions.y * m_NewResolution.y) << ")\n";
-  ss << "Z Range: " << m_NewOrigin.z << " to " << (m_NewOrigin.z + (m_NewDimensions.z * m_NewResolution.z)) << " (Delta: " << (m_NewDimensions.z * m_NewResolution.z) << ")";
-
+  ss << "X Range: " << m_NewOrigin.x << " to " << (m_NewOrigin.x + (m_NewDimensions.x * m_NewResolution.x)) << " (Delta: " << (m_NewDimensions.x * m_NewResolution.x) << ") "
+  << m_NewDimensions.x << " Voxels\n";
+  ss << "Y Range: " << m_NewOrigin.y << " to " << (m_NewOrigin.y + (m_NewDimensions.y * m_NewResolution.y)) << " (Delta: " << (m_NewDimensions.y * m_NewResolution.y) << ") "
+  << m_NewDimensions.y << " Voxels\n";
+  ss << "Z Range: " << m_NewOrigin.z << " to " << (m_NewOrigin.z + (m_NewDimensions.z * m_NewResolution.z)) << " (Delta: " << (m_NewDimensions.z * m_NewResolution.z) << ") "
+  << m_NewDimensions.z << " Voxels\n";
   return desc;
 }
 
