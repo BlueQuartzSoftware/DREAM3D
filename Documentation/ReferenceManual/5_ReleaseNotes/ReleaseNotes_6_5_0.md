@@ -23,6 +23,7 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 + Add cancel checks for the EMsoftSO3Sampler filter
 + Add information parameter that shows the size of the image geometry in real length units.
++ DREAM3D Issue #784: Parallelize the FindNeighborhoods filter.ß
 + DREAM3D Issue #755: Implement a read only preflight updated value that states the range and delta for each axis in synthetic volume. This allows better feedback to the user that they are hitting specific size targets that they have in mind.
 + DREAM3D Issue #756: Figure out how to remove the JQuery.js file that Doxygen includes.
 + DREAM3D Issue #758: CMake code in the plugins are not generating any unit test code
