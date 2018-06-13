@@ -37,6 +37,8 @@
 
 #include <mutex>
 
+#include <QtCore/QDateTime>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -81,14 +83,17 @@ class FindNeighborhoodsImpl
       float dBinX = 0, dBinY = 0, dBinZ = 0;
       float criticalDistance1 = 0, criticalDistance2 = 0;
       
+      size_t increment = (end - start) / 100;
+      size_t incCount = 0;
       // NEVER start at 0.
       if(start == 0) { start = 1;}
       for(size_t i = start; i < end; i++)
       {
-        size_t numCompleted = i - start;
-       // if(numCompleted % 1000 == 0)
+        incCount++;
+        if(incCount == increment || i == end - 1)
         {
-          m_Filter->updateProgress(1, m_TotalFeatures);
+          incCount = 0;
+          m_Filter->updateProgress(increment, m_TotalFeatures);
         }
         if(m_Filter->getCancel()) { break; }
         x = m_Centroids[3 * i];
@@ -317,14 +322,18 @@ void FindNeighborhoods::execute()
   {
     return;
   }
-    float x = 0.0f, y = 0.0f, z = 0.0f;
+  m_IncCount = 0;
+  
+  float x = 0.0f, y = 0.0f, z = 0.0f;
   m_NumCompleted = 0;
-//  std::vector<std::vector<int32_t>> neighborhoodlist;
+  //  std::vector<std::vector<int32_t>> neighborhoodlist;
   std::vector<float> criticalDistance;
-
+  
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_EquivalentDiametersArrayPath.getDataContainerName());
   size_t totalFeatures = m_EquivalentDiametersPtr.lock()->getNumberOfTuples();
-
+  
+  m_ProgIncrement = totalFeatures / 100;
+  
   m_LocalNeighborhoodList.resize(totalFeatures);
   criticalDistance.resize(totalFeatures);
 
@@ -408,9 +417,12 @@ void FindNeighborhoods::updateProgress(size_t numCompleted, size_t totalFeatures
 {
   static std::mutex mutex;
   std::lock_guard<std::mutex> lock(mutex);
-  m_NumCompleted = m_NumCompleted + numCompleted;
-  if(m_NumCompleted % 1000 == 0)
+  m_IncCount += numCompleted;
+  m_NumCompleted = m_NumCompleted + numCompleted;  
+  if(m_IncCount > m_ProgIncrement)
+ // if(m_NumCompleted % 1000 == 0)
   {
+    m_IncCount = 0;
     QString ss = QObject::tr("Working on Feature %1 of %2").arg(m_NumCompleted).arg(totalFeatures);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   }

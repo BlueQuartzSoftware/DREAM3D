@@ -200,6 +200,9 @@ private:
   NeighborList<int32_t>::WeakPointer m_NeighborhoodList;
   std::vector<std::vector<int32_t>> m_LocalNeighborhoodList;
   size_t m_NumCompleted = 0;
+  size_t m_ProgIncrement = 0;
+  size_t m_IncCount = 0;
+  
 public:
   FindNeighborhoods(const FindNeighborhoods&) = delete; // Copy Constructor Not Implemented
   FindNeighborhoods(FindNeighborhoods&&) = delete;      // Move Constructor
