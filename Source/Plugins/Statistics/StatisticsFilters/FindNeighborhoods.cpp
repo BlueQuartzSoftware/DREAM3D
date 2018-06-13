@@ -1,39 +1,43 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "FindNeighborhoods.h"
+
+#include <mutex>
+
+#include <QtCore/QDateTime>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -46,6 +50,99 @@
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
+
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+#include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
+
+class FindNeighborhoodsImpl
+{
+public:
+  FindNeighborhoodsImpl(FindNeighborhoods* filter, size_t totalFeatures, float* centroids, const std::vector<int64_t>& bins, const std::vector<float>& criticalDistance)
+  : m_Filter(filter)
+  , m_TotalFeatures(totalFeatures)
+  , m_Centroids(centroids)
+  , m_Bins(bins)
+  , m_CriticalDistance(criticalDistance)
+  {
+  }
+
+  void convert(size_t start, size_t end) const
+  {
+    float x = 0.0f, y = 0.0f, z = 0.0f;
+    int64_t bin1x = 0, bin2x = 0, bin1y = 0, bin2y = 0, bin1z = 0, bin2z = 0;
+    float dBinX = 0, dBinY = 0, dBinZ = 0;
+    float criticalDistance1 = 0, criticalDistance2 = 0;
+
+    size_t increment = (end - start) / 100;
+    size_t incCount = 0;
+    // NEVER start at 0.
+    if(start == 0)
+    {
+      start = 1;
+    }
+    for(size_t i = start; i < end; i++)
+    {
+      incCount++;
+      if(incCount == increment || i == end - 1)
+      {
+        incCount = 0;
+        m_Filter->updateProgress(increment, m_TotalFeatures);
+      }
+      if(m_Filter->getCancel())
+      {
+        break;
+      }
+      x = m_Centroids[3 * i];
+      y = m_Centroids[3 * i + 1];
+      z = m_Centroids[3 * i + 2];
+      bin1x = m_Bins[3 * i];
+      bin1y = m_Bins[3 * i + 1];
+      bin1z = m_Bins[3 * i + 2];
+      criticalDistance1 = m_CriticalDistance[i];
+
+      for(size_t j = i + 1; j < m_TotalFeatures; j++)
+      {
+        bin2x = m_Bins[3 * j];
+        bin2y = m_Bins[3 * j + 1];
+        bin2z = m_Bins[3 * j + 2];
+        criticalDistance2 = m_CriticalDistance[j];
+        // Use the llabs version of the "C" abs function because we are using int64_t
+        // do NOT try to use the std::abs() function as this is C++11 ONLY
+        dBinX = llabs(bin2x - bin1x);
+        dBinY = llabs(bin2y - bin1y);
+        dBinZ = llabs(bin2z - bin1z);
+
+        if(dBinX < criticalDistance1 && dBinY < criticalDistance1 && dBinZ < criticalDistance1)
+        {
+          m_Filter->updateNeighborHood(i, j);
+        }
+
+        if(dBinX < criticalDistance2 && dBinY < criticalDistance2 && dBinZ < criticalDistance2)
+        {
+          m_Filter->updateNeighborHood(j, i);
+        }
+      }
+    }
+  }
+
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    convert(r.begin(), r.end());
+  }
+#endif
+
+private:
+  FindNeighborhoods* m_Filter = nullptr;
+  size_t m_TotalFeatures = 0;
+  float* m_Centroids = nullptr;
+  const std::vector<int64_t>& m_Bins;
+  const std::vector<float>& m_CriticalDistance;
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -63,13 +160,13 @@ FindNeighborhoods::FindNeighborhoods()
 , m_Neighborhoods(nullptr)
 {
   m_NeighborhoodList = NeighborList<int32_t>::NullPointer();
-
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 FindNeighborhoods::~FindNeighborhoods() = default;
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -98,6 +195,7 @@ void FindNeighborhoods::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_STRING_FP("Neighborhood List", NeighborhoodListArrayName, FilterParameter::CreatedArray, FindNeighborhoods));
   setFilterParameters(parameters);
 }
+
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
@@ -166,8 +264,8 @@ void FindNeighborhoods::dataCheck()
 
   tempPath.update(m_EquivalentDiametersArrayPath.getDataContainerName(), m_EquivalentDiametersArrayPath.getAttributeMatrixName(), getNeighborhoodsArrayName());
   m_NeighborhoodsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
-      this, tempPath, 0, cDims);                 /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_NeighborhoodsPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+      this, tempPath, 0, cDims);           /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_NeighborhoodsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -205,15 +303,32 @@ void FindNeighborhoods::preflight()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::find_neighborhoods()
 {
-  float x = 0.0f, y = 0.0f, z = 0.0f;
+}
 
-  std::vector<std::vector<int32_t>> neighborhoodlist;
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindNeighborhoods::execute()
+{
+  setErrorCondition(0);
+  setWarningCondition(0);
+  dataCheck();
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
+  m_IncCount = 0;
+
+  float x = 0.0f, y = 0.0f, z = 0.0f;
+  m_NumCompleted = 0;
   std::vector<float> criticalDistance;
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_EquivalentDiametersArrayPath.getDataContainerName());
   size_t totalFeatures = m_EquivalentDiametersPtr.lock()->getNumberOfTuples();
 
-  neighborhoodlist.resize(totalFeatures);
+  m_ProgIncrement = totalFeatures / 100;
+
+  m_LocalNeighborhoodList.resize(totalFeatures);
   criticalDistance.resize(totalFeatures);
 
   float aveDiam = 0.0f;
@@ -241,84 +356,68 @@ void FindNeighborhoods::find_neighborhoods()
     x = m_Centroids[3 * i];
     y = m_Centroids[3 * i + 1];
     z = m_Centroids[3 * i + 2];
-    xbin = int32_t((x - m_OriginX) / aveDiam);
-    ybin = int32_t((y - m_OriginY) / aveDiam);
-    zbin = int32_t((z - m_OriginZ) / aveDiam);
-    bins[3 * i] = xbin;
-    bins[3 * i + 1] = ybin;
-    bins[3 * i + 2] = zbin;
+    xbin = static_cast<size_t>((x - m_OriginX) / aveDiam);
+    ybin = static_cast<size_t>((y - m_OriginY) / aveDiam);
+    zbin = static_cast<size_t>((z - m_OriginZ) / aveDiam);
+    bins[3 * i] = static_cast<int64_t>(xbin);
+    bins[3 * i + 1] = static_cast<int64_t>(ybin);
+    bins[3 * i + 2] = static_cast<int64_t>(zbin);
   }
 
-  int64_t bin1x = 0, bin2x = 0, bin1y = 0, bin2y = 0, bin1z = 0, bin2z = 0;
-  float dBinX = 0, dBinY = 0, dBinZ = 0;
-  float criticalDistance1 = 0, criticalDistance2 = 0;
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+  tbb::task_scheduler_init init;
+  bool doParallel = true;
+#endif
 
-  for(size_t i = 1; i < totalFeatures; i++)
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+  if(doParallel == true)
   {
-    if(i % 1000 == 0)
-    {
-
-      QString ss = QObject::tr("Working on Feature %1 of %2").arg(i).arg(totalFeatures);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-    }
-    x = m_Centroids[3 * i];
-    y = m_Centroids[3 * i + 1];
-    z = m_Centroids[3 * i + 2];
-    bin1x = bins[3 * i];
-    bin1y = bins[3 * i + 1];
-    bin1z = bins[3 * i + 2];
-    criticalDistance1 = criticalDistance[i];
-
-    for(size_t j = i + 1; j < totalFeatures; j++)
-    {
-      bin2x = bins[3 * j];
-      bin2y = bins[3 * j + 1];
-      bin2z = bins[3 * j + 2];
-      criticalDistance2 = criticalDistance[j];
-      // Use the llabs version of the "C" abs function because we are using int64_t
-      // do NOT try to use the std::abs() function as this is C++11 ONLY
-      dBinX = llabs(bin2x - bin1x);
-      dBinY = llabs(bin2y - bin1y);
-      dBinZ = llabs(bin2z - bin1z);
-
-      if(dBinX < criticalDistance1 && dBinY < criticalDistance1 && dBinZ < criticalDistance1)
-      {
-        m_Neighborhoods[i]++;
-        neighborhoodlist[i].push_back(j);
-      }
-
-      if(dBinX < criticalDistance2 && dBinY < criticalDistance2 && dBinZ < criticalDistance2)
-      {
-        m_Neighborhoods[j]++;
-        neighborhoodlist[j].push_back(i);
-      }
-    }
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalFeatures), FindNeighborhoodsImpl(this, totalFeatures, m_Centroids, bins, criticalDistance), tbb::auto_partitioner());
   }
+  else
+#endif
+  {
+    FindNeighborhoodsImpl serial(this, totalFeatures, m_Centroids, bins, criticalDistance);
+    serial.convert(0, totalFeatures);
+  }
+
   for(size_t i = 1; i < totalFeatures; i++)
   {
     // Set the vector for each list into the NeighborhoodList Object
     NeighborList<int32_t>::SharedVectorType sharedNeiLst(new std::vector<int32_t>);
-    sharedNeiLst->assign(neighborhoodlist[i].begin(), neighborhoodlist[i].end());
+    sharedNeiLst->assign(m_LocalNeighborhoodList[i].begin(), m_LocalNeighborhoodList[i].end());
     m_NeighborhoodList.lock()->setList(static_cast<int32_t>(i), sharedNeiLst);
   }
+
+  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNeighborhoods::execute()
+void FindNeighborhoods::updateNeighborHood(size_t sourceIndex, size_t destIndex)
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
-  dataCheck();
-  if(getErrorCondition() < 0)
+  static std::mutex mutex;
+  std::lock_guard<std::mutex> lock(mutex);
+  m_Neighborhoods[sourceIndex]++;
+  m_LocalNeighborhoodList[sourceIndex].push_back(static_cast<int32_t>(destIndex));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FindNeighborhoods::updateProgress(size_t numCompleted, size_t totalFeatures)
+{
+  static std::mutex mutex;
+  std::lock_guard<std::mutex> lock(mutex);
+  m_IncCount += numCompleted;
+  m_NumCompleted = m_NumCompleted + numCompleted;
+  if(m_IncCount > m_ProgIncrement)
   {
-    return;
+    m_IncCount = 0;
+    QString ss = QObject::tr("Working on Feature %1 of %2").arg(m_NumCompleted).arg(totalFeatures);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   }
-
-  find_neighborhoods();
-
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
