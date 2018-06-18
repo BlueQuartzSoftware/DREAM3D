@@ -516,6 +516,8 @@ void StatsGenAxisODFWidget::calculateAxisODF()
   config.imageDim = imageSize;
   config.lambertDim = lamberSize;
   config.numColors = numColors;
+  config.discrete = true;
+  config.discreteHeatMap = false;
   QVector<QString> labels(3);
   labels[0] = QString("C Axis"); // 001
   labels[1] = QString("A Axis"); // 100

@@ -584,6 +584,7 @@ void StatsGenODFWidget::calculateODF()
   config.lambertDim = lamberSize;
   config.numColors = numColors;
   config.discrete = true;
+  config.discreteHeatMap = false;
 
   QVector<UInt8ArrayType::Pointer> figures;
 
