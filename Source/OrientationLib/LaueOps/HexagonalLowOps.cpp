@@ -1399,13 +1399,12 @@ QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureC
 
   if(doParallel == true)
   {
-    tbb::task_group* g = new tbb::task_group;
+    std::shared_ptr<tbb::task_group> g(new tbb::task_group);
     g->run(ComputeStereographicProjection(xyz001.get(), &config, intensity001.get()));
     g->run(ComputeStereographicProjection(xyz011.get(), &config, intensity011.get()));
     g->run(ComputeStereographicProjection(xyz111.get(), &config, intensity111.get()));
     g->wait(); // Wait for all the threads to complete before moving on.
-    delete g;
-    g = nullptr;
+
   }
   else
 #endif
@@ -1490,13 +1489,12 @@ QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureC
 
   if(doParallel == true)
   {
-    tbb::task_group* g = new tbb::task_group;
+    std::shared_ptr<tbb::task_group> g(new tbb::task_group);
     g->run(GeneratePoleFigureRgbaImageImpl(intensity001.get(), &config, image001.get()));
     g->run(GeneratePoleFigureRgbaImageImpl(intensity011.get(), &config, image011.get()));
     g->run(GeneratePoleFigureRgbaImageImpl(intensity111.get(), &config, image111.get()));
     g->wait(); // Wait for all the threads to complete before moving on.
-    delete g;
-    g = nullptr;
+
   }
   else
 #endif

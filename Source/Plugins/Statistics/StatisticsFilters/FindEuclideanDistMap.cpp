@@ -671,7 +671,7 @@ void FindEuclideanDistMap::findDistanceMap()
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel == true)
   {
-    tbb::task_group* g = new tbb::task_group;
+    std::shared_ptr<tbb::task_group> g(new tbb::task_group);
     if(m_DoBoundaries == true)
     {
       if (m_CalcManhattanDist == true)
@@ -706,7 +706,7 @@ void FindEuclideanDistMap::findDistanceMap()
       }
     }
     g->wait();
-    delete g;
+    
   }
   else
 #endif

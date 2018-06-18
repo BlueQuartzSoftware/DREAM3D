@@ -306,7 +306,7 @@ void AlignSections::execute()
   // Better speed up could be achieved if we had better data locality.
   if(doParallel == true)
   {
-    tbb::task_group* g = new tbb::task_group;
+    std::shared_ptr<tbb::task_group> g(new tbb::task_group);
     QVector<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNames().toVector();
     m_TotalProgress = voxelArrayNames.size() * dims[2]; // Total number of slices to update
     // Create all the tasks
@@ -316,7 +316,7 @@ void AlignSections::execute()
     }
     // Wait for them to complete.
     g->wait();
-    delete g;
+    
   }
   else
 #endif

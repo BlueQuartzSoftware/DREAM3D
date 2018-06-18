@@ -443,7 +443,7 @@ void MPMCalculation::execute()
     tbb::task_scheduler_init init;
     int threads = init.default_num_threads();
 #if USE_TBB_TASK_GROUP
-    tbb::task_group* g = new tbb::task_group;
+    std::shared_ptr<tbb::task_group> g(new tbb::task_group);
     unsigned int rowIncrement = rows / threads;
     unsigned int rowStop = 0 + rowIncrement;
     unsigned int rowStart = 0;
@@ -458,7 +458,7 @@ void MPMCalculation::execute()
       }
     }
     g->wait();
-    delete g;
+    
 #else
     tbb::parallel_for(tbb::blocked_range2d<int>(0, rows, rows / threads, 0, cols, cols), ParallelMPMLoop(data, yk, &(rndNumbers.front())), tbb::simple_partitioner());
 #endif

@@ -495,7 +495,7 @@ void NeighborOrientationCorrelation::execute()
     m_TotalProgress = 0;
     if(doParallel == true)
     {
-      tbb::task_group* g = new tbb::task_group;
+      std::shared_ptr<tbb::task_group> g(new tbb::task_group);
       AttributeMatrix* attrMat = m->getAttributeMatrix(attrMatName).get();
       QVector<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames().toVector();
       m_TotalProgress = voxelArrayNames.size() * totalPoints; // Total number of points to update
@@ -506,7 +506,7 @@ void NeighborOrientationCorrelation::execute()
       }
       // Wait for them to complete.
       g->wait();
-      delete g;
+      
     }
     else
 #endif

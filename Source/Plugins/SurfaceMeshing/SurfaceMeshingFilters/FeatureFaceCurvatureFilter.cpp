@@ -409,7 +409,7 @@ void FeatureFaceCurvatureFilter::execute()
 #endif
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_group* g = new tbb::task_group;
+  std::shared_ptr<tbb::task_group> g(new tbb::task_group);
 #else
 
 #endif
@@ -444,7 +444,7 @@ void FeatureFaceCurvatureFilter::execute()
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   g->wait(); // Wait for all the threads to complete before moving on.
-  delete g;
+  
 #endif
 
   /* Let the GUI know we are done with this filter */

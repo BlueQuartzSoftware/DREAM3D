@@ -807,16 +807,15 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
-  tbb::task_group* g = new tbb::task_group;
 
   if(doParallel == true)
   {
+    std::shared_ptr<tbb::task_group> g(new tbb::task_group);
     g->run(ComputeStereographicProjection(coords[0].get(), &config, intensity001.get()));
     g->run(ComputeStereographicProjection(coords[1].get(), &config, intensity100.get()));
     g->run(ComputeStereographicProjection(coords[2].get(), &config, intensity010.get()));
     g->wait(); // Wait for all the threads to complete before moving on.
-    delete g;
-    g = nullptr;
+
   }
   else
 #endif
@@ -901,13 +900,12 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel == true)
   {
-    g = new tbb::task_group;
+    std::shared_ptr<tbb::task_group> g(new tbb::task_group);
     g->run(GeneratePoleFigureRgbaImageImpl(intensity001.get(), &config, image001.get()));
     g->run(GeneratePoleFigureRgbaImageImpl(intensity100.get(), &config, image100.get()));
     g->run(GeneratePoleFigureRgbaImageImpl(intensity010.get(), &config, image010.get()));
     g->wait(); // Wait for all the threads to complete before moving on.
-    delete g;
-    g = nullptr;
+
   }
   else
 #endif

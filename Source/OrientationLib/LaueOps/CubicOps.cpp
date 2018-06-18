@@ -1839,15 +1839,13 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
   tbb::task_scheduler_init init;
   bool doParallel = true;
 
-  if(doParallel == true)
+  if(doParallel)
   {
-    tbb::task_group* g = new tbb::task_group;
+    std::shared_ptr<tbb::task_group> g(new tbb::task_group);
     g->run(ComputeStereographicProjection(xyz001.get(), &config, intensity001.get()));
     g->run(ComputeStereographicProjection(xyz011.get(), &config, intensity011.get()));
     g->run(ComputeStereographicProjection(xyz111.get(), &config, intensity111.get()));
     g->wait(); // Wait for all the threads to complete before moving on.
-    delete g;
-    g = nullptr;
   }
   else
 #endif
@@ -1933,13 +1931,11 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
 
   if(doParallel == true)
   {
-    tbb::task_group* g = new tbb::task_group;
+    std::shared_ptr<tbb::task_group> g(new tbb::task_group);
     g->run(GeneratePoleFigureRgbaImageImpl(intensity001.get(), &config, image001.get()));
     g->run(GeneratePoleFigureRgbaImageImpl(intensity011.get(), &config, image011.get()));
     g->run(GeneratePoleFigureRgbaImageImpl(intensity111.get(), &config, image111.get()));
     g->wait(); // Wait for all the threads to complete before moving on.
-    delete g;
-    g = nullptr;
   }
   else
 #endif
@@ -2017,7 +2013,7 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
       b = (2 * x * x + 2 * y * y);
       c = (x * x + y * y - 1);
 
-      val = (-b + sqrtf(b * b - 4.0 * a * c)) / (2.0 * a);
+      val = (-b + sqrtf(b * b - 4.0f * a * c)) / (2.0f * a);
       x1 = (1 + val) * x;
       y1 = (1 + val) * y;
       z1 = val;
@@ -2033,9 +2029,9 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
       x1alt = x1alt / sqrt((x1alt * x1alt) + (y1 * y1));
       theta = acos(x1alt);
 
-      if (phi < (45 * SIMPLib::Constants::k_PiOver180) ||
-          phi > (90 * SIMPLib::Constants::k_PiOver180) ||
-          theta > (35.26 * SIMPLib::Constants::k_PiOver180))
+      if (phi < (45.0f * SIMPLib::Constants::k_PiOver180) ||
+          phi > (90.0f * SIMPLib::Constants::k_PiOver180) ||
+          theta > (35.26f * SIMPLib::Constants::k_PiOver180))
       {
         color = 0xFFFFFFFF;
       }
