@@ -36,9 +36,10 @@
 #ifndef _writepolefigure_h_
 #define _writepolefigure_h_
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/StringDataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -130,7 +131,10 @@ public:
     SIMPL_FILTER_PARAMETER(QString, Title)
     Q_PROPERTY(QString Title READ getTitle WRITE setTitle)
         
-    
+
+    SIMPL_FILTER_PARAMETER(DataArrayPath, MaterialNameArrayPath)
+    Q_PROPERTY(DataArrayPath MaterialNameArrayPath READ getMaterialNameArrayPath WRITE setMaterialNameArrayPath)
+        
     //  SIMPL_FILTER_PARAMETER(bool, UseDiscreteHeatMap)
     //  Q_PROPERTY(bool UseDiscreteHeatMap READ getUseDiscreteHeatMap WRITE setUseDiscreteHeatMap)
 
@@ -254,6 +258,8 @@ public:
     DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
     DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
     DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
+    
+    StringDataArray::Pointer m_MaterialNames;
 
 public:
   WritePoleFigure(const WritePoleFigure&) = delete; // Copy Constructor Not Implemented
