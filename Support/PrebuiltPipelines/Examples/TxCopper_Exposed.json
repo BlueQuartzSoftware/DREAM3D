@@ -3,10 +3,11 @@
         "CellAttributeMatrixName": "EBSD Scan Data",
         "CellEnsembleAttributeMatrixName": "Phase Data",
         "DataContainerName": "Cugrid_after 2nd_15kv_2kx_2",
-        "FilterVersion": "6.4.167",
+        "FilterVersion": "6.4.425",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Import Oxford Instr. EBSD Data (.ctf)",
         "Filter_Name": "ReadCtfData",
+        "Filter_Uuid": "{d1df969c-0428-53c3-b61d-99ea2bb6da28}",
         "InputFile": "Data/Textured_Copper/Cugrid_after 2nd_15kv_2kx_2.ctf"
     },
     "1": {
@@ -15,10 +16,11 @@
             "Data Array Name": "",
             "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
-        "FilterVersion": "6.4.167",
+        "FilterVersion": "6.4.425",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Rotate Sample Reference Frame",
         "Filter_Name": "RotateSampleRefFrame",
+        "Filter_Uuid": "{e25d9b4c-2b37-578c-b1de-cf7032b5ef19}",
         "RotationAngle": 180,
         "RotationAxis": {
             "x": 0,
@@ -33,10 +35,11 @@
             "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
         "ConversionType": 0,
-        "FilterVersion": "6.4.167",
+        "FilterVersion": "6.4.425",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Convert Angles to Degrees or Radians",
-        "Filter_Name": "ChangeAngleRepresentation"
+        "Filter_Name": "ChangeAngleRepresentation",
+        "Filter_Uuid": "{f7bc0e1e-0f50-5fe0-a9e7-510b6ed83792}"
     },
     "3": {
         "CellAttributeMatrixPath": {
@@ -54,11 +57,14 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
-        "FilterVersion": "6.4.167",
+        "FilterVersion": "6.4.425",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Crop Geometry (Image)",
         "Filter_Name": "CropImageGeometry",
+        "Filter_Uuid": "{baa4b7fe-31e5-5e63-a2cb-0bb9d844cfaf}",
+        "NewBoxDimensions": "X Range: 0 to 46.1 (Delta: 46.1) 461 Voxels\nY Range: 0 to 40 (Delta: 40) 400 Voxels\nZ Range: 0 to 1 (Delta: 1) 1 Voxels\n",
         "NewDataContainerName": "NewCugrid_after 2nd_15kv_2kx_2",
+        "OldBoxDimensions": "X Range: 0 to 55 (Delta: 55) 550 Voxels\nY Range: 0 to 40 (Delta: 40) 400 Voxels\nZ Range: 0 to 1 (Delta: 1) 1 Voxels",
         "RenumberFeatures": 0,
         "SaveAsNewDataContainer": 0,
         "UpdateOrigin": 1,
@@ -71,10 +77,11 @@
     },
     "4": {
         "DestinationArrayName": "Mask",
-        "FilterVersion": "1.0.165",
+        "FilterVersion": "1.1.561",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Threshold Objects",
         "Filter_Name": "MultiThresholdObjects",
+        "Filter_Uuid": "{014b7300-cf36-5ede-a751-5faf9b119dae}",
         "SelectedThresholds": [
             {
                 "Attribute Array Name": "Error",
@@ -102,10 +109,11 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
-        "FilterVersion": "6.4.167",
+        "FilterVersion": "6.4.425",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
+        "Filter_Uuid": "{a50e6532-8075-5de5-ab63-945feb0de7f7}",
         "GoodVoxelsArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Mask",
@@ -120,10 +128,11 @@
     },
     "6": {
         "FileName": "Data/Output/TexturedCopper/IPF_Exposed.png",
-        "FilterVersion": "1.0.366",
+        "FilterVersion": "1.0.439",
         "Filter_Enabled": true,
         "Filter_Human_Label": "ITK::Image Writer",
         "Filter_Name": "ITKImageWriter",
+        "Filter_Uuid": "{11473711-f94d-5d96-b749-ec36a81ad338}",
         "ImageArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "IPF_Exposed_001",
@@ -146,27 +155,77 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
-        "FilterVersion": "6.4.167",
+        "FilterVersion": "6.4.425",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Export Pole Figure Images",
         "Filter_Name": "WritePoleFigure",
+        "Filter_Uuid": "{a10bb78e-fcff-553d-97d6-830a43c85385}",
+        "GenerationAlgorithm": 0,
         "GoodVoxelsArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Mask",
             "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
         "ImageFormat": 0,
-        "ImageLayout": 2,
-        "ImagePrefix": "Exposed_",
-        "ImageSize": 512,
+        "ImageLayout": 0,
+        "ImagePrefix": "Exposed_Lambert_",
+        "ImageSize": 1000,
         "LambertSize": 32,
+        "MaterialNameArrayPath": {
+            "Attribute Matrix Name": "Phase Data",
+            "Data Array Name": "MaterialName",
+            "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
+        },
         "NumColors": 32,
         "OutputPath": "Data/Output/TexturedCopper",
-        "UseGoodVoxels": 0
+        "Title": "Cu Grid After 2nd 15kV (Exposed Area)",
+        "UseGoodVoxels": 1
+    },
+    "8": {
+        "CellEulerAnglesArrayPath": {
+            "Attribute Matrix Name": "EBSD Scan Data",
+            "Data Array Name": "EulerAngles",
+            "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
+        },
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "EBSD Scan Data",
+            "Data Array Name": "Phases",
+            "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
+        },
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "Phase Data",
+            "Data Array Name": "CrystalStructures",
+            "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
+        },
+        "FilterVersion": "6.4.425",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Export Pole Figure Images",
+        "Filter_Name": "WritePoleFigure",
+        "Filter_Uuid": "{a10bb78e-fcff-553d-97d6-830a43c85385}",
+        "GenerationAlgorithm": 1,
+        "GoodVoxelsArrayPath": {
+            "Attribute Matrix Name": "EBSD Scan Data",
+            "Data Array Name": "Mask",
+            "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
+        },
+        "ImageFormat": 0,
+        "ImageLayout": 0,
+        "ImagePrefix": "Exposed_Discrete_",
+        "ImageSize": 1000,
+        "LambertSize": 32,
+        "MaterialNameArrayPath": {
+            "Attribute Matrix Name": "Phase Data",
+            "Data Array Name": "MaterialName",
+            "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
+        },
+        "NumColors": 32,
+        "OutputPath": "Data/Output/TexturedCopper",
+        "Title": "Cu Grid After 2nd 15kV (Exposed Area)",
+        "UseGoodVoxels": 1
     },
     "PipelineBuilder": {
         "Name": "TxCopper_Exposed",
-        "Number_Filters": 8,
+        "Number_Filters": 9,
         "Version": 6
     }
 }
