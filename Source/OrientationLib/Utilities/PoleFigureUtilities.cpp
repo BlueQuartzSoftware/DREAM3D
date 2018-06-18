@@ -55,18 +55,12 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PoleFigureUtilities::PoleFigureUtilities()
-{
-
-}
+PoleFigureUtilities::PoleFigureUtilities() = default;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PoleFigureUtilities::~PoleFigureUtilities()
-{
-
-}
+PoleFigureUtilities::~PoleFigureUtilities() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -325,9 +319,7 @@ void PoleFigureUtilities::GenerateOrthoPoleFigures(FloatArrayType* eulers, int l
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GeneratePoleFigureRgbaImageImpl::GeneratePoleFigureRgbaImageImpl()
-{
-}
+GeneratePoleFigureRgbaImageImpl::GeneratePoleFigureRgbaImageImpl()= default;
 
 GeneratePoleFigureRgbaImageImpl::GeneratePoleFigureRgbaImageImpl(DoubleArrayType* intensity, PoleFigureConfiguration_t* config, UInt8ArrayType* rgba)
 : m_Intensity(intensity)
@@ -337,6 +329,9 @@ GeneratePoleFigureRgbaImageImpl::GeneratePoleFigureRgbaImageImpl(DoubleArrayType
 }
 GeneratePoleFigureRgbaImageImpl::~GeneratePoleFigureRgbaImageImpl() = default;
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void GeneratePoleFigureRgbaImageImpl::operator()() const
 {
   PoleFigureUtilities::CreateColorImage(m_Intensity, *m_Config, m_Rgba);
