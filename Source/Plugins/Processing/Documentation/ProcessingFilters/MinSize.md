@@ -1,5 +1,5 @@
-Minimum Size 
-=============
+# Minimum Size #
+
 
 ## Group (Subgroup) ##
 
@@ -10,6 +10,10 @@ Processing (Cleanup)
 This **Filter** removes **Features** that have a total number of **Cells** below the minimum threshold defined by the user. Entering a number larger than the largest **Feature** generates an _error_ (since all **Features** would be removed). Hence, a choice of threshold should be carefully be chosen if it is not known how many **Cells** are in the largest **Features**. After removing all the small **Features**, the remaining **Features** are isotropically coarsened to fill the gaps left by the small **Features**.
 
 The **Filter** can be run in a mode where the minimum number of neighbors is applied to a single **Ensemble**.  The user can select to apply the minimum to one specific **Ensemble**.
+
+## Notes ##
+
+If any features are removed **and** the Cell Feature AttributeMatrix contains any _NeighborList_ data arrays those arrays will be **REMOVED** because those lists are now invalid. Re-run the _Find Neighbors_ filter to re-create the lists.
 
 ## Parameters ##
 

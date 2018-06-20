@@ -198,15 +198,17 @@ protected:
   QVector<bool> merge_containedfeatures();
 
 private:
-  int32_t* m_Neighbors;
+  int32_t* m_Neighbors = nullptr;
 
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
   DEFINE_DATAARRAY_VARIABLE(int32_t, NumNeighbors)
 
-  MinNeighbors(const MinNeighbors&);   // Copy Constructor Not Implemented
+public:
+  MinNeighbors(const MinNeighbors&) = delete;            // Copy Constructor Not Implemented
+  MinNeighbors(MinNeighbors&&) = delete;                 // Move Constructor Not Implemented
   MinNeighbors& operator=(const MinNeighbors&) = delete; // Copy Assignment Not Implemented
-  MinNeighbors& operator=(MinNeighbors&&) = delete;      // Move Assignment
+  MinNeighbors& operator=(MinNeighbors&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* MinNeighbors_H_ */

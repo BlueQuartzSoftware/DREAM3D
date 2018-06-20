@@ -56,10 +56,6 @@ MinNeighbors::MinNeighbors()
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 , m_FeaturePhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases)
 , m_NumNeighborsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::NumNeighbors)
-, m_Neighbors(nullptr)
-, m_FeatureIds(nullptr)
-, m_FeaturePhases(nullptr)
-, m_NumNeighbors(nullptr)
 {
 }
 
@@ -186,11 +182,11 @@ void MinNeighbors::dataCheck()
     return;
   }
 
-  QString ss = QObject::tr("If this filter changes the selected feature ids array located at '%1', all arrays of type NeighborList will be deleted.  These arrays are:\n").arg(featureIdsPath);
+  QString ss = QObject::tr("If this filter modifies the Cell Level Array '%1', all arrays of type NeighborList will be deleted.  These arrays are:\n").arg(featureIdsPath);
   QList<QString> featureArrayNames = featureAM->getAttributeArrayNames();
-  for(int i = 0; i < featureArrayNames.size(); i++)
+  for(const auto& featureArrayName : featureArrayNames)
   {
-    IDataArray::Pointer arr = featureAM->getAttributeArray(featureArrayNames[i]);
+    IDataArray::Pointer arr = featureAM->getAttributeArray(featureArrayName);
     QString type = arr->getTypeAsString();
     if(type.compare("NeighborList<T>") == 0)
     {
@@ -448,7 +444,7 @@ QVector<bool> MinNeighbors::merge_containedfeatures()
 
   for(size_t i = 1; i < totalFeatures; i++)
   {
-    if(m_ApplyToSinglePhase == false)
+    if(!m_ApplyToSinglePhase)
     {
       if(m_NumNeighbors[i] >= m_MinNumNeighbors)
       {
@@ -471,7 +467,7 @@ QVector<bool> MinNeighbors::merge_containedfeatures()
       }
     }
   }
-  if(good == false)
+  if(!good)
   {
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), "The minimum number of neighbors is larger than the Feature with the most neighbors.  All Features would be removed", getErrorCondition());
@@ -480,7 +476,7 @@ QVector<bool> MinNeighbors::merge_containedfeatures()
   for(size_t i = 0; i < totalPoints; i++)
   {
     int32_t featurename = m_FeatureIds[i];
-    if(activeObjects[featurename] == false)
+    if(!activeObjects[featurename])
     {
       m_FeatureIds[i] = -1;
     }
@@ -494,7 +490,7 @@ QVector<bool> MinNeighbors::merge_containedfeatures()
 AbstractFilter::Pointer MinNeighbors::newFilterInstance(bool copyFilterParameters) const
 {
   MinNeighbors::Pointer filter = MinNeighbors::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

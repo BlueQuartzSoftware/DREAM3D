@@ -56,10 +56,6 @@ MinSize::MinSize()
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 , m_FeaturePhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases)
 , m_NumCellsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::NumCells)
-, m_Neighbors(nullptr)
-, m_FeatureIds(nullptr)
-, m_FeaturePhases(nullptr)
-, m_NumCells(nullptr)
 {
 }
 
@@ -143,16 +139,14 @@ void MinSize::dataCheck()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
   QVector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
-                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_FeatureIdsPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims);
+  if(nullptr != m_FeatureIdsPtr.lock())
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_NumCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getNumCellsArrayPath(),
-                                                                                                      cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_NumCellsPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+  m_NumCellsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getNumCellsArrayPath(), cDims);
+  if(nullptr != m_NumCellsPtr.lock())
   {
     m_NumCells = m_NumCellsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -161,11 +155,10 @@ void MinSize::dataCheck()
     dataArrayPaths.push_back(getNumCellsArrayPath());
   }
 
-  if(m_ApplyToSinglePhase == true)
+  if(m_ApplyToSinglePhase)
   {
-    m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(),
-                                                                                                             cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_FeaturePhasesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(), cDims);
+    if(nullptr != m_FeaturePhasesPtr.lock())
     {
       m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -186,11 +179,11 @@ void MinSize::dataCheck()
     return;
   }
 
-  QString ss = QObject::tr("If this filter changes the selected feature ids array located at '%1', all arrays of type NeighborList will be deleted.  These arrays are:\n").arg(featureIdsPath);
+  QString ss = QObject::tr("If this filter modifies the Cell Level Array '%1', all arrays of type NeighborList will be deleted.  These arrays are:\n").arg(featureIdsPath);
   QList<QString> featureArrayNames = featureAM->getAttributeArrayNames();
-  for(int i = 0; i < featureArrayNames.size(); i++)
+  for(const auto& featureArrayName : featureArrayNames)
   {
-    IDataArray::Pointer arr = featureAM->getAttributeArray(featureArrayNames[i]);
+    IDataArray::Pointer arr = featureAM->getAttributeArray(featureArrayName);
     QString type = arr->getTypeAsString();
     if(type.compare("NeighborList<T>") == 0)
     {
@@ -232,7 +225,7 @@ void MinSize::execute()
   // that is not in the system ; the filter would not crash otherwise, but the user should
   // be notified of unanticipated behavior ; this cannot be done in the dataCheck since
   // we don't have acces to the data yet
-  if(m_ApplyToSinglePhase == true)
+  if(m_ApplyToSinglePhase)
   {
     AttributeMatrix::Pointer featAttrMat =
         getDataContainerArray()->getDataContainer(getFeaturePhasesArrayPath().getDataContainerName())->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName());
@@ -247,7 +240,7 @@ void MinSize::execute()
       }
     }
 
-    if(unavailablePhase == true)
+    if(unavailablePhase)
     {
       QString ss = QObject::tr("The phase number (%1) is not available in the supplied Feature phases array with path (%2)").arg(m_PhaseNumber).arg(m_FeaturePhasesArrayPath.serialize());
       setErrorCondition(-5555);
@@ -324,7 +317,6 @@ void MinSize::assign_badpoints()
           if(featurename < 0)
           {
             counter++;
-            current = 0;
             most = 0;
             for(int32_t l = 0; l < 6; l++)
             {
@@ -421,9 +413,9 @@ void MinSize::assign_badpoints()
         if(featurename < 0 && m_FeatureIds[neighbor] >= 0)
         {
 
-          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          for(auto& voxelArrayName : voxelArrayNames)
           {
-            IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
+            IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(voxelArrayName);
             p->copyTuple(neighbor, j);
           }
         }
@@ -447,7 +439,7 @@ QVector<bool> MinSize::remove_smallfeatures()
 
   for(size_t i = 1; i < totalFeatures; i++)
   {
-    if(m_ApplyToSinglePhase == false)
+    if(!m_ApplyToSinglePhase)
     {
       if(m_NumCells[i] >= m_MinAllowedFeatureSize)
       {
@@ -470,7 +462,7 @@ QVector<bool> MinSize::remove_smallfeatures()
       }
     }
   }
-  if(good == false)
+  if(!good)
   {
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), "The minimum size is larger than the largest Feature.  All Features would be removed", -1);
@@ -479,7 +471,7 @@ QVector<bool> MinSize::remove_smallfeatures()
   for(size_t i = 0; i < totalPoints; i++)
   {
     gnum = m_FeatureIds[i];
-    if(activeObjects[gnum] == false)
+    if(!activeObjects[gnum])
     {
       m_FeatureIds[i] = -1;
     }
@@ -493,7 +485,7 @@ QVector<bool> MinSize::remove_smallfeatures()
 AbstractFilter::Pointer MinSize::newFilterInstance(bool copyFilterParameters) const
 {
   MinSize::Pointer filter = MinSize::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

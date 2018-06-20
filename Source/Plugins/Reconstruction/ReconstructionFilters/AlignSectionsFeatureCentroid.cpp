@@ -56,9 +56,7 @@ AlignSectionsFeatureCentroid::AlignSectionsFeatureCentroid()
 : m_ReferenceSlice(0)
 , m_UseReferenceSlice(false)
 , m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
-, m_GoodVoxels(nullptr)
 {
-  // only setting up the child parameters because the parent constructor has already been called
 }
 
 // -----------------------------------------------------------------------------
@@ -171,17 +169,19 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   std::ofstream outFile;
-  if(getWriteAlignmentShifts() == true)
+  if(getWriteAlignmentShifts())
   {
     outFile.open(getAlignmentShiftFileName().toLatin1().data());
     outFile << "#"
             << "Slice_A,Slice_B,New X Shift,New Y Shift,X Shift, Y Shift, X Centroid, Y Centroid" << std::endl;
   }
-  size_t udims[3] = {0, 0, 0};
-  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
+  size_t dims[3] = {0, 0, 0};
+  std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
-  size_t dims[3] = {
-      static_cast<size_t>(udims[0]), static_cast<size_t>(udims[1]), static_cast<size_t>(udims[2]),
+  int64_t sdims[3] = {
+      static_cast<int64_t>(dims[0]),
+      static_cast<int64_t>(dims[1]),
+      static_cast<int64_t>(dims[2]),
   };
 
   size_t newxshift = 0;
@@ -210,7 +210,7 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
       for(size_t n = 0; n < dims[0]; n++)
       {
         point = ((slice)*dims[0] * dims[1]) + (l * dims[0]) + n;
-        if(m_GoodVoxels[point] == true)
+        if(m_GoodVoxels[point])
         {
           xCentroid[iter] = xCentroid[iter] + (static_cast<float>(n) * xRes);
           yCentroid[iter] = yCentroid[iter] + (static_cast<float>(l) * yRes);
@@ -228,7 +228,7 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
   for(size_t iter = 1; iter < dims[2]; iter++)
   {
     slice = (dims[2] - 1) - iter;
-    if(m_UseReferenceSlice == true)
+    if(m_UseReferenceSlice)
     {
       xshifts[iter] = static_cast<int64_t>((xCentroid[iter] - xCentroid[static_cast<size_t>(m_ReferenceSlice)]) / xRes);
       yshifts[iter] = static_cast<int64_t>((yCentroid[iter] - yCentroid[static_cast<size_t>(m_ReferenceSlice)]) / yRes);
@@ -239,32 +239,50 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
       yshifts[iter] = yshifts[iter - 1] + static_cast<int64_t>((yCentroid[iter] - yCentroid[iter - 1]) / yRes);
     }
 
-    if((xshifts[iter] < 0 || static_cast<size_t>(xshifts[iter]) > dims[0]) && !xWarning)
+    if((xshifts[iter] < -sdims[0] || xshifts[iter] > sdims[0]) && !xWarning)
     {
-      notifyWarningMessage(getHumanLabel(), QString("A shift was greater than the X dimension of the Image Geometry. All subsequent slices are probably wrong"), 100);
+      setWarningCondition(100);
+      QString msg;
+      QTextStream ss(&msg);
+      ss << "A shift was greater than the X dimension of the Image Geometry. All subsequent slices are probably wrong. Slice=" << iter << " X Dim=" << dims[0] << " X Shift=" << xshifts[iter]
+         << " sDims[0]=" << sdims[0];
+      notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
       xWarning = true;
     }
-    if((yshifts[iter] < 0 || static_cast<size_t>(yshifts[iter]) > dims[1]) && !yWarning)
+    if((yshifts[iter] < -sdims[1] || yshifts[iter] > sdims[1]) && !yWarning)
     {
-      notifyWarningMessage(getHumanLabel(), QString("A shift was greater than the Y dimension of the Image Geometry. All subsequent slices are probably wrong"), 101);
+      setWarningCondition(101);
+      QString msg;
+      QTextStream ss(&msg);
+      ss << "A shift was greater than the Y dimension of the Image Geometry. All subsequent slices are probably wrong. Slice=" << iter << " Y Dim=" << dims[1] << " Y Shift=" << yshifts[iter]
+         << " sDims[1]=" << sdims[1];
+      notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
       yWarning = true;
     }
     if(std::isnan(xCentroid[iter]) && !xWarning)
     {
-      notifyWarningMessage(getHumanLabel(), QString("The X Centoird was NaN. All subsequent slices are probably wrong"), 100);
+      setWarningCondition(102);
+      QString msg;
+      QTextStream ss(&msg);
+      ss << "The X Centoird was NaN. All subsequent slices are probably wrong. Slice=" << iter;
+      notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
       xWarning = true;
     }
     if(std::isnan(yCentroid[iter]) && !yWarning)
     {
-      notifyWarningMessage(getHumanLabel(), QString("The Y Centoird was NaN. All subsequent slices are probably wrong"), 100);
+      setWarningCondition(103);
+      QString msg;
+      QTextStream ss(&msg);
+      ss << "The Y Centoird was NaN. All subsequent slices are probably wrong. Slice=" << iter;
+      notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
       yWarning = true;
     }
-    if(getWriteAlignmentShifts() == true)
+    if(getWriteAlignmentShifts())
     {
       outFile << slice << "," << slice + 1 << "," << newxshift << "," << newyshift << "," << xshifts[iter] << "," << yshifts[iter] << "," << xCentroid[iter] << "," << yCentroid[iter] << std::endl;
     }
   }
-  if(getWriteAlignmentShifts() == true)
+  if(getWriteAlignmentShifts())
   {
     outFile.close();
   }

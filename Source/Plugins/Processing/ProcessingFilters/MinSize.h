@@ -195,15 +195,17 @@ protected:
   QVector<bool> remove_smallfeatures();
 
 private:
-  int32_t* m_Neighbors;
+  int32_t* m_Neighbors = nullptr;
 
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
   DEFINE_DATAARRAY_VARIABLE(int32_t, NumCells)
 
-  MinSize(const MinSize&);        // Copy Constructor Not Implemented
+public:
+  MinSize(const MinSize&) = delete;            // Copy Constructor Not Implemented
+  MinSize(MinSize&&) = delete;                 // Move Constructor Not Implemented
   MinSize& operator=(const MinSize&) = delete; // Copy Assignment Not Implemented
-  MinSize& operator=(MinSize&&) = delete;      // Move Assignment
+  MinSize& operator=(MinSize&&) = delete;      // Move Assignment Not Implemented
 };
 
 #endif /* MinSize_H_ */

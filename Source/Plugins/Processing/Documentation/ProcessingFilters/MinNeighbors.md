@@ -1,5 +1,5 @@
-Minimum Number of Neighbors 
-=============
+# Minimum Number of Neighbors #
+
 
 ## Group (Subgroup) ##
 
@@ -13,7 +13,7 @@ The **Filter** can be run in a mode where the minimum number of neighbors is app
 
 ## Notes ##
 
-If any features are removed **and** the CellFeature AttributeMatrix contains any _NeighborList_ data arrays those arrays will be **REMOVED** because those lists are now invalid. Re-run the Find Neighbors filter to re-create the lists.
+If any features are removed **and** the Cell Feature AttributeMatrix contains any _NeighborList_ data arrays those arrays will be **REMOVED** because those lists are now invalid. Re-run the _Find Neighbors_ filter to re-create the lists.
 
 ## Parameters ##
 
