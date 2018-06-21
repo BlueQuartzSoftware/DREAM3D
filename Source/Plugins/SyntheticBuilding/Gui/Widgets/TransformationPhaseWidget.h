@@ -60,22 +60,22 @@ class TransformationPhaseWidget : public StatsGenWidget, private Ui::Transformat
 
 public:
   TransformationPhaseWidget(QWidget* parent = 0);
-  virtual ~TransformationPhaseWidget();
+  ~TransformationPhaseWidget() override;
 
   void updatePlots();
 
   SIMPL_INSTANCE_PROPERTY(PhaseType::Type, PhaseType)
-  void setCrystalStructure(unsigned int xtal);
-  unsigned int getCrystalStructure() const;
-  void setPhaseIndex(int index);
-  int getPhaseIndex() const;
+  void setCrystalStructure(const unsigned int& xtal) override;
+  unsigned int getCrystalStructure() const override;
+  void setPhaseIndex(const int& index) override;
+  int getPhaseIndex() const override;
   SIMPL_INSTANCE_PROPERTY(float, PhaseFraction)
   SIMPL_INSTANCE_PROPERTY(float, TotalPhaseFraction)
   SIMPL_INSTANCE_PROPERTY(unsigned int, ParentPhase)
   SIMPL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
   SIMPL_INSTANCE_PROPERTY(bool, BulkLoadFailure)
 
-  void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
+  void extractStatsData(AttributeMatrix::Pointer attrMat, int index) override;
 
   void plotSizeDistribution();
   void updateSizeDistributionPlot();
@@ -86,9 +86,9 @@ public:
   int calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize);
   int gatherSizeDistributionFromGui(float& mu, float& sigma, float& minCutOff, float& maxCutOff, float& stepSize);
 
-  int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false);
+  int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false) override;
 
-  virtual void generateDefaultData();
+  void generateDefaultData() override;
 
 protected slots:
   void on_m_GenerateDefaultData_clicked();

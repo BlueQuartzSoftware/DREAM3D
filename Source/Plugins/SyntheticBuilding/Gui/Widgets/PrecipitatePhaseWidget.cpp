@@ -144,7 +144,7 @@ void PrecipitatePhaseWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrecipitatePhaseWidget::setPhaseIndex(int index)
+void PrecipitatePhaseWidget::setPhaseIndex(const int& index)
 {
   StatsGenWidget::setPhaseIndex(index);
   getFeatureSizeWidget()->setPhaseIndex(index);
@@ -158,7 +158,7 @@ void PrecipitatePhaseWidget::setPhaseIndex(int index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrecipitatePhaseWidget::setCrystalStructure(unsigned int xtal)
+void PrecipitatePhaseWidget::setCrystalStructure(const unsigned int& xtal)
 {
   StatsGenWidget::setCrystalStructure(xtal);
   getFeatureSizeWidget()->setCrystalStructure(xtal);

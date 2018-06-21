@@ -476,7 +476,7 @@ void PrimaryPhaseWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::setPhaseIndex(int index)
+void PrimaryPhaseWidget::setPhaseIndex(const int& index)
 {
   StatsGenWidget::setPhaseIndex(index);
   m_Omega3Plot->setPhaseIndex(index);
@@ -494,7 +494,7 @@ void PrimaryPhaseWidget::setPhaseIndex(int index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::setCrystalStructure(unsigned int xtal)
+void PrimaryPhaseWidget::setCrystalStructure(const unsigned int& xtal)
 {
   StatsGenWidget::setCrystalStructure(xtal);
   m_Omega3Plot->setCrystalStructure(xtal);

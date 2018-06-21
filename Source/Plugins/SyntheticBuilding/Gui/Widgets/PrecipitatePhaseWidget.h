@@ -63,13 +63,13 @@ class PrecipitatePhaseWidget : public PrimaryPhaseWidget
 
 public:
   PrecipitatePhaseWidget(QWidget* parent = 0);
-  virtual ~PrecipitatePhaseWidget();
+  ~PrecipitatePhaseWidget() override;
 
   void updatePlots();
 
-  void setCrystalStructure(unsigned int xtal) override;
+  void setCrystalStructure(const unsigned int& xtal) override;
 
-  void setPhaseIndex(int index) override;
+  void setPhaseIndex(const int& index) override;
 
   SIMPL_INSTANCE_PROPERTY(float, PptFraction)
 
@@ -77,9 +77,9 @@ public:
 
   int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false) override;
 
-  virtual QIcon getPhaseIcon() override;
+  QIcon getPhaseIcon() override;
 
-  virtual void generateDefaultData() override;
+  void generateDefaultData() override;
 
 protected slots:
 

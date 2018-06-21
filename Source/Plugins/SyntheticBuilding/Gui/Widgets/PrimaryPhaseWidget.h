@@ -40,15 +40,15 @@ class PrimaryPhaseWidget : public StatsGenWidget, private Ui::PrimaryPhaseWidget
   Q_OBJECT
 
 public:
-  PrimaryPhaseWidget(QWidget* parent = 0);
-  virtual ~PrimaryPhaseWidget();
+  PrimaryPhaseWidget(QWidget* parent = nullptr);
+  ~PrimaryPhaseWidget() ;
 
   void updatePlots();
 
   SIMPL_INSTANCE_PROPERTY(PhaseType::Type, PhaseType)
 
-  virtual void setCrystalStructure(unsigned int xtal);
-  virtual void setPhaseIndex(int index);
+  void setCrystalStructure(const unsigned int& xtal) override;
+  void setPhaseIndex(const int& index) override;
 
   SIMPL_INSTANCE_PROPERTY(QList<StatsGenPlotWidget*>, SGPlotWidgets)
 

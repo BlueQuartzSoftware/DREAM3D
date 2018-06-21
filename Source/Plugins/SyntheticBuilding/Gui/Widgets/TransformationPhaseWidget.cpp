@@ -214,7 +214,7 @@ void TransformationPhaseWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TransformationPhaseWidget::setPhaseIndex(int index)
+void TransformationPhaseWidget::setPhaseIndex(const int& index)
 {
   m_PhaseIndex = index;
   m_Omega3Plot->setPhaseIndex(m_PhaseIndex);
@@ -235,7 +235,7 @@ int TransformationPhaseWidget::getPhaseIndex() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TransformationPhaseWidget::setCrystalStructure(unsigned int xtal)
+void TransformationPhaseWidget::setCrystalStructure(const unsigned int& xtal)
 {
   m_CrystalStructure = xtal;
   m_Omega3Plot->setCrystalStructure(xtal);
