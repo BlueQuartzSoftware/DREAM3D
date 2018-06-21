@@ -62,7 +62,7 @@ class PrecipitatePhaseWidget : public PrimaryPhaseWidget
   Q_OBJECT
 
 public:
-  PrecipitatePhaseWidget(QWidget* parent = 0);
+  PrecipitatePhaseWidget(QWidget* parent = nullptr);
   ~PrecipitatePhaseWidget() override;
 
   void updatePlots();

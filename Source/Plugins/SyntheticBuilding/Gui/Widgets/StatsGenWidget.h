@@ -61,7 +61,7 @@ class StatsGenWidget : public QWidget
   Q_OBJECT
 
 public:
-  StatsGenWidget(QWidget* parent = 0);
+  StatsGenWidget(QWidget* parent = nullptr);
   virtual ~StatsGenWidget();
 
   SIMPL_VIRTUAL_INSTANCE_PROPERTY(PhaseType::Type, PhaseType)

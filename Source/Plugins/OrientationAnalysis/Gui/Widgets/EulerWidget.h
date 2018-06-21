@@ -45,7 +45,7 @@ class EulerWidget : public OrientationWidget, private Ui::EulerWidget
   Q_OBJECT
 
 public:
-  EulerWidget(QWidget* parent = 0);
+  EulerWidget(QWidget* parent = nullptr);
   virtual ~EulerWidget();
 
 protected slots:

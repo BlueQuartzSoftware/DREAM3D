@@ -67,7 +67,7 @@ class StatsGenRDFWidget : public QWidget
   Q_OBJECT
 
 public:
-  StatsGenRDFWidget(QWidget* parent = 0);
+  StatsGenRDFWidget(QWidget* parent = nullptr);
   virtual ~StatsGenRDFWidget();
   /**
    * @brief setupGui

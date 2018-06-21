@@ -64,7 +64,7 @@ class StatsGenMDFWidget : public QWidget, private Ui::StatsGenMDFWidget
   Q_OBJECT
 
 public:
-  StatsGenMDFWidget(QWidget* parent = 0);
+  StatsGenMDFWidget(QWidget* parent = nullptr);
   virtual ~StatsGenMDFWidget();
 
   void setupGui();

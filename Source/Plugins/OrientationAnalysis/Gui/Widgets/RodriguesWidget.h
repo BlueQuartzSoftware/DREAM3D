@@ -45,7 +45,7 @@ class RodriguesWidget : public OrientationWidget, private Ui::RodriguesWidget
   Q_OBJECT
 
 public:
-  RodriguesWidget(QWidget* parent = 0);
+  RodriguesWidget(QWidget* parent = nullptr);
   virtual ~RodriguesWidget();
 
 protected slots:

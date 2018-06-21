@@ -66,7 +66,7 @@ class StatsGenAxisODFWidget : public QWidget, private Ui::StatsGenAxisODFWidget
   Q_OBJECT
 
 public:
-  StatsGenAxisODFWidget(QWidget* parent = 0);
+  StatsGenAxisODFWidget(QWidget* parent = nullptr);
   virtual ~StatsGenAxisODFWidget();
 
   void setupGui();

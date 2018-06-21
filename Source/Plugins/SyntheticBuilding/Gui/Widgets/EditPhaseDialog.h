@@ -57,7 +57,7 @@ class EditPhaseDialog : public QDialog, private Ui::EditPhaseDialog
   Q_OBJECT
 
 public:
-  EditPhaseDialog(QWidget* parent = 0);
+  EditPhaseDialog(QWidget* parent = nullptr);
   virtual ~EditPhaseDialog();
 
   unsigned int getCrystalStructure();

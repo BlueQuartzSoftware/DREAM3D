@@ -45,7 +45,7 @@ class HomochoricWidget : public OrientationWidget, private Ui::HomochoricWidget
   Q_OBJECT
 
 public:
-  HomochoricWidget(QWidget* parent = 0);
+  HomochoricWidget(QWidget* parent = nullptr);
   virtual ~HomochoricWidget();
 
 protected slots:

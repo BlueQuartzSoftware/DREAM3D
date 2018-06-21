@@ -62,7 +62,7 @@ class StatsGenPlotWidget : public QWidget, private Ui::StatsGenPlotWidget
   Q_OBJECT
 
 public:
-  StatsGenPlotWidget(QWidget* parent = 0);
+  StatsGenPlotWidget(QWidget* parent = nullptr);
   virtual ~StatsGenPlotWidget();
 
   VectorOfFloatArray getStatisticsData();

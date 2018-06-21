@@ -49,7 +49,7 @@ class StatsGenFeatureSizeWidget : public QWidget, private Ui::StatsGenFeatureSiz
 {
   Q_OBJECT
 public:
-  StatsGenFeatureSizeWidget(QWidget* parent = 0);
+  StatsGenFeatureSizeWidget(QWidget* parent = nullptr);
   virtual ~StatsGenFeatureSizeWidget();
 
   float getMu();

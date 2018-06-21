@@ -56,7 +56,7 @@ class MatrixPhaseWidget : public StatsGenWidget, private Ui::MatrixPhaseWidget
   Q_OBJECT
 
 public:
-  MatrixPhaseWidget(QWidget* parent = 0);
+  MatrixPhaseWidget(QWidget* parent = nullptr);
   virtual ~MatrixPhaseWidget();
 
   void updatePlots();

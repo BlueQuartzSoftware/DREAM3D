@@ -58,7 +58,7 @@ class TextureDialog : public QDialog, private Ui::TextureDialog
   Q_OBJECT
 
 public:
-  TextureDialog(unsigned int xtal, QWidget* parent = 0);
+  TextureDialog(unsigned int xtal, QWidget* parent = nullptr);
   virtual ~TextureDialog();
 
   SIMPL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)

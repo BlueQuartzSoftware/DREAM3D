@@ -66,7 +66,7 @@ class QEbsdReferenceFrameDialog : public QDialog, private Ui::QEbsdReferenceFram
   Q_OBJECT
 
 public:
-  QEbsdReferenceFrameDialog(QString filename, QWidget* parent = 0);
+  QEbsdReferenceFrameDialog(QString filename, QWidget* parent = nullptr);
   virtual ~QEbsdReferenceFrameDialog();
 
   void setEbsdFileName(QString filename);

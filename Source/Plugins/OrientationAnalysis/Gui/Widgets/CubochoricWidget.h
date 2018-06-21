@@ -47,7 +47,7 @@ class CubochoricWidget : public OrientationWidget, private Ui::CubochoricWidget
   Q_OBJECT
 
 public:
-  CubochoricWidget(QWidget* parent = 0);
+  CubochoricWidget(QWidget* parent = nullptr);
   virtual ~CubochoricWidget();
 
 protected slots:

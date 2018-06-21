@@ -59,7 +59,7 @@ class TransformationPhaseWidget : public StatsGenWidget, private Ui::Transformat
   Q_OBJECT
 
 public:
-  TransformationPhaseWidget(QWidget* parent = 0);
+  TransformationPhaseWidget(QWidget* parent = nullptr);
   ~TransformationPhaseWidget() override;
 
   void updatePlots();

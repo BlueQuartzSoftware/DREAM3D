@@ -45,7 +45,7 @@ class OmWidget : public OrientationWidget, private Ui::OmWidget
   Q_OBJECT
 
 public:
-  OmWidget(QWidget* parent = 0);
+  OmWidget(QWidget* parent = nullptr);
   virtual ~OmWidget();
 
 protected slots:

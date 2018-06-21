@@ -57,7 +57,7 @@ class BoundaryPhaseWidget : public StatsGenWidget, private Ui::BoundaryPhaseWidg
   Q_OBJECT
 
 public:
-  BoundaryPhaseWidget(QWidget* parent = 0);
+  BoundaryPhaseWidget(QWidget* parent = nullptr);
   virtual ~BoundaryPhaseWidget();
 
   void updatePlots();

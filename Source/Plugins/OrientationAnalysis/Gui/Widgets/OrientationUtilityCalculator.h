@@ -45,7 +45,7 @@ class OrientationUtilityCalculator : public QWidget
   Q_OBJECT
 
 public:
-  OrientationUtilityCalculator(QWidget* parent = 0);
+  OrientationUtilityCalculator(QWidget* parent = nullptr);
   virtual ~OrientationUtilityCalculator();
 
   OrientationConverter<double>::OrientationType getInputType();

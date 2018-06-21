@@ -47,7 +47,7 @@ class OrientationWidget : public QWidget
   Q_OBJECT
 
 public:
-  OrientationWidget(QWidget* parent = 0);
+  OrientationWidget(QWidget* parent = nullptr);
   virtual ~OrientationWidget();
 
 signals:

@@ -45,7 +45,7 @@ class QuatWidget : public OrientationWidget, private Ui::QuatWidget
   Q_OBJECT
 
 public:
-  QuatWidget(QWidget* parent = 0);
+  QuatWidget(QWidget* parent = nullptr);
   virtual ~QuatWidget();
 
 protected slots:

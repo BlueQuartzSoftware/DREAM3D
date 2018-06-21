@@ -45,7 +45,7 @@ class AxisAngleWidget : public OrientationWidget, private Ui::AxisAngleWidget
   Q_OBJECT
 
 public:
-  AxisAngleWidget(QWidget* parent = 0);
+  AxisAngleWidget(QWidget* parent = nullptr);
   virtual ~AxisAngleWidget();
 
 protected slots:
