@@ -237,7 +237,7 @@ if(SIMPL_WRAP_PYTHON)
                     PATH_TO_STRIP "${PLUGIN_NAME}/${PLUGIN_NAME}Filters" 
                     OUTPUT_PATH "${${PLUGIN_NAME}_BINARY_DIR}/Wrapping/PythonCore" 
                     BINARY_DIR "${${PLUGIN_NAME}_BINARY_DIR}" 
-                    MODULE_TEMPLATE_FILE "${SIMPLProj_SOURCE_DIR}/Wrapping/Python/Pybind11/Templates/PluginModuleCodeTemplate.cpp" 
+                    MODULE_TEMPLATE_FILE "${SIMPLProj_SOURCE_DIR}/Wrapping/Python/Pybind11/Templates/PluginModuleCodeTemplate.in.cpp" 
                     MODULE_LINK_LIBRARIES ${plug_target_name} 
   )
 endif()
