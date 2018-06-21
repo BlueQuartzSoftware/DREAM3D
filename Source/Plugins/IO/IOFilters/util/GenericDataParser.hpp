@@ -48,12 +48,14 @@ class GenericDataParser
     SIMPL_SHARED_POINTERS(GenericDataParser)
     SIMPL_TYPE_MACRO(GenericDataParser)
 
-    virtual ~GenericDataParser() {}
+    virtual ~GenericDataParser() = default;
 
     SIMPL_INSTANCE_STRING_PROPERTY(ColumnName)
     SIMPL_INSTANCE_PROPERTY(int, ColumnIndex)
-    SIMPL_VIRTUAL_INSTANCE_PROPERTY(IDataArray::Pointer, DataArray)
-
+    
+    virtual void setDataArray(IDataArray::Pointer value) { m_DataArray = value; }
+    virtual IDataArray::Pointer getDataArray() { return m_DataArray; }
+    
     virtual IDataArray::Pointer initializeNewDataArray(size_t numTuples, const QString& name, bool allocate) { return IDataArray::NullPointer(); }
 
     virtual void parse(const QByteArray& token, size_t index) {}
@@ -62,6 +64,8 @@ class GenericDataParser
     GenericDataParser() {}
 
   private:
+    IDataArray::Pointer m_DataArray;
+    
     GenericDataParser(const GenericDataParser&); // Copy Constructor Not Implemented
     void operator=(const GenericDataParser&);    // Move assignment Not Implemented
 };

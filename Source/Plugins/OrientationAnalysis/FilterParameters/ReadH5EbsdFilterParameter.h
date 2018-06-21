@@ -68,7 +68,7 @@ public:
   /**
   *
   */  
-  SIMPL_INSTANCE_PROPERTY(ReadH5Ebsd*, Filter)
+  SIMPL_POINTER_PROPERTY(ReadH5Ebsd, Filter)
 
   QString getWidgetType() const override;
   

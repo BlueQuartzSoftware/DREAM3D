@@ -60,7 +60,7 @@ class EMMPMLib_EXPORT MPMCalculation : public Observable
     virtual ~MPMCalculation();
 
     SIMPL_INSTANCE_PROPERTY(EMMPM_Data::Pointer, Data)
-    SIMPL_INSTANCE_PROPERTY(StatsDelegate*, StatsDelegate);
+    SIMPL_POINTER_PROPERTY(StatsDelegate, StatsDelegate);
     SIMPL_INSTANCE_PROPERTY(int, ErrorCondition)
     SIMPL_INSTANCE_PROPERTY(QString, MessagePrefix)
 

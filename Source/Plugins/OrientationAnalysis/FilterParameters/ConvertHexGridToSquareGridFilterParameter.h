@@ -57,7 +57,7 @@ public:
   SIMPL_INSTANCE_STRING_PROPERTY(FileExtension)
     SIMPL_INSTANCE_STRING_PROPERTY(FileType)
 
-  SIMPL_INSTANCE_PROPERTY(ConvertHexGridToSquareGrid*, Filter)
+  SIMPL_POINTER_PROPERTY(ConvertHexGridToSquareGrid, Filter)
 
   QString getWidgetType() const override;
 

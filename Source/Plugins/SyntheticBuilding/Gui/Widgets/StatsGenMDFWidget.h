@@ -72,7 +72,7 @@ public:
 
   SIMPL_INSTANCE_PROPERTY(int, PhaseIndex)
   SIMPL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
-  SIMPL_INSTANCE_PROPERTY(SGODFTableModel*, ODFTableModel)
+  SIMPL_POINTER_PROPERTY(SGODFTableModel, ODFTableModel)
 
   int getMisorientationData(StatsData* statsData, PhaseType::Type phaseType, bool preflight = false);
   void extractStatsData(int index, StatsData* statsData, PhaseType::Type phaseType);

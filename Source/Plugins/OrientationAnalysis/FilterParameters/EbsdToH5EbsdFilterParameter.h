@@ -58,7 +58,7 @@ public:
   SIMPL_INSTANCE_STRING_PROPERTY(FileExtension)
     SIMPL_INSTANCE_STRING_PROPERTY(FileType)
 
-  SIMPL_INSTANCE_PROPERTY(EbsdToH5Ebsd*, Filter)
+  SIMPL_POINTER_PROPERTY(EbsdToH5Ebsd, Filter)
 
   QString getWidgetType() const override;
 

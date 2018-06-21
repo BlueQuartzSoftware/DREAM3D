@@ -71,7 +71,7 @@ class EMMPMFilterParameter : public FilterParameter
 
     virtual ~EMMPMFilterParameter();
 
-    SIMPL_INSTANCE_PROPERTY(EMMPMFilter*, Filter)
+    SIMPL_POINTER_PROPERTY(EMMPMFilter, Filter)
 
     /**
      * @brief getWidgetType Returns the type of widget that displays and controls
