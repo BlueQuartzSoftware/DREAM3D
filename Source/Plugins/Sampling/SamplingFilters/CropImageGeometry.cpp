@@ -70,6 +70,9 @@ CropImageGeometry::CropImageGeometry()
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 , m_FeatureIds(nullptr)
 {
+  m_OldDimensions.x = 0, m_OldDimensions.y = 0; m_OldDimensions.z = 0;
+  m_OldResolution.x = 0.0f; m_OldResolution.y = 0.0f; m_OldResolution.z = 0.0f;
+  m_OldOrigin.x = 0.0f; m_OldOrigin.y = 0.0f; m_OldOrigin.z = 0.0f;
 }
 
 // -----------------------------------------------------------------------------
@@ -181,7 +184,10 @@ void CropImageGeometry::dataCheck()
 
   m_OldDimensions = getCurrentVolumeDataContainerDimensions();
   m_OldResolution = getCurrentVolumeDataContainerResolutions();
-  image->getOrigin(m_OldOrigin.x, m_OldOrigin.y, m_OldOrigin.z);
+  if(image)
+  {
+    image->getOrigin(m_OldOrigin.x, m_OldOrigin.y, m_OldOrigin.z);
+  } 
   
   DataContainer::Pointer destCellDataContainer = srcCellDataContainer;
   AttributeMatrix::Pointer destCellAttrMat;
@@ -673,15 +679,27 @@ FloatVec3_t CropImageGeometry::getCurrentVolumeDataContainerResolutions()
 // -----------------------------------------------------------------------------
 QString CropImageGeometry::getOldBoxDimensions()
 {
-  QString desc;
-  QTextStream ss(&desc);
-
-  ss << "X Range: " << m_OldOrigin.x << " to " << (m_OldOrigin.x + (m_OldDimensions.x * m_OldResolution.x)) << " (Delta: " << (m_OldDimensions.x * m_OldResolution.x) << ") " 
-  << m_OldDimensions.x << " Voxels\n";
-  ss << "Y Range: " << m_OldOrigin.y << " to " << (m_OldOrigin.y + (m_OldDimensions.y * m_OldResolution.y)) << " (Delta: " << (m_OldDimensions.y * m_OldResolution.y) << ") "
-  << m_OldDimensions.y << " Voxels\n";
-  ss << "Z Range: " << m_OldOrigin.z << " to " << (m_OldOrigin.z + (m_OldDimensions.z * m_OldResolution.z)) << " (Delta: " << (m_OldDimensions.z * m_OldResolution.z) << ") "
-  << m_OldDimensions.z << " Voxels";
+  QString desc = QString("Please select a Data Container that has an Image Geometry");
+  DataContainerArray::Pointer dca = getDataContainerArray();
+  if(nullptr != dca)
+  {
+    DataContainer::Pointer m = dca->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
+    if(nullptr != m)
+    {
+      ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
+      if(nullptr != image)
+      {
+        desc.clear();
+        QTextStream ss(&desc);
+        ss << "X Range: " << m_OldOrigin.x << " to " << (m_OldOrigin.x + (m_OldDimensions.x * m_OldResolution.x)) << " (Delta: " << (m_OldDimensions.x * m_OldResolution.x) << ") " 
+           << m_OldDimensions.x << " Voxels\n";
+        ss << "Y Range: " << m_OldOrigin.y << " to " << (m_OldOrigin.y + (m_OldDimensions.y * m_OldResolution.y)) << " (Delta: " << (m_OldDimensions.y * m_OldResolution.y) << ") "
+           << m_OldDimensions.y << " Voxels\n";
+        ss << "Z Range: " << m_OldOrigin.z << " to " << (m_OldOrigin.z + (m_OldDimensions.z * m_OldResolution.z)) << " (Delta: " << (m_OldDimensions.z * m_OldResolution.z) << ") "
+           << m_OldDimensions.z << " Voxels";
+      }
+    }
+  }
   return desc;
 }
 
@@ -690,15 +708,27 @@ QString CropImageGeometry::getOldBoxDimensions()
 // -----------------------------------------------------------------------------
 QString CropImageGeometry::getNewBoxDimensions()
 {
-  QString desc;
-  QTextStream ss(&desc);
-
-  ss << "X Range: " << m_NewOrigin.x << " to " << (m_NewOrigin.x + (m_NewDimensions.x * m_NewResolution.x)) << " (Delta: " << (m_NewDimensions.x * m_NewResolution.x) << ") "
-  << m_NewDimensions.x << " Voxels\n";
-  ss << "Y Range: " << m_NewOrigin.y << " to " << (m_NewOrigin.y + (m_NewDimensions.y * m_NewResolution.y)) << " (Delta: " << (m_NewDimensions.y * m_NewResolution.y) << ") "
-  << m_NewDimensions.y << " Voxels\n";
-  ss << "Z Range: " << m_NewOrigin.z << " to " << (m_NewOrigin.z + (m_NewDimensions.z * m_NewResolution.z)) << " (Delta: " << (m_NewDimensions.z * m_NewResolution.z) << ") "
-  << m_NewDimensions.z << " Voxels\n";
+  QString desc = QString("Please select a Data Container that has an Image Geometry");
+  DataContainerArray::Pointer dca = getDataContainerArray();
+  if(nullptr != dca)
+  {
+    DataContainer::Pointer m = dca->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
+    if(nullptr != m)
+    {
+      ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
+      if(nullptr != image)
+      {
+        desc.clear();
+        QTextStream ss(&desc);
+        ss << "X Range: " << m_NewOrigin.x << " to " << (m_NewOrigin.x + (m_NewDimensions.x * m_NewResolution.x)) << " (Delta: " << (m_NewDimensions.x * m_NewResolution.x) << ") "
+           << m_NewDimensions.x << " Voxels\n";
+        ss << "Y Range: " << m_NewOrigin.y << " to " << (m_NewOrigin.y + (m_NewDimensions.y * m_NewResolution.y)) << " (Delta: " << (m_NewDimensions.y * m_NewResolution.y) << ") "
+           << m_NewDimensions.y << " Voxels\n";
+        ss << "Z Range: " << m_NewOrigin.z << " to " << (m_NewOrigin.z + (m_NewDimensions.z * m_NewResolution.z)) << " (Delta: " << (m_NewDimensions.z * m_NewResolution.z) << ") "
+           << m_NewDimensions.z << " Voxels\n";
+      }
+    }
+  }
   return desc;
 }
 
