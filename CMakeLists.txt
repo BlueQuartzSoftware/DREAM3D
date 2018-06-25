@@ -52,7 +52,7 @@ if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
   cmake_policy(SET CMP0074 NEW)
 endif()
 
-cmake_minimum_required(VERSION 3.12.0)
+cmake_minimum_required(VERSION 3.8.0)
 
 #------------------------------------------------------------------------------
 # Create the Top level Project
