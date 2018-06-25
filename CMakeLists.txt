@@ -32,8 +32,8 @@ else()
       message(STATUS "Set QWT_INSTALL variable to the root directory where Qwt is located.")
   endif()
 
-  if(NOT DEFINED TBB_ROOT)
-      message(STATUS "Set TBB_ROOT variable to the root directory where TBB is located.")
+  if(NOT DEFINED TBB_DIR)
+      message(STATUS "Set TBB_DIR variable to the root directory where TBB is located.")
   endif()
 
 endif()
@@ -48,9 +48,11 @@ if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
   cmake_policy(SET CMP0054 NEW)
 
   cmake_policy(SET CMP0002 NEW)
+
+  cmake_policy(SET CMP0074 NEW)
 endif()
 
-cmake_minimum_required(VERSION 3.8.0)
+cmake_minimum_required(VERSION 3.12.0)
 
 #------------------------------------------------------------------------------
 # Create the Top level Project
@@ -468,4 +470,8 @@ foreach(d3dPlugin ${DREAM3D_ALL_PLUGINS})
 endforeach()
 message(STATUS "*******************************************************************************")
 
+# get_target_property( sources dream3d_py SOURCES)
+# foreach(source ${sources})
+#   message(STATUS "${source}")  
+# endforeach(source ${sources})
 

@@ -52,10 +52,10 @@
 GenericPlugin::GenericPlugin()
 : m_Version(Generic::Version::Package())
 , m_CompatibilityVersion(Generic::Version::Package())
-, m_Vendor(BlueQuartz::VendorName)
-, m_URL(BlueQuartz::URL)
+, m_Vendor(GenericConstants::BlueQuartz::VendorName)
+, m_URL(GenericConstants::BlueQuartz::URL)
 , m_Location("")
-, m_Copyright(BlueQuartz::Copyright)
+, m_Copyright(GenericConstants::BlueQuartz::Copyright)
 , m_Filters(QList<QString>())
 , m_DidLoad(false)
 {

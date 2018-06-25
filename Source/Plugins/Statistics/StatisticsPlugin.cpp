@@ -52,10 +52,10 @@
 StatisticsPlugin::StatisticsPlugin()
 : m_Version(Statistics::Version::Package())
 , m_CompatibilityVersion(Statistics::Version::Package())
-, m_Vendor(BlueQuartz::VendorName)
-, m_URL(BlueQuartz::URL)
+, m_Vendor(StatisticsConstants::BlueQuartz::VendorName)
+, m_URL(StatisticsConstants::BlueQuartz::URL)
 , m_Location("")
-, m_Copyright(BlueQuartz::Copyright)
+, m_Copyright(StatisticsConstants::BlueQuartz::Copyright)
 , m_Filters(QList<QString>())
 , m_DidLoad(false)
 {

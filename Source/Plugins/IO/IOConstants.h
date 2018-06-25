@@ -46,6 +46,13 @@ namespace IOConstants
   const QString IOPluginFile("IOPlugin");
   const QString IOPluginDisplayName("IO");
   const QString IOBaseName("IO");
+
+  namespace BlueQuartz
+  {
+  const QString VendorName("BlueQuartz Software, LLC");
+  const QString URL("http://www.bluequartz.net");
+  const QString Copyright("(C) 2016 BlueQuartz Software, LLC");
+  } // namespace BlueQuartz
 }
 
 /**
@@ -57,12 +64,6 @@ namespace FilterParameterWidgetType
 
   const QString ProcessMonitoringWidget("ProcessMonitoringWidget");
 
-}
-namespace BlueQuartz
-{
-  const QString VendorName("BlueQuartz Software, LLC");
-  const QString URL("http://www.bluequartz.net");
-  const QString Copyright("(C) 2016 BlueQuartz Software, LLC");
 }
 
 #endif

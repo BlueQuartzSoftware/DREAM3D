@@ -21,10 +21,10 @@
 EMMPMPlugin::EMMPMPlugin()
 : m_Version(EM_MPM::Version::Package())
 , m_CompatibilityVersion(EM_MPM::Version::Package())
-, m_Vendor(BlueQuartz::VendorName)
-, m_URL(BlueQuartz::URL)
+, m_Vendor(EMMPMConstants::BlueQuartz::VendorName)
+, m_URL(EMMPMConstants::BlueQuartz::URL)
 , m_Location("")
-, m_Copyright(BlueQuartz::Copyright)
+, m_Copyright(EMMPMConstants::BlueQuartz::Copyright)
 , m_Filters(QList<QString>())
 , m_DidLoad(false)
 {

@@ -52,10 +52,10 @@
 IOPlugin::IOPlugin()
 : m_Version(IO::Version::Package())
 , m_CompatibilityVersion(IO::Version::Package())
-, m_Vendor(BlueQuartz::VendorName)
-, m_URL(BlueQuartz::URL)
+, m_Vendor(IOConstants::BlueQuartz::VendorName)
+, m_URL(IOConstants::BlueQuartz::URL)
 , m_Location("")
-, m_Copyright(BlueQuartz::Copyright)
+, m_Copyright(IOConstants::BlueQuartz::Copyright)
 , m_Filters(QList<QString>())
 , m_DidLoad(false)
 {

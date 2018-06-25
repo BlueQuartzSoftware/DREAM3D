@@ -52,10 +52,10 @@
 SyntheticBuildingPlugin::SyntheticBuildingPlugin()
 : m_Version(SyntheticBuilding::Version::Package())
 , m_CompatibilityVersion(SyntheticBuilding::Version::Package())
-, m_Vendor(BlueQuartz::VendorName)
-, m_URL(BlueQuartz::URL)
+, m_Vendor(SyntheticBuildingConstants::BlueQuartz::VendorName)
+, m_URL(SyntheticBuildingConstants::BlueQuartz::URL)
 , m_Location("")
-, m_Copyright(BlueQuartz::Copyright)
+, m_Copyright(SyntheticBuildingConstants::BlueQuartz::Copyright)
 , m_Filters(QList<QString>())
 , m_DidLoad(false)
 {

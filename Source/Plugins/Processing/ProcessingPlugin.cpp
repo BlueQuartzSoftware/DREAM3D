@@ -52,10 +52,10 @@
 ProcessingPlugin::ProcessingPlugin()
 : m_Version(Processing::Version::Package())
 , m_CompatibilityVersion(Processing::Version::Package())
-, m_Vendor(BlueQuartz::VendorName)
-, m_URL(BlueQuartz::URL)
+, m_Vendor(ProcessingConstants::BlueQuartz::VendorName)
+, m_URL(ProcessingConstants::BlueQuartz::URL)
 , m_Location("")
-, m_Copyright(BlueQuartz::Copyright)
+, m_Copyright(ProcessingConstants::BlueQuartz::Copyright)
 , m_Filters(QList<QString>())
 , m_DidLoad(false)
 {

@@ -8,7 +8,6 @@ namespace ProcessingConstants
   const QString ProcessingPluginFile("ProcessingPlugin");
   const QString ProcessingPluginDisplayName("Processing");
   const QString ProcessingBaseName("Processing");
-}
 
 namespace BlueQuartz
 {
@@ -16,5 +15,7 @@ namespace BlueQuartz
   const QString URL("http://www.bluequartz.net");
   const QString Copyright("(C) 2016 BlueQuartz Software, LLC");
 }
+
+} // namespace ProcessingConstants
 
 #endif

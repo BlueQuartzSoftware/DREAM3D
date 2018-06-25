@@ -52,10 +52,10 @@
 SamplingPlugin::SamplingPlugin()
 : m_Version(Sampling::Version::Package())
 , m_CompatibilityVersion(Sampling::Version::Package())
-, m_Vendor(BlueQuartz::VendorName)
-, m_URL(BlueQuartz::URL)
+, m_Vendor(SamplingConstants::BlueQuartz::VendorName)
+, m_URL(SamplingConstants::BlueQuartz::URL)
 , m_Location("")
-, m_Copyright(BlueQuartz::Copyright)
+, m_Copyright(SamplingConstants::BlueQuartz::Copyright)
 , m_Filters(QList<QString>())
 , m_DidLoad(false)
 {

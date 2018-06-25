@@ -52,10 +52,10 @@
 ReconstructionPlugin::ReconstructionPlugin()
 : m_Version(Reconstruction::Version::Package())
 , m_CompatibilityVersion(Reconstruction::Version::Package())
-, m_Vendor(BlueQuartz::VendorName)
-, m_URL(BlueQuartz::URL)
+, m_Vendor(ReconstructionConstants::BlueQuartz::VendorName)
+, m_URL(ReconstructionConstants::BlueQuartz::URL)
 , m_Location("")
-, m_Copyright(BlueQuartz::Copyright)
+, m_Copyright(ReconstructionConstants::BlueQuartz::Copyright)
 , m_Filters(QList<QString>())
 , m_DidLoad(false)
 {

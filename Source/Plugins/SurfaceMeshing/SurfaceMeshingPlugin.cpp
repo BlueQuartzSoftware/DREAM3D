@@ -52,10 +52,10 @@
 SurfaceMeshingPlugin::SurfaceMeshingPlugin()
 : m_Version(SurfaceMeshing::Version::Package())
 , m_CompatibilityVersion(SurfaceMeshing::Version::Package())
-, m_Vendor(BlueQuartz::VendorName)
-, m_URL(BlueQuartz::URL)
+, m_Vendor(SurfaceMeshingConstants::BlueQuartz::VendorName)
+, m_URL(SurfaceMeshingConstants::BlueQuartz::URL)
 , m_Location("")
-, m_Copyright(BlueQuartz::Copyright)
+, m_Copyright(SurfaceMeshingConstants::BlueQuartz::Copyright)
 , m_Filters(QList<QString>())
 , m_DidLoad(false)
 {

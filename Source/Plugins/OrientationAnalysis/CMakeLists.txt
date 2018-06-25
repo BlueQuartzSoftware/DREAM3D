@@ -257,8 +257,7 @@ endif()
 #- This installs all the prebuilt pipeline files.
 if(EXISTS ${${PLUGIN_NAME}_SOURCE_DIR}/ExamplePipelines/${PLUGIN_NAME})
   #-------------------------------------------------------------------------------
-  #- This copies all the Prebuilt Pipeline files into the Build directory so the help
-  #- works from the Build Tree
+  #- This copies all the Prebuilt Pipeline files into the Build directory
   add_custom_target(${PLUGIN_NAME}ExamplePipelinesCopy ALL
               COMMAND ${CMAKE_COMMAND} -E copy_directory ${${PLUGIN_NAME}_SOURCE_DIR}/ExamplePipelines/${PLUGIN_NAME}
               ${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/PrebuiltPipelines/Examples/${PLUGIN_NAME}
