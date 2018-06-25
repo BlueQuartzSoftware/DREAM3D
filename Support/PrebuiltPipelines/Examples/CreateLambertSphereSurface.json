@@ -1,20 +1,20 @@
 {
     "0": {
-        "CreatedDataContainer": "ImageDataContainer",
-        "FilterVersion": "1.0.345",
+        "DataContainerName": "ImageDataContainer",
+        "FilterVersion": "1.1.572",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Data Container",
         "Filter_Name": "CreateDataContainer",
         "Filter_Uuid": "{816fbe6b-7c38-581b-b149-3f839fb65b93}"
     },
     "1": {
-        "BoxDimensions": "X Range: 0 to 101 (Delta: 101)\nY Range: 0 to 101 (Delta: 101)\nZ Range: 0 to 1 (Delta: 1)",
+        "BoxDimensions": "Extents:\nX Extent: 0 to 100 (dimension: 101)\nY Extent: 0 to 100 (dimension: 101)\nZ Extent: 0 to 0 (dimension: 1)\nBounds:\nX Range: -0.5 to 100.5 (delta: 101)\nY Range: -0.5 to 100.5 (delta: 101)\nZ Range: -0.5 to 0.5 (delta: 1)\n",
         "Dimensions": {
             "x": 101,
             "y": 101,
             "z": 1
         },
-        "FilterVersion": "1.0.345",
+        "FilterVersion": "1.1.572",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Geometry (Image)",
         "Filter_Name": "CreateImageGeometry",
@@ -38,7 +38,7 @@
             "Data Array Name": "",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.0.345",
+        "FilterVersion": "1.1.572",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Attribute Matrix",
         "Filter_Name": "CreateAttributeMatrix",
@@ -68,7 +68,7 @@
         }
     },
     "3": {
-        "FilterVersion": "1.0.345",
+        "FilterVersion": "1.1.572",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Data Array",
         "Filter_Name": "CreateDataArray",
@@ -92,7 +92,8 @@
         "CreateQuadGeometry": 1,
         "CreateTriangleGeometry": 1,
         "CreateVertexGeometry": 1,
-        "FilterVersion": "6.4.325",
+        "EdgeDataContainerName": "EdgeDataContainer",
+        "FilterVersion": "6.4.436",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Sphere (Lambert Projection Technique)",
         "Filter_Name": "CreateLambertSphere",
@@ -103,10 +104,12 @@
             "Data Array Name": "ScalarValues",
             "Data Container Name": "ImageDataContainer"
         },
-        "UseExistingImage": 0
+        "QuadDataContainerName": "QuadDataContainer",
+        "TriangleDataContainerName": "TriangleDataContainer",
+        "VertexDataContainerName": "VertexDataContainer"
     },
     "5": {
-        "FilterVersion": "1.0.345",
+        "FilterVersion": "1.1.572",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
