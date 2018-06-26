@@ -36,7 +36,7 @@
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "(08) Image Initial Visualization",
+        "Name": "(01) Image Initial Visualization",
         "Number_Filters": 2,
         "Version": 6
     }
