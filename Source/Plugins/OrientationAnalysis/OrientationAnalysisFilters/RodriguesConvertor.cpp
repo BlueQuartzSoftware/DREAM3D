@@ -1,0 +1,292 @@
+/*
+ * Your License or Copyright can go here
+ */
+
+#include "RodriguesConvertor.h"
+
+#include <cmath>
+
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/SIMPLSpan.hpp"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisVersion.h"
+
+
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+#include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
+
+class RodriguesConvertorImpl
+{
+public:
+  RodriguesConvertorImpl(RodriguesConvertor* filter, size_t nTuples, float* inputRod, float* outputRod)
+  : m_Filter(filter)
+  , m_Input(inputRod, nTuples * 3)
+  , m_Output(outputRod, nTuples * 4)
+  {
+  }
+  RodriguesConvertorImpl(const RodriguesConvertorImpl&) = default; // Copy Constructor
+  RodriguesConvertorImpl(RodriguesConvertorImpl&&) = delete;      // Move Constructor Not Implemented
+  RodriguesConvertorImpl& operator=(const RodriguesConvertorImpl&) = delete; // Copy Assignment Not Implemented
+  RodriguesConvertorImpl& operator=(RodriguesConvertorImpl&&) = delete;      // Move Assignment Not Implemented
+
+  virtual ~RodriguesConvertorImpl() = default;
+
+  void convert(size_t start, size_t end) const
+  {
+     for(size_t i = start; i < end; i++)
+    {
+      if(m_Filter->getCancel()) { return; }
+      float r0 = m_Input[i*3];
+      float r1 = m_Input[i*3 + 1];
+      float r2 = m_Input[i*3 + 2];
+      float length = std::sqrtf(r0*r0 + r1*r1 + r2*r2);
+      
+      m_Output[i*4] = r0/length;
+      m_Output[i*4+1] = r1/length;
+      m_Output[i*4+2] = r2/length;
+      m_Output[i*4+3] = length;
+    }
+    
+  }
+
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    convert(r.begin(), r.end());
+  }
+#endif
+private:
+  RodriguesConvertor* m_Filter = nullptr;
+  SIMPL::span<float> m_Input;
+  SIMPL::span<float> m_Output;
+};
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+RodriguesConvertor::RodriguesConvertor() :
+m_DeleteOriginalData(true)
+{
+  initialize();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+RodriguesConvertor::~RodriguesConvertor() = default;
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RodriguesConvertor::initialize()
+{
+  setErrorCondition(0);
+  setWarningCondition(0);
+  setCancel(false);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RodriguesConvertor::setupFilterParameters()
+{
+  FilterParameterVector parameters;
+  DataArraySelectionFilterParameter::RequirementType dasReq;
+  QVector<QVector<size_t>> rodComp;
+  rodComp.append({3});
+  dasReq.componentDimensions = rodComp;
+  dasReq.daTypes = {"float"};
+  parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Rodrigues Array", RodriguesDataArrayPath, FilterParameter::Parameter, RodriguesConvertor, dasReq));
+  DataArrayCreationFilterParameter::RequirementType dacReq;
+  parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Output Data Array Path", OutputDataArrayPath, FilterParameter::CreatedArray, RodriguesConvertor, dacReq));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Delete Original Data", DeleteOriginalData, FilterParameter::Parameter, RodriguesConvertor));
+  setFilterParameters(parameters);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RodriguesConvertor::dataCheck()
+{
+  setErrorCondition(0);
+  setWarningCondition(0);
+  
+   QVector<size_t> cDims(1, 1);
+  cDims[0] = 3;
+  m_RodriguesVectorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getRodriguesDataArrayPath(), cDims);
+  if(nullptr != m_RodriguesVectorsPtr.lock())                                                                       
+  {
+    m_RodriguesVectors = m_RodriguesVectorsPtr.lock()->getPointer(0);
+  }
+  
+  cDims[0] = 4;
+  m_OutputRodriguesVectorsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getOutputDataArrayPath(), 0, cDims);                 /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_OutputRodriguesVectorsPtr.lock())   
+  {
+    m_OutputRodriguesVectors = m_OutputRodriguesVectorsPtr.lock()->getPointer(0);
+  }
+  
+  if(getDeleteOriginalData() && getInPreflight())
+  {
+    AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(getRodriguesDataArrayPath());
+    if(am)
+    {
+      am->removeAttributeArray(getRodriguesDataArrayPath().getDataArrayName());
+    }
+  }
+  
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RodriguesConvertor::preflight()
+{
+  // These are the REQUIRED lines of CODE to make sure the filter behaves correctly
+  setInPreflight(true); // Set the fact that we are preflighting.
+  emit preflightAboutToExecute(); // Emit this signal so that other widgets can do one file update
+  emit updateFilterParameters(this); // Emit this signal to have the widgets push their values down to the filter
+  dataCheck(); // Run our DataCheck to make sure everthing is setup correctly
+  emit preflightExecuted(); // We are done preflighting this filter
+  setInPreflight(false); // Inform the system this filter is NOT in preflight mode anymore.
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void RodriguesConvertor::execute()
+{
+  initialize();
+  dataCheck();
+  if(getErrorCondition() < 0) { return; }
+
+  if (getCancel()) { return; }
+
+//  if (getWarningCondition() < 0)
+//  {
+//    QString ss = QObject::tr("Some warning message");
+//    setWarningCondition(-88888888);
+//    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+//  }
+
+//  if (getErrorCondition() < 0)
+//  {
+//    QString ss = QObject::tr("Some error message");
+//    setErrorCondition(-99999999);
+//    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+//    return;
+//  }
+
+
+  size_t totalPoints = m_RodriguesVectorsPtr.lock()->getNumberOfTuples();
+
+
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+  tbb::task_scheduler_init init;
+  bool doParallel = true;
+#endif
+  
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+  if(doParallel)
+  {
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
+                      RodriguesConvertorImpl(this, totalPoints, m_RodriguesVectors, m_OutputRodriguesVectors), tbb::auto_partitioner());
+  }
+  else
+#endif
+  {
+    RodriguesConvertorImpl serial(this, totalPoints, m_RodriguesVectors, m_OutputRodriguesVectors);
+    serial.convert(0, totalPoints);
+  }
+  
+  /* Do not forget to remove the original array if requested */
+  if(getDeleteOriginalData())
+  {
+    getDataContainerArray()->getAttributeMatrix(getRodriguesDataArrayPath())->removeAttributeArray(getRodriguesDataArrayPath().getDataArrayName());
+  }
+  
+  notifyStatusMessage(getHumanLabel(), "Complete");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer RodriguesConvertor::newFilterInstance(bool copyFilterParameters) const
+{
+  RodriguesConvertor::Pointer filter = RodriguesConvertor::New();
+  if(copyFilterParameters)
+  {
+    copyFilterParameterInstanceVariables(filter.get());
+  }
+  return filter;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RodriguesConvertor::getCompiledLibraryName() const
+{ 
+  return OrientationAnalysisConstants::OrientationAnalysisBaseName;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RodriguesConvertor::getBrandingString() const
+{
+  return "OrientationAnalysis";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RodriguesConvertor::getFilterVersion() const
+{
+  QString version;
+  QTextStream vStream(&version);
+  vStream <<  OrientationAnalysis::Version::Major() << "." << OrientationAnalysis::Version::Minor() << "." << OrientationAnalysis::Version::Patch();
+  return version;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RodriguesConvertor::getGroupName() const
+{ 
+  return SIMPL::FilterGroups::ProcessingFilters;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RodriguesConvertor::getSubGroupName() const
+{ 
+  return SIMPL::FilterSubGroups::CrystallographyFilters;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QString RodriguesConvertor::getHumanLabel() const
+{ 
+  return "Rodrigues Convertor"; 
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+const QUuid RodriguesConvertor::getUuid()
+{
+  return QUuid("{a2b62395-1a7d-5058-a840-752d8f8e2430}");
+}
+

@@ -61,6 +61,7 @@ set(_PublicFilters
   FindDistsToCharactGBs
   GenerateFaceIPFColoring
   GenerateFaceMisorientationColoring
+  RodriguesConvertor
 )
 
 
