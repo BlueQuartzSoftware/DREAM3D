@@ -1,19 +1,23 @@
-RodriguesConvertor
-=============
+# RodriguesConvertor #
+
 
 ## Group (Subgroup) ##
 
-OrientationAnalysis (OrientationAnalysis)
+OrientationAnalysis (Processing)
 
 ## Description ##
 
-This **Filter** does the following...
+This *filter* will convert a 3 component Rodrigues vector into a 4 component vector that DREAM.3D expects in its equations and algorithms. The algorithm is the following:
+
+Find the length of the 3 component vector.
+Divide each component by the length
+Store the length as the 4th component in the output array
 
 ## Parameters ##
 
 | Name | Type | Description |
 |------|------|------|
-| Parameter Name | Parameter Type | Description of parameter... |
+| Delete Original Array | Boolean | Set this to TRUE/ON to have the original 3 component data array deleted at the end of the filter. |
 
 ## Required Geometry ##
 
@@ -23,17 +27,13 @@ Required Geometry Type -or- Not Applicable
 
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| **Data Container** | Data Container Name | N/A | N/A | Description of object... |
-| **Attribute Matrix** | Attribute Matrix Name | Element/Feature/Ensemble/etc. | N/A | Description of object... |
-| **Element/Feature/Ensemble/etc. Attribute Array** | AttributeArray Name | int32_t/float/etc. | (1)/(3)/etc. | Description of object... |
+| **Attribute Array** | Rodrigues Input Vector | float | (3) |  |
 
 ## Created Objects ##
 
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|-------------|---------|-----|
-| **Data Container** | Data Container Name | N/A | N/A | Description of object... |
-| **Attribute Matrix** | Attribute Matrix Name | Element/Feature/Ensemble/etc. | N/A | Description of object... |
-| **Element/Feature/Ensemble/etc. Attribute Array** | AttributeArray Name | int32_t/float/etc. | (1)/(3)/etc. | Description of object... |
+| **Attribute Array** | Rodrigues Ouput Vector | float | (4) |  |
 
 
 ## Example Pipelines ##
