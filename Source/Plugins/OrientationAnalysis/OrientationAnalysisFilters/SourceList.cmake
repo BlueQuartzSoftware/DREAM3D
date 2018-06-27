@@ -62,6 +62,8 @@ set(_PublicFilters
   GenerateFaceIPFColoring
   GenerateFaceMisorientationColoring
   RodriguesConvertor
+  GenerateQuaternionConjugate
+  GenerateOrientationMatrixTranspose
 )
 
 

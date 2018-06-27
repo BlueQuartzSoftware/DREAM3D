@@ -132,7 +132,7 @@ void RodriguesConvertor::setupFilterParameters()
   QVector<QVector<size_t>> rodComp;
   rodComp.append({3});
   dasReq.componentDimensions = rodComp;
-  dasReq.daTypes = {"float"};
+  dasReq.daTypes = { SIMPL::TypeNames::Float };
   parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Rodrigues Array", RodriguesDataArrayPath, FilterParameter::Parameter, RodriguesConvertor, dasReq));
   DataArrayCreationFilterParameter::RequirementType dacReq;
   parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Output Data Array Path", OutputDataArrayPath, FilterParameter::CreatedArray, RodriguesConvertor, dacReq));
@@ -147,8 +147,8 @@ void RodriguesConvertor::dataCheck()
 {
   setErrorCondition(0);
   setWarningCondition(0);
-  
-   QVector<size_t> cDims(1, 1);
+
+  QVector<size_t> cDims(1, 1);
   cDims[0] = 3;
   m_RodriguesVectorsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getRodriguesDataArrayPath(), cDims);
   if(nullptr != m_RodriguesVectorsPtr.lock())                                                                       
@@ -199,22 +199,6 @@ void RodriguesConvertor::execute()
 
   if (getCancel()) { return; }
 
-//  if (getWarningCondition() < 0)
-//  {
-//    QString ss = QObject::tr("Some warning message");
-//    setWarningCondition(-88888888);
-//    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
-//  }
-
-//  if (getErrorCondition() < 0)
-//  {
-//    QString ss = QObject::tr("Some error message");
-//    setErrorCondition(-99999999);
-//    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-//    return;
-//  }
-
-
   size_t totalPoints = m_RodriguesVectorsPtr.lock()->getNumberOfTuples();
 
 
@@ -242,7 +226,6 @@ void RodriguesConvertor::execute()
     getDataContainerArray()->getAttributeMatrix(getRodriguesDataArrayPath())->removeAttributeArray(getRodriguesDataArrayPath().getDataArrayName());
   }
   
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
