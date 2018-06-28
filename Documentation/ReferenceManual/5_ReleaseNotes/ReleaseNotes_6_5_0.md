@@ -14,16 +14,20 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 ### New Filters & Features ###
 
-+ Implemented a custom style for the BrandedDREAM3D folder where any intrepid developer can use any Qt5 support CSS (Cascading Style Sheet) codes to completely customize the look of DREAM.3D/SIMPLView.
++ Implemented a custom style for the BrandedDREAM3D folder where any intrepid developer can use any Qt5 supported CSS (Cascading Style Sheet) codes to completely customize the look of DREAM.3D/SIMPLView.
 + DREAM3D Issue #752: Add filter to reduce orientations to their fundamental zone.
 + Add ability to create discrete pole figures instead of Lambert based pole figures.
++ Pole Figures are now generated as PDF files using libHaru
 + Add new filter that allows the user to summarize a pipeline by entering text into a basic text edit widget
++ Add filter to convert from 3 Component Rodrigues vectors to 4 component
++ Add filter to compute the conjugate of a Quaternioni
++ Add filter to compute the transpose of an Orientation Matrix
++ Updated the organization of the Prebuilt pipelines.
 
 ### Fixed DREAM3D Issues ###
 
 + Add cancel checks for the EMsoftSO3Sampler filter
 + Add information parameter that shows the size of the image geometry in real length units.
-+ DREAM3D Issue #784: Parallelize the FindNeighborhoods filter.ß
 + DREAM3D Issue #755: Implement a read only preflight updated value that states the range and delta for each axis in synthetic volume. This allows better feedback to the user that they are hitting specific size targets that they have in mind.
 + DREAM3D Issue #756: Figure out how to remove the JQuery.js file that Doxygen includes.
 + DREAM3D Issue #758: CMake code in the plugins are not generating any unit test code
@@ -43,6 +47,7 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 + DREAM3D Issue #783: Identify Sample Documentation needs example image when to to use the filter 
 + DREAM3D Issue #784: Crop Volume (Image) needs to have a cancel check in the inner cropping loop
 + DREAM3D Issue #789: Calculate the Sphericity of each feature
++ DREAM3D Issue #794: Parallelize the FindNeighborhoods filter.ß
 + Enable Tetragonal High, Tetragonal Low, Trigonal High & Trigonal Low Laue Group for Pole Figure generation
 + Fix a regression where incorrect static_cast<> would cause black pole figures.
 + Fix memory leak in the LaueOps classes when multi-threading.
