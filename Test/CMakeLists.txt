@@ -63,7 +63,7 @@ set(PREBUILT_PIPELINE_NAMES
 "EBSD Reconstruction/(05) SmallIN100 Segmentation"
 "EBSD Reconstruction/(06) SmallIN100 Postsegmentation Processing"
 "EBSD Reconstruction/(07) SmallIN100 Final Processing"
-"EBSD Reconstruction/(10) SmallIN100 Full Reconstruction"
+"EBSD Reconstruction/(08) SmallIN100 Full Reconstruction"
 "EBSD Statistics/(01) SmallIN100 Morphological Statistics"
 "EBSD Statistics/(02) SmallIN100 Export Statistics"
 "EBSD Statistics/(03) SmallIN100 Transfer Field Data"

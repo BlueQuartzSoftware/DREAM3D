@@ -488,7 +488,7 @@
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "(10) SmallIN100 Full Reconstruction",
+        "Name": "(08) SmallIN100 Full Reconstruction",
         "Number_Filters": 22,
         "Version": 6
     }
