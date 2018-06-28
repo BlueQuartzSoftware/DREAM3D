@@ -22,6 +22,8 @@ set(RefManual_Docs_Developer
   )
 
 set(RefManual_Docs_ReleaseNotes
+    Contributors
+    Acknowledgements
     ReleaseNotes_6_0_0
     ReleaseNotes_6_1_0
     ReleaseNotes_6_2_0
@@ -48,8 +50,7 @@ set(RefManual_Docs_UsingDREAM3D
     B_UserInterface
     C_CreatingPipeline
     D_ImportExportPipelines
-    E_Contributors
-    F_Acknowledgements
+    E_Reference_Frame_Notes
   )
 
 set(RefManual_Groups
