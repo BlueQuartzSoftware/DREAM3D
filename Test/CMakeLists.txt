@@ -56,23 +56,23 @@ set(TEST_PIPELINE_LIST_FILE ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.txt)
 set(TEST_DATA_DIR ${DREAM3D_DATA_DIR})
 
 set(PREBUILT_PIPELINE_NAMES
-"Reconstruction/(01) SmallIN100 Archive"
-"Reconstruction/(02) SmallIN100 Initial Visualization"
-"Reconstruction/(03) SmallIN100 Alignment"
-"Reconstruction/(04) SmallIN100 Presegmentation Processing"
-"Reconstruction/(05) SmallIN100 Segmentation"
-"Reconstruction/(06) SmallIN100 Postsegmentation Processing"
-"Reconstruction/(07) SmallIN100 Final Processing"
-"Reconstruction/(10) SmallIN100 Full Reconstruction"
-"Statistics/(01) SmallIN100 Morphological Statistics"
-"Statistics/(02) SmallIN100 Export Statistics"
-"Statistics/(03) SmallIN100 Transfer Field Data"
-"Statistics/(04) SmallIN100 Field Threshold"
-"Statistics/(05) SmallIN100 Crystallographic Statistics"
-"SurfaceMeshing/(01) SmallIN100 Quick Mesh"
-"SurfaceMeshing/(02) SmallIN100 Smooth Mesh"
-"SurfaceMeshing/(03) SmallIN100 Mesh Statistics"
-"SurfaceMeshing/(04) SmallIN100 GBCD"
+"EBSD Reconstruction/(01) SmallIN100 Archive"
+"EBSD Reconstruction/(02) SmallIN100 Initial Visualization"
+"EBSD Reconstruction/(03) SmallIN100 Alignment"
+"EBSD Reconstruction/(04) SmallIN100 Presegmentation Processing"
+"EBSD Reconstruction/(05) SmallIN100 Segmentation"
+"EBSD Reconstruction/(06) SmallIN100 Postsegmentation Processing"
+"EBSD Reconstruction/(07) SmallIN100 Final Processing"
+"EBSD Reconstruction/(10) SmallIN100 Full Reconstruction"
+"EBSD Statistics/(01) SmallIN100 Morphological Statistics"
+"EBSD Statistics/(02) SmallIN100 Export Statistics"
+"EBSD Statistics/(03) SmallIN100 Transfer Field Data"
+"EBSD Statistics/(04) SmallIN100 Field Threshold"
+"EBSD Statistics/(05) SmallIN100 Crystallographic Statistics"
+"EBSD SurfaceMeshing/(01) SmallIN100 Quick Mesh"
+"EBSD SurfaceMeshing/(02) SmallIN100 Smooth Mesh"
+"EBSD SurfaceMeshing/(03) SmallIN100 Mesh Statistics"
+"EBSD SurfaceMeshing/(04) SmallIN100 GBCD"
 "Synthetic/(01) Single Cubic Phase Equiaxed"
 "Synthetic/(02) Single Hexagonal Phase Equiaxed"
 "Synthetic/(03) Single Cubic Phase Rolled"
@@ -84,8 +84,8 @@ set(PREBUILT_PIPELINE_NAMES
 if(SIMPL_USE_ITK)
   set(PREBUILT_PIPELINE_NAMES
     ${PREBUILT_PIPELINE_NAMES}
-    "Reconstruction/(08) Image Initial Visualization"
-    "Reconstruction/(09) Image Segmentation"
+    "Image Reconstruction/(01) Image Initial Visualization"
+    "Image Reconstruction/(02) Image Segmentation"
     )
 endif()
 
