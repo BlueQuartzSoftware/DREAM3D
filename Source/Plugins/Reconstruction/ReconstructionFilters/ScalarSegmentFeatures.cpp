@@ -59,9 +59,7 @@
 class CompareFunctor
 {
 public:
-  virtual ~CompareFunctor()
-  {
-  }
+  ~CompareFunctor() = default;
 
   virtual bool operator()(int64_t index, int64_t neighIndex, int32_t gnum) // call using () operator
   {
@@ -81,9 +79,7 @@ public:
   {
     m_Data = reinterpret_cast<bool*>(data);
   }
-  virtual ~TSpecificCompareFunctorBool()
-  {
-  }
+  ~TSpecificCompareFunctorBool() = default;
 
   virtual bool operator()(int64_t referencepoint, int64_t neighborpoint, int32_t gnum)
   {
@@ -107,9 +103,9 @@ protected:
   }
 
 private:
-  bool* m_Data;          // The data that is being compared
-  int64_t m_Length;      // Length of the Data Array
-  int32_t* m_FeatureIds; // The Feature Ids
+  bool* m_Data = nullptr;          // The data that is being compared
+  int64_t m_Length = 0;      // Length of the Data Array
+  int32_t* m_FeatureIds = nullptr; // The Feature Ids
 };
 
 /**
@@ -125,9 +121,7 @@ public:
   {
     m_Data = reinterpret_cast<T*>(data);
   }
-  virtual ~TSpecificCompareFunctor()
-  {
-  }
+   ~TSpecificCompareFunctor() = default;
 
   virtual bool operator()(int64_t referencepoint, int64_t neighborpoint, int32_t gnum)
   {
@@ -162,10 +156,10 @@ protected:
   }
 
 private:
-  T* m_Data;             // The data that is being compared
-  int64_t m_Length;      // Length of the Data Array
-  T m_Tolerance;         // The tolerance of the comparison
-  int32_t* m_FeatureIds; // The Feature Ids
+  T* m_Data = nullptr;             // The data that is being compared
+  int64_t m_Length = 0;      // Length of the Data Array
+  T m_Tolerance = static_cast<T>(0);         // The tolerance of the comparison
+  int32_t* m_FeatureIds = nullptr; // The Feature Ids
 };
 
 // -----------------------------------------------------------------------------
@@ -496,39 +490,39 @@ void ScalarSegmentFeatures::execute()
   }
   else if(dType.compare("int8_t") == 0)
   {
-    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int8_t>>(new TSpecificCompareFunctor<int8_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int8_t>>(new TSpecificCompareFunctor<int8_t>(m_InputData, inDataPoints, static_cast<int8_t>(m_ScalarTolerance), m_FeatureIds));
   }
   else if(dType.compare("uint8_t") == 0)
   {
-    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint8_t>>(new TSpecificCompareFunctor<uint8_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint8_t>>(new TSpecificCompareFunctor<uint8_t>(m_InputData, inDataPoints, static_cast<uint8_t>(m_ScalarTolerance), m_FeatureIds));
   }
   else if(dType.compare("bool") == 0)
   {
-    m_Compare = std::shared_ptr<TSpecificCompareFunctorBool>(new TSpecificCompareFunctorBool(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctorBool>(new TSpecificCompareFunctorBool(m_InputData, inDataPoints, static_cast<bool>(m_ScalarTolerance), m_FeatureIds));
   }
   else if(dType.compare("int16_t") == 0)
   {
-    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int16_t>>(new TSpecificCompareFunctor<int16_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int16_t>>(new TSpecificCompareFunctor<int16_t>(m_InputData, inDataPoints, static_cast<int16_t>(m_ScalarTolerance), m_FeatureIds));
   }
   else if(dType.compare("uint16_t") == 0)
   {
-    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint16_t>>(new TSpecificCompareFunctor<uint16_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint16_t>>(new TSpecificCompareFunctor<uint16_t>(m_InputData, inDataPoints, static_cast<uint16_t>(m_ScalarTolerance), m_FeatureIds));
   }
   else if(dType.compare("int32_t") == 0)
   {
-    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int32_t>>(new TSpecificCompareFunctor<int32_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int32_t>>(new TSpecificCompareFunctor<int32_t>(m_InputData, inDataPoints, static_cast<int32_t>(m_ScalarTolerance), m_FeatureIds));
   }
   else if(dType.compare("uint32_t") == 0)
   {
-    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint32_t>>(new TSpecificCompareFunctor<uint32_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint32_t>>(new TSpecificCompareFunctor<uint32_t>(m_InputData, inDataPoints, static_cast<uint32_t>(m_ScalarTolerance), m_FeatureIds));
   }
   else if(dType.compare("int64_t") == 0)
   {
-    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int64_t>>(new TSpecificCompareFunctor<int64_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<int64_t>>(new TSpecificCompareFunctor<int64_t>(m_InputData, inDataPoints, static_cast<int64_t>(m_ScalarTolerance), m_FeatureIds));
   }
   else if(dType.compare("uint64_t") == 0)
   {
-    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint64_t>>(new TSpecificCompareFunctor<uint64_t>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<uint64_t>>(new TSpecificCompareFunctor<uint64_t>(m_InputData, inDataPoints, static_cast<uint64_t>(m_ScalarTolerance), m_FeatureIds));
   }
   else if(dType.compare("float") == 0)
   {
@@ -536,7 +530,7 @@ void ScalarSegmentFeatures::execute()
   }
   else if(dType.compare("double") == 0)
   {
-    m_Compare = std::shared_ptr<TSpecificCompareFunctor<double>>(new TSpecificCompareFunctor<double>(m_InputData, inDataPoints, m_ScalarTolerance, m_FeatureIds));
+    m_Compare = std::shared_ptr<TSpecificCompareFunctor<double>>(new TSpecificCompareFunctor<double>(m_InputData, inDataPoints, static_cast<double>(m_ScalarTolerance), m_FeatureIds));
   }
 
   // Generate the random voxel indices that will be used for the seed points to start a new grain growth/agglomeration
@@ -553,13 +547,14 @@ void ScalarSegmentFeatures::execute()
     notifyErrorMessage(getHumanLabel(), "The number of Features was 0 or 1 which means no Features were detected. A threshold value may be set too high", getErrorCondition());
     return;
   }
-
+  
   // By default we randomize grains
-  if(true == m_RandomizeFeatureIds)
+  if(m_RandomizeFeatureIds)
   {
     totalPoints = static_cast<int64_t>(m->getGeometry()->getNumberOfElements());
     randomizeFeatureIds(totalPoints, totalFeatures);
   }
+  
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage(getHumanLabel(), "Complete");
