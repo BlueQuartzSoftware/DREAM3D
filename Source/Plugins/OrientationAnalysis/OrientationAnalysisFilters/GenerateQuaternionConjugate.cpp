@@ -5,7 +5,6 @@
 #include "GenerateQuaternionConjugate.h"
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLSpan.hpp"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -23,10 +22,10 @@
 class GenerateQuaternionConjugateImpl
 {
 public:
-  GenerateQuaternionConjugateImpl(GenerateQuaternionConjugate* filter, size_t nTuples, float* inputRod, float* outputRod)
+  GenerateQuaternionConjugateImpl(GenerateQuaternionConjugate* filter, float* inputRod, float* outputRod)
   : m_Filter(filter)
-  , m_Input(inputRod, nTuples * 4)
-  , m_Output(outputRod, nTuples * 4)
+  , m_Input(inputRod)
+  , m_Output(outputRod)
   {
   }
   GenerateQuaternionConjugateImpl(const GenerateQuaternionConjugateImpl&) = default;           // Copy Constructor
@@ -60,8 +59,8 @@ public:
 #endif
 private:
   GenerateQuaternionConjugate* m_Filter = nullptr;
-  SIMPL::span<float> m_Input;
-  SIMPL::span<float> m_Output;
+  float* m_Input;
+  float* m_Output;
 };
 
 // -----------------------------------------------------------------------------
@@ -96,7 +95,7 @@ void GenerateQuaternionConjugate::setupFilterParameters()
   FilterParameterVector parameters;
   DataArraySelectionFilterParameter::RequirementType dasReq;
   QVector<QVector<size_t>> comp;
-  comp.append({4});
+  comp.push_back(QVector<size_t>(1, 4));
   dasReq.componentDimensions = comp;
   dasReq.daTypes = { SIMPL::TypeNames::Float };
   parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternion Array", QuaternionDataArrayPath, FilterParameter::Parameter, GenerateQuaternionConjugate, dasReq));
@@ -176,12 +175,12 @@ void GenerateQuaternionConjugate::execute()
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), GenerateQuaternionConjugateImpl(this, totalPoints, m_Quaternions, m_OutputQuaternions), tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), GenerateQuaternionConjugateImpl(this, m_Quaternions, m_OutputQuaternions), tbb::auto_partitioner());
   }
   else
 #endif
   {
-    GenerateQuaternionConjugateImpl serial(this, totalPoints, m_Quaternions, m_OutputQuaternions);
+    GenerateQuaternionConjugateImpl serial(this, m_Quaternions, m_OutputQuaternions);
     serial.convert(0, totalPoints);
   }
 

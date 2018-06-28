@@ -35,7 +35,6 @@
 #include <cmath>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLSpan.hpp"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
@@ -54,10 +53,10 @@
 class RodriguesConvertorImpl
 {
 public:
-  RodriguesConvertorImpl(RodriguesConvertor* filter, size_t nTuples, float* inputRod, float* outputRod)
+  RodriguesConvertorImpl(RodriguesConvertor* filter, float* inputRod, float* outputRod)
   : m_Filter(filter)
-  , m_Input(inputRod, nTuples * 3)
-  , m_Output(outputRod, nTuples * 4)
+  , m_Input(inputRod)
+  , m_Output(outputRod)
   {
   }
   RodriguesConvertorImpl(const RodriguesConvertorImpl&) = default; // Copy Constructor
@@ -75,8 +74,8 @@ public:
       float r0 = m_Input[i*3];
       float r1 = m_Input[i*3 + 1];
       float r2 = m_Input[i*3 + 2];
-      float length = std::sqrtf(r0*r0 + r1*r1 + r2*r2);
-      
+      float length = sqrtf(r0 * r0 + r1 * r1 + r2 * r2);
+
       m_Output[i*4] = r0/length;
       m_Output[i*4+1] = r1/length;
       m_Output[i*4+2] = r2/length;
@@ -93,8 +92,8 @@ public:
 #endif
 private:
   RodriguesConvertor* m_Filter = nullptr;
-  SIMPL::span<float> m_Input;
-  SIMPL::span<float> m_Output;
+  float* m_Input;
+  float* m_Output;
 };
 
 
@@ -129,9 +128,9 @@ void RodriguesConvertor::setupFilterParameters()
 {
   FilterParameterVector parameters;
   DataArraySelectionFilterParameter::RequirementType dasReq;
-  QVector<QVector<size_t>> rodComp;
-  rodComp.append({3});
-  dasReq.componentDimensions = rodComp;
+  QVector<QVector<size_t>> comp;
+  comp.push_back(QVector<size_t>(1, 3));
+  dasReq.componentDimensions = comp;
   dasReq.daTypes = { SIMPL::TypeNames::Float };
   parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Rodrigues Array", RodriguesDataArrayPath, FilterParameter::Parameter, RodriguesConvertor, dasReq));
   DataArrayCreationFilterParameter::RequirementType dacReq;
@@ -210,13 +209,12 @@ void RodriguesConvertor::execute()
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-                      RodriguesConvertorImpl(this, totalPoints, m_RodriguesVectors, m_OutputRodriguesVectors), tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), RodriguesConvertorImpl(this, m_RodriguesVectors, m_OutputRodriguesVectors), tbb::auto_partitioner());
   }
   else
 #endif
   {
-    RodriguesConvertorImpl serial(this, totalPoints, m_RodriguesVectors, m_OutputRodriguesVectors);
+    RodriguesConvertorImpl serial(this, m_RodriguesVectors, m_OutputRodriguesVectors);
     serial.convert(0, totalPoints);
   }
   

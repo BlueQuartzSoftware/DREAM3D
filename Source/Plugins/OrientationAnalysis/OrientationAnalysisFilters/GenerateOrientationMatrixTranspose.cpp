@@ -5,7 +5,6 @@
 #include "GenerateOrientationMatrixTranspose.h"
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLSpan.hpp"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -23,10 +22,10 @@
 class GenerateOrientationMatrixTransposeImpl
 {
 public:
-  GenerateOrientationMatrixTransposeImpl(GenerateOrientationMatrixTranspose* filter, size_t nTuples, float* inputRod, float* outputRod)
+  GenerateOrientationMatrixTransposeImpl(GenerateOrientationMatrixTranspose* filter, float* inputRod, float* outputRod)
   : m_Filter(filter)
-  , m_Input(inputRod, nTuples * 9)
-  , m_Output(outputRod, nTuples * 9)
+  , m_Input(inputRod)
+  , m_Output(outputRod)
   {
   }
   GenerateOrientationMatrixTransposeImpl(const GenerateOrientationMatrixTransposeImpl&) = default;           // Copy Constructor
@@ -65,8 +64,8 @@ public:
 #endif
 private:
   GenerateOrientationMatrixTranspose* m_Filter = nullptr;
-  SIMPL::span<float> m_Input;
-  SIMPL::span<float> m_Output;
+  float* m_Input;
+  float* m_Output;
 };
 
 // -----------------------------------------------------------------------------
@@ -101,7 +100,7 @@ void GenerateOrientationMatrixTranspose::setupFilterParameters()
   FilterParameterVector parameters;
   DataArraySelectionFilterParameter::RequirementType dasReq;
   QVector<QVector<size_t>> comp;
-  comp.append({9});
+  comp.push_back(QVector<size_t>(1, 9));
   dasReq.componentDimensions = comp;
   dasReq.daTypes = { SIMPL::TypeNames::Float };
   
@@ -187,12 +186,12 @@ void GenerateOrientationMatrixTranspose::execute()
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), GenerateOrientationMatrixTransposeImpl(this, totalPoints, m_OrientationMatrix, m_OutputOrientationMatrix), tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), GenerateOrientationMatrixTransposeImpl(this, m_OrientationMatrix, m_OutputOrientationMatrix), tbb::auto_partitioner());
   }
   else
 #endif
   {
-    GenerateOrientationMatrixTransposeImpl serial(this, totalPoints, m_OrientationMatrix, m_OutputOrientationMatrix);
+    GenerateOrientationMatrixTransposeImpl serial(this, m_OrientationMatrix, m_OutputOrientationMatrix);
     serial.convert(0, totalPoints);
   }
 
