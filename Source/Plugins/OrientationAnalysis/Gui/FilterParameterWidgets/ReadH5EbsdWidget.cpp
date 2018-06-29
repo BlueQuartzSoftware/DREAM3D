@@ -164,7 +164,7 @@ void ReadH5EbsdWidget::setupGui()
 
   setupMenuField();
 
-  validateInputFile();
+//  validateInputFile();
 
   // Setup the GUI widgets from what ever is in the Filter instance
   QString inputPath = m_Filter->getInputFile();
