@@ -76,10 +76,6 @@ protected slots:
 signals:
   void newValuesCalculated();
 
-  // These are needed to shut up the console
-  void parametersChanged();
-  void errorSettingFilterParameter(const QString&);
-
 private:
   enum ErrorTableColumns
   {

@@ -93,10 +93,6 @@ class ReadH5EbsdWidget : public FilterParameterWidget, private Ui::ReadH5EbsdWid
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
 
-  signals:
-    void errorSettingFilterParameter(const QString& msg);
-    void parametersChanged();
-
   protected slots:
     void on_m_LineEditBtn_clicked();
     void on_m_LineEdit_textChanged(const QString& text);

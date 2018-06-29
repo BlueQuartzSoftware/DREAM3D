@@ -83,10 +83,6 @@ protected slots:
   void lineCountDidFinish();
   void updateProgress(double percentage);
 
-signals:
-  void errorSettingFilterParameter(const QString& msg);
-  void parametersChanged();
-
 private:
   ReadASCIIDataFilterParameter* m_FilterParameter;
   ReadASCIIData* m_Filter;

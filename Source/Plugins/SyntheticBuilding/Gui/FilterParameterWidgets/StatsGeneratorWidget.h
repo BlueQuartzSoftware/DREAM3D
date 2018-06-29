@@ -99,10 +99,6 @@ protected slots:
   void on_openStatsFile_clicked();
   void on_phaseTabs_tabCloseRequested(int index);
 
-signals:
-  void errorSettingFilterParameter(const QString& msg);
-  void parametersChanged(); // This function MUST be named this way
-
 protected:
   /**
    * @brief Initializes some of the GUI elements with selections or other GUI related items

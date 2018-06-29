@@ -88,10 +88,6 @@ class ReadEdaxH5DataWidget : public FilterParameterWidget, private Ui::ReadEdaxH
     void on_removeScanName_clicked();
     void on_stackLowToHighBtn_toggled(bool checked);
 
-  signals:
-    void errorSettingFilterParameter(const QString& msg);
-    void parametersChanged();
-
   private:
     ReadEdaxH5Data*                         m_Filter;
     ReadEdaxH5DataFilterParameter*          m_FilterParameter;

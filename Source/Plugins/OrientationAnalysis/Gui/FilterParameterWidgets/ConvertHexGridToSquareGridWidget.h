@@ -104,11 +104,6 @@ class ConvertHexGridToSquareGridWidget : public FilterParameterWidget, private U
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
 
-
-  signals:
-    void errorSettingFilterParameter(const QString& msg);
-    void parametersChanged();
-
   protected slots:
 
     void on_m_InputDirBtn_clicked();

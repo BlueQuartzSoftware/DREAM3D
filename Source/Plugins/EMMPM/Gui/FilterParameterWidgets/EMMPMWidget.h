@@ -102,10 +102,6 @@ public slots:
   void on_m_NumClasses_valueChanged(int i);
   void on_enableManualInit_toggled(bool checked);
 
-signals:
-  void errorSettingFilterParameter(const QString& msg);
-  void parametersChanged();
-
 private:
   EMMPMFilter* m_Filter;
   EMMPMFilterParameter* m_FilterParameter;

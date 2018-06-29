@@ -79,10 +79,6 @@ class InitializeSyntheticVolumeWidget : public FilterParameterWidget, private Ui
     void filterNeedsInputParameters(AbstractFilter* filter);
     void displayErrorMessage(const PipelineMessage& msg);
 
-  signals:
-    void errorSettingFilterParameter(const QString& msg);
-    void parametersChanged();
-
   protected slots:
     // Auto Hookup Slots
     void on_m_InputFileBtn_clicked();

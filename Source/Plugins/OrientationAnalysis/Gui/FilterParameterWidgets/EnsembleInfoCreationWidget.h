@@ -109,18 +109,6 @@ public slots:
    */
   void filterNeedsInputParameters(AbstractFilter* filter);
 
-signals:
-  /**
-   * @brief errorSettingFilterParameter
-   * @param msg
-   */
-  void errorSettingFilterParameter(const QString& msg);
-
-  /**
-   * @brief parametersChanged
-   */
-  void parametersChanged();
-
 protected:
   /**
    * @brief setComparisons

@@ -106,10 +106,6 @@ class EbsdToH5EbsdWidget : public FilterParameterWidget, private Ui::EbsdToH5Ebs
      */
     virtual void showFileInFileSystem();
 
-  signals:
-    void errorSettingFilterParameter(const QString& msg);
-    void parametersChanged();
-
   protected slots:
     /* OIM Data Import Slots */
     void on_m_InputDirBtn_clicked();

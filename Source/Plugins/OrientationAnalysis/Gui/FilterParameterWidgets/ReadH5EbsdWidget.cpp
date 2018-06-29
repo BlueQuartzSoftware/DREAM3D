@@ -256,7 +256,11 @@ void ReadH5EbsdWidget::validateInputFile()
   {
     QString Ftype = m_FilterParameter->getFileType();
     QString ext = m_FilterParameter->getFileExtension();
-    QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
+    QString s = tr("All Files(*.*)");
+    if (ext.isEmpty() == false && Ftype.isEmpty() == false)
+    {
+      s = s.prepend(tr("%1 Files (*.%2);;").arg(Ftype).arg(ext));
+    }
 
     QString title = QObject::tr("Select a replacement input file in filter '%2'").arg(m_Filter->getHumanLabel());
 
@@ -323,6 +327,7 @@ void ReadH5EbsdWidget::on_m_LineEdit_textChanged(const QString& text)
 
   // We need to send the file down to the filter BEFORE any of the preflight starts because it needs this updated file
   m_Filter->setInputFile(m_LineEdit->text());
+
   // Once the input file is changed then kick off the prefligth by emitting the parametersChanged() signal
   emit parametersChanged();
   m_DidCausePreflight = false;
