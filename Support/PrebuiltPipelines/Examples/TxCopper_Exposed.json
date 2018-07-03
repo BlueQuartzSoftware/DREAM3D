@@ -8,7 +8,7 @@
         "Filter_Human_Label": "Import Oxford Instr. EBSD Data (.ctf)",
         "Filter_Name": "ReadCtfData",
         "Filter_Uuid": "{d1df969c-0428-53c3-b61d-99ea2bb6da28}",
-        "InputFile": "Textured_Copper/Cugrid_after 2nd_15kv_2kx_2.ctf"
+        "InputFile": "Data/Textured_Copper/Cugrid_after 2nd_15kv_2kx_2.ctf"
     },
     "1": {
         "CellAttributeMatrixPath": {
@@ -127,7 +127,7 @@
         "UseGoodVoxels": 1
     },
     "6": {
-        "FileName": "Output/TexturedCopper/IPF_Exposed.png",
+        "FileName": "Data/Output/TexturedCopper/IPF_Exposed.png",
         "FilterVersion": "1.0.439",
         "Filter_Enabled": true,
         "Filter_Human_Label": "ITK::Image Writer",
@@ -177,7 +177,7 @@
             "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
         "NumColors": 32,
-        "OutputPath": "Output/TexturedCopper",
+        "OutputPath": "Data/Output/TexturedCopper",
         "Title": "Cu Grid After 2nd 15kV (Exposed Area)",
         "UseGoodVoxels": 1
     },
@@ -219,7 +219,7 @@
             "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
         "NumColors": 32,
-        "OutputPath": "Output/TexturedCopper",
+        "OutputPath": "Data/Output/TexturedCopper",
         "Title": "Cu Grid After 2nd 15kV (Exposed Area)",
         "UseGoodVoxels": 1
     },

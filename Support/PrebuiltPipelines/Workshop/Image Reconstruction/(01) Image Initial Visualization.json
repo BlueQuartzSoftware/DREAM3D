@@ -12,7 +12,7 @@
             "FilePrefix": "slice_",
             "FileSuffix": "",
             "IncrementIndex": 1,
-            "InputPath": "Image",
+            "InputPath": "Data/Image",
             "Ordering": 0,
             "PaddingDigits": 2,
             "StartIndex": 11
@@ -32,7 +32,7 @@
         "FilterVersion": "1.0.803",
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
-        "OutputFile": "Output/ImagesStack/Images.dream3d",
+        "OutputFile": "Data/Output/ImagesStack/Images.dream3d",
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {

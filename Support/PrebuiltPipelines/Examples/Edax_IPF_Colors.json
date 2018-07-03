@@ -6,7 +6,7 @@
         "FilterVersion": "6.4.499",
         "Filter_Human_Label": "Import EDAX EBSD Data (.ang)",
         "Filter_Name": "ReadAngData",
-        "InputFile": "SmallIN100/Slice_1.ang"
+        "InputFile": "Data/SmallIN100/Slice_1.ang"
     },
     "1": {
         "CellAttributeMatrixPath": {
@@ -88,7 +88,7 @@
         "UseGoodVoxels": 1
     },
     "5": {
-        "FileName": "Output/Small_IN100_Slice_1.png",
+        "FileName": "Data/Output/Small_IN100_Slice_1.png",
         "FilterVersion": "1.0.358",
         "Filter_Human_Label": "ITK::Image Writer (KW)",
         "Filter_Name": "ITKImageWriter",

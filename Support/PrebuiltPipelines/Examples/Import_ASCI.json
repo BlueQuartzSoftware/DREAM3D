@@ -151,7 +151,7 @@
         "Wizard_HeaderIsCustom": true,
         "Wizard_HeaderLine": -1,
         "Wizard_HeaderUseDefaults": false,
-        "Wizard_InputFilePath": "SmallIN100/Slice_1.ang",
+        "Wizard_InputFilePath": "Data/SmallIN100/Slice_1.ang",
         "Wizard_NumberOfLines": 38021,
         "Wizard_SelectedPath": {
             "Attribute Matrix Name": "CellData",
@@ -446,7 +446,7 @@
         "UseGoodVoxels": 0
     },
     "9": {
-        "FileName": "Output/Example/Import_ASCII_IPF.png",
+        "FileName": "Data/Output/Example/Import_ASCII_IPF.png",
         "FilterVersion": "1.0.406",
         "Filter_Enabled": true,
         "Filter_Human_Label": "ITK::Image Writer",

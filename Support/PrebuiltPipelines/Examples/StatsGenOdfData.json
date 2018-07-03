@@ -6,7 +6,7 @@
         "FilterVersion": "6.4.5",
         "Filter_Human_Label": "Import EDAX EBSD Data (.ang)",
         "Filter_Name": "ReadAngData",
-        "InputFile": "SmallIN100/Slice_1.ang"
+        "InputFile": "Data/SmallIN100/Slice_1.ang"
     },
     "1": {
         "CellEulerAnglesArrayPath": {
@@ -82,7 +82,7 @@
             "Data Array Name": "Mask",
             "Data Container Name": "Small IN100 Slice 1"
         },
-        "OutputFile": "Output/StatsGenODF.txt",
+        "OutputFile": "Data/Output/StatsGenODF.txt",
         "UseGoodVoxels": 1
     },
     "PipelineBuilder": {

@@ -16,7 +16,7 @@
         "Filter_Human_Label": "Import EDAX EBSD Data (.ang)",
         "Filter_Name": "ReadAngData",
         "Filter_Uuid": "{b8e128a8-c2a3-5e6c-a7ad-e4fb864e5d40}",
-        "InputFile": "SmallIN100/Slice_1.ang"
+        "InputFile": "Data/SmallIN100/Slice_1.ang"
     },
     "02": {
         "FilterVersion": "1.0.381",
@@ -142,7 +142,7 @@
         "SelectedPresetName": "jet"
     },
     "09": {
-        "FileName": "Output/Example/Small_IN100_Slice_1_CI_Jet.png",
+        "FileName": "Data/Output/Example/Small_IN100_Slice_1_CI_Jet.png",
         "FilterVersion": "1.0.414",
         "Filter_Enabled": true,
         "Filter_Human_Label": "ITK::Image Writer",
@@ -221,7 +221,7 @@
         "SelectedPresetName": "jet"
     },
     "13": {
-        "FileName": "Output/Example/Small_IN100_Slice_1_phi1_Jet.png",
+        "FileName": "Data/Output/Example/Small_IN100_Slice_1_phi1_Jet.png",
         "FilterVersion": "1.0.414",
         "Filter_Enabled": true,
         "Filter_Human_Label": "ITK::Image Writer",
