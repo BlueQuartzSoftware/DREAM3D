@@ -27,11 +27,11 @@
     <number>2</number>
    </property>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout">
+    <layout class="QGridLayout" name="gridLayout">
      <property name="topMargin">
       <number>0</number>
      </property>
-     <item>
+     <item row="0" column="0">
       <widget class="QLabel" name="label">
        <property name="styleSheet">
         <string notr="true">QLabel {
@@ -44,17 +44,7 @@ font-size: 11px;
        </property>
       </widget>
      </item>
-     <item>
-      <widget class="QtSLineEdit" name="m_LineEdit">
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-      </widget>
-     </item>
-     <item>
+     <item row="0" column="2">
       <widget class="QPushButton" name="m_LineEditBtn">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
@@ -64,6 +54,41 @@ font-size: 11px;
        </property>
        <property name="text">
         <string>Select</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1">
+      <widget class="QtSLineEdit" name="m_LineEdit">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLabel" name="absPathNameLabel">
+       <property name="styleSheet">
+        <string notr="true">QLabel {
+font-weight: bold;
+font-size: 11px;
+}</string>
+       </property>
+       <property name="text">
+        <string>Absolute Path:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QLabel" name="absPathLabel">
+       <property name="font">
+        <font>
+         <italic>true</italic>
+        </font>
+       </property>
+       <property name="text">
+        <string/>
        </property>
       </widget>
      </item>
