@@ -114,7 +114,7 @@
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
         "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
-        "OutputFile": "Data/Output/LambertSphere.dream3d",
+        "OutputFile": "Output/LambertSphere.dream3d",
         "WriteTimeSeries": 0,
         "WriteXdmfFile": 1
     },

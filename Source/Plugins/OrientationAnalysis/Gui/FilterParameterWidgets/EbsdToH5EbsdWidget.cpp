@@ -55,6 +55,7 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/Utilities/SIMPLDataPathValidator.h"
 
 #include "SVWidgetsLib/QtSupport/QtSCheckboxDialog.h"
 #include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
@@ -162,6 +163,17 @@ void EbsdToH5EbsdWidget::setupGui()
   m_OutputFile->setCompleter(com1);
   QObject::connect(com1, SIGNAL(activated(const QString&)), this, SLOT(on_m_OutputFile_textChanged(const QString&)));
 
+  // Update the widget when the data directory changes
+  SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
+  connect(validator, &SIMPLDataPathValidator::dataDirectoryChanged, [=] {
+    blockSignals(true);
+    on_m_LineEdit_textChanged(m_LineEdit->text());
+    on_m_OutputFile_textChanged(m_OutputFile->text());
+    blockSignals(false);
+
+    emit parametersChanged();
+  });
+
   m_WidgetList << m_LineEdit << m_InputDirBtn << m_OutputFile << m_OutputFileBtn;
   m_WidgetList << m_FileExt << m_ErrorMessage << m_TotalDigits;
   m_WidgetList << m_FilePrefix << m_TotalSlices << m_ZStartIndex << m_ZEndIndex << m_zSpacing;
@@ -178,7 +190,7 @@ void EbsdToH5EbsdWidget::setupGui()
 
   m_RefFrameOptionsBtn->setEnabled(false);
 
-  validateInputFile();
+//  validateInputFile();
   getGuiParametersFromFilter();
 }
 // -----------------------------------------------------------------------------
@@ -198,7 +210,10 @@ void EbsdToH5EbsdWidget::keyPressEvent(QKeyEvent* event)
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::setupMenuField()
 {
-  QFileInfo fi(m_LineEdit->text());
+  SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
+  QString inputPath = validator->sanityCheckRelativePath(m_LineEdit->text());
+
+  QFileInfo fi(inputPath);
 
   QMenu* lineEditMenu = new QMenu(m_LineEdit);
   m_LineEdit->setButtonMenu(QtSLineEdit::Left, lineEditMenu);
@@ -329,6 +344,11 @@ d.getEulerTranformation(m_EulerTransformationAngle, m_EulerTransformationAxis[0]
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString& text)
 {
+  SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
+  QString outputPath = validator->sanityCheckRelativePath(text);
+
+  m_OutputFile->setToolTip("Absolute File Path: " + outputPath);
+
   // if (verifyPathExists(text, m_OutputFile) == true )
   //{
   //  QFileInfo fi(text);
@@ -388,19 +408,20 @@ void EbsdToH5EbsdWidget::on_m_InputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::on_m_LineEdit_textChanged(const QString& text)
 {
+  SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
+  QString inputPath = validator->sanityCheckRelativePath(text);
 
-  if(verifyPathExists(m_LineEdit->text(), m_LineEdit))
+  m_LineEdit->setToolTip("Absolute File Path: " + inputPath);
+
+  if(verifyPathExists(inputPath, m_LineEdit))
   {
     m_ShowFileAction->setEnabled(true);
     m_RefFrameOptionsBtn->setEnabled(true);
     findEbsdMaxSliceAndPrefix();
-    QDir dir(m_LineEdit->text());
+    QDir dir(inputPath);
     QString dirname = dir.dirName();
     dir.cdUp();
 
-    QString outPath = dir.absolutePath() + QDir::separator() + dirname + "_Output" + QDir::separator() + dirname + ".h5ebsd";
-    outPath = QDir::toNativeSeparators(outPath);
-    m_OutputFile->setText(outPath);
     generateExampleEbsdInputFile();
     m_LineEdit->blockSignals(true);
     m_LineEdit->setText(QDir::toNativeSeparators(m_LineEdit->text()));
@@ -522,6 +543,8 @@ void EbsdToH5EbsdWidget::on_m_FilePrefix_textChanged(const QString& string)
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::generateExampleEbsdInputFile()
 {
+  SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
+  QString inputPath = validator->sanityCheckRelativePath(m_LineEdit->text());
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text()).arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0').arg(m_FileSuffix->text()).arg(m_FileExt->text());
   m_GeneratedFileNameExample->setText(filename);
@@ -532,7 +555,7 @@ void EbsdToH5EbsdWidget::generateExampleEbsdInputFile()
   int increment = 1;
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = FilePathGenerator::GenerateFileList(start, end, increment, hasMissingFiles, m_StackLowToHigh->isChecked(), m_LineEdit->text(), m_FilePrefix->text(), m_FileSuffix->text(),
+  QVector<QString> fileList = FilePathGenerator::GenerateFileList(start, end, increment, hasMissingFiles, m_StackLowToHigh->isChecked(), inputPath, m_FilePrefix->text(), m_FileSuffix->text(),
                                                                   m_FileExt->text(), m_TotalDigits->value());
   m_FileListView->clear();
   QIcon greenDot = QIcon(QString(":/SIMPL/icons/images/bullet_ball_green.png"));
@@ -578,8 +601,11 @@ void EbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
   bool hasMissingFiles = false;
   int increment = 1;
 
+  SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
+  QString inputPath = validator->sanityCheckRelativePath(m_LineEdit->text());
+
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = FilePathGenerator::GenerateFileList(start, end, increment, hasMissingFiles, m_StackLowToHigh->isChecked(), m_LineEdit->text(), m_FilePrefix->text(), m_FileSuffix->text(),
+  QVector<QString> fileList = FilePathGenerator::GenerateFileList(start, end, increment, hasMissingFiles, m_StackLowToHigh->isChecked(), inputPath, m_FilePrefix->text(), m_FileSuffix->text(),
                                                                   m_FileExt->text(), m_TotalDigits->value());
   if(fileList.size() == 0)
   {
@@ -656,7 +682,11 @@ void EbsdToH5EbsdWidget::findEbsdMaxSliceAndPrefix()
   {
     return;
   }
-  QDir dir(m_LineEdit->text());
+
+  SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
+  QString inputPath = validator->sanityCheckRelativePath(m_LineEdit->text());
+
+  QDir dir(inputPath);
   m_FileExt->setText("");
   {
     QString ext = ".ang";
@@ -790,14 +820,24 @@ void EbsdToH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
   EbsdToH5Ebsd* ebsdConverter = qobject_cast<EbsdToH5Ebsd*>(filter);
   Q_ASSERT_X(nullptr != ebsdConverter, "EbsdToH5EbsdWidget can ONLY be used with EbsdToH5Ebsd filter", __FILE__);
 
+  SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
+
   bool ok = false;
-  ebsdConverter->setOutputFile(m_OutputFile->text());
+
+  QString outputPath = m_OutputFile->text();
+  outputPath = validator->sanityCheckRelativePath(outputPath);
+
+  ebsdConverter->setOutputFile(outputPath);
   ebsdConverter->setZStartIndex(m_ZStartIndex->text().toLongLong(&ok));
   ebsdConverter->setZEndIndex(m_ZEndIndex->text().toLongLong(&ok));
   ebsdConverter->setZResolution(m_zSpacing->text().toDouble(&ok));
   ebsdConverter->setRefFrameZDir(getRefFrameZDir());
 
-  ebsdConverter->setInputPath(m_LineEdit->text());
+
+  QString inputPath = m_LineEdit->text();
+  inputPath = validator->sanityCheckRelativePath(inputPath);
+
+  ebsdConverter->setInputPath(inputPath);
   ebsdConverter->setFilePrefix(m_FilePrefix->text());
   ebsdConverter->setFileSuffix(m_FileSuffix->text());
   ebsdConverter->setFileExtension(m_FileExt->text());
@@ -847,7 +887,6 @@ QString EbsdToH5EbsdWidget::getInputDirectory()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-
 void EbsdToH5EbsdWidget::setOutputPath(QString val)
 {
   m_OutputFile->setText(val);

@@ -52,6 +52,7 @@
 #include "EbsdLib/TSL/H5AngVolumeReader.h"
 
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Utilities/SIMPLDataPathValidator.h"
 
 #include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
 #include "SVWidgetsLib/QtSupport/QtSFileUtils.h"
@@ -172,7 +173,18 @@ void ReadH5EbsdWidget::setupGui()
   {
     inputPath = QDir::homePath();
   }
+
   m_LineEdit->setText(inputPath);
+
+  // Update the widget when the data directory changes
+  SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
+  connect(validator, &SIMPLDataPathValidator::dataDirectoryChanged, [=] {
+    blockSignals(true);
+    on_m_LineEdit_textChanged(m_LineEdit->text());
+    blockSignals(false);
+
+    emit parametersChanged();
+  });
 
   // Set the initial range based on the z min & z max. This will get adjusted later
   m_ZStartIndex->setRange(0, m_Filter->getZEndIndex());
@@ -308,7 +320,12 @@ void ReadH5EbsdWidget::on_m_LineEditBtn_clicked()
 // -----------------------------------------------------------------------------
 void ReadH5EbsdWidget::on_m_LineEdit_textChanged(const QString& text)
 {
-  if(verifyPathExists(m_LineEdit->text(), m_LineEdit))
+  SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
+  QString inputPath = validator->sanityCheckRelativePath(text);
+
+  m_LineEdit->setToolTip("Absolute File Path: " + inputPath);
+
+  if(verifyPathExists(inputPath, m_LineEdit))
   {
     m_ShowFileAction->setEnabled(true);
   }
@@ -326,7 +343,7 @@ void ReadH5EbsdWidget::on_m_LineEdit_textChanged(const QString& text)
   m_DidCausePreflight = true;
 
   // We need to send the file down to the filter BEFORE any of the preflight starts because it needs this updated file
-  m_Filter->setInputFile(m_LineEdit->text());
+  m_Filter->setInputFile(inputPath);
 
   // Once the input file is changed then kick off the prefligth by emitting the parametersChanged() signal
   emit parametersChanged();
@@ -451,7 +468,12 @@ void ReadH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
   Q_ASSERT_X(nullptr != readEbsd, "ReadH5EbsdWidget can ONLY be used with ReadH5Ebsd filter", __FILE__);
 
   bool ok = false;
-  readEbsd->setInputFile(m_LineEdit->text());
+
+  QString inputPath = m_LineEdit->text();
+  SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
+  inputPath = validator->sanityCheckRelativePath(inputPath);
+
+  readEbsd->setInputFile(inputPath);
   readEbsd->setZStartIndex(m_ZStartIndex->text().toLongLong(&ok));
   readEbsd->setZEndIndex(m_ZEndIndex->text().toLongLong(&ok));
   readEbsd->setUseTransformations(m_UseTransformations->isChecked());
@@ -556,14 +578,17 @@ void ReadH5EbsdWidget::updateModelFromFilter(QSet<QString>& arrayNames, bool set
 // -----------------------------------------------------------------------------
 void ReadH5EbsdWidget::updateFileInfoWidgets()
 {
-  if(verifyPathExists(m_LineEdit->text(), m_LineEdit))
+  SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
+  QString inputPath = validator->sanityCheckRelativePath(m_LineEdit->text());
+
+  if(verifyPathExists(inputPath, m_LineEdit))
   {
-    QFileInfo fi(m_LineEdit->text());
+    QFileInfo fi(inputPath);
     if(fi.exists() && fi.isFile())
     {
       // Read the Phase information from the .h5ang file
       H5EbsdVolumeReader::Pointer h5Reader = H5EbsdVolumeReader::New();
-      h5Reader->setFileName(m_LineEdit->text());
+      h5Reader->setFileName(inputPath);
 
       float xres = 0.0f;
       float yres = 0.0f;

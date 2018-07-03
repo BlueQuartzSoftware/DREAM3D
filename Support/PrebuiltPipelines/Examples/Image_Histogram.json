@@ -2,7 +2,7 @@
     "0": {
         "CellAttributeMatrixName": "CellData",
         "DataContainerName": "ImageDataContainer",
-        "FileName": "Data/Image/slice_11.tif",
+        "FileName": "Image/slice_11.tif",
         "FilterVersion": "1.0.358",
         "Filter_Human_Label": "ITK::Image Reader (KW)",
         "Filter_Name": "ITKImageReader",
@@ -34,7 +34,7 @@
         "Filter_Human_Label": "Export ASCII Data",
         "Filter_Name": "WriteASCIIData",
         "MaxValPerLine": 1,
-        "OutputPath": "Data/Output/Histograms",
+        "OutputPath": "Output/Histograms",
         "SelectedDataArrayPaths": [
             {
                 "Attribute Matrix Name": "HistogramAttributeMatrix",

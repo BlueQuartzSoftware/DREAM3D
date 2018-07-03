@@ -6,7 +6,7 @@
         "FilterVersion": "6.4.17",
         "Filter_Human_Label": "Import EDAX EBSD Data (.ang)",
         "Filter_Name": "ReadAngData",
-        "InputFile": "Data/SmallIN100/Slice_1.ang"
+        "InputFile": "SmallIN100/Slice_1.ang"
     },
     "01": {
         "CellAttributeMatrixPath": {
@@ -240,7 +240,7 @@
             "Data Array Name": "NumFeatures",
             "Data Container Name": "Small IN100 Slice 1"
         },
-        "OutputFile": "Data/Output/INL_Example/Small_IN100.inl"
+        "OutputFile": "Output/INL_Example/Small_IN100.inl"
     },
     "12": {
         "CellEulerAnglesArrayPath": {
@@ -275,7 +275,7 @@
         "UseGoodVoxels": 1
     },
     "13": {
-        "FileName": "Data/Output/INL_Example/Small_IN100_Slice_1.png",
+        "FileName": "Output/INL_Example/Small_IN100_Slice_1.png",
         "FilterVersion": "1.0.360",
         "Filter_Human_Label": "ITK::Image Writer",
         "Filter_Name": "ITKImageWriter",
