@@ -165,6 +165,9 @@ void ReadH5EbsdWidget::setupGui()
 
   setupMenuField();
 
+  absPathLabel->hide();
+  absPathNameLabel->hide();
+
 //  validateInputFile();
 
   // Setup the GUI widgets from what ever is in the Filter instance
@@ -321,9 +324,20 @@ void ReadH5EbsdWidget::on_m_LineEditBtn_clicked()
 void ReadH5EbsdWidget::on_m_LineEdit_textChanged(const QString& text)
 {
   SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
-  QString inputPath = validator->sanityCheckRelativePath(text);
+  QString inputPath = validator->convertToAbsolutePath(text);
 
-  m_LineEdit->setToolTip("Absolute File Path: " + inputPath);
+  QFileInfo fi(text);
+  if (fi.isRelative())
+  {
+    absPathLabel->setText(inputPath);
+    absPathLabel->show();
+    absPathNameLabel->show();
+  }
+  else
+  {
+    absPathLabel->hide();
+    absPathNameLabel->hide();
+  }
 
   if(verifyPathExists(inputPath, m_LineEdit))
   {
@@ -471,7 +485,7 @@ void ReadH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
 
   QString inputPath = m_LineEdit->text();
   SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
-  inputPath = validator->sanityCheckRelativePath(inputPath);
+  inputPath = validator->convertToAbsolutePath(inputPath);
 
   readEbsd->setInputFile(inputPath);
   readEbsd->setZStartIndex(m_ZStartIndex->text().toLongLong(&ok));
@@ -579,7 +593,7 @@ void ReadH5EbsdWidget::updateModelFromFilter(QSet<QString>& arrayNames, bool set
 void ReadH5EbsdWidget::updateFileInfoWidgets()
 {
   SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
-  QString inputPath = validator->sanityCheckRelativePath(m_LineEdit->text());
+  QString inputPath = validator->convertToAbsolutePath(m_LineEdit->text());
 
   if(verifyPathExists(inputPath, m_LineEdit))
   {

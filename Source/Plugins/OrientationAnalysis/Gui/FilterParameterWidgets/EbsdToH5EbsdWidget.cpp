@@ -159,6 +159,11 @@ void EbsdToH5EbsdWidget::setupGui()
 
   setupMenuField();
 
+  inputAbsPathLabel->hide();
+  inputAbsPathNameLabel->hide();
+  outputAbsPathLabel->hide();
+  outputAbsPathNameLabel->hide();
+
   QtSFileCompleter* com1 = new QtSFileCompleter(this, false);
   m_OutputFile->setCompleter(com1);
   QObject::connect(com1, SIGNAL(activated(const QString&)), this, SLOT(on_m_OutputFile_textChanged(const QString&)));
@@ -211,7 +216,7 @@ void EbsdToH5EbsdWidget::keyPressEvent(QKeyEvent* event)
 void EbsdToH5EbsdWidget::setupMenuField()
 {
   SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
-  QString inputPath = validator->sanityCheckRelativePath(m_LineEdit->text());
+  QString inputPath = validator->convertToAbsolutePath(m_LineEdit->text());
 
   QFileInfo fi(inputPath);
 
@@ -345,9 +350,20 @@ d.getEulerTranformation(m_EulerTransformationAngle, m_EulerTransformationAxis[0]
 void EbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString& text)
 {
   SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
-  QString outputPath = validator->sanityCheckRelativePath(text);
+  QString outputPath = validator->convertToAbsolutePath(text);
 
-  m_OutputFile->setToolTip("Absolute File Path: " + outputPath);
+  QFileInfo fi(text);
+  if (fi.isRelative())
+  {
+    outputAbsPathLabel->setText(outputPath);
+    outputAbsPathLabel->show();
+    outputAbsPathNameLabel->show();
+  }
+  else
+  {
+    outputAbsPathLabel->hide();
+    outputAbsPathNameLabel->hide();
+  }
 
   // if (verifyPathExists(text, m_OutputFile) == true )
   //{
@@ -409,9 +425,20 @@ void EbsdToH5EbsdWidget::on_m_InputDirBtn_clicked()
 void EbsdToH5EbsdWidget::on_m_LineEdit_textChanged(const QString& text)
 {
   SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
-  QString inputPath = validator->sanityCheckRelativePath(text);
+  QString inputPath = validator->convertToAbsolutePath(text);
 
-  m_LineEdit->setToolTip("Absolute File Path: " + inputPath);
+  QFileInfo fi(text);
+  if (fi.isRelative())
+  {
+    inputAbsPathLabel->setText(inputPath);
+    inputAbsPathLabel->show();
+    inputAbsPathNameLabel->show();
+  }
+  else
+  {
+    inputAbsPathLabel->hide();
+    inputAbsPathNameLabel->hide();
+  }
 
   if(verifyPathExists(inputPath, m_LineEdit))
   {
@@ -544,7 +571,7 @@ void EbsdToH5EbsdWidget::on_m_FilePrefix_textChanged(const QString& string)
 void EbsdToH5EbsdWidget::generateExampleEbsdInputFile()
 {
   SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
-  QString inputPath = validator->sanityCheckRelativePath(m_LineEdit->text());
+  QString inputPath = validator->convertToAbsolutePath(m_LineEdit->text());
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text()).arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0').arg(m_FileSuffix->text()).arg(m_FileExt->text());
   m_GeneratedFileNameExample->setText(filename);
@@ -602,7 +629,7 @@ void EbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
   int increment = 1;
 
   SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
-  QString inputPath = validator->sanityCheckRelativePath(m_LineEdit->text());
+  QString inputPath = validator->convertToAbsolutePath(m_LineEdit->text());
 
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList = FilePathGenerator::GenerateFileList(start, end, increment, hasMissingFiles, m_StackLowToHigh->isChecked(), inputPath, m_FilePrefix->text(), m_FileSuffix->text(),
@@ -684,7 +711,7 @@ void EbsdToH5EbsdWidget::findEbsdMaxSliceAndPrefix()
   }
 
   SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
-  QString inputPath = validator->sanityCheckRelativePath(m_LineEdit->text());
+  QString inputPath = validator->convertToAbsolutePath(m_LineEdit->text());
 
   QDir dir(inputPath);
   m_FileExt->setText("");
@@ -825,7 +852,7 @@ void EbsdToH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
   bool ok = false;
 
   QString outputPath = m_OutputFile->text();
-  outputPath = validator->sanityCheckRelativePath(outputPath);
+  outputPath = validator->convertToAbsolutePath(outputPath);
 
   ebsdConverter->setOutputFile(outputPath);
   ebsdConverter->setZStartIndex(m_ZStartIndex->text().toLongLong(&ok));
@@ -835,7 +862,7 @@ void EbsdToH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
 
 
   QString inputPath = m_LineEdit->text();
-  inputPath = validator->sanityCheckRelativePath(inputPath);
+  inputPath = validator->convertToAbsolutePath(inputPath);
 
   ebsdConverter->setInputPath(inputPath);
   ebsdConverter->setFilePrefix(m_FilePrefix->text());
