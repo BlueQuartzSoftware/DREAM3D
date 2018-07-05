@@ -10,7 +10,16 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
-## Version 6.5.xxx ##
+## Version 6.5.10 ##
+
++ Fix a hard crash inside of the DataContainerReader that would prevent the use of the filter within the GUI environment.
+
+
+## Version 6.5.9 ##
+
++ Improvements to handling of relative file paths on macOS. There is now a default "DREAM3D Data" directory that is used which is initially set to a directory called "DREAM3DData" and is placed inside the users home directory
+
+## Version 6.5.3 ##
 
 ### New Filters & Features ###
 
