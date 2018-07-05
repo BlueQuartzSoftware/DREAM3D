@@ -447,6 +447,16 @@ font-size: 11px;
        </property>
       </widget>
      </item>
+     <item row="0" column="0" colspan="4">
+      <widget class="Line" name="line_10">
+       <property name="frameShadow">
+        <enum>QFrame::Plain</enum>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
     </layout>
    </item>
    <item row="0" column="0">
@@ -457,8 +467,11 @@ font-size: 11px;
      <property name="bottomMargin">
       <number>0</number>
      </property>
-     <property name="spacing">
+     <property name="horizontalSpacing">
       <number>6</number>
+     </property>
+     <property name="verticalSpacing">
+      <number>2</number>
      </property>
      <item row="1" column="1">
       <widget class="QtSLineEdit" name="m_LineEdit"/>
@@ -544,6 +557,9 @@ font-size: 12px;
     <layout class="QGridLayout" name="gridLayout_4">
      <property name="topMargin">
       <number>10</number>
+     </property>
+     <property name="verticalSpacing">
+      <number>2</number>
      </property>
      <item row="2" column="1">
       <widget class="QtSLineEdit" name="m_OutputFile">
