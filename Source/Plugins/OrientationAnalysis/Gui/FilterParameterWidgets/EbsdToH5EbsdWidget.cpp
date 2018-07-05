@@ -160,9 +160,7 @@ void EbsdToH5EbsdWidget::setupGui()
   setupMenuField();
 
   inputAbsPathLabel->hide();
-  inputAbsPathNameLabel->hide();
   outputAbsPathLabel->hide();
-  outputAbsPathNameLabel->hide();
 
   QtSFileCompleter* com1 = new QtSFileCompleter(this, false);
   m_OutputFile->setCompleter(com1);
@@ -269,6 +267,7 @@ void EbsdToH5EbsdWidget::getGuiParametersFromFilter()
     inputPath = QDir::homePath();
   }
   m_LineEdit->setText(inputPath);
+  m_OutputFile->setText(m_Filter->getOutputFile());
 
   QObjectList obs = children();
   foreach(QObject* ob, obs)
@@ -276,7 +275,6 @@ void EbsdToH5EbsdWidget::getGuiParametersFromFilter()
     ob->blockSignals(true);
   }
 
-  m_OutputFile->setText(m_Filter->getOutputFile());
   m_ZStartIndex->setValue(m_Filter->getZStartIndex());
   m_ZEndIndex->setValue(m_Filter->getZEndIndex());
   m_zSpacing->setText(QString::number(m_Filter->getZResolution()));
@@ -357,12 +355,10 @@ void EbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString& text)
   {
     outputAbsPathLabel->setText(outputPath);
     outputAbsPathLabel->show();
-    outputAbsPathNameLabel->show();
   }
   else
   {
     outputAbsPathLabel->hide();
-    outputAbsPathNameLabel->hide();
   }
 
   // if (verifyPathExists(text, m_OutputFile) == true )
@@ -432,12 +428,10 @@ void EbsdToH5EbsdWidget::on_m_LineEdit_textChanged(const QString& text)
   {
     inputAbsPathLabel->setText(inputPath);
     inputAbsPathLabel->show();
-    inputAbsPathNameLabel->show();
   }
   else
   {
     inputAbsPathLabel->hide();
-    inputAbsPathNameLabel->hide();
   }
 
   if(verifyPathExists(inputPath, m_LineEdit))

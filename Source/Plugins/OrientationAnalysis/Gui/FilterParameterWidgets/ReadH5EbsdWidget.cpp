@@ -166,7 +166,6 @@ void ReadH5EbsdWidget::setupGui()
   setupMenuField();
 
   absPathLabel->hide();
-  absPathNameLabel->hide();
 
 //  validateInputFile();
 
@@ -331,14 +330,12 @@ void ReadH5EbsdWidget::on_m_LineEdit_textChanged(const QString& text)
   {
     absPathLabel->setText(inputPath);
     absPathLabel->show();
-    absPathNameLabel->show();
   }
   else
   {
     absPathLabel->hide();
-    absPathNameLabel->hide();
   }
-
+  
   if(verifyPathExists(inputPath, m_LineEdit))
   {
     m_ShowFileAction->setEnabled(true);

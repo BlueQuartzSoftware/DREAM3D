@@ -67,28 +67,21 @@ font-size: 11px;
        </property>
       </widget>
      </item>
-     <item row="1" column="0">
-      <widget class="QLabel" name="absPathNameLabel">
-       <property name="styleSheet">
-        <string notr="true">QLabel {
-font-weight: bold;
-font-size: 11px;
-}</string>
-       </property>
-       <property name="text">
-        <string>Absolute Path:</string>
-       </property>
-      </widget>
-     </item>
      <item row="1" column="1">
-      <widget class="QLabel" name="absPathLabel">
+      <widget class="SVSmallLabel" name="absPathLabel">
        <property name="font">
         <font>
-         <italic>true</italic>
+         <italic>false</italic>
         </font>
        </property>
        <property name="text">
         <string/>
+       </property>
+       <property name="wordWrap">
+        <bool>true</bool>
+       </property>
+       <property name="textInteractionFlags">
+        <set>Qt::LinksAccessibleByMouse|Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
        </property>
       </widget>
      </item>
@@ -720,6 +713,11 @@ font-size: 11px;
    <class>QtSLineEdit</class>
    <extends>QLineEdit</extends>
    <header location="global">QtSLineEdit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>SVSmallLabel</class>
+   <extends>QLabel</extends>
+   <header location="global">SVControlWidgets.h</header>
   </customwidget>
   <customwidget>
    <class>SVSpinBox</class>
