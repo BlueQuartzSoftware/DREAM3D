@@ -150,7 +150,7 @@ set_property(GLOBAL PROPERTY COPY_LIBRARY_TARGETS "")
 # Development: This is currently in development and probably has bugs.
 get_property(DREAM3DProj_RELEASE_TYPE GLOBAL PROPERTY PACKAGE_RELEASE_TYPE)
 if("${DREAM3DProj_RELEASE_TYPE}" STREQUAL "")
-  set(DREAM3DProj_RELEASE_TYPE "Beta")
+  set(DREAM3DProj_RELEASE_TYPE "Development")
   set_property(GLOBAL PROPERTY PACKAGE_RELEASE_TYPE "${DREAM3DProj_RELEASE_TYPE}")
 endif()
 
