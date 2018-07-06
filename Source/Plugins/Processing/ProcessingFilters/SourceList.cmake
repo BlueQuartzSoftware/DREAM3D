@@ -17,6 +17,7 @@ SIMPL_START_FILTER_GROUP(
 
 set(_PublicFilters
   ConvertColorToGrayScale
+  DetectEllipsoids
   ErodeDilateBadData
   ErodeDilateCoordinationNumber
   ErodeDilateMask
@@ -60,6 +61,9 @@ foreach(f ${_PrivateFilters} )
 endforeach()
 
 
+
+ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName}/HelperClasses ComputeGradient)
+ADD_SIMPL_SUPPORT_CLASS(${${PLUGIN_NAME}_SOURCE_DIR} ${_filterGroupName}/HelperClasses DetectEllipsoidsImpl)
 
 
 SIMPL_END_FILTER_GROUP(${Processing_BINARY_DIR} "${_filterGroupName}" "Processing Filters")
