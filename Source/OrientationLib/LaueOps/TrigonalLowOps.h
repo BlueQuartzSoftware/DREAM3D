@@ -32,8 +32,7 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _trigonallowops_h_
-#define _trigonallowops_h_
+#pragma once
 
 
 #include "SIMPLib/SIMPLib.h"
@@ -189,5 +188,4 @@ class OrientationLib_EXPORT TrigonalLowOps : public LaueOps
     void operator=(const TrigonalLowOps&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* TrigonalLowOPS_H_ */
 

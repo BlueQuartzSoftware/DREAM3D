@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _writepolefigure_h_
-#define _writepolefigure_h_
+#pragma once
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -268,4 +267,3 @@ public:
   WritePoleFigure& operator=(WritePoleFigure&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _WritePoleFigure_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _alignsections_h_
-#define _alignsections_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -191,4 +190,3 @@ private:
   AlignSections& operator=(AlignSections&&) = delete;      // Move Assignment
 };
 
-#endif /* ALIGNSECTIONS_H_ */

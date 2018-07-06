@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ctfheaderentry_h_
-#define _ctfheaderentry_h_
+#pragma once
 
 
 #include <string.h>
@@ -162,6 +161,5 @@ class CtfStringHeaderEntry : public EbsdHeaderEntry
 
 
 
-#endif /* _CTFHEADERENTRY_H_ */
 
 

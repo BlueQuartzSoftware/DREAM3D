@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _converthexgridtosquaregridfilterparameter_h_
-#define _converthexgridtosquaregridfilterparameter_h_
+#pragma once
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
@@ -81,4 +80,3 @@ private:
   void operator=(const ConvertHexGridToSquareGridFilterParameter&) = delete;                            // Move assignment Not Implemented
 };
 
-#endif /* _ConvertHexGridToSquareGridFilterParameter_H_ */

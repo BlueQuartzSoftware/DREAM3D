@@ -21,8 +21,7 @@
  *****************************************************************************/ 
 
 
-#ifndef TCLAP_VERSION_VISITOR_H
-#define TCLAP_VERSION_VISITOR_H
+#pragma once
 
 #include <tclap/CmdLineInterface.h>
 #include <tclap/CmdLineOutput.h>
@@ -71,4 +70,3 @@ class VersionVisitor: public Visitor
 
 }
 
-#endif

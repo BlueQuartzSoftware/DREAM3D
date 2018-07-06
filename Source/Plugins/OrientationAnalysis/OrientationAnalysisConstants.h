@@ -1,5 +1,4 @@
-#ifndef _orientationanalysisconstants_h_
-#define _orientationanalysisconstants_h_
+#pragma once
 
 #include <QtCore/QString>
 /**
@@ -58,4 +57,3 @@ namespace FilterParameterWidgetType
   const QString ConvertHexGridToSquareGridWidget("ConvertHexGridToSquareGridWidget");
 }
 
-#endif

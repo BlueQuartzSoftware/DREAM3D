@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _statsdelegate_h_
-#define _statsdelegate_h_
+#pragma once
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -66,4 +65,3 @@ class EMMPMLib_EXPORT StatsDelegate
     void operator=(const StatsDelegate&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* STATSDELEGATE_H_ */

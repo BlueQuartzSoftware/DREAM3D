@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _phwriter_h_
-#define _phwriter_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/FileWriter.h"
@@ -150,4 +149,3 @@ private:
   void operator=(const PhWriter&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* PhWriter_H_ */

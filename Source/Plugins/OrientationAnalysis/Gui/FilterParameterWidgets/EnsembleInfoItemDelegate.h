@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ensembleinfoitemdelegate_h_
-#define _ensembleinfoitemdelegate_h_
+#pragma once
 
 #include <iostream>
 
@@ -88,4 +87,3 @@ private:
   void operator=(const EnsembleInfoItemDelegate&);                    // Move assignment Not Implemented
 };
 
-#endif /*  */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _mergetwins_h_
-#define _mergetwins_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -219,4 +218,3 @@ private:
   void operator=(const MergeTwins&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* MergeTwins_H_ */

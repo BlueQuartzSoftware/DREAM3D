@@ -32,8 +32,7 @@
  *    United States Prime Contract Navy N00173-07-C-2068
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _matrixphasewidget_h_
-#define _matrixphasewidget_h_
+#pragma once
 
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
 #include "SIMPLib/SIMPLib.h"
@@ -95,4 +94,3 @@ private:
   void operator=(const MatrixPhaseWidget&) = delete;    // Move assignment Not Implemented
 };
 
-#endif /* MatrixPhaseWidget_H_ */

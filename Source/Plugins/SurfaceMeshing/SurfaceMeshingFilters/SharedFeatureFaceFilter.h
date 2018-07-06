@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _sharedfeaturefacefilter_h_
-#define _sharedfeaturefacefilter_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -172,4 +171,3 @@ public:
    SharedFeatureFaceFilter& operator=(SharedFeatureFaceFilter&&) = delete;      //           // Move assignment Not Implemented
 };
 
-#endif /* _FeatureFaceFilter_H_ */

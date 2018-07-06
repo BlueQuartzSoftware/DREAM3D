@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _initializedata_h_
-#define _initializedata_h_
+#pragma once
 
 #include <QtCore/QVector>
 
@@ -245,4 +244,3 @@ public:
   InitializeData& operator=(InitializeData&&) = delete;      // Move Assignment
 };
 
-#endif /* InitializeData_H_ */

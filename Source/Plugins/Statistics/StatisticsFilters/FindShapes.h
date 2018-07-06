@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findshapes_h_
-#define _findshapes_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -238,4 +237,3 @@ private:
   FindShapes& operator=(FindShapes&&) = delete;      // Move Assignment
 };
 
-#endif /* FINDSHAPES_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _alignsectionsfeaturecentroid_h_
-#define _alignsectionsfeaturecentroid_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -159,4 +158,3 @@ private:
   void operator=(const AlignSectionsFeatureCentroid&);                        // Move assignment Not Implemented
 };
 
-#endif /* AlignSectionsFeatureCentroid_H_ */

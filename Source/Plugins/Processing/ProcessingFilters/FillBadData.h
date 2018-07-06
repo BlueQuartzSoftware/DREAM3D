@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _fillbaddata_h_
-#define _fillbaddata_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -184,4 +183,3 @@ private:
   FillBadData& operator=(FillBadData&&) = delete;      // Move Assignment
 };
 
-#endif /* FillBadData_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _triangleareafilter_h_
-#define _triangleareafilter_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -149,4 +148,3 @@ public:
   TriangleAreaFilter& operator=(TriangleAreaFilter&&) = delete;      //       // Move assignment Not Implemented
 };
 
-#endif /* _TriangleAreaFilter_H_ */

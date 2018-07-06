@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _sgpowerlawtablemodel_h_
-#define _sgpowerlawtablemodel_h_
+#pragma once
 
 #include "SGAbstractTableModel.h"
 #include <QtCore/QVariant>
@@ -157,4 +156,3 @@ private:
   void operator=(const SGPowerLawTableModel&) = delete;       // Move assignment Not Implemented
 };
 
-#endif /* _SG_POWER_LAW_TABLEMODEL_H_ */

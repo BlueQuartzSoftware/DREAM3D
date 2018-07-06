@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _abaqussurfacemeshwriter_h_
-#define _abaqussurfacemeshwriter_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -205,4 +204,3 @@ public:
   AbaqusSurfaceMeshWriter& operator=(AbaqusSurfaceMeshWriter&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _AbaqusSurfaceMeshWriter_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findboundarycells_h_
-#define _findboundarycells_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -183,4 +182,3 @@ public:
   FindBoundaryCells& operator=(FindBoundaryCells&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindBoundaryCells_H_ */

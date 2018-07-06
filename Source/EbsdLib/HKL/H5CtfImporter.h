@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _h5ctfimporter_h_
-#define _h5ctfimporter_h_
+#pragma once
 
 #include "hdf5.h"
 
@@ -128,5 +127,4 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
     void operator=(const H5CtfImporter&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* _H5CTFIMPORTER_H_ */
 

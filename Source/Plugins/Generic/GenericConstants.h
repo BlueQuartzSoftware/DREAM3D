@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _genericconstants_h_
-#define _genericconstants_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -67,4 +66,3 @@ namespace FilterParameterWidgetType
 }
 
 
-#endif

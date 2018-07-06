@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _polefiguredata_h_
-#define _polefiguredata_h_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QVector>
@@ -83,5 +82,4 @@ class OrientationLib_EXPORT PoleFigureData : QObject
 };
 
 
-#endif /* _PoleFigureData_H_ */
 

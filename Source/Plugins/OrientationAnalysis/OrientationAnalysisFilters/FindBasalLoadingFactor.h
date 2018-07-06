@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findbasalloadingfactor_h_
-#define _findbasalloadingfactor_h_
+#pragma once
 
 #include <string>
 #include <vector>
@@ -189,4 +188,3 @@ public:
   FindBasalLoadingFactor& operator=(FindBasalLoadingFactor&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindBasalLoadingFactor_H_ */

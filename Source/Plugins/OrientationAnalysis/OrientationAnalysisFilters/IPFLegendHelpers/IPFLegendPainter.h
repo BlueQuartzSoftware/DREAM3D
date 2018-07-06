@@ -29,8 +29,7 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _ipflegendpainter_H_
-#define _ipflegendpainter_H_
+#pragma once
 
 #include <QtGui/QImage>
 
@@ -67,4 +66,3 @@ private:
   void operator=(const IPFLegendPainter&);            // Move assignment Not Implemented
 };
 
-#endif /* _ipflegendpainter_H_ */

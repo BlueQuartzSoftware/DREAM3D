@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findtrianglegeomneighbors_h_
-#define _findtrianglegeomneighbors_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
@@ -181,4 +180,3 @@ public:
   FindTriangleGeomNeighbors& operator=(FindTriangleGeomNeighbors&&) = delete;      // Move Assignment
 };
 
-#endif /* _findtrianglegeomneighbors_h_ */

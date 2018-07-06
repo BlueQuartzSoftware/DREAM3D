@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _generatefacemisorientationcoloring_h_
-#define _generatefacemisorientationcoloring_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -192,4 +191,3 @@ public:
   GenerateFaceMisorientationColoring& operator=(GenerateFaceMisorientationColoring&&) = delete;      // Move assignment Not Implemented                    // Move assignment Not Implemented
 };
 
-#endif /* _GenerateFaceMisorientationColoring_H_ */

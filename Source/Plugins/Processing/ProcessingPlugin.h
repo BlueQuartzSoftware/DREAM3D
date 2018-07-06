@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _processingplugin_h_
-#define _processingplugin_h_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -192,5 +191,4 @@ class Processing_EXPORT ProcessingPlugin : public QObject, public ISIMPLibPlugin
     void operator=(const ProcessingPlugin&) = delete;   // Move assignment Not Implemented
 };
 
-#endif /* _Processing_H_ */
 

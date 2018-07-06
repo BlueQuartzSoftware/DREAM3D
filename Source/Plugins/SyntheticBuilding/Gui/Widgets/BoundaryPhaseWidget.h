@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _boundaryphasewidget_h_
-#define _boundaryphasewidget_h_
+#pragma once
 
 #include <QtCore/QList>
 
@@ -96,4 +95,3 @@ private:
   void operator=(const BoundaryPhaseWidget&) = delete;      // Move assignment Not Implemented
 };
 
-#endif /* BoundaryPhaseWidget_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _statsgen_h_
-#define _statsgen_h_
+#pragma once
 
 #if defined(_MSC_VER)
 #define WIN32_LEAN_AND_MEAN // Exclude rarely-used stuff from Windows headers
@@ -560,4 +559,3 @@ private:
   void operator=(const StatsGen&); // Move assignment Not Implemented
 };
 
-#endif /* _statsgen_h_ */

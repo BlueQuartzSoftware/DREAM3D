@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _meshfunctions_h_
-#define _meshfunctions_h_
+#pragma once
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
@@ -242,4 +241,3 @@ class TriangleFunctions
     void operator=(const TriangleFunctions&) = delete;    // Move assignment Not Implemented
 };
 
-#endif /* _MeshFunctions_H_ */

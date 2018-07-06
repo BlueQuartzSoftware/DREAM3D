@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _erodedilatemask_h_
-#define _erodedilatemask_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -192,4 +191,3 @@ public:
   ErodeDilateMask& operator=(ErodeDilateMask&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* ErodeDilateMask_H_ */

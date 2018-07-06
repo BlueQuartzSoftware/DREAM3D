@@ -4,8 +4,7 @@
  * Notice:  Copyright Stuart Golodetz, 2008. All rights reserved.
  ***/
 
-#ifndef _vector3_h_
-#define _vector3_h_
+#pragma once
 
 #include <iostream>
 
@@ -57,4 +56,3 @@ typedef double           FloatType;
 typedef Vector3<FloatType>  VectorType;
 
 
-#endif

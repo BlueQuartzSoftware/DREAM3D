@@ -29,8 +29,7 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _trigonalipflegendpainter_H_
-#define _trigonalipflegendpainter_H_
+#pragma once
 
 #include <QtGui/QImage>
 
@@ -57,4 +56,3 @@ private:
   void operator=(const TrigonalIPFLegendPainter&);                    // Move assignment Not Implemented
 };
 
-#endif /* _trigonalipflegendpainter_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findmicrotextureregions_h_
-#define _findmicrotextureregions_h_
+#pragma once
 
 #include <QtCore/QString>
 #include <vector>
@@ -193,4 +192,3 @@ public:
   FindMicroTextureRegions& operator=(FindMicroTextureRegions&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindMicroTextureRegions_H_ */

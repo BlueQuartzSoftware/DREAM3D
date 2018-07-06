@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _statisticsplugin_h_
-#define _statisticsplugin_h_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -192,5 +191,4 @@ class Statistics_EXPORT StatisticsPlugin : public QObject, public ISIMPLibPlugin
     void operator=(const StatisticsPlugin&) = delete;   // Move assignment Not Implemented
 };
 
-#endif /* _Statistics_H_ */
 

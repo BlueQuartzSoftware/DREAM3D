@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _m3cslicebyslice_h_
-#define _m3cslicebyslice_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -364,4 +363,3 @@ public:
   M3CSliceBySlice& operator=(M3CSliceBySlice&&) = delete;
 };
 
-#endif

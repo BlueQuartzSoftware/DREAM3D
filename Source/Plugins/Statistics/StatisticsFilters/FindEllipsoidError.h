@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findellipsoiderror_h_
-#define _findellipsoiderror_h_
+#pragma once
 
 #include <QtCore/QString>
 #include <vector>
@@ -223,4 +222,3 @@ public:
   FindEllipsoidError& operator=(FindEllipsoidError&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindEllipsoidError_H_ */

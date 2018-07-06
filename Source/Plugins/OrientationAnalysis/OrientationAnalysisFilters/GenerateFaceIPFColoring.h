@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _generatefaceipfcoloring_h_
-#define _generatefaceipfcoloring_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -197,4 +196,3 @@ public:
   GenerateFaceIPFColoring& operator=(GenerateFaceIPFColoring&&) = delete;      // Move assignment Not Implemented
 };
 
-#endif /* _GenerateFaceIPFColoring_H_ */

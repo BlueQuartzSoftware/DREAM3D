@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _editphasedialog_h_
-#define _editphasedialog_h_
+#pragma once
 
 #include "ui_EditPhaseDialog.h"
 #include <QtGui/QDoubleValidator>
@@ -96,4 +95,3 @@ private:
   void operator=(const EditPhaseDialog&) = delete;  // Move assignment Not Implemented
 };
 
-#endif /* EDITPHASEDIALOG_H_ */

@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _sgmdfitemdelegate_h_
-#define _sgmdfitemdelegate_h_
+#pragma once
 
 #include <iostream>
 
@@ -161,4 +160,3 @@ private:
   //  QAbstractItemModel* m_Model;
 };
 
-#endif /* SGMDFITEMDELEGATE_H_ */

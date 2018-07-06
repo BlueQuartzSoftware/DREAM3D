@@ -1,5 +1,4 @@
-#ifndef _syntheticbuildingconstants_h_
-#define _syntheticbuildingconstants_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -53,4 +52,3 @@ namespace FilterParameterWidgetType
 
 #endif
 
-#endif

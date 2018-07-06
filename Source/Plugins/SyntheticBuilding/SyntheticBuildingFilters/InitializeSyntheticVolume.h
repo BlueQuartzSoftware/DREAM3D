@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _initializesyntheticvolume_h_
-#define _initializesyntheticvolume_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -229,4 +228,3 @@ public:
   InitializeSyntheticVolume& operator=(InitializeSyntheticVolume&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _InitializeSyntheticVolume_H_ */

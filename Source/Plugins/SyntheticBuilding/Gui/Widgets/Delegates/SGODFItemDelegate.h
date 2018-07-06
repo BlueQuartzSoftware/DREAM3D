@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _sgodfitemdelegate_h_
-#define _sgodfitemdelegate_h_
+#pragma once
 
 #include <iostream>
 
@@ -159,4 +158,3 @@ private:
   unsigned int m_CrystalStructure;
 };
 
-#endif /* _SGODFITEMDELEGATE_H_ */

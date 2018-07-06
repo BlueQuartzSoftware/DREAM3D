@@ -29,8 +29,7 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _triclinicipflegendpainter_H_
-#define _triclinicipflegendpainter_H_
+#pragma once
 
 #include <QtGui/QImage>
 
@@ -57,4 +56,3 @@ private:
   void operator=(const TriclinicIPFLegendPainter&);                     // Move assignment Not Implemented
 };
 
-#endif /* _triclinicipflegendpainter_H_ */

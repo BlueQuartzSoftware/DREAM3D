@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _genericplugin_h_
-#define _genericplugin_h_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -189,4 +188,3 @@ class Generic_EXPORT GenericPlugin : public QObject, public ISIMPLibPlugin
     void operator=(const GenericPlugin&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* _Generic_H_ */

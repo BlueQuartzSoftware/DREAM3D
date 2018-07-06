@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _statsgenmdfwidget_h_
-#define _statsgenmdfwidget_h_
+#pragma once
 
 #include "ui_StatsGenMDFWidget.h"
 #include <QtWidgets/QWidget>
@@ -102,4 +101,3 @@ private:
   void operator=(const StatsGenMDFWidget&) = delete;    // Move assignment Not Implemented
 };
 
-#endif /* _STATSGENMDFWIDGET_H_ */

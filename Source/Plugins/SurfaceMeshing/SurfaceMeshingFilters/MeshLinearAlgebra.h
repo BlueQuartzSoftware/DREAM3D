@@ -42,8 +42,7 @@
  */
 
 // LinearAlgebra.h
-#ifndef _meshlinearalgebra_h_
-#define _meshlinearalgebra_h_
+#pragma once
 #include<vector>
 #include<cmath>
 #include<iostream>
@@ -602,4 +601,3 @@ namespace MFE
 
 }
 
-#endif

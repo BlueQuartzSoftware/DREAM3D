@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _readstlfile_h_
-#define _readstlfile_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -203,4 +202,3 @@ private:
   ReadStlFile& operator=(ReadStlFile&&) = delete;      // Move Assignment
 };
 
-#endif /* _ReadStlFile_H_ */

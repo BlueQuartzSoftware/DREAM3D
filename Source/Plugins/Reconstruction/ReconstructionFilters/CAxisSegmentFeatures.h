@@ -32,8 +32,7 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _caxissegmentfeatures_h_
-#define _caxissegmentfeatures_h_
+#pragma once
 
 #include <random>
 
@@ -226,4 +225,3 @@ private:
   void operator=(const CAxisSegmentFeatures&);                // Move assignment Not Implemented
 };
 
-#endif /* CAxisSegmentFeatures_H_ */

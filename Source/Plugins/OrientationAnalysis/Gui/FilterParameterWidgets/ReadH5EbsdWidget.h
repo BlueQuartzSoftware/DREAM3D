@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _readh5ebsdwidget_h_
-#define _readh5ebsdwidget_h_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QUrl>
@@ -181,4 +180,3 @@ class ReadH5EbsdWidget : public FilterParameterWidget, private Ui::ReadH5EbsdWid
 };
 
 
-#endif /* QReadH5Ebsd_H_ */

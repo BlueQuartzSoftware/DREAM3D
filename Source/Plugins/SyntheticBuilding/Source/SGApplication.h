@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _sgapplication_h_
-#define _sgapplication_h_
+#pragma once
 
 //-- Qt Headers
 #include <QtCore/QList>
@@ -65,4 +64,3 @@ private:
   QList<StatsGeneratorUI*> m_Windows;
 };
 
-#endif /* SGAPPLICATION_H_ */

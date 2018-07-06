@@ -1,5 +1,4 @@
-#ifndef _testprintfunctions_h_
-#define _testprintfunctions_h_
+#pragma once
 
 #include <stdio.h>
 
@@ -139,4 +138,3 @@ template <typename K> void PrintTuple(typename DataArray<K>::Pointer data, size_
 }
 }
 
-#endif /* _TestPrintFunctions_H_ */

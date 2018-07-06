@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _emmpm_h_
-#define _emmpm_h_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
@@ -98,4 +97,3 @@ class EMMPMLib_EXPORT EMMPM : public Observable
 
 
 
-#endif /* _EMMPM_H_ */

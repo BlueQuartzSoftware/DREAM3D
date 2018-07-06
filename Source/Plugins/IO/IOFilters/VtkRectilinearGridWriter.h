@@ -32,8 +32,7 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _vtkrectilineargridwriter_h_
-#define _vtkrectilineargridwriter_h_
+#pragma once
 
 #include <QtCore/QString>
 #include <QtCore/QVector>
@@ -260,4 +259,3 @@ public:
   void write(const QString& file);
 };
 
-#endif /* VtkRectilinearGridWriter_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _converthexgridtosquaregrid_h_
-#define _converthexgridtosquaregrid_h_
+#pragma once
 
 #if defined(_MSC_VER)
 #define WIN32_LEAN_AND_MEAN // Exclude rarely-used stuff from Windows headers
@@ -214,4 +213,3 @@ public:
   ConvertHexGridToSquareGrid& operator=(ConvertHexGridToSquareGrid&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* ConvertHexGridToSquareGrid_H_ */

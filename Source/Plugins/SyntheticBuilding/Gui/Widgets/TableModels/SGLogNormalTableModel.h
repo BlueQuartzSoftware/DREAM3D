@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _sglognormaltablemodel_h_
-#define _sglognormaltablemodel_h_
+#pragma once
 
 #include "SGAbstractTableModel.h"
 #include <QtCore/QVariant>
@@ -147,4 +146,3 @@ private:
   void operator=(const SGLogNormalTableModel&) = delete;        // Move assignment Not Implemented
 };
 
-#endif /* _SG_LOG_NORMAL_TABLEMODEL_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _createensembleinfo_h_
-#define _createensembleinfo_h_
+#pragma once
 
 #include "SIMPLib/Common/EnsembleInfo.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -195,4 +194,3 @@ public:
   CreateEnsembleInfo& operator=(CreateEnsembleInfo&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _CreateEnsembleInfo_H_ */

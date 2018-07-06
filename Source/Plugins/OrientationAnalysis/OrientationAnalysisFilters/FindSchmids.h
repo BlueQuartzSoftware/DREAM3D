@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findschmids_h_
-#define _findschmids_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -229,4 +228,3 @@ private:
   FindSchmids& operator=(FindSchmids&&) = delete;      // Move Assignment
 };
 
-#endif /* FindSchmids_H_ */

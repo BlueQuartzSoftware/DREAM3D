@@ -1,9 +1,7 @@
-#ifndef _correlatefieldstatistics_h_
-#define _correlatefieldstatistics_h_
+#pragma once
 
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
-#endif /* CORRELATEFIELDSTATISTICS_H_ */
 

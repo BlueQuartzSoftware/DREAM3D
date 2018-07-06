@@ -1,8 +1,7 @@
 /*
  * Your License should go here
  */
-#ifndef _emmpmconstants_h_
-#define _emmpmconstants_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -35,4 +34,3 @@ namespace FilterParameterWidgetType
 }
 
 
-#endif

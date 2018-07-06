@@ -29,8 +29,7 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _ModifiedLamberProjection3D_H_
-#define _ModifiedLamberProjection3D_H_
+#pragma once
 
 #include <assert.h>
 
@@ -340,4 +339,3 @@ class ModifiedLambertProjection3D
     void operator=(const ModifiedLambertProjection3D&);              // Move assignment Not Implemented
 };
 
-#endif /* _ModifiedLamberProjection3D_H_ */

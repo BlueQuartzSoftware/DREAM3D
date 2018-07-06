@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _detectellipsoids_h_
-#define _detectellipsoids_h_
+#pragma once
 
 #include <complex>
 
@@ -358,4 +357,3 @@ public:
   DetectEllipsoids& operator=(DetectEllipsoids&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _detectellipsoids_h_ */

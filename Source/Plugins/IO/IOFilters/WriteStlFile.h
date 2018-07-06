@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _writestlfile_h_
-#define _writestlfile_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -215,4 +214,3 @@ private:
   WriteStlFile& operator=(WriteStlFile&&) = delete;      // Move Assignment
 };
 
-#endif /* _WriteStlFile_H_ */

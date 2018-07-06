@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _vtkstructuredpointsreader_h_
-#define _vtkstructuredpointsreader_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -289,4 +288,3 @@ public:
   VtkStructuredPointsReader& operator=(VtkStructuredPointsReader&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* VtkStructuredPointsReader_H_ */

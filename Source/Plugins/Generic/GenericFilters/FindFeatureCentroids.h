@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findfeaturecentroids_h_
-#define _findfeaturecentroids_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -180,4 +179,3 @@ public:
   FindFeatureCentroids& operator=(FindFeatureCentroids&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindFeatureCentroids_H_ */

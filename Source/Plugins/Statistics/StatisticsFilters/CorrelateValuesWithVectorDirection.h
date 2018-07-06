@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _correlatevalueswithvectordirection_h_
-#define _correlatevalueswithvectordirection_h_
+#pragma once
 
 #include <QtCore/QString>
 #include <vector>
@@ -214,4 +213,3 @@ public:
   CorrelateValuesWithVectorDirection& operator=(CorrelateValuesWithVectorDirection&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* CorrelateValuesWithVectorDirection_H_ */

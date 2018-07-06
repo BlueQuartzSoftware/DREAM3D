@@ -20,8 +20,7 @@
  *****************************************************************************/
 
 
-#ifndef TCLAP_MULTIPLE_ARGUMENT_H
-#define TCLAP_MULTIPLE_ARGUMENT_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -419,4 +418,3 @@ void MultiArg<T>::reset()
 
 } // namespace TCLAP
 
-#endif

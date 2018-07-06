@@ -23,8 +23,7 @@
 // This is an internal tclap file, you should probably not have to
 // include this directly
 
-#ifndef TCLAP_ARGTRAITS_H
-#define TCLAP_ARGTRAITS_H
+#pragma once
 
 namespace TCLAP {
 
@@ -76,6 +75,5 @@ struct ArgTraits {
     //typedef ValueLike ValueCategory;
 };
 
-#endif
 
 } // namespace

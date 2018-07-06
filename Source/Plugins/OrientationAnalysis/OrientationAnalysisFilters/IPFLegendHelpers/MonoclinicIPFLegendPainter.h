@@ -29,8 +29,7 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _monoclinicIPFLegendPainter_H_
-#define _monoclinicIPFLegendPainter_H_
+#pragma once
 
 #include <QtGui/QImage>
 
@@ -57,4 +56,3 @@ private:
   void operator=(const MonoclinicIPFLegendPainter&);                      // Move assignment Not Implemented
 };
 
-#endif /* _monoclinicIPFLegendPainter_H_ */

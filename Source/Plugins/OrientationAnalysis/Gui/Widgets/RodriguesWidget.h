@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _rodrigueswidget_h_
-#define _rodrigueswidget_h_
+#pragma once
 
 #include "OrientationWidget.h"
 
@@ -62,4 +61,3 @@ private:
   void operator=(const RodriguesWidget&) = delete;  // Move assignment Not Implemented
 };
 
-#endif /* EBSDREFERENCEFRAMEWIDGET_H_ */

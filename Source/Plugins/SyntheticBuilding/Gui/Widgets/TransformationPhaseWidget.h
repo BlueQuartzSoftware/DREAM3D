@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _transformationphasewidget_h_
-#define _transformationphasewidget_h_
+#pragma once
 
 #include <QtCore/QList>
 #include <QtCore/QVector>
@@ -134,4 +133,3 @@ private:
   void operator=(const TransformationPhaseWidget&) = delete;            // Move assignment Not Implemented
 };
 
-#endif /* TransformationPhaseWidget_H_ */

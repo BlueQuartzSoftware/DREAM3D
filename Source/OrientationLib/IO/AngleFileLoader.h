@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _anglefileloader_h_
-#define _anglefileloader_h_
+#pragma once
 
 
 
@@ -95,6 +94,5 @@ class OrientationLib_EXPORT AngleFileLoader
 
 
 
-#endif /* _AngleFileLoader_H_ */
 
 

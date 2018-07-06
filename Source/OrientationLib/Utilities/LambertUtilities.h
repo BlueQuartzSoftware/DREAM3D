@@ -29,8 +29,7 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _labert_utilities_H_
-#define _labert_utilities_H_
+#pragma once
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -76,4 +75,3 @@ class OrientationLib_EXPORT LambertUtilities
     void operator=(const LambertUtilities&) = delete;   // Move assignment Not Implemented
 };
 
-#endif /* _labert_utilities_H_ */

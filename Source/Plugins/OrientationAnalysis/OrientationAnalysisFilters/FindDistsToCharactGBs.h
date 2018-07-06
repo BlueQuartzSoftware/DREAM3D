@@ -41,8 +41,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _finddiststocharactgbs_H_
-#define _finddiststocharactgbs_H_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -221,4 +220,3 @@ public:
   FindDistsToCharactGBs& operator=(FindDistsToCharactGBs&&) = delete;      // Move Assignment
 };
 
-#endif /* _FindDistsToCharactGBs_H_ */

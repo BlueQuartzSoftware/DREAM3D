@@ -1,5 +1,4 @@
-#ifndef _processingconstants_h_
-#define _processingconstants_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -18,4 +17,3 @@ namespace BlueQuartz
 
 } // namespace ProcessingConstants
 
-#endif

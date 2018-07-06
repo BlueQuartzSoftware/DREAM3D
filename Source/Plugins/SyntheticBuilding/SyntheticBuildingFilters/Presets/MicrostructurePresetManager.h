@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _microstructurepresetmanager_h_
-#define _microstructurepresetmanager_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
@@ -137,4 +136,3 @@ private:
   void operator=(const MicrostructurePresetManager&) = delete;              // Move assignment Not Implemented
 };
 
-#endif /* MICROSTRUCTUREPRESETMANAGER_H_ */

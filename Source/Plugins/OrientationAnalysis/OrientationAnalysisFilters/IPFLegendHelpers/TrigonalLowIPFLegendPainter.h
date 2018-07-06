@@ -29,8 +29,7 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _trigonalLowipflegendpainter_H_
-#define _trigonalLowipflegendpainter_H_
+#pragma once
 
 #include <QtGui/QImage>
 
@@ -57,4 +56,3 @@ private:
   void operator=(const TrigonalLowIPFLegendPainter&);                       // Move assignment Not Implemented
 };
 
-#endif /* _trigonalLowipflegendpainter_H_ */

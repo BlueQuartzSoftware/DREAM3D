@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _abstractmicrostructurepresetfactory_h_
-#define _abstractmicrostructurepresetfactory_h_
+#pragma once
 
 #include <string>
 #include <vector>
@@ -164,4 +163,3 @@ private:
   void operator=(const AbstractMicrostructurePresetFactory&);                      // Move assignment Not Implemented
 };
 
-#endif /* ABSTRACTMICROSTRUCTUREPRESETFACTORY_H_ */

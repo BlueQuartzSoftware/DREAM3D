@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _emcalculation_h_
-#define _emcalculation_h_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
@@ -94,4 +93,3 @@ class EMMPMLib_EXPORT EMCalculation : public Observable
     void operator=(const EMCalculation&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* _EMCalculation_H_ */

@@ -32,8 +32,7 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _laueOps_h_
-#define _laueOps_h_
+#pragma once
 
 #include <vector>
 
@@ -227,5 +226,4 @@ class OrientationLib_EXPORT LaueOps
     void operator=(const LaueOps&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* _laueOps_H_ */
 

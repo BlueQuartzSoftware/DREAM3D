@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _h5oimreader_h_
-#define _h5oimreader_h_
+#pragma once
 
 #include <hdf5.h>
 
@@ -186,5 +185,4 @@ class EbsdLib_EXPORT H5OIMReader : public AngReader
     void operator=(const H5OIMReader&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* _H5OIMReader_H_ */
 

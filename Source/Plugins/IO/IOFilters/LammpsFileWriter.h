@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _lammpsfilewriter_h_
-#define _lammpsfilewriter_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -183,4 +182,3 @@ public:
   LammpsFileWriter& operator=(LammpsFileWriter&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* LammpsFileWriter_H_ */

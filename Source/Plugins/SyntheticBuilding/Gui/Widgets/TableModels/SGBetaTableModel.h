@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _sgbetatablemodel_h_
-#define _sgbetatablemodel_h_
+#pragma once
 
 #include "SGAbstractTableModel.h"
 #include <QtCore/QVariant>
@@ -147,4 +146,3 @@ private:
   void operator=(const SGBetaTableModel&) = delete;   // Move assignment Not Implemented
 };
 
-#endif /* _SG_BETA_TABLEMODEL_H_ */

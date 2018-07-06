@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _regulargridsamplesurfacemesh_h_
-#define _regulargridsamplesurfacemesh_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -188,4 +187,3 @@ private:
   void operator=(const RegularGridSampleSurfaceMesh&);                        // Move assignment Not Implemented
 };
 
-#endif /* RegularGridSampleSurfaceMesh_H_ */

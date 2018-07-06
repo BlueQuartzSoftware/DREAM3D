@@ -38,8 +38,7 @@
 
 
 
-#ifndef _angphase_h_
-#define _angphase_h_
+#pragma once
 
 #include <QtCore/QString>
 #include <QtCore/QVector>
@@ -219,5 +218,4 @@ enum ANG_READ_FLAG
 
 Q_DECLARE_METATYPE(Ang_Private_Data)
 
-#endif /* ANGPHASE_H_ */
 

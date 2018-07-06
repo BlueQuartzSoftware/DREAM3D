@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _convertorientations_h_
-#define _convertorientations_h_
+#pragma once
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -184,4 +183,3 @@ public:
   ConvertOrientations& operator=(ConvertOrientations&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* ConvertOrientations_H_ */

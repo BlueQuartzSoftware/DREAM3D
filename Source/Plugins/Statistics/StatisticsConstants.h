@@ -1,5 +1,4 @@
-#ifndef _statisticsconstants_h_
-#define _statisticsconstants_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -16,4 +15,3 @@ namespace BlueQuartz
 }
 } // namespace StatisticsConstants
 
-#endif

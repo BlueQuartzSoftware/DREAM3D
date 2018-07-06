@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _regularizezspacing_h_
-#define _regularizezspacing_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -176,4 +175,3 @@ public:
   RegularizeZSpacing& operator=(RegularizeZSpacing&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* RegularizeZSpacing_H_ */

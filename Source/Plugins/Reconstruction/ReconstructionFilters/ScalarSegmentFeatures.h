@@ -32,8 +32,7 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _scalarsegmentfeatures_h_
-#define _scalarsegmentfeatures_h_
+#pragma once
 
 #include <random>
 
@@ -214,4 +213,3 @@ private:
   void operator=(const ScalarSegmentFeatures&);                 // Move assignment Not Implemented
 };
 
-#endif /* ScalarSegmentFeatures_H_ */

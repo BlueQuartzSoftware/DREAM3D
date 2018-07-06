@@ -29,8 +29,7 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _orientationlibconstants_h_
-#define _orientationlibconstants_h_
+#pragma once
 
 namespace LambertParametersType
 {
@@ -79,4 +78,3 @@ namespace LambertParametersType
 namespace LPs = LambertParametersType;
 
 
-#endif /* _OrientationLibConstants_H_ */

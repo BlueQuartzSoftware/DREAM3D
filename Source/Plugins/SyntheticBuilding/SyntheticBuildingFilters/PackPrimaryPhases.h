@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _packprimaryphases_h_
-#define _packprimaryphases_h_
+#pragma once
 
 #include "OrientationLib/LaueOps/OrthoRhombicOps.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -533,4 +532,3 @@ public:
   PackPrimaryPhases& operator=(PackPrimaryPhases&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* PackPrimaryPhases_H_ */

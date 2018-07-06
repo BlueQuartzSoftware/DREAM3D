@@ -29,8 +29,7 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _statsprogresswidget_H_
-#define _statsprogresswidget_H_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
@@ -111,4 +110,3 @@ public:
   StatsProgressWidget& operator=(StatsProgressWidget&&) = delete;      // Move Assignment
 };
 
-#endif /* _statsprogresswidget_H_ */

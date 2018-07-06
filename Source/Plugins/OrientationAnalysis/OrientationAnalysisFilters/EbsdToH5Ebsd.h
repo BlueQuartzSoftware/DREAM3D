@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ebsdtoh5ebsd_h_
-#define _ebsdtoh5ebsd_h_
+#pragma once
 
 // Needed for AxisAngle_t
 #include "EbsdLib/EbsdConstants.h"
@@ -197,4 +196,3 @@ private:
   EbsdToH5Ebsd& operator=(EbsdToH5Ebsd&&) = delete;      // Move Assignment
 };
 
-#endif /* EbsdToH5Ebsd_H_ */

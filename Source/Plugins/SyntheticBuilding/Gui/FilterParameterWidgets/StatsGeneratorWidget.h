@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _statsGeneratorWidget_h_
-#define _statsGeneratorWidget_h_
+#pragma once
 
 #include <vector>
 
@@ -139,4 +138,3 @@ private:
   void operator=(const StatsGeneratorWidget&) = delete;       // Move assignment Not Implemented
 };
 
-#endif /* _statsGeneratorWidget_h_ */

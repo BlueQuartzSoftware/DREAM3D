@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _sgbetaitemdelegate_h_
-#define _sgbetaitemdelegate_h_
+#pragma once
 
 #include <iostream>
 
@@ -157,4 +156,3 @@ private:
   QModelIndex m_Index;
 };
 
-#endif /* SGBETAITEMDELEGATE_H_ */

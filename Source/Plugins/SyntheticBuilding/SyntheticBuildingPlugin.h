@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _syntheticbuildingplugin_h_
-#define _syntheticbuildingplugin_h_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -192,5 +191,4 @@ class SyntheticBuilding_EXPORT SyntheticBuildingPlugin : public QObject, public 
     void operator=(const SyntheticBuildingPlugin&) = delete;          // Move assignment Not Implemented
 };
 
-#endif /* _SyntheticBuilding_H_ */
 

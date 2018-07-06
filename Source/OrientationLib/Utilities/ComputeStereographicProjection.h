@@ -29,8 +29,7 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _computeStereographicProjection_H_
-#define _computeStereographicProjection_H_
+#pragma once
 
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
@@ -75,4 +74,3 @@ class OrientationLib_EXPORT ComputeStereographicProjection
 };
 
 
-#endif /* _computeStereographicProjection_H_ */

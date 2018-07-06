@@ -1,5 +1,4 @@
-#ifndef _generatefeatureids_h_
-#define _generatefeatureids_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -231,4 +230,3 @@ private:
   void operator=(const CreateDataContainer&);               // Move assignment Not Implemented
 };
 
-#endif /* _GenerateFeatureIds_H_ */

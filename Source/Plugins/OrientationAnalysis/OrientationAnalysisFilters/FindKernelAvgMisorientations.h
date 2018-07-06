@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findkernelavgmisorientations_h_
-#define _findkernelavgmisorientations_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
@@ -200,4 +199,3 @@ public:
   FindKernelAvgMisorientations& operator=(FindKernelAvgMisorientations&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindKernelAvgMisorientations_H_ */

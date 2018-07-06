@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _findnringneighbors_h_
-#define _findnringneighbors_h_
+#pragma once
 
 #include <set>
 
@@ -108,5 +107,4 @@ class FindNRingNeighbors
     void operator=(const FindNRingNeighbors&) = delete;     // Move assignment Not Implemented
 };
 
-#endif /* _FindNRingNeighbors_H_ */
 

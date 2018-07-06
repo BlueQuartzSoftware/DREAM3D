@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _alignsectionsmutualinformation_h_
-#define _alignsectionsmutualinformation_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -189,4 +188,3 @@ private:
   void operator=(const AlignSectionsMutualInformation&);                          // Move assignment Not Implemented
 };
 
-#endif /* AlignSectionsMutualInformation_H_ */

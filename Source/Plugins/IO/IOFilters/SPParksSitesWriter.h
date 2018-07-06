@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _spparkswriter_h_
-#define _spparkswriter_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/FileWriter.h"
@@ -151,4 +150,3 @@ private:
   void operator=(const SPParksSitesWriter&);              // Move assignment Not Implemented
 };
 
-#endif /* _SPParksSitesWriter_H_ */

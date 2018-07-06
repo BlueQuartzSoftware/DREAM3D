@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _orientationutilitycalculator_h_
-#define _orientationutilitycalculator_h_
+#pragma once
 
 #include <QtWidgets/QWidget>
 
@@ -69,4 +68,3 @@ private:
   void operator=(const OrientationUtilityCalculator&) = delete;               // Move assignment Not Implemented
 };
 
-#endif /* EBSDREFERENCEFRAMEWIDGET_H_ */

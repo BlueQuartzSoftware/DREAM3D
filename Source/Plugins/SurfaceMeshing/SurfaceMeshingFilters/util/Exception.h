@@ -10,8 +10,7 @@
 * San Francisco, California, 94105, USA.
  ***/
 
-#ifndef _exception_h_
-#define _exception_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -46,4 +45,3 @@ namespace m3c_basics
   }
 }
 
-#endif

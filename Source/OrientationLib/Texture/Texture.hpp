@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _texture_h_
-#define _texture_h_
+#pragma once
 
 #include <fstream>
 #include <vector>
@@ -599,4 +598,3 @@ private:
   void operator=(const Texture&); // Move assignment Not Implemented
 };
 
-#endif /* TEXTURE_H_ */

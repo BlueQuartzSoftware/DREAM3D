@@ -28,8 +28,7 @@
  * ###################################################################
  */
 
-#ifndef _emsoftso3sampler_h_
-#define _emsoftso3sampler_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
@@ -261,4 +260,3 @@ public:
   EMsoftSO3Sampler& operator=(EMsoftSO3Sampler&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _EMsoftSO3Sampler_H_ */

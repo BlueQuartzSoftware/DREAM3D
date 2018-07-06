@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _samplesurfacemeshspecifiedpoints_h_
-#define _samplesurfacemeshspecifiedpoints_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -171,4 +170,3 @@ private:
   void operator=(const SampleSurfaceMeshSpecifiedPoints&);                            // Move assignment Not Implemented
 };
 
-#endif /* _SampleSurfaceMeshSpecifiedPoints_H_ */

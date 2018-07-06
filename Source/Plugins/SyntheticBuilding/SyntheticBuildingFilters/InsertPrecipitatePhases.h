@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _insertprecipitatephases_h_
-#define _insertprecipitatephases_h_
+#pragma once
 
 #include "OrientationLib/LaueOps/CubicOps.h"
 #include "OrientationLib/LaueOps/HexagonalOps.h"
@@ -569,4 +568,3 @@ public:
   InsertPrecipitatePhases& operator=(InsertPrecipitatePhases&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* InsertPrecipitatePhases_H_ */

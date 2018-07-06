@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _abstractmicrostructurepreset_h_
-#define _abstractmicrostructurepreset_h_
+#pragma once
 
 #include <QtCore/QVector>
 
@@ -151,4 +150,3 @@ private:
   void operator=(const AbstractMicrostructurePreset&) = delete;               // Move assignment Not Implemented
 };
 
-#endif /* MICROSTRUCTUREPRESET_H_ */

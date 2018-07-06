@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _emmpm_math_h_
-#define _emmpm_math_h_
+#pragma once
 /** @file EMMPM_Math.h
  * @brief This file performs the necessary including of <math.h> with certain
  * define constants (like M_PI) defined on all platforms.
@@ -123,4 +122,3 @@ lacking still.
 
 #include <math.h>
 
-#endif /* _EMMPM_MATH_H_ */

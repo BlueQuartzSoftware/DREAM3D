@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ebsdreader_h_
-#define _ebsdreader_h_
+#pragma once
 
 #include <QtCore/QString>
 #include <QtCore/QVector>
@@ -212,5 +211,4 @@ class EbsdLib_EXPORT EbsdReader
     void operator=(const EbsdReader&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* EBSDREADER_H_ */
 

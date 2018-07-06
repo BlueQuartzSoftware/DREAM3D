@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _converthexgridtosquaregridwidget_h_
-#define _converthexgridtosquaregridwidget_h_
+#pragma once
 
 
 #include <QtCore/QString>
@@ -183,4 +182,3 @@ class ConvertHexGridToSquareGridWidget : public FilterParameterWidget, private U
     void operator=(const ConvertHexGridToSquareGridWidget&) = delete;                   // Move assignment Not Implemented
 };
 
-#endif /* EbsdImportWIDGET_H_ */

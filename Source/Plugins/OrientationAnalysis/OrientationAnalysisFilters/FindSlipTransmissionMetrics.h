@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findsliptransmissionmetrics_h_
-#define _findsliptransmissionmetrics_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
@@ -211,4 +210,3 @@ public:
   FindSlipTransmissionMetrics& operator=(FindSlipTransmissionMetrics&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindSlipTransmissionMetrics_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _insertatoms_h_
-#define _insertatoms_h_
+#pragma once
 
 #include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
 
@@ -208,4 +207,3 @@ private:
   InsertAtoms& operator=(InsertAtoms&&) = delete;      // Move Assignment
 };
 
-#endif /* InsertAtoms_H_ */

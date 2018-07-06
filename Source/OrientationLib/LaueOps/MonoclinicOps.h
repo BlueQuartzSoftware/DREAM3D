@@ -32,8 +32,7 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _monoclinicops_h_
-#define _monoclinicops_h_
+#pragma once
 
 
 #include "SIMPLib/SIMPLib.h"
@@ -186,5 +185,4 @@ class OrientationLib_EXPORT MonoclinicOps : public LaueOps
     void operator=(const MonoclinicOps&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* MonoclinicOPS_H_ */
 

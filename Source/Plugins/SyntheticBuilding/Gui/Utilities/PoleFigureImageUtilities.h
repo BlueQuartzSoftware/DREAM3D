@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _polefigureimageutilities_h_
-#define _polefigureimageutilities_h_
+#pragma once
 
 #define PFIU_USE_PDF 1
 
@@ -82,4 +81,3 @@ private:
   void operator=(const PoleFigureImageUtilities&) = delete;           // Move assignment Not Implemented
 };
 
-#endif /* _PoleFigureImageUtilities_H_ */

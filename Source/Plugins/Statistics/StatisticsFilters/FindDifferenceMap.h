@@ -2,8 +2,7 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _finddifferencemap_h_
-#define _finddifferencemap_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -150,4 +149,3 @@ public:
   FindDifferenceMap& operator=(FindDifferenceMap&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _FindDifferenceMap_H_ */

@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _precipitatephasewidget_h_
-#define _precipitatephasewidget_h_
+#pragma once
 
 #include <QtCore/QList>
 #include <QtCore/QVector>
@@ -103,4 +102,3 @@ private:
   void operator=(const PrecipitatePhaseWidget&) = delete;         // Move assignment Not Implemented
 };
 
-#endif /* PrecipitatePhaseWidget_H_ */

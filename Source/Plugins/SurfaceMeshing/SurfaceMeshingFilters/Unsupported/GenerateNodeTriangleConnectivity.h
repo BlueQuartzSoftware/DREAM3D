@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _generatenodetriangleconnectivity_h_
-#define _generatenodetriangleconnectivity_h_
+#pragma once
 
 #include <string>
 
@@ -142,4 +141,3 @@ public:
   GenerateNodeTriangleConnectivity& operator=(GenerateNodeTriangleConnectivity&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _GenerateNodeTriangleConnectivity_H_ */

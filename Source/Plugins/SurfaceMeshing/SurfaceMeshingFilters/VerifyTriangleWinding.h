@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _verifytrianglewinding_h_
-#define _verifytrianglewinding_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -174,7 +173,6 @@ class SurfaceMeshing_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
     VerifyTriangleWinding& operator=(VerifyTriangleWinding&&) = delete;      // Move Assignment
 };
 
-#endif /* _VerifyTriangleWinding_H_ */
 
 
 

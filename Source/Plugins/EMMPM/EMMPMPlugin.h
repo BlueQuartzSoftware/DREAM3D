@@ -2,8 +2,7 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef _emmpmplugin_h_
-#define _emmpmplugin_h_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -161,4 +160,3 @@ class EMMPM_EXPORT EMMPMPlugin : public QObject, public ISIMPLibPlugin
     void operator=(const EMMPMPlugin&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* _EMMPM_H_ */

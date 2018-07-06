@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findneighborhoods_h_
-#define _findneighborhoods_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
@@ -209,4 +208,3 @@ public:
   FindNeighborhoods& operator=(FindNeighborhoods&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FINDNEIGHBORHOODS_H_ */

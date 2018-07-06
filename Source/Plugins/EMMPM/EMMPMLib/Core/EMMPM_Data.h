@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _emmpm_data_h_
-#define _emmpm_data_h_
+#pragma once
 
 // C Includes
 #include <stddef.h>
@@ -195,4 +194,3 @@ class EMMPMLib_EXPORT EMMPM_Data
     void operator=(const EMMPM_Data&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* EMMPM_STRUCTURES_H_ */

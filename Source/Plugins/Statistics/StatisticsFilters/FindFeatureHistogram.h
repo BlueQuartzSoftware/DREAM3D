@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findfeaturehistogram_h_
-#define _findfeaturehistogram_h_
+#pragma once
 
 #include <QtCore/QString>
 #include <set>
@@ -211,4 +210,3 @@ public:
   FindFeatureHistogram& operator=(FindFeatureHistogram&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindFeatureHistogram_H_ */

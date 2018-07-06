@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _DATAPARSER_HPP_
-#define _DATAPARSER_HPP_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -203,5 +202,4 @@ class FloatParser : public DataParser
 };
 
 
-#endif /* DATAPARSER_HPP_ */
 

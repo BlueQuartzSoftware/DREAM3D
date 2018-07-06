@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _generaterodriguescolors_h_
-#define _generaterodriguescolors_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -201,4 +200,3 @@ public:
   GenerateRodriguesColors& operator=(GenerateRodriguesColors&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _GenerateRodriguesColors_H_ */

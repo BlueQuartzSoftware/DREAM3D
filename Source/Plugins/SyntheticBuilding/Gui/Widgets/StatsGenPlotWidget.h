@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _statsgenplotwidget_h_
-#define _statsgenplotwidget_h_
+#pragma once
 
 #include <QtWidgets/QWidget>
 
@@ -134,4 +133,3 @@ private:
   void operator=(const StatsGenPlotWidget&) = delete;     // Move assignment Not Implemented
 };
 
-#endif /* _STATSGENPLOTWIDGET_H_ */

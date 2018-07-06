@@ -29,8 +29,7 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _tetragonalLowipflegendpainter_H_
-#define _tetragonalLowipflegendpainter_H_
+#pragma once
 
 #include <QtGui/QImage>
 
@@ -57,4 +56,3 @@ private:
   void operator=(const TetragonalLowIPFLegendPainter&);                         // Move assignment Not Implemented
 };
 
-#endif /* _tetragonalLowipflegendpainter_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _addbaddata_h_
-#define _addbaddata_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -190,4 +189,3 @@ private:
   AddBadData& operator=(AddBadData&&) = delete;      // Move Assignment
 };
 
-#endif /* AddBadData_H_ */

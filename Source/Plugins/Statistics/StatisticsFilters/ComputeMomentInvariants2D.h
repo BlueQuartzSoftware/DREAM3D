@@ -2,8 +2,7 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _computemomentinvariants2d_h_
-#define _computemomentinvariants2d_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -164,4 +163,3 @@ public:
   ComputeMomentInvariants2D& operator=(ComputeMomentInvariants2D&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _ComputeMomentInvariants2D_H_ */

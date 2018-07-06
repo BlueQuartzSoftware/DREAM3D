@@ -1,5 +1,4 @@
-#ifndef _preflightverify_h_
-#define _preflightverify_h_
+#pragma once
 
 
 
@@ -34,4 +33,3 @@ class PreflightVerify : public QObject
 };
 
 
-#endif /* _PreflightVerify_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _avizouniformcoordinatewriter_h_
-#define _avizouniformcoordinatewriter_h_
+#pragma once
 
 #include <stdio.h>
 
@@ -213,4 +212,3 @@ public:
   AvizoUniformCoordinateWriter& operator=(AvizoUniformCoordinateWriter&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* AvizoUniformCoordinateWriter_H_ */

@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _emmpmutilities_h_
-#define _emmpmutilities_h_
+#pragma once
 
 #include "EMMPMLib/EMMPMLib.h"
 #include "EMMPMLib/Core/EMMPM_Constants.h"
@@ -135,4 +134,3 @@ class EMMPMLib_EXPORT EMMPMUtilities
     void operator=(const EMMPMUtilities&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* EM_H_ */

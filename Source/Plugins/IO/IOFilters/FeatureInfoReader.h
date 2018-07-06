@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _featureinforeader_h_
-#define _featureinforeader_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/FileReader.h"
@@ -198,4 +197,3 @@ private:
   void operator=(const FeatureInfoReader&);    // Not Implemented
 };
 
-#endif /* _FeatureInfoReader_h_ */

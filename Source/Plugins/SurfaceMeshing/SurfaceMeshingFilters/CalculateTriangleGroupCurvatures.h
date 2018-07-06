@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _calculatetrianglegroupcurvatures_h_
-#define _calculatetrianglegroupcurvatures_h_
+#pragma once
 
 #include <set>
 
@@ -92,4 +91,3 @@ private:
   AbstractFilter* m_ParentFilter;
 };
 
-#endif /* _CalculateTriangleGroupCurvatures_H_ */

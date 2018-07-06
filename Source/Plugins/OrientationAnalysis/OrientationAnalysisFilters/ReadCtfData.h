@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _readctfdata_h_
-#define _readctfdata_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
@@ -263,4 +262,3 @@ private:
 
 Q_DECLARE_METATYPE(Ctf_Private_Data)
 
-#endif /* _ReadCtfData_H_ */

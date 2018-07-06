@@ -1,5 +1,4 @@
-#ifndef _samplingconstants_h_
-#define _samplingconstants_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -18,4 +17,3 @@ namespace BlueQuartz
 
 } // namespace SamplingConstants
 
-#endif

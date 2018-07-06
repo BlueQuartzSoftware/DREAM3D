@@ -32,8 +32,7 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _triclinicops_h_
-#define _triclinicops_h_
+#pragma once
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -186,5 +185,4 @@ class OrientationLib_EXPORT TriclinicOps : public LaueOps
     void operator=(const TriclinicOps&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* TriclinicOPS_H_ */
 

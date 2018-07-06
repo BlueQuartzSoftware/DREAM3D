@@ -29,8 +29,7 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _cubicipflegendpainter_H_
-#define _cubicipflegendpainter_H_
+#pragma once
 
 #include <QtGui/QImage>
 #include "IPFLegendPainter.h"
@@ -56,4 +55,3 @@ private:
   void operator=(const CubicIPFLegendPainter&);                 // Move assignment Not Implemented
 };
 
-#endif /* _cubicipflegendpainter_H_ */

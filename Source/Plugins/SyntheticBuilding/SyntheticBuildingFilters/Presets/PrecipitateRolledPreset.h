@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _precipitaterolledpreset_h_
-#define _precipitaterolledpreset_h_
+#pragma once
 
 //-- C++ includes
 #include <string>
@@ -88,4 +87,3 @@ private:
 
 DECLARE_FACTORY_CLASS(PrecipitateRolledPresetFactory, PrecipitateRolledPreset, "Precipitate Rolled")
 
-#endif /* PrecipitateRolledPreset_H_ */

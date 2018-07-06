@@ -2,8 +2,7 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _computefeaturerect_h_
-#define _computefeaturerect_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -151,4 +150,3 @@ public:
   ComputeFeatureRect& operator=(ComputeFeatureRect&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _ComputeFeatureRect_H_ */

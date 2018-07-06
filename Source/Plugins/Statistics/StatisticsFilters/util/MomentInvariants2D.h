@@ -29,8 +29,7 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _moments2d_H_
-#define _moments2d_H_
+#pragma once
 
 #include <assert.h>
 
@@ -258,4 +257,3 @@ class MomentInvariants2D
 };
 
 
-#endif /* _moments2d_H_ */

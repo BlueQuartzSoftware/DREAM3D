@@ -30,8 +30,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _stereographic3d_h_
-#define _stereographic3d_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -174,4 +173,3 @@ public:
   Stereographic3D& operator=(Stereographic3D&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _Stereographic3D_H_ */

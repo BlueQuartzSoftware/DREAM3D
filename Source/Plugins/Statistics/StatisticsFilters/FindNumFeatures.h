@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findnumfeatures_h_
-#define _findnumfeatures_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -176,4 +175,3 @@ public:
   FindNumFeatures& operator=(FindNumFeatures&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindNumFeatures_H_ */

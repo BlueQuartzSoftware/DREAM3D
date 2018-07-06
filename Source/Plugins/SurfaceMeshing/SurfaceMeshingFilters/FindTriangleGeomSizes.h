@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findtrianglegeomsizes_h_
-#define _findtrianglegeomsizes_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -186,4 +185,3 @@ public:
   FindTriangleGeomSizes& operator=(FindTriangleGeomSizes&&) = delete;      // Move assignment Not Implemented
 };
 
-#endif /* _FindTriangleGeomSizes_H_ */

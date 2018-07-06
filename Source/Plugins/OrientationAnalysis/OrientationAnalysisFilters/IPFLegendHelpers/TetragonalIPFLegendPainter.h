@@ -29,8 +29,7 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _tetragonalipflegendpainter_H_
-#define _tetragonalipflegendpainter_H_
+#pragma once
 
 #include <QtGui/QImage>
 
@@ -57,4 +56,3 @@ private:
   void operator=(const TetragonalIPFLegendPainter&);                      // Move assignment Not Implemented
 };
 
-#endif /* _tetragonalipflegendpainter_H_ */

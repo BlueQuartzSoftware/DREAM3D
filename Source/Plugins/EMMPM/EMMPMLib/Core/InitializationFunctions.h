@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _initializationfunctions_h_
-#define _initializationfunctions_h_
+#pragma once
 
 //-- MXA Includes
 #include "SIMPLib/SIMPLib.h"
@@ -206,4 +205,3 @@ class EMMPMLib_EXPORT CurvatureInitialization : public InitializationFunction
 
 
 
-#endif /* INITIALIZATIONFUNCTIONS_H_ */

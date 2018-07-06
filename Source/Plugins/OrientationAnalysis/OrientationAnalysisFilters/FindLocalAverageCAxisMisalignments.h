@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findlocalaveragecaxismisalignments_h_
-#define _findlocalaveragecaxismisalignments_h_
+#pragma once
 
 #include <QtCore/QObject>
 
@@ -240,4 +239,3 @@ public:
   FindLocalAverageCAxisMisalignments& operator=(FindLocalAverageCAxisMisalignments&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindLocalAverageCAxisMisalignments_H_ */

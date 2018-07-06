@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _rotatesamplerefframe_h_
-#define _rotatesamplerefframe_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -182,4 +181,3 @@ public:
   RotateSampleRefFrame& operator=(RotateSampleRefFrame&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* RotateSampleRefFrame_H_ */

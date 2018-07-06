@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _powerlawops_h_
-#define _powerlawops_h_
+#pragma once
 
 
 
@@ -70,5 +69,4 @@ class PowerLawOps : public DistributionAnalysisOps
     void operator=(const PowerLawOps&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* _PowerLawOps_H_ */
 

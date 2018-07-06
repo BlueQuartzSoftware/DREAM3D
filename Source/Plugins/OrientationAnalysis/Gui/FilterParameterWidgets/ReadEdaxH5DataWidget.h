@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ReadEdaxH5DataWidget_H_
-#define _ReadEdaxH5DataWidget_H_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
@@ -99,4 +98,3 @@ class ReadEdaxH5DataWidget : public FilterParameterWidget, private Ui::ReadEdaxH
 };
 
 
-#endif /* ReadEdaxH5DataWidget_H_ */

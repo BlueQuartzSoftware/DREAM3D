@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findgbcd_h_
-#define _findgbcd_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -236,4 +235,3 @@ public:
   FindGBCD& operator=(FindGBCD&&) = delete;      // Move Assignment
 };
 
-#endif /* _FindGBCD_H_ */

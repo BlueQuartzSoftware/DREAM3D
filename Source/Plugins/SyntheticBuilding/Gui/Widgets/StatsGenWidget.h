@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _StatsGenWidget_h_
-#define _StatsGenWidget_h_
+#pragma once
 
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QWidget>
@@ -112,4 +111,3 @@ private:
   void operator=(const StatsGenWidget&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* StatsGenWidget_H_ */

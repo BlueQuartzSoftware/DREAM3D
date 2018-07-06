@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findboundaryelementfractions_h_
-#define _findboundaryelementfractions_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -186,4 +185,3 @@ public:
   FindBoundaryElementFractions& operator=(FindBoundaryElementFractions&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindBoundaryElementFractions_H_ */

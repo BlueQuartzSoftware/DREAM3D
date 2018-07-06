@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findavgcaxes_h_
-#define _findavgcaxes_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -182,4 +181,3 @@ private:
   FindAvgCAxes& operator=(FindAvgCAxes&&) = delete;      // Move Assignment
 };
 
-#endif /* FindAvgCAxes_H_ */

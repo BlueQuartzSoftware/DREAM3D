@@ -32,8 +32,7 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _hexagonalops_h_
-#define _hexagonalops_h_
+#pragma once
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -192,5 +191,4 @@ class OrientationLib_EXPORT HexagonalOps : public LaueOps
     void operator=(const HexagonalOps&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* HEXAGONALOPS_H_ */
 

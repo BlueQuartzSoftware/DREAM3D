@@ -37,8 +37,7 @@
 
 
 
-#ifndef _h5angreader_h_
-#define _h5angreader_h_
+#pragma once
 
 #include <hdf5.h>
 
@@ -179,5 +178,4 @@ class EbsdLib_EXPORT H5AngReader : public AngReader
     void operator=(const H5AngReader&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* _H5ANGREADER_H_ */
 

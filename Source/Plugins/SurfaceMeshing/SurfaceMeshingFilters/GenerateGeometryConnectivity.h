@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _generategeometryconnectivity_h_
-#define _generategeometryconnectivity_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -154,4 +153,3 @@ public:
    GenerateGeometryConnectivity& operator=(GenerateGeometryConnectivity&&) = delete;      // Move assignment Not Implemented
 };
 
-#endif /* _GenerateGeometryConnectivity_H_ */

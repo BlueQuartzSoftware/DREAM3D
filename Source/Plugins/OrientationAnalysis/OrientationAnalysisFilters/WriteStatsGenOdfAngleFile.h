@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _writestatsgenodfanglefile_h_
-#define _writestatsgenodfanglefile_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -216,4 +215,3 @@ public:
   WriteStatsGenOdfAngleFile& operator=(WriteStatsGenOdfAngleFile&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _WriteStatsGenOdfAngleFile_H_ */

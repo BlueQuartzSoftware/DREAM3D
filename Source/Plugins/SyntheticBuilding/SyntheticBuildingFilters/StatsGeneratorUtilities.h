@@ -31,8 +31,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _statsgeneratorutilities_h_
-#define _statsgeneratorutilities_h_
+#pragma once
 
 #include <QtCore/QVector>
 
@@ -77,4 +76,3 @@ private:
   void operator=(const StatsGeneratorUtilities&) = delete;          // Move assignment Not Implemented
 };
 
-#endif /* _StatsGeneratorUtilities_h_ */

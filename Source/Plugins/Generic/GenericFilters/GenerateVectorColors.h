@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _generatevectorcolors_h_
-#define _generatevectorcolors_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -184,4 +183,3 @@ public:
   GenerateVectorColors& operator=(GenerateVectorColors&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _GenerateVectorColors_H_ */

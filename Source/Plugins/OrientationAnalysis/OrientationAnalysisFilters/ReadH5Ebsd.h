@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _readh5ebsd_h_
-#define _readh5ebsd_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
@@ -345,4 +344,3 @@ private:
   ReadH5Ebsd& operator=(ReadH5Ebsd&&) = delete;      // Move Assignment
 };
 
-#endif /* ReadH5Ebsd_H_ */

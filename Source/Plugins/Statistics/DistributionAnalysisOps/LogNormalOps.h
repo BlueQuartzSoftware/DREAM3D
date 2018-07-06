@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _lognormalops_h_
-#define _lognormalops_h_
+#pragma once
 
 
 
@@ -70,5 +69,4 @@ class LogNormalOps : public DistributionAnalysisOps
     void operator=(const LogNormalOps&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* _LogNormalOps_H_ */
 

@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ensembleinfocreationwidget_h_
-#define _ensembleinfocreationwidget_h_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
@@ -181,4 +180,3 @@ private:
   void operator=(const EnsembleInfoCreationWidget&);                      // Move assignment Not Implemented
 };
 
-#endif /* _EnsembleInfoCreationWidget_H_ */

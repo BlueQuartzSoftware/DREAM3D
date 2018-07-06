@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ebsdconstants_h_
-#define _ebsdconstants_h_
+#pragma once
 
 #include <QtCore/QString>
 #include <QtCore/QJsonObject>
@@ -197,4 +196,3 @@ namespace Ebsd
 
 
 
-#endif /* _EbsdConstants.h_  */

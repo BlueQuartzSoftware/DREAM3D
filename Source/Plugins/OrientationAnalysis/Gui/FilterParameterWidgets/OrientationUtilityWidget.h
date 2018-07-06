@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _orientationutilitywidget_h_
-#define _orientationutilitywidget_h_
+#pragma once
 
 #include <QtCore/QSettings>
 #include <QtCore/QString>
@@ -91,4 +90,3 @@ private:
   void operator=(const OrientationUtilityWidget&) = delete;           // Move assignment Not Implemented
 };
 
-#endif /* EbsdImportWIDGET_H_ */

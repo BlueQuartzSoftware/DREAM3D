@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _groupfeatures_h_
-#define _groupfeatures_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
@@ -217,4 +216,3 @@ private:
   GroupFeatures& operator=(GroupFeatures&&) = delete;      // Move Assignment
 };
 
-#endif /* GroupFeatures_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findprojectedimagestatistics_h_
-#define _findprojectedimagestatistics_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -200,4 +199,3 @@ public:
   FindProjectedImageStatistics& operator=(FindProjectedImageStatistics&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindProjectedImageStatistics_H_ */

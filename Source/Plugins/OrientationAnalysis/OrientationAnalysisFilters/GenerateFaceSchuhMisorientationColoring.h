@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _generatefaceschuhmisorientationcoloring_h_
-#define _generatefaceschuhmisorientationcoloring_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -205,4 +204,3 @@ public:
   GenerateFaceSchuhMisorientationColoring& operator=(GenerateFaceSchuhMisorientationColoring&&) = delete;      // Move Assignment
 };
 
-#endif /* _GenerateFaceSchuhMisorientationColoring_H_ */

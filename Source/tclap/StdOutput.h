@@ -20,8 +20,7 @@
  *  
  *****************************************************************************/ 
 
-#ifndef TCLAP_STDCMDLINEOUTPUT_H
-#define TCLAP_STDCMDLINEOUTPUT_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -295,4 +294,3 @@ inline void StdOutput::spacePrint( std::ostream& os,
 }
 
 } //namespace TCLAP
-#endif 

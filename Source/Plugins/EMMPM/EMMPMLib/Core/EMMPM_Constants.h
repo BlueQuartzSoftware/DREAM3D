@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _emmpm_constants_h_
-#define _emmpm_constants_h_
+#pragma once
 
 
 
@@ -50,4 +49,3 @@ enum EMMPM_InitializationType
 };
 
 
-#endif /* EMMPM_CONSTANTS_H_ */

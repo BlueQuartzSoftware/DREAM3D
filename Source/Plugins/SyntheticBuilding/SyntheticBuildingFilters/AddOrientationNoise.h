@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _addorientationnoise_h_
-#define _addorientationnoise_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -180,4 +179,3 @@ public:
   AddOrientationNoise& operator=(AddOrientationNoise&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* AddOrientationNoise_H_ */

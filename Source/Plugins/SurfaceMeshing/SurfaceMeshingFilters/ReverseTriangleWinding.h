@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _reversetrianglewinding_h_
-#define _reversetrianglewinding_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -146,4 +145,3 @@ public:
    ReverseTriangleWinding& operator=(ReverseTriangleWinding&&) = delete;      //        // Move assignment Not Implemented
 };
 
-#endif /* _ReverseTriangleWinding_H_ */

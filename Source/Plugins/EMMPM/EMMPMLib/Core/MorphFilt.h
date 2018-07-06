@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _morphfilt_h_
-#define _morphfilt_h_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
@@ -93,4 +92,3 @@ class EMMPMLib_EXPORT MorphFilter : public Observable
     void operator=(const MorphFilter&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* _MORPHFILT_H_ */

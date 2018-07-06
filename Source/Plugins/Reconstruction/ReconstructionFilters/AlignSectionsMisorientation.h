@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _alignsectionsmisorientation_h_
-#define _alignsectionsmisorientation_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -180,4 +179,3 @@ private:
   void operator=(const AlignSectionsMisorientation&);                       // Move assignment Not Implemented
 };
 
-#endif /* AlignSectionsMisorientation_H_ */

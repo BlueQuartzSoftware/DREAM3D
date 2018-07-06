@@ -38,8 +38,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _m3centirevolume_h_
-#define _m3centirevolume_h_
+#pragma once
 
 #include <string>
 
@@ -210,4 +209,3 @@ public:
   M3CEntireVolume& operator=(M3CEntireVolume&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _M3CEntireVolume_H_ */

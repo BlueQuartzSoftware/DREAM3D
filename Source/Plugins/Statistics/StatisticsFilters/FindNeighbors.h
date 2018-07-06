@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findneighbors_h_
-#define _findneighbors_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
@@ -208,4 +207,3 @@ private:
   FindNeighbors& operator=(FindNeighbors&&) = delete;      // Move Assignment
 };
 
-#endif /* FINDNEIGHBORS_H_ */

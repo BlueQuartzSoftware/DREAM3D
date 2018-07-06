@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findrelativemotionbetweenslices_h_
-#define _findrelativemotionbetweenslices_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -200,4 +199,3 @@ public:
   FindRelativeMotionBetweenSlices& operator=(FindRelativeMotionBetweenSlices&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindRelativeMotionBetweenSlices_H_ */

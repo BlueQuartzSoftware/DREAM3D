@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _matchcrystallography_h_
-#define _matchcrystallography_h_
+#pragma once
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -334,4 +333,3 @@ public:
   MatchCrystallography& operator=(MatchCrystallography&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* MATCHCRYSTALLOGRAPHY_H_ */

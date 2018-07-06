@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _emmpmfilter_h_
-#define _emmpmfilter_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/DynamicTableData.h"
@@ -267,4 +266,3 @@ private:
   EMMPMFilter& operator=(EMMPMFilter&&) = delete;      // Move Assignment
 };
 
-#endif /* _EMMPMFilter_H_ */

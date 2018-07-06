@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _detectellipsoidsimpl_h_
-#define _detectellipsoidsimpl_h_
+#pragma once
 
 #include <QtCore/QVector>
 
@@ -340,4 +339,3 @@ private:
   int m_ThreadIndex = 0;
 };
 
-#endif /* _detectellipsoidsimpl_h_ */

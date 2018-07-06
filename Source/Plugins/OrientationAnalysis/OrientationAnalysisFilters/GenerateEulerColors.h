@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _generateeulercolors_h_
-#define _generateeulercolors_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -202,4 +201,3 @@ public:
   GenerateEulerColors& operator=(GenerateEulerColors&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _GenerateEulerColors_H_ */

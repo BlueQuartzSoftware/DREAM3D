@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _cropimagegeometry_h_
-#define _cropimagegeometry_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -241,4 +240,3 @@ public:
   CropImageGeometry& operator=(CropImageGeometry&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* CropImageGeometry_H_ */

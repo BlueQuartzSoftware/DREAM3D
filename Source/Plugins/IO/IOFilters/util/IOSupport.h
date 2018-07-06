@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _iosupport_h_
-#define _iosupport_h_
+#pragma once
 
 #include <hdf5.h>
 
@@ -97,5 +96,4 @@ class  IOSupport : public Observable
 };
 
 
-#endif /* _IOSupport_H_ */
 

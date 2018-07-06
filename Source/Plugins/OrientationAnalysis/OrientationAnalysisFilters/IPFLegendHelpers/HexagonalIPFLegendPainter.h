@@ -29,8 +29,7 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _hexagonalipflegendpainter_H_
-#define _hexagonalipflegendpainter_H_
+#pragma once
 
 #include <QtGui/QImage>
 
@@ -57,4 +56,3 @@ private:
   void operator=(const HexagonalIPFLegendPainter&);                     // Move assignment Not Implemented
 };
 
-#endif /* _hexagonalipflegendpainter_H_ */

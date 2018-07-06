@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findtrianglegeomcentroids_h_
-#define _findtrianglegeomcentroids_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -176,4 +175,3 @@ public:
   FindTriangleGeomCentroids& operator=(FindTriangleGeomCentroids&&) = delete;      // Move Assignment
 };
 
-#endif /* _findtrianglegeomcentroids_h_ */

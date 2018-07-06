@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _readangdata_h_
-#define _readangdata_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
@@ -242,4 +241,3 @@ private:
   ReadAngData& operator=(ReadAngData&&) = delete;      // Move Assignment
 };
 
-#endif /* _ReadAngData_H_ */

@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _primaryrecrystallizedpreset_h_
-#define _primaryrecrystallizedpreset_h_
+#pragma once
 
 //-- C++ includes
 #include <string>
@@ -86,4 +85,3 @@ private:
 
 DECLARE_FACTORY_CLASS(PrimaryRecrystallizedPresetFactory, PrimaryRecrystallizedPreset, "Recrystallized")
 
-#endif /* PrimaryRecrystallizedPreset_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _nodestrianglestovtk_h_
-#define _nodestrianglestovtk_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -202,4 +201,3 @@ public:
   NodesTrianglesToVtk& operator=(NodesTrianglesToVtk&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* NodesTrianglesToVtk_H_ */

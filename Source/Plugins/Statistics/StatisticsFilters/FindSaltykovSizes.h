@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findsaltykovsizes_h_
-#define _findsaltykovsizes_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -215,4 +214,3 @@ public:
   FindSaltykovSizes& operator=(FindSaltykovSizes&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindSaltykovSizes_H_ */

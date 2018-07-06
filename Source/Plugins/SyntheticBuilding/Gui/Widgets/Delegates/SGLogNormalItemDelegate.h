@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _sglognormalitemdelegate_h_
-#define _sglognormalitemdelegate_h_
+#pragma once
 
 #include <iostream>
 
@@ -157,4 +156,3 @@ private:
   //    QAbstractItemModel* m_Model;
 };
 
-#endif /* SGLOGNORMALITEMDELEGATE_H_ */

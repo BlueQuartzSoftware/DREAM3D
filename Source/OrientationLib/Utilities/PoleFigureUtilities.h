@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _polefigureutilities_h_
-#define _polefigureutilities_h_
+#pragma once
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
@@ -160,5 +159,4 @@ class GeneratePoleFigureRgbaImageImpl
 
 
 
-#endif /* _PoleFigureUtilities_H_ */
 

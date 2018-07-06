@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _sgabstracttablemodel_h_
-#define _sgabstracttablemodel_h_
+#pragma once
 
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QVariant>
@@ -223,4 +222,3 @@ private:
   void operator=(const SGAbstractTableModel&) = delete;       // Move assignment Not Implemented
 };
 
-#endif /* SGABSTRACTTABLEMODEL_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _msvcdefines_h_
-#define _msvcdefines_h_
+#pragma once
 
 #ifdef _MSC_VER
 
@@ -61,4 +60,3 @@ standard C++ library."
 
 
 
-#endif /* _MSVCDEFINES_H_ */

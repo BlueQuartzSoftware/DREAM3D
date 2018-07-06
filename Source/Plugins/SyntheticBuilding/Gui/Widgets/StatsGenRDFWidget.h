@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _statsgenrdfwidget_h_
-#define _statsgenrdfwidget_h_
+#pragma once
 
 #include <QtWidgets/QWidget>
 
@@ -164,4 +163,3 @@ private:
   void operator=(const StatsGenRDFWidget&) = delete;    // Move assignment Not Implemented
 };
 
-#endif /* _StatsGenRDFWidget_H_ */

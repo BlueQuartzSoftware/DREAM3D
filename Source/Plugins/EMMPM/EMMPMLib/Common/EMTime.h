@@ -6,8 +6,7 @@
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef _emtime_h_
-#define _emtime_h_
+#pragma once
 
 #include "EMMPMLib/EMMPMLib.h"
 
@@ -106,4 +105,3 @@ EMMPMLib_EXPORT unsigned long long int EMMPM_getMilliSeconds();
 
 
 
-#endif /* _EMTime.h_  */

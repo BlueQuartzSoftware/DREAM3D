@@ -2,8 +2,7 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _generateprimarystatsdata_h_
-#define _generateprimarystatsdata_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/DynamicTableData.h"
@@ -224,4 +223,3 @@ public:
   GeneratePrimaryStatsData& operator=(GeneratePrimaryStatsData&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _GeneratePrimaryStatsData_H_ */

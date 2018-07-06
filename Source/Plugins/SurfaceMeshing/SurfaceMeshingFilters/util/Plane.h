@@ -10,8 +10,7 @@
 * San Francisco, California, 94105, USA.
  ***/
 
-#ifndef _plane_h_
-#define _plane_h_
+#pragma once
 
 #include <ostream>
 
@@ -69,4 +68,3 @@ class Plane
 
 
 
-#endif

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _h5ctfvolumereader_h_
-#define _h5ctfvolumereader_h_
+#pragma once
 
 #include <QtCore/QString>
 #include <QtCore/QVector>
@@ -173,5 +172,4 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
 
 };
 
-#endif /* H5CTFVOLUMEREADER_H_ */
 

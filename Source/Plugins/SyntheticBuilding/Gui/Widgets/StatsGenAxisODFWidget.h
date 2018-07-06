@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _statsGenAxisODFWidget_h_
-#define _statsGenAxisODFWidget_h_
+#pragma once
 
 #include <QtCore/QString>
 #include <QtCore/QVector>
@@ -134,4 +133,3 @@ private:
   void operator=(const StatsGenAxisODFWidget&) = delete;        // Move assignment Not Implemented
 };
 
-#endif /* _SG_AXIS_ODFWIDGET_H_ */

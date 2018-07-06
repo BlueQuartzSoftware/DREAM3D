@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _warpregulargrid_h_
-#define _warpregulargrid_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FourthOrderPolynomialFilterParameter.h"
@@ -216,4 +215,3 @@ public:
   WarpRegularGrid& operator=(WarpRegularGrid&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* WarpRegularGrid_H_ */

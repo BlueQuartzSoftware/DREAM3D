@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ensembleinfotablemodel_h_
-#define _ensembleinfotablemodel_h_
+#pragma once
 
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QStringList>
@@ -167,4 +166,3 @@ private:
   void operator=(const EnsembleInfoTableModel&);                  // Move assignment Not Implemented
 };
 
-#endif /* QUALITYMETRICTABLEMODEL_H_ */

@@ -2,8 +2,7 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef _samplingplugin_h_
-#define _samplingplugin_h_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -161,5 +160,4 @@ class Sampling_EXPORT SamplingPlugin : public QObject, public ISIMPLibPlugin
     void operator=(const SamplingPlugin&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* _Sampling_H_ */
 

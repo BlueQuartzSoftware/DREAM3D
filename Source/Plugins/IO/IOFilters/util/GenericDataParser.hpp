@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _GenericDataParser_hpp_
-#define _GenericDataParser_hpp_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -179,5 +178,4 @@ class GenericFloatParser : public GenericDataParser
 };
 
 
-#endif /* GenericDataParser_HPP_ */
 

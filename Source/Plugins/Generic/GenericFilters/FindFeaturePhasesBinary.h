@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findfeaturephasesbinary_h_
-#define _findfeaturephasesbinary_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -184,4 +183,3 @@ public:
   FindFeaturePhasesBinary& operator=(FindFeaturePhasesBinary&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindFeaturePhasesBinary_H_ */

@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _vaspreader_h_
-#define _vaspreader_h_
+#pragma once
 
 #include <QtCore/QString>
 #include <vector>
@@ -191,4 +190,3 @@ class IO_EXPORT VASPReader : public FileReader
     void operator=(const VASPReader&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* VASPReader_H_ */

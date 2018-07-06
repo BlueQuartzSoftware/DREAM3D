@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _distributionanalysisops_h_
-#define _distributionanalysisops_h_
+#pragma once
 
 #include <vector>
 
@@ -72,5 +71,4 @@ class DistributionAnalysisOps
     void operator=(const DistributionAnalysisOps&) = delete;          // Move assignment Not Implemented
 };
 
-#endif /* _DistributionAnalysisOps_H_ */
 

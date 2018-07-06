@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _primaryrecrystallizedpresetdialog_h_
-#define _primaryrecrystallizedpresetdialog_h_
+#pragma once
 
 #include <QtWidgets/QDialog>
 
@@ -68,4 +67,3 @@ private:
   void operator=(const PrimaryRecrystallizedPresetDialog&) = delete;                    // Move assignment Not Implemented
 };
 
-#endif /* PrimaryRecrystallizedPresetDialog_H_ */

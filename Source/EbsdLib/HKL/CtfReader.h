@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ctfreader_h_
-#define _ctfreader_h_
+#pragma once
 
 #include <QtCore/QString>
 #include <QtCore/QMap>
@@ -219,5 +218,4 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
 };
 
 
-#endif /* _CTFREADER_H_ */
 

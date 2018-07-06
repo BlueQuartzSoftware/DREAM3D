@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _readh5ebsdfilterparameter_h_
-#define _readh5ebsdfilterparameter_h_
+#pragma once
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
@@ -92,4 +91,3 @@ private:
   void operator=(const ReadH5EbsdFilterParameter&);                     // Move assignment Not Implemented
 };
 
-#endif /* _ImportVectorImageStackFilterParameter_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _multiemmpmfilter_h_
-#define _multiemmpmfilter_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -160,4 +159,3 @@ private:
   void operator=(const MultiEmmpmFilter&);            // Move assignment Not Implemented
 };
 
-#endif /* _MultiEmmpmFilter_H_ */

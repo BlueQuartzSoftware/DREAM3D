@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _movingfiniteelementsmoothing_h_
-#define _movingfiniteelementsmoothing_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -166,7 +165,6 @@ class SurfaceMeshing_EXPORT MovingFiniteElementSmoothing : public SurfaceMeshFil
      MovingFiniteElementSmoothing& operator=(MovingFiniteElementSmoothing&&) = delete;      // Move Assignment
 };
 
-#endif /* _MovingFiniteElementSmoothing_H_ */
 
 
 

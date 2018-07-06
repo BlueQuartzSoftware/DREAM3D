@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _generateensemblestatistics_h_
-#define _generateensemblestatistics_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
@@ -399,4 +398,3 @@ public:
   GenerateEnsembleStatistics& operator=(GenerateEnsembleStatistics&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* GenerateEnsembleStatistics_H_ */

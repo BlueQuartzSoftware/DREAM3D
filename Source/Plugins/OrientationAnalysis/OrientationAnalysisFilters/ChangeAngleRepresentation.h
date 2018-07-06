@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _changeanglerepresentation_h_
-#define _changeanglerepresentation_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -174,4 +173,3 @@ public:
   ChangeAngleRepresentation& operator=(ChangeAngleRepresentation&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* ChangeAngleRepresentation_H_ */

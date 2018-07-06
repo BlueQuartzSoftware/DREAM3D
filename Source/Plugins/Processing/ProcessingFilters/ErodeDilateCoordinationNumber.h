@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _erodedilatecoordinationnumber_h_
-#define _erodedilatecoordinationnumber_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -180,4 +179,3 @@ public:
   ErodeDilateCoordinationNumber& operator=(ErodeDilateCoordinationNumber&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _ErodeDilateCoordination_Number_H_ */

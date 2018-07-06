@@ -37,8 +37,7 @@
 
 
 
-#ifndef _ctfconstants_h_
-#define _ctfconstants_h_
+#pragma once
 
 #include <QtCore/QString>
 #include <QtCore/QVector>
@@ -190,4 +189,3 @@ namespace Ebsd
   }
 } // End Namespace Ebsd
 
-#endif /* _HKLConstants.h_  */

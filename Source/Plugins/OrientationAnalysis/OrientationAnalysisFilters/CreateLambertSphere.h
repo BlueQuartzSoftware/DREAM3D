@@ -29,8 +29,7 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _createLambertSphere_H_
-#define _createLambertSphere_H_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -275,4 +274,3 @@ public:
   CreateLambertSphere& operator=(CreateLambertSphere&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _createLambertSphere_H_ */

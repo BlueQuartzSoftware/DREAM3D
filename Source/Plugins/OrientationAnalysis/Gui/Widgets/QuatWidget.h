@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _quatwidget_h_
-#define _quatwidget_h_
+#pragma once
 
 #include "OrientationWidget.h"
 
@@ -62,4 +61,3 @@ private:
   void operator=(const QuatWidget&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* EBSDREFERENCEFRAMEWIDGET_H_ */

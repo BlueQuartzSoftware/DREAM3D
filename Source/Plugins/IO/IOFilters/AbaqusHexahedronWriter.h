@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _abaqushexahedronwriter_h_
-#define _abaqushexahedronwriter_h_
+#pragma once
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -247,4 +246,3 @@ public:
   AbaqusHexahedronWriter& operator=(AbaqusHexahedronWriter&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _AbaqusHexahedronWriter_H_ */

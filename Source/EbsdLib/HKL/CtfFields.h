@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ctffields_h_
-#define _ctffields_h_
+#pragma once
 
 #include <QtCore/QString>
 #include <QtCore/QVector>
@@ -84,5 +83,4 @@ class EbsdLib_EXPORT CtfFields : public AbstractEbsdFields
     void operator=(const CtfFields&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* CTFFIELDS_H_ */
 

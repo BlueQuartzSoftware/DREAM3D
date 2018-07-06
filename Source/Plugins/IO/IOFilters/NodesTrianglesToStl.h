@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _nodestrianglestostl_h_
-#define _nodestrianglestostl_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -198,4 +197,3 @@ public:
   NodesTrianglesToStl& operator=(NodesTrianglesToStl&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* NodesTrianglesToStl_H_ */

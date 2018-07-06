@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findsizes_h_
-#define _findsizes_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -211,4 +210,3 @@ private:
   FindSizes& operator=(FindSizes&&) = delete;      // Move Assignment
 };
 
-#endif /* FINDSIZES_H_ */

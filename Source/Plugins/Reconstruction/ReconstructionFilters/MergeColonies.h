@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _mergecolonies_h_
-#define _mergecolonies_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -244,4 +243,3 @@ private:
   void operator=(const MergeColonies&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* MergeColonies_H_ */

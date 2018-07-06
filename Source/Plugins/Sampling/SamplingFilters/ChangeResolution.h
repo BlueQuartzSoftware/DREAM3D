@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _changeresolution_h_
-#define _changeresolution_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -196,4 +195,3 @@ public:
   ChangeResolution& operator=(ChangeResolution&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* CHANGERESOLUTION_H_ */

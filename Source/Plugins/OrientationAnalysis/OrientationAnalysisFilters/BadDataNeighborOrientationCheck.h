@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _baddataneighbororientationcheck_h_
-#define _baddataneighbororientationcheck_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -197,4 +196,3 @@ public:
   BadDataNeighborOrientationCheck& operator=(BadDataNeighborOrientationCheck&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* BadDataNeighborOrientationCheck_H_ */

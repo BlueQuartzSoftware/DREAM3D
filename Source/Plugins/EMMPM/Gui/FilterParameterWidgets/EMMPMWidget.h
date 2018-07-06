@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _emmpmwidget_h_
-#define _emmpmwidget_h_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QPointer>
@@ -113,4 +112,3 @@ private:
   void operator=(const EMMPMWidget&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* _emmpmwidget_h_ */

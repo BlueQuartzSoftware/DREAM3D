@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _quiltcelldata_h_
-#define _quiltcelldata_h_
+#pragma once
 
 #include <QtCore/QString>
 #include <set>
@@ -201,4 +200,3 @@ private:
   QuiltCellData& operator=(QuiltCellData&&) = delete;      // Move Assignment
 };
 
-#endif /* QuiltCellData_H_ */

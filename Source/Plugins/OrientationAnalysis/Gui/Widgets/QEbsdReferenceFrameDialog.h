@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _qebsdreferenceframedialog_h_
-#define _qebsdreferenceframedialog_h_
+#pragma once
 
 #include <QtCore/QSettings>
 #include <QtCore/QString>
@@ -126,4 +125,3 @@ private:
   void operator=(const QEbsdReferenceFrameDialog&);                     // Move assignment Not Implemented
 };
 
-#endif /* EBSDREFERENCEFRAMEWIDGET_H_ */

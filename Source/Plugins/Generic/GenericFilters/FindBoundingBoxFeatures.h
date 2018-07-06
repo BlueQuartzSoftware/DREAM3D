@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findboundingboxfeatures_h_
-#define _findboundingboxfeatures_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -199,4 +198,3 @@ public:
   FindBoundingBoxFeatures& operator=(FindBoundingBoxFeatures&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindBoundingBoxFeatures_H_ */

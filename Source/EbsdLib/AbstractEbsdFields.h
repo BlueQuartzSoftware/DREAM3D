@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _abstractebsdfields_h_
-#define _abstractebsdfields_h_
+#pragma once
 
 
 #include <QtCore/QString>
@@ -62,5 +61,4 @@ class EbsdLib_EXPORT AbstractEbsdFields
 
 };
 
-#endif /* ABSTRACTEBSDFIELDS_H_ */
 

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _fitcorrelatedfeaturedata_h_
-#define _fitcorrelatedfeaturedata_h_
+#pragma once
 
 #include <QtCore/QString>
 #include <set>
@@ -217,4 +216,3 @@ public:
   FitCorrelatedFeatureData& operator=(FitCorrelatedFeatureData&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FitCorrelatedFeatureData_H_ */

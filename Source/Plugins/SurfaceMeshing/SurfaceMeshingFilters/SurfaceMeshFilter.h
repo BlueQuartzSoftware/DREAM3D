@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _surfacemeshfilter_h_
-#define _surfacemeshfilter_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -92,4 +91,3 @@ public:
   SurfaceMeshFilter& operator=(SurfaceMeshFilter&&) = delete;      //
 };
 
-#endif /* _SurfaceMeshFilter_H_ */

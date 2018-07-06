@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _orientationwidget_h_
-#define _orientationwidget_h_
+#pragma once
 
 #include <QtWidgets/QWidget>
 
@@ -73,4 +72,3 @@ private:
   void operator=(const OrientationWidget&) = delete;    // Move assignment Not Implemented
 };
 
-#endif /* EBSDREFERENCEFRAMEWIDGET_H_ */

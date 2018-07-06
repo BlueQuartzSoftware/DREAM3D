@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _texturedialog_h_
-#define _texturedialog_h_
+#pragma once
 
 #include <vector>
 
@@ -79,4 +78,3 @@ private:
   void operator=(const TextureDialog&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* TEXTUREDIALOG_H_ */

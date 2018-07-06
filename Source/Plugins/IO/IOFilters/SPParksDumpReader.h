@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _spparkstextreader_h_
-#define _spparkstextreader_h_
+#pragma once
 
 #include <QtCore/QFile>
 
@@ -223,4 +222,3 @@ private:
   void operator=(const SPParksDumpReader&);             // Move assignment Not Implemented
 };
 
-#endif /* _SPParksDumpReader_H_ */

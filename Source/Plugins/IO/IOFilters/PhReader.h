@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _phreader_h_
-#define _phreader_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/FileReader.h"
@@ -205,4 +204,3 @@ private:
   void operator=(const PhReader&); // Not Implemented
 };
 
-#endif /* _PHReader_h_ */

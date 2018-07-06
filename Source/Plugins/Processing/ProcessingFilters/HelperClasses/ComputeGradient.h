@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _computegradient_h_
-#define _computegradient_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -63,4 +62,3 @@ private:
   DoubleArrayType::Pointer m_GradY = DoubleArrayType::NullPointer();
 };
 
-#endif /* _computegradient_h_ */

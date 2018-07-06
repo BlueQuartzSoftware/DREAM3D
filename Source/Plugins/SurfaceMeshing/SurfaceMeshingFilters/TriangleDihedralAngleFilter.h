@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _triangledihedralanglefilter_h_
-#define _triangledihedralanglefilter_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -149,4 +148,3 @@ public:
   TriangleDihedralAngleFilter& operator=(TriangleDihedralAngleFilter&&) = delete;      // Move assignment Not Implemented
 };
 
-#endif /* _TriangleDihedralAngleFilter_H_ */

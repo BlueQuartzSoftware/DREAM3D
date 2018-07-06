@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findlargestcrosssections_h_
-#define _findlargestcrosssections_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -185,4 +184,3 @@ public:
   FindLargestCrossSections& operator=(FindLargestCrossSections&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindLargestCrossSections_H_ */

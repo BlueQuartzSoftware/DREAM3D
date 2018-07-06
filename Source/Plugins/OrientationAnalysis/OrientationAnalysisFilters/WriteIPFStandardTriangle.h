@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _writeipfstandardtriangle_h_
-#define _writeipfstandardtriangle_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -205,4 +204,3 @@ public:
   WriteIPFStandardTriangle& operator=(WriteIPFStandardTriangle&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _WriteIPFStandardTriangle_H_ */

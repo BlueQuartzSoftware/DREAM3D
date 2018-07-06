@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _h5ebsdvolumeinfo_h_
-#define _h5ebsdvolumeinfo_h_
+#pragma once
 
 #include <QtCore/QString>
 #include <QtCore/QVector>
@@ -211,5 +210,4 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
 
 };
 
-#endif /* H5EBSDVOLUMEREADER_H_ */
 

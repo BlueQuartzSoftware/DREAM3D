@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _primaryrolledpreset_h_
-#define _primaryrolledpreset_h_
+#pragma once
 
 //-- C++ includes
 #include <string>
@@ -93,4 +92,3 @@ private:
 
 DECLARE_FACTORY_CLASS(PrimaryRolledPresetFactory, PrimaryRolledPreset, "Primary Rolled")
 
-#endif /* PrimaryRolledPreset_H_ */

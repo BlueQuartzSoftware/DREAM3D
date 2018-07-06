@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _precipitateequiaxedpreset_h_
-#define _precipitateequiaxedpreset_h_
+#pragma once
 
 //-- C++ includes
 #include <string>
@@ -88,4 +87,3 @@ private:
 
 DECLARE_FACTORY_CLASS(PrecipitateEquiaxedPresetFactory, PrecipitateEquiaxedPreset, "Precipitate Equiaxed")
 
-#endif /* PrecipitateEquiaxedPresetFACTORY_H_ */

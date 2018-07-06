@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _OrientationTransforms_H_
-#define _OrientationTransforms_H_
+#pragma once
 
 #include <assert.h>     /* assert */
 
@@ -2166,4 +2165,3 @@ typedef OrientationTransforms<FOrientArrayType, float>     FOrientTransformsType
 typedef OrientationTransforms<DOrientArrayType, double>     DOrientTransformsType;
 
 
-#endif /* _OrientationTransforms_H_ */

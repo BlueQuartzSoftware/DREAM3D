@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _fitfeaturedata_h_
-#define _fitfeaturedata_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -199,4 +198,3 @@ public:
   FitFeatureData& operator=(FitFeatureData&&) = delete;      // Move Assignment
 };
 
-#endif /* FitFeatureData_H_ */

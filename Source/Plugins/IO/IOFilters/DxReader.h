@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _dxreader_h_
-#define _dxreader_h_
+#pragma once
 
 #include <QtCore/QFile>
 
@@ -206,4 +205,3 @@ private:
   void operator=(const DxReader&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* DxReader_H_ */

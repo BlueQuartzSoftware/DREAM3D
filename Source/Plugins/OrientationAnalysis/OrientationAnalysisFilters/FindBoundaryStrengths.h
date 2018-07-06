@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findboundarystrengths_h_
-#define _findboundarystrengths_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -216,4 +215,3 @@ public:
   FindBoundaryStrengths& operator=(FindBoundaryStrengths&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindBoundaryStrengths_H_ */

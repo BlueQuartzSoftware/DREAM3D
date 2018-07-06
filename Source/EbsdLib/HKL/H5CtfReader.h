@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _h5ctfreader_h_
-#define _h5ctfreader_h_
+#pragma once
 
 #include <hdf5.h>
 
@@ -144,5 +143,4 @@ class EbsdLib_EXPORT H5CtfReader : public CtfReader
     void operator=(const H5CtfReader&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* _H5CTFREADER_H_ */
 

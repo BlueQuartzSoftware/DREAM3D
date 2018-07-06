@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _trianglenormalfilter_h_
-#define _trianglenormalfilter_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -149,4 +148,3 @@ public:
   TriangleNormalFilter& operator=(TriangleNormalFilter&&) = delete;      // Move assignment Not Implemented
 };
 
-#endif /* _TriangleNormalFilter_H_ */

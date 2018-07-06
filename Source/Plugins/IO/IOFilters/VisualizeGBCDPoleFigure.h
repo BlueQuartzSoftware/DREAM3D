@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _visualizegbcdpolefigure_h_
-#define _visualizegbcdpolefigure_h_
+#pragma once
 
 // Needed for AxisAngle_t
 #include "EbsdLib/EbsdConstants.h"
@@ -217,4 +216,3 @@ public:
   VisualizeGBCDPoleFigure& operator=(VisualizeGBCDPoleFigure&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _VisualizeGBCDPoleFigure_H_ */

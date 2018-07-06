@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _inlwriter_h_
-#define _inlwriter_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/FileWriter.h"
@@ -179,4 +178,3 @@ private:
   void operator=(const INLWriter&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* _INLWriter_H_ */

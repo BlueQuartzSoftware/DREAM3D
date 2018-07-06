@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _establishshapetypes_h_
-#define _establishshapetypes_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/ShapeType.h"
@@ -183,4 +182,3 @@ public:
   EstablishShapeTypes& operator=(EstablishShapeTypes&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _EstablishShapeTypes_H_ */

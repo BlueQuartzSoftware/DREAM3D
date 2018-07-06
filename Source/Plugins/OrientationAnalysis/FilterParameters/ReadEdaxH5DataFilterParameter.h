@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ImportVectorImageStackFilterParameter_H_
-#define _ImportVectorImageStackFilterParameter_H_
+#pragma once
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
@@ -82,4 +81,3 @@ private:
   void operator=(const ReadEdaxH5DataFilterParameter&) = delete;                // Move assignment Not Implemented
 };
 
-#endif /* _ImportVectorImageStackFilterParameter_H_ */

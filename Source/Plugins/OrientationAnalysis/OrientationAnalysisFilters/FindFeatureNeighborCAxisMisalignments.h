@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findfeatureneighborcaxismisalignments_h_
-#define _findfeatureneighborcaxismisalignments_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
@@ -206,4 +205,3 @@ public:
   FindFeatureNeighborCAxisMisalignments& operator=(FindFeatureNeighborCAxisMisalignments&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindFeatureNeighborCAxisMisalignments_H_ */

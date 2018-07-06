@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _yschoiabaqusreader_h_
-#define _yschoiabaqusreader_h_
+#pragma once
 
 #include <string.h> // needed for the ::memcpy function below
 #include <QtCore/QString>
@@ -210,4 +209,3 @@ class OrientationAnalysis_EXPORT YSChoiAbaqusReader : public FileReader
     void operator=(const YSChoiAbaqusReader&) = delete;     // Move assignment Not Implemented
 };
 
-#endif /* YSChoiAbaqusReader_H_ */

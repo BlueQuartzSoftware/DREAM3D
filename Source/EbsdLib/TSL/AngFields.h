@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _angfields_h_
-#define _angfields_h_
+#pragma once
 
 #include <QtCore/QString>
 #include <QtCore/QVector>
@@ -85,5 +84,4 @@ class EbsdLib_EXPORT AngFields : public AbstractEbsdFields
 
 
 
-#endif /* ANGFIELDS_H_ */
 

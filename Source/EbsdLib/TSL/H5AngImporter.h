@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _h5angimporter_h_
-#define _h5angimporter_h_
+#pragma once
 
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
@@ -136,5 +135,4 @@ class EbsdLib_EXPORT H5AngImporter : public EbsdImporter
 };
 
 
-#endif /* _H5ANGIMPORTER_H_ */
 

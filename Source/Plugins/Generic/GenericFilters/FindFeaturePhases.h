@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findfeaturephases_h_
-#define _findfeaturephases_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -181,4 +180,3 @@ public:
   FindFeaturePhases& operator=(FindFeaturePhases&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindFeaturePhases_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _angheaderentry_h_
-#define _angheaderentry_h_
+#pragma once
 
 
 #include <string.h>
@@ -160,6 +159,5 @@ class AngStringHeaderEntry : public EbsdHeaderEntry
 
 
 
-#endif /* _AngHeaderEntry_H_ */
 
 

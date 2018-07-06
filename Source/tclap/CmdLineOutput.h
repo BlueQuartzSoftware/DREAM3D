@@ -20,8 +20,7 @@
  *  
  *****************************************************************************/ 
 
-#ifndef TCLAP_CMDLINEOUTPUT_H
-#define TCLAP_CMDLINEOUTPUT_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -71,4 +70,3 @@ class CmdLineOutput
 };
 
 } //namespace TCLAP
-#endif 

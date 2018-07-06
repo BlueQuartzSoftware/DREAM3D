@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _avizorectilinearcoordinatewriter_h_
-#define _avizorectilinearcoordinatewriter_h_
+#pragma once
 
 #include <stdio.h>
 
@@ -213,4 +212,3 @@ public:
   AvizoRectilinearCoordinateWriter& operator=(AvizoRectilinearCoordinateWriter&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* AvizoRectilinearCoordinateWriter_H_ */

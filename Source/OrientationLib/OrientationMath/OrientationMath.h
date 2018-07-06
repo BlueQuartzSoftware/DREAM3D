@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _orientationmath_h_
-#define _orientationmath_h_
+#pragma once
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Math/QuaternionMath.hpp"
@@ -180,5 +179,4 @@ class OrientationLib_EXPORT OrientationMath
     void operator=(const OrientationMath&) = delete;  // Move assignment Not Implemented
 };
 
-#endif /* _OrientationMath_H_ */
 

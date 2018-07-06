@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _mpmcalculation_h_
-#define _mpmcalculation_h_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
@@ -91,4 +90,3 @@ class EMMPMLib_EXPORT MPMCalculation : public Observable
     void operator=(const MPMCalculation&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* _MPMCalculation_H_ */

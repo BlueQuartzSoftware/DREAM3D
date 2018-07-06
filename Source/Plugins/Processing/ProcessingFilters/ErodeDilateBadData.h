@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _erodedilatebaddata_h_
-#define _erodedilatebaddata_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -195,4 +194,3 @@ public:
   ErodeDilateBadData& operator=(ErodeDilateBadData&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* ErodeDilateBadData_H_ */

@@ -32,8 +32,7 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _groupmicrotextureregions_h_
-#define _groupmicrotextureregions_h_
+#pragma once
 
 #include <random>
 
@@ -239,4 +238,3 @@ private:
   void operator=(const GroupMicroTextureRegions&);                    // Move assignment Not Implemented
 };
 
-#endif /* GroupMicroTextureRegions_H_ */

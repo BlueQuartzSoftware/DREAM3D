@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _sgodftablemodel_h_
-#define _sgodftablemodel_h_
+#pragma once
 
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QVariant>
@@ -183,4 +182,3 @@ private:
   void operator=(const SGODFTableModel&) = delete;  // Move assignment Not Implemented
 };
 
-#endif /* _SGODFTABLEMODEL_H_ */

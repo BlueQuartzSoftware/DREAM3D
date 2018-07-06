@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _goldfeatherreader_h_
-#define _goldfeatherreader_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -219,4 +218,3 @@ public:
   GoldfeatherReader& operator=(GoldfeatherReader&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _GoldfeatherReader_H_ */

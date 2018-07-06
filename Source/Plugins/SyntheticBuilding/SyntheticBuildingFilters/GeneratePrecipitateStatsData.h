@@ -2,8 +2,7 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _GeneratePrecipitateStatsData_h_
-#define _GeneratePrecipitateStatsData_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/DynamicTableData.h"
@@ -238,4 +237,3 @@ public:
   GeneratePrecipitateStatsData& operator=(GeneratePrecipitateStatsData&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _GeneratePrecipitateStatsData_H_ */

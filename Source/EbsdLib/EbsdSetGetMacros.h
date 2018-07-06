@@ -37,8 +37,7 @@
 
 
 
-#ifndef _ebsdsetgetmacros_h_
-#define _ebsdsetgetmacros_h_
+#pragma once
 
 #include <string.h>
 
@@ -380,4 +379,3 @@ namespace Ebsd
   }
 }
 
-#endif /* _EbsdSetGetMacros_h_  */

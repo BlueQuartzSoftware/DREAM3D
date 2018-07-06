@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _eulerwidget_h_
-#define _eulerwidget_h_
+#pragma once
 
 #include "OrientationWidget.h"
 
@@ -66,4 +65,3 @@ private:
   void operator=(const EulerWidget&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* EBSDREFERENCEFRAMEWIDGET_H_ */

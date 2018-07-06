@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _axisanglewidget_h_
-#define _axisanglewidget_h_
+#pragma once
 
 #include "OrientationWidget.h"
 
@@ -63,4 +62,3 @@ private:
   void operator=(const AxisAngleWidget&) = delete;  // Move assignment Not Implemented
 };
 
-#endif /* EBSDREFERENCEFRAMEWIDGET_H_ */

@@ -35,8 +35,7 @@
 
 
 
-#ifndef _ebsdimporter_h_
-#define _ebsdimporter_h_
+#pragma once
 
 #include "hdf5.h"
 
@@ -148,4 +147,3 @@ class EbsdLib_EXPORT EbsdImporter
 
 
 
-#endif /* _EbsdImporter_h_  */

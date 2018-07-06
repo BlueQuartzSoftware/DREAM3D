@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findmisorientations_h_
-#define _findmisorientations_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
@@ -206,4 +205,3 @@ public:
   FindMisorientations& operator=(FindMisorientations&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindMisorientations_H_ */

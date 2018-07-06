@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ebsdtransform_h_
-#define _ebsdtransform_h_
+#pragma once
 
 #include <QtCore/QString>
 #include <QtCore/QVector>
@@ -87,5 +86,4 @@ class EbsdLib_EXPORT EbsdTransform
     void operator=(const EbsdTransform&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* EBSDTRANSFORM_H_ */
 

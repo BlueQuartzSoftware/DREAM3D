@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findtrianglegeomshapes_h_
-#define _findtrianglegeomshapes_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -245,4 +244,3 @@ public:
   FindTriangleGeomShapes& operator=(FindTriangleGeomShapes&&) = delete;      // Move Assignme
 };
 
-#endif /* _findtrianglegeomshapes_h_ */

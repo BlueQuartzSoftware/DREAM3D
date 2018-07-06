@@ -1,5 +1,4 @@
-#ifndef _generatefunctionlist_h_
-#define _generatefunctionlist_h_
+#pragma once
 
 
 #include <stdio.h>
@@ -114,4 +113,3 @@ class GenerateFunctionList
     void operator=(const GenerateFunctionList&) = delete;       // Move assignment Not Implemented
 };
 
-#endif /* _GenerateFunctionList_H_ */

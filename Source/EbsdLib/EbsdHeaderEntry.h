@@ -35,8 +35,7 @@
 
 
 
-#ifndef _ebsdheaderentry_h_
-#define _ebsdheaderentry_h_
+#pragma once
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
@@ -117,4 +116,3 @@
 
 
 
-#endif /* _EbsdHeaderEntry.h_  */

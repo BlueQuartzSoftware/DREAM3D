@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _readedaxh5data_h_
-#define _readedaxh5data_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StringDataArray.hpp"
@@ -282,4 +281,3 @@ public:
   ReadEdaxH5Data& operator=(ReadEdaxH5Data&&) = delete;      // Move Assignment
 };
 
-#endif /* _ReadEdaxH5Data_H_ */

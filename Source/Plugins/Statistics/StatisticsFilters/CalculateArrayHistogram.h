@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _calculatearrayhistogram_h_
-#define _calculatearrayhistogram_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -220,4 +219,3 @@ public:
   CalculateArrayHistogram& operator=(CalculateArrayHistogram&&) = delete;      // Move Assignment
 };
 
-#endif /* _CalculateArrayHistogram_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findsurfacefeatures_h_
-#define _findsurfacefeatures_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -185,4 +184,3 @@ public:
   FindSurfaceFeatures& operator=(FindSurfaceFeatures&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindSurfaceFeatures_H_ */

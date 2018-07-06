@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ensembleinfofilterparameter_h_
-#define _ensembleinfofilterparameter_h_
+#pragma once
 
 #include <QtCore/QJsonObject>
 
@@ -146,4 +145,3 @@ private:
   void operator=(const EnsembleInfoFilterParameter&);                       // Move assignment Not Implemented
 };
 
-#endif /* _EnsembleInfoFilterParameter_H_ */

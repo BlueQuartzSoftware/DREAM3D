@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _identifymicrotextureregions_h_
-#define _identifymicrotextureregions_h_
+#pragma once
 
 #include <random>
 
@@ -249,4 +248,3 @@ public:
   IdentifyMicroTextureRegions& operator=(IdentifyMicroTextureRegions&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* IdentifyMicroTextureRegions_H_ */

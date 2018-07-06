@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _orientationutilityfilterparameter_h_
-#define _orientationutilityfilterparameter_h_
+#pragma once
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
@@ -61,4 +60,3 @@ private:
   void operator=(const OrientationUtilityFilterParameter&) = delete;                    // Move assignment Not Implemented
 };
 
-#endif /* _ImportVectorImageStackFilterParameter_H_ */

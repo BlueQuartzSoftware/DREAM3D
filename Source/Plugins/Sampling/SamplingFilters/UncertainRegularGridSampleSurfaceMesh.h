@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _uncertainregulargridsamplesurfacemesh_h_
-#define _uncertainregulargridsamplesurfacemesh_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -192,4 +191,3 @@ private:
   void operator=(const UncertainRegularGridSampleSurfaceMesh&);                                 // Move assignment Not Implemented
 };
 
-#endif /* UncertainRegularGridSampleSurfaceMesh_H_ */

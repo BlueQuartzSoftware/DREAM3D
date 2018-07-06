@@ -10,8 +10,7 @@
 * San Francisco, California, 94105, USA.
  ***/
 
-#ifndef _invalidparameterexception_h_
-#define _invalidparameterexception_h_
+#pragma once
 
 #include "Exception.h"
 
@@ -32,4 +31,3 @@ namespace m3c_basics
   }
 }
 
-#endif

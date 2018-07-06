@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _gbcdtriangledumper_h_
-#define _gbcdtriangledumper_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -190,4 +189,3 @@ public:
   GBCDTriangleDumper& operator=(GBCDTriangleDumper&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _GBCDTriangleDumper_H_ */

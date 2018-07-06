@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _surfacemeshtononconformalvtk_h_
-#define _surfacemeshtononconformalvtk_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -195,4 +194,3 @@ public:
   SurfaceMeshToNonconformalVtk& operator=(SurfaceMeshToNonconformalVtk&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _SurfaceMeshToNonconformalVtk_H_ */

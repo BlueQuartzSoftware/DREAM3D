@@ -32,8 +32,7 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _establishmatrixphase_h_
-#define _establishmatrixphase_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
@@ -246,4 +245,3 @@ public:
   EstablishMatrixPhase& operator=(EstablishMatrixPhase&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* EstablishMatrixPhase_H_ */

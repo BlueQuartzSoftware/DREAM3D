@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findfeaturereferencemisorientations_h_
-#define _findfeaturereferencemisorientations_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -214,4 +213,3 @@ public:
   FindFeatureReferenceMisorientations& operator=(FindFeatureReferenceMisorientations&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindFeatureReferenceMisorientations_H_ */

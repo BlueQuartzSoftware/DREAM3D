@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _jumbleorientations_h_
-#define _jumbleorientations_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -191,4 +190,3 @@ public:
   JumbleOrientations& operator=(JumbleOrientations&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* JumbleOrientations_H_ */

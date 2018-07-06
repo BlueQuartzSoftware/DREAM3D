@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _surfacemeshtovtk_h_
-#define _surfacemeshtovtk_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -218,4 +217,3 @@ public:
   SurfaceMeshToVtk& operator=(SurfaceMeshToVtk&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _SurfaceMeshToVtk_H_ */

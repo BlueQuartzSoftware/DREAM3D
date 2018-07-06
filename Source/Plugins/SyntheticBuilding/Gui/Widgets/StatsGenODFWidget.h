@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _statsgenodfwidget_h_
-#define _statsgenodfwidget_h_
+#pragma once
 
 #include <QtCore/QFutureWatcher>
 #include <QtGui/QImage>
@@ -154,4 +153,3 @@ private:
   void operator=(const StatsGenODFWidget&) = delete;    // Move assignment Not Implemented
 };
 
-#endif /* _STATSGENODFWIDGET_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _nearestpointfuseregulargrids_h_
-#define _nearestpointfuseregulargrids_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -172,4 +171,3 @@ public:
   NearestPointFuseRegularGrids& operator=(NearestPointFuseRegularGrids&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* NearestPointFuseRegularGrids_H_ */

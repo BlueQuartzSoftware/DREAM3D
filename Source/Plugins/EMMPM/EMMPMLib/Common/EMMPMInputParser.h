@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _emmpminputparser_h_
-#define _emmpminputparser_h_
+#pragma once
 
 #error
 
@@ -102,4 +101,3 @@ class EMMPMLib_EXPORT EMMPMInputParser
     void operator=(const EMMPMInputParser&) = delete;   // Move assignment Not Implemented
 };
 
-#endif /* _EMMPMINPUTPARSER_H_ */

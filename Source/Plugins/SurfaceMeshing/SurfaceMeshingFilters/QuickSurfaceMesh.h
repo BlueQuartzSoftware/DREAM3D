@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _quicksurfacemesh_h_
-#define _quicksurfacemesh_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -226,4 +225,3 @@ public:
   QuickSurfaceMesh& operator=(QuickSurfaceMesh&&) = delete;      // Move assignment Not Implemented
 };
 
-#endif /* QuickSurfaceMesh_H_ */

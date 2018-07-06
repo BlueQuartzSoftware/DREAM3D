@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _surfacemeshingplugin_h_
-#define _surfacemeshingplugin_h_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -191,5 +190,4 @@ class SurfaceMeshing_EXPORT SurfaceMeshingPlugin : public QObject, public ISIMPL
     void operator=(const SurfaceMeshingPlugin&) = delete;       // Move assignment Not Implemented
 };
 
-#endif /* _SurfaceMeshing_H_ */
 

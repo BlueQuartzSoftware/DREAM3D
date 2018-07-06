@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ioplugin_h_
-#define _ioplugin_h_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -191,4 +190,3 @@ class IO_EXPORT IOPlugin : public QObject, public ISIMPLibPlugin
     void operator=(const IOPlugin&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* _IOPlugin_H_ */

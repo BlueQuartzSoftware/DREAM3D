@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _modifiedlambertprojectionarray_h_
-#define _modifiedlambertprojectionarray_h_
+#pragma once
 
 #include <vector>
 
@@ -368,5 +367,4 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
     void operator=(const ModifiedLambertProjectionArray&) = delete;                 // Move assignment Not Implemented
 };
 
-#endif /* _ModifiedLambertProjectionArray_H_ */
 

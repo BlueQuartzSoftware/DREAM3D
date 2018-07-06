@@ -37,8 +37,7 @@
 
 
 
-#ifndef _orientationlibdllexport_h_
-#define _orientationlibdllexport_h_
+#pragma once
 
 
 #if defined (_MSC_VER)
@@ -83,5 +82,4 @@ building the MXADatModel DLL on windows.
 #endif
 
 
-#endif /* _OrientationLib_COMMON_DLL_EXPORT_H_ */
 

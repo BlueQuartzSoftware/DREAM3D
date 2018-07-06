@@ -29,8 +29,7 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _so3sampler_h_
-#define _so3sampler_h_
+#pragma once
 
 
 
@@ -106,5 +105,4 @@ class OrientationLib_EXPORT SO3Sampler
 };
 
 
-#endif /* _SO3Sampler_H_ */
 

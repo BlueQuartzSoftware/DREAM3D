@@ -5,8 +5,7 @@
  *      Author: mjackson
  */
 
-#ifndef _ebsdmath_h_
-#define _ebsdmath_h_
+#pragma once
 
 
 
@@ -97,5 +96,4 @@ lacking still.
 #endif
 
 
-#endif /* EBSBMATH_H_ */
 

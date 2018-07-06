@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _h5angvolumereader_h_
-#define _h5angvolumereader_h_
+#pragma once
 
 #include <vector>
 
@@ -166,5 +165,4 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
 
 };
 
-#endif /* _H5ANGDATALOADER_H_ */
 

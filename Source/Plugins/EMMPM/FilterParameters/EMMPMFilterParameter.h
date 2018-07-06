@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _emmpmfilterparameter_h_
-#define _emmpmfilterparameter_h_
+#pragma once
 
 #include <QtCore/QJsonObject>
 
@@ -104,4 +103,3 @@ class EMMPMFilterParameter : public FilterParameter
     void operator=(const EMMPMFilterParameter&) = delete;       // Move assignment Not Implemented
 };
 
-#endif /* _emmpmfilterparameter_h_ */

@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ebsdtoh5ebsdwidget_h_
-#define _ebsdtoh5ebsdwidget_h_
+#pragma once
 
 
 #include <QtCore/QString>
@@ -213,4 +212,3 @@ class EbsdToH5EbsdWidget : public FilterParameterWidget, private Ui::EbsdToH5Ebs
     void operator=(const EbsdToH5EbsdWidget&) = delete;     // Move assignment Not Implemented
 };
 
-#endif /* EbsdImportWIDGET_H_ */

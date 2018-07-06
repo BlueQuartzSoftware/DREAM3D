@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _generateipfcolors_h_
-#define _generateipfcolors_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -206,4 +205,3 @@ public:
   GenerateIPFColors& operator=(GenerateIPFColors&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _GenerateIPFColors_H_ */

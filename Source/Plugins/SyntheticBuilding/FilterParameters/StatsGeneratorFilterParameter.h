@@ -31,8 +31,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _statsgeneratorfilterparameter_h_
-#define _statsgeneratorfilterparameter_h_
+#pragma once
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
@@ -71,4 +70,3 @@ private:
   void operator=(const StatsGeneratorFilterParameter&);                         // Move assignment Not Implemented
 };
 
-#endif /* _statsgeneratorfilterparameter_h_ */

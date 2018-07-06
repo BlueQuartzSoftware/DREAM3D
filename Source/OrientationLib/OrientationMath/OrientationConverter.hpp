@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _orientationConverter_H_
-#define _orientationConverter_H_
+#pragma once
 
 #include <iostream>
 
@@ -1607,4 +1606,3 @@ class CubochoricConverter : public OrientationConverter<T>
     void operator=(const CubochoricConverter&) = delete;      // Move assignment Not Implemented
 };
 
-#endif /* _orientationConverter_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findavgscalarvalueforfeatures_h_
-#define _findavgscalarvalueforfeatures_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -186,4 +185,3 @@ public:
   FindAvgScalarValueForFeatures& operator=(FindAvgScalarValueForFeatures&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindAvgScalarValueForFeatures_H_ */

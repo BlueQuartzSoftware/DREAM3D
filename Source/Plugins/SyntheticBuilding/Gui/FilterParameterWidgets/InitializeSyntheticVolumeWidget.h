@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _initializesyntheticvolumewidget_h_
-#define _initializesyntheticvolumewidget_h_
+#pragma once
 
 
 #include <QtCore/QObject>
@@ -173,5 +172,4 @@ class InitializeSyntheticVolumeWidget : public FilterParameterWidget, private Ui
     void operator=(const InitializeSyntheticVolumeWidget&) = delete;                  // Move assignment Not Implemented
 };
 
-#endif /* _InitializeSyntheticVolumeWidget_H_ */
 

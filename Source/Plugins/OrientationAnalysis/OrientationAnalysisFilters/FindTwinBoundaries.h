@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findtwinboundaries_h_
-#define _findtwinboundaries_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -218,4 +217,3 @@ public:
   FindTwinBoundaries& operator=(FindTwinBoundaries&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindTwinBoundaries_H_ */

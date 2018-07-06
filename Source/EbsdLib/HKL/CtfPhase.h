@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ctfphase_h_
-#define _ctfphase_h_
+#pragma once
 
 #include <string.h>
 
@@ -100,5 +99,4 @@ class EbsdLib_EXPORT CtfPhase
     CtfPhase(const CtfPhase&) = delete;       // Copy Constructor Not Implemented
     void operator=(const CtfPhase&) = delete; // Move assignment Not Implemented
 };
-#endif /* _CTFPHASE_H_ */
 

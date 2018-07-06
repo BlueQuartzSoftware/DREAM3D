@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ConvertColorToGrayScale_h_
-#define _ConvertColorToGrayScale_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -199,4 +198,3 @@ public:
   ConvertColorToGrayScale& operator=(ConvertColorToGrayScale&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* ConvertColorToGrayScale_H_ */

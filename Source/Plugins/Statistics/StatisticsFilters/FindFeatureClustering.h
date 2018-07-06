@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findfeatureclustering_h_
-#define _findfeatureclustering_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
@@ -226,4 +225,3 @@ public:
   FindFeatureClustering& operator=(FindFeatureClustering&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindFeatureClustering_H_ */

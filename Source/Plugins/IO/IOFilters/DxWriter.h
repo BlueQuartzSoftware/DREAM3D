@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _dxwriter_h_
-#define _dxwriter_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/FileWriter.h"
@@ -154,4 +153,3 @@ private:
   void operator=(const DxWriter&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* DxWriter_H_ */

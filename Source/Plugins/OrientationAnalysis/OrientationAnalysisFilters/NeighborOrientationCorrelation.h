@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _neighbororientationcorrelation_h_
-#define _neighbororientationcorrelation_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -207,4 +206,3 @@ public:
   NeighborOrientationCorrelation& operator=(NeighborOrientationCorrelation&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* NeighborOrientationCorrelation_H_ */

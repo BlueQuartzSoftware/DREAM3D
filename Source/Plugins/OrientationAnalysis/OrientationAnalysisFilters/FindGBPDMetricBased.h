@@ -43,8 +43,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findgbpdmetricbased_H_
-#define _findgbpdmetricbased_H_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -248,4 +247,3 @@ public:
   FindGBPDMetricBased& operator=(FindGBPDMetricBased&&) = delete;      // Move Assignment
 };
 
-#endif /* _FindGBPDMetricBased_H_ */

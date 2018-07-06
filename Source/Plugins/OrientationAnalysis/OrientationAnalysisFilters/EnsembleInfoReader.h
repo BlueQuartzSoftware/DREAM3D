@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ensembleinforeader_h_
-#define _ensembleinforeader_h_
+#pragma once
 
 #include "SIMPLib/Common/PhaseType.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -183,4 +182,3 @@ private:
   void operator=(const EnsembleInfoReader&);     // Not Implemented
 };
 
-#endif /* _EnsembleInfoReader_h_ */

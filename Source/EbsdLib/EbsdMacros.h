@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _ebsdmacros_h_
-#define _ebsdmacros_h_
+#pragma once
 
 /* Define our buffer size for reading data */
 #define kBufferSize 1024
@@ -156,5 +155,4 @@
     set##name##Pointer(f); }
 
 
-#endif /* EBSDMACROS_H_ */
 

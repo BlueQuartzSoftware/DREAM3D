@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _losalamosfftwriter_h_
-#define _losalamosfftwriter_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/FileWriter.h"
@@ -161,4 +160,3 @@ private:
   void operator=(const LosAlamosFFTWriter&);              // Move assignment Not Implemented
 };
 
-#endif /* _LosAlamosFFTWriter_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _minsize_h_
-#define _minsize_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -208,4 +207,3 @@ public:
   MinSize& operator=(MinSize&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* MinSize_H_ */

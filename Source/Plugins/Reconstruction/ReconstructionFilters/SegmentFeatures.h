@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _segmentfeatures_h_
-#define _segmentfeatures_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -181,4 +180,3 @@ public:
   SegmentFeatures& operator=(SegmentFeatures&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* SegmentFeatures_H_ */

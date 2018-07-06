@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findvolfractions_h_
-#define _findvolfractions_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -176,4 +175,3 @@ public:
   FindVolFractions& operator=(FindVolFractions&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindVolFractions_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findsurfaceareatovolume_h_
-#define _findsurfaceareatovolume_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -187,4 +186,3 @@ public:
   FindSurfaceAreaToVolume& operator=(FindSurfaceAreaToVolume&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindSurfaceAreaToVolume_H_ */

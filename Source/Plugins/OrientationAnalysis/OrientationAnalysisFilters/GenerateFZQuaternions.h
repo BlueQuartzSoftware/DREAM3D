@@ -2,8 +2,7 @@
  * Your License or Copyright can go here
  */
 
-#ifndef _generatefzquaternions_h_
-#define _generatefzquaternions_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -170,4 +169,3 @@ public:
   GenerateFZQuaternions& operator=(GenerateFZQuaternions&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _GenerateFZQuaternions_H_ */

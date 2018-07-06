@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _appendimagegeometryzslice_h_
-#define _appendimagegeometryzslice_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -177,4 +176,3 @@ public:
   AppendImageGeometryZSlice& operator=(AppendImageGeometryZSlice&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _AppendZSlice_H_ */

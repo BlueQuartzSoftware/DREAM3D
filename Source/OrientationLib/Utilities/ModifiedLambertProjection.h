@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _modifiedlambertprojection_h_
-#define _modifiedlambertprojection_h_
+#pragma once
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -193,5 +192,4 @@ class OrientationLib_EXPORT ModifiedLambertProjection
 
 
 
-#endif /* _ModifiedLambertProjection_H_ */
 

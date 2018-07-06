@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _triangleops_h_
-#define _triangleops_h_
+#pragma once
 
 #include <vector>
 #include <set>
@@ -87,5 +86,4 @@ class TriangleOps
     void operator=(const TriangleOps&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* _TriangleOps_H_ */
 

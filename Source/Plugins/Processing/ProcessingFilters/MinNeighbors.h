@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _minneighbors_h_
-#define _minneighbors_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -211,4 +210,3 @@ public:
   MinNeighbors& operator=(MinNeighbors&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* MinNeighbors_H_ */

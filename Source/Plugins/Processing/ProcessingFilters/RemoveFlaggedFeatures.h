@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _removeflaggedfeatures_h_
-#define _removeflaggedfeatures_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -194,4 +193,3 @@ public:
   RemoveFlaggedFeatures& operator=(RemoveFlaggedFeatures&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* RemoveFlaggedFeatures_H_ */

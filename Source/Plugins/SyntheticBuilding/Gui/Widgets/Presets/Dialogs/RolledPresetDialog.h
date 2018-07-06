@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _RolledPresetDialog_h_
-#define _RolledPresetDialog_h_
+#pragma once
 
 #include <QtWidgets/QDialog>
 
@@ -75,4 +74,3 @@ private:
   void operator=(const RolledPresetDialog&) = delete;     // Move assignment Not Implemented
 };
 
-#endif /* RolledPresetDialog_H_ */

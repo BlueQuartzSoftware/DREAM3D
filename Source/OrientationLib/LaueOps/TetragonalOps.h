@@ -32,8 +32,7 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _tetragonalops_h_
-#define _tetragonalops_h_
+#pragma once
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -187,5 +186,4 @@ class OrientationLib_EXPORT TetragonalOps : public LaueOps
     void operator=(const TetragonalOps&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* TetragonalOPS_H_ */
 

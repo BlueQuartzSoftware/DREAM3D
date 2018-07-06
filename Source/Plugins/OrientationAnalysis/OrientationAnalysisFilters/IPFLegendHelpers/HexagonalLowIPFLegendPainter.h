@@ -29,8 +29,7 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _hexagonalLowipflegendpainter_H_
-#define _hexagonalLowipflegendpainter_H_
+#pragma once
 
 #include <QtGui/QImage>
 
@@ -57,4 +56,3 @@ private:
   void operator=(const HexagonalLowIPFLegendPainter&);                        // Move assignment Not Implemented
 };
 
-#endif /* _hexagonalLowipflegendpainter_H_ */

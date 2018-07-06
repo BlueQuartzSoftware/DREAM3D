@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _reconstructionplugin_h_
-#define _reconstructionplugin_h_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -191,5 +190,4 @@ class Reconstruction_EXPORT ReconstructionPlugin : public QObject, public ISIMPL
     void operator=(const ReconstructionPlugin&) = delete;       // Move assignment Not Implemented
 };
 
-#endif /* _Reconstruction_H_ */
 

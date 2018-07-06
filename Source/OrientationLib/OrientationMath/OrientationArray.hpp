@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _OrientationArray_H_
-#define _OrientationArray_H_
+#pragma once
 
 #include <assert.h>
 #include <string.h>
@@ -453,4 +452,3 @@ typedef OrientationArray<float> FOrientArrayType;
  */
 typedef OrientationArray<double> DOrientArrayType;
 
-#endif /* _OrientationArray_H_ */

@@ -37,8 +37,7 @@
 
 
 
-#ifndef _angconstants_h_
-#define _angconstants_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -337,5 +336,4 @@ namespace Ebsd
 }
 #endif
 
-#endif /* ANGCONSTANTS_H_ */
 

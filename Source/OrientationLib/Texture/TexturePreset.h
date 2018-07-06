@@ -34,8 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#ifndef _texturepreset_h_
-#define _texturepreset_h_
+#pragma once
 
 #include <QtCore/QVector>
 #include <QtCore/QString>
@@ -126,5 +125,4 @@ class OrientationLib_EXPORT HexTexturePresets
     void operator=(const HexTexturePresets&) = delete;    // Move assignment Not Implemented
 };
 
-#endif /* TEXTUREPRESET_H_ */
 

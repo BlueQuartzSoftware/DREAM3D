@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _alignsectionslist_h_
-#define _alignsectionslist_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -153,4 +152,3 @@ private:
   void operator=(const AlignSectionsList&);             // Move assignment Not Implemented
 };
 
-#endif /* AlignSectionsList_H_ */

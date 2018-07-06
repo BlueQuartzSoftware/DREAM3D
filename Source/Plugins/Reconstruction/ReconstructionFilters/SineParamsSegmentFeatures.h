@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _sineparamssegmentfeatures_h_
-#define _sineparamssegmentfeatures_h_
+#pragma once
 
 #include <random>
 
@@ -215,4 +214,3 @@ private:
   void operator=(const SineParamsSegmentFeatures&);                     // Move assignment Not Implemented
 };
 
-#endif /* SineParamsSegmentFeatures_H_ */

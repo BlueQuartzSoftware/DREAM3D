@@ -43,8 +43,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findgbcdmetricbased_h_
-#define _findgbcdmetricbased_h_
+#pragma once
 
 // Needed for AxisAngle_t
 #include "EbsdLib/EbsdConstants.h"
@@ -258,4 +257,3 @@ public:
   FindGBCDMetricBased& operator=(FindGBCDMetricBased&&) = delete;      // Move Assignment
 };
 
-#endif /* _FindGBCD_MetricBased_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _orientationanalysisplugin_h_
-#define _orientationanalysisplugin_h_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -191,5 +190,4 @@ class OrientationAnalysis_EXPORT OrientationAnalysisPlugin : public QObject, pub
     void operator=(const OrientationAnalysisPlugin&) = delete;            // Move assignment Not Implemented
 };
 
-#endif /* _OrientationAnalysis_H_ */
 

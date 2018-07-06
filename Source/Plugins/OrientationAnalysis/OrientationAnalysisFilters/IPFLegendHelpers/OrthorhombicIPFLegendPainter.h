@@ -29,8 +29,7 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _orthorhombicIPFLegendPainter_H_
-#define _orthorhombicIPFLegendPainter_H_
+#pragma once
 
 #include <QtGui/QImage>
 
@@ -57,4 +56,3 @@ private:
   void operator=(const OrthorhombicIPFLegendPainter&);                        // Move assignment Not Implemented
 };
 
-#endif /* _orthorhombicIPFLegendPainter_H_ */

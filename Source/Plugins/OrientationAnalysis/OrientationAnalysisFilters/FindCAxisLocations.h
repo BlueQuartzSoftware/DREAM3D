@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findcaxislocations_h_
-#define _findcaxislocations_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -180,4 +179,3 @@ public:
   FindCAxisLocations& operator=(FindCAxisLocations&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindCAxisLocations_H_ */

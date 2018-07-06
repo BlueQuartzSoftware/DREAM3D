@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _homochoricwidget_h_
-#define _homochoricwidget_h_
+#pragma once
 
 #include "OrientationWidget.h"
 
@@ -62,4 +61,3 @@ private:
   void operator=(const HomochoricWidget&) = delete;   // Move assignment Not Implemented
 };
 
-#endif /* EBSDREFERENCEFRAMEWIDGET_H_ */

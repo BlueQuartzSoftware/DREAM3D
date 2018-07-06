@@ -32,8 +32,7 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _trigonalops_h_
-#define _trigonalops_h_
+#pragma once
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -188,5 +187,4 @@ class OrientationLib_EXPORT TrigonalOps : public LaueOps
     void operator=(const TrigonalOps&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* TrigonalOPS_H_ */
 

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ebsdsegmentfeatures_h_
-#define _ebsdsegmentfeatures_h_
+#pragma once
 
 #include <random>
 
@@ -228,4 +227,3 @@ private:
   void operator=(const EBSDSegmentFeatures&);               // Move assignment Not Implemented
 };
 
-#endif /* EBSDSegmentFeatures_H_ */

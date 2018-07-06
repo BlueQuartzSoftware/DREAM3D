@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _primaryequiaxedpreset_h_
-#define _primaryequiaxedpreset_h_
+#pragma once
 
 //-- C++ includes
 #include <string>
@@ -84,4 +83,3 @@ private:
 
 DECLARE_FACTORY_CLASS(PrimaryEquiaxedPresetFactory, PrimaryEquiaxedPreset, "Primary Equiaxed")
 
-#endif /* PrimaryEquiaxedPresetFACTORY_H_ */

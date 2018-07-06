@@ -32,8 +32,7 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _vectorsegmentfeatures_h_
-#define _vectorsegmentfeatures_h_
+#pragma once
 
 #include <random>
 
@@ -211,4 +210,3 @@ private:
   void operator=(const VectorSegmentFeatures&);                 // Move assignment Not Implemented
 };
 
-#endif /* VectorSegmentFeatures_H_ */

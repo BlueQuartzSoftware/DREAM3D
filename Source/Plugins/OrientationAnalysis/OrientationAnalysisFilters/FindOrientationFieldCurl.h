@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findorientationfieldcurl_h_
-#define _findorientationfieldcurl_h_
+#pragma once
 
 #include <QtCore/QString>
 #include <vector>
@@ -203,4 +202,3 @@ public:
   FindOrientationFieldCurl& operator=(FindOrientationFieldCurl&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindOrientationFieldCurl_H_ */

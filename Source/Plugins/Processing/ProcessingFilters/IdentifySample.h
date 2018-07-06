@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _identifysample_h_
-#define _identifysample_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -177,4 +176,3 @@ public:
   IdentifySample& operator=(IdentifySample&&) = delete;      // Move Assignment
 };
 
-#endif /* IdentifySample_H_ */

@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _betaops_h_
-#define _betaops_h_
+#pragma once
 
 
 
@@ -69,5 +68,4 @@ class BetaOps : public DistributionAnalysisOps
     void operator=(const BetaOps&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* _BETAOPS_H_ */
 

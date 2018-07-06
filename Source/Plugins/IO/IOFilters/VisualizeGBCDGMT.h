@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _visualizegbcdgmt_h_
-#define _visualizegbcdgmt_h_
+#pragma once
 
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -202,4 +201,3 @@ public:
   VisualizeGBCDGMT& operator=(VisualizeGBCDGMT&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _VisualizeGBCDGMT_H_ */

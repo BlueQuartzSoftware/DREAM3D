@@ -1,5 +1,4 @@
-#ifndef _statsGenFeatureSizeWidget_H_
-#define _statsGenFeatureSizeWidget_H_
+#pragma once
 
 #include <cmath>
 #include <limits>
@@ -263,4 +262,3 @@ private:
   bool m_EsdUpdated = false;
 };
 
-#endif /* _statsGenFeatureSizeWidget_H_ */

@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _sgrdfitemdelegate_h_
-#define _sgrdfitemdelegate_h_
+#pragma once
 
 #include <iostream>
 
@@ -137,4 +136,3 @@ private:
   QModelIndex m_Index;
 };
 
-#endif /* _SGRDFITEMDELEGATE_H_ */

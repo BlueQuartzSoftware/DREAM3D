@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _binarynodestrianglesreader_h_
-#define _binarynodestrianglesreader_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -125,4 +124,3 @@ class SurfaceMeshing_EXPORT BinaryNodesTrianglesReader : public SurfaceMeshFilte
      BinaryNodesTrianglesReader& operator=(BinaryNodesTrianglesReader&&) = delete;      // Move Assignment
 };
 
-#endif /* _BinaryNodesTrianglesReader_H_ */

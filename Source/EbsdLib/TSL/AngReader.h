@@ -36,8 +36,7 @@
 
 
 
-#ifndef _angreader_h_
-#define _angreader_h_
+#pragma once
 
 #include <QtCore/QString>
 #include <QtCore/QFile>
@@ -164,5 +163,4 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
     void operator=(const AngReader&); // Move assignment Not Implemented
 };
 
-#endif /* ANGREADER_H_ */
 

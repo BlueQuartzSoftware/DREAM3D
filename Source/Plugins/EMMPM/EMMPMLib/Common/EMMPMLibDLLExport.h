@@ -8,8 +8,7 @@
 //                           FA8650-04-C-5229
 //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef _emmpmlibdllexport_h_
-#define _emmpmlibdllexport_h_
+#pragma once
 
 
 /* Cmake will define EMMPMLib_EXPORTS on Windows when it
@@ -42,4 +41,3 @@ building the EMMPMDatModel DLL on windows.
 #endif
 
 
-#endif /* _EMMPM_DLL_EXPORT_H_ */

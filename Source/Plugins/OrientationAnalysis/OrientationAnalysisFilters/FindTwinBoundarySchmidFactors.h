@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _findtwinboundaryschmidfactors_h_
-#define _findtwinboundaryschmidfactors_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -219,4 +218,3 @@ public:
   FindTwinBoundarySchmidFactors& operator=(FindTwinBoundarySchmidFactors&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* FindTwinBoundarySchmidFactors_H_ */

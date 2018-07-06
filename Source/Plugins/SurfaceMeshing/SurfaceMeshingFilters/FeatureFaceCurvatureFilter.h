@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _featurefacecurvaturefilter_h_
-#define _featurefacecurvaturefilter_h_
+#pragma once
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -237,4 +236,3 @@ class SurfaceMeshing_EXPORT FeatureFaceCurvatureFilter : public SurfaceMeshFilte
     FeatureFaceCurvatureFilter& operator=(FeatureFaceCurvatureFilter&&) = delete;      // Move Assignment
 };
 
-#endif /* FeatureFaceCurvatureFilter_H_ */

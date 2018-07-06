@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _polefiguremaker_h_
-#define _polefiguremaker_h_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QVector>
@@ -141,4 +140,3 @@ private:
   void operator=(const PoleFigureMaker&) = delete;  // Move assignment Not Implemented
 };
 
-#endif /* COLORPOLEFIGURE_H_ */

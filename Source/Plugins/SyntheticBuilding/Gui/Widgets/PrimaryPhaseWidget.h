@@ -5,8 +5,7 @@
  *      Author: mjackson
  */
 
-#ifndef _primaryphasewidget_h_
-#define _primaryphasewidget_h_
+#pragma once
 
 #include <QtCore/QObject>
 #include <QtCore/QString>
@@ -136,4 +135,3 @@ private:
   void operator=(const PrimaryPhaseWidget&);              // Move assignment Not Implemented
 };
 
-#endif /* PRIMARYPHASEWIDGET_H_ */

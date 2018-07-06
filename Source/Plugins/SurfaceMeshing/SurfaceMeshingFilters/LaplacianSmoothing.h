@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _laplaciansmoothing_h_
-#define _laplaciansmoothing_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -216,4 +215,3 @@ public:
    LaplacianSmoothing& operator=(LaplacianSmoothing&&) = delete;      // Move assignment Not Implemented
 };
 
-#endif /* _LaplacianSmoothing_H_ */

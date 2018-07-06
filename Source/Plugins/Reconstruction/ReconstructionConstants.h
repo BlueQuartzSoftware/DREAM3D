@@ -1,5 +1,4 @@
-#ifndef _reconstructionconstants_h_
-#define _reconstructionconstants_h_
+#pragma once
 
 #include <QtCore/QString>
 
@@ -17,4 +16,3 @@ namespace BlueQuartz
 }
 } // namespace ReconstructionConstants
 
-#endif

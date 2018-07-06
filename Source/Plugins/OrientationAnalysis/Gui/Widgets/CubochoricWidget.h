@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _cubochoricwidget_h_
-#define _cubochoricwidget_h_
+#pragma once
 
 #include "OrientationWidget.h"
 
@@ -64,4 +63,3 @@ private:
   void operator=(const CubochoricWidget&) = delete;   // Move assignment Not Implemented
 };
 
-#endif /* EBSDREFERENCEFRAMEWIDGET_H_ */

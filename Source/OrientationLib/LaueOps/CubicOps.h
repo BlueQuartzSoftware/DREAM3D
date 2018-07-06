@@ -32,8 +32,7 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _cubicops_h_
-#define _cubicops_h_
+#pragma once
 
 
 #include "SIMPLib/SIMPLib.h"
@@ -208,5 +207,4 @@ class OrientationLib_EXPORT CubicOps : public LaueOps
     void operator=(const CubicOps&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* CUBICOPS_H_ */
 

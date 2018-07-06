@@ -33,8 +33,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _trianglecentroidfilter_h_
-#define _trianglecentroidfilter_h_
+#pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -149,4 +148,3 @@ public:
   TriangleCentroidFilter& operator=(TriangleCentroidFilter&&) = delete;      // Move assignment Not Implemented
 };
 
-#endif /* _TriangleCentroidFilter_H_ */

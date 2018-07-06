@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _sgpowerlawitemdelegate_h_
-#define _sgpowerlawitemdelegate_h_
+#pragma once
 
 #include <iostream>
 
@@ -99,4 +98,3 @@ private:
   QModelIndex m_Index;
 };
 
-#endif /* SGPOWERLAWITEMDELEGATE_H_ */

@@ -20,8 +20,7 @@
  *  
  *****************************************************************************/ 
 
-#ifndef TCLAP_COMMANDLINE_INTERFACE_H
-#define TCLAP_COMMANDLINE_INTERFACE_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -147,4 +146,3 @@ class CmdLineInterface
 } //namespace
 
 
-#endif 

@@ -31,8 +31,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _statsgeneratorfilter_h_
-#define _statsgeneratorfilter_h_
+#pragma once
 
 #include <QtCore/QObject>
 
@@ -232,4 +231,3 @@ public:
   StatsGeneratorFilter& operator=(StatsGeneratorFilter&&) = delete;      // Move Assignment Not Implemented
 };
 
-#endif /* _statsGeneratorFilter_H_ */

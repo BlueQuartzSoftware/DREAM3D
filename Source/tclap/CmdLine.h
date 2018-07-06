@@ -21,8 +21,7 @@
  *
  *****************************************************************************/
 
-#ifndef TCLAP_CMDLINE_H
-#define TCLAP_CMDLINE_H
+#pragma once
 
 #include <tclap/SwitchArg.h>
 #include <tclap/MultiSwitchArg.h>
@@ -618,4 +617,3 @@ inline void CmdLine::reset()
 
 
 } //namespace TCLAP
-#endif

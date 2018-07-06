@@ -32,8 +32,7 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _orthorhombicops_h_
-#define _orthorhombicops_h_
+#pragma once
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -191,5 +190,4 @@ class OrientationLib_EXPORT OrthoRhombicOps : public LaueOps
     void operator=(const OrthoRhombicOps&) = delete;  // Move assignment Not Implemented
 };
 
-#endif /* ORTHORHOMBICOPS_H_ */
 

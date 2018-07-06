@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _sgrdftablemodel_h_
-#define _sgrdftablemodel_h_
+#pragma once
 
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QVariant>
@@ -171,4 +170,3 @@ private:
   void operator=(const SGRDFTableModel&) = delete;  // Move assignment Not Implemented
 };
 
-#endif /* _SGRDFTableModel_H_ */

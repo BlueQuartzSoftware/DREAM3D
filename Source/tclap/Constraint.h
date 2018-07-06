@@ -19,8 +19,7 @@
  *
  *****************************************************************************/
 
-#ifndef TCLAP_CONSTRAINT_H
-#define TCLAP_CONSTRAINT_H
+#pragma once
 
 #include <string>
 #include <vector>
@@ -65,4 +64,3 @@ class Constraint
 };
 
 } //namespace TCLAP
-#endif

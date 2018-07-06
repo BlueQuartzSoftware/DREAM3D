@@ -33,8 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _omwidget_h_
-#define _omwidget_h_
+#pragma once
 
 #include "OrientationWidget.h"
 
@@ -62,4 +61,3 @@ private:
   void operator=(const OmWidget&) = delete; // Move assignment Not Implemented
 };
 
-#endif /* EBSDREFERENCEFRAMEWIDGET_H_ */
