@@ -1,4 +1,15 @@
 
+if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
+# CMake 3.1 introduces if() policies on dereferencing variables in quotes
+cmake_policy(SET CMP0054 NEW)
+
+cmake_policy(SET CMP0002 NEW)
+
+# cmake_policy(SET CMP0074 NEW)
+endif()
+
+cmake_minimum_required(VERSION 3.10.0)
+
 message(STATUS "********* STARTING DREAM.3D CONFIGURATION ***********************")
 if(NOT "${DREAM3D_SDK}" STREQUAL "")
   include("${DREAM3D_SDK}/DREAM3D_SDK.cmake")
@@ -43,16 +54,6 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_EXTENSIONS False)
 
-if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
-  # CMake 3.1 introduces if() policies on dereferencing variables in quotes
-  cmake_policy(SET CMP0054 NEW)
-
-  cmake_policy(SET CMP0002 NEW)
-
-  # cmake_policy(SET CMP0074 NEW)
-endif()
-
-cmake_minimum_required(VERSION 3.8.0)
 
 #------------------------------------------------------------------------------
 # Create the Top level Project
