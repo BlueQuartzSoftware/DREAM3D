@@ -833,9 +833,12 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
   }
   m_ODFWidget->setCrystalStructure(getCrystalStructure());
 
-  /* SEt the BinNumbers data set */
+  /* Set the BinNumbers data set */
   FloatArrayType::Pointer bins = primaryStatsData->getBinNumbers();
-
+  if(bins == nullptr)
+  {
+    return;
+  }
 #if 0
   /* Set the Feature_Diameter_Info Data */
 
