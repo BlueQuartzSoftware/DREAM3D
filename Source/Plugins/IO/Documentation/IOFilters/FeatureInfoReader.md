@@ -1,5 +1,5 @@
-Read Feature Info File 
-=============
+# Read Feature Info File #
+
 
 ## Group (Subgroup) ##
 
@@ -7,22 +7,56 @@ IO (Input)
 
 ## Description ##
 
-This **Filter** reads information about an existing set of **Feature** into the a new **Feature Attribute Matrix**. The basic format of the file is the number of **Features** on the first line of the file followed by columnar formatted data listing the **Feature** Id, **Ensemble** Id, Euler Angle 1, Euler Angle 2 and Euler Angle 3. Currently, only the **Ensemble** Id and Euler angle information can be read using this **Filter**.
+This **Filter** reads information about an existing set of **Feature** into the a new **Feature Attribute Matrix**. 
+The basic format of the file is the number of **Features** on the first line of the file followed by columnar 
+formatted data listing the:
+
++ **Feature** Id
++ **Ensemble** Id
++ Euler Angle 1
++ Euler Angle 2
++ Euler Angle 3
+
+Currently, only the **Ensemble** Id and Euler angle information can be 
+read using this **Filter**.
+
+Values **MUST** be seperated by a _SPACE_ character.
+
+Comment lines in the file **MUST** have '#' as the first character of the line. Comments
+can be anywhere in the file.
+
+If the Euler values are in Degrees be sure to use the "Degrees to Radians" filter
+to convert those values to Radians.
+
 
 *If you do not have Euler Angle data for each **Feature** then substituting Zero (0.0) is fine.*
 
-**Feature** and **Ensemble** Ids start from one (1) in DREAM.3D. DREAM.3D uses the zero (0) index internally which has several ramifications that the user needs to understand. Statistics will **not** be calculated for any **Feature** or **Ensemble** with an Id value of zero (0). If your segmented data numbering starts with Zero (0), then the user needs to find a way to renumber **Feature**=0 to another value, typically the max Id + 1. For example, if you have a file with 123 **Features** and 2 **Ensembles** then the file would be similar to the following: 
+**Feature** and **Ensemble** Ids start from one (1) in DREAM.3D. DREAM.3D uses the 
+zero (0) index internally which has several ramifications that the user needs to 
+understand. Statistics will **not** be calculated for any **Feature** or **Ensemble** 
+with an Id value of zero (0). If your segmented data numbering starts with Zero (0), 
+then the user needs to find a way to renumber **Feature**=0 to another value, 
+typically the max Id + 1. For example, if you have a file with 123 **Features** 
+and 2 **Ensembles** then the file would be similar to the following: 
 
 ## Example Input ##
 
-For example, if you have a file with 123 **Features** and 2 **Ensembles** then the file would be similar to the following:
+For example, if you have a file with 8 **Features** and 2 **Ensembles** then the file would be similar to the following:
 
-    123
-    1   2  1.2  0.4  0.8
-    2   1  0.8  0.99  1.0
-    .....
-    121 1 0.3  0.5  0.9
-    123 2 1.0  1.1  0.03
+    # Number of Features
+    8
+    # Grain ID Ensemble ID Euler 1 Euler 2 Euler 3
+    1 1 0. 0. 0.
+    2 2 0.3490658504 0. 0.
+    3 1 0.523598776 0. 0.
+    4 2 0.69813 0. 0.
+    5 1 0. 0.785398 0.
+    6 2 0.3490658504 0.785398 0.
+    7 1 0.523598776 0.785398 0.
+    8 1 0.69813 0.785398 0.
+    
+Note the use of the comments to add more verbosity to the file. The comment lines are optional.
+
 
 ## Parameters ##
 
