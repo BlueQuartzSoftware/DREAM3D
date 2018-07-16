@@ -166,17 +166,17 @@ protected:
   /**
    * @brief readHeader Reimplemented from @see FileReader class
    */
-  virtual int32_t readHeader();
+  int32_t readHeader() override;
 
   /**
    * @brief readFile Reimplemented from @see FileReader class
    */
-  virtual int32_t readFile();
+  int32_t readFile() override;
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  void dataCheck();
+  void dataCheck() override;
 
   /**
    * @brief Initializes all the private instance variables.
@@ -214,11 +214,14 @@ protected:
   void parseDataLine(QByteArray& line, QVector<size_t> dims, int64_t xCol, int64_t yCol, int64_t zCol, size_t lineNum);
 
 private:
-  QFile m_InStream;
-  QMap<QString, DataParser::Pointer> m_NamePointerMap;
-  ImageGeom* m_CachedGeometry = nullptr;
+  QFile                               m_InStream;
+  QMap<QString, DataParser::Pointer>  m_NamePointerMap;
+  ImageGeom*                          m_CachedGeometry = nullptr;
 
+public:
   SPParksDumpReader(const SPParksDumpReader&) = delete; // Copy Constructor Not Implemented
-  void operator=(const SPParksDumpReader&);             // Move assignment Not Implemented
+  SPParksDumpReader(SPParksDumpReader&&) = delete;      // Move Constructor Not Implemented
+  SPParksDumpReader& operator=(const SPParksDumpReader&) = delete; // Copy Assignment Not Implemented
+  SPParksDumpReader& operator=(SPParksDumpReader&&) = delete;      // Move Assignment Not Implemented
 };
 
