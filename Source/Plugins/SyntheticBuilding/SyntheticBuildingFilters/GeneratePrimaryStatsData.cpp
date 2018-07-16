@@ -374,14 +374,6 @@ void GeneratePrimaryStatsData::execute()
     return;
   }
 
-  if(getErrorCondition() < 0)
-  {
-    QString ss = QObject::tr("Some error message");
-    setErrorCondition(-99999999);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
   typedef QVector<float> FloatVectorType;
   int err = 0;
   int size = 250;
