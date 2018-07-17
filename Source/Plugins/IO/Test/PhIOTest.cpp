@@ -126,8 +126,8 @@ public:
 
       int err = 0;
 
-      // Use the helper class CreateDataContainer to generate a valid DataContainer
-      CreateDataContainer::Pointer createVolumeDC = CreateDataContainer::New();
+      // Use the helper class CreateImageGeomDataContainer to generate a valid DataContainer
+      CreateImageGeomDataContainer::Pointer createVolumeDC = CreateImageGeomDataContainer::New();
       createVolumeDC->setXDim(UnitTest::FeatureIdsTest::XSize);
       createVolumeDC->setYDim(UnitTest::FeatureIdsTest::YSize);
       createVolumeDC->setZDim(UnitTest::FeatureIdsTest::ZSize);
@@ -176,8 +176,8 @@ public:
 
       int err = 0;
 
-      // Use the helper class CreateDataContainer to generate a valid DataContainer
-      CreateDataContainer::Pointer createVolumeDC = CreateDataContainer::New();
+      // Use the helper class CreateImageGeomDataContainer to generate a valid DataContainer
+      CreateImageGeomDataContainer::Pointer createVolumeDC = CreateImageGeomDataContainer::New();
       createVolumeDC->setXDim(UnitTest::FeatureIdsTest::XSize);
       createVolumeDC->setYDim(UnitTest::FeatureIdsTest::YSize);
       createVolumeDC->setZDim(UnitTest::FeatureIdsTest::ZSize);
@@ -520,6 +520,7 @@ public:
   void operator()()
   {
     int err = EXIT_SUCCESS;
+    std::cout << "<===== Start " << getNameOfClass().toStdString() << std::endl;
     DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
     DREAM3D_REGISTER_TEST(TestPhWriter())

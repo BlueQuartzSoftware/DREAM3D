@@ -270,8 +270,10 @@ public:
   void operator()()
   {
     int err = EXIT_SUCCESS;
+    std::cout << "<===== Start " << getNameOfClass().toStdString() << std::endl;
     DREAM3D_REGISTER_TEST(TestWritingFiles());
     DREAM3D_REGISTER_TEST(TestReadingFiles());
+    DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
 
 private:
