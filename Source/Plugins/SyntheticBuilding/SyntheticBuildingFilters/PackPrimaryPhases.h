@@ -137,8 +137,8 @@ public:
   SIMPL_FILTER_PARAMETER(bool, UseMask)
   Q_PROPERTY(bool UseMask READ getUseMask WRITE setUseMask)
 
-  SIMPL_FILTER_PARAMETER(bool, HaveFeatures)
-  Q_PROPERTY(bool HaveFeatures READ getHaveFeatures WRITE setHaveFeatures)
+  SIMPL_FILTER_PARAMETER(int, FeatureGeneration)
+  Q_PROPERTY(int FeatureGeneration READ getFeatureGeneration WRITE setFeatureGeneration)
 
   SIMPL_FILTER_PARAMETER(QString, FeatureInputFile)
   Q_PROPERTY(QString FeatureInputFile READ getFeatureInputFile WRITE setFeatureInputFile)
@@ -439,13 +439,13 @@ private:
   QString m_AxisEulerAnglesArrayName;
   QString m_Omega3sArrayName;
   QString m_EquivalentDiametersArrayName;
-  int64_t* m_Neighbors;
+  int64_t* m_Neighbors = nullptr;
 
   // Cell Data - make sure these are all initialized to nullptr in the constructor
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
   DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
   DEFINE_DATAARRAY_VARIABLE(bool, Mask)
-  int8_t* m_BoundaryCells;
+  int8_t* m_BoundaryCells = nullptr;
 
   // Feature Data - make sure these are all initialized to nullptr in the constructor
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)

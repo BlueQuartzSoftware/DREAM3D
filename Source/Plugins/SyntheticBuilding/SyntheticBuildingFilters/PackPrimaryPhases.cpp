@@ -250,12 +250,12 @@ PackPrimaryPhases::PackPrimaryPhases()
 , m_InputShapeTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::ShapeTypes)
 , m_MaskArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
 , m_UseMask(false)
-, m_HaveFeatures(false)
+, m_FeatureGeneration(0)
 , m_FeatureInputFile("")
 , m_CsvOutputFile("")
 , m_PeriodicBoundaries(false)
 , m_WriteGoalAttributes(false)
-, m_SaveGeometricDescriptions(false)
+, m_SaveGeometricDescriptions(0)
 , m_NewAttributeMatrixPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, PrimaryPhaseSyntheticShapeParametersName, "")
 , m_NeighborhoodsArrayName(SIMPL::FeatureData::Neighborhoods)
 , m_CentroidsArrayName(SIMPL::FeatureData::Centroids)
@@ -264,22 +264,6 @@ PackPrimaryPhases::PackPrimaryPhases()
 , m_AxisEulerAnglesArrayName(SIMPL::FeatureData::AxisEulerAngles)
 , m_Omega3sArrayName(SIMPL::FeatureData::Omega3s)
 , m_EquivalentDiametersArrayName(SIMPL::FeatureData::EquivalentDiameters)
-, m_Neighbors(nullptr)
-, m_FeatureIds(nullptr)
-, m_CellPhases(nullptr)
-, m_Mask(nullptr)
-, m_BoundaryCells(nullptr)
-, m_FeaturePhases(nullptr)
-, m_Neighborhoods(nullptr)
-, m_Centroids(nullptr)
-, m_Volumes(nullptr)
-, m_AxisLengths(nullptr)
-, m_AxisEulerAngles(nullptr)
-, m_Omega3s(nullptr)
-, m_EquivalentDiameters(nullptr)
-, m_PhaseTypes(nullptr)
-, m_ShapeTypes(nullptr)
-, m_NumFeatures(nullptr)
 , m_ErrorOutputFile("")
 , m_VtkOutputFile("")
 {
@@ -368,6 +352,7 @@ void PackPrimaryPhases::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", MaskArrayPath, FilterParameter::RequiredArray, PackPrimaryPhases, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
+
   {
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::StatsDataArray, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Any);
@@ -375,7 +360,7 @@ void PackPrimaryPhases::setupFilterParameters()
     geomTypes.push_back(IGeometry::Type::Image);
     geomTypes.push_back(IGeometry::Type::Unknown);
     req.dcGeometryTypes = geomTypes;
-    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Statistics", InputStatsArrayPath, FilterParameter::RequiredArray, PackPrimaryPhases, req));
+    parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Statistics", InputStatsArrayPath, FilterParameter::RequiredArray, PackPrimaryPhases, req, 0));
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -417,10 +402,32 @@ void PackPrimaryPhases::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix", OutputCellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, PackPrimaryPhases));
   parameters.push_back(SIMPL_NEW_STRING_FP("Number of Features", NumFeaturesArrayName, FilterParameter::CreatedArray, PackPrimaryPhases));
 
+  
+  {
+    LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
+    parameter->setHumanLabel("Feature Generation");
+    parameter->setPropertyName("FeatureGeneration");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(PackPrimaryPhases, this, FeatureGeneration));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(PackPrimaryPhases, this, FeatureGeneration));
+
+    QVector<QString> choices;
+    choices.push_back("Generate Features");
+    choices.push_back("Already Have Features");
+    parameter->setChoices(choices);
+    QStringList linkedProps;
+    linkedProps << "InputStatsArrayPath"
+                << "FeatureInputFile";
+    parameter->setLinkedProperties(linkedProps);
+    parameter->setEditable(false);
+    parameter->setCategory(FilterParameter::Parameter);
+    parameters.push_back(parameter);
+  }
+
+
   linkedProps.clear();
-  linkedProps << "FeatureInputFile";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Already Have Features", HaveFeatures, FilterParameter::Parameter, PackPrimaryPhases, linkedProps));
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Feature Input File", FeatureInputFile, FilterParameter::Parameter, PackPrimaryPhases, "*.txt", "Text File"));
+  linkedProps << "FeatureInputFile" << "InputStatsArrayPath";
+ // parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Already Have Features", HaveFeatures, FilterParameter::Parameter, PackPrimaryPhases, linkedProps));
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Feature Input File", FeatureInputFile, FilterParameter::Parameter, PackPrimaryPhases, "*.txt", "Text File", 1));
   linkedProps.clear();
   //  linkedProps << "CsvOutputFile";
   //  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Goal Attributes", WriteGoalAttributes, FilterParameter::Parameter, PackPrimaryPhases, linkedProps));
@@ -481,7 +488,17 @@ void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* rea
   setPeriodicBoundaries(reader->readValue("PeriodicBoundaries", false));
   setWriteGoalAttributes(reader->readValue("WriteGoalAttributes", false));
   setUseMask(reader->readValue("UseMask", getUseMask()));
-  setHaveFeatures(reader->readValue("HaveFeatures", getHaveFeatures()));
+  
+  bool haveFeatures = reader->readValue("HaveFeatures", false);
+  if(haveFeatures)
+  {
+    setFeatureGeneration(0);
+  }
+  else
+  {
+    setFeatureGeneration(1);
+  }
+  
   setFeatureInputFile(reader->readString("FeatureInputFile", getFeatureInputFile()));
   setCsvOutputFile(reader->readString("CsvOutputFile", getCsvOutputFile()));
   setInputStatsArrayPath(reader->readDataArrayPath("InputStatsArrayPath", getInputStatsArrayPath()));
@@ -499,8 +516,6 @@ void PackPrimaryPhases::readFilterParameters(AbstractFilterParametersReader* rea
 void PackPrimaryPhases::readFilterParameters(QJsonObject& obj)
 {
   AbstractFilter::readFilterParameters(obj);
-  // setErrorOutputFile(obj["ErrorOutputFile"].toString());
-  // setVtkOutputFile(obj["VtkOutputFile"].toString());
 }
 
 // FP: Check why these values are not connected to a filter parameter!
@@ -511,8 +526,6 @@ void PackPrimaryPhases::readFilterParameters(QJsonObject& obj)
 void PackPrimaryPhases::writeFilterParameters(QJsonObject& obj)
 {
   AbstractFilter::writeFilterParameters(obj);
-  // obj["ErrorOutputFile"] = getErrorOutputFile();
-  // obj["VtkOutputFile"] = getVtkOutputFile();
 }
 
 // -----------------------------------------------------------------------------
@@ -598,20 +611,23 @@ void PackPrimaryPhases::dataCheck()
   {
     ensembleDataArrayPaths.push_back(getInputShapeTypesArrayPath());
   }
-
-  m_StatsDataArray = getDataContainerArray()->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), cDims);
-  if(m_StatsDataArray.lock() == nullptr)
+  
+  if(getFeatureGeneration() == 0)
   {
-    QString ss = QObject::tr("Statistics array is not initialized correctly. The path is %1").arg(getInputStatsArrayPath().serialize());
-    setErrorCondition(-78000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    m_StatsDataArray = getDataContainerArray()->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), cDims);
+    if(m_StatsDataArray.lock() == nullptr)
+    {
+      QString ss = QObject::tr("Statistics array is not initialized correctly. The path is %1").arg(getInputStatsArrayPath().serialize());
+      setErrorCondition(-78000);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
   }
   if(getErrorCondition() >= 0)
   {
     ensembleDataArrayPaths.push_back(getInputStatsArrayPath());
   }
 
-  if(m_UseMask == true)
+  if(m_UseMask)
   {
     m_MaskPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getMaskArrayPath(), cDims);
     if(nullptr != m_MaskPtr.lock())
@@ -755,9 +771,9 @@ void PackPrimaryPhases::dataCheck()
     m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0);
   }
 
-  if(m_WriteGoalAttributes == true)
+  if(m_WriteGoalAttributes)
   {
-    if(getCsvOutputFile().isEmpty() == true)
+    if(getCsvOutputFile().isEmpty())
     {
       QString ss = QObject::tr("The goal attribute output file must be set");
       setErrorCondition(-78001);
@@ -767,7 +783,7 @@ void PackPrimaryPhases::dataCheck()
     QFileInfo fi(getCsvOutputFile());
 
     QDir parentPath = fi.path();
-    if(parentPath.exists() == false)
+    if(!parentPath.exists())
     {
       setWarningCondition(-78002);
       QString ss = QObject::tr("The directory path for the GoalAttribute output file does not exist. The application will attempt to create this path during execution of the filter");
@@ -775,17 +791,17 @@ void PackPrimaryPhases::dataCheck()
     }
   }
 
-  if(m_HaveFeatures == true)
+  if(getFeatureGeneration() == 1)
   {
     QFileInfo fi(getFeatureInputFile());
 
-    if(getFeatureInputFile().isEmpty() == true)
+    if(getFeatureInputFile().isEmpty())
     {
       QString ss = QObject::tr("The input feature file must be set");
       setErrorCondition(-78003);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
-    else if(fi.exists() == false)
+    else if(!fi.exists())
     {
       QString ss = QObject::tr("The input feature file does not exist");
       setErrorCondition(-78004);
@@ -838,7 +854,7 @@ void PackPrimaryPhases::execute()
     return;
   }
 
-  if(m_HaveFeatures == false)
+  if(getFeatureGeneration() == 0)
   {
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Features || Initializing Volume");
     // this initializes the arrays to hold the details of the locations of all of the features during packing
@@ -859,7 +875,7 @@ void PackPrimaryPhases::execute()
     }
   }
 
-  if(m_HaveFeatures == true)
+  if(getFeatureGeneration() == 1)
   {
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Loading Features");
     loadFeatures();
@@ -891,7 +907,7 @@ void PackPrimaryPhases::execute()
   // cleanup_features();
   // if (getCancel() == true) { return; }
 
-  if(m_WriteGoalAttributes == true)
+  if(m_WriteGoalAttributes)
   {
     writeGoalAttributes();
   }
@@ -906,7 +922,7 @@ void PackPrimaryPhases::execute()
 
   AttributeMatrix::Pointer ensembleAttrMat = getDataContainerArray()->getAttributeMatrix(getInputPhaseNamesArrayPath());
   IDataArray::Pointer inputPhaseNames = ensembleAttrMat->getAttributeArray(getInputPhaseNamesArrayPath().getDataArrayName());
-  if(inputPhaseNames.get() != nullptr)
+  if(inputPhaseNames != nullptr)
   {
     AttributeMatrix::Pointer cellEnsembleAttrMat = m->getAttributeMatrix(m_OutputCellEnsembleAttributeMatrixName);
     IDataArray::Pointer outputPhaseNames = inputPhaseNames->deepCopy();
@@ -924,7 +940,7 @@ int32_t PackPrimaryPhases::writeVtkFile(int32_t* featureOwners, int32_t* exclusi
   size_t featureOwnersIdx = 0;
   std::ofstream outFile;
   outFile.open(m_VtkOutputFile.toLatin1().data(), std::ios_base::binary);
-  if(outFile.is_open() == false)
+  if(!outFile.is_open() )
   {
     qDebug() << "m_VtkOutputFile: " << m_VtkOutputFile << "\n";
     notifyErrorMessage(getHumanLabel(), "Could not open Vtk File for writing from PackFeatures", -1);
@@ -1066,7 +1082,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
 {
   bool writeErrorFile = false;
   std::ofstream outFile;
-  if(m_ErrorOutputFile.isEmpty() == false)
+  if(!m_ErrorOutputFile.isEmpty())
   {
     outFile.open(m_ErrorOutputFile.toLatin1().data(), std::ios_base::binary);
     writeErrorFile = outFile.is_open();
@@ -1122,8 +1138,10 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
   float xc = 0.0f, yc = 0.0f, zc = 0.0f;
   float oldxc = 0.0f, oldyc = 0.0f, oldzc = 0.0f;
   m_OldFillingError = 0.0f;
-  m_CurrentNeighborhoodError = 0.0f, m_OldNeighborhoodError = 0.0f;
-  m_CurrentSizeDistError = 0.0f, m_OldSizeDistError = 0.0f;
+  m_CurrentNeighborhoodError = 0.0f;
+  m_OldNeighborhoodError = 0.0f;
+  m_CurrentSizeDistError = 0.0f;
+  m_OldSizeDistError = 0.0f;
   int32_t acceptedmoves = 0;
   float totalprimaryfractions = 0.0f;
 
@@ -1173,7 +1191,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
   m_AvailablePointsCount = 0;
   for(int64_t i = 0; i < m_TotalPackingPoints; i++)
   {
-    if((exclusionOwners[i] == 0 && m_UseMask == false) || (exclusionOwners[i] == 0 && m_UseMask == true && m_Mask[i] == true))
+    if((exclusionOwners[i] == 0 && !m_UseMask) || (exclusionOwners[i] == 0 && m_UseMask && m_Mask[i]))
     {
       availablePoints[i] = m_AvailablePointsCount;
       availablePointsInv[m_AvailablePointsCount] = i;
@@ -1225,7 +1243,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
   }
 
   // generate the features and monitor the size distribution error while doing so. After features are generated, no new features can enter or leave the structure.
-  Feature_t feature;
+  Feature_t feature = Feature_t();
 
   // Estimate the total Number of features here
   int32_t estNumFeatures = estimateNumFeatures(udims[0], udims[1], udims[2], xRes, yRes, zRes);
@@ -1280,7 +1298,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
     }
   }
 
-  if(m_PeriodicBoundaries == false)
+  if(!m_PeriodicBoundaries)
   {
     iter = 0;
     int32_t xfeatures = 0, yfeatures = 0, zfeatures = 0;
@@ -1409,7 +1427,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
       return;
     }
 
-    if((int32_t)i > progFeature + progFeatureInc)
+    if(static_cast<int32_t>(i) > progFeature + progFeatureInc)
     {
       QString ss = QObject::tr("Placing Feature #%1/%2").arg(i).arg(totalFeatures);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
@@ -1464,10 +1482,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
     m_FillingError = checkFillingError(i, -1000, featureOwnersPtr, exclusionOwnersPtr);
   }
 
-  progFeature = 0;
-  progFeatureInc = static_cast<int32_t>(totalFeatures * 0.01f);
   uint64_t millis = QDateTime::currentMSecsSinceEpoch();
-  uint64_t currentMillis = millis;
   uint64_t startMillis = millis;
   uint64_t estimatedTime = 0;
   float timeDiff = 0.0f;
@@ -1475,7 +1490,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
   // determine neighborhoods and initial neighbor distribution errors
   for(size_t i = m_FirstPrimaryFeature; i < totalFeatures; i++)
   {
-    currentMillis = QDateTime::currentMSecsSinceEpoch();
+    uint64_t currentMillis = QDateTime::currentMSecsSinceEpoch();
     if(currentMillis - millis > 1000)
     {
       QString ss = QObject::tr("Determining Neighbors Feature %1/%2").arg(i).arg(totalFeatures);
@@ -1497,7 +1512,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
   m_AvailablePointsCount = 0;
   for(int64_t i = 0; i < m_TotalPackingPoints; i++)
   {
-    if((exclusionOwners[i] == 0 && m_UseMask == false) || (exclusionOwners[i] == 0 && m_UseMask == true && m_Mask[i] == true))
+    if((exclusionOwners[i] == 0 && !m_UseMask) || (exclusionOwners[i] == 0 && m_UseMask && m_Mask[i]))
     {
       availablePoints[i] = m_AvailablePointsCount;
       availablePointsInv[m_AvailablePointsCount] = i;
@@ -1517,7 +1532,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
   int32_t lastIteration = 0;
   for(int32_t iteration = 0; iteration < totalAdjustments; ++iteration)
   {
-    currentMillis = QDateTime::currentMSecsSinceEpoch();
+    uint64_t currentMillis = QDateTime::currentMSecsSinceEpoch();
     if(currentMillis - millis > 1000)
     {
       QString ss = QObject::tr("Swapping/Moving/Adding/Removing Features Iteration %1/%2").arg(iteration).arg(totalAdjustments);
@@ -1538,7 +1553,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
 
     int32_t option = iteration % 2;
 
-    if(writeErrorFile == true && iteration % 25 == 0)
+    if(writeErrorFile && iteration % 25 == 0)
     {
       outFile << iteration << " " << m_FillingError << "  " << availablePoints.size() << "  " << m_AvailablePointsCount << " " << totalFeatures << " " << acceptedmoves << "\n";
     }
@@ -1549,7 +1564,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
       randomfeature = m_FirstPrimaryFeature + int32_t(rg.genrand_res53() * (totalFeatures - m_FirstPrimaryFeature));
       good = false;
       count = 0;
-      while(good == false && count < static_cast<int32_t>((totalFeatures - m_FirstPrimaryFeature)))
+      while(!good && count < static_cast<int32_t>((totalFeatures - m_FirstPrimaryFeature)))
       {
         xc = m_Centroids[3 * randomfeature];
         yc = m_Centroids[3 * randomfeature + 1];
@@ -1621,7 +1636,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
       randomfeature = m_FirstPrimaryFeature + int32_t(rg.genrand_res53() * (totalFeatures - m_FirstPrimaryFeature));
       good = false;
       count = 0;
-      while(good == false && count < static_cast<int32_t>((totalFeatures - m_FirstPrimaryFeature)))
+      while(!good && count < static_cast<int32_t>((totalFeatures - m_FirstPrimaryFeature)))
       {
         xc = m_Centroids[3 * randomfeature];
         yc = m_Centroids[3 * randomfeature + 1];
@@ -1700,7 +1715,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
     }
   }
 
-  if(m_VtkOutputFile.isEmpty() == false)
+  if(!m_VtkOutputFile.isEmpty())
   {
     int32_t err = writeVtkFile(featureOwnersPtr->getPointer(0), exclusionOwnersPtr->getPointer(0));
     if(err < 0)
@@ -1782,7 +1797,7 @@ void PackPrimaryPhases::generateFeature(int32_t phase, Feature_t* feature, uint3
   VectorOfFloatArray GSdist = pp->getFeatureSizeDistribution();
   float avg = GSdist[0]->getValue(0);
   float stdev = GSdist[1]->getValue(0);
-  while(volgood == false)
+  while(!volgood)
   {
     volgood = true;
     diam = static_cast<float>(rg.genrand_norm(avg, stdev));
@@ -1947,11 +1962,11 @@ void PackPrimaryPhases::determineNeighbors(size_t gnum, bool add)
   dia = m_EquivalentDiameters[gnum];
   size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumberOfTuples();
   int32_t increment = 0;
-  if(add == true)
+  if(add)
   {
     increment = 1;
   }
-  if(add == false)
+  if(!add)
   {
     increment = -1;
   }
@@ -1994,7 +2009,7 @@ float PackPrimaryPhases::checkNeighborhoodError(int32_t gadd, int32_t gremove)
   int32_t index = 0;
   int32_t phase = 0;
 
-  typedef std::vector<std::vector<float>> VectOfVectFloat_t;
+  using VectOfVectFloat_t = std::vector<std::vector<float>> ;
   size_t numPhases = m_SimNeighborDist.size();
   for(size_t iter = 0; iter < numPhases; ++iter)
   {
@@ -2095,7 +2110,7 @@ float PackPrimaryPhases::checkNeighborhoodError(int32_t gadd, int32_t gremove)
       }
       else
       {
-        float oneOverCount = 1.0f / (float)(count[i]);
+        float oneOverCount = 1.0f / static_cast<float>(count[i]);
         for(size_t j = 0; j < 40; j++)
         {
           curSimNeighborDist[i][j] = curSimNeighborDist[i][j] * oneOverCount;
@@ -2296,7 +2311,7 @@ float PackPrimaryPhases::checkFillingError(int32_t gadd, int32_t gremove, Int32A
       col = cl[i];
       row = rl[i];
       plane = pl[i];
-      if(m_PeriodicBoundaries == true)
+      if(m_PeriodicBoundaries)
       {
         // Perform mod arithmetic to ensure we are within the packing points range
         col = col % m_PackingPoints[0];
@@ -2383,7 +2398,7 @@ float PackPrimaryPhases::checkFillingError(int32_t gadd, int32_t gremove, Int32A
       col = cl[i];
       row = rl[i];
       plane = pl[i];
-      if(m_PeriodicBoundaries == true)
+      if(m_PeriodicBoundaries)
       {
         // Perform mod arithmetic to ensure we are within the packing points range
         col = col % m_PackingPoints[0];
@@ -2727,7 +2742,7 @@ void PackPrimaryPhases::assignVoxels()
     zmin = static_cast<int64_t>(plane - ((radcur1 / zRes) + 1));
     zmax = static_cast<int64_t>(plane + ((radcur1 / zRes) + 1));
 
-    if(m_PeriodicBoundaries == true)
+    if(m_PeriodicBoundaries)
     {
       if(xmin < -dims[0])
       {
@@ -2787,7 +2802,7 @@ void PackPrimaryPhases::assignVoxels()
     ShapeOps* shapeOps = m_ShapeOps[shapeclass].get();
 //#if 0
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel == true)
+    if(doParallel)
     {
       tbb::parallel_for(tbb::blocked_range3d<int64_t, int64_t, int64_t>(zmin, zmax + 1, ymin, ymax + 1, xmin, xmax + 1),
                         AssignVoxelsGapsImpl(dims, res, m_FeatureIds, radCur, xx, shapeOps, ga, size, i, newownersPtr, ellipfuncsPtr), tbb::auto_partitioner());
@@ -2805,11 +2820,11 @@ void PackPrimaryPhases::assignVoxels()
   for(size_t i = 0; i < totalPoints; i++)
   {
     //    if(ellipfuncs[i] >= 0) { m_FeatureIds[i] = newowners[i]; }
-    if(ellipfuncs[i] >= 0 && (m_UseMask == false || (m_UseMask == true && m_Mask[i] == true)))
+    if(ellipfuncs[i] >= 0 && (!m_UseMask || (m_UseMask && m_Mask[i])))
     {
       m_FeatureIds[i] = newowners[i];
     }
-    if(m_UseMask == true && m_Mask[i] == false)
+    if(m_UseMask && !m_Mask[i])
     {
       m_FeatureIds[i] = 0;
     }
@@ -2940,7 +2955,7 @@ void PackPrimaryPhases::assignGapsOnly()
               {
                 good = false;
               }
-              if(good == true)
+              if(good)
               {
                 feature = m_FeatureIds[neighpoint];
                 if(feature > 0)
@@ -2983,7 +2998,7 @@ void PackPrimaryPhases::assignGapsOnly()
               {
                 good = false;
               }
-              if(good == true)
+              if(good)
               {
                 feature = m_FeatureIds[neighpoint];
                 if(feature > 0)
@@ -3086,7 +3101,7 @@ void PackPrimaryPhases::cleanupFeatures()
   for(size_t i = 0; i < totalPoints; i++)
   {
     touchessurface = false;
-    if(checked[i] == false && m_FeatureIds[i] > m_FirstPrimaryFeature)
+    if(!checked[i] && m_FeatureIds[i] > m_FirstPrimaryFeature)
     {
       PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[m_CellPhases[i]]);
       minsize = static_cast<float>(pp->getMinFeatureDiameter() * pp->getMinFeatureDiameter() * pp->getMinFeatureDiameter() * k_PiOver6);
@@ -3107,7 +3122,7 @@ void PackPrimaryPhases::cleanupFeatures()
         {
           good = true;
           neighbor = index + neighpoints[j];
-          if(m_PeriodicBoundaries == false)
+          if(!m_PeriodicBoundaries)
           {
             if(j == 0 && plane == 0)
             {
@@ -3133,13 +3148,13 @@ void PackPrimaryPhases::cleanupFeatures()
             {
               good = false;
             }
-            if(good == true && m_FeatureIds[neighbor] == m_FeatureIds[index] && checked[neighbor] == false)
+            if(good && m_FeatureIds[neighbor] == m_FeatureIds[index] && !checked[neighbor])
             {
               currentvlist.push_back(neighbor);
               checked[neighbor] = true;
             }
           }
-          else if(m_PeriodicBoundaries == true)
+          else if(m_PeriodicBoundaries)
           {
             if(j == 0 && plane == 0)
             {
@@ -3165,7 +3180,7 @@ void PackPrimaryPhases::cleanupFeatures()
             {
               neighbor = neighbor - (xp);
             }
-            if(m_FeatureIds[neighbor] == m_FeatureIds[index] && checked[neighbor] == false)
+            if(m_FeatureIds[neighbor] == m_FeatureIds[index] && !checked[neighbor])
             {
               currentvlist.push_back(neighbor);
               checked[neighbor] = true;
@@ -3196,12 +3211,12 @@ void PackPrimaryPhases::cleanupFeatures()
       }
       else if(size == 0)
       {
-        if(currentvlist.size() >= minsize || touchessurface == true)
+        if(currentvlist.size() >= minsize || touchessurface)
         {
           vlists[m_FeatureIds[i]].resize(currentvlist.size());
           vlists[m_FeatureIds[i]].swap(currentvlist);
         }
-        if(currentvlist.size() < minsize && touchessurface == false)
+        if(currentvlist.size() < minsize && !touchessurface)
         {
           for(size_t k = 0; k < currentvlist.size(); k++)
           {
@@ -3334,7 +3349,7 @@ int32_t PackPrimaryPhases::estimateNumFeatures(size_t xpoints, size_t ypoints, s
       volgood = 0;
       phase = primaryPhasesLocal[j];
       PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[phase]);
-      while(volgood == false)
+      while(!volgood)
       {
         volgood = true;
         if(pp->getFeatureSize_DistType() == SIMPL::DistributionType::LogNormal)
