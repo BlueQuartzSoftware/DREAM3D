@@ -226,6 +226,19 @@ void FindSizes::findSizesImage(ImageGeom::Pointer image)
   float zRes = 0.0f;
   std::tie(xRes, yRes, zRes) = image->getResolution();
 
+  // We know we may have issues if we ever have a feature with more than
+  // 9007199254740992 voxels (9 Petabytes worth) so check that real quick
+  for(size_t i = 1; i < numfeatures; i++)
+  {
+    if(static_cast<uint64_t>(featurecounts[i]) > 9007199254740992)
+    {
+      setErrorCondition(-10201);
+      QString ss = QObject::tr("Feature Id %1 has more than 9,007,199,254,740,992 voxels which will cause math errors when calculating the size value.").arg(i);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return;
+    }
+  }
+
   if(image->getXPoints() == 1 || image->getYPoints() == 1 || image->getZPoints() == 1)
   {
     if(image->getXPoints() == 1)
