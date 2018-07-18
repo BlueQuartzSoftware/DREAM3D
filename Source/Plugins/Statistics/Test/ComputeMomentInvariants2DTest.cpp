@@ -45,6 +45,8 @@
 #include "SIMPLib/SIMPLib.h"
 #include "UnitTestSupport.hpp"
 
+#include "SIMPLib/Math/SIMPLibMath.h"
+
 #include "StatisticsTestFileLocations.h"
 
 #include <Eigen/Dense>
