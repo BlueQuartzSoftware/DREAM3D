@@ -230,13 +230,19 @@ void FindSizes::findSizesImage(ImageGeom::Pointer image)
   // 9007199254740992 voxels (9 Petabytes worth) so check that real quick
   for(size_t i = 1; i < numfeatures; i++)
   {
-    if(static_cast<uint64_t>(featurecounts[i]) > 9007199254740992)
+    m_NumElements[i] = static_cast<int32_t>(featurecounts[i]);
+    if(featurecounts[i] > 9007199254740992ULL)
     {
-      setErrorCondition(-10201);
-      QString ss = QObject::tr("Feature Id %1 has more than 9,007,199,254,740,992 voxels which will cause math errors when calculating the size value.").arg(i);
+      setErrorCondition(-78231);
+      QString ss = QObject::tr("Number of voxels belonging to feature %1 (%2) is greater than 9007199254740992").arg(i).arg(featurecounts[i]);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
+    m_Volumes[i] = (static_cast<double>(featurecounts[i]) * static_cast<double>(res_scalar));
+
+    rad = m_Volumes[i] / SIMPLib::Constants::k_Pi;
+    diameter = (2 * sqrtf(rad));
+    m_EquivalentDiameters[i] = diameter;
   }
 
   if(image->getXPoints() == 1 || image->getYPoints() == 1 || image->getZPoints() == 1)
