@@ -47,6 +47,7 @@
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QTableView>
 #include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QHeaderView>
 
 //-- Qwt Includes
 #include <qwt.h>
