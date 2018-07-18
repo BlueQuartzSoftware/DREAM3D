@@ -147,7 +147,7 @@ void FindSizes::dataCheck()
   }
 
   tempPath.update(getFeatureAttributeMatrixName().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getVolumesArrayName());
-  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0,
+  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0,
                                                                                                                 cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_VolumesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -155,7 +155,7 @@ void FindSizes::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getFeatureAttributeMatrixName().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getEquivalentDiametersArrayName());
-  m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
+  m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
         this, tempPath, 0, cDims);                       /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_EquivalentDiametersPtr.lock())         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -204,13 +204,17 @@ void FindSizes::findSizesImage(ImageGeom::Pointer image)
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t numfeatures = m_VolumesPtr.lock()->getNumberOfTuples();
 
-  DataArray<float>::Pointer m_FeatureCounts = DataArray<float>::CreateArray(numfeatures, "_INTERNAL_USE_ONLY_FeatureCounts");
+  // Previous versions of this filter used floats for their calculations.  However, with large data sets, the feature count 
+  // surpasses the maximum integer value that a floating point number can contain.  Converting over to doubles temporarily 
+  // aleviates the problem, but a more in-depth algorithm to prevent or minimize inaccuracies when dealing with large data sets
+  // should be implemented in the future.
+  DataArray<double>::Pointer m_FeatureCounts = DataArray<double>::CreateArray(numfeatures, "_INTERNAL_USE_ONLY_FeatureCounts");
   m_FeatureCounts->initializeWithZeros();
-  float* featurecounts = m_FeatureCounts->getPointer(0);
+  double* featurecounts = m_FeatureCounts->getPointer(0);
 
-  float rad = 0.0f;
-  float diameter = 0.0f;
-  float res_scalar = 0.0f;
+  double rad = 0.0f;
+  double diameter = 0.0f;
+  double res_scalar = 0.0f;
 
   for(size_t j = 0; j < totalPoints; j++)
   {
