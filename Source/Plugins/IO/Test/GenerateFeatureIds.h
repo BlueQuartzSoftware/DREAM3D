@@ -121,29 +121,26 @@ public:
 };
 
 /**
- * @class CreateDataContainer
+ * @class CreateImageGeomDataContainer
  * @brief This class simply adds a DataContainer with default name to the DataContainerArray
  * @author
  * @date
  * @version 1.0
  */
-class CreateDataContainer : public AbstractFilter
+class CreateImageGeomDataContainer : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(GenerateFeatureIds SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(int64_t XDim READ getXDim WRITE setXDim)
-    PYB11_PROPERTY(int64_t YDim READ getYDim WRITE setYDim)
-    PYB11_PROPERTY(int64_t ZDim READ getZDim WRITE setZDim)
+
 public:
-  SIMPL_SHARED_POINTERS(CreateDataContainer)
-  SIMPL_FILTER_NEW_MACRO(CreateDataContainer)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CreateDataContainer, AbstractFilter)
+  SIMPL_SHARED_POINTERS(CreateImageGeomDataContainer)
+  SIMPL_FILTER_NEW_MACRO(CreateImageGeomDataContainer)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CreateImageGeomDataContainer, AbstractFilter)
 
   SIMPL_FILTER_PARAMETER(int64_t, XDim)
   SIMPL_FILTER_PARAMETER(int64_t, YDim)
   SIMPL_FILTER_PARAMETER(int64_t, ZDim)
 
-  ~CreateDataContainer()
+  ~CreateImageGeomDataContainer()
   {
   }
 
@@ -163,7 +160,7 @@ public:
   */
   virtual const QString getHumanLabel() const override
   {
-    return "CreateDataContainer Filter";
+    return "CreateImageGeomDataContainer Filter";
   }
 
   /**
@@ -190,7 +187,7 @@ public:
   }
 
 protected:
-  CreateDataContainer()
+  CreateImageGeomDataContainer()
   : m_XDim(0)
   , m_YDim(0)
   , m_ZDim(0)
@@ -226,7 +223,7 @@ protected:
   }
 
 private:
-  CreateDataContainer(const CreateDataContainer&) = delete; // Copy Constructor Not Implemented
-  void operator=(const CreateDataContainer&);               // Move assignment Not Implemented
+  CreateImageGeomDataContainer(const CreateImageGeomDataContainer&) = delete; // Copy Constructor Not Implemented
+  void operator=(const CreateImageGeomDataContainer&);               // Move assignment Not Implemented
 };
 

@@ -34,11 +34,11 @@ namespace UnitTest
     const QString TestFile2("@TEST_TEMP_DIR@/DxIOTest2.dx");
   }
 
-    namespace EnsembleInfoReaderTest
+  namespace EnsembleInfoReaderTest
   {
     const QString TestFileIni("@TEST_TEMP_DIR@/EnsembleInfoTest.ini");
-  const QString TestFileTxt("@TEST_TEMP_DIR@/EnsembleInfoTest.txt");
-  const QString TestFileDoc("@TEST_TEMP_DIR@/EnsembleInfoTest.doc");
+    const QString TestFileTxt("@TEST_TEMP_DIR@/EnsembleInfoTest.txt");
+    const QString TestFileDoc("@TEST_TEMP_DIR@/EnsembleInfoTest.doc");
   }
 
   namespace ExportDataTest
@@ -81,9 +81,17 @@ namespace UnitTest
     const QString BinaryFile("@TEST_TEMP_DIR@/binary_file.vtk");
     const QString AsciiFile("@TEST_TEMP_DIR@/ascii_file.vtk");
 
-        static const size_t XSize = 3;
+    static const size_t XSize = 3;
     static const size_t YSize = 4;
     static const size_t ZSize = 5;
+
+  }
+  
+  namespace FeatureInfoReaderTest
+  {
+    const QString InputFile("@TEST_TEMP_DIR@/FeatureInfoTestFileInput.txt");
+    const QString OutputFile("@TEST_TEMP_DIR@/FeatureInfoTestFile.dream3d");
+    const QString OutputFileXdmf("@TEST_TEMP_DIR@/FeatureInfoTestFile.xdmf");
 
   }
 

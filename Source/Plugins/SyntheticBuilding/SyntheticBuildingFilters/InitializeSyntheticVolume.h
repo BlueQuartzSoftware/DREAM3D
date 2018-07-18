@@ -60,7 +60,6 @@ class SyntheticBuilding_EXPORT InitializeSyntheticVolume : public AbstractFilter
     PYB11_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
     PYB11_PROPERTY(DataArrayPath InputPhaseNamesArrayPath READ getInputPhaseNamesArrayPath WRITE setInputPhaseNamesArrayPath)
     PYB11_PROPERTY(bool EstimateNumberOfFeatures READ getEstimateNumberOfFeatures WRITE setEstimateNumberOfFeatures)
-    PYB11_PROPERTY(QString InputStatsFile READ getInputStatsFile WRITE setInputStatsFile)
 public:
   SIMPL_SHARED_POINTERS(InitializeSyntheticVolume)
   SIMPL_FILTER_NEW_MACRO(InitializeSyntheticVolume)
@@ -99,9 +98,6 @@ public:
 
   SIMPL_FILTER_PARAMETER(bool, EstimateNumberOfFeatures)
   Q_PROPERTY(bool EstimateNumberOfFeatures READ getEstimateNumberOfFeatures WRITE setEstimateNumberOfFeatures)
-
-  SIMPL_FILTER_PARAMETER(QString, InputStatsFile)
-  Q_PROPERTY(QString InputStatsFile READ getInputStatsFile WRITE setInputStatsFile)
 
   QString getEstimatedPrimaryFeatures();
   Q_PROPERTY(QString EstimatedPrimaryFeatures READ getEstimatedPrimaryFeatures)

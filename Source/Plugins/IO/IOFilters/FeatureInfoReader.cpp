@@ -36,7 +36,7 @@
 #include "FeatureInfoReader.h"
 
 #include <fstream>
-
+#include <thread>
 #include <QtCore/QFileInfo>
 
 #include "SIMPLib/Common/Constants.h"
@@ -66,11 +66,6 @@ FeatureInfoReader::FeatureInfoReader()
 , m_CellEulerAnglesArrayName(SIMPL::CellData::EulerAngles)
 , m_FeaturePhasesArrayName(SIMPL::FeatureData::Phases)
 , m_FeatureEulerAnglesArrayName(SIMPL::FeatureData::EulerAngles)
-, m_FeatureIds(nullptr)
-, m_CellPhases(nullptr)
-, m_CellEulerAngles(nullptr)
-, m_FeaturePhases(nullptr)
-, m_FeatureEulerAngles(nullptr)
 {
 }
 
@@ -179,20 +174,20 @@ void FeatureInfoReader::dataCheck()
   m->createNonPrereqAttributeMatrix(this, getCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
 
   QFileInfo fi(getInputFile());
-  if(getInputFile().isEmpty() == true)
+  if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("The input file must be set").arg(ClassName());
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if(fi.exists() == false)
+  else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if(m_CellFeatureAttributeMatrixName.isEmpty() == true)
+  if(m_CellFeatureAttributeMatrixName.isEmpty())
   {
     QString ss = QObject::tr("Feature Attribute Matrix name must be set");
     setErrorCondition(-1);
@@ -283,25 +278,36 @@ int32_t FeatureInfoReader::readFile()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixName());
 
-  std::ifstream inFile;
-  inFile.open(getInputFile().toLatin1().data(), std::ios_base::binary);
-  if(!inFile)
+  QFile inStream;
+  inStream.setFileName(getInputFile());
+  inStream.open(QFile::ReadOnly);
+  int32_t lineNum = 0;
+  
+  if(!inStream.isOpen())
   {
     QString ss = QObject::tr("Error opening input file: %1").arg(getInputFile());
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return getErrorCondition();
   }
-
+  bool ok = false;
   int32_t numfeatures = 0;
   int32_t gnum = 0, phase = 0;
   int32_t maxphase = 0;
   float ea1 = 0.0f, ea2 = 0.0f, ea3 = 0.0f;
-  inFile >> numfeatures;
+  QByteArray buf = inStream.readLine();
+  buf = buf.trimmed();
+  while (buf.at(0) == '#')
+  {
+    buf = inStream.readLine();
+    buf = buf.trimmed();
+    lineNum++;
+  }
+  numfeatures = buf.toInt(&ok); // Parse out the number of features
   if(0 == numfeatures)
   {
     QString ss = QObject::tr("The number of Features (%1) specified in the file must be greater than zero").arg(numfeatures);
-    setErrorCondition(-600);
+    setErrorCondition(-68000);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return getErrorCondition();
   }
@@ -321,25 +327,87 @@ int32_t FeatureInfoReader::readFile()
   {
     QString ss =
         QObject::tr("The number of Features (%1) specified in the file does not correspond to the maximum Feature Id (%2) in the selected Feature Ids array").arg(numfeatures).arg(maxFeatureId);
-    setErrorCondition(-600);
+    setErrorCondition(-68000);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return getErrorCondition();
   }
 
-  QVector<size_t> tDims(1, numfeatures + 1);
+  QVector<size_t> tDims(1, static_cast<size_t>(numfeatures + 1));
   cellFeatureAttrMat->setTupleDimensions(tDims);
   updateFeatureInstancePointers();
-
+  
+  QString ss;
+  QTextStream errStream(&ss);
+  
   for(int32_t i = 0; i < numfeatures; i++)
-  {
-    inFile >> gnum >> phase >> ea1 >> ea2 >> ea3;
-    if(gnum > maxFeatureId)
+  { 
+    buf = inStream.readLine();
+    lineNum++;
+    buf = buf.trimmed();
+    // If the first Character is a '#' character then this is a comment line
+    if(buf.at(0) == '#')
     {
-      QString ss = QObject::tr("A Feature Id (%1) specified in the file is larger than the maximum Feature Id (%2) in the selected Feature Ids array").arg(numfeatures).arg(maxFeatureId);
-      setErrorCondition(-600);
+      continue;
+    }
+    QList<QByteArray> tokens = buf.split(' '); // Split into tokens
+    if(tokens.size() != 5)
+    {
+      setErrorCondition(-68001);
+      ss.clear();
+      errStream << "There are not enough values at line "<< lineNum << ". 5 values are required";
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return getErrorCondition();
     }
+    ok = false;
+    gnum = tokens[0].toInt(&ok);
+    if(!ok)
+    {
+      setErrorCondition(-68002);
+      ss.clear();
+      errStream << "Line " << lineNum << ": Error converting Feature Id with token '" << tokens[0] << "' into integer";
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
+    phase = tokens[1].toInt(&ok);
+    if(!ok)
+    {
+      setErrorCondition(-68003);
+      ss.clear();
+      errStream << "Line " << lineNum << ": Error converting Ensemble Id with token '" << tokens[1] << "' into integer";
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
+    ea1 = tokens[2].toFloat(&ok);
+    if(!ok)
+    {
+      setErrorCondition(-68004);
+      ss.clear();
+      errStream << "Line " << lineNum << ": Error converting Euler 1 with token '" << tokens[2] << "' into float";
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
+    ea2 = tokens[3].toFloat(&ok);
+    if(!ok)
+    {
+      setErrorCondition(-68005);
+      ss.clear();
+      errStream << "Line " << lineNum << ": Error converting Euler 2 with token '" << tokens[3] << "' into float";
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
+    ea3 = tokens[4].toFloat(&ok);
+    if(!ok)
+    {
+      setErrorCondition(-68006);
+      ss.clear();
+      errStream << "Line " << lineNum << ": Error converting Euler 3 with token '" << tokens[4] << "' into float";
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
+
+    if(gnum > maxFeatureId)
+    {
+      QString ss = QObject::tr("A Feature Id (%1) specified in the file is larger than the maximum Feature Id (%2) in the selected Feature Ids array").arg(numfeatures).arg(maxFeatureId);
+      setErrorCondition(-68000);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      return getErrorCondition();
+    }
+
     m_FeatureEulerAngles[3 * gnum] = ea1;
     m_FeatureEulerAngles[3 * gnum + 1] = ea2;
     m_FeatureEulerAngles[3 * gnum + 2] = ea3;
@@ -350,7 +418,7 @@ int32_t FeatureInfoReader::readFile()
     }
   }
 
-  if(m_CreateCellLevelArrays == true)
+  if(m_CreateCellLevelArrays)
   {
     for(size_t i = 0; i < totalPoints; i++)
     {
@@ -362,7 +430,7 @@ int32_t FeatureInfoReader::readFile()
     }
   }
 
-  if(m_RenumberFeatures == true)
+  if(m_RenumberFeatures)
   {
     size_t totalFeatures = cellFeatureAttrMat->getNumberOfTuples();
 
@@ -385,7 +453,7 @@ int32_t FeatureInfoReader::readFile()
 AbstractFilter::Pointer FeatureInfoReader::newFilterInstance(bool copyFilterParameters) const
 {
   FeatureInfoReader::Pointer filter = FeatureInfoReader::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

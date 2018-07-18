@@ -163,17 +163,17 @@ protected:
   /**
    * @brief readHeader Reimplemented from @see FileReader class
    */
-  virtual int32_t readHeader();
+  int32_t readHeader() override;
 
   /**
    * @brief readFile Reimplemented from @see FileReader class
    */
-  virtual int32_t readFile();
+  int32_t readFile() override;
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
    */
-  void dataCheck();
+  void dataCheck() override;
 
   /**
    * @brief Initializes all the private instance variables.
@@ -193,7 +193,10 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
   DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
 
-  FeatureInfoReader(const FeatureInfoReader&); // Not Implemented
-  void operator=(const FeatureInfoReader&);    // Not Implemented
+public:
+  FeatureInfoReader(const FeatureInfoReader&) = delete; // Copy Constructor Not Implemented
+  FeatureInfoReader(FeatureInfoReader&&) = delete;      // Move Constructor Not Implemented
+  FeatureInfoReader& operator=(const FeatureInfoReader&) = delete; // Copy Assignment Not Implemented
+  FeatureInfoReader& operator=(FeatureInfoReader&&) = delete;      // Move Assignment Not Implemented
 };
 
