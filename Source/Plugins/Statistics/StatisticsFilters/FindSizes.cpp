@@ -147,7 +147,7 @@ void FindSizes::dataCheck()
   }
 
   tempPath.update(getFeatureAttributeMatrixName().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getVolumesArrayName());
-  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0,
+  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0,
                                                                                                                 cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_VolumesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -155,7 +155,7 @@ void FindSizes::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getFeatureAttributeMatrixName().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getEquivalentDiametersArrayName());
-  m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
+  m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
         this, tempPath, 0, cDims);                       /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_EquivalentDiametersPtr.lock())         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -201,20 +201,17 @@ void FindSizes::preflight()
 // -----------------------------------------------------------------------------
 void FindSizes::findSizesImage(ImageGeom::Pointer image)
 {
+  std::cout << "FindSizes::findSizesImage....." << std::endl;
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t numfeatures = m_VolumesPtr.lock()->getNumberOfTuples();
 
-  // Previous versions of this filter used floats for their calculations.  However, with large data sets, the feature count 
-  // surpasses the maximum integer value that a floating point number can contain.  Converting over to doubles temporarily 
-  // aleviates the problem, but a more in-depth algorithm to prevent or minimize inaccuracies when dealing with large data sets
-  // should be implemented in the future.
-  DataArray<double>::Pointer m_FeatureCounts = DataArray<double>::CreateArray(numfeatures, "_INTERNAL_USE_ONLY_FeatureCounts");
+  DataArray<uint64_t>::Pointer m_FeatureCounts = DataArray<uint64_t>::CreateArray(numfeatures, "_INTERNAL_USE_ONLY_FeatureCounts");
   m_FeatureCounts->initializeWithZeros();
-  double* featurecounts = m_FeatureCounts->getPointer(0);
+  uint64_t* featurecounts = m_FeatureCounts->getPointer(0);
 
-  double rad = 0.0f;
-  double diameter = 0.0f;
-  double res_scalar = 0.0f;
+  float rad = 0.0f;
+  float diameter = 0.0f;
+  float res_scalar = 0.0f;
 
   for(size_t j = 0; j < totalPoints; j++)
   {
@@ -225,25 +222,6 @@ void FindSizes::findSizesImage(ImageGeom::Pointer image)
   float yRes = 0.0f;
   float zRes = 0.0f;
   std::tie(xRes, yRes, zRes) = image->getResolution();
-
-  // We know we may have issues if we ever have a feature with more than
-  // 9007199254740992 voxels (9 Petabytes worth) so check that real quick
-  for(size_t i = 1; i < numfeatures; i++)
-  {
-    m_NumElements[i] = static_cast<int32_t>(featurecounts[i]);
-    if(featurecounts[i] > 9007199254740992ULL)
-    {
-      setErrorCondition(-78231);
-      QString ss = QObject::tr("Number of voxels belonging to feature %1 (%2) is greater than 9007199254740992").arg(i).arg(featurecounts[i]);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
-    }
-    m_Volumes[i] = (static_cast<double>(featurecounts[i]) * static_cast<double>(res_scalar));
-
-    rad = m_Volumes[i] / SIMPLib::Constants::k_Pi;
-    diameter = (2 * sqrtf(rad));
-    m_EquivalentDiameters[i] = diameter;
-  }
 
   if(image->getXPoints() == 1 || image->getYPoints() == 1 || image->getZPoints() == 1)
   {
@@ -259,10 +237,19 @@ void FindSizes::findSizesImage(ImageGeom::Pointer image)
     {
       res_scalar = xRes * yRes;
     }
+
     for(size_t i = 1; i < numfeatures; i++)
     {
       m_NumElements[i] = static_cast<int32_t>(featurecounts[i]);
-      m_Volumes[i] = (featurecounts[i] * res_scalar);
+      if(featurecounts[i] > 9007199254740992ULL)
+      {
+        setErrorCondition(-78231);
+        QString ss = QObject::tr("Number of voxels belonging to feature %1 (%2) is greater than 9007199254740992").arg(i).arg(featurecounts[i]);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
+      m_Volumes[i] = (static_cast<double>(featurecounts[i]) * static_cast<double>(res_scalar));
+
       rad = m_Volumes[i] / SIMPLib::Constants::k_Pi;
       diameter = (2 * sqrtf(rad));
       m_EquivalentDiameters[i] = diameter;
@@ -275,7 +262,16 @@ void FindSizes::findSizesImage(ImageGeom::Pointer image)
     for(size_t i = 1; i < numfeatures; i++)
     {
       m_NumElements[i] = static_cast<int32_t>(featurecounts[i]);
-      m_Volumes[i] = (featurecounts[i] * res_scalar);
+      if(featurecounts[i] > 9007199254740992ULL)
+      {
+        setErrorCondition(-78231);
+        QString ss = QObject::tr("Number of voxels belonging to feature %1 (%2) is greater than 9007199254740992").arg(i).arg(featurecounts[i]);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
+
+      m_Volumes[i] = (static_cast<double>(featurecounts[i]) * static_cast<double>(res_scalar));
+
       rad = m_Volumes[i] / vol_term;
       diameter = 2.0f * powf(rad, 0.3333333333f);
       m_EquivalentDiameters[i] = diameter;
