@@ -74,7 +74,7 @@ class SyntheticBuilding_EXPORT PackPrimaryPhases : public AbstractFilter
     PYB11_PROPERTY(DataArrayPath InputShapeTypesArrayPath READ getInputShapeTypesArrayPath WRITE setInputShapeTypesArrayPath)
     PYB11_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
     PYB11_PROPERTY(bool UseMask READ getUseMask WRITE setUseMask)
-    PYB11_PROPERTY(bool HaveFeatures READ getHaveFeatures WRITE setHaveFeatures)
+    PYB11_PROPERTY(int FeatureGeneration READ getFeatureGeneration WRITE setFeatureGeneration)
     PYB11_PROPERTY(QString FeatureInputFile READ getFeatureInputFile WRITE setFeatureInputFile)
     PYB11_PROPERTY(QString CsvOutputFile READ getCsvOutputFile WRITE setCsvOutputFile)
     PYB11_PROPERTY(bool PeriodicBoundaries READ getPeriodicBoundaries WRITE setPeriodicBoundaries)
