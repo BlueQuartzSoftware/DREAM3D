@@ -1,37 +1,37 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "FindSizes.h"
 
@@ -78,19 +78,15 @@ void FindSizes::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_BOOL_FP("Save Element Sizes", SaveElementSizes, FilterParameter::Parameter, FindSizes));
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
-    DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Any, IGeometry::Type::Any);
-    AttributeMatrix::Types amTypes = { AttributeMatrix::Type::Vertex, AttributeMatrix::Type::Edge,
-                                  AttributeMatrix::Type::Face, AttributeMatrix::Type::Cell };
+    DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Any, IGeometry::Type::Any);
+    AttributeMatrix::Types amTypes = {AttributeMatrix::Type::Vertex, AttributeMatrix::Type::Edge, AttributeMatrix::Type::Face, AttributeMatrix::Type::Cell};
     req.amTypes = amTypes;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FindSizes, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
   {
-    AttributeMatrixSelectionFilterParameter::RequirementType req =
-        AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Any, IGeometry::Type::Any);
-     AttributeMatrix::Types amTypes = { AttributeMatrix::Type::VertexFeature, AttributeMatrix::Type::EdgeFeature,
-                                  AttributeMatrix::Type::FaceFeature, AttributeMatrix::Type::CellFeature };
+    AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Any, IGeometry::Type::Any);
+    AttributeMatrix::Types amTypes = {AttributeMatrix::Type::VertexFeature, AttributeMatrix::Type::EdgeFeature, AttributeMatrix::Type::FaceFeature, AttributeMatrix::Type::CellFeature};
     req.amTypes = amTypes;
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Feature Attribute Matrix", FeatureAttributeMatrixName, FilterParameter::RequiredArray, FindSizes, req));
   }
@@ -108,13 +104,13 @@ void FindSizes::readFilterParameters(AbstractFilterParametersReader* reader, int
 {
   reader->openFilterGroup(this, index);
   setFeatureAttributeMatrixName(reader->readDataArrayPath("CellFeatureAttributeMatrixName", getFeatureAttributeMatrixName())); // Note the String name differs, this is for historical reasons
-  setNumElementsArrayName(reader->readString("NumCellsArrayName", getNumElementsArrayName())); // Note the String name differs, this is for historical reasons
+  setNumElementsArrayName(reader->readString("NumCellsArrayName", getNumElementsArrayName()));                                 // Note the String name differs, this is for historical reasons
   setEquivalentDiametersArrayName(reader->readString("EquivalentDiametersArrayName", getEquivalentDiametersArrayName()));
   setVolumesArrayName(reader->readString("VolumesArrayName", getVolumesArrayName()));
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
   // SaveElementSizes was introduced AFTER 6.3.29 and would ONLY show up in the JSON based pipelines. This
   // method should only be reading from an HDF5 based pipeline.
-  //setSaveElementSizes(reader->readValue("SaveElementSizes", getSaveElementSizes()));
+  // setSaveElementSizes(reader->readValue("SaveElementSizes", getSaveElementSizes()));
   reader->closeFilterGroup();
 }
 
@@ -139,8 +135,7 @@ void FindSizes::dataCheck()
   IGeometry::Pointer igeom = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
   QVector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
-                                                                                                        cDims);
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims);
   if(nullptr != m_FeatureIdsPtr.lock())
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
@@ -156,21 +151,24 @@ void FindSizes::dataCheck()
 
   tempPath.update(getFeatureAttributeMatrixName().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getEquivalentDiametersArrayName());
   m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-        this, tempPath, 0, cDims);                       /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_EquivalentDiametersPtr.lock())         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+      this, tempPath, 0, cDims);                 /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_EquivalentDiametersPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getFeatureAttributeMatrixName().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getNumElementsArrayName());
-  m_NumElementsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0,
-                                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NumElementsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
+      this, tempPath, 0, cDims);         /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_NumElementsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_NumElements = m_NumElementsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
 
   size_t numElements = igeom->getNumberOfElements();
 
@@ -178,7 +176,10 @@ void FindSizes::dataCheck()
   {
     setErrorCondition(-10200);
     QString ss = QObject::tr("The number of tuples for the DataArray %1 is %2 and for Geometry %3 is %4. The number of tuples must match.")
-        .arg(m_FeatureIdsPtr.lock()->getName()).arg(m_FeatureIdsPtr.lock()->getNumberOfTuples()).arg(igeom->getGeometryTypeAsString()).arg(numElements);
+                     .arg(m_FeatureIdsPtr.lock()->getName())
+                     .arg(m_FeatureIdsPtr.lock()->getNumberOfTuples())
+                     .arg(igeom->getGeometryTypeAsString())
+                     .arg(numElements);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 }
@@ -201,12 +202,13 @@ void FindSizes::preflight()
 // -----------------------------------------------------------------------------
 void FindSizes::findSizesImage(ImageGeom::Pointer image)
 {
+  std::cout << "FindSizes::findSizesImage....." << std::endl;
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t numfeatures = m_VolumesPtr.lock()->getNumberOfTuples();
 
-  DataArray<float>::Pointer m_FeatureCounts = DataArray<float>::CreateArray(numfeatures, "_INTERNAL_USE_ONLY_FeatureCounts");
+  DataArray<uint64_t>::Pointer m_FeatureCounts = DataArray<uint64_t>::CreateArray(numfeatures, "_INTERNAL_USE_ONLY_FeatureCounts");
   m_FeatureCounts->initializeWithZeros();
-  float* featurecounts = m_FeatureCounts->getPointer(0);
+  uint64_t* featurecounts = m_FeatureCounts->getPointer(0);
 
   float rad = 0.0f;
   float diameter = 0.0f;
@@ -236,10 +238,19 @@ void FindSizes::findSizesImage(ImageGeom::Pointer image)
     {
       res_scalar = xRes * yRes;
     }
+
     for(size_t i = 1; i < numfeatures; i++)
     {
       m_NumElements[i] = static_cast<int32_t>(featurecounts[i]);
-      m_Volumes[i] = (featurecounts[i] * res_scalar);
+      if(featurecounts[i] > 9007199254740992ULL)
+      {
+        setErrorCondition(-78231);
+        QString ss = QObject::tr("Number of voxels belonging to feature %1 (%2) is greater than 9007199254740992").arg(i).arg(featurecounts[i]);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
+      m_Volumes[i] = (static_cast<double>(featurecounts[i]) * static_cast<double>(res_scalar));
+
       rad = m_Volumes[i] / SIMPLib::Constants::k_Pi;
       diameter = (2 * sqrtf(rad));
       m_EquivalentDiameters[i] = diameter;
@@ -252,7 +263,16 @@ void FindSizes::findSizesImage(ImageGeom::Pointer image)
     for(size_t i = 1; i < numfeatures; i++)
     {
       m_NumElements[i] = static_cast<int32_t>(featurecounts[i]);
-      m_Volumes[i] = (featurecounts[i] * res_scalar);
+      if(featurecounts[i] > 9007199254740992ULL)
+      {
+        setErrorCondition(-78231);
+        QString ss = QObject::tr("Number of voxels belonging to feature %1 (%2) is greater than 9007199254740992").arg(i).arg(featurecounts[i]);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        return;
+      }
+
+      m_Volumes[i] = (static_cast<double>(featurecounts[i]) * static_cast<double>(res_scalar));
+
       rad = m_Volumes[i] / vol_term;
       diameter = 2.0f * powf(rad, 0.3333333333f);
       m_EquivalentDiameters[i] = diameter;
