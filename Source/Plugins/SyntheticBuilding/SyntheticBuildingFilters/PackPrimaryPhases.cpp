@@ -523,7 +523,7 @@ void PackPrimaryPhases::readFilterParameters(QJsonObject& obj)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::writeFilterParameters(QJsonObject& obj)
+void PackPrimaryPhases::writeFilterParameters(QJsonObject& obj) const
 {
   AbstractFilter::writeFilterParameters(obj);
 }

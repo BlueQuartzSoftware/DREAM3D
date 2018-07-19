@@ -173,7 +173,7 @@ void StatsGeneratorFilter::readFilterParameters(QJsonObject& obj)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGeneratorFilter::writeFilterParameters(QJsonObject& obj)
+void StatsGeneratorFilter::writeFilterParameters(QJsonObject& obj) const
 {
   QVector<FilterParameter::Pointer> filterParameters = getFilterParameters();
   for(int i = 0; i < filterParameters.size(); i++)

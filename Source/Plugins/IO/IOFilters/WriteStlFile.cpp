@@ -120,7 +120,7 @@ void WriteStlFile::readFilterParameters(QJsonObject& obj)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WriteStlFile::writeFilterParameters(QJsonObject& obj)
+void WriteStlFile::writeFilterParameters(QJsonObject& obj) const
 {
   AbstractFilter::writeFilterParameters(obj);
 

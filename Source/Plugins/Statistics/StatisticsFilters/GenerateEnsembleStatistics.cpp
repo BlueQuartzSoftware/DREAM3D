@@ -348,7 +348,7 @@ void GenerateEnsembleStatistics::readFilterParameters(QJsonObject& obj)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateEnsembleStatistics::writeFilterParameters(QJsonObject& obj)
+void GenerateEnsembleStatistics::writeFilterParameters(QJsonObject& obj) const
 {
   AbstractFilter::writeFilterParameters(obj);
 

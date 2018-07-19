@@ -128,7 +128,7 @@ void CalculateArrayHistogram::readFilterParameters(QJsonObject& obj)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CalculateArrayHistogram::writeFilterParameters(QJsonObject& obj)
+void CalculateArrayHistogram::writeFilterParameters(QJsonObject& obj) const
 {
   AbstractFilter::writeFilterParameters(obj);
   obj["Normalize"] = static_cast<int>(getNormalize());
