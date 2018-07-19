@@ -622,6 +622,12 @@ void PackPrimaryPhases::dataCheck()
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }
+  if(getFeatureGeneration() > 1 || getFeatureGeneration() < 0)
+  {
+      QString ss = QObject::tr("The value for 'Feature Generation' can only be 0 or 1. The value being used is ").arg(getFeatureGeneration());
+      setErrorCondition(-78001);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  }
   if(getErrorCondition() >= 0)
   {
     ensembleDataArrayPaths.push_back(getInputStatsArrayPath());
