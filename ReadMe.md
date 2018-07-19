@@ -31,7 +31,7 @@ See the Copying.md file for CopyRight & license
 
 ## Building DREAM.3D ##
 
-For information on building DREAM.3D and all its necessary dependencies, see the Documentation/ReferenceManual/Developer/ directory. [View it here on the GitHub website](https://github.com/BlueQuartzSoftware/DREAM3D/tree/develop/Documentation/ReferenceManual/Developer)
+For information on building DREAM.3D and all its necessary dependencies, see the Documentation/ReferenceManual/Developer/ directory. [View it here on the GitHub website](https://github.com/BlueQuartzSoftware/DREAM3D/tree/develop/Documentation/ReferenceManual/6_Developer).
 
 Current build status for the build farm is located at [our CDash site.](http://my.cdash.org/index.php?project=DREAM3D)
 
