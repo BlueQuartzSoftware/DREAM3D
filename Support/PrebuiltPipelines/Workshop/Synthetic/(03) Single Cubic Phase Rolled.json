@@ -175,7 +175,7 @@
         "FilterVersion": "1.0.278",
         "Filter_Human_Label": "Pack Primary Phases",
         "Filter_Name": "PackPrimaryPhases",
-        "HaveFeatures": 0,
+        "FeatureGeneration": 0,
         "InputPhaseTypesArrayPath": {
             "Attribute Matrix Name": "CellEnsembleData",
             "Data Array Name": "PhaseTypes",
