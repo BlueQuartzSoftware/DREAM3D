@@ -134,7 +134,7 @@ void EstablishMatrixPhase::setupFilterParameters()
   }
   {
     DataArraySelectionFilterParameter::RequirementType req =
-        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Any);
+        DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::StringArray, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Any);
     IGeometry::Types geomTypes;
     geomTypes.push_back(IGeometry::Type::Image);
     geomTypes.push_back(IGeometry::Type::Unknown);
