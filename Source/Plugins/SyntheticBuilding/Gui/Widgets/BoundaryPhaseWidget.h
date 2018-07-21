@@ -71,6 +71,7 @@ protected slots:
 
 signals:
   void dataChanged();
+  void progressText(const QString& text);
 
 protected:
   /**
