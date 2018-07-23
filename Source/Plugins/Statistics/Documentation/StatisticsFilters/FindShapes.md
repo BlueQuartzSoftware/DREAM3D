@@ -13,8 +13,8 @@ This **Filter** calculates the second-order moments of each **Feature** in order
 2. For each **Cell**, calculate Ixx, Iyy, Izz, Ixy, Ixz and Iyz using the x, y and z distances determined in step 1.
 3. Sum the individual Ixx, Iyy, Izz, Ixy, Ixz and Iyz values for all **Cells** belonging to the same **Feature**
 4. Find the *eigenvalues* and *eigenvectors* of the *3x3* symmetric matrix defined by the *6* values calculated in step 3 for each **Feature**
-5. Use the relationship of *principal moments* to the *principal axis lengths* for an ellipsoid, which can be found in [4], to determine the *Axis Lengths*
-6. Calculate the *Aspect Ratios* from the *Axis Lengths* found in step 5.
+5. Use the relationship of *principal moments* to the *principal axis lengths* for an ellipsoid, which can be found in [4], to determine the *Semi-Axis Lengths*
+6. Calculate the *Aspect Ratios* from the *Semi-Axis Lengths* found in step 5.
 7. Determine the Euler angles required to represent the *principal axis directions* in the *sample reference frame* and store them as the **Feature**'s *Axis Euler Angles*.
 8. Calculate the moment variant Omega3 as definied in [2] and is discussed further in [1] and [3]
 
@@ -38,9 +38,9 @@ Image
 
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
-| **Feature Attribute Array** | AspectRatios | float | (2) | Ratio of axis lengths (b/a and c/a) for best-fit ellipsoid to **Feature** |
+| **Feature Attribute Array** | AspectRatios | float | (2) | Ratio of semi-axis lengths (b/a and c/a) for best-fit ellipsoid to **Feature** |
 | **Feature Attribute Array** | AxisEulerAngles | float | (3) | Euler angles (in radians) necessary to rotate the sample reference frame to the reference frame of the **Feature**, where the prinicpal axes of the best-fit ellipsoid are (X, Y, Z) |
-| **Feature Attribute Array** | AxisLengths | float | (3) | Axis lengths (a, b, c) for best-fit ellipsoid to **Feature** |
+| **Feature Attribute Array** | SemiAxisLengths | float | (3) | Semi-axis lengths (a, b, c) for best-fit ellipsoid to **Feature** |
 | **Feature Attribute Array** | Omega3s | float | (1) | 3rd invariant of the second-order moment matrix for the **Feature**, does not assume a shape type (i.e., ellipsoid) |
 | **Feature Attribute Array** | Volumes | float | (1) | The volume of each **Feature** |
 
