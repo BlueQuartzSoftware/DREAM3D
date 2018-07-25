@@ -73,7 +73,7 @@ InsertPrecipitatePhases::InsertPrecipitatePhases()
 , m_CsvOutputFile("")
 , m_MaskArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
 , m_UseMask(false)
-, m_HavePrecips(false)
+, m_FeatureGeneration(0)
 , m_PrecipInputFile("")
 , m_PeriodicBoundaries(false)
 , m_MatchRDF(false)
@@ -187,15 +187,34 @@ void InsertPrecipitatePhases::setupFilterParameters()
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Number of Features", NumFeaturesArrayPath, FilterParameter::RequiredArray, InsertPrecipitatePhases, req));
   }
-  linkedProps.clear();
-  linkedProps << "PrecipInputFile";
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Already Have Precipitates", HavePrecips, FilterParameter::Parameter, InsertPrecipitatePhases, linkedProps));
-  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Precipitate Input File", PrecipInputFile, FilterParameter::Parameter, InsertPrecipitatePhases, "*.txt", "Text File"));
-  linkedProps.clear();
-  //  linkedProps << "CsvOutputFile";
-  //  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Goal Attributes", WriteGoalAttributes, FilterParameter::Parameter, InsertPrecipitatePhases, linkedProps));
-  //  parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Goal Attribute CSV File", CsvOutputFile, FilterParameter::Parameter, InsertPrecipitatePhases, "*.csv", "Comma Separated Data"));
+    
+  {
+    LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
+    parameter->setHumanLabel("Precipitate Generation");
+    parameter->setPropertyName("FeatureGeneration");
+    parameter->setSetterCallback(SIMPL_BIND_SETTER(InsertPrecipitatePhases, this, FeatureGeneration));
+    parameter->setGetterCallback(SIMPL_BIND_GETTER(InsertPrecipitatePhases, this, FeatureGeneration));
 
+    QVector<QString> choices;
+    choices.push_back("Generate Precipitates");
+    choices.push_back("Already Have Precipitates");
+    parameter->setChoices(choices);
+    QStringList linkedProps;
+    linkedProps << "InputStatsArrayPath"
+                << "PrecipInputFile";
+    parameter->setLinkedProperties(linkedProps);
+    parameter->setEditable(false);
+    parameter->setCategory(FilterParameter::Parameter);
+    parameters.push_back(parameter);
+  }
+  
+  
+  linkedProps.clear();
+  linkedProps << "PrecipInputFile" << "InputStatsArrayPath";
+  parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Precipitates Input File", PrecipInputFile, FilterParameter::Parameter, InsertPrecipitatePhases, "*.txt", "Text File", 1));
+  linkedProps.clear();
+  
+  
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
     parameter->setHumanLabel("Save Shape Description Arrays");
@@ -247,7 +266,15 @@ void InsertPrecipitatePhases::readFilterParameters(AbstractFilterParametersReade
   setPeriodicBoundaries(reader->readValue("PeriodicBoundaries", getPeriodicBoundaries()));
   setMatchRDF(reader->readValue("MatchRDF", getMatchRDF()));
   setUseMask(reader->readValue("UseMask", getUseMask()));
-  setHavePrecips(reader->readValue("HavePrecips", getHavePrecips()));
+  bool haveFeatures = reader->readValue("HaveFeatures", false);
+  if(haveFeatures)
+  {
+    setFeatureGeneration(0);
+  }
+  else
+  {
+    setFeatureGeneration(1);
+  }
   setPrecipInputFile(reader->readString("PrecipInputFile", getPrecipInputFile()));
   setWriteGoalAttributes(reader->readValue("WriteGoalAttributes", getWriteGoalAttributes()));
   setCsvOutputFile(reader->readString("CsvOutputFile", getCsvOutputFile()));
@@ -384,12 +411,21 @@ void InsertPrecipitatePhases::dataCheck()
     ensembleDataArrayPaths.push_back(getInputShapeTypesArrayPath());
   }
 
-  m_StatsDataArray = getDataContainerArray()->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), cDims);
-  if(m_StatsDataArray.lock() == nullptr)
+  if(getFeatureGeneration() == 0)
   {
-    QString ss = QObject::tr("Statistics array is not initialized correctly. The path is %1").arg(getInputStatsArrayPath().serialize());
-    setErrorCondition(-308);
-    notifyErrorMessage(getHumanLabel(), ss, -308);
+    m_StatsDataArray = getDataContainerArray()->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), cDims);
+    if(m_StatsDataArray.lock() == nullptr)
+    {
+      QString ss = QObject::tr("Statistics array is not initialized correctly. The path is %1").arg(getInputStatsArrayPath().serialize());
+      setErrorCondition(-78000);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
+  }
+  if(getFeatureGeneration() > 1 || getFeatureGeneration() < 0)
+  {
+      QString ss = QObject::tr("The value for 'Precipitate Generation' can only be 0 or 1. The value being used is ").arg(getFeatureGeneration());
+      setErrorCondition(-78001);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   if(getErrorCondition() >= 0)
   {
@@ -542,11 +578,22 @@ void InsertPrecipitatePhases::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if(m_HavePrecips == true && getPrecipInputFile().isEmpty() == true)
+  if(getFeatureGeneration() == 1)
   {
-    QString ss = QObject::tr("The precipitate file must be set");
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    QFileInfo fi(getPrecipInputFile());
+
+    if(getPrecipInputFile().isEmpty())
+    {
+      QString ss = QObject::tr("The input precipitate file must be set");
+      setErrorCondition(-78003);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
+    else if(!fi.exists())
+    {
+      QString ss = QObject::tr("The input precipitate file does not exist");
+      setErrorCondition(-78004);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
   }
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, cellDataArrayPaths);
@@ -602,7 +649,7 @@ void InsertPrecipitatePhases::execute()
 
   m_TotalPoints = static_cast<size_t>(dims[0] * dims[1] * dims[2]);
 
-  if(m_HavePrecips == false)
+  if(getFeatureGeneration() == 0)
   {
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Precipitates || Generating and Placing Precipitates");
     // this initializes the arrays to hold the details of the locations of all
@@ -620,7 +667,7 @@ void InsertPrecipitatePhases::execute()
     }
   }
 
-  if(m_HavePrecips == true)
+  if(getFeatureGeneration() == 1)
   {
     load_precipitates();
     if(getCancel())

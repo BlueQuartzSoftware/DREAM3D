@@ -70,7 +70,7 @@ class SyntheticBuilding_EXPORT InsertPrecipitatePhases : public AbstractFilter
     PYB11_PROPERTY(QString CsvOutputFile READ getCsvOutputFile WRITE setCsvOutputFile)
     PYB11_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
     PYB11_PROPERTY(bool UseMask READ getUseMask WRITE setUseMask)
-    PYB11_PROPERTY(bool HavePrecips READ getHavePrecips WRITE setHavePrecips)
+    PYB11_PROPERTY(int FeatureGeneration READ getFeatureGeneration WRITE setFeatureGeneration)
     PYB11_PROPERTY(QString PrecipInputFile READ getPrecipInputFile WRITE setPrecipInputFile)
     PYB11_PROPERTY(bool PeriodicBoundaries READ getPeriodicBoundaries WRITE setPeriodicBoundaries)
     PYB11_PROPERTY(bool MatchRDF READ getMatchRDF WRITE setMatchRDF)
@@ -122,8 +122,8 @@ public:
   SIMPL_FILTER_PARAMETER(bool, UseMask)
   Q_PROPERTY(bool UseMask READ getUseMask WRITE setUseMask)
 
-  SIMPL_FILTER_PARAMETER(bool, HavePrecips)
-  Q_PROPERTY(bool HavePrecips READ getHavePrecips WRITE setHavePrecips)
+  SIMPL_FILTER_PARAMETER(int, FeatureGeneration)
+  Q_PROPERTY(int FeatureGeneration READ getFeatureGeneration WRITE setFeatureGeneration)
 
   SIMPL_FILTER_PARAMETER(QString, PrecipInputFile)
   Q_PROPERTY(QString PrecipInputFile READ getPrecipInputFile WRITE setPrecipInputFile)
