@@ -55,6 +55,8 @@
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 
+#include "SVWidgetsLib/Widgets/SVStyle.h"
+
 #include "OrientationLib/Texture/StatsGen.hpp"
 
 #include "SyntheticBuilding/Gui/Widgets/StatsGenCurveTracker.h"
@@ -127,6 +129,7 @@ void StatsGenFeatureSizeWidget::setupGui()
 
   QwtText qwtStr(QString("Feature ESD Probability Density Function"));
   qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
+  qwtStr.setColor(SVStyle::Instance()->getQLabel_color());
   m_SizeDistributionPlot->setTitle(qwtStr);
 
   qwtStr.setText(QString("Equivalent Sphere Diameter (ESD)"));

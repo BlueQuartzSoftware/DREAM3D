@@ -73,6 +73,8 @@
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/Utilities/ColorUtilities.h"
 
+#include "SVWidgetsLib/Widgets/SVStyle.h"
+
 #include "SyntheticBuilding/Gui/Widgets/TableModels/SGBetaTableModel.h"
 #include "SyntheticBuilding/Gui/Widgets/TableModels/SGLogNormalTableModel.h"
 #include "SyntheticBuilding/Gui/Widgets/TableModels/SGPowerLawTableModel.h"
@@ -362,6 +364,7 @@ void StatsGenPlotWidget::setPlotTitle(const QString& title)
 
   QwtText qwtStr = QwtText(title);
   qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
+  qwtStr.setColor(SVStyle::Instance()->getQLabel_color());
   m_PlotView->setTitle(qwtStr);
 
 #endif
@@ -374,6 +377,7 @@ void StatsGenPlotWidget::setXAxisName(const QString& name)
 {
   QwtText qwtStr = QwtText(name);
   qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
+  qwtStr.setColor(SVStyle::Instance()->getQLabel_color());
   m_PlotView->setAxisTitle(QwtPlot::xBottom, qwtStr);
 }
 
@@ -384,6 +388,7 @@ void StatsGenPlotWidget::setYAxisName(const QString& name)
 {
   QwtText qwtStr = QwtText(name);
   qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
+  qwtStr.setColor(SVStyle::Instance()->getQLabel_color());
   m_PlotView->setAxisTitle(QwtPlot::yLeft, qwtStr);
 }
 
@@ -394,7 +399,7 @@ void StatsGenPlotWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPl
 {
 
   QPalette pal;
-  pal.setColor(QPalette::Text, Qt::black);
+  pal.setColor(QPalette::Text, SVStyle::Instance()->getQLabel_color());
   pal.setColor(QPalette::Foreground, Qt::white);
   pal.setColor(QPalette::Window, Qt::black);
 
@@ -417,11 +422,13 @@ void StatsGenPlotWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPl
   QwtText xAxis(xAxisName);
   xAxis.setRenderFlags(Qt::AlignHCenter | Qt::AlignTop);
   xAxis.setFont(font);
+  xAxis.setColor(SVStyle::Instance()->getQLabel_color());
   plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
 
   QwtText yAxis(yAxisName);
   yAxis.setRenderFlags(Qt::AlignHCenter | Qt::AlignTop);
   yAxis.setFont(font);
+  yAxis.setColor(SVStyle::Instance()->getQLabel_color());
   plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
 
   const int margin = 0;
