@@ -46,7 +46,7 @@
 #include "EbsdLib/EbsdConstants.h"
 
 #include "SIMPLib/DataArrays/StatsDataArray.h"
-#include "SIMPLib/DataArrays/StringDataArray.hpp"
+#include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/MatrixStatsData.h"
