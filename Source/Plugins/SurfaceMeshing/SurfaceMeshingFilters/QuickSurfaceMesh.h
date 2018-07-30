@@ -217,6 +217,11 @@ private:
    * @brief updateVertexInstancePointers Updates raw Vertex pointers
    */
   void updateVertexInstancePointers();
+  
+  /**
+   * @brief generateTripleLines
+   */
+  void generateTripleLines();
 
 public:
   QuickSurfaceMesh(const QuickSurfaceMesh&) = delete; // Copy Constructor Not Implemented

@@ -35,8 +35,16 @@
 
 #include "QuickSurfaceMesh.h"
 
+
+#include <array>
+#include <random>
+#include <unordered_map>
+#include <unordered_set>
+#include <set>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/TemplateHelpers.hpp"
+#include "SIMPLib/DataArrays/DynamicListArray.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -44,9 +52,48 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Geometry/EdgeGeom.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
+
+namespace
+{
+template <class T> inline void hashCombine(size_t& seed, const T& obj)
+{
+  std::hash<T> hasher;
+  seed ^= hasher(obj) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+}
+
+using Vertex = std::array<float, 3>;
+using Edge = std::array<int64_t, 2>;
+
+struct VertexHasher
+{
+    size_t operator()(const Vertex& vert) const
+    {
+      size_t hash = std::hash<float>()(vert[0]);
+      hashCombine(hash, vert[1]);
+      hashCombine(hash, vert[2]);
+      return hash;
+    }
+};
+
+struct EdgeHasher
+{
+    size_t operator()(const Edge& edge) const
+    {
+      size_t hash = std::hash<int64_t>()(edge[0]);
+      hashCombine(hash, edge[1]);
+      return hash;
+    }
+};
+
+using VertexMap = std::unordered_map<Vertex, int64_t, VertexHasher>;
+using EdgeMap = std::unordered_map<Edge, int64_t, EdgeHasher>;
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -678,7 +725,7 @@ void QuickSurfaceMesh::execute()
       for(int64_t i = 0; i < xP; i++)
       {
         point = (k * xP * yP) + (j * xP) + i;
-        neigh1 = point + 1;
+        neigh1 = point + 1; // <== What happens if we are at the end of a row?
         neigh2 = point + xP;
         neigh3 = point + (xP * yP);
 
@@ -835,7 +882,7 @@ void QuickSurfaceMesh::execute()
           ownerLists[m_NodeIds[nodeId4]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId4]].insert(-1);
         }
-        if(i == (xP - 1))
+        if(i == (xP - 1)) // Takes care of the end of a Row...
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
           getGridCoordinates(grid, i + 1, j, k, vertex + (m_NodeIds[nodeId1] * 3));
@@ -937,7 +984,7 @@ void QuickSurfaceMesh::execute()
           ownerLists[m_NodeIds[nodeId4]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId4]].insert(m_FeatureIds[neigh1]);
         }
-        if(j == (yP - 1))
+        if(j == (yP - 1)) // Takes care of the end of a column
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
           getGridCoordinates(grid, i + 1, j + 1, k, vertex + (m_NodeIds[nodeId1] * 3));
@@ -1039,7 +1086,7 @@ void QuickSurfaceMesh::execute()
           ownerLists[m_NodeIds[nodeId4]].insert(m_FeatureIds[point]);
           ownerLists[m_NodeIds[nodeId4]].insert(m_FeatureIds[neigh2]);
         }
-        if(k == (zP - 1))
+        if(k == (zP - 1)) // Takes care of the end of a Pillar
         {
           nodeId1 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
           getGridCoordinates(grid, i + 1, j, k + 1, vertex + (m_NodeIds[nodeId1] * 3));
@@ -1160,6 +1207,232 @@ void QuickSurfaceMesh::execute()
 
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QuickSurfaceMesh::generateTripleLines()
+{
+
+  /**
+   * This is a bit of experimental code where we define a triple line as an edge
+   * that shares voxels with at least 3 unique Feature Ids. This is different
+   * than saying that an edge is part of a triple line if it's nodes are considered
+   * sharing at least 3 unique voxels. This code is not complete as it will only
+   * find "interior" triple lines and no lines on the surface. I am going to leave
+   * this bit of code in place for historical reasons so that we can refer to it
+   * later if needed.
+   * Mike Jackson, JULY 2018
+   */
+  Q_ASSERT(false); // We don't want anyone to run this program.
+  DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
+
+  AttributeMatrix::Pointer featAttrMat = sm->getAttributeMatrix(m_FeatureAttributeMatrixName);
+  size_t numFeatures = 0;
+  size_t numTuples = m_FeatureIdsPtr.lock()->getNumberOfTuples();
+  for(size_t i = 0; i < numTuples; i++)
+  {
+    if(m_FeatureIds[i] > numFeatures) { numFeatures = m_FeatureIds[i]; }
+  }
+
+  QVector<size_t> featDims(1, numFeatures + 1);
+  featAttrMat->setTupleDimensions(featDims);
+
+  IGeometryGrid::Pointer grid = m->getGeometryAs<IGeometryGrid>();
+  ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
+
+  size_t udims[3] = {0, 0, 0};
+  std::tie(udims[0], udims[1], udims[2]) = grid->getDimensions();
+
+  int64_t dims[3] = {
+      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
+  };
+
+  int64_t xP = dims[0];
+  int64_t yP = dims[1];
+  int64_t zP = dims[2];
+  int64_t point = 0, neigh1 = 0, neigh2 = 0, neigh3 = 0;
+  
+  std::set<int32_t> uFeatures;
+  
+  float origin[3] = { 0.0f, 0.0f, 0.0f };
+  std::tie(origin[0], origin[1], origin[2]) = imageGeom->getOrigin();
+  float res[3] = { 0.0f, 0.0f, 0.0f};
+  std::tie(res[0], res[1], res[2]) = imageGeom->getResolution();
+  
+  
+  VertexMap vertexMap;
+  EdgeMap edgeMap;
+  int64_t vertCounter = 0;
+  int64_t edgeCounter = 0;
+  
+  
+  // Cycle through again assigning coordinates to each node and assigning node numbers and feature labels to each triangle
+  //int64_t triangleIndex = 0;
+  for(int64_t k = 0; k < zP-1; k++)
+  {
+    for(int64_t j = 0; j < yP-1; j++)
+    {
+      for(int64_t i = 0; i < xP-1; i++)
+      {
+        
+        point = (k * xP * yP) + (j * xP) + i;
+        //Case 1
+        neigh1 = point + 1;
+        neigh2 = point + (xP * yP) + 1;
+        neigh3 = point + (xP * yP);
+        
+        Vertex p0 = {{ origin[0] + static_cast<float>(i)*res[0] + res[0],
+                       origin[1] + static_cast<float>(j)*res[1] + res[1],
+                       origin[2] + static_cast<float>(k)*res[2] + res[2] }};
+        
+        Vertex p1 = {{ origin[0] + static_cast<float>(i)*res[0] + res[0],
+                       origin[1] + static_cast<float>(j)*res[1],
+                       origin[2] + static_cast<float>(k)*res[2] + res[2] }};        
+        
+        Vertex p2 = {{ origin[0] + static_cast<float>(i)*res[0],
+                       origin[1] + static_cast<float>(j)*res[1] + res[1],
+                       origin[2] + static_cast<float>(k)*res[2] + res[2] }};         
+        
+        Vertex p3 = {{ origin[0] + static_cast<float>(i)*res[0] + res[0],
+                       origin[1] + static_cast<float>(j)*res[1] + res[1],
+                       origin[2] + static_cast<float>(k)*res[2] }};         
+        
+        
+        uFeatures.clear();
+        uFeatures.insert(m_FeatureIds[point]);
+        uFeatures.insert(m_FeatureIds[neigh1]);
+        uFeatures.insert(m_FeatureIds[neigh2]);
+        uFeatures.insert(m_FeatureIds[neigh3]);
+        
+        if(uFeatures.size() > 2)
+        { 
+          auto iter = vertexMap.find(p0);
+          if(iter == vertexMap.end()) {
+            vertexMap[p0] = vertCounter++;
+          }
+          iter = vertexMap.find(p1);
+          if(iter == vertexMap.end()) {          
+            vertexMap[p1] = vertCounter++;
+          }
+          int64_t i0 = vertexMap[p0];
+          int64_t i1 = vertexMap[p1];
+          
+          Edge tmpEdge = {{i0, i1}};
+          auto eiter = edgeMap.find(tmpEdge);
+          if(eiter == edgeMap.end())
+          {
+            edgeMap[tmpEdge] = edgeCounter++;
+          }
+        }
+        
+        
+        //Case 2
+        neigh1 = point + xP;
+        neigh2 = point + (xP * yP) + xP;
+        neigh3 = point + (xP * yP);
+        
+        uFeatures.clear();
+        uFeatures.insert(m_FeatureIds[point]);
+        uFeatures.insert(m_FeatureIds[neigh1]);
+        uFeatures.insert(m_FeatureIds[neigh2]);
+        uFeatures.insert(m_FeatureIds[neigh3]);     
+        if(uFeatures.size() > 2)
+        {
+          auto iter = vertexMap.find(p0);
+          if(iter == vertexMap.end()) {
+            vertexMap[p0] = vertCounter++;
+          }
+          iter = vertexMap.find(p2);
+          if(iter == vertexMap.end()) {          
+            vertexMap[p2] = vertCounter++;
+          }
+          
+          int64_t i0 = vertexMap[p0];
+          int64_t i2 = vertexMap[p2];
+          
+          Edge tmpEdge = {{i0, i2}};
+          auto eiter = edgeMap.find(tmpEdge);
+          if(eiter == edgeMap.end())
+          {
+            edgeMap[tmpEdge] = edgeCounter++;
+          }
+          
+        }
+        
+        
+        //Case 3
+        neigh1 = point + 1;
+        neigh2 = point + xP + 1;
+        neigh3 = point + + xP;      
+        
+        uFeatures.clear();
+        uFeatures.insert(m_FeatureIds[point]);
+        uFeatures.insert(m_FeatureIds[neigh1]);
+        uFeatures.insert(m_FeatureIds[neigh2]);
+        uFeatures.insert(m_FeatureIds[neigh3]);
+        if(uFeatures.size() > 2)
+        {
+          auto iter = vertexMap.find(p0);
+          if(iter == vertexMap.end()) {
+            vertexMap[p0] = vertCounter++;
+          }
+          iter = vertexMap.find(p3);
+          if(iter == vertexMap.end()) {          
+            vertexMap[p3] = vertCounter++;
+          }
+          
+          int64_t i0 = vertexMap[p0];
+          int64_t i3 = vertexMap[p3];
+          
+          Edge tmpEdge = {{i0, i3}};
+          auto eiter = edgeMap.find(tmpEdge);
+          if(eiter == edgeMap.end())
+          {
+            edgeMap[tmpEdge] = edgeCounter++;
+          }
+          
+        }
+        
+        
+      }
+    }
+  }
+  
+  EdgeGeom::Pointer tripleLineEdge = EdgeGeom::New();
+  SharedVertexList::Pointer vertices = tripleLineEdge->CreateSharedVertexList(vertexMap.size() * 3);
+  
+  for(auto vert : vertexMap)
+  {
+    float v0 = vert.first[0];
+    float v1 = vert.first[1];
+    float v2 = vert.first[2];
+    int64_t idx = vert.second;
+    vertices->setComponent(idx, 0, v0);
+    vertices->setComponent(idx, 1, v1);
+    vertices->setComponent(idx, 2, v2);
+  }
+  
+  tripleLineEdge->setVertices(vertices);
+  
+  SharedEdgeList::Pointer edges = tripleLineEdge->CreateSharedEdgeList(edgeMap.size() * 2);
+  for(auto edge : edgeMap)
+  {
+    int64_t i0 = edge.first[0];
+    int64_t i1 = edge.first[1];
+    int64_t idx = edge.second;
+    edges->setComponent(idx, 0, i0);
+    edges->setComponent(idx, 1, i1);
+  }
+ tripleLineEdge->setEdges(edges);
+ 
+ DataContainerArray::Pointer dca = getDataContainerArray();
+ DataContainer::Pointer dc = DataContainer::New("Edges");
+ dca->addDataContainer(dc);
+ dc->setGeometry(tripleLineEdge);
+}
+
 
 // -----------------------------------------------------------------------------
 //
