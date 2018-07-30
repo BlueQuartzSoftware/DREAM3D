@@ -117,7 +117,7 @@ private:
 
 public:
   GenerateFeatureIds(const GenerateFeatureIds&) = delete; // Copy Constructor Not Implemented
-  GenerateFeatureIds(GenerateFeatureIds&&) = delete;      // Move Constructor
+  GenerateFeatureIds(GenerateFeatureIds&&) = delete;      // Move Constructor Not Implemented
   GenerateFeatureIds& operator=(const GenerateFeatureIds&) = delete; // Copy Assignment Not Implemented
   GenerateFeatureIds& operator=(GenerateFeatureIds&&) = delete;      // Move Assignment Not Implemented
 };

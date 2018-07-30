@@ -166,7 +166,7 @@ public:
 
  public:
    SharedFeatureFaceFilter(const SharedFeatureFaceFilter&) = delete;            // Copy Constructor Not Implemented
-   SharedFeatureFaceFilter(SharedFeatureFaceFilter&&) = delete;                 // Move Constructor
+   SharedFeatureFaceFilter(SharedFeatureFaceFilter&&) = delete;                 // Move Constructor Not Implemented
    SharedFeatureFaceFilter& operator=(const SharedFeatureFaceFilter&) = delete; // Copy Assignment Not Implemented
    SharedFeatureFaceFilter& operator=(SharedFeatureFaceFilter&&) = delete;      //           // Move assignment Not Implemented
 };

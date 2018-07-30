@@ -173,7 +173,7 @@ private:
 
 public:
   RotateEulerRefFrame(const RotateEulerRefFrame&) = delete; // Copy Constructor Not Implemented
-  RotateEulerRefFrame(RotateEulerRefFrame&&) = delete;      // Move Constructor
+  RotateEulerRefFrame(RotateEulerRefFrame&&) = delete;      // Move Constructor Not Implemented
   RotateEulerRefFrame& operator=(const RotateEulerRefFrame&) = delete; // Copy Assignment Not Implemented
   RotateEulerRefFrame& operator=(RotateEulerRefFrame&&) = delete;      // Move Assignment Not Implemented
 };

@@ -243,7 +243,7 @@ private:
 
 public:
   IdentifyMicroTextureRegions(const IdentifyMicroTextureRegions&) = delete; // Copy Constructor Not Implemented
-  IdentifyMicroTextureRegions(IdentifyMicroTextureRegions&&) = delete;      // Move Constructor
+  IdentifyMicroTextureRegions(IdentifyMicroTextureRegions&&) = delete;      // Move Constructor Not Implemented
   IdentifyMicroTextureRegions& operator=(const IdentifyMicroTextureRegions&) = delete; // Copy Assignment Not Implemented
   IdentifyMicroTextureRegions& operator=(IdentifyMicroTextureRegions&&) = delete;      // Move Assignment Not Implemented
 };

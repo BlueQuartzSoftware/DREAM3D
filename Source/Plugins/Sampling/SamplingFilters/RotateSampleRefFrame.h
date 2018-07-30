@@ -176,7 +176,7 @@ protected:
 private:
 public:
   RotateSampleRefFrame(const RotateSampleRefFrame&) = delete; // Copy Constructor Not Implemented
-  RotateSampleRefFrame(RotateSampleRefFrame&&) = delete;      // Move Constructor
+  RotateSampleRefFrame(RotateSampleRefFrame&&) = delete;      // Move Constructor Not Implemented
   RotateSampleRefFrame& operator=(const RotateSampleRefFrame&) = delete; // Copy Assignment Not Implemented
   RotateSampleRefFrame& operator=(RotateSampleRefFrame&&) = delete;      // Move Assignment Not Implemented
 };

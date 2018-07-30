@@ -239,7 +239,7 @@ private:
 
 public:
   FindTriangleGeomShapes(const FindTriangleGeomShapes&) = delete; // Copy Constructor Not Implemented
-  FindTriangleGeomShapes(FindTriangleGeomShapes&&) = delete;      // Move Constructor
+  FindTriangleGeomShapes(FindTriangleGeomShapes&&) = delete;      // Move Constructor Not Implemented
   FindTriangleGeomShapes& operator=(const FindTriangleGeomShapes&) = delete; // Copy Assignment Not Implemented
   FindTriangleGeomShapes& operator=(FindTriangleGeomShapes&&) = delete;      // Move Assignme
 };

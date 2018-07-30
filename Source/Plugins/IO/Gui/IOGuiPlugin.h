@@ -20,7 +20,7 @@ public:
 
 public:
   IOGuiPlugin(const IOGuiPlugin&) = delete;            // Copy Constructor Not Implemented
-  IOGuiPlugin(IOGuiPlugin&&) = delete;                 // Move Constructor
+  IOGuiPlugin(IOGuiPlugin&&) = delete;                 // Move Constructor Not Implemented
   IOGuiPlugin& operator=(const IOGuiPlugin&) = delete; // Copy Assignment Not Implemented
   IOGuiPlugin& operator=(IOGuiPlugin&&) = delete;      // Move Assignment Not Implemented
 };

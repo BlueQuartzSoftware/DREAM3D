@@ -143,7 +143,7 @@ private:
 
 public:
   TriangleNormalFilter(const TriangleNormalFilter&) = delete; // Copy Constructor Not Implemented
-  TriangleNormalFilter(TriangleNormalFilter&&) = delete;      // Move Constructor
+  TriangleNormalFilter(TriangleNormalFilter&&) = delete;      // Move Constructor Not Implemented
   TriangleNormalFilter& operator=(const TriangleNormalFilter&) = delete; // Copy Assignment Not Implemented
   TriangleNormalFilter& operator=(TriangleNormalFilter&&) = delete;      // Move assignment Not Implemented
 };

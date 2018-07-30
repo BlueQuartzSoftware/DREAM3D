@@ -164,7 +164,7 @@ private:
 
 public:
   GenerateFZQuaternions(const GenerateFZQuaternions&) = delete; // Copy Constructor Not Implemented
-  GenerateFZQuaternions(GenerateFZQuaternions&&) = delete;      // Move Constructor
+  GenerateFZQuaternions(GenerateFZQuaternions&&) = delete;      // Move Constructor Not Implemented
   GenerateFZQuaternions& operator=(const GenerateFZQuaternions&) = delete; // Copy Assignment Not Implemented
   GenerateFZQuaternions& operator=(GenerateFZQuaternions&&) = delete;      // Move Assignment Not Implemented
 };

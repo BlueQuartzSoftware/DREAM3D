@@ -20,7 +20,7 @@ public:
 
 public:
   StatisticsGuiPlugin(const StatisticsGuiPlugin&) = delete;            // Copy Constructor Not Implemented
-  StatisticsGuiPlugin(StatisticsGuiPlugin&&) = delete;                 // Move Constructor
+  StatisticsGuiPlugin(StatisticsGuiPlugin&&) = delete;                 // Move Constructor Not Implemented
   StatisticsGuiPlugin& operator=(const StatisticsGuiPlugin&) = delete; // Copy Assignment Not Implemented
   StatisticsGuiPlugin& operator=(StatisticsGuiPlugin&&) = delete;      // Move Assignment Not Implemented
 };

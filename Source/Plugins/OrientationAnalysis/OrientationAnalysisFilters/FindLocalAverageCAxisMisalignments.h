@@ -234,7 +234,7 @@ private:
 
 public:
   FindLocalAverageCAxisMisalignments(const FindLocalAverageCAxisMisalignments&) = delete; // Copy Constructor Not Implemented
-  FindLocalAverageCAxisMisalignments(FindLocalAverageCAxisMisalignments&&) = delete;      // Move Constructor
+  FindLocalAverageCAxisMisalignments(FindLocalAverageCAxisMisalignments&&) = delete;      // Move Constructor Not Implemented
   FindLocalAverageCAxisMisalignments& operator=(const FindLocalAverageCAxisMisalignments&) = delete; // Copy Assignment Not Implemented
   FindLocalAverageCAxisMisalignments& operator=(FindLocalAverageCAxisMisalignments&&) = delete;      // Move Assignment Not Implemented
 };

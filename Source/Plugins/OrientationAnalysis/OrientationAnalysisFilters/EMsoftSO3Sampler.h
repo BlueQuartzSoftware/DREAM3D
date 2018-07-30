@@ -255,7 +255,7 @@ private:
 
 public:
   EMsoftSO3Sampler(const EMsoftSO3Sampler&) = delete; // Copy Constructor Not Implemented
-  EMsoftSO3Sampler(EMsoftSO3Sampler&&) = delete;      // Move Constructor
+  EMsoftSO3Sampler(EMsoftSO3Sampler&&) = delete;      // Move Constructor Not Implemented
   EMsoftSO3Sampler& operator=(const EMsoftSO3Sampler&) = delete; // Copy Assignment Not Implemented
   EMsoftSO3Sampler& operator=(EMsoftSO3Sampler&&) = delete;      // Move Assignment Not Implemented
 };

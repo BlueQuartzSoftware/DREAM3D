@@ -205,7 +205,7 @@ private:
 
 public:
   FindFeatureHistogram(const FindFeatureHistogram&) = delete; // Copy Constructor Not Implemented
-  FindFeatureHistogram(FindFeatureHistogram&&) = delete;      // Move Constructor
+  FindFeatureHistogram(FindFeatureHistogram&&) = delete;      // Move Constructor Not Implemented
   FindFeatureHistogram& operator=(const FindFeatureHistogram&) = delete; // Copy Assignment Not Implemented
   FindFeatureHistogram& operator=(FindFeatureHistogram&&) = delete;      // Move Assignment Not Implemented
 };

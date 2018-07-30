@@ -145,7 +145,7 @@ private:
 
 public:
   ComputeFeatureRect(const ComputeFeatureRect&) = delete; // Copy Constructor Not Implemented
-  ComputeFeatureRect(ComputeFeatureRect&&) = delete;      // Move Constructor
+  ComputeFeatureRect(ComputeFeatureRect&&) = delete;      // Move Constructor Not Implemented
   ComputeFeatureRect& operator=(const ComputeFeatureRect&) = delete; // Copy Assignment Not Implemented
   ComputeFeatureRect& operator=(ComputeFeatureRect&&) = delete;      // Move Assignment Not Implemented
 };

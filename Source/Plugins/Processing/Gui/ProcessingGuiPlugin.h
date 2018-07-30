@@ -20,7 +20,7 @@ public:
 
 public:
   ProcessingGuiPlugin(const ProcessingGuiPlugin&) = delete;            // Copy Constructor Not Implemented
-  ProcessingGuiPlugin(ProcessingGuiPlugin&&) = delete;                 // Move Constructor
+  ProcessingGuiPlugin(ProcessingGuiPlugin&&) = delete;                 // Move Constructor Not Implemented
   ProcessingGuiPlugin& operator=(const ProcessingGuiPlugin&) = delete; // Copy Assignment Not Implemented
   ProcessingGuiPlugin& operator=(ProcessingGuiPlugin&&) = delete;      // Move Assignment Not Implemented
 };

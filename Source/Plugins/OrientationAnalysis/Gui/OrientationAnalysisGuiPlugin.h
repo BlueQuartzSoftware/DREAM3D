@@ -20,7 +20,7 @@ public:
 
 public:
   OrientationAnalysisGuiPlugin(const OrientationAnalysisGuiPlugin&) = delete;            // Copy Constructor Not Implemented
-  OrientationAnalysisGuiPlugin(OrientationAnalysisGuiPlugin&&) = delete;                 // Move Constructor
+  OrientationAnalysisGuiPlugin(OrientationAnalysisGuiPlugin&&) = delete;                 // Move Constructor Not Implemented
   OrientationAnalysisGuiPlugin& operator=(const OrientationAnalysisGuiPlugin&) = delete; // Copy Assignment Not Implemented
   OrientationAnalysisGuiPlugin& operator=(OrientationAnalysisGuiPlugin&&) = delete;      // Move Assignment Not Implemented
 };

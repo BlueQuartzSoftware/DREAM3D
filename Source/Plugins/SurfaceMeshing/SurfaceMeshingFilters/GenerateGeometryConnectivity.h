@@ -148,7 +148,7 @@ public:
 
  public:
    GenerateGeometryConnectivity(const GenerateGeometryConnectivity&) = delete;            // Copy Constructor Not Implemented
-   GenerateGeometryConnectivity(GenerateGeometryConnectivity&&) = delete;                 // Move Constructor
+   GenerateGeometryConnectivity(GenerateGeometryConnectivity&&) = delete;                 // Move Constructor Not Implemented
    GenerateGeometryConnectivity& operator=(const GenerateGeometryConnectivity&) = delete; // Copy Assignment Not Implemented
    GenerateGeometryConnectivity& operator=(GenerateGeometryConnectivity&&) = delete;      // Move assignment Not Implemented
 };

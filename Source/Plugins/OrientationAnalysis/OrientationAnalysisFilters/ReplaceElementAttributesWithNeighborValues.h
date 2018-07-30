@@ -175,7 +175,7 @@ private:
 
 public:
   ReplaceElementAttributesWithNeighborValues(const ReplaceElementAttributesWithNeighborValues&) = delete; // Copy Constructor Not Implemented
-  ReplaceElementAttributesWithNeighborValues(ReplaceElementAttributesWithNeighborValues&&) = delete;      // Move Constructor
+  ReplaceElementAttributesWithNeighborValues(ReplaceElementAttributesWithNeighborValues&&) = delete;      // Move Constructor Not Implemented
   ReplaceElementAttributesWithNeighborValues& operator=(const ReplaceElementAttributesWithNeighborValues&) = delete; // Copy Assignment Not Implemented
   ReplaceElementAttributesWithNeighborValues& operator=(ReplaceElementAttributesWithNeighborValues&&) = delete;      // Move Assignment Not Implemented
 };

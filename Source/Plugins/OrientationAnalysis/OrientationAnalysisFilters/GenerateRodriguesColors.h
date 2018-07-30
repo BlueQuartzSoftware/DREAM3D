@@ -195,7 +195,7 @@ private:
 
 public:
   GenerateRodriguesColors(const GenerateRodriguesColors&) = delete; // Copy Constructor Not Implemented
-  GenerateRodriguesColors(GenerateRodriguesColors&&) = delete;      // Move Constructor
+  GenerateRodriguesColors(GenerateRodriguesColors&&) = delete;      // Move Constructor Not Implemented
   GenerateRodriguesColors& operator=(const GenerateRodriguesColors&) = delete; // Copy Assignment Not Implemented
   GenerateRodriguesColors& operator=(GenerateRodriguesColors&&) = delete;      // Move Assignment Not Implemented
 };

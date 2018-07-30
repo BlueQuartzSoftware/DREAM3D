@@ -207,7 +207,7 @@ private:
 
 public:
   AvizoRectilinearCoordinateWriter(const AvizoRectilinearCoordinateWriter&) = delete; // Copy Constructor Not Implemented
-  AvizoRectilinearCoordinateWriter(AvizoRectilinearCoordinateWriter&&) = delete;      // Move Constructor
+  AvizoRectilinearCoordinateWriter(AvizoRectilinearCoordinateWriter&&) = delete;      // Move Constructor Not Implemented
   AvizoRectilinearCoordinateWriter& operator=(const AvizoRectilinearCoordinateWriter&) = delete; // Copy Assignment Not Implemented
   AvizoRectilinearCoordinateWriter& operator=(AvizoRectilinearCoordinateWriter&&) = delete;      // Move Assignment Not Implemented
 };

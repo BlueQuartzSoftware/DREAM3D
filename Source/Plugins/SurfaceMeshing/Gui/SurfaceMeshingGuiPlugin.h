@@ -20,7 +20,7 @@ public:
 
 public:
   SurfaceMeshingGuiPlugin(const SurfaceMeshingGuiPlugin&) = delete;            // Copy Constructor Not Implemented
-  SurfaceMeshingGuiPlugin(SurfaceMeshingGuiPlugin&&) = delete;                 // Move Constructor
+  SurfaceMeshingGuiPlugin(SurfaceMeshingGuiPlugin&&) = delete;                 // Move Constructor Not Implemented
   SurfaceMeshingGuiPlugin& operator=(const SurfaceMeshingGuiPlugin&) = delete; // Copy Assignment Not Implemented
   SurfaceMeshingGuiPlugin& operator=(SurfaceMeshingGuiPlugin&&) = delete;      // Move Assignment Not Implemented
 };

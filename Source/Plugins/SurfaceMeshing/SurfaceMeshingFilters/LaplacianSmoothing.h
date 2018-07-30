@@ -210,7 +210,7 @@ public:
 
  public:
    LaplacianSmoothing(const LaplacianSmoothing&) = delete;            // Copy Constructor Not Implemented
-   LaplacianSmoothing(LaplacianSmoothing&&) = delete;                 // Move Constructor
+   LaplacianSmoothing(LaplacianSmoothing&&) = delete;                 // Move Constructor Not Implemented
    LaplacianSmoothing& operator=(const LaplacianSmoothing&) = delete; // Copy Assignment Not Implemented
    LaplacianSmoothing& operator=(LaplacianSmoothing&&) = delete;      // Move assignment Not Implemented
 };

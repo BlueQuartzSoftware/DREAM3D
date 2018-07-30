@@ -20,7 +20,7 @@ public:
 
 public:
   EMMPMGuiPlugin(const EMMPMGuiPlugin&) = delete;            // Copy Constructor Not Implemented
-  EMMPMGuiPlugin(EMMPMGuiPlugin&&) = delete;                 // Move Constructor
+  EMMPMGuiPlugin(EMMPMGuiPlugin&&) = delete;                 // Move Constructor Not Implemented
   EMMPMGuiPlugin& operator=(const EMMPMGuiPlugin&) = delete; // Copy Assignment Not Implemented
   EMMPMGuiPlugin& operator=(EMMPMGuiPlugin&&) = delete;      // Move Assignment Not Implemented
 };

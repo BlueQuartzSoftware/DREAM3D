@@ -212,7 +212,7 @@ private:
 
 public:
   FindTwinBoundaries(const FindTwinBoundaries&) = delete; // Copy Constructor Not Implemented
-  FindTwinBoundaries(FindTwinBoundaries&&) = delete;      // Move Constructor
+  FindTwinBoundaries(FindTwinBoundaries&&) = delete;      // Move Constructor Not Implemented
   FindTwinBoundaries& operator=(const FindTwinBoundaries&) = delete; // Copy Assignment Not Implemented
   FindTwinBoundaries& operator=(FindTwinBoundaries&&) = delete;      // Move Assignment Not Implemented
 };

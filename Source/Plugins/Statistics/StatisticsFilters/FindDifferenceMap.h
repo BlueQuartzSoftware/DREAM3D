@@ -144,7 +144,7 @@ private:
 
 public:
   FindDifferenceMap(const FindDifferenceMap&) = delete; // Copy Constructor Not Implemented
-  FindDifferenceMap(FindDifferenceMap&&) = delete;      // Move Constructor
+  FindDifferenceMap(FindDifferenceMap&&) = delete;      // Move Constructor Not Implemented
   FindDifferenceMap& operator=(const FindDifferenceMap&) = delete; // Copy Assignment Not Implemented
   FindDifferenceMap& operator=(FindDifferenceMap&&) = delete;      // Move Assignment Not Implemented
 };

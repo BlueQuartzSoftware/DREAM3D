@@ -252,7 +252,7 @@ private:
 
 public:
   VtkRectilinearGridWriter(const VtkRectilinearGridWriter&) = delete; // Copy Constructor Not Implemented
-  VtkRectilinearGridWriter(VtkRectilinearGridWriter&&) = delete;      // Move Constructor
+  VtkRectilinearGridWriter(VtkRectilinearGridWriter&&) = delete;      // Move Constructor Not Implemented
   VtkRectilinearGridWriter& operator=(const VtkRectilinearGridWriter&) = delete; // Copy Assignment Not Implemented
   VtkRectilinearGridWriter& operator=(VtkRectilinearGridWriter&&) = delete;      // Move Assignment Not Implemented
 

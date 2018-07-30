@@ -241,7 +241,7 @@ private:
 
 public:
   AbaqusHexahedronWriter(const AbaqusHexahedronWriter&) = delete; // Copy Constructor Not Implemented
-  AbaqusHexahedronWriter(AbaqusHexahedronWriter&&) = delete;      // Move Constructor
+  AbaqusHexahedronWriter(AbaqusHexahedronWriter&&) = delete;      // Move Constructor Not Implemented
   AbaqusHexahedronWriter& operator=(const AbaqusHexahedronWriter&) = delete; // Copy Assignment Not Implemented
   AbaqusHexahedronWriter& operator=(AbaqusHexahedronWriter&&) = delete;      // Move Assignment Not Implemented
 };

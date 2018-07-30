@@ -148,6 +148,6 @@ public:
    */
   ImportAvxmMDSim(const ImportAvxmMDSim&) = delete;            // Copy Constructor
   ImportAvxmMDSim& operator=(const ImportAvxmMDSim&) = delete; // Copy Assignment
-  ImportAvxmMDSim(ImportAvxmMDSim&&) = delete;                 // Move Constructor
+  ImportAvxmMDSim(ImportAvxmMDSim&&) = delete;                 // Move Constructor Not Implemented
   ImportAvxmMDSim& operator=(ImportAvxmMDSim&&) = delete;      // Move Assignment
 };

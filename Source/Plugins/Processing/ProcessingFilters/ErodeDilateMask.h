@@ -186,7 +186,7 @@ private:
 
 public:
   ErodeDilateMask(const ErodeDilateMask&) = delete; // Copy Constructor Not Implemented
-  ErodeDilateMask(ErodeDilateMask&&) = delete;      // Move Constructor
+  ErodeDilateMask(ErodeDilateMask&&) = delete;      // Move Constructor Not Implemented
   ErodeDilateMask& operator=(const ErodeDilateMask&) = delete; // Copy Assignment Not Implemented
   ErodeDilateMask& operator=(ErodeDilateMask&&) = delete;      // Move Assignment Not Implemented
 };

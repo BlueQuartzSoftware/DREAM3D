@@ -196,7 +196,7 @@ private:
 
 public:
   NodesTrianglesToVtk(const NodesTrianglesToVtk&) = delete; // Copy Constructor Not Implemented
-  NodesTrianglesToVtk(NodesTrianglesToVtk&&) = delete;      // Move Constructor
+  NodesTrianglesToVtk(NodesTrianglesToVtk&&) = delete;      // Move Constructor Not Implemented
   NodesTrianglesToVtk& operator=(const NodesTrianglesToVtk&) = delete; // Copy Assignment Not Implemented
   NodesTrianglesToVtk& operator=(NodesTrianglesToVtk&&) = delete;      // Move Assignment Not Implemented
 };

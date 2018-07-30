@@ -194,7 +194,7 @@ private:
 
 public:
   FindProjectedImageStatistics(const FindProjectedImageStatistics&) = delete; // Copy Constructor Not Implemented
-  FindProjectedImageStatistics(FindProjectedImageStatistics&&) = delete;      // Move Constructor
+  FindProjectedImageStatistics(FindProjectedImageStatistics&&) = delete;      // Move Constructor Not Implemented
   FindProjectedImageStatistics& operator=(const FindProjectedImageStatistics&) = delete; // Copy Assignment Not Implemented
   FindProjectedImageStatistics& operator=(FindProjectedImageStatistics&&) = delete;      // Move Assignment Not Implemented
 };

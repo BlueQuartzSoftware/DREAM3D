@@ -160,7 +160,7 @@ class SurfaceMeshing_EXPORT MovingFiniteElementSmoothing : public SurfaceMeshFil
 
    public:
      MovingFiniteElementSmoothing(const MovingFiniteElementSmoothing&) = delete;            // Copy Constructor Not Implemented
-     MovingFiniteElementSmoothing(MovingFiniteElementSmoothing&&) = delete;                 // Move Constructor
+     MovingFiniteElementSmoothing(MovingFiniteElementSmoothing&&) = delete;                 // Move Constructor Not Implemented
      MovingFiniteElementSmoothing& operator=(const MovingFiniteElementSmoothing&) = delete; // Copy Assignment Not Implemented
      MovingFiniteElementSmoothing& operator=(MovingFiniteElementSmoothing&&) = delete;      // Move Assignment
 };

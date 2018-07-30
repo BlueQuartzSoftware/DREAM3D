@@ -20,7 +20,7 @@ public:
 
 public:
   GenericGuiPlugin(const GenericGuiPlugin&) = delete;            // Copy Constructor Not Implemented
-  GenericGuiPlugin(GenericGuiPlugin&&) = delete;                 // Move Constructor
+  GenericGuiPlugin(GenericGuiPlugin&&) = delete;                 // Move Constructor Not Implemented
   GenericGuiPlugin& operator=(const GenericGuiPlugin&) = delete; // Copy Assignment Not Implemented
   GenericGuiPlugin& operator=(GenericGuiPlugin&&) = delete;      // Move Assignment Not Implemented
 };

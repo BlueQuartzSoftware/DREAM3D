@@ -239,7 +239,7 @@ private:
 
 public:
   InitializeData(const InitializeData&) = delete; // Copy Constructor Not Implemented
-  InitializeData(InitializeData&&) = delete;      // Move Constructor
+  InitializeData(InitializeData&&) = delete;      // Move Constructor Not Implemented
   InitializeData& operator=(const InitializeData&) = delete; // Copy Assignment Not Implemented
   InitializeData& operator=(InitializeData&&) = delete;      // Move Assignment
 };

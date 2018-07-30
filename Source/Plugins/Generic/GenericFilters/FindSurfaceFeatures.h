@@ -179,7 +179,7 @@ private:
 
 public:
   FindSurfaceFeatures(const FindSurfaceFeatures&) = delete; // Copy Constructor Not Implemented
-  FindSurfaceFeatures(FindSurfaceFeatures&&) = delete;      // Move Constructor
+  FindSurfaceFeatures(FindSurfaceFeatures&&) = delete;      // Move Constructor Not Implemented
   FindSurfaceFeatures& operator=(const FindSurfaceFeatures&) = delete; // Copy Assignment Not Implemented
   FindSurfaceFeatures& operator=(FindSurfaceFeatures&&) = delete;      // Move Assignment Not Implemented
 };

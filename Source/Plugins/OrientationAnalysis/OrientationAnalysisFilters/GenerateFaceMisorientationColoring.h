@@ -186,7 +186,7 @@ private:
 
 public:
   GenerateFaceMisorientationColoring(const GenerateFaceMisorientationColoring&) = delete;            // Copy Constructor Not Implemented
-  GenerateFaceMisorientationColoring(GenerateFaceMisorientationColoring&&) = delete;                 // Move Constructor
+  GenerateFaceMisorientationColoring(GenerateFaceMisorientationColoring&&) = delete;                 // Move Constructor Not Implemented
   GenerateFaceMisorientationColoring& operator=(const GenerateFaceMisorientationColoring&) = delete; // Copy Assignment Not Implemented
   GenerateFaceMisorientationColoring& operator=(GenerateFaceMisorientationColoring&&) = delete;      // Move assignment Not Implemented                    // Move assignment Not Implemented
 };

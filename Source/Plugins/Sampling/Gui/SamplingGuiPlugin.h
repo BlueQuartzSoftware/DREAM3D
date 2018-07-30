@@ -20,7 +20,7 @@ public:
 
 public:
   SamplingGuiPlugin(const SamplingGuiPlugin&) = delete;            // Copy Constructor Not Implemented
-  SamplingGuiPlugin(SamplingGuiPlugin&&) = delete;                 // Move Constructor
+  SamplingGuiPlugin(SamplingGuiPlugin&&) = delete;                 // Move Constructor Not Implemented
   SamplingGuiPlugin& operator=(const SamplingGuiPlugin&) = delete; // Copy Assignment Not Implemented
   SamplingGuiPlugin& operator=(SamplingGuiPlugin&&) = delete;      // Move Assignment Not Implemented
 };

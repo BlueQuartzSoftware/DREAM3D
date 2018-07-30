@@ -199,7 +199,7 @@ private:
 
 public:
   FindFeatureReferenceCAxisMisorientations(const FindFeatureReferenceCAxisMisorientations&) = delete; // Copy Constructor Not Implemented
-  FindFeatureReferenceCAxisMisorientations(FindFeatureReferenceCAxisMisorientations&&) = delete;      // Move Constructor
+  FindFeatureReferenceCAxisMisorientations(FindFeatureReferenceCAxisMisorientations&&) = delete;      // Move Constructor Not Implemented
   FindFeatureReferenceCAxisMisorientations& operator=(const FindFeatureReferenceCAxisMisorientations&) = delete; // Copy Assignment Not Implemented
   FindFeatureReferenceCAxisMisorientations& operator=(FindFeatureReferenceCAxisMisorientations&&) = delete;      // Move Assignment Not Implemented
 };

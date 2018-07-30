@@ -194,7 +194,7 @@ private:
 
 public:
   FindRelativeMotionBetweenSlices(const FindRelativeMotionBetweenSlices&) = delete; // Copy Constructor Not Implemented
-  FindRelativeMotionBetweenSlices(FindRelativeMotionBetweenSlices&&) = delete;      // Move Constructor
+  FindRelativeMotionBetweenSlices(FindRelativeMotionBetweenSlices&&) = delete;      // Move Constructor Not Implemented
   FindRelativeMotionBetweenSlices& operator=(const FindRelativeMotionBetweenSlices&) = delete; // Copy Assignment Not Implemented
   FindRelativeMotionBetweenSlices& operator=(FindRelativeMotionBetweenSlices&&) = delete;      // Move Assignment Not Implemented
 };

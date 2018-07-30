@@ -140,7 +140,7 @@ public:
 
  public:
    ReverseTriangleWinding(const ReverseTriangleWinding&) = delete;            // Copy Constructor Not Implemented
-   ReverseTriangleWinding(ReverseTriangleWinding&&) = delete;                 // Move Constructor
+   ReverseTriangleWinding(ReverseTriangleWinding&&) = delete;                 // Move Constructor Not Implemented
    ReverseTriangleWinding& operator=(const ReverseTriangleWinding&) = delete; // Copy Assignment Not Implemented
    ReverseTriangleWinding& operator=(ReverseTriangleWinding&&) = delete;      //        // Move assignment Not Implemented
 };

@@ -180,7 +180,7 @@ private:
 
 public:
   FindAvgScalarValueForFeatures(const FindAvgScalarValueForFeatures&) = delete; // Copy Constructor Not Implemented
-  FindAvgScalarValueForFeatures(FindAvgScalarValueForFeatures&&) = delete;      // Move Constructor
+  FindAvgScalarValueForFeatures(FindAvgScalarValueForFeatures&&) = delete;      // Move Constructor Not Implemented
   FindAvgScalarValueForFeatures& operator=(const FindAvgScalarValueForFeatures&) = delete; // Copy Assignment Not Implemented
   FindAvgScalarValueForFeatures& operator=(FindAvgScalarValueForFeatures&&) = delete;      // Move Assignment Not Implemented
 };

@@ -143,7 +143,7 @@ private:
 
 public:
   TriangleCentroidFilter(const TriangleCentroidFilter&) = delete; // Copy Constructor Not Implemented
-  TriangleCentroidFilter(TriangleCentroidFilter&&) = delete;      // Move Constructor
+  TriangleCentroidFilter(TriangleCentroidFilter&&) = delete;      // Move Constructor Not Implemented
   TriangleCentroidFilter& operator=(const TriangleCentroidFilter&) = delete; // Copy Assignment Not Implemented
   TriangleCentroidFilter& operator=(TriangleCentroidFilter&&) = delete;      // Move assignment Not Implemented
 };

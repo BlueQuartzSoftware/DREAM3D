@@ -178,7 +178,7 @@ private:
 
 public:
   FindFeaturePhasesBinary(const FindFeaturePhasesBinary&) = delete; // Copy Constructor Not Implemented
-  FindFeaturePhasesBinary(FindFeaturePhasesBinary&&) = delete;      // Move Constructor
+  FindFeaturePhasesBinary(FindFeaturePhasesBinary&&) = delete;      // Move Constructor Not Implemented
   FindFeaturePhasesBinary& operator=(const FindFeaturePhasesBinary&) = delete; // Copy Assignment Not Implemented
   FindFeaturePhasesBinary& operator=(FindFeaturePhasesBinary&&) = delete;      // Move Assignment Not Implemented
 };

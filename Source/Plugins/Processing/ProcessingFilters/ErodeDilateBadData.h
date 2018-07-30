@@ -189,7 +189,7 @@ private:
 
 public:
   ErodeDilateBadData(const ErodeDilateBadData&) = delete; // Copy Constructor Not Implemented
-  ErodeDilateBadData(ErodeDilateBadData&&) = delete;      // Move Constructor
+  ErodeDilateBadData(ErodeDilateBadData&&) = delete;      // Move Constructor Not Implemented
   ErodeDilateBadData& operator=(const ErodeDilateBadData&) = delete; // Copy Assignment Not Implemented
   ErodeDilateBadData& operator=(ErodeDilateBadData&&) = delete;      // Move Assignment Not Implemented
 };

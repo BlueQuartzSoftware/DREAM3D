@@ -227,7 +227,7 @@ private:
 
 public:
   FindEuclideanDistMap(const FindEuclideanDistMap&) = delete; // Copy Constructor Not Implemented
-  FindEuclideanDistMap(FindEuclideanDistMap&&) = delete;      // Move Constructor
+  FindEuclideanDistMap(FindEuclideanDistMap&&) = delete;      // Move Constructor Not Implemented
   FindEuclideanDistMap& operator=(const FindEuclideanDistMap&) = delete; // Copy Assignment Not Implemented
   FindEuclideanDistMap& operator=(FindEuclideanDistMap&&) = delete;      // Move Assignment Not Implemented
 };

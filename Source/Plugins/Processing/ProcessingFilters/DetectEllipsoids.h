@@ -352,7 +352,7 @@ private:
 
 public:
   DetectEllipsoids(const DetectEllipsoids&) = delete;            // Copy Constructor Not Implemented
-  DetectEllipsoids(DetectEllipsoids&&) = delete;                 // Move Constructor
+  DetectEllipsoids(DetectEllipsoids&&) = delete;                 // Move Constructor Not Implemented
   DetectEllipsoids& operator=(const DetectEllipsoids&) = delete; // Copy Assignment Not Implemented
   DetectEllipsoids& operator=(DetectEllipsoids&&) = delete;      // Move Assignment Not Implemented
 };

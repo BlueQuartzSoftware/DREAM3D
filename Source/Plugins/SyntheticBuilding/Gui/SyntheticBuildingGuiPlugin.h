@@ -20,7 +20,7 @@ public:
 
 public:
   SyntheticBuildingGuiPlugin(const SyntheticBuildingGuiPlugin&) = delete;            // Copy Constructor Not Implemented
-  SyntheticBuildingGuiPlugin(SyntheticBuildingGuiPlugin&&) = delete;                 // Move Constructor
+  SyntheticBuildingGuiPlugin(SyntheticBuildingGuiPlugin&&) = delete;                 // Move Constructor Not Implemented
   SyntheticBuildingGuiPlugin& operator=(const SyntheticBuildingGuiPlugin&) = delete; // Copy Assignment Not Implemented
   SyntheticBuildingGuiPlugin& operator=(SyntheticBuildingGuiPlugin&&) = delete;      // Move Assignment Not Implemented
 };

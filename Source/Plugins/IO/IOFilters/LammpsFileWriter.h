@@ -177,7 +177,7 @@ protected:
 private:
 public:
   LammpsFileWriter(const LammpsFileWriter&) = delete; // Copy Constructor Not Implemented
-  LammpsFileWriter(LammpsFileWriter&&) = delete;      // Move Constructor
+  LammpsFileWriter(LammpsFileWriter&&) = delete;      // Move Constructor Not Implemented
   LammpsFileWriter& operator=(const LammpsFileWriter&) = delete; // Copy Assignment Not Implemented
   LammpsFileWriter& operator=(LammpsFileWriter&&) = delete;      // Move Assignment Not Implemented
 };

@@ -189,7 +189,7 @@ private:
 
 public:
   CreateEnsembleInfo(const CreateEnsembleInfo&) = delete; // Copy Constructor Not Implemented
-  CreateEnsembleInfo(CreateEnsembleInfo&&) = delete;      // Move Constructor
+  CreateEnsembleInfo(CreateEnsembleInfo&&) = delete;      // Move Constructor Not Implemented
   CreateEnsembleInfo& operator=(const CreateEnsembleInfo&) = delete; // Copy Assignment Not Implemented
   CreateEnsembleInfo& operator=(CreateEnsembleInfo&&) = delete;      // Move Assignment Not Implemented
 };

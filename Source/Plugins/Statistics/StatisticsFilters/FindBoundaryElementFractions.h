@@ -180,7 +180,7 @@ private:
 
 public:
   FindBoundaryElementFractions(const FindBoundaryElementFractions&) = delete; // Copy Constructor Not Implemented
-  FindBoundaryElementFractions(FindBoundaryElementFractions&&) = delete;      // Move Constructor
+  FindBoundaryElementFractions(FindBoundaryElementFractions&&) = delete;      // Move Constructor Not Implemented
   FindBoundaryElementFractions& operator=(const FindBoundaryElementFractions&) = delete; // Copy Assignment Not Implemented
   FindBoundaryElementFractions& operator=(FindBoundaryElementFractions&&) = delete;      // Move Assignment Not Implemented
 };

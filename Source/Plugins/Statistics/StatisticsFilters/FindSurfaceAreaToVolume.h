@@ -181,7 +181,7 @@ private:
 
 public:
   FindSurfaceAreaToVolume(const FindSurfaceAreaToVolume&) = delete; // Copy Constructor Not Implemented
-  FindSurfaceAreaToVolume(FindSurfaceAreaToVolume&&) = delete;      // Move Constructor
+  FindSurfaceAreaToVolume(FindSurfaceAreaToVolume&&) = delete;      // Move Constructor Not Implemented
   FindSurfaceAreaToVolume& operator=(const FindSurfaceAreaToVolume&) = delete; // Copy Assignment Not Implemented
   FindSurfaceAreaToVolume& operator=(FindSurfaceAreaToVolume&&) = delete;      // Move Assignment Not Implemented
 };

@@ -210,7 +210,7 @@ protected:
 private:
 public:
   WarpRegularGrid(const WarpRegularGrid&) = delete; // Copy Constructor Not Implemented
-  WarpRegularGrid(WarpRegularGrid&&) = delete;      // Move Constructor
+  WarpRegularGrid(WarpRegularGrid&&) = delete;      // Move Constructor Not Implemented
   WarpRegularGrid& operator=(const WarpRegularGrid&) = delete; // Copy Assignment Not Implemented
   WarpRegularGrid& operator=(WarpRegularGrid&&) = delete;      // Move Assignment Not Implemented
 };

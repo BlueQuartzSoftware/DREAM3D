@@ -143,7 +143,7 @@ private:
 
 public:
   TriangleAreaFilter(const TriangleAreaFilter&) = delete; // Copy Constructor Not Implemented
-  TriangleAreaFilter(TriangleAreaFilter&&) = delete;      // Move Constructor
+  TriangleAreaFilter(TriangleAreaFilter&&) = delete;      // Move Constructor Not Implemented
   TriangleAreaFilter& operator=(const TriangleAreaFilter&) = delete; // Copy Assignment Not Implemented
   TriangleAreaFilter& operator=(TriangleAreaFilter&&) = delete;      //       // Move assignment Not Implemented
 };

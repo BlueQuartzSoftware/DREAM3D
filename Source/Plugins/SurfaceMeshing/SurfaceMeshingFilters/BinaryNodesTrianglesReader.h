@@ -119,7 +119,7 @@ class SurfaceMeshing_EXPORT BinaryNodesTrianglesReader : public SurfaceMeshFilte
 
    public:
      BinaryNodesTrianglesReader(const BinaryNodesTrianglesReader&) = delete;            // Copy Constructor Not Implemented
-     BinaryNodesTrianglesReader(BinaryNodesTrianglesReader&&) = delete;                 // Move Constructor
+     BinaryNodesTrianglesReader(BinaryNodesTrianglesReader&&) = delete;                 // Move Constructor Not Implemented
      BinaryNodesTrianglesReader& operator=(const BinaryNodesTrianglesReader&) = delete; // Copy Assignment Not Implemented
      BinaryNodesTrianglesReader& operator=(BinaryNodesTrianglesReader&&) = delete;      // Move Assignment
 };

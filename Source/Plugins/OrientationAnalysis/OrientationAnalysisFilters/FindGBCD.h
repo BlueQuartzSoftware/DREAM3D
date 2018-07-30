@@ -230,7 +230,7 @@ private:
 
 public:
   FindGBCD(const FindGBCD&) = delete;            // Copy Constructor Not Implemented
-  FindGBCD(FindGBCD&&) = delete;                 // Move Constructor
+  FindGBCD(FindGBCD&&) = delete;                 // Move Constructor Not Implemented
   FindGBCD& operator=(const FindGBCD&) = delete; // Copy Assignment Not Implemented
   FindGBCD& operator=(FindGBCD&&) = delete;      // Move Assignment
 };

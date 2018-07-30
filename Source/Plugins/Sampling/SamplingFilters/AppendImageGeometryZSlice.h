@@ -171,7 +171,7 @@ protected:
 private:
 public:
   AppendImageGeometryZSlice(const AppendImageGeometryZSlice&) = delete; // Copy Constructor Not Implemented
-  AppendImageGeometryZSlice(AppendImageGeometryZSlice&&) = delete;      // Move Constructor
+  AppendImageGeometryZSlice(AppendImageGeometryZSlice&&) = delete;      // Move Constructor Not Implemented
   AppendImageGeometryZSlice& operator=(const AppendImageGeometryZSlice&) = delete; // Copy Assignment Not Implemented
   AppendImageGeometryZSlice& operator=(AppendImageGeometryZSlice&&) = delete;      // Move Assignment Not Implemented
 };

@@ -191,7 +191,7 @@ private:
 
 public:
   GenerateFaceIPFColoring(const GenerateFaceIPFColoring&) = delete;            // Copy Constructor Not Implemented
-  GenerateFaceIPFColoring(GenerateFaceIPFColoring&&) = delete;                 // Move Constructor
+  GenerateFaceIPFColoring(GenerateFaceIPFColoring&&) = delete;                 // Move Constructor Not Implemented
   GenerateFaceIPFColoring& operator=(const GenerateFaceIPFColoring&) = delete; // Copy Assignment Not Implemented
   GenerateFaceIPFColoring& operator=(GenerateFaceIPFColoring&&) = delete;      // Move assignment Not Implemented
 };

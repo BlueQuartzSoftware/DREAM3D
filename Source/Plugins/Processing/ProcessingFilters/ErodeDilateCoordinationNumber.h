@@ -174,7 +174,7 @@ private:
 
 public:
   ErodeDilateCoordinationNumber(const ErodeDilateCoordinationNumber&) = delete; // Copy Constructor Not Implemented
-  ErodeDilateCoordinationNumber(ErodeDilateCoordinationNumber&&) = delete;      // Move Constructor
+  ErodeDilateCoordinationNumber(ErodeDilateCoordinationNumber&&) = delete;      // Move Constructor Not Implemented
   ErodeDilateCoordinationNumber& operator=(const ErodeDilateCoordinationNumber&) = delete; // Copy Assignment Not Implemented
   ErodeDilateCoordinationNumber& operator=(ErodeDilateCoordinationNumber&&) = delete;      // Move Assignment Not Implemented
 };

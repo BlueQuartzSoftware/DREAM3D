@@ -143,7 +143,7 @@ private:
 
 public:
   TriangleDihedralAngleFilter(const TriangleDihedralAngleFilter&) = delete; // Copy Constructor Not Implemented
-  TriangleDihedralAngleFilter(TriangleDihedralAngleFilter&&) = delete;      // Move Constructor
+  TriangleDihedralAngleFilter(TriangleDihedralAngleFilter&&) = delete;      // Move Constructor Not Implemented
   TriangleDihedralAngleFilter& operator=(const TriangleDihedralAngleFilter&) = delete; // Copy Assignment Not Implemented
   TriangleDihedralAngleFilter& operator=(TriangleDihedralAngleFilter&&) = delete;      // Move assignment Not Implemented
 };

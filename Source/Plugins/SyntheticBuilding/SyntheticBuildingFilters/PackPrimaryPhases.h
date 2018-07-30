@@ -527,7 +527,7 @@ private:
 
 public:
   PackPrimaryPhases(const PackPrimaryPhases&) = delete; // Copy Constructor Not Implemented
-  PackPrimaryPhases(PackPrimaryPhases&&) = delete;      // Move Constructor
+  PackPrimaryPhases(PackPrimaryPhases&&) = delete;      // Move Constructor Not Implemented
   PackPrimaryPhases& operator=(const PackPrimaryPhases&) = delete; // Copy Assignment Not Implemented
   PackPrimaryPhases& operator=(PackPrimaryPhases&&) = delete;      // Move Assignment Not Implemented
 };

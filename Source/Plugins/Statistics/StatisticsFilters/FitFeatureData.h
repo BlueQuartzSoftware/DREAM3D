@@ -193,7 +193,7 @@ private:
 
 public:
   FitFeatureData(const FitFeatureData&) = delete; // Copy Constructor Not Implemented
-  FitFeatureData(FitFeatureData&&) = delete;      // Move Constructor
+  FitFeatureData(FitFeatureData&&) = delete;      // Move Constructor Not Implemented
   FitFeatureData& operator=(const FitFeatureData&) = delete; // Copy Assignment Not Implemented
   FitFeatureData& operator=(FitFeatureData&&) = delete;      // Move Assignment
 };

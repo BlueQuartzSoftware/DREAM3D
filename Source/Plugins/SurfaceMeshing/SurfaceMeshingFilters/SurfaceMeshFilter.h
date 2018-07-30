@@ -86,7 +86,7 @@ protected:
 
 public:
   SurfaceMeshFilter(const SurfaceMeshFilter&) = delete; // Copy Constructor Not Implemented
-  SurfaceMeshFilter(SurfaceMeshFilter&&) = delete;      // Move Constructor
+  SurfaceMeshFilter(SurfaceMeshFilter&&) = delete;      // Move Constructor Not Implemented
   SurfaceMeshFilter& operator=(const SurfaceMeshFilter&) = delete; // Copy Assignment Not Implemented
   SurfaceMeshFilter& operator=(SurfaceMeshFilter&&) = delete;      //
 };

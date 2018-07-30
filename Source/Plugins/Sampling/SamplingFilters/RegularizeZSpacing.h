@@ -170,7 +170,7 @@ protected:
 private:
 public:
   RegularizeZSpacing(const RegularizeZSpacing&) = delete; // Copy Constructor Not Implemented
-  RegularizeZSpacing(RegularizeZSpacing&&) = delete;      // Move Constructor
+  RegularizeZSpacing(RegularizeZSpacing&&) = delete;      // Move Constructor Not Implemented
   RegularizeZSpacing& operator=(const RegularizeZSpacing&) = delete; // Copy Assignment Not Implemented
   RegularizeZSpacing& operator=(RegularizeZSpacing&&) = delete;      // Move Assignment Not Implemented
 };

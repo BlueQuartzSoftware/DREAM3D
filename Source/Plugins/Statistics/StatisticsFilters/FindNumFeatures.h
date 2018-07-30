@@ -170,7 +170,7 @@ private:
 
 public:
   FindNumFeatures(const FindNumFeatures&) = delete; // Copy Constructor Not Implemented
-  FindNumFeatures(FindNumFeatures&&) = delete;      // Move Constructor
+  FindNumFeatures(FindNumFeatures&&) = delete;      // Move Constructor Not Implemented
   FindNumFeatures& operator=(const FindNumFeatures&) = delete; // Copy Assignment Not Implemented
   FindNumFeatures& operator=(FindNumFeatures&&) = delete;      // Move Assignment Not Implemented
 };

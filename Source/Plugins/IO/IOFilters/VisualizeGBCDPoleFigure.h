@@ -211,7 +211,7 @@ private:
 
 public:
   VisualizeGBCDPoleFigure(const VisualizeGBCDPoleFigure&) = delete; // Copy Constructor Not Implemented
-  VisualizeGBCDPoleFigure(VisualizeGBCDPoleFigure&&) = delete;      // Move Constructor
+  VisualizeGBCDPoleFigure(VisualizeGBCDPoleFigure&&) = delete;      // Move Constructor Not Implemented
   VisualizeGBCDPoleFigure& operator=(const VisualizeGBCDPoleFigure&) = delete; // Copy Assignment Not Implemented
   VisualizeGBCDPoleFigure& operator=(VisualizeGBCDPoleFigure&&) = delete;      // Move Assignment Not Implemented
 };

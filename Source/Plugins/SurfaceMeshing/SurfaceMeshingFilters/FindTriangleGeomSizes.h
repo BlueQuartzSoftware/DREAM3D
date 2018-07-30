@@ -180,7 +180,7 @@ private:
 
 public:
   FindTriangleGeomSizes(const FindTriangleGeomSizes&) = delete; // Copy Constructor Not Implemented
-  FindTriangleGeomSizes(FindTriangleGeomSizes&&) = delete;      // Move Constructor
+  FindTriangleGeomSizes(FindTriangleGeomSizes&&) = delete;      // Move Constructor Not Implemented
   FindTriangleGeomSizes& operator=(const FindTriangleGeomSizes&) = delete; // Copy Assignment Not Implemented
   FindTriangleGeomSizes& operator=(FindTriangleGeomSizes&&) = delete;      // Move assignment Not Implemented
 };

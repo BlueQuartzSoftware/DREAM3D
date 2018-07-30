@@ -105,7 +105,7 @@ private:
 
 public:
   StatsProgressWidget(const StatsProgressWidget&) = delete;            // Copy Constructor Not Implemented
-  StatsProgressWidget(StatsProgressWidget&&) = delete;                 // Move Constructor
+  StatsProgressWidget(StatsProgressWidget&&) = delete;                 // Move Constructor Not Implemented
   StatsProgressWidget& operator=(const StatsProgressWidget&) = delete; // Copy Assignment Not Implemented
   StatsProgressWidget& operator=(StatsProgressWidget&&) = delete;      // Move Assignment
 };

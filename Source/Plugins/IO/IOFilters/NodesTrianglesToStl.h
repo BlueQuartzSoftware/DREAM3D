@@ -192,7 +192,7 @@ private:
 
 public:
   NodesTrianglesToStl(const NodesTrianglesToStl&) = delete; // Copy Constructor Not Implemented
-  NodesTrianglesToStl(NodesTrianglesToStl&&) = delete;      // Move Constructor
+  NodesTrianglesToStl(NodesTrianglesToStl&&) = delete;      // Move Constructor Not Implemented
   NodesTrianglesToStl& operator=(const NodesTrianglesToStl&) = delete; // Copy Assignment Not Implemented
   NodesTrianglesToStl& operator=(NodesTrianglesToStl&&) = delete;      // Move Assignment Not Implemented
 };

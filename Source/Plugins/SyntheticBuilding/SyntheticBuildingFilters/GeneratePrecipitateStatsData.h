@@ -232,7 +232,7 @@ private:
 
 public:
   GeneratePrecipitateStatsData(const GeneratePrecipitateStatsData&) = delete;            // Copy Constructor Not Implemented
-  GeneratePrecipitateStatsData(GeneratePrecipitateStatsData&&) = delete;                 // Move Constructor
+  GeneratePrecipitateStatsData(GeneratePrecipitateStatsData&&) = delete;                 // Move Constructor Not Implemented
   GeneratePrecipitateStatsData& operator=(const GeneratePrecipitateStatsData&) = delete; // Copy Assignment Not Implemented
   GeneratePrecipitateStatsData& operator=(GeneratePrecipitateStatsData&&) = delete;      // Move Assignment Not Implemented
 };

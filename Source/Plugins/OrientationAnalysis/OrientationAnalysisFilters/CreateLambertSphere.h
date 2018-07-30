@@ -269,7 +269,7 @@ private:
 
 public:
   CreateLambertSphere(const CreateLambertSphere&) = delete; // Copy Constructor Not Implemented
-  CreateLambertSphere(CreateLambertSphere&&) = delete;      // Move Constructor
+  CreateLambertSphere(CreateLambertSphere&&) = delete;      // Move Constructor Not Implemented
   CreateLambertSphere& operator=(const CreateLambertSphere&) = delete; // Copy Assignment Not Implemented
   CreateLambertSphere& operator=(CreateLambertSphere&&) = delete;      // Move Assignment Not Implemented
 };

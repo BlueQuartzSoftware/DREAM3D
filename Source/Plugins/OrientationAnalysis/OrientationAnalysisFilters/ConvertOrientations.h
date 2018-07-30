@@ -178,7 +178,7 @@ protected:
 private:
 public:
   ConvertOrientations(const ConvertOrientations&) = delete; // Copy Constructor Not Implemented
-  ConvertOrientations(ConvertOrientations&&) = delete;      // Move Constructor
+  ConvertOrientations(ConvertOrientations&&) = delete;      // Move Constructor Not Implemented
   ConvertOrientations& operator=(const ConvertOrientations&) = delete; // Copy Assignment Not Implemented
   ConvertOrientations& operator=(ConvertOrientations&&) = delete;      // Move Assignment Not Implemented
 };

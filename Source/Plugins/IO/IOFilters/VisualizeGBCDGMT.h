@@ -196,7 +196,7 @@ private:
 
 public:
   VisualizeGBCDGMT(const VisualizeGBCDGMT&) = delete; // Copy Constructor Not Implemented
-  VisualizeGBCDGMT(VisualizeGBCDGMT&&) = delete;      // Move Constructor
+  VisualizeGBCDGMT(VisualizeGBCDGMT&&) = delete;      // Move Constructor Not Implemented
   VisualizeGBCDGMT& operator=(const VisualizeGBCDGMT&) = delete; // Copy Assignment Not Implemented
   VisualizeGBCDGMT& operator=(VisualizeGBCDGMT&&) = delete;      // Move Assignment Not Implemented
 };

@@ -170,7 +170,7 @@ private:
 
 public:
   FindVolFractions(const FindVolFractions&) = delete; // Copy Constructor Not Implemented
-  FindVolFractions(FindVolFractions&&) = delete;      // Move Constructor
+  FindVolFractions(FindVolFractions&&) = delete;      // Move Constructor Not Implemented
   FindVolFractions& operator=(const FindVolFractions&) = delete; // Copy Assignment Not Implemented
   FindVolFractions& operator=(FindVolFractions&&) = delete;      // Move Assignment Not Implemented
 };

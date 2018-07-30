@@ -174,7 +174,7 @@ private:
 
 public:
   FindCAxisLocations(const FindCAxisLocations&) = delete; // Copy Constructor Not Implemented
-  FindCAxisLocations(FindCAxisLocations&&) = delete;      // Move Constructor
+  FindCAxisLocations(FindCAxisLocations&&) = delete;      // Move Constructor Not Implemented
   FindCAxisLocations& operator=(const FindCAxisLocations&) = delete; // Copy Assignment Not Implemented
   FindCAxisLocations& operator=(FindCAxisLocations&&) = delete;      // Move Assignment Not Implemented
 };

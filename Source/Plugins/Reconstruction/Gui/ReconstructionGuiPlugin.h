@@ -20,7 +20,7 @@ public:
 
 public:
   ReconstructionGuiPlugin(const ReconstructionGuiPlugin&) = delete;            // Copy Constructor Not Implemented
-  ReconstructionGuiPlugin(ReconstructionGuiPlugin&&) = delete;                 // Move Constructor
+  ReconstructionGuiPlugin(ReconstructionGuiPlugin&&) = delete;                 // Move Constructor Not Implemented
   ReconstructionGuiPlugin& operator=(const ReconstructionGuiPlugin&) = delete; // Copy Assignment Not Implemented
   ReconstructionGuiPlugin& operator=(ReconstructionGuiPlugin&&) = delete;      // Move Assignment Not Implemented
 };

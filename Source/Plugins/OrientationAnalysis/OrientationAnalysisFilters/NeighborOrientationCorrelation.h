@@ -201,7 +201,7 @@ private:
 
 public:
   NeighborOrientationCorrelation(const NeighborOrientationCorrelation&) = delete; // Copy Constructor Not Implemented
-  NeighborOrientationCorrelation(NeighborOrientationCorrelation&&) = delete;      // Move Constructor
+  NeighborOrientationCorrelation(NeighborOrientationCorrelation&&) = delete;      // Move Constructor Not Implemented
   NeighborOrientationCorrelation& operator=(const NeighborOrientationCorrelation&) = delete; // Copy Assignment Not Implemented
   NeighborOrientationCorrelation& operator=(NeighborOrientationCorrelation&&) = delete;      // Move Assignment Not Implemented
 };
