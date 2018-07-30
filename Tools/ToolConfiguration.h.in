@@ -1,5 +1,4 @@
-#ifndef _toolConfiguration_H_
-#define _toolConfiguration_H_
+#pragma once
 
 
 #include <QtCore/QString>
@@ -70,5 +69,3 @@ namespace D3DTools
   }
 
 }
-
-#endif
