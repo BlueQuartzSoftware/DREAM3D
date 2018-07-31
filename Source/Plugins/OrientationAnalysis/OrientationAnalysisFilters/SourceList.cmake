@@ -49,7 +49,6 @@ set(_PublicFilters
   ReadH5Ebsd
   ReplaceElementAttributesWithNeighborValues
   RotateEulerRefFrame
-  WriteIPFStandardTriangle
   WritePoleFigure
   WriteStatsGenOdfAngleFile
   OrientationUtility
@@ -94,7 +93,7 @@ set(_PrivateFilters
   GenerateEulerColors
   GenerateRodriguesColors
   YSChoiAbaqusReader
-
+  WriteIPFStandardTriangle
 )
 
 #-----------------
