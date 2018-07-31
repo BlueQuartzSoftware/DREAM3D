@@ -21,7 +21,7 @@
 
 #include "DREAM3DToolsConfiguration.h"
 
-#include "RestServerConstants.h"
+#include "SIMPLib/Plugin/SIMPLPluginConstants.h"
 
 class RESTServerInfo
 {
@@ -43,67 +43,36 @@ class RESTServerInfo
    */
     void execute()
     {
-      PluginManager* pm = PluginManager::Instance();
-      QVector<ISIMPLibPlugin*> plugins = pm->getPluginsVector();
+
       
       // Write our File Version and DREAM3D Version strings
       QJsonObject dream3dMeta;
       
-      dream3dMeta[RestServer::Strings::ReleaseDate] = QDate::currentDate().toString();
-      dream3dMeta[RestServer::Strings::ReleaseType] = SIMPLProj_RELEASE_TYPE;
-      dream3dMeta[RestServer::Strings::MajorVersion] = SIMPLView::Version::Major();
-      dream3dMeta[RestServer::Strings::MinorVersion] = SIMPLView::Version::Minor();
-      dream3dMeta[RestServer::Strings::PatchVersion] = SIMPLView::Version::Patch();
-      dream3dMeta[RestServer::Strings::Revision] = SIMPLView::Version::Revision();
-      dream3dMeta[RestServer::Strings::DownloadURL] = "http://dream3d.bluequartz.net/?page_id=32";
+      dream3dMeta[SIMPL::JSON::ReleaseDate] = QDate::currentDate().toString();
+      dream3dMeta[SIMPL::JSON::ReleaseType] = SIMPLProj_RELEASE_TYPE;
+      dream3dMeta[SIMPL::JSON::MajorVersion] = SIMPLView::Version::Major();
+      dream3dMeta[SIMPL::JSON::MinorVersion] = SIMPLView::Version::Minor();
+      dream3dMeta[SIMPL::JSON::PatchVersion] = SIMPLView::Version::Patch();
+      dream3dMeta[SIMPL::JSON::Revision] = SIMPLView::Version::Revision();
+      dream3dMeta[SIMPL::JSON::DownloadURL] = "http://dream3d.bluequartz.net/?page_id=32";
       QJsonObject m_Root;
-      m_Root[RestServer::Strings::DREAM3D] = dream3dMeta;
+      m_Root[SIMPL::JSON::DREAM3D] = dream3dMeta;
       
       QJsonObject simplMeta;
-      simplMeta[RestServer::Strings::MajorVersion] = SIMPLib::Version::Major();
-      simplMeta[RestServer::Strings::MinorVersion] = SIMPLib::Version::Minor();
-      simplMeta[RestServer::Strings::PatchVersion] = SIMPLib::Version::Patch();
-      simplMeta[RestServer::Strings::Revision] = SIMPLib::Version::Revision();
-      m_Root[RestServer::Strings::SIMPL] = simplMeta;
+      simplMeta[SIMPL::JSON::MajorVersion] = SIMPLib::Version::Major();
+      simplMeta[SIMPL::JSON::MinorVersion] = SIMPLib::Version::Minor();
+      simplMeta[SIMPL::JSON::PatchVersion] = SIMPLib::Version::Patch();
+      simplMeta[SIMPL::JSON::Revision] = SIMPLib::Version::Revision();
+      m_Root[SIMPL::JSON::SIMPL] = simplMeta;
       
-      QJsonArray plugArray;
-      
-      for(int i = 0; i < plugins.size(); i++)
-      {
-        ISIMPLibPlugin* plug = plugins[i];
-        QJsonObject jobj;
-        jobj[RestServer::Strings::BaseName] = plug->getPluginBaseName();
-        jobj[RestServer::Strings::Version] = plug->getVersion();
-        jobj[RestServer::Strings::Vendor] = plug->getVendor();
-        jobj[RestServer::Strings::CompatibilityVersion] = plug->getCompatibilityVersion();
-        jobj[RestServer::Strings::DisplayName] = plug->getPluginDisplayName();
-        jobj[RestServer::Strings::URL] = plug->getURL();
-        plugArray.append(jobj);
-      }
-      m_Root[RestServer::Strings::Plugins] = plugArray;
+      // Loop over all the plugins
+      PluginManager* pm = PluginManager::Instance();
+      m_Root[SIMPL::JSON::Plugins] = pm->toJsonArray();
       
       // Loop over all the filters
       FilterManager* fm = FilterManager::Instance();
-      QJsonArray filterArray;
+      m_Root[SIMPL::JSON::Filters] = fm->toJsonArray();
       
-      FilterManager::Collection factories = fm->getFactories();
-      for(auto factory : factories)
-      {
-        AbstractFilter::Pointer filter = factory->create();
-        QJsonObject filtJson;
-        
-        filtJson[RestServer::Strings::Name] = filter->getHumanLabel();
-        filtJson[RestServer::Strings::ClassName] = filter->getNameOfClass();
-        filtJson[RestServer::Strings::Uuid] = filter->getUuid().toString();
-        filtJson[RestServer::Strings::PluginName] = filter->getCompiledLibraryName();
-        filtJson[RestServer::Strings::Version] = filter->getFilterVersion();
-        filtJson[RestServer::Strings::GroupName] = filter->getGroupName();
-        filtJson[RestServer::Strings::SubGroupName] = filter->getSubGroupName();
-        
-        filterArray.append(filtJson);
-      }
-      
-      m_Root[RestServer::Strings::Filters] = filterArray;
       
       QJsonDocument doc(m_Root);
       
