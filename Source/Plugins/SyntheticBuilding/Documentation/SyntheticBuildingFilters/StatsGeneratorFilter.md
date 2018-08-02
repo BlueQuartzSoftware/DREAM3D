@@ -120,16 +120,18 @@ The Omega3 tab controls the morphological shape of the features that are generat
 + **Bin**: Xalculated from the size distribution and cannot be changed
 + **Alpha**: The &alpha; parameter of a beta distribution. B/A, C/A and C/B are normalized and can only be between 0 and 1 to insure that the beta distribution is a good fit
 + **Beta**: The &beta; parameter of the beta distribution
-+ **Color**: Allows the user to change colors of the curves for image creation or easier identification during stats generation
 
 ## Neighbor Distribution Tab ##
 
 ![Number of Neighbors Distribution GUI](Images/NeighborDistPlot.png)
 
+The Neighbor Distribution data is generated from a [Log-Normal Probability Distribution Function\(PDF\)](https://en.wikipedia.org/wiki/Log-normal_distribution) distribution.
+
+![](Images/LogNormal_PDF_Equation.png)
+
 + **Bin**: Calculated from the size distribution and cannot be changed
-+ **Alpha**: The &alpha; parameter of a power law distribution, which the exponent of a power law distribution
-+ **Beta**: The &beta; parameter of a power law distribution
-+ **Color**: Allows the user to change colors of the curves for image creation or easier identification during stats generation
++ **Average**: The **x** parameter of a Log-Normal Probability Distributeion Function (PDF).
++ **Standard Deviation**: The &sigma; parameter of a Log-Normal Probability Distributeion Function (PDF).
 
 ## Radial Distribution Function Tab ## 
 
