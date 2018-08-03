@@ -10,7 +10,64 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
-## Version 6.5.xxx ##
+## Version 6.5.x ##
+
+### New Filters & Features ###
+
++ ITKImageProcessing::ITKImageWriter gained the ability to write out various orthogonal planes from the image geometry.
+
+### Fixed DREAM3D Issues ###
+
++ Update documentation for StatsGenerator to reflect Neighbor Distribution generation
++ Removed Write IPF Standard Triangle from available filters. Static images are available in the Data folder
+
+### Fixed SIMPLView Issues ###
+
++ Change from 'Clear Cache' to 'Reset Preferences' which is more descriptive
+
+### Fixed SIMPL Issues ###
+
++ Fix issue in MultiAttributeMatrixSelectionWidget where the selections would not deserialize from a pipeline file correctly.
++ Issue #228: Fix issue where the contents of the QTextEdit would not be saved to the filter in the Pipeline Annotation Filter
++ Issue #233: Fix bug where disabled filters are not written to the pipeline files.
++ Merge Coordinate transform system into mainline develop branch.
+
+## Version 6.5.36 ##
+
+### New Filters & Features ###
+
+No new features or filters were added. This bug fix is mainly a bug fix release based on feedback from users.
+
+### Fixed DREAM3D Issues ###
+
++ Pack Primary Phases and Insert Precipitates now use "Feature Generation" filter parameter instead of "Alread Have Features"
++ Issue #809: changed the Feature Attribute Array Default Name from "AxisLengths" to "SemiAxisLengths," with other consistency changes (J. Tucker)
++ Issue #808: Adjust the min height of vertical tabs for some visual styles.
++ Issue #803: FindSizes overflow on large data
++ Issue #799: Allow FeatureInfoReader to accept comments in the file
++ Update prebuild pipelines that use the PackPrimaryPhases filter
++ Remove 'Input Stats File' for the estimation of number of features
++ Update documentation for PackPrimaryPhases (A.D. Rollett)
++ Update the Reference Frame documentation with edits from M.D. Graef.
++ Promote the "Detect Ellipsoids" filter into the Processing plugin
+
+### Fixed SIMPLView Issues ###
+
++ Updating the text in the dialog box that appears when the SIMPL_RELATIVE_PATH_CHECK CMake variable is On and no data directory path has been set previously.  The dialog text is now consistent with the menu system text when telling users how to set a different data directory location.
+
+### Fixed SIMPL Issues ###
+
++ Import HDF5 Dataset: Now import multiple datasets per filter. Better guessing for the component dimensions
++ Fix bug where filter parameters were shared among multiple filter instances in certain situations.
++ Fixed a bug where moving a filter would incorrectly prevent the filter from being deleted, thus causing the move to behave like a copy and place the same filter into the pipeline multiple times.
++ Fixed a bug in PipelineListWidget where the pipeline could be run even with errors if they were caused during pipeline execution. Updated PipelineListWidget to use an enum to check and change its current state rather than comparing text output to the UI.
++ Disabled the option of reading FilterPipelines from .dream3d files.  If a .dream3d file is dropped into the pipeline view, a Read DREAM.3D Data File filter is automatically created for the file.
++ Fixed a bug where pressing cancel when asked if the user wants to import a .dream3d file as a pipeline or as an import data filter would not cancel the import process.
++ Issue #215: Fixed
++ Issue #212: Add a Hexahedral geometry class.
++ Promote several filters from DREAM3DReview into SIMPL/Core: Copy Object, Create Geometry, Crop Vertex Geometry, Extract Attribute Arrays from Geometry, Split Attribute Array
+
+## Version 6.5.10 ##
 
 ### New Filters & Features ###
 
