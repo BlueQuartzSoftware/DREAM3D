@@ -164,7 +164,7 @@ font-size: 10px;
        </widget>
       </item>
       <item row="2" column="4">
-       <widget class="QLineEdit" name="m_MaxSigmaCutOff">
+       <widget class="SVLineEdit" name="m_MaxSigmaCutOff">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -209,7 +209,7 @@ font-size: 10px;
        </widget>
       </item>
       <item row="2" column="2">
-       <widget class="QLineEdit" name="m_Sigma_SizeDistribution">
+       <widget class="SVLineEdit" name="m_Sigma_SizeDistribution">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -234,7 +234,7 @@ font-size: 10px;
        </widget>
       </item>
       <item row="1" column="2">
-       <widget class="QLineEdit" name="m_Mu_SizeDistribution">
+       <widget class="SVLineEdit" name="m_Mu_SizeDistribution">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -296,7 +296,7 @@ font-size: 10px;
        </widget>
       </item>
       <item row="1" column="4">
-       <widget class="QLineEdit" name="m_MinSigmaCutOff">
+       <widget class="SVLineEdit" name="m_MinSigmaCutOff">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
           <horstretch>0</horstretch>
@@ -401,6 +401,11 @@ font-size: 10px;
    <header>qwt_plot.h</header>
    <container>1</container>
   </customwidget>
+  <customwidget>
+   <class>SVLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">SVControlWidgets.h</header>
+  </customwidget>
  </customwidgets>
  <tabstops>
   <tabstop>m_Mu_SizeDistribution</tabstop>
@@ -410,8 +415,6 @@ font-size: 10px;
   <tabstop>m_MaxSigmaCutOff</tabstop>
   <tabstop>distributionTypeCombo</tabstop>
  </tabstops>
- <resources>
-  <include location="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc"/>
- </resources>
+ <resources/>
  <connections/>
 </ui>
