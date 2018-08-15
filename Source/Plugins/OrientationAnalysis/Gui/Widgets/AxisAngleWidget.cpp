@@ -35,6 +35,8 @@
 
 #include "AxisAngleWidget.h"
 
+#include <QtGui/QDoubleValidator>
+
 #include "SIMPLib/Math/SIMPLibMath.h"
 
 #include <Eigen/Core>

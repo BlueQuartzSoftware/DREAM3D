@@ -35,6 +35,8 @@
 
 #include "QuatWidget.h"
 
+#include <QtGui/QDoubleValidator>
+
 #include "SIMPLib/Math/QuaternionMath.hpp"
 
 // -----------------------------------------------------------------------------

@@ -35,6 +35,8 @@
 
 #include "EulerWidget.h"
 
+#include <QtGui/QRegExpValidator>
+
 #include "SIMPLib/Math/SIMPLibMath.h"
 
 // -----------------------------------------------------------------------------

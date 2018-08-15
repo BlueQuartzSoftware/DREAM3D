@@ -47,6 +47,7 @@
 #include <QtGui/QFont>
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
+#include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QGraphicsPixmapItem>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMessageBox>
