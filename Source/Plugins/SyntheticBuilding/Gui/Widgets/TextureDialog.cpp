@@ -41,7 +41,7 @@
 //
 // -----------------------------------------------------------------------------
 TextureDialog::TextureDialog(unsigned int xtal, QWidget* parent)
-: QDialog(parent)
+: SVDialog(parent)
 , m_CrystalStructure(xtal)
 {
   setupUi(this);

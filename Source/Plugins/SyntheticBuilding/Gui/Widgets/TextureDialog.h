@@ -43,6 +43,8 @@
 
 #include "SIMPLib/Common/Constants.h"
 
+#include "SVWidgetsLib/Widgets/SVControlWidgets.h"
+
 #include "OrientationLib/Texture/TexturePreset.h"
 
 /**
@@ -52,7 +54,7 @@
  * @date Apr 20, 2011
  * @version 1.0
  */
-class TextureDialog : public QDialog, private Ui::TextureDialog
+class TextureDialog : public SVDialog, private Ui::TextureDialog
 {
   Q_OBJECT
 

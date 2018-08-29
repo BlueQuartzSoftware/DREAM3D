@@ -49,6 +49,8 @@ class DataArrayPath;
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
 
+#include "SVWidgetsLib/Widgets/SVControlWidgets.h"
+
 #include "EbsdLib/EbsdConstants.h"
 
 /**
@@ -60,7 +62,7 @@ class DataArrayPath;
  * @date Oct 2, 2011
  * @version 1.0
  */
-class QEbsdReferenceFrameDialog : public QDialog, private Ui::QEbsdReferenceFrameDialog
+class QEbsdReferenceFrameDialog : public SVDialog, private Ui::QEbsdReferenceFrameDialog
 {
   Q_OBJECT
 

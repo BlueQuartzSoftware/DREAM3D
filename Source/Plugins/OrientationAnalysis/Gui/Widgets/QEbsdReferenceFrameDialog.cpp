@@ -76,7 +76,7 @@
 //
 // -----------------------------------------------------------------------------
 QEbsdReferenceFrameDialog::QEbsdReferenceFrameDialog(QString filename, QWidget* parent)
-: QDialog(parent)
+: SVDialog(parent)
 , m_EbsdFileName(filename)
 , m_OriginGroup(nullptr)
 {

@@ -44,6 +44,9 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/PhaseType.h"
 
+#include "SVWidgetsLib/Widgets/SVControlWidgets.h"
+
+
 /**
  * @class EditPhaseDialog EditPhaseDialog.h StatsGenerator/EditPhaseDialog.h
  * @brief Simple dialog that is presented to the user when a new phase is added.
@@ -51,7 +54,7 @@
  * @date Apr 14, 2011
  * @version 1.0
  */
-class EditPhaseDialog : public QDialog, private Ui::EditPhaseDialog
+class EditPhaseDialog : public SVDialog, private Ui::EditPhaseDialog
 {
   Q_OBJECT
 
