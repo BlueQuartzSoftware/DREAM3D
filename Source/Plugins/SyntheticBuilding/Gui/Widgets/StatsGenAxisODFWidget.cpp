@@ -222,9 +222,9 @@ int StatsGenAxisODFWidget::getOrientationData(StatsData* statsData, PhaseType::T
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
-  QVector<float> e1Rad = e1s;
-  QVector<float> e2Rad = e2s;
-  QVector<float> e3Rad = e3s;
+//  QVector<float> e1Rad = e1s;
+//  QVector<float> e2Rad = e2s;
+//  QVector<float> e3Rad = e3s;
 
   // Convert from Degrees to Radians
   for(QVector<float>::size_type i = 0; i < e1s.size(); i++)
@@ -324,8 +324,8 @@ void StatsGenAxisODFWidget::setupGui()
   QString releaseType = QString::fromLatin1(SIMPLProj_RELEASE_TYPE);
   if(releaseType.compare("Official") == 0)
   {
-    pfLambertSize->hide();
-    pfLambertLabel->hide();
+    m_PFLambertSize->hide();
+    m_PFLambertLabel->hide();
   }
 
   // Disable the MDF tab
@@ -497,8 +497,8 @@ void StatsGenAxisODFWidget::calculateAxisODF()
   }
   size_t numEntries = e1s.size();
 
-  int imageSize = pfImageSize->value();
-  int lamberSize = pfLambertSize->value();
+  int imageSize = m_PFImageSize->value();
+  int lamberSize = m_PFLambertSize->value();
   int numColors = 16;
   int npoints = pfSamplePoints->value();
   QVector<size_t> dims(1, 3);
@@ -537,7 +537,7 @@ void StatsGenAxisODFWidget::calculateAxisODF()
     return;
   }
 
-  QImage image = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config, imageLayout->currentIndex());
+  QImage image = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config, m_ImageLayoutCB->currentIndex());
   m_PoleFigureLabel->setPixmap(QPixmap::fromImage(image));
 
   emit dataChanged();

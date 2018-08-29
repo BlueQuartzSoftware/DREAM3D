@@ -323,9 +323,54 @@ void StatsGenODFWidget::setPhaseIndex(int value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void StatsGenODFWidget::updatePFStatus(const QString &msg)
+{
+    m_PFStatusLabel->setText(msg);
+    m_PFStatusLabel->setVisible(!msg.isEmpty());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int StatsGenODFWidget::getPhaseIndex()
 {
   return m_PhaseIndex;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::on_m_PFTypeCB_currentIndexChanged(int index)
+{
+  m_PFLambertLabel->setVisible( (index == 1));
+  m_PFLambertSize->setVisible( (index == 1));
+  updatePFStatus(QString("Click Refresh Button"));
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::on_m_PFImageSize_valueChanged(int i)
+{
+  Q_UNUSED(i)
+  updatePFStatus(QString("Click Refresh Button"));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::on_m_ImageLayoutCB_currentIndexChanged(int index)
+{
+  updatePFStatus(QString("Click Refresh Button"));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void  StatsGenODFWidget::on_m_PFLambertSize_valueChanged(int i)
+{
+  updatePFStatus(QString("Click Refresh Button"));
 }
 
 // -----------------------------------------------------------------------------
@@ -376,11 +421,11 @@ void StatsGenODFWidget::setupGui()
   on_m_WeightSpreads_clicked(true);
 
   // In release mode hide the Lambert Square Size.
-  QString releaseType = QString::fromLatin1(SIMPLProj_RELEASE_TYPE);
+  // QString releaseType = QString::fromLatin1(SIMPLProj_RELEASE_TYPE);
   // if(releaseType.compare("Official") == 0)
   {
-    pfLambertSize->hide();
-    pfLambertLabel->hide();
+    m_PFLambertSize->hide();
+    m_PFLambertLabel->hide();
   }
 
   m_ODFGroup.addButton(m_ODFParametersBtn);
@@ -511,6 +556,7 @@ void StatsGenODFWidget::updatePlots()
   m_AbortUpdate = false;
   calculateODF();
   m_AbortUpdate = true;
+  updatePFStatus(QString(""));
 }
 
 // -----------------------------------------------------------------------------
@@ -572,8 +618,8 @@ void StatsGenODFWidget::calculateODF()
   }
   size_t numEntries = static_cast<size_t>(e1s.size());
 
-  int imageSize = pfImageSize->value();
-  int lamberSize = pfLambertSize->value();
+  int imageSize = m_PFImageSize->value();
+  int lamberSize = m_PFLambertSize->value();
   int numColors = 16;
 
   QVector<size_t> dims(1, 3);
@@ -585,8 +631,14 @@ void StatsGenODFWidget::calculateODF()
   config.numColors = numColors;
   config.discrete = true;
   config.discreteHeatMap = false;
-
+  
+  // Check if the user wants a Discreet or Lambert PoleFigure
+  if(m_PFTypeCB->currentIndex() == 1)
+  {
+    config.discrete = false;
+  }
   QVector<UInt8ArrayType::Pointer> figures;
+  
 
   if(Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
   {
@@ -637,9 +689,9 @@ void StatsGenODFWidget::calculateODF()
     return;
   }
 
-  QImage image = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config, imageLayout->currentIndex());
+  QImage image = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config, m_ImageLayoutCB->currentIndex());
   m_PoleFigureLabel->setPixmap(QPixmap::fromImage(image));
-
+    
   // Enable the MDF tab
   if(m_MDFWidget != nullptr)
   {

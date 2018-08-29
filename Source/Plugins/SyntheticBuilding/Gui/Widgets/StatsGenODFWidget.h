@@ -122,6 +122,12 @@ protected slots:
 
   void on_m_WeightSpreads_clicked(bool b);
   void on_m_WeightSpreadsBulkLoad_clicked(bool b);
+  
+  void on_m_PFImageSize_valueChanged(int i);
+  void on_m_ImageLayoutCB_currentIndexChanged(int index);
+  void on_m_PFTypeCB_currentIndexChanged(int index);
+  void on_m_PFLambertSize_valueChanged(int i);
+  void updatePFStatus(const QString &msg);
 
 signals:
   void dataChanged();
