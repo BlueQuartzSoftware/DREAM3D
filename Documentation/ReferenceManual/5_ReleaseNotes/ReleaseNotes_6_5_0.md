@@ -20,10 +20,15 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 + Update documentation for StatsGenerator to reflect Neighbor Distribution generation
 + Removed Write IPF Standard Triangle from available filters. Static images are available in the Data folder
++ Issue 817: Correctly calculate the northern hemisphere XYZ coord from the southern hemisphere
++ Issue 819: Allow users to pick either a Lambert or Discrete pole figure for the ODF tab in StatsGenerator
++ Update documentation for the Neighbor Distribution function in StatsGenerator
 
 ### Fixed SIMPLView Issues ###
 
 + Change from 'Clear Cache' to 'Reset Preferences' which is more descriptive
++ Window settings are saved each time any dock widgets are moved or updated
++ Dock widgets with Tabs are now located at the top instead of the bottom.
 
 ### Fixed SIMPL Issues ###
 
@@ -31,6 +36,9 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 + Issue #228: Fix issue where the contents of the QTextEdit would not be saved to the filter in the Pipeline Annotation Filter
 + Issue #233: Fix bug where disabled filters are not written to the pipeline files.
 + Merge Coordinate transform system into mainline develop branch.
++ Adding a sanity check when loading bookmarks to make sure that all bookmark items have the proper item type.
++ Added unit test for SplitAttributeArray filter
++ Improves the output location of files related to Python Wrapping when used with Visual Studio.
 
 ## Version 6.5.36 ##
 
