@@ -34,7 +34,6 @@
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
 
-
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 
 // -----------------------------------------------------------------------------
@@ -70,6 +69,8 @@ void ComputeStereographicProjection::operator()() const
     {
       if(xyzPtr[i * 3 + 2] < 0.0f)
       {
+        xyzPtr[i * 3 + 0] *= -1.0f;
+        xyzPtr[i * 3 + 1] *= -1.0f;
         xyzPtr[i * 3 + 2] *= -1.0f;
       }
       float x = xyzPtr[i * 3] / (1 + xyzPtr[i * 3 + 2]);
@@ -81,10 +82,6 @@ void ComputeStereographicProjection::operator()() const
       size_t index = static_cast<size_t>((yCoord * m_Config->imageDim) + xCoord);
 
       intensity[index]++;
-    }
-
-    for(size_t i = 0; i < numCoords; i++)
-    {
     }
 #if 0
     // This chunk is here for some debugging....
