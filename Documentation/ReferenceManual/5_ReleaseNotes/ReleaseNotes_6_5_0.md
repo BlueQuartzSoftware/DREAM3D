@@ -10,7 +10,7 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
-## Version 6.5.x ##
+## Version 6.5.48 ##
 
 ### New Filters & Features ###
 
@@ -29,6 +29,7 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 + Change from 'Clear Cache' to 'Reset Preferences' which is more descriptive
 + Window settings are saved each time any dock widgets are moved or updated
 + Dock widgets with Tabs are now located at the top instead of the bottom.
++ Fixed issue when quitting the appication on macOS where the save as dialog would appear twice.
 
 ### Fixed SIMPL Issues ###
 
