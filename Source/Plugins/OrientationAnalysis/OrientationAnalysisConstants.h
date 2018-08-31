@@ -14,7 +14,7 @@ namespace OrientationAnalysisConstants
   {
   const QString VendorName("BlueQuartz Software, LLC");
   const QString URL("http://www.bluequartz.net");
-  const QString Copyright("(C) 2016 BlueQuartz Software, LLC");
+  const QString Copyright("(C) 2018 BlueQuartz Software, LLC");
   } // namespace BlueQuartz
 
   namespace
