@@ -155,9 +155,9 @@ void RolledPresetDialog::checkInputs(const QString& text)
   }
   else
   {
-    SVStyle::Instance()->LineEditRedErrorStyle(A);
-    SVStyle::Instance()->LineEditRedErrorStyle(B);
-    SVStyle::Instance()->LineEditRedErrorStyle(C);
+    SVStyle::Instance()->LineEditBackgroundErrorStyle(A);
+    SVStyle::Instance()->LineEditBackgroundErrorStyle(B);
+    SVStyle::Instance()->LineEditBackgroundErrorStyle(C);
   }
 }
 
