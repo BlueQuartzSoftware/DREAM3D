@@ -43,7 +43,7 @@
 #include <set>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/TemplateHelpers.hpp"
+#include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/DataArrays/DynamicListArray.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -51,9 +51,9 @@
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-#include "SIMPLib/Geometry/TriangleGeom.h"
-#include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/EdgeGeom.h"
+#include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Geometry/TriangleGeom.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"

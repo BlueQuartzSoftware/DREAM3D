@@ -44,16 +44,15 @@
 #include <tbb/tick_count.h>
 #endif
 
+#include "Reconstruction/ReconstructionConstants.h"
+#include "Reconstruction/ReconstructionVersion.h"
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/TemplateHelpers.hpp"
+#include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
-
-#include "Reconstruction/ReconstructionConstants.h"
-#include "Reconstruction/ReconstructionVersion.h"
 
 // -----------------------------------------------------------------------------
 //

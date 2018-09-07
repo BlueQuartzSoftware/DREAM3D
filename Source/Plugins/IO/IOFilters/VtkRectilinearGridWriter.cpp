@@ -41,7 +41,7 @@
 #include <QtCore/QFileInfo>
 
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
-#include "SIMPLib/Common/TemplateHelpers.hpp"
+#include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
