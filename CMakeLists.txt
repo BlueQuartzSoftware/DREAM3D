@@ -165,7 +165,7 @@ if(NOT DEFINED BrandedSIMPLView_DIR)
 endif()
 
 # Set the Application Name to DREAM3D to rebrand SIMPLView with the correct icons and badges
-set(SIMPLView_APPLICATION_NAME "DREAM3D")
+set(SIMPLView_APPLICATION_NAME "Visivo")
 set(SIMPLView_VERSION_HDR_FILE "SIMPLViewVersion.h")
 set(SIMPLView_VERSION_SRC_FILE "SIMPLViewVersion.cpp")
 set(EXE_DEBUG_EXTENSION "_debug")
