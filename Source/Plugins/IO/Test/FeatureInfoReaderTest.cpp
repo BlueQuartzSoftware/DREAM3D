@@ -207,42 +207,352 @@ public:
     propWasSet = featureInfoReader->setProperty("CellFeatureAttributeMatrixName", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
+    var.setValue(0);
+    propWasSet = featureInfoReader->setProperty("Delimiter", var);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+
     pipeline->pushBack(featureInfoReader);
     
     DataContainerWriter::Pointer writer = DataContainerWriter::New();
     writer->setOutputFile(UnitTest::FeatureInfoReaderTest::OutputFile);
     pipeline->pushBack(writer);
-    
-    // Try an input file with Comments    
-    WriteInputFile(true, ' ');
 
+    // Try an input file with Comments and comma delimited while in comma mode
+    WriteInputFile(true, ',');
+    var.setValue(0);
+    featureInfoReader->setProperty("Delimiter", var);
     int err = pipeline->preflightPipeline();
     DREAM3D_REQUIRE(err >= 0)
 
     DataContainerArray::Pointer dca = pipeline->execute();
     err = pipeline->getErrorCondition();
-    DREAM3D_REQUIRE(err >= 0)
-    
-    // Try an input file without Comments    
-    WriteInputFile(false, ' ');
+    DREAM3D_REQUIRED(err, >= , 0)
+
+    // Try an input file with Comments and semicolon delimited while in semicolon mode
+    WriteInputFile(true, ';');
+    var.setValue(1);
+    featureInfoReader->setProperty("Delimiter", var);
     err = pipeline->preflightPipeline();
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
     err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , 0)
+
+    // Try an input file with Comments and colon delimited while in colon mode
+    WriteInputFile(true, ':');
+    var.setValue(2);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
     DREAM3D_REQUIRE(err >= 0)
-    
-    // Try an input file without Comments and comma delimited which will induce a runtime error   
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , 0)
+
+    // Try an input file with Comments and tab delimited while in tab mode
+    WriteInputFile(true, '\t');
+    var.setValue(3);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >=, 0)
+
+    // Try an input file with Comments and space delimited while in space mode
+    WriteInputFile(true, ' ');
+    var.setValue(4);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >=, 0)
+
+    // Try an input file without Comments and comma delimited while in comma mode
     WriteInputFile(false, ',');
+    var.setValue(0);
+    featureInfoReader->setProperty("Delimiter", var);
     err = pipeline->preflightPipeline();
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
     err = pipeline->getErrorCondition();
-    DREAM3D_REQUIRED(err, ==, -68001)
-    
+    DREAM3D_REQUIRED(err, >= , 0)
+
+    // Try an input file without Comments and semicolon delimited while in semicolon mode
+    WriteInputFile(false, ';');
+    var.setValue(1);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , 0)
+
+    // Try an input file without Comments and colon delimited while in colon mode
+    WriteInputFile(false, ':');
+    var.setValue(2);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , 0)
+
+    // Try an input file without Comments and tab delimited while in tab mode
+    WriteInputFile(false, '\t');
+    var.setValue(3);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >=, 0)
+
+    // Try an input file without Comments and space delimited while in space mode
+    WriteInputFile(false, ' ');
+    var.setValue(4);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >=, 0)
+
+    // Try an input file without Comments and comma delimited while in semicolon mode which will induce a runtime error
+    WriteInputFile(false, ',');
+    var.setValue(1);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , -68001)
+
+    // Try an input file without Comments and comma delimited while in colon mode which will induce a runtime error
+    WriteInputFile(false, ',');
+    var.setValue(2);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , -68001)
+
+    // Try an input file without Comments and comma delimited while in tab mode which will induce a runtime error
+    WriteInputFile(false, ',');
+    var.setValue(3);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , -68001)
+
+    // Try an input file without Comments and comma delimited while in space mode which will induce a runtime error
+    WriteInputFile(false, ',');
+    var.setValue(4);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , -68001)
+
+    // Try an input file without Comments and semicolon delimited while in comma mode which will induce a runtime error
+    WriteInputFile(false, ';');
+    var.setValue(0);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , -68001)
+
+    // Try an input file without Comments and semicolon delimited while in colon mode which will induce a runtime error
+    WriteInputFile(false, ';');
+    var.setValue(2);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , -68001)
+
+    // Try an input file without Comments and semicolon delimited while in tab mode which will induce a runtime error
+    WriteInputFile(false, ';');
+    var.setValue(3);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , -68001)
+
+    // Try an input file without Comments and semicolon delimited while in space mode which will induce a runtime error
+    WriteInputFile(false, ';');
+    var.setValue(4);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , -68001)
+
+    // Try an input file without Comments and colon delimited while in comma mode which will induce a runtime error
+    WriteInputFile(false, ':');
+    var.setValue(0);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , -68001)
+
+    // Try an input file without Comments and colon delimited while in semicolon mode which will induce a runtime error
+    WriteInputFile(false, ':');
+    var.setValue(1);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , -68001)
+
+    // Try an input file without Comments and colon delimited while in tab mode which will induce a runtime error
+    WriteInputFile(false, ':');
+    var.setValue(3);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , -68001)
+
+    // Try an input file without Comments and colon delimited while in space mode which will induce a runtime error
+    WriteInputFile(false, ':');
+    var.setValue(4);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , -68001)
+
+    // Try an input file without Comments and tab delimited while in comma mode which will induce a runtime error
+    WriteInputFile(false, '\t');
+    var.setValue(0);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , -68001)
+
+    // Try an input file without Comments and tab delimited while in semicolon mode which will induce a runtime error
+    WriteInputFile(false, '\t');
+    var.setValue(1);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , -68001)
+
+    // Try an input file without Comments and tab delimited while in colon mode which will induce a runtime error
+    WriteInputFile(false, '\t');
+    var.setValue(2);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , -68001)
+
+
+    // Try an input file without Comments and tab delimited while in space mode which will induce a runtime error
+    WriteInputFile(false, '\t');
+    var.setValue(4);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , -68001)
+
+    // Try an input file without Comments and space delimited while in comma mode which will induce a runtime error
+    WriteInputFile(false, ' ');
+    var.setValue(0);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , -68001)
+
+    // Try an input file without Comments and space delimited while in semicolon mode which will induce a runtime error
+    WriteInputFile(false, ' ');
+    var.setValue(1);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , -68001)
+
+    // Try an input file without Comments and space delimited while in colon mode which will induce a runtime error
+    WriteInputFile(false, ' ');
+    var.setValue(2);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , -68001)
+
+
+    // Try an input file without Comments and space delimited while in tab mode which will induce a runtime error
+    WriteInputFile(false, ' ');
+    var.setValue(3);
+    featureInfoReader->setProperty("Delimiter", var);
+    err = pipeline->preflightPipeline();
+    DREAM3D_REQUIRE(err >= 0)
+
+    dca = pipeline->execute();
+    err = pipeline->getErrorCondition();
+    DREAM3D_REQUIRED(err, >= , -68001)
+
     // Change the init value to 10 so that we induce a runtime error
     WriteInputFile(false, ' ');
+    var.setValue(4);
+    featureInfoReader->setProperty("Delimiter", var);
     createDataArray->setInitializationValue(QString::number(10));
     err = pipeline->preflightPipeline();
     DREAM3D_REQUIRED(err, >=, 0)
@@ -250,8 +560,6 @@ public:
     dca = pipeline->execute();
     err = pipeline->getErrorCondition();
     DREAM3D_REQUIRED(err, ==, -68000)
-    
-    
   }
 
   /**
