@@ -145,32 +145,51 @@ if(SIMPL_USE_MKDOCS)
   file(APPEND "${docsCmakeFile}" "file(RENAME \"${docsDestDir}/128x128.png\" \"${docsDestDir}/logo.png\")\n")
 
   find_package(PythonInterp)
-  find_program (
+
+
+  if(NOT MKDOCS_EXECUTABLE)
+    find_program (
           MKDOCS_EXECUTABLE
           mkdocs
-  )
+    )
+    if("${MKDOCS_EXECUTABLE}" STREQUAL "MKDOCS_EXECUTABLE-NOTFOUND")
+      message(FATAL_ERROR "mkdocs was not found on your system. Typical installation under python is\n\
+      pip install mkdocs-material\n\
+      You may also need to do\n\
+      pip install msgpack\n\
+      If you are on macOS and are having trouble installing to try adding the --user to the above commands\n\
+      to install those python modules into your home directory.\n\
+      You can also define PYTHON_EXECUTABLE and MKDOCS_EXECUTABLE in your DREAM3D_SDK.cmake file or on the command line\n\
+      using the standard '-DPYTHON_EXECUTABLE=.....' syntax")
+    endif()
+  endif()
+  
 
   if(APPLE)
-    set(MKDOCS_EXECUTABLE "${DREAM3DDocRoot}/ReferenceManual/mkdocs")
-    file(WRITE "${MKDOCS_EXECUTABLE}" "#!/usr/bin/python\n")
-    file(APPEND "${MKDOCS_EXECUTABLE}" "# -*- coding: utf-8 -*-\n")
-    file(APPEND "${MKDOCS_EXECUTABLE}" "import re\n")
-    file(APPEND "${MKDOCS_EXECUTABLE}" "import sys\n")
-    file(APPEND "${MKDOCS_EXECUTABLE}" "from mkdocs.__main__ import cli\n")
-    file(APPEND "${MKDOCS_EXECUTABLE}" "if __name__ == '__main__':\n")
-    file(APPEND "${MKDOCS_EXECUTABLE}" "  sys.argv[0] = re.sub(r'(-script\.pyw?|\.exe)?$', '', sys.argv[0])\n")
-    file(APPEND "${MKDOCS_EXECUTABLE}" "  sys.exit(cli())\n")
-    file(APPEND "${MKDOCS_EXECUTABLE}" "\n")
-    execute_process(COMMAND "/bin/chmod" ug+rwx ${MKDOCS_EXECUTABLE}
+    set(MKDOCS_EXECUTABLE_SCRIPT "${DREAM3DDocRoot}/ReferenceManual/mkdocs")
+    file(WRITE "${MKDOCS_EXECUTABLE_SCRIPT}" "#!${PYTHON_EXECUTABLE}\n")
+    file(APPEND "${MKDOCS_EXECUTABLE_SCRIPT}" "# -*- coding: utf-8 -*-\n")
+    file(APPEND "${MKDOCS_EXECUTABLE_SCRIPT}" "#    This script is generated automatically from CMake for macOS systems to get the encoding correct.\n")
+    file(APPEND "${MKDOCS_EXECUTABLE_SCRIPT}" "#    Generated in code from ${CMAKE_CURRENT_LIST_FILE}\n")
+    file(APPEND "${MKDOCS_EXECUTABLE_SCRIPT}" "import re\n")
+    file(APPEND "${MKDOCS_EXECUTABLE_SCRIPT}" "import sys\n")
+    file(APPEND "${MKDOCS_EXECUTABLE_SCRIPT}" "from mkdocs.__main__ import cli\n")
+    file(APPEND "${MKDOCS_EXECUTABLE_SCRIPT}" "if __name__ == '__main__':\n")
+    file(APPEND "${MKDOCS_EXECUTABLE_SCRIPT}" "  sys.argv[0] = re.sub(r'(-script\.pyw?|\.exe)?$', '', sys.argv[0])\n")
+    file(APPEND "${MKDOCS_EXECUTABLE_SCRIPT}" "  sys.exit(cli())\n")
+    file(APPEND "${MKDOCS_EXECUTABLE_SCRIPT}" "\n")
+    execute_process(COMMAND "/bin/chmod" ug+rwx ${MKDOCS_EXECUTABLE_SCRIPT}
                   OUTPUT_VARIABLE chmod_output
                   RESULT_VARIABLE chmod_result
                   ERROR_VARIABLE chmod_error
                   WORKING_DIRECTORY ${DREAM3DDocRoot}/ReferenceManual
     )
-    message(STATUS "chmod_output: ${chmod_output}")
-    message(STATUS "chmod_result: ${chmod_result}")
-    message(STATUS "chmod_error: ${chmod_error}")
-
+    if(DEBUG)
+      message(STATUS "chmod_output: ${chmod_output}")
+      message(STATUS "chmod_result: ${chmod_result}")
+      message(STATUS "chmod_error: ${chmod_error}")
+    endif()
+    set(MKDOCS_EXECUTABLE "${MKDOCS_EXECUTABLE_SCRIPT}")
   else()
     # Find Python Executable
     if("${PYTHON_EXECUTABLE}" STREQUAL "")
@@ -190,7 +209,7 @@ if(SIMPL_USE_MKDOCS)
 
   message(STATUS "PYTHON_EXECUTABLE: ${PYTHON_EXECUTABLE}")
   if("${PYTHON_EXECUTABLE}" STREQUAL "PYTHON_EXECUTABLE-NOTFOUND")
-    message(FATAL_ERROR "Python was not found. Please set the 'PYTHON_EXECUTABLE' variable manually")
+    message(FATAL_ERROR "Python was not found. Please set the 'PYTHON_EXECUTABLE' variable manually or install python.")
   endif()
 
   message(STATUS "MKDOCS_EXECUTABLE: ${MKDOCS_EXECUTABLE}")
