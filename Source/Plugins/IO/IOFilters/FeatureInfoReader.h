@@ -97,6 +97,9 @@ public:
   SIMPL_FILTER_PARAMETER(QString, FeatureEulerAnglesArrayName)
   Q_PROPERTY(QString FeatureEulerAnglesArrayName READ getFeatureEulerAnglesArrayName WRITE setFeatureEulerAnglesArrayName)
 
+  SIMPL_FILTER_PARAMETER(int, Delimiter)
+  Q_PROPERTY(int Delimiter READ getDelimiter WRITE setDelimiter)
+
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
