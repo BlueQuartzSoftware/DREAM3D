@@ -48,6 +48,7 @@
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
@@ -66,6 +67,7 @@ FeatureInfoReader::FeatureInfoReader()
 , m_CellEulerAnglesArrayName(SIMPL::CellData::EulerAngles)
 , m_FeaturePhasesArrayName(SIMPL::FeatureData::Phases)
 , m_FeatureEulerAnglesArrayName(SIMPL::FeatureData::EulerAngles)
+, m_Delimiter(0)
 {
 }
 
@@ -108,6 +110,18 @@ void FeatureInfoReader::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_STRING_FP("Feature Attribute Matrix", CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FeatureInfoReader));
   parameters.push_back(SIMPL_NEW_STRING_FP("Phases", FeaturePhasesArrayName, FilterParameter::CreatedArray, FeatureInfoReader));
   parameters.push_back(SIMPL_NEW_STRING_FP("Euler Angles", FeatureEulerAnglesArrayName, FilterParameter::CreatedArray, FeatureInfoReader));
+
+  {
+    QVector<QString> choices;
+    choices.push_back(",");
+    choices.push_back(";");
+    choices.push_back(":");
+    choices.push_back("Tab");
+    choices.push_back("Space");
+    // Create the Choice Filter Parameter and add it to the list of parameters
+    parameters.push_back(SIMPL_NEW_CHOICE_FP("Delimiter", Delimiter, FilterParameter::Parameter, FeatureInfoReader, choices, false));
+  }
+
   setFilterParameters(parameters);
 }
 
@@ -239,6 +253,13 @@ void FeatureInfoReader::dataCheck()
   {
     m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
+
+  if (getDelimiter() < 0 || getDelimiter() > 4)
+  {
+    setErrorCondition(-10001);
+    notifyErrorMessage(getHumanLabel(), "The dilimiter can only have values of 0,1,2,3,4", getErrorCondition());
+  }
+
 }
 
 // -----------------------------------------------------------------------------
@@ -349,7 +370,33 @@ int32_t FeatureInfoReader::readFile()
     {
       continue;
     }
-    QList<QByteArray> tokens = buf.split(' '); // Split into tokens
+
+    char d;
+
+    switch (m_Delimiter)
+    {
+      case 0:
+        d = ',';
+        break;
+      case 1:
+        d = ';';
+        break;
+      case 2:
+        d = ':';
+        break;
+      case 3:
+        d = '\t';
+        break;
+      case 4:
+        d = ' ';
+        break;
+      default:
+        d = ',';
+        break;
+    }
+
+    QList<QByteArray> tokens = buf.split(d); // Split into tokens
+    
     if(tokens.size() != 5)
     {
       setErrorCondition(-68001);
