@@ -189,7 +189,7 @@ if(SIMPL_USE_MKDOCS)
       message(STATUS "chmod_result: ${chmod_result}")
       message(STATUS "chmod_error: ${chmod_error}")
     endif()
-    set(MKDOCS_EXECUTABLE "${MKDOCS_EXECUTABLE_SCRIPT}")
+    #set(MKDOCS_EXECUTABLE "${MKDOCS_EXECUTABLE_SCRIPT}")
   else()
     # Find Python Executable
     if("${PYTHON_EXECUTABLE}" STREQUAL "")
