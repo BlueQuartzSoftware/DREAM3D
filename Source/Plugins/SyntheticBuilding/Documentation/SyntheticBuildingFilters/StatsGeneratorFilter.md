@@ -176,8 +176,32 @@ The ODF tab controls the generation of the Orientation Distribution Function. Th
 
 ### Bulk Load of Angle Data ##
 
+The filter __Export StatsGenerator ODF Angle File__ can help the user create the proper kind of file that is needed for this section to work. An example input file is below:
+
 ![Bulk Load the ODF Angles from a File.](Images/BulkLoadAngles.png)
 
+
+	# All lines starting with '#' are comments and should come before the header.
+	# DREAM.3D StatsGenerator Angles Input File
+	# DREAM.3D Version 6.1.107.0d8bad9
+	# Angle Data is space delimited.
+	# Euler0 Euler1 Euler2 Weight Sigma
+	Angle Count:100
+	0 0 0 1 1
+	3.6 1.8 3.6 1 1
+	7.2 3.6 7.2 1 1
+	10.8 5.4 10.8 1 1
+	14.4 7.2 14.4 1 1
+	
+The **only** required header line is:
+
+	Angle Count:100
+
+There are 5 columns of data which are the 3 Euler Angles, the Weight Value and the Sigma Value.
+
+### Delimiter ###
+
+Choice of delimiter can be Comma (,), semicolon (;), space ( ), colon (:) or tab (\t)
 
 
 ### MDF Section ###
