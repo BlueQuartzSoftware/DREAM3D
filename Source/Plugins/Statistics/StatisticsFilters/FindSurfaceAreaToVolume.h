@@ -51,6 +51,8 @@ class Statistics_EXPORT FindSurfaceAreaToVolume : public AbstractFilter
     PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
     PYB11_PROPERTY(DataArrayPath NumCellsArrayPath READ getNumCellsArrayPath WRITE setNumCellsArrayPath)
     PYB11_PROPERTY(QString SurfaceAreaVolumeRatioArrayName READ getSurfaceAreaVolumeRatioArrayName WRITE setSurfaceAreaVolumeRatioArrayName)
+	PYB11_PROPERTY(QString SphericityArrayName READ getSphericityArrayName WRITE setSphericityArrayName)
+	PYB11_PROPERTY(bool CalculateSphericity READ getCalculateSphericity WRITE setCalculateSphericity)
 public:
   SIMPL_SHARED_POINTERS(FindSurfaceAreaToVolume)
   SIMPL_FILTER_NEW_MACRO(FindSurfaceAreaToVolume)
