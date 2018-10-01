@@ -518,6 +518,13 @@ void StatsGenAxisODFWidget::calculateAxisODF()
   config.numColors = numColors;
   config.discrete = true;
   config.discreteHeatMap = false;
+    
+  // Check if the user wants a Discreet or Lambert PoleFigure
+  if(m_PFTypeCB->currentIndex() == 1)
+  {
+    config.discrete = false;
+  }
+  
   QVector<QString> labels(3);
   labels[0] = QString("C Axis"); // 001
   labels[1] = QString("A Axis"); // 100
