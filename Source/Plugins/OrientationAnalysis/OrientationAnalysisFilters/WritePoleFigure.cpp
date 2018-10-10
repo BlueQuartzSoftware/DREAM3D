@@ -811,12 +811,9 @@ void WritePoleFigure::execute()
     }
 
     if(figures.size() == 3)
-    {
-      // QImage combinedImage = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config, getImageLayout());
-      //writeImage(combinedImage, label);
-      
+    {      
       QString filename = generateImagePath(label);
-      
+
       HPDF_Doc  pdf = HPDF_New (error_handler, nullptr);
       
       HPDF_SetCompressionMode (pdf, HPDF_COMP_ALL);
@@ -824,15 +821,13 @@ void WritePoleFigure::execute()
       /* create default-font */
       HPDF_Font font = HPDF_GetFont (pdf, "Helvetica", nullptr);
       
-      const HPDF_BYTE buf[1] = { 'X' };
+      HPDF_BYTE buf[1] = { 'X' };
       
       HPDF_TextWidth textWidth = HPDF_Font_TextWidth(font, buf, 1);
       
       HPDF_REAL pageWidth = 0.0f;
       HPDF_REAL pageHeight = 0.0f;
-      
 
-      
       HPDF_UINT imageWidth = static_cast<HPDF_UINT>(config.imageDim);
       HPDF_UINT imageHeight = static_cast<HPDF_UINT>(config.imageDim);
       HPDF_REAL fontPtSize = imageHeight / 16.0f;
@@ -875,7 +870,7 @@ void WritePoleFigure::execute()
       }
       
       pageHeight = pageHeight + margins + fontPtSize;
-      
+
       /* add a new page object. */
       HPDF_Page page = HPDF_AddPage (pdf);
       HPDF_Page_SetWidth (page, pageWidth);
@@ -901,28 +896,73 @@ void WritePoleFigure::execute()
       
       for(int i = 0; i < 3; i++)
       {
-        HPDF_REAL x = 0.0f;
-        HPDF_REAL y = 0.0f;
-        
-        std::tie(x, y) = imagePositions[i];
-        
-        /* Draw image to the canvas. (normal-mode with actual size.)*/
-        HPDF_Page_DrawImage (page, pdfImages[i], x + margins, y+ margins+fontPtSize, imageWidth, imageHeight);
-        
+          HPDF_REAL x = 0.0f;
+          HPDF_REAL y = 0.0f;
+
+          std::tie(x, y) = imagePositions[i];
+
+          /* Draw image to the canvas. (normal-mode with actual size.)*/
+          HPDF_Page_DrawImage (page, pdfImages[i], x + margins, y+ margins+fontPtSize, imageWidth, imageHeight);
+
+          QString text = figures[i]->getName();
+          std::vector<uint8_t> buffer;
+          QString modText;
+          int k = 0;
+          while(k < text.length())
+          {
+              if(text.at(k) == '-')
+              {
+                  HPDF_TextWidth tw = HPDF_Font_TextWidth(font, buffer.data(), buffer.size());
+                  int32_t scaledOffset = (tw.width * fontPtSize / 1000);
+
+                  buffer.push_back(static_cast<uint8_t>(text.at(k+1).toLatin1()));
+                  tw = HPDF_Font_TextWidth(font, buffer.data(), buffer.size());
+                  int32_t scaledOffset2 = (tw.width * fontPtSize / 1000);
+                  buffer.pop_back();
+
+                  int32_t diff = (scaledOffset2 - scaledOffset);
+
+                  buf[0] = '-';
+                  tw = HPDF_Font_TextWidth(font, buf, 1);
+                  int32_t charWidth = (tw.width * fontPtSize / 1000);
+                  scaledOffset = scaledOffset + (diff - charWidth)/2;
+                  // Draw the bar at the correct location...
+                  std::string underScore("-");
+                  HPDF_Page_BeginText (page);
+                  HPDF_Page_SetFontAndSize (page, font, fontPtSize);
+                  HPDF_Page_MoveTextPos (page, x + margins + scaledOffset, y+margins+fontPtSize+imageHeight+fontPtSize*1.60+ margins);
+                  HPDF_Page_ShowText (page, underScore.c_str());
+                  HPDF_Page_EndText (page);
+
+                  k++;
+              }
+              // Keep building up the string to finally print.
+              if(text.at(k) != '-')
+              {
+                  modText = modText + text.at(k);
+                  buffer.push_back(static_cast<uint8_t>(text.at(k).toLatin1()));
+              }
+              k++;
+          }
+
         HPDF_Page_BeginText (page);
         HPDF_Page_SetFontAndSize (page, font, fontPtSize);
+
         HPDF_Page_MoveTextPos (page, x + margins, y+margins+fontPtSize+imageHeight+fontPtSize+ margins);
-        HPDF_Page_ShowText (page, figures[i]->getName().toLatin1());
+        HPDF_Page_ShowText (page, modText.toLatin1());
         HPDF_Page_EndText (page);
-        
+
         HPDF_REAL lineWidth = imageWidth / 512.0f;
         if(lineWidth < 1.0f)
         {
           lineWidth = 1.0f;
         }
+
         HPDF_Page_SetLineWidth (page, lineWidth);
         HPDF_Page_SetRGBStroke (page, 0.0f, 0.0f, 0.0f);
         HPDF_Page_SetGrayStroke (page, 0.30f);
+
+        // Draw
         HPDF_Page_Circle (page, x + margins + imageWidth/2.0f, y+ margins + fontPtSize + imageWidth/2.0f, imageWidth/2.0f);
         // Draw the Horizontal Axis
         HPDF_Page_MoveTo (page, x + margins, y+ margins + fontPtSize + imageWidth/2.0f);
