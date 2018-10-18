@@ -50,6 +50,7 @@ class OrientationAnalysis_EXPORT INLWriter : public FileWriter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(INLWriter SUPERCLASS FileWriter)
+	PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
     PYB11_PROPERTY(DataArrayPath MaterialNameArrayPath READ getMaterialNameArrayPath WRITE setMaterialNameArrayPath)
     PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
     PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
