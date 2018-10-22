@@ -248,19 +248,6 @@ void RegularGridSampleSurfaceMesh::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer RegularGridSampleSurfaceMesh::newFilterInstance(bool copyFilterParameters) const
-{
-  RegularGridSampleSurfaceMesh::Pointer filter = RegularGridSampleSurfaceMesh::New();
-  if(true == copyFilterParameters)
-  {
-    copyFilterParameterInstanceVariables(filter.get());
-  }
-  return filter;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 const QString RegularGridSampleSurfaceMesh::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
