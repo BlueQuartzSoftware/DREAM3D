@@ -60,15 +60,17 @@
  */
 class SampleSurfaceMeshImpl
 {
+  SampleSurfaceMesh* m_Filter = nullptr;
   TriangleGeom::Pointer m_Faces;
   Int32Int32DynamicListArray::Pointer m_FaceIds;
   VertexGeom::Pointer m_FaceBBs;
   VertexGeom::Pointer m_Points;
-  int32_t* m_PolyIds;
+  int32_t* m_PolyIds = nullptr;
 
 public:
-  SampleSurfaceMeshImpl(TriangleGeom::Pointer faces, Int32Int32DynamicListArray::Pointer faceIds, VertexGeom::Pointer faceBBs, VertexGeom::Pointer points, int32_t* polyIds)
-  : m_Faces(faces)
+  SampleSurfaceMeshImpl(SampleSurfaceMesh* filter, TriangleGeom::Pointer faces, Int32Int32DynamicListArray::Pointer faceIds, VertexGeom::Pointer faceBBs, VertexGeom::Pointer points, int32_t* polyIds)
+  : m_Filter(filter)
+  , m_Faces(faces)
   , m_FaceIds(faceIds)
   , m_FaceBBs(faceBBs)
   , m_Points(points)
@@ -93,6 +95,7 @@ public:
 
     for(size_t iter = start; iter < end; iter++)
     {
+
       // find bounding box for current feature
       GeometryMath::FindBoundingBoxOfFaces(m_Faces.get(), m_FaceIds->getElementList(iter), ll, ur);
       GeometryMath::FindDistanceBetweenPoints(ll, ur, radius);
@@ -100,6 +103,12 @@ public:
       // check points in vertex array to see if they are in the bounding box of the feature
       for(int64_t i = 0; i < numPoints; i++)
       {
+        // Check for the filter being cancelled.
+        if(m_Filter->getCancel())
+        {
+          return;
+        }
+
         point = m_Points->getVertexPointer(i);
         if(m_PolyIds[i] == 0 && GeometryMath::PointInBox(point, ll, ur) == true)
         {
@@ -262,6 +271,8 @@ void SampleSurfaceMesh::execute()
   float* ur = urPtr->getPointer(0);
   VertexGeom::Pointer faceBBs = VertexGeom::CreateGeometry(2 * numFaces, "_INTERNAL_USE_ONLY_faceBBs");
 
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Counting number of Features...");
+
   // walk through faces to see how many features there are
   int32_t g1 = 0, g2 = 0;
   int32_t maxFeatureId = 0;
@@ -278,6 +289,13 @@ void SampleSurfaceMesh::execute()
       maxFeatureId = g2;
     }
   }
+
+  // Check for user canceled flag.
+  if(getCancel())
+  {
+    return;
+  }
+
   // add one to account for feature 0
   int32_t numFeatures = maxFeatureId + 1;
 
@@ -289,6 +307,8 @@ void SampleSurfaceMesh::execute()
   Int32ArrayType::Pointer linkLocPtr = Int32ArrayType::CreateArray(numFaces, "_INTERNAL_USE_ONLY_cell refs");
   linkLocPtr->initializeWithZeros();
   int32_t* linkLoc = linkLocPtr->getPointer(0);
+
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Counting number of triangle faces per feature ...");
 
   // traverse data to determine number of faces belonging to each feature
   for(int64_t i = 0; i < numFaces; i++)
@@ -305,8 +325,16 @@ void SampleSurfaceMesh::execute()
     }
   }
 
+  // Check for user canceled flag.
+  if(getCancel())
+  {
+    return;
+  }
+
   // now allocate storage for the faces
   faceLists->allocateLists(linkCount);
+
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Allocating triangle faces per feature ...");
 
   // traverse data again to get the faces belonging to each feature
   for(int64_t i = 0; i < numFaces; i++)
@@ -327,6 +355,14 @@ void SampleSurfaceMesh::execute()
     faceBBs->setCoords(2 * i + 1, ur);
   }
 
+  // Check for user canceled flag.
+  if(getCancel())
+  {
+    return;
+  }
+
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Vertex Geometry generating sampling points");
+
   // generate the list of sampling points from subclass
   VertexGeom::Pointer points = generate_points();
   if(getErrorCondition() < 0 || nullptr == points.get())
@@ -341,21 +377,23 @@ void SampleSurfaceMesh::execute()
   iArray->initializeWithZeros();
   int32_t* polyIds = iArray->getPointer(0);
 
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Sampling triangle geometry ...");
+
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel == true)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, numFeatures), SampleSurfaceMeshImpl(triangleGeom, faceLists, faceBBs, points, polyIds), tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, numFeatures), SampleSurfaceMeshImpl(this, triangleGeom, faceLists, faceBBs, points, polyIds), tbb::auto_partitioner());
   }
   else
 #endif
   {
-    SampleSurfaceMeshImpl serial(triangleGeom, faceLists, faceBBs, points, polyIds);
+    SampleSurfaceMeshImpl serial(this, triangleGeom, faceLists, faceBBs, points, polyIds);
     serial.checkPoints(0, numFeatures);
   }
 
   assign_points(iArray);
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
