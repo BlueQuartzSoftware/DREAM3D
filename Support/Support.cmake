@@ -35,18 +35,22 @@ add_custom_target(DataFolderCopy ALL
 set_target_properties(DataFolderCopy PROPERTIES FOLDER ZZ_COPY_FILES)
 
 
-#- This installs all the Data files during a "make install" or "make package"
-list(GET SYNTHETIC_STATS_FILES 0 data_file)
+set(DREAM3D_DATA_DIRECTORIES
+  ${DREAM3D_DATA_DIR}/Data/SmallIN100 
+  ${DREAM3D_DATA_DIR}/Data/Image 
+  ${DREAM3D_DATA_DIR}/Data/Textured_Copper
+  ${DREAM3D_DATA_DIR}/Data/Models
+)
 
-if(EXISTS ${data_file})
-  set(INSTALL_DESTINATION "Data")
-
-  install(DIRECTORY 
-            ${DREAM3D_DATA_DIR}/Data/SmallIN100 
-            ${DREAM3D_DATA_DIR}/Data/Image 
-            ${DREAM3D_DATA_DIR}/Data/Textured_Copper
-            ${DREAM3D_DATA_DIR}/Data/Models
+foreach(data_dir ${DREAM3D_DATA_DIRECTORIES})
+  if(EXISTS ${data_dir})
+    set(INSTALL_DESTINATION "Data")
+    install(DIRECTORY 
+          ${data_dir}
           DESTINATION ${INSTALL_DESTINATION}
           COMPONENT Applications)
-endif()
+  endif()
+endforeach()
+
+
 
