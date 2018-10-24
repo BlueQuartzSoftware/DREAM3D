@@ -125,6 +125,13 @@ public:
   */
   void preflight() override;
 
+  /**
+   * @brief sendThreadSafeProgressMessage
+   * @param counter
+   * @param max
+   */
+  void sendThreadSafeProgressMessage(int featureId, size_t numCompleted, size_t totalFeatures);
+
 signals:
   /**
    * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
@@ -175,6 +182,10 @@ protected:
 
 private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+  size_t m_NumCompleted = 0;
+  qint64 m_StartMillis = 0;
+  qint64 m_Millis = 0;
+  int64_t m_LastCompletedPoints = 0;
 
 public:
   SampleSurfaceMesh(const SampleSurfaceMesh&) = delete; // Copy Constructor Not Implemented
