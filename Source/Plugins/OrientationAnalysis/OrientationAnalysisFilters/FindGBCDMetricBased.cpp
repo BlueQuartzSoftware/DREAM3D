@@ -57,6 +57,7 @@
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
@@ -601,38 +602,12 @@ void FindGBCDMetricBased::dataCheck()
   }
 
   // Output files (filter params.)
-  if(getDistOutputFile().isEmpty() == true)
-  {
-    setErrorCondition(-1004);
-    QString ss = QObject::tr("The output file for saving the distribution must be set");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
+  FileSystemPathHelper::CheckOutputFile(this, "Output Distribution File", getDistOutputFile(), true);
 
-  if(getErrOutputFile().isEmpty() == true)
-  {
-    setErrorCondition(-1005);
-    QString ss = QObject::tr("The output file for saving the distribution errors must be set");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
+  FileSystemPathHelper::CheckOutputFile(this, "Output Error File", getErrOutputFile(), true);
 
   QFileInfo distOutFileInfo(getDistOutputFile());
-  QDir distParentPath = distOutFileInfo.path();
-  if(distParentPath.exists() == false)
-  {
-    setWarningCondition(-1006);
-    QString ss = QObject::tr("The directory path for the distribution output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
-    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
-  }
-
   QFileInfo errOutFileInfo(getErrOutputFile());
-  QDir errParentPath = errOutFileInfo.path();
-  if(errParentPath.exists() == false)
-  {
-    setWarningCondition(-1007);
-    QString ss = QObject::tr("The directory path for the distribution errors output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
-    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
-  }
-
   if(distOutFileInfo.suffix().compare("") == 0)
   {
     setDistOutputFile(getDistOutputFile().append(".dat"));

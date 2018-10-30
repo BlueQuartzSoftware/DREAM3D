@@ -56,6 +56,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
@@ -571,11 +572,9 @@ void InsertPrecipitatePhases::dataCheck()
     m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0);
   }
 
-  if(m_WriteGoalAttributes == true && getCsvOutputFile().isEmpty() == true)
+  if(getWriteGoalAttributes())
   {
-    QString ss = QObject::tr("The Csv output file must be set").arg(ClassName());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    FileSystemPathHelper::CheckOutputFile(this, "Output File Path", getCsvOutputFile(), true);
   }
 
   if(getFeatureGeneration() == 1)

@@ -61,6 +61,7 @@
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -172,22 +173,9 @@ void WriteStatsGenOdfAngleFile::dataCheck()
   setErrorCondition(0);
   setWarningCondition(0);
 
-  QString ss;
-  if(getOutputFile().isEmpty() == true)
-  {
-    ss = QObject::tr("The output file must be set");
-    setErrorCondition(-94000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-  QFileInfo fi(getOutputFile());
-  QDir parentPath = fi.path();
-  if(parentPath.exists() == false)
-  {
-    setWarningCondition(-94001);
-    ss = QObject::tr("The directory path for the output file does not exist");
-    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
-  }
+  FileSystemPathHelper::CheckOutputFile(this, "Output File Path", getOutputFile(), true);
 
+  QString ss;
   if(getWeight() < 1.0f)
   {
     ss = QObject::tr("The default 'Weight' value should be at least 1.0. Undefined results will occur from this filter.");

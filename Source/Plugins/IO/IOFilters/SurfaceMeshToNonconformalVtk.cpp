@@ -45,6 +45,7 @@
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
 
 #include "IO/IOConstants.h"
@@ -119,11 +120,7 @@ void SurfaceMeshToNonconformalVtk::dataCheck()
   setWarningCondition(0);
   QString ss;
 
-  if(m_OutputVtkFile.isEmpty() == true)
-  {
-    setErrorCondition(-1003);
-    notifyErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
-  }
+  FileSystemPathHelper::CheckOutputFile(this, "Output VTK File", getOutputVtkFile(), true);
 
   DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
   if(getErrorCondition() < 0)

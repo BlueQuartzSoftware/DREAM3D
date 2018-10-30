@@ -43,6 +43,7 @@
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
 
 #include "IO/IOConstants.h"
@@ -105,11 +106,7 @@ void LammpsFileWriter::dataCheck()
   setErrorCondition(0);
   setWarningCondition(0);
 
-  if(m_LammpsFile.isEmpty() == true)
-  {
-    setErrorCondition(-1003);
-    notifyErrorMessage(getHumanLabel(), "Lammps Output file is Not set correctly", -1003);
-  }
+  FileSystemPathHelper::CheckOutputFile(this, "Output LAMMPS File", getLammpsFile(), true);
 
   DataContainer::Pointer v = getDataContainerArray()->getPrereqDataContainer(this, m_VertexDataContainerName);
   if(getErrorCondition() < 0)

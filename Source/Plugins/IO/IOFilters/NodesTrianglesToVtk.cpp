@@ -43,6 +43,7 @@
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
 
 #include "IO/IOConstants.h"
@@ -155,11 +156,7 @@ void NodesTrianglesToVtk::dataCheck()
     }
   }
 
-  if(m_OutputVtkFile.isEmpty() == true)
-  {
-    setErrorCondition(-1006);
-    notifyErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
-  }
+  FileSystemPathHelper::CheckOutputFile(this, "Output VTK File", getOutputVtkFile(), true);
 }
 
 // -----------------------------------------------------------------------------

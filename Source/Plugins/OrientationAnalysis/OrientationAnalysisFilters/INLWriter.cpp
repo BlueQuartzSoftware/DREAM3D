@@ -44,6 +44,7 @@
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/TSL/AngConstants.h"
@@ -151,21 +152,7 @@ void INLWriter::dataCheck()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
-  if(getOutputFile().isEmpty() == true)
-  {
-    QString ss = QObject::tr("The output file must be set");
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-
-  QFileInfo fi(getOutputFile());
-  QDir parentPath = fi.path();
-  if(parentPath.exists() == false)
-  {
-    setWarningCondition(-1);
-    QString ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
-    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
-  }
+  FileSystemPathHelper::CheckOutputFile(this, "Output File Path", getOutputFile(), true);
 
   QVector<DataArrayPath> cellDataArrayPaths;
   QVector<DataArrayPath> ensembleDataArrayPaths;

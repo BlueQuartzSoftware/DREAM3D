@@ -51,6 +51,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -126,12 +127,8 @@ void AvizoRectilinearCoordinateWriter::dataCheck()
     return;
   }
 
-  if(m_OutputFile.isEmpty() == true)
-  {
-    QString ss = QObject::tr("The output file must be set before executing this filter.");
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
+  FileSystemPathHelper::CheckOutputFile(this, "Output File Path", getOutputFile(), true);
+
   if(m_WriteFeatureIds == true)
   {
     QVector<size_t> dims(1, 1);

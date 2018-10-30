@@ -42,6 +42,7 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
@@ -121,12 +122,7 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh()
   setErrorCondition(0);
   setWarningCondition(0);
 
-  if(getOutputFile().isEmpty() == true)
-  {
-    QString ss = QObject::tr("The output file must be set");
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
+  FileSystemPathHelper::CheckOutputFile(this, "Output File Path", getOutputFile(), true);
 
   QVector<IDataArray::Pointer> dataArrays;
 

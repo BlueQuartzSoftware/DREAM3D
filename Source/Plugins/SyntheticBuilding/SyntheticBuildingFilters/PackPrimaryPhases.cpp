@@ -65,6 +65,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 #include "SIMPLib/Utilities/TimeUtilities.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
@@ -777,24 +778,9 @@ void PackPrimaryPhases::dataCheck()
     m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0);
   }
 
-  if(m_WriteGoalAttributes)
+  if(getWriteGoalAttributes())
   {
-    if(getCsvOutputFile().isEmpty())
-    {
-      QString ss = QObject::tr("The goal attribute output file must be set");
-      setErrorCondition(-78001);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    }
-
-    QFileInfo fi(getCsvOutputFile());
-
-    QDir parentPath = fi.path();
-    if(!parentPath.exists())
-    {
-      setWarningCondition(-78002);
-      QString ss = QObject::tr("The directory path for the GoalAttribute output file does not exist. The application will attempt to create this path during execution of the filter");
-      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
-    }
+    FileSystemPathHelper::CheckOutputFile(this, "Output Nodes File", getCsvOutputFile(), true);
   }
 
   if(getFeatureGeneration() == 1)
