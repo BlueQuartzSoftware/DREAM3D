@@ -45,6 +45,7 @@
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 #include "SIMPLib/Utilities/TimeUtilities.h"
 
 #include "IO/IOConstants.h"
@@ -106,6 +107,8 @@ void SPParksSitesWriter::dataCheck()
 {
   setErrorCondition(0);
   setWarningCondition(0);
+
+  FileSystemPathHelper::CheckOutputFile(this, "Output SPPARKS File", getOutputFile(), true);
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 

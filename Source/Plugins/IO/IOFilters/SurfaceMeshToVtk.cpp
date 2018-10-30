@@ -46,6 +46,7 @@
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
 
 #include "IO/IOConstants.h"
@@ -135,11 +136,7 @@ void SurfaceMeshToVtk::dataCheck()
 {
   setErrorCondition(0);
   setWarningCondition(0);
-  if(m_OutputVtkFile.isEmpty() == true)
-  {
-    setErrorCondition(-1003);
-    notifyErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
-  }
+  FileSystemPathHelper::CheckOutputFile(this, "Output VTK File", getOutputVtkFile(), true);
 
   QString dcName;
   if(m_SelectedFaceArrays.size() > 0)

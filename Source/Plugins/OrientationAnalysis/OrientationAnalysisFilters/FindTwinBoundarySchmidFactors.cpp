@@ -55,6 +55,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Math/GeometryMath.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
@@ -379,6 +380,10 @@ void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh()
   setWarningCondition(0);
   DataArrayPath tempPath;
 
+  if(m_WriteFile == true)
+  {
+    FileSystemPathHelper::CheckOutputFile(this, "Output File Path", getTwinBoundarySchmidFactorsFile(), true);
+  }
   QVector<DataArrayPath> dataArrayPaths;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());

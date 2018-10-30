@@ -53,6 +53,7 @@
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -228,11 +229,9 @@ void AlignSections::dataCheck()
   tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), "");
   getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, tempPath, -301);
 
-  if(true == m_WriteAlignmentShifts && m_AlignmentShiftFileName.isEmpty() == true)
+  if(true == m_WriteAlignmentShifts)
   {
-    QString ss = QObject::tr("The alignment shift file name is empty");
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    FileSystemPathHelper::CheckOutputFile(this, "Output Alignment Shifts File", getAlignmentShiftFileName(), true);
   }
 }
 

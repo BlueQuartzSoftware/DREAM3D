@@ -42,6 +42,7 @@
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
@@ -118,33 +119,12 @@ void WriteIPFStandardTriangle::dataCheck()
   setWarningCondition(0);
 
   QString ss;
-  if(getOutputFile().isEmpty() == true)
-  {
-    ss = QObject::tr("The output file must be set");
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
+
+  FileSystemPathHelper::CheckOutputFile(this, "Output File Path", getOutputFile(), true);
 
   QFileInfo fi(getOutputFile());
-  QDir parentPath = fi.path();
   QString ext = fi.completeSuffix();
-
-  if(parentPath.exists() == false)
-  {
-    setWarningCondition(-1002);
-    ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
-    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
-  }
-
-  if(ext.isEmpty())
-  {
-    ss = QObject::tr("The output file does not have an extension");
-    setErrorCondition(-1003);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-  else if(ext != "tif" && ext != "bmp" && ext != "png")
+  if(ext != "tif" && ext != "bmp" && ext != "png")
   {
     ss = QObject::tr("The output file has an unsupported extension.  Please select a TIF, BMP, or PNG file");
     setErrorCondition(-1004);
