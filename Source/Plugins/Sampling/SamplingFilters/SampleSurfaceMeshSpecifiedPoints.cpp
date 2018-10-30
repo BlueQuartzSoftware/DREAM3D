@@ -42,6 +42,7 @@
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
@@ -123,12 +124,8 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, -1);
   }
-  if(true == m_OutputFilePath.isEmpty())
-  {
-    QString ss = QObject::tr("The output file must be set");
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
-  }
+
+  FileSystemPathHelper::CheckOutputFile(this, "Output File Path", getOutputFilePath(), true);
 
   DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "SpecifiedPoints");
   if(getErrorCondition() < 0 || nullptr == v.get())

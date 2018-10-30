@@ -45,6 +45,7 @@
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
@@ -131,27 +132,13 @@ void VisualizeGBCDGMT::dataCheck()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getGBCDArrayPath().getDataContainerName());
 
-  if(getOutputFile().isEmpty() == true)
-  {
-    QString ss = QObject::tr("The output file must be set");
-    setErrorCondition(-1000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
-
   QFileInfo fi(getOutputFile());
-  QDir parentPath = fi.path();
-  if(parentPath.exists() == false && getInPreflight())
-  {
-    setWarningCondition(-1001);
-    QString ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
-    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
-  }
-
   if(fi.suffix().compare("") == 0)
   {
     setOutputFile(getOutputFile().append(".dat"));
   }
+
+  FileSystemPathHelper::CheckOutputFile(this, "Output GBCD File", getOutputFile(), true);
 
   // Make sure the file name ends with _1 so the GMT scripts work correctly
   QString fName = fi.baseName();

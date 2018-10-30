@@ -45,7 +45,7 @@
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
-#include "SIMPLib/Utilities/SIMPLibEndian.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
 
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
@@ -131,26 +131,12 @@ void VisualizeGBCDPoleFigure::dataCheck()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getGBCDArrayPath().getDataContainerName());
 
-  if(getOutputFile().isEmpty() == true)
-  {
-    QString ss = QObject::tr("The output file must be set");
-    setErrorCondition(-1000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
-
-  QFileInfo fi(getOutputFile());
-  QDir parentPath = fi.path();
-  if(parentPath.exists() == false && getInPreflight())
-  {
-    setWarningCondition(-1001);
-    QString ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
-    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
-  }
-
+  QFileInfo fi(m_OutputFile);
   if(fi.suffix().compare("") == 0)
   {
-    setOutputFile(getOutputFile().append(".vtk"));
+    m_OutputFile.append(".dream3d");
   }
+  FileSystemPathHelper::CheckOutputFile(this, "Output VTK File", getOutputFile(), true);
 
   QVector<size_t> cDims(1, 1);
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(),

@@ -44,6 +44,7 @@
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
 #include "IO/IOConstants.h"
 #include "IO/IOVersion.h"
@@ -107,20 +108,7 @@ void AbaqusSurfaceMeshWriter::dataCheck()
   setErrorCondition(0);
   setWarningCondition(0);
 
-  if(m_OutputFile.isEmpty() == true)
-  {
-    setErrorCondition(-1003);
-    notifyErrorMessage(getHumanLabel(), "The output file must be set", getErrorCondition());
-  }
-
-  QFileInfo fi(m_OutputFile);
-  QDir parentPath = fi.path();
-  if(parentPath.exists() == false)
-  {
-    setWarningCondition(-1002);
-    QString ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
-    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
-  }
+  FileSystemPathHelper::CheckOutputFile(this, "Output File Path", getOutputFile(), true);
 
   QVector<IDataArray::Pointer> dataArrays;
 

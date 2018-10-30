@@ -283,6 +283,37 @@ QImage PoleFigureImageUtilities::GenerateScalarBar(int imageWidth, int imageHeig
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PoleFigureImageUtilities::PaintSymmetryDirection(const QString& text, QFontMetrics *metrics, QPainter *painter, int x, int y)
+{
+
+  QVector<int> offsets;
+  int i = 0;
+  QString mod;
+  int fontHeight = metrics->height();
+
+  while(i < text.length())
+  {
+    if(text.at(i) == '-')
+    {
+      int offset = metrics->width(mod);
+      i++;
+      mod = mod + text.at(i);
+      int width = metrics->width(text.at(i)) * .80;
+      painter->drawRect(x + offset, y - 0.80 * fontHeight, width, 1);
+    }
+    else
+    {
+      mod = mod + text.at(i);
+    }
+    i++;
+  }
+  painter->drawText(x, y, mod);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QImage PoleFigureImageUtilities::PaintPoleFigureOverlay(int imageWidth, int imageHeight, QString label, QImage image)
 {
   int pxHigh = 0;
@@ -346,8 +377,7 @@ QImage PoleFigureImageUtilities::PaintPoleFigureOverlay(int imageWidth, int imag
   }
   painter.setFont(font);
   pxHigh = metrics.height() + 2;
-  // pxWide = metrics.width(label);
-  painter.drawText(pxOffset, pxHigh, label);
+  PaintSymmetryDirection(label, &metrics, &painter, pxOffset, pxHigh);
 
   // Draw slightly transparent lines
   // penWidth = 1;

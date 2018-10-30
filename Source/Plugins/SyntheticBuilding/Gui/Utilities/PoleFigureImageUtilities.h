@@ -73,6 +73,16 @@ public:
 
   static QImage Create3ImagePoleFigure(UInt8ArrayType* i0, UInt8ArrayType* i1, UInt8ArrayType* i2, PoleFigureConfiguration_t& config, int32_t layout = SIMPL::Layout::Square);
 
+  /**
+   * @brief PaintSymmetryDirection
+   * @param text
+   * @param metrics
+   * @param painter
+   * @param x
+   * @param y
+   */
+  static void PaintSymmetryDirection(const QString& text, QFontMetrics *metrics, QPainter *painter, int x, int y);
+
 private:
   QVector<qint32> m_KernelWeights;
   bool m_KernelWeightsInited;

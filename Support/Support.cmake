@@ -34,34 +34,23 @@ add_custom_target(DataFolderCopy ALL
             COMMENT "Copying Data Folder into Binary Directory")
 set_target_properties(DataFolderCopy PROPERTIES FOLDER ZZ_COPY_FILES)
 
-#-------------------------------------------------------------------------------
-# Make Sure the DataFolderCopy target is run before the DREAM3D target is built
-# add_dependencies(DREAM3D DataFolderCopy)
 
-# we want specific stats files to be bundled with the Application. The Ang data files
-# are too large to be included and will be a separate download
-set(SYNTHETIC_STATS_FILES
-    ${DREAM3D_DATA_DIR}/Data/Composite.dream3d
-    ${DREAM3D_DATA_DIR}/Data/CubicSingleEquiaxed.dream3d
-    ${DREAM3D_DATA_DIR}/Data/CubicSingleRolled.dream3d
-    ${DREAM3D_DATA_DIR}/Data/HexagonalSingleEquiaxed.dream3d
-    ${DREAM3D_DATA_DIR}/Data/TwoPhaseCubicHexParticlesEquiaxed.dream3d
-  )
+set(DREAM3D_DATA_DIRECTORIES
+  ${DREAM3D_DATA_DIR}/Data/SmallIN100 
+  ${DREAM3D_DATA_DIR}/Data/Image 
+  ${DREAM3D_DATA_DIR}/Data/Textured_Copper
+  ${DREAM3D_DATA_DIR}/Data/Models
+)
 
-#- This installs all the Data files during a "make install" or "make package"
-list(GET SYNTHETIC_STATS_FILES 0 data_file)
-
-if(EXISTS ${data_file})
-  # if(APPLE)
-  #   set(INSTALL_DESTINATION "${DREAM3D_PACKAGE_DEST_PREFIX}/Resources/Data")
-  # else()
+foreach(data_dir ${DREAM3D_DATA_DIRECTORIES})
+  if(EXISTS ${data_dir})
     set(INSTALL_DESTINATION "Data")
-  # endif()
-
-  install(FILES ${SYNTHETIC_STATS_FILES}
-          DESTINATION ${INSTALL_DESTINATION}
-          COMPONENT Applications )
-  install(DIRECTORY ${DREAM3D_DATA_DIR}/Data/SmallIN100 ${DREAM3D_DATA_DIR}/Data/Image ${DREAM3D_DATA_DIR}/Data/Textured_Copper
+    install(DIRECTORY 
+          ${data_dir}
           DESTINATION ${INSTALL_DESTINATION}
           COMPONENT Applications)
-endif()
+  endif()
+endforeach()
+
+
+

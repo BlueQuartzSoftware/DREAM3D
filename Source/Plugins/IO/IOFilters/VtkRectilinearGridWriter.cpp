@@ -47,6 +47,7 @@
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Utilities/FileSystemPathHelper.h"
 #include "SIMPLib/VTKUtils/VTKUtil.hpp"
 
 #include "IO/IOConstants.h"
@@ -266,29 +267,15 @@ void VtkRectilinearGridWriter::dataCheck()
   setErrorCondition(0);
   setWarningCondition(0);
   initialize();
-  if(m_OutputFile.isEmpty() == true)
-  {
-    QString ss = QObject::tr("The output file must be set before executing this filter.");
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
+
+  FileSystemPathHelper::CheckOutputFile(this, "Output VTK File", getOutputFile(), true);
 
   // Make sure what we are checking is an actual file name and not a directory
   QFileInfo fi(m_OutputFile);
-  if(fi.isDir() == false)
-  {
-    QDir parentPath = fi.path();
-    if(parentPath.exists() == false)
-    {
-      setWarningCondition(-11000);
-      QString ss = QObject::tr("The directory path for the output file does not exist.");
-      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
-    }
-  }
-  else
+  if(fi.isDir() == true)
   {
     QString ss = QObject::tr("The output file path is a path to an existing directory. Please change the path to point to a file");
-    setErrorCondition(-1);
+    setErrorCondition(-1012);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 

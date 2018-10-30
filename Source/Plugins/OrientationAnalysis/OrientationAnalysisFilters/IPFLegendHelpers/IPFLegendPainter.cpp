@@ -59,7 +59,7 @@ void IPFLegendPainter::paintSymmetryDirection(const QString& text, QFontMetrics 
 
   while(i < text.length())
   {
-    if(text.at(i) == '_')
+    if(text.at(i) == '-')
     {
       int offset = metrics->width(mod);
       i++;
