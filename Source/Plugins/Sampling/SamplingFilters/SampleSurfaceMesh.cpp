@@ -105,7 +105,7 @@ public:
     GeometryMath::FindDistanceBetweenPoints(ll, ur, radius);
     int64_t pointsVisited = 0;
     // check points in vertex array to see if they are in the bounding box of the feature
-    for(int64_t i = start; i < end; i++)
+    for(int64_t i = static_cast<int64_t>(start); i < static_cast<int64_t>(end); i++)
     {
       // Check for the filter being cancelled.
       if(m_Filter->getCancel())
@@ -462,8 +462,8 @@ void SampleSurfaceMesh::execute()
 #endif
 
   // C++11 RIGHT HERE....
-  unsigned int nthreads = std::thread::hardware_concurrency();
-  // If the number of featurs is larger than the number of cores to do the work then parallelize over the number of features
+  int32_t nthreads = static_cast<int32_t>(std::thread::hardware_concurrency()); // Returns ZERO if not defined on this platform
+  // If the number of features is larger than the number of cores to do the work then parallelize over the number of features
   // otherwise parallelize over the number of triangle points.
   if(numFeatures > nthreads)
   {
