@@ -262,7 +262,7 @@ void FindMisorientations::execute()
       QuaternionMathF::Copy(avgQuats[nname], q2);
       xtalType2 = m_CrystalStructures[m_FeaturePhases[nname]];
       tempMisoList = neighborlist[i].size();
-      if(xtalType1 == xtalType2 && xtalType1 < m_OrientationOps.size())
+      if(xtalType1 == xtalType2 && static_cast<int64_t>(xtalType1) < static_cast<int64_t>(m_OrientationOps.size()))
       {
         w = m_OrientationOps[xtalType1]->getMisoQuat(q1, q2, n1, n2, n3);
         misorientationlists[i][j] = w * SIMPLib::Constants::k_180OverPi;
