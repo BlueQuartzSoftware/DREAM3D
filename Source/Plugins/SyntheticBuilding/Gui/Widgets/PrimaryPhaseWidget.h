@@ -131,7 +131,10 @@ private:
   QButtonGroup m_DistButtonGroup;
   bool m_ResetData = false;
 
+public:
   PrimaryPhaseWidget(const PrimaryPhaseWidget&) = delete; // Copy Constructor Not Implemented
-  void operator=(const PrimaryPhaseWidget&);              // Move assignment Not Implemented
+  PrimaryPhaseWidget(PrimaryPhaseWidget&&) = delete;      // Move Constructor Not Implemented
+  PrimaryPhaseWidget& operator=(const PrimaryPhaseWidget&) = delete; // Copy Assignment Not Implemented
+  PrimaryPhaseWidget& operator=(PrimaryPhaseWidget&&) = delete;      // Move Assignment Not Implemented
 };
 

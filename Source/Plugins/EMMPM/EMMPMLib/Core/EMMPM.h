@@ -89,9 +89,11 @@ class EMMPMLib_EXPORT EMMPM : public Observable
   protected:
     EMMPM();
 
-  private:
+  public:
     EMMPM(const EMMPM&) = delete;          // Copy Constructor Not Implemented
-    void operator=(const EMMPM&) = delete; // Move assignment Not Implemented
+    EMMPM(EMMPM&&) = delete;               // Move Constructor Not Implemented
+    EMMPM& operator=(const EMMPM&) = delete; // Copy Assignment Not Implemented
+    EMMPM& operator=(EMMPM&&) = delete;      // Move Assignment Not Implemented
 };
 
 

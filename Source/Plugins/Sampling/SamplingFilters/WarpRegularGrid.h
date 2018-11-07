@@ -207,7 +207,6 @@ protected:
    */
   void determine_warped_coordinates(float x, float y, float& newX, float& newY);
 
-private:
 public:
   WarpRegularGrid(const WarpRegularGrid&) = delete; // Copy Constructor Not Implemented
   WarpRegularGrid(WarpRegularGrid&&) = delete;      // Move Constructor Not Implemented

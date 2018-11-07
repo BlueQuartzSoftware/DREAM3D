@@ -85,9 +85,11 @@ public:
 protected:
   PrimaryRolledPreset();
 
-private:
+public:
   PrimaryRolledPreset(const PrimaryRolledPreset&) = delete; // Copy Constructor Not Implemented
-  void operator=(const PrimaryRolledPreset&) = delete;      // Move assignment Not Implemented
+  PrimaryRolledPreset(PrimaryRolledPreset&&) = delete;      // Move Constructor Not Implemented
+  PrimaryRolledPreset& operator=(const PrimaryRolledPreset&) = delete; // Copy Assignment Not Implemented
+  PrimaryRolledPreset& operator=(PrimaryRolledPreset&&) = delete;      // Move Assignment Not Implemented
 };
 
 DECLARE_FACTORY_CLASS(PrimaryRolledPresetFactory, PrimaryRolledPreset, "Primary Rolled")

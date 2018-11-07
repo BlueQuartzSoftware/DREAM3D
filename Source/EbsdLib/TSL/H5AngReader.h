@@ -107,7 +107,7 @@ class EbsdLib_EXPORT H5AngReader : public AngReader
     EBSD_SHARED_POINTERS(H5AngReader)
     EBSD_STATIC_NEW_MACRO(H5AngReader)
     EBSD_TYPE_MACRO(H5AngReader)
-    virtual ~H5AngReader();
+    ~H5AngReader() override;
 
     /**
      * @brief The HDF5 path to find the EBSD data
@@ -143,14 +143,14 @@ class EbsdLib_EXPORT H5AngReader : public AngReader
      * @brief Sets the names of the arrays to read out of the file
      * @param names
      */
-    virtual void setArraysToRead(QSet<QString> names);
+    void setArraysToRead(QSet<QString> names);
 
     /**
      * @brief Over rides the setArraysToReads to tell the reader to load ALL the data from the HDF5 file. If the
      * ArrayNames to read is empty and this is true then all arrays will be read.
      * @param b
      */
-    virtual void readAllArrays(bool b);
+    void readAllArrays(bool b);
 
   protected:
     H5AngReader();
@@ -174,8 +174,11 @@ class EbsdLib_EXPORT H5AngReader : public AngReader
     QSet<QString>         m_ArrayNames;
     bool                  m_ReadAllArrays;
 
+  public:
     H5AngReader(const H5AngReader&) = delete;    // Copy Constructor Not Implemented
-    void operator=(const H5AngReader&) = delete; // Move assignment Not Implemented
+    H5AngReader(H5AngReader&&) = delete;         // Move Constructor Not Implemented
+    H5AngReader& operator=(const H5AngReader&) = delete; // Copy Assignment Not Implemented
+    H5AngReader& operator=(H5AngReader&&) = delete;      // Move Assignment Not Implemented
 };
 
 

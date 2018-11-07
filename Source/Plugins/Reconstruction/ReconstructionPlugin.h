@@ -186,8 +186,11 @@ class Reconstruction_EXPORT ReconstructionPlugin : public QObject, public ISIMPL
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
+  public:
     ReconstructionPlugin(const ReconstructionPlugin&) = delete; // Copy Constructor Not Implemented
-    void operator=(const ReconstructionPlugin&) = delete;       // Move assignment Not Implemented
+    ReconstructionPlugin(ReconstructionPlugin&&) = delete;      // Move Constructor Not Implemented
+    ReconstructionPlugin& operator=(const ReconstructionPlugin&) = delete; // Copy Assignment Not Implemented
+    ReconstructionPlugin& operator=(ReconstructionPlugin&&) = delete;      // Move Assignment Not Implemented
 };
 
 

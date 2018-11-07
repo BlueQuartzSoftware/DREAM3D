@@ -83,7 +83,10 @@ private:
   QStringList m_PhaseTypeList;
   int m_NumberOfPhases;
 
+public:
   EnsembleInfoItemDelegate(const EnsembleInfoItemDelegate&) = delete; // Copy Constructor Not Implemented
-  void operator=(const EnsembleInfoItemDelegate&);                    // Move assignment Not Implemented
+  EnsembleInfoItemDelegate(EnsembleInfoItemDelegate&&) = delete;      // Move Constructor Not Implemented
+  EnsembleInfoItemDelegate& operator=(const EnsembleInfoItemDelegate&) = delete; // Copy Assignment Not Implemented
+  EnsembleInfoItemDelegate& operator=(EnsembleInfoItemDelegate&&) = delete;      // Move Assignment Not Implemented
 };
 

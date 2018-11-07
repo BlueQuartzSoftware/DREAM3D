@@ -223,7 +223,6 @@ protected:
    */
   void readArray(const QJsonObject& jsonRoot, size_t numTuples);
 
-private:
 public:
   StatsGeneratorFilter(const StatsGeneratorFilter&) = delete;            // Copy Constructor Not Implemented
   StatsGeneratorFilter(StatsGeneratorFilter&&) = delete;                 // Move Constructor Not Implemented

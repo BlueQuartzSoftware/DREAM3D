@@ -81,9 +81,11 @@ class TriangleOps
   protected:
     TriangleOps();
 
-  private:
+  public:
     TriangleOps(const TriangleOps&) = delete;    // Copy Constructor Not Implemented
-    void operator=(const TriangleOps&) = delete; // Move assignment Not Implemented
+    TriangleOps(TriangleOps&&) = delete;         // Move Constructor Not Implemented
+    TriangleOps& operator=(const TriangleOps&) = delete; // Copy Assignment Not Implemented
+    TriangleOps& operator=(TriangleOps&&) = delete;      // Move Assignment Not Implemented
 };
 
 

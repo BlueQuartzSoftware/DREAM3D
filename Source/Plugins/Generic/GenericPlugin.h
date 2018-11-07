@@ -184,7 +184,10 @@ class Generic_EXPORT GenericPlugin : public QObject, public ISIMPLibPlugin
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
+  public:
     GenericPlugin(const GenericPlugin&) = delete;  // Copy Constructor Not Implemented
-    void operator=(const GenericPlugin&) = delete; // Move assignment Not Implemented
+    GenericPlugin(GenericPlugin&&) = delete;       // Move Constructor Not Implemented
+    GenericPlugin& operator=(const GenericPlugin&) = delete; // Copy Assignment Not Implemented
+    GenericPlugin& operator=(GenericPlugin&&) = delete;      // Move Assignment Not Implemented
 };
 

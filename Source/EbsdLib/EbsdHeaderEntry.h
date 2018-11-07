@@ -109,9 +109,11 @@
       EbsdHeaderEntry() {}
 
 
-    private:
+    public:
       EbsdHeaderEntry(const EbsdHeaderEntry&) = delete; // Copy Constructor Not Implemented
-      void operator=(const EbsdHeaderEntry&) = delete;  // Move assignment Not Implemented
+      EbsdHeaderEntry(EbsdHeaderEntry&&) = delete;      // Move Constructor Not Implemented
+      EbsdHeaderEntry& operator=(const EbsdHeaderEntry&) = delete; // Copy Assignment Not Implemented
+      EbsdHeaderEntry& operator=(EbsdHeaderEntry&&) = delete;      // Move Assignment Not Implemented
   };
 
 

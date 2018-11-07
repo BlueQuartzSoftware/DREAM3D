@@ -134,7 +134,10 @@ private:
   bool m_NeedDataLoad = false;
   AttributeMatrix::Pointer m_CellEnsembleAttrMat = AttributeMatrix::NullPointer();
 
+public:
   StatsGeneratorWidget(const StatsGeneratorWidget&) = delete; // Copy Constructor Not Implemented
-  void operator=(const StatsGeneratorWidget&) = delete;       // Move assignment Not Implemented
+  StatsGeneratorWidget(StatsGeneratorWidget&&) = delete;      // Move Constructor Not Implemented
+  StatsGeneratorWidget& operator=(const StatsGeneratorWidget&) = delete; // Copy Assignment Not Implemented
+  StatsGeneratorWidget& operator=(StatsGeneratorWidget&&) = delete;      // Move Assignment Not Implemented
 };
 

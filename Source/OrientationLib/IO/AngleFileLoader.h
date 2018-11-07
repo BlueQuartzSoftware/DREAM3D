@@ -87,9 +87,11 @@ class OrientationLib_EXPORT AngleFileLoader
     AngleFileLoader();
 
 
-  private:
+  public:
     AngleFileLoader(const AngleFileLoader&) = delete; // Copy Constructor Not Implemented
-    void operator=(const AngleFileLoader&) = delete;  // Move assignment Not Implemented
+    AngleFileLoader(AngleFileLoader&&) = delete;      // Move Constructor Not Implemented
+    AngleFileLoader& operator=(const AngleFileLoader&) = delete; // Copy Assignment Not Implemented
+    AngleFileLoader& operator=(AngleFileLoader&&) = delete;      // Move Assignment Not Implemented
 };
 
 

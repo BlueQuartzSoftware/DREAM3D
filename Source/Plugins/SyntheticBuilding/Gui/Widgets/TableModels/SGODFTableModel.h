@@ -178,7 +178,10 @@ private:
   QVector<float> m_Weights;
   QVector<float> m_Sigmas;
 
+public:
   SGODFTableModel(const SGODFTableModel&) = delete; // Copy Constructor Not Implemented
-  void operator=(const SGODFTableModel&) = delete;  // Move assignment Not Implemented
+  SGODFTableModel(SGODFTableModel&&) = delete;      // Move Constructor Not Implemented
+  SGODFTableModel& operator=(const SGODFTableModel&) = delete; // Copy Assignment Not Implemented
+  SGODFTableModel& operator=(SGODFTableModel&&) = delete;      // Move Assignment Not Implemented
 };
 

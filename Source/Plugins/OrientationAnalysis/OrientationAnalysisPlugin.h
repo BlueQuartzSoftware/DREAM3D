@@ -186,8 +186,11 @@ class OrientationAnalysis_EXPORT OrientationAnalysisPlugin : public QObject, pub
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
+  public:
     OrientationAnalysisPlugin(const OrientationAnalysisPlugin&) = delete; // Copy Constructor Not Implemented
-    void operator=(const OrientationAnalysisPlugin&) = delete;            // Move assignment Not Implemented
+    OrientationAnalysisPlugin(OrientationAnalysisPlugin&&) = delete;      // Move Constructor Not Implemented
+    OrientationAnalysisPlugin& operator=(const OrientationAnalysisPlugin&) = delete; // Copy Assignment Not Implemented
+    OrientationAnalysisPlugin& operator=(OrientationAnalysisPlugin&&) = delete;      // Move Assignment Not Implemented
 };
 
 

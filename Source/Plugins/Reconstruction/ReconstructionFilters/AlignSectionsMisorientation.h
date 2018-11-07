@@ -175,7 +175,10 @@ private:
 
   uint64_t m_RandomSeed;
 
+public:
   AlignSectionsMisorientation(const AlignSectionsMisorientation&) = delete; // Copy Constructor Not Implemented
-  void operator=(const AlignSectionsMisorientation&);                       // Move assignment Not Implemented
+  AlignSectionsMisorientation(AlignSectionsMisorientation&&) = delete;      // Move Constructor Not Implemented
+  AlignSectionsMisorientation& operator=(const AlignSectionsMisorientation&) = delete; // Copy Assignment Not Implemented
+  AlignSectionsMisorientation& operator=(AlignSectionsMisorientation&&) = delete;      // Move Assignment Not Implemented
 };
 

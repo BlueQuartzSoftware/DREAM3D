@@ -98,8 +98,10 @@ class EMMPMFilterParameter : public FilterParameter
      */
     EMMPMFilterParameter();
 
-  private:
+  public:
     EMMPMFilterParameter(const EMMPMFilterParameter&) = delete; // Copy Constructor Not Implemented
-    void operator=(const EMMPMFilterParameter&) = delete;       // Move assignment Not Implemented
+    EMMPMFilterParameter(EMMPMFilterParameter&&) = delete;      // Move Constructor Not Implemented
+    EMMPMFilterParameter& operator=(const EMMPMFilterParameter&) = delete; // Copy Assignment Not Implemented
+    EMMPMFilterParameter& operator=(EMMPMFilterParameter&&) = delete;      // Move Assignment Not Implemented
 };
 

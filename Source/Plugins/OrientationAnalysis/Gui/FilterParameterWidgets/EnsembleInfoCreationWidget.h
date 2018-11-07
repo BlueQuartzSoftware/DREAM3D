@@ -176,7 +176,10 @@ private:
    */
   EnsembleInfoTableModel* createEnsembleInfoModel();
 
+public:
   EnsembleInfoCreationWidget(const EnsembleInfoCreationWidget&) = delete; // Copy Constructor Not Implemented
-  void operator=(const EnsembleInfoCreationWidget&);                      // Move assignment Not Implemented
+  EnsembleInfoCreationWidget(EnsembleInfoCreationWidget&&) = delete;      // Move Constructor Not Implemented
+  EnsembleInfoCreationWidget& operator=(const EnsembleInfoCreationWidget&) = delete; // Copy Assignment Not Implemented
+  EnsembleInfoCreationWidget& operator=(EnsembleInfoCreationWidget&&) = delete;      // Move Assignment Not Implemented
 };
 

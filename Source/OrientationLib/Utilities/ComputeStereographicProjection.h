@@ -71,6 +71,12 @@ class OrientationLib_EXPORT ComputeStereographicProjection
     FloatArrayType*     m_XYZCoords = nullptr;
     PoleFigureConfiguration_t* m_Config = nullptr;
     DoubleArrayType*    m_Intensity = nullptr;
+
+  public:
+    ComputeStereographicProjection(const ComputeStereographicProjection&) = delete; // Copy Constructor Not Implemented
+    ComputeStereographicProjection(ComputeStereographicProjection&&) = default;
+    ComputeStereographicProjection& operator=(const ComputeStereographicProjection&) = delete; // Copy Assignment Not Implemented
+    ComputeStereographicProjection& operator=(ComputeStereographicProjection&&) = delete;      // Move Assignment Not Implemented
 };
 
 

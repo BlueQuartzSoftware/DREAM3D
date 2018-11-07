@@ -142,7 +142,10 @@ private:
   QVector<float> m_Beta;
   QVector<SIMPL::Rgb> m_Colors;
 
+public:
   SGBetaTableModel(const SGBetaTableModel&) = delete; // Copy Constructor Not Implemented
-  void operator=(const SGBetaTableModel&) = delete;   // Move assignment Not Implemented
+  SGBetaTableModel(SGBetaTableModel&&) = delete;      // Move Constructor Not Implemented
+  SGBetaTableModel& operator=(const SGBetaTableModel&) = delete; // Copy Assignment Not Implemented
+  SGBetaTableModel& operator=(SGBetaTableModel&&) = delete;      // Move Assignment Not Implemented
 };
 

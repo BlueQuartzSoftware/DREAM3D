@@ -124,7 +124,6 @@ protected:
    */
   void initialize();
 
-private:
 public:
   OrientationUtility(const OrientationUtility&) = delete; // Copy Constructor Not Implemented
   OrientationUtility(OrientationUtility&&) = delete;      // Move Constructor Not Implemented

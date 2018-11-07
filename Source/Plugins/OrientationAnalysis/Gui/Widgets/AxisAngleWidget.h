@@ -58,7 +58,10 @@ private:
 
   QVector<double> getValues();
 
+public:
   AxisAngleWidget(const AxisAngleWidget&) = delete; // Copy Constructor Not Implemented
-  void operator=(const AxisAngleWidget&) = delete;  // Move assignment Not Implemented
+  AxisAngleWidget(AxisAngleWidget&&) = delete;      // Move Constructor Not Implemented
+  AxisAngleWidget& operator=(const AxisAngleWidget&) = delete; // Copy Assignment Not Implemented
+  AxisAngleWidget& operator=(AxisAngleWidget&&) = delete;      // Move Assignment Not Implemented
 };
 

@@ -94,7 +94,10 @@ private:
   QThread* m_WorkerThread;
   LineCounterObject* m_LineCounter;
 
+public:
   ReadASCIIDataWidget(const ReadASCIIDataWidget&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ReadASCIIDataWidget&) = delete;      // Move assignment Not Implemented
+  ReadASCIIDataWidget(ReadASCIIDataWidget&&) = delete;      // Move Constructor Not Implemented
+  ReadASCIIDataWidget& operator=(const ReadASCIIDataWidget&) = delete; // Copy Assignment Not Implemented
+  ReadASCIIDataWidget& operator=(ReadASCIIDataWidget&&) = delete;      // Move Assignment Not Implemented
 };
 

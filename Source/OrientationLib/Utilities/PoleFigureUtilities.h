@@ -131,9 +131,11 @@ class OrientationLib_EXPORT PoleFigureUtilities
     void GenerateOrthoPoleFigures(FloatArrayType* eulers, int lambertDimension, int poleFigureDim, DoubleArrayType::Pointer& intensity100, DoubleArrayType::Pointer& intensity010,
                                   DoubleArrayType::Pointer& intensity001);
 
-  private:
+  public:
     PoleFigureUtilities(const PoleFigureUtilities&) = delete; // Copy Constructor Not Implemented
-    void operator=(const PoleFigureUtilities&) = delete;      // Move assignment Not Implemented
+    PoleFigureUtilities(PoleFigureUtilities&&) = delete;      // Move Constructor Not Implemented
+    PoleFigureUtilities& operator=(const PoleFigureUtilities&) = delete; // Copy Assignment Not Implemented
+    PoleFigureUtilities& operator=(PoleFigureUtilities&&) = delete;      // Move Assignment Not Implemented
 };
 
 /**

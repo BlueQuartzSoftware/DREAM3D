@@ -86,8 +86,10 @@ public:
 protected:
   ReadH5EbsdFilterParameter();
 
-private:
+public:
   ReadH5EbsdFilterParameter(const ReadH5EbsdFilterParameter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ReadH5EbsdFilterParameter&);                     // Move assignment Not Implemented
+  ReadH5EbsdFilterParameter(ReadH5EbsdFilterParameter&&) = delete;      // Move Constructor Not Implemented
+  ReadH5EbsdFilterParameter& operator=(const ReadH5EbsdFilterParameter&) = delete; // Copy Assignment Not Implemented
+  ReadH5EbsdFilterParameter& operator=(ReadH5EbsdFilterParameter&&) = delete;      // Move Assignment Not Implemented
 };
 

@@ -221,7 +221,10 @@ private:
    */
   void updateFeatureInstancePointers();
 
+public:
   CAxisSegmentFeatures(const CAxisSegmentFeatures&) = delete; // Copy Constructor Not Implemented
-  void operator=(const CAxisSegmentFeatures&);                // Move assignment Not Implemented
+  CAxisSegmentFeatures(CAxisSegmentFeatures&&) = delete;      // Move Constructor Not Implemented
+  CAxisSegmentFeatures& operator=(const CAxisSegmentFeatures&) = delete; // Copy Assignment Not Implemented
+  CAxisSegmentFeatures& operator=(CAxisSegmentFeatures&&) = delete;      // Move Assignment Not Implemented
 };
 

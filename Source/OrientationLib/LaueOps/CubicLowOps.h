@@ -181,9 +181,11 @@ class OrientationLib_EXPORT CubicLowOps : public LaueOps
     float _calcMisoQuat(const QuatF quatsym[24], int numsym,
                         QuatF& q1, QuatF& q2,
                         float& n1, float& n2, float& n3);
-  private:
+  public:
     CubicLowOps(const CubicLowOps&) = delete;    // Copy Constructor Not Implemented
-    void operator=(const CubicLowOps&) = delete; // Move assignment Not Implemented
+    CubicLowOps(CubicLowOps&&) = delete;         // Move Constructor Not Implemented
+    CubicLowOps& operator=(const CubicLowOps&) = delete; // Copy Assignment Not Implemented
+    CubicLowOps& operator=(CubicLowOps&&) = delete;      // Move Assignment Not Implemented
 };
 
 

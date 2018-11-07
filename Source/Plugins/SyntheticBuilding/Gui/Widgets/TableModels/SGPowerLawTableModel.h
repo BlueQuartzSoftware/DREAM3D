@@ -152,7 +152,10 @@ private:
   QVector<float> m_Beta;
   QVector<SIMPL::Rgb> m_Colors;
 
+public:
   SGPowerLawTableModel(const SGPowerLawTableModel&) = delete; // Copy Constructor Not Implemented
-  void operator=(const SGPowerLawTableModel&) = delete;       // Move assignment Not Implemented
+  SGPowerLawTableModel(SGPowerLawTableModel&&) = delete;      // Move Constructor Not Implemented
+  SGPowerLawTableModel& operator=(const SGPowerLawTableModel&) = delete; // Copy Assignment Not Implemented
+  SGPowerLawTableModel& operator=(SGPowerLawTableModel&&) = delete;      // Move Assignment Not Implemented
 };
 

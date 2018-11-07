@@ -65,8 +65,10 @@ public:
 protected:
   StatsGeneratorFilterParameter();
 
-private:
+public:
   StatsGeneratorFilterParameter(const StatsGeneratorFilterParameter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const StatsGeneratorFilterParameter&);                         // Move assignment Not Implemented
+  StatsGeneratorFilterParameter(StatsGeneratorFilterParameter&&) = delete;      // Move Constructor Not Implemented
+  StatsGeneratorFilterParameter& operator=(const StatsGeneratorFilterParameter&) = delete; // Copy Assignment Not Implemented
+  StatsGeneratorFilterParameter& operator=(StatsGeneratorFilterParameter&&) = delete;      // Move Assignment Not Implemented
 };
 

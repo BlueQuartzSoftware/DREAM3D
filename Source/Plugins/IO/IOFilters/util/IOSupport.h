@@ -90,9 +90,11 @@ class  IOSupport : public Observable
   protected:
     IOSupport();
 
-  private:
+  public:
     IOSupport(const IOSupport&) = delete;      // Copy Constructor Not Implemented
-    void operator=(const IOSupport&) = delete; // Move assignment Not Implemented
+    IOSupport(IOSupport&&) = delete;           // Move Constructor Not Implemented
+    IOSupport& operator=(const IOSupport&) = delete; // Copy Assignment Not Implemented
+    IOSupport& operator=(IOSupport&&) = delete;      // Move Assignment Not Implemented
 };
 
 

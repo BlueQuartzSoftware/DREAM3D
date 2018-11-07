@@ -209,7 +209,10 @@ private:
    */
   void updateFeatureInstancePointers();
 
+public:
   ScalarSegmentFeatures(const ScalarSegmentFeatures&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ScalarSegmentFeatures&);                 // Move assignment Not Implemented
+  ScalarSegmentFeatures(ScalarSegmentFeatures&&) = delete;      // Move Constructor Not Implemented
+  ScalarSegmentFeatures& operator=(const ScalarSegmentFeatures&) = delete; // Copy Assignment Not Implemented
+  ScalarSegmentFeatures& operator=(ScalarSegmentFeatures&&) = delete;      // Move Assignment Not Implemented
 };
 

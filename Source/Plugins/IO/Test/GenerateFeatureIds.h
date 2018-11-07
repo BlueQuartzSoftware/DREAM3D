@@ -224,6 +224,6 @@ protected:
 
 private:
   CreateImageGeomDataContainer(const CreateImageGeomDataContainer&) = delete; // Copy Constructor Not Implemented
-  void operator=(const CreateImageGeomDataContainer&);               // Move assignment Not Implemented
+  void operator=(const CreateImageGeomDataContainer&) = delete;               // Move assignment Not Implemented
 };
 

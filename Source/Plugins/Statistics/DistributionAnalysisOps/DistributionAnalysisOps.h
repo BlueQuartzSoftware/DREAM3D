@@ -66,9 +66,11 @@ class DistributionAnalysisOps
   protected:
     DistributionAnalysisOps();
 
-  private:
+  public:
     DistributionAnalysisOps(const DistributionAnalysisOps&) = delete; // Copy Constructor Not Implemented
-    void operator=(const DistributionAnalysisOps&) = delete;          // Move assignment Not Implemented
+    DistributionAnalysisOps(DistributionAnalysisOps&&) = delete;      // Move Constructor Not Implemented
+    DistributionAnalysisOps& operator=(const DistributionAnalysisOps&) = delete; // Copy Assignment Not Implemented
+    DistributionAnalysisOps& operator=(DistributionAnalysisOps&&) = delete;      // Move Assignment Not Implemented
 };
 
 

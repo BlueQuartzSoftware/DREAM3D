@@ -185,7 +185,9 @@ private:
   size_t m_Progress = 0;
   size_t m_TotalProgress = 0;
 
+public:
   AlignSections(const AlignSections&) = delete;  // Copy Constructor Not Implemented
+  AlignSections(AlignSections&&) = delete;       // Move Constructor Not Implemented
   AlignSections& operator=(const AlignSections&) = delete; // Copy Assignment Not Implemented
   AlignSections& operator=(AlignSections&&) = delete;      // Move Assignment Not Implemented
 };

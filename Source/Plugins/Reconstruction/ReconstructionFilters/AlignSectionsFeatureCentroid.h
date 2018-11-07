@@ -154,7 +154,10 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
 
+public:
   AlignSectionsFeatureCentroid(const AlignSectionsFeatureCentroid&) = delete; // Copy Constructor Not Implemented
-  void operator=(const AlignSectionsFeatureCentroid&);                        // Move assignment Not Implemented
+  AlignSectionsFeatureCentroid(AlignSectionsFeatureCentroid&&) = delete;      // Move Constructor Not Implemented
+  AlignSectionsFeatureCentroid& operator=(const AlignSectionsFeatureCentroid&) = delete; // Copy Assignment Not Implemented
+  AlignSectionsFeatureCentroid& operator=(AlignSectionsFeatureCentroid&&) = delete;      // Move Assignment Not Implemented
 };
 

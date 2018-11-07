@@ -94,7 +94,10 @@ private:
   QDoubleValidator* m_PhaseFractionValidator = nullptr;
   QDoubleValidator* m_PptFractionValidator = nullptr;
 
+public:
   EditPhaseDialog(const EditPhaseDialog&) = delete; // Copy Constructor Not Implemented
-  void operator=(const EditPhaseDialog&) = delete;  // Move assignment Not Implemented
+  EditPhaseDialog(EditPhaseDialog&&) = delete;      // Move Constructor Not Implemented
+  EditPhaseDialog& operator=(const EditPhaseDialog&) = delete; // Copy Assignment Not Implemented
+  EditPhaseDialog& operator=(EditPhaseDialog&&) = delete;      // Move Assignment Not Implemented
 };
 
