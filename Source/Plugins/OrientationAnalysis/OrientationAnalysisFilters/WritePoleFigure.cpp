@@ -1020,6 +1020,20 @@ void WritePoleFigure::execute()
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer WritePoleFigure::newFilterInstance(bool copyFilterParameters) const
+{
+  WritePoleFigure::Pointer filter = WritePoleFigure::New();
+  if(copyFilterParameters)
+  {
+    copyFilterParameterInstanceVariables(filter.get());
+  }
+  return filter;
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

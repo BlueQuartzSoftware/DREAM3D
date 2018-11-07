@@ -157,6 +157,11 @@ public:
   const QString getFilterVersion() const override;
 
   /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+
+  /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
   const QString getGroupName() const override;
