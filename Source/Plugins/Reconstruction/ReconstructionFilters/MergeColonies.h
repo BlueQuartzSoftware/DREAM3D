@@ -239,7 +239,7 @@ private:
    */
   void updateFeatureInstancePointers();
 
-  MergeColonies(const MergeColonies&);  // Copy Constructor Not Implemented
+  MergeColonies(const MergeColonies&) = delete;  // Copy Constructor Not Implemented
   void operator=(const MergeColonies&) = delete; // Move assignment Not Implemented
 };
 

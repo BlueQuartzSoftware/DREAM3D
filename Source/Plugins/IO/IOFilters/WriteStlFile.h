@@ -211,6 +211,6 @@ private:
 
   WriteStlFile(const WriteStlFile&);   // Copy Constructor Not Implemented
   WriteStlFile& operator=(const WriteStlFile&) = delete; // Copy Assignment Not Implemented
-  WriteStlFile& operator=(WriteStlFile&&) = delete;      // Move Assignment
+  WriteStlFile& operator=(WriteStlFile&&) = delete;      // Move Assignment Not Implemented
 };
 

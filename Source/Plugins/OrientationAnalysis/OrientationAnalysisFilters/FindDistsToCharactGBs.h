@@ -217,6 +217,6 @@ public:
   FindDistsToCharactGBs(const FindDistsToCharactGBs&) = delete;            // Copy Constructor Not Implemented
   FindDistsToCharactGBs(FindDistsToCharactGBs&&) = delete;                 // Move Constructor Not Implemented
   FindDistsToCharactGBs& operator=(const FindDistsToCharactGBs&) = delete; // Copy Assignment Not Implemented
-  FindDistsToCharactGBs& operator=(FindDistsToCharactGBs&&) = delete;      // Move Assignment
+  FindDistsToCharactGBs& operator=(FindDistsToCharactGBs&&) = delete;      // Move Assignment Not Implemented
 };
 

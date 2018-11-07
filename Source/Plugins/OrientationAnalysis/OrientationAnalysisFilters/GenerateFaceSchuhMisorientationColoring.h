@@ -201,6 +201,6 @@ public:
   GenerateFaceSchuhMisorientationColoring(const GenerateFaceSchuhMisorientationColoring&) = delete;            // Copy Constructor Not Implemented
   GenerateFaceSchuhMisorientationColoring(GenerateFaceSchuhMisorientationColoring&&) = delete;                 // Move Constructor Not Implemented
   GenerateFaceSchuhMisorientationColoring& operator=(const GenerateFaceSchuhMisorientationColoring&) = delete; // Copy Assignment Not Implemented
-  GenerateFaceSchuhMisorientationColoring& operator=(GenerateFaceSchuhMisorientationColoring&&) = delete;      // Move Assignment
+  GenerateFaceSchuhMisorientationColoring& operator=(GenerateFaceSchuhMisorientationColoring&&) = delete;      // Move Assignment Not Implemented
 };
 

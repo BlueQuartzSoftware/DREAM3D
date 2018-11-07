@@ -202,8 +202,8 @@ private:
   NeighborList<int32_t>::WeakPointer m_NeighborList;
   NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;
 
-  FindNeighbors(const FindNeighbors&);  // Copy Constructor Not Implemented
+  FindNeighbors(const FindNeighbors&) = delete;  // Copy Constructor Not Implemented
   FindNeighbors& operator=(const FindNeighbors&) = delete; // Copy Assignment Not Implemented
-  FindNeighbors& operator=(FindNeighbors&&) = delete;      // Move Assignment
+  FindNeighbors& operator=(FindNeighbors&&) = delete;      // Move Assignment Not Implemented
 };
 

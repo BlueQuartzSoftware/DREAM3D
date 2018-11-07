@@ -177,6 +177,6 @@ public:
   FindTriangleGeomNeighbors(const FindTriangleGeomNeighbors&) = delete; // Copy Constructor Not Implemented
   FindTriangleGeomNeighbors(FindTriangleGeomNeighbors&&) = delete;      // Move Constructor Not Implemented
   FindTriangleGeomNeighbors& operator=(const FindTriangleGeomNeighbors&) = delete; // Copy Assignment Not Implemented
-  FindTriangleGeomNeighbors& operator=(FindTriangleGeomNeighbors&&) = delete;      // Move Assignment
+  FindTriangleGeomNeighbors& operator=(FindTriangleGeomNeighbors&&) = delete;      // Move Assignment Not Implemented
 };
 

@@ -178,6 +178,6 @@ private:
 
   FindAvgCAxes(const FindAvgCAxes&);   // Copy Constructor Not Implemented
   FindAvgCAxes& operator=(const FindAvgCAxes&) = delete; // Copy Assignment Not Implemented
-  FindAvgCAxes& operator=(FindAvgCAxes&&) = delete;      // Move Assignment
+  FindAvgCAxes& operator=(FindAvgCAxes&&) = delete;      // Move Assignment Not Implemented
 };
 

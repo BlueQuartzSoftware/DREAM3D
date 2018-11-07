@@ -263,6 +263,6 @@ private:
 
   EMMPMFilter(const EMMPMFilter&);    // Copy Constructor Not Implemented
   EMMPMFilter& operator=(const EMMPMFilter&) = delete; // Copy Assignment Not Implemented
-  EMMPMFilter& operator=(EMMPMFilter&&) = delete;      // Move Assignment
+  EMMPMFilter& operator=(EMMPMFilter&&) = delete;      // Move Assignment Not Implemented
 };
 

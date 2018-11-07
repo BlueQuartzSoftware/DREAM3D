@@ -216,6 +216,6 @@ public:
   CalculateArrayHistogram(const CalculateArrayHistogram&) = delete; // Copy Constructor Not Implemented
   CalculateArrayHistogram(CalculateArrayHistogram&&) = delete;      // Move Constructor Not Implemented
   CalculateArrayHistogram& operator=(const CalculateArrayHistogram&) = delete; // Copy Assignment Not Implemented
-  CalculateArrayHistogram& operator=(CalculateArrayHistogram&&) = delete;      // Move Assignment
+  CalculateArrayHistogram& operator=(CalculateArrayHistogram&&) = delete;      // Move Assignment Not Implemented
 };
 

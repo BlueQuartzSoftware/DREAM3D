@@ -254,6 +254,6 @@ public:
   FindGBCDMetricBased(const FindGBCDMetricBased&) = delete;            // Copy Constructor Not Implemented
   FindGBCDMetricBased(FindGBCDMetricBased&&) = delete;                 // Move Constructor Not Implemented
   FindGBCDMetricBased& operator=(const FindGBCDMetricBased&) = delete; // Copy Assignment Not Implemented
-  FindGBCDMetricBased& operator=(FindGBCDMetricBased&&) = delete;      // Move Assignment
+  FindGBCDMetricBased& operator=(FindGBCDMetricBased&&) = delete;      // Move Assignment Not Implemented
 };
 

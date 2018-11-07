@@ -207,5 +207,5 @@ private:
 
   FindSizes(const FindSizes&);                     // Copy Constructor Not Implemented
   FindSizes& operator=(const FindSizes&) = delete; // Copy Assignment Not Implemented
-  FindSizes& operator=(FindSizes&&) = delete;      // Move Assignment
+  FindSizes& operator=(FindSizes&&) = delete;      // Move Assignment Not Implemented
 };

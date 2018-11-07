@@ -180,6 +180,6 @@ private:
 
   FillBadData(const FillBadData&);    // Copy Constructor Not Implemented
   FillBadData& operator=(const FillBadData&) = delete; // Copy Assignment Not Implemented
-  FillBadData& operator=(FillBadData&&) = delete;      // Move Assignment
+  FillBadData& operator=(FillBadData&&) = delete;      // Move Assignment Not Implemented
 };
 

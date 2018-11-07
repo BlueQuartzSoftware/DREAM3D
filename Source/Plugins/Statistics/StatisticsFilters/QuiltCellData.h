@@ -195,8 +195,8 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(float, OutputArray)
 
-  QuiltCellData(const QuiltCellData&);  // Copy Constructor Not Implemented
+  QuiltCellData(const QuiltCellData&) = delete;  // Copy Constructor Not Implemented
   QuiltCellData& operator=(const QuiltCellData&) = delete; // Copy Assignment Not Implemented
-  QuiltCellData& operator=(QuiltCellData&&) = delete;      // Move Assignment
+  QuiltCellData& operator=(QuiltCellData&&) = delete;      // Move Assignment Not Implemented
 };
 

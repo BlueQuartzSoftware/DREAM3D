@@ -341,6 +341,6 @@ private:
 
   ReadH5Ebsd(const ReadH5Ebsd&);     // Copy Constructor Not Implemented
   ReadH5Ebsd& operator=(const ReadH5Ebsd&) = delete; // Copy Assignment Not Implemented
-  ReadH5Ebsd& operator=(ReadH5Ebsd&&) = delete;      // Move Assignment
+  ReadH5Ebsd& operator=(ReadH5Ebsd&&) = delete;      // Move Assignment Not Implemented
 };
 

@@ -225,6 +225,6 @@ private:
 
   FindSchmids(const FindSchmids&);    // Copy Constructor Not Implemented
   FindSchmids& operator=(const FindSchmids&) = delete; // Copy Assignment Not Implemented
-  FindSchmids& operator=(FindSchmids&&) = delete;      // Move Assignment
+  FindSchmids& operator=(FindSchmids&&) = delete;      // Move Assignment Not Implemented
 };
 
