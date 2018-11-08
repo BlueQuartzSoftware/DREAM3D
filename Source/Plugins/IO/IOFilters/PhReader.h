@@ -200,7 +200,10 @@ private:
   size_t m_Dims[3];
   FILE* m_InStream;
 
-  PhReader(const PhReader&);       // Not Implemented
-  void operator=(const PhReader&); // Not Implemented
+public:
+  PhReader(const PhReader&) = delete;            // Copy Constructor Not Implemented
+  PhReader(PhReader&&) = delete;                 // Move Constructor Not Implemented
+  PhReader& operator=(const PhReader&) = delete; // Copy Assignment Not Implemented
+  PhReader& operator=(PhReader&&) = delete;      // Move Assignment Not Implemented
 };
 

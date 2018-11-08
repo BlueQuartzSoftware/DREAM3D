@@ -140,8 +140,10 @@ protected:
    */
   EnsembleInfoFilterParameter();
 
-private:
+public:
   EnsembleInfoFilterParameter(const EnsembleInfoFilterParameter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const EnsembleInfoFilterParameter&);                       // Move assignment Not Implemented
+  EnsembleInfoFilterParameter(EnsembleInfoFilterParameter&&) = delete;      // Move Constructor Not Implemented
+  EnsembleInfoFilterParameter& operator=(const EnsembleInfoFilterParameter&) = delete; // Copy Assignment Not Implemented
+  EnsembleInfoFilterParameter& operator=(EnsembleInfoFilterParameter&&) = delete;      // Move Assignment Not Implemented
 };
 

@@ -214,7 +214,10 @@ private:
    */
   void updateFeatureInstancePointers();
 
-  MergeTwins(const MergeTwins&);     // Copy Constructor Not Implemented
-  void operator=(const MergeTwins&) = delete; // Move assignment Not Implemented
+public:
+  MergeTwins(const MergeTwins&) = delete;            // Copy Constructor Not Implemented
+  MergeTwins(MergeTwins&&) = delete;                 // Move Constructor Not Implemented
+  MergeTwins& operator=(const MergeTwins&) = delete; // Copy Assignment Not Implemented
+  MergeTwins& operator=(MergeTwins&&) = delete;      // Move Assignment Not Implemented
 };
 

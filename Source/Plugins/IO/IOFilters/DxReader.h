@@ -201,7 +201,10 @@ private:
   size_t m_Dims[3];
   QFile m_InStream;
 
-  DxReader(const DxReader&);       // Copy Constructor Not Implemented
-  void operator=(const DxReader&) = delete; // Move assignment Not Implemented
+public:
+  DxReader(const DxReader&) = delete;            // Copy Constructor Not Implemented
+  DxReader(DxReader&&) = delete;                 // Move Constructor Not Implemented
+  DxReader& operator=(const DxReader&) = delete; // Copy Assignment Not Implemented
+  DxReader& operator=(DxReader&&) = delete;      // Move Assignment Not Implemented
 };
 

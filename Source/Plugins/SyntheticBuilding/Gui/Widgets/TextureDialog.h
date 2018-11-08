@@ -76,7 +76,10 @@ protected:
 private:
   QVector<TexturePreset::Pointer> m_Presets;
 
+public:
   TextureDialog(const TextureDialog&) = delete;  // Copy Constructor Not Implemented
-  void operator=(const TextureDialog&) = delete; // Move assignment Not Implemented
+  TextureDialog(TextureDialog&&) = delete;       // Move Constructor Not Implemented
+  TextureDialog& operator=(const TextureDialog&) = delete; // Copy Assignment Not Implemented
+  TextureDialog& operator=(TextureDialog&&) = delete;      // Move Assignment Not Implemented
 };
 

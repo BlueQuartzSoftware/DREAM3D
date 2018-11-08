@@ -60,8 +60,10 @@ class EMMPMLib_EXPORT StatsDelegate
 
     StatsDelegate();
 
-  private:
+  public:
     StatsDelegate(const StatsDelegate&) = delete;  // Copy Constructor Not Implemented
-    void operator=(const StatsDelegate&) = delete; // Move assignment Not Implemented
+    StatsDelegate(StatsDelegate&&) = delete;       // Move Constructor Not Implemented
+    StatsDelegate& operator=(const StatsDelegate&) = delete; // Copy Assignment Not Implemented
+    StatsDelegate& operator=(StatsDelegate&&) = delete;      // Move Assignment Not Implemented
 };
 

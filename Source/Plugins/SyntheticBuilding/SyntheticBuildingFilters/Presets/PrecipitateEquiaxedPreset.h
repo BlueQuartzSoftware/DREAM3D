@@ -80,9 +80,11 @@ public:
 protected:
   PrecipitateEquiaxedPreset();
 
-private:
+public:
   PrecipitateEquiaxedPreset(const PrecipitateEquiaxedPreset&) = delete; // Copy Constructor Not Implemented
-  void operator=(const PrecipitateEquiaxedPreset&) = delete;            // Move assignment Not Implemented
+  PrecipitateEquiaxedPreset(PrecipitateEquiaxedPreset&&) = delete;      // Move Constructor Not Implemented
+  PrecipitateEquiaxedPreset& operator=(const PrecipitateEquiaxedPreset&) = delete; // Copy Assignment Not Implemented
+  PrecipitateEquiaxedPreset& operator=(PrecipitateEquiaxedPreset&&) = delete;      // Move Assignment Not Implemented
 };
 
 DECLARE_FACTORY_CLASS(PrecipitateEquiaxedPresetFactory, PrecipitateEquiaxedPreset, "Precipitate Equiaxed")

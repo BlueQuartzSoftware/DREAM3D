@@ -61,8 +61,10 @@ public:
  */
   void paintSymmetryDirection(const QString& text, QFontMetrics* metrics, QPainter* painter, int x, int y);
 
-private:
+public:
   IPFLegendPainter(const IPFLegendPainter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const IPFLegendPainter&);            // Move assignment Not Implemented
+  IPFLegendPainter(IPFLegendPainter&&) = delete;      // Move Constructor Not Implemented
+  IPFLegendPainter& operator=(const IPFLegendPainter&) = delete; // Copy Assignment Not Implemented
+  IPFLegendPainter& operator=(IPFLegendPainter&&) = delete;      // Move Assignment Not Implemented
 };
 

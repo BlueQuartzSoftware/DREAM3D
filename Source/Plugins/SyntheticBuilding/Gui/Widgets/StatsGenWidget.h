@@ -105,9 +105,10 @@ public:
   //  signals:
   //    void phaseParametersChanged();
 
-protected:
-private:
+public:
   StatsGenWidget(const StatsGenWidget&) = delete; // Copy Constructor Not Implemented
-  void operator=(const StatsGenWidget&) = delete; // Move assignment Not Implemented
+  StatsGenWidget(StatsGenWidget&&) = delete;      // Move Constructor Not Implemented
+  StatsGenWidget& operator=(const StatsGenWidget&) = delete; // Copy Assignment Not Implemented
+  StatsGenWidget& operator=(StatsGenWidget&&) = delete;      // Move Assignment Not Implemented
 };
 

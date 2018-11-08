@@ -85,9 +85,11 @@ class OrientationLib_EXPORT TexturePreset
   protected:
     TexturePreset();
 
-  private:
+  public:
     TexturePreset(const TexturePreset&) = delete;  // Copy Constructor Not Implemented
-    void operator=(const TexturePreset&) = delete; // Move assignment Not Implemented
+    TexturePreset(TexturePreset&&) = delete;       // Move Constructor Not Implemented
+    TexturePreset& operator=(const TexturePreset&) = delete; // Copy Assignment Not Implemented
+    TexturePreset& operator=(TexturePreset&&) = delete;      // Move Assignment Not Implemented
 };
 
 

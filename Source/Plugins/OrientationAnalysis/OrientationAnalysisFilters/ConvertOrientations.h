@@ -175,7 +175,6 @@ protected:
    */
   void initialize();
 
-private:
 public:
   ConvertOrientations(const ConvertOrientations&) = delete; // Copy Constructor Not Implemented
   ConvertOrientations(ConvertOrientations&&) = delete;      // Move Constructor Not Implemented

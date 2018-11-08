@@ -186,7 +186,10 @@ class IO_EXPORT VASPReader : public FileReader
     QVector<int> atomNumbers;
     int totalAtoms;
 
+  public:
     VASPReader(const VASPReader&) = delete;     // Copy Constructor Not Implemented
-    void operator=(const VASPReader&) = delete; // Move assignment Not Implemented
+    VASPReader(VASPReader&&) = delete;          // Move Constructor Not Implemented
+    VASPReader& operator=(const VASPReader&) = delete; // Copy Assignment Not Implemented
+    VASPReader& operator=(VASPReader&&) = delete;      // Move Assignment Not Implemented
 };
 

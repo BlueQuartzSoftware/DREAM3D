@@ -86,7 +86,10 @@ class EMMPMLib_EXPORT MPMCalculation : public Observable
                   int colStart, int colEnd,
                   real_t* yk);
 
+  public:
     MPMCalculation(const MPMCalculation&) = delete; // Copy Constructor Not Implemented
-    void operator=(const MPMCalculation&) = delete; // Move assignment Not Implemented
+    MPMCalculation(MPMCalculation&&) = delete;      // Move Constructor Not Implemented
+    MPMCalculation& operator=(const MPMCalculation&) = delete; // Copy Assignment Not Implemented
+    MPMCalculation& operator=(MPMCalculation&&) = delete;      // Move Assignment Not Implemented
 };
 

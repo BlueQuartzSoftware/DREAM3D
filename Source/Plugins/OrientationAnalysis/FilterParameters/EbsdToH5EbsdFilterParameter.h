@@ -76,8 +76,10 @@ public:
 protected:
   EbsdToH5EbsdFilterParameter();
 
-private:
+public:
   EbsdToH5EbsdFilterParameter(const EbsdToH5EbsdFilterParameter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const EbsdToH5EbsdFilterParameter&) = delete;              // Move assignment Not Implemented
+  EbsdToH5EbsdFilterParameter(EbsdToH5EbsdFilterParameter&&) = delete;      // Move Constructor Not Implemented
+  EbsdToH5EbsdFilterParameter& operator=(const EbsdToH5EbsdFilterParameter&) = delete; // Copy Assignment Not Implemented
+  EbsdToH5EbsdFilterParameter& operator=(EbsdToH5EbsdFilterParameter&&) = delete;      // Move Assignment Not Implemented
 };
 

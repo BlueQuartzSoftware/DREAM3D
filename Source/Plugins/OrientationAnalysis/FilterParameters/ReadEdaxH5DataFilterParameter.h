@@ -76,8 +76,10 @@ public:
 protected:
   ReadEdaxH5DataFilterParameter();
 
-private:
+public:
   ReadEdaxH5DataFilterParameter(const ReadEdaxH5DataFilterParameter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const ReadEdaxH5DataFilterParameter&) = delete;                // Move assignment Not Implemented
+  ReadEdaxH5DataFilterParameter(ReadEdaxH5DataFilterParameter&&) = delete;      // Move Constructor Not Implemented
+  ReadEdaxH5DataFilterParameter& operator=(const ReadEdaxH5DataFilterParameter&) = delete; // Copy Assignment Not Implemented
+  ReadEdaxH5DataFilterParameter& operator=(ReadEdaxH5DataFilterParameter&&) = delete;      // Move Assignment Not Implemented
 };
 

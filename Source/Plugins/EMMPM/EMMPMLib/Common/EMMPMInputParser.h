@@ -96,8 +96,10 @@ class EMMPMLib_EXPORT EMMPMInputParser
      */
     char* copyFilenameToNewCharBuffer( const std::string& fname);
 
-  private:
+  public:
     EMMPMInputParser(const EMMPMInputParser&) = delete; // Copy Constructor Not Implemented
-    void operator=(const EMMPMInputParser&) = delete;   // Move assignment Not Implemented
+    EMMPMInputParser(EMMPMInputParser&&) = delete;      // Move Constructor Not Implemented
+    EMMPMInputParser& operator=(const EMMPMInputParser&) = delete; // Copy Assignment Not Implemented
+    EMMPMInputParser& operator=(EMMPMInputParser&&) = delete;      // Move Assignment Not Implemented
 };
 

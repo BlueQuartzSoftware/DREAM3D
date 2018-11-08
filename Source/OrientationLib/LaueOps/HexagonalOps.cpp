@@ -1293,7 +1293,7 @@ void HexagonalOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatA
 #endif
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if (doParallel == true)
+  if(doParallel)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations),
                       Detail::HexagonalHigh::GenerateSphereCoordsImpl(eulers, xyz0001, xyz1010, xyz1120), tbb::auto_partitioner());
@@ -1483,7 +1483,7 @@ QVector<UInt8ArrayType::Pointer> HexagonalOps::generatePoleFigure(PoleFigureConf
   tbb::task_scheduler_init init;
   bool doParallel = true;
 
-  if(doParallel == true)
+  if(doParallel)
   {
     std::shared_ptr<tbb::task_group> g(new tbb::task_group);
     g->run(ComputeStereographicProjection(xyz001.get(), &config, intensity001.get()));
@@ -1574,7 +1574,7 @@ QVector<UInt8ArrayType::Pointer> HexagonalOps::generatePoleFigure(PoleFigureConf
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 
-  if(doParallel == true)
+  if(doParallel)
   {
     std::shared_ptr<tbb::task_group> g(new tbb::task_group);
     g->run(GeneratePoleFigureRgbaImageImpl(intensity001.get(), &config, image001.get()));

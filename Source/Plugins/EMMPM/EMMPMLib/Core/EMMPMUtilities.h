@@ -129,8 +129,10 @@ class EMMPMLib_EXPORT EMMPMUtilities
     {
     }
 
-  private:
+  public:
     EMMPMUtilities(const EMMPMUtilities&) = delete; // Copy Constructor Not Implemented
-    void operator=(const EMMPMUtilities&) = delete; // Move assignment Not Implemented
+    EMMPMUtilities(EMMPMUtilities&&) = delete;      // Move Constructor Not Implemented
+    EMMPMUtilities& operator=(const EMMPMUtilities&) = delete; // Copy Assignment Not Implemented
+    EMMPMUtilities& operator=(EMMPMUtilities&&) = delete;      // Move Assignment Not Implemented
 };
 

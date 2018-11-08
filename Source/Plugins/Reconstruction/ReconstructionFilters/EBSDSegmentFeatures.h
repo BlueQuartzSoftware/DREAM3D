@@ -223,7 +223,10 @@ private:
    */
   void updateFeatureInstancePointers();
 
+public:
   EBSDSegmentFeatures(const EBSDSegmentFeatures&) = delete; // Copy Constructor Not Implemented
-  void operator=(const EBSDSegmentFeatures&);               // Move assignment Not Implemented
+  EBSDSegmentFeatures(EBSDSegmentFeatures&&) = delete;      // Move Constructor Not Implemented
+  EBSDSegmentFeatures& operator=(const EBSDSegmentFeatures&) = delete; // Copy Assignment Not Implemented
+  EBSDSegmentFeatures& operator=(EBSDSegmentFeatures&&) = delete;      // Move Assignment Not Implemented
 };
 

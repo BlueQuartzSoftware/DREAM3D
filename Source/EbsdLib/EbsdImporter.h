@@ -140,9 +140,11 @@ class EbsdLib_EXPORT EbsdImporter
       m_PipelineMessage = "";
     }
 
-  private:
+  public:
     EbsdImporter(const EbsdImporter&) = delete;   // Copy Constructor Not Implemented
-    void operator=(const EbsdImporter&) = delete; // Move assignment Not Implemented
+    EbsdImporter(EbsdImporter&&) = delete;        // Move Constructor Not Implemented
+    EbsdImporter& operator=(const EbsdImporter&) = delete; // Copy Assignment Not Implemented
+    EbsdImporter& operator=(EbsdImporter&&) = delete;      // Move Assignment Not Implemented
 };
 
 

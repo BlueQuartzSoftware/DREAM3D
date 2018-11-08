@@ -63,7 +63,7 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
     EBSD_TYPE_MACRO_SUPER(H5CtfImporter, EbsdImporter)
     EBSD_STATIC_NEW_SUPERCLASS(EbsdImporter, H5CtfImporter)
 
-    virtual ~H5CtfImporter();
+    ~H5CtfImporter() override;
 
     /**
      * @brief Imports a specific file into the HDF5 file
@@ -86,27 +86,27 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
      * @param x Number of X Voxels (out)
      * @param y Number of Y Voxels (out)
      */
-    virtual void getDims(int64_t& x, int64_t& y);
+    void getDims(int64_t& x, int64_t& y) override;
 
     /**
      * @brief Returns the x and y resolution of the voxels
      * @param x The x resolution (out)
      * @param y The y resolution (out)
      */
-    virtual void getResolution(float& x, float& y);
+    void getResolution(float& x, float& y) override;
 
     /**
      * @brief Return the number of slices imported
      * @return
      */
-    virtual int numberOfSlicesImported();
+    int numberOfSlicesImported() override;
 
     /**
      * @brief This function sets the version of the H5Ebsd file that will be written.
      * @param version
      * @return
      */
-    virtual void setFileVersion(uint32_t version);
+    void setFileVersion(uint32_t version) override;
 
   protected:
     H5CtfImporter();
@@ -123,8 +123,11 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
     int m_NumSlicesImported;
     int   m_FileVersion;
 
+  public:
     H5CtfImporter(const H5CtfImporter&) = delete;  // Copy Constructor Not Implemented
-    void operator=(const H5CtfImporter&) = delete; // Move assignment Not Implemented
+    H5CtfImporter(H5CtfImporter&&) = delete;       // Move Constructor Not Implemented
+    H5CtfImporter& operator=(const H5CtfImporter&) = delete; // Copy Assignment Not Implemented
+    H5CtfImporter& operator=(H5CtfImporter&&) = delete;      // Move Assignment Not Implemented
 };
 
 

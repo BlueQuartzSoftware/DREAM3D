@@ -103,8 +103,11 @@ class FindNRingNeighbors
   private:
     UniqueFaceIds_t  m_NRingTriangles;
 
+  public:
     FindNRingNeighbors(const FindNRingNeighbors&) = delete; // Copy Constructor Not Implemented
-    void operator=(const FindNRingNeighbors&) = delete;     // Move assignment Not Implemented
+    FindNRingNeighbors(FindNRingNeighbors&&) = delete;      // Move Constructor Not Implemented
+    FindNRingNeighbors& operator=(const FindNRingNeighbors&) = delete; // Copy Assignment Not Implemented
+    FindNRingNeighbors& operator=(FindNRingNeighbors&&) = delete;      // Move Assignment Not Implemented
 };
 
 

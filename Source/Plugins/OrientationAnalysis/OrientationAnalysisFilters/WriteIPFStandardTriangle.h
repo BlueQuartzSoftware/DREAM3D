@@ -196,7 +196,6 @@ protected:
    */
   QImage overlayText(QImage image, LaueOps* ops);
 
-private:
 public:
   WriteIPFStandardTriangle(const WriteIPFStandardTriangle&) = delete; // Copy Constructor Not Implemented
   WriteIPFStandardTriangle(WriteIPFStandardTriangle&&) = delete;      // Move Constructor Not Implemented

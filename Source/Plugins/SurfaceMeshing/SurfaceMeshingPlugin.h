@@ -186,8 +186,11 @@ class SurfaceMeshing_EXPORT SurfaceMeshingPlugin : public QObject, public ISIMPL
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
+  public:
     SurfaceMeshingPlugin(const SurfaceMeshingPlugin&) = delete; // Copy Constructor Not Implemented
-    void operator=(const SurfaceMeshingPlugin&) = delete;       // Move assignment Not Implemented
+    SurfaceMeshingPlugin(SurfaceMeshingPlugin&&) = delete;      // Move Constructor Not Implemented
+    SurfaceMeshingPlugin& operator=(const SurfaceMeshingPlugin&) = delete; // Copy Assignment Not Implemented
+    SurfaceMeshingPlugin& operator=(SurfaceMeshingPlugin&&) = delete;      // Move Assignment Not Implemented
 };
 
 

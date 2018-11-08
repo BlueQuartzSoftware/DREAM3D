@@ -187,7 +187,10 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
+public:
   UncertainRegularGridSampleSurfaceMesh(const UncertainRegularGridSampleSurfaceMesh&) = delete; // Copy Constructor Not Implemented
-  void operator=(const UncertainRegularGridSampleSurfaceMesh&);                                 // Move assignment Not Implemented
+  UncertainRegularGridSampleSurfaceMesh(UncertainRegularGridSampleSurfaceMesh&&) = delete;      // Move Constructor Not Implemented
+  UncertainRegularGridSampleSurfaceMesh& operator=(const UncertainRegularGridSampleSurfaceMesh&) = delete; // Copy Assignment Not Implemented
+  UncertainRegularGridSampleSurfaceMesh& operator=(UncertainRegularGridSampleSurfaceMesh&&) = delete;      // Move Assignment Not Implemented
 };
 

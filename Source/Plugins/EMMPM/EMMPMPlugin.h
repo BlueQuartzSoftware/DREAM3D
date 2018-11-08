@@ -156,7 +156,10 @@ class EMMPM_EXPORT EMMPMPlugin : public QObject, public ISIMPLibPlugin
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
+  public:
     EMMPMPlugin(const EMMPMPlugin&) = delete;    // Copy Constructor Not Implemented
-    void operator=(const EMMPMPlugin&) = delete; // Move assignment Not Implemented
+    EMMPMPlugin(EMMPMPlugin&&) = delete;         // Move Constructor Not Implemented
+    EMMPMPlugin& operator=(const EMMPMPlugin&) = delete; // Copy Assignment Not Implemented
+    EMMPMPlugin& operator=(EMMPMPlugin&&) = delete;      // Move Assignment Not Implemented
 };
 

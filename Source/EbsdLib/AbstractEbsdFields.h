@@ -58,7 +58,11 @@ class EbsdLib_EXPORT AbstractEbsdFields
 
     virtual QVector<QString> getFieldNames() = 0;
 
-
+  public:
+    AbstractEbsdFields(const AbstractEbsdFields&) = delete;            // Copy Constructor Not Implemented
+    AbstractEbsdFields(AbstractEbsdFields&&) = delete;                 // Move Constructor Not Implemented
+    AbstractEbsdFields& operator=(const AbstractEbsdFields&) = delete; // Copy Assignment Not Implemented
+    AbstractEbsdFields& operator=(AbstractEbsdFields&&) = delete;      // Move Assignment Not Implemented
 };
 
 

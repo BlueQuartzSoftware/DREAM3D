@@ -55,8 +55,10 @@ public:
 protected:
   OrientationUtilityFilterParameter();
 
-private:
+public:
   OrientationUtilityFilterParameter(const OrientationUtilityFilterParameter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const OrientationUtilityFilterParameter&) = delete;                    // Move assignment Not Implemented
+  OrientationUtilityFilterParameter(OrientationUtilityFilterParameter&&) = delete;      // Move Constructor Not Implemented
+  OrientationUtilityFilterParameter& operator=(const OrientationUtilityFilterParameter&) = delete; // Copy Assignment Not Implemented
+  OrientationUtilityFilterParameter& operator=(OrientationUtilityFilterParameter&&) = delete;      // Move Assignment Not Implemented
 };
 

@@ -135,6 +135,7 @@ public:
   /* Rule of 5: All special member functions should be defined if any are defined.
    * https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#c21-if-you-define-or-delete-any-default-operation-define-or-delete-them-all
    */
+public:
   GenerateOrientationMatrixTranspose(const GenerateOrientationMatrixTranspose&) = delete;            // Copy Constructor Not Implemented
   GenerateOrientationMatrixTranspose& operator=(const GenerateOrientationMatrixTranspose&) = delete; // Copy Assignment Not Implemented
   GenerateOrientationMatrixTranspose(GenerateOrientationMatrixTranspose&&) = delete;                 // Move Constructor Not Implemented

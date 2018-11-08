@@ -221,9 +221,11 @@ class OrientationLib_EXPORT LaueOps
     void _calcDetermineHomochoricValues(uint64_t seed, float init[3], float step[3], int32_t phi[3], int choose, float& r1, float& r2, float& r3);
     int _calcODFBin(float dim[3], float bins[3], float step[3], FOrientArrayType homochoric);
 
-  private:
+  public:
     LaueOps(const LaueOps&) = delete;        // Copy Constructor Not Implemented
-    void operator=(const LaueOps&) = delete; // Move assignment Not Implemented
+    LaueOps(LaueOps&&) = delete;             // Move Constructor Not Implemented
+    LaueOps& operator=(const LaueOps&) = delete; // Copy Assignment Not Implemented
+    LaueOps& operator=(LaueOps&&) = delete;      // Move Assignment Not Implemented
 };
 
 

@@ -155,7 +155,10 @@ private:
 
   QString m_OpenDialogLastFilePath; // Must be last in the list
 
+public:
   StatsGenODFWidget(const StatsGenODFWidget&) = delete; // Copy Constructor Not Implemented
-  void operator=(const StatsGenODFWidget&) = delete;    // Move assignment Not Implemented
+  StatsGenODFWidget(StatsGenODFWidget&&) = delete;      // Move Constructor Not Implemented
+  StatsGenODFWidget& operator=(const StatsGenODFWidget&) = delete; // Copy Assignment Not Implemented
+  StatsGenODFWidget& operator=(StatsGenODFWidget&&) = delete;      // Move Assignment Not Implemented
 };
 

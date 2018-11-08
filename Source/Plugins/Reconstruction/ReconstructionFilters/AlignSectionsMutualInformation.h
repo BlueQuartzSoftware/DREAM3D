@@ -184,7 +184,10 @@ private:
   Int32ArrayType::Pointer m_MIFeaturesPtr;
   uint64_t m_RandomSeed;
 
+public:
   AlignSectionsMutualInformation(const AlignSectionsMutualInformation&) = delete; // Copy Constructor Not Implemented
-  void operator=(const AlignSectionsMutualInformation&);                          // Move assignment Not Implemented
+  AlignSectionsMutualInformation(AlignSectionsMutualInformation&&) = delete;      // Move Constructor Not Implemented
+  AlignSectionsMutualInformation& operator=(const AlignSectionsMutualInformation&) = delete; // Copy Assignment Not Implemented
+  AlignSectionsMutualInformation& operator=(AlignSectionsMutualInformation&&) = delete;      // Move Assignment Not Implemented
 };
 

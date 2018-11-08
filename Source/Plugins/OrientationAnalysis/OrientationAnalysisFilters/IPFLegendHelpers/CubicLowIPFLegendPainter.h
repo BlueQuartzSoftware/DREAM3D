@@ -51,8 +51,10 @@ public:
 protected:
   QImage overlayText(int pixelWidth, int pixelHeight, QImage image, LaueOps* ops);
 
-private:
+public:
   CubicLowIPFLegendPainter(const CubicLowIPFLegendPainter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const CubicLowIPFLegendPainter&);                    // Move assignment Not Implemented
+  CubicLowIPFLegendPainter(CubicLowIPFLegendPainter&&) = delete;      // Move Constructor Not Implemented
+  CubicLowIPFLegendPainter& operator=(const CubicLowIPFLegendPainter&) = delete; // Copy Assignment Not Implemented
+  CubicLowIPFLegendPainter& operator=(CubicLowIPFLegendPainter&&) = delete;      // Move Assignment Not Implemented
 };
 

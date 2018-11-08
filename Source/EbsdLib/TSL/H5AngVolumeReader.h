@@ -61,8 +61,7 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
     EBSD_SHARED_POINTERS(H5AngVolumeReader)
     EBSD_STATIC_NEW_SUPERCLASS(H5EbsdVolumeReader, H5AngVolumeReader)
 
-    virtual ~H5AngVolumeReader();
-
+    ~H5AngVolumeReader() override;
 
     EBSD_POINTER_PROPERTY(Phi1, Phi1, float)
     EBSD_POINTER_PROPERTY(Phi, Phi, float)
@@ -121,8 +120,11 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
   private:
     QVector<AngPhase::Pointer> m_Phases;
 
-    H5AngVolumeReader(const H5AngVolumeReader&);    // Copy Constructor Not Implemented
-    void operator=(const H5AngVolumeReader&);       // Move assignment Not Implemented
+  public:
+    H5AngVolumeReader(const H5AngVolumeReader&) = delete;            // Copy Constructor Not Implemented
+    H5AngVolumeReader(H5AngVolumeReader&&) = delete;                 // Move Constructor Not Implemented
+    H5AngVolumeReader& operator=(const H5AngVolumeReader&) = delete; // Copy Assignment Not Implemented
+    H5AngVolumeReader& operator=(H5AngVolumeReader&&) = delete;      // Move Assignment Not Implemented
 
     /**
      * @brief Allocats a contiguous chunk of memory to store values from the .ang file

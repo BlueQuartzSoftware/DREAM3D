@@ -232,7 +232,9 @@ private:
 
   double m_ScaleFactor;
 
-  FindShapes(const FindShapes&);     // Copy Constructor Not Implemented
+public:
+  FindShapes(const FindShapes&) = delete;            // Copy Constructor Not Implemented
+  FindShapes(FindShapes&&) = delete;                 // Move Constructor Not Implemented
   FindShapes& operator=(const FindShapes&) = delete; // Copy Assignment Not Implemented
   FindShapes& operator=(FindShapes&&) = delete;      // Move Assignment Not Implemented
 };

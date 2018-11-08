@@ -186,7 +186,10 @@ class IO_EXPORT IOPlugin : public QObject, public ISIMPLibPlugin
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
+  public:
     IOPlugin(const IOPlugin&) = delete;       // Copy Constructor Not Implemented
-    void operator=(const IOPlugin&) = delete; // Move assignment Not Implemented
+    IOPlugin(IOPlugin&&) = delete;            // Move Constructor Not Implemented
+    IOPlugin& operator=(const IOPlugin&) = delete; // Copy Assignment Not Implemented
+    IOPlugin& operator=(IOPlugin&&) = delete;      // Move Assignment Not Implemented
 };
 

@@ -93,8 +93,11 @@ class ReadEdaxH5DataWidget : public FilterParameterWidget, private Ui::ReadEdaxH
 
     void sortList(DREAM3DListWidget* listWidget, Qt::SortOrder order);
 
+  public:
     ReadEdaxH5DataWidget(const ReadEdaxH5DataWidget&) = delete; // Copy Constructor Not Implemented
-    void operator=(const ReadEdaxH5DataWidget&) = delete;       // Move assignment Not Implemented
+    ReadEdaxH5DataWidget(ReadEdaxH5DataWidget&&) = delete;      // Move Constructor Not Implemented
+    ReadEdaxH5DataWidget& operator=(const ReadEdaxH5DataWidget&) = delete; // Copy Assignment Not Implemented
+    ReadEdaxH5DataWidget& operator=(ReadEdaxH5DataWidget&&) = delete;      // Move Assignment Not Implemented
 };
 
 

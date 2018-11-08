@@ -63,9 +63,11 @@ class BetaOps : public DistributionAnalysisOps
   protected:
     BetaOps();
 
-  private:
+  public:
     BetaOps(const BetaOps&) = delete;        // Copy Constructor Not Implemented
-    void operator=(const BetaOps&) = delete; // Move assignment Not Implemented
+    BetaOps(BetaOps&&) = delete;             // Move Constructor Not Implemented
+    BetaOps& operator=(const BetaOps&) = delete; // Copy Assignment Not Implemented
+    BetaOps& operator=(BetaOps&&) = delete;      // Move Assignment Not Implemented
 };
 
 

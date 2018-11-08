@@ -180,9 +180,11 @@ class OrientationLib_EXPORT TriclinicOps : public LaueOps
     float _calcMisoQuat(const QuatF quatsym[24], int numsym,
                         QuatF& q1, QuatF& q2,
                         float& n1, float& n2, float& n3);
-  private:
+  public:
     TriclinicOps(const TriclinicOps&) = delete;   // Copy Constructor Not Implemented
-    void operator=(const TriclinicOps&) = delete; // Move assignment Not Implemented
+    TriclinicOps(TriclinicOps&&) = delete;        // Move Constructor Not Implemented
+    TriclinicOps& operator=(const TriclinicOps&) = delete; // Copy Assignment Not Implemented
+    TriclinicOps& operator=(TriclinicOps&&) = delete;      // Move Assignment Not Implemented
 };
 
 

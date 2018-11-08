@@ -168,7 +168,6 @@ protected:
    */
   void initialize();
 
-private:
 public:
   AppendImageGeometryZSlice(const AppendImageGeometryZSlice&) = delete; // Copy Constructor Not Implemented
   AppendImageGeometryZSlice(AppendImageGeometryZSlice&&) = delete;      // Move Constructor Not Implemented

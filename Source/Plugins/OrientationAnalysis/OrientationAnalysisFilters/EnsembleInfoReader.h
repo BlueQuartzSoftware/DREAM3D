@@ -178,7 +178,10 @@ private:
   PhaseType::Type m_ptype;
   uint32_t m_crystruct;
 
-  EnsembleInfoReader(const EnsembleInfoReader&); // Not Implemented
-  void operator=(const EnsembleInfoReader&);     // Not Implemented
+public:
+  EnsembleInfoReader(const EnsembleInfoReader&) = delete;            // Copy Constructor Not Implemented
+  EnsembleInfoReader(EnsembleInfoReader&&) = delete;                 // Move Constructor Not Implemented
+  EnsembleInfoReader& operator=(const EnsembleInfoReader&) = delete; // Copy Assignment Not Implemented
+  EnsembleInfoReader& operator=(EnsembleInfoReader&&) = delete;      // Move Assignment Not Implemented
 };
 

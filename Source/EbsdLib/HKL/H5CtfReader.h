@@ -78,7 +78,7 @@ class EbsdLib_EXPORT H5CtfReader : public CtfReader
     EBSD_SHARED_POINTERS(H5CtfReader)
     EBSD_STATIC_NEW_MACRO(H5CtfReader)
     EBSD_TYPE_MACRO_SUPER(H5CtfReader, CtfReader)
-    virtual ~H5CtfReader();
+    ~H5CtfReader() override;
 
     /**
      * @brief The HDF5 path to find the EBSD data
@@ -89,7 +89,7 @@ class EbsdLib_EXPORT H5CtfReader : public CtfReader
      * @brief Reads the file
      * @return error condition
      */
-    virtual int readFile();
+    int readFile() override;
 
     /**
      * @brief Reads the header section of the file
@@ -102,7 +102,7 @@ class EbsdLib_EXPORT H5CtfReader : public CtfReader
     * @brief Reads ONLY the header portion of the HKL .ctf file
     * @return 1 on success
     */
-    virtual int readHeaderOnly();
+    int readHeaderOnly() override;
 
     /**
      * @brief Returns a vector of AngPhase objects corresponding to the phases
@@ -114,14 +114,14 @@ class EbsdLib_EXPORT H5CtfReader : public CtfReader
      * @brief Sets the names of the arrays to read out of the file
      * @param names
      */
-    virtual void setArraysToRead(QSet<QString> names);
+    void setArraysToRead(QSet<QString> names);
 
     /**
      * @brief Over rides the setArraysToReads to tell the reader to load ALL the data from the HDF5 file. If the
      * ArrayNames to read is empty and this is true then all arrays will be read.
      * @param b
      */
-    virtual void readAllArrays(bool b);
+    void readAllArrays(bool b);
 
   protected:
     H5CtfReader();
@@ -139,8 +139,11 @@ class EbsdLib_EXPORT H5CtfReader : public CtfReader
     QSet<QString> m_ArrayNames;
     bool                  m_ReadAllArrays;
 
+  public:
     H5CtfReader(const H5CtfReader&) = delete;    // Copy Constructor Not Implemented
-    void operator=(const H5CtfReader&) = delete; // Move assignment Not Implemented
+    H5CtfReader(H5CtfReader&&) = delete;         // Move Constructor Not Implemented
+    H5CtfReader& operator=(const H5CtfReader&) = delete; // Copy Assignment Not Implemented
+    H5CtfReader& operator=(H5CtfReader&&) = delete;      // Move Assignment Not Implemented
 };
 
 

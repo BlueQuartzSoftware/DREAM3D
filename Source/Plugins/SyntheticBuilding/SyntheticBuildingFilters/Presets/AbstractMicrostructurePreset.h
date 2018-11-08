@@ -145,8 +145,10 @@ public:
 protected:
   AbstractMicrostructurePreset();
 
-private:
+public:
   AbstractMicrostructurePreset(const AbstractMicrostructurePreset&) = delete; // Copy Constructor Not Implemented
-  void operator=(const AbstractMicrostructurePreset&) = delete;               // Move assignment Not Implemented
+  AbstractMicrostructurePreset(AbstractMicrostructurePreset&&) = delete;      // Move Constructor Not Implemented
+  AbstractMicrostructurePreset& operator=(const AbstractMicrostructurePreset&) = delete; // Copy Assignment Not Implemented
+  AbstractMicrostructurePreset& operator=(AbstractMicrostructurePreset&&) = delete;      // Move Assignment Not Implemented
 };
 

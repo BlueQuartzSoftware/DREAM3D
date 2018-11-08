@@ -208,7 +208,10 @@ class EbsdToH5EbsdWidget : public FilterParameterWidget, private Ui::EbsdToH5Ebs
     QString  m_CurrentText = "";
     bool     m_DidCausePreflight = false;
 
+  public:
     EbsdToH5EbsdWidget(const EbsdToH5EbsdWidget&) = delete; // Copy Constructor Not Implemented
-    void operator=(const EbsdToH5EbsdWidget&) = delete;     // Move assignment Not Implemented
+    EbsdToH5EbsdWidget(EbsdToH5EbsdWidget&&) = delete;      // Move Constructor Not Implemented
+    EbsdToH5EbsdWidget& operator=(const EbsdToH5EbsdWidget&) = delete; // Copy Assignment Not Implemented
+    EbsdToH5EbsdWidget& operator=(EbsdToH5EbsdWidget&&) = delete;      // Move Assignment Not Implemented
 };
 

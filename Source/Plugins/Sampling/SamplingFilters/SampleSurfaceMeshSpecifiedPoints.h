@@ -166,7 +166,10 @@ private:
    */
   void updateVertexInstancePointers();
 
+public:
   SampleSurfaceMeshSpecifiedPoints(const SampleSurfaceMeshSpecifiedPoints&) = delete; // Copy Constructor Not Implemented
-  void operator=(const SampleSurfaceMeshSpecifiedPoints&);                            // Move assignment Not Implemented
+  SampleSurfaceMeshSpecifiedPoints(SampleSurfaceMeshSpecifiedPoints&&) = delete;      // Move Constructor Not Implemented
+  SampleSurfaceMeshSpecifiedPoints& operator=(const SampleSurfaceMeshSpecifiedPoints&) = delete; // Copy Assignment Not Implemented
+  SampleSurfaceMeshSpecifiedPoints& operator=(SampleSurfaceMeshSpecifiedPoints&&) = delete;      // Move Assignment Not Implemented
 };
 

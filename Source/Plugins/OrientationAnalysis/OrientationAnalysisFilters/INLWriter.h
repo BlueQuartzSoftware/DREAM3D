@@ -174,7 +174,10 @@ private:
 
   StringDataArray::WeakPointer m_MaterialNamePtr;
 
-  INLWriter(const INLWriter&);      // Copy Constructor Not Implemented
-  void operator=(const INLWriter&) = delete; // Move assignment Not Implemented
+public:
+  INLWriter(const INLWriter&) = delete;            // Copy Constructor Not Implemented
+  INLWriter(INLWriter&&) = delete;                 // Move Constructor Not Implemented
+  INLWriter& operator=(const INLWriter&) = delete; // Copy Assignment Not Implemented
+  INLWriter& operator=(INLWriter&&) = delete;      // Move Assignment Not Implemented
 };
 

@@ -236,7 +236,9 @@ private:
   DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
   DEFINE_DATAARRAY_VARIABLE(float, LatticeConstants)
 
-  ReadAngData(const ReadAngData&);    // Copy Constructor Not Implemented
+public:
+  ReadAngData(const ReadAngData&) = delete;            // Copy Constructor Not Implemented
+  ReadAngData(ReadAngData&&) = delete;                 // Move Constructor Not Implemented
   ReadAngData& operator=(const ReadAngData&) = delete; // Copy Assignment Not Implemented
   ReadAngData& operator=(ReadAngData&&) = delete;      // Move Assignment Not Implemented
 };

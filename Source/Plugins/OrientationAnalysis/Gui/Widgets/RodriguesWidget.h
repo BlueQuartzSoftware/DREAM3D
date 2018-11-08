@@ -57,7 +57,10 @@ private:
 
   QVector<double> getValues();
 
+public:
   RodriguesWidget(const RodriguesWidget&) = delete; // Copy Constructor Not Implemented
-  void operator=(const RodriguesWidget&) = delete;  // Move assignment Not Implemented
+  RodriguesWidget(RodriguesWidget&&) = delete;      // Move Constructor Not Implemented
+  RodriguesWidget& operator=(const RodriguesWidget&) = delete; // Copy Assignment Not Implemented
+  RodriguesWidget& operator=(RodriguesWidget&&) = delete;      // Move Assignment Not Implemented
 };
 

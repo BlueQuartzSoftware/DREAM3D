@@ -149,7 +149,10 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-  DxWriter(const DxWriter&);       // Copy Constructor Not Implemented
-  void operator=(const DxWriter&) = delete; // Move assignment Not Implemented
+public:
+  DxWriter(const DxWriter&) = delete;            // Copy Constructor Not Implemented
+  DxWriter(DxWriter&&) = delete;                 // Move Constructor Not Implemented
+  DxWriter& operator=(const DxWriter&) = delete; // Copy Assignment Not Implemented
+  DxWriter& operator=(DxWriter&&) = delete;      // Move Assignment Not Implemented
 };
 

@@ -186,9 +186,11 @@ class OrientationLib_EXPORT HexagonalOps : public LaueOps
                         QuatF& q1, QuatF& q2,
                         float& n1, float& n2, float& n3);
 
-  private:
+  public:
     HexagonalOps(const HexagonalOps&) = delete;   // Copy Constructor Not Implemented
-    void operator=(const HexagonalOps&) = delete; // Move assignment Not Implemented
+    HexagonalOps(HexagonalOps&&) = delete;        // Move Constructor Not Implemented
+    HexagonalOps& operator=(const HexagonalOps&) = delete; // Copy Assignment Not Implemented
+    HexagonalOps& operator=(HexagonalOps&&) = delete;      // Move Assignment Not Implemented
 };
 
 

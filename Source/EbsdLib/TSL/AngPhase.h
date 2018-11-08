@@ -196,9 +196,11 @@ class EbsdLib_EXPORT AngPhase
   protected:
     AngPhase();
 
-  private:
+  public:
     AngPhase(const AngPhase&) = delete;       // Copy Constructor Not Implemented
-    void operator=(const AngPhase&) = delete; // Move assignment Not Implemented
+    AngPhase(AngPhase&&) = delete;            // Move Constructor Not Implemented
+    AngPhase& operator=(const AngPhase&) = delete; // Copy Assignment Not Implemented
+    AngPhase& operator=(AngPhase&&) = delete;      // Move Assignment Not Implemented
 };
 
 

@@ -205,9 +205,11 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
 
     QString m_Manufacturer;
 
-    H5EbsdVolumeInfo(const H5EbsdVolumeInfo&); //Not Implemented
-    void operator=(const H5EbsdVolumeInfo&); //Not Implemented
-
+  public:
+    H5EbsdVolumeInfo(const H5EbsdVolumeInfo&) = delete;            // Copy Constructor Not Implemented
+    H5EbsdVolumeInfo(H5EbsdVolumeInfo&&) = delete;                 // Move Constructor Not Implemented
+    H5EbsdVolumeInfo& operator=(const H5EbsdVolumeInfo&) = delete; // Copy Assignment Not Implemented
+    H5EbsdVolumeInfo& operator=(H5EbsdVolumeInfo&&) = delete;      // Move Assignment Not Implemented
 };
 
 
