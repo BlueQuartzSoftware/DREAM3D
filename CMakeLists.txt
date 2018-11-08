@@ -1,11 +1,15 @@
 
-if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
-# CMake 3.1 introduces if() policies on dereferencing variables in quotes
-cmake_policy(SET CMP0054 NEW)
+if(${CMAKE_MAJOR_VERSION} VERSION_GREATER_EQUAL "3.1.0")
+  cmake_policy(SET CMP0002 NEW)
+  cmake_policy(SET CMP0054 NEW)
+endif()
 
-cmake_policy(SET CMP0002 NEW)
+if(${CMAKE_MAJOR_VERSION} VERSION_GREATER_EQUAL "3.12.0")
+  cmake_policy(SET CMP0074 NEW)
+endif()
 
-# cmake_policy(SET CMP0074 NEW)
+if(${CMAKE_MAJOR_VERSION} VERSION_GREATER_EQUAL "3.13.0")
+  cmake_policy(SET CMP0079 NEW)
 endif()
 
 cmake_minimum_required(VERSION 3.10.0)

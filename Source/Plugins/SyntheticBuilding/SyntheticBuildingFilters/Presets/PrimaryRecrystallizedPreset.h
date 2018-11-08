@@ -78,9 +78,11 @@ public:
 protected:
   PrimaryRecrystallizedPreset();
 
-private:
+public:
   PrimaryRecrystallizedPreset(const PrimaryRecrystallizedPreset&) = delete; // Copy Constructor Not Implemented
-  void operator=(const PrimaryRecrystallizedPreset&) = delete;              // Move assignment Not Implemented
+  PrimaryRecrystallizedPreset(PrimaryRecrystallizedPreset&&) = delete;      // Move Constructor Not Implemented
+  PrimaryRecrystallizedPreset& operator=(const PrimaryRecrystallizedPreset&) = delete; // Copy Assignment Not Implemented
+  PrimaryRecrystallizedPreset& operator=(PrimaryRecrystallizedPreset&&) = delete;      // Move Assignment Not Implemented
 };
 
 DECLARE_FACTORY_CLASS(PrimaryRecrystallizedPresetFactory, PrimaryRecrystallizedPreset, "Recrystallized")

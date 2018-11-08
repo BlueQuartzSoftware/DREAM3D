@@ -167,7 +167,6 @@ protected:
    */
   void initialize();
 
-private:
 public:
   RegularizeZSpacing(const RegularizeZSpacing&) = delete; // Copy Constructor Not Implemented
   RegularizeZSpacing(RegularizeZSpacing&&) = delete;      // Move Constructor Not Implemented

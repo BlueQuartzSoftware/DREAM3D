@@ -189,8 +189,10 @@ class EMMPMLib_EXPORT EMMPM_Data
 
   protected:
     EMMPM_Data();
-  private:
+  public:
     EMMPM_Data(const EMMPM_Data&) = delete;     // Copy Constructor Not Implemented
-    void operator=(const EMMPM_Data&) = delete; // Move assignment Not Implemented
+    EMMPM_Data(EMMPM_Data&&) = delete;          // Move Constructor Not Implemented
+    EMMPM_Data& operator=(const EMMPM_Data&) = delete; // Copy Assignment Not Implemented
+    EMMPM_Data& operator=(EMMPM_Data&&) = delete;      // Move Assignment Not Implemented
 };
 

@@ -174,7 +174,6 @@ protected:
    */
   void initialize();
 
-private:
 public:
   LammpsFileWriter(const LammpsFileWriter&) = delete; // Copy Constructor Not Implemented
   LammpsFileWriter(LammpsFileWriter&&) = delete;      // Move Constructor Not Implemented

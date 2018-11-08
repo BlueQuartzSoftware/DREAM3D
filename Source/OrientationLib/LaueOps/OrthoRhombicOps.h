@@ -185,9 +185,11 @@ class OrientationLib_EXPORT OrthoRhombicOps : public LaueOps
                         QuatF& q1, QuatF& q2,
                         float& n1, float& n2, float& n3);
 
-  private:
+  public:
     OrthoRhombicOps(const OrthoRhombicOps&) = delete; // Copy Constructor Not Implemented
-    void operator=(const OrthoRhombicOps&) = delete;  // Move assignment Not Implemented
+    OrthoRhombicOps(OrthoRhombicOps&&) = delete;      // Move Constructor Not Implemented
+    OrthoRhombicOps& operator=(const OrthoRhombicOps&) = delete; // Copy Assignment Not Implemented
+    OrthoRhombicOps& operator=(OrthoRhombicOps&&) = delete;      // Move Assignment Not Implemented
 };
 
 

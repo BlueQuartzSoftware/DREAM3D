@@ -170,7 +170,7 @@ class SurfaceMeshing_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
     VerifyTriangleWinding(const VerifyTriangleWinding&) = delete; // Copy Constructor Not Implemented
     VerifyTriangleWinding(VerifyTriangleWinding&&) = delete;      // Move Constructor Not Implemented
     VerifyTriangleWinding& operator=(const VerifyTriangleWinding&) = delete; // Copy Assignment Not Implemented
-    VerifyTriangleWinding& operator=(VerifyTriangleWinding&&) = delete;      // Move Assignment
+    VerifyTriangleWinding& operator=(VerifyTriangleWinding&&) = delete;      // Move Assignment Not Implemented
 };
 
 

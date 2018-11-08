@@ -63,7 +63,10 @@ protected:
 private:
   QLineEdit* percentRecystallized;
 
+public:
   PrimaryRecrystallizedPresetDialog(const PrimaryRecrystallizedPresetDialog&) = delete; // Copy Constructor Not Implemented
-  void operator=(const PrimaryRecrystallizedPresetDialog&) = delete;                    // Move assignment Not Implemented
+  PrimaryRecrystallizedPresetDialog(PrimaryRecrystallizedPresetDialog&&) = delete;      // Move Constructor Not Implemented
+  PrimaryRecrystallizedPresetDialog& operator=(const PrimaryRecrystallizedPresetDialog&) = delete; // Copy Assignment Not Implemented
+  PrimaryRecrystallizedPresetDialog& operator=(PrimaryRecrystallizedPresetDialog&&) = delete;      // Move Assignment Not Implemented
 };
 

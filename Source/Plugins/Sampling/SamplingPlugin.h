@@ -156,8 +156,11 @@ class Sampling_EXPORT SamplingPlugin : public QObject, public ISIMPLibPlugin
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
+  public:
     SamplingPlugin(const SamplingPlugin&) = delete; // Copy Constructor Not Implemented
-    void operator=(const SamplingPlugin&) = delete; // Move assignment Not Implemented
+    SamplingPlugin(SamplingPlugin&&) = delete;      // Move Constructor Not Implemented
+    SamplingPlugin& operator=(const SamplingPlugin&) = delete; // Copy Assignment Not Implemented
+    SamplingPlugin& operator=(SamplingPlugin&&) = delete;      // Move Assignment Not Implemented
 };
 
 

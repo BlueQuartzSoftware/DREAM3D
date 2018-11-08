@@ -220,8 +220,10 @@ protected:
     m->addAttributeMatrix(attrMat->getName(), attrMat);
   }
 
-private:
-  CreateDataContainer(const CreateDataContainer&) = delete; // Copy Constructor Not Implemented
-  void operator=(const CreateDataContainer&);               // Move assignment Not Implemented
+public:
+  CreateDataContainer(const CreateDataContainer&) = delete;            // Copy Constructor Not Implemented
+  CreateDataContainer(CreateDataContainer&&) = delete;                 // Move Constructor Not Implemented
+  CreateDataContainer& operator=(const CreateDataContainer&) = delete; // Copy Assignment Not Implemented
+  CreateDataContainer& operator=(CreateDataContainer&&) = delete;      // Move Assignment Not Implemented
 };
 

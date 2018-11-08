@@ -156,7 +156,10 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
   DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
 
+public:
   LosAlamosFFTWriter(const LosAlamosFFTWriter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const LosAlamosFFTWriter&);              // Move assignment Not Implemented
+  LosAlamosFFTWriter(LosAlamosFFTWriter&&) = delete;      // Move Constructor Not Implemented
+  LosAlamosFFTWriter& operator=(const LosAlamosFFTWriter&) = delete; // Copy Assignment Not Implemented
+  LosAlamosFFTWriter& operator=(LosAlamosFFTWriter&&) = delete;      // Move Assignment Not Implemented
 };
 

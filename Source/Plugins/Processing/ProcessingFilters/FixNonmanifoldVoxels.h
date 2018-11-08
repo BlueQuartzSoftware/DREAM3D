@@ -133,5 +133,5 @@ public:
   FixNonmanifoldVoxels(const FixNonmanifoldVoxels&) = delete;            // Copy Constructor
   FixNonmanifoldVoxels(FixNonmanifoldVoxels&&) = delete;                 // Move Constructor Not Implemented
   FixNonmanifoldVoxels& operator=(const FixNonmanifoldVoxels&) = delete; // Copy Assignment Not Implemented
-  FixNonmanifoldVoxels& operator=(FixNonmanifoldVoxels&&) = delete;      // Move Assignment
+  FixNonmanifoldVoxels& operator=(FixNonmanifoldVoxels&&) = delete;      // Move Assignment Not Implemented
 };

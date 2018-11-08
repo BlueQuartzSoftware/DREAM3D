@@ -339,8 +339,10 @@ private:
 
   StringDataArray::WeakPointer m_MaterialNamesPtr;
 
-  ReadH5Ebsd(const ReadH5Ebsd&);     // Copy Constructor Not Implemented
+public:
+  ReadH5Ebsd(const ReadH5Ebsd&) = delete;            // Copy Constructor Not Implemented
+  ReadH5Ebsd(ReadH5Ebsd&&) = delete;                 // Move Constructor Not Implemented
   ReadH5Ebsd& operator=(const ReadH5Ebsd&) = delete; // Copy Assignment Not Implemented
-  ReadH5Ebsd& operator=(ReadH5Ebsd&&) = delete;      // Move Assignment
+  ReadH5Ebsd& operator=(ReadH5Ebsd&&) = delete;      // Move Assignment Not Implemented
 };
 

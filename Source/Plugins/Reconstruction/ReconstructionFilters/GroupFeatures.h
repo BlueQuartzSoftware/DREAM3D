@@ -211,8 +211,10 @@ private:
   NeighborList<int32_t>::WeakPointer m_ContiguousNeighborList;
   NeighborList<int32_t>::WeakPointer m_NonContiguousNeighborList;
 
-  GroupFeatures(const GroupFeatures&);  // Copy Constructor Not Implemented
+public:
+  GroupFeatures(const GroupFeatures&) = delete;  // Copy Constructor Not Implemented
+  GroupFeatures(GroupFeatures&&) = delete;       // Move Constructor Not Implemented
   GroupFeatures& operator=(const GroupFeatures&) = delete; // Copy Assignment Not Implemented
-  GroupFeatures& operator=(GroupFeatures&&) = delete;      // Move Assignment
+  GroupFeatures& operator=(GroupFeatures&&) = delete;      // Move Assignment Not Implemented
 };
 

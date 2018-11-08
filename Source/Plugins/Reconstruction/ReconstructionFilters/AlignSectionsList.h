@@ -147,8 +147,10 @@ protected:
    */
   virtual void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts);
 
-private:
+public:
   AlignSectionsList(const AlignSectionsList&) = delete; // Copy Constructor Not Implemented
-  void operator=(const AlignSectionsList&);             // Move assignment Not Implemented
+  AlignSectionsList(AlignSectionsList&&) = delete;      // Move Constructor Not Implemented
+  AlignSectionsList& operator=(const AlignSectionsList&) = delete; // Copy Assignment Not Implemented
+  AlignSectionsList& operator=(AlignSectionsList&&) = delete;      // Move Assignment Not Implemented
 };
 

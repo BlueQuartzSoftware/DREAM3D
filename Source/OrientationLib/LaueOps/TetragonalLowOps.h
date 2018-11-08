@@ -181,9 +181,11 @@ class OrientationLib_EXPORT TetragonalLowOps : public LaueOps
                         QuatF& q1, QuatF& q2,
                         float& n1, float& n2, float& n3);
 
-  private:
+  public:
     TetragonalLowOps(const TetragonalLowOps&) = delete; // Copy Constructor Not Implemented
-    void operator=(const TetragonalLowOps&) = delete;   // Move assignment Not Implemented
+    TetragonalLowOps(TetragonalLowOps&&) = delete;      // Move Constructor Not Implemented
+    TetragonalLowOps& operator=(const TetragonalLowOps&) = delete; // Copy Assignment Not Implemented
+    TetragonalLowOps& operator=(TetragonalLowOps&&) = delete;      // Move Assignment Not Implemented
 };
 
 

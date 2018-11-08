@@ -175,8 +175,11 @@ class ReadH5EbsdWidget : public FilterParameterWidget, private Ui::ReadH5EbsdWid
     bool m_NewFileLoaded;
     bool m_Version4Warning;
 
+  public:
     ReadH5EbsdWidget(const ReadH5EbsdWidget&) = delete; // Copy Constructor Not Implemented
-    void operator=(const ReadH5EbsdWidget&) = delete;   // Move assignment Not Implemented
+    ReadH5EbsdWidget(ReadH5EbsdWidget&&) = delete;      // Move Constructor Not Implemented
+    ReadH5EbsdWidget& operator=(const ReadH5EbsdWidget&) = delete; // Copy Assignment Not Implemented
+    ReadH5EbsdWidget& operator=(ReadH5EbsdWidget&&) = delete;      // Move Assignment Not Implemented
 };
 
 

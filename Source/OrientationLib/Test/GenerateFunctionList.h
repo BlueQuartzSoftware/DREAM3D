@@ -109,7 +109,10 @@ class GenerateFunctionList
     std::vector<EntryType> m_Combinations;
     std::vector<EntryType> m_Permutations;
 
+  public:
     GenerateFunctionList(const GenerateFunctionList&) = delete; // Copy Constructor Not Implemented
-    void operator=(const GenerateFunctionList&) = delete;       // Move assignment Not Implemented
+    GenerateFunctionList(GenerateFunctionList&&) = delete;      // Move Constructor Not Implemented
+    GenerateFunctionList& operator=(const GenerateFunctionList&) = delete; // Copy Assignment Not Implemented
+    GenerateFunctionList& operator=(GenerateFunctionList&&) = delete;      // Move Assignment Not Implemented
 };
 

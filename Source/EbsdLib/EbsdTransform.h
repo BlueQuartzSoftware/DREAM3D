@@ -77,13 +77,11 @@ class EbsdLib_EXPORT EbsdTransform
     static Ebsd::EbsdToSampleCoordinateMapping IdentifyStandardTransformation(AxisAngleInput_t sampleTransformation, AxisAngleInput_t eulerTransformation);
 
 
-  protected:
-
-
-
-  private:
+  public:
     EbsdTransform(const EbsdTransform&) = delete;  // Copy Constructor Not Implemented
-    void operator=(const EbsdTransform&) = delete; // Move assignment Not Implemented
+    EbsdTransform(EbsdTransform&&) = delete;       // Move Constructor Not Implemented
+    EbsdTransform& operator=(const EbsdTransform&) = delete; // Copy Assignment Not Implemented
+    EbsdTransform& operator=(EbsdTransform&&) = delete;      // Move Assignment Not Implemented
 };
 
 

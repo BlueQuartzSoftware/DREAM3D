@@ -168,8 +168,11 @@ class InitializeSyntheticVolumeWidget : public FilterParameterWidget, private Ui
     DataArraySelectionFilterParameter::Pointer     m_PhaseTypesPath;
     DataArraySelectionFilterParameter::Pointer     m_CrystalStructuresPath;
 
+  public:
     InitializeSyntheticVolumeWidget(const InitializeSyntheticVolumeWidget&) = delete; // Copy Constructor Not Implemented
-    void operator=(const InitializeSyntheticVolumeWidget&) = delete;                  // Move assignment Not Implemented
+    InitializeSyntheticVolumeWidget(InitializeSyntheticVolumeWidget&&) = delete;      // Move Constructor Not Implemented
+    InitializeSyntheticVolumeWidget& operator=(const InitializeSyntheticVolumeWidget&) = delete; // Copy Assignment Not Implemented
+    InitializeSyntheticVolumeWidget& operator=(InitializeSyntheticVolumeWidget&&) = delete;      // Move Assignment Not Implemented
 };
 
 

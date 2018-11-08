@@ -172,7 +172,6 @@ protected:
    */
   virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum);
 
-private:
 public:
   SegmentFeatures(const SegmentFeatures&) = delete; // Copy Constructor Not Implemented
   SegmentFeatures(SegmentFeatures&&) = delete;      // Move Constructor Not Implemented

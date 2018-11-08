@@ -182,9 +182,11 @@ class OrientationLib_EXPORT TrigonalOps : public LaueOps
                         QuatF& q1, QuatF& q2,
                         float& n1, float& n2, float& n3);
 
-  private:
+  public:
     TrigonalOps(const TrigonalOps&) = delete;    // Copy Constructor Not Implemented
-    void operator=(const TrigonalOps&) = delete; // Move assignment Not Implemented
+    TrigonalOps(TrigonalOps&&) = delete;         // Move Constructor Not Implemented
+    TrigonalOps& operator=(const TrigonalOps&) = delete; // Copy Assignment Not Implemented
+    TrigonalOps& operator=(TrigonalOps&&) = delete;      // Move Assignment Not Implemented
 };
 
 

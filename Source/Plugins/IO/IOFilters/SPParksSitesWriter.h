@@ -146,7 +146,10 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
+public:
   SPParksSitesWriter(const SPParksSitesWriter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const SPParksSitesWriter&);              // Move assignment Not Implemented
+  SPParksSitesWriter(SPParksSitesWriter&&) = delete;      // Move Constructor Not Implemented
+  SPParksSitesWriter& operator=(const SPParksSitesWriter&) = delete; // Copy Assignment Not Implemented
+  SPParksSitesWriter& operator=(SPParksSitesWriter&&) = delete;      // Move Assignment Not Implemented
 };
 

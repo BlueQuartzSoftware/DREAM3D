@@ -158,8 +158,10 @@ protected:
   {
   }
 
-private:
-  AbstractMicrostructurePresetFactory(const AbstractMicrostructurePresetFactory&); // Copy Constructor Not Implemented
-  void operator=(const AbstractMicrostructurePresetFactory&);                      // Move assignment Not Implemented
+public:
+  AbstractMicrostructurePresetFactory(const AbstractMicrostructurePresetFactory&) = delete;            // Copy Constructor Not Implemented
+  AbstractMicrostructurePresetFactory(AbstractMicrostructurePresetFactory&&) = delete;                 // Move Constructor Not Implemented
+  AbstractMicrostructurePresetFactory& operator=(const AbstractMicrostructurePresetFactory&) = delete; // Copy Assignment Not Implemented
+  AbstractMicrostructurePresetFactory& operator=(AbstractMicrostructurePresetFactory&&) = delete;      // Move Assignment Not Implemented
 };
 

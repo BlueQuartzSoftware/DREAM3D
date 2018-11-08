@@ -86,7 +86,10 @@ private:
 
   QList<OrientationWidget*> m_OrientationWidgets;
 
+public:
   OrientationUtilityWidget(const OrientationUtilityWidget&) = delete; // Copy Constructor Not Implemented
-  void operator=(const OrientationUtilityWidget&) = delete;           // Move assignment Not Implemented
+  OrientationUtilityWidget(OrientationUtilityWidget&&) = delete;      // Move Constructor Not Implemented
+  OrientationUtilityWidget& operator=(const OrientationUtilityWidget&) = delete; // Copy Assignment Not Implemented
+  OrientationUtilityWidget& operator=(OrientationUtilityWidget&&) = delete;      // Move Assignment Not Implemented
 };
 

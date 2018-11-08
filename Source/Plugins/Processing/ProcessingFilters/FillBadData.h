@@ -178,8 +178,10 @@ private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
   DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
 
-  FillBadData(const FillBadData&);    // Copy Constructor Not Implemented
+public:
+  FillBadData(const FillBadData&) = delete;            // Copy Constructor Not Implemented
+  FillBadData(FillBadData&&) = delete;                 // Move Constructor Not Implemented
   FillBadData& operator=(const FillBadData&) = delete; // Copy Assignment Not Implemented
-  FillBadData& operator=(FillBadData&&) = delete;      // Move Assignment
+  FillBadData& operator=(FillBadData&&) = delete;      // Move Assignment Not Implemented
 };
 

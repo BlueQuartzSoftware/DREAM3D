@@ -88,8 +88,10 @@ class EMMPMLib_EXPORT EMCalculation : public Observable
   protected:
     EMCalculation();
 
-  private:
+  public:
     EMCalculation(const EMCalculation&) = delete;  // Copy Constructor Not Implemented
-    void operator=(const EMCalculation&) = delete; // Move assignment Not Implemented
+    EMCalculation(EMCalculation&&) = delete;       // Move Constructor Not Implemented
+    EMCalculation& operator=(const EMCalculation&) = delete; // Copy Assignment Not Implemented
+    EMCalculation& operator=(EMCalculation&&) = delete;      // Move Assignment Not Implemented
 };
 

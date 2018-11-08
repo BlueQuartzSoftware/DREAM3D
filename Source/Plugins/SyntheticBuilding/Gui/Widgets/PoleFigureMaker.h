@@ -136,7 +136,10 @@ private:
   QVector<qint32> m_KernelWeights;
   bool m_KernelWeightsInited;
 
+public:
   PoleFigureMaker(const PoleFigureMaker&) = delete; // Copy Constructor Not Implemented
-  void operator=(const PoleFigureMaker&) = delete;  // Move assignment Not Implemented
+  PoleFigureMaker(PoleFigureMaker&&) = delete;      // Move Constructor Not Implemented
+  PoleFigureMaker& operator=(const PoleFigureMaker&) = delete; // Copy Assignment Not Implemented
+  PoleFigureMaker& operator=(PoleFigureMaker&&) = delete;      // Move Assignment Not Implemented
 };
 

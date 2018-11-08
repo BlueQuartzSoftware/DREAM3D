@@ -202,9 +202,11 @@ class OrientationLib_EXPORT CubicOps : public LaueOps
      */
     std::vector< std::pair<double, double> > rodri2pair(std::vector<double>, std::vector<double>, std::vector<double>);
 
-  private:
+  public:
     CubicOps(const CubicOps&) = delete;       // Copy Constructor Not Implemented
-    void operator=(const CubicOps&) = delete; // Move assignment Not Implemented
+    CubicOps(CubicOps&&) = delete;            // Move Constructor Not Implemented
+    CubicOps& operator=(const CubicOps&) = delete; // Copy Assignment Not Implemented
+    CubicOps& operator=(CubicOps&&) = delete;      // Move Assignment Not Implemented
 };
 
 

@@ -187,8 +187,11 @@ class Processing_EXPORT ProcessingPlugin : public QObject, public ISIMPLibPlugin
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
+  public:
     ProcessingPlugin(const ProcessingPlugin&) = delete; // Copy Constructor Not Implemented
-    void operator=(const ProcessingPlugin&) = delete;   // Move assignment Not Implemented
+    ProcessingPlugin(ProcessingPlugin&&) = delete;      // Move Constructor Not Implemented
+    ProcessingPlugin& operator=(const ProcessingPlugin&) = delete; // Copy Assignment Not Implemented
+    ProcessingPlugin& operator=(ProcessingPlugin&&) = delete;      // Move Assignment Not Implemented
 };
 
 

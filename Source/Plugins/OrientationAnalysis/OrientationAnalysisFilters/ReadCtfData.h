@@ -255,9 +255,11 @@ private:
   DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
   DEFINE_DATAARRAY_VARIABLE(float, LatticeConstants)
 
-  ReadCtfData(const ReadCtfData&);    // Copy Constructor Not Implemented
+public:
+  ReadCtfData(const ReadCtfData&) = delete;            // Copy Constructor Not Implemented
+  ReadCtfData(ReadCtfData&&) = delete;                 // Move Constructor Not Implemented
   ReadCtfData& operator=(const ReadCtfData&) = delete; // Copy Assignment Not Implemented
-  ReadCtfData& operator=(ReadCtfData&&) = delete;      // Move Assignment
+  ReadCtfData& operator=(ReadCtfData&&) = delete;      // Move Assignment Not Implemented
 };
 
 Q_DECLARE_METATYPE(Ctf_Private_Data)

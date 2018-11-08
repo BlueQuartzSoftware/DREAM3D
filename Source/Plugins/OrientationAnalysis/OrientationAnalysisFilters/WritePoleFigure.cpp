@@ -506,7 +506,7 @@ void drawScalarBar(HPDF_Page page, const PoleFigureConfiguration_t &config,
   HPDF_Page_SetGrayStroke (page, 0.00f);
   HPDF_Page_BeginText (page);
   HPDF_Page_SetFontAndSize (page, font, fontPtSize);
-  HPDF_Page_MoveTextPos (page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second*numColors/1.5);
+  HPDF_Page_MoveTextPos(page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second * numColors / 1.5f);
   HPDF_Page_ShowText (page, label.toLatin1());
   HPDF_Page_EndText (page);
 
@@ -515,7 +515,7 @@ void drawScalarBar(HPDF_Page page, const PoleFigureConfiguration_t &config,
   HPDF_Page_SetGrayStroke (page, 0.00f);
   HPDF_Page_BeginText (page);
   HPDF_Page_SetFontAndSize (page, font, fontPtSize);
-  HPDF_Page_MoveTextPos (page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second*numColors/1.5 - (fontPtSize*1.10f) );
+  HPDF_Page_MoveTextPos(page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second * numColors / 1.5f - (fontPtSize * 1.10f));
   HPDF_Page_ShowText (page, label.toLatin1());
   HPDF_Page_EndText (page);
 
@@ -524,7 +524,7 @@ void drawScalarBar(HPDF_Page page, const PoleFigureConfiguration_t &config,
   HPDF_Page_SetGrayStroke (page, 0.00f);
   HPDF_Page_BeginText (page);
   HPDF_Page_SetFontAndSize (page, font, fontPtSize);
-  HPDF_Page_MoveTextPos (page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second*numColors/1.5- (fontPtSize*2.20f) );
+  HPDF_Page_MoveTextPos(page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second * numColors / 1.5f - (fontPtSize * 2.20f));
   HPDF_Page_ShowText (page, label.toLatin1());
   HPDF_Page_EndText (page);
   
@@ -533,7 +533,7 @@ void drawScalarBar(HPDF_Page page, const PoleFigureConfiguration_t &config,
   HPDF_Page_SetGrayStroke (page, 0.00f);
   HPDF_Page_BeginText (page);
   HPDF_Page_SetFontAndSize (page, font, fontPtSize);
-  HPDF_Page_MoveTextPos (page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second*numColors/1.5 - (fontPtSize*3.30f) );
+  HPDF_Page_MoveTextPos(page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second * numColors / 1.5f - (fontPtSize * 3.30f));
   HPDF_Page_ShowText (page, label.toLatin1());
   HPDF_Page_EndText (page);
   
@@ -542,7 +542,7 @@ void drawScalarBar(HPDF_Page page, const PoleFigureConfiguration_t &config,
   HPDF_Page_SetGrayStroke (page, 0.00f);
   HPDF_Page_BeginText (page);
   HPDF_Page_SetFontAndSize (page, font, fontPtSize);
-  HPDF_Page_MoveTextPos (page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second*numColors/1.5 - (fontPtSize*4.40f) );
+  HPDF_Page_MoveTextPos(page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second * numColors / 1.5f - (fontPtSize * 4.40f));
   HPDF_Page_ShowText (page, label.toLatin1());
   HPDF_Page_EndText (page);  
   
@@ -551,7 +551,7 @@ void drawScalarBar(HPDF_Page page, const PoleFigureConfiguration_t &config,
   HPDF_Page_SetGrayStroke (page, 0.00f);
   HPDF_Page_BeginText (page);
   HPDF_Page_SetFontAndSize (page, font, fontPtSize);
-  HPDF_Page_MoveTextPos (page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second*numColors/1.5 - (fontPtSize*5.50f) );
+  HPDF_Page_MoveTextPos(page, position.first + margins + rect.first + margins, position.second + margins + fontPtSize + rect.second * numColors / 1.5f - (fontPtSize * 5.50f));
   HPDF_Page_ShowText (page, label.toLatin1());
   HPDF_Page_EndText (page);  
   
@@ -845,28 +845,28 @@ void WritePoleFigure::execute()
       {
         pageWidth = subCanvasWidth * 4;
         pageHeight = subCanvasHeight;
-        imagePositions[0] = std::make_pair(0, 0);
-        imagePositions[1] = std::make_pair(subCanvasWidth, 0);
-        imagePositions[2] = std::make_pair(subCanvasWidth * 2, 0);
-        imagePositions[3] = std::make_pair(subCanvasWidth * 3, 0);
+        imagePositions[0] = std::make_pair(0.0f, 0.0f);
+        imagePositions[1] = std::make_pair(subCanvasWidth, 0.0f);
+        imagePositions[2] = std::make_pair(subCanvasWidth * 2.0f, 0.0f);
+        imagePositions[3] = std::make_pair(subCanvasWidth * 3.0f, 0.0f);
       }
       else if(m_ImageLayout == SIMPL::Layout::Vertical)
       {
         pageWidth = subCanvasWidth;
         pageHeight = subCanvasHeight * 4.0f;
-        imagePositions[0] = std::make_pair(0, subCanvasHeight * 3);
-        imagePositions[1] = std::make_pair(0, subCanvasHeight * 2);
-        imagePositions[2] = std::make_pair(0, subCanvasHeight * 1);
-        imagePositions[3] = std::make_pair(0, 0);
+        imagePositions[0] = std::make_pair(0.0f, subCanvasHeight * 3.0f);
+        imagePositions[1] = std::make_pair(0.0f, subCanvasHeight * 2.0f);
+        imagePositions[2] = std::make_pair(0.0f, subCanvasHeight * 1.0f);
+        imagePositions[3] = std::make_pair(0.0f, 0.0f);
       }
       else if(m_ImageLayout == SIMPL::Layout::Square)
       {
-        pageWidth =subCanvasWidth * 2;
-        pageHeight = subCanvasHeight * 2;
-        imagePositions[0] = std::make_pair(0, subCanvasHeight); // Upper Left
+        pageWidth = subCanvasWidth * 2.0f;
+        pageHeight = subCanvasHeight * 2.0f;
+        imagePositions[0] = std::make_pair(0.0f, subCanvasHeight);           // Upper Left
         imagePositions[1] = std::make_pair(subCanvasWidth, subCanvasHeight); // Upper Right
-        imagePositions[2] = std::make_pair(0, 0); // Lower Left
-        imagePositions[3] = std::make_pair(subCanvasWidth, 0); // Lower Right
+        imagePositions[2] = std::make_pair(0.0f, 0.0f);                      // Lower Left
+        imagePositions[3] = std::make_pair(subCanvasWidth, 0.0f);            // Lower Right
       }
       
       pageHeight = pageHeight + margins + fontPtSize;
@@ -912,29 +912,29 @@ void WritePoleFigure::execute()
           {
               if(text.at(k) == '-')
               {
-                  HPDF_TextWidth tw = HPDF_Font_TextWidth(font, buffer.data(), buffer.size());
-                  int32_t scaledOffset = (tw.width * fontPtSize / 1000);
+                HPDF_TextWidth tw = HPDF_Font_TextWidth(font, buffer.data(), static_cast<HPDF_UINT>(buffer.size()));
+                int32_t scaledOffset = static_cast<int32_t>(tw.width * fontPtSize / 1000);
 
-                  buffer.push_back(static_cast<uint8_t>(text.at(k+1).toLatin1()));
-                  tw = HPDF_Font_TextWidth(font, buffer.data(), buffer.size());
-                  int32_t scaledOffset2 = (tw.width * fontPtSize / 1000);
-                  buffer.pop_back();
+                buffer.push_back(static_cast<uint8_t>(text.at(k + 1).toLatin1()));
+                tw = HPDF_Font_TextWidth(font, buffer.data(), static_cast<HPDF_UINT>(buffer.size()));
+                int32_t scaledOffset2 = static_cast<int32_t>(tw.width * fontPtSize / 1000);
+                buffer.pop_back();
 
-                  int32_t diff = (scaledOffset2 - scaledOffset);
+                int32_t diff = (scaledOffset2 - scaledOffset);
 
-                  buf[0] = '-';
-                  tw = HPDF_Font_TextWidth(font, buf, 1);
-                  int32_t charWidth = (tw.width * fontPtSize / 1000);
-                  scaledOffset = scaledOffset + (diff - charWidth)/2;
-                  // Draw the bar at the correct location...
-                  std::string underScore("-");
-                  HPDF_Page_BeginText (page);
-                  HPDF_Page_SetFontAndSize (page, font, fontPtSize);
-                  HPDF_Page_MoveTextPos (page, x + margins + scaledOffset, y+margins+fontPtSize+imageHeight+fontPtSize*1.60+ margins);
-                  HPDF_Page_ShowText (page, underScore.c_str());
-                  HPDF_Page_EndText (page);
+                buf[0] = '-';
+                tw = HPDF_Font_TextWidth(font, buf, 1);
+                int32_t charWidth = static_cast<int32_t>(tw.width * fontPtSize / 1000.0f);
+                scaledOffset = scaledOffset + (diff - charWidth) / 2;
+                // Draw the bar at the correct location...
+                std::string underScore("-");
+                HPDF_Page_BeginText(page);
+                HPDF_Page_SetFontAndSize(page, font, fontPtSize);
+                HPDF_Page_MoveTextPos(page, x + margins + scaledOffset, y + margins + fontPtSize + imageHeight + fontPtSize * 1.60f + margins);
+                HPDF_Page_ShowText(page, underScore.c_str());
+                HPDF_Page_EndText(page);
 
-                  k++;
+                k++;
               }
               // Keep building up the string to finally print.
               if(text.at(k) != '-')
@@ -1001,11 +1001,11 @@ void WritePoleFigure::execute()
       // Now draw the Color Scalar Bar if needed.
       if(config.discrete)
       {
-        drawDiscreteInfoArea(page, config, imagePositions[3], margins, imageHeight / 20.0f, font, phase, laueNames[laueIndex], materialName);
+        drawDiscreteInfoArea(page, config, imagePositions[3], margins, imageHeight / 20.0f, font, static_cast<int32_t>(phase), laueNames[laueIndex], materialName);
       }
       else
       {
-        drawScalarBar(page, config, imagePositions[3], margins, imageHeight / 20.0f, font, phase, laueNames[laueIndex], materialName);
+        drawScalarBar(page, config, imagePositions[3], margins, imageHeight / 20.0f, font, static_cast<int32_t>(phase), laueNames[laueIndex], materialName);
       }
       
       /* save the document to a file */

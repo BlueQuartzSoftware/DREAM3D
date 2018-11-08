@@ -184,8 +184,10 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, GBEuclideanDistances)
 
-  AddBadData(const AddBadData&);     // Copy Constructor Not Implemented
+public:
+  AddBadData(const AddBadData&) = delete;            // Copy Constructor Not Implemented
+  AddBadData(AddBadData&&) = delete;                 // Move Constructor Not Implemented
   AddBadData& operator=(const AddBadData&) = delete; // Copy Assignment Not Implemented
-  AddBadData& operator=(AddBadData&&) = delete;      // Move Assignment
+  AddBadData& operator=(AddBadData&&) = delete;      // Move Assignment Not Implemented
 };
 

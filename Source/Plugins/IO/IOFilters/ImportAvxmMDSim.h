@@ -146,8 +146,9 @@ public:
   /* Rule of 5: All special member functions should be defined if any are defined.
    * https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#c21-if-you-define-or-delete-any-default-operation-define-or-delete-them-all
    */
+public:
   ImportAvxmMDSim(const ImportAvxmMDSim&) = delete;            // Copy Constructor
   ImportAvxmMDSim& operator=(const ImportAvxmMDSim&) = delete; // Copy Assignment
   ImportAvxmMDSim(ImportAvxmMDSim&&) = delete;                 // Move Constructor Not Implemented
-  ImportAvxmMDSim& operator=(ImportAvxmMDSim&&) = delete;      // Move Assignment
+  ImportAvxmMDSim& operator=(ImportAvxmMDSim&&) = delete;      // Move Assignment Not Implemented
 };

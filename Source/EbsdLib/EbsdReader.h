@@ -206,9 +206,11 @@ class EbsdLib_EXPORT EbsdReader
     QMap<QString, EbsdHeaderEntry::Pointer> m_HeaderMap;
 
 
-  private:
+  public:
     EbsdReader(const EbsdReader&) = delete;     // Copy Constructor Not Implemented
-    void operator=(const EbsdReader&) = delete; // Move assignment Not Implemented
+    EbsdReader(EbsdReader&&) = delete;          // Move Constructor Not Implemented
+    EbsdReader& operator=(const EbsdReader&) = delete; // Copy Assignment Not Implemented
+    EbsdReader& operator=(EbsdReader&&) = delete;      // Move Assignment Not Implemented
 };
 
 

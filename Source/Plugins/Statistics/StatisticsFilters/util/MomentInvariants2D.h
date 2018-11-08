@@ -251,9 +251,11 @@ class MomentInvariants2D
     int factorial(int n) const;
 
 
-  private:
+  public:
     MomentInvariants2D(const MomentInvariants2D&) = delete; // Copy Constructor Not Implemented
-    void operator=(const MomentInvariants2D&) = delete;     // Move assignment Not Implemented
+    MomentInvariants2D(MomentInvariants2D&&) = delete;      // Move Constructor Not Implemented
+    MomentInvariants2D& operator=(const MomentInvariants2D&) = delete; // Copy Assignment Not Implemented
+    MomentInvariants2D& operator=(MomentInvariants2D&&) = delete;      // Move Assignment Not Implemented
 };
 
 

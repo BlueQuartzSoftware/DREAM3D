@@ -132,7 +132,10 @@ protected:
 private:
   AbstractMicrostructurePresetFactory::Collection _factories;
 
+public:
   MicrostructurePresetManager(const MicrostructurePresetManager&) = delete; // Copy Constructor Not Implemented
-  void operator=(const MicrostructurePresetManager&) = delete;              // Move assignment Not Implemented
+  MicrostructurePresetManager(MicrostructurePresetManager&&) = delete;      // Move Constructor Not Implemented
+  MicrostructurePresetManager& operator=(const MicrostructurePresetManager&) = delete; // Copy Assignment Not Implemented
+  MicrostructurePresetManager& operator=(MicrostructurePresetManager&&) = delete;      // Move Assignment Not Implemented
 };
 

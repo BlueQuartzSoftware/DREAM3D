@@ -99,9 +99,11 @@ class OrientationLib_EXPORT SO3Sampler
   protected:
     SO3Sampler();
 
-  private:
+  public:
     SO3Sampler(const SO3Sampler&) = delete;     // Copy Constructor Not Implemented
-    void operator=(const SO3Sampler&) = delete; // Move assignment Not Implemented
+    SO3Sampler(SO3Sampler&&) = delete;          // Move Constructor Not Implemented
+    SO3Sampler& operator=(const SO3Sampler&) = delete; // Copy Assignment Not Implemented
+    SO3Sampler& operator=(SO3Sampler&&) = delete;      // Move Assignment Not Implemented
 };
 
 

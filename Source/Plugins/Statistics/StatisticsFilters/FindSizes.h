@@ -205,7 +205,9 @@ private:
   DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
   DEFINE_DATAARRAY_VARIABLE(int32_t, NumElements)
 
-  FindSizes(const FindSizes&);                     // Copy Constructor Not Implemented
+public:
+  FindSizes(const FindSizes&) = delete;            // Copy Constructor Not Implemented
+  FindSizes(FindSizes&&) = delete;                 // Move Constructor Not Implemented
   FindSizes& operator=(const FindSizes&) = delete; // Copy Assignment Not Implemented
-  FindSizes& operator=(FindSizes&&) = delete;      // Move Assignment
+  FindSizes& operator=(FindSizes&&) = delete;      // Move Assignment Not Implemented
 };

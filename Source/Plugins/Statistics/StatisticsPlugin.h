@@ -187,8 +187,11 @@ class Statistics_EXPORT StatisticsPlugin : public QObject, public ISIMPLibPlugin
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
+  public:
     StatisticsPlugin(const StatisticsPlugin&) = delete; // Copy Constructor Not Implemented
-    void operator=(const StatisticsPlugin&) = delete;   // Move assignment Not Implemented
+    StatisticsPlugin(StatisticsPlugin&&) = delete;      // Move Constructor Not Implemented
+    StatisticsPlugin& operator=(const StatisticsPlugin&) = delete; // Copy Assignment Not Implemented
+    StatisticsPlugin& operator=(StatisticsPlugin&&) = delete;      // Move Assignment Not Implemented
 };
 
 

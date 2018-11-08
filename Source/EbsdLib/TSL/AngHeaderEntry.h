@@ -100,8 +100,11 @@ class EbsdLib_EXPORT AngHeaderEntry : public EbsdHeaderEntry
     T m_value;
     QString m_key;
 
+  public:
     AngHeaderEntry(const AngHeaderEntry&) = delete; // Copy Constructor Not Implemented
-    void operator=(const AngHeaderEntry&) = delete; // Move assignment Not Implemented
+    AngHeaderEntry(AngHeaderEntry&&) = delete;      // Move Constructor Not Implemented
+    AngHeaderEntry& operator=(const AngHeaderEntry&) = delete; // Copy Assignment Not Implemented
+    AngHeaderEntry& operator=(AngHeaderEntry&&) = delete;      // Move Assignment Not Implemented
 };
 
 /**

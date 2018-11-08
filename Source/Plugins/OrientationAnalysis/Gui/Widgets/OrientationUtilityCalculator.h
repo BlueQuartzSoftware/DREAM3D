@@ -64,7 +64,10 @@ private:
   OrientationConverter<double>::OrientationType m_InputType;
   bool m_HasErrors;
 
+public:
   OrientationUtilityCalculator(const OrientationUtilityCalculator&) = delete; // Copy Constructor Not Implemented
-  void operator=(const OrientationUtilityCalculator&) = delete;               // Move assignment Not Implemented
+  OrientationUtilityCalculator(OrientationUtilityCalculator&&) = delete;      // Move Constructor Not Implemented
+  OrientationUtilityCalculator& operator=(const OrientationUtilityCalculator&) = delete; // Copy Assignment Not Implemented
+  OrientationUtilityCalculator& operator=(OrientationUtilityCalculator&&) = delete;      // Move Assignment Not Implemented
 };
 

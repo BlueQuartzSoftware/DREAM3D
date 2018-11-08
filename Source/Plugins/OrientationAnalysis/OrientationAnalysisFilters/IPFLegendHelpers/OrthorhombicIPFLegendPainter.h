@@ -51,8 +51,10 @@ public:
 protected:
   QImage overlayText(int pixelWidth, int pixelHeight, QImage image, LaueOps* ops);
 
-private:
+public:
   OrthorhombicIPFLegendPainter(const OrthorhombicIPFLegendPainter&) = delete; // Copy Constructor Not Implemented
-  void operator=(const OrthorhombicIPFLegendPainter&);                        // Move assignment Not Implemented
+  OrthorhombicIPFLegendPainter(OrthorhombicIPFLegendPainter&&) = delete;      // Move Constructor Not Implemented
+  OrthorhombicIPFLegendPainter& operator=(const OrthorhombicIPFLegendPainter&) = delete; // Copy Assignment Not Implemented
+  OrthorhombicIPFLegendPainter& operator=(OrthorhombicIPFLegendPainter&&) = delete;      // Move Assignment Not Implemented
 };
 

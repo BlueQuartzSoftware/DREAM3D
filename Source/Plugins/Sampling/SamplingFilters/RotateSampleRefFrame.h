@@ -173,7 +173,6 @@ protected:
    */
   void initialize();
 
-private:
 public:
   RotateSampleRefFrame(const RotateSampleRefFrame&) = delete; // Copy Constructor Not Implemented
   RotateSampleRefFrame(RotateSampleRefFrame&&) = delete;      // Move Constructor Not Implemented

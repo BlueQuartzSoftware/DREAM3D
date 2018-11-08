@@ -190,9 +190,10 @@ protected:
    */
   void initialize();
 
-private:
-  EbsdToH5Ebsd(const EbsdToH5Ebsd&);   // Copy Constructor Not Implemented
+public:
+  EbsdToH5Ebsd(const EbsdToH5Ebsd&) = delete;            // Copy Constructor Not Implemented
+  EbsdToH5Ebsd(EbsdToH5Ebsd&&) = delete;                 // Move Constructor Not Implemented
   EbsdToH5Ebsd& operator=(const EbsdToH5Ebsd&) = delete; // Copy Assignment Not Implemented
-  EbsdToH5Ebsd& operator=(EbsdToH5Ebsd&&) = delete;      // Move Assignment
+  EbsdToH5Ebsd& operator=(EbsdToH5Ebsd&&) = delete;      // Move Assignment Not Implemented
 };
 

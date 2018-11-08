@@ -45,7 +45,7 @@ class DataParser
     EBSD_SHARED_POINTERS(DataParser)
     EBSD_TYPE_MACRO(DataParser)
 
-    virtual ~DataParser() {}
+    virtual ~DataParser() = default;
 
     virtual bool allocateArray(size_t numberOfElements) { (void)(numberOfElements); return false;}
     virtual void* getVoidPointer() { return nullptr; }
@@ -59,11 +59,19 @@ class DataParser
 
     virtual void parse(const QByteArray& token, size_t index) {}
   protected:
-    DataParser() {}
+    DataParser()
+    : m_ManageMemory(false)
+    , m_Size(0)
+    , m_ColumnName("")
+    , m_ColumnIndex(0)
+    {
+    }
 
-  private:
-    DataParser(const DataParser&); // Copy Constructor Not Implemented
-    void operator=(const DataParser&); // Move assignment Not Implemented
+  public:
+    DataParser(const DataParser&) = delete;            // Copy Constructor Not Implemented
+    DataParser(DataParser&&) = delete;                 // Move Constructor Not Implemented
+    DataParser& operator=(const DataParser&) = delete; // Copy Assignment Not Implemented
+    DataParser& operator=(DataParser&&) = delete;      // Move Assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -80,9 +88,9 @@ class Int32Parser : public DataParser
       return sharedPtr;
     }
 
-    virtual ~Int32Parser()
+    ~Int32Parser() override
     {
-      if (m_Ptr != nullptr && getManageMemory() == true)
+      if(m_Ptr != nullptr && getManageMemory())
       {
 #if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
         _mm_free(m_Ptr );
@@ -93,9 +101,16 @@ class Int32Parser : public DataParser
       }
     }
 
-    EBSD_INSTANCE_PROPERTY(int32_t*, Ptr)
+    void setPtr(int32_t* value)
+    {
+      this->m_Ptr = value;
+    }
+    int32_t* getPtr()
+    {
+      return m_Ptr;
+    }
 
-    virtual bool allocateArray(size_t numberOfElements)
+    bool allocateArray(size_t numberOfElements) override
     {
 #if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
       m_Ptr = static_cast<int32_t*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
@@ -105,13 +120,18 @@ class Int32Parser : public DataParser
       return (m_Ptr != nullptr);
     }
 
-    virtual void* getVoidPointer() { return reinterpret_cast<void*>(m_Ptr); }
-    virtual void  setVoidPointer(void* p) { m_Ptr = reinterpret_cast<int32_t*>(p); }
+    void* getVoidPointer() override
+    {
+      return reinterpret_cast<void*>(m_Ptr);
+    }
+    void setVoidPointer(void* p) override
+    {
+      m_Ptr = reinterpret_cast<int32_t*>(p);
+    }
 
     int32_t* getPointer(size_t offset) { return m_Ptr + offset; }
 
-
-    virtual void parse(const QByteArray& token, size_t index)
+    void parse(const QByteArray& token, size_t index) override
     {
       Q_ASSERT(index < getSize());
       bool ok = false;
@@ -129,10 +149,13 @@ class Int32Parser : public DataParser
     }
 
   private:
+    int32_t* m_Ptr;
 
-
-    Int32Parser(const Int32Parser&); // Copy Constructor Not Implemented
-    void operator=(const Int32Parser&); // Move assignment Not Implemented
+  public:
+    Int32Parser(const Int32Parser&) = delete;            // Copy Constructor Not Implemented
+    Int32Parser(Int32Parser&&) = delete;                 // Move Constructor Not Implemented
+    Int32Parser& operator=(const Int32Parser&) = delete; // Copy Assignment Not Implemented
+    Int32Parser& operator=(Int32Parser&&) = delete;      // Move Assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
@@ -149,9 +172,9 @@ class FloatParser : public DataParser
       return sharedPtr;
     }
 
-    virtual ~FloatParser()
+    ~FloatParser() override
     {
-      if (m_Ptr != nullptr && getManageMemory() == true)
+      if(m_Ptr != nullptr && getManageMemory())
       {
 #if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
         _mm_free(m_Ptr );
@@ -162,9 +185,16 @@ class FloatParser : public DataParser
       }
     }
 
-    EBSD_INSTANCE_PROPERTY(float*, Ptr)
+    void setPtr(float* value)
+    {
+      this->m_Ptr = value;
+    }
+    float* getPtr()
+    {
+      return m_Ptr;
+    }
 
-    virtual bool allocateArray(size_t numberOfElements)
+    bool allocateArray(size_t numberOfElements) override
     {
 #if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
       m_Ptr = static_cast<float*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
@@ -174,12 +204,18 @@ class FloatParser : public DataParser
       return (m_Ptr != nullptr);
     }
 
-    virtual void* getVoidPointer() { return reinterpret_cast<void*>(m_Ptr); }
-    virtual void  setVoidPointer(void* p) { m_Ptr = reinterpret_cast<float*>(p); }
+    void* getVoidPointer() override
+    {
+      return reinterpret_cast<void*>(m_Ptr);
+    }
+    void setVoidPointer(void* p) override
+    {
+      m_Ptr = reinterpret_cast<float*>(p);
+    }
 
     float* getPointer(size_t offset) { return m_Ptr + offset; }
 
-    virtual void parse(const QByteArray& token, size_t index)
+    void parse(const QByteArray& token, size_t index) override
     {
       bool ok = false;
       m_Ptr[index] = token.toFloat(&ok);
@@ -196,9 +232,13 @@ class FloatParser : public DataParser
     }
 
   private:
+    float* m_Ptr;
 
-    FloatParser(const FloatParser&); // Copy Constructor Not Implemented
-    void operator=(const FloatParser&); // Move assignment Not Implemented
+  public:
+    FloatParser(const FloatParser&) = delete;            // Copy Constructor Not Implemented
+    FloatParser(FloatParser&&) = delete;                 // Move Constructor Not Implemented
+    FloatParser& operator=(const FloatParser&) = delete; // Copy Assignment Not Implemented
+    FloatParser& operator=(FloatParser&&) = delete;      // Move Assignment Not Implemented
 };
 
 

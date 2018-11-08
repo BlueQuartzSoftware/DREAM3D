@@ -60,7 +60,7 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
     EBSD_STATIC_NEW_SUPERCLASS(H5EbsdVolumeReader, H5CtfVolumeReader)
     EBSD_TYPE_MACRO_SUPER(H5CtfVolumeReader, H5EbsdVolumeReader)
 
-    virtual ~H5CtfVolumeReader();
+    ~H5CtfVolumeReader() override;
 
     EBSD_POINTER_PROPERTY(Phase, Phase, int)
     EBSD_POINTER_PROPERTY(X, X, float)
@@ -127,9 +127,6 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
   private:
     QVector<CtfPhase::Pointer> m_Phases;
 
-    H5CtfVolumeReader(const H5CtfVolumeReader&) = delete; // Copy Constructor Not Implemented
-    void operator=(const H5CtfVolumeReader&) = delete;    // Move assignment Not Implemented
-
     /**
      * @brief Allocats a contiguous chunk of memory to store values from the .ang file
      * @param numberOfElements The number of elements in the Array. This method can
@@ -169,7 +166,11 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
       }
     }
 
-
+  public:
+    H5CtfVolumeReader(const H5CtfVolumeReader&) = delete;            // Copy Constructor Not Implemented
+    H5CtfVolumeReader(H5CtfVolumeReader&&) = delete;                 // Move Constructor Not Implemented
+    H5CtfVolumeReader& operator=(const H5CtfVolumeReader&) = delete; // Copy Assignment Not Implemented
+    H5CtfVolumeReader& operator=(H5CtfVolumeReader&&) = delete;      // Move Assignment Not Implemented
 };
 
 

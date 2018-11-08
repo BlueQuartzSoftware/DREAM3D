@@ -233,6 +233,6 @@ class SurfaceMeshing_EXPORT FeatureFaceCurvatureFilter : public SurfaceMeshFilte
     FeatureFaceCurvatureFilter(const FeatureFaceCurvatureFilter&) = delete; // Copy Constructor Not Implemented
     FeatureFaceCurvatureFilter(FeatureFaceCurvatureFilter&&) = delete;      // Move Constructor Not Implemented
     FeatureFaceCurvatureFilter& operator=(const FeatureFaceCurvatureFilter&) = delete; // Copy Assignment Not Implemented
-    FeatureFaceCurvatureFilter& operator=(FeatureFaceCurvatureFilter&&) = delete;      // Move Assignment
+    FeatureFaceCurvatureFilter& operator=(FeatureFaceCurvatureFilter&&) = delete;      // Move Assignment Not Implemented
 };
 

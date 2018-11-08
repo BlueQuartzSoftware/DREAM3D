@@ -187,8 +187,11 @@ class SyntheticBuilding_EXPORT SyntheticBuildingPlugin : public QObject, public 
     QList<QString>      m_Filters;
     bool                m_DidLoad;
 
+  public:
     SyntheticBuildingPlugin(const SyntheticBuildingPlugin&) = delete; // Copy Constructor Not Implemented
-    void operator=(const SyntheticBuildingPlugin&) = delete;          // Move assignment Not Implemented
+    SyntheticBuildingPlugin(SyntheticBuildingPlugin&&) = delete;      // Move Constructor Not Implemented
+    SyntheticBuildingPlugin& operator=(const SyntheticBuildingPlugin&) = delete; // Copy Assignment Not Implemented
+    SyntheticBuildingPlugin& operator=(SyntheticBuildingPlugin&&) = delete;      // Move Assignment Not Implemented
 };
 
 

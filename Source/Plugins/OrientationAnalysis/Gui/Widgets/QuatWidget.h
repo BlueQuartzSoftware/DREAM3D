@@ -57,7 +57,10 @@ private:
 
   QVector<double> getValues();
 
+public:
   QuatWidget(const QuatWidget&) = delete;     // Copy Constructor Not Implemented
-  void operator=(const QuatWidget&) = delete; // Move assignment Not Implemented
+  QuatWidget(QuatWidget&&) = delete;          // Move Constructor Not Implemented
+  QuatWidget& operator=(const QuatWidget&) = delete; // Copy Assignment Not Implemented
+  QuatWidget& operator=(QuatWidget&&) = delete;      // Move Assignment Not Implemented
 };
 

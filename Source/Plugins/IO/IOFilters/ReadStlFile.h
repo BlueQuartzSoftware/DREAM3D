@@ -197,8 +197,10 @@ private:
    */
   void eliminate_duplicate_nodes();
 
-  ReadStlFile(const ReadStlFile&);    // Copy Constructor Not Implemented
+public:
+  ReadStlFile(const ReadStlFile&) = delete;            // Copy Constructor Not Implemented
+  ReadStlFile(ReadStlFile&&) = delete;                 // Move Constructor Not Implemented
   ReadStlFile& operator=(const ReadStlFile&) = delete; // Copy Assignment Not Implemented
-  ReadStlFile& operator=(ReadStlFile&&) = delete;      // Move Assignment
+  ReadStlFile& operator=(ReadStlFile&&) = delete;      // Move Assignment Not Implemented
 };
 

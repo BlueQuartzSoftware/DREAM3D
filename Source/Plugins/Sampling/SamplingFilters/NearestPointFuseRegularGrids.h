@@ -163,7 +163,6 @@ protected:
    */
   void initialize();
 
-private:
 public:
   NearestPointFuseRegularGrids(const NearestPointFuseRegularGrids&) = delete; // Copy Constructor Not Implemented
   NearestPointFuseRegularGrids(NearestPointFuseRegularGrids&&) = delete;      // Move Constructor Not Implemented

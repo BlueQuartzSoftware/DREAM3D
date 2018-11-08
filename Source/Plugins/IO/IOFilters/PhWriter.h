@@ -145,7 +145,10 @@ protected:
 private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-  PhWriter(const PhWriter&);       // Copy Constructor Not Implemented
-  void operator=(const PhWriter&) = delete; // Move assignment Not Implemented
+public:
+  PhWriter(const PhWriter&) = delete;            // Copy Constructor Not Implemented
+  PhWriter(PhWriter&&) = delete;                 // Move Constructor Not Implemented
+  PhWriter& operator=(const PhWriter&) = delete; // Copy Assignment Not Implemented
+  PhWriter& operator=(PhWriter&&) = delete;      // Move Assignment Not Implemented
 };
 

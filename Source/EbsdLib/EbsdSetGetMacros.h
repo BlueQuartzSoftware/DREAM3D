@@ -32,16 +32,9 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-
-
-
 #pragma once
 
-#include <string.h>
-
-#include <QtCore/QString>
+#include <cstring>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
@@ -124,29 +117,29 @@
 /**
  * @brief Creates a static "New" method that creates an instance of thisClass
  */
-#define EBSD_NEW_SUPERCLASS(thisClass, SuperClass)\
-  typedef SuperClass::Pointer SuperClass##Type;\
-  static SuperClass##Type New##SuperClass(void) \
-  { \
-    SuperClass##Type sharedPtr (new thisClass); \
-    return sharedPtr; \
+#define EBSD_NEW_SUPERCLASS(thisClass, SuperClass)                                                                                                                                                     \
+  typedef SuperClass::Pointer SuperClass##Type;                                                                                                                                                        \
+  static SuperClass##Type New##SuperClass(void)                                                                                                                                                        \
+  {                                                                                                                                                                                                    \
+    SuperClass##Type sharedPtr(new(thisClass));                                                                                                                                                        \
+    return sharedPtr;                                                                                                                                                                                  \
   }
 
 /**
  * @brief Implements a Static 'New' Method for a class
  */
-#define EBSD_STATIC_NEW_MACRO(thisClass) \
-  static Pointer New(void) \
-  { \
-    Pointer sharedPtr (new thisClass); \
-    return sharedPtr; \
+#define EBSD_STATIC_NEW_MACRO(thisClass)                                                                                                                                                               \
+  static Pointer New(void)                                                                                                                                                                             \
+  {                                                                                                                                                                                                    \
+    Pointer sharedPtr(new(thisClass));                                                                                                                                                                 \
+    return sharedPtr;                                                                                                                                                                                  \
   }
 
-#define EBSD_STATIC_NEW_MACRO_WITH_ARGS(thisClass, args) \
-  static Pointer New args \
-  { \
-    Pointer sharedPtr (new thisClass); \
-    return sharedPtr; \
+#define EBSD_STATIC_NEW_MACRO_WITH_ARGS(thisClass, args)                                                                                                                                               \
+  static Pointer New args                                                                                                                                                                              \
+  {                                                                                                                                                                                                    \
+    Pointer sharedPtr(new(thisClass));                                                                                                                                                                 \
+    return sharedPtr;                                                                                                                                                                                  \
   }
 
 /** Macro used to add standard methods to all classes, mainly type
@@ -211,8 +204,11 @@
 /**
 * @brief Creates a "setter" method to set the property.
 */
-#define EBSD_SET_PROPERTY(m_msgType, prpty) \
-  void set##prpty(m_msgType value) { this->m_##prpty = value; }
+#define EBSD_SET_PROPERTY(m_msgType, prpty)                                                                                                                                                            \
+  void set##prpty(const m_msgType& value)                                                                                                                                                              \
+  {                                                                                                                                                                                                    \
+    this->m_##prpty = value;                                                                                                                                                                           \
+  }
 
 /**
 * @brief Creates a "getter" method to retrieve the value of the property.
@@ -237,7 +233,31 @@
   EBSD_SET_PROPERTY(m_msgType, prpty)\
   EBSD_GET_PROPERTY(m_msgType, prpty)
 
+/**
+ * @brief Creates a "setter" method to set the property.
+ */
+#define EBSD_SET_PTR_PROPERTY(m_msgType, prpty)                                                                                                                                                        \
+  void set##prpty(m_msgType value)                                                                                                                                                                     \
+  {                                                                                                                                                                                                    \
+    this->m_##prpty = value;                                                                                                                                                                           \
+  }
 
+/**
+ * @brief Creates a "getter" method to retrieve the value of the property.
+ */
+#define EBSD_GET_PTR_PROPERTY(m_msgType, prpty)                                                                                                                                                        \
+  m_msgType get##prpty()                                                                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    return m_##prpty;                                                                                                                                                                                  \
+  }
+
+#define EBSD_PTR_INSTANCE_PROPERTY(m_msgType, prpty)                                                                                                                                                   \
+private:                                                                                                                                                                                               \
+  m_msgType m_##prpty;                                                                                                                                                                                 \
+                                                                                                                                                                                                       \
+public:                                                                                                                                                                                                \
+  EBSD_SET_PTR_PROPERTY(m_msgType, prpty)                                                                                                                                                              \
+  EBSD_GET_PTR_PROPERTY(m_msgType, prpty)
 
 #define EBSD_SET_2DVECTOR_PROPERTY(m_msgType, prpty, varname)\
   void set##prpty(m_msgType value[2]) {\
@@ -296,23 +316,36 @@
 /**
  * @brief Creates a "setter" method to set the property.
  */
-#define EbsdHeader_SET_PROPERTY( HeaderType, m_msgType, prpty, key) \
-  void set##prpty(m_msgType value) { \
-    HeaderType* p = dynamic_cast<HeaderType*>(m_HeaderMap[key].get()); \
-    if (nullptr != p) { p->setValue(value); } else {\
-      std::cout << "Value for Key: " << key.toStdString() << " was null." << std::endl;} }
+#define EbsdHeader_SET_PROPERTY(HeaderType, m_msgType, prpty, key)                                                                                                                                     \
+  void set##prpty(const m_msgType& value)                                                                                                                                                              \
+  {                                                                                                                                                                                                    \
+    auto p = dynamic_cast<HeaderType*>(m_HeaderMap[key].get());                                                                                                                                        \
+    if(nullptr != p)                                                                                                                                                                                   \
+    {                                                                                                                                                                                                  \
+      p->setValue(value);                                                                                                                                                                              \
+    }                                                                                                                                                                                                  \
+    else                                                                                                                                                                                               \
+    {                                                                                                                                                                                                  \
+      std::cout << "Value for Key: " << key.toStdString() << " was null." << std::endl;                                                                                                                \
+    }                                                                                                                                                                                                  \
+  }
 
 /**
  * @brief Creates a "getter" method to retrieve the value of the property.
  */
-#define EbsdHeader_GET_PROPERTY(HeaderType, m_msgType, prpty, key) \
-  m_msgType get##prpty() { \
-    HeaderType* p = dynamic_cast<HeaderType*>(m_HeaderMap[key].get());\
-    if (nullptr != p) { return p->getValue(); } else {\
-      std::cout << "Value for Key: " << key.toStdString() << " was null." << std::endl; return 0;} }
+#define EbsdHeader_GET_PROPERTY(HeaderType, m_msgType, prpty, key)                                                                                                                                     \
+  m_msgType get##prpty()                                                                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    auto p = dynamic_cast<HeaderType*>(m_HeaderMap[key].get());                                                                                                                                        \
+    if(nullptr != p)                                                                                                                                                                                   \
+    {                                                                                                                                                                                                  \
+      return p->getValue();                                                                                                                                                                            \
+    }                                                                                                                                                                                                  \
+    std::cout << "Value for Key: " << key.toStdString() << " was null." << std::endl;                                                                                                                  \
+    return 0;                                                                                                                                                                                          \
+  }
 
-
-#define EbsdHeader_INSTANCE_PROPERTY(HeaderType, m_msgType, prpty, key)\
+#define EBSDHEADER_INSTANCE_PROPERTY(HeaderType, m_msgType, prpty, key)\
   public:\
   EbsdHeader_SET_PROPERTY(HeaderType, m_msgType, prpty, key)\
   EbsdHeader_GET_PROPERTY(HeaderType, m_msgType, prpty, key)
