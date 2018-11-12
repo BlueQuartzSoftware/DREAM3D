@@ -176,7 +176,7 @@ void FindFeatureNeighborCAxisMisalignments::dataCheck()
   }
 
   // New Feature Data
-  if(m_FindAvgMisals == true)
+  if(m_FindAvgMisals)
   {
     tempPath.update(m_FeaturePhasesArrayPath.getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getAvgCAxisMisalignmentsArrayName());
     m_AvgCAxisMisalignmentsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
@@ -304,21 +304,21 @@ void FindFeatureNeighborCAxisMisalignments::execute()
         }
 
         misalignmentlists[i][j] = w * SIMPLib::Constants::k_180OverPi;
-        if(m_FindAvgMisals == true)
+        if(m_FindAvgMisals)
         {
           m_AvgCAxisMisalignments[i] += misalignmentlists[i][j];
         }
       }
       else
       {
-        if(m_FindAvgMisals == true)
+        if(m_FindAvgMisals)
         {
           hexneighborlistsize--;
         }
         misalignmentlists[i][j] = NAN;
       }
     }
-    if(m_FindAvgMisals == true)
+    if(m_FindAvgMisals)
     {
       if(hexneighborlistsize > 0)
       {
@@ -348,7 +348,7 @@ void FindFeatureNeighborCAxisMisalignments::execute()
 AbstractFilter::Pointer FindFeatureNeighborCAxisMisalignments::newFilterInstance(bool copyFilterParameters) const
 {
   FindFeatureNeighborCAxisMisalignments::Pointer filter = FindFeatureNeighborCAxisMisalignments::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

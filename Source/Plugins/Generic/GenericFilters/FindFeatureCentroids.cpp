@@ -228,7 +228,7 @@ void FindFeatureCentroids::execute()
 AbstractFilter::Pointer FindFeatureCentroids::newFilterInstance(bool copyFilterParameters) const
 {
   FindFeatureCentroids::Pointer filter = FindFeatureCentroids::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

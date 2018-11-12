@@ -216,7 +216,7 @@ void ConvertHexGridToSquareGridWidget::validateInputFile()
 {
   QString currentPath = m_Filter->getInputPath();
   QFileInfo fi(currentPath);
-  if(currentPath.isEmpty() == false && fi.exists() == false)
+  if(!currentPath.isEmpty() && !fi.exists())
   {
     //    QString Ftype = m_FilterParameter->getFileType();
     //    QString ext = m_FilterParameter->getFileExtension();
@@ -225,7 +225,7 @@ void ConvertHexGridToSquareGridWidget::validateInputFile()
     QString title = QObject::tr("Select a replacement input file in filter '%2'").arg(m_Filter->getHumanLabel());
 
     QString file = QFileDialog::getExistingDirectory(this, title, getInputDirectory(), QFileDialog::ShowDirsOnly);
-    if(true == file.isEmpty())
+    if(file.isEmpty())
     {
       file = currentPath;
     }
@@ -252,7 +252,7 @@ bool ConvertHexGridToSquareGridWidget::verifyPathExists(QString outFilePath, QLi
 {
   //  std::cout << "outFilePath: " << outFilePath << std::endl;
   QFileInfo fileinfo(outFilePath);
-  if(false == fileinfo.exists())
+  if(!fileinfo.exists())
   {
     lineEdit->setStyleSheet("border: 1px solid red;");
   }
@@ -268,7 +268,7 @@ bool ConvertHexGridToSquareGridWidget::verifyPathExists(QString outFilePath, QLi
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::checkIOFiles()
 {
-  if(true == this->verifyPathExists(m_InputDir->text(), this->m_InputDir))
+  if(this->verifyPathExists(m_InputDir->text(), this->m_InputDir))
   {
     findMaxSliceAndPrefix();
   }
@@ -324,7 +324,7 @@ void ConvertHexGridToSquareGridWidget::on_m_OutputDirBtn_clicked()
   QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
   QString file = QFileDialog::getExistingDirectory(this, tr("Select Output Folder"), getOutputDirectory(), QFileDialog::ShowDirsOnly);
 
-  if(true == file.isEmpty())
+  if(file.isEmpty())
   {
     return;
   }
@@ -438,7 +438,7 @@ void ConvertHexGridToSquareGridWidget::generateExampleInputFile()
     QString filePath(fileList.at(i));
     QFileInfo fi(filePath);
     QListWidgetItem* item = new QListWidgetItem(filePath, m_FileListView);
-    if(fi.exists() == true)
+    if(fi.exists())
     {
       item->setIcon(greenDot);
     }
@@ -449,7 +449,7 @@ void ConvertHexGridToSquareGridWidget::generateExampleInputFile()
     }
   }
 
-  if(hasMissingFiles == true)
+  if(hasMissingFiles)
   {
     m_ErrorMessage->setVisible(true);
     m_ErrorMessage->setText("Alert: Red Dot File(s) on the list do NOT exist on the filesystem. Please make sure all files exist");
@@ -500,7 +500,7 @@ void ConvertHexGridToSquareGridWidget::findMaxSliceAndPrefix()
 #endif
 
   // Final check to make sure we have a valid file extension
-  if(m_FileExt->text().isEmpty() == true)
+  if(m_FileExt->text().isEmpty())
   {
     return;
   }
@@ -526,7 +526,7 @@ void ConvertHexGridToSquareGridWidget::findMaxSliceAndPrefix()
   int minTotalDigits = 1000;
   foreach(QFileInfo fi, angList)
   {
-    if(fi.suffix().compare(ext) && fi.isFile() == true)
+    if((fi.suffix().compare(ext) != 0) && fi.isFile())
     {
       pos = 0;
       list.clear();
@@ -558,10 +558,10 @@ void ConvertHexGridToSquareGridWidget::findMaxSliceAndPrefix()
         minTotalDigits = digitEnd - digitStart;
       }
       m_TotalDigits->setValue(minTotalDigits);
-      if(list.size() > 0)
+      if(!list.empty())
       {
         currValue = list.front().toInt(&ok);
-        if(false == flag)
+        if(!flag)
         {
           minSlice = currValue;
           flag = true;
@@ -626,7 +626,7 @@ void ConvertHexGridToSquareGridWidget::filterNeedsInputParameters(AbstractFilter
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::beforePreflight()
 {
-  if(m_DidCausePreflight == false)
+  if(!m_DidCausePreflight)
   {
   }
 }

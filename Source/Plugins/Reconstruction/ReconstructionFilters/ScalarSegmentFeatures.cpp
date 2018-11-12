@@ -98,9 +98,7 @@ public:
   }
 
 protected:
-  TSpecificCompareFunctorBool()
-  {
-  }
+  TSpecificCompareFunctorBool() = default;
 
 private:
   bool* m_Data = nullptr;          // The data that is being compared
@@ -151,9 +149,7 @@ public:
   }
 
 protected:
-  TSpecificCompareFunctor()
-  {
-  }
+  TSpecificCompareFunctor() = default;
 
 private:
   T* m_Data = nullptr;             // The data that is being compared
@@ -309,7 +305,7 @@ void ScalarSegmentFeatures::dataCheck()
     dataArrayPaths.push_back(getScalarArrayPath());
   }
 
-  if(m_UseGoodVoxels == true)
+  if(m_UseGoodVoxels)
   {
     m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -408,7 +404,7 @@ int64_t ScalarSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
   {
     if(m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
     {
-      if(m_UseGoodVoxels == false || m_GoodVoxels[randpoint] == true)
+      if(!m_UseGoodVoxels || m_GoodVoxels[randpoint])
       {
         seed = randpoint;
       }
@@ -437,16 +433,14 @@ int64_t ScalarSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
 // -----------------------------------------------------------------------------
 bool ScalarSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum)
 {
-  if(m_FeatureIds[neighborpoint] == 0 && (m_UseGoodVoxels == false || m_GoodVoxels[neighborpoint] == true))
+  if(m_FeatureIds[neighborpoint] == 0 && (!m_UseGoodVoxels || m_GoodVoxels[neighborpoint]))
   {
     CompareFunctor* func = m_Compare.get();
     return (*func)((size_t)(referencepoint), (size_t)(neighborpoint), gnum);
     //     | Functor  ||calling the operator() method of the CompareFunctor Class |
   }
-  else
-  {
+
     return false;
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -566,7 +560,7 @@ void ScalarSegmentFeatures::execute()
 AbstractFilter::Pointer ScalarSegmentFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   ScalarSegmentFeatures::Pointer filter = ScalarSegmentFeatures::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

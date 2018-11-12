@@ -170,7 +170,7 @@ void WarpRegularGrid::dataCheck()
 {
   getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellAttributeMatrixPath(), -301);
 
-  if(m_SaveAsNewDataContainer == false)
+  if(!m_SaveAsNewDataContainer)
   {
     getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
   }
@@ -225,7 +225,7 @@ void WarpRegularGrid::execute()
   }
 
   DataContainer::Pointer m;
-  if(m_SaveAsNewDataContainer == false)
+  if(!m_SaveAsNewDataContainer)
   {
     m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
   }
@@ -300,7 +300,7 @@ void WarpRegularGrid::execute()
     {
       newIndicies_I = newindicies[i];
 
-      if(goodPoint[i] == true)
+      if(goodPoint[i])
       {
         source = p->getVoidPointer((nComp * newIndicies_I));
         destination = data->getVoidPointer((data->getNumberOfComponents() * i));
@@ -327,7 +327,7 @@ void WarpRegularGrid::execute()
 AbstractFilter::Pointer WarpRegularGrid::newFilterInstance(bool copyFilterParameters) const
 {
   WarpRegularGrid::Pointer filter = WarpRegularGrid::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

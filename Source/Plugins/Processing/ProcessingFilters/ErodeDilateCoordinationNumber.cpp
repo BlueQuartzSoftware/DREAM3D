@@ -202,10 +202,10 @@ void ErodeDilateCoordinationNumber::execute()
   bool keepgoing = true;
   int32_t counter = 1;
 
-  while(counter > 0 && keepgoing == true)
+  while(counter > 0 && keepgoing)
   {
     counter = 0;
-    if(m_Loop == false)
+    if(!m_Loop)
     {
       keepgoing = false;
     }
@@ -345,7 +345,7 @@ void ErodeDilateCoordinationNumber::execute()
 AbstractFilter::Pointer ErodeDilateCoordinationNumber::newFilterInstance(bool copyFilterParameters) const
 {
   ErodeDilateCoordinationNumber::Pointer filter = ErodeDilateCoordinationNumber::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

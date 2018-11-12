@@ -251,7 +251,7 @@ void WriteIPFStandardTriangle::writeImage(QImage& image)
 
   QFileInfo fi((m_OutputFile));
   QDir parent(fi.absolutePath());
-  if(parent.exists() == false)
+  if(!parent.exists())
   {
     parent.mkpath(fi.absolutePath());
   }
@@ -271,7 +271,7 @@ void WriteIPFStandardTriangle::writeImage(QImage& image)
 AbstractFilter::Pointer WriteIPFStandardTriangle::newFilterInstance(bool copyFilterParameters) const
 {
   WriteIPFStandardTriangle::Pointer filter = WriteIPFStandardTriangle::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

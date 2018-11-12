@@ -206,7 +206,7 @@ void WriteStatsGenOdfAngleFile::dataCheck()
     m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(getUseGoodVoxels() == true)
+  if(getUseGoodVoxels())
   {
     // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
     cDims[0] = 1;
@@ -332,11 +332,11 @@ int WriteStatsGenOdfAngleFile::determineOutputLineCount(int64_t totalPoints, int
   {
     if(m_CellPhases[i] == phase)
     {
-      if(m_UseGoodVoxels == false)
+      if(!m_UseGoodVoxels)
       {
         lineCount++;
       }
-      else if(m_UseGoodVoxels == true && m_GoodVoxels[i] == true)
+      else if(m_UseGoodVoxels && m_GoodVoxels[i])
       {
         lineCount++;
       }
@@ -361,7 +361,7 @@ int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream& out, int32_t lineCou
 
   out << "# Angle Data is " << delStr[m_Delimiter] << " delimited.\n";
 
-  if(m_ConvertToDegrees == true)
+  if(m_ConvertToDegrees)
   {
     out << "# Euler angles are expressed in degrees\n";
   }
@@ -378,22 +378,22 @@ int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream& out, int32_t lineCou
 
     if(m_CellPhases[i] == phase)
     {
-      if(m_UseGoodVoxels == false)
+      if(!m_UseGoodVoxels)
       {
         writeLine = true;
       }
-      else if(m_UseGoodVoxels == true && m_GoodVoxels[i] == true)
+      else if(m_UseGoodVoxels && m_GoodVoxels[i])
       {
         writeLine = true;
       }
     }
 
-    if(writeLine == true)
+    if(writeLine)
     {
       float e0 = m_CellEulerAngles[i * 3 + 0];
       float e1 = m_CellEulerAngles[i * 3 + 1];
       float e2 = m_CellEulerAngles[i * 3 + 2];
-      if(m_ConvertToDegrees == true)
+      if(m_ConvertToDegrees)
       {
         e0 = e0 * static_cast<float>(SIMPLib::Constants::k_180OverPi);
         e1 = e1 * static_cast<float>(SIMPLib::Constants::k_180OverPi);
@@ -412,7 +412,7 @@ int WriteStatsGenOdfAngleFile::writeOutputFile(QTextStream& out, int32_t lineCou
 AbstractFilter::Pointer WriteStatsGenOdfAngleFile::newFilterInstance(bool copyFilterParameters) const
 {
   WriteStatsGenOdfAngleFile::Pointer filter = WriteStatsGenOdfAngleFile::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

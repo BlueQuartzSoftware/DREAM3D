@@ -5,10 +5,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReconstructionGuiPlugin::ReconstructionGuiPlugin()
-: ReconstructionPlugin()
-{
-}
+ReconstructionGuiPlugin::ReconstructionGuiPlugin() = default;
 
 // -----------------------------------------------------------------------------
 //

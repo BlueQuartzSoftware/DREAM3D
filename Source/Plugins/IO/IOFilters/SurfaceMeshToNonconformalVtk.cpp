@@ -287,7 +287,7 @@ void SurfaceMeshToNonconformalVtk::execute()
       pos[1] = static_cast<float>(nodes[i * 3 + 1]);
       pos[2] = static_cast<float>(nodes[i * 3 + 2]);
 
-      if(m_WriteBinaryFile == true)
+      if(m_WriteBinaryFile)
       {
         SIMPLib::Endian::FromSystemToBig::convert(pos[0]);
         SIMPLib::Endian::FromSystemToBig::convert(pos[1]);
@@ -386,7 +386,7 @@ void SurfaceMeshToNonconformalVtk::execute()
         tData[2] = triangles[j * 3 + 1];
         tData[3] = triangles[j * 3];
       }
-      if(m_WriteBinaryFile == true)
+      if(m_WriteBinaryFile)
       {
 
         SIMPLib::Endian::FromSystemToBig::convert(tData[0]);
@@ -437,7 +437,7 @@ void writePointScalarData(DataContainer::Pointer dc, const QString& vertexAttrib
     for(int i = 0; i < nT; ++i)
     {
       T swapped = 0x00;
-      if(writeBinaryData == true)
+      if(writeBinaryData)
       {
         swapped = static_cast<T>(m[i]);
         SIMPLib::Endian::FromSystemToBig::convert(swapped);
@@ -477,7 +477,7 @@ void writePointVectorData(DataContainer::Pointer dc, const QString& vertexAttrib
       T s0 = 0x00;
       T s1 = 0x00;
       T s2 = 0x00;
-      if(writeBinaryData == true)
+      if(writeBinaryData)
       {
         s0 = static_cast<T>(m[i * 3 + 0]);
         s1 = static_cast<T>(m[i * 3 + 1]);
@@ -546,7 +546,7 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
   {
     if(m_SurfaceMeshNodeType[i] > 0)
     {
-      if(m_WriteBinaryFile == true)
+      if(m_WriteBinaryFile)
       {
         // swapped = m_SurfaceMeshNodeType[i];
         // SIMPLib::Endian::FromSystemToBig::convert(swapped);
@@ -624,7 +624,7 @@ void writeCellScalarData(DataContainer::Pointer dc, const QString& faceAttribute
         }
 
         // Write the values to the buffer after an Endian swap.
-        if(writeBinaryData == true)
+        if(writeBinaryData)
         {
           SIMPLib::Endian::FromSystemToBig::convert(s0);
           buffer[index] = s0;
@@ -639,7 +639,7 @@ void writeCellScalarData(DataContainer::Pointer dc, const QString& faceAttribute
       }
 
       // Write the Buffer
-      if(writeBinaryData == true)
+      if(writeBinaryData)
       {
         fwrite(&(buffer.front()), sizeof(T), size, vtkFile);
       }
@@ -694,7 +694,7 @@ void writeCellNormalData(DataContainer::Pointer dc, const QString& faceAttribute
           s2 *= -1.0;
         }
         // Write the values to the buffer after an Endian swap.
-        if(writeBinaryData == true)
+        if(writeBinaryData)
         {
           SIMPLib::Endian::FromSystemToBig::convert(s0);
           buffer[index] = s0;
@@ -718,7 +718,7 @@ void writeCellNormalData(DataContainer::Pointer dc, const QString& faceAttribute
       }
 
       // Write the Buffer
-      if(writeBinaryData == true)
+      if(writeBinaryData)
       {
         fwrite(&(buffer.front()), sizeof(T), size * 3, vtkFile);
       }
@@ -749,7 +749,7 @@ void writeCellVectorData(DataContainer::Pointer dc, const QString& faceAttribute
       T s0 = 0x00;
       T s1 = 0x00;
       T s2 = 0x00;
-      if(writeBinaryData == true)
+      if(writeBinaryData)
       {
         s0 = static_cast<T>(m[i * 3 + 0]);
         s1 = static_cast<T>(m[i * 3 + 1]);
@@ -828,7 +828,7 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int
     {
       if(m_SurfaceMeshFaceLabels[j * 2] == gid || m_SurfaceMeshFaceLabels[j * 2 + 1] == gid)
       {
-        if(m_WriteBinaryFile == true)
+        if(m_WriteBinaryFile)
         {
           buffer[index] = swapped;
           ++index;
@@ -840,7 +840,7 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int
       }
     }
     // Write the Buffer
-    if(m_WriteBinaryFile == true)
+    if(m_WriteBinaryFile)
     {
       fwrite(&(buffer.front()), sizeof(int32_t), size, vtkFile);
     }
@@ -907,7 +907,7 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int
 AbstractFilter::Pointer SurfaceMeshToNonconformalVtk::newFilterInstance(bool copyFilterParameters) const
 {
   SurfaceMeshToNonconformalVtk::Pointer filter = SurfaceMeshToNonconformalVtk::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

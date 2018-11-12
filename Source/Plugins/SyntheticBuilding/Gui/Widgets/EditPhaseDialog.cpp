@@ -169,19 +169,19 @@ void EditPhaseDialog::setupGui()
   m_PptFractionValidator->setBottom(0.0);
   m_PptFractionValidator->setTop(1.0);
   m_PptFractionValidator->setDecimals(6);
-  if(m_EditFlag == true)
+  if(m_EditFlag)
   {
     phaseTypeCombo->setEnabled(false);
   }
-  if(m_EditFlag == false)
+  if(!m_EditFlag)
   {
     phaseTypeCombo->setEnabled(true);
   }
-  if(m_EditFlag == true)
+  if(m_EditFlag)
   {
     phaseTypeComboLabel->setEnabled(false);
   }
-  if(m_EditFlag == false)
+  if(!m_EditFlag)
   {
     phaseTypeComboLabel->setEnabled(true);
   }

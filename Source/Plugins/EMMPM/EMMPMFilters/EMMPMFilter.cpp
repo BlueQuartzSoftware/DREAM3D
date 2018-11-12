@@ -269,7 +269,7 @@ void EMMPMFilter::execute()
   // This is the routine that sets up the EM/MPM to segment the image
   segment(getEmmpmInitType());
 
-  if (m_UseOneBasedValues == true && m_OutputImagePtr.lock().get() != nullptr)
+  if(m_UseOneBasedValues && m_OutputImagePtr.lock() != nullptr)
   {
     UInt8ArrayType::Pointer outputArray =  m_OutputImagePtr.lock();
     for (int i=0; i<outputArray->getNumberOfTuples(); i++)
@@ -337,9 +337,9 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   m_Data->inputImageChannels = cDims[0];
 
   m_Data->simulatedAnnealing = (char)(getUseSimulatedAnnealing());
-  m_Data->useGradientPenalty = getUseGradientPenalty();
+  m_Data->useGradientPenalty = static_cast<char>(getUseGradientPenalty());
   m_Data->beta_e = getGradientBetaE();
-  m_Data->useCurvaturePenalty = getUseCurvaturePenalty();
+  m_Data->useCurvaturePenalty = static_cast<char>(getUseCurvaturePenalty());
   m_Data->beta_c = getCurvatureBetaC();
   m_Data->r_max = getCurvatureRMax();
   m_Data->ccostLoopDelay = getCurvatureEMLoopDelay();
@@ -389,19 +389,6 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   // into the initialization of the next Image to be Segmented
   m_PreviousMu.resize(getNumClasses() * m_Data->dims);
   m_PreviousSigma.resize(getNumClasses() * m_Data->dims);
-  if(0)
-  {
-    std::cout << "--------------------------------------------------------------" << std::endl;
-    for(std::vector<float>::size_type i = 0; i < getNumClasses(); i++)
-    {
-      std::cout << "Mu: " << m_Data->mean[i] << " Variance: " << sqrtf(m_Data->variance[i]) << std::endl;
-      for(uint32_t d = 0; d < m_Data->dims; d++)
-      {
-        m_PreviousMu[i * m_Data->dims + d] = m_Data->mean[i * m_Data->dims + d];
-        m_PreviousSigma[i * m_Data->dims + d] = m_Data->variance[i * m_Data->dims + d];
-      }
-    }
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -410,7 +397,7 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
 AbstractFilter::Pointer EMMPMFilter::newFilterInstance(bool copyFilterParameters) const
 {
   EMMPMFilter::Pointer filter = EMMPMFilter::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -294,7 +294,7 @@ void FindKernelAvgMisorientations::execute()
                 {
                   good = false;
                 }
-                if(good == true && m_FeatureIds[point] == m_FeatureIds[neighbor])
+                if(good && m_FeatureIds[point] == m_FeatureIds[neighbor])
                 {
                   w = std::numeric_limits<float>::max();
                   QuaternionMathF::Copy(quats[neighbor], q2);
@@ -330,7 +330,7 @@ void FindKernelAvgMisorientations::execute()
 AbstractFilter::Pointer FindKernelAvgMisorientations::newFilterInstance(bool copyFilterParameters) const
 {
   FindKernelAvgMisorientations::Pointer filter = FindKernelAvgMisorientations::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

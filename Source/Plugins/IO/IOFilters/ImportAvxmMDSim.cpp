@@ -17,7 +17,6 @@
 //
 // -----------------------------------------------------------------------------
 ImportAvxmMDSim::ImportAvxmMDSim()
-: AbstractFilter()
 {
   initialize();
 }
@@ -72,7 +71,7 @@ void ImportAvxmMDSim::dataCheck()
     return;
   }
 
-  if(m_InputFileListInfo.InputPath.isEmpty() == true)
+  if(m_InputFileListInfo.InputPath.isEmpty())
   {
     ss = QObject::tr("The input directory must be set.");
     setErrorCondition(-13001);
@@ -95,7 +94,7 @@ void ImportAvxmMDSim::dataCheck()
   m_FilePathList = FilePathGenerator::GenerateFileList(m_InputFileListInfo.StartIndex, m_InputFileListInfo.EndIndex, m_InputFileListInfo.IncrementIndex, hasMissingFiles, orderAscending,
                                                        m_InputFileListInfo.InputPath, m_InputFileListInfo.FilePrefix, m_InputFileListInfo.FileSuffix, m_InputFileListInfo.FileExtension,
                                                        m_InputFileListInfo.PaddingDigits);
-  if(m_FilePathList.size() == 0)
+  if(m_FilePathList.empty())
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
     setErrorCondition(-13002);
@@ -103,7 +102,7 @@ void ImportAvxmMDSim::dataCheck()
     return;
   }
 
-  if(hasMissingFiles == true)
+  if(hasMissingFiles)
   {
     QString ss = QObject::tr("Red Dot File(s) on the list do NOT exist on the filesystem. Please make sure all files exist.");
     setErrorCondition(-13003);
@@ -220,7 +219,7 @@ void ImportAvxmMDSim::execute()
       bool ok = false;
 
       float x = tokens[1].toFloat(&ok);
-      if(ok == true)
+      if(ok)
       {
         verts->setComponent(j, 0, x);
       }
@@ -228,7 +227,7 @@ void ImportAvxmMDSim::execute()
       ok = false;
 
       float y = tokens[2].toFloat(&ok);
-      if(ok == true)
+      if(ok)
       {
         verts->setComponent(j, 1, y);
       }
@@ -236,7 +235,7 @@ void ImportAvxmMDSim::execute()
       ok = false;
 
       float z = tokens[3].toFloat(&ok);
-      if(ok == true)
+      if(ok)
       {
         verts->setComponent(j, 2, z);
       }

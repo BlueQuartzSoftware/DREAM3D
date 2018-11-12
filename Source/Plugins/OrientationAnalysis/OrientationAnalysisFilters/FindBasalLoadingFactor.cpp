@@ -209,7 +209,7 @@ void FindBasalLoadingFactor::execute()
 AbstractFilter::Pointer FindBasalLoadingFactor::newFilterInstance(bool copyFilterParameters) const
 {
   FindBasalLoadingFactor::Pointer filter = FindBasalLoadingFactor::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

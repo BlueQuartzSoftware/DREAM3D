@@ -101,7 +101,7 @@ public:
         prog = prog + progIncrement;
         m_Filter->updateProgress(progIncrement);
       }
-      if(m_Filter->getCancel() == true)
+      if(m_Filter->getCancel())
       {
         return;
       }
@@ -229,7 +229,7 @@ void AlignSections::dataCheck()
   tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), "");
   getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, tempPath, -301);
 
-  if(true == m_WriteAlignmentShifts)
+  if(m_WriteAlignmentShifts)
   {
     FileSystemPathHelper::CheckOutputFile(this, "Output Alignment Shifts File", getAlignmentShiftFileName(), true);
   }
@@ -253,7 +253,6 @@ void AlignSections::preflight()
 // -----------------------------------------------------------------------------
 void AlignSections::find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts)
 {
-  return;
 }
 
 // -----------------------------------------------------------------------------
@@ -302,7 +301,7 @@ void AlignSections::execute()
   // The idea for this parallel section is to parallelize over each Data Array that
   // will need it's data adjusted. This should go faster than before by about 2x.
   // Better speed up could be achieved if we had better data locality.
-  if(doParallel == true)
+  if(doParallel)
   {
     std::shared_ptr<tbb::task_group> g(new tbb::task_group);
     QVector<QString> voxelArrayNames = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArrayNames().toVector();
@@ -404,7 +403,7 @@ void AlignSections::execute()
 AbstractFilter::Pointer AlignSections::newFilterInstance(bool copyFilterParameters) const
 {
   AlignSections::Pointer filter = AlignSections::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

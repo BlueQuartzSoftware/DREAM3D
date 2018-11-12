@@ -146,7 +146,7 @@ void MultiEmmpmFilter::dataCheck()
   setErrorCondition(0);
   setWarningCondition(0);
 
-  if(DataArrayPath::ValidateVector(getInputDataArrayVector()) == false)
+  if(!DataArrayPath::ValidateVector(getInputDataArrayVector()))
   {
     setErrorCondition(-89004);
     QString ss = QObject::tr("All Attribute Arrays must belong to the same Data Container and Attribute Matrix");
@@ -335,7 +335,7 @@ void MultiEmmpmFilter::execute()
 AbstractFilter::Pointer MultiEmmpmFilter::newFilterInstance(bool copyFilterParameters) const
 {
   MultiEmmpmFilter::Pointer filter = MultiEmmpmFilter::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     SIMPL_COPY_INSTANCEVAR(InputDataArrayVector)
     SIMPL_COPY_INSTANCEVAR(NumClasses)

@@ -249,13 +249,13 @@ void YSChoiAbaqusReader::dataCheck()
   }
 
   QFileInfo fi(getInputFile());
-  if(getInputFile().isEmpty() == true)
+  if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if(fi.exists() == false)
+  else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
@@ -278,7 +278,7 @@ void YSChoiAbaqusReader::dataCheck()
     bool headerdone = false;
     int xpoints, ypoints, zpoints;
     float resx, resy, resz;
-    while(headerdone == false)
+    while(!headerdone)
     {
       QByteArray buf = in.readLine();
 
@@ -393,7 +393,7 @@ void YSChoiAbaqusReader::execute()
   QString word;
   bool ok = false;
   bool headerdone = false;
-  while(headerdone == false)
+  while(!headerdone)
   {
     QByteArray buf = in.readLine();
 
@@ -483,7 +483,7 @@ void YSChoiAbaqusReader::execute()
     for(int iter2 = 0; iter2 < 3; iter2++)
     {
       headerdone = false;
-      while(headerdone == false)
+      while(!headerdone)
       {
         buf = in2.readLine();
 
@@ -495,7 +495,7 @@ void YSChoiAbaqusReader::execute()
       }
       for(int i = 0; i < totalpoints; i++)
       {
-        onedge = 0;
+        onedge = false;
         value = buf.toInt(&ok, 10);
         mat[i][iter1][iter2] = value;
       }
@@ -550,7 +550,7 @@ void YSChoiAbaqusReader::execute()
 AbstractFilter::Pointer YSChoiAbaqusReader::newFilterInstance(bool copyFilterParameters) const
 {
   YSChoiAbaqusReader::Pointer filter = YSChoiAbaqusReader::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

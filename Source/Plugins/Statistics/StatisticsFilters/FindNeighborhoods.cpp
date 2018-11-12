@@ -370,7 +370,7 @@ void FindNeighborhoods::execute()
 #endif
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel == true)
+  if(doParallel)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalFeatures), FindNeighborhoodsImpl(this, totalFeatures, m_Centroids, bins, criticalDistance), tbb::auto_partitioner());
   }
@@ -426,7 +426,7 @@ void FindNeighborhoods::updateProgress(size_t numCompleted, size_t totalFeatures
 AbstractFilter::Pointer FindNeighborhoods::newFilterInstance(bool copyFilterParameters) const
 {
   FindNeighborhoods::Pointer filter = FindNeighborhoods::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

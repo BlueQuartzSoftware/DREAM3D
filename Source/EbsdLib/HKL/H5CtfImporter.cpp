@@ -99,15 +99,14 @@ using namespace H5Support_NAMESPACE;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5CtfImporter::H5CtfImporter():
-  EbsdImporter(),
-  xDim(0),
-  yDim(0),
-  xRes(0),
-  yRes(0),
-  zRes(0),
-  m_NumSlicesImported(1),
-  m_FileVersion(Ebsd::H5::FileVersion)
+H5CtfImporter::H5CtfImporter()
+: xDim(0)
+, yDim(0)
+, xRes(0)
+, yRes(0)
+, zRes(0)
+, m_NumSlicesImported(1)
+, m_FileVersion(Ebsd::H5::FileVersion)
 {
 }
 

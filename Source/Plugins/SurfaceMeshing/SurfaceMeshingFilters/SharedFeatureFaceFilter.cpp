@@ -274,7 +274,7 @@ void SharedFeatureFaceFilter::execute()
 AbstractFilter::Pointer SharedFeatureFaceFilter::newFilterInstance(bool copyFilterParameters) const
 {
   SharedFeatureFaceFilter::Pointer filter = SharedFeatureFaceFilter::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

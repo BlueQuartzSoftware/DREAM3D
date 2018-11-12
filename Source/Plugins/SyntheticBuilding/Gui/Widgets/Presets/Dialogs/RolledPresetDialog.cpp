@@ -169,7 +169,9 @@ float RolledPresetDialog::getA()
   bool ok = false;
   float d = A->text().toFloat(&ok);
   if(!ok)
+  {
     d = 0.0f;
+  }
   return d;
 }
 
@@ -181,7 +183,9 @@ float RolledPresetDialog::getB()
   bool ok = false;
   float d = B->text().toFloat(&ok);
   if(!ok)
+  {
     d = 0.0f;
+  }
   return d;
 }
 
@@ -193,6 +197,8 @@ float RolledPresetDialog::getC()
   bool ok = false;
   float d = C->text().toFloat(&ok);
   if(!ok)
+  {
     d = 0.0f;
+  }
   return d;
 }

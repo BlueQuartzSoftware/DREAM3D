@@ -62,7 +62,7 @@ void OrientationWidget::updateData(OrientationUtilityCalculator* calculator)
 // -----------------------------------------------------------------------------
 void OrientationWidget::updateAngleMeasurement(bool isDegrees)
 {
-  if(isDegrees == true)
+  if(isDegrees)
   {
     m_AngleMeasurement = Degrees;
   }

@@ -53,8 +53,7 @@ using namespace H5Support_NAMESPACE;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5AngVolumeReader::H5AngVolumeReader() :
-  H5EbsdVolumeReader()
+H5AngVolumeReader::H5AngVolumeReader()
 {
   // Init all the arrays to nullptr
   m_Phi1 = nullptr;

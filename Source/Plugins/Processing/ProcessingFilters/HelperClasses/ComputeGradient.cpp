@@ -48,9 +48,7 @@ ComputeGradient::ComputeGradient(DoubleArrayType::Pointer input, int width, int 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ComputeGradient::~ComputeGradient()
-{
-}
+ComputeGradient::~ComputeGradient() = default;
 
 // -----------------------------------------------------------------------------
 //

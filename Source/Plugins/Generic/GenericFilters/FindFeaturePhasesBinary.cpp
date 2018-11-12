@@ -201,7 +201,7 @@ void FindFeaturePhasesBinary::execute()
   for(size_t i = 0; i < totalPoints; i++)
   {
     gnum = m_FeatureIds[i];
-    if(m_GoodVoxels[i] == true)
+    if(m_GoodVoxels[i])
     {
       m_FeaturePhases[gnum] = 1;
     }
@@ -221,7 +221,7 @@ void FindFeaturePhasesBinary::execute()
 AbstractFilter::Pointer FindFeaturePhasesBinary::newFilterInstance(bool copyFilterParameters) const
 {
   FindFeaturePhasesBinary::Pointer filter = FindFeaturePhasesBinary::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

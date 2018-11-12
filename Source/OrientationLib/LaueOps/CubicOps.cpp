@@ -282,9 +282,7 @@ using namespace Detail;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CubicOps::CubicOps()
-{
-}
+CubicOps::CubicOps() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -1125,7 +1123,7 @@ void CubicOps::getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1)
 
   MatrixMath::Normalize3x1(LD);
 
-  if(maxSF == true)
+  if(maxSF)
   {
     maxSchmidFactor = 0;
   }
@@ -1144,10 +1142,10 @@ void CubicOps::getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1)
     directionComponent1 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw1));
     planeComponent1 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl1));
     schmidFactor1 = directionComponent1 * planeComponent1;
-    if(schmidFactor1 > maxSchmidFactor || maxSF == false)
+    if(schmidFactor1 > maxSchmidFactor || !maxSF)
     {
       totalDirectionMisalignment = 0;
-      if(maxSF == true)
+      if(maxSF)
       {
         maxSchmidFactor = schmidFactor1;
       }
@@ -1170,7 +1168,7 @@ void CubicOps::getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1)
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
       }
       F1 = schmidFactor1 * directionComponent1 * totalDirectionMisalignment;
-      if(maxSF == false)
+      if(!maxSF)
       {
         if(F1 < maxF1)
         {
@@ -1209,7 +1207,7 @@ void CubicOps::getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1
 
   MatrixMath::Normalize3x1(LD);
 
-  if(maxSF == true)
+  if(maxSF)
   {
     maxSchmidFactor = 0;
   }
@@ -1228,11 +1226,11 @@ void CubicOps::getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1
     directionComponent1 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw1));
     planeComponent1 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl1));
     schmidFactor1 = directionComponent1 * planeComponent1;
-    if(schmidFactor1 > maxSchmidFactor || maxSF == false)
+    if(schmidFactor1 > maxSchmidFactor || !maxSF)
     {
       totalDirectionMisalignment = 0;
       totalPlaneMisalignment = 0;
-      if(maxSF == true)
+      if(maxSF)
       {
         maxSchmidFactor = schmidFactor1;
       }
@@ -1257,7 +1255,7 @@ void CubicOps::getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1
         totalPlaneMisalignment = totalPlaneMisalignment + planeMisalignment;
       }
       F1spt = schmidFactor1 * directionComponent1 * totalDirectionMisalignment * totalPlaneMisalignment;
-      if(maxSF == false)
+      if(!maxSF)
       {
         if(F1spt < maxF1spt)
         {
@@ -1310,10 +1308,10 @@ void CubicOps::getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7)
     directionComponent1 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, uvw1));
     planeComponent1 = std::fabs(GeometryMath::CosThetaBetweenVectors(LD, hkl1));
     schmidFactor1 = directionComponent1 * planeComponent1;
-    if(schmidFactor1 > maxSchmidFactor || maxSF == false)
+    if(schmidFactor1 > maxSchmidFactor || !maxSF)
     {
       totalDirectionMisalignment = 0;
-      if(maxSF == true)
+      if(maxSF)
       {
         maxSchmidFactor = schmidFactor1;
       }
@@ -1336,7 +1334,7 @@ void CubicOps::getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7)
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
       }
       F7 = directionComponent1 * directionComponent1 * totalDirectionMisalignment;
-      if(maxSF == false)
+      if(!maxSF)
       {
         if(F7 < maxF7)
         {
@@ -1372,7 +1370,7 @@ namespace Detail
           m_xyz011(xyz011),
           m_xyz111(xyz111)
         {}
-        virtual ~GenerateSphereCoordsImpl() {}
+        virtual ~GenerateSphereCoordsImpl() = default;
 
         void generate(size_t start, size_t end) const
         {
@@ -1515,7 +1513,7 @@ void CubicOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArray
 #endif
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if (doParallel == true)
+  if(doParallel)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations),
                       Detail::CubicHigh::GenerateSphereCoordsImpl(eulers, xyz001, xyz011, xyz111), tbb::auto_partitioner());
@@ -1666,11 +1664,7 @@ bool CubicOps::inUnitTriangle(float eta, float chi)
   }
   SIMPLibMath::boundF(chiMax, -1.0f, 1.0f);
   chiMax = acos(chiMax);
-  if( eta < 0.0 || eta > (45.0 * SIMPLib::Constants::k_PiOver180) || chi < 0.0 || chi > chiMax )
-  {
-    return false;
-  }
-  return true;
+  return !(eta < 0.0 || eta > (45.0 * SIMPLib::Constants::k_PiOver180) || chi < 0.0 || chi > chiMax);
 }
 
 // -----------------------------------------------------------------------------
@@ -1686,7 +1680,7 @@ SIMPL::Rgb CubicOps::generateIPFColor(double* eulers, double* refDir, bool conve
 // -----------------------------------------------------------------------------
 SIMPL::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
 {
-  if (degToRad == true)
+  if(degToRad)
   {
     phi1 = phi1 * SIMPLib::Constants::k_DegToRad;
     phi = phi * SIMPLib::Constants::k_DegToRad;
@@ -1721,24 +1715,22 @@ SIMPL::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, doub
     MatrixMath::Multiply3x3with3x1(g, refDirection, p);
     MatrixMath::Normalize3x1(p);
 
-    if(getHasInversion() == false && p[2] < 0)
+    if(!getHasInversion() && p[2] < 0)
     {
       continue;
     }
-    else if(getHasInversion() == true && p[2] < 0)
+    if(getHasInversion() && p[2] < 0)
     {
       p[0] = -p[0], p[1] = -p[1], p[2] = -p[2];
     }
     chi = std::acos(p[2]);
     eta = std::atan2(p[1], p[0]);
-    if(inUnitTriangle(eta, chi) == false)
+    if(!inUnitTriangle(eta, chi))
     {
       continue;
     }
-    else
-    {
+
       break;
-    }
   }
 
   float etaMin = 0.0;
@@ -1809,7 +1801,10 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
   QString label0 = QString("<001>");
   QString label1 = QString("<011>");
   QString label2 = QString("<111>");
-  if(config.labels.size() > 0) { label0 = config.labels.at(0); }
+  if(!config.labels.empty())
+  {
+    label0 = config.labels.at(0);
+  }
   if(config.labels.size() > 1) { label1 = config.labels.at(1); }
   if(config.labels.size() > 2) { label2 = config.labels.at(2); }
 
@@ -1929,7 +1924,7 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 
-  if(doParallel == true)
+  if(doParallel)
   {
     std::shared_ptr<tbb::task_group> g(new tbb::task_group);
     g->run(GeneratePoleFigureRgbaImageImpl(intensity001.get(), &config, image001.get()));

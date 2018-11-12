@@ -237,27 +237,27 @@ void ErodeDilateBadData::execute()
             {
               good = 1;
               neighpoint = count + neighpoints[l];
-              if(l == 0 && (k == 0 || m_ZDirOn == false))
+              if(l == 0 && (k == 0 || !m_ZDirOn))
               {
                 good = 0;
               }
-              else if(l == 5 && (k == (dims[2] - 1) || m_ZDirOn == false))
+              else if(l == 5 && (k == (dims[2] - 1) || !m_ZDirOn))
               {
                 good = 0;
               }
-              else if(l == 1 && (j == 0 || m_YDirOn == false))
+              else if(l == 1 && (j == 0 || !m_YDirOn))
               {
                 good = 0;
               }
-              else if(l == 4 && (j == (dims[1] - 1) || m_YDirOn == false))
+              else if(l == 4 && (j == (dims[1] - 1) || !m_YDirOn))
               {
                 good = 0;
               }
-              else if(l == 2 && (i == 0 || m_XDirOn == false))
+              else if(l == 2 && (i == 0 || !m_XDirOn))
               {
                 good = 0;
               }
-              else if(l == 3 && (i == (dims[0] - 1) || m_XDirOn == false))
+              else if(l == 3 && (i == (dims[0] - 1) || !m_XDirOn))
               {
                 good = 0;
               }
@@ -353,7 +353,7 @@ void ErodeDilateBadData::execute()
 AbstractFilter::Pointer ErodeDilateBadData::newFilterInstance(bool copyFilterParameters) const
 {
   ErodeDilateBadData::Pointer filter = ErodeDilateBadData::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

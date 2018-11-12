@@ -235,7 +235,7 @@ void FindSchmids::dataCheck()
     dataArrayPaths.push_back(getAvgQuatsArrayPath());
   }
 
-  if(m_StoreAngleComponents == true)
+  if(m_StoreAngleComponents)
   {
     cDims[0] = 1;
     tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getPhisArrayName());
@@ -349,7 +349,7 @@ void FindSchmids::execute()
       }
 
       m_Schmids[i] = schmid;
-      if(m_StoreAngleComponents == true)
+      if(m_StoreAngleComponents)
       {
         m_Phis[i] = angleComps[0];
         m_Lambdas[i] = angleComps[1];
@@ -370,7 +370,7 @@ void FindSchmids::execute()
 AbstractFilter::Pointer FindSchmids::newFilterInstance(bool copyFilterParameters) const
 {
   FindSchmids::Pointer filter = FindSchmids::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -177,7 +177,7 @@ void FindVolFractions::execute()
 AbstractFilter::Pointer FindVolFractions::newFilterInstance(bool copyFilterParameters) const
 {
   FindVolFractions::Pointer filter = FindVolFractions::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

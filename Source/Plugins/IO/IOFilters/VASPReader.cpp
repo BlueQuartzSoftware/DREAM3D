@@ -164,13 +164,13 @@ void VASPReader::dataCheck()
 
   QFileInfo fi(getInputFile());
 
-  if(getInputFile().isEmpty() == true)
+  if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if(fi.exists() == false)
+  else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
@@ -194,7 +194,7 @@ void VASPReader::dataCheck()
     m_AtomTypes = m_AtomTypesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(getInputFile().isEmpty() == false && fi.exists() == true)
+  if(!getInputFile().isEmpty() && fi.exists())
   {
     // We need to read the header of the input file to get the dimensions
     m_InStream.setFileName(getInputFile());
@@ -418,7 +418,7 @@ int VASPReader::readFile()
 AbstractFilter::Pointer VASPReader::newFilterInstance(bool copyFilterParameters) const
 {
   VASPReader::Pointer filter = VASPReader::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

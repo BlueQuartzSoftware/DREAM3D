@@ -72,9 +72,7 @@ public:
     axis[1] = rotAxis[1];
     axis[2] = rotAxis[2];
   }
-  virtual ~RotateEulerRefFrameImpl()
-  {
-  }
+  virtual ~RotateEulerRefFrameImpl() = default;
 
   void convert(size_t start, size_t end) const
   {
@@ -221,7 +219,7 @@ void RotateEulerRefFrame::execute()
 #endif
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel == true)
+  if(doParallel)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), RotateEulerRefFrameImpl(m_CellEulerAngles, rotAngle, rotAxis), tbb::auto_partitioner());
   }
@@ -241,7 +239,7 @@ void RotateEulerRefFrame::execute()
 AbstractFilter::Pointer RotateEulerRefFrame::newFilterInstance(bool copyFilterParameters) const
 {
   RotateEulerRefFrame::Pointer filter = RotateEulerRefFrame::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

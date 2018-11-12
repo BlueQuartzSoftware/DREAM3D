@@ -146,7 +146,7 @@ void GenerateVectorColors::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to ignore it
-  if(getUseGoodVoxels() == true)
+  if(getUseGoodVoxels())
   {
     // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
     cDims[0] = 1;
@@ -221,7 +221,7 @@ void GenerateVectorColors::execute()
     float dir[3] = {0.0f, 0.0f, 0.0f};
     float r = 0, g = 0, b = 0;
     SIMPL::Rgb argb;
-    if(missingGoodVoxels == true || m_GoodVoxels[i] == true)
+    if(missingGoodVoxels || m_GoodVoxels[i])
     {
       dir[0] = m_Vectors[index + 0];
       dir[1] = m_Vectors[index + 1];
@@ -295,7 +295,7 @@ void GenerateVectorColors::execute()
 AbstractFilter::Pointer GenerateVectorColors::newFilterInstance(bool copyFilterParameters) const
 {
   GenerateVectorColors::Pointer filter = GenerateVectorColors::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

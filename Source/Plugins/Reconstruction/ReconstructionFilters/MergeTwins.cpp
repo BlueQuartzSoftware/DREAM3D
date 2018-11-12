@@ -333,7 +333,7 @@ bool MergeTwins::determineGrouping(int32_t referenceFeature, int32_t neighborFea
       {
         twin = true;
       }
-      if(twin == true)
+      if(twin)
       {
         m_FeatureParentIds[neighborFeature] = newFid;
         return true;
@@ -348,7 +348,6 @@ bool MergeTwins::determineGrouping(int32_t referenceFeature, int32_t neighborFea
 // -----------------------------------------------------------------------------
 void MergeTwins::characterize_twins()
 {
-  return;
 }
 
 // -----------------------------------------------------------------------------
@@ -395,7 +394,7 @@ void MergeTwins::execute()
   characterize_twins();
   notifyStatusMessage(getHumanLabel(), "Characterizing Twins Complete");
 
-  if(true == m_RandomizeParentIds)
+  if(m_RandomizeParentIds)
   {
     notifyStatusMessage(getHumanLabel(), "Randomizing Parent Ids....");
     // Generate all the numbers up front
@@ -449,7 +448,7 @@ void MergeTwins::execute()
 AbstractFilter::Pointer MergeTwins::newFilterInstance(bool copyFilterParameters) const
 {
   MergeTwins::Pointer filter = MergeTwins::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

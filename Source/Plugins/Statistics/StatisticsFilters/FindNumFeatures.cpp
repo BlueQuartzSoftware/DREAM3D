@@ -170,7 +170,7 @@ void FindNumFeatures::execute()
 AbstractFilter::Pointer FindNumFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   FindNumFeatures::Pointer filter = FindNumFeatures::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

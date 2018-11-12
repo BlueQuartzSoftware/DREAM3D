@@ -166,7 +166,7 @@ void GenerateEulerColors::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
   // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
   dims[0] = 1;
-  if(getUseGoodVoxels() == true)
+  if(getUseGoodVoxels())
   {
     // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
     dims[0] = 1;
@@ -255,7 +255,7 @@ void GenerateEulerColors::execute()
 AbstractFilter::Pointer GenerateEulerColors::newFilterInstance(bool copyFilterParameters) const
 {
   GenerateEulerColors::Pointer filter = GenerateEulerColors::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

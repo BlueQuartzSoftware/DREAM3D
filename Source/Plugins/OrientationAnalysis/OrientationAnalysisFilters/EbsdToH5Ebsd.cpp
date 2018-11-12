@@ -132,14 +132,14 @@ void EbsdToH5Ebsd::dataCheck()
   setWarningCondition(0);
   QString ss;
 
-  if(m_OutputFile.isEmpty() == true)
+  if(m_OutputFile.isEmpty())
   {
     ss = QObject::tr("The output file must be set");
     setErrorCondition(-12);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if(m_InputPath.isEmpty() == true)
+  if(m_InputPath.isEmpty())
   {
     ss = QObject::tr("The Input Directory must be set");
     setErrorCondition(-13);
@@ -154,7 +154,7 @@ void EbsdToH5Ebsd::dataCheck()
   QVector<QString> fileList =
       FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex, increment, hasMissingFiles, stackLowToHigh, m_InputPath, m_FilePrefix, m_FileSuffix, m_FileExtension, m_PaddingDigits);
 
-  if(fileList.size() == 0)
+  if(fileList.empty())
   {
     ss.clear();
     QTextStream out(&ss);
@@ -222,7 +222,7 @@ void EbsdToH5Ebsd::execute()
   herr_t err = 0;
   hid_t fileId = -1;
 
-  if(m_OutputFile.isEmpty() == true)
+  if(m_OutputFile.isEmpty())
   {
     QString ss = QObject::tr("EbsdToH5Ebsd Error: The output file was not set correctly or is empty. The current value is '%1'"
                              ". Please set the output file before running the importer. ")
@@ -506,7 +506,7 @@ void EbsdToH5Ebsd::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if(false == getCancel())
+  if(!getCancel())
   {
     // Write an Index data set which contains all the z index values which
     // should help speed up the reading side of this file
@@ -524,7 +524,7 @@ void EbsdToH5Ebsd::execute()
 AbstractFilter::Pointer EbsdToH5Ebsd::newFilterInstance(bool copyFilterParameters) const
 {
   EbsdToH5Ebsd::Pointer filter = EbsdToH5Ebsd::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     filter->setFilterParameters(getFilterParameters());
     // We are going to hand copy all of the parameters because the other way of copying the parameters are going to

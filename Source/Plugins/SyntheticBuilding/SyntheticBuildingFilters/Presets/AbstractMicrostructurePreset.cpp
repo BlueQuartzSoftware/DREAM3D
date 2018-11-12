@@ -58,9 +58,7 @@ const QString AbstractMicrostructurePreset::kAxis = "Axis";
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractMicrostructurePreset::AbstractMicrostructurePreset()
-{
-}
+AbstractMicrostructurePreset::AbstractMicrostructurePreset() = default;
 
 // -----------------------------------------------------------------------------
 //

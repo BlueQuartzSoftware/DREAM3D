@@ -142,7 +142,7 @@ void VisualizeGBCDGMT::dataCheck()
 
   // Make sure the file name ends with _1 so the GMT scripts work correctly
   QString fName = fi.baseName();
-  if(fName.endsWith("_1") == false)
+  if(!fName.endsWith("_1"))
   {
     fName = fName + "_1";
     QString absPath = fi.absolutePath() + "/" + fName + ".dat";
@@ -174,7 +174,7 @@ void VisualizeGBCDGMT::dataCheck()
     } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
-  if(nullptr != m_GBCDPtr.lock().get() && getPhaseOfInterest() >= m_GBCDPtr.lock()->getNumberOfTuples())
+  if(nullptr != m_GBCDPtr.lock() && getPhaseOfInterest() >= m_GBCDPtr.lock()->getNumberOfTuples())
   {
     QString ss = QObject::tr("The phase index is larger than the number of Ensembles").arg(ClassName());
     setErrorCondition(-1);
@@ -387,7 +387,7 @@ void VisualizeGBCDGMT::execute()
                location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
             {
               hemisphere = 0;
-              if(nhCheck == false)
+              if(!nhCheck)
               {
                 hemisphere = 1;
               }
@@ -420,7 +420,7 @@ void VisualizeGBCDGMT::execute()
                location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
             {
               hemisphere = 0;
-              if(nhCheck == false)
+              if(!nhCheck)
               {
                 hemisphere = 1;
               }
@@ -490,7 +490,7 @@ bool VisualizeGBCDGMT::getSquareCoord(float* xstl1_norm1, float* sqCoord)
 AbstractFilter::Pointer VisualizeGBCDGMT::newFilterInstance(bool copyFilterParameters) const
 {
   VisualizeGBCDGMT::Pointer filter = VisualizeGBCDGMT::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -257,7 +257,7 @@ void QuickSurfaceMesh::dataCheck()
 
   QVector<DataArrayPath> paths = getSelectedDataArrayPaths();
 
-  if(DataArrayPath::ValidateVector(paths) == false)
+  if(!DataArrayPath::ValidateVector(paths))
   {
     setErrorCondition(-11004);
     QString ss = QObject::tr("There are Attribute Arrays selected that are not contained in the same Attribute Matrix. All selected Attribute Arrays must belong to the same Attribute Matrix");
@@ -1440,7 +1440,7 @@ void QuickSurfaceMesh::generateTripleLines()
 AbstractFilter::Pointer QuickSurfaceMesh::newFilterInstance(bool copyFilterParameters) const
 {
   QuickSurfaceMesh::Pointer filter = QuickSurfaceMesh::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

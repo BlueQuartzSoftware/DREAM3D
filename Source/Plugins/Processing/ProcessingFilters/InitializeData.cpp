@@ -166,7 +166,7 @@ void InitializeData::dataCheck()
   setErrorCondition(0);
   setWarningCondition(0);
 
-  if(m_CellAttributeMatrixPaths.size() <= 0)
+  if(m_CellAttributeMatrixPaths.empty())
   {
     QString ss = "At least one data array must be selected.";
     setErrorCondition(-5550);
@@ -328,14 +328,14 @@ template <typename T> void InitializeData::checkInitialization(IDataArray::Point
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
-    else if(min < static_cast<double>(std::numeric_limits<T>().lowest()) || max > static_cast<double>(std::numeric_limits<T>().max()))
+    if(min < static_cast<double>(std::numeric_limits<T>().lowest()) || max > static_cast<double>(std::numeric_limits<T>().max()))
     {
       setErrorCondition(-4001);
       QString ss = QObject::tr("%1: The initialization range can only be from %2 to %3").arg(arrayName).arg(std::numeric_limits<T>::min()).arg(std::numeric_limits<T>::max());
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
-    else if(min == max)
+    if(min == max)
     {
       setErrorCondition(-4002);
       QString ss = arrayName + ": The initialization range must have differing values";
@@ -536,7 +536,7 @@ template <typename T> void InitializeData::initializeArrayWithReals(IDataArray::
 AbstractFilter::Pointer InitializeData::newFilterInstance(bool copyFilterParameters) const
 {
   InitializeData::Pointer filter = InitializeData::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

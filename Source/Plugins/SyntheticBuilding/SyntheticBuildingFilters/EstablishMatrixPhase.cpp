@@ -237,7 +237,7 @@ void EstablishMatrixPhase::dataCheck()
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_UseMask == true)
+  if(m_UseMask)
   {
     m_MaskPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getMaskArrayPath(), cDims);
     if(nullptr != m_MaskPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -418,7 +418,7 @@ void EstablishMatrixPhase::establish_matrix()
   size_t j = 0;
   for(size_t i = 0; i < totalPoints; ++i)
   {
-    if((m_UseMask == false && m_FeatureIds[i] <= 0) || (m_UseMask == true && m_Mask[i] == true && m_FeatureIds[i] <= 0))
+    if((!m_UseMask && m_FeatureIds[i] <= 0) || (m_UseMask && m_Mask[i] && m_FeatureIds[i] <= 0))
     {
       random = static_cast<float>(rg.genrand_res53());
       j = 0;
@@ -437,7 +437,7 @@ void EstablishMatrixPhase::establish_matrix()
       m_CellPhases[i] = matrixphases[j];
       m_FeaturePhases[(firstMatrixFeature + j)] = matrixphases[j];
     }
-    else if(m_UseMask == true && m_Mask[i] == false)
+    else if(m_UseMask && !m_Mask[i])
     {
       m_FeatureIds[i] = 0;
       m_CellPhases[i] = 0;
@@ -451,7 +451,7 @@ void EstablishMatrixPhase::establish_matrix()
 AbstractFilter::Pointer EstablishMatrixPhase::newFilterInstance(bool copyFilterParameters) const
 {
   EstablishMatrixPhase::Pointer filter = EstablishMatrixPhase::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

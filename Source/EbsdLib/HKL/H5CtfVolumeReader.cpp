@@ -51,8 +51,7 @@ using namespace H5Support_NAMESPACE;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5CtfVolumeReader::H5CtfVolumeReader() :
-  H5EbsdVolumeReader()
+H5CtfVolumeReader::H5CtfVolumeReader()
 {
   m_Phase = nullptr;
   m_X = nullptr;
@@ -66,7 +65,6 @@ H5CtfVolumeReader::H5CtfVolumeReader() :
   m_MAD = nullptr;
   m_BC = nullptr;
   m_BS = nullptr;
-
 }
 
 // -----------------------------------------------------------------------------

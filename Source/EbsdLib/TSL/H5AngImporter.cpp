@@ -56,13 +56,12 @@ using namespace H5Support_NAMESPACE;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5AngImporter::H5AngImporter() :
-  EbsdImporter(),
-  xDim(0),
-  yDim(0),
-  xRes(0),
-  yRes(0),
-  m_FileVersion(Ebsd::H5::FileVersion)
+H5AngImporter::H5AngImporter()
+: xDim(0)
+, yDim(0)
+, xRes(0)
+, yRes(0)
+, m_FileVersion(Ebsd::H5::FileVersion)
 {
 }
 
@@ -146,7 +145,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString& angFile)
 {
   herr_t err = -1;
   setCancel(false);
-  setErrorCondition(false);
+  setErrorCondition(0);
   setPipelineMessage("");
   QString streamBuf;
   QTextStream ss(&streamBuf);

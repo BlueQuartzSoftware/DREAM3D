@@ -62,9 +62,7 @@ public:
   {
   }
 
-  virtual ~GenerateCoordinatesImpl()
-  {
-  }
+  virtual ~GenerateCoordinatesImpl() = default;
 
   void convert(size_t start, size_t end) const
   {
@@ -240,7 +238,7 @@ void Stereographic3D::execute()
 #endif
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel == true)
+  if(doParallel)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), GenerateCoordinatesImpl(this, m_Quats, m_CellCoordinates), tbb::auto_partitioner());
   }
@@ -260,7 +258,7 @@ void Stereographic3D::execute()
 AbstractFilter::Pointer Stereographic3D::newFilterInstance(bool copyFilterParameters) const
 {
   Stereographic3D::Pointer filter = Stereographic3D::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

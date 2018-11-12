@@ -297,7 +297,7 @@ void FindTriangleGeomNeighbors::execute()
 AbstractFilter::Pointer FindTriangleGeomNeighbors::newFilterInstance(bool copyFilterParameters) const
 {
   FindTriangleGeomNeighbors::Pointer filter = FindTriangleGeomNeighbors::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

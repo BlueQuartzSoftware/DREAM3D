@@ -159,7 +159,7 @@ void InitializeSyntheticVolumeWidget::setupGui()
 void InitializeSyntheticVolumeWidget::on_m_InputFileBtn_clicked()
 {
   QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"), getInputFilePath(), tr("DREAM3D Stats Files (*.dream3d *.h5stats);;HDF5 Files(*.h5 *.hdf5);;All Files(*.*)"));
-  if(true == file.isEmpty())
+  if(file.isEmpty())
   {
     return;
   }
@@ -180,13 +180,13 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   {
     return;
   }
-  if(verifyPathExists(m_InputFile->text(), m_InputFile) == false)
+  if(!verifyPathExists(m_InputFile->text(), m_InputFile))
   {
     return;
   }
 
   QFileInfo fi(m_InputFile->text());
-  if(fi.isFile() == false)
+  if(!fi.isFile())
   {
     return;
   }
@@ -201,7 +201,6 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   m_DidCausePreflight = false;
   m_NewFileLoaded = false;
 
-  if(true)
   {
     return;
   }
@@ -348,7 +347,7 @@ void InitializeSyntheticVolumeWidget::filterNeedsInputParameters(AbstractFilter*
 void InitializeSyntheticVolumeWidget::beforePreflight()
 {
 
-  if(m_NewFileLoaded == true)
+  if(m_NewFileLoaded)
   {
     // We need to update the DataArraySelectionWidgets
     statsArrayWidget->initializeWidget(m_StatsArrayPath.get(), m_Filter);
@@ -358,7 +357,7 @@ void InitializeSyntheticVolumeWidget::beforePreflight()
     m_NewFileLoaded = false; // We are all done with our update based a new file being loaded
   }
 
-  if(m_DidCausePreflight == false)
+  if(!m_DidCausePreflight)
   {
     // Update the DataArraySelectionWidgets
   }
@@ -558,7 +557,7 @@ bool InitializeSyntheticVolumeWidget::verifyPathExists(QString outFilePath, QLin
 {
   //  std::cout << "outFilePath: " << outFilePath << std::endl;
   QFileInfo fileinfo(outFilePath);
-  if(false == fileinfo.exists())
+  if(!fileinfo.exists())
   {
     lineEdit->setStyleSheet("border: 1px solid red;");
   }

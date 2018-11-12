@@ -132,9 +132,7 @@ public:
     ellipfuncsPtr = ellipfuncs;
   }
 
-  virtual ~AssignVoxelsGapsImpl()
-  {
-  }
+  virtual ~AssignVoxelsGapsImpl() = default;
 
   // -----------------------------------------------------------------------------
   //
@@ -1581,7 +1579,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
       }
       m_Seed++;
 
-      if(availablePoints.size() > 0)
+      if(!availablePoints.empty())
       {
         key = static_cast<size_t>(rg.genrand_res53() * (m_AvailablePointsCount - 1));
         featureOwnersIdx = availablePointsInv[key];
@@ -3276,7 +3274,7 @@ int32_t PackPrimaryPhases::estimateNumFeatures(size_t xpoints, size_t ypoints, s
 
   StatsDataArray::Pointer statsPtr = dca->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), cDims);
   m_StatsDataArray = std::dynamic_pointer_cast<StatsDataArray>(statsPtr);
-  if(m_StatsDataArray.lock().get() == nullptr)
+  if(m_StatsDataArray.lock() == nullptr)
   {
     QString ss = QObject::tr("Stats Array Not Initialized correctly");
     setErrorCondition(-78011);
@@ -3338,7 +3336,7 @@ int32_t PackPrimaryPhases::estimateNumFeatures(size_t xpoints, size_t ypoints, s
     float curphasetotalvol = m_TotalVol * primaryPhaseFractionsLocal[j];
     while(currentvol < curphasetotalvol)
     {
-      volgood = 0;
+      volgood = false;
       phase = primaryPhasesLocal[j];
       PrimaryStatsData::Pointer pp = std::dynamic_pointer_cast<PrimaryStatsData>(statsDataArray[phase]);
       while(!volgood)
@@ -3498,7 +3496,7 @@ void PackPrimaryPhases::moveShapeDescriptions()
     AttributeMatrix::Pointer newAM = getDataContainerArray()->getAttributeMatrix(getNewAttributeMatrixPath());
     if(newAM != AttributeMatrix::NullPointer())
     {
-      if(attrArrays.size() > 0)
+      if(!attrArrays.empty())
       {
         size_t incomingArrayTupleCount = attrArrays[0]->getNumberOfTuples();
         size_t newAMTupleCount = newAM->getTupleDimensions()[0];
@@ -3517,7 +3515,7 @@ void PackPrimaryPhases::moveShapeDescriptions()
     AttributeMatrix::Pointer existingAM = getDataContainerArray()->getAttributeMatrix(getSelectedAttributeMatrixPath());
     if(existingAM != AttributeMatrix::NullPointer())
     {
-      if(attrArrays.size() > 0)
+      if(!attrArrays.empty())
       {
         size_t incomingArrayTupleCount = attrArrays[0]->getNumberOfTuples();
         size_t existingAMTupleCount = existingAM->getTupleDimensions()[0];
@@ -3544,7 +3542,7 @@ void PackPrimaryPhases::moveShapeDescriptions()
 AbstractFilter::Pointer PackPrimaryPhases::newFilterInstance(bool copyFilterParameters) const
 {
   PackPrimaryPhases::Pointer filter = PackPrimaryPhases::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     filter->setFilterParameters(getFilterParameters());
     copyFilterParameterInstanceVariables(filter.get());

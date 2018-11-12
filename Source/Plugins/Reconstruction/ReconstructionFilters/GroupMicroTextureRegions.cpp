@@ -394,7 +394,7 @@ int32_t GroupMicroTextureRegions::getSeed(int32_t newFid)
     getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
     updateFeatureInstancePointers();
 
-    if(m_UseRunningAverage == true)
+    if(m_UseRunningAverage)
     {
       QuaternionMathF::Copy(avgQuats[seed], q1);
       phase1 = m_CrystalStructures[m_FeaturePhases[seed]];
@@ -435,7 +435,7 @@ bool GroupMicroTextureRegions::determineGrouping(int32_t referenceFeature, int32
 
   if(m_FeatureParentIds[neighborFeature] == -1 && m_FeaturePhases[referenceFeature] > 0 && m_FeaturePhases[neighborFeature] > 0)
   {
-    if(m_UseRunningAverage == false)
+    if(!m_UseRunningAverage)
     {
       QuaternionMathF::Copy(avgQuats[referenceFeature], q1);
       phase1 = m_CrystalStructures[m_FeaturePhases[referenceFeature]];
@@ -465,7 +465,7 @@ bool GroupMicroTextureRegions::determineGrouping(int32_t referenceFeature, int32
       // dividing by the magnitudes (they would be 1)
       MatrixMath::Normalize3x1(c2);
 
-      if(m_UseRunningAverage == true)
+      if(m_UseRunningAverage)
       {
         w = GeometryMath::CosThetaBetweenVectors(m_AvgCAxes, c2);
       }
@@ -478,7 +478,7 @@ bool GroupMicroTextureRegions::determineGrouping(int32_t referenceFeature, int32
       if(w <= m_CAxisToleranceRad || (SIMPLib::Constants::k_Pi - w) <= m_CAxisToleranceRad)
       {
         m_FeatureParentIds[neighborFeature] = newFid;
-        if(m_UseRunningAverage == true)
+        if(m_UseRunningAverage)
         {
           MatrixMath::Multiply3x1withConstant(c2, m_Volumes[neighborFeature]);
           MatrixMath::Add3x1s(m_AvgCAxes, c2, m_AvgCAxes);
@@ -539,7 +539,7 @@ void GroupMicroTextureRegions::execute()
   }
 
   // By default we randomize grains
-  if(true == m_RandomizeParentIds)
+  if(m_RandomizeParentIds)
   {
     randomizeFeatureIds(totalPoints, totalFeatures);
   }
@@ -554,7 +554,7 @@ void GroupMicroTextureRegions::execute()
 AbstractFilter::Pointer GroupMicroTextureRegions::newFilterInstance(bool copyFilterParameters) const
 {
   GroupMicroTextureRegions::Pointer filter = GroupMicroTextureRegions::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

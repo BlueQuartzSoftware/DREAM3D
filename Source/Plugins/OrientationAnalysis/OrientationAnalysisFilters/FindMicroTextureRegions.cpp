@@ -304,7 +304,7 @@ void FindMicroTextureRegions::find_microtextureregions()
 AbstractFilter::Pointer FindMicroTextureRegions::newFilterInstance(bool copyFilterParameters) const
 {
   FindMicroTextureRegions::Pointer filter = FindMicroTextureRegions::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -43,9 +43,7 @@ namespace SM = SIMPL::SurfaceMesh;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TriangleOps::TriangleOps()
-{
-}
+TriangleOps::TriangleOps() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -154,7 +152,7 @@ bool TriangleOps::verifyWinding(int64_t source[3], int64_t tri[3], int32_t* face
         done = true;
         break;
       }
-      else if(i0 == nids[j] && i1 == nids[j + 1])
+      if(i0 == nids[j] && i1 == nids[j + 1])
       {
         //   qDebug() << "!!!!!! Winding Bad " << "\n";
         done = true;

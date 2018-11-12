@@ -162,12 +162,12 @@ void FitCorrelatedFeatureData::dataCheck()
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_SelectedFeatureArrayPath.isEmpty() == true)
+  if(m_SelectedFeatureArrayPath.isEmpty())
   {
     setErrorCondition(-11000);
     notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
   }
-  if(m_CorrelatedFeatureArrayPath.isEmpty() == true)
+  if(m_CorrelatedFeatureArrayPath.isEmpty())
   {
     setErrorCondition(-11000);
     notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
@@ -201,7 +201,7 @@ void FitCorrelatedFeatureData::dataCheck()
     m_NewEnsembleArray = m_NewEnsembleArrayPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_RemoveBiasedFeatures == true)
+  if(m_RemoveBiasedFeatures)
   {
     dims.resize(1);
     dims[0] = 1;
@@ -286,7 +286,7 @@ void fitData(IDataArray::Pointer inputData, float* ensembleArray, int32_t* eIds,
   int32_t ensemble;
   for(size_t i = 1; i < numfeatures; i++)
   {
-    if(removeBiasedFeatures == false || biasedFeatures[i] == false)
+    if(!removeBiasedFeatures || !biasedFeatures[i])
     {
       ensemble = eIds[i];
       values[ensemble][bPtr[i]].push_back(static_cast<float>(fPtr[i]));
@@ -304,7 +304,6 @@ void fitData(IDataArray::Pointer inputData, float* ensembleArray, int32_t* eIds,
       }
     }
   }
-  return;
 }
 
 // -----------------------------------------------------------------------------
@@ -483,7 +482,7 @@ void FitCorrelatedFeatureData::execute()
 AbstractFilter::Pointer FitCorrelatedFeatureData::newFilterInstance(bool copyFilterParameters) const
 {
   FitCorrelatedFeatureData::Pointer filter = FitCorrelatedFeatureData::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

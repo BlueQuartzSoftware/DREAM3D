@@ -58,9 +58,7 @@ public:
   SIMPL_SHARED_POINTERS(LessThanComparison<T>)
   SIMPL_STATIC_NEW_MACRO(LessThanComparison<T>)
   SIMPL_TYPE_MACRO(LessThanComparison<T>)
-  virtual ~LessThanComparison()
-  {
-  }
+  virtual ~LessThanComparison() = default;
 
   virtual bool compare(T a, T b)
   {
@@ -76,9 +74,7 @@ public:
   }
 
 protected:
-  LessThanComparison()
-  {
-  }
+  LessThanComparison() = default;
 };
 
 template <typename T> class GreaterThanComparison : public LessThanComparison<T>
@@ -87,9 +83,7 @@ public:
   SIMPL_SHARED_POINTERS(GreaterThanComparison<T>)
   SIMPL_STATIC_NEW_MACRO(GreaterThanComparison<T>)
   SIMPL_TYPE_MACRO_SUPER(GreaterThanComparison<T>, LessThanComparison<T>)
-  virtual ~GreaterThanComparison()
-  {
-  }
+  virtual ~GreaterThanComparison() = default;
 
   virtual bool compare(T a, T b)
   {
@@ -105,9 +99,7 @@ public:
   }
 
 protected:
-  GreaterThanComparison()
-  {
-  }
+  GreaterThanComparison() = default;
 };
 
 template <typename T> void ExecuteTemplate(ReplaceElementAttributesWithNeighborValues* filter, IDataArray::Pointer inArrayPtr)
@@ -154,7 +146,7 @@ template <typename T> void ExecuteTemplate(ReplaceElementAttributesWithNeighborV
 
   float thresholdValue = filter->getMinConfidence();
 
-  while(keepGoing == true)
+  while(keepGoing)
   {
     keepGoing = false;
     count = 0;
@@ -203,7 +195,7 @@ template <typename T> void ExecuteTemplate(ReplaceElementAttributesWithNeighborV
           {
             good = false;
           }
-          if(good == true)
+          if(good)
           {
             if(comp->compare1(data[neighbor], thresholdValue) && comp->compare2(data[neighbor], best))
             {
@@ -252,7 +244,7 @@ template <typename T> void ExecuteTemplate(ReplaceElementAttributesWithNeighborV
         }
       }
     }
-    if(filter->getLoop() == true && count > 0)
+    if(filter->getLoop() && count > 0)
     {
       keepGoing = true;
     }
@@ -394,7 +386,7 @@ void ReplaceElementAttributesWithNeighborValues::execute()
 AbstractFilter::Pointer ReplaceElementAttributesWithNeighborValues::newFilterInstance(bool copyFilterParameters) const
 {
   ReplaceElementAttributesWithNeighborValues::Pointer filter = ReplaceElementAttributesWithNeighborValues::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

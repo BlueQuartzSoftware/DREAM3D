@@ -358,7 +358,7 @@ void FindBoundaryStrengths::execute()
 AbstractFilter::Pointer FindBoundaryStrengths::newFilterInstance(bool copyFilterParameters) const
 {
   FindBoundaryStrengths::Pointer filter = FindBoundaryStrengths::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

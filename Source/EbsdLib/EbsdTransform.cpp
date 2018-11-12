@@ -41,10 +41,7 @@
 // -----------------------------------------------------------------------------
 EbsdTransform::EbsdTransform()
 
-{
-
-}
-
+    = default;
 
 Ebsd::EbsdToSampleCoordinateMapping EbsdTransform::IdentifyStandardTransformation(AxisAngleInput_t sampleTransformation, AxisAngleInput_t eulerTransformation)
 {
@@ -100,10 +97,7 @@ Ebsd::EbsdToSampleCoordinateMapping EbsdTransform::IdentifyStandardTransformatio
     return Ebsd::HEDMdefault;
   }
 
-
-  else {return Ebsd::UnknownCoordinateMapping;}
-
-
+  return Ebsd::UnknownCoordinateMapping;
 }
 
 

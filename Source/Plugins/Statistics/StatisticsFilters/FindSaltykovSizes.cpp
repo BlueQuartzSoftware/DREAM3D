@@ -426,7 +426,7 @@ template <class T> int FindSaltykovSizes::round_to_nearest_int(T x)
 AbstractFilter::Pointer FindSaltykovSizes::newFilterInstance(bool copyFilterParameters) const
 {
   FindSaltykovSizes::Pointer filter = FindSaltykovSizes::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

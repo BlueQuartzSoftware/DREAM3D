@@ -299,7 +299,7 @@ void ComputeMomentInvariants2D::execute()
 AbstractFilter::Pointer ComputeMomentInvariants2D::newFilterInstance(bool copyFilterParameters) const
 {
   ComputeMomentInvariants2D::Pointer filter = ComputeMomentInvariants2D::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

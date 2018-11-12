@@ -245,7 +245,7 @@ void EbsdToH5EbsdWidget::setupMenuField()
     connect(m_ShowFileAction, SIGNAL(triggered()), this, SLOT(showFileInFileSystem()));
   }
 
-  if(m_LineEdit->text().isEmpty() == false && fi.exists())
+  if(!m_LineEdit->text().isEmpty() && fi.exists())
   {
     m_ShowFileAction->setEnabled(true);
   }
@@ -303,7 +303,7 @@ void EbsdToH5EbsdWidget::validateInputFile()
 {
   QString currentPath = m_Filter->getInputPath();
   QFileInfo fi(currentPath);
-  if(currentPath.isEmpty() == false && fi.exists() == false)
+  if(!currentPath.isEmpty() && !fi.exists())
   {
     //    QString Ftype = getFilterParameter()->getFileType();
     //    QString ext = getFilterParameter()->getFileExtension();
@@ -317,7 +317,7 @@ void EbsdToH5EbsdWidget::validateInputFile()
     QString title = QObject::tr("Select a replacement input file in filter '%2'").arg(m_Filter->getHumanLabel());
 
     QString file = QFileDialog::getExistingDirectory(this, title, defaultName, QFileDialog::ShowDirsOnly);
-    if(true == file.isEmpty())
+    if(file.isEmpty())
     {
       file = currentPath;
     }
@@ -374,7 +374,7 @@ void EbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString& text)
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::checkIOFiles()
 {
-  if(true == this->verifyPathExists(m_LineEdit->text(), this->m_LineEdit))
+  if(this->verifyPathExists(m_LineEdit->text(), this->m_LineEdit))
   {
     findEbsdMaxSliceAndPrefix();
   }
@@ -387,7 +387,7 @@ void EbsdToH5EbsdWidget::on_m_OutputFileBtn_clicked()
 {
   QString defaultName = getOutputPath();
   QString file = QFileDialog::getSaveFileName(this, tr("Save HDF5 EBSD File"), defaultName, tr("HDF5 EBSD Files (*.h5ebsd)"));
-  if(true == file.isEmpty())
+  if(file.isEmpty())
   {
     return;
   }
@@ -586,7 +586,7 @@ void EbsdToH5EbsdWidget::generateExampleEbsdInputFile()
     QString filePath(fileList.at(i));
     QFileInfo fi(filePath);
     QListWidgetItem* item = new QListWidgetItem(filePath, m_FileListView);
-    if(fi.exists() == true)
+    if(fi.exists())
     {
       item->setIcon(greenDot);
     }
@@ -597,7 +597,7 @@ void EbsdToH5EbsdWidget::generateExampleEbsdInputFile()
     }
   }
 
-  if(hasMissingFiles == true)
+  if(hasMissingFiles)
   {
     m_ErrorMessage->setVisible(true);
     m_ErrorMessage->setText("Alert: Red Dot File(s) on the list do NOT exist on the filesystem. Please make sure all files exist");
@@ -628,7 +628,7 @@ void EbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList = FilePathGenerator::GenerateFileList(start, end, increment, hasMissingFiles, m_StackLowToHigh->isChecked(), inputPath, m_FilePrefix->text(), m_FileSuffix->text(),
                                                                   m_FileExt->text(), m_TotalDigits->value());
-  if(fileList.size() == 0)
+  if(fileList.empty())
   {
     return;
   }
@@ -715,19 +715,19 @@ void EbsdToH5EbsdWidget::findEbsdMaxSliceAndPrefix()
     filters << "*" + ext;
     dir.setNameFilters(filters);
     QFileInfoList angList = dir.entryInfoList();
-    if(angList.size() != 0)
+    if(!angList.empty())
     {
       m_FileExt->setText("ang");
     }
   }
-  if(m_FileExt->text().isEmpty() == true)
+  if(m_FileExt->text().isEmpty())
   {
     QString ext = ".ctf";
     QStringList filters;
     filters << "*" + ext;
     dir.setNameFilters(filters);
     QFileInfoList angList = dir.entryInfoList();
-    if(angList.size() != 0)
+    if(!angList.empty())
     {
       m_FileExt->setText("ctf");
     }
@@ -735,7 +735,7 @@ void EbsdToH5EbsdWidget::findEbsdMaxSliceAndPrefix()
   // Add in more file formats to look for here
 
   // Final check to make sure we have a valid file extension
-  if(m_FileExt->text().isEmpty() == true)
+  if(m_FileExt->text().isEmpty())
   {
     return;
   }
@@ -761,7 +761,7 @@ void EbsdToH5EbsdWidget::findEbsdMaxSliceAndPrefix()
   int minTotalDigits = 1000;
   foreach(QFileInfo fi, angList)
   {
-    if(fi.suffix().compare(ext) && fi.isFile() == true)
+    if((fi.suffix().compare(ext) != 0) && fi.isFile())
     {
       pos = 0;
       list.clear();
@@ -793,10 +793,10 @@ void EbsdToH5EbsdWidget::findEbsdMaxSliceAndPrefix()
         minTotalDigits = digitEnd - digitStart;
       }
       m_TotalDigits->setValue(minTotalDigits);
-      if(list.size() > 0)
+      if(!list.empty())
       {
         currValue = list.front().toInt(&ok);
-        if(false == flag)
+        if(!flag)
         {
           minSlice = currValue;
           flag = true;
@@ -873,7 +873,7 @@ void EbsdToH5EbsdWidget::filterNeedsInputParameters(AbstractFilter* filter)
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::beforePreflight()
 {
-  if(m_DidCausePreflight == false)
+  if(!m_DidCausePreflight)
   {
   }
 }

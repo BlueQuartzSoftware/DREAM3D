@@ -139,11 +139,11 @@ void SurfaceMeshToVtk::dataCheck()
   FileSystemPathHelper::CheckOutputFile(this, "Output VTK File", getOutputVtkFile(), true);
 
   QString dcName;
-  if(m_SelectedFaceArrays.size() > 0)
+  if(!m_SelectedFaceArrays.empty())
   {
     dcName = m_SelectedFaceArrays[0].getDataContainerName();
   }
-  else if(m_SelectedVertexArrays.size() > 0)
+  else if(!m_SelectedVertexArrays.empty())
   {
     dcName = m_SelectedVertexArrays[0].getDataContainerName();
   }
@@ -330,7 +330,7 @@ void SurfaceMeshToVtk::execute()
       pos[1] = static_cast<float>(nodes[i * 3 + 1]);
       pos[2] = static_cast<float>(nodes[i * 3 + 2]);
 
-      if(m_WriteBinaryFile == true)
+      if(m_WriteBinaryFile)
       {
         SIMPLib::Endian::FromSystemToBig::convert(pos[0]);
         SIMPLib::Endian::FromSystemToBig::convert(pos[1]);
@@ -350,7 +350,7 @@ void SurfaceMeshToVtk::execute()
   int tData[4];
   int triangleCount = numTriangles;
   //  int tn1, tn2, tn3;
-  if(false == m_WriteConformalMesh)
+  if(!m_WriteConformalMesh)
   {
     triangleCount = numTriangles * 2;
   }
@@ -363,7 +363,7 @@ void SurfaceMeshToVtk::execute()
     tData[2] = triangles[j * 3 + 1];
     tData[3] = triangles[j * 3 + 2];
 
-    if(m_WriteBinaryFile == true)
+    if(m_WriteBinaryFile)
     {
       tData[0] = 3; // Push on the total number of entries for this entry
       SIMPLib::Endian::FromSystemToBig::convert(tData[0]);
@@ -371,7 +371,7 @@ void SurfaceMeshToVtk::execute()
       SIMPLib::Endian::FromSystemToBig::convert(tData[2]); // Index of Vertex 1
       SIMPLib::Endian::FromSystemToBig::convert(tData[3]); // Index of Vertex 2
       fwrite(tData, sizeof(int), 4, vtkFile);
-      if(false == m_WriteConformalMesh)
+      if(!m_WriteConformalMesh)
       {
         tData[0] = tData[1];
         tData[1] = tData[3];
@@ -384,7 +384,7 @@ void SurfaceMeshToVtk::execute()
     else
     {
       fprintf(vtkFile, "3 %d %d %d\n", tData[1], tData[2], tData[3]);
-      if(false == m_WriteConformalMesh)
+      if(!m_WriteConformalMesh)
       {
         fprintf(vtkFile, "3 %d %d %d\n", tData[3], tData[2], tData[1]);
       }
@@ -421,7 +421,7 @@ void writePointScalarData(DataContainer::Pointer dc, const QString& vertexAttrib
     for(int i = 0; i < nT; ++i)
     {
       T swapped = 0x00;
-      if(writeBinaryData == true)
+      if(writeBinaryData)
       {
         swapped = static_cast<T>(m[i]);
         SIMPLib::Endian::FromSystemToBig::convert(swapped);
@@ -460,7 +460,7 @@ void writePointVectorData(DataContainer::Pointer dc, const QString& vertexAttrib
       T s0 = 0x00;
       T s1 = 0x00;
       T s2 = 0x00;
-      if(writeBinaryData == true)
+      if(writeBinaryData)
       {
         s0 = static_cast<T>(m[i * 3 + 0]);
         s1 = static_cast<T>(m[i * 3 + 1]);
@@ -522,7 +522,7 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
   {
     if(m_SurfaceMeshNodeType[i] > 0)
     {
-      if(m_WriteBinaryFile == true)
+      if(m_WriteBinaryFile)
       {
         // Normally, we would byte swap to big endian but since we are only writing
         // 1 byte Char values, nothing to swap.
@@ -576,12 +576,12 @@ void writeCellScalarData(DataContainer::Pointer dc, const QString& faceAttribute
     for(int i = 0; i < nT; ++i)
     {
       T swapped = 0x00;
-      if(writeBinaryData == true)
+      if(writeBinaryData)
       {
         swapped = static_cast<T>(m[i]);
         SIMPLib::Endian::FromSystemToBig::convert(swapped);
         fwrite(&swapped, sizeof(T), 1, vtkFile);
-        if(false == writeConformalMesh)
+        if(!writeConformalMesh)
         {
           fwrite(&swapped, sizeof(T), 1, vtkFile);
         }
@@ -590,7 +590,7 @@ void writeCellScalarData(DataContainer::Pointer dc, const QString& faceAttribute
       {
 
         ss << m[i] << " ";
-        if(false == writeConformalMesh)
+        if(!writeConformalMesh)
         {
           ss << m[i] << " ";
         }
@@ -625,7 +625,7 @@ void writeCellVectorData(DataContainer::Pointer dc, const QString& faceAttribute
       T s0 = 0x00;
       T s1 = 0x00;
       T s2 = 0x00;
-      if(writeBinaryData == true)
+      if(writeBinaryData)
       {
         s0 = static_cast<T>(m[i * 3 + 0]);
         s1 = static_cast<T>(m[i * 3 + 1]);
@@ -636,7 +636,7 @@ void writeCellVectorData(DataContainer::Pointer dc, const QString& faceAttribute
         fwrite(&s0, sizeof(T), 1, vtkFile);
         fwrite(&s1, sizeof(T), 1, vtkFile);
         fwrite(&s2, sizeof(T), 1, vtkFile);
-        if(false == writeConformalMesh)
+        if(!writeConformalMesh)
         {
           fwrite(&s0, sizeof(T), 1, vtkFile);
           fwrite(&s1, sizeof(T), 1, vtkFile);
@@ -646,7 +646,7 @@ void writeCellVectorData(DataContainer::Pointer dc, const QString& faceAttribute
       else
       {
         ss << m[i * 3 + 0] << " " << m[i * 3 + 1] << " " << m[i * 3 + 2] << " ";
-        if(false == writeConformalMesh)
+        if(!writeConformalMesh)
         {
           ss << m[i * 3 + 0] << " " << m[i * 3 + 1] << " " << m[i * 3 + 2] << " ";
         }
@@ -681,7 +681,7 @@ void writeCellNormalData(DataContainer::Pointer dc, const QString& faceAttribute
       T s0 = 0x00;
       T s1 = 0x00;
       T s2 = 0x00;
-      if(writeBinaryData == true)
+      if(writeBinaryData)
       {
         s0 = static_cast<T>(m[i * 3 + 0]);
         s1 = static_cast<T>(m[i * 3 + 1]);
@@ -692,7 +692,7 @@ void writeCellNormalData(DataContainer::Pointer dc, const QString& faceAttribute
         fwrite(&s0, sizeof(T), 1, vtkFile);
         fwrite(&s1, sizeof(T), 1, vtkFile);
         fwrite(&s2, sizeof(T), 1, vtkFile);
-        if(false == writeConformalMesh)
+        if(!writeConformalMesh)
         {
           s0 = static_cast<T>(m[i * 3 + 0]) * -1.0;
           s1 = static_cast<T>(m[i * 3 + 1]) * -1.0;
@@ -709,7 +709,7 @@ void writeCellNormalData(DataContainer::Pointer dc, const QString& faceAttribute
       {
 
         ss << m[i * 3 + 0] << " " << m[i * 3 + 1] << " " << m[i * 3 + 2] << " ";
-        if(false == writeConformalMesh)
+        if(!writeConformalMesh)
         {
           ss << -1.0 * m[i * 3 + 0] << " " << -1.0 * m[i * 3 + 1] << " " << -1.0 * m[i * 3 + 2] << " ";
         }
@@ -744,7 +744,7 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
 
   int numTriangles = nT;
   int swapped;
-  if(false == m_WriteConformalMesh)
+  if(!m_WriteConformalMesh)
   {
     numTriangles = nT * 2;
   }
@@ -760,12 +760,12 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
   {
     // FaceArray::Face_t& t = triangles[i]; // Get the current Node
 
-    if(m_WriteBinaryFile == true)
+    if(m_WriteBinaryFile)
     {
       swapped = m_SurfaceMeshFaceLabels[i * 2];
       SIMPLib::Endian::FromSystemToBig::convert(swapped);
       fwrite(&swapped, sizeof(int), 1, vtkFile);
-      if(false == m_WriteConformalMesh)
+      if(!m_WriteConformalMesh)
       {
         swapped = m_SurfaceMeshFaceLabels[i * 2 + 1];
         SIMPLib::Endian::FromSystemToBig::convert(swapped);
@@ -775,7 +775,7 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
     else
     {
       fprintf(vtkFile, "%d\n", m_SurfaceMeshFaceLabels[i * 2]);
-      if(false == m_WriteConformalMesh)
+      if(!m_WriteConformalMesh)
       {
         fprintf(vtkFile, "%d\n", m_SurfaceMeshFaceLabels[i * 2 + 1]);
       }
@@ -841,7 +841,7 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
 AbstractFilter::Pointer SurfaceMeshToVtk::newFilterInstance(bool copyFilterParameters) const
 {
   SurfaceMeshToVtk::Pointer filter = SurfaceMeshToVtk::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

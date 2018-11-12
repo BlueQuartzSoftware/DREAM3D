@@ -206,7 +206,7 @@ void FindFeaturePhases::execute()
     m_FeaturePhases[gnum] = m_CellPhases[i];
   }
 
-  if(warningMap.size() > 0)
+  if(!warningMap.empty())
   {
     QStringList warnings;
     QString header = QString("Elements from some features did not all have the same phase Id. The last phase Id copied into each feature will be used");
@@ -234,7 +234,7 @@ void FindFeaturePhases::execute()
 AbstractFilter::Pointer FindFeaturePhases::newFilterInstance(bool copyFilterParameters) const
 {
   FindFeaturePhases::Pointer filter = FindFeaturePhases::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }
