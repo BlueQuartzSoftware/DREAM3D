@@ -5,10 +5,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationAnalysisGuiPlugin::OrientationAnalysisGuiPlugin()
-: OrientationAnalysisPlugin()
-{
-}
+OrientationAnalysisGuiPlugin::OrientationAnalysisGuiPlugin() = default;
 
 // -----------------------------------------------------------------------------
 //

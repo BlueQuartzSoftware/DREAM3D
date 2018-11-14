@@ -196,7 +196,7 @@ void VectorSegmentFeatures::dataCheck()
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_UseGoodVoxels == true)
+  if(m_UseGoodVoxels)
   {
     m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -295,7 +295,7 @@ int64_t VectorSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
   {
     if(m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
     {
-      if(m_UseGoodVoxels == false || m_GoodVoxels[randpoint] == true)
+      if(!m_UseGoodVoxels || m_GoodVoxels[randpoint])
       {
         seed = randpoint;
       }
@@ -327,7 +327,7 @@ bool VectorSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
   bool group = false;
   float v1[3] = {0.0f, 0.0f, 0.0f};
   float v2[3] = {0.0f, 0.0f, 0.0f};
-  if(m_FeatureIds[neighborpoint] == 0 && (m_UseGoodVoxels == false || m_GoodVoxels[neighborpoint] == true))
+  if(m_FeatureIds[neighborpoint] == 0 && (!m_UseGoodVoxels || m_GoodVoxels[neighborpoint]))
   {
     v1[0] = m_Vectors[3 * referencepoint + 0];
     v1[1] = m_Vectors[3 * referencepoint + 1];
@@ -410,7 +410,7 @@ void VectorSegmentFeatures::execute()
   }
 
   // By default we randomize grains
-  if(true == m_RandomizeFeatureIds)
+  if(m_RandomizeFeatureIds)
   {
     randomizeFeatureIds(totalPoints, totalFeatures);
   }
@@ -425,7 +425,7 @@ void VectorSegmentFeatures::execute()
 AbstractFilter::Pointer VectorSegmentFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   VectorSegmentFeatures::Pointer filter = VectorSegmentFeatures::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

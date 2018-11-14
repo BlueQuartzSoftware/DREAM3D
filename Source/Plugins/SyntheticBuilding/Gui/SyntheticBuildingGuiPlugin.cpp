@@ -5,10 +5,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SyntheticBuildingGuiPlugin::SyntheticBuildingGuiPlugin()
-: SyntheticBuildingPlugin()
-{
-}
+SyntheticBuildingGuiPlugin::SyntheticBuildingGuiPlugin() = default;
 
 // -----------------------------------------------------------------------------
 //

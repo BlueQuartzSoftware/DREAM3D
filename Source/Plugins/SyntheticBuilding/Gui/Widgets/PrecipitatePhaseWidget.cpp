@@ -116,7 +116,7 @@ void PrecipitatePhaseWidget::setupGui()
 
   removeNeighborsPlotWidget();
 
-  if(!m_RdfPlot)
+  if(m_RdfPlot == nullptr)
   {
     QWidget* rdfTab;
     QHBoxLayout* horizontalLayout_2;
@@ -176,7 +176,7 @@ void PrecipitatePhaseWidget::setCrystalStructure(const unsigned int& xtal)
 // -----------------------------------------------------------------------------
 void PrecipitatePhaseWidget::updatePlots()
 {
-  if(getDataHasBeenGenerated() == true)
+  if(getDataHasBeenGenerated())
   {
     QProgressDialog progress("Generating Data ....", "Cancel", 0, 4, this);
     progress.setWindowModality(Qt::WindowModal);
@@ -197,7 +197,7 @@ void PrecipitatePhaseWidget::updatePlots()
     getMicroPreset()->initializeOmega3TableModel(data, colors);
     getOmega3PlotWidget()->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kOmega3Distribution), false);
     SGAbstractTableModel* tmodel = getOmega3PlotWidget()->tableModel();
-    if(tmodel)
+    if(tmodel != nullptr)
     {
       QVector<QVector<float>> colData;
       colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
@@ -208,7 +208,7 @@ void PrecipitatePhaseWidget::updatePlots()
     getMicroPreset()->initializeBOverATableModel(data, colors);
     getBOverAPlotPlotWidget()->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kBOverADistribution), false);
     tmodel = getBOverAPlotPlotWidget()->tableModel();
-    if(tmodel)
+    if(tmodel != nullptr)
     {
       QVector<QVector<float>> colData;
       colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
@@ -219,7 +219,7 @@ void PrecipitatePhaseWidget::updatePlots()
     getMicroPreset()->initializeCOverATableModel(data, colors);
     getCOverAPlotWidget()->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kCOverADistribution), false);
     tmodel = getCOverAPlotWidget()->tableModel();
-    if(tmodel)
+    if(tmodel != nullptr)
     {
       QVector<QVector<float>> colData;
       colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
@@ -235,7 +235,7 @@ void PrecipitatePhaseWidget::updatePlots()
     // Get any presets for the ODF/AxisODF/MDF also
     getMicroPreset()->initializeODFTableModel(data);
     SGODFTableModel* model = getODFWidget()->tableModel();
-    if(model)
+    if(model != nullptr)
     {
       model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
                           data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
@@ -243,7 +243,7 @@ void PrecipitatePhaseWidget::updatePlots()
 
     getMicroPreset()->initializeAxisODFTableModel(data);
     model = getAxisODFWidget()->tableModel();
-    if(model)
+    if(model != nullptr)
     {
       model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
                           data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
@@ -252,7 +252,7 @@ void PrecipitatePhaseWidget::updatePlots()
     // getMicroPreset()->initializeMDFTableModel(m_ODFWidget->getMDFWidget());
     getMicroPreset()->initializeMDFTableModel(data);
     SGMDFTableModel* mdfModel = (getODFWidget()->getMDFWidget()->tableModel());
-    if(mdfModel)
+    if(mdfModel != nullptr)
     {
       mdfModel->setTableData(data[AbstractMicrostructurePreset::kAngles], data[AbstractMicrostructurePreset::kAxis], data[AbstractMicrostructurePreset::kWeight]);
     }

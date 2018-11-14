@@ -172,7 +172,7 @@ void FindMisorientations::dataCheck()
   }
 
   // New Feature Data
-  if(m_FindAvgMisors == true)
+  if(m_FindAvgMisors)
   {
     tempPath.update(m_FeaturePhasesArrayPath.getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getAvgMisorientationsArrayName());
     m_AvgMisorientationsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
@@ -266,21 +266,21 @@ void FindMisorientations::execute()
       {
         w = m_OrientationOps[xtalType1]->getMisoQuat(q1, q2, n1, n2, n3);
         misorientationlists[i][j] = w * SIMPLib::Constants::k_180OverPi;
-        if(m_FindAvgMisors == true)
+        if(m_FindAvgMisors)
         {
           m_AvgMisorientations[i] += misorientationlists[i][j];
         }
       }
       else
       {
-        if(m_FindAvgMisors == true)
+        if(m_FindAvgMisors)
         {
           tempMisoList--;
         }
         misorientationlists[i][j] = NAN;
       }
     }
-    if(m_FindAvgMisors == true)
+    if(m_FindAvgMisors)
     {
       if(tempMisoList != 0)
       {
@@ -310,7 +310,7 @@ void FindMisorientations::execute()
 AbstractFilter::Pointer FindMisorientations::newFilterInstance(bool copyFilterParameters) const
 {
   FindMisorientations::Pointer filter = FindMisorientations::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

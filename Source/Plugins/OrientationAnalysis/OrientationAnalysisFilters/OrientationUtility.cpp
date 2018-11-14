@@ -15,9 +15,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationUtility::OrientationUtility()
-{
-}
+OrientationUtility::OrientationUtility() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -87,7 +85,7 @@ void OrientationUtility::execute()
 AbstractFilter::Pointer OrientationUtility::newFilterInstance(bool copyFilterParameters) const
 {
   OrientationUtility::Pointer filter = OrientationUtility::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

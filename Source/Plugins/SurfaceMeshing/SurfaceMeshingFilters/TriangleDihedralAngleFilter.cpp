@@ -68,9 +68,7 @@ public:
   , m_DihedralAngles(DihedralAngles)
   {
   }
-  virtual ~CalculateDihedralAnglesImpl()
-  {
-  }
+  virtual ~CalculateDihedralAnglesImpl() = default;
 
   void generate(size_t start, size_t end) const
   {
@@ -241,7 +239,7 @@ void TriangleDihedralAngleFilter::execute()
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel == true)
+  if(doParallel)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, triangleGeom->getNumberOfTris()),
                       CalculateDihedralAnglesImpl(triangleGeom->getVertices(), triangleGeom->getTriangles(), m_SurfaceMeshTriangleDihedralAngles), tbb::auto_partitioner());
@@ -262,7 +260,7 @@ void TriangleDihedralAngleFilter::execute()
 AbstractFilter::Pointer TriangleDihedralAngleFilter::newFilterInstance(bool copyFilterParameters) const
 {
   TriangleDihedralAngleFilter::Pointer filter = TriangleDihedralAngleFilter::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

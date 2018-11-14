@@ -243,7 +243,7 @@ void BadDataNeighborOrientationCheck::execute()
 
   for(size_t i = 0; i < totalPoints; i++)
   {
-    if(m_GoodVoxels[i] == false)
+    if(!m_GoodVoxels[i])
     {
       column = i % dims[0];
       row = (i / dims[0]) % dims[1];
@@ -276,7 +276,7 @@ void BadDataNeighborOrientationCheck::execute()
         {
           good = 0;
         }
-        if(good == 1 && m_GoodVoxels[neighbor] == true)
+        if(good == 1 && m_GoodVoxels[neighbor])
         {
           phase1 = m_CrystalStructures[m_CellPhases[i]];
           QuaternionMathF::Copy(quats[i], q1);
@@ -308,7 +308,7 @@ void BadDataNeighborOrientationCheck::execute()
       counter = 0;
       for(size_t i = 0; i < totalPoints; i++)
       {
-        if(neighborCount[i] >= currentLevel && m_GoodVoxels[i] == false)
+        if(neighborCount[i] >= currentLevel && !m_GoodVoxels[i])
         {
           m_GoodVoxels[i] = true;
           counter++;
@@ -343,7 +343,7 @@ void BadDataNeighborOrientationCheck::execute()
             {
               good = 0;
             }
-            if(good == 1 && m_GoodVoxels[neighbor] == false)
+            if(good == 1 && !m_GoodVoxels[neighbor])
             {
               phase1 = m_CrystalStructures[m_CellPhases[i]];
               QuaternionMathF::Copy(quats[i], q1);
@@ -377,7 +377,7 @@ void BadDataNeighborOrientationCheck::execute()
 AbstractFilter::Pointer BadDataNeighborOrientationCheck::newFilterInstance(bool copyFilterParameters) const
 {
   BadDataNeighborOrientationCheck::Pointer filter = BadDataNeighborOrientationCheck::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

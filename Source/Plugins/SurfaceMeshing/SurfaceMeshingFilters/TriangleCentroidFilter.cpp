@@ -67,9 +67,7 @@ public:
   , m_Centroids(centroids)
   {
   }
-  virtual ~CalculateCentroidsImpl()
-  {
-  }
+  virtual ~CalculateCentroidsImpl() = default;
 
   void generate(size_t start, size_t end) const
   {
@@ -207,7 +205,7 @@ void TriangleCentroidFilter::execute()
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel == true)
+  if(doParallel)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, triangleGeom->getNumberOfTris()), CalculateCentroidsImpl(triangleGeom->getVertices(), triangleGeom->getTriangles(), m_SurfaceMeshTriangleCentroids),
                       tbb::auto_partitioner());
@@ -228,7 +226,7 @@ void TriangleCentroidFilter::execute()
 AbstractFilter::Pointer TriangleCentroidFilter::newFilterInstance(bool copyFilterParameters) const
 {
   TriangleCentroidFilter::Pointer filter = TriangleCentroidFilter::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -54,7 +54,6 @@ GeneratePrecipitateStatsData::GeneratePrecipitateStatsData()
 , m_DataContainerName(SIMPL::Defaults::StatsGenerator)
 , m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName)
 , m_AppendToExistingAttributeMatrix(false)
-, m_SelectedEnsembleAttributeMatrix()
 , m_PrecipitateStatsData(nullptr)
 {
   initialize();
@@ -671,7 +670,7 @@ void GeneratePrecipitateStatsData::normalizePhaseFractions(StatsDataArray* stats
 AbstractFilter::Pointer GeneratePrecipitateStatsData::newFilterInstance(bool copyFilterParameters) const
 {
   GeneratePrecipitateStatsData::Pointer filter = GeneratePrecipitateStatsData::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

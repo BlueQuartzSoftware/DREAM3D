@@ -160,7 +160,7 @@ void RemoveFlaggedFeatures::execute()
 
   QVector<bool> activeObjects = remove_flaggedfeatures();
 
-  if(m_FillRemovedFeatures == true)
+  if(m_FillRemovedFeatures)
   {
     assign_badpoints();
   }
@@ -349,7 +349,7 @@ QVector<bool> RemoveFlaggedFeatures::remove_flaggedfeatures()
 
   for(size_t i = 1; i < totalFeatures; i++)
   {
-    if(m_FlaggedFeatures[i] == false)
+    if(!m_FlaggedFeatures[i])
     {
       good = true;
     }
@@ -358,7 +358,7 @@ QVector<bool> RemoveFlaggedFeatures::remove_flaggedfeatures()
       activeObjects[i] = false;
     }
   }
-  if(good == false)
+  if(!good)
   {
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), "All Features were flagged and would all be removed.  The filter has quit.", -1);
@@ -367,9 +367,9 @@ QVector<bool> RemoveFlaggedFeatures::remove_flaggedfeatures()
   for(size_t i = 0; i < totalPoints; i++)
   {
     gnum = m_FeatureIds[i];
-    if(activeObjects[gnum] == false)
+    if(!activeObjects[gnum])
     {
-      if(m_FillRemovedFeatures == false)
+      if(!m_FillRemovedFeatures)
       {
         m_FeatureIds[i] = 0;
       }
@@ -388,7 +388,7 @@ QVector<bool> RemoveFlaggedFeatures::remove_flaggedfeatures()
 AbstractFilter::Pointer RemoveFlaggedFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   RemoveFlaggedFeatures::Pointer filter = RemoveFlaggedFeatures::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

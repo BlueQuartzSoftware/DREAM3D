@@ -88,9 +88,7 @@ public:
   , m_InFeature(inFeature)
   {
   }
-  virtual ~InsertAtomsImpl()
-  {
-  }
+  virtual ~InsertAtomsImpl() = default;
 
   void checkPoints(size_t start, size_t end) const
   {
@@ -129,7 +127,7 @@ public:
       for(int64_t i = 0; i < numPoints; i++)
       {
         point = vertArray->getVertexPointer(i);
-        if(boolArray->getValue(i) == false)
+        if(!boolArray->getValue(i))
         {
           code = GeometryMath::PointInPolyhedron(m_Faces.get(), faceIds, m_FaceBBs.get(), point, ll, ur, radius);
           if(code == 'i' || code == 'V' || code == 'E' || code == 'F')
@@ -436,7 +434,7 @@ void InsertAtoms::assign_points(QVector<VertexGeom::Pointer> points, QVector<Boo
     bool* inside = inFeature[i]->getPointer(0);
     for(int64_t j = 0; j < numPoints; j++)
     {
-      if(inside[j] == true)
+      if(inside[j])
       {
         count++;
       }
@@ -460,7 +458,7 @@ void InsertAtoms::assign_points(QVector<VertexGeom::Pointer> points, QVector<Boo
     bool* inside = inFeature[i]->getPointer(0);
     for(int64_t j = 0; j < numPoints; j++)
     {
-      if(inside[j] == true)
+      if(inside[j])
       {
         coords[0] = points[i]->getVertexPointer(j)[0];
         coords[1] = points[i]->getVertexPointer(j)[1];
@@ -517,7 +515,7 @@ void InsertAtoms::execute()
     }
   }
 
-  if(mismatchedFeatures == true)
+  if(mismatchedFeatures)
   {
     QString ss = QObject::tr("The number of Features in the AvgQuats array (%1) is larger than the largest Feature Id in the SurfaceMeshFaceLabels array").arg(numFeaturesIn);
     setErrorCondition(-5555);
@@ -635,7 +633,7 @@ void InsertAtoms::execute()
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel == true)
+  if(doParallel)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, numFeatures), InsertAtomsImpl(triangleGeom, faceLists, faceBBs, avgQuats, latticeConstants, m_Basis, points, inFeature), tbb::auto_partitioner());
   }
@@ -657,7 +655,7 @@ void InsertAtoms::execute()
 AbstractFilter::Pointer InsertAtoms::newFilterInstance(bool copyFilterParameters) const
 {
   InsertAtoms::Pointer filter = InsertAtoms::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     filter->setFilterParameters(getFilterParameters());
     copyFilterParameterInstanceVariables(filter.get());

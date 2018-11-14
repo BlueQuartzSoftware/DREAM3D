@@ -117,7 +117,7 @@ void StatsGeneratorFilter::readFilterParameters(AbstractFilterParametersReader* 
 
   m_StatsDataArray = StatsDataArray::CreateArray(0, "THIS SHOULD BE RESET");
 
-  if(dynamic_cast<H5FilterParametersReader*>(reader))
+  if(dynamic_cast<H5FilterParametersReader*>(reader) != nullptr)
   {
     QString jsonString = reader->readString("StatsDataArray", "");
     QJsonDocument jDoc = QJsonDocument::fromJson(jsonString.toUtf8());
@@ -125,7 +125,7 @@ void StatsGeneratorFilter::readFilterParameters(AbstractFilterParametersReader* 
     size_t numTuples = m_StatsDataArray->getNumberOfTuples();
     readArray(jDoc.object(), numTuples);
   }
-  else if(dynamic_cast<JsonFilterParametersReader*>(reader))
+  else if(dynamic_cast<JsonFilterParametersReader*>(reader) != nullptr)
   {
     JsonFilterParametersReader* jsonReader = dynamic_cast<JsonFilterParametersReader*>(reader);
     QJsonObject& jsonRoot = jsonReader->getCurrentGroupObject();
@@ -450,7 +450,7 @@ void StatsGeneratorFilter::execute()
 AbstractFilter::Pointer StatsGeneratorFilter::newFilterInstance(bool copyFilterParameters) const
 {
   StatsGeneratorFilter::Pointer filter = StatsGeneratorFilter::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     filter->setStatsGeneratorDataContainerName(getStatsGeneratorDataContainerName());
     filter->setCellEnsembleAttributeMatrixName(getCellEnsembleAttributeMatrixName());

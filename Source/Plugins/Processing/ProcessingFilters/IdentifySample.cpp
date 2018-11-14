@@ -173,7 +173,7 @@ void IdentifySample::execute()
   // are flipped to be called 'bad' voxels or 'not sample'
   for(int64_t i = 0; i < totalPoints; i++)
   {
-    if(checked[i] == false && m_GoodVoxels[i] == true)
+    if(!checked[i] && m_GoodVoxels[i])
     {
       currentvlist.push_back(i);
       count = 0;
@@ -211,7 +211,7 @@ void IdentifySample::execute()
           {
             good = 0;
           }
-          if(good == 1 && checked[neighbor] == false && m_GoodVoxels[neighbor] == true)
+          if(good == 1 && !checked[neighbor] && m_GoodVoxels[neighbor])
           {
             currentvlist.push_back(neighbor);
             checked[neighbor] = true;
@@ -233,7 +233,7 @@ void IdentifySample::execute()
   }
   for(int64_t i = 0; i < totalPoints; i++)
   {
-    if(sample[i] == false && m_GoodVoxels[i] == true)
+    if(!sample[i] && m_GoodVoxels[i])
     {
       m_GoodVoxels[i] = false;
     }
@@ -243,12 +243,12 @@ void IdentifySample::execute()
 
   // In this loop we are going to 'close' all of the 'holes' inside of the region already identified as the 'sample' if the user chose to do so.
   // This is done by flipping all 'bad' voxel features that do not touch the outside of the sample (i.e. they are fully contained inside of the 'sample'.
-  if(m_FillHoles == true)
+  if(m_FillHoles)
   {
     bool touchesBoundary = false;
     for(int64_t i = 0; i < totalPoints; i++)
     {
-      if(checked[i] == false && m_GoodVoxels[i] == false)
+      if(!checked[i] && !m_GoodVoxels[i])
       {
         currentvlist.push_back(i);
         count = 0;
@@ -291,7 +291,7 @@ void IdentifySample::execute()
             {
               good = 0;
             }
-            if(good == 1 && checked[neighbor] == false && m_GoodVoxels[neighbor] == false)
+            if(good == 1 && !checked[neighbor] && !m_GoodVoxels[neighbor])
             {
               currentvlist.push_back(neighbor);
               checked[neighbor] = true;
@@ -299,7 +299,7 @@ void IdentifySample::execute()
           }
           count++;
         }
-        if(touchesBoundary == false)
+        if(!touchesBoundary)
         {
           for(size_t j = 0; j < currentvlist.size(); j++)
           {
@@ -322,7 +322,7 @@ void IdentifySample::execute()
 AbstractFilter::Pointer IdentifySample::newFilterInstance(bool copyFilterParameters) const
 {
   IdentifySample::Pointer filter = IdentifySample::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

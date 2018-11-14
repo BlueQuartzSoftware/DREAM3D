@@ -221,7 +221,7 @@ size_t ComputeFeatureRect::sub2ind(QVector<size_t> tDims, size_t x, size_t y, si
 AbstractFilter::Pointer ComputeFeatureRect::newFilterInstance(bool copyFilterParameters) const
 {
   ComputeFeatureRect::Pointer filter = ComputeFeatureRect::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

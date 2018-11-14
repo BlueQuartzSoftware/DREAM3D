@@ -121,10 +121,7 @@ H5EbsdVolumeInfo::H5EbsdVolumeInfo() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5EbsdVolumeInfo::~H5EbsdVolumeInfo()
-{
-
-}
+H5EbsdVolumeInfo::~H5EbsdVolumeInfo() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -308,7 +305,7 @@ int H5EbsdVolumeInfo::readVolumeInfo()
 uint32_t H5EbsdVolumeInfo::getFileVersion()
 {
   int err = -1;
-  if (m_ValuesAreCached == false)
+  if(!m_ValuesAreCached)
   {
     err = readVolumeInfo();
     if (err < 0) { return 0; }
@@ -324,12 +321,12 @@ int H5EbsdVolumeInfo::getDimsAndResolution(int64_t& xDim, int64_t& yDim, int64_t
                                            float& xRes, float& yRes, float& zRes)
 {
   int err = -1;
-  if (m_ValuesAreCached == false)
+  if(!m_ValuesAreCached)
   {
     err = readVolumeInfo();
     if (err < 0) { return -1; }
   }
-  if (m_ValuesAreCached == true)
+  if(m_ValuesAreCached)
   {
     xDim = m_XDim;
     yDim = m_YDim;
@@ -348,12 +345,12 @@ int H5EbsdVolumeInfo::getDimsAndResolution(int64_t& xDim, int64_t& yDim, int64_t
 int H5EbsdVolumeInfo::getDims(int64_t& xDim, int64_t& yDim, int64_t& zDim)
 {
   int err = -1;
-  if (m_ValuesAreCached == false)
+  if(!m_ValuesAreCached)
   {
     err = readVolumeInfo();
     if (err < 0) { return -1; }
   }
-  if (m_ValuesAreCached == true)
+  if(m_ValuesAreCached)
   {
     xDim = m_XDim;
     yDim = m_YDim;
@@ -369,12 +366,12 @@ int H5EbsdVolumeInfo::getDims(int64_t& xDim, int64_t& yDim, int64_t& zDim)
 int H5EbsdVolumeInfo::getResolution(float& xRes, float& yRes, float& zRes)
 {
   int err = -1;
-  if (m_ValuesAreCached == false)
+  if(!m_ValuesAreCached)
   {
     err = readVolumeInfo();
     if (err < 0) { return -1; }
   }
-  if (m_ValuesAreCached == true)
+  if(m_ValuesAreCached)
   {
     xRes = m_XRes;
     yRes = m_YRes;
@@ -390,7 +387,7 @@ int H5EbsdVolumeInfo::getResolution(float& xRes, float& yRes, float& zRes)
 QString H5EbsdVolumeInfo::getManufacturer()
 {
   int err = -1;
-  if (m_ValuesAreCached == false)
+  if(!m_ValuesAreCached)
   {
     err = readVolumeInfo();
     if (err < 0) { return QString(""); }
@@ -404,7 +401,7 @@ QString H5EbsdVolumeInfo::getManufacturer()
 int H5EbsdVolumeInfo::getNumSlices()
 {
   int err = -1;
-  if (m_ValuesAreCached == false)
+  if(!m_ValuesAreCached)
   {
     err = readVolumeInfo();
     if (err < 0) { return 0; }
@@ -418,7 +415,7 @@ int H5EbsdVolumeInfo::getNumSlices()
 int H5EbsdVolumeInfo::getZStart()
 {
   int err = -1;
-  if (m_ValuesAreCached == false)
+  if(!m_ValuesAreCached)
   {
     err = readVolumeInfo();
     if (err < 0) { return 0; }
@@ -432,7 +429,7 @@ int H5EbsdVolumeInfo::getZStart()
 int H5EbsdVolumeInfo::getZEnd()
 {
   int err = -1;
-  if (m_ValuesAreCached == false)
+  if(!m_ValuesAreCached)
   {
     err = readVolumeInfo();
     if (err < 0) { return 0; }
@@ -446,7 +443,7 @@ int H5EbsdVolumeInfo::getZEnd()
 int H5EbsdVolumeInfo::getNumPhases()
 {
   int err = -1;
-  if (m_ValuesAreCached == false)
+  if(!m_ValuesAreCached)
   {
     err = readVolumeInfo();
     if (err < 0) { return 0; }
@@ -460,7 +457,7 @@ int H5EbsdVolumeInfo::getNumPhases()
 uint32_t H5EbsdVolumeInfo::getStackingOrder()
 {
   int err = -1;
-  if (m_ValuesAreCached == false)
+  if(!m_ValuesAreCached)
   {
     err = readVolumeInfo();
     if (err < 0) { return SIMPL::RefFrameZDir::UnknownRefFrameZDirection; }
@@ -474,7 +471,7 @@ uint32_t H5EbsdVolumeInfo::getStackingOrder()
 float H5EbsdVolumeInfo::getSampleTransformationAngle()
 {
   int err = -1;
-  if (m_ValuesAreCached == false)
+  if(!m_ValuesAreCached)
   {
     err = readVolumeInfo();
     if (err < 0) { return 0.0; }
@@ -488,7 +485,7 @@ float H5EbsdVolumeInfo::getSampleTransformationAngle()
 QVector<float> H5EbsdVolumeInfo::getSampleTransformationAxis()
 {
   int err = -1;
-  if (m_ValuesAreCached == false)
+  if(!m_ValuesAreCached)
   {
     err = readVolumeInfo();
     if (err < 0)
@@ -508,7 +505,7 @@ QVector<float> H5EbsdVolumeInfo::getSampleTransformationAxis()
 float H5EbsdVolumeInfo::getEulerTransformationAngle()
 {
   int err = -1;
-  if (m_ValuesAreCached == false)
+  if(!m_ValuesAreCached)
   {
     err = readVolumeInfo();
     if (err < 0) { return 0.0; }
@@ -521,7 +518,7 @@ float H5EbsdVolumeInfo::getEulerTransformationAngle()
 QVector<float> H5EbsdVolumeInfo::getEulerTransformationAxis()
 {
   int err = -1;
-  if (m_ValuesAreCached == false)
+  if(!m_ValuesAreCached)
   {
     err = readVolumeInfo();
     if (err < 0)
@@ -543,7 +540,7 @@ QSet<QString> H5EbsdVolumeInfo::getDataArrayNames()
 {
   QSet<QString> empty;
   int err = -1;
-  if (m_ValuesAreCached == false)
+  if(!m_ValuesAreCached)
   {
     err = readVolumeInfo();
     if (err < 0) { return empty; }

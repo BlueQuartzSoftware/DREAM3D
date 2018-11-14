@@ -127,7 +127,7 @@ void AvizoUniformCoordinateWriter::dataCheck()
 
   FileSystemPathHelper::CheckOutputFile(this, "Output File Path", getOutputFile(), true);
 
-  if(m_WriteFeatureIds == true)
+  if(m_WriteFeatureIds)
   {
     QVector<size_t> dims(1, 1);
     m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
@@ -202,7 +202,7 @@ void AvizoUniformCoordinateWriter::execute()
 // -----------------------------------------------------------------------------
 void AvizoUniformCoordinateWriter::generateHeader(FILE* f)
 {
-  if(m_WriteBinaryFile == true)
+  if(m_WriteBinaryFile)
   {
 #ifdef CMP_WORDS_BIGENDIAN
     fprintf(f, "# AmiraMesh BINARY 2.1\n");
@@ -259,7 +259,7 @@ int AvizoUniformCoordinateWriter::writeData(FILE* f)
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
-  if(true == m_WriteBinaryFile)
+  if(m_WriteBinaryFile)
   {
     fwrite(m_FeatureIds, sizeof(int32_t), totalPoints, f);
   }
@@ -292,7 +292,7 @@ int AvizoUniformCoordinateWriter::writeData(FILE* f)
 AbstractFilter::Pointer AvizoUniformCoordinateWriter::newFilterInstance(bool copyFilterParameters) const
 {
   AvizoUniformCoordinateWriter::Pointer filter = AvizoUniformCoordinateWriter::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

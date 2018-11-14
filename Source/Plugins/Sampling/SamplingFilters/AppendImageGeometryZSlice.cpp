@@ -47,9 +47,7 @@
 //
 // -----------------------------------------------------------------------------
 AppendImageGeometryZSlice::AppendImageGeometryZSlice()
-: m_InputAttributeMatrix()
-, m_DestinationAttributeMatrix()
-, m_CheckResolution(false)
+: m_CheckResolution(false)
 {
 }
 
@@ -304,7 +302,7 @@ void AppendImageGeometryZSlice::execute()
 AbstractFilter::Pointer AppendImageGeometryZSlice::newFilterInstance(bool copyFilterParameters) const
 {
   AppendImageGeometryZSlice::Pointer filter = AppendImageGeometryZSlice::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

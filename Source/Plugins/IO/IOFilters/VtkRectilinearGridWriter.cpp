@@ -101,7 +101,7 @@ template <typename T> int WriteCoords(FILE* f, const char* axis, const char* typ
 #else
   fprintf(f, "%s %lld %s\n", axis, npoints, type);
 #endif
-  if(binary == true)
+  if(binary)
   {
     T* data = new T[npoints];
     T d;
@@ -272,14 +272,14 @@ void VtkRectilinearGridWriter::dataCheck()
 
   // Make sure what we are checking is an actual file name and not a directory
   QFileInfo fi(m_OutputFile);
-  if(fi.isDir() == true)
+  if(fi.isDir())
   {
     QString ss = QObject::tr("The output file path is a path to an existing directory. Please change the path to point to a file");
     setErrorCondition(-1012);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if(m_SelectedDataArrayPaths.isEmpty() == true)
+  if(m_SelectedDataArrayPaths.isEmpty())
   {
     setErrorCondition(-11001);
     QString ss = QObject::tr("At least one Attribute Array must be selected");
@@ -289,7 +289,7 @@ void VtkRectilinearGridWriter::dataCheck()
 
   QVector<DataArrayPath> paths = getSelectedDataArrayPaths();
 
-  if(DataArrayPath::ValidateVector(paths) == false)
+  if(!DataArrayPath::ValidateVector(paths))
   {
     setErrorCondition(-11004);
     QString ss = QObject::tr("There are Attribute Arrays selected that are not contained in the same Attribute Matrix. All selected Attribute Arrays must belong to the same Attribute Matrix");
@@ -453,7 +453,7 @@ void VtkRectilinearGridWriter::execute()
 AbstractFilter::Pointer VtkRectilinearGridWriter::newFilterInstance(bool copyFilterParameters) const
 {
   VtkRectilinearGridWriter::Pointer filter = VtkRectilinearGridWriter::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

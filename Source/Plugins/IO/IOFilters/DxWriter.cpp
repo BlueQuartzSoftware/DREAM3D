@@ -53,8 +53,7 @@
 //
 // -----------------------------------------------------------------------------
 DxWriter::DxWriter()
-: FileWriter()
-, m_AddSurfaceLayer(false)
+: m_AddSurfaceLayer(false)
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 , m_FeatureIds(nullptr)
 {
@@ -388,7 +387,7 @@ int32_t DxWriter::writeFile()
 AbstractFilter::Pointer DxWriter::newFilterInstance(bool copyFilterParameters) const
 {
   DxWriter::Pointer filter = DxWriter::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

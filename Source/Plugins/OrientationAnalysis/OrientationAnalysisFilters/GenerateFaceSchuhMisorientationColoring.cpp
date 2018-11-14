@@ -88,9 +88,7 @@ public:
   {
     m_OrientationOps = LaueOps::getOrientationOpsQVector();
   }
-  virtual ~CalculateFaceSchuhMisorientationColorsImpl()
-  {
-  }
+  virtual ~CalculateFaceSchuhMisorientationColorsImpl() = default;
 
   /**
    * @brief generate Generates the colors for the triangles
@@ -334,7 +332,7 @@ void GenerateFaceSchuhMisorientationColoring::execute()
 #endif
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel == true)
+  if(doParallel)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, numTriangles),
                       CalculateFaceSchuhMisorientationColorsImpl(m_SurfaceMeshFaceLabels, m_FeaturePhases, m_AvgQuats, m_SurfaceMeshFaceSchuhMisorientationColors, m_CrystalStructures),
@@ -356,7 +354,7 @@ void GenerateFaceSchuhMisorientationColoring::execute()
 AbstractFilter::Pointer GenerateFaceSchuhMisorientationColoring::newFilterInstance(bool copyFilterParameters) const
 {
   GenerateFaceSchuhMisorientationColoring::Pointer filter = GenerateFaceSchuhMisorientationColoring::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

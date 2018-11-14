@@ -93,9 +93,7 @@ public:
     m_OrientationOps = LaueOps::getOrientationOpsQVector();
   }
 
-  virtual ~CalculateTwinBoundaryImpl()
-  {
-  }
+  virtual ~CalculateTwinBoundaryImpl() = default;
 
   void generate(size_t start, size_t end) const
   {
@@ -453,7 +451,7 @@ void FindTwinBoundaries::execute()
   float axistol = static_cast<float>(m_AxisTolerance * M_PI / 180.0f);
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel == true)
+  if(doParallel)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, numTriangles), CalculateTwinBoundaryImpl(angtol, axistol, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_AvgQuats, m_FeaturePhases,
                                                                                              m_CrystalStructures, m_SurfaceMeshTwinBoundary, m_SurfaceMeshTwinBoundaryIncoherence, m_FindCoherence),
@@ -476,7 +474,7 @@ void FindTwinBoundaries::execute()
 AbstractFilter::Pointer FindTwinBoundaries::newFilterInstance(bool copyFilterParameters) const
 {
   FindTwinBoundaries::Pointer filter = FindTwinBoundaries::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

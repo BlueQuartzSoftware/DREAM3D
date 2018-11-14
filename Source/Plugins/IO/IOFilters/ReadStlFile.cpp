@@ -192,7 +192,7 @@ void ReadStlFile::dataCheck()
 
   DataArrayPath tempPath;
 
-  if(m_StlFilePath.isEmpty() == true)
+  if(m_StlFilePath.isEmpty())
   {
     setErrorCondition(-1003);
     notifyErrorMessage(getHumanLabel(), "The input file must be set", -1003);
@@ -408,8 +408,6 @@ void ReadStlFile::readFile()
     triangles[t * 3 + 1] = 3 * t + 1;
     triangles[t * 3 + 2] = 3 * t + 2;
   }
-
-  return;
 }
 
 // -----------------------------------------------------------------------------
@@ -473,7 +471,7 @@ void ReadStlFile::eliminate_duplicate_nodes()
 
 // Parallel algorithm to find duplicate nodes
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel == true)
+  if(doParallel)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, 100 * 100 * 100), FindUniqueIdsImpl(triangleGeom->getVertices(), nodesInBin, uniqueIds), tbb::auto_partitioner());
   }
@@ -528,7 +526,7 @@ void ReadStlFile::eliminate_duplicate_nodes()
 AbstractFilter::Pointer ReadStlFile::newFilterInstance(bool copyFilterParameters) const
 {
   ReadStlFile::Pointer filter = ReadStlFile::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

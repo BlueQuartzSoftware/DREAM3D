@@ -87,9 +87,7 @@ public:
   {
     m_OrientationOps = LaueOps::getOrientationOpsQVector();
   }
-  virtual ~CalculateTwinBoundarySchmidFactorsImpl()
-  {
-  }
+  virtual ~CalculateTwinBoundarySchmidFactorsImpl() = default;
 
   void generate(size_t start, size_t end) const
   {
@@ -107,7 +105,7 @@ public:
 
     for(size_t i = start; i < end; i++)
     {
-      if(m_TwinBoundary[i] == true)
+      if(m_TwinBoundary[i])
       {
         feature1 = m_Labels[2 * i];
         feature2 = m_Labels[2 * i + 1];
@@ -380,7 +378,7 @@ void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh()
   setWarningCondition(0);
   DataArrayPath tempPath;
 
-  if(m_WriteFile == true)
+  if(m_WriteFile)
   {
     FileSystemPathHelper::CheckOutputFile(this, "Output File Path", getTwinBoundarySchmidFactorsFile(), true);
   }
@@ -480,7 +478,7 @@ void FindTwinBoundarySchmidFactors::execute()
   LoadingDir[2] = m_LoadingDir.z;
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel == true)
+  if(doParallel)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, numTriangles), CalculateTwinBoundarySchmidFactorsImpl(LoadingDir, m_SurfaceMeshFaceLabels, m_SurfaceMeshFaceNormals, m_AvgQuats,
                                                                                                           m_SurfaceMeshTwinBoundary, m_SurfaceMeshTwinBoundarySchmidFactors),
@@ -493,7 +491,7 @@ void FindTwinBoundarySchmidFactors::execute()
     serial.generate(0, numTriangles);
   }
 
-  if(m_WriteFile == true)
+  if(m_WriteFile)
   {
     std::ofstream outFile;
     outFile.open(m_TwinBoundarySchmidFactorsFile.toLatin1().data(), std::ios_base::binary);
@@ -517,7 +515,7 @@ void FindTwinBoundarySchmidFactors::execute()
 AbstractFilter::Pointer FindTwinBoundarySchmidFactors::newFilterInstance(bool copyFilterParameters) const
 {
   FindTwinBoundarySchmidFactors::Pointer filter = FindTwinBoundarySchmidFactors::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -94,7 +94,7 @@ InsertPrecipitatePhases::InsertPrecipitatePhases()
 , m_AxisEulerAnglesArrayName(SIMPL::FeatureData::AxisEulerAngles)
 , m_AxisLengthsArrayName(SIMPL::FeatureData::AxisLengths)
 , m_NumFeaturesArrayPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::NumFeatures)
-, m_SaveGeometricDescriptions(false)
+, m_SaveGeometricDescriptions(0)
 , m_NewAttributeMatrixPath(SIMPL::Defaults::SyntheticVolumeDataContainerName, PrecipitateSyntheticShapeParametersName, "")
 , m_FeatureIds(nullptr)
 , m_CellPhases(nullptr)
@@ -467,7 +467,7 @@ void InsertPrecipitatePhases::dataCheck()
     cellDataArrayPaths.push_back(getBoundaryCellsArrayPath());
   }
 
-  if(m_UseMask == true)
+  if(m_UseMask)
   {
     m_MaskPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getMaskArrayPath(), cDims);
     if(nullptr != m_MaskPtr.lock())
@@ -702,7 +702,7 @@ void InsertPrecipitatePhases::execute()
     m_CellPhases[i] = m_FeaturePhases[m_FeatureIds[i]];
   }
 
-  if(m_WriteGoalAttributes == true)
+  if(m_WriteGoalAttributes)
   {
     write_goal_attributes();
   }
@@ -782,7 +782,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   bool write_test_outputs = false;
 
   std::ofstream outFile;
-  if(m_ErrorOutputFile.isEmpty() == false)
+  if(!m_ErrorOutputFile.isEmpty())
   {
     outFile.open(m_ErrorOutputFile.toLatin1().data(), std::ios_base::binary);
     writeErrorFile = true;
@@ -815,16 +815,16 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   m_SizeY = dims[1] * m_YRes;
   m_SizeZ = dims[2] * m_ZRes;
   m_TotalVol = m_SizeX * m_SizeY * m_SizeZ;
-  if(m_UseMask == false)
+  if(!m_UseMask)
   {
     m_UseableTotalVol = m_TotalVol;
   }
-  else if(m_UseMask == true)
+  else if(m_UseMask)
   {
     float cellVol = m_XRes * m_YRes * m_ZRes;
     for(int64_t i = 0; i < m_TotalPoints; i++)
     {
-      if(m_Mask[i] == true)
+      if(m_Mask[i])
       {
         m_UseableTotalVol += cellVol;
       }
@@ -998,7 +998,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 
   // initializing the target RDF vector - this is the radial distribution
   // function we are trying to match to
-  if(m_MatchRDF == true)
+  if(m_MatchRDF)
   {
     for(size_t i = 1; i < numensembles; ++i)
     {
@@ -1037,7 +1037,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   m_AvailablePointsCount = 0;
   for(int64_t i = 0; i < m_TotalPoints; i++)
   {
-    if((exclusionZones[i] == 0 && m_UseMask == false) || (exclusionZones[i] == 0 && m_UseMask == true && m_Mask[i] == true))
+    if((exclusionZones[i] == 0 && !m_UseMask) || (exclusionZones[i] == 0 && m_UseMask && m_Mask[i]))
     {
       availablePoints[i] = m_AvailablePointsCount;
       availablePointsInv[m_AvailablePointsCount] = i;
@@ -1312,7 +1312,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 
   notifyStatusMessage(getHumanLabel(), "Packing Features - Initial Feature Placement Complete");
 
-  if(m_MatchRDF == true)
+  if(m_MatchRDF)
   {
     /*RANDOM: Figure out the RDF for randomly distributed particles.
     We always keep the same stepsize as the target RDF,
@@ -1355,7 +1355,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
       m_RdfRandom[i] = m_RdfRandom[i] * numPPTfeatures * (numPPTfeatures - 1);
     }
 
-    if(write_test_outputs == true)
+    if(write_test_outputs)
     {
 
       std::ofstream testFile6;
@@ -1368,7 +1368,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     }
   }
 
-  if(m_MatchRDF == true)
+  if(m_MatchRDF)
   {
     // calculate the initial current RDF - this will change as we move particles
     // around
@@ -1380,7 +1380,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     if(true)
     {
       std::ofstream testFile;
-      if(write_test_outputs == true)
+      if(write_test_outputs)
       {
         testFile.open("/Users/Shared/Data/PW_Work/OUTFILE/BC.txt");
       }
@@ -1403,7 +1403,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
           notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
         }
 
-        if(writeErrorFile == true && iteration % 25 == 0)
+        if(writeErrorFile && iteration % 25 == 0)
         {
           outFile << iteration << " " << m_oldRDFerror << " " << acceptedmoves << "\n";
         }
@@ -1531,19 +1531,19 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
           m_PointsToAdd.clear();
         }
 
-        if(write_test_outputs == true && iteration % 100 == 0)
+        if(write_test_outputs && iteration % 100 == 0)
         {
           testFile << "\n" << m_oldRDFerror;
         }
       }
-      if(write_test_outputs == true)
+      if(write_test_outputs)
       {
         testFile.close();
       }
     }
   }
 
-  if(write_test_outputs == true)
+  if(write_test_outputs)
   {
     std::ofstream testFile3;
     testFile3.open("/Users/Shared/Data/PW_Work/OUTFILE/current.txt");
@@ -1585,7 +1585,7 @@ void InsertPrecipitatePhases::generate_precipitate(int32_t phase, Precip_t* prec
   VectorOfFloatArray GSdist = pp->getFeatureSizeDistribution();
   float avg = GSdist[0]->getValue(0);
   float stdev = GSdist[1]->getValue(0);
-  while(volgood == false)
+  while(!volgood)
   {
     volgood = true;
     diam = static_cast<float>(rg.genrand_norm(avg, stdev));
@@ -1752,7 +1752,7 @@ void InsertPrecipitatePhases::update_exclusionZones(int32_t gadd, int32_t gremov
       col = cl[i];
       row = rl[i];
       plane = pl[i];
-      if(m_PeriodicBoundaries == true)
+      if(m_PeriodicBoundaries)
       {
         // Perform mod arithmetic to ensure we are within the packing points range
         col = col % m_XPoints;
@@ -1821,7 +1821,7 @@ void InsertPrecipitatePhases::update_exclusionZones(int32_t gadd, int32_t gremov
       col = cl[i];
       row = rl[i];
       plane = pl[i];
-      if(m_PeriodicBoundaries == true)
+      if(m_PeriodicBoundaries)
       {
         // Perform mod arithmetic to ensure we are within the packing points range
         col = col % m_XPoints;
@@ -2009,11 +2009,11 @@ void InsertPrecipitatePhases::determine_currentRDF(int32_t gnum, int32_t add, bo
       //  int stop = 0;
       //}
       // if (rdfBin >= m_numRDFbins) {rdfBin = m_numRDFbins;}
-      if(double_count == true)
+      if(double_count)
       {
         m_RdfCurrentDist[rdfBin + 1] += 2 * add;
       }
-      else if(double_count == false)
+      else if(!double_count)
       {
         m_RdfCurrentDist[rdfBin + 1] += add;
       }
@@ -2058,11 +2058,11 @@ void InsertPrecipitatePhases::determine_randomRDF(size_t gnum, int32_t add, bool
       {
         rdfBin = -1;
       }
-      if(double_count == true)
+      if(double_count)
       {
         m_RdfRandom[rdfBin + 1] += 2 * add;
       }
-      else if(double_count == false)
+      else if(!double_count)
       {
         m_RdfRandom[rdfBin + 1] += add;
       }
@@ -2515,7 +2515,7 @@ void InsertPrecipitatePhases::assign_voxels()
     ymax = static_cast<int64_t>(row + ((radcur1 / yRes) + 1));
     zmin = static_cast<int64_t>(plane - ((radcur1 / zRes) + 1));
     zmax = static_cast<int64_t>(plane + ((radcur1 / zRes) + 1));
-    if(m_PeriodicBoundaries == true)
+    if(m_PeriodicBoundaries)
     {
       if(xmin < -dims[0])
       {
@@ -2542,7 +2542,7 @@ void InsertPrecipitatePhases::assign_voxels()
         zmax = (2 * dims[2] - 1);
       }
     }
-    if(m_PeriodicBoundaries == false)
+    if(!m_PeriodicBoundaries)
     {
       if(xmin < 0)
       {
@@ -2661,7 +2661,7 @@ void InsertPrecipitatePhases::assign_voxels()
   int32_t gnum = 0;
   for(size_t i = 0; i < static_cast<size_t>(totalPoints); i++)
   {
-    if(m_UseMask == true && m_Mask[i] == false)
+    if(m_UseMask && !m_Mask[i])
     {
       m_FeatureIds[i] = 0;
     }
@@ -2763,7 +2763,7 @@ void InsertPrecipitatePhases::assign_gaps()
               {
                 good = false;
               }
-              if(good == true)
+              if(good)
               {
                 feature = m_FeatureIds[neighpoint];
                 if(feature > 0)
@@ -2806,7 +2806,7 @@ void InsertPrecipitatePhases::assign_gaps()
               {
                 good = false;
               }
-              if(good == true)
+              if(good)
               {
                 feature = m_FeatureIds[neighpoint];
                 if(feature > 0)
@@ -3035,7 +3035,7 @@ void InsertPrecipitatePhases::saveToNewAttributeMatrix(QList<IDataArray::Pointer
   AttributeMatrix::Pointer newAM = getDataContainerArray()->getAttributeMatrix(getNewAttributeMatrixPath());
   if(newAM != AttributeMatrix::NullPointer())
   {
-    if(incomingArrays.size() > 0)
+    if(!incomingArrays.empty())
     {
       size_t incomingArrayTupleCount = incomingArrays[0]->getNumberOfTuples();
       size_t newAMTupleCount = newAM->getTupleDimensions()[0];
@@ -3061,7 +3061,7 @@ void InsertPrecipitatePhases::appendToExistingAttributeMatrix(QList<IDataArray::
   if(existingAM != AttributeMatrix::NullPointer())
   {
     size_t existingAMTupleCount = existingAM->getTupleDimensions()[0];
-    if(incomingArrays.size() > 0)
+    if(!incomingArrays.empty())
     {
       size_t incomingArrayTupleCount = incomingArrays[0]->getNumberOfTuples();
       tDims[0] = incomingArrayTupleCount;
@@ -3088,7 +3088,7 @@ void InsertPrecipitatePhases::appendToExistingAttributeMatrix(QList<IDataArray::
 AbstractFilter::Pointer InsertPrecipitatePhases::newFilterInstance(bool copyFilterParameters) const
 {
   InsertPrecipitatePhases::Pointer filter = InsertPrecipitatePhases::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

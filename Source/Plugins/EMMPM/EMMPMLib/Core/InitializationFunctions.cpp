@@ -52,9 +52,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-InitializationFunction::InitializationFunction()
-{
-}
+InitializationFunction::InitializationFunction() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -71,9 +69,7 @@ void InitializationFunction::initialize(EMMPM_Data::Pointer data)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-BasicInitialization::BasicInitialization()
-{
-}
+BasicInitialization::BasicInitialization() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -144,9 +140,7 @@ void BasicInitialization::initialize(EMMPM_Data::Pointer data)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-UserDefinedAreasInitialization::UserDefinedAreasInitialization()
-{
-}
+UserDefinedAreasInitialization::UserDefinedAreasInitialization() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -206,9 +200,7 @@ void UserDefinedAreasInitialization::initialize(EMMPM_Data::Pointer data)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-XtArrayInitialization::XtArrayInitialization()
-{
-}
+XtArrayInitialization::XtArrayInitialization() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -243,9 +235,7 @@ void XtArrayInitialization::initialize(EMMPM_Data::Pointer data)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GradientVariablesInitialization::GradientVariablesInitialization()
-{
-}
+GradientVariablesInitialization::GradientVariablesInitialization() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -356,9 +346,7 @@ void GradientVariablesInitialization::initialize(EMMPM_Data::Pointer data)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CurvatureInitialization::CurvatureInitialization()
-{
-}
+CurvatureInitialization::CurvatureInitialization() = default;
 
 // -----------------------------------------------------------------------------
 //

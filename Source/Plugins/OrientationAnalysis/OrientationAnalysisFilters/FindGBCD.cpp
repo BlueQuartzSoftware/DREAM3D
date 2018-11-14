@@ -101,9 +101,7 @@ public:
   {
     m_OrientationOps = LaueOps::getOrientationOpsQVector();
   }
-  virtual ~CalculateGBCDImpl()
-  {
-  }
+  virtual ~CalculateGBCDImpl() = default;
 
   void generate(size_t start, size_t end) const
   {
@@ -199,14 +197,7 @@ public:
             {
               sqCoordInv[0] = -sqCoord[0];
               sqCoordInv[1] = -sqCoord[1];
-              if(nhCheck == false)
-              {
-                nhCheckInv = true;
-              }
-              else
-              {
-                nhCheckInv = false;
-              }
+              nhCheckInv = !nhCheck;
             }
 
             for(k = 0; k < nsym; k++)
@@ -649,7 +640,7 @@ void FindGBCD::execute()
     }
     m_GbcdBinsArray->initializeWithValue(-1);
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel == true)
+    if(doParallel)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(i, i + faceChunkSize),
                         CalculateGBCDImpl(i, numMisoReps, m_SurfaceMeshFaceLabelsPtr.lock(), m_SurfaceMeshFaceNormalsPtr.lock(), m_FeatureEulerAnglesPtr.lock(), m_FeaturePhasesPtr.lock(),
@@ -693,7 +684,7 @@ void FindGBCD::execute()
         if(m_GbcdBins[(j * numMisoReps) + (k)] >= 0)
         {
           hemisphere = 0;
-          if(m_HemiCheck[(j * numMisoReps) + k] == false)
+          if(!m_HemiCheck[(j * numMisoReps) + k])
           {
             hemisphere = 1;
           }
@@ -799,7 +790,7 @@ void FindGBCD::sizeGBCD(size_t faceChunkSize, size_t numMisoReps)
 AbstractFilter::Pointer FindGBCD::newFilterInstance(bool copyFilterParameters) const
 {
   FindGBCD::Pointer filter = FindGBCD::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

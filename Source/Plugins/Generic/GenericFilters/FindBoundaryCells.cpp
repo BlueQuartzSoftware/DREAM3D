@@ -181,7 +181,7 @@ void FindBoundaryCells::execute()
   int64_t neighbor = 0;
 
   int ignoreFeatureZeroVal = 0;
-  if (m_IgnoreFeatureZero == false)
+  if(!m_IgnoreFeatureZero)
   {
     ignoreFeatureZeroVal = -1;
   }
@@ -199,7 +199,7 @@ void FindBoundaryCells::execute()
         feature = m_FeatureIds[zStride + yStride + k];
         if(feature >= 0)
         {
-          if(m_IncludeVolumeBoundary == true)
+          if(m_IncludeVolumeBoundary)
           {
             if (xPoints > 2 && (k == 0 || k == xPoints - 1)) { onsurf++; }
             if (yPoints > 2 && (j == 0 || j == yPoints - 1)) { onsurf++; }
@@ -256,7 +256,7 @@ void FindBoundaryCells::execute()
 AbstractFilter::Pointer FindBoundaryCells::newFilterInstance(bool copyFilterParameters) const
 {
   FindBoundaryCells::Pointer filter = FindBoundaryCells::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

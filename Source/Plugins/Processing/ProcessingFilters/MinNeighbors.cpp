@@ -157,7 +157,7 @@ void MinNeighbors::dataCheck()
     dataArrayPaths.push_back(getNumNeighborsArrayPath());
   }
 
-  if(getApplyToSinglePhase() == true)
+  if(getApplyToSinglePhase())
   {
     m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(),
                                                                                                              cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -228,7 +228,7 @@ void MinNeighbors::execute()
   // that is not in the system ; the filter would not crash otherwise, but the user should
   // be notified of unanticipated behavior ; this cannot be done in the dataCheck since
   // we don't have acces to the data yet
-  if(m_ApplyToSinglePhase == true)
+  if(m_ApplyToSinglePhase)
   {
     AttributeMatrix::Pointer featAttrMat =
         getDataContainerArray()->getDataContainer(getFeaturePhasesArrayPath().getDataContainerName())->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName());
@@ -243,7 +243,7 @@ void MinNeighbors::execute()
       }
     }
 
-    if(unavailablePhase == true)
+    if(unavailablePhase)
     {
       QString ss = QObject::tr("The phase number (%1) is not available in the supplied Feature phases array with path (%2)").arg(m_PhaseNumber).arg(m_FeaturePhasesArrayPath.serialize());
       setErrorCondition(-5555);

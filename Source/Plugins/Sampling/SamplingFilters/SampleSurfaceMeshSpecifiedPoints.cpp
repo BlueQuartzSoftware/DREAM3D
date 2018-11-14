@@ -118,7 +118,7 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
   initialize();
   DataArrayPath tempPath;
 
-  if(true == m_InputFilePath.isEmpty())
+  if(m_InputFilePath.isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
     setErrorCondition(-1);
@@ -250,7 +250,7 @@ void SampleSurfaceMeshSpecifiedPoints::execute()
 AbstractFilter::Pointer SampleSurfaceMeshSpecifiedPoints::newFilterInstance(bool copyFilterParameters) const
 {
   SampleSurfaceMeshSpecifiedPoints::Pointer filter = SampleSurfaceMeshSpecifiedPoints::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

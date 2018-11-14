@@ -145,22 +145,22 @@ QVariant SGMDFTableModel::data(const QModelIndex& index, qint32 role) const
     QSize size(fontMetrics.width(contents.text()), fontMetrics.height());
     return qApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
   }
-  else if(role == Qt::TextAlignmentRole)
+  if(role == Qt::TextAlignmentRole)
   {
     return int(Qt::AlignRight | Qt::AlignVCenter);
   }
-  else if(role == Qt::DisplayRole || role == Qt::EditRole)
+  if(role == Qt::DisplayRole || role == Qt::EditRole)
   {
     int col = index.column();
     if(col == Angle)
     {
       return QVariant(m_Angles[index.row()]);
     }
-    else if(col == Weight)
+    if(col == Weight)
     {
       return QVariant(m_Weights[index.row()]);
     }
-    else if(col == Axis)
+    if(col == Axis)
     {
       return QVariant(m_Axis[index.row()]);
     }
@@ -304,11 +304,11 @@ QVector<float> SGMDFTableModel::getData(int col)
   {
     return m_Angles;
   }
-  else if(col == Weight)
+  if(col == Weight)
   {
     return m_Weights;
   }
-  else if(col == Axis)
+  if(col == Axis)
   {
     int count = rowCount();
     QVector<float> values;

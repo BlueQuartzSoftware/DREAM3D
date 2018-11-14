@@ -39,9 +39,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-HexagonalLowIPFLegendPainter::HexagonalLowIPFLegendPainter()
-{
-}
+HexagonalLowIPFLegendPainter::HexagonalLowIPFLegendPainter() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -190,7 +190,7 @@ void EBSDSegmentFeatures::dataCheck()
   QVector<DataArrayPath> dataArrayPaths;
 
   QVector<size_t> cDims(1, 1);
-  if(m_UseGoodVoxels == true)
+  if(m_UseGoodVoxels)
   {
     m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -326,7 +326,7 @@ int64_t EBSDSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
   {
     if(m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
     {
-      if((m_UseGoodVoxels == false || m_GoodVoxels[randpoint] == true) && m_CellPhases[randpoint] > 0)
+      if((!m_UseGoodVoxels || m_GoodVoxels[randpoint]) && m_CellPhases[randpoint] > 0)
       {
         seed = randpoint;
       }
@@ -366,7 +366,7 @@ bool EBSDSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neig
     return group;
   }
 
-  if(m_FeatureIds[neighborpoint] == 0 && (m_UseGoodVoxels == false || m_GoodVoxels[neighborpoint] == true))
+  if(m_FeatureIds[neighborpoint] == 0 && (!m_UseGoodVoxels || m_GoodVoxels[neighborpoint]))
   {
     float w = std::numeric_limits<float>::max();
     QuatF q1 = QuaternionMathF::New();
@@ -439,7 +439,7 @@ void EBSDSegmentFeatures::execute()
   }
 
   // By default we randomize grains
-  if(true == getRandomizeFeatureIds())
+  if(getRandomizeFeatureIds())
   {
     totalPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getNumberOfElements());
     randomizeFeatureIds(totalPoints, totalFeatures);
@@ -455,7 +455,7 @@ void EBSDSegmentFeatures::execute()
 AbstractFilter::Pointer EBSDSegmentFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   EBSDSegmentFeatures::Pointer filter = EBSDSegmentFeatures::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

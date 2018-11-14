@@ -192,7 +192,7 @@ void SineParamsSegmentFeatures::dataCheck()
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(m_UseGoodVoxels == true)
+  if(m_UseGoodVoxels)
   {
     m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
                                                                                                        dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -271,7 +271,7 @@ void SineParamsSegmentFeatures::execute()
   }
 
   // By default we randomize grains
-  if(true == m_RandomizeFeatureIds)
+  if(m_RandomizeFeatureIds)
   {
     randomizeFeatureIds(totalPoints, totalFeatures);
   }
@@ -339,7 +339,7 @@ int64_t SineParamsSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
   {
     if(m_FeatureIds[randpoint] == 0) // If the GrainId of the voxel is ZERO then we can use this as a seed point
     {
-      if(m_UseGoodVoxels == false || m_GoodVoxels[randpoint] == true)
+      if(!m_UseGoodVoxels || m_GoodVoxels[randpoint])
       {
         seed = randpoint;
       }
@@ -374,7 +374,7 @@ bool SineParamsSegmentFeatures::determineGrouping(int64_t referencepoint, int64_
   float shift;
   float step = 45.0f * SIMPLib::Constants::k_PiOver180;
   float avgDiff = 0;
-  if(m_FeatureIds[neighborpoint] == 0 && (m_UseGoodVoxels == false || m_GoodVoxels[neighborpoint] == true))
+  if(m_FeatureIds[neighborpoint] == 0 && (!m_UseGoodVoxels || m_GoodVoxels[neighborpoint]))
   {
     for(int i = 0; i < 8; i++)
     {
@@ -412,7 +412,7 @@ void SineParamsSegmentFeatures::initializeVoxelSeedGenerator(const size_t rangeM
 AbstractFilter::Pointer SineParamsSegmentFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   SineParamsSegmentFeatures::Pointer filter = SineParamsSegmentFeatures::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

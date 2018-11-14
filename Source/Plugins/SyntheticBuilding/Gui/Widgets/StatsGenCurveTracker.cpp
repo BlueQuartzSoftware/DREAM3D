@@ -66,7 +66,7 @@ QRect StatsGenCurveTracker::trackerRect(const QFont& font) const
   // align r to the first curve
 
   const QwtPlotItemList curves = plot()->itemList(QwtPlotItem::Rtti_PlotCurve);
-  if(curves.size() > 0)
+  if(!curves.empty())
   {
     QPointF pos = invTransform(trackerPosition());
 
@@ -110,7 +110,9 @@ QwtText StatsGenCurveTracker::trackerTextF(const QPointF& pos) const
     if(!curveInfo.isEmpty())
     {
       if(!info.isEmpty())
+      {
         info += "<br>";
+      }
 
       info += curveInfo;
     }
@@ -127,7 +129,9 @@ QString StatsGenCurveTracker::curveInfoAt(const QwtPlotCurve* curve, const QPoin
 {
   const QLineF line = curveLineAt(curve, pos.x());
   if(line.isNull())
+  {
     return QString::null;
+  }
 
   const double y = line.pointAt((pos.x() - line.p1().x()) / line.dx()).y();
 

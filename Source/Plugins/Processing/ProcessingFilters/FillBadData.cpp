@@ -138,7 +138,7 @@ void FillBadData::dataCheck()
     dataArrayPaths.push_back(getFeatureIdsArrayPath());
   }
 
-  if(m_StoreAsNewPhase == true)
+  if(m_StoreAsNewPhase)
   {
     m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(),
                                                                                                           cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -219,7 +219,7 @@ void FillBadData::execute()
     }
   }
 
-  if(m_StoreAsNewPhase == true)
+  if(m_StoreAsNewPhase)
   {
     for(size_t i = 0; i < totalPoints; i++)
     {
@@ -250,7 +250,7 @@ void FillBadData::execute()
 
   for(size_t i = 0; i < totalPoints; i++)
   {
-    if(m_AlreadyChecked[i] == false && m_FeatureIds[i] == 0)
+    if(!m_AlreadyChecked[i] && m_FeatureIds[i] == 0)
     {
       currentvlist.push_back(static_cast<int64_t>(i));
       count = 0;
@@ -288,7 +288,7 @@ void FillBadData::execute()
           {
             good = 0;
           }
-          if(good == 1 && m_FeatureIds[neighbor] == 0 && m_AlreadyChecked[neighbor] == false)
+          if(good == 1 && m_FeatureIds[neighbor] == 0 && !m_AlreadyChecked[neighbor])
           {
             currentvlist.push_back(neighbor);
             m_AlreadyChecked[neighbor] = true;
@@ -301,7 +301,7 @@ void FillBadData::execute()
         for(size_t k = 0; k < currentvlist.size(); k++)
         {
           m_FeatureIds[currentvlist[k]] = 0;
-          if(m_StoreAsNewPhase == true)
+          if(m_StoreAsNewPhase)
           {
             m_CellPhases[currentvlist[k]] = maxPhase + 1;
           }
@@ -447,7 +447,7 @@ void FillBadData::execute()
 AbstractFilter::Pointer FillBadData::newFilterInstance(bool copyFilterParameters) const
 {
   FillBadData::Pointer filter = FillBadData::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

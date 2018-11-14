@@ -313,7 +313,7 @@ void AlignSectionsFeatureCentroid::execute()
 AbstractFilter::Pointer AlignSectionsFeatureCentroid::newFilterInstance(bool copyFilterParameters) const
 {
   AlignSectionsFeatureCentroid::Pointer filter = AlignSectionsFeatureCentroid::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

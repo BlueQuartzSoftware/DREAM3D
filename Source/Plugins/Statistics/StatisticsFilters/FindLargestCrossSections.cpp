@@ -276,7 +276,7 @@ void FindLargestCrossSections::execute()
 AbstractFilter::Pointer FindLargestCrossSections::newFilterInstance(bool copyFilterParameters) const
 {
   FindLargestCrossSections::Pointer filter = FindLargestCrossSections::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

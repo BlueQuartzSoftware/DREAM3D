@@ -50,7 +50,6 @@ GeneratePrimaryStatsData::GeneratePrimaryStatsData()
 , m_DataContainerName(SIMPL::Defaults::StatsGenerator)
 , m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName)
 , m_AppendToExistingAttributeMatrix(false)
-, m_SelectedEnsembleAttributeMatrix()
 {
   initialize();
 }
@@ -618,7 +617,7 @@ void GeneratePrimaryStatsData::normalizePhaseFractions(StatsDataArray* statsData
 AbstractFilter::Pointer GeneratePrimaryStatsData::newFilterInstance(bool copyFilterParameters) const
 {
   GeneratePrimaryStatsData::Pointer filter = GeneratePrimaryStatsData::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

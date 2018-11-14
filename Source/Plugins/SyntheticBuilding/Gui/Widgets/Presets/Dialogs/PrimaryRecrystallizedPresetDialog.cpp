@@ -109,6 +109,8 @@ float PrimaryRecrystallizedPresetDialog::getPercentRecrystallized()
   bool ok = false;
   float d = percentRecystallized->text().toFloat(&ok);
   if(!ok)
+  {
     d = 0.0f;
+  }
   return d;
 }

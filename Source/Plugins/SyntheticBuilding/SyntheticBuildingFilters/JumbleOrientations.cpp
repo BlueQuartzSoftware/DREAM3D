@@ -221,7 +221,7 @@ void JumbleOrientations::execute()
   for(int32_t i = 1; i < totalFeatures; i++)
   {
     bool good = false;
-    while(good == false)
+    while(!good)
     {
       good = true;
       r = distribution(generator); // Random remaining position.
@@ -270,7 +270,7 @@ void JumbleOrientations::execute()
 AbstractFilter::Pointer JumbleOrientations::newFilterInstance(bool copyFilterParameters) const
 {
   JumbleOrientations::Pointer filter = JumbleOrientations::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

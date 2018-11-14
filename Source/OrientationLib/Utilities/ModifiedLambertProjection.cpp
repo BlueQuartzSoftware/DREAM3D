@@ -60,10 +60,7 @@ ModifiedLambertProjection::ModifiedLambertProjection() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ModifiedLambertProjection::~ModifiedLambertProjection()
-{
-
-}
+ModifiedLambertProjection::~ModifiedLambertProjection() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -113,7 +110,7 @@ ModifiedLambertProjection::Pointer ModifiedLambertProjection::LambertBallToSquar
 
     // Based on the XY coordinate, get the pointer index that the value corresponds to in the proper square
 //    sqIndex = squareProj->getSquareIndex(sqCoord);
-    if (nhCheck == true)
+    if(nhCheck)
     {
       //north increment by 1
 //      squareProj->addValue(ModifiedLambertProjection::NorthSquare, sqIndex, 1.0);
@@ -322,10 +319,8 @@ double ModifiedLambertProjection::getValue(Square square, int index)
   {
     return m_NorthSquare->getValue(index);
   }
-  else
-  {
+
     return m_SouthSquare->getValue(index);
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -402,15 +397,13 @@ double ModifiedLambertProjection::getInterpolatedValue(Square square, float* sqC
     float interpolatedIntensity = ((intensity1 * (1 - modX) * (1 - modY)) + (intensity2 * (modX) * (1 - modY)) + (intensity3 * (1 - modX) * (modY)) + (intensity4 * (modX) * (modY)));
     return interpolatedIntensity;
   }
-  else
-  {
+
     float intensity1 = m_SouthSquare->getValue((abin1) + (bbin1 * m_Dimension));
     float intensity2 = m_SouthSquare->getValue((abin2) + (bbin2 * m_Dimension));
     float intensity3 = m_SouthSquare->getValue((abin3) + (bbin3 * m_Dimension));
     float intensity4 = m_SouthSquare->getValue((abin4) + (bbin4 * m_Dimension));
     float interpolatedIntensity = ((intensity1 * (1 - modX) * (1 - modY)) + (intensity2 * (modX) * (1 - modY)) + (intensity3 * (1 - modX) * (modY)) + (intensity4 * (modX) * (modY)));
     return interpolatedIntensity;
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -580,7 +573,7 @@ void ModifiedLambertProjection::createStereographicProjection(int dim, DoubleArr
           }
           nhCheck = getSquareCoord(xyz, sqCoord);
           //sqIndex = getSquareIndex(sqCoord);
-          if (nhCheck == true)
+          if(nhCheck)
           {
             //get Value from North square
             intensity[index] += getInterpolatedValue(ModifiedLambertProjection::NorthSquare, sqCoord);

@@ -392,7 +392,7 @@ void FindSizes::execute()
 AbstractFilter::Pointer FindSizes::newFilterInstance(bool copyFilterParameters) const
 {
   FindSizes::Pointer filter = FindSizes::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

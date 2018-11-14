@@ -220,7 +220,7 @@ void FindAvgScalarValueForFeatures::execute()
 AbstractFilter::Pointer FindAvgScalarValueForFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   FindAvgScalarValueForFeatures::Pointer filter = FindAvgScalarValueForFeatures::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

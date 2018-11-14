@@ -228,7 +228,7 @@ void ExtractFlaggedFeatures::execute()
   CropImageGeometry::Pointer cropVol = CropImageGeometry::New();
   for(size_t i = 1; i < totalFeatures; i++)
   {
-    if(m_FlaggedFeatures[i] == true)
+    if(m_FlaggedFeatures[i])
     {
       newDCName.clear();
       newDCName = "Feature_" + QString::number(i);
@@ -258,7 +258,7 @@ void ExtractFlaggedFeatures::execute()
 AbstractFilter::Pointer ExtractFlaggedFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   ExtractFlaggedFeatures::Pointer filter = ExtractFlaggedFeatures::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

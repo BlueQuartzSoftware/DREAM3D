@@ -264,27 +264,27 @@ int TransformationPhaseWidget::gatherSizeDistributionFromGui(float& mu, float& s
 
   bool ok = false;
   mu = loc.toFloat(m_Mu_SizeDistribution->text(), &ok);
-  if(ok == false)
+  if(!ok)
   {
     return 0;
   }
   sigma = loc.toFloat(m_Sigma_SizeDistribution->text(), &ok);
-  if(ok == false)
+  if(!ok)
   {
     return 0;
   }
   minCutOff = loc.toFloat(m_MinSigmaCutOff->text(), &ok);
-  if(ok == false)
+  if(!ok)
   {
     return 0;
   }
   maxCutOff = loc.toFloat(m_MaxSigmaCutOff->text(), &ok);
-  if(ok == false)
+  if(!ok)
   {
     return 0;
   }
   stepSize = loc.toFloat(m_BinStepSize->text(), &ok);
-  if(ok == false)
+  if(!ok)
   {
     return 0;
   }
@@ -328,7 +328,7 @@ void TransformationPhaseWidget::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 void TransformationPhaseWidget::updatePlots()
 {
-  if(m_DataHasBeenGenerated == true)
+  if(m_DataHasBeenGenerated)
   {
     QProgressDialog progress("Generating Data ....", "Cancel", 0, 4, this);
     progress.setWindowModality(Qt::WindowModal);
@@ -626,7 +626,7 @@ void TransformationPhaseWidget::plotSizeDistribution()
   m_MicroPreset->initializeOmega3TableModel(data, colors);
   m_Omega3Plot->setDistributionType(m_MicroPreset->getDistributionType(AbstractMicrostructurePreset::kOmega3Distribution), false);
   SGAbstractTableModel* tmodel = m_Omega3Plot->tableModel();
-  if(tmodel)
+  if(tmodel != nullptr)
   {
     QVector<QVector<float>> colData;
     colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
@@ -637,7 +637,7 @@ void TransformationPhaseWidget::plotSizeDistribution()
   m_MicroPreset->initializeBOverATableModel(data, colors);
   m_BOverAPlot->setDistributionType(m_MicroPreset->getDistributionType(AbstractMicrostructurePreset::kBOverADistribution), false);
   tmodel = m_BOverAPlot->tableModel();
-  if(tmodel)
+  if(tmodel != nullptr)
   {
     QVector<QVector<float>> colData;
     colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
@@ -648,7 +648,7 @@ void TransformationPhaseWidget::plotSizeDistribution()
   m_MicroPreset->initializeCOverATableModel(data, colors);
   m_COverAPlot->setDistributionType(m_MicroPreset->getDistributionType(AbstractMicrostructurePreset::kCOverADistribution), false);
   tmodel = m_COverAPlot->tableModel();
-  if(tmodel)
+  if(tmodel != nullptr)
   {
     QVector<QVector<float>> colData;
     colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
@@ -659,7 +659,7 @@ void TransformationPhaseWidget::plotSizeDistribution()
   // Get any presets for the ODF/AxisODF/MDF also
   m_MicroPreset->initializeODFTableModel(data);
   SGODFTableModel* model = m_ODFWidget->tableModel();
-  if(model)
+  if(model != nullptr)
   {
     model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
                         data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
@@ -667,7 +667,7 @@ void TransformationPhaseWidget::plotSizeDistribution()
 
   m_MicroPreset->initializeAxisODFTableModel(data);
   model = m_AxisODFWidget->tableModel();
-  if(model)
+  if(model != nullptr)
   {
     model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
                         data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
@@ -676,7 +676,7 @@ void TransformationPhaseWidget::plotSizeDistribution()
   // m_MicroPreset->initializeMDFTableModel(m_ODFWidget->getMDFWidget());
   m_MicroPreset->initializeMDFTableModel(data);
   SGMDFTableModel* mdfModel = (m_ODFWidget->getMDFWidget()->tableModel());
-  if(mdfModel)
+  if(mdfModel != nullptr)
   {
     mdfModel->setTableData(data[AbstractMicrostructurePreset::kAngles], data[AbstractMicrostructurePreset::kAxis], data[AbstractMicrostructurePreset::kWeight]);
   }

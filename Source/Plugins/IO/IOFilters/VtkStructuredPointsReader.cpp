@@ -132,13 +132,13 @@ void VtkStructuredPointsReader::dataCheck()
   setWarningCondition(0);
 
   QFileInfo fi(getInputFile());
-  if(getInputFile().isEmpty() == true)
+  if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
     setErrorCondition(-61000);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if(fi.exists() == false)
+  else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-61001);
@@ -308,7 +308,7 @@ size_t VtkStructuredPointsReader::parseByteSize(QString text)
 template <typename T> int32_t skipVolume(std::istream& in, bool binary, size_t totalSize)
 {
   int32_t err = 0;
-  if(binary == true)
+  if(binary)
   {
     std::istream::pos_type pos = in.tellg();
     qint64 newPos = totalSize * sizeof(T) + 1;
@@ -414,12 +414,11 @@ template <typename T> int32_t readDataChunk(AttributeMatrix::Pointer attrMat, st
   typename DataArray<T>::Pointer data = DataArray<T>::CreateArray(tDims, cDims, scalarName, !inPreflight);
   data->initializeWithZeros();
   attrMat->addAttributeArray(data->getName(), data);
-  if(inPreflight == true)
+  if(inPreflight)
   {
     return skipVolume<T>(in, binary, numTuples * scalarNumComp);
   }
-  else
-  {
+
     if(binary)
     {
       int32_t err = vtkReadBinaryData<T>(in, data->getPointer(0), numTuples, scalarNumComp);
@@ -443,7 +442,7 @@ template <typename T> int32_t readDataChunk(AttributeMatrix::Pointer attrMat, st
         data->setValue(i, value);
       }
     }
-  }
+
   return 0;
 }
 
@@ -537,11 +536,11 @@ int32_t VtkStructuredPointsReader::readFile()
   setComment(QString(buf));
   err = readLine(in, buffer, kBufferSize); // Read Line 3 - BINARY or ASCII
   QString fileType(buf);
-  if(fileType.startsWith("BINARY") == true)
+  if(fileType.startsWith("BINARY"))
   {
     setFileIsBinary(true);
   }
-  else if(fileType.startsWith("ASCII") == true)
+  else if(fileType.startsWith("ASCII"))
   {
     setFileIsBinary(false);
   }
@@ -658,10 +657,10 @@ int32_t VtkStructuredPointsReader::readDataTypeSection(std::istream& in, int32_t
   char* line = buf.data();
 
   // Read keywords until end-of-file
-  while(this->readString(in, line, kBufferSize))
+  while(this->readString(in, line, kBufferSize) != 0)
   {
     // read scalar data
-    if(!strncmp(lowerCase(line, kBufferSize), "scalars", 7))
+    if(strncmp(lowerCase(line, kBufferSize), "scalars", 7) == 0)
     {
       if(this->readScalarData(in, numValues) <= 0)
       {
@@ -669,7 +668,7 @@ int32_t VtkStructuredPointsReader::readDataTypeSection(std::istream& in, int32_t
       }
     }
     // read vector data
-    else if(!strncmp(line, "vectors", 7))
+    else if(strncmp(line, "vectors", 7) == 0)
     {
       if(this->readVectorData(in, numValues) <= 0)
       {
@@ -767,19 +766,19 @@ int32_t VtkStructuredPointsReader::readDataTypeSection(std::istream& in, int32_t
 #endif
 
     // maybe bumped into cell data
-    else if(!strncmp(line, nextKeyWord.c_str(), 9))
+    else if(strncmp(line, nextKeyWord.c_str(), 9) == 0)
     {
       bool ok = false;
-      if(readString(in, line, 256))
+      if(readString(in, line, 256) != 0)
       {
-        if(nextKeyWord.compare("cell_data") == 0)
+        if(nextKeyWord == "cell_data")
         {
           DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVolumeDataContainerName());
           m_CurrentAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
           int32_t ncells = QString(line).toInt(&ok);
           this->readDataTypeSection(in, ncells, "point_data");
         }
-        else if(nextKeyWord.compare("point_data") == 0)
+        else if(nextKeyWord == "point_data")
         {
           DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getVertexDataContainerName());
           m_CurrentAttrMat = m->getAttributeMatrix(getVertexAttributeMatrixName());
@@ -803,7 +802,7 @@ int32_t VtkStructuredPointsReader::readDataTypeSection(std::istream& in, int32_t
 // ------------------------------------------------------------------------
 int32_t VtkStructuredPointsReader::DecodeString(char* resname, const char* name)
 {
-  if(!resname || !name)
+  if((resname == nullptr) || (name == nullptr))
   {
     return 0;
   }
@@ -813,7 +812,7 @@ int32_t VtkStructuredPointsReader::DecodeString(char* resname, const char* name)
   size_t len = strlen(name);
   size_t reslen = 0;
   char buffer[10] = "0x";
-  while(name[cc])
+  while(name[cc] != 0)
   {
     if(name[cc] == '%')
     {
@@ -849,7 +848,7 @@ int32_t VtkStructuredPointsReader::readScalarData(std::istream& in, int32_t numP
   int32_t numComp = 1;
   char buffer[1024];
 
-  if(!(this->readString(in, buffer, 1024) && this->readString(in, line, 1024)))
+  if(!((this->readString(in, buffer, 1024) != 0) && (this->readString(in, line, 1024) != 0)))
   {
     vtkErrorMacro(<< "Cannot read scalar header!"
                   << " for file: " << (getInputFile().toStdString()));
@@ -858,7 +857,7 @@ int32_t VtkStructuredPointsReader::readScalarData(std::istream& in, int32_t numP
 
   this->DecodeString(name, buffer);
 
-  if(!this->readString(in, key, 1024))
+  if(this->readString(in, key, 1024) == 0)
   {
     vtkErrorMacro(<< "Cannot read scalar header!"
                   << " for file: " << getInputFile().toStdString());
@@ -868,10 +867,10 @@ int32_t VtkStructuredPointsReader::readScalarData(std::istream& in, int32_t numP
   QString scalarType(line);
 
   // the next string could be an integer number of components or a lookup table
-  if(strcmp(this->lowerCase(key, 256), "lookup_table"))
+  if(strcmp(this->lowerCase(key, 256), "lookup_table") != 0)
   {
     numComp = atoi(key);
-    if(numComp < 1 || !this->readString(in, key, 1024))
+    if(numComp < 1 || (this->readString(in, key, 1024) == 0))
     {
       vtkErrorMacro(<< "Cannot read scalar header!"
                     << " for file: " << getInputFile().toStdString());
@@ -879,14 +878,14 @@ int32_t VtkStructuredPointsReader::readScalarData(std::istream& in, int32_t numP
     }
   }
 
-  if(strcmp(this->lowerCase(key, 256), "lookup_table"))
+  if(strcmp(this->lowerCase(key, 256), "lookup_table") != 0)
   {
     vtkErrorMacro(<< "Lookup table must be specified with scalar.\n"
                   << "Use \"LOOKUP_TABLE default\" to use default table.");
     return 0;
   }
 
-  if(!this->readString(in, tableName, 1024))
+  if(this->readString(in, tableName, 1024) == 0)
   {
     vtkErrorMacro(<< "Cannot read scalar header!"
                   << " for file: " << getInputFile().toStdString());
@@ -1201,7 +1200,7 @@ void VtkStructuredPointsReader::readData(std::istream& instream)
 AbstractFilter::Pointer VtkStructuredPointsReader::newFilterInstance(bool copyFilterParameters) const
 {
   VtkStructuredPointsReader::Pointer filter = VtkStructuredPointsReader::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

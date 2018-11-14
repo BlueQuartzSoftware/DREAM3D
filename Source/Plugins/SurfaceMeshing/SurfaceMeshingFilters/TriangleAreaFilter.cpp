@@ -70,9 +70,7 @@ public:
   , m_Areas(Areas)
   {
   }
-  virtual ~CalculateAreasImpl()
-  {
-  }
+  virtual ~CalculateAreasImpl() = default;
 
   void generate(size_t start, size_t end) const
   {
@@ -220,7 +218,7 @@ void TriangleAreaFilter::execute()
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel == true)
+  if(doParallel)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, triangleGeom->getNumberOfTris()), CalculateAreasImpl(triangleGeom->getVertices(), triangleGeom->getTriangles(), m_SurfaceMeshTriangleAreas),
                       tbb::auto_partitioner());
@@ -241,7 +239,7 @@ void TriangleAreaFilter::execute()
 AbstractFilter::Pointer TriangleAreaFilter::newFilterInstance(bool copyFilterParameters) const
 {
   TriangleAreaFilter::Pointer filter = TriangleAreaFilter::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

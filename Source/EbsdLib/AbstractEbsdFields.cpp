@@ -36,14 +36,6 @@
 
 #include "AbstractEbsdFields.h"
 
-AbstractEbsdFields::AbstractEbsdFields()
-{
-  
+AbstractEbsdFields::AbstractEbsdFields() = default;
 
-}
-
-AbstractEbsdFields::~AbstractEbsdFields()
-{
-  
-}
-
+AbstractEbsdFields::~AbstractEbsdFields() = default;

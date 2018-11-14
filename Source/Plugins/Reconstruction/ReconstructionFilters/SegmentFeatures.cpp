@@ -136,7 +136,7 @@ void SegmentFeatures::execute()
   int32_t gnum = 1;
   int64_t seed = 0;
   int64_t neighbor = 0;
-  bool good = 0;
+  bool good = false;
   int64_t col = 0, row = 0, plane = 0;
   size_t size = 0;
   size_t initialVoxelsListSize = 100000;
@@ -194,9 +194,9 @@ void SegmentFeatures::execute()
           {
             good = false;
           }
-          if(good == true)
+          if(good)
           {
-            if(determineGrouping(currentpoint, neighbor, gnum) == true)
+            if(determineGrouping(currentpoint, neighbor, gnum))
             {
               voxelslist[size] = neighbor;
               size++;
@@ -242,7 +242,7 @@ void SegmentFeatures::execute()
 AbstractFilter::Pointer SegmentFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   SegmentFeatures::Pointer filter = SegmentFeatures::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -282,7 +282,7 @@ void RegularizeZSpacing::execute()
 AbstractFilter::Pointer RegularizeZSpacing::newFilterInstance(bool copyFilterParameters) const
 {
   RegularizeZSpacing::Pointer filter = RegularizeZSpacing::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

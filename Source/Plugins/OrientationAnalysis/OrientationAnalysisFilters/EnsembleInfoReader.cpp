@@ -145,13 +145,13 @@ void EnsembleInfoReader::dataCheck()
   DataArrayPath tempPath;
 
   QFileInfo fi(getInputFile());
-  if(getInputFile().isEmpty() == true)
+  if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if(fi.exists() == false)
+  else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
@@ -166,7 +166,7 @@ void EnsembleInfoReader::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if(m_CellEnsembleAttributeMatrixName.isEmpty() == true)
+  if(m_CellEnsembleAttributeMatrixName.isEmpty())
   {
     QString ss = QObject::tr("Ensemble Attribute Matrix name must be set");
     setErrorCondition(-1);
@@ -315,10 +315,8 @@ int32_t EnsembleInfoReader::readFile()
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return -1;
     }
-    else
-    {
+
       m_CrystalStructures[index] = m_crystruct;
-    }
 
     // now check to see if the Phase type string was valid.
     if(m_ptype == PhaseType::Type::Unknown)
@@ -328,10 +326,8 @@ int32_t EnsembleInfoReader::readFile()
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return -1;
     }
-    else
-    {
+
       m_PhaseTypes[index] = static_cast<PhaseType::EnumType>(m_ptype);
-    }
 
     visited[index] = true;
     // Close up this group
@@ -341,7 +337,7 @@ int32_t EnsembleInfoReader::readFile()
   // Make sure we visited all the groups.
   for(std::vector<bool>::size_type i = 0; i < visited.size(); i++)
   {
-    if(visited[i] == false)
+    if(!visited[i])
     {
       QString ss = QObject::tr("Phase '%1' did not have entries in the file. Phase numbering must start at 1 and no phases may be skipped")
                        .arg(i); // The phase type name read from the file was not found in the lookup table
@@ -447,7 +443,7 @@ void EnsembleInfoReader::ensembleLookup(QStringList list)
 AbstractFilter::Pointer EnsembleInfoReader::newFilterInstance(bool copyFilterParameters) const
 {
   EnsembleInfoReader::Pointer filter = EnsembleInfoReader::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

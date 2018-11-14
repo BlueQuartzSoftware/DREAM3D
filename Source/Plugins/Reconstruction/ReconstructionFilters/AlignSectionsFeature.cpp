@@ -145,7 +145,7 @@ void AlignSectionsFeature::find_shifts(std::vector<int64_t>& xshifts, std::vecto
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   std::ofstream outFile;
-  if(getWriteAlignmentShifts() == true)
+  if(getWriteAlignmentShifts())
   {
     outFile.open(getAlignmentShiftFileName().toLatin1().data());
   }
@@ -235,12 +235,12 @@ void AlignSectionsFeature::find_shifts(std::vector<int64_t>& xshifts, std::vecto
     }
     xshifts[iter] = xshifts[iter - 1] + newxshift;
     yshifts[iter] = yshifts[iter - 1] + newyshift;
-    if(getWriteAlignmentShifts() == true)
+    if(getWriteAlignmentShifts())
     {
       outFile << slice << "	" << slice + 1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << std::endl;
     }
   }
-  if(getWriteAlignmentShifts() == true)
+  if(getWriteAlignmentShifts())
   {
     outFile.close();
   }
@@ -271,7 +271,7 @@ void AlignSectionsFeature::execute()
 AbstractFilter::Pointer AlignSectionsFeature::newFilterInstance(bool copyFilterParameters) const
 {
   AlignSectionsFeature::Pointer filter = AlignSectionsFeature::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

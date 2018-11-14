@@ -162,7 +162,7 @@ void CalculateArrayHistogram::dataCheck()
   QVector<size_t> cDims(1, 2);
 
   QString newArrayName;
-  if(m_Normalize == true)
+  if(m_Normalize)
   {
     newArrayName = getNewDataArrayName() + QString("_Normalized");
   }
@@ -330,7 +330,7 @@ void CalculateArrayHistogram::execute()
 AbstractFilter::Pointer CalculateArrayHistogram::newFilterInstance(bool copyFilterParameters) const
 {
   CalculateArrayHistogram::Pointer filter = CalculateArrayHistogram::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

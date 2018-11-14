@@ -57,10 +57,10 @@
 
 namespace
 {
-static const float unit110 = 1.0 / sqrtf(2.0);
-static const float unit111 = 1.0 / sqrtf(3.0);
-static const float unit112_1 = 1.0 / sqrtf(6.0);
-static const float unit112_2 = 2.0 / sqrtf(6.0);
+const float unit110 = 1.0 / sqrtf(2.0);
+const float unit111 = 1.0 / sqrtf(3.0);
+const float unit112_1 = 1.0 / sqrtf(6.0);
+const float unit112_2 = 2.0 / sqrtf(6.0);
 
 float crystalDirections[12][3][3] = {{{unit111, unit112_1, unit110}, {-unit111, -unit112_1, unit110}, {unit111, -unit112_2, 0}},
 
@@ -277,7 +277,7 @@ void MergeColonies::dataCheck()
     m_CellParentIds = m_CellParentIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_IdentifyGlobAlpha == true)
+  if(m_IdentifyGlobAlpha)
   {
     tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getGlobAlphaArrayName());
     m_GlobAlphaPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
@@ -455,7 +455,7 @@ bool MergeColonies::determineGrouping(int32_t referenceFeature, int32_t neighbor
       {
         colony = true;
       }
-      if(colony == true)
+      if(colony)
       {
         m_FeatureParentIds[neighborFeature] = newFid;
         return true;
@@ -464,7 +464,7 @@ bool MergeColonies::determineGrouping(int32_t referenceFeature, int32_t neighbor
     else if(Ebsd::CrystalStructure::Cubic_High == phase2 && Ebsd::CrystalStructure::Hexagonal_High == phase1)
     {
       colony = check_for_burgers(q2, q1);
-      if(colony == true)
+      if(colony)
       {
         m_FeatureParentIds[neighborFeature] = newFid;
         return true;
@@ -473,7 +473,7 @@ bool MergeColonies::determineGrouping(int32_t referenceFeature, int32_t neighbor
     else if(Ebsd::CrystalStructure::Cubic_High == phase1 && Ebsd::CrystalStructure::Hexagonal_High == phase2)
     {
       colony = check_for_burgers(q1, q2);
-      if(colony == true)
+      if(colony)
       {
         m_FeatureParentIds[neighborFeature] = newFid;
         return true;
@@ -488,7 +488,6 @@ bool MergeColonies::determineGrouping(int32_t referenceFeature, int32_t neighbor
 // -----------------------------------------------------------------------------
 void MergeColonies::characterize_colonies()
 {
-  return;
 }
 
 // -----------------------------------------------------------------------------
@@ -647,7 +646,7 @@ void MergeColonies::execute()
   notifyStatusMessage(getHumanLabel(), "Characterizing Colonies");
   characterize_colonies();
 
-  if(true == m_RandomizeParentIds)
+  if(m_RandomizeParentIds)
   {
     // Generate all the numbers up front
     const int32_t rangeMin = 1;
@@ -691,7 +690,7 @@ void MergeColonies::execute()
     }
   }
 
-  if(m_IdentifyGlobAlpha == true)
+  if(m_IdentifyGlobAlpha)
   {
     identify_globAlpha();
   }
@@ -705,7 +704,7 @@ void MergeColonies::execute()
 AbstractFilter::Pointer MergeColonies::newFilterInstance(bool copyFilterParameters) const
 {
   MergeColonies::Pointer filter = MergeColonies::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

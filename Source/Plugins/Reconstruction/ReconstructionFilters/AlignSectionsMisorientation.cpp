@@ -183,7 +183,7 @@ void AlignSectionsMisorientation::dataCheck()
     dataArrayPaths.push_back(getCellPhasesArrayPath());
   }
 
-  if(m_UseGoodVoxels == true)
+  if(m_UseGoodVoxels)
   {
     m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -228,7 +228,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   std::ofstream outFile;
-  if(getWriteAlignmentShifts() == true)
+  if(getWriteAlignmentShifts())
   {
     outFile.open(getAlignmentShiftFileName().toLatin1().data());
   }
@@ -305,7 +305,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
           xIdx = k + oldxshift + halfDim0;
           yIdx = j + oldyshift + halfDim1;
           idx = (dims[0] * yIdx) + xIdx;
-          if(misorients[idx] == false && llabs(k + oldxshift) < halfDim0 && llabs(j + oldyshift) < halfDim1)
+          if(!misorients[idx] && llabs(k + oldxshift) < halfDim0 && llabs(j + oldyshift) < halfDim1)
           {
             for(int64_t l = 0; l < dims[1]; l = l + 4)
             {
@@ -316,7 +316,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
                   count++;
                   refposition = ((slice + 1) * dims[0] * dims[1]) + (l * dims[0]) + n;
                   curposition = (slice * dims[0] * dims[1]) + ((l + j + oldyshift) * dims[0]) + (n + k + oldxshift);
-                  if(m_UseGoodVoxels == false || (m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == true))
+                  if(!m_UseGoodVoxels || (m_GoodVoxels[refposition] && m_GoodVoxels[curposition]))
                   {
                     w = std::numeric_limits<float>::max();
                     if(m_CellPhases[refposition] > 0 && m_CellPhases[curposition] > 0)
@@ -335,13 +335,13 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
                       disorientation++;
                     }
                   }
-                  if(m_UseGoodVoxels == true)
+                  if(m_UseGoodVoxels)
                   {
-                    if(m_GoodVoxels[refposition] == true && m_GoodVoxels[curposition] == false)
+                    if(m_GoodVoxels[refposition] && !m_GoodVoxels[curposition])
                     {
                       disorientation++;
                     }
-                    if(m_GoodVoxels[refposition] == false && m_GoodVoxels[curposition] == true)
+                    if(!m_GoodVoxels[refposition] && m_GoodVoxels[curposition])
                     {
                       disorientation++;
                     }
@@ -369,12 +369,12 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
     }
     xshifts[iter] = xshifts[iter - 1] + newxshift;
     yshifts[iter] = yshifts[iter - 1] + newyshift;
-    if(getWriteAlignmentShifts() == true)
+    if(getWriteAlignmentShifts())
     {
       outFile << slice << "	" << slice + 1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << "\n";
     }
   }
-  if(getWriteAlignmentShifts() == true)
+  if(getWriteAlignmentShifts())
   {
     outFile.close();
   }
@@ -406,7 +406,7 @@ void AlignSectionsMisorientation::execute()
 AbstractFilter::Pointer AlignSectionsMisorientation::newFilterInstance(bool copyFilterParameters) const
 {
   AlignSectionsMisorientation::Pointer filter = AlignSectionsMisorientation::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

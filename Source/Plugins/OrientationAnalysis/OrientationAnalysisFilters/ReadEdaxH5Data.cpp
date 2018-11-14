@@ -214,7 +214,7 @@ void ReadEdaxH5Data::dataCheck()
   }
 
   QFileInfo fi(m_InputFile);
-  if(fi.exists() == false)
+  if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist: '%1'").arg(getInputFile());
     setErrorCondition(-388);
@@ -222,7 +222,7 @@ void ReadEdaxH5Data::dataCheck()
     return;
   }
 
-  if(m_InputFile.isEmpty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
+  if(m_InputFile.isEmpty() && m_Manufacturer == Ebsd::UnknownManufacturer)
   {
     QString ss = QObject::tr("The input file must be set for property %1").arg("InputFile");
     setErrorCondition(-1);
@@ -238,7 +238,7 @@ void ReadEdaxH5Data::dataCheck()
     return;
   }
 
-  if(m_InputFile.isEmpty() == false) // User set a filename, so lets check it
+  if(!m_InputFile.isEmpty()) // User set a filename, so lets check it
   {
     QVector<size_t> cDims(3, 0);
 
@@ -262,7 +262,7 @@ void ReadEdaxH5Data::dataCheck()
       setFileScanNames(scanNames);
       setNumberOfScans(scanNames.size());
 
-      if(getSelectedScanNames().size() > 0)
+      if(!getSelectedScanNames().empty())
       {
         readDataFile(reader.get(), m, cDims, scanNames[0], ANG_HEADER_ONLY);
 
@@ -408,7 +408,7 @@ void ReadEdaxH5Data::readDataFile(H5OIMReader* reader, DataContainer::Pointer m,
     setInputFile_Cache(""); // We need something to trigger the file read below
   }
   // Drop into this if statement if we need to read from a file
-  if(m_InputFile != getInputFile_Cache() || getTimeStamp_Cache().isValid() == false || getTimeStamp_Cache() < timeStamp)
+  if(m_InputFile != getInputFile_Cache() || !getTimeStamp_Cache().isValid() || getTimeStamp_Cache() < timeStamp)
   {
     float zStep = static_cast<float>(getZSpacing()), xOrigin = getOrigin().x, yOrigin = getOrigin().y, zOrigin = getOrigin().z;
     reader->setReadPatternData(getReadPatternData());
@@ -426,10 +426,8 @@ void ReadEdaxH5Data::readDataFile(H5OIMReader* reader, DataContainer::Pointer m,
         m_FileWasRead = false;
         return;
       }
-      else
-      {
+
         m_FileWasRead = true;
-      }
     }
     else
     {
@@ -500,7 +498,7 @@ void ReadEdaxH5Data::readDataFile(H5OIMReader* reader, DataContainer::Pointer m,
 int32_t ReadEdaxH5Data::loadMaterialInfo(H5OIMReader* reader)
 {
   QVector<AngPhase::Pointer> phases = getData().phases;
-  if(phases.size() == 0)
+  if(phases.empty())
   {
     setErrorCondition(reader->getErrorCode());
     notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), getErrorCondition());
@@ -749,7 +747,7 @@ void ReadEdaxH5Data::execute()
 AbstractFilter::Pointer ReadEdaxH5Data::newFilterInstance(bool copyFilterParameters) const
 {
   ReadEdaxH5Data::Pointer filter = ReadEdaxH5Data::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     filter->setFilterParameters(getFilterParameters());
     copyFilterParameterInstanceVariables(filter.get());

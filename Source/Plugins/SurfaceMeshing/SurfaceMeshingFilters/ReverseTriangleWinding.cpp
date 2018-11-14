@@ -62,9 +62,7 @@ public:
   : m_Triangles(triangles)
   {
   }
-  virtual ~ReverseWindingImpl()
-  {
-  }
+  virtual ~ReverseWindingImpl() = default;
 
   void generate(size_t start, size_t end) const
   {
@@ -181,7 +179,7 @@ void ReverseTriangleWinding::execute()
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel == true)
+  if(doParallel)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, triangleGeom->getNumberOfTris()), ReverseWindingImpl(triangleGeom->getTriangles()), tbb::auto_partitioner());
   }
@@ -202,7 +200,7 @@ void ReverseTriangleWinding::execute()
 AbstractFilter::Pointer ReverseTriangleWinding::newFilterInstance(bool copyFilterParameters) const
 {
   ReverseTriangleWinding::Pointer filter = ReverseTriangleWinding::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

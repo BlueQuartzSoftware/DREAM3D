@@ -166,13 +166,13 @@ void ReadEdaxH5DataWidget::afterPreflight()
 // -----------------------------------------------------------------------------
 void ReadEdaxH5DataWidget::updateList()
 {
-  if(getFilter())
+  if(getFilter() != nullptr)
   {
     // Get the list of choices from the filter
     QString listProp = m_FilterParameter->getListProperty();
 
     QVariant var = getFilter()->property(listProp.toLatin1().constData());
-    if(var.isValid() == false)
+    if(!var.isValid())
     {
       qDebug() << "Error getting Property " << m_FilterParameter->getListProperty() << " from Filter";
     }
@@ -250,7 +250,7 @@ void ReadEdaxH5DataWidget::on_removeScanName_clicked()
 // -----------------------------------------------------------------------------
 void ReadEdaxH5DataWidget::on_stackLowToHighBtn_toggled(bool checked)
 {
-  if(checked == true)
+  if(checked)
   {
     sortList(selectedScanNames, Qt::AscendingOrder);
   }
@@ -279,7 +279,7 @@ void ReadEdaxH5DataWidget::sortList(DREAM3DListWidget* listWidget, Qt::SortOrder
       QRegularExpressionMatch match = iter.next();
       bool ok;
       int num = match.captured().toInt(&ok);
-      if(ok == true)
+      if(ok)
       {
         sortingMap.insert(num, selectedScanName);
       }

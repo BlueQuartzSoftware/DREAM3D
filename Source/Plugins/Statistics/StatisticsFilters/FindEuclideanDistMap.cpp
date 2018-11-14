@@ -387,10 +387,10 @@ void FindEuclideanDistMap::dataCheck()
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   }
 
-  if(m_DoBoundaries == true)
+  if(m_DoBoundaries)
   {
     tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getGBDistancesArrayName());
-    if (m_CalcManhattanDist == true)
+    if(m_CalcManhattanDist)
     {
       m_GBManhattanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, cDims);
       if(nullptr != m_GBManhattanDistancesPtr.lock())
@@ -408,10 +408,10 @@ void FindEuclideanDistMap::dataCheck()
     }
   }
 
-  if(m_DoTripleLines == true)
+  if(m_DoTripleLines)
   {
     tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getTJDistancesArrayName());
-    if (m_CalcManhattanDist == true)
+    if(m_CalcManhattanDist)
     {
       m_TJManhattanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, cDims);
       if(nullptr != m_TJManhattanDistancesPtr.lock())
@@ -429,10 +429,10 @@ void FindEuclideanDistMap::dataCheck()
     }
   }
 
-  if(m_DoQuadPoints == true)
+  if(m_DoQuadPoints)
   {
     tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getQPDistancesArrayName());
-    if (m_CalcManhattanDist == true)
+    if(m_CalcManhattanDist)
     {
       m_QPManhattanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, cDims);
       if(nullptr != m_QPManhattanDistancesPtr.lock())
@@ -475,7 +475,7 @@ void FindEuclideanDistMap::preflight()
     setInPreflight(false);
     return;
   }
-  if(m_SaveNearestNeighbors == false)
+  if(!m_SaveNearestNeighbors)
   {
     DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
     AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(getFeatureIdsArrayPath().getAttributeMatrixName());
@@ -496,9 +496,9 @@ void FindEuclideanDistMap::findDistanceMap()
 
   for(size_t i = 0; i < totalPoints; i++)
   {
-    if(m_DoBoundaries == true)
+    if(m_DoBoundaries)
     {
-      if (m_CalcManhattanDist == true)
+      if(m_CalcManhattanDist)
       {
         m_GBManhattanDistances[i] = -1;
       }
@@ -507,9 +507,9 @@ void FindEuclideanDistMap::findDistanceMap()
         m_GBEuclideanDistances[i] = -1;
       }
     }
-    if(m_DoTripleLines == true)
+    if(m_DoTripleLines)
     {
-      if (m_CalcManhattanDist == true)
+      if(m_CalcManhattanDist)
       {
         m_TJManhattanDistances[i] = -1;
       }
@@ -518,9 +518,9 @@ void FindEuclideanDistMap::findDistanceMap()
         m_TJEuclideanDistances[i] = -1;
       }
     }
-    if(m_DoQuadPoints == true)
+    if(m_DoQuadPoints)
     {
-      if (m_CalcManhattanDist == true)
+      if(m_CalcManhattanDist)
       {
         m_QPManhattanDistances[i] = -1;
       }
@@ -592,7 +592,7 @@ void FindEuclideanDistMap::findDistanceMap()
         {
           good = false;
         }
-        if(good == true && m_FeatureIds[neighbor] != feature && m_FeatureIds[neighbor] >= 0)
+        if(good && m_FeatureIds[neighbor] != feature && m_FeatureIds[neighbor] >= 0)
         {
           add = true;
           for(size_t i = 0; i < coordination.size(); i++)
@@ -602,21 +602,21 @@ void FindEuclideanDistMap::findDistanceMap()
               add = false;
             }
           }
-          if(add == true)
+          if(add)
           {
             coordination.push_back(m_FeatureIds[neighbor]);
           }
         }
       }
-      if(coordination.size() == 0)
+      if(coordination.empty())
       {
         m_NearestNeighbors[a * 3 + 0] = -1;
         m_NearestNeighbors[a * 3 + 1] = -1;
         m_NearestNeighbors[a * 3 + 2] = -1;
       }
-      if(coordination.size() >= 1 && m_DoBoundaries == true)
+      if(!coordination.empty() && m_DoBoundaries)
       {
-        if (m_CalcManhattanDist == true)
+        if(m_CalcManhattanDist)
         {
           m_GBManhattanDistances[a] = 0;
         }
@@ -629,9 +629,9 @@ void FindEuclideanDistMap::findDistanceMap()
         m_NearestNeighbors[a * 3 + 1] = -1;
         m_NearestNeighbors[a * 3 + 2] = -1;
       }
-      if(coordination.size() >= 2 && m_DoTripleLines == true)
+      if(coordination.size() >= 2 && m_DoTripleLines)
       {
-        if (m_CalcManhattanDist == true)
+        if(m_CalcManhattanDist)
         {
           m_TJManhattanDistances[a] = 0;
         }
@@ -644,9 +644,9 @@ void FindEuclideanDistMap::findDistanceMap()
         m_NearestNeighbors[a * 3 + 1] = coordination[0];
         m_NearestNeighbors[a * 3 + 2] = -1;
       }
-      if(coordination.size() > 2 && m_DoQuadPoints == true)
+      if(coordination.size() > 2 && m_DoQuadPoints)
       {
-        if (m_CalcManhattanDist == true)
+        if(m_CalcManhattanDist)
         {
           m_QPManhattanDistances[a] = 0;
         }
@@ -669,12 +669,12 @@ void FindEuclideanDistMap::findDistanceMap()
 #endif
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel == true)
+  if(doParallel)
   {
     std::shared_ptr<tbb::task_group> g(new tbb::task_group);
-    if(m_DoBoundaries == true)
+    if(m_DoBoundaries)
     {
-      if (m_CalcManhattanDist == true)
+      if(m_CalcManhattanDist)
       {
         g->run(ComputeDistanceMapImpl<int32_t>(m, m_FeatureIds, m_NearestNeighbors, m_CalcManhattanDist, m_GBManhattanDistances, m_TJManhattanDistances, m_QPManhattanDistances, MapType::FeatureBoundary));
       }
@@ -683,9 +683,9 @@ void FindEuclideanDistMap::findDistanceMap()
         g->run(ComputeDistanceMapImpl<float>(m, m_FeatureIds, m_NearestNeighbors, m_CalcManhattanDist, m_GBEuclideanDistances, m_TJEuclideanDistances, m_QPEuclideanDistances, MapType::FeatureBoundary));
       }
     }
-    if(m_DoTripleLines == true)
+    if(m_DoTripleLines)
     {
-      if (m_CalcManhattanDist == true)
+      if(m_CalcManhattanDist)
       {
         g->run(ComputeDistanceMapImpl<int32_t>(m, m_FeatureIds, m_NearestNeighbors, m_CalcManhattanDist, m_GBManhattanDistances, m_TJManhattanDistances, m_QPManhattanDistances, MapType::TripleJunction));
       }
@@ -694,9 +694,9 @@ void FindEuclideanDistMap::findDistanceMap()
         g->run(ComputeDistanceMapImpl<float>(m, m_FeatureIds, m_NearestNeighbors, m_CalcManhattanDist, m_GBEuclideanDistances, m_TJEuclideanDistances, m_QPEuclideanDistances, MapType::TripleJunction));
       }
     }
-    if(m_DoQuadPoints == true)
+    if(m_DoQuadPoints)
     {
-      if (m_CalcManhattanDist == true)
+      if(m_CalcManhattanDist)
       {
         g->run(ComputeDistanceMapImpl<int32_t>(m, m_FeatureIds, m_NearestNeighbors, m_CalcManhattanDist, m_GBManhattanDistances, m_TJManhattanDistances, m_QPManhattanDistances, MapType::QuadPoint));
       }
@@ -723,9 +723,9 @@ void FindEuclideanDistMap::findDistanceMap()
         mapType = FindEuclideanDistMap::MapType::QuadPoint;
       }
 
-      if((i == 0 && m_DoBoundaries == true) || (i == 1 && m_DoTripleLines == true) || (i == 2 && m_DoQuadPoints == true))
+      if((i == 0 && m_DoBoundaries) || (i == 1 && m_DoTripleLines) || (i == 2 && m_DoQuadPoints))
       {
-        if (m_CalcManhattanDist == true)
+        if(m_CalcManhattanDist)
         {
           ComputeDistanceMapImpl<int32_t> f(m, m_FeatureIds, m_NearestNeighbors, m_CalcManhattanDist, m_GBManhattanDistances, m_TJManhattanDistances, m_QPManhattanDistances, mapType);
           f();
@@ -755,7 +755,7 @@ void FindEuclideanDistMap::execute()
 
   findDistanceMap();
 
-  if(m_SaveNearestNeighbors == false)
+  if(!m_SaveNearestNeighbors)
   {
     DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
     AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(getFeatureIdsArrayPath().getAttributeMatrixName());
@@ -771,7 +771,7 @@ void FindEuclideanDistMap::execute()
 AbstractFilter::Pointer FindEuclideanDistMap::newFilterInstance(bool copyFilterParameters) const
 {
   FindEuclideanDistMap::Pointer filter = FindEuclideanDistMap::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

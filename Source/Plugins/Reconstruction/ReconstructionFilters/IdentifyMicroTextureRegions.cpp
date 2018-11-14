@@ -93,9 +93,7 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  virtual ~FindPatchMisalignmentsImpl()
-  {
-  }
+  virtual ~FindPatchMisalignmentsImpl() = default;
 
   void convert(size_t start, size_t end) const
   {
@@ -468,7 +466,6 @@ void IdentifyMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, int64
 // -----------------------------------------------------------------------------
 void IdentifyMicroTextureRegions::findMTRregions()
 {
-  return;
 }
 
 // -----------------------------------------------------------------------------
@@ -605,7 +602,7 @@ void IdentifyMicroTextureRegions::execute()
 
 // first determine the misorientation vectors on all the voxel faces
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel == true)
+  if(doParallel)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPatches),
                       FindPatchMisalignmentsImpl(newDims, origDims, m_CAxisLocations, m_CellPhases, m_CrystalStructures, m_VolFrac, m_AvgCAxis, m_InMTR, critDim, m_MinVolFrac, m_CAxisToleranceRad),
@@ -746,7 +743,7 @@ void IdentifyMicroTextureRegions::execute()
   int64_t totalFeatures = static_cast<int64_t>(m_AvgCAxisPtr.lock()->getNumberOfTuples());
 
   // By default we randomize grains
-  if(true == getRandomizeMTRIds() && getCancel() == false)
+  if(getRandomizeMTRIds() && !getCancel())
   {
     totalPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getNumberOfElements());
     randomizeFeatureIds(totalPoints, totalFeatures);
@@ -762,7 +759,7 @@ void IdentifyMicroTextureRegions::execute()
 AbstractFilter::Pointer IdentifyMicroTextureRegions::newFilterInstance(bool copyFilterParameters) const
 {
   IdentifyMicroTextureRegions::Pointer filter = IdentifyMicroTextureRegions::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     filter->setFilterParameters(getFilterParameters());
     copyFilterParameterInstanceVariables(filter.get());

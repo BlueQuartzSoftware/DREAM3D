@@ -183,7 +183,7 @@ void StatsGenODFWidget::extractStatsData(int index, StatsData* statsData, PhaseT
     TransformationStatsData* tp = dynamic_cast<TransformationStatsData*>(statsData);
     arrays = tp->getODF_Weights();
   }
-  if(arrays.size() > 0)
+  if(!arrays.empty())
   {
     QVector<float> e1(static_cast<int>(arrays[0]->getNumberOfTuples()));
     ::memcpy(e1.data(), arrays[0]->getVoidPointer(0), sizeof(float) * static_cast<size_t>(e1.size()));
@@ -208,7 +208,7 @@ void StatsGenODFWidget::extractStatsData(int index, StatsData* statsData, PhaseT
       e3[i] = e3[i] * static_cast<float>(SIMPLib::Constants::k_RadToDeg);
     }
 
-    if(e1.size() > 0)
+    if(!e1.empty())
     {
       // Load the data into the table model
       m_ODFTableModel->setTableData(e1, e2, e3, weights, sigmas);
@@ -743,12 +743,12 @@ void StatsGenODFWidget::on_addODFTextureBtn_clicked()
 void StatsGenODFWidget::on_selectAnglesFile_clicked()
 {
   QString proposedFile = m_OpenDialogLastFilePath;
-  if(false == angleFilePath->text().isEmpty())
+  if(!angleFilePath->text().isEmpty())
   {
     proposedFile = angleFilePath->text();
   }
   QString file = QFileDialog::getOpenFileName(this, tr("Select Angles File"), proposedFile, tr("Text Document (*.txt)"));
-  if(false == file.isEmpty())
+  if(!file.isEmpty())
   {
     angleFilePath->setText(file);
     m_OpenDialogLastFilePath = file;
@@ -763,7 +763,7 @@ void StatsGenODFWidget::on_angleFilePath_textChanged()
   // If the text has changed, we don't know if the file exists/is valid,
   // so blow away the bulk table model, if it exists, and emit that
   // the user needs to select a valid file and reload
-  if(m_OdfBulkTableModel)
+  if(m_OdfBulkTableModel != nullptr)
   {
     delete m_OdfBulkTableModel;
     m_OdfBulkTableModel = nullptr;
@@ -782,14 +782,14 @@ void StatsGenODFWidget::on_angleFilePath_textChanged()
 void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
 {
   QString file = angleFilePath->text();
-  if(true == file.isEmpty())
+  if(file.isEmpty())
   {
     emit bulkLoadEvent(true);
     return;
   }
 
   QFileInfo fi(angleFilePath->text());
-  if(fi.exists() == false)
+  if(!fi.exists())
   {
     emit bulkLoadEvent(true);
     return;
@@ -873,7 +873,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     }
 #endif
   }
-  else if(fi.suffix().compare(Ebsd::Ctf::FileExt) == 0)
+  if(fi.suffix().compare(Ebsd::Ctf::FileExt) == 0)
   {
     QMessageBox::critical(this, "CTF File Loading not Supported",
                           "Please use the 'Write StatsGenerator ODF Angle File' filter from DREAM.3D to generate a file. See that filter's help for the proper format.", QMessageBox::Ok);
@@ -935,8 +935,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     }
 #endif
   }
-  else
-  {
+
     anglesInDegrees->setEnabled(true);
     angleRepresentation->setEnabled(true);
     delimiter->setEnabled(true);
@@ -989,14 +988,13 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
       weights[i] = data->getComponent(i, 3);
       sigmas[i] = data->getComponent(i, 4);
     }
-  }
 
   progress.setValue(2);
   progress.setLabelText("[2/3] Rendering Pole Figure ...");
 
   // Just blow away our table and create a new one. Quicker than removing all the rows
   // first, the repopulating them
-  if(m_OdfBulkTableModel)
+  if(m_OdfBulkTableModel != nullptr)
   {
     delete m_OdfBulkTableModel;
     m_OdfBulkTableModel = nullptr;
@@ -1073,7 +1071,7 @@ void StatsGenODFWidget::on_savePoleFigureImage_clicked()
   QString defaultName = m_OpenDialogLastFilePath;
   QString file = QFileDialog::getSaveFileName(this, tr("Save File As"), defaultName, s);
 
-  if(true == file.isEmpty())
+  if(file.isEmpty())
   {
     return;
   }

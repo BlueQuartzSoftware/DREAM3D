@@ -49,7 +49,6 @@
 //
 // -----------------------------------------------------------------------------
 AngReader::AngReader()
-: EbsdReader()
 {
   // Init all the arrays to nullptr
   m_Phi1 = nullptr;
@@ -266,11 +265,11 @@ int AngReader::readHeaderOnly()
   QTextStream ostr(&origHeader);
   m_PhaseVector.clear();
 
-  while(!in.atEnd() && false == getHeaderIsComplete())
+  while(!in.atEnd() && !getHeaderIsComplete())
   {
     buf = in.readLine();
     parseHeaderLine(buf);
-    if(getHeaderIsComplete() == false)
+    if(!getHeaderIsComplete())
     {
       ostr << buf << "\n";
     }
@@ -303,7 +302,7 @@ int AngReader::readFile()
   setOriginalHeader(origHeader);
   m_PhaseVector.clear();
 
-  while(!in.atEnd() && false == getHeaderIsComplete())
+  while(!in.atEnd() && !getHeaderIsComplete())
   {
     buf = in.readLine();
     if(buf.at(0) != '#')
@@ -330,7 +329,7 @@ int AngReader::readFile()
     setErrorMessage(msg);
     return -110;
   }
-  if(m_PhaseVector.size() == 0)
+  if(m_PhaseVector.empty())
   {
     setErrorCode(-150);
     setErrorMessage("No phase was parsed in the header portion of the file. This possibly means that part of the header is missing.");
@@ -371,7 +370,7 @@ void AngReader::readData(QFile& in, QByteArray& buf)
     setErrorMessage("NumRows Sanity Check not correct. Check the entry for NROWS in the .ang file");
     return;
   }
-  else if(grid.startsWith(Ebsd::Ang::SquareGrid) == true)
+  if(grid.startsWith(Ebsd::Ang::SquareGrid))
   {
     if(nOddCols > 0)
     {
@@ -386,13 +385,13 @@ void AngReader::readData(QFile& in, QByteArray& buf)
       totalDataPoints = 0;
     }
   }
-  else if(grid.startsWith(Ebsd::Ang::HexGrid) == true && m_ReadHexGrid == false)
+  else if(grid.startsWith(Ebsd::Ang::HexGrid) && !m_ReadHexGrid)
   {
     setErrorCode(-400);
     setErrorMessage("Ang Files with Hex Grids Are NOT currently supported - Try converting them to Square Grid with the Hex2Sqr Converter filter.");
     return;
   }
-  else if(grid.startsWith(Ebsd::Ang::HexGrid) == true && m_ReadHexGrid == true)
+  else if(grid.startsWith(Ebsd::Ang::HexGrid) && m_ReadHexGrid)
   {
     bool evenRow = false;
     totalDataPoints = 0;
@@ -477,7 +476,7 @@ void AngReader::readData(QFile& in, QByteArray& buf)
     {
       ++nxEven;
     }
-    if(in.atEnd() == true)
+    if(in.atEnd())
     {
       break;
     }
@@ -503,7 +502,7 @@ void AngReader::readData(QFile& in, QByteArray& buf)
     return;
   }
 
-  if(counter != totalDataPoints && in.atEnd() == true)
+  if(counter != totalDataPoints && in.atEnd())
   {
     ss.string()->clear();
 
@@ -602,7 +601,7 @@ void AngReader::parseHeaderLine(QByteArray& buf)
       m_CurrentPhase->parseHKLFamilies(tokens);
     }
   }
-  else if(word.startsWith(Ebsd::Ang::Categories) == true && m_CurrentPhase.get() != nullptr)
+  else if(word.startsWith(Ebsd::Ang::Categories) && m_CurrentPhase.get() != nullptr)
   {
     if(tokens.size() > 1)
     {
@@ -631,7 +630,7 @@ std::cout << "m_HeaderMap[Ebsd::Ang::" << word << "] = AngHeaderEntry<float>::Ne
 #endif
       return;
     }
-    else if(tokens.size() > 1)
+    if(tokens.size() > 1)
     {
       p->parseValue(tokens[1]);
 #if 0
@@ -670,7 +669,7 @@ void AngReader::parseDataLine(QByteArray& line, size_t i)
   QList<QByteArray> tokens = line.trimmed().simplified().split(' ');
   bool ok = true;
   offset = i;
-  if(tokens.size() >= 1)
+  if(!tokens.empty())
   {
     p1 = tokens[0].toFloat(&ok);
     if(!ok)

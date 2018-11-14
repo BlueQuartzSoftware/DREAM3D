@@ -38,10 +38,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationUtilityFilterParameter::OrientationUtilityFilterParameter()
-: FilterParameter()
-{
-}
+OrientationUtilityFilterParameter::OrientationUtilityFilterParameter() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -162,7 +162,7 @@ void StatsGenAxisODFWidget::extractStatsData(int index, StatsData* statsData, Ph
     TransformationStatsData* tp = dynamic_cast<TransformationStatsData*>(statsData);
     arrays = tp->getAxisODF_Weights();
   }
-  if(arrays.size() > 0)
+  if(!arrays.empty())
   {
     QVector<float> e1(static_cast<int>(arrays[0]->getNumberOfTuples()));
     ::memcpy(&(e1.front()), arrays[0]->getVoidPointer(0), sizeof(float) * e1.size());
@@ -193,7 +193,7 @@ void StatsGenAxisODFWidget::extractStatsData(int index, StatsData* statsData, Ph
       e3[e] = e3[0] * 180.0f / SIMPLib::Constants::k_Pif;
     }
 
-    if(e1.size() > 0)
+    if(!e1.empty())
     {
       // Load the data into the table model
       m_ODFTableModel->setTableData(e1, e2, e3, weights, sigmas);
@@ -614,12 +614,11 @@ void StatsGenAxisODFWidget::on_loadODFTextureBtn_clicked()
 {
   QString proposedFile = m_OpenDialogLastDirectory;
   QString file = QFileDialog::getOpenFileName(this, tr("Open Axis ODF File"), proposedFile, tr("Text Document (*.txt)"));
-  if(true == file.isEmpty())
+  if(file.isEmpty())
   {
     return;
   }
-  else
-  {
+
     size_t numOrients = 0;
     QString filename = file;
     std::ifstream inFile;
@@ -643,7 +642,6 @@ void StatsGenAxisODFWidget::on_loadODFTextureBtn_clicked()
       QModelIndex index = m_ODFTableModel->index(m_ODFTableModel->rowCount() - 1, 0);
       m_ODFTableView->setCurrentIndex(index);
     }
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -666,7 +664,7 @@ void StatsGenAxisODFWidget::on_savePoleFigureImage_clicked()
 
   QString file = QFileDialog::getSaveFileName(this, tr("Save File As"), defaultName, s);
 
-  if(true == file.isEmpty())
+  if(file.isEmpty())
   {
     return;
   }

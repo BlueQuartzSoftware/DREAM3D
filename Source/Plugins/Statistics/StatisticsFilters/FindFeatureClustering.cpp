@@ -190,7 +190,7 @@ void FindFeatureClustering::dataCheck()
     m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_RemoveBiasedFeatures == true)
+  if(m_RemoveBiasedFeatures)
   {
     cDims[0] = 1;
     m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(),
@@ -246,7 +246,7 @@ void FindFeatureClustering::find_clustering()
   bool writeErrorFile = true;
   std::ofstream outFile;
 
-  if(m_ErrorOutputFile.isEmpty() == false)
+  if(!m_ErrorOutputFile.isEmpty())
   {
     outFile.open(m_ErrorOutputFile.toLatin1().data(), std::ios_base::binary);
     writeErrorFile = true;
@@ -333,7 +333,7 @@ void FindFeatureClustering::find_clustering()
           clusteringlist[i].push_back(r);
           clusteringlist[j].push_back(r);
 
-          if(writeErrorFile == true && m_FeaturePhases[j] == 2)
+          if(writeErrorFile && m_FeaturePhases[j] == 2)
           {
             outFile << r << "\n" << r << "\n";
           }
@@ -372,7 +372,7 @@ void FindFeatureClustering::find_clustering()
     {
       if(m_FeaturePhases[i] == m_PhaseNumber)
       {
-        if(m_RemoveBiasedFeatures == false || m_BiasedFeatures[i] == false)
+        if(!m_RemoveBiasedFeatures || !m_BiasedFeatures[i])
         {
           ensemble = m_FeaturePhases[i];
           bin = (clusteringlist[i][j] - min) / stepsize;
@@ -464,7 +464,7 @@ void FindFeatureClustering::execute()
 AbstractFilter::Pointer FindFeatureClustering::newFilterInstance(bool copyFilterParameters) const
 {
   FindFeatureClustering::Pointer filter = FindFeatureClustering::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

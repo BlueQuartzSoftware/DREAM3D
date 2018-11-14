@@ -269,7 +269,7 @@ bool QEbsdReferenceFrameDialog::getNoTranschecked()
 // -----------------------------------------------------------------------------
 void QEbsdReferenceFrameDialog::loadEbsdData()
 {
-  if(m_EbsdFileName.isEmpty() == true)
+  if(m_EbsdFileName.isEmpty())
   {
     return;
   }
@@ -344,7 +344,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   }
 
   // If they want to convert the Eulers to Radians
-  if(degToRads->isChecked() == true)
+  if(degToRads->isChecked())
   {
     QString filtName = ChangeAngleRepresentation::ClassName();
     FilterManager* fm = FilterManager::Instance();
@@ -602,14 +602,14 @@ void QEbsdReferenceFrameDialog::generateImageRGB(IDataArray::Pointer dataArray, 
 // -----------------------------------------------------------------------------
 void QEbsdReferenceFrameDialog::originChanged(bool checked)
 {
-  if(checked == false)
+  if(!checked)
   {
     return;
   }
 
   updateGraphicsView();
 
-  if(checked == true)
+  if(checked)
   {
     updateDisplay();
   }
@@ -646,21 +646,21 @@ void QEbsdReferenceFrameDialog::getSampleTranformation(AxisAngleInput_t& input)
   input.k = 0.0f;
   input.l = 1.0f;
 
-  if(getTSLchecked() == true)
+  if(getTSLchecked())
   {
     input.angle = 180.0;
     input.h = 0.0;
     input.k = 1.0;
     input.l = 0.0;
   }
-  else if(getHKLchecked() == true)
+  else if(getHKLchecked())
   {
     input.angle = 180.0;
     input.h = 0.0;
     input.k = 1.0;
     input.l = 0.0;
   }
-  else if(getHEDMchecked() == true)
+  else if(getHEDMchecked())
   {
     input.angle = 0.0;
     input.h = 0.0;
@@ -679,21 +679,21 @@ void QEbsdReferenceFrameDialog::getEulerTranformation(AxisAngleInput_t& input)
   input.k = 0.0f;
   input.l = 1.0f;
 
-  if(getTSLchecked() == true)
+  if(getTSLchecked())
   {
     input.angle = 90.0;
     input.h = 0.0;
     input.k = 0.0;
     input.l = 1.0;
   }
-  else if(getHKLchecked() == true)
+  else if(getHKLchecked())
   {
     input.angle = 0.0;
     input.h = 0.0;
     input.k = 0.0;
     input.l = 1.0;
   }
-  else if(getHEDMchecked() == true)
+  else if(getHEDMchecked())
   {
     input.angle = 0.0;
     input.h = 0.0;

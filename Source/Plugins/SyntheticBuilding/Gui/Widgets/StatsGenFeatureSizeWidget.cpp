@@ -252,27 +252,27 @@ int StatsGenFeatureSizeWidget::gatherSizeDistributionFromGui(float& mu, float& s
 
   bool ok = false;
   mu = loc.toFloat(m_Mu_SizeDistribution->text(), &ok);
-  if(ok == false)
+  if(!ok)
   {
     return 0;
   }
   sigma = loc.toFloat(m_Sigma_SizeDistribution->text(), &ok);
-  if(ok == false)
+  if(!ok)
   {
     return 0;
   }
   minCutOff = loc.toFloat(m_MinSigmaCutOff->text(), &ok);
-  if(ok == false)
+  if(!ok)
   {
     return 0;
   }
   maxCutOff = loc.toFloat(m_MaxSigmaCutOff->text(), &ok);
-  if(ok == false)
+  if(!ok)
   {
     return 0;
   }
   stepSize = loc.toFloat(m_BinStepSize->text(), &ok);
-  if(ok == false)
+  if(!ok)
   {
     return 0;
   }
@@ -292,10 +292,9 @@ bool StatsGenFeatureSizeWidget::validateValue(QDoubleValidator* val, QLineEdit* 
     lineEdit->setStyleSheet("border: 1px solid red;");
     return false;
   }
-  else
-  {
+
     lineEdit->setStyleSheet("");
-  }
+
   return true;
 }
 

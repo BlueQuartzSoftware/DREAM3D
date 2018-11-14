@@ -114,7 +114,7 @@ void GroupFeatures::dataCheck()
   QVector<size_t> cDims(1, 1);
   m_ContiguousNeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter>(this, getContiguousNeighborListArrayPath(), cDims);
 
-  if(m_UseNonContiguousNeighbors == true)
+  if(m_UseNonContiguousNeighbors)
   {
     m_NonContiguousNeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter>(this, getNonContiguousNeighborListArrayPath(), cDims);
   }
@@ -199,13 +199,13 @@ void GroupFeatures::execute()
       {
         int32_t firstfeature = grouplist[j];
         list1size = int32_t(neighborlist[firstfeature].size());
-        if(m_UseNonContiguousNeighbors == true)
+        if(m_UseNonContiguousNeighbors)
         {
           list2size = nonContigNeighList->getListSize(firstfeature);
         }
         for(int32_t k = 0; k < 2; k++)
         {
-          if(m_PatchGrouping == true)
+          if(m_PatchGrouping)
           {
             k = 1;
           }
@@ -229,9 +229,9 @@ void GroupFeatures::execute()
             }
             if(neigh != firstfeature)
             {
-              if(determineGrouping(firstfeature, neigh, parentcount) == true)
+              if(determineGrouping(firstfeature, neigh, parentcount))
               {
-                if(m_PatchGrouping == false)
+                if(!m_PatchGrouping)
                 {
                   grouplist.push_back(neigh);
                 }
@@ -240,9 +240,9 @@ void GroupFeatures::execute()
           }
         }
       }
-      if(m_PatchGrouping == true)
+      if(m_PatchGrouping)
       {
-        if(growPatch(parentcount) == true)
+        if(growPatch(parentcount))
         {
           for(std::vector<int32_t>::size_type j = 0; j < grouplist.size(); j++)
           {
@@ -253,7 +253,7 @@ void GroupFeatures::execute()
               neigh = neighborlist[firstfeature][l];
               if(neigh != firstfeature)
               {
-                if(growGrouping(firstfeature, neigh, parentcount) == true)
+                if(growGrouping(firstfeature, neigh, parentcount))
                 {
                   grouplist.push_back(neigh);
                 }
@@ -276,7 +276,7 @@ void GroupFeatures::execute()
 AbstractFilter::Pointer GroupFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   GroupFeatures::Pointer filter = GroupFeatures::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

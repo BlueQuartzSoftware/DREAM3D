@@ -120,7 +120,7 @@ void CorrelateValuesWithVectorDirection::dataCheck()
     m_VectorData = m_VectorDataPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_CorrelatedDataArrayPath.isEmpty() == true)
+  if(m_CorrelatedDataArrayPath.isEmpty())
   {
     QString ss = QObject::tr("The correlated data array name is empty. Please select a name for the correlated data array");
     setErrorCondition(-11000);
@@ -675,7 +675,7 @@ AbstractFilter::Pointer CorrelateValuesWithVectorDirection::newFilterInstance(bo
   /*
   */
   CorrelateValuesWithVectorDirection::Pointer filter = CorrelateValuesWithVectorDirection::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

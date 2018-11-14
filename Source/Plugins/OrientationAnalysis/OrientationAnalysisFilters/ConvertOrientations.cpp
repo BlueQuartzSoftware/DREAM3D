@@ -303,7 +303,7 @@ void ConvertOrientations::execute()
 AbstractFilter::Pointer ConvertOrientations::newFilterInstance(bool copyFilterParameters) const
 {
   ConvertOrientations::Pointer filter = ConvertOrientations::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

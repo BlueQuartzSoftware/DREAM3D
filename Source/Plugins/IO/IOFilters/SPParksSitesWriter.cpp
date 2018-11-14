@@ -55,8 +55,7 @@
 //
 // -----------------------------------------------------------------------------
 SPParksSitesWriter::SPParksSitesWriter()
-: FileWriter()
-, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
+: m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 , m_FeatureIds(nullptr)
 {
 }
@@ -266,7 +265,7 @@ int32_t SPParksSitesWriter::writeFile()
 AbstractFilter::Pointer SPParksSitesWriter::newFilterInstance(bool copyFilterParameters) const
 {
   SPParksSitesWriter::Pointer filter = SPParksSitesWriter::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

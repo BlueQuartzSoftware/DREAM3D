@@ -533,7 +533,7 @@ void LaplacianSmoothing::writeVTKFile(const QString& outputVtkFile)
 AbstractFilter::Pointer LaplacianSmoothing::newFilterInstance(bool copyFilterParameters) const
 {
   LaplacianSmoothing::Pointer filter = LaplacianSmoothing::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

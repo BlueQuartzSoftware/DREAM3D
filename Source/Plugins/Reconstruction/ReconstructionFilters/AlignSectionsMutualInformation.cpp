@@ -181,7 +181,7 @@ void AlignSectionsMutualInformation::dataCheck()
   {
     dataArrayPaths.push_back(getCellPhasesArrayPath());
   }
-  if(m_UseGoodVoxels == true)
+  if(m_UseGoodVoxels)
   {
     m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -231,7 +231,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int64_t>& xshifts, 
   int32_t* miFeatureIds = m_MIFeaturesPtr->getPointer(0);
 
   std::ofstream outFile;
-  if(getWriteAlignmentShifts() == true)
+  if(getWriteAlignmentShifts())
   {
     outFile.open(getAlignmentShiftFileName().toLatin1().data());
   }
@@ -403,7 +403,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int64_t>& xshifts, 
     }
     xshifts[iter] = xshifts[iter - 1] + newxshift;
     yshifts[iter] = yshifts[iter - 1] + newyshift;
-    if(getWriteAlignmentShifts() == true)
+    if(getWriteAlignmentShifts())
     {
       outFile << slice << "	" << slice + 1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << "\n";
     }
@@ -421,7 +421,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int64_t>& xshifts, 
 
   m->getAttributeMatrix(getCellAttributeMatrixName())->removeAttributeArray(SIMPL::CellData::FeatureIds);
 
-  if(getWriteAlignmentShifts() == true)
+  if(getWriteAlignmentShifts())
   {
     outFile.close();
   }
@@ -485,7 +485,7 @@ void AlignSectionsMutualInformation::form_features_sections()
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     featurecount = 1;
     noseeds = false;
-    while(noseeds == false)
+    while(!noseeds)
     {
       seed = -1;
       randx = static_cast<int64_t>(float(rg.genrand_res53()) * float(dims[0]));
@@ -506,7 +506,7 @@ void AlignSectionsMutualInformation::form_features_sections()
             y = y - dims[1];
           }
           point = (z * dims[0] * dims[1]) + (y * dims[0]) + x;
-          if((m_UseGoodVoxels == false || m_GoodVoxels[point] == true) && miFeatureIds[point] == 0 && m_CellPhases[point] > 0)
+          if((!m_UseGoodVoxels || m_GoodVoxels[point]) && miFeatureIds[point] == 0 && m_CellPhases[point] > 0)
           {
             seed = point;
           }
@@ -557,7 +557,7 @@ void AlignSectionsMutualInformation::form_features_sections()
             {
               good = false;
             }
-            if(good == true && miFeatureIds[neighbor] <= 0 && m_CellPhases[neighbor] > 0)
+            if(good && miFeatureIds[neighbor] <= 0 && m_CellPhases[neighbor] > 0)
             {
               w = std::numeric_limits<float>::max();
               QuaternionMathF::Copy(quats[neighbor], q2);
@@ -618,7 +618,7 @@ void AlignSectionsMutualInformation::execute()
 AbstractFilter::Pointer AlignSectionsMutualInformation::newFilterInstance(bool copyFilterParameters) const
 {
   AlignSectionsMutualInformation::Pointer filter = AlignSectionsMutualInformation::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

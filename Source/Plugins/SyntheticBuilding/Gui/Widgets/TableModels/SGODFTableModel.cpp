@@ -112,26 +112,26 @@ QVariant SGODFTableModel::data(const QModelIndex& index, qint32 role) const
     QSize size(fontMetrics.width(comboBox.currentText), fontMetrics.height());
     return qApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
   }
-  else if(role == Qt::TextAlignmentRole)
+  if(role == Qt::TextAlignmentRole)
   {
     return int(Qt::AlignRight | Qt::AlignVCenter);
   }
-  else if(role == Qt::DisplayRole || role == Qt::EditRole)
+  if(role == Qt::DisplayRole || role == Qt::EditRole)
   {
     int col = index.column();
     if(col == Euler1)
     {
       return QVariant(m_Euler1s[index.row()]);
     }
-    else if(col == Euler2)
+    if(col == Euler2)
     {
       return QVariant(m_Euler2s[index.row()]);
     }
-    else if(col == Euler3)
+    if(col == Euler3)
     {
       return QVariant(m_Euler3s[index.row()]);
     }
-    else if(col == Weight)
+    if(col == Weight)
     {
       return QVariant(m_Weights[index.row()]);
     }

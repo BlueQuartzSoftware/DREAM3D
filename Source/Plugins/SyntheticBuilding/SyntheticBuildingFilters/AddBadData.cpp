@@ -117,7 +117,7 @@ void AddBadData::dataCheck()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getGBEuclideanDistancesArrayPath().getDataContainerName());
 
-  if((m_PoissonNoise == false) && (m_BoundaryNoise == false))
+  if((!m_PoissonNoise) && (!m_BoundaryNoise))
   {
     QString ss = QObject::tr("At least one type of noise must be selected");
     setErrorCondition(-1);
@@ -182,7 +182,7 @@ void AddBadData::add_noise()
   size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
   for(size_t i = 0; i < totalPoints; ++i)
   {
-    if(m_BoundaryNoise == true && m_GBEuclideanDistances[i] < 1)
+    if(m_BoundaryNoise && m_GBEuclideanDistances[i] < 1)
     {
       random = static_cast<float>(rg.genrand_res53());
       if(random < m_BoundaryVolFraction)
@@ -195,7 +195,7 @@ void AddBadData::add_noise()
         }
       }
     }
-    if(m_PoissonNoise == true)
+    if(m_PoissonNoise)
     {
       random = static_cast<float>(rg.genrand_res53());
       if(random < m_PoissonVolFraction)
@@ -217,7 +217,7 @@ void AddBadData::add_noise()
 AbstractFilter::Pointer AddBadData::newFilterInstance(bool copyFilterParameters) const
 {
   AddBadData::Pointer filter = AddBadData::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

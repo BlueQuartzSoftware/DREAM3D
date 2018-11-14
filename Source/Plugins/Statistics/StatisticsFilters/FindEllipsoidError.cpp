@@ -200,7 +200,7 @@ void FindEllipsoidError::dataCheck()
     m_NumCells = m_NumCellsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_WriteIdealEllipseFeatureIds == true)
+  if(m_WriteIdealEllipseFeatureIds)
   {
     dims[0] = 1;
     tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getIdealFeatureIdsArrayName());
@@ -384,7 +384,7 @@ void FindEllipsoidError::find_error2D()
 AbstractFilter::Pointer FindEllipsoidError::newFilterInstance(bool copyFilterParameters) const
 {
   FindEllipsoidError::Pointer filter = FindEllipsoidError::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

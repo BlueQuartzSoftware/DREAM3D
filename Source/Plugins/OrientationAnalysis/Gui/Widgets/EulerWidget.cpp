@@ -81,7 +81,7 @@ void EulerWidget::updateData(OrientationUtilityCalculator* calculator)
     // The input type is the same as this widget, so don't update
     return;
   }
-  else if(calculator->getHasErrors() == true)
+  if(calculator->getHasErrors())
   {
     e1->setText("nan");
     e2->setText("nan");
@@ -141,7 +141,7 @@ void EulerWidget::convertData(bool isDegrees)
 {
   QVector<double> values = getValues();
 
-  if(isDegrees == true)
+  if(isDegrees)
   {
     values = toDegrees(values);
   }

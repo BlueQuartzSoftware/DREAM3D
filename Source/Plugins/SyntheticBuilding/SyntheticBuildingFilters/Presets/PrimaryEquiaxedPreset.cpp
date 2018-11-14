@@ -43,9 +43,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PrimaryEquiaxedPreset::PrimaryEquiaxedPreset()
-{
-}
+PrimaryEquiaxedPreset::PrimaryEquiaxedPreset() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -189,15 +187,15 @@ unsigned int PrimaryEquiaxedPreset::getDistributionType(const QString& distType)
   {
     return SIMPL::DistributionType::Beta;
   }
-  else if(distType == AbstractMicrostructurePreset::kBOverADistribution)
+  if(distType == AbstractMicrostructurePreset::kBOverADistribution)
   {
     return SIMPL::DistributionType::Beta;
   }
-  else if(distType == AbstractMicrostructurePreset::kCOverADistribution)
+  if(distType == AbstractMicrostructurePreset::kCOverADistribution)
   {
     return SIMPL::DistributionType::Beta;
   }
-  else if(distType == AbstractMicrostructurePreset::kClusterDistribution)
+  if(distType == AbstractMicrostructurePreset::kClusterDistribution)
   {
     return SIMPL::DistributionType::UnknownDistributionType;
   }

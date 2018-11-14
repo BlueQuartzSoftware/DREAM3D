@@ -53,8 +53,7 @@
 //
 // -----------------------------------------------------------------------------
 PhWriter::PhWriter()
-: FileWriter()
-, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
+: m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 , m_FeatureIds(nullptr)
 {
 }
@@ -211,7 +210,7 @@ int32_t PhWriter::writeFile()
   typedef QMap<int32_t, bool>::iterator iterator;
   for(iterator i = used.begin(); i != used.end(); i++)
   {
-    if(i.value() == true)
+    if(i.value())
     {
       features++;
     }
@@ -243,7 +242,7 @@ int32_t PhWriter::writeFile()
 AbstractFilter::Pointer PhWriter::newFilterInstance(bool copyFilterParameters) const
 {
   PhWriter::Pointer filter = PhWriter::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

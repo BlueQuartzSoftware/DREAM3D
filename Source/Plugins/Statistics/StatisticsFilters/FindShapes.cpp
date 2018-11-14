@@ -932,7 +932,7 @@ void FindShapes::execute()
 AbstractFilter::Pointer FindShapes::newFilterInstance(bool copyFilterParameters) const
 {
   FindShapes::Pointer filter = FindShapes::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

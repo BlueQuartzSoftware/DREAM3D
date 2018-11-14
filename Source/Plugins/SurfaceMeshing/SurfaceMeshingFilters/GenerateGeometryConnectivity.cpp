@@ -130,7 +130,7 @@ void GenerateGeometryConnectivity::execute()
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
   IGeometry::Pointer geom = sm->getGeometry();
 
-  if(m_GenerateVertexTriangleLists == true || m_GenerateTriangleNeighbors == true)
+  if(m_GenerateVertexTriangleLists || m_GenerateTriangleNeighbors)
   {
     notifyStatusMessage(getHumanLabel(), "Generating Vertex Element List");
     err = geom->findElementsContainingVert();
@@ -141,7 +141,7 @@ void GenerateGeometryConnectivity::execute()
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }
-  if(m_GenerateTriangleNeighbors == true)
+  if(m_GenerateTriangleNeighbors)
   {
     notifyStatusMessage(getHumanLabel(), "Generating Element Neighbors List");
     err = geom->findElementNeighbors();
@@ -163,7 +163,7 @@ void GenerateGeometryConnectivity::execute()
 AbstractFilter::Pointer GenerateGeometryConnectivity::newFilterInstance(bool copyFilterParameters) const
 {
   GenerateGeometryConnectivity::Pointer filter = GenerateGeometryConnectivity::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

@@ -117,7 +117,7 @@ void AbaqusHexahedronWriter::dataCheck()
   setErrorCondition(0);
   setWarningCondition(0);
 
-  if(m_OutputPath.isEmpty() == true)
+  if(m_OutputPath.isEmpty())
   {
     setErrorCondition(-12001);
     QString ss = QObject::tr("The output path must be set");
@@ -126,7 +126,7 @@ void AbaqusHexahedronWriter::dataCheck()
 
   QFileInfo fi(m_OutputPath);
   QDir parentPath = fi.path();
-  if(parentPath.exists() == false)
+  if(!parentPath.exists())
   {
     setWarningCondition(-10100);
     QString ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
@@ -224,7 +224,7 @@ void AbaqusHexahedronWriter::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  else if(getCancel()) // Filter has been cancelled
+  if(getCancel()) // Filter has been cancelled
   {
     deleteFile(fileNames); // delete files
     return;
@@ -238,7 +238,7 @@ void AbaqusHexahedronWriter::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  else if(getCancel()) // Filter has been cancelled
+  if(getCancel()) // Filter has been cancelled
   {
     deleteFile(fileNames); // delete files
     return;
@@ -252,7 +252,7 @@ void AbaqusHexahedronWriter::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  else if(getCancel()) // Filter has been cancelled
+  if(getCancel()) // Filter has been cancelled
   {
     deleteFile(fileNames); // delete files
     return;
@@ -266,7 +266,7 @@ void AbaqusHexahedronWriter::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  else if(getCancel()) // Filter has been cancelled
+  if(getCancel()) // Filter has been cancelled
   {
     deleteFile(fileNames); // delete files
     return;
@@ -280,7 +280,7 @@ void AbaqusHexahedronWriter::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  else if(getCancel()) // Filter has been cancelled
+  if(getCancel()) // Filter has been cancelled
   {
     deleteFile(fileNames); // delete files
     return;
@@ -496,7 +496,7 @@ int32_t AbaqusHexahedronWriter::writeElset(const QList<QString>& fileNames, size
       {
         if(elementPerLine != 0) // no comma at start
         {
-          if(elementPerLine % 16) // 16 per line
+          if((elementPerLine % 16) != 0u) // 16 per line
           {
             fprintf(f, ", ");
           }
@@ -666,7 +666,7 @@ void AbaqusHexahedronWriter::deleteFile(const QList<QString>& fileNames)
 AbstractFilter::Pointer AbaqusHexahedronWriter::newFilterInstance(bool copyFilterParameters) const
 {
   AbaqusHexahedronWriter::Pointer filter = AbaqusHexahedronWriter::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }
