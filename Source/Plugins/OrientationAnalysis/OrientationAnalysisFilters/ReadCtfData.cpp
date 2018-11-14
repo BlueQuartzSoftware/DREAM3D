@@ -182,21 +182,21 @@ void ReadCtfData::dataCheck()
   }
 
   QFileInfo fi(m_InputFile);
-  if(fi.exists() == false)
+  if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist: '%1'").arg(getInputFile());
     setErrorCondition(-388);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if(m_InputFile.isEmpty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
+  if(m_InputFile.isEmpty() && m_Manufacturer == Ebsd::UnknownManufacturer)
   {
     QString ss = QObject::tr("The input file must be set");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, -1);
   }
 
-  if(m_InputFile.isEmpty() == false) // User set a filename, so lets check it
+  if(!m_InputFile.isEmpty()) // User set a filename, so lets check it
   {
     QVector<size_t> tDims(3, 0);
 
@@ -308,7 +308,7 @@ void ReadCtfData::readDataFile(CtfReader* reader, DataContainer::Pointer m, QVec
   }
 
   // Drop into this if statement if we need to read from a file
-  if(m_InputFile != getInputFile_Cache() || getTimeStamp_Cache().isValid() == false || getTimeStamp_Cache() < timeStamp)
+  if(m_InputFile != getInputFile_Cache() || !getTimeStamp_Cache().isValid() || getTimeStamp_Cache() < timeStamp)
   {
     float xOrigin = 0.0f, yOrigin = 0.0f, zOrigin = 0.0f, zStep = 1.0f;
     reader->setFileName(m_InputFile);
@@ -324,10 +324,8 @@ void ReadCtfData::readDataFile(CtfReader* reader, DataContainer::Pointer m, QVec
         m_FileWasRead = false;
         return;
       }
-      else
-      {
+
         m_FileWasRead = true;
-      }
     }
     else
     {
@@ -399,7 +397,7 @@ void ReadCtfData::readDataFile(CtfReader* reader, DataContainer::Pointer m, QVec
 int32_t ReadCtfData::loadMaterialInfo(CtfReader* reader)
 {
   QVector<CtfPhase::Pointer> phases = getData().phases;
-  if(phases.size() == 0)
+  if(phases.empty())
   {
     setErrorCondition(reader->getErrorCode());
     notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), getErrorCondition());
@@ -640,7 +638,7 @@ void ReadCtfData::execute()
 AbstractFilter::Pointer ReadCtfData::newFilterInstance(bool copyFilterParameters) const
 {
   ReadCtfData::Pointer filter = ReadCtfData::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     filter->setFilterParameters(getFilterParameters());
     copyFilterParameterInstanceVariables(filter.get());

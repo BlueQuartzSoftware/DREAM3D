@@ -101,7 +101,7 @@ int PoleFigureImageUtilities::countPixelNeighbors(int imageWidth, int imageHeigh
   int targetIndex = (imageWidth * pY) + pX;
   float delta = (pX - cX) * (pX - cX) + (pY - cY) * (pY - cY);
 
-  if(genmask == true)
+  if(genmask)
   {
     if(delta > radSqrd)
     {
@@ -416,7 +416,7 @@ QImage PoleFigureImageUtilities::CreateQImageFromRgbaArray(UInt8ArrayType* poleF
   image = image.mirrored(false, true);
 
   QString imageLabel = (poleFigurePtr->getName());
-  if(includeOverlay == true)
+  if(includeOverlay)
   {
     image = PoleFigureImageUtilities::PaintPoleFigureOverlay(imageDimension, imageDimension, imageLabel, image);
   }
@@ -483,7 +483,7 @@ QImage PoleFigureImageUtilities::Create3ImagePoleFigure(UInt8ArrayType* i0, UInt
   painter.drawImage(pos1, img0); // Draw the first image in the upper Left
   painter.drawImage(pos2, img1); // Draw the second image in the upper right
   painter.drawImage(pos3, img2); // Draw the third image in the lower Left
-  if((config.discrete && config.discreteHeatMap) || config.discrete == false)
+  if((config.discrete && config.discreteHeatMap) || !config.discrete)
   {
     painter.drawImage(pos4, scalarBar); // Draw the Scalar Bar
   }

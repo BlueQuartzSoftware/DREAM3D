@@ -125,7 +125,7 @@ void QuiltCellData::dataCheck()
 
   // First sanity check the inputs and output names. All must be filled in
 
-  if(m_SelectedCellArrayPath.isEmpty() == true)
+  if(m_SelectedCellArrayPath.isEmpty())
   {
     QString ss = QObject::tr("The input array name is empty. Please select a name for the input array");
     setErrorCondition(-11000);
@@ -133,7 +133,7 @@ void QuiltCellData::dataCheck()
     return;
   }
 
-  if(getOutputDataContainerName().isEmpty() == true)
+  if(getOutputDataContainerName().isEmpty())
   {
     QString ss = QObject::tr("The output DataContainer name is empty. Please assign a name for the created DataContainer");
     setErrorCondition(-11001);
@@ -141,7 +141,7 @@ void QuiltCellData::dataCheck()
     return;
   }
 
-  if(getOutputAttributeMatrixName().isEmpty() == true)
+  if(getOutputAttributeMatrixName().isEmpty())
   {
     QString ss = QObject::tr("The output AttributeMatrix name is empty. Please assign a name for the created AttributeMatrix");
     setErrorCondition(-11002);
@@ -149,7 +149,7 @@ void QuiltCellData::dataCheck()
     return;
   }
 
-  if(getOutputArrayName().isEmpty() == true)
+  if(getOutputArrayName().isEmpty())
   {
     QString ss = QObject::tr("The output array name is empty. Please assign a name for the created array");
     setErrorCondition(-11003);
@@ -441,7 +441,7 @@ void QuiltCellData::execute()
 AbstractFilter::Pointer QuiltCellData::newFilterInstance(bool copyFilterParameters) const
 {
   QuiltCellData::Pointer filter = QuiltCellData::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

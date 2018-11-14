@@ -154,7 +154,7 @@ void WriteStlFile::dataCheck()
     dataArrays.push_back(triangles->getTriangles());
   }
 
-  if(m_OutputStlDirectory.isEmpty() == true)
+  if(m_OutputStlDirectory.isEmpty())
   {
     setErrorCondition(-1003);
     notifyErrorMessage(getHumanLabel(), "The output directory must be set", -1003);
@@ -172,7 +172,7 @@ void WriteStlFile::dataCheck()
     dataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock());
   }
 
-  if(m_GroupByPhase == true)
+  if(m_GroupByPhase)
   {
     m_SurfaceMeshFacePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFacePhasesArrayPath(),
                                                                                                                      cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -242,7 +242,7 @@ void WriteStlFile::execute()
 
   // Store all the unique Spins
   QMap<int32_t, int32_t> uniqueGrainIdtoPhase;
-  if(m_GroupByPhase == true)
+  if(m_GroupByPhase)
   {
     for(int64_t i = 0; i < nTriangles; i++)
     {
@@ -281,7 +281,7 @@ void WriteStlFile::execute()
 
     // Generate the output file name
     QString filename = getOutputStlDirectory() + "/" + getOutputStlPrefix();
-    if(m_GroupByPhase == true)
+    if(m_GroupByPhase)
     {
       filename = filename + QString("Ensemble_") + QString::number(spinIter.value()) + QString("_");
     }
@@ -293,7 +293,7 @@ void WriteStlFile::execute()
     }
 
     QString header = "DREAM3D Generated For Feature ID " + QString::number(spin);
-    if(m_GroupByPhase == true)
+    if(m_GroupByPhase)
     {
       header = header + " Phase " + QString::number(spinIter.value());
     }
@@ -373,8 +373,6 @@ void WriteStlFile::execute()
   setErrorCondition(0);
   setWarningCondition(0);
   notifyStatusMessage(getHumanLabel(), "Complete");
-
-  return;
 }
 
 // -----------------------------------------------------------------------------
@@ -424,7 +422,7 @@ int32_t WriteStlFile::writeNumTrianglesToFile(const QString& filename, int32_t t
 AbstractFilter::Pointer WriteStlFile::newFilterInstance(bool copyFilterParameters) const
 {
   WriteStlFile::Pointer filter = WriteStlFile::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

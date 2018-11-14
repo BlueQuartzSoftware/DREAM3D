@@ -71,9 +71,7 @@ class PhReaderPrivate
 // -----------------------------------------------------------------------------
 PhReaderPrivate::PhReaderPrivate(PhReader* ptr)
 : q_ptr(ptr)
-, m_Dims()
 , m_InputFile_Cache("")
-, m_LastRead()
 {
 }
 
@@ -203,20 +201,20 @@ void PhReader::dataCheck()
   m->setGeometry(image);
 
   QFileInfo fi(getInputFile());
-  if(getInputFile().isEmpty() == true)
+  if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if(fi.exists() == false)
+  else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if(getInputFile().isEmpty() == false && fi.exists() == true)
+  if(!getInputFile().isEmpty() && fi.exists())
   {
     QDateTime lastModified(fi.lastModified());
 
@@ -414,7 +412,7 @@ int32_t PhReader::readFile()
 AbstractFilter::Pointer PhReader::newFilterInstance(bool copyFilterParameters) const
 {
   PhReader::Pointer filter = PhReader::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

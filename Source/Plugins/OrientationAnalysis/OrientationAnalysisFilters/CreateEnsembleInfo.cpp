@@ -55,7 +55,6 @@
 CreateEnsembleInfo::CreateEnsembleInfo()
 : m_DataContainerName("")
 , m_CellEnsembleAttributeMatrixName("EnsembleAttributeMatrix")
-, m_Ensemble()
 , m_CrystalStructuresArrayName(SIMPL::EnsembleData::CrystalStructures)
 , m_PhaseTypesArrayName(SIMPL::EnsembleData::PhaseTypes)
 , m_PhaseNamesArrayName("PhaseNames")
@@ -261,7 +260,7 @@ void CreateEnsembleInfo::execute()
 AbstractFilter::Pointer CreateEnsembleInfo::newFilterInstance(bool copyFilterParameters) const
 {
   CreateEnsembleInfo::Pointer filter = CreateEnsembleInfo::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

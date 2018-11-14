@@ -82,7 +82,7 @@ void RodriguesWidget::updateData(OrientationUtilityCalculator* calculator)
     // The input type is the same as this widget, so don't update
     return;
   }
-  else if(calculator->getHasErrors() == true)
+  if(calculator->getHasErrors())
   {
     r1->setText("nan");
     r2->setText("nan");

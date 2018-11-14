@@ -180,7 +180,7 @@ void FitFeatureData::dataCheck()
     m_NewEnsembleArray = m_NewEnsembleArrayPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_RemoveBiasedFeatures == true)
+  if(m_RemoveBiasedFeatures)
   {
     cDims[0] = 1;
     m_BiasedFeaturesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getBiasedFeaturesArrayPath(),
@@ -254,7 +254,7 @@ template <typename T> void fitData(IDataArray::Pointer inDataPtr, float* ensembl
   int32_t ensemble = 0;
   for(size_t i = 1; i < numfeatures; i++)
   {
-    if(removeBiasedFeatures == false || biasedFeatures[i] == false)
+    if(!removeBiasedFeatures || !biasedFeatures[i])
     {
       ensemble = eIds[i];
       values[ensemble].push_back(static_cast<float>(fPtr[i]));
@@ -298,7 +298,7 @@ void FitFeatureData::execute()
 AbstractFilter::Pointer FitFeatureData::newFilterInstance(bool copyFilterParameters) const
 {
   FitFeatureData::Pointer filter = FitFeatureData::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

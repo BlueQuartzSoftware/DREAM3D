@@ -174,9 +174,7 @@ public:
     nsym = m_OrientationOps[cryst]->getNumSymOps();
   }
 
-  virtual ~TrisSelector()
-  {
-  }
+  virtual ~TrisSelector() = default;
 
   void select(size_t start, size_t end) const
   {
@@ -222,7 +220,7 @@ public:
         continue;
       }
 
-      if(m_ExcludeTripleLines == true)
+      if(m_ExcludeTripleLines)
       {
         int64_t node1 = m_Triangles[triIdx * 3];
         int64_t node2 = m_Triangles[triIdx * 3 + 1];
@@ -357,9 +355,7 @@ public:
   {
   }
 
-  virtual ~ProbeDistrib()
-  {
-  }
+  virtual ~ProbeDistrib() = default;
 
   void probe(size_t start, size_t end) const
   {
@@ -375,7 +371,9 @@ public:
         {
           float sign = 1.0f;
           if(inversion == 1)
+          {
             sign = -1.0f;
+          }
 
           float theta1 = acosf(sign * (selectedTris[triRepresIdx].normal_grain1_x * fixedNormal1[0] + selectedTris[triRepresIdx].normal_grain1_y * fixedNormal1[1] +
                                        selectedTris[triRepresIdx].normal_grain1_z * fixedNormal1[2]));
@@ -620,7 +618,7 @@ void FindGBCDMetricBased::dataCheck()
 
   // Make sure the file name ends with _1 so the GMT scripts work correctly
   QString distFName = distOutFileInfo.baseName();
-  if(!distFName.isEmpty() && distFName.endsWith("_1") == false)
+  if(!distFName.isEmpty() && !distFName.endsWith("_1"))
   {
     distFName = distFName + "_1";
     QString absPath = distOutFileInfo.absolutePath() + "/" + distFName + ".dat";
@@ -628,14 +626,14 @@ void FindGBCDMetricBased::dataCheck()
   }
 
   QString errFName = errOutFileInfo.baseName();
-  if(!errFName.isEmpty() && errFName.endsWith("_1") == false)
+  if(!errFName.isEmpty() && !errFName.endsWith("_1"))
   {
     errFName = errFName + "_1";
     QString absPath = errOutFileInfo.absolutePath() + "/" + errFName + ".dat";
     setErrOutputFile(absPath);
   }
 
-  if(getDistOutputFile().isEmpty() == false && getDistOutputFile() == getErrOutputFile())
+  if(!getDistOutputFile().isEmpty() && getDistOutputFile() == getErrOutputFile())
   {
     setErrorCondition(-1008);
     QString ss = QObject::tr("The output files must be different");
@@ -947,7 +945,7 @@ void FindGBCDMetricBased::execute()
     }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel == true)
+    if(doParallel)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(i, i + trisChunkSize),
                         GBCDMetricBased::TrisSelector(m_ExcludeTripleLines, m_Triangles, m_NodeTypes, &selectedTris, &triIncluded, m_misorResol, m_PhaseOfInterest, gFixedT, m_CrystalStructures,
@@ -1018,7 +1016,7 @@ void FindGBCDMetricBased::execute()
     }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel == true)
+    if(doParallel)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(i, i + pointsChunkSize),
                         GBCDMetricBased::ProbeDistrib(&distribValues, &errorValues, samplPtsX, samplPtsY, samplPtsZ, selectedTris, m_PlaneResolSq, totalFaceArea, numDistinctGBs, ballVolume, gFixedT),
@@ -1047,7 +1045,7 @@ void FindGBCDMetricBased::execute()
 
     fprintf(fDist, "%.2f %.2f %.4f\n", azimuthDeg, 90.0f - zenithDeg, distribValues[ptIdx]);
 
-    if(m_SaveRelativeErr == false)
+    if(!m_SaveRelativeErr)
     {
       fprintf(fErr, "%.2f %.2f %.4f\n", azimuthDeg, 90.0f - zenithDeg, errorValues[ptIdx]);
     }
@@ -1073,7 +1071,7 @@ void FindGBCDMetricBased::execute()
 AbstractFilter::Pointer FindGBCDMetricBased::newFilterInstance(bool copyFilterParameters) const
 {
   FindGBCDMetricBased::Pointer filter = FindGBCDMetricBased::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

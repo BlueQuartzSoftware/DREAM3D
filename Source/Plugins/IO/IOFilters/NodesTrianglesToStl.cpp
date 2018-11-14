@@ -111,12 +111,12 @@ void NodesTrianglesToStl::dataCheck()
 
   QFileInfo fi(m_TrianglesFile);
 
-  if(m_TrianglesFile.isEmpty() == true)
+  if(m_TrianglesFile.isEmpty())
   {
     setErrorCondition(-1001);
     notifyErrorMessage(getHumanLabel(), "Triangles file path or name is emtpy", -1001);
   }
-  else if(fi.exists() == false)
+  else if(!fi.exists())
   {
 
     if(getInPreflight())
@@ -133,12 +133,12 @@ void NodesTrianglesToStl::dataCheck()
   }
 
   QFileInfo fii(m_NodesFile);
-  if(m_NodesFile.isEmpty() == true)
+  if(m_NodesFile.isEmpty())
   {
     setErrorCondition(-1002);
     notifyErrorMessage(getHumanLabel(), "Nodes file path or name is emtpy", -1002);
   }
-  else if(fii.exists() == false)
+  else if(!fii.exists())
   {
 
     if(getInPreflight())
@@ -154,7 +154,7 @@ void NodesTrianglesToStl::dataCheck()
     }
   }
 
-  if(m_OutputStlDirectory.isEmpty() == true)
+  if(m_OutputStlDirectory.isEmpty())
   {
     setErrorCondition(-1003);
     notifyErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
@@ -405,8 +405,6 @@ void NodesTrianglesToStl::execute()
   setErrorCondition(0);
   setWarningCondition(0);
   notifyStatusMessage(getHumanLabel(), "Complete");
-
-  return;
 }
 
 // -----------------------------------------------------------------------------
@@ -460,7 +458,7 @@ AbstractFilter::Pointer NodesTrianglesToStl::newFilterInstance(bool copyFilterPa
   * OutputStlPrefix
   */
   NodesTrianglesToStl::Pointer filter = NodesTrianglesToStl::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

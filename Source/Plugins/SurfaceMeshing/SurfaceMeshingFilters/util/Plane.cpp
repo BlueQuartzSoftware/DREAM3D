@@ -62,7 +62,7 @@ Plane::CP Plane::classify_point(VectorType& p)
   {
     return CP_COPLANAR;
   }
-  else if(value > 0)
+  if(value > 0)
   {
     return CP_FRONT;
   }

@@ -39,9 +39,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MicrostructurePresetManager::MicrostructurePresetManager()
-{
-}
+MicrostructurePresetManager::MicrostructurePresetManager() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -103,11 +101,11 @@ AbstractMicrostructurePreset::Pointer MicrostructurePresetManager::createPreset(
 {
   // std::cout << "MicrostructurePresetManager::newMicrostructurePreset -> Trying to create MicrostructurePreset for '" << classname << "'" << std::endl;
   AbstractMicrostructurePreset::Pointer MicrostructurePreset;
-  for(AbstractMicrostructurePresetFactory::Collection::iterator iter = _factories.begin(); iter != _factories.end(); ++iter)
+  for(const auto& factory : _factories)
   {
-    if((*(iter))->canCreateClass(classname) == true)
+    if(factory->canCreateClass(classname))
     {
-      return (*(iter)).get()->newMicrostructurePreset();
+      return factory->newMicrostructurePreset();
     }
   }
 
@@ -127,11 +125,11 @@ void MicrostructurePresetManager::addFactory(AbstractMicrostructurePresetFactory
 // -----------------------------------------------------------------------------
 AbstractMicrostructurePresetFactory::Pointer MicrostructurePresetManager::getFactory(const QString& classname)
 {
-  for(AbstractMicrostructurePresetFactory::Collection::iterator iter = _factories.begin(); iter != _factories.end(); ++iter)
+  for(const auto& factory : _factories)
   {
-    if((*(iter))->canCreateClass(classname) == true)
+    if(factory->canCreateClass(classname))
     {
-      return *(iter);
+      return factory;
     }
   }
   AbstractMicrostructurePresetFactory::Pointer nullPointer;

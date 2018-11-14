@@ -306,7 +306,7 @@ void ConvertColorToGrayScale::dataCheck()
 {
   setErrorCondition(0);
   setWarningCondition(0);
-  if(DataArrayPath::ValidateVector(getInputDataArrayVector()) == false)
+  if(!DataArrayPath::ValidateVector(getInputDataArrayVector()))
   {
     setErrorCondition(-62100);
     QString ss = QObject::tr("All Attribute Arrays must belong to the same Data Container and Attribute Matrix");
@@ -473,7 +473,7 @@ void ConvertColorToGrayScale::execute()
     if(ConversionType::Luminosity == convType)
     {
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      if(doParallel == true)
+      if(doParallel)
       {
         tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), LuminosityImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), m_ColorWeights, comp), tbb::auto_partitioner());
       }
@@ -487,7 +487,7 @@ void ConvertColorToGrayScale::execute()
     else if(ConversionType::Average == convType)
     {
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      if(doParallel == true)
+      if(doParallel)
       {
         tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), AverageImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp), tbb::auto_partitioner());
       }
@@ -501,7 +501,7 @@ void ConvertColorToGrayScale::execute()
     else if(ConversionType::Lightness == convType)
     {
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      if(doParallel == true)
+      if(doParallel)
       {
         tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), LightnessImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp), tbb::auto_partitioner());
       }
@@ -515,7 +515,7 @@ void ConvertColorToGrayScale::execute()
     else if(ConversionType::SingleChannel == convType)
     {
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      if(doParallel == true)
+      if(doParallel)
       {
         tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), SingleChannelImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp, getColorChannel()),
                           tbb::auto_partitioner());
@@ -586,7 +586,7 @@ void ConvertColorToGrayScale::execute()
 AbstractFilter::Pointer ConvertColorToGrayScale::newFilterInstance(bool copyFilterParameters) const
 {
   ConvertColorToGrayScale::Pointer filter = ConvertColorToGrayScale::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

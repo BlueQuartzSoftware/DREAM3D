@@ -224,7 +224,7 @@ void FindTriangleGeomSizes::execute()
 AbstractFilter::Pointer FindTriangleGeomSizes::newFilterInstance(bool copyFilterParameters) const
 {
   FindTriangleGeomSizes::Pointer filter = FindTriangleGeomSizes::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

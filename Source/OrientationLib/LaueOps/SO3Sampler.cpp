@@ -41,21 +41,21 @@
 
 
 namespace {
-  static const int AnorthicType = 0; // Triclinic
-  static const int CyclicType = 1;
-  static const int DihedralType = 2;
-  static const int TetrahedralType = 3;
-  static const int OctahedralType = 4;
+const int AnorthicType = 0; // Triclinic
+const int CyclicType = 1;
+const int DihedralType = 2;
+const int TetrahedralType = 3;
+const int OctahedralType = 4;
 }
 
 
 namespace
 {
-  static const int NoAxisOrder = 0;
-  static const int TwoFoldAxisOrder = 2;
-  static const int ThreeFoldAxisOrder = 3;
-  static const int FourFoldAxisOrder = 4;
-  static const int SixFoldAxisOrder = 6;
+const int NoAxisOrder = 0;
+const int TwoFoldAxisOrder = 2;
+const int ThreeFoldAxisOrder = 3;
+const int FourFoldAxisOrder = 4;
+const int SixFoldAxisOrder = 6;
 }
 
 // Following numbers are coefficients used to calculate the exponential of a matrix
@@ -106,19 +106,12 @@ static const int FZoarray[32] = { NoAxisOrder,NoAxisOrder,TwoFoldAxisOrder,TwoFo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SO3Sampler::SO3Sampler()
-{
-
-
-}
+SO3Sampler::SO3Sampler() = default;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SO3Sampler::~SO3Sampler()
-{
-
-}
+SO3Sampler::~SO3Sampler() = default;
 
 // ###################################################################
 // Copyright (c) 2013-2014, Marc De Graef/Carnegie Mellon University
@@ -207,13 +200,22 @@ bool SO3Sampler::IsinsideFZ(double* rod, int FZtype, int FZorder)
       insideFZ = insideCyclicFZ(rod,FZorder);      // infinity is checked inside this function
       break;
     case DihedralType:
-      if (rod[3] != std::numeric_limits<double>::infinity()) insideFZ = insideDihedralFZ(rod,FZorder);
+      if(rod[3] != std::numeric_limits<double>::infinity())
+      {
+        insideFZ = insideDihedralFZ(rod, FZorder);
+      }
       break;
     case TetrahedralType:
-      if (rod[3] != std::numeric_limits<double>::infinity()) insideFZ = insideCubicFZ(rod,TetrahedralType);
+      if(rod[3] != std::numeric_limits<double>::infinity())
+      {
+        insideFZ = insideCubicFZ(rod, TetrahedralType);
+      }
       break;
     case OctahedralType:
-      if (rod[3] != std::numeric_limits<double>::infinity()) insideFZ = insideCubicFZ(rod,OctahedralType);
+      if(rod[3] != std::numeric_limits<double>::infinity())
+      {
+        insideFZ = insideCubicFZ(rod, OctahedralType);
+      }
       break;
     default:
       insideFZ = false;

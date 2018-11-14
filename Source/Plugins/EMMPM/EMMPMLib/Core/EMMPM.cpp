@@ -49,8 +49,7 @@
 //
 // -----------------------------------------------------------------------------
 EMMPM::EMMPM()
-: Observable()
-, m_StatsDelegate(nullptr)
+: m_StatsDelegate(nullptr)
 , m_ErrorCondition(0)
 {
 }
@@ -186,7 +185,7 @@ void EMMPM::execute()
   //  millis = millis >> 32; // bring back the low bits
   // data->rngVars = init_genrand( (unsigned long)(millis));
 
-  if(data->cancel)
+  if(data->cancel != 0)
   {
     data->progress = 100.0;
     return;
@@ -194,7 +193,7 @@ void EMMPM::execute()
 
   /* Initialize the Curvature Penalty variables:  */
   data->ccost = nullptr;
-  if(data->useCurvaturePenalty)
+  if(data->useCurvaturePenalty != 0)
   {
     CurvatureInitialization::Pointer curvatureInit = CurvatureInitialization::New();
     curvatureInit->initCurvatureVariables(m_Data);
@@ -212,7 +211,7 @@ void EMMPM::execute()
   data->ew = nullptr;
   data->sw = nullptr;
   data->nw = nullptr;
-  if(data->useGradientPenalty)
+  if(data->useGradientPenalty != 0)
   {
     GradientVariablesInitialization::Pointer gradientInit = GradientVariablesInitialization::New();
     gradientInit->initialize(m_Data);
@@ -232,7 +231,7 @@ void EMMPM::execute()
   XtArrayInitialization::Pointer xtInit = XtArrayInitialization::New();
   xtInit->initialize(m_Data);
 
-  if(data->cancel)
+  if(data->cancel != 0)
   {
     data->progress = 100.0;
     return;

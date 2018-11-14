@@ -114,7 +114,7 @@ public:
       }
 
       point = m_Points->getVertexPointer(i);
-      if(m_PolyIds[i] == 0 && GeometryMath::PointInBox(point, ll, ur) == true)
+      if(m_PolyIds[i] == 0 && GeometryMath::PointInBox(point, ll, ur))
       {
         code = GeometryMath::PointInPolyhedron(m_Faces.get(), m_FaceIds->getElementList(iter), m_FaceBBs.get(), point, ll, ur, radius, distToBoundary);
         if(code == 'i' || code == 'V' || code == 'E' || code == 'F')
@@ -192,7 +192,7 @@ public:
         }
 
         point = m_Points->getVertexPointer(i);
-        if(m_PolyIds[i] == 0 && GeometryMath::PointInBox(point, ll, ur) == true)
+        if(m_PolyIds[i] == 0 && GeometryMath::PointInBox(point, ll, ur))
         {
           code = GeometryMath::PointInPolyhedron(m_Faces.get(), m_FaceIds->getElementList(iter), m_FaceBBs.get(), point, ll, ur, radius, distToBoundary);
           if(code == 'i' || code == 'V' || code == 'E' || code == 'F')
@@ -317,7 +317,6 @@ VertexGeom::Pointer SampleSurfaceMesh::generate_points()
 // -----------------------------------------------------------------------------
 void SampleSurfaceMesh::assign_points(Int32ArrayType::Pointer iArray)
 {
-  return;
 }
 
 // -----------------------------------------------------------------------------
@@ -468,7 +467,7 @@ void SampleSurfaceMesh::execute()
   if(numFeatures > nthreads)
   {
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel == true)
+    if(doParallel)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, numFeatures), SampleSurfaceMeshImpl(this, triangleGeom, faceLists, faceBBs, points, polyIds), tbb::auto_partitioner());
     }
@@ -488,7 +487,7 @@ void SampleSurfaceMesh::execute()
       m_Millis = m_StartMillis;
       size_t numPoints = points->getNumberOfVertices();
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      if(doParallel == true)
+      if(doParallel)
       {
         tbb::parallel_for(tbb::blocked_range<size_t>(0, numPoints), SampleSurfaceMeshImplByPoints(this, triangleGeom, faceLists, faceBBs, points, featureId, polyIds), tbb::auto_partitioner());
       }
@@ -532,7 +531,7 @@ void SampleSurfaceMesh::sendThreadSafeProgressMessage(int featureId, size_t numC
 AbstractFilter::Pointer SampleSurfaceMesh::newFilterInstance(bool copyFilterParameters) const
 {
   SampleSurfaceMesh::Pointer filter = SampleSurfaceMesh::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

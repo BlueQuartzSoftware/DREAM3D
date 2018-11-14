@@ -58,9 +58,8 @@ using namespace H5Support_NAMESPACE;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5AngReader::H5AngReader() :
-  AngReader(),
-  m_ReadAllArrays(true)
+H5AngReader::H5AngReader()
+: m_ReadAllArrays(true)
 {
 }
 
@@ -78,7 +77,7 @@ H5AngReader::~H5AngReader()
 int H5AngReader::readFile()
 {
   int err = -1;
-  if (m_HDF5Path.isEmpty() == true)
+  if(m_HDF5Path.isEmpty())
   {
     qDebug() << "H5AngReader Error: HDF5 Path is empty.";
     return err;
@@ -142,7 +141,7 @@ int H5AngReader::readFile()
 int H5AngReader::readHeaderOnly()
 {
   int err = -1;
-  if (m_HDF5Path.isEmpty() == true)
+  if(m_HDF5Path.isEmpty())
   {
     qDebug() << "H5AngReader Error: HDF5 Path is empty.";
     return -1;
@@ -212,7 +211,7 @@ int H5AngReader::readHeader(hid_t parId)
 
   QStringList names;
   err = QH5Utilities::getGroupObjects(phasesGid, H5Utilities::H5Support_GROUP, names);
-  if (err < 0 || names.size() == 0)
+  if(err < 0 || names.empty())
   {
     setErrorCode(-90009);
     setErrorMessage("H5AngReader Error: There were no Phase groups present in the HDF5 file");
@@ -247,7 +246,7 @@ int H5AngReader::readHeader(hid_t parId)
       if (getErrorCode() < 0) { err = H5Gclose(pid); H5Gclose(phasesGid); H5Gclose(gid); return -1; }
     }
     /* The 'Categories' header may actually be missing from certain types of .ang files */
-    if (QH5Lite::datasetExists(pid, Ebsd::Ang::Categories) == true)
+    if(QH5Lite::datasetExists(pid, Ebsd::Ang::Categories))
     {
       READ_PHASE_HEADER_ARRAY("H5AngReader", pid, int, Ebsd::Ang::Categories, Categories, m_CurrentPhase)
     }
@@ -355,7 +354,7 @@ int H5AngReader::readData(hid_t parId)
     setErrorCode(err);
     return err;
   }
-  else if (grid.startsWith(Ebsd::Ang::SquareGrid) == true)
+  if(grid.startsWith(Ebsd::Ang::SquareGrid))
   {
     // if (nCols > 0) { numElements = nRows * nCols; }
     if (nOddCols > 0)
@@ -371,7 +370,7 @@ int H5AngReader::readData(hid_t parId)
       totalDataRows = 0;
     }
   }
-  else if (grid.startsWith(Ebsd::Ang::HexGrid) == true)
+  else if(grid.startsWith(Ebsd::Ang::HexGrid))
   {
     setErrorCode(-90400);
     setErrorMessage("Ang Files with Hex Grids Are NOT currently supported. Please convert them to Square Grid files first");
@@ -397,7 +396,7 @@ int H5AngReader::readData(hid_t parId)
   QString sBuf;
   QTextStream ss(&sBuf);
 
-  if(m_ArrayNames.size() == 0 && m_ReadAllArrays == false)
+  if(m_ArrayNames.empty() && !m_ReadAllArrays)
   {
     err = H5Gclose(gid);
     err = -90013;

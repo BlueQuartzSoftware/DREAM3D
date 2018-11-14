@@ -161,7 +161,7 @@ void FindSurfaceFeatures::find_surfacefeatures()
       for(int64_t k = 0; k < xPoints; k++)
       {
         int32_t gnum = m_FeatureIds[zStride + yStride + k];
-        if(m_SurfaceFeatures[gnum] == false)
+        if(!m_SurfaceFeatures[gnum])
         {
           if(k <= 0)
           {
@@ -187,7 +187,7 @@ void FindSurfaceFeatures::find_surfacefeatures()
           {
             m_SurfaceFeatures[gnum] = true;
           }
-          if(m_SurfaceFeatures[gnum] == false)
+          if(!m_SurfaceFeatures[gnum])
           {
             if(m_FeatureIds[zStride + yStride + k - 1] == 0)
             {
@@ -252,7 +252,7 @@ void FindSurfaceFeatures::find_surfacefeatures2D()
     for(int64_t k = 0; k < xPoints; k++)
     {
       int32_t gnum = m_FeatureIds[yStride + k];
-      if(m_SurfaceFeatures[gnum] == false)
+      if(!m_SurfaceFeatures[gnum])
       {
         if(k <= 0)
         {
@@ -270,7 +270,7 @@ void FindSurfaceFeatures::find_surfacefeatures2D()
         {
           m_SurfaceFeatures[gnum] = true;
         }
-        if(m_SurfaceFeatures[gnum] == false)
+        if(!m_SurfaceFeatures[gnum])
         {
           if(m_FeatureIds[yStride + k - 1] == 0)
           {
@@ -327,7 +327,7 @@ void FindSurfaceFeatures::execute()
 AbstractFilter::Pointer FindSurfaceFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   FindSurfaceFeatures::Pointer filter = FindSurfaceFeatures::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

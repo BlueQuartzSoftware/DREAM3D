@@ -52,9 +52,8 @@ using namespace H5Support_NAMESPACE;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5CtfReader::H5CtfReader() :
-  CtfReader(),
-  m_ReadAllArrays(true)
+H5CtfReader::H5CtfReader()
+: m_ReadAllArrays(true)
 {
 }
 
@@ -72,7 +71,7 @@ H5CtfReader::~H5CtfReader()
 int H5CtfReader::readHeaderOnly()
 {
   int err = -1;
-  if (m_HDF5Path.isEmpty() == true)
+  if(m_HDF5Path.isEmpty())
   {
     qDebug() << "H5CtfReader Error: HDF5 Path is empty.";
     return -1;
@@ -107,7 +106,7 @@ int H5CtfReader::readHeaderOnly()
 int H5CtfReader::readFile()
 {
   int err = -1;
-  if (m_HDF5Path.isEmpty() == true)
+  if(m_HDF5Path.isEmpty())
   {
     qDebug() << "H5CtfReader Error: HDF5 Path is empty.";
     return -1;
@@ -186,7 +185,7 @@ int H5CtfReader::readHeader(hid_t parId)
 
   QList<QString> names;
   err = QH5Utilities::getGroupObjects(phasesGid, H5Utilities::H5Support_GROUP, names);
-  if (err < 0 || names.size() == 0)
+  if(err < 0 || names.empty())
   {
     qDebug() << "H5CtfReader Error: There were no Phase groups present in the HDF5 file";
     H5Gclose(phasesGid);

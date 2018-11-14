@@ -53,8 +53,7 @@
 //
 // -----------------------------------------------------------------------------
 MorphFilter::MorphFilter()
-: Observable()
-, m_ErrorCondition(0)
+: m_ErrorCondition(0)
 {
 }
 

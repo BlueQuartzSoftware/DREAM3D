@@ -105,9 +105,7 @@ public:
     rotMatrixInv[2][1] = rotMat[1][2];
     rotMatrixInv[2][2] = rotMat[2][2];
   }
-  virtual ~RotateSampleRefFrameImpl()
-  {
-  }
+  virtual ~RotateSampleRefFrameImpl() = default;
 
   void convert(int64_t zStart, int64_t zEnd, int64_t yStart, int64_t yEnd, int64_t xStart, int64_t xEnd) const
   {
@@ -139,7 +137,7 @@ public:
           colOld = static_cast<int64_t>(nearbyint(coordsNew[0] / m_params->xRes));
           rowOld = static_cast<int64_t>(nearbyint(coordsNew[1] / m_params->yRes));
           planeOld = static_cast<int64_t>(nearbyint(coordsNew[2] / m_params->zRes));
-          if(m_SliceBySlice == true)
+          if(m_SliceBySlice)
           {
             planeOld = k;
           }
@@ -594,7 +592,7 @@ void RotateSampleRefFrame::execute()
 #endif
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel == true)
+  if(doParallel)
   {
     tbb::parallel_for(tbb::blocked_range3d<int64_t, int64_t, int64_t>(0, params.zpNew, 0, params.ypNew, 0, params.xpNew), RotateSampleRefFrameImpl(newIndiciesPtr, &params, rotMat, m_SliceBySlice),
                       tbb::auto_partitioner());
@@ -666,7 +664,7 @@ void RotateSampleRefFrame::execute()
 AbstractFilter::Pointer RotateSampleRefFrame::newFilterInstance(bool copyFilterParameters) const
 {
   RotateSampleRefFrame::Pointer filter = RotateSampleRefFrame::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

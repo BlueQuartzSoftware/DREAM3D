@@ -123,7 +123,7 @@ void NearestPointFuseRegularGrids::dataCheck()
     IDataArray::Pointer tmpDataArray = sampleAttrMat->getPrereqIDataArray<IDataArray, AbstractFilter>(this, *iter, -90001);
     if(getErrorCondition() >= 0)
     {
-      if(refArrayNames.contains(*iter) == true)
+      if(refArrayNames.contains(*iter))
       {
         QString ss = QObject::tr("There is already an attribute array with the name %1 in the reference attribute matrix").arg(*iter);
         setErrorCondition(-5559);
@@ -155,7 +155,7 @@ void NearestPointFuseRegularGrids::dataCheck()
       tempAttrMatType = tmpAttrMat->getType();
       if(tempAttrMatType > AttributeMatrix::Type::Cell)
       {
-        if(refAttrMatNames.contains(tmpAttrMat->getName()) == true)
+        if(refAttrMatNames.contains(tmpAttrMat->getName()))
         {
           QString ss = QObject::tr("There is already an attribute matrix with the name %1 in the reference data container").arg(tmpAttrMat->getName());
           setErrorCondition(-5559);
@@ -230,7 +230,7 @@ void NearestPointFuseRegularGrids::execute()
     }
   }
 
-  if(zeroRes == true)
+  if(zeroRes)
   {
     QString ss = QObject::tr("A component of the resolution for the Image Geometry associated with DataContainer '%1' is 0. This would result in a division by 0 operation")
                      .arg(m_SamplingCellAttributeMatrixPath.getDataContainerName());
@@ -308,7 +308,7 @@ void NearestPointFuseRegularGrids::execute()
         {
           outside = true;
         }
-        if(outside == false)
+        if(!outside)
         {
           sampleIndex = (plane * sampleDims[0] * sampleDims[1]) + (row * sampleDims[0]) + col;
           refIndex = planeComp + rowComp + k;
@@ -341,7 +341,7 @@ void NearestPointFuseRegularGrids::execute()
 AbstractFilter::Pointer NearestPointFuseRegularGrids::newFilterInstance(bool copyFilterParameters) const
 {
   NearestPointFuseRegularGrids::Pointer filter = NearestPointFuseRegularGrids::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

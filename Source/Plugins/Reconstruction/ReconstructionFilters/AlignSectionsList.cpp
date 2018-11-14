@@ -116,13 +116,13 @@ void AlignSectionsList::dataCheck()
   }
 
   QFileInfo fi(m_InputFile);
-  if(true == m_InputFile.isEmpty())
+  if(m_InputFile.isEmpty())
   {
     ss = QObject::tr("The input file must be set for property %1").arg("InputFile");
     setErrorCondition(-15000);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  if(false == fi.exists())
+  if(!fi.exists())
   {
     ss = QObject::tr("The input file does not exist: '%1'").arg(getInputFile());
     setErrorCondition(-15001);
@@ -227,7 +227,7 @@ void AlignSectionsList::execute()
 AbstractFilter::Pointer AlignSectionsList::newFilterInstance(bool copyFilterParameters) const
 {
   AlignSectionsList::Pointer filter = AlignSectionsList::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

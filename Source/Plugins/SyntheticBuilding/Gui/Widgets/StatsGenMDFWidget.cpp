@@ -364,12 +364,11 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
 {
   QString proposedFile = m_OpenDialogLastFilePath;
   QString file = QFileDialog::getOpenFileName(this, tr("Open MDF File"), proposedFile, tr("Text Document (*.txt)"));
-  if(true == file.isEmpty())
+  if(file.isEmpty())
   {
     return;
   }
-  else
-  {
+
     QFileInfo fi(file);
     m_OpenDialogLastFilePath = fi.filePath();
 
@@ -401,7 +400,6 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
       QModelIndex index = m_MDFTableModel->index(m_MDFTableModel->rowCount() - 1, 0);
       m_MDFTableView->setCurrentIndex(index);
     }
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -451,7 +449,7 @@ void StatsGenMDFWidget::extractStatsData(int index, StatsData* statsData, PhaseT
       ::memcpy(&(weights.front()), arrays[i]->getVoidPointer(0), sizeof(float) * weights.size());
     }
   }
-  if(arrays.size() > 0)
+  if(!arrays.empty())
   {
     // Load the data into the table model
     m_MDFTableModel->setTableData(angle, axis, weights);

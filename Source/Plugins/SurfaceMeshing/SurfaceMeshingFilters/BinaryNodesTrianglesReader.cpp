@@ -134,14 +134,14 @@ void BinaryNodesTrianglesReader::initialize()
 // -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::dataCheck()
 {
-  if(getBinaryNodesFile().isEmpty() == true)
+  if(getBinaryNodesFile().isEmpty())
   {
     QString ss = QObject::tr("%1 needs the Binary Nodes File path set and it was not.").arg(ClassName());
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if(getBinaryNodesFile().isEmpty() == true)
+  if(getBinaryNodesFile().isEmpty())
   {
     QString ss = QObject::tr("%1 needs the Binary Nodes File path set and it was not.").arg(ClassName());
     setErrorCondition(-387);

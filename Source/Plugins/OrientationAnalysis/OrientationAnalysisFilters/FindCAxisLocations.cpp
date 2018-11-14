@@ -192,7 +192,7 @@ void FindCAxisLocations::execute()
 AbstractFilter::Pointer FindCAxisLocations::newFilterInstance(bool copyFilterParameters) const
 {
   FindCAxisLocations::Pointer filter = FindCAxisLocations::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

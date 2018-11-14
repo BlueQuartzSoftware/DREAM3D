@@ -61,8 +61,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // -----------------------------------------------------------------------------
 EMCalculation::EMCalculation()
-: Observable()
-, m_StatsDelegate(nullptr)
+: m_StatsDelegate(nullptr)
 , m_ErrorCondition(0)
 {
 }
@@ -126,7 +125,7 @@ void EMCalculation::execute()
   MorphFilter::Pointer morphFilt = MorphFilter::New();
 
   /* After curveLoopDelay iterations, begin calculating curvature costs */
-  if(k >= ccostLoopDelay && data->useCurvaturePenalty)
+  if(k >= ccostLoopDelay && (data->useCurvaturePenalty != 0))
   {
     notifyStatusMessage(getHumanLabel(), "Performing Morphological Filter on input data");
     morphFilt->multiSE(data);
@@ -168,7 +167,7 @@ void EMCalculation::execute()
     }
 
     /* Check to see if we are canceled */
-    if(data->cancel)
+    if(data->cancel != 0)
     {
       data->progress = 100.0;
       break;
@@ -185,7 +184,7 @@ void EMCalculation::execute()
      * bail out of the loop now.
      */
     stop = EMMPMUtilities::isStoppingConditionLessThanTolerance(getData());
-    if(stop == true)
+    if(stop)
     {
       break;
     }
@@ -234,7 +233,7 @@ void EMCalculation::execute()
     }
 
     /* After curveLoopDelay iterations, begin calculating curvature costs */
-    if(k >= ccostLoopDelay && data->useCurvaturePenalty)
+    if(k >= ccostLoopDelay && (data->useCurvaturePenalty != 0))
     {
       ss.clear();
       msgOut << "EM Loop " << data->currentEMLoop << " - Performing Morphological filtering ...";

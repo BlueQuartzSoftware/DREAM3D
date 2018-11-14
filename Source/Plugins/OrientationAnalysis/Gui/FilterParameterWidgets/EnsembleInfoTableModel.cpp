@@ -166,11 +166,11 @@ QVariant EnsembleInfoTableModel::data(const QModelIndex& index, qint32 role) con
 
     // return qApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
   }
-  else if(role == Qt::TextAlignmentRole)
+  if(role == Qt::TextAlignmentRole)
   {
     return int(Qt::AlignRight | Qt::AlignVCenter);
   }
-  else if(role == Qt::DisplayRole || role == Qt::EditRole)
+  if(role == Qt::DisplayRole || role == Qt::EditRole)
   {
     int col = index.column();
     if(col == CrystalStructure)
@@ -179,13 +179,13 @@ QVariant EnsembleInfoTableModel::data(const QModelIndex& index, qint32 role) con
       QString structure = EnsembleInfo::CrystalStructureToStr(info.getCrystalStructure(index.row()));
       return QVariant(structure);
     }
-    else if(col == PhaseType)
+    if(col == PhaseType)
     {
       EnsembleInfo info = m_EnsembleInfo;
       QString phase = PhaseType::getPhaseTypeString(info.getPhaseType(index.row()));
       return QVariant(phase);
     }
-    else if(col == PhaseName)
+    if(col == PhaseName)
     {
       EnsembleInfo info = m_EnsembleInfo;
       QString phaseName = info.getPhaseName(index.row());
@@ -414,7 +414,7 @@ void EnsembleInfoTableModel::setNumberOfPhases(int n)
 {
   m_NumberOfPhases = n;
   EnsembleInfoItemDelegate* dlg = qobject_cast<EnsembleInfoItemDelegate*>(getItemDelegate());
-  if(dlg)
+  if(dlg != nullptr)
   {
     dlg->setNumberOfPhases(n);
     delete dlg;

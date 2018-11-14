@@ -371,7 +371,7 @@ void NeighborOrientationCorrelation::execute()
           {
             good = false;
           }
-          if(good == true)
+          if(good)
           {
             phase1 = m_CrystalStructures[m_CellPhases[i]];
             QuaternionMathF::Copy(quats[i], q1);
@@ -415,7 +415,7 @@ void NeighborOrientationCorrelation::execute()
               {
                 good2 = false;
               }
-              if(good2 == true)
+              if(good2)
               {
                 phase1 = m_CrystalStructures[m_CellPhases[neighbor2]];
                 QuaternionMathF::Copy(quats[neighbor2], q1);
@@ -464,7 +464,7 @@ void NeighborOrientationCorrelation::execute()
           {
             good = false;
           }
-          if(good == true)
+          if(good)
           {
             if(neighborSimCount[j] > best)
             {
@@ -493,7 +493,7 @@ void NeighborOrientationCorrelation::execute()
     // Better speed up could be achieved if we had better data locality.
     m_Progress = 0;
     m_TotalProgress = 0;
-    if(doParallel == true)
+    if(doParallel)
     {
       std::shared_ptr<tbb::task_group> g(new tbb::task_group);
       AttributeMatrix* attrMat = m->getAttributeMatrix(attrMatName).get();
@@ -566,7 +566,7 @@ void NeighborOrientationCorrelation::updateProgress(size_t p)
 AbstractFilter::Pointer NeighborOrientationCorrelation::newFilterInstance(bool copyFilterParameters) const
 {
   NeighborOrientationCorrelation::Pointer filter = NeighborOrientationCorrelation::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

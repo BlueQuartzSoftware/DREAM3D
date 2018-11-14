@@ -201,12 +201,6 @@ int EstablishShapeTypes::getPhaseCount()
     return 0;
   }
 
-  if(0)
-  {
-    qDebug() << "EstablishShapeTypes::getPhaseCount()  data->getNumberOfTuples(): " << inputAttrMat->getTupleDimensions();
-    qDebug() << "EstablishShapeTypes::getPhaseCount()  Name" << inputAttrMat->getName();
-  }
-
   if(inputAttrMat->getType() < AttributeMatrix::Type::VertexEnsemble || inputAttrMat->getType() > AttributeMatrix::Type::CellEnsemble)
   {
     return 0;
@@ -227,7 +221,7 @@ int EstablishShapeTypes::getPhaseCount()
 AbstractFilter::Pointer EstablishShapeTypes::newFilterInstance(bool copyFilterParameters) const
 {
   EstablishShapeTypes::Pointer filter = EstablishShapeTypes::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     filter->setFilterParameters(getFilterParameters());
     copyFilterParameterInstanceVariables(filter.get());

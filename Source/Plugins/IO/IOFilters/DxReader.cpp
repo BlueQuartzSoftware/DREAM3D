@@ -69,9 +69,7 @@ class DxReaderPrivate
 // -----------------------------------------------------------------------------
 DxReaderPrivate::DxReaderPrivate(DxReader* ptr)
 : q_ptr(ptr)
-, m_Dims()
 , m_InputFile_Cache("")
-, m_LastRead()
 {
 }
 
@@ -204,26 +202,25 @@ void DxReader::dataCheck()
 
   QFileInfo fi(getInputFile());
 
-  if(getInputFile().isEmpty() == true)
+  if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if(fi.exists() == false)
+  else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-
-  if(m_InStream.isOpen() == true)
+  if(m_InStream.isOpen())
   {
     m_InStream.close();
   }
 
-  if(getInputFile().isEmpty() == false && fi.exists() == true)
+  if(!getInputFile().isEmpty() && fi.exists())
   {
     QDateTime lastModified(fi.lastModified());
 
@@ -358,7 +355,7 @@ int32_t DxReader::readHeader()
   size_t ny = 0;
   size_t nz = 0;
   bool done = false;
-  while(m_InStream.atEnd() == false && done == false)
+  while(!m_InStream.atEnd() && !done)
   {
     buf = m_InStream.readLine();
     buf = buf.trimmed();
@@ -393,7 +390,7 @@ int32_t DxReader::readHeader()
   //  equivalent to list-direcvted input in Fortran, actually !!
 
   qint32 pos1 = 0;
-  while(pos1 == 0 && m_InStream.atEnd() == false)
+  while(pos1 == 0 && !m_InStream.atEnd())
   {
     // continue until we find the keyword
     buf = m_InStream.readLine();
@@ -476,14 +473,14 @@ int32_t DxReader::readFile()
   size_t xIdx = 0, yIdx = 0, zIdx = 0;
   size_t count = 0;
 
-  while(buf.size() > 0 && m_InStream.atEnd() == false)
+  while(buf.size() > 0 && !m_InStream.atEnd())
   {
     // Get the remaining lines of the header and ignore
     buf = buf.simplified();
     QList<QByteArray> tokens = buf.split(' ');
 
     size_t total = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
-    if(count == total || (finished_header && tokens.size() != 0 && tokens[0] == "attribute"))
+    if(count == total || (finished_header && !tokens.empty() && tokens[0] == "attribute"))
     {
       finished_data = true;
     }
@@ -544,7 +541,7 @@ int32_t DxReader::readFile()
 AbstractFilter::Pointer DxReader::newFilterInstance(bool copyFilterParameters) const
 {
   DxReader::Pointer filter = DxReader::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

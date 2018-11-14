@@ -219,43 +219,43 @@ void ErodeDilateMask::execute()
         for(int64_t i = 0; i < dims[0]; i++)
         {
           count = kstride + jstride + i;
-          if(m_Mask[count] == false)
+          if(!m_Mask[count])
           {
             for(int32_t l = 0; l < 6; l++)
             {
               good = 1;
               neighpoint = count + neighpoints[l];
-              if(l == 0 && (k == 0 || m_ZDirOn == false))
+              if(l == 0 && (k == 0 || !m_ZDirOn))
               {
                 good = 0;
               }
-              else if(l == 5 && (k == (dims[2] - 1) || m_ZDirOn == false))
+              else if(l == 5 && (k == (dims[2] - 1) || !m_ZDirOn))
               {
                 good = 0;
               }
-              else if(l == 1 && (j == 0 || m_YDirOn == false))
+              else if(l == 1 && (j == 0 || !m_YDirOn))
               {
                 good = 0;
               }
-              else if(l == 4 && (j == (dims[1] - 1) || m_YDirOn == false))
+              else if(l == 4 && (j == (dims[1] - 1) || !m_YDirOn))
               {
                 good = 0;
               }
-              else if(l == 2 && (i == 0 || m_XDirOn == false))
+              else if(l == 2 && (i == 0 || !m_XDirOn))
               {
                 good = 0;
               }
-              else if(l == 3 && (i == (dims[0] - 1) || m_XDirOn == false))
+              else if(l == 3 && (i == (dims[0] - 1) || !m_XDirOn))
               {
                 good = 0;
               }
               if(good == 1)
               {
-                if(m_Direction == 0 && m_Mask[neighpoint] == true)
+                if(m_Direction == 0 && m_Mask[neighpoint])
                 {
                   m_MaskCopy[count] = true;
                 }
-                if(m_Direction == 1 && m_Mask[neighpoint] == true)
+                if(m_Direction == 1 && m_Mask[neighpoint])
                 {
                   m_MaskCopy[neighpoint] = false;
                 }
@@ -281,7 +281,7 @@ void ErodeDilateMask::execute()
 AbstractFilter::Pointer ErodeDilateMask::newFilterInstance(bool copyFilterParameters) const
 {
   ErodeDilateMask::Pointer filter = ErodeDilateMask::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

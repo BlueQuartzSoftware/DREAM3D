@@ -5,10 +5,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceMeshingGuiPlugin::SurfaceMeshingGuiPlugin()
-: SurfaceMeshingPlugin()
-{
-}
+SurfaceMeshingGuiPlugin::SurfaceMeshingGuiPlugin() = default;
 
 // -----------------------------------------------------------------------------
 //

@@ -32,9 +32,7 @@ public:
   , m_DifferenceMap(differenceMap)
   {
   }
-  virtual ~FindDifferenceMapImpl()
-  {
-  }
+  virtual ~FindDifferenceMapImpl() = default;
 
   void generate(size_t start, size_t end) const
   {
@@ -77,12 +75,8 @@ private:
 template <typename DataType> class ExecuteFindDifferenceMap
 {
 public:
-  ExecuteFindDifferenceMap()
-  {
-  }
-  virtual ~ExecuteFindDifferenceMap()
-  {
-  }
+  ExecuteFindDifferenceMap() = default;
+  virtual ~ExecuteFindDifferenceMap() = default;
 
   bool operator()(IDataArray::Pointer p)
   {
@@ -100,7 +94,7 @@ public:
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 
-    if(doParallel == true)
+    if(doParallel)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, numTuples), FindDifferenceMapImpl<DataType>(firstArrayPtr, secondArrayPtr, differenceMapPtr), tbb::auto_partitioner());
     }
@@ -248,7 +242,7 @@ void FindDifferenceMap::dataCheck()
     dataArrays.push_back(m_SecondInputArrayPtr.lock());
   }
 
-  if(dataArrays.size() > 0)
+  if(!dataArrays.empty())
   {
     EXECUTE_FUNCTION_TEMPLATE(this, validateArrayTypes, dataArrays[0], this, dataArrays)
   }
@@ -258,7 +252,7 @@ void FindDifferenceMap::dataCheck()
     return;
   }
 
-  if(dataArrays.size() > 0)
+  if(!dataArrays.empty())
   {
     EXECUTE_FUNCTION_TEMPLATE(this, warnOnUnsignedTypes, dataArrays[0], this, dataArrays[0])
   }
@@ -326,7 +320,7 @@ void FindDifferenceMap::execute()
 AbstractFilter::Pointer FindDifferenceMap::newFilterInstance(bool copyFilterParameters) const
 {
   FindDifferenceMap::Pointer filter = FindDifferenceMap::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

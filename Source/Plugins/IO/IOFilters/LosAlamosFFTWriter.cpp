@@ -55,8 +55,7 @@
 //
 // -----------------------------------------------------------------------------
 LosAlamosFFTWriter::LosAlamosFFTWriter()
-: FileWriter()
-, m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
+: m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 , m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
 , m_CellEulerAnglesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::EulerAngles)
 , m_FeatureIds(nullptr)
@@ -268,7 +267,7 @@ int32_t LosAlamosFFTWriter::writeFile()
 AbstractFilter::Pointer LosAlamosFFTWriter::newFilterInstance(bool copyFilterParameters) const
 {
   LosAlamosFFTWriter::Pointer filter = LosAlamosFFTWriter::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

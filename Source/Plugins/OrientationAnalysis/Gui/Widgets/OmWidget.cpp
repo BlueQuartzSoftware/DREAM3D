@@ -91,7 +91,7 @@ void OmWidget::updateData(OrientationUtilityCalculator* calculator)
     // The input type is the same as this widget, so don't update
     return;
   }
-  else if(calculator->getHasErrors() == true)
+  if(calculator->getHasErrors())
   {
     om1->setText("nan");
     om2->setText("nan");

@@ -1123,7 +1123,7 @@ namespace Detail
           m_xyz011(xyz011Coords),
           m_xyz111(xyz111Coords)
         {}
-        virtual ~GenerateSphereCoordsImpl() {}
+        virtual ~GenerateSphereCoordsImpl() = default;
 
         void generate(size_t start, size_t end) const
         {
@@ -1210,7 +1210,7 @@ void HexagonalLowOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, Flo
 #endif
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if (doParallel == true)
+  if(doParallel)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations),
                       Detail::HexagonalLow::GenerateSphereCoordsImpl(eulers, xyz0001, xyz1010, xyz1120), tbb::auto_partitioner());
@@ -1229,11 +1229,7 @@ void HexagonalLowOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, Flo
 // -----------------------------------------------------------------------------
 bool HexagonalLowOps::inUnitTriangle(float eta, float chi)
 {
-  if( eta < 0 || eta > (60.0 * SIMPLib::Constants::k_PiOver180) || chi < 0 || chi > (90.0 * SIMPLib::Constants::k_PiOver180) )
-  {
-    return false;
-  }
-  return true;
+  return !(eta < 0 || eta > (60.0 * SIMPLib::Constants::k_PiOver180) || chi < 0 || chi > (90.0 * SIMPLib::Constants::k_PiOver180));
 }
 
 // -----------------------------------------------------------------------------
@@ -1249,7 +1245,7 @@ SIMPL::Rgb HexagonalLowOps::generateIPFColor(double* eulers, double* refDir, boo
 // -----------------------------------------------------------------------------
 SIMPL::Rgb HexagonalLowOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
 {
-  if (degToRad == true)
+  if(degToRad)
   {
     phi1 = phi1 * SIMPLib::Constants::k_DegToRad;
     phi = phi * SIMPLib::Constants::k_DegToRad;
@@ -1284,24 +1280,22 @@ SIMPL::Rgb HexagonalLowOps::generateIPFColor(double phi1, double phi, double phi
     MatrixMath::Multiply3x3with3x1(g, refDirection, p);
     MatrixMath::Normalize3x1(p);
 
-    if(getHasInversion() == false && p[2] < 0)
+    if(!getHasInversion() && p[2] < 0)
     {
       continue;
     }
-    else if(getHasInversion() == true && p[2] < 0)
+    if(getHasInversion() && p[2] < 0)
     {
       p[0] = -p[0], p[1] = -p[1], p[2] = -p[2];
     }
     chi = acos(p[2]);
     eta = atan2(p[1], p[0]);
-    if(inUnitTriangle(eta, chi) == false)
+    if(!inUnitTriangle(eta, chi))
     {
       continue;
     }
-    else
-    {
+
       break;
-    }
   }
 
   float etaMin = 0.0;
@@ -1367,7 +1361,10 @@ QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureC
   QString label0 = QString("<0001>");
   QString label1 = QString("<11-20>");
   QString label2 = QString("<2-1-10>");
-  if(config.labels.size() > 0) { label0 = config.labels.at(0); }
+  if(!config.labels.empty())
+  {
+    label0 = config.labels.at(0);
+  }
   if(config.labels.size() > 1) { label1 = config.labels.at(1); }
   if(config.labels.size() > 2) { label2 = config.labels.at(2); }
 
@@ -1397,7 +1394,7 @@ QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureC
   tbb::task_scheduler_init init;
   bool doParallel = true;
 
-  if(doParallel == true)
+  if(doParallel)
   {
     std::shared_ptr<tbb::task_group> g(new tbb::task_group);
     g->run(ComputeStereographicProjection(xyz001.get(), &config, intensity001.get()));
@@ -1487,7 +1484,7 @@ QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureC
   }
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 
-  if(doParallel == true)
+  if(doParallel)
   {
     std::shared_ptr<tbb::task_group> g(new tbb::task_group);
     g->run(GeneratePoleFigureRgbaImageImpl(intensity001.get(), &config, image001.get()));

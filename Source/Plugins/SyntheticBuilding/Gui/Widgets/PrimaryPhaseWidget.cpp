@@ -482,7 +482,7 @@ void PrimaryPhaseWidget::setPhaseIndex(const int& index)
   m_Omega3Plot->setPhaseIndex(index);
   m_BOverAPlot->setPhaseIndex(index);
   m_COverAPlot->setPhaseIndex(index);
-  if(m_NeighborPlot)
+  if(m_NeighborPlot != nullptr)
   {
     m_NeighborPlot->setPhaseIndex(index);
   }
@@ -500,7 +500,7 @@ void PrimaryPhaseWidget::setCrystalStructure(const unsigned int& xtal)
   m_Omega3Plot->setCrystalStructure(xtal);
   m_BOverAPlot->setCrystalStructure(xtal);
   m_COverAPlot->setCrystalStructure(xtal);
-  if(m_NeighborPlot)
+  if(m_NeighborPlot != nullptr)
   {
     m_NeighborPlot->setCrystalStructure(xtal);
   }
@@ -567,7 +567,7 @@ void PrimaryPhaseWidget::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 void PrimaryPhaseWidget::updatePlots()
 {
-  if(getDataHasBeenGenerated() == true)
+  if(getDataHasBeenGenerated())
   {
     QProgressDialog progress("Generating Data ....", "Cancel", 0, 4, this);
     progress.setWindowModality(Qt::WindowModal);
@@ -590,7 +590,7 @@ void PrimaryPhaseWidget::updatePlots()
     m_Omega3Plot->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kOmega3Distribution), false);
 
     SGAbstractTableModel* tmodel = m_Omega3Plot->tableModel();
-    if(tmodel)
+    if(tmodel != nullptr)
     {
       QVector<QVector<float>> colData;
       colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
@@ -601,7 +601,7 @@ void PrimaryPhaseWidget::updatePlots()
     getMicroPreset()->initializeBOverATableModel(data, colors);
     m_BOverAPlot->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kBOverADistribution), false);
     tmodel = m_BOverAPlot->tableModel();
-    if(tmodel)
+    if(tmodel != nullptr)
     {
       QVector<QVector<float>> colData;
       colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
@@ -612,7 +612,7 @@ void PrimaryPhaseWidget::updatePlots()
     getMicroPreset()->initializeCOverATableModel(data, colors);
     m_COverAPlot->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kCOverADistribution), false);
     tmodel = m_COverAPlot->tableModel();
-    if(tmodel)
+    if(tmodel != nullptr)
     {
       QVector<QVector<float>> colData;
       colData.push_back(data[AbstractMicrostructurePreset::kAlpha]);
@@ -620,12 +620,12 @@ void PrimaryPhaseWidget::updatePlots()
       tmodel->setTableData(binSizes, colData, colors);
     }
 
-    if(m_NeighborPlot)
+    if(m_NeighborPlot != nullptr)
     {
       getMicroPreset()->initializeNeighborTableModel(data, colors);
       m_NeighborPlot->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kNeighborDistribution), false);
       tmodel = m_NeighborPlot->tableModel();
-      if(tmodel)
+      if(tmodel != nullptr)
       {
         QVector<QVector<float>> colData;
         colData.push_back(data[AbstractMicrostructurePreset::kMu]);
@@ -641,7 +641,7 @@ void PrimaryPhaseWidget::updatePlots()
     {
       getMicroPreset()->initializeODFTableModel(data);
       SGODFTableModel* model = m_ODFWidget->tableModel();
-      if(model)
+      if(model != nullptr)
       {
         model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
                             data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
@@ -650,7 +650,7 @@ void PrimaryPhaseWidget::updatePlots()
       // m_MicroPreset->initializeMDFTableModel(m_ODFWidget->getMDFWidget());
       getMicroPreset()->initializeMDFTableModel(data);
       SGMDFTableModel* mdfModel = (m_ODFWidget->getMDFWidget()->tableModel());
-      if(mdfModel)
+      if(mdfModel != nullptr)
       {
         mdfModel->setTableData(data[AbstractMicrostructurePreset::kAngles], data[AbstractMicrostructurePreset::kAxis], data[AbstractMicrostructurePreset::kWeight]);
       }
@@ -660,7 +660,7 @@ void PrimaryPhaseWidget::updatePlots()
       // m_AxisODFWidget->updatePlots();
       getMicroPreset()->initializeAxisODFTableModel(data);
       model = m_AxisODFWidget->tableModel();
-      if(model)
+      if(model != nullptr)
       {
         model->setTableData(data[AbstractMicrostructurePreset::kEuler1], data[AbstractMicrostructurePreset::kEuler2], data[AbstractMicrostructurePreset::kEuler3],
                             data[AbstractMicrostructurePreset::kWeight], data[AbstractMicrostructurePreset::kSigma]);
@@ -775,7 +775,7 @@ int PrimaryPhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bool p
       primaryStatsData->setFeatureSize_COverA(data);
       primaryStatsData->setCOverA_DistType(m_COverAPlot->getDistributionType());
     }
-    if(m_NeighborPlot)
+    if(m_NeighborPlot != nullptr)
     {
       VectorOfFloatArray data = m_NeighborPlot->getStatisticsData();
       primaryStatsData->setFeatureSize_Neighbors(data);
@@ -913,7 +913,7 @@ void PrimaryPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, int 
   m_COverAPlot->extractStatsData(index, qbins, primaryStatsData->getFeatureSize_COverA());
   m_COverAPlot->setSizeDistributionValues(mu, sigma, minCutOff, maxCutOff, binStepSize);
 
-  if(m_NeighborPlot)
+  if(m_NeighborPlot != nullptr)
   {
     emit progressText(QString("Extracting Neighbor Distribution Values"));
     qApp->processEvents();

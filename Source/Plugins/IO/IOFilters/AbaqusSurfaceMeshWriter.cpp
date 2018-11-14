@@ -365,7 +365,7 @@ int32_t AbaqusSurfaceMeshWriter::writeFeatures(FILE* f)
 AbstractFilter::Pointer AbaqusSurfaceMeshWriter::newFilterInstance(bool copyFilterParameters) const
 {
   AbaqusSurfaceMeshWriter::Pointer filter = AbaqusSurfaceMeshWriter::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

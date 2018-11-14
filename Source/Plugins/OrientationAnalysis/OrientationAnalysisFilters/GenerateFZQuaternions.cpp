@@ -43,9 +43,7 @@ public:
   {
   }
 
-  virtual ~GenerateFZQuatsImpl()
-  {
-  }
+  virtual ~GenerateFZQuatsImpl() = default;
 
   /**
    * @brief convert
@@ -120,7 +118,6 @@ GenerateFZQuaternions::GenerateFZQuaternions()
 , m_CrystalStructuresArrayPath("", "", "")
 , m_UseGoodVoxels(false)
 , m_GoodVoxelsArrayPath("", "", "")
-, m_FZQuatsArrayPath()
 , m_CellPhases(nullptr)
 , m_Quats(nullptr)
 , m_CrystalStructures(nullptr)
@@ -227,7 +224,7 @@ void GenerateFZQuaternions::dataCheck()
     m_FZQuats = m_FZQuatsPtr.lock()->getPointer(0);
   }
 
-  if(getUseGoodVoxels() == true)
+  if(getUseGoodVoxels())
   {
     // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
     cDims[0] = 1;
@@ -291,7 +288,7 @@ void GenerateFZQuaternions::execute()
 #endif
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel == true)
+  if(doParallel)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), GenerateFZQuatsImpl(this, m_Quats, m_CellPhases, m_CrystalStructures, numPhases, m_GoodVoxels, m_FZQuats), tbb::auto_partitioner());
   }
@@ -329,7 +326,7 @@ void GenerateFZQuaternions::incrementPhaseWarningCount()
 AbstractFilter::Pointer GenerateFZQuaternions::newFilterInstance(bool copyFilterParameters) const
 {
   GenerateFZQuaternions::Pointer filter = GenerateFZQuaternions::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

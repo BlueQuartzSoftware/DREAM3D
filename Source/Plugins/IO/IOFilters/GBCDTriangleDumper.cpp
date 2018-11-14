@@ -281,7 +281,7 @@ void GBCDTriangleDumper::execute()
 AbstractFilter::Pointer GBCDTriangleDumper::newFilterInstance(bool copyFilterParameters) const
 {
   GBCDTriangleDumper::Pointer filter = GBCDTriangleDumper::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

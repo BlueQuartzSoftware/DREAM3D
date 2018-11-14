@@ -163,7 +163,7 @@ void VisualizeGBCDPoleFigure::dataCheck()
     } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
-  if(nullptr != m_GBCDPtr.lock().get() && getPhaseOfInterest() >= m_GBCDPtr.lock()->getNumberOfTuples())
+  if(nullptr != m_GBCDPtr.lock() && getPhaseOfInterest() >= m_GBCDPtr.lock()->getNumberOfTuples())
   {
     QString ss = QObject::tr("The phase index is larger than the number of Ensembles").arg(ClassName());
     setErrorCondition(-1);
@@ -386,7 +386,7 @@ void VisualizeGBCDPoleFigure::execute()
                  location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
               {
                 hemisphere = 0;
-                if(nhCheck == false)
+                if(!nhCheck)
                 {
                   hemisphere = 1;
                 }
@@ -419,7 +419,7 @@ void VisualizeGBCDPoleFigure::execute()
                  location4 < gbcdSizes[3] && location5 < gbcdSizes[4])
               {
                 hemisphere = 0;
-                if(nhCheck == false)
+                if(!nhCheck)
                 {
                   hemisphere = 1;
                 }
@@ -555,7 +555,7 @@ int32_t VisualizeGBCDPoleFigure::writeCoords(FILE* f, const char* axis, const ch
 AbstractFilter::Pointer VisualizeGBCDPoleFigure::newFilterInstance(bool copyFilterParameters) const
 {
   VisualizeGBCDPoleFigure::Pointer filter = VisualizeGBCDPoleFigure::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

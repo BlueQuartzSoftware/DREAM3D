@@ -59,8 +59,7 @@ using namespace H5Support_NAMESPACE;
 //
 // -----------------------------------------------------------------------------
 H5OIMReader::H5OIMReader()
-: AngReader()
-, m_HDF5Path()
+: m_HDF5Path()
 , m_ReadPatternData(false)
 , m_PatternData(nullptr)
 , m_ReadAllArrays(true)
@@ -108,7 +107,7 @@ H5OIMReader::~H5OIMReader()
 int H5OIMReader::readFile()
 {
   int err = -1;
-  if(m_HDF5Path.isEmpty() == true)
+  if(m_HDF5Path.isEmpty())
   {
     QString str;
     QTextStream ss(&str);
@@ -241,7 +240,7 @@ int H5OIMReader::readHeaderOnly()
   }
   H5ScopedFileSentinel sentinel(&fileId, false);
 
-  if(m_HDF5Path.isEmpty() == true)
+  if(m_HDF5Path.isEmpty())
   {
     QStringList names;
     err = QH5Utilities::getGroupObjects(fileId, H5Utilities::H5Support_GROUP, names);
@@ -375,13 +374,12 @@ template <typename ClassType, typename T, typename HeaderEntryClass> int ReadEbs
     c->setErrorMessage(ss);
     return -90001;
   }
-  else
-  {
+
     EbsdHeaderEntry::Pointer p = headerMap[key];
-    typename HeaderEntryClass::Pointer c = std::dynamic_pointer_cast<HeaderEntryClass>(p);
-    c->setValue(t);
-  }
-  return 0;
+    typename HeaderEntryClass::Pointer hec = std::dynamic_pointer_cast<HeaderEntryClass>(p);
+    hec->setValue(t);
+
+    return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -401,13 +399,12 @@ template <typename ClassType, typename T, typename HeaderEntryClass> int ReadEbs
     c->setErrorMessage(ss);
     return -90001;
   }
-  else
-  {
+
     EbsdHeaderEntry::Pointer p = headerMap[key];
-    typename HeaderEntryClass::Pointer c = std::dynamic_pointer_cast<HeaderEntryClass>(p);
-    c->setValue(t);
-  }
-  return 0;
+    typename HeaderEntryClass::Pointer hec = std::dynamic_pointer_cast<HeaderEntryClass>(p);
+    hec->setValue(t);
+
+    return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -488,7 +485,7 @@ int H5OIMReader::readHeader(hid_t parId)
 
   QStringList names;
   err = QH5Utilities::getGroupObjects(phasesGid, H5Utilities::H5Support_GROUP, names);
-  if(err < 0 || names.size() == 0)
+  if(err < 0 || names.empty())
   {
     setErrorCode(-90009);
     setErrorMessage("H5OIMReader Error: There were no Phase groups present in the HDF5 file");
@@ -534,7 +531,7 @@ int H5OIMReader::readHeader(hid_t parId)
       }
     }
     /* The 'Categories' header may actually be missing from certain types of .ang files */
-    if(QH5Lite::datasetExists(pid, Ebsd::Ang::Categories) == true)
+    if(QH5Lite::datasetExists(pid, Ebsd::Ang::Categories))
     {
       READ_PHASE_HEADER_ARRAY("H5OIMReader", pid, int, Ebsd::Ang::Categories, Categories, currentPhase)
     }
@@ -660,7 +657,7 @@ int H5OIMReader::readData(hid_t parId)
     setErrorCode(err);
     return err;
   }
-  else if(grid.startsWith(Ebsd::Ang::SquareGrid) == true)
+  if(grid.startsWith(Ebsd::Ang::SquareGrid))
   {
     // if (nCols > 0) { numElements = nRows * nCols; }
     if(nColumns > 0)
@@ -672,7 +669,7 @@ int H5OIMReader::readData(hid_t parId)
       totalDataRows = 0;
     }
   }
-  else if(grid.startsWith(Ebsd::Ang::HexGrid) == true)
+  else if(grid.startsWith(Ebsd::Ang::HexGrid))
   {
     setErrorCode(-90400);
     setErrorMessage("Ang Files with Hex Grids Are NOT currently supported. Please convert them to Square Grid files first");
@@ -704,7 +701,7 @@ int H5OIMReader::readData(hid_t parId)
   QString sBuf;
   QTextStream ss(&sBuf);
 
-  if(m_ArrayNames.size() == 0 && m_ReadAllArrays == false)
+  if(m_ArrayNames.empty() && !m_ReadAllArrays)
   {
     err = H5Gclose(gid);
     err = -90013;

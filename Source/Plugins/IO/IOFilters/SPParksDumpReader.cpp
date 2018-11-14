@@ -164,13 +164,13 @@ void SPParksDumpReader::dataCheck()
   getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, fIdsPath, 0, cDims);
 
   QFileInfo fi(getInputFile());
-  if(getInputFile().isEmpty() == true)
+  if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if(fi.exists() == false)
+  else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
@@ -180,7 +180,7 @@ void SPParksDumpReader::dataCheck()
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
 
-  if(getInputFile().isEmpty() == false && fi.exists() == true)
+  if(!getInputFile().isEmpty() && fi.exists())
   {
     // We need to read the header of the input file to get the dimensions
     m_InStream.setFileName(getInputFile());
@@ -438,7 +438,7 @@ int32_t SPParksDumpReader::readFile()
     if(Ebsd::Int32 == pType)
     {
       Int32Parser::Pointer dparser = Int32Parser::New(nullptr, totalPoints, name, i - 2);
-      if((didAllocate = dparser->allocateArray(totalPoints)) == true)
+      if((didAllocate = dparser->allocateArray(totalPoints)))
       {
         ::memset(dparser->getVoidPointer(), 0xAB, sizeof(int32_t) * totalPoints);
         m_NamePointerMap.insert(name, dparser);
@@ -447,7 +447,7 @@ int32_t SPParksDumpReader::readFile()
     else if(Ebsd::Float == pType)
     {
       FloatParser::Pointer dparser = FloatParser::New(nullptr, totalPoints, name, i - 2);
-      if((didAllocate = dparser->allocateArray(totalPoints)) == true)
+      if((didAllocate = dparser->allocateArray(totalPoints)))
       {
         ::memset(dparser->getVoidPointer(), 0xAB, sizeof(float) * totalPoints);
         m_NamePointerMap.insert(name, dparser);
@@ -461,7 +461,7 @@ int32_t SPParksDumpReader::readFile()
       return getErrorCondition();
     }
 
-    if(didAllocate == false)
+    if(!didAllocate)
     {
       QString msg = QObject::tr("Unable to allocate memory for the data");
       setErrorCondition(-106);
@@ -477,7 +477,7 @@ int32_t SPParksDumpReader::readFile()
     buf = m_InStream.readLine(); // Read the line into a QByteArray including the newline
     buf = buf.trimmed();         // Remove leading and trailing whitespace
 
-    if(m_InStream.atEnd() == true && buf.isEmpty() == true) // We have to have read to the end of the file AND the buffer is empty
+    if(m_InStream.atEnd() && buf.isEmpty()) // We have to have read to the end of the file AND the buffer is empty
     {
       // otherwise we read EXACTLY the last line and we still need to parse the line.
       break;
@@ -693,7 +693,7 @@ int32_t SPParksDumpReader::getTypeSize(const QString& featureName)
 AbstractFilter::Pointer SPParksDumpReader::newFilterInstance(bool copyFilterParameters) const
 {
   SPParksDumpReader::Pointer filter = SPParksDumpReader::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

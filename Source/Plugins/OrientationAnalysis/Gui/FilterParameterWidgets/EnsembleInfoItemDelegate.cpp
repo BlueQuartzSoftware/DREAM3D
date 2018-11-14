@@ -125,7 +125,7 @@ QWidget* EnsembleInfoItemDelegate::createEditor(QWidget* widgetParent, const QSt
     operatorCombo = new QComboBox(widgetParent);
     operatorCombo->addItems(m_CrystalStructureList);
     operatorCombo->setAutoFillBackground(true);
-    if(tableModel)
+    if(tableModel != nullptr)
     {
       connect(operatorCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(crystalStructureChangedData(int)));
     }
@@ -135,7 +135,7 @@ QWidget* EnsembleInfoItemDelegate::createEditor(QWidget* widgetParent, const QSt
     operatorCombo = new QComboBox(widgetParent);
     operatorCombo->addItems(m_PhaseTypeList);
     operatorCombo->setAutoFillBackground(true);
-    if(tableModel)
+    if(tableModel != nullptr)
     {
       connect(operatorCombo, SIGNAL(currentIndexChanged(int)), this, SLOT(phaseTypeChangedData(int)));
     }
@@ -147,7 +147,7 @@ QWidget* EnsembleInfoItemDelegate::createEditor(QWidget* widgetParent, const QSt
     lineEdit->setFrame(false);
     QVariant var = index.model()->data(index);
     lineEdit->setText(var.toString());
-    if(tableModel)
+    if(tableModel != nullptr)
     {
       connect(lineEdit, SIGNAL(textChanged(const QString&)), this, SLOT(phaseNameChangedData(const QString&)));
     }
@@ -246,7 +246,7 @@ void EnsembleInfoItemDelegate::crystalStructureChangedData(int i)
 {
   EnsembleInfoTableModel* tableModel = qobject_cast<EnsembleInfoTableModel*>(parent());
   QWidget* w = qobject_cast<QWidget*>(sender());
-  if(tableModel && w)
+  if((tableModel != nullptr) && (w != nullptr))
   {
     QString objName = w->objectName();
     QStringList tokens = objName.split(',');
@@ -264,7 +264,7 @@ void EnsembleInfoItemDelegate::phaseTypeChangedData(int i)
 {
   EnsembleInfoTableModel* tableModel = qobject_cast<EnsembleInfoTableModel*>(parent());
   QWidget* w = qobject_cast<QWidget*>(sender());
-  if(tableModel && w)
+  if((tableModel != nullptr) && (w != nullptr))
   {
     QString objName = w->objectName();
     QStringList tokens = objName.split(',');
@@ -284,7 +284,7 @@ void EnsembleInfoItemDelegate::phaseNameChangedData(const QString& text)
 {
   EnsembleInfoTableModel* tableModel = qobject_cast<EnsembleInfoTableModel*>(parent());
   QWidget* w = qobject_cast<QWidget*>(sender());
-  if(tableModel && w)
+  if((tableModel != nullptr) && (w != nullptr))
   {
     QString objName = w->objectName();
     QStringList tokens = objName.split(',');

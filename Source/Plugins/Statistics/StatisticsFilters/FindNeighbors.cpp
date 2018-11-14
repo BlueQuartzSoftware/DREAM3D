@@ -158,7 +158,7 @@ void FindNeighbors::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getBoundaryCellsArrayName());
-  if(m_StoreBoundaryCells == true)
+  if(m_StoreBoundaryCells)
   {
     m_BoundaryCellsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter, int8_t>(
         this, tempPath, 0, cDims);                 /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -179,7 +179,7 @@ void FindNeighbors::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getSurfaceFeaturesArrayName());
-  if(m_StoreSurfaceFeatures == true)
+  if(m_StoreSurfaceFeatures)
   {
     m_SurfaceFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(
         this, tempPath, false, cDims);               /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -283,7 +283,7 @@ void FindNeighbors::execute()
     m_NumNeighbors[i] = 0;
     neighborlist[i].resize(nListSize);
     neighborsurfacearealist[i].assign(nListSize, -1.0f);
-    if(m_StoreSurfaceFeatures == true)
+    if(m_StoreSurfaceFeatures)
     {
       m_SurfaceFeatures[i] = false;
     }
@@ -311,7 +311,7 @@ void FindNeighbors::execute()
       column = static_cast<int64_t>(j % m->getGeometryAs<ImageGeom>()->getXPoints());
       row = static_cast<int64_t>((j / m->getGeometryAs<ImageGeom>()->getXPoints()) % m->getGeometryAs<ImageGeom>()->getYPoints());
       plane = static_cast<int64_t>(j / (m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getYPoints()));
-      if(m_StoreSurfaceFeatures == true)
+      if(m_StoreSurfaceFeatures)
       {
         if((column == 0 || column == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getXPoints() - 1)) || row == 0 ||
             row == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getYPoints()) - 1) || plane == 0 || plane == static_cast<int64_t>((m->getGeometryAs<ImageGeom>()->getZPoints() - 1))) &&
@@ -354,7 +354,7 @@ void FindNeighbors::execute()
         {
           good = false;
         }
-        if(good == true && m_FeatureIds[neighbor] != feature && m_FeatureIds[neighbor] > 0)
+        if(good && m_FeatureIds[neighbor] != feature && m_FeatureIds[neighbor] > 0)
         {
           onsurf++;
           nnum = m_NumNeighbors[feature];
@@ -364,7 +364,7 @@ void FindNeighbors::execute()
         }
       }
     }
-    if(m_StoreBoundaryCells == true)
+    if(m_StoreBoundaryCells)
     {
       m_BoundaryCells[j] = onsurf;
     }
@@ -439,7 +439,7 @@ void FindNeighbors::execute()
 AbstractFilter::Pointer FindNeighbors::newFilterInstance(bool copyFilterParameters) const
 {
   FindNeighbors::Pointer filter = FindNeighbors::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

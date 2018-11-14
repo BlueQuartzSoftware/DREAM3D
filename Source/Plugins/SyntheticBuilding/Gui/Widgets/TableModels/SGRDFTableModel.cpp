@@ -112,11 +112,11 @@ QVariant SGRDFTableModel::data(const QModelIndex& index, qint32 role) const
     QSize size(fontMetrics.width(comboBox.currentText), fontMetrics.height());
     return qApp->style()->sizeFromContents(QStyle::CT_ComboBox, &comboBox, size);
   }
-  else if(role == Qt::TextAlignmentRole)
+  if(role == Qt::TextAlignmentRole)
   {
     return int(Qt::AlignRight | Qt::AlignVCenter);
   }
-  else if(role == Qt::DisplayRole || role == Qt::EditRole)
+  if(role == Qt::DisplayRole || role == Qt::EditRole)
   {
     int col = index.column();
     if(col == Frequency)

@@ -68,9 +68,7 @@ public:
   , m_Normals(normals)
   {
   }
-  virtual ~CalculateNormalsImpl()
-  {
-  }
+  virtual ~CalculateNormalsImpl() = default;
 
   void generate(size_t start, size_t end) const
   {
@@ -218,7 +216,7 @@ void TriangleNormalFilter::execute()
 #endif
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel == true)
+  if(doParallel)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, triangleGeom->getNumberOfTris()), CalculateNormalsImpl(triangleGeom->getVertices(), triangleGeom->getTriangles(), m_SurfaceMeshTriangleNormals),
                       tbb::auto_partitioner());
@@ -239,7 +237,7 @@ void TriangleNormalFilter::execute()
 AbstractFilter::Pointer TriangleNormalFilter::newFilterInstance(bool copyFilterParameters) const
 {
   TriangleNormalFilter::Pointer filter = TriangleNormalFilter::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

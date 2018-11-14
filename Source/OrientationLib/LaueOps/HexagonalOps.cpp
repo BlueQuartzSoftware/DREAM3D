@@ -169,10 +169,7 @@ using namespace Detail;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-HexagonalOps::HexagonalOps()
-{
-
-}
+HexagonalOps::HexagonalOps() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -1184,7 +1181,7 @@ namespace Detail
           m_xyz011(xyz1010Coords),
           m_xyz111(xyz1120Coords)
         {}
-        virtual ~GenerateSphereCoordsImpl() {}
+        virtual ~GenerateSphereCoordsImpl() = default;
 
         void generate(size_t start, size_t end) const
         {
@@ -1312,11 +1309,7 @@ void HexagonalOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatA
 // -----------------------------------------------------------------------------
 bool HexagonalOps::inUnitTriangle(float eta, float chi)
 {
-  if( eta < 0 || eta > (30.0 * SIMPLib::Constants::k_PiOver180) || chi < 0 || chi > (90.0 * SIMPLib::Constants::k_PiOver180) )
-  {
-    return false;
-  }
-  return true;
+  return !(eta < 0 || eta > (30.0 * SIMPLib::Constants::k_PiOver180) || chi < 0 || chi > (90.0 * SIMPLib::Constants::k_PiOver180));
 }
 
 // -----------------------------------------------------------------------------
@@ -1332,7 +1325,7 @@ SIMPL::Rgb HexagonalOps::generateIPFColor(double* eulers, double* refDir, bool c
 // -----------------------------------------------------------------------------
 SIMPL::Rgb HexagonalOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
 {
-  if (degToRad == true)
+  if(degToRad)
   {
     phi1 = phi1 * SIMPLib::Constants::k_DegToRad;
     phi = phi * SIMPLib::Constants::k_DegToRad;
@@ -1370,24 +1363,22 @@ SIMPL::Rgb HexagonalOps::generateIPFColor(double phi1, double phi, double phi2, 
     MatrixMath::Multiply3x3with3x1(g, refDirection, p);
     MatrixMath::Normalize3x1(p);
 
-    if(getHasInversion() == false && p[2] < 0)
+    if(!getHasInversion() && p[2] < 0)
     {
       continue;
     }
-    else if(getHasInversion() == true && p[2] < 0)
+    if(getHasInversion() && p[2] < 0)
     {
       p[0] = -p[0], p[1] = -p[1], p[2] = -p[2];
     }
     chi = acos(p[2]);
     eta = atan2(p[1], p[0]);
-    if(inUnitTriangle(eta, chi) == false)
+    if(!inUnitTriangle(eta, chi))
     {
       continue;
     }
-    else
-    {
+
       break;
-    }
   }
 
   float etaMin = 0.0;
@@ -1453,7 +1444,10 @@ QVector<UInt8ArrayType::Pointer> HexagonalOps::generatePoleFigure(PoleFigureConf
   QString label0 = QString("<0001>");
   QString label1 = QString("<10-10>");
   QString label2 = QString("<2-1-10>");
-  if(config.labels.size() > 0) { label0 = config.labels.at(0); }
+  if(!config.labels.empty())
+  {
+    label0 = config.labels.at(0);
+  }
   if(config.labels.size() > 1) { label1 = config.labels.at(1); }
   if(config.labels.size() > 2) { label2 = config.labels.at(2); }
 

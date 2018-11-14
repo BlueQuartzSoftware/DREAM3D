@@ -242,8 +242,6 @@ void LammpsFileWriter::execute()
   setErrorCondition(0);
   setWarningCondition(0);
   notifyStatusMessage(getHumanLabel(), "Complete");
-
-  return;
 }
 
 // -----------------------------------------------------------------------------
@@ -259,7 +257,7 @@ AbstractFilter::Pointer LammpsFileWriter::newFilterInstance(bool copyFilterParam
   * WriteConformalMesh
   */
   LammpsFileWriter::Pointer filter = LammpsFileWriter::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

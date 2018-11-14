@@ -158,7 +158,7 @@ void ChangeResolution::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if(getSaveAsNewDataContainer() == false)
+  if(!getSaveAsNewDataContainer())
   {
     getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
   }
@@ -170,7 +170,7 @@ void ChangeResolution::dataCheck()
 
   getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellAttributeMatrixPath(), -301);
 
-  if(getRenumberFeatures() == true)
+  if(getRenumberFeatures())
   {
     QVector<size_t> cDims(1, 1);
     m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
@@ -200,7 +200,7 @@ void ChangeResolution::preflight()
   }
 
   DataContainer::Pointer m;
-  if(m_SaveAsNewDataContainer == false)
+  if(!m_SaveAsNewDataContainer)
   {
     m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
   }
@@ -272,7 +272,7 @@ void ChangeResolution::preflight()
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   m->addAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName(), newCellAttrMat);
 
-  if(m_RenumberFeatures == true)
+  if(m_RenumberFeatures)
   {
     AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
     if(nullptr != cellFeatureAttrMat.get())
@@ -299,7 +299,7 @@ void ChangeResolution::execute()
   }
 
   DataContainer::Pointer m;
-  if(m_SaveAsNewDataContainer == false)
+  if(!m_SaveAsNewDataContainer)
   {
     m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
   }
@@ -420,7 +420,7 @@ void ChangeResolution::execute()
   m->addAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName(), newCellAttrMat);
 
   // Feature Ids MUST already be renumbered.
-  if(m_RenumberFeatures == true)
+  if(m_RenumberFeatures)
   {
     totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
     AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(getCellFeatureAttributeMatrixPath().getAttributeMatrixName());
@@ -454,7 +454,7 @@ void ChangeResolution::execute()
 AbstractFilter::Pointer ChangeResolution::newFilterInstance(bool copyFilterParameters) const
 {
   ChangeResolution::Pointer filter = ChangeResolution::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

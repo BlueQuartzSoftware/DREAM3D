@@ -221,13 +221,13 @@ void GoldfeatherReader::dataCheck()
   }
 
   QFileInfo fi(getInputFile());
-  if(getInputFile().isEmpty() == true)
+  if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if(fi.exists() == false)
+  else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
@@ -417,7 +417,7 @@ void GoldfeatherReader::execute()
 AbstractFilter::Pointer GoldfeatherReader::newFilterInstance(bool copyFilterParameters) const
 {
   GoldfeatherReader::Pointer filter = GoldfeatherReader::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

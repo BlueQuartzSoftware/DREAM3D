@@ -80,7 +80,7 @@ void HomochoricWidget::updateData(OrientationUtilityCalculator* calculator)
     // The input type is the same as this widget, so don't update
     return;
   }
-  else if(calculator->getHasErrors() == true)
+  if(calculator->getHasErrors())
   {
     h1->setText("nan");
     h2->setText("nan");

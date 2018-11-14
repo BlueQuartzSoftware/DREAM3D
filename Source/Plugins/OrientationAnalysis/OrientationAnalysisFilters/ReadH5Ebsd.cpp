@@ -178,21 +178,21 @@ void ReadH5Ebsd::readVolumeInfo()
   m_DataArrayNames.clear(); // Remove all the data arrays
 
   QFileInfo fi(m_InputFile);
-  if(m_InputFile.isEmpty() == true)
+  if(m_InputFile.isEmpty())
   {
     QString ss = QObject::tr("The input file must be set for property %1").arg("InputFile");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, -1);
     return;
   }
-  else if(fi.exists() == false)
+  if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist. '%1'").arg(getInputFile());
     setErrorCondition(-388);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  else if(m_InputFile.isEmpty() == false)
+  if(!m_InputFile.isEmpty())
   {
     H5EbsdVolumeInfo::Pointer reader = H5EbsdVolumeInfo::New();
     reader->setFileName(m_InputFile);
@@ -285,7 +285,7 @@ void ReadH5Ebsd::dataCheck()
 
   H5EbsdVolumeInfo::Pointer volumeInfoReader = H5EbsdVolumeInfo::New();
   QFileInfo fi(getInputFile());
-  if(fi.exists() == false)
+  if(!fi.exists())
   {
     QString ss = QObject::tr("The input file was not specified or was empty");
     setErrorCondition(-10);
@@ -581,7 +581,7 @@ void ReadH5Ebsd::execute()
     return;
   }
 
-  if(m_UseTransformations == true)
+  if(m_UseTransformations)
   {
 
     if(m_SampleTransformation.angle > 0)
@@ -606,7 +606,7 @@ void ReadH5Ebsd::execute()
         // instantiate the filter since it resides in a plugin. These calls are SLOW. DO NOT EVER do this in a
         // tight loop. Your filter will slow down by 10X.
         bool propWasSet = rot_Sample->setProperty("RotationAngle", m_SampleTransformation.angle);
-        if(false == propWasSet)
+        if(!propWasSet)
         {
           QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed "
                                    "with a Q_PROPERTY macro. Please notify the developers")
@@ -618,7 +618,7 @@ void ReadH5Ebsd::execute()
         QVariant v;
         v.setValue(sampleAxis);
         propWasSet = rot_Sample->setProperty("RotationAxis", v);
-        if(false == propWasSet)
+        if(!propWasSet)
         {
           QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed "
                                    "with a Q_PROPERTY macro. Please notify the developers")
@@ -629,7 +629,7 @@ void ReadH5Ebsd::execute()
         }
         v.setValue(true);
         propWasSet = rot_Sample->setProperty("SliceBySlice", v);
-        if(false == propWasSet)
+        if(!propWasSet)
         {
           QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed "
                                    "with a Q_PROPERTY macro. Please notify the developers")
@@ -642,7 +642,7 @@ void ReadH5Ebsd::execute()
         tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), "");
         v.setValue(tempPath);
         propWasSet = rot_Sample->setProperty("CellAttributeMatrixPath", v);
-        if(false == propWasSet)
+        if(!propWasSet)
         {
           QString ss = QObject::tr("Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not exposed "
                                    "with a Q_PROPERTY macro. Please notify the developers")
@@ -684,7 +684,7 @@ void ReadH5Ebsd::execute()
         // instantiate the filter since it resides in a plugin. These calls are SLOW. DO NOT EVER do this in a
         // tight loop. Your filter will slow down by 10X.
         bool propWasSet = rot_Euler->setProperty("RotationAngle", m_EulerTransformation.angle);
-        if(false == propWasSet)
+        if(!propWasSet)
         {
           QString ss = QObject::tr("ReadH5Ebsd Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not "
                                    "exposed with a Q_PROPERTY macro. Please notify the developers")
@@ -696,7 +696,7 @@ void ReadH5Ebsd::execute()
         QVariant v;
         v.setValue(eulerAxis);
         propWasSet = rot_Euler->setProperty("RotationAxis", v);
-        if(false == propWasSet)
+        if(!propWasSet)
         {
           QString ss = QObject::tr("ReadH5Ebsd Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not "
                                    "exposed with a Q_PROPERTY macro. Please notify the developers")
@@ -709,7 +709,7 @@ void ReadH5Ebsd::execute()
         tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getCellEulerAnglesArrayName());
         v.setValue(tempPath);
         propWasSet = rot_Euler->setProperty("CellEulerAnglesArrayPath", v);
-        if(false == propWasSet)
+        if(!propWasSet)
         {
           QString ss = QObject::tr("ReadH5Ebsd Error Setting Property '%1' into filter '%2' which is a subfilter called by ReadH5Ebsd. The property was not set which could mean the property was not "
                                    "exposed with a Q_PROPERTY macro. Please notify the developers")
@@ -841,7 +841,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     fArray = FloatArrayType::CreateArray(tDims, cDims, SIMPL::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
     float degToRad = 1.0f;
-    if(m_AngleRepresentation != Ebsd::AngleRepresentation::Radians && m_UseTransformations == true)
+    if(m_AngleRepresentation != Ebsd::AngleRepresentation::Radians && m_UseTransformations)
     {
       degToRad = SIMPLib::Constants::k_PiOver180;
     }
@@ -944,7 +944,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
     float* cellEulerAngles = fArray->getPointer(0);
     int32_t* cellPhases = iArray->getPointer(0);
     float degToRad = 1.0f;
-    if(m_AngleRepresentation != Ebsd::AngleRepresentation::Radians && m_UseTransformations == true)
+    if(m_AngleRepresentation != Ebsd::AngleRepresentation::Radians && m_UseTransformations)
     {
       degToRad = SIMPLib::Constants::k_PiOver180;
     }
@@ -1023,7 +1023,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
 AbstractFilter::Pointer ReadH5Ebsd::newFilterInstance(bool copyFilterParameters) const
 {
   ReadH5Ebsd::Pointer filter = ReadH5Ebsd::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     filter->setFilterParameters(getFilterParameters());
     // We are going to hand copy all of the parameters because the other way of copying the parameters are going to

@@ -67,9 +67,7 @@ public:
   {
     m_OrientationOps = LaueOps::getOrientationOpsQVector();
   }
-  virtual ~FindMisorientationVectorsImpl()
-  {
-  }
+  virtual ~FindMisorientationVectorsImpl() = default;
 
   void convert(size_t start, size_t end) const
   {
@@ -317,7 +315,7 @@ void FindOrientationFieldCurl::execute()
 
 // first determine the misorientation vectors on all the voxel faces
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel == true)
+  if(doParallel)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, (xP * yP * zP)), FindMisorientationVectorsImpl(quats, misoVecs, neighbors, faceIds), tbb::auto_partitioner());
   }
@@ -486,7 +484,7 @@ void FindOrientationFieldCurl::execute()
 AbstractFilter::Pointer FindOrientationFieldCurl::newFilterInstance(bool copyFilterParameters) const
 {
   FindOrientationFieldCurl::Pointer filter = FindOrientationFieldCurl::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

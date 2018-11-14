@@ -192,7 +192,7 @@ void CropImageGeometry::dataCheck()
   DataContainer::Pointer destCellDataContainer = srcCellDataContainer;
   AttributeMatrix::Pointer destCellAttrMat;
 
-  if(m_SaveAsNewDataContainer == true)
+  if(m_SaveAsNewDataContainer)
   {
     destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
     if(nullptr == destCellDataContainer.get() || getErrorCondition() < 0)
@@ -300,7 +300,7 @@ void CropImageGeometry::dataCheck()
   m_NewDimensions.z = tDims[2];
   m_NewResolution = m_OldResolution;
 
-  if(m_UpdateOrigin == true)
+  if(m_UpdateOrigin)
   {
     m_NewOrigin.x = getXMin() * m_NewResolution.x + m_OldOrigin.x;
     m_NewOrigin.y = getYMin() * m_NewResolution.y + m_OldOrigin.y;
@@ -341,7 +341,7 @@ void CropImageGeometry::dataCheck()
   destCellDataContainer->removeAttributeMatrix(destCellAttrMat->getName());
   destCellDataContainer->addAttributeMatrix(newCellAttrMat->getName(), newCellAttrMat);
 
-  if(m_RenumberFeatures == true)
+  if(m_RenumberFeatures)
   {
     QVector<size_t> cDims(1, 1);
     m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(nullptr, getFeatureIdsArrayPath(), cDims);
@@ -404,7 +404,7 @@ void CropImageGeometry::execute()
   AttributeMatrix::Pointer cellAttrMat = srcCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   DataContainer::Pointer destCellDataContainer = srcCellDataContainer;
 
-  if(m_SaveAsNewDataContainer == true)
+  if(m_SaveAsNewDataContainer)
   {
     float ox = 0.0f, oy = 0.0f, oz = 0.0f, rx = 0.0f, ry = 0.0f, rz = 0.0f;
     srcCellDataContainer->getGeometryAs<ImageGeom>()->getOrigin(ox, oy, oz);
@@ -530,7 +530,7 @@ void CropImageGeometry::execute()
   tDims[2] = ZP;
   cellAttrMat->setTupleDimensions(tDims); // THIS WILL CAUSE A RESIZE of all the underlying data arrays.
 
-  if(m_RenumberFeatures == true)
+  if(m_RenumberFeatures)
   {
     totalPoints = destCellDataContainer->getGeometryAs<ImageGeom>()->getNumberOfElements();
 
@@ -593,7 +593,7 @@ void CropImageGeometry::execute()
     cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock().get());
   }
 
-  if(m_UpdateOrigin == true)
+  if(m_UpdateOrigin)
   {
     float resolution[3] = {0.0f, 0.0f, 0.0f};
     destCellDataContainer->getGeometryAs<ImageGeom>()->getResolution(resolution);
@@ -738,7 +738,7 @@ QString CropImageGeometry::getNewBoxDimensions()
 AbstractFilter::Pointer CropImageGeometry::newFilterInstance(bool copyFilterParameters) const
 {
   CropImageGeometry::Pointer filter = CropImageGeometry::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

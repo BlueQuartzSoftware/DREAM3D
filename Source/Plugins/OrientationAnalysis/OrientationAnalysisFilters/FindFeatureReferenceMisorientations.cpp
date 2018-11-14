@@ -395,7 +395,7 @@ void FindFeatureReferenceMisorientations::execute()
 AbstractFilter::Pointer FindFeatureReferenceMisorientations::newFilterInstance(bool copyFilterParameters) const
 {
   FindFeatureReferenceMisorientations::Pointer filter = FindFeatureReferenceMisorientations::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

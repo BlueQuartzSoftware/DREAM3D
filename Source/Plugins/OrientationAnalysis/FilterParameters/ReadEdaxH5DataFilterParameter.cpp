@@ -41,10 +41,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReadEdaxH5DataFilterParameter::ReadEdaxH5DataFilterParameter()
-: FilterParameter()
-{
-}
+ReadEdaxH5DataFilterParameter::ReadEdaxH5DataFilterParameter() = default;
 
 // -----------------------------------------------------------------------------
 //

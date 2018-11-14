@@ -107,9 +107,7 @@ public:
   , rnd(rnd)
   {
   }
-  virtual ~ParallelMPMLoop()
-  {
-  }
+  virtual ~ParallelMPMLoop() = default;
 
   void calc(int rowStart, int rowEnd, int colStart, int colEnd) const
   {
@@ -209,7 +207,7 @@ public:
           // now check for the gradient penalty. If our current class is NOT equal
           // to the class at index[i][j] AND the value of C[i][j] does NOT equal
           // to the Number of Classes then add in the gradient penalty.
-          if(data->useGradientPenalty)
+          if(data->useGradientPenalty != 0)
           {
             if(C[0][0] != l && C[0][0] != classes)
             {
@@ -247,7 +245,7 @@ public:
 
           lij = (cols * rows * l) + (cols * y) + x;
           curvature_value = 0.0;
-          if(data->useCurvaturePenalty)
+          if(data->useCurvaturePenalty != 0)
           {
             curvature_value = data->beta_c * ccost[lij];
           }
@@ -324,8 +322,7 @@ private:
 //
 // -----------------------------------------------------------------------------
 MPMCalculation::MPMCalculation()
-: Observable()
-, m_StatsDelegate(nullptr)
+: m_StatsDelegate(nullptr)
 , m_ErrorCondition(0)
 {
 }
@@ -432,7 +429,7 @@ void MPMCalculation::execute()
   {
 
     data->currentMPMLoop = k;
-    if(data->cancel)
+    if(data->cancel != 0)
     {
       data->progress = 100.0;
       break;
@@ -441,7 +438,7 @@ void MPMCalculation::execute()
 
 #if EMMPM_USE_PARALLEL_ALGORITHMS
     tbb::task_scheduler_init init;
-    int threads = init.default_num_threads();
+    int threads = tbb::task_scheduler_init::default_num_threads();
 #if USE_TBB_TASK_GROUP
     std::shared_ptr<tbb::task_group> g(new tbb::task_group);
     unsigned int rowIncrement = rows / threads;
@@ -495,7 +492,7 @@ void MPMCalculation::execute()
 
   data->inside_mpm_loop = 0;
 
-  if(!data->cancel)
+  if(data->cancel == 0)
   {
     /* Normalize probabilities */
     for(uint32_t i = 0; i < data->rows; i++)

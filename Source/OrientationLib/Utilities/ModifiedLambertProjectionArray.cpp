@@ -135,7 +135,7 @@ void ModifiedLambertProjectionArray::fillArrayWithNewModifiedLambertProjection(s
   m_ModifiedLambertProjectionArray.resize(n);
   for (size_t i = 0; i < n; ++i)
   {
-    if (m_ModifiedLambertProjectionArray[i].get() == nullptr)
+    if(m_ModifiedLambertProjectionArray[i] == nullptr)
     {
       m_ModifiedLambertProjectionArray[i] = ModifiedLambertProjection::New();
     }
@@ -148,7 +148,7 @@ void ModifiedLambertProjectionArray::fillArrayWithNewModifiedLambertProjection(s
 ModifiedLambertProjection::Pointer ModifiedLambertProjectionArray::getModifiedLambertProjection(int idx)
 {
 #ifndef NDEBUG
-  if(m_ModifiedLambertProjectionArray.size() > 0)
+  if(!m_ModifiedLambertProjectionArray.empty())
   {
     Q_ASSERT(idx < static_cast<int>(m_ModifiedLambertProjectionArray.size()));
   }
@@ -162,7 +162,7 @@ ModifiedLambertProjection::Pointer ModifiedLambertProjectionArray::getModifiedLa
 ModifiedLambertProjection::Pointer ModifiedLambertProjectionArray::operator[](int idx)
 {
 #ifndef NDEBUG
-  if(m_ModifiedLambertProjectionArray.size() > 0)
+  if(!m_ModifiedLambertProjectionArray.empty())
   {
     Q_ASSERT(idx < static_cast<int>(m_ModifiedLambertProjectionArray.size()));
   }
@@ -205,7 +205,7 @@ void ModifiedLambertProjectionArray::releaseOwnership()
 void* ModifiedLambertProjectionArray::getVoidPointer(size_t i)
 {
 #ifndef NDEBUG
-  if(m_ModifiedLambertProjectionArray.size() > 0)
+  if(!m_ModifiedLambertProjectionArray.empty())
   {
     Q_ASSERT(i < static_cast<size_t>(m_ModifiedLambertProjectionArray.size()));
   }
@@ -293,7 +293,7 @@ int ModifiedLambertProjectionArray::eraseTuples(QVector<size_t>& idxs)
   int err = 0;
 
   // If nothing is to be erased just return
-  if(idxs.size() == 0)
+  if(idxs.empty())
   {
     return 0;
   }
@@ -354,7 +354,10 @@ int ModifiedLambertProjectionArray::copyTuple(size_t currentPos, size_t newPos)
 bool ModifiedLambertProjectionArray::copyFromArray(size_t destTupleOffset, IDataArray::Pointer sourceArray, size_t srcTupleOffset, size_t totalSrcTuples)
 {
   if(!m_IsAllocated) { return false; }
-  if(0 == m_ModifiedLambertProjectionArray.size()) { return false; }
+  if(m_ModifiedLambertProjectionArray.empty())
+  {
+    return false;
+  }
   if(destTupleOffset >= m_ModifiedLambertProjectionArray.size()) { return false; }
   if(!sourceArray->isAllocated()) { return false; }
   Self* source = dynamic_cast<Self*>(sourceArray.get());
@@ -406,7 +409,7 @@ void ModifiedLambertProjectionArray::initializeWithZeros()
 IDataArray::Pointer ModifiedLambertProjectionArray::deepCopy(bool forceNoAllocate)
 {
   ModifiedLambertProjectionArray::Pointer daCopyPtr = ModifiedLambertProjectionArray::New();
-  if(forceNoAllocate == false)
+  if(!forceNoAllocate)
   {
     daCopyPtr->resize(getNumberOfTuples());
     ModifiedLambertProjectionArray& daCopy = *daCopyPtr;
@@ -608,7 +611,7 @@ void Create2DExpandableDataset(hid_t gid, const QString& dsetName, int lambertSi
 int ModifiedLambertProjectionArray::writeH5Data(hid_t parentId, QVector<size_t> tDims)
 {
   herr_t err = 0;
-  if (m_ModifiedLambertProjectionArray.size() == 0)
+  if(m_ModifiedLambertProjectionArray.empty())
   {
     return -2;
   }
@@ -635,7 +638,7 @@ int ModifiedLambertProjectionArray::writeH5Data(hid_t parentId, QVector<size_t> 
   // We start numbering our phases at 1. Anything in slot 0 is considered "Dummy" or invalid
   for(qint32 i = 1; i < m_ModifiedLambertProjectionArray.size(); ++i)
   {
-    if (m_ModifiedLambertProjectionArray[i].get() != nullptr)
+    if(m_ModifiedLambertProjectionArray[i] != nullptr)
     {
       north = m_ModifiedLambertProjectionArray[i]->getNorthSquare().get();
       south = m_ModifiedLambertProjectionArray[i]->getSouthSquare().get();

@@ -83,7 +83,7 @@ void QuatWidget::updateData(OrientationUtilityCalculator* calculator)
     // The input type is the same as this widget, so don't update
     return;
   }
-  else if(calculator->getHasErrors() == true)
+  if(calculator->getHasErrors())
   {
     q1->setText("nan");
     q2->setText("nan");

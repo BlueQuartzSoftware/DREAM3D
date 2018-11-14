@@ -77,9 +77,7 @@ public:
   {
   }
 
-  virtual ~GenerateIPFColorsImpl()
-  {
-  }
+  virtual ~GenerateIPFColorsImpl() = default;
 
   void convert(size_t start, size_t end) const
   {
@@ -271,7 +269,7 @@ void GenerateIPFColors::dataCheck()
     m_CellIPFColors = m_CellIPFColorsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(getUseGoodVoxels() == true)
+  if(getUseGoodVoxels())
   {
     // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
     cDims[0] = 1;
@@ -336,7 +334,7 @@ void GenerateIPFColors::execute()
 #endif
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel == true)
+  if(doParallel)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
                       GenerateIPFColorsImpl(this, normRefDir, m_CellEulerAngles, m_CellPhases, m_CrystalStructures, numPhases, m_GoodVoxels, m_CellIPFColors), tbb::auto_partitioner());
@@ -376,7 +374,7 @@ void GenerateIPFColors::incrementPhaseWarningCount()
 AbstractFilter::Pointer GenerateIPFColors::newFilterInstance(bool copyFilterParameters) const
 {
   GenerateIPFColors::Pointer filter = GenerateIPFColors::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

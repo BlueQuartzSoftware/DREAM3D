@@ -212,7 +212,7 @@ void FindBoundaryElementFractions::execute()
 AbstractFilter::Pointer FindBoundaryElementFractions::newFilterInstance(bool copyFilterParameters) const
 {
   FindBoundaryElementFractions::Pointer filter = FindBoundaryElementFractions::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

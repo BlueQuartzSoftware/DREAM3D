@@ -401,10 +401,10 @@ void DetectEllipsoids::execute()
     tbb::task_scheduler_init init;
     bool doParallel = true;
 
-    if(doParallel == true)
+    if(doParallel)
     {
       std::shared_ptr<tbb::task_group> g(new tbb::task_group);
-      int threads = init.default_num_threads();
+      int threads = tbb::task_scheduler_init::default_num_threads();
 
       for(int i = 0; i < threads; i++)
       {
@@ -1241,7 +1241,7 @@ Int32ArrayType::Pointer DetectEllipsoids::fillEllipse(Int32ArrayType::Pointer I,
   I_tmp->initializeWithZeros();
 
   bool copy = I->copyIntoArray(I_tmp);
-  if(copy == false)
+  if(!copy)
   {
     // Error: Could not copy array contents into new array!
     return Int32ArrayType::NullPointer();
@@ -1394,7 +1394,7 @@ int DetectEllipsoids::getThreadIndex()
 AbstractFilter::Pointer DetectEllipsoids::newFilterInstance(bool copyFilterParameters) const
 {
   DetectEllipsoids::Pointer filter = DetectEllipsoids::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

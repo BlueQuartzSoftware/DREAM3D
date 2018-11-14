@@ -164,7 +164,7 @@ void FindBoundingBoxFeatures::dataCheck()
     m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(getCalcByPhase() == true)
+  if(getCalcByPhase())
   {
     m_PhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getPhasesArrayPath(),
                                                                                                       cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -217,7 +217,7 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
 
   // loop first to determine number of phases if calcByPhase is being used
   int32_t numPhases = 1;
-  if(m_CalcByPhase == true)
+  if(m_CalcByPhase)
   {
     for(size_t i = 1; i < size; i++)
     {
@@ -229,7 +229,7 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
   }
   for(int32_t iter = 1; iter <= numPhases; iter++)
   {
-    if(m_CalcByPhase == true)
+    if(m_CalcByPhase)
     {
       QString ss = QObject::tr("Working on Phase %1 of %2").arg(iter).arg(numPhases);
       notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
@@ -239,7 +239,7 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
 
     for(size_t i = 1; i < size; i++)
     {
-      if(m_SurfaceFeatures[i] == true && (m_CalcByPhase == false || m_Phases[i] == iter))
+      if(m_SurfaceFeatures[i] && (!m_CalcByPhase || m_Phases[i] == iter))
       {
         sidetomove = 0;
         move = 1;
@@ -292,7 +292,7 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
     }
     for(size_t j = 1; j < size; j++)
     {
-      if(m_CalcByPhase == false || m_Phases[j] == iter)
+      if(!m_CalcByPhase || m_Phases[j] == iter)
       {
         if(m_Centroids[3 * j] <= boundbox[0])
         {
@@ -375,7 +375,7 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
 
   for(size_t i = 1; i < size; i++)
   {
-    if(m_SurfaceFeatures[i] == true)
+    if(m_SurfaceFeatures[i])
     {
       sidetomove = 0;
       move = 1;
@@ -478,7 +478,7 @@ void FindBoundingBoxFeatures::execute()
 AbstractFilter::Pointer FindBoundingBoxFeatures::newFilterInstance(bool copyFilterParameters) const
 {
   FindBoundingBoxFeatures::Pointer filter = FindBoundingBoxFeatures::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

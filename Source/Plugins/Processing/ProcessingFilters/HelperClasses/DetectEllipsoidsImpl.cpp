@@ -600,14 +600,22 @@ QPair<size_t, size_t> DetectEllipsoidsImpl::plotlineEdgeInter(int x0, int y0, in
   int sx, sy;
 
   if(x0 < x1)
+  {
     sx = 1;
+  }
   else
+  {
     sx = -1;
+  }
 
   if(y0 < y1)
+  {
     sy = 1;
+  }
   else
+  {
     sy = -1;
+  }
 
   int err = dx - dy;
   int e2;
@@ -631,17 +639,17 @@ QPair<size_t, size_t> DetectEllipsoidsImpl::plotlineEdgeInter(int x0, int y0, in
         edge.first = m_Filter->sub2ind(imageDims, y1, x1, z);
         break;
       }
-      else if(x0 == x1 && y0 + 1 == y1)
+      if(x0 == x1 && y0 + 1 == y1)
       {
         edge.first = m_Filter->sub2ind(imageDims, y1, x1, z);
         break;
       }
-      else if(x0 + 1 == x1 && y0 + 1 == y1)
+      if(x0 + 1 == x1 && y0 + 1 == y1)
       {
         edge.first = m_Filter->sub2ind(imageDims, y1, x1, z);
         break;
       }
-      else if(x0 + 1 == x1 && y0 == y1)
+      if(x0 + 1 == x1 && y0 == y1)
       {
         edge.first = m_Filter->sub2ind(imageDims, y1, x1, z);
         break;
@@ -699,14 +707,22 @@ QPair<size_t, size_t> DetectEllipsoidsImpl::plotlineEdgeInter(int x0, int y0, in
   y0 = yi;
 
   if(x0 > x1)
+  {
     sx = 1;
+  }
   else
+  {
     sx = -1;
+  }
 
   if(y0 > y1)
+  {
     sy = 1;
+  }
   else
+  {
     sy = -1;
+  }
 
   err = dx - dy;
 

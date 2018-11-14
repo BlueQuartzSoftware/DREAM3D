@@ -179,7 +179,7 @@ void GenerateRodriguesColors::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
   // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
   dims[0] = 1;
-  if(getUseGoodVoxels() == true)
+  if(getUseGoodVoxels())
   {
     // The good voxels array is optional, If it is available we are going to use it, otherwise we are going to create it
     dims[0] = 1;
@@ -259,7 +259,7 @@ void GenerateRodriguesColors::execute()
     m_CellRodriguesColors[index + 2] = 0;
 
     // Make sure we are using a valid Euler Angles with valid crystal symmetry
-    if((missingGoodVoxels == true || m_GoodVoxels[i] == true) && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd)
+    if((missingGoodVoxels || m_GoodVoxels[i]) && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd)
     {
       FOrientArrayType rod(4);
       FOrientTransformsType::eu2ro(FOrientArrayType(m_CellEulerAngles + index, 3), rod);
@@ -281,7 +281,7 @@ void GenerateRodriguesColors::execute()
 AbstractFilter::Pointer GenerateRodriguesColors::newFilterInstance(bool copyFilterParameters) const
 {
   GenerateRodriguesColors::Pointer filter = GenerateRodriguesColors::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }
