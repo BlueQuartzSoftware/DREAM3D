@@ -75,10 +75,6 @@ ReadH5Ebsd::ReadH5Ebsd()
 , m_LatticeConstantsArrayName(SIMPL::EnsembleData::LatticeConstants)
 , m_CellPhasesArrayName(SIMPL::CellData::Phases)
 , m_CellEulerAnglesArrayName(SIMPL::CellData::EulerAngles)
-, m_CellPhases(nullptr)
-, m_CellEulerAngles(nullptr)
-, m_CrystalStructures(nullptr)
-, m_LatticeConstants(nullptr)
 {
   m_SampleTransformation.angle = 0.0f;
   m_SampleTransformation.h = 0.0f;

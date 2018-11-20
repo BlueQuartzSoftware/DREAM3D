@@ -93,7 +93,6 @@ private:
 ChangeAngleRepresentation::ChangeAngleRepresentation()
 : m_ConversionType(SIMPL::EulerAngleConversionType::DegreesToRadians)
 , m_CellEulerAnglesArrayPath("", "", "")
-, m_CellEulerAngles(nullptr)
 {
 }
 

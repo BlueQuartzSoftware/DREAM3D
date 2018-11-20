@@ -54,7 +54,6 @@ ModifiedLambertProjection::ModifiedLambertProjection() :
   m_MaxCoord(0.0),
   m_MinCoord(0.0)
 {
-
 }
 
 // -----------------------------------------------------------------------------

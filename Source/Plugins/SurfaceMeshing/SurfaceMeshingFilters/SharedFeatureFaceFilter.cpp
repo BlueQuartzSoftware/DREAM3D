@@ -53,10 +53,6 @@ SharedFeatureFaceFilter::SharedFeatureFaceFilter()
 , m_SurfaceMeshFeatureFaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels)
 , m_SurfaceMeshFeatureFaceNumTrianglesArrayName("NumTriangles")
 , m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
-, m_SurfaceMeshFaceLabels(nullptr)
-, m_SurfaceMeshFeatureFaceIds(nullptr)
-, m_SurfaceMeshFeatureFaceLabels(nullptr)
-, m_SurfaceMeshFeatureFaceNumTriangles(nullptr)
 {
 }
 

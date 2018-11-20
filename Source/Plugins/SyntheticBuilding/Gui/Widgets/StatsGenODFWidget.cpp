@@ -93,7 +93,6 @@ StatsGenODFWidget::StatsGenODFWidget(QWidget* parent)
 , m_Initializing(true)
 , m_PhaseIndex(-1)
 , m_CrystalStructure(Ebsd::CrystalStructure::Cubic_High)
-, m_ODFTableModel(nullptr)
 {
   m_OpenDialogLastFilePath = QDir::homePath();
   this->setupUi(this);

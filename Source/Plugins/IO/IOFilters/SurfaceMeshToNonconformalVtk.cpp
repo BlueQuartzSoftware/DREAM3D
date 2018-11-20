@@ -59,8 +59,6 @@ SurfaceMeshToNonconformalVtk::SurfaceMeshToNonconformalVtk()
 , m_WriteBinaryFile(false)
 , m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
 , m_SurfaceMeshNodeTypeArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::VertexAttributeMatrixName, SIMPL::VertexData::SurfaceMeshNodeType)
-, m_SurfaceMeshFaceLabels(nullptr)
-, m_SurfaceMeshNodeType(nullptr)
 {
 }
 

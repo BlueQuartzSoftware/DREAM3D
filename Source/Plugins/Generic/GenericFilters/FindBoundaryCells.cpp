@@ -56,8 +56,6 @@ FindBoundaryCells::FindBoundaryCells()
 , m_BoundaryCellsArrayName(SIMPL::CellData::BoundaryCells)
 , m_IgnoreFeatureZero(true)
 , m_IncludeVolumeBoundary(false)
-, m_FeatureIds(nullptr)
-, m_BoundaryCells(nullptr)
 {
 }
 

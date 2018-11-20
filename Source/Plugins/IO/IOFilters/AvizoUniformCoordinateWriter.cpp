@@ -61,7 +61,6 @@ AvizoUniformCoordinateWriter::AvizoUniformCoordinateWriter()
 , m_Units("microns")
 , m_WriteFeatureIds(true)
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_FeatureIds(nullptr)
 {
 }
 

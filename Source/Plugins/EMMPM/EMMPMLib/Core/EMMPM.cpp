@@ -33,9 +33,9 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #include "EMMPMLib/Common/EMMPM_Math.h"
 #include "EMMPMLib/Common/EMTime.h"
@@ -49,8 +49,7 @@
 //
 // -----------------------------------------------------------------------------
 EMMPM::EMMPM()
-: m_StatsDelegate(nullptr)
-, m_ErrorCondition(0)
+: m_ErrorCondition(0)
 {
 }
 

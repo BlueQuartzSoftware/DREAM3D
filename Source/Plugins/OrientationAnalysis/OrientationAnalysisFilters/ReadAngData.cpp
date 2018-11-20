@@ -88,10 +88,6 @@ ReadAngData::ReadAngData()
 , m_RefFrameZDir(SIMPL::RefFrameZDir::UnknownRefFrameZDirection)
 , m_Manufacturer(Ebsd::UnknownManufacturer)
 , d_ptr(new ReadAngDataPrivate(this))
-, m_CellPhases(nullptr)
-, m_CellEulerAngles(nullptr)
-, m_CrystalStructures(nullptr)
-, m_LatticeConstants(nullptr)
 {
 }
 

@@ -57,8 +57,6 @@ FillBadData::FillBadData()
 , m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
 , m_AlreadyChecked(nullptr)
 , m_Neighbors(nullptr)
-, m_FeatureIds(nullptr)
-, m_CellPhases(nullptr)
 {
 }
 

@@ -62,7 +62,6 @@ EMsoftSO3Sampler::EMsoftSO3Sampler()
 , m_OffsetGrid(false)
 , m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
 , m_EMsoftAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_EulerAngles(nullptr)
 {
   m_RefOr.x = 0.0;
   m_RefOr.y = 0.0;

@@ -58,13 +58,6 @@ FindEllipsoidError::FindEllipsoidError()
 , m_IdealFeatureIdsArrayName("IdealFeatureIds")
 , m_EllipsoidErrorArrayName("EllipsoidError")
 , m_WriteIdealEllipseFeatureIds(true)
-, m_FeatureIds(nullptr)
-, m_AxisEulerAngles(nullptr)
-, m_Centroids(nullptr)
-, m_AxisLengths(nullptr)
-, m_NumCells(nullptr)
-, m_IdealFeatureIds(nullptr)
-, m_EllipsoidError(nullptr)
 , m_ScaleFator(1.0f)
 {
 }

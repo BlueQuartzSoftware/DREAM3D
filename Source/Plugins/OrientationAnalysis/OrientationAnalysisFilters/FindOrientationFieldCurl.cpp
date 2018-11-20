@@ -117,10 +117,6 @@ FindOrientationFieldCurl::FindOrientationFieldCurl()
 , m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
 , m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats)
 , m_DislocationTensorsArrayName(SIMPL::CellData::DislocationTensors)
-, m_CellPhases(nullptr)
-, m_DislocationTensors(nullptr)
-, m_Quats(nullptr)
-, m_CrystalStructures(nullptr)
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 

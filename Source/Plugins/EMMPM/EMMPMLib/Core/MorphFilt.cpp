@@ -41,9 +41,9 @@
 
 /* Note: This is the function where I really got windowing right for the first time. */
 
-#include <stddef.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstddef>
+#include <cstdlib>
+#include <cstring>
 
 #include "MorphFilt.h"
 

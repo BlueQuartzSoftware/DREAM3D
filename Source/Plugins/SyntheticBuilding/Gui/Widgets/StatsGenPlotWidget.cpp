@@ -105,11 +105,8 @@ StatsGenPlotWidget::StatsGenPlotWidget(QWidget* parent)
 , m_BinStep(0.5f)
 , m_PhaseIndex(-1)
 , m_DistributionType(SIMPL::DistributionType::UnknownDistributionType)
-, m_TableModel(nullptr)
 , m_StatsType(SIMPL::StatisticsType::UnknownStatisticsGroup)
 , m_UserUpdatedData(false)
-, m_TableViewWidget(nullptr)
-, m_TableView(nullptr)
 {
   this->setupUi(this);
   this->setupGui();

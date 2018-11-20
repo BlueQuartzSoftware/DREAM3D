@@ -118,11 +118,6 @@ GenerateFZQuaternions::GenerateFZQuaternions()
 , m_CrystalStructuresArrayPath("", "", "")
 , m_UseGoodVoxels(false)
 , m_GoodVoxelsArrayPath("", "", "")
-, m_CellPhases(nullptr)
-, m_Quats(nullptr)
-, m_CrystalStructures(nullptr)
-, m_GoodVoxels(nullptr)
-, m_FZQuats(nullptr)
 {
   initialize();
   m_OrientationOps = LaueOps::getOrientationOpsQVector();

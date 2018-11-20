@@ -61,11 +61,6 @@ JumbleOrientations::JumbleOrientations()
 , m_FeaturePhasesArrayPath("", "", "")
 , m_FeatureEulerAnglesArrayPath("", "", "")
 , m_AvgQuatsArrayName(SIMPL::FeatureData::AvgQuats)
-, m_FeatureIds(nullptr)
-, m_CellEulerAngles(nullptr)
-, m_FeaturePhases(nullptr)
-, m_FeatureEulerAngles(nullptr)
-, m_AvgQuats(nullptr)
 {
 }
 

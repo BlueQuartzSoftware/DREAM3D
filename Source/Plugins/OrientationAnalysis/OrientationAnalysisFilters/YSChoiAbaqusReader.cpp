@@ -36,7 +36,7 @@
 #include "YSChoiAbaqusReader.h"
 
 // C Includes
-#include <stdio.h>
+#include <cstdio>
 
 // C++ Includes
 #include <iomanip>
@@ -83,13 +83,6 @@ YSChoiAbaqusReader::YSChoiAbaqusReader()
 , m_SurfaceFeaturesArrayName(SIMPL::FeatureData::SurfaceFeatures)
 , m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
 , m_CrystalStructuresArrayName(SIMPL::EnsembleData::CrystalStructures)
-, m_FeatureIds(nullptr)
-, m_CellPhases(nullptr)
-, m_SurfaceFeatures(nullptr)
-, m_Quats(nullptr)
-, m_AvgQuats(nullptr)
-, m_CellEulerAngles(nullptr)
-, m_CrystalStructures(nullptr)
 {
 }
 

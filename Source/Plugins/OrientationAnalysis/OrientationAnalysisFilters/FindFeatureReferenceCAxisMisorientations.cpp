@@ -59,13 +59,6 @@ FindFeatureReferenceCAxisMisorientations::FindFeatureReferenceCAxisMisorientatio
 , m_FeatureAvgCAxisMisorientationsArrayName(SIMPL::FeatureData::FeatureAvgCAxisMisorientations)
 , m_FeatureStdevCAxisMisorientationsArrayName(SIMPL::FeatureData::FeatureStdevCAxisMisorientations)
 , m_FeatureReferenceCAxisMisorientationsArrayName(SIMPL::CellData::FeatureReferenceCAxisMisorientations)
-, m_FeatureIds(nullptr)
-, m_CellPhases(nullptr)
-, m_Quats(nullptr)
-, m_AvgCAxes(nullptr)
-, m_FeatureReferenceCAxisMisorientations(nullptr)
-, m_FeatureAvgCAxisMisorientations(nullptr)
-, m_FeatureStdevCAxisMisorientations(nullptr)
 {
 }
 

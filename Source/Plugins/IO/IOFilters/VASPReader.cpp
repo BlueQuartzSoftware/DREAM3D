@@ -59,8 +59,6 @@ VASPReader::VASPReader()
 , m_InputFile("")
 , m_AtomVelocitiesArrayName(SIMPL::VertexData::AtomVelocities)
 , m_AtomTypesArrayName(SIMPL::VertexData::AtomTypes)
-, m_AtomVelocities(nullptr)
-, m_AtomTypes(nullptr)
 {
 }
 

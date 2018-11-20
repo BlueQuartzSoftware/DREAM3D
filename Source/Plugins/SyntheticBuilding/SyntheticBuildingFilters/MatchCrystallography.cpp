@@ -76,17 +76,6 @@ MatchCrystallography::MatchCrystallography()
 , m_FeatureEulerAnglesArrayName(SIMPL::FeatureData::EulerAngles)
 , m_AvgQuatsArrayName(SIMPL::FeatureData::AvgQuats)
 , m_MaxIterations(1)
-, m_FeatureIds(nullptr)
-, m_CellEulerAngles(nullptr)
-, m_SurfaceFeatures(nullptr)
-, m_FeaturePhases(nullptr)
-, m_Volumes(nullptr)
-, m_FeatureEulerAngles(nullptr)
-, m_AvgQuats(nullptr)
-, m_SyntheticCrystalStructures(nullptr)
-, m_CrystalStructures(nullptr)
-, m_PhaseTypes(nullptr)
-, m_NumFeatures(nullptr)
 {
   m_NeighborList = NeighborList<int32_t>::NullPointer();
   m_SharedSurfaceAreaList = NeighborList<float>::NullPointer();

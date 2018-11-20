@@ -56,8 +56,6 @@ FindTriangleGeomNeighbors::FindTriangleGeomNeighbors()
 , m_NeighborListArrayName(SIMPL::FeatureData::NeighborList)
 , m_FaceLabelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 , m_NumNeighborsArrayName(SIMPL::FeatureData::NumNeighbors)
-, m_FaceLabels(nullptr)
-, m_NumNeighbors(nullptr)
 {
   m_NeighborList = NeighborList<int32_t>::NullPointer();
 

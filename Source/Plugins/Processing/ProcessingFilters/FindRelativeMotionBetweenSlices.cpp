@@ -134,8 +134,6 @@ FindRelativeMotionBetweenSlices::FindRelativeMotionBetweenSlices()
 , m_SSize2(0)
 , m_SliceStep(0)
 , m_MotionDirectionArrayName(SIMPL::CellData::MotionDirection)
-, m_InData(nullptr)
-, m_MotionDirection(nullptr)
 {
 }
 

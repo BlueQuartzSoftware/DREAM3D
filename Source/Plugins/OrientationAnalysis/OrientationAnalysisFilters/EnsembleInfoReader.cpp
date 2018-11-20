@@ -59,8 +59,6 @@ EnsembleInfoReader::EnsembleInfoReader()
 , m_InputFile("")
 , m_CrystalStructuresArrayName(SIMPL::EnsembleData::CrystalStructures)
 , m_PhaseTypesArrayName(SIMPL::EnsembleData::PhaseTypes)
-, m_CrystalStructures(nullptr)
-, m_PhaseTypes(nullptr)
 , m_ptype(PhaseType::Type::Unknown)
 , m_crystruct(999)
 {

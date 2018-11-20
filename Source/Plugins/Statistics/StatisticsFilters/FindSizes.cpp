@@ -57,10 +57,6 @@ FindSizes::FindSizes()
 , m_EquivalentDiametersArrayName(SIMPL::FeatureData::EquivalentDiameters)
 , m_NumElementsArrayName(SIMPL::FeatureData::NumElements)
 , m_SaveElementSizes(false)
-, m_FeatureIds(nullptr)
-, m_Volumes(nullptr)
-, m_EquivalentDiameters(nullptr)
-, m_NumElements(nullptr)
 {
 }
 

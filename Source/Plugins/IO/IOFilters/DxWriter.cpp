@@ -55,7 +55,6 @@
 DxWriter::DxWriter()
 : m_AddSurfaceLayer(false)
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_FeatureIds(nullptr)
 {
 }
 

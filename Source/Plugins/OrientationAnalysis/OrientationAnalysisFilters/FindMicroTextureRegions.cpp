@@ -55,9 +55,6 @@ FindMicroTextureRegions::FindMicroTextureRegions()
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 , m_MicroTextureRegionNumCellsArrayName("MicroTextureRegionNumCells")
 , m_MicroTextureRegionFractionOccupiedArrayName("MicroTextureRegionFractionOccupied")
-, m_MicroTextureRegionNumCells(nullptr)
-, m_MicroTextureRegionFractionOccupied(nullptr)
-, m_FeatureIds(nullptr)
 {
 }
 

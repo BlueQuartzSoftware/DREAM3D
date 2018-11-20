@@ -53,8 +53,6 @@ FindLargestCrossSections::FindLargestCrossSections()
 : m_Plane(0)
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 , m_LargestCrossSectionsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::LargestCrossSections)
-, m_FeatureIds(nullptr)
-, m_LargestCrossSections(nullptr)
 {
 }
 

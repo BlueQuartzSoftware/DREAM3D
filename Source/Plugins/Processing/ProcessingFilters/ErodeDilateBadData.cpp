@@ -58,7 +58,6 @@ ErodeDilateBadData::ErodeDilateBadData()
 , m_ZDirOn(true)
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 , m_Neighbors(nullptr)
-, m_FeatureIds(nullptr)
 {
 }
 

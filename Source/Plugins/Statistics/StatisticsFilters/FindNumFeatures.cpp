@@ -50,8 +50,6 @@
 FindNumFeatures::FindNumFeatures()
 : m_FeaturePhasesArrayPath("", "", "")
 , m_NumFeaturesArrayPath("", "", "")
-, m_FeaturePhases(nullptr)
-, m_NumFeatures(nullptr)
 {
 }
 

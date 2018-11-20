@@ -212,7 +212,7 @@ void* ModifiedLambertProjectionArray::getVoidPointer(size_t i)
 #endif
   if(i >= this->getNumberOfTuples())
   {
-    return 0x0;
+    return nullptr;
   }
   return (void*)(&(m_ModifiedLambertProjectionArray[i]));
 }
@@ -266,7 +266,6 @@ QVector<size_t> ModifiedLambertProjectionArray::getComponentDimensions()
 // -----------------------------------------------------------------------------
 void ModifiedLambertProjectionArray::SetRank(int rnk)
 {
-
 }
 
 // -----------------------------------------------------------------------------

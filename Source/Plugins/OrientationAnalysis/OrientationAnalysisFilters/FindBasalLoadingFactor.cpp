@@ -55,8 +55,6 @@
 FindBasalLoadingFactor::FindBasalLoadingFactor()
 : m_AvgQuatsArrayPath("", "", "")
 , m_BasalLoadingFactorArrayPath("", "", "")
-, m_BasalLoadingFactor(nullptr)
-, m_AvgQuats(nullptr)
 {
   m_LoadingDirection.x = 1.0f;
   m_LoadingDirection.y = 1.0f;

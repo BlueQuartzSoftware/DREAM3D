@@ -35,8 +35,8 @@
 
 #include "LaplacianSmoothing.h"
 
+#include <cstdio>
 #include <sstream>
-#include <stdio.h>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -66,8 +66,6 @@ LaplacianSmoothing::LaplacianSmoothing()
 , m_SurfaceQuadPointLambda(0.0f)
 , m_UseTaubinSmoothing(false)
 , m_MuFactor(-1.03f)
-, m_SurfaceMeshNodeType(nullptr)
-, m_SurfaceMeshFaceLabels(nullptr)
 {
 }
 

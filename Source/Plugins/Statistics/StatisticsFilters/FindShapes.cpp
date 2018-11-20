@@ -60,13 +60,6 @@ FindShapes::FindShapes()
 , m_AxisLengthsArrayName(SIMPL::FeatureData::AxisLengths)
 , m_AxisEulerAnglesArrayName(SIMPL::FeatureData::AxisEulerAngles)
 , m_AspectRatiosArrayName(SIMPL::FeatureData::AspectRatios)
-, m_FeatureIds(nullptr)
-, m_Centroids(nullptr)
-, m_AxisEulerAngles(nullptr)
-, m_AxisLengths(nullptr)
-, m_Omega3s(nullptr)
-, m_Volumes(nullptr)
-, m_AspectRatios(nullptr)
 , m_ScaleFactor(1.0f)
 {
   m_FeatureMoments = nullptr;

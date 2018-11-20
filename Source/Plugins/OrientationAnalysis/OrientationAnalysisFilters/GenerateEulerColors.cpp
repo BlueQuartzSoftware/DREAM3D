@@ -60,10 +60,6 @@ GenerateEulerColors::GenerateEulerColors()
 , m_GoodVoxelsArrayPath("", "", "")
 , m_CellEulerColorsArrayName(SIMPL::CellData::EulerColor)
 , m_UseGoodVoxels(false)
-, m_CellPhases(nullptr)
-, m_CellEulerAngles(nullptr)
-, m_CellEulerColors(nullptr)
-, m_CrystalStructures(nullptr)
 {
 }
 

@@ -62,10 +62,6 @@ SineParamsSegmentFeatures::SineParamsSegmentFeatures()
 , m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::GoodVoxels)
 , m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
 , m_ActiveArrayName(SIMPL::FeatureData::Active)
-, m_SineParams(nullptr)
-, m_FeatureIds(nullptr)
-, m_GoodVoxels(nullptr)
-, m_Active(nullptr)
 , m_MissingGoodVoxels(false)
 {
 }
