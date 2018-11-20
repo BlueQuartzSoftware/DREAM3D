@@ -101,8 +101,7 @@
 #define EBSD_STATIC_NEW_SUPERCLASS(superclass, theclass)\
   static superclass::Pointer New()\
   {\
-    theclass* ptr = new theclass();\
-    superclass::Pointer shared_ptr (dynamic_cast<superclass*>(ptr) );\
+    superclass::Pointer shared_ptr (dynamic_cast<superclass*>(new theclass()) );\
     return shared_ptr;\
   }
 
