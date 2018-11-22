@@ -52,8 +52,6 @@
 FindSaltykovSizes::FindSaltykovSizes()
 : m_EquivalentDiametersArrayPath(SIMPL::FeatureData::EquivalentDiameters)
 , m_SaltykovEquivalentDiametersArrayPath(SIMPL::FeatureData::SaltykovEquivalentDiameters)
-, m_EquivalentDiameters(nullptr)
-, m_SaltykovEquivalentDiameters(nullptr)
 {
 }
 

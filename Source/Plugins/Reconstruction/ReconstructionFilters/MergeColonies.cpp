@@ -105,15 +105,6 @@ MergeColonies::MergeColonies()
 , m_AngleTolerance(1.0f)
 , m_RandomizeParentIds(true)
 , m_IdentifyGlobAlpha(false)
-, m_FeatureIds(nullptr)
-, m_CellPhases(nullptr)
-, m_AvgQuats(nullptr)
-, m_FeaturePhases(nullptr)
-, m_CrystalStructures(nullptr)
-, m_CellParentIds(nullptr)
-, m_FeatureParentIds(nullptr)
-, m_GlobAlpha(nullptr)
-, m_Active(nullptr)
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 

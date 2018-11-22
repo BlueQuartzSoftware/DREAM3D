@@ -109,7 +109,6 @@ public:
 // -----------------------------------------------------------------------------
 TriangleAreaFilter::TriangleAreaFilter()
 : m_SurfaceMeshTriangleAreasArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceAreas)
-, m_SurfaceMeshTriangleAreas(nullptr)
 {
 }
 

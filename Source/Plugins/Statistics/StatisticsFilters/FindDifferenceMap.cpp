@@ -114,9 +114,6 @@ FindDifferenceMap::FindDifferenceMap()
 : m_FirstInputArrayPath("", "", "")
 , m_SecondInputArrayPath("", "", "")
 , m_DifferenceMapArrayPath("", "", "DifferenceMap")
-, m_FirstInputArray(nullptr)
-, m_SecondInputArray(nullptr)
-, m_DifferenceMap(nullptr)
 {
 }
 

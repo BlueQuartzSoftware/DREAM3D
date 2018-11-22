@@ -51,8 +51,6 @@
 EstablishShapeTypes::EstablishShapeTypes()
 : m_InputPhaseTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes)
 , m_ShapeTypesArrayName(SIMPL::EnsembleData::ShapeTypes)
-, m_PhaseTypes(nullptr)
-, m_ShapeTypes(nullptr)
 {
 }
 

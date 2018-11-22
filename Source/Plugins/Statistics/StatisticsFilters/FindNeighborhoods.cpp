@@ -154,10 +154,6 @@ FindNeighborhoods::FindNeighborhoods()
 , m_FeaturePhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases)
 , m_CentroidsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Centroids)
 , m_NeighborhoodsArrayName(SIMPL::FeatureData::Neighborhoods)
-, m_FeaturePhases(nullptr)
-, m_Centroids(nullptr)
-, m_EquivalentDiameters(nullptr)
-, m_Neighborhoods(nullptr)
 {
   m_NeighborhoodList = NeighborList<int32_t>::NullPointer();
 }

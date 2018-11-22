@@ -68,7 +68,6 @@ CropImageGeometry::CropImageGeometry()
 , m_SaveAsNewDataContainer(false)
 , m_UpdateOrigin(true)
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_FeatureIds(nullptr)
 {
   m_OldDimensions.x = 0, m_OldDimensions.y = 0; m_OldDimensions.z = 0;
   m_OldResolution.x = 0.0f; m_OldResolution.y = 0.0f; m_OldResolution.z = 0.0f;

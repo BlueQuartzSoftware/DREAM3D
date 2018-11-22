@@ -107,9 +107,6 @@ QuickSurfaceMesh::QuickSurfaceMesh()
 , m_FaceLabelsArrayName(SIMPL::FaceData::SurfaceMeshFaceLabels)
 , m_NodeTypesArrayName(SIMPL::VertexData::SurfaceMeshNodeType)
 , m_FeatureAttributeMatrixName(SIMPL::Defaults::FaceFeatureAttributeMatrixName)
-, m_FeatureIds(nullptr)
-, m_FaceLabels(nullptr)
-, m_NodeTypes(nullptr)
 {
 }
 

@@ -152,12 +152,6 @@ FindProjectedImageStatistics::FindProjectedImageStatistics()
 , m_ProjectedImageAvgArrayName(SIMPL::CellData::ProjectedImageAvg)
 , m_ProjectedImageStdArrayName(SIMPL::CellData::ProjectedImageStd)
 , m_ProjectedImageVarArrayName(SIMPL::CellData::ProjectedImageVar)
-, m_InData(nullptr)
-, m_ProjectedImageMin(nullptr)
-, m_ProjectedImageMax(nullptr)
-, m_ProjectedImageAvg(nullptr)
-, m_ProjectedImageStd(nullptr)
-, m_ProjectedImageVar(nullptr)
 {
 }
 

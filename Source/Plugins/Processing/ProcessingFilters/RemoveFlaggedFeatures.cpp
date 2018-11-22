@@ -53,8 +53,6 @@ RemoveFlaggedFeatures::RemoveFlaggedFeatures()
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 , m_FlaggedFeaturesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Active)
 , m_Neighbors(nullptr)
-, m_FeatureIds(nullptr)
-, m_FlaggedFeatures(nullptr)
 {
 }
 

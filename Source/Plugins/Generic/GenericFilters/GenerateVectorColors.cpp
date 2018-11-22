@@ -59,9 +59,6 @@ GenerateVectorColors::GenerateVectorColors()
 , m_GoodVoxelsArrayPath("", "", "")
 , m_CellVectorColorsArrayName(SIMPL::CellData::VectorColor)
 , m_UseGoodVoxels(false)
-, m_Vectors(nullptr)
-, m_GoodVoxels(nullptr)
-, m_CellVectorColors(nullptr)
 {
 }
 

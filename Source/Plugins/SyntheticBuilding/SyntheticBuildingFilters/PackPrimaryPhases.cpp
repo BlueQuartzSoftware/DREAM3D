@@ -102,7 +102,7 @@ public:
   , m_ShapeOps(shapeOps)
   , curFeature(cur_feature)
   {
-    size = 0;
+    size = nullptr;
     dims[0] = dimensions[0];
     dims[1] = dimensions[1];
     dims[2] = dimensions[2];
@@ -698,7 +698,7 @@ void PackPrimaryPhases::dataCheck()
   tempPath = getOutputCellAttributeMatrixPath();
   tempPath.setAttributeMatrixName(getOutputCellEnsembleAttributeMatrixName());
   tempPath.setDataArrayName(SIMPL::EnsembleData::PhaseName);
-  m_PhaseNamesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<StringDataArray, AbstractFilter, QString>(this, tempPath, 0,
+  m_PhaseNamesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<StringDataArray, AbstractFilter, QString>(this, tempPath, nullptr,
                                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
 
   // Feature Data

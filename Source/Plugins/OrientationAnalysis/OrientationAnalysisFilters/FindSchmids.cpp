@@ -64,14 +64,6 @@ FindSchmids::FindSchmids()
 , m_LambdasArrayName("SchmidLambdas")
 , m_StoreAngleComponents(false)
 , m_OverrideSystem(false)
-, m_FeaturePhases(nullptr)
-, m_AvgQuats(nullptr)
-, m_CrystalStructures(nullptr)
-, m_Schmids(nullptr)
-, m_Phis(nullptr)
-, m_Lambdas(nullptr)
-, m_Poles(nullptr)
-, m_SlipSystems(nullptr)
 {
   m_LoadingDirection.x = 1.0f;
   m_LoadingDirection.y = 1.0f;

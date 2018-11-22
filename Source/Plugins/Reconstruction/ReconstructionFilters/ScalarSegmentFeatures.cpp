@@ -170,10 +170,6 @@ ScalarSegmentFeatures::ScalarSegmentFeatures()
 , m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
 , m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
 , m_ActiveArrayName(SIMPL::FeatureData::Active)
-, m_GoodVoxels(nullptr)
-, m_InputData(nullptr)
-, m_FeatureIds(nullptr)
-, m_Active(nullptr)
 {
 }
 

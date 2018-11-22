@@ -58,7 +58,6 @@ ErodeDilateMask::ErodeDilateMask()
 , m_ZDirOn(true)
 , m_MaskArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
 , m_MaskCopy(nullptr)
-, m_Mask(nullptr)
 {
 }
 

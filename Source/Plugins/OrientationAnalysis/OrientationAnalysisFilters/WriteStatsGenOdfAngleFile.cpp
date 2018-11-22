@@ -35,7 +35,7 @@
 
 #include "WriteStatsGenOdfAngleFile.h"
 
-#include <stdio.h>
+#include <cstdio>
 
 #include <iostream>
 

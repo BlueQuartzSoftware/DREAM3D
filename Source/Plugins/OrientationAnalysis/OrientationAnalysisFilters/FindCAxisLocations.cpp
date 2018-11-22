@@ -52,8 +52,6 @@
 FindCAxisLocations::FindCAxisLocations()
 : m_QuatsArrayPath("", "", "")
 , m_CAxisLocationsArrayName(SIMPL::CellData::CAxisLocation)
-, m_Quats(nullptr)
-, m_CAxisLocations(nullptr)
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 

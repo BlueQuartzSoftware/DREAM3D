@@ -61,8 +61,6 @@ VisualizeGBCDPoleFigure::VisualizeGBCDPoleFigure()
 , m_PhaseOfInterest(1)
 , m_GBCDArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceEnsembleAttributeMatrixName, SIMPL::EnsembleData::GBCD)
 , m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
-, m_GBCD(nullptr)
-, m_CrystalStructures(nullptr)
 {
   m_MisorientationRotation.angle = 0.0f;
   m_MisorientationRotation.h = 0.0f;

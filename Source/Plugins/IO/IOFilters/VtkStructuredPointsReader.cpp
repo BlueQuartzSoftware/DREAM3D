@@ -361,7 +361,7 @@ template <typename T> int32_t vtkReadBinaryData(std::istream& in, T* data, int32
 
   // Now chunk through the file reading up chunks of data that can actually be
   // read in a single read. DEFAULT_BLOCKSIZE will control this.
-  while(1)
+  while(true)
   {
     in.read(chunkptr, chunkSize);
     bytes_read = in.gcount();

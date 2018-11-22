@@ -62,8 +62,6 @@ CalculateArrayHistogram::CalculateArrayHistogram()
 , m_NewDataArrayName(SIMPL::CellData::Histogram)
 , m_NewDataContainer(false)
 , m_NewDataContainerName(SIMPL::Defaults::NewDataContainerName)
-, m_InDataArray(nullptr)
-, m_NewDataArray(nullptr)
 {
 }
 

@@ -51,9 +51,6 @@ FindBoundaryElementFractions::FindBoundaryElementFractions()
 : m_FeatureIdsArrayPath("", "", "")
 , m_BoundaryCellsArrayPath("", "", "")
 , m_BoundaryCellFractionsArrayPath("", "", "")
-, m_FeatureIds(nullptr)
-, m_BoundaryCells(nullptr)
-, m_BoundaryCellFractions(nullptr)
 {
 }
 

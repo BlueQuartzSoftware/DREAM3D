@@ -92,10 +92,6 @@ ReadCtfData::ReadCtfData()
 , m_RefFrameZDir(SIMPL::RefFrameZDir::UnknownRefFrameZDirection)
 , m_Manufacturer(Ebsd::UnknownManufacturer)
 , d_ptr(new ReadCtfDataPrivate(this))
-, m_CellPhases(nullptr)
-, m_CellEulerAngles(nullptr)
-, m_CrystalStructures(nullptr)
-, m_LatticeConstants(nullptr)
 {
 }
 

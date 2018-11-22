@@ -56,12 +56,6 @@ FindAvgOrientations::FindAvgOrientations()
 , m_CrystalStructuresArrayPath("", "", "")
 , m_AvgQuatsArrayPath("", "", "")
 , m_AvgEulerAnglesArrayPath("", "", "")
-, m_FeatureIds(nullptr)
-, m_CellPhases(nullptr)
-, m_Quats(nullptr)
-, m_CrystalStructures(nullptr)
-, m_FeatureEulerAngles(nullptr)
-, m_AvgQuats(nullptr)
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 

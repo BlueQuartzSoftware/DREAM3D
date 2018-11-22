@@ -290,14 +290,6 @@ FindEuclideanDistMap::FindEuclideanDistMap()
 , m_DoQuadPoints(false)
 , m_SaveNearestNeighbors(false)
 , m_CalcManhattanDist(true)
-, m_FeatureIds(nullptr)
-, m_NearestNeighbors(nullptr)
-, m_GBEuclideanDistances(nullptr)
-, m_TJEuclideanDistances(nullptr)
-, m_QPEuclideanDistances(nullptr)
-, m_GBManhattanDistances(nullptr)
-, m_TJManhattanDistances(nullptr)
-, m_QPManhattanDistances(nullptr)
 {
 }
 

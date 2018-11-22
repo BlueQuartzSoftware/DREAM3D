@@ -60,7 +60,6 @@ AbaqusHexahedronWriter::AbaqusHexahedronWriter()
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 , m_HourglassStiffness(250)
 , m_JobName("")
-, m_FeatureIds(nullptr)
 {
 }
 
@@ -629,7 +628,7 @@ std::vector<int64_t> AbaqusHexahedronWriter::getNodeIds(size_t x, size_t y, size
   nodeId[6] = static_cast<int64_t>(1 + (pDims[0] * pDims[1] * (z + 1)) + (pDims[0] * (y + 1)) + x);
   nodeId[7] = static_cast<int64_t>(1 + (pDims[0] * pDims[1] * (z + 1)) + (pDims[0] * (y + 1)) + (x + 1));
 
-  if(0)
+  if(false)
   {
     printf("           %lld-------%lld  \n", static_cast<long long int>(nodeId[4]), static_cast<long long int>(nodeId[5]));
     printf("            /|        /|   \n");

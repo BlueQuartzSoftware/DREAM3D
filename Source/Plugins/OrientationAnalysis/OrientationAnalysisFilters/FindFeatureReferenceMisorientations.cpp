@@ -61,13 +61,6 @@ FindFeatureReferenceMisorientations::FindFeatureReferenceMisorientations()
 , m_FeatureAvgMisorientationsArrayName(SIMPL::FeatureData::FeatureAvgMisorientations)
 , m_FeatureReferenceMisorientationsArrayName(SIMPL::CellData::FeatureReferenceMisorientations)
 , m_ReferenceOrientation(0)
-, m_FeatureIds(nullptr)
-, m_CellPhases(nullptr)
-, m_GBEuclideanDistances(nullptr)
-, m_Quats(nullptr)
-, m_CrystalStructures(nullptr)
-, m_FeatureReferenceMisorientations(nullptr)
-, m_FeatureAvgMisorientations(nullptr)
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 

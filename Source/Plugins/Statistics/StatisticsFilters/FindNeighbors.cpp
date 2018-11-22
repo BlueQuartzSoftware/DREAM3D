@@ -62,10 +62,6 @@ FindNeighbors::FindNeighbors()
 , m_SurfaceFeaturesArrayName(SIMPL::FeatureData::SurfaceFeatures)
 , m_StoreBoundaryCells(false)
 , m_StoreSurfaceFeatures(false)
-, m_FeatureIds(nullptr)
-, m_BoundaryCells(nullptr)
-, m_SurfaceFeatures(nullptr)
-, m_NumNeighbors(nullptr)
 {
   m_NeighborList = NeighborList<int32_t>::NullPointer();
   m_SharedSurfaceAreaList = NeighborList<float>::NullPointer();

@@ -251,9 +251,6 @@ InsertAtoms::InsertAtoms()
 , m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
 , m_AvgQuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgQuats)
 , m_AtomFeatureLabelsArrayName(SIMPL::VertexData::AtomFeatureLabels)
-, m_SurfaceMeshFaceLabels(nullptr)
-, m_AvgQuats(nullptr)
-, m_AtomFeatureLabels(nullptr)
 {
   m_LatticeConstants.x = 1.0f;
   m_LatticeConstants.y = 1.0f;

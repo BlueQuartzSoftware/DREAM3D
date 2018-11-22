@@ -65,13 +65,8 @@ VectorSegmentFeatures::VectorSegmentFeatures()
 , m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
 , m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
 , m_ActiveArrayName(SIMPL::FeatureData::Active)
-, m_Vectors(nullptr)
-, m_FeatureIds(nullptr)
-, m_GoodVoxels(nullptr)
-, m_Active(nullptr)
 , m_AngleToleranceRad(0.0f)
 {
-
 }
 
 // -----------------------------------------------------------------------------

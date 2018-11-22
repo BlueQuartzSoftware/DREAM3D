@@ -235,16 +235,6 @@ IdentifyMicroTextureRegions::IdentifyMicroTextureRegions()
 , m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
 , m_MTRIdsArrayName(SIMPL::CellData::ParentIds)
 , m_ActiveArrayName(SIMPL::FeatureData::Active)
-, m_CAxisLocations(nullptr)
-, m_CellPhases(nullptr)
-, m_CrystalStructures(nullptr)
-, m_MTRIds(nullptr)
-, m_Active(nullptr)
-, m_InMTR(nullptr)
-, m_VolFrac(nullptr)
-, m_AvgCAxis(nullptr)
-, m_PatchIds(nullptr)
-, m_PatchActive(nullptr)
 {
   m_CAxisToleranceRad = 0.0f;
 

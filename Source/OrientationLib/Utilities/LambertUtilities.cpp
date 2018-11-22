@@ -31,7 +31,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "LambertUtilities.h"
 
-#include <assert.h>
+#include <cassert>
 
 #include <cmath>
 

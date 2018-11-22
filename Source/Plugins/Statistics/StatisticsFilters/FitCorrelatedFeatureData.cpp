@@ -60,9 +60,6 @@ FitCorrelatedFeatureData::FitCorrelatedFeatureData()
 , m_FeaturePhasesArrayPath("", "", "")
 , m_BiasedFeaturesArrayPath("", "", "")
 , m_NewEnsembleArrayArrayPath("", "", "")
-, m_BiasedFeatures(nullptr)
-, m_NewEnsembleArray(nullptr)
-, m_FeaturePhases(nullptr)
 {
 }
 

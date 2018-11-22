@@ -169,11 +169,6 @@ GenerateFaceSchuhMisorientationColoring::GenerateFaceSchuhMisorientationColoring
 , m_FeaturePhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases)
 , m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
 , m_SurfaceMeshFaceSchuhMisorientationColorsArrayName(SIMPL::FaceData::SurfaceMeshFaceSchuhMisorientationColors)
-, m_SurfaceMeshFaceLabels(nullptr)
-, m_SurfaceMeshFaceSchuhMisorientationColors(nullptr)
-, m_AvgQuats(nullptr)
-, m_FeaturePhases(nullptr)
-, m_CrystalStructures(nullptr)
 {
 }
 

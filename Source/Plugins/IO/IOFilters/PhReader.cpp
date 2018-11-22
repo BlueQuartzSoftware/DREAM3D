@@ -85,7 +85,6 @@ PhReader::PhReader()
 , m_FileWasRead(false)
 , m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
 , d_ptr(new PhReaderPrivate(this))
-, m_FeatureIds(nullptr)
 {
   m_Origin.x = 0.0f;
   m_Origin.y = 0.0f;

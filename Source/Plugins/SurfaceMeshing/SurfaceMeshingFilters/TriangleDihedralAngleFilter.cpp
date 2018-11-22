@@ -129,7 +129,6 @@ public:
 // -----------------------------------------------------------------------------
 TriangleDihedralAngleFilter::TriangleDihedralAngleFilter()
 : m_SurfaceMeshTriangleDihedralAnglesArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceDihedralAngles)
-, m_SurfaceMeshTriangleDihedralAngles(nullptr)
 {
 }
 

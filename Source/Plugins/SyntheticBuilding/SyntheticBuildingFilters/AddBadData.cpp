@@ -56,7 +56,6 @@ AddBadData::AddBadData()
 , m_PoissonVolFraction(0.0f)
 , m_BoundaryNoise(false)
 , m_BoundaryVolFraction(0.0f)
-, m_GBEuclideanDistances(nullptr)
 {
 }
 

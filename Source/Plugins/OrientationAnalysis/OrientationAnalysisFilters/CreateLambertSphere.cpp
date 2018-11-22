@@ -30,7 +30,7 @@
 
 #include "CreateLambertSphere.h"
 
-#include <assert.h>
+#include <cassert>
 #include <cmath>
 
 #include "SIMPLib/Common/Constants.h"
