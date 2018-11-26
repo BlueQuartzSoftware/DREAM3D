@@ -35,8 +35,9 @@
 
 #include "FindFeatureCentroids.h"
 
-#include "SIMPLib/Common/Constants.h"
+#include <array>
 
+#include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -152,20 +153,14 @@ void FindFeatureCentroids::find_centroids()
   m_FeatureCentersPtr->initializeWithZeros();
   float* featurecenters = m_FeatureCentersPtr->getPointer(0);
 
-  float x = 0.0f;
-  float y = 0.0f;
-  float z = 0.0f;
-
   size_t xPoints = imageGeom->getXPoints();
   size_t yPoints = imageGeom->getYPoints();
   size_t zPoints = imageGeom->getZPoints();
 
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = imageGeom->getResolution();
-  float origin[3] = { 0.0f, 0.0f, 0.0f};
-  imageGeom->getOrigin(origin);
+  std::array<float, 3> resolution = {0.0f, 0.0f, 0.0f};
+  imageGeom->getResolution(resolution.data());
+  std::array<float, 3> origin = {0.0f, 0.0f, 0.0f};
+  imageGeom->getOrigin(origin.data());
 
   size_t zStride = 0;
   size_t yStride = 0;
@@ -179,12 +174,11 @@ void FindFeatureCentroids::find_centroids()
       {
         int32_t gnum = m_FeatureIds[zStride + yStride + k];
         featurecenters[gnum * 4 + 0]++;
-        x = float(k) * xRes;
-        y = float(j) * yRes;
-        z = float(i) * zRes;
-        featurecenters[gnum * 4 + 1] = featurecenters[gnum * 4 + 1] + x;
-        featurecenters[gnum * 4 + 2] = featurecenters[gnum * 4 + 2] + y;
-        featurecenters[gnum * 4 + 3] = featurecenters[gnum * 4 + 3] + z;
+        std::array<float, 3> coords = {0.0f, 0.0f, 0.0f};
+        imageGeom->getCoords(k, j, i, coords.data());
+        featurecenters[gnum * 4 + 1] = featurecenters[gnum * 4 + 1] + coords[0];
+        featurecenters[gnum * 4 + 2] = featurecenters[gnum * 4 + 2] + coords[1];
+        featurecenters[gnum * 4 + 3] = featurecenters[gnum * 4 + 3] + coords[2];
       }
     }
   }
@@ -195,9 +189,9 @@ void FindFeatureCentroids::find_centroids()
       featurecenters[i * 4 + 1] = featurecenters[i * 4 + 1] / featurecenters[i * 4 + 0];
       featurecenters[i * 4 + 2] = featurecenters[i * 4 + 2] / featurecenters[i * 4 + 0];
       featurecenters[i * 4 + 3] = featurecenters[i * 4 + 3] / featurecenters[i * 4 + 0];
-      m_Centroids[3 * i] = featurecenters[i * 4 + 1] + origin[0];
-      m_Centroids[3 * i + 1] = featurecenters[i * 4 + 2] + origin[1];
-      m_Centroids[3 * i + 2] = featurecenters[i * 4 + 3] + origin[2];
+      m_Centroids[3 * i] = featurecenters[i * 4 + 1];
+      m_Centroids[3 * i + 1] = featurecenters[i * 4 + 2];
+      m_Centroids[3 * i + 2] = featurecenters[i * 4 + 3];
     }
   }
 }
