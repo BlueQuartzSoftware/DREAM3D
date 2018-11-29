@@ -55,12 +55,8 @@ class FindShapesTest
 {
 
 public:
-  FindShapesTest()
-  {
-  }
-  virtual ~FindShapesTest()
-  {
-  }
+  FindShapesTest() = default;
+  virtual ~FindShapesTest() = default;
 
 #define DREAM3D_CLOSE_ENOUGH(L, R, eps)                                                                                                                                                                \
   if(false == SIMPLibMath::closeEnough<>(L, R, eps))                                                                                                                                                   \
@@ -288,7 +284,7 @@ public:
     DREAM3D_REQUIRE_EQUAL(axisEulerAngles->getNumberOfTuples(), 2);
     DREAM3D_REQUIRE_EQUAL(aspectRatios->getNumberOfTuples(), 2);
 
-    DREAM3D_CLOSE_ENOUGH(omega3s->getValue(1), 0.7879f, 0.0001f);
+    DREAM3D_CLOSE_ENOUGH(omega3s->getValue(1), 0.78715f, 0.0001f);
 
     DREAM3D_CLOSE_ENOUGH(axisLengths->getValue(3), 120.0f, 1.5f);
     DREAM3D_CLOSE_ENOUGH(axisLengths->getValue(4), 40.0f, 1.5f);
@@ -353,7 +349,11 @@ public:
     DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
 
-private:
-  FindShapesTest(const FindShapesTest&); // Copy Constructor Not Implemented
-  void operator=(const FindShapesTest&); // Move assignment Not Implemented
+  public:
+  FindShapesTest(const FindShapesTest&) = delete; // Copy Constructor Not Implemented
+  FindShapesTest(FindShapesTest&&) = delete;      // Move Constructor Not Implemented
+  FindShapesTest& operator=(const FindShapesTest&) = delete; // Copy Assignment Not Implemented
+  FindShapesTest& operator=(FindShapesTest&&) = delete;      // Move Assignment Not Implemented
+
+
 };
