@@ -1,7 +1,10 @@
 {
     "0": {
+        "FilterVersion": "1.2.724",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Read DREAM.3D Data File",
         "Filter_Name": "DataContainerReader",
+        "Filter_Uuid": "{043cbde5-3878-5718-958f-ae75714df0df}",
         "InputFile": "Data/Output/Reconstruction/06_SmallIN100_Postsegmentation.dream3d",
         "InputFileDataContainerArrayProxy": {
             "Data Containers": [
@@ -164,52 +167,6 @@
                                         1
                                     ],
                                     "Flag": 2,
-                                    "Name": "CrystalStructures",
-                                    "Object Type": "DataArray<uint32_t>",
-                                    "Path": "/DataContainers/Small IN100/Phase Data",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        6
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "LatticeConstants",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/Small IN100/Phase Data",
-                                    "Tuple Dimensions": [
-                                        6
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "MaterialName",
-                                    "Object Type": "StringDataArray",
-                                    "Path": "/DataContainers/Small IN100/Phase Data",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                }
-                            ],
-                            "Flag": 2,
-                            "Name": "Phase Data",
-                            "Type": 11
-                        },
-                        {
-                            "Data Arrays": [
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
                                     "Name": "Active",
                                     "Object Type": "DataArray<bool>",
                                     "Path": "/DataContainers/Small IN100/Grain Data",
@@ -262,11 +219,11 @@
                                         1
                                     ],
                                     "Flag": 2,
-                                    "Name": "NumCells",
+                                    "Name": "NumElements",
                                     "Object Type": "DataArray<int32_t>",
                                     "Path": "/DataContainers/Small IN100/Grain Data",
                                     "Tuple Dimensions": [
-                                        1
+                                        2353
                                     ],
                                     "Version": 2
                                 },
@@ -359,6 +316,52 @@
                             "Flag": 2,
                             "Name": "NewGrain Data",
                             "Type": 7
+                        },
+                        {
+                            "Data Arrays": [
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "CrystalStructures",
+                                    "Object Type": "DataArray<uint32_t>",
+                                    "Path": "/DataContainers/Small IN100/Phase Data",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        6
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "LatticeConstants",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100/Phase Data",
+                                    "Tuple Dimensions": [
+                                        6
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "MaterialName",
+                                    "Object Type": "StringDataArray",
+                                    "Path": "/DataContainers/Small IN100/Phase Data",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                }
+                            ],
+                            "Flag": 2,
+                            "Name": "Phase Data",
+                            "Type": 11
                         }
                     ],
                     "Flag": 2,
@@ -380,9 +383,13 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Fill Bad Data",
         "Filter_Name": "FillBadData",
+        "Filter_Uuid": "{30ae0a1e-3d94-5dab-b279-c5727ab5d7ff}",
+        "IgnoredDataArrayPaths": [
+        ],
         "MinAllowedDefectSize": 1000,
         "StoreAsNewPhase": 0
     },
@@ -393,9 +400,13 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Erode/Dilate Bad Data",
         "Filter_Name": "ErodeDilateBadData",
+        "Filter_Uuid": "{3adfe077-c3c9-5cd0-ad74-cf5f8ff3d254}",
+        "IgnoredDataArrayPaths": [
+        ],
         "NumIterations": 2,
         "XDirOn": 1,
         "YDirOn": 1,
@@ -408,24 +419,31 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Erode/Dilate Bad Data",
         "Filter_Name": "ErodeDilateBadData",
+        "Filter_Uuid": "{3adfe077-c3c9-5cd0-ad74-cf5f8ff3d254}",
+        "IgnoredDataArrayPaths": [
+        ],
         "NumIterations": 2,
         "XDirOn": 1,
         "YDirOn": 1,
         "ZDirOn": 1
     },
     "4": {
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "1.2.724",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
+        "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
         "OutputFile": "Data/Output/Reconstruction/SmallIN100_Final.dream3d",
+        "WriteTimeSeries": 0,
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
         "Name": "(07) SmallIN100 Final Processing",
         "Number_Filters": 5,
-        "Version": "1.0"
+        "Version": 6
     }
 }

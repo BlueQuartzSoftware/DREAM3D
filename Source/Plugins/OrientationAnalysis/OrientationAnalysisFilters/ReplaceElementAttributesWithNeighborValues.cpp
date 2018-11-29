@@ -41,6 +41,7 @@
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
+#include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
@@ -83,17 +84,17 @@ public:
   SIMPL_SHARED_POINTERS(GreaterThanComparison<T>)
   SIMPL_STATIC_NEW_MACRO(GreaterThanComparison<T>)
   SIMPL_TYPE_MACRO_SUPER(GreaterThanComparison<T>, LessThanComparison<T>)
-  virtual ~GreaterThanComparison() = default;
+  ~GreaterThanComparison() override = default;
 
-  virtual bool compare(T a, T b)
+  bool compare(T a, T b) override
   {
     return a > b;
   }
-  virtual bool compare1(T a, T b)
+  bool compare1(T a, T b) override
   {
     return a <= b;
   }
-  virtual bool compare2(T a, T b)
+  bool compare2(T a, T b) override
   {
     return a < b;
   }
@@ -104,8 +105,8 @@ protected:
 
 template <typename T> void ExecuteTemplate(ReplaceElementAttributesWithNeighborValues* filter, IDataArray::Pointer inArrayPtr)
 {
-  typedef DataArray<T> DataArrayType;
-  typedef typename DataArrayType::Pointer DataArrayPointerType;
+  using DataArrayType = DataArray<T>;
+  using DataArrayPointerType = typename DataArrayType::Pointer;
 
   DataArrayPath dataArrayPath = filter->getConfidenceIndexArrayPath();
   DataContainer::Pointer m = filter->getDataContainerArray()->getDataContainer(dataArrayPath.getDataContainerName());
@@ -145,6 +146,14 @@ template <typename T> void ExecuteTemplate(ReplaceElementAttributesWithNeighborV
   DataArrayType& data = *inData;
 
   float thresholdValue = filter->getMinConfidence();
+
+  QString attrMatName = dataArrayPath.getAttributeMatrixName();
+  QVector<DataArrayPath> ignoredPaths = filter->getIgnoredDataArrayPaths();
+  QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
+  for(const auto& dataArrayPath : ignoredPaths)
+  {
+    voxelArrayNames.removeAll(dataArrayPath.getDataArrayName());
+  }
 
   while(keepGoing)
   {
@@ -213,8 +222,6 @@ template <typename T> void ExecuteTemplate(ReplaceElementAttributesWithNeighborV
         prog = prog + progIncrement;
       }
     }
-    QString attrMatName = dataArrayPath.getAttributeMatrixName();
-    QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
 
     if(filter->getCancel())
     {
@@ -237,9 +244,9 @@ template <typename T> void ExecuteTemplate(ReplaceElementAttributesWithNeighborV
       neighbor = bestNeighbor[i];
       if(neighbor != -1)
       {
-        for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+        for(const auto& arrayName : voxelArrayNames)
         {
-          IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
+          IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(arrayName);
           p->copyTuple(neighbor, i);
         }
       }

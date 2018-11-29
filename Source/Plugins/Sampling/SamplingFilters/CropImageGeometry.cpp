@@ -509,9 +509,9 @@ void CropImageGeometry::execute()
         col = k;
         index_old = planeold + rowold + colold;
         index = plane + row + col;
-        for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+        for(const auto& arrayName : voxelArrayNames)
         {
-          IDataArray::Pointer p = cellAttrMat->getAttributeArray(*iter);
+          IDataArray::Pointer p = cellAttrMat->getAttributeArray(arrayName);
           p->copyTuple(index_old, index);
         }
       }

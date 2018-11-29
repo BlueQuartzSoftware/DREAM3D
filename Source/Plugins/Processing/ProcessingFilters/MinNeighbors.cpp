@@ -40,6 +40,7 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
@@ -91,6 +92,10 @@ void MinNeighbors::setupFilterParameters()
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Number of Neighbors", NumNeighborsArrayPath, FilterParameter::RequiredArray, MinNeighbors, req));
+  }
+  {
+    MultiDataArraySelectionFilterParameter::RequirementType req;
+    parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Ignore", IgnoredDataArrayPaths, FilterParameter::Parameter, MinNeighbors, req));
   }
   setFilterParameters(parameters);
 }
@@ -410,15 +415,19 @@ void MinNeighbors::assign_badpoints()
     }
     QString attrMatName = m_FeatureIdsArrayPath.getAttributeMatrixName();
     QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
+    for(const auto& dataArrayPath : m_IgnoredDataArrayPaths)
+    {
+      voxelArrayNames.removeAll(dataArrayPath.getDataArrayName());
+    }
     for(size_t j = 0; j < totalPoints; j++)
     {
       featurename = m_FeatureIds[j];
       neighbor = m_Neighbors[j];
       if(featurename < 0 && neighbor >= 0 && m_FeatureIds[neighbor] >= 0)
       {
-        for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+        for(const auto& arrayName : voxelArrayNames)
         {
-          IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
+          IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(arrayName);
           p->copyTuple(neighbor, j);
         }
       }

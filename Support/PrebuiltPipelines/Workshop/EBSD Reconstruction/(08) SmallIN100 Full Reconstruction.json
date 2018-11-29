@@ -4,17 +4,19 @@
         "CellAttributeMatrixName": "EBSD Scan Data",
         "CellEnsembleAttributeMatrixName": "Phase Data",
         "DataContainerName": "Small IN100",
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Import H5EBSD File",
         "Filter_Name": "ReadH5Ebsd",
+        "Filter_Uuid": "{4ef7f56b-616e-5a80-9e68-1da8f35ad235}",
         "InputFile": "Data/Output/Reconstruction/SmallIN100.h5ebsd",
         "RefFrameZDir": 1,
         "SelectedArrayNames": [
             "Phases",
-            "Image Quality",
-            "Fit",
-            "EulerAngles",
             "SEM Signal",
+            "EulerAngles",
+            "Fit",
+            "Image Quality",
             "Confidence Index"
         ],
         "UseTransformations": 1,
@@ -23,9 +25,11 @@
     },
     "01": {
         "DestinationArrayName": "Mask",
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "1.2.724",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Threshold Objects",
         "Filter_Name": "MultiThresholdObjects",
+        "Filter_Uuid": "{014b7300-cf36-5ede-a751-5faf9b119dae}",
         "SelectedThresholds": [
             {
                 "Attribute Array Name": "Confidence Index",
@@ -44,9 +48,11 @@
         ]
     },
     "02": {
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Convert Orientation Representation",
         "Filter_Name": "ConvertOrientations",
+        "Filter_Uuid": "{e5629880-98c4-5656-82b8-c9fe2b9744de}",
         "InputOrientationArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "EulerAngles",
@@ -57,7 +63,7 @@
         "OutputType": 2
     },
     "03": {
-        "AlignmentShiftFileName": "",
+        "AlignmentShiftFileName": "/Users/mjackson",
         "CellPhasesArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Phases",
@@ -68,9 +74,11 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Align Sections (Misorientation)",
         "Filter_Name": "AlignSectionsMisorientation",
+        "Filter_Uuid": "{4fb2b9de-3124-534b-b914-dbbbdbc14604}",
         "GoodVoxelsArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Mask",
@@ -87,9 +95,11 @@
     },
     "04": {
         "FillHoles": 0,
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Isolate Largest Feature (Identify Sample)",
         "Filter_Name": "IdentifySample",
+        "Filter_Uuid": "{0e8c0818-a3fb-57d4-a5c8-7cb8ae54a40a}",
         "GoodVoxelsArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Mask",
@@ -97,10 +107,12 @@
         }
     },
     "05": {
-        "AlignmentShiftFileName": "",
-        "FilterVersion": "6.4.440",
+        "AlignmentShiftFileName": "/Users/mjackson",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Align Sections (Feature Centroid)",
         "Filter_Name": "AlignSectionsFeatureCentroid",
+        "Filter_Uuid": "{886f8b46-51b6-5682-a289-6febd10b7ef0}",
         "GoodVoxelsArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Mask",
@@ -121,9 +133,11 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Neighbor Orientation Comparison (Bad Data)",
         "Filter_Name": "BadDataNeighborOrientationCheck",
+        "Filter_Uuid": "{f4a7c2df-e9b0-5da9-b745-a862666d6c99}",
         "GoodVoxelsArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Mask",
@@ -153,9 +167,13 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Neighbor Orientation Correlation",
         "Filter_Name": "NeighborOrientationCorrelation",
+        "Filter_Uuid": "{6427cd5e-0ad2-5a24-8847-29f8e0720f4f}",
+        "IgnoredDataArrayPaths": [
+        ],
         "Level": 2,
         "MinConfidence": 0.20000000298023224,
         "MisorientationTolerance": 5,
@@ -179,9 +197,11 @@
             "Data Container Name": "Small IN100"
         },
         "FeatureIdsArrayName": "FeatureIds",
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Segment Features (Misorientation)",
         "Filter_Name": "EBSDSegmentFeatures",
+        "Filter_Uuid": "{7861c691-b821-537b-bd25-dc195578e0ea}",
         "GoodVoxelsArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Mask",
@@ -211,9 +231,11 @@
             "Data Array Name": "Phases",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Find Feature Phases",
-        "Filter_Name": "FindFeaturePhases"
+        "Filter_Name": "FindFeaturePhases",
+        "Filter_Uuid": "{6334ce16-cea5-5643-83b5-9573805873fa}"
     },
     "10": {
         "AvgEulerAnglesArrayPath": {
@@ -241,9 +263,11 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Find Feature Average Orientations",
         "Filter_Name": "FindAvgOrientations",
+        "Filter_Uuid": "{bf7036d8-25bd-540e-b6de-3a5ab0e42c5f}",
         "QuatsArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Quats",
@@ -262,9 +286,11 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
+        "Filter_Uuid": "{97cf66f8-7a9b-5ec2-83eb-f8c4c8a17bac}",
         "NeighborListArrayName": "NeighborList2",
         "NumNeighborsArrayName": "NumNeighbors2",
         "SharedSurfaceAreaListArrayName": "SharedSurfaceAreaList2",
@@ -303,9 +329,11 @@
             "Data Array Name": "Phases",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Merge Twins",
         "Filter_Name": "MergeTwins",
+        "Filter_Uuid": "{c9af506e-9ea1-5ff5-a882-fa561def5f52}",
         "NewCellFeatureAttributeMatrixName": "NewGrain Data",
         "NonContiguousNeighborListArrayPath": {
             "Attribute Matrix Name": "",
@@ -326,9 +354,11 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Find Feature Sizes",
         "Filter_Name": "FindSizes",
+        "Filter_Uuid": "{656f144c-a120-5c3b-bee5-06deab438588}",
         "NumElementsArrayName": "NumElements",
         "SaveElementSizes": 0,
         "VolumesArrayName": "Volumes"
@@ -345,9 +375,13 @@
             "Data Array Name": "Phases",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Minimum Size",
         "Filter_Name": "MinSize",
+        "Filter_Uuid": "{53ac1638-8934-57b8-b8e5-4b91cdda23ec}",
+        "IgnoredDataArrayPaths": [
+        ],
         "MinAllowedFeatureSize": 16,
         "NumCellsArrayPath": {
             "Attribute Matrix Name": "Grain Data",
@@ -368,9 +402,11 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
+        "Filter_Uuid": "{97cf66f8-7a9b-5ec2-83eb-f8c4c8a17bac}",
         "NeighborListArrayName": "NeighborList",
         "NumNeighborsArrayName": "NumNeighbors",
         "SharedSurfaceAreaListArrayName": "SharedSurfaceAreaList",
@@ -390,9 +426,13 @@
             "Data Array Name": "Phases",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Minimum Number of Neighbors",
         "Filter_Name": "MinNeighbors",
+        "Filter_Uuid": "{dab5de3c-5f81-5bb5-8490-73521e1183ea}",
+        "IgnoredDataArrayPaths": [
+        ],
         "MinNumNeighbors": 2,
         "NumNeighborsArrayPath": {
             "Attribute Matrix Name": "Grain Data",
@@ -412,9 +452,13 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Fill Bad Data",
         "Filter_Name": "FillBadData",
+        "Filter_Uuid": "{30ae0a1e-3d94-5dab-b279-c5727ab5d7ff}",
+        "IgnoredDataArrayPaths": [
+        ],
         "MinAllowedDefectSize": 1000,
         "StoreAsNewPhase": 0
     },
@@ -425,9 +469,13 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Erode/Dilate Bad Data",
         "Filter_Name": "ErodeDilateBadData",
+        "Filter_Uuid": "{3adfe077-c3c9-5cd0-ad74-cf5f8ff3d254}",
+        "IgnoredDataArrayPaths": [
+        ],
         "NumIterations": 2,
         "XDirOn": 1,
         "YDirOn": 1,
@@ -440,9 +488,13 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Erode/Dilate Bad Data",
         "Filter_Name": "ErodeDilateBadData",
+        "Filter_Uuid": "{3adfe077-c3c9-5cd0-ad74-cf5f8ff3d254}",
+        "IgnoredDataArrayPaths": [
+        ],
         "NumIterations": 2,
         "XDirOn": 1,
         "YDirOn": 1,
@@ -465,9 +517,11 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
+        "Filter_Uuid": "{a50e6532-8075-5de5-ab63-945feb0de7f7}",
         "GoodVoxelsArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Mask",
@@ -481,10 +535,13 @@
         "UseGoodVoxels": 1
     },
     "21": {
-        "FilterVersion": "1.0.858",
+        "FilterVersion": "1.2.724",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
+        "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
         "OutputFile": "Data/Output/Reconstruction/SmallIN100_Final.dream3d",
+        "WriteTimeSeries": 0,
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
