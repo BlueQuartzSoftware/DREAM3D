@@ -70,6 +70,9 @@ public:
   SIMPL_FILTER_PARAMETER(int, SelectedComparison)
   Q_PROPERTY(int SelectedComparison READ getSelectedComparison WRITE setSelectedComparison)
 
+  SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, IgnoredDataArrayPaths)
+  Q_PROPERTY(QVector<DataArrayPath> IgnoredDataArrayPaths READ getIgnoredDataArrayPaths WRITE setIgnoredDataArrayPaths)
+
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
