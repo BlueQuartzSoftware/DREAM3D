@@ -40,6 +40,7 @@
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
@@ -75,6 +76,10 @@ void ErodeDilateCoordinationNumber::setupFilterParameters()
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, ErodeDilateCoordinationNumber, req));
+  }
+  {
+    MultiDataArraySelectionFilterParameter::RequirementType req;
+    parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Ignore", IgnoredDataArrayPaths, FilterParameter::Parameter, ErodeDilateCoordinationNumber, req));
   }
   setFilterParameters(parameters);
 }
@@ -195,6 +200,10 @@ void ErodeDilateCoordinationNumber::execute()
 
   QString attrMatName = m_FeatureIdsArrayPath.getAttributeMatrixName();
   QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
+  for(const auto& dataArrayPath : m_IgnoredDataArrayPaths)
+  {
+    voxelArrayNames.removeAll(dataArrayPath.getDataArrayName());
+  }
 
   QVector<int32_t> n(numfeatures + 1, 0);
   QVector<int32_t> coordinationNumber(totalPoints, 0);
@@ -270,9 +279,9 @@ void ErodeDilateCoordinationNumber::execute()
           int32_t neighbor = m_Neighbors[point];
           if(coordinationNumber[point] >= m_CoordinationNumber && coordinationNumber[point] > 0)
           {
-            for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+            for(const auto& arrayName : voxelArrayNames)
             {
-              IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
+              IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(arrayName);
               p->copyTuple(neighbor, point);
             }
           }

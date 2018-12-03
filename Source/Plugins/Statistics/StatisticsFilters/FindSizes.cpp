@@ -198,7 +198,6 @@ void FindSizes::preflight()
 // -----------------------------------------------------------------------------
 void FindSizes::findSizesImage(ImageGeom::Pointer image)
 {
-  std::cout << "FindSizes::findSizesImage....." << std::endl;
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t numfeatures = m_VolumesPtr.lock()->getNumberOfTuples();
 

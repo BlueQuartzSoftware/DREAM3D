@@ -1,7 +1,10 @@
 {
     "0": {
+        "FilterVersion": "1.2.724",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Read DREAM.3D Data File",
         "Filter_Name": "DataContainerReader",
+        "Filter_Uuid": "{043cbde5-3878-5718-958f-ae75714df0df}",
         "InputFile": "Data/Output/Statistics/SmallIN100_CrystalStats.dream3d",
         "InputFileDataContainerArrayProxy": {
             "Data Containers": [
@@ -19,6 +22,36 @@
                                     "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "CriticalField",
+                                    "Object Type": "DataArray<bool>",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        117
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "EquivalentDiameters",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        117
                                     ],
                                     "Version": 2
                                 },
@@ -53,11 +86,41 @@
                                         1
                                     ],
                                     "Flag": 2,
+                                    "Name": "FeatureReferenceMisorientations",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        117
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
                                     "Name": "Fit",
                                     "Object Type": "DataArray<float>",
                                     "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "GBManhattanDistances",
+                                    "Object Type": "DataArray<int32_t>",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        117
                                     ],
                                     "Version": 2
                                 },
@@ -84,6 +147,21 @@
                                     "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
                                         1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "KernelAverageMisorientations",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        117
                                     ],
                                     "Version": 2
                                 },
@@ -128,6 +206,21 @@
                                 },
                                 {
                                     "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "QPManhattanDistances",
+                                    "Object Type": "DataArray<int32_t>",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        117
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
                                         4
                                     ],
                                     "Flag": 2,
@@ -151,11 +244,417 @@
                                         1
                                     ],
                                     "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "TJManhattanDistances",
+                                    "Object Type": "DataArray<int32_t>",
+                                    "Path": "/DataContainers/Small IN100/EBSD Scan Data",
+                                    "Tuple Dimensions": [
+                                        189,
+                                        201,
+                                        117
+                                    ],
+                                    "Version": 2
                                 }
                             ],
                             "Flag": 2,
                             "Name": "EBSD Scan Data",
                             "Type": 3
+                        },
+                        {
+                            "Data Arrays": [
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "Active",
+                                    "Object Type": "DataArray<bool>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        2
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "AspectRatios",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        3
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "AvgEulerAngles",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        3
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        4
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "AvgQuats",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        4
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        3
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "AxisEulerAngles",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        3
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "AxisLengths",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        3
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "Centroids",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "CriticalFields",
+                                    "Object Type": "DataArray<bool>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "EquivalentDiameters",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "FeatureAvgMisorientations",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "MisorientationList",
+                                    "Object Type": "NeighborList<T>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "NeighborList",
+                                    "Object Type": "NeighborList<T>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "NeighborhoodList",
+                                    "Object Type": "NeighborList<T>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "Neighborhoods",
+                                    "Object Type": "DataArray<int32_t>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "NumElements",
+                                    "Object Type": "DataArray<int32_t>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "NumNeighbors",
+                                    "Object Type": "DataArray<int32_t>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "NumNeighbors2",
+                                    "Object Type": "DataArray<int32_t>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "Omega3s",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "ParentIds",
+                                    "Object Type": "DataArray<int32_t>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "Phases",
+                                    "Object Type": "DataArray<int32_t>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        3
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "Poles",
+                                    "Object Type": "DataArray<int32_t>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "Schmids",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "Shape Volumes",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "SharedSurfaceAreaList",
+                                    "Object Type": "NeighborList<T>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "Size Volumes",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "SlipSystems",
+                                    "Object Type": "DataArray<int32_t>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "Sphericity",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "SurfaceAreaVolumeRatio",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                }
+                            ],
+                            "Flag": 2,
+                            "Name": "Grain Data",
+                            "Type": 7
+                        },
+                        {
+                            "Data Arrays": [
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "Active",
+                                    "Object Type": "DataArray<bool>",
+                                    "Path": "/DataContainers/Small IN100/NewGrain Data",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                }
+                            ],
+                            "Flag": 2,
+                            "Name": "NewGrain Data",
+                            "Type": 7
                         },
                         {
                             "Data Arrays": [
@@ -202,163 +701,6 @@
                             "Flag": 2,
                             "Name": "Phase Data",
                             "Type": 11
-                        },
-                        {
-                            "Data Arrays": [
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "Active",
-                                    "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/Small IN100/Grain Data",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        3
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "AvgEulerAngles",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/Small IN100/Grain Data",
-                                    "Tuple Dimensions": [
-                                        3
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        4
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "AvgQuats",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/Small IN100/Grain Data",
-                                    "Tuple Dimensions": [
-                                        4
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "EquivalentDiameters",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/Small IN100/Grain Data",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "NumCells",
-                                    "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/Small IN100/Grain Data",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "NumNeighbors",
-                                    "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/Small IN100/Grain Data",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "NumNeighbors2",
-                                    "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/Small IN100/Grain Data",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "ParentIds",
-                                    "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/Small IN100/Grain Data",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "Phases",
-                                    "Object Type": "DataArray<int32_t>",
-                                    "Path": "/DataContainers/Small IN100/Grain Data",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "Volumes",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/Small IN100/Grain Data",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                }
-                            ],
-                            "Flag": 2,
-                            "Name": "Grain Data",
-                            "Type": 7
-                        },
-                        {
-                            "Data Arrays": [
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "Active",
-                                    "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/Small IN100/NewGrain Data",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                }
-                            ],
-                            "Flag": 2,
-                            "Name": "NewGrain Data",
-                            "Type": 7
                         }
                     ],
                     "Flag": 2,
@@ -385,10 +727,14 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Crop Geometry (Image)",
         "Filter_Name": "CropImageGeometry",
+        "Filter_Uuid": "{baa4b7fe-31e5-5e63-a2cb-0bb9d844cfaf}",
+        "NewBoxDimensions": "X Range: -36.75 to -11.75 (Delta: 25) 100 Voxels\nY Range: 10.25 to 35.25 (Delta: 25) 100 Voxels\nZ Range: -29 to -4 (Delta: 25) 100 Voxels\n",
         "NewDataContainerName": "NewSmall IN100",
+        "OldBoxDimensions": "X Range: -47 to 0.249996 (Delta: 47.25) 189 Voxels\nY Range: 0 to 50.25 (Delta: 50.25) 201 Voxels\nZ Range: -29 to 0.25 (Delta: 29.25) 117 Voxels",
         "RenumberFeatures": 1,
         "SaveAsNewDataContainer": 0,
         "UpdateOrigin": 1,
@@ -402,14 +748,17 @@
     "2": {
         "FaceAttributeMatrixName": "FaceData",
         "FaceLabelsArrayName": "FaceLabels",
+        "FeatureAttributeMatrixName": "FaceFeatureData",
         "FeatureIdsArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "FeatureIds",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Quick Surface Mesh",
         "Filter_Name": "QuickSurfaceMesh",
+        "Filter_Uuid": "{07b49e30-3900-5c34-862a-f1fb48bad568}",
         "NodeTypesArrayName": "NodeType",
         "SelectedDataArrayPaths": [
         ],
@@ -417,15 +766,18 @@
         "VertexAttributeMatrixName": "VertexData"
     },
     "3": {
-        "FilterVersion": "1.0.278",
+        "FilterVersion": "1.2.724",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
+        "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
         "OutputFile": "Data/Output/SurfaceMesh/SmallIN100.dream3d",
+        "WriteTimeSeries": 0,
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
         "Name": "(01) SmallIN100 Quick Mesh",
         "Number_Filters": 4,
-        "Version": "1.0"
+        "Version": 6
     }
 }

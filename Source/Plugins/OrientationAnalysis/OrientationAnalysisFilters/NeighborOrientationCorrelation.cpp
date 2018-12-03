@@ -51,6 +51,7 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
@@ -61,25 +62,23 @@ class NeighborOrientationCorrelationTransferDataImpl
 {
 public:
   NeighborOrientationCorrelationTransferDataImpl() = delete;
-  NeighborOrientationCorrelationTransferDataImpl(const NeighborOrientationCorrelationTransferDataImpl&) = default; // Copy Constructor Not Implemented
+  NeighborOrientationCorrelationTransferDataImpl(const NeighborOrientationCorrelationTransferDataImpl&) = default;
 
-  NeighborOrientationCorrelationTransferDataImpl(NeighborOrientationCorrelation* filter, size_t totalPoints, const std::vector<int64_t>& bestNeighbor, AttributeMatrix* attrMat,
-                                                 int32_t voxelArrayIndex)
+  NeighborOrientationCorrelationTransferDataImpl(NeighborOrientationCorrelation* filter, size_t totalPoints, const std::vector<int64_t>& bestNeighbor, IDataArray::Pointer dataArrayPtr)
   : m_Filter(filter)
   , m_TotalPoints(totalPoints)
   , m_BestNeighbor(bestNeighbor)
-  , m_AttrMat(attrMat)
-  , m_VoxelArrayIndex(voxelArrayIndex)
+  , m_DataArrayPtr(dataArrayPtr)
   {
   }
+  NeighborOrientationCorrelationTransferDataImpl(NeighborOrientationCorrelationTransferDataImpl&&) = default;                // Move Constructor Not Implemented
+  NeighborOrientationCorrelationTransferDataImpl& operator=(const NeighborOrientationCorrelationTransferDataImpl&) = delete; // Copy Assignment Not Implemented
+  NeighborOrientationCorrelationTransferDataImpl& operator=(NeighborOrientationCorrelationTransferDataImpl&&) = delete;      // Move Assignment Not Implemented
 
   ~NeighborOrientationCorrelationTransferDataImpl() = default;
 
   void operator()() const
   {
-
-    QVector<QString> voxelArrayNames = m_AttrMat->getAttributeArrayNames().toVector();
-
     size_t progIncrement = static_cast<size_t>(m_TotalPoints / 50);
     size_t prog = 1;
     for(size_t i = 0; i < m_TotalPoints; i++)
@@ -92,8 +91,8 @@ public:
       int64_t neighbor = m_BestNeighbor[i];
       if(neighbor != -1)
       {
-        IDataArray::Pointer p = m_AttrMat->getAttributeArray(voxelArrayNames[m_VoxelArrayIndex]);
-        p->copyTuple(neighbor, i);
+        // IDataArray::Pointer p = m_AttrMat->getAttributeArray(m_VoxelArrayNames[m_VoxelArrayIndex]);
+        m_DataArrayPtr->copyTuple(neighbor, i);
       }
     }
   }
@@ -102,10 +101,7 @@ private:
   NeighborOrientationCorrelation* m_Filter = nullptr;
   size_t m_TotalPoints = 0;
   std::vector<int64_t> m_BestNeighbor;
-  AttributeMatrix* m_AttrMat = nullptr;
-  int32_t m_VoxelArrayIndex = 0;
-
-  void operator=(const NeighborOrientationCorrelationTransferDataImpl&) = delete; // Move assignment Not Implemented
+  IDataArray::Pointer m_DataArrayPtr;
 };
 
 // -----------------------------------------------------------------------------
@@ -160,6 +156,10 @@ void NeighborOrientationCorrelation::setupFilterParameters()
     DataArraySelectionFilterParameter::RequirementType req =
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::UInt32, 1, AttributeMatrix::Type::CellEnsemble, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, NeighborOrientationCorrelation, req));
+  }
+  {
+    MultiDataArraySelectionFilterParameter::RequirementType req;
+    parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Ignore", IgnoredDataArrayPaths, FilterParameter::Parameter, NeighborOrientationCorrelation, req));
   }
   setFilterParameters(parameters);
 }
@@ -483,6 +483,12 @@ void NeighborOrientationCorrelation::execute()
     bool doParallel = true;
 #endif
 
+    QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
+    for(const auto& dataArrayPath : m_IgnoredDataArrayPaths)
+    {
+      voxelArrayNames.removeAll(dataArrayPath.getDataArrayName());
+    }
+
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
     // The idea for this parallel section is to parallelize over each Data Array that
     // will need it's data adjusted. This should go faster than before by about 2x.
@@ -491,23 +497,21 @@ void NeighborOrientationCorrelation::execute()
     m_TotalProgress = 0;
     if(doParallel)
     {
-      std::shared_ptr<tbb::task_group> g(new tbb::task_group);
+      std::shared_ptr<tbb::task_group> taskGroup(new tbb::task_group);
       AttributeMatrix* attrMat = m->getAttributeMatrix(attrMatName).get();
-      QVector<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames().toVector();
       m_TotalProgress = voxelArrayNames.size() * totalPoints; // Total number of points to update
       // Create and run all the tasks
-      for(int32_t voxelArray = 0; voxelArray < voxelArrayNames.size(); voxelArray++)
+      for(const auto& arrayName : voxelArrayNames)
       {
-        g->run(NeighborOrientationCorrelationTransferDataImpl(this, totalPoints, bestNeighbor, attrMat, voxelArray));
+        IDataArray::Pointer dataArrayPtr = attrMat->getAttributeArray(arrayName);
+        taskGroup->run(NeighborOrientationCorrelationTransferDataImpl(this, totalPoints, bestNeighbor, dataArrayPtr));
       }
       // Wait for them to complete.
-      g->wait();
-      
+      taskGroup->wait();
     }
     else
 #endif
     {
-      QList<QString> voxelArrayNames = m->getAttributeMatrix(attrMatName)->getAttributeArrayNames();
       progIncrement = static_cast<int64_t>(totalPoints / 100);
       prog = 1;
       progressInt = 0;
@@ -523,9 +527,9 @@ void NeighborOrientationCorrelation::execute()
         neighbor = bestNeighbor[i];
         if(neighbor != -1)
         {
-          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          for(const auto& iter : voxelArrayNames)
           {
-            IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
+            IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(iter);
             p->copyTuple(neighbor, i);
           }
         }
