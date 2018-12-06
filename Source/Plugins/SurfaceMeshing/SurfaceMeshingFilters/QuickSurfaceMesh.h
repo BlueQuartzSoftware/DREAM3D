@@ -32,13 +32,13 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
 #pragma once
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/IGeometryGrid.h"
 #include "SIMPLib/SIMPLib.h"
+
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -206,7 +206,19 @@ private:
    * @param z
    * @param coords
    */
-  void getGridCoordinates(IGeometryGrid::Pointer grid, size_t x, size_t y, size_t z, float* coords);
+  void getGridCoordinates(const IGeometryGrid::Pointer &grid, size_t x, size_t y, size_t z, float* coords);
+
+  void flipProblemVoxelCase1(int64_t v1, int64_t v2, int64_t v3, int64_t v4, int64_t v5, int64_t v6);
+
+  void flipProblemVoxelCase2(int64_t v1, int64_t v2, int64_t v3, int64_t v4);
+
+  void flipProblemVoxelCase3(int64_t v1, int64_t v2, int64_t v3);
+
+  void correctProblemVoxels();
+
+  void determineActiveNodes(std::vector<int64_t>& m_NodeIds, int64_t& nodeCount, int64_t& triangleCount);
+
+  void createNodesAndTriangles(std::vector<int64_t> m_NodeIds, int64_t nodeCount, int64_t triangleCount);
 
   /**
    * @brief updateFaceInstancePointers Updates raw Face pointers
@@ -217,7 +229,7 @@ private:
    * @brief updateVertexInstancePointers Updates raw Vertex pointers
    */
   void updateVertexInstancePointers();
-  
+
   /**
    * @brief generateTripleLines
    */
