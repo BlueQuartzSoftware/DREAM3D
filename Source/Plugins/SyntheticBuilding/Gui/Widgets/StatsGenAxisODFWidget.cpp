@@ -179,18 +179,12 @@ void StatsGenAxisODFWidget::extractStatsData(int index, StatsData* statsData, Ph
     QVector<float> sigmas(static_cast<int>(arrays[3]->getNumberOfTuples()));
     ::memcpy(&(sigmas.front()), arrays[3]->getVoidPointer(0), sizeof(float) * sigmas.size());
 
-    // Data was stored as radians, convert back to angles
-    for(int e = 0; e < e1.size(); e++)
+    // Convert from Radians to Degrees for the Euler Angles
+    for(int i = 0; i < e1.size(); ++i)
     {
-      e1[e] = e1[0] * 180.0f / SIMPLib::Constants::k_Pif;
-    }
-    for(int e = 0; e < e2.size(); e++)
-    {
-      e2[e] = e2[0] * 180.0f / SIMPLib::Constants::k_Pif;
-    }
-    for(int e = 0; e < e3.size(); e++)
-    {
-      e3[e] = e3[0] * 180.0f / SIMPLib::Constants::k_Pif;
+      e1[i] = e1[i] * static_cast<float>(SIMPLib::Constants::k_RadToDeg);
+      e2[i] = e2[i] * static_cast<float>(SIMPLib::Constants::k_RadToDeg);
+      e3[i] = e3[i] * static_cast<float>(SIMPLib::Constants::k_RadToDeg);
     }
 
     if(!e1.empty())
@@ -619,29 +613,28 @@ void StatsGenAxisODFWidget::on_loadODFTextureBtn_clicked()
     return;
   }
 
-    size_t numOrients = 0;
-    QString filename = file;
-    std::ifstream inFile;
-    inFile.open(filename.toLatin1().data());
+  size_t numOrients = 0;
+  std::ifstream inFile;
+  inFile.open(file.toLatin1().data());
 
-    inFile >> numOrients;
+  inFile >> numOrients;
 
-    float e1, e2, e3, weight, sigma;
-    for(size_t i = 0; i < numOrients; i++)
+  float e1, e2, e3, weight, sigma;
+  for(size_t i = 0; i < numOrients; i++)
+  {
+    inFile >> e1 >> e2 >> e3 >> weight >> sigma;
+    if(!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount()))
     {
-      inFile >> e1 >> e2 >> e3 >> weight >> sigma;
-      if(!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount()))
-      {
-        return;
-      }
-      int row = m_ODFTableModel->rowCount() - 1;
-      m_ODFTableModel->setRowData(row, e1, e2, e3, weight, sigma);
-      m_ODFTableView->resizeColumnsToContents();
-      m_ODFTableView->scrollToBottom();
-      m_ODFTableView->setFocus();
-      QModelIndex index = m_ODFTableModel->index(m_ODFTableModel->rowCount() - 1, 0);
-      m_ODFTableView->setCurrentIndex(index);
+      return;
     }
+    int row = m_ODFTableModel->rowCount() - 1;
+    m_ODFTableModel->setRowData(row, e1, e2, e3, weight, sigma);
+    m_ODFTableView->resizeColumnsToContents();
+    m_ODFTableView->scrollToBottom();
+    m_ODFTableView->setFocus();
+    QModelIndex index = m_ODFTableModel->index(m_ODFTableModel->rowCount() - 1, 0);
+    m_ODFTableView->setCurrentIndex(index);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -657,8 +650,6 @@ SGODFTableModel* StatsGenAxisODFWidget::tableModel()
 // -----------------------------------------------------------------------------
 void StatsGenAxisODFWidget::on_savePoleFigureImage_clicked()
 {
-  QString Ftype = "Image Files";
-  QString ext = "*.png";
   QString s = "Image Files (*.tiff *.png *.bmp);;All Files(*.*)";
   QString defaultName = m_OpenDialogLastDirectory;
 
@@ -668,7 +659,6 @@ void StatsGenAxisODFWidget::on_savePoleFigureImage_clicked()
   {
     return;
   }
-  // bool ok = false;
   file = QDir::toNativeSeparators(file);
   // Store the last used directory into the private instance variable
   m_OpenDialogLastDirectory = file;
