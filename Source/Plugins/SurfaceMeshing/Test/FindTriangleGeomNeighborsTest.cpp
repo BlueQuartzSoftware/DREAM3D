@@ -55,12 +55,13 @@ class FindTriangleGeomNeighborsTest
 {
 
 public:
-  FindTriangleGeomNeighborsTest()
-  {
-  }
-  virtual ~FindTriangleGeomNeighborsTest()
-  {
-  }
+  FindTriangleGeomNeighborsTest() = default;
+  ~FindTriangleGeomNeighborsTest() = default;
+  SIMPL_TYPE_MACRO(FindTriangleGeomNeighborsTest)
+  FindTriangleGeomNeighborsTest(const FindTriangleGeomNeighborsTest&) = delete;            // Copy Constructor Not Implemented
+  FindTriangleGeomNeighborsTest(FindTriangleGeomNeighborsTest&&) = delete;                 // Move Constructor Not Implemented
+  FindTriangleGeomNeighborsTest& operator=(const FindTriangleGeomNeighborsTest&) = delete; // Copy Assignment Not Implemented
+  FindTriangleGeomNeighborsTest& operator=(FindTriangleGeomNeighborsTest&&) = delete;      // Move Assignment Not Implemented
 
   // -----------------------------------------------------------------------------
   //
@@ -474,6 +475,7 @@ public:
   void operator()()
   {
     int err = EXIT_SUCCESS;
+    std::cout << "---- " << getNameOfClass().toStdString() << " ----" << std::endl;
 
     DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
@@ -482,7 +484,4 @@ public:
     DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
 
-private:
-  FindTriangleGeomNeighborsTest(const FindTriangleGeomNeighborsTest&); // Copy Constructor Not Implemented
-  void operator=(const FindTriangleGeomNeighborsTest&);                // Move assignment Not Implemented
 };
