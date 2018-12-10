@@ -72,6 +72,9 @@ public:
   SIMPL_FILTER_PARAMETER(QString, SurfaceDataContainerName)
   Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
+  SIMPL_FILTER_PARAMETER(QString, TripleLineDataContainerName)
+  Q_PROPERTY(QString TripleLineDataContainerName READ getTripleLineDataContainerName WRITE setTripleLineDataContainerName)
+
   SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 

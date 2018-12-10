@@ -100,6 +100,7 @@ using EdgeMap = std::unordered_map<Edge, int64_t, EdgeHasher>;
 QuickSurfaceMesh::QuickSurfaceMesh()
 : m_SelectedDataArrayPaths(QVector<DataArrayPath>())
 , m_SurfaceDataContainerName(SIMPL::Defaults::TriangleDataContainerName)
+, m_TripleLineDataContainerName("TripleLines")
 , m_VertexAttributeMatrixName(SIMPL::Defaults::VertexAttributeMatrixName)
 , m_FaceAttributeMatrixName(SIMPL::Defaults::FaceAttributeMatrixName)
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
@@ -334,6 +335,9 @@ void QuickSurfaceMesh::dataCheck()
   }
 
   sm->createNonPrereqAttributeMatrix(this, getFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::FaceFeature);
+
+  // Create the TripleLines DataContainer
+  getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getTripleLineDataContainerName());
 }
 
 // -----------------------------------------------------------------------------
@@ -477,8 +481,6 @@ void QuickSurfaceMesh::correctProblemVoxels()
 
   int64_t row1, row2;
   int64_t plane1, plane2;
-
-  int64_t nodeId;
 
   int64_t count = 1;
   int64_t iter = 0;
@@ -1295,8 +1297,8 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
           getGridCoordinates(grid, i, j + 1, k + 1, vertex + (m_NodeIds[nodeId4] * 3));
 
           triangle[triangleIndex * 3 + 0] = m_NodeIds[nodeId1];
-          triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId3];
-          triangle[triangleIndex * 3 + 2] = m_NodeIds[nodeId2];
+          triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId2];
+          triangle[triangleIndex * 3 + 2] = m_NodeIds[nodeId3];
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
@@ -1309,8 +1311,8 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
           triangleIndex++;
 
           triangle[triangleIndex * 3 + 0] = m_NodeIds[nodeId2];
-          triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId3];
-          triangle[triangleIndex * 3 + 2] = m_NodeIds[nodeId4];
+          triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId4];
+          triangle[triangleIndex * 3 + 2] = m_NodeIds[nodeId3];
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
@@ -1419,8 +1421,8 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
           getGridCoordinates(grid, i, j + 1, k + 1, vertex + (m_NodeIds[nodeId4] * 3));
 
           triangle[triangleIndex * 3 + 0] = m_NodeIds[nodeId1];
-          triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId2];
-          triangle[triangleIndex * 3 + 2] = m_NodeIds[nodeId3];
+          triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId3];
+          triangle[triangleIndex * 3 + 2] = m_NodeIds[nodeId2];
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
@@ -1433,8 +1435,8 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
           triangleIndex++;
 
           triangle[triangleIndex * 3 + 0] = m_NodeIds[nodeId2];
-          triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId4];
-          triangle[triangleIndex * 3 + 2] = m_NodeIds[nodeId3];
+          triangle[triangleIndex * 3 + 1] = m_NodeIds[nodeId3];
+          triangle[triangleIndex * 3 + 2] = m_NodeIds[nodeId4];
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
@@ -1562,9 +1564,20 @@ void QuickSurfaceMesh::execute()
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
-  DataContainer::Pointer tl = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "tripleLines");
-
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
+  DataContainer::Pointer tripleLineDC = getDataContainerArray()->getDataContainer(getTripleLineDataContainerName());
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
   IGeometryGrid::Pointer grid = m->getGeometryAs<IGeometryGrid>();
 
   size_t udims[3] = {0, 0, 0};
@@ -1604,7 +1617,7 @@ void QuickSurfaceMesh::execute()
   FloatArrayType::Pointer vertices = triangleGeom->getVertices();
   SharedEdgeList::Pointer edges = EdgeGeom::CreateSharedEdgeList(0);
   EdgeGeom::Pointer edgeGeom = EdgeGeom::CreateGeometry(edges, vertices, SIMPL::Geometry::EdgeGeometry);
-  tl->setGeometry(edgeGeom);
+  tripleLineDC->setGeometry(edgeGeom);
 
   int64_t edgeCount = 0;
   for(int64_t i = 0; i < triangleCount; i++)
@@ -1653,52 +1666,6 @@ void QuickSurfaceMesh::execute()
       edgeCount++;
     }
   }
-
-  // int64_t plane, row;
-  // for(int64_t k = 0; k < zP; k++)
-  // {
-  //   plane = k * xP * yP;
-  //   for(int64_t j = 0; j < yP; j++)
-  //   {
-  //     row = j * xP;
-  //     for(int64_t i = 0; i < xP; i++)
-  //     {
-  //       int64_t n1 = m_NodeIds[plane + row + i];
-  //       int64_t n2 = m_NodeIds[plane + row + i + 1];
-  //       int64_t n3 = m_NodeIds[plane + row + xP + i];
-  //       int64_t n4 = m_NodeIds[plane + row + xP + i + 1];
-  //       int64_t n5 = m_NodeIds[plane + (xP * yP) + row + i];
-  //       int64_t n6 = m_NodeIds[plane + (xP * yP) + row + i + 1];
-  //       int64_t n7 = m_NodeIds[plane + (xP * yP) + row + xP + i];
-  //       int64_t n8 = m_NodeIds[plane + (xP * yP) + row + xP + i + 1];
-  //       if(m_NodeTypes[n1] == 3 && m_NodeTypes[n2] == 3 && m_NodeTypes[n3] == 3 && m_NodeTypes[n4] == 3)
-  //       {
-  //         m_FeatureIds[plane + row + i] = -1;
-  //       }
-  //       if(m_NodeTypes[n1] == 3 && m_NodeTypes[n2] == 3 && m_NodeTypes[n5] == 3 && m_NodeTypes[n6] == 3)
-  //       {
-  //         m_FeatureIds[plane + row + i] = -1;
-  //       }
-  //       if(m_NodeTypes[n1] == 3 && m_NodeTypes[n3] == 3 && m_NodeTypes[n5] == 3 && m_NodeTypes[n7] == 3)
-  //       {
-  //         m_FeatureIds[plane + row + i] = -1;
-  //       }
-  //       if(m_NodeTypes[n2] == 3 && m_NodeTypes[n4] == 3 && m_NodeTypes[n6] == 3 && m_NodeTypes[n8] == 3)
-  //       {
-  //         m_FeatureIds[plane + row + i] = -1;
-  //       }
-  //       if(m_NodeTypes[n3] == 3 && m_NodeTypes[n4] == 3 && m_NodeTypes[n7] == 3 && m_NodeTypes[n8] == 3)
-  //       {
-  //         m_FeatureIds[plane + row + i] = -1;
-  //       }
-  //       if(m_NodeTypes[n5] == 3 && m_NodeTypes[n6] == 3 && m_NodeTypes[n7] == 3 && m_NodeTypes[n8] == 3)
-  //       {
-  //         m_FeatureIds[plane + row + i] = -1;
-  //       }
-  //     }
-  //}
-  // }
-
   notifyStatusMessage(getHumanLabel(), "Complete");
 }
 

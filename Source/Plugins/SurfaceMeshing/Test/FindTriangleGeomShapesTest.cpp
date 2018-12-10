@@ -1,37 +1,37 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
@@ -56,12 +56,15 @@ class FindTriangleGeomShapesTest
 {
 
 public:
-  FindTriangleGeomShapesTest()
-  {
-  }
-  virtual ~FindTriangleGeomShapesTest()
-  {
-  }
+  FindTriangleGeomShapesTest() = default;
+  ~FindTriangleGeomShapesTest() = default;
+
+  SIMPL_TYPE_MACRO(FindTriangleGeomShapesTest)
+
+  FindTriangleGeomShapesTest(const FindTriangleGeomShapesTest&) = delete;            // Copy Constructor Not Implemented
+  FindTriangleGeomShapesTest(FindTriangleGeomShapesTest&&) = delete;                 // Move Constructor Not Implemented
+  FindTriangleGeomShapesTest& operator=(const FindTriangleGeomShapesTest&) = delete; // Copy Assignment Not Implemented
+  FindTriangleGeomShapesTest& operator=(FindTriangleGeomShapesTest&&) = delete;      // Move Assignment Not Implemented
 
 #define DREAM3D_CLOSE_ENOUGH(L, R, eps)                                                                                                                                                                \
   if(false == SIMPLibMath::closeEnough<>(L, R, eps))                                                                                                                                                   \
@@ -80,8 +83,8 @@ public:
   void RemoveTestFiles()
   {
 #if REMOVE_TEST_FILES
-    QFile::remove(UnitTest::FindTriangleGeomShapesTest::TestFile1);
-    QFile::remove(UnitTest::FindTriangleGeomShapesTest::TestFile2);
+    QFile::remove(UnitTest::FindTriangleGeomShapesTest::TestFile);
+    QFile::remove(UnitTest::FindTriangleGeomShapesTest::TestFileXdmf);
 #endif
   }
 
@@ -159,6 +162,7 @@ public:
     bool propWasSet = true;
     QVariant var;
 
+    //##################################################################################################################
     QString filtName = "QuickSurfaceMesh";
     IFilterFactory::Pointer factory = fm->getFactoryFromClassName(filtName);
     DREAM3D_REQUIRE(factory.get() != nullptr);
@@ -177,6 +181,7 @@ public:
     int32_t err = meshFilter->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, 0);
 
+    //##################################################################################################################
     filtName = "FindTriangleGeomCentroids";
     factory = fm->getFactoryFromClassName(filtName);
     DREAM3D_REQUIRE(factory.get() != nullptr);
@@ -202,6 +207,7 @@ public:
     err = centroidsFilter->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, 0);
 
+    //##################################################################################################################
     filtName = "FindTriangleGeomSizes";
     factory = fm->getFactoryFromClassName(filtName);
     DREAM3D_REQUIRE(factory.get() != nullptr);
@@ -227,6 +233,7 @@ public:
     err = sizesFilter->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, 0);
 
+    //##################################################################################################################
     filtName = "FindTriangleGeomShapes";
     factory = fm->getFactoryFromClassName(filtName);
     DREAM3D_REQUIRE(factory.get() != nullptr);
@@ -266,29 +273,51 @@ public:
     err = shapesFilter->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(err, 0);
 
+    //##################################################################################################################
+    filtName = "DataContainerWriter";
+    factory = fm->getFactoryFromClassName(filtName);
+    DREAM3D_REQUIRE(factory.get() != nullptr);
+    AbstractFilter::Pointer writer = factory->create();
+    DREAM3D_REQUIRE(writer.get() != nullptr);
+    writer->setDataContainerArray(dca);
+    var.setValue(UnitTest::FindTriangleGeomShapesTest::TestFile);
+    propWasSet = writer->setProperty("OutputFile", var);
+    if(!propWasSet)
+    {
+      qDebug() << "Unable to set property OutputFile";
+    }
+    writer->execute();
+    err = writer->getErrorCondition();
+    DREAM3D_REQUIRED(err, >=, 0)
+
     AttributeMatrix::Pointer faceFeatAttrMat = dca->getDataContainer(SIMPL::Defaults::TriangleDataContainerName)->getAttributeMatrix(SIMPL::Defaults::FaceFeatureAttributeMatrixName);
-    FloatArrayType::Pointer omega3s = faceFeatAttrMat->getAttributeArrayAs<FloatArrayType>(SIMPL::FeatureData::Omega3s);
+
+    FloatArrayType::Pointer centroids = faceFeatAttrMat->getAttributeArrayAs<FloatArrayType>(SIMPL::FeatureData::Centroids);
+    DREAM3D_REQUIRE_EQUAL(centroids->getNumberOfTuples(), 2);
+    DREAM3D_CLOSE_ENOUGH(centroids->getValue(3), 128.0f, 0.0001f);
+    DREAM3D_CLOSE_ENOUGH(centroids->getValue(4), 64.0f, 0.0001f);
+    DREAM3D_CLOSE_ENOUGH(centroids->getValue(5), 32.0f, 0.0001f);
+
     FloatArrayType::Pointer axisLengths = faceFeatAttrMat->getAttributeArrayAs<FloatArrayType>(SIMPL::FeatureData::AxisLengths);
-    FloatArrayType::Pointer axisEulerAngles = faceFeatAttrMat->getAttributeArrayAs<FloatArrayType>(SIMPL::FeatureData::AxisEulerAngles);
-    FloatArrayType::Pointer aspectRatios = faceFeatAttrMat->getAttributeArrayAs<FloatArrayType>(SIMPL::FeatureData::AspectRatios);
-
-    DREAM3D_REQUIRE_EQUAL(omega3s->getNumberOfTuples(), 2);
     DREAM3D_REQUIRE_EQUAL(axisLengths->getNumberOfTuples(), 2);
-    DREAM3D_REQUIRE_EQUAL(axisEulerAngles->getNumberOfTuples(), 2);
-    DREAM3D_REQUIRE_EQUAL(aspectRatios->getNumberOfTuples(), 2);
-
-    DREAM3D_CLOSE_ENOUGH(omega3s->getValue(1), 0.824f, 0.0001f);
-
     DREAM3D_CLOSE_ENOUGH(axisLengths->getValue(3), 160.0f, 1.0f);
     DREAM3D_CLOSE_ENOUGH(axisLengths->getValue(4), 80.0f, 1.0f);
     DREAM3D_CLOSE_ENOUGH(axisLengths->getValue(5), 40.0f, 1.0f);
 
+    FloatArrayType::Pointer axisEulerAngles = faceFeatAttrMat->getAttributeArrayAs<FloatArrayType>(SIMPL::FeatureData::AxisEulerAngles);
+    DREAM3D_REQUIRE_EQUAL(axisEulerAngles->getNumberOfTuples(), 2);
     DREAM3D_CLOSE_ENOUGH(axisEulerAngles->getValue(3), 3.141f, 0.001f);
     DREAM3D_CLOSE_ENOUGH(axisEulerAngles->getValue(4), 0.0f, 0.001f);
     DREAM3D_CLOSE_ENOUGH(axisEulerAngles->getValue(5), 0.0f, 0.001f);
 
+    FloatArrayType::Pointer aspectRatios = faceFeatAttrMat->getAttributeArrayAs<FloatArrayType>(SIMPL::FeatureData::AspectRatios);
+    DREAM3D_REQUIRE_EQUAL(aspectRatios->getNumberOfTuples(), 2);
     DREAM3D_CLOSE_ENOUGH(aspectRatios->getValue(2), 0.5f, 0.0001f);
     DREAM3D_CLOSE_ENOUGH(aspectRatios->getValue(3), 0.25f, 0.0001f);
+
+    FloatArrayType::Pointer omega3s = faceFeatAttrMat->getAttributeArrayAs<FloatArrayType>(SIMPL::FeatureData::Omega3s);
+    DREAM3D_REQUIRE_EQUAL(omega3s->getNumberOfTuples(), 2);
+    DREAM3D_CLOSE_ENOUGH(omega3s->getValue(1), 0.824f, 0.0001f);
 
     return EXIT_SUCCESS;
   }
@@ -299,6 +328,7 @@ public:
   void operator()()
   {
     int err = EXIT_SUCCESS;
+    std::cout << "---- " << getNameOfClass().toStdString() << " ----" << std::endl;
 
     DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
@@ -306,8 +336,4 @@ public:
 
     DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
-
-private:
-  FindTriangleGeomShapesTest(const FindTriangleGeomShapesTest&); // Copy Constructor Not Implemented
-  void operator=(const FindTriangleGeomShapesTest&);             // Move assignment Not Implemented
 };
