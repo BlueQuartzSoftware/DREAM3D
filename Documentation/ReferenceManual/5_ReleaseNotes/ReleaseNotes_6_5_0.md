@@ -10,7 +10,54 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
-## Version 6.5.x ##
+## Version 6.5.83 ##
+
+### New Filters & Features ###
+
+### Fixed DREAM3D Issues ###
+
++ Improvements to StatsGenerator Documentation and Axis ODF Widget. (#824)
++ Fix incorrect labeling on pole figures for Hexagonal High Laue Class (#826)
++ Add example pipeline that produces a cylindrical shaped synthetic microstructure (#828)
++ Fix regression in installation codes where some data directories were left out. (#829)
++ Update dataCheck() to use a standardized output file checking mechanism. (#833)
++ Add second strategy for parallel implementation of SampleSurfaceMesh (#835)
++ Update all classes to properly implement constructors and assignment operators. (#837)
++ Fix calculation of centroid of the voxel. (#841)
++ Allow some filters to set specific DataArrays t0 ignore during the tuple copy operations
++ Calculate GBCD: Fix crashing bug due to use of -1 as a pointer offset. (#845)
++ Multiple entries in the AxisODF table were not deserialized correctly. (#846)
++ Additional fixes to QuickSurfaceMesh to address triangle winding issues. (#847)
+
+### Fixed SIMPLView Issues ###
+
++ Fix issue in generated Filter that would cause compile errors on MSVC due to lack of EXPORT macro
++ Use distinct output name for the GUI plugin. Not doing so causes issues with debugging on MSVC
++ Fix bad CMake code generation in the Python wrapping code. Incorrect template filename was used.
++ Update codes to modern C++ standards using clang-tidy
+
+### Fixed SIMPL Issues ###
+
++ LINUX: Properly move up a directory so that relative paths work correctly
++ Use the SVDialog as a superclass so that more GUI classes pick up the stying
++ Redo the Plugin Information UI to be more streamlined.
++ Improve Styling of Table widgets, improve AboutPlugins UX (#235)
++ Update TemplateHelpers implementations. (#237)
++ Removing pixmap that was being saved when creating an SVSpinBox.
++ Fix compile error on macOS 10.14 and Qt 5.11.1 (#247)
++ Fixes assert in setTuple in DataArray.hpp (#244)
++ Made FeatureDataCSVWriter use the new delimiter enum
++ Adds HexahedralGeom to CreateGeometry filter
++ Fix bugs in the SplitAttributeArrayTest and SplitAttributeArray filter (#251)
++ Fixing bug where changing "Start Import at Row" resets the data types in the Import ASCII Data wizard. (#254)
++ Allow wrapping of the file path in the Import ASCII Data Widget. (#258)
++ Create more verbose error message if parsing Json Pipeline fails. (#257)
++ Enable support for using the HDF5 1.10.3 library (#266)
++ Fix issue when reading a JSON file with an extended suffix.
++ Remove any colon characters that end up in a file path. (#271)
++ Update codes to modern C++ standards using clang-tidy
+
+## Version 6.5.47 ##
 
 ### New Filters & Features ###
 
@@ -22,7 +69,6 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 + Removed Write IPF Standard Triangle from available filters. Static images are available in the Data folder
 + Issue 817: Correctly calculate the northern hemisphere XYZ coord from the southern hemisphere
 + Issue 819: Allow users to pick either a Lambert or Discrete pole figure for the ODF tab in StatsGenerator
-+ Update documentation for the Neighbor Distribution function in StatsGenerator
 
 ### Fixed SIMPLView Issues ###
 
