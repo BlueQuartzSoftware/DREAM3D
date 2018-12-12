@@ -131,12 +131,6 @@ void StatsGenMDFWidget::setupGui()
   QAbstractItemDelegate* aid = m_MDFTableModel->getItemDelegate();
   m_MDFTableView->setItemDelegate(aid);
   m_PlotCurve = new QwtPlotCurve;
-  
-  // Apple the Style to the buttons
-  addMDFRowBtn->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(addMDFRowBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::AddImagePath));  
-  deleteMDFRowBtn->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(deleteMDFRowBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::DeleteImagePath));
-  loadMDFBtn->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(loadMDFBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::LoadImagePath));
-  m_MDFUpdateBtn->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(m_MDFUpdateBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::ReloadImagePath));
 
 }
 

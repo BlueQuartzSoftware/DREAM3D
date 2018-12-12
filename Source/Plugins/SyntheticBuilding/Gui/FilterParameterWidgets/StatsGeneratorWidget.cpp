@@ -192,16 +192,6 @@ void StatsGeneratorWidget::setupGui()
   // Catch when the filter wants its values updated
   connect(getFilter(), SIGNAL(updateFilterParameters(AbstractFilter*)), this, SLOT(filterNeedsInputParameters(AbstractFilter*)));
   
-  editPhase->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(editPhase->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::CogImagePath));
-  addPhase->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(addPhase->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::AddImagePath));
-  deletePhase->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(deletePhase->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::DeleteImagePath));
-
-  updatePipelineBtn->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(updatePipelineBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::ReloadImagePath));
-  openStatsFile->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(openStatsFile->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::LoadImagePath));
-  saveJsonBtn->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(saveJsonBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::ReloadImagePath));
-  saveH5Btn->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(saveH5Btn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::HDFImagePath));
-
-
   // Hide the debugging buttons
   updatePipelineBtn->hide();
   saveJsonBtn->hide();
