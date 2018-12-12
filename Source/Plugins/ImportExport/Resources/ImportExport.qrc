@@ -1,0 +1,7 @@
+ <!DOCTYPE RCC>
+ <RCC version="1.0">
+ <qresource>
+ <file>ImportExport/ImportExportLicense.txt</file>
+ <file>ImportExport/ImportExportDescription.txt</file>
+ </qresource>
+ </RCC>
