@@ -430,13 +430,6 @@ void StatsGenODFWidget::setupGui()
   m_ODFGroup.addButton(m_ODFParametersBtn);
   m_ODFGroup.addButton(m_MDFParametersBtn);
 
-  // Style the buttons
-  addODFTextureBtn->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(addODFTextureBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::AddImagePath));  
-  deleteODFTextureBtn->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(deleteODFTextureBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::DeleteImagePath));
-  m_CalculateODFBtn->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(m_CalculateODFBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::ReloadImagePath));
-  savePoleFigureImage->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(savePoleFigureImage->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::SaveImagePath));
-  
-  
   on_m_ODFParametersBtn_clicked(true);
 }
 

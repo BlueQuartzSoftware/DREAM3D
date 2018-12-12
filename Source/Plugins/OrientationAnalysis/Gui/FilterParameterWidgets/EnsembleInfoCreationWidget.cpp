@@ -126,10 +126,7 @@ void EnsembleInfoCreationWidget::setupGui()
   EnsembleInfo info = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<EnsembleInfo>();
   m_EnsembleInfoTableModel->setTableData(info);
 
-//  addBtn->setStyleSheet(SVStyle::StyleSheetForButton(addBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::AddImagePath));
-//  deleteBtn->setStyleSheet(SVStyle::StyleSheetForButton(deleteBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::DeleteImagePath));
- 
- 
+
 #if 0
   // is the filter parameter tied to a boolean property of the Filter Instance, if it is then we need to make the check box visible
   if(getFilterParameter()->isConditional())
