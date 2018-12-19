@@ -54,6 +54,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/Utilities/ColorUtilities.h"
 
 #include "SVWidgetsLib/Widgets/SVStyle.h"
 
@@ -69,6 +70,7 @@
 #include <qwt_plot_layout.h>
 #include <qwt_plot_marker.h>
 #include <qwt_plot_shapeitem.h>
+#include <qwt_plot_textlabel.h>
 #include <qwt_scale_widget.h>
 #include <qwt_symbol.h>
 
@@ -125,43 +127,7 @@ void StatsGenFeatureSizeWidget::setupGui()
   m_Mu_SizeDistribution->setText(loc.toString(SyntheticBuildingConstants::k_Mu));
   m_Sigma_SizeDistribution->setText(loc.toString(SyntheticBuildingConstants::k_Sigma));
 
-  m_SizeDistributionPlot->setCanvasBackground(QColor(Qt::white));
-
-  QwtText qwtStr(QString("Feature ESD Probability Density Function"));
-  qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
-  qwtStr.setColor(SVStyle::Instance()->getQLabel_color());
-  m_SizeDistributionPlot->setTitle(qwtStr);
-
-  qwtStr.setText(QString("Equivalent Sphere Diameter (ESD)"));
-  m_SizeDistributionPlot->setAxisTitle(QwtPlot::xBottom, qwtStr);
-
-  qwtStr.setText(QString("Probability of Sampling ESD \nfrom the Distribution"));
-  m_SizeDistributionPlot->setAxisTitle(QwtPlot::yLeft, qwtStr);
-
-  m_SizeDistributionPlot->plotLayout()->setAlignCanvasToScales(true);
-  for(int axis = 0; axis < QwtPlot::axisCnt; axis++)
-  {
-    m_SizeDistributionPlot->axisWidget(axis)->setMargin(0);
-  }
-  QwtPlotCanvas* canvas = new QwtPlotCanvas();
-  canvas->setAutoFillBackground(false);
-  canvas->setFrameStyle(QFrame::NoFrame);
-  // canvas->setPalette(pal);
-  m_SizeDistributionPlot->setCanvas(canvas);
-
-  QwtPlotPicker* plotPicker = new QwtPlotPicker(m_SizeDistributionPlot->xBottom, m_SizeDistributionPlot->yLeft, QwtPicker::CrossRubberBand, QwtPicker::AlwaysOn, m_SizeDistributionPlot->canvas());
-  QwtPickerMachine* pickerMachine = new QwtPickerClickPointMachine();
-  plotPicker->setStateMachine(pickerMachine);
-  connect(plotPicker, SIGNAL(selected(const QPointF&)), this, SLOT(plotPointSelected(const QPointF&)));
-
-#if 0
-  m_grid = new QwtPlotGrid;
-  m_grid->enableXMin(true);
-  m_grid->enableYMin(true);
-  m_grid->setMajorPen(QPen(Qt::gray, 0, Qt::SolidLine));
-  m_grid->setMinorPen(QPen(Qt::lightGray, 0, Qt::DotLine));
-  m_grid->attach(m_SizeDistributionPlot);
-#endif
+  initQwtPlot(QString("Feature ESD Probability Density Function"), QString("Equivalent Sphere Diameter (ESD)"), QString("Probability of Sampling ESD \nfrom the Distribution"), m_SizeDistributionPlot);
 
   updateSizeDistributionPlot();
   calculateNumberOfBins();
@@ -170,24 +136,76 @@ void StatsGenFeatureSizeWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void StatsGenFeatureSizeWidget::initQwtPlot(const QString& title, const QString& xAxisName, const QString& yAxisName, QwtPlot* plot)
+{
+
+  QPalette pal;
+  pal.setColor(QPalette::Text, SVStyle::Instance()->getQLabel_color());
+  pal.setColor(QPalette::Foreground, Qt::white);
+  pal.setColor(QPalette::Window, Qt::black);
+
+  plot->plotLayout()->setAlignCanvasToScales(true);
+  for(int axis = 0; axis < QwtPlot::axisCnt; axis++)
+  {
+    plot->axisWidget(axis)->setMargin(0);
+    plot->axisWidget(axis)->setPalette(pal);
+  }
+
+  QFont font = SVStyle::Instance()->GetUIFont();
+  font.setWeight(QFont::Bold);
+  font.setPointSize(SG_FONT_SIZE);
+
+  QwtText xAxis(xAxisName);
+  xAxis.setRenderFlags(Qt::AlignHCenter | Qt::AlignTop);
+  xAxis.setFont(font);
+  xAxis.setColor(SVStyle::Instance()->getQLabel_color());
+  plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
+
+  QwtText yAxis(yAxisName);
+  yAxis.setRenderFlags(Qt::AlignHCenter | Qt::AlignTop);
+  yAxis.setFont(font);
+  yAxis.setColor(SVStyle::Instance()->getQLabel_color());
+  plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
+
+  const int margin = 0;
+  plot->setContentsMargins(margin, margin, margin, margin);
+
+  plotTitle->setText(title);
+  plotTitle->setFont(font);
+
+  QwtPlotPicker* plotPicker = new QwtPlotPicker(plot->xBottom, plot->yLeft, QwtPicker::CrossRubberBand, QwtPicker::AlwaysOn, plot->canvas());
+  QwtPickerMachine* pickerMachine = new QwtPickerClickPointMachine();
+  plotPicker->setTrackerPen(QPen(SVStyle::Instance()->getQLabel_color()));
+  plotPicker->setStateMachine(pickerMachine);
+  connect(plotPicker, SIGNAL(selected(const QPointF&)), this, SLOT(plotPointSelected(const QPointF&)));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void StatsGenFeatureSizeWidget::plotPointSelected(const QPointF& point)
 {
   int selectedBin = -1;
+  QVector<SIMPL::Rgb> colors = ColorUtilities::GenerateColors(m_BarChartItems.count(), SyntheticBuildingConstants::k_HSV_Saturation, SyntheticBuildingConstants::k_HSV_Value);
+
   for(int i = 0; i < m_BarChartItems.size(); i++)
   {
     QwtPlotShapeItem* item = m_BarChartItems[i];
 
-    // qDebug()  << "\t" << item->boundingRect();
     if(item->boundingRect().contains(point))
     {
-      QColor fillColor = QColor("IndianRed");
+      QColor fillColor = colors.at(i);
+      float hue = fillColor.hue();
+      float saturation = static_cast<float>(SyntheticBuildingConstants::k_HSV_Saturation + 40) / 255.0f;
+      float value = static_cast<float>(SyntheticBuildingConstants::k_HSV_Value + 50) / 255.0f;
+      fillColor = ColorUtilities::Hsv2Rgb(hue, saturation, value);
       fillColor.setAlpha(200);
       item->setBrush(fillColor);
       selectedBin = i;
     }
     else
     {
-      QColor fillColor = QColor("RoyalBlue");
+      QColor fillColor = colors.at(i);
       fillColor.setAlpha(200);
       item->setBrush(fillColor);
     }
@@ -618,13 +636,13 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
   {
     m_SizeDistCenterPointCurve = new QwtPlotCurve("Size Distribution Bin Centers");
     m_SizeDistCenterPointCurve->setRenderHint(QwtPlotItem::RenderAntialiased);
-    m_SizeDistCenterPointCurve->setPen(QPen(Qt::blue, 2));
+    // m_SizeDistCenterPointCurve->setPen(QPen(Qt::blue, 2));
 
-    QColor color = QColor("Black");
+    QColor color = QColor("IndianRed");
     m_SizeDistCenterPointCurve->setPen(color, 2);
     m_SizeDistCenterPointCurve->setRenderHint(QwtPlotItem::RenderAntialiased, true);
     m_SizeDistCenterPointCurve->setStyle(QwtPlotCurve::NoCurve);
-    QwtSymbol* symbol = new QwtSymbol(QwtSymbol::VLine, QBrush(Qt::white), QPen(color, 1), QSize(1, 16));
+    QwtSymbol* symbol = new QwtSymbol(QwtSymbol::Ellipse, QBrush(SVStyle::Instance()->getQLabel_color()), QPen(color, 2), QSize(8, 8));
     m_SizeDistCenterPointCurve->setSymbol(symbol);
 
     m_SizeDistCenterPointCurve->attach(m_SizeDistributionPlot);
@@ -637,14 +655,19 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
     m_CutOffMin->attach(m_SizeDistributionPlot);
   }
 
+  QFont font = SVStyle::Instance()->GetUIFont();
+  font.setWeight(QFont::Bold);
+  font.setPointSize(SG_FONT_SIZE);
+
   QString str = QString("Min Feature ESD = %1").arg(xCo[0]);
   QwtText qwtStr = QwtText(str);
-  qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
+  qwtStr.setFont(font);
+  qwtStr.setColor(SVStyle::Instance()->getQLabel_color());
   m_CutOffMin->setLabel(qwtStr);
   m_CutOffMin->setLabelAlignment(Qt::AlignRight | Qt::AlignTop);
   m_CutOffMin->setLabelOrientation(Qt::Vertical);
   m_CutOffMin->setLineStyle(QwtPlotMarker::VLine);
-  m_CutOffMin->setLinePen(QPen(Qt::blue, 1, Qt::SolidLine));
+  m_CutOffMin->setLinePen(QPen(SVStyle::Instance()->getQLabel_color(), 1, Qt::SolidLine));
   m_CutOffMin->setXValue(xCo[0]);
 
   if(nullptr == m_CutOffMax)
@@ -654,12 +677,13 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
   }
   str = QString("Max Feature ESD = %1").arg(xCo[1]);
   qwtStr = QwtText(str);
-  qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
+  qwtStr.setFont(font);
+  qwtStr.setColor(SVStyle::Instance()->getQLabel_color());
   m_CutOffMax->setLabel(qwtStr);
   m_CutOffMax->setLabelAlignment(Qt::AlignLeft | Qt::AlignTop);
   m_CutOffMax->setLabelOrientation(Qt::Vertical);
   m_CutOffMax->setLineStyle(QwtPlotMarker::VLine);
-  m_CutOffMax->setLinePen(QPen(Qt::blue, 1, Qt::SolidLine));
+  m_CutOffMax->setLinePen(QPen(SVStyle::Instance()->getQLabel_color(), 1, Qt::SolidLine));
   m_CutOffMax->setXValue(xCo[1]);
 
   QwtArray<double> xD(x.size());
@@ -695,6 +719,9 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
 
   QwtArray<double> xBinCenter(binsizes.count());
   QwtArray<double> yBinCenter(binsizes.count());
+
+  // Generate our colors to coordinate with the other stats plot widgets
+  QVector<SIMPL::Rgb> colors = ColorUtilities::GenerateColors(binsizes.count(), SyntheticBuildingConstants::k_HSV_Saturation, SyntheticBuildingConstants::k_HSV_Value);
 
   int j = 0;
   for(int i = 0; i < binsizes.count(); i++)
@@ -744,7 +771,7 @@ int StatsGenFeatureSizeWidget::updateSizeDistributionPlot()
     QPainterPath path;
     path.addRect(rect);
 
-    QColor fillColor = QColor("RoyalBlue");
+    QColor fillColor = colors.at(i);
     fillColor.setAlpha(200);
 
     QPen pen(Qt::black, 1);

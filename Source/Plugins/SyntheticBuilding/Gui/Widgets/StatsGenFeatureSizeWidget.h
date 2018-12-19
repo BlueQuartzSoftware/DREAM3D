@@ -49,7 +49,7 @@ class StatsGenFeatureSizeWidget : public QWidget, private Ui::StatsGenFeatureSiz
   Q_OBJECT
 public:
   StatsGenFeatureSizeWidget(QWidget* parent = nullptr);
-  virtual ~StatsGenFeatureSizeWidget();
+  ~StatsGenFeatureSizeWidget() override;
 
   float getMu();
   float getSigma();
@@ -224,7 +224,7 @@ protected:
    * @brief mousePressEvent
    * @param event
    */
-  void mousePressEvent(QMouseEvent* event);
+  void mousePressEvent(QMouseEvent* event) override;
 
 protected slots:
 
@@ -247,6 +247,9 @@ protected slots:
    * @brief userEditedPlotData
    */
   void userEditedPlotData();
+
+protected:
+  void initQwtPlot(const QString& title, const QString& xAxisName, const QString& yAxisName, QwtPlot* plot);
 
 private:
   QwtPlotCurve* m_SizeDistributionCurve = nullptr;

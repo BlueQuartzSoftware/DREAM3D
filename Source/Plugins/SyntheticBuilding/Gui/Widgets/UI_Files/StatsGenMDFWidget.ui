@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>994</width>
-    <height>386</height>
+    <width>790</width>
+    <height>432</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -29,59 +29,6 @@
    <property name="spacing">
     <number>4</number>
    </property>
-   <item row="2" column="0" colspan="2">
-    <widget class="QwtPlot" name="m_MDFPlot">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-       <horstretch>0</horstretch>
-       <verstretch>3</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="toolTip">
-      <string>Enter values in the table above to adjust this plot.</string>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QwtPlot
-{
-background-color: rgb(0, 0, 0);
-}</string>
-     </property>
-     <property name="frameShape">
-      <enum>QFrame::Box</enum>
-     </property>
-    </widget>
-   </item>
-   <item row="0" column="1">
-    <widget class="QTableView" name="m_MDFTableView">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>10</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>300</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="maximumSize">
-      <size>
-       <width>16777215</width>
-       <height>16777215</height>
-      </size>
-     </property>
-     <property name="verticalScrollMode">
-      <enum>QAbstractItemView::ScrollPerPixel</enum>
-     </property>
-     <property name="horizontalScrollMode">
-      <enum>QAbstractItemView::ScrollPerPixel</enum>
-     </property>
-     <property name="cornerButtonEnabled">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="0">
     <layout class="QVBoxLayout" name="verticalLayout">
      <property name="spacing">
@@ -118,7 +65,7 @@ background-color: rgb(0, 0, 0);
        </property>
        <property name="icon">
         <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
-         <normaloff>:/SIMPL/icons/images/add.png</normaloff>:/add.png</iconset>
+         <normaloff>:/SIMPL/icons/images/add.png</normaloff>:/SIMPL/icons/images/add.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -159,7 +106,7 @@ background-color: rgb(0, 0, 0);
        </property>
        <property name="icon">
         <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
-         <normaloff>:/SIMPL/icons/images/delete_plain.png</normaloff>:/delete_plain.png</iconset>
+         <normaloff>:/SIMPL/icons/images/delete_plain.png</normaloff>:/SIMPL/icons/images/delete_plain.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -200,7 +147,7 @@ background-color: rgb(0, 0, 0);
        </property>
        <property name="icon">
         <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
-         <normaloff>:/SIMPL/icons/images/data-transfer-upload.png</normaloff>:/data-transfer-upload.png</iconset>
+         <normaloff>:/SIMPL/icons/images/data-transfer-upload.png</normaloff>:/SIMPL/icons/images/data-transfer-upload.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -241,7 +188,7 @@ background-color: rgb(0, 0, 0);
        </property>
        <property name="icon">
         <iconset resource="../../../../../../ExternalProjects/SIMPL/Resources/SIMPL.qrc">
-         <normaloff>:/SIMPL/icons/images/refresh.png</normaloff>:/refresh.png</iconset>
+         <normaloff>:/SIMPL/icons/images/refresh.png</normaloff>:/SIMPL/icons/images/refresh.png</iconset>
        </property>
        <property name="iconSize">
         <size>
@@ -271,6 +218,56 @@ background-color: rgb(0, 0, 0);
       </spacer>
      </item>
     </layout>
+   </item>
+   <item row="0" column="1">
+    <widget class="QTableView" name="m_MDFTableView">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize">
+      <size>
+       <width>300</width>
+       <height>0</height>
+      </size>
+     </property>
+     <property name="maximumSize">
+      <size>
+       <width>16777215</width>
+       <height>16777215</height>
+      </size>
+     </property>
+     <property name="verticalScrollMode">
+      <enum>QAbstractItemView::ScrollPerPixel</enum>
+     </property>
+     <property name="horizontalScrollMode">
+      <enum>QAbstractItemView::ScrollPerPixel</enum>
+     </property>
+     <property name="cornerButtonEnabled">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="2">
+    <widget class="QwtPlot" name="m_MDFPlot">
+     <property name="sizePolicy">
+      <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+       <horstretch>3</horstretch>
+       <verstretch>3</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="toolTip">
+      <string>Enter values in the table above to adjust this plot.</string>
+     </property>
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+    </widget>
    </item>
   </layout>
  </widget>

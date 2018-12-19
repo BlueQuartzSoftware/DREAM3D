@@ -76,13 +76,13 @@ public:
 
   int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false) override;
 
-  QIcon getPhaseIcon() override;
+  QIcon getPhaseIcon();
 
   void generateDefaultData() override;
 
 protected slots:
 
-  virtual void on_m_GenerateDefaultData_clicked() override;
+  void on_m_GenerateDefaultData_clicked();
 
 signals:
 
@@ -91,7 +91,7 @@ signals:
   void progressText(const QString& text);
 
 protected:
-  void setupGui() override;
+  void setupGui();
 
 private:
   QList<QWidget*> m_WidgetList;

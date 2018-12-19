@@ -139,31 +139,6 @@ void StatsGenODFWidget::on_m_WeightSpreadsBulkLoad_clicked(bool /* checked */)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenODFWidget::on_m_ODFParametersBtn_clicked(bool /* b */)
-{
-  stackedWidget->setCurrentIndex(0);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StatsGenODFWidget::on_m_MDFParametersBtn_clicked(bool /* b */)
-{
-  stackedWidget->setCurrentIndex(1);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-// void StatsGenODFWidget::on_pfImageSize_editingFinished()
-//{
-//  updatePlots();
-//  m_PoleFigureLabel->focusWidget();
-//}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void StatsGenODFWidget::extractStatsData(int index, StatsData* statsData, PhaseType::Type phaseType)
 {
   VectorOfFloatArray arrays;
@@ -213,11 +188,6 @@ void StatsGenODFWidget::extractStatsData(int index, StatsData* statsData, PhaseT
       m_ODFTableModel->setTableData(e1, e2, e3, weights, sigmas);
     }
   }
-  // Write the MDF Data if we have that functionality enabled
-  if(m_MDFWidget != nullptr)
-  {
-    m_MDFWidget->extractStatsData(index, statsData, phaseType);
-  }
   updatePlots();
 }
 
@@ -261,24 +231,7 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, PhaseType::Type 
 
   StatsGeneratorUtilities::GenerateODFBinData(statsData, phaseType, m_CrystalStructure, e1s, e2s, e3s, weights, sigmas, !preflight);
 
-  // Write the MDF Data if we have that functionality enabled
-  if(m_MDFWidget != nullptr)
-  {
-    m_MDFWidget->getMisorientationData(statsData, phaseType, !preflight);
-  }
   return retErr;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StatsGenODFWidget::enableMDFTab(bool b)
-{
-  if(b)
-  {
-    m_MDFWidget->setODFTableModel(m_ODFTableModel);
-    connect(m_MDFWidget, SIGNAL(dataChanged()), this, SIGNAL(dataChanged()));
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -289,10 +242,6 @@ void StatsGenODFWidget::setCrystalStructure(unsigned int value)
   if(m_CrystalStructure != value)
   {
     this->m_CrystalStructure = value;
-    if(m_MDFWidget != nullptr)
-    {
-      m_MDFWidget->setCrystalStructure(m_CrystalStructure);
-    }
     m_ODFTableModel->setCrystalStructure(m_CrystalStructure);
     QAbstractItemDelegate* idelegate = m_ODFTableModel->getItemDelegate();
     m_ODFTableView->setItemDelegate(idelegate);
@@ -313,10 +262,6 @@ unsigned int StatsGenODFWidget::getCrystalStructure()
 void StatsGenODFWidget::setPhaseIndex(int value)
 {
   this->m_PhaseIndex = value;
-  if(m_MDFWidget != nullptr)
-  {
-    m_MDFWidget->setPhaseIndex(m_PhaseIndex);
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -426,11 +371,6 @@ void StatsGenODFWidget::setupGui()
     m_PFLambertSize->hide();
     m_PFLambertLabel->hide();
   }
-
-  m_ODFGroup.addButton(m_ODFParametersBtn);
-  m_ODFGroup.addButton(m_MDFParametersBtn);
-
-  on_m_ODFParametersBtn_clicked(true);
 }
 
 // -----------------------------------------------------------------------------
@@ -549,6 +489,7 @@ void StatsGenODFWidget::updatePlots()
   calculateODF();
   m_AbortUpdate = true;
   updatePFStatus(QString(""));
+  emit odfDataChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -684,12 +625,6 @@ void StatsGenODFWidget::calculateODF()
   QImage image = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config, m_ImageLayoutCB->currentIndex());
   m_PoleFigureLabel->setPixmap(QPixmap::fromImage(image));
     
-  // Enable the MDF tab
-  if(m_MDFWidget != nullptr)
-  {
-    m_MDFWidget->setEnabled(true);
-    m_MDFWidget->updateMDFPlot(odf);
-  }
   delete progressDialog;
   emit dataChanged();
 }
@@ -1042,14 +977,6 @@ void StatsGenODFWidget::on_deleteODFTextureBtn_clicked()
 SGODFTableModel* StatsGenODFWidget::tableModel()
 {
   return m_ODFTableModel;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-StatsGenMDFWidget* StatsGenODFWidget::getMDFWidget()
-{
-  return m_MDFWidget;
 }
 
 // -----------------------------------------------------------------------------

@@ -127,22 +127,6 @@ void StatsGenAxisODFWidget::on_m_WeightSpreadsBulkLoad_clicked(bool b)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenAxisODFWidget::on_m_ODFParametersBtn_clicked(bool b)
-{
-  stackedWidget->setCurrentIndex(0);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void StatsGenAxisODFWidget::on_m_MDFParametersBtn_clicked(bool b)
-{
-  stackedWidget->setCurrentIndex(1);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void StatsGenAxisODFWidget::extractStatsData(int index, StatsData* statsData, PhaseType::Type phaseType)
 {
 
@@ -322,16 +306,6 @@ void StatsGenAxisODFWidget::setupGui()
     m_PFLambertLabel->hide();
   }
 
-  // Disable the MDF tab
-  m_MDFParametersBtn->setDisabled(true);
-
-  m_ODFGroup.addButton(m_ODFParametersBtn);
-  m_ODFGroup.addButton(m_MDFParametersBtn);
-  m_ODFParametersBtn->setVisible(false);
-  m_MDFParametersBtn->setVisible(false);
-  horizontalLine->setVisible(false);
-
-  on_m_ODFParametersBtn_clicked(true);
 }
 
 // -----------------------------------------------------------------------------

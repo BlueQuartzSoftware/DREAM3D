@@ -22,6 +22,9 @@ namespace SyntheticBuildingConstants
 
   static const float k_Mu = 1.0f;
   static const float k_Sigma = 0.1f;
+
+  static const int k_HSV_Saturation = 160;
+  static const int k_HSV_Value = 160;
 }
 
 /**
@@ -44,7 +47,7 @@ namespace FilterParameterWidgetType
 
 #elif defined(Q_OS_OSX)
 
-#define SG_FONT_SIZE 14
+#define SG_FONT_SIZE 13
 
 #else
 

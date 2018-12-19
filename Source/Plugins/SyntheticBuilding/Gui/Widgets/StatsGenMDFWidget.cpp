@@ -195,7 +195,7 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
+void StatsGenMDFWidget::updatePlots()
 {
   // Generate the ODF Data from the current values in the ODFTableModel
   QVector<float> e1s;
@@ -203,7 +203,10 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
   QVector<float> e3s;
   QVector<float> weights;
   QVector<float> sigmas;
-
+  if(nullptr == m_ODFTableModel)
+  {
+    return;
+  }
   // Initialize xMax and yMax....
   e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
   e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
@@ -223,6 +226,14 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
   updateMDFPlot(odf);
 
   emit dataChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
+{
+  updatePlots();
 }
 
 // -----------------------------------------------------------------------------

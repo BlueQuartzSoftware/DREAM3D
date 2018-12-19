@@ -85,35 +85,35 @@ public:
    * @param tableModel The TableModel that will receive the preset values
    * @param binNumbers The array of Bin values which are needed for the table model
    */
-  virtual void initializeOmega3TableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors) = 0;
+  virtual void initializeOmega3TableModel(QMap<QString, QVector<float>>& data) = 0;
 
   /**
    * @brief Initializes the B Over A preset table values
    * @param tableModel The TableModel that will receive the preset values
    * @param binNumbers The array of Bin values which are needed for the table model
    */
-  virtual void initializeBOverATableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors) = 0;
+  virtual void initializeBOverATableModel(QMap<QString, QVector<float>>& data) = 0;
 
   /**
    * @brief Initializes the C Over A preset table values
    * @param tableModel The TableModel that will receive the preset values
    * @param binNumbers The array of Bin values which are needed for the table model
    */
-  virtual void initializeCOverATableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors) = 0;
+  virtual void initializeCOverATableModel(QMap<QString, QVector<float>>& data) = 0;
 
   /**
    * @brief Initializes the Neighbor preset table values
    * @param tableModel The TableModel that will receive the preset values
    * @param binNumbers The array of Bin values which are needed for the table model
    */
-  virtual void initializeClusteringTableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors) = 0;
+  virtual void initializeClusteringTableModel(QMap<QString, QVector<float>>& data) = 0;
 
   /**
    * @brief Initializes the Clustering preset table values
    * @param tableModel The TableModel that will receive the preset values
    * @param binNumbers The array of Bin values which are needed for the table model
    */
-  virtual void initializeNeighborTableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors) = 0;
+  virtual void initializeNeighborTableModel(QMap<QString, QVector<float>>& data) = 0;
 
   /**
    * @brief This method initializes the AxisODF Table with preset Euler angles,
