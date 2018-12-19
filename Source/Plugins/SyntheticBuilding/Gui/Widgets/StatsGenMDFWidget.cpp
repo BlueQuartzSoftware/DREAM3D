@@ -131,12 +131,6 @@ void StatsGenMDFWidget::setupGui()
   QAbstractItemDelegate* aid = m_MDFTableModel->getItemDelegate();
   m_MDFTableView->setItemDelegate(aid);
   m_PlotCurve = new QwtPlotCurve;
-  
-  // Apple the Style to the buttons
-  addMDFRowBtn->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(addMDFRowBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::AddImagePath));  
-  deleteMDFRowBtn->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(deleteMDFRowBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::DeleteImagePath));
-  loadMDFBtn->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(loadMDFBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::LoadImagePath));
-  m_MDFUpdateBtn->setStyleSheet(SVStyle::Instance()->StyleSheetForButton(m_MDFUpdateBtn->objectName(), SVWidgets::Styles::PushButtonStyleSheet, SVWidgets::Styles::ReloadImagePath));
 
 }
 
@@ -201,7 +195,7 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
+void StatsGenMDFWidget::updatePlots()
 {
   // Generate the ODF Data from the current values in the ODFTableModel
   QVector<float> e1s;
@@ -209,7 +203,10 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
   QVector<float> e3s;
   QVector<float> weights;
   QVector<float> sigmas;
-
+  if(nullptr == m_ODFTableModel)
+  {
+    return;
+  }
   // Initialize xMax and yMax....
   e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
   e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
@@ -229,6 +226,14 @@ void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
   updateMDFPlot(odf);
 
   emit dataChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenMDFWidget::on_m_MDFUpdateBtn_clicked()
+{
+  updatePlots();
 }
 
 // -----------------------------------------------------------------------------

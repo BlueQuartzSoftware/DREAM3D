@@ -274,7 +274,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
 
   // Remove all the items from the GUI and from the internal tracking Lists
   QLayoutItem* child;
-  while((formLayout_2->count() > 0) && (child = formLayout_2->takeAt(0)) != 0)
+  while((formLayout_2->count() > 0) && (child = formLayout_2->takeAt(0)) != nullptr)
   {
     delete child;
   }
@@ -731,9 +731,7 @@ QFilterWidget* InitializeSyntheticVolumeWidget::createDeepCopy()
 //
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolumeWidget::setShapeTypes(DataArray<unsigned int>::Pointer array)
-{
-
-}
+{}
 
 // -----------------------------------------------------------------------------
 //

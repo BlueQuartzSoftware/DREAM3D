@@ -50,12 +50,10 @@ CorrelateValuesWithVectorDirection::CorrelateValuesWithVectorDirection()
 : m_CorrelatedDataArrayPath("", "", "")
 , m_VectorDataArrayPath("", "", "")
 , m_Logfile("CorrelateValuesWithVectorDirection.log")
-, m_VectorData(nullptr)
 , m_MaxCoord(sqrt(SIMPLib::Constants::k_2Pi) / 2.0)
 , m_Dimension(72)
 , m_StepSize(sqrt(SIMPLib::Constants::k_2Pi) / 72.0)
 {
-
 }
 
 // -----------------------------------------------------------------------------

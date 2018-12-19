@@ -1,7 +1,10 @@
 {
     "0": {
+        "FilterVersion": "1.2.724",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Read DREAM.3D Data File",
         "Filter_Name": "DataContainerReader",
+        "Filter_Uuid": "{043cbde5-3878-5718-958f-ae75714df0df}",
         "InputFile": "Data/Output/Statistics/SmallIN100_Morph.dream3d",
         "InputFileDataContainerArrayProxy": {
             "Data Containers": [
@@ -66,11 +69,13 @@
                                         1
                                     ],
                                     "Flag": 2,
-                                    "Name": "GBEuclideanDistances",
-                                    "Object Type": "DataArray<float>",
+                                    "Name": "GBManhattanDistances",
+                                    "Object Type": "DataArray<int32_t>",
                                     "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
-                                        1
+                                        189,
+                                        201,
+                                        117
                                     ],
                                     "Version": 2
                                 },
@@ -144,11 +149,13 @@
                                         1
                                     ],
                                     "Flag": 2,
-                                    "Name": "QPEuclideanDistances",
-                                    "Object Type": "DataArray<float>",
+                                    "Name": "QPManhattanDistances",
+                                    "Object Type": "DataArray<int32_t>",
                                     "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
-                                        1
+                                        189,
+                                        201,
+                                        117
                                     ],
                                     "Version": 2
                                 },
@@ -183,11 +190,13 @@
                                         1
                                     ],
                                     "Flag": 2,
-                                    "Name": "TJEuclideanDistances",
-                                    "Object Type": "DataArray<float>",
+                                    "Name": "TJManhattanDistances",
+                                    "Object Type": "DataArray<int32_t>",
                                     "Path": "/DataContainers/Small IN100/EBSD Scan Data",
                                     "Tuple Dimensions": [
-                                        1
+                                        189,
+                                        201,
+                                        117
                                     ],
                                     "Version": 2
                                 }
@@ -195,52 +204,6 @@
                             "Flag": 2,
                             "Name": "EBSD Scan Data",
                             "Type": 3
-                        },
-                        {
-                            "Data Arrays": [
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "CrystalStructures",
-                                    "Object Type": "DataArray<uint32_t>",
-                                    "Path": "/DataContainers/Small IN100/Phase Data",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        6
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "LatticeConstants",
-                                    "Object Type": "DataArray<float>",
-                                    "Path": "/DataContainers/Small IN100/Phase Data",
-                                    "Tuple Dimensions": [
-                                        6
-                                    ],
-                                    "Version": 2
-                                },
-                                {
-                                    "Component Dimensions": [
-                                        14
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "MaterialName",
-                                    "Object Type": "DataArray<int8_t>",
-                                    "Path": "/DataContainers/Small IN100/Phase Data",
-                                    "Tuple Dimensions": [
-                                        14
-                                    ],
-                                    "Version": 2
-                                }
-                            ],
-                            "Flag": 2,
-                            "Name": "Phase Data",
-                            "Type": 11
                         },
                         {
                             "Data Arrays": [
@@ -392,11 +355,11 @@
                                         1
                                     ],
                                     "Flag": 2,
-                                    "Name": "NumCells",
+                                    "Name": "NumElements",
                                     "Object Type": "DataArray<int32_t>",
                                     "Path": "/DataContainers/Small IN100/Grain Data",
                                     "Tuple Dimensions": [
-                                        1
+                                        2353
                                     ],
                                     "Version": 2
                                 },
@@ -503,6 +466,32 @@
                                         1
                                     ],
                                     "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "Sphericity",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "SurfaceAreaVolumeRatio",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        2353
+                                    ],
+                                    "Version": 2
                                 }
                             ],
                             "Flag": 2,
@@ -528,6 +517,52 @@
                             "Flag": 2,
                             "Name": "NewGrain Data",
                             "Type": 7
+                        },
+                        {
+                            "Data Arrays": [
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "CrystalStructures",
+                                    "Object Type": "DataArray<uint32_t>",
+                                    "Path": "/DataContainers/Small IN100/Phase Data",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        6
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "LatticeConstants",
+                                    "Object Type": "DataArray<float>",
+                                    "Path": "/DataContainers/Small IN100/Phase Data",
+                                    "Tuple Dimensions": [
+                                        6
+                                    ],
+                                    "Version": 2
+                                },
+                                {
+                                    "Component Dimensions": [
+                                        14
+                                    ],
+                                    "Flag": 2,
+                                    "Name": "MaterialName",
+                                    "Object Type": "DataArray<int8_t>",
+                                    "Path": "/DataContainers/Small IN100/Phase Data",
+                                    "Tuple Dimensions": [
+                                        14
+                                    ],
+                                    "Version": 2
+                                }
+                            ],
+                            "Flag": 2,
+                            "Name": "Phase Data",
+                            "Type": 11
                         }
                     ],
                     "Flag": 2,
@@ -544,15 +579,19 @@
             "Data Array Name": "",
             "Data Container Name": "Small IN100"
         },
-        "FeatureDataFile": "Data/Statistics/SmallIN100_Morph/FeatureStatistics.csv",
-        "FilterVersion": "1.0.278",
-        "Filter_Human_Label": "Write Feature Data as CSV File",
+        "DelimiterChoiceInt": 0,
+        "FeatureDataFile": "Data/Output/Statistics/SmallIN100_Morph/FeatureStatistics.csv",
+        "FilterVersion": "1.2.724",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Export Feature Data as CSV File",
         "Filter_Name": "FeatureDataCSVWriter",
-        "WriteNeighborListData": 0
+        "Filter_Uuid": "{737b8d5a-8622-50f9-9a8a-bfdb57608891}",
+        "WriteNeighborListData": 0,
+        "WriteNumFeaturesLine": 1
     },
     "PipelineBuilder": {
         "Name": "(02) SmallIN100 Export Statistics",
         "Number_Filters": 2,
-        "Version": "1.0"
+        "Version": 6
     }
 }

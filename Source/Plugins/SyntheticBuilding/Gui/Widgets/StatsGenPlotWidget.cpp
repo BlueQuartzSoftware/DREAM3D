@@ -105,11 +105,8 @@ StatsGenPlotWidget::StatsGenPlotWidget(QWidget* parent)
 , m_BinStep(0.5f)
 , m_PhaseIndex(-1)
 , m_DistributionType(SIMPL::DistributionType::UnknownDistributionType)
-, m_TableModel(nullptr)
 , m_StatsType(SIMPL::StatisticsType::UnknownStatisticsGroup)
 , m_UserUpdatedData(false)
-, m_TableViewWidget(nullptr)
-, m_TableView(nullptr)
 {
   this->setupUi(this);
   this->setupGui();
@@ -170,16 +167,16 @@ int StatsGenPlotWidget::extractStatsData(int index, QVector<float>& binNumbers, 
   setDistributionType(m_DistributionType); // This makes sure the combo box is set correctly
 
   qint32 count = binNumbers.count();
-  QVector<SIMPL::Rgb> colors = ColorUtilities::GenerateColors(count, 160, 255);
+  QVector<SIMPL::Rgb> colors = ColorUtilities::GenerateColors(count, SyntheticBuildingConstants::k_HSV_Saturation, SyntheticBuildingConstants::k_HSV_Value);
 
   QVector<QVector<float>> data;
 
-  for(VectorOfFloatArray::size_type i = 0; i < arrays.size(); ++i)
+  for(const auto& dataArray : arrays)
   {
-    QVector<float> col(static_cast<int>(arrays[i]->getNumberOfTuples()));
-    if(arrays[i]->getNumberOfTuples() > 0)
+    QVector<float> col(static_cast<int>(dataArray->getNumberOfTuples()));
+    if(dataArray->getNumberOfTuples() > 0)
     {
-      ::memcpy(&(col.front()), arrays[i]->getVoidPointer(0), sizeof(float) * col.size());
+      ::memcpy(&(col.front()), dataArray->getVoidPointer(0), sizeof(float) * col.size());
     }
     data.push_back(col);
   }
@@ -221,7 +218,6 @@ VectorOfFloatArray StatsGenPlotWidget::getStatisticsData()
 
   QVector<float> v0;
   QVector<float> v1;
-  QVector<float> v2;
   Q_ASSERT(m_PhaseIndex >= 0);
 
   // Create a new Table Model
@@ -348,26 +344,10 @@ void StatsGenPlotWidget::setDataTitle(const QString& title)
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::setPlotTitle(const QString& title)
 {
-#if 0
-  QwtText plotTitle(title);
-
-  plotTitle.setColor(Qt::white);
-  plotTitle.setRenderFlags(Qt::AlignHCenter | Qt::AlignTop);
-
-  QFont font;
-  font.setBold(true);
-  font.setPointSize(12);
-  plotTitle.setFont(font);
-
-  m_PlotView->setTitle(plotTitle);
-#else
-
   QwtText qwtStr = QwtText(title);
-  qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
+  qwtStr.setFont(QFont("Lato", SG_FONT_SIZE, QFont::Bold, false));
   qwtStr.setColor(SVStyle::Instance()->getQLabel_color());
   m_PlotView->setTitle(qwtStr);
-
-#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -376,7 +356,7 @@ void StatsGenPlotWidget::setPlotTitle(const QString& title)
 void StatsGenPlotWidget::setXAxisName(const QString& name)
 {
   QwtText qwtStr = QwtText(name);
-  qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
+  qwtStr.setFont(QFont("Lato", SG_FONT_SIZE, QFont::Bold, false));
   qwtStr.setColor(SVStyle::Instance()->getQLabel_color());
   m_PlotView->setAxisTitle(QwtPlot::xBottom, qwtStr);
 }
@@ -387,7 +367,7 @@ void StatsGenPlotWidget::setXAxisName(const QString& name)
 void StatsGenPlotWidget::setYAxisName(const QString& name)
 {
   QwtText qwtStr = QwtText(name);
-  qwtStr.setFont(QFont("Arial", SG_FONT_SIZE, QFont::Bold, false));
+  qwtStr.setFont(QFont("Lato", SG_FONT_SIZE, QFont::Bold, false));
   qwtStr.setColor(SVStyle::Instance()->getQLabel_color());
   m_PlotView->setAxisTitle(QwtPlot::yLeft, qwtStr);
 }
@@ -402,12 +382,13 @@ void StatsGenPlotWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPl
   pal.setColor(QPalette::Text, SVStyle::Instance()->getQLabel_color());
   pal.setColor(QPalette::Foreground, Qt::white);
   pal.setColor(QPalette::Window, Qt::black);
+  pal.setColor(QPalette::Background, Qt::black);
 
   plot->plotLayout()->setAlignCanvasToScales(true);
   for(int axis = 0; axis < QwtPlot::axisCnt; axis++)
   {
     plot->axisWidget(axis)->setMargin(0);
-    // plot->axisWidget(axis)->setPalette(pal);
+    plot->axisWidget(axis)->setPalette(pal);
   }
   QwtPlotCanvas* canvas = new QwtPlotCanvas();
   canvas->setAutoFillBackground(false);
@@ -475,7 +456,7 @@ void StatsGenPlotWidget::setupGui()
   m_TableView = new QTableView(m_TableViewWidget);
   m_TableView->setObjectName(QStringLiteral("m_TableView"));
   m_TableView->setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContentsOnFirstShow);
-  m_TableView->setAlternatingRowColors(true);
+  m_TableView->setAlternatingRowColors(false);
   m_TableView->setCornerButtonEnabled(false);
   m_TableView->horizontalHeader()->setCascadingSectionResizes(true);
   m_TableView->horizontalHeader()->setStretchLastSection(true);

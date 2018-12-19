@@ -52,11 +52,7 @@ FindFeaturePhases::FindFeaturePhases()
 : m_FeatureIdsArrayPath("", "", "")
 , m_CellPhasesArrayPath("", "", "")
 , m_FeaturePhasesArrayPath(SIMPL::FeatureData::Phases)
-, m_FeatureIds(nullptr)
-, m_CellPhases(nullptr)
-, m_FeaturePhases(nullptr)
 {
-
 }
 
 // -----------------------------------------------------------------------------

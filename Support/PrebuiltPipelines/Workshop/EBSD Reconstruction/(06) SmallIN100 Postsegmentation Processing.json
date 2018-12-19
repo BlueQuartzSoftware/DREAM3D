@@ -1,8 +1,10 @@
 {
     "0": {
-        "FilterVersion": "1.0.600",
+        "FilterVersion": "1.2.724",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Read DREAM.3D Data File",
         "Filter_Name": "DataContainerReader",
+        "Filter_Uuid": "{043cbde5-3878-5718-958f-ae75714df0df}",
         "InputFile": "Data/Output/Reconstruction/05_SmallIN100_Segmentation.dream3d",
         "InputFileDataContainerArrayProxy": {
             "Data Containers": [
@@ -152,6 +154,26 @@
                                         1
                                     ],
                                     "Flag": 2,
+                                    "Name": "Active",
+                                    "Object Type": "DataArray<bool>",
+                                    "Path": "/DataContainers/Small IN100/Grain Data",
+                                    "Tuple Dimensions": [
+                                        1
+                                    ],
+                                    "Version": 2
+                                }
+                            ],
+                            "Flag": 2,
+                            "Name": "Grain Data",
+                            "Type": 7
+                        },
+                        {
+                            "Data Arrays": [
+                                {
+                                    "Component Dimensions": [
+                                        1
+                                    ],
+                                    "Flag": 2,
                                     "Name": "CrystalStructures",
                                     "Object Type": "DataArray<uint32_t>",
                                     "Path": "/DataContainers/Small IN100/Phase Data",
@@ -190,26 +212,6 @@
                             "Flag": 2,
                             "Name": "Phase Data",
                             "Type": 11
-                        },
-                        {
-                            "Data Arrays": [
-                                {
-                                    "Component Dimensions": [
-                                        1
-                                    ],
-                                    "Flag": 2,
-                                    "Name": "Active",
-                                    "Object Type": "DataArray<bool>",
-                                    "Path": "/DataContainers/Small IN100/Grain Data",
-                                    "Tuple Dimensions": [
-                                        1
-                                    ],
-                                    "Version": 2
-                                }
-                            ],
-                            "Flag": 2,
-                            "Name": "Grain Data",
-                            "Type": 7
                         }
                     ],
                     "Flag": 2,
@@ -236,9 +238,11 @@
             "Data Array Name": "Phases",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.3.287",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Find Feature Phases",
-        "Filter_Name": "FindFeaturePhases"
+        "Filter_Name": "FindFeaturePhases",
+        "Filter_Uuid": "{6334ce16-cea5-5643-83b5-9573805873fa}"
     },
     "2": {
         "AvgEulerAnglesArrayPath": {
@@ -266,9 +270,11 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.3.287",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Find Feature Average Orientations",
         "Filter_Name": "FindAvgOrientations",
+        "Filter_Uuid": "{bf7036d8-25bd-540e-b6de-3a5ab0e42c5f}",
         "QuatsArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Quats",
@@ -287,9 +293,11 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.3.287",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
+        "Filter_Uuid": "{97cf66f8-7a9b-5ec2-83eb-f8c4c8a17bac}",
         "NeighborListArrayName": "NeighborList2",
         "NumNeighborsArrayName": "NumNeighbors2",
         "SharedSurfaceAreaListArrayName": "SharedSurfaceAreaList2",
@@ -328,9 +336,11 @@
             "Data Array Name": "Phases",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.3.287",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Merge Twins",
         "Filter_Name": "MergeTwins",
+        "Filter_Uuid": "{c9af506e-9ea1-5ff5-a882-fa561def5f52}",
         "NewCellFeatureAttributeMatrixName": "NewGrain Data",
         "NonContiguousNeighborListArrayPath": {
             "Attribute Matrix Name": "",
@@ -351,9 +361,11 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.3.287",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Find Feature Sizes",
         "Filter_Name": "FindSizes",
+        "Filter_Uuid": "{656f144c-a120-5c3b-bee5-06deab438588}",
         "NumElementsArrayName": "NumElements",
         "SaveElementSizes": 0,
         "VolumesArrayName": "Volumes"
@@ -370,9 +382,13 @@
             "Data Array Name": "Phases",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.3.287",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Minimum Size",
         "Filter_Name": "MinSize",
+        "Filter_Uuid": "{53ac1638-8934-57b8-b8e5-4b91cdda23ec}",
+        "IgnoredDataArrayPaths": [
+        ],
         "MinAllowedFeatureSize": 16,
         "NumCellsArrayPath": {
             "Attribute Matrix Name": "Grain Data",
@@ -393,9 +409,11 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.3.287",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
+        "Filter_Uuid": "{97cf66f8-7a9b-5ec2-83eb-f8c4c8a17bac}",
         "NeighborListArrayName": "NeighborList",
         "NumNeighborsArrayName": "NumNeighbors",
         "SharedSurfaceAreaListArrayName": "SharedSurfaceAreaList",
@@ -415,9 +433,13 @@
             "Data Array Name": "Phases",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.3.287",
+        "FilterVersion": "6.5.77",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Minimum Number of Neighbors",
         "Filter_Name": "MinNeighbors",
+        "Filter_Uuid": "{dab5de3c-5f81-5bb5-8490-73521e1183ea}",
+        "IgnoredDataArrayPaths": [
+        ],
         "MinNumNeighbors": 2,
         "NumNeighborsArrayPath": {
             "Attribute Matrix Name": "Grain Data",
@@ -427,10 +449,13 @@
         "PhaseNumber": 0
     },
     "9": {
-        "FilterVersion": "1.0.600",
+        "FilterVersion": "1.2.724",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
+        "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
         "OutputFile": "Data/Output/Reconstruction/06_SmallIN100_Postsegmentation.dream3d",
+        "WriteTimeSeries": 0,
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {

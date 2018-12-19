@@ -53,7 +53,6 @@
 AddOrientationNoise::AddOrientationNoise()
 : m_Magnitude(1.0f)
 , m_CellEulerAnglesArrayPath("", "", "")
-, m_CellEulerAngles(nullptr)
 {
 }
 

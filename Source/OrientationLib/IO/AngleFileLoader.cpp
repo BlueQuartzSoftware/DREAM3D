@@ -36,8 +36,8 @@
 
 #include "AngleFileLoader.h"
 
-#include <stdio.h>
-#include <string.h>
+#include <cstdio>
+#include <cstring>
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
@@ -65,7 +65,6 @@ AngleFileLoader::AngleFileLoader():
   m_AngleRepresentation(AngleFileLoader::EulerAngles),
   m_IgnoreMultipleDelimiters(true)
 {
-
 }
 
 // -----------------------------------------------------------------------------

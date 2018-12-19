@@ -72,14 +72,6 @@ GroupMicroTextureRegions::GroupMicroTextureRegions()
 , m_CellParentIdsArrayName(SIMPL::CellData::ParentIds)
 , m_FeatureParentIdsArrayName(SIMPL::FeatureData::ParentIds)
 , m_ActiveArrayName(SIMPL::FeatureData::Active)
-, m_FeatureIds(nullptr)
-, m_AvgQuats(nullptr)
-, m_FeaturePhases(nullptr)
-, m_Volumes(nullptr)
-, m_CrystalStructures(nullptr)
-, m_Active(nullptr)
-, m_CellParentIds(nullptr)
-, m_FeatureParentIds(nullptr)
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
   m_AvgCAxes[0] = 0.0f;

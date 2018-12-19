@@ -61,12 +61,6 @@ FindTriangleGeomShapes::FindTriangleGeomShapes()
 , m_AxisLengthsArrayName(SIMPL::FeatureData::AxisLengths)
 , m_AxisEulerAnglesArrayName(SIMPL::FeatureData::AxisEulerAngles)
 , m_AspectRatiosArrayName(SIMPL::FeatureData::AspectRatios)
-, m_FaceLabels(nullptr)
-, m_Centroids(nullptr)
-, m_AxisEulerAngles(nullptr)
-, m_AxisLengths(nullptr)
-, m_Omega3s(nullptr)
-, m_AspectRatios(nullptr)
 , m_ScaleFactor(1.0f)
 {
   featuremoments = nullptr;

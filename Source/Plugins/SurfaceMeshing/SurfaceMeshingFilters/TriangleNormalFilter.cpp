@@ -108,7 +108,6 @@ public:
 // -----------------------------------------------------------------------------
 TriangleNormalFilter::TriangleNormalFilter()
 : m_SurfaceMeshTriangleNormalsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceNormals)
-, m_SurfaceMeshTriangleNormals(nullptr)
 {
 }
 

@@ -57,11 +57,6 @@ FindKernelAvgMisorientations::FindKernelAvgMisorientations()
 , m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
 , m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats)
 , m_KernelAverageMisorientationsArrayName(SIMPL::CellData::KernelAverageMisorientations)
-, m_FeatureIds(nullptr)
-, m_CellPhases(nullptr)
-, m_Quats(nullptr)
-, m_CrystalStructures(nullptr)
-, m_KernelAverageMisorientations(nullptr)
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 

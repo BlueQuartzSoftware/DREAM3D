@@ -72,11 +72,6 @@ GenerateRodriguesColors::GenerateRodriguesColors()
 , m_GoodVoxelsArrayPath("", "", "")
 , m_CellRodriguesColorsArrayName(SIMPL::CellData::RodriguesColor)
 , m_UseGoodVoxels(false)
-, m_CellPhases(nullptr)
-, m_CellEulerAngles(nullptr)
-, m_CrystalStructures(nullptr)
-, m_CellRodriguesColors(nullptr)
-, m_GoodVoxels(nullptr)
 {
 }
 

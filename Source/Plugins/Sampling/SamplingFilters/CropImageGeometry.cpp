@@ -68,7 +68,6 @@ CropImageGeometry::CropImageGeometry()
 , m_SaveAsNewDataContainer(false)
 , m_UpdateOrigin(true)
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_FeatureIds(nullptr)
 {
   m_OldDimensions.x = 0, m_OldDimensions.y = 0; m_OldDimensions.z = 0;
   m_OldResolution.x = 0.0f; m_OldResolution.y = 0.0f; m_OldResolution.z = 0.0f;
@@ -510,9 +509,9 @@ void CropImageGeometry::execute()
         col = k;
         index_old = planeold + rowold + colold;
         index = plane + row + col;
-        for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+        for(const auto& arrayName : voxelArrayNames)
         {
-          IDataArray::Pointer p = cellAttrMat->getAttributeArray(*iter);
+          IDataArray::Pointer p = cellAttrMat->getAttributeArray(arrayName);
           p->copyTuple(index_old, index);
         }
       }

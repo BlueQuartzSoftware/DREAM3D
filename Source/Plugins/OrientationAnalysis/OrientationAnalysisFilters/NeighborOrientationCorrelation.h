@@ -85,6 +85,9 @@ public:
   SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
   Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
+  SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, IgnoredDataArrayPaths)
+  Q_PROPERTY(QVector<DataArrayPath> IgnoredDataArrayPaths READ getIgnoredDataArrayPaths WRITE setIgnoredDataArrayPaths)
+
   void updateProgress(size_t p);
 
   /**

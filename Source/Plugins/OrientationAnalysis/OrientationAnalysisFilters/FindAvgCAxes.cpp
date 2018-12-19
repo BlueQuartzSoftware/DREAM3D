@@ -54,9 +54,6 @@ FindAvgCAxes::FindAvgCAxes()
 : m_QuatsArrayPath("", "", "")
 , m_FeatureIdsArrayPath("", "", "")
 , m_AvgCAxesArrayPath("", "", "")
-, m_FeatureIds(nullptr)
-, m_Quats(nullptr)
-, m_AvgCAxes(nullptr)
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 

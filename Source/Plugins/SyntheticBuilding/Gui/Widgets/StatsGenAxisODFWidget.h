@@ -99,9 +99,6 @@ protected slots:
   void on_savePoleFigureImage_clicked();
   void tableDataChanged(const QModelIndex& topLeft, const QModelIndex& bottomRight);
 
-  virtual void on_m_ODFParametersBtn_clicked(bool b);
-  virtual void on_m_MDFParametersBtn_clicked(bool b);
-
   virtual void on_m_WeightSpreads_clicked(bool b);
   virtual void on_m_WeightSpreadsBulkLoad_clicked(bool b);
 

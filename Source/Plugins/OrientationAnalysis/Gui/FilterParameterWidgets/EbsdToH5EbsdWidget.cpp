@@ -73,12 +73,10 @@
 // -----------------------------------------------------------------------------
 EbsdToH5EbsdWidget::EbsdToH5EbsdWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent)
 : FilterParameterWidget(parameter, filter, parent)
-, m_StackingGroup(nullptr)
 , m_TSLchecked(false)
 , m_HKLchecked(false)
 , m_HEDMchecked(false)
 , m_NoTranschecked(true)
-, m_DidCausePreflight(false)
 {
   m_SampleTransformation.angle = 0.0f;
   m_SampleTransformation.h = 0.0f;

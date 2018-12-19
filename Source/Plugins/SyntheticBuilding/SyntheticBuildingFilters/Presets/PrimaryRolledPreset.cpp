@@ -37,7 +37,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
-#include "SIMPLib/Utilities/ColorUtilities.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -64,7 +63,7 @@ QString PrimaryRolledPreset::getName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryRolledPreset::initializeOmega3TableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors)
+void PrimaryRolledPreset::initializeOmega3TableModel(QMap<QString, QVector<float>>& data)
 {
   QVector<float>& binNumbers = data[kBinNumbers];
   qint32 count = binNumbers.count();
@@ -74,8 +73,6 @@ void PrimaryRolledPreset::initializeOmega3TableModel(QMap<QString, QVector<float
 
   QVector<float> alphas;
   QVector<float> betas;
-  colors.clear();
-  colors.append(ColorUtilities::GenerateColors(count, 160, 255));
 
   for(qint32 i = 0; i < count; ++i)
   {
@@ -92,7 +89,7 @@ void PrimaryRolledPreset::initializeOmega3TableModel(QMap<QString, QVector<float
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryRolledPreset::initializeBOverATableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors)
+void PrimaryRolledPreset::initializeBOverATableModel(QMap<QString, QVector<float>>& data)
 {
   QVector<float>& binNumbers = data[kBinNumbers];
   qint32 count = binNumbers.count();
@@ -102,8 +99,6 @@ void PrimaryRolledPreset::initializeBOverATableModel(QMap<QString, QVector<float
 
   QVector<float> alphas;
   QVector<float> betas;
-  colors.clear();
-  colors.append(ColorUtilities::GenerateColors(count, 160, 255));
 
   for(qint32 i = 0; i < count; ++i)
   {
@@ -120,7 +115,7 @@ void PrimaryRolledPreset::initializeBOverATableModel(QMap<QString, QVector<float
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryRolledPreset::initializeCOverATableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors)
+void PrimaryRolledPreset::initializeCOverATableModel(QMap<QString, QVector<float>>& data)
 {
   QVector<float>& binNumbers = data[kBinNumbers];
   qint32 count = binNumbers.count();
@@ -130,8 +125,6 @@ void PrimaryRolledPreset::initializeCOverATableModel(QMap<QString, QVector<float
 
   QVector<float> alphas;
   QVector<float> betas;
-  colors.clear();
-  colors.append(ColorUtilities::GenerateColors(count, 160, 255));
 
   for(qint32 i = 0; i < count; ++i)
   {
@@ -148,7 +141,7 @@ void PrimaryRolledPreset::initializeCOverATableModel(QMap<QString, QVector<float
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryRolledPreset::initializeNeighborTableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors)
+void PrimaryRolledPreset::initializeNeighborTableModel(QMap<QString, QVector<float>>& data)
 {
   QVector<float>& binNumbers = data[kBinNumbers];
   qint32 count = binNumbers.count();
@@ -158,8 +151,6 @@ void PrimaryRolledPreset::initializeNeighborTableModel(QMap<QString, QVector<flo
 
   QVector<float> mus;
   QVector<float> sigmas;
-  colors.clear();
-  colors.append(ColorUtilities::GenerateColors(count, 160, 255));
 
   int middlebin = count / 2;
   for(qint32 i = 0; i < count; ++i)
@@ -177,7 +168,7 @@ void PrimaryRolledPreset::initializeNeighborTableModel(QMap<QString, QVector<flo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryRolledPreset::initializeClusteringTableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors)
+void PrimaryRolledPreset::initializeClusteringTableModel(QMap<QString, QVector<float>>& data)
 {
   Q_ASSERT(false);
 }
@@ -239,7 +230,7 @@ unsigned int PrimaryRolledPreset::getDistributionType(const QString& distType)
   {
     return SIMPL::DistributionType::UnknownDistributionType;
   }
-  else if(distType == AbstractMicrostructurePreset::kNeighborDistribution)
+  if(distType == AbstractMicrostructurePreset::kNeighborDistribution)
   {
     return SIMPL::DistributionType::LogNormal;
   }

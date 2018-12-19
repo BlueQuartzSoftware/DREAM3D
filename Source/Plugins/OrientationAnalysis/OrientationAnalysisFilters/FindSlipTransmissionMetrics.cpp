@@ -56,9 +56,6 @@ FindSlipTransmissionMetrics::FindSlipTransmissionMetrics()
 , m_AvgQuatsArrayPath("", "", "")
 , m_FeaturePhasesArrayPath("", "", "")
 , m_CrystalStructuresArrayPath("", "", "")
-, m_FeaturePhases(nullptr)
-, m_AvgQuats(nullptr)
-, m_CrystalStructures(nullptr)
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 

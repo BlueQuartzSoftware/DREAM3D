@@ -69,7 +69,7 @@
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 #include "hpdf.h"
-#include <setjmp.h>
+#include <csetjmp>
 
 jmp_buf env;
 

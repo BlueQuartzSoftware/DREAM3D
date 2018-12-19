@@ -26,55 +26,43 @@ namespace UnitTest
     static const size_t Offset = 200;
   }
 
+  const QString TestTempDir("@TEST_TEMP_DIR@");
+
   namespace CropVolumeTest
   {
     const QString CropVolumeTest_3("@TEST_TEMP_DIR@/CropVolumeTest_3.dream3d");
     const QString CropVolumeTest_4("@TEST_TEMP_DIR@/CropVolumeTest_4.dream3d");
   }
-}
 
-namespace UnitTest
-{
   namespace QuickSurfaceMeshTest
   {
-   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
-   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+   const QString TestFile1("@TEST_TEMP_DIR@/QuickSurfaceMeshTest.dream3d");
+   const QString TestFile1Xdmf("@TEST_TEMP_DIR@/QuickSurfaceMeshTest.xdmf");
   }
-}
 
-namespace UnitTest
-{
   namespace FindTriangleGeomSizesTest
   {
    const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
    const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
   }
-}
 
-namespace UnitTest
-{
   namespace FindTriangleGeomCentroidsTest
   {
    const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
    const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
   }
-}
 
-namespace UnitTest
-{
   namespace FindTriangleGeomNeighborsTest
   {
    const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
    const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
   }
-}
 
-namespace UnitTest
-{
   namespace FindTriangleGeomShapesTest
   {
-   const QString TestFile1("@TEST_TEMP_DIR@/TestFile1.txt");
-   const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
+   const QString TestFile("@TEST_TEMP_DIR@/FindTriangleGeomShapesTest.dream3d");
+   const QString TestFileXdmf("@TEST_TEMP_DIR@/FindTriangleGeomShapesTest.xdmf");
+
   }
 }
 

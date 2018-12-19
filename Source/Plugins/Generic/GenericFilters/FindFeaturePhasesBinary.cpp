@@ -55,10 +55,7 @@ FindFeaturePhasesBinary::FindFeaturePhasesBinary()
 , m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
 , m_FeaturePhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases)
 , m_CellEnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName)
-, m_FeatureIds(nullptr)
-, m_GoodVoxels(nullptr)
 {
-
 }
 
 // -----------------------------------------------------------------------------

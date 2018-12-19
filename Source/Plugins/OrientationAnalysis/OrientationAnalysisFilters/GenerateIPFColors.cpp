@@ -148,11 +148,6 @@ GenerateIPFColors::GenerateIPFColors()
 , m_UseGoodVoxels(false)
 , m_GoodVoxelsArrayPath("", "", "")
 , m_CellIPFColorsArrayName(SIMPL::CellData::IPFColor)
-, m_CellPhases(nullptr)
-, m_CellEulerAngles(nullptr)
-, m_CrystalStructures(nullptr)
-, m_GoodVoxels(nullptr)
-, m_CellIPFColors(nullptr)
 {
   m_ReferenceDir.x = 0.0f;
   m_ReferenceDir.y = 0.0f;

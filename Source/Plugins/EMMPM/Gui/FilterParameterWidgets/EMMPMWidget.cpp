@@ -35,7 +35,7 @@
 
 #include "EMMPMWidget.h"
 
-#include <assert.h>
+#include <cassert>
 
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>

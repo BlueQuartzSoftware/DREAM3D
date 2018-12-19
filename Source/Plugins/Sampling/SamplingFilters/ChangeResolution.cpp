@@ -58,7 +58,6 @@ ChangeResolution::ChangeResolution()
 , m_RenumberFeatures(true)
 , m_SaveAsNewDataContainer(false)
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
-, m_FeatureIds(nullptr)
 {
   m_Resolution.x = 1.0f;
   m_Resolution.y = 1.0f;

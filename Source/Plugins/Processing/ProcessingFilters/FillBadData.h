@@ -71,6 +71,9 @@ public:
   SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
+  SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, IgnoredDataArrayPaths)
+  Q_PROPERTY(QVector<DataArrayPath> IgnoredDataArrayPaths READ getIgnoredDataArrayPaths WRITE setIgnoredDataArrayPaths)
+
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */

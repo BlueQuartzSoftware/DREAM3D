@@ -51,7 +51,6 @@
 IdentifySample::IdentifySample()
 : m_FillHoles(false)
 , m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
-, m_GoodVoxels(nullptr)
 {
 }
 

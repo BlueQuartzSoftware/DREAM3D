@@ -53,7 +53,6 @@ QuiltCellData::QuiltCellData()
 , m_OutputDataContainerName(SIMPL::Defaults::NewImageDataContainerName)
 , m_OutputAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_OutputArrayName("Quilt_Data")
-, m_OutputArray(nullptr)
 {
   m_QuiltStep.x = 2;
   m_QuiltStep.y = 2;

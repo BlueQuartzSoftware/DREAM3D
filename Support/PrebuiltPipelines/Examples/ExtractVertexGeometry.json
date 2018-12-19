@@ -1,0 +1,142 @@
+{
+    "0": {
+        "CellAttributeMatrixName": "EBSD Scan Data",
+        "CellEnsembleAttributeMatrixName": "Phase Data",
+        "DataContainerName": "Small IN100 Slice 1",
+        "FilterVersion": "6.5.85",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Import EDAX EBSD Data (.ang)",
+        "Filter_Name": "ReadAngData",
+        "Filter_Uuid": "{b8e128a8-c2a3-5e6c-a7ad-e4fb864e5d40}",
+        "InputFile": "Data/SmallIN100/Slice_1.ang"
+    },
+    "1": {
+        "CellAttributeMatrixPath": {
+            "Attribute Matrix Name": "EBSD Scan Data",
+            "Data Array Name": "",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "FilterVersion": "6.5.85",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Rotate Sample Reference Frame",
+        "Filter_Name": "RotateSampleRefFrame",
+        "Filter_Uuid": "{e25d9b4c-2b37-578c-b1de-cf7032b5ef19}",
+        "RotationAngle": 180,
+        "RotationAxis": {
+            "x": 0,
+            "y": 1,
+            "z": 0
+        }
+    },
+    "2": {
+        "CellEulerAnglesArrayPath": {
+            "Attribute Matrix Name": "EBSD Scan Data",
+            "Data Array Name": "EulerAngles",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "FilterVersion": "6.5.85",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Rotate Euler Reference Frame",
+        "Filter_Name": "RotateEulerRefFrame",
+        "Filter_Uuid": "{ef9420b2-8c46-55f3-8ae4-f53790639de4}",
+        "RotationAngle": 90,
+        "RotationAxis": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+        }
+    },
+    "3": {
+        "DestinationArrayName": "Mask",
+        "FilterVersion": "1.2.718",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Threshold Objects",
+        "Filter_Name": "MultiThresholdObjects",
+        "Filter_Uuid": "{014b7300-cf36-5ede-a751-5faf9b119dae}",
+        "SelectedThresholds": [
+            {
+                "Attribute Array Name": "Confidence Index",
+                "Attribute Matrix Name": "EBSD Scan Data",
+                "Comparison Operator": 0,
+                "Comparison Value": 0,
+                "Data Container Name": "Small IN100 Slice 1"
+            }
+        ]
+    },
+    "4": {
+        "CellEulerAnglesArrayPath": {
+            "Attribute Matrix Name": "EBSD Scan Data",
+            "Data Array Name": "EulerAngles",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "CellIPFColorsArrayName": "IPFColor",
+        "CellPhasesArrayPath": {
+            "Attribute Matrix Name": "EBSD Scan Data",
+            "Data Array Name": "Phases",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "CrystalStructuresArrayPath": {
+            "Attribute Matrix Name": "Phase Data",
+            "Data Array Name": "CrystalStructures",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "FilterVersion": "6.5.85",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Generate IPF Colors",
+        "Filter_Name": "GenerateIPFColors",
+        "Filter_Uuid": "{a50e6532-8075-5de5-ab63-945feb0de7f7}",
+        "GoodVoxelsArrayPath": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": ""
+        },
+        "ReferenceDir": {
+            "x": 0,
+            "y": 0,
+            "z": 1
+        },
+        "UseGoodVoxels": 0
+    },
+    "5": {
+        "ArrayHandling": 0,
+        "FilterVersion": "1.2.718",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Extract Vertex Geometry",
+        "Filter_Name": "ExtractVertexGeometry",
+        "Filter_Uuid": "{bc8a91ca-0cee-59c6-b5cb-acc1aab8617f}",
+        "IncludedDataArrayPaths": [
+            {
+                "Attribute Matrix Name": "EBSD Scan Data",
+                "Data Array Name": "IPFColor",
+                "Data Container Name": "Small IN100 Slice 1"
+            },
+            {
+                "Attribute Matrix Name": "EBSD Scan Data",
+                "Data Array Name": "Confidence Index",
+                "Data Container Name": "Small IN100 Slice 1"
+            },
+            {
+                "Attribute Matrix Name": "EBSD Scan Data",
+                "Data Array Name": "Image Quality",
+                "Data Container Name": "Small IN100 Slice 1"
+            }
+        ],
+        "SelectedDataContainerName": "Small IN100 Slice 1",
+        "VertexDataContainerName": "VertexDataContainer"
+    },
+    "6": {
+        "FilterVersion": "1.2.718",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Write DREAM.3D Data File",
+        "Filter_Name": "DataContainerWriter",
+        "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
+        "OutputFile": "Output/Examples/ExtractVertexGeometry.dream3d",
+        "WriteTimeSeries": 0,
+        "WriteXdmfFile": 1
+    },
+    "PipelineBuilder": {
+        "Name": "Extract Vertex Geometry",
+        "Number_Filters": 7,
+        "Version": 6
+    }
+}

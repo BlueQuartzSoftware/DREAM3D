@@ -36,9 +36,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #include "EMCalculation.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 #include "SIMPLib/SIMPLib.h"
 
@@ -61,8 +61,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 //
 // -----------------------------------------------------------------------------
 EMCalculation::EMCalculation()
-: m_StatsDelegate(nullptr)
-, m_ErrorCondition(0)
+: m_ErrorCondition(0)
 {
 }
 

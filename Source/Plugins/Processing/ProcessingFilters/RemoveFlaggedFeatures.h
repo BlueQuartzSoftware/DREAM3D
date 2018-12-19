@@ -67,6 +67,9 @@ public:
   SIMPL_FILTER_PARAMETER(DataArrayPath, FlaggedFeaturesArrayPath)
   Q_PROPERTY(DataArrayPath FlaggedFeaturesArrayPath READ getFlaggedFeaturesArrayPath WRITE setFlaggedFeaturesArrayPath)
 
+  SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, IgnoredDataArrayPaths)
+  Q_PROPERTY(QVector<DataArrayPath> IgnoredDataArrayPaths READ getIgnoredDataArrayPaths WRITE setIgnoredDataArrayPaths)
+
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */

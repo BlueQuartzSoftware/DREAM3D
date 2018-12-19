@@ -249,15 +249,6 @@ FindDistsToCharactGBs::FindDistsToCharactGBs()
 , m_DistToTwistArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, "DistanceToTwist")
 , m_DistToSymmetricArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, "DistanceToSymmetric")
 , m_DistTo180TiltArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, "DistanceTo180tilt")
-, m_CrystalStructures(nullptr)
-, m_FeatureEulerAngles(nullptr)
-, m_FeaturePhases(nullptr)
-, m_SurfaceMeshFaceLabels(nullptr)
-, m_SurfaceMeshFaceNormals(nullptr)
-, m_DistToTilt(nullptr)
-, m_DistToTwist(nullptr)
-, m_DistToSymmetric(nullptr)
-, m_DistTo180Tilt(nullptr)
 {
 }
 

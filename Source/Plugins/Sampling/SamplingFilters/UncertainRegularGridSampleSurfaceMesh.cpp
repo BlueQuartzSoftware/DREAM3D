@@ -60,7 +60,6 @@ UncertainRegularGridSampleSurfaceMesh::UncertainRegularGridSampleSurfaceMesh()
 , m_YPoints(0)
 , m_ZPoints(0)
 , m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
-, m_FeatureIds(nullptr)
 {
   m_Resolution.x = 1.0f;
   m_Resolution.y = 1.0f;

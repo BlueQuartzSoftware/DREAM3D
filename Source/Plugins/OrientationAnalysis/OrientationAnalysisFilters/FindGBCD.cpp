@@ -34,6 +34,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "FindGBCD.h"
+#include <utility>
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range.h>
@@ -83,21 +84,30 @@ class CalculateGBCDImpl
   QVector<LaueOps::Pointer> m_OrientationOps;
 
 public:
-  CalculateGBCDImpl(size_t i, size_t numMisoReps, Int32ArrayType::Pointer Labels, DoubleArrayType::Pointer Normals, FloatArrayType::Pointer Eulers, Int32ArrayType::Pointer Phases,
-                    UInt32ArrayType::Pointer CrystalStructures, Int32ArrayType::Pointer Bins, BoolArrayType::Pointer HemiCheck, FloatArrayType::Pointer GBCDdeltas, Int32ArrayType::Pointer GBCDsizes,
-                    FloatArrayType::Pointer GBCDlimits)
+  CalculateGBCDImpl(size_t i,
+                    size_t numMisoReps,
+                    Int32ArrayType::Pointer labels,
+                    DoubleArrayType::Pointer normals,
+                    FloatArrayType::Pointer eulers,
+                    Int32ArrayType::Pointer phases,
+                    UInt32ArrayType::Pointer crystalStructures,
+                    Int32ArrayType::Pointer bins,
+                    BoolArrayType::Pointer hemiCheck,
+                    FloatArrayType::Pointer gbcdDeltas,
+                    Int32ArrayType::Pointer gbcdSizes,
+                    FloatArrayType::Pointer gbcdLimits)
   : startOffset(i)
   , numEntriesPerTri(numMisoReps)
-  , m_LabelsArray(Labels)
-  , m_NormalsArray(Normals)
-  , m_PhasesArray(Phases)
-  , m_EulersArray(Eulers)
-  , m_GbcdDeltasArray(GBCDdeltas)
-  , m_GbcdLimitsArray(GBCDlimits)
-  , m_GbcdSizesArray(GBCDsizes)
-  , m_GbcdBinsArray(Bins)
-  , m_GbcdHemiCheckArray(HemiCheck)
-  , m_CrystalStructuresArray(CrystalStructures)
+  , m_LabelsArray(std::move(labels))
+  , m_NormalsArray(std::move(normals))
+  , m_PhasesArray(std::move(phases))
+  , m_EulersArray(std::move(eulers))
+  , m_GbcdDeltasArray(std::move(gbcdDeltas))
+  , m_GbcdLimitsArray(std::move(gbcdLimits))
+  , m_GbcdSizesArray(std::move(gbcdSizes))
+  , m_GbcdBinsArray(std::move(bins))
+  , m_GbcdHemiCheckArray(std::move(hemiCheck))
+  , m_CrystalStructuresArray(std::move(crystalStructures))
   {
     m_OrientationOps = LaueOps::getOrientationOpsQVector();
   }
@@ -107,17 +117,17 @@ public:
   {
 
     // We want to work with the raw pointers for speed so get those pointers.
-    float* m_GBCDdeltas = m_GbcdDeltasArray->getPointer(0);
-    float* m_GBCDlimits = m_GbcdLimitsArray->getPointer(0);
-    int* m_GBCDsizes = m_GbcdSizesArray->getPointer(0);
-    int32_t* m_Bins = m_GbcdBinsArray->getPointer(0);
-    bool* m_HemiCheck = m_GbcdHemiCheckArray->getPointer(0);
+    float* gbcdDeltas = m_GbcdDeltasArray->getPointer(0);
+    float* gbcdLimits = m_GbcdLimitsArray->getPointer(0);
+    int* gbcdSizes = m_GbcdSizesArray->getPointer(0);
+    int32_t* bins = m_GbcdBinsArray->getPointer(0);
+    bool* hemiCheck = m_GbcdHemiCheckArray->getPointer(0);
 
-    int32_t* m_Labels = m_LabelsArray->getPointer(0);
-    double* m_Normals = m_NormalsArray->getPointer(0);
-    int32_t* m_Phases = m_PhasesArray->getPointer(0);
-    float* m_Eulers = m_EulersArray->getPointer(0);
-    uint32_t* m_CrystalStructures = m_CrystalStructuresArray->getPointer(0);
+    int32_t* labels = m_LabelsArray->getPointer(0);
+    double* normals = m_NormalsArray->getPointer(0);
+    int32_t* phases = m_PhasesArray->getPointer(0);
+    float* eulers = m_EulersArray->getPointer(0);
+    uint32_t* crystalStructures = m_CrystalStructuresArray->getPointer(0);
 
     int32_t j = 0; //, j4;
     int32_t k = 0; //, k4;
@@ -138,27 +148,27 @@ public:
     float sqCoord[2] = {0.0f, 0.0f}, sqCoordInv[2] = {0.0f, 0.0f};
     bool nhCheck = false, nhCheckInv = true;
     int32_t SYMcounter = 0;
-    int64_t TRIcounter = static_cast<int64_t>(start - startOffset);
+    auto TRIcounter = static_cast<int64_t>(start - startOffset);
     int64_t TRIcounterShift = 0;
 
     for(size_t i = start; i < end; i++)
     {
       SYMcounter = 0;
-      feature1 = m_Labels[2 * i];
-      feature2 = m_Labels[2 * i + 1];
-      normal[0] = m_Normals[3 * i];
-      normal[1] = m_Normals[3 * i + 1];
-      normal[2] = m_Normals[3 * i + 2];
+      feature1 = labels[2 * i];
+      feature2 = labels[2 * i + 1];
+      normal[0] = normals[3 * i];
+      normal[1] = normals[3 * i + 1];
+      normal[2] = normals[3 * i + 2];
 
       if(feature1 < 0 || feature2 < 0)
       {
         continue;
       }
 
-      if(m_Phases[feature1] == m_Phases[feature2] && m_Phases[feature1] > 0)
+      if(phases[feature1] == phases[feature2] && phases[feature1] > 0)
       {
         TRIcounterShift = (TRIcounter * numEntriesPerTri);
-        uint32_t cryst = m_CrystalStructures[m_Phases[feature1]];
+        uint32_t cryst = crystalStructures[phases[feature1]];
         for(int32_t q = 0; q < 2; q++)
         {
           if(q == 1)
@@ -172,8 +182,8 @@ public:
           }
           for(m = 0; m < 3; m++)
           {
-            g1ea[m] = m_Eulers[3 * feature1 + m];
-            g2ea[m] = m_Eulers[3 * feature2 + m];
+            g1ea[m] = eulers[3 * feature1 + m];
+            g2ea[m] = eulers[3 * feature2 + m];
           }
 
           FOrientArrayType om(9, 0.0f);
@@ -221,20 +231,20 @@ public:
                 // PHI euler angle is stored in GBCD as cos(PHI)
                 euler_mis[1] = cosf(euler_mis[1]);
                 // get the indexes that this point would be in the GBCD histogram
-                gbcd_index = GBCDIndex(m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, sqCoord);
+                gbcd_index = GBCDIndex(gbcdDeltas, gbcdSizes, gbcdLimits, euler_mis, sqCoord);
                 if(gbcd_index != -1)
                 {
-                  m_HemiCheck[TRIcounterShift + SYMcounter] = nhCheck;
-                  m_Bins[TRIcounterShift + SYMcounter] = gbcd_index;
+                  hemiCheck[TRIcounterShift + SYMcounter] = nhCheck;
+                  bins[TRIcounterShift + SYMcounter] = gbcd_index;
                 }
                 SYMcounter++;
                 if(inversion == 1)
                 {
-                  gbcd_index = GBCDIndex(m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, sqCoordInv);
+                  gbcd_index = GBCDIndex(gbcdDeltas, gbcdSizes, gbcdLimits, euler_mis, sqCoordInv);
                   if(gbcd_index != -1)
                   {
-                    m_HemiCheck[TRIcounterShift + SYMcounter] = nhCheckInv;
-                    m_Bins[TRIcounterShift + SYMcounter] = gbcd_index;
+                    hemiCheck[TRIcounterShift + SYMcounter] = nhCheckInv;
+                    bins[TRIcounterShift + SYMcounter] = gbcd_index;
                   }
                   SYMcounter++;
                 }
@@ -258,7 +268,7 @@ public:
   }
 #endif
 
-  int32_t GBCDIndex(float* gbcddelta, int32_t* gbcdsz, float* gbcdlimits, float* eulerN, float* sqCoord) const
+  int32_t GBCDIndex(const float* gbcddelta, const int32_t* gbcdsz, const float* gbcdlimits, const float* eulerN, const float* sqCoord) const
   {
     int32_t gbcd_index;
     int32_t i = 0, index[5] = {0, 0, 0, 0, 0};
@@ -354,18 +364,6 @@ FindGBCD::FindGBCD()
 , m_FeaturePhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases)
 , m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
 , m_GBCDArrayName(SIMPL::EnsembleData::GBCD)
-, m_SurfaceMeshFaceAreas(nullptr)
-, m_SurfaceMeshFaceLabels(nullptr)
-, m_SurfaceMeshFaceNormals(nullptr)
-, m_FeatureEulerAngles(nullptr)
-, m_FeaturePhases(nullptr)
-, m_CrystalStructures(nullptr)
-, m_GBCD(nullptr)
-, m_GbcdDeltas(nullptr)
-, m_GbcdSizes(nullptr)
-, m_GbcdLimits(nullptr)
-, m_GbcdBins(nullptr)
-, m_HemiCheck(nullptr)
 {
   m_GbcdDeltasArray = FloatArrayType::NullPointer();
   m_GbcdSizesArray = Int32ArrayType::NullPointer();
@@ -678,6 +676,7 @@ void FindGBCD::execute()
     {
       area = m_SurfaceMeshFaceAreas[i + j];
       feature = m_SurfaceMeshFaceLabels[2 * (i + j)];
+      if(feature < 0) { continue; }
       phase = m_FeaturePhases[feature];
       for(size_t k = 0; k < numMisoReps; k++)
       {
@@ -688,7 +687,9 @@ void FindGBCD::execute()
           {
             hemisphere = 1;
           }
-          m_GBCD[(phase * totalGBCDBins) + (2 * m_GbcdBins[(j * numMisoReps) + (k)] + hemisphere)] += area;
+          size_t gbcdBinIdx = (j * numMisoReps) + k;
+          size_t gbcdIdx = (phase * totalGBCDBins) + (2 * m_GbcdBins[gbcdBinIdx] + hemisphere);
+          m_GBCD[gbcdIdx] += area;
           totalFaceArea[phase] += area;
         }
       }

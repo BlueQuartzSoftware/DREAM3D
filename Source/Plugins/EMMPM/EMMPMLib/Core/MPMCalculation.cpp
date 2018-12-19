@@ -44,10 +44,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "MPMCalculation.h"
 
 //-- C Includes
-#include <stddef.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
+#include <cstddef>
+#include <cstdio>
+#include <cstdlib>
+#include <cstring>
 
 //-- C++ includes
 #include <random>
@@ -322,8 +322,7 @@ private:
 //
 // -----------------------------------------------------------------------------
 MPMCalculation::MPMCalculation()
-: m_StatsDelegate(nullptr)
-, m_ErrorCondition(0)
+: m_ErrorCondition(0)
 {
 }
 

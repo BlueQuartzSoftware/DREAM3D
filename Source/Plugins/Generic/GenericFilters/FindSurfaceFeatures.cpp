@@ -52,8 +52,6 @@
 FindSurfaceFeatures::FindSurfaceFeatures()
 : m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 , m_SurfaceFeaturesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::SurfaceFeatures)
-, m_FeatureIds(nullptr)
-, m_SurfaceFeatures(nullptr)
 {
 }
 

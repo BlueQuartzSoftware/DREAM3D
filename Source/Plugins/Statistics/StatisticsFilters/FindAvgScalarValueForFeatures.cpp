@@ -52,11 +52,7 @@ FindAvgScalarValueForFeatures::FindAvgScalarValueForFeatures()
 : m_SelectedCellArrayPath("", "", "")
 , m_FeatureIdsArrayPath("", "", "")
 , m_NewFeatureArrayArrayPath("", "", "")
-, m_InDataArray(nullptr)
-, m_FeatureIds(nullptr)
-, m_NewFeatureArray(nullptr)
 {
-
 }
 
 // -----------------------------------------------------------------------------

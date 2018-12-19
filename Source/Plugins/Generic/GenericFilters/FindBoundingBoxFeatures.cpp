@@ -56,10 +56,6 @@ FindBoundingBoxFeatures::FindBoundingBoxFeatures()
 , m_PhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::Phases)
 , m_SurfaceFeaturesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::SurfaceFeatures)
 , m_BiasedFeaturesArrayName(SIMPL::FeatureData::BiasedFeatures)
-, m_Phases(nullptr)
-, m_Centroids(nullptr)
-, m_SurfaceFeatures(nullptr)
-, m_BiasedFeatures(nullptr)
 {
 }
 

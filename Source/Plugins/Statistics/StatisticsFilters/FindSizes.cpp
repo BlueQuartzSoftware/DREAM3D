@@ -57,10 +57,6 @@ FindSizes::FindSizes()
 , m_EquivalentDiametersArrayName(SIMPL::FeatureData::EquivalentDiameters)
 , m_NumElementsArrayName(SIMPL::FeatureData::NumElements)
 , m_SaveElementSizes(false)
-, m_FeatureIds(nullptr)
-, m_Volumes(nullptr)
-, m_EquivalentDiameters(nullptr)
-, m_NumElements(nullptr)
 {
 }
 
@@ -202,7 +198,6 @@ void FindSizes::preflight()
 // -----------------------------------------------------------------------------
 void FindSizes::findSizesImage(ImageGeom::Pointer image)
 {
-  std::cout << "FindSizes::findSizesImage....." << std::endl;
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t numfeatures = m_VolumesPtr.lock()->getNumberOfTuples();
 

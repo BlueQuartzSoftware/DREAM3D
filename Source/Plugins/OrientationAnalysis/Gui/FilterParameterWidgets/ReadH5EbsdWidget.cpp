@@ -67,7 +67,6 @@
 // -----------------------------------------------------------------------------
 ReadH5EbsdWidget::ReadH5EbsdWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent)
 : FilterParameterWidget(parameter, filter, parent)
-, m_DidCausePreflight(false)
 , m_NewFileLoaded(false)
 , m_Version4Warning(false)
 {

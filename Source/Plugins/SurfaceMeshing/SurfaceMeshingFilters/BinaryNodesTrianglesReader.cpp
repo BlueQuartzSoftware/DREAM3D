@@ -59,8 +59,6 @@ BinaryNodesTrianglesReader::BinaryNodesTrianglesReader()
 , m_SurfaceMeshNodeTypesArrayName(SIMPL::VertexData::SurfaceMeshNodeType)
 , m_BinaryNodesFile("")
 , m_BinaryTrianglesFile("")
-, m_SurfaceMeshNodeTypes(nullptr)
-, m_FaceLabels(nullptr)
 {
 }
 

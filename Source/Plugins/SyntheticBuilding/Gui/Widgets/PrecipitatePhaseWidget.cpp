@@ -56,6 +56,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/StatsData/StatsData.h"
+#include "SIMPLib/Utilities/ColorUtilities.h"
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 
@@ -178,12 +179,12 @@ void PrecipitatePhaseWidget::updatePlots()
 {
   if(getDataHasBeenGenerated())
   {
-    QProgressDialog progress("Generating Data ....", "Cancel", 0, 4, this);
+    QProgressDialog progress("Generating Data ....", "Cancel", 0, 5, this);
     progress.setWindowModality(Qt::WindowModal);
     progress.setMinimumDuration(2000);
 
     progress.setValue(1);
-    progress.setLabelText("[1/4] Calculating Size Distributions ...");
+    progress.setLabelText("[1/5] Calculating Size Distributions ...");
     getFeatureSizeWidget()->plotSizeDistribution();
 
     // Now that we have bins and feature sizes, push those to the other plot widgets
@@ -192,9 +193,9 @@ void PrecipitatePhaseWidget::updatePlots()
     QwtArray<float> binSizes = getFeatureSizeWidget()->getBinSizes();
     QMap<QString, QVector<float>> data;
     data[AbstractMicrostructurePreset::kBinNumbers] = binSizes;
-    QVector<SIMPL::Rgb> colors;
+    QVector<SIMPL::Rgb> colors = ColorUtilities::GenerateColors(binSizes.size(), SyntheticBuildingConstants::k_HSV_Saturation, SyntheticBuildingConstants::k_HSV_Value);
 
-    getMicroPreset()->initializeOmega3TableModel(data, colors);
+    getMicroPreset()->initializeOmega3TableModel(data);
     getOmega3PlotWidget()->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kOmega3Distribution), false);
     SGAbstractTableModel* tmodel = getOmega3PlotWidget()->tableModel();
     if(tmodel != nullptr)
@@ -205,7 +206,7 @@ void PrecipitatePhaseWidget::updatePlots()
       tmodel->setTableData(binSizes, colData, colors);
     }
 
-    getMicroPreset()->initializeBOverATableModel(data, colors);
+    getMicroPreset()->initializeBOverATableModel(data);
     getBOverAPlotPlotWidget()->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kBOverADistribution), false);
     tmodel = getBOverAPlotPlotWidget()->tableModel();
     if(tmodel != nullptr)
@@ -216,7 +217,7 @@ void PrecipitatePhaseWidget::updatePlots()
       tmodel->setTableData(binSizes, colData, colors);
     }
 
-    getMicroPreset()->initializeCOverATableModel(data, colors);
+    getMicroPreset()->initializeCOverATableModel(data);
     getCOverAPlotWidget()->setDistributionType(getMicroPreset()->getDistributionType(AbstractMicrostructurePreset::kCOverADistribution), false);
     tmodel = getCOverAPlotWidget()->tableModel();
     if(tmodel != nullptr)
@@ -251,22 +252,26 @@ void PrecipitatePhaseWidget::updatePlots()
 
     // getMicroPreset()->initializeMDFTableModel(m_ODFWidget->getMDFWidget());
     getMicroPreset()->initializeMDFTableModel(data);
-    SGMDFTableModel* mdfModel = (getODFWidget()->getMDFWidget()->tableModel());
+    SGMDFTableModel* mdfModel = getMDFWidget()->tableModel();
     if(mdfModel != nullptr)
     {
       mdfModel->setTableData(data[AbstractMicrostructurePreset::kAngles], data[AbstractMicrostructurePreset::kAxis], data[AbstractMicrostructurePreset::kWeight]);
     }
 #endif
     progress.setValue(2);
-    progress.setLabelText("[2/4] Calculating ODF Data ...");
+    progress.setLabelText("[2/5] Calculating ODF Data ...");
     getODFWidget()->updatePlots();
 
     progress.setValue(3);
-    progress.setLabelText("[3/4] Calculating Axis ODF Data ...");
-    getAxisODFWidget()->updatePlots();
+    progress.setLabelText("[3/5] Calculating MDF Data ...");
+    getMDFWidget()->updatePlots();
 
     progress.setValue(4);
-    progress.setLabelText("[4/4] Calculating RDF Data ...");
+    progress.setLabelText("[4/5] Calculating Axis ODF Data ...");
+    getAxisODFWidget()->updatePlots();
+
+    progress.setValue(5);
+    progress.setLabelText("[5/5] Calculating RDF Data ...");
     m_RdfPlot->updatePlots();
 
     setTabsPlotTabsEnabled(true);
@@ -392,6 +397,7 @@ int PrecipitatePhaseWidget::gatherStatsData(AttributeMatrix::Pointer attrMat, bo
     }
 
     getODFWidget()->getOrientationData(precipitateStatsData.get(), PhaseType::Type::Precipitate, preflight);
+    getMDFWidget()->getMisorientationData(precipitateStatsData.get(), PhaseType::Type::Precipitate, !preflight);
 
     err = getAxisODFWidget()->getOrientationData(precipitateStatsData.get(), PhaseType::Type::Precipitate, preflight);
   }
@@ -481,6 +487,11 @@ void PrecipitatePhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMat, 
   qApp->processEvents();
   // Set the ODF Data
   getODFWidget()->extractStatsData(index, precipitateStatsData.get(), PhaseType::Type::Precipitate);
+
+  emit progressText(QString("Extracting MDF Distribution Values"));
+  qApp->processEvents();
+  // Set the ODF Data
+  getMDFWidget()->extractStatsData(index, precipitateStatsData.get(), PhaseType::Type::Precipitate);
 
   emit progressText(QString("Extracting Axis ODF Distribution Values"));
   qApp->processEvents();

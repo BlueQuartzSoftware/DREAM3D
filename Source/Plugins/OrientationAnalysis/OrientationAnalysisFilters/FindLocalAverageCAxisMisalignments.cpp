@@ -69,14 +69,6 @@ FindLocalAverageCAxisMisalignments::FindLocalAverageCAxisMisalignments()
 , m_CrystalStructuresArrayPath("", "", "")
 , m_UnbiasedLocalCAxisMisalignmentsArrayName(SIMPL::FeatureData::UnbiasedLocalCAxisMisalignments)
 , m_NumFeaturesPerParentArrayName(SIMPL::FeatureData::NumFeaturesPerParent)
-, m_FeatureIds(nullptr)
-, m_CellParentIds(nullptr)
-, m_FeatureParentIds(nullptr)
-, m_NumFeaturesPerParent(nullptr)
-, m_AvgCAxisMisalignments(nullptr)
-, m_LocalCAxisMisalignments(nullptr)
-, m_UnbiasedLocalCAxisMisalignments(nullptr)
-, m_CrystalStructures(nullptr)
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 

@@ -52,6 +52,7 @@
 #include <QtWidgets/QMessageBox>
 
 #include "SIMPLib/Math/RadialDistributionFunction.h"
+#include "SVWidgetsLib/Widgets/SVStyle.h"
 
 #include "SyntheticBuilding/Gui/Widgets/TableModels/SGMDFTableModel.h"
 
@@ -137,6 +138,7 @@ void StatsGenRDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 
   QwtPlotPicker* plotPicker = new QwtPlotPicker(plot->xBottom, plot->yLeft, QwtPicker::CrossRubberBand, QwtPicker::AlwaysOn, plot->canvas());
   QwtPickerMachine* pickerMachine = new QwtPickerClickPointMachine();
+  plotPicker->setTrackerPen(QPen(SVStyle::Instance()->getQLabel_color()));
   plotPicker->setStateMachine(pickerMachine);
 
   m_PlotCurve = new QwtPlotCurve();
@@ -144,7 +146,7 @@ void StatsGenRDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
   // Use Antialiasing to improve plot render quality
   m_PlotCurve->setRenderHint(QwtPlotItem::RenderAntialiased, true);
   QPen pen;
-  pen.setColor(Qt::white);
+  pen.setColor(SVStyle::Instance()->getQLabel_color());
   pen.setWidth(2);
   m_PlotCurve->setPen(pen); // Set color and thickness for drawing the curve
   m_PlotCurve->attach(plot);
@@ -317,6 +319,12 @@ void StatsGenRDFWidget::updateRDFPlot(QVector<float>& freqs)
 #else
   curve->setData(xD, yD);
 #endif
+
+  QColor color = QColor("DodgerBlue");
+  curve->setPen(color, 2);
+  curve->setRenderHint(QwtPlotItem::RenderAntialiased, true);
+  curve->setStyle(QwtPlotCurve::Lines);
+
   ui->m_RDFPlot->replot();
   ui->m_RDFPlot->update();
   this->repaint();

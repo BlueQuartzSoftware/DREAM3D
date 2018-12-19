@@ -58,10 +58,6 @@ FindMisorientations::FindMisorientations()
 , m_CrystalStructuresArrayPath("", "", "")
 , m_AvgMisorientationsArrayName(SIMPL::FeatureData::AvgMisorientations)
 , m_FindAvgMisors(false)
-, m_AvgQuats(nullptr)
-, m_FeaturePhases(nullptr)
-, m_CrystalStructures(nullptr)
-, m_AvgMisorientations(nullptr)
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 

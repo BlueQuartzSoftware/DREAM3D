@@ -82,6 +82,9 @@ public:
   SIMPL_FILTER_PARAMETER(DataArrayPath, NumNeighborsArrayPath)
   Q_PROPERTY(DataArrayPath NumNeighborsArrayPath READ getNumNeighborsArrayPath WRITE setNumNeighborsArrayPath)
 
+  SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, IgnoredDataArrayPaths)
+  Q_PROPERTY(QVector<DataArrayPath> IgnoredDataArrayPaths READ getIgnoredDataArrayPaths WRITE setIgnoredDataArrayPaths)
+
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */

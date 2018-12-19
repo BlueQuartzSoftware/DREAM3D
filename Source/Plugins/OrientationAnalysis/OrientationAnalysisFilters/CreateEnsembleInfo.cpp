@@ -58,8 +58,6 @@ CreateEnsembleInfo::CreateEnsembleInfo()
 , m_CrystalStructuresArrayName(SIMPL::EnsembleData::CrystalStructures)
 , m_PhaseTypesArrayName(SIMPL::EnsembleData::PhaseTypes)
 , m_PhaseNamesArrayName("PhaseNames")
-, m_CrystalStructures(nullptr)
-, m_PhaseTypes(nullptr)
 {
 }
 

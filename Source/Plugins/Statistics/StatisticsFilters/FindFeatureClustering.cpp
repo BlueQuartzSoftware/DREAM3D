@@ -67,12 +67,6 @@ FindFeatureClustering::FindFeatureClustering()
 , m_ClusteringListArrayName(SIMPL::FeatureData::ClusteringList)
 , m_NewEnsembleArrayArrayName("RDF")
 , m_MaxMinArrayName("RDFMaxMinDistances")
-, m_FeaturePhases(nullptr)
-, m_Centroids(nullptr)
-, m_EquivalentDiameters(nullptr)
-, m_NewEnsembleArray(nullptr)
-, m_MaxMinArray(nullptr)
-, m_BiasedFeatures(nullptr)
 {
 }
 

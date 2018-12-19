@@ -61,23 +61,19 @@ public:
   SIMPL_STATIC_NEW_MACRO(PrimaryRolledPreset)
   SIMPL_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, PrimaryRolledPreset)
 
-  virtual ~PrimaryRolledPreset();
+  ~PrimaryRolledPreset() override;
 
-  virtual QString getName();
+  QString getName() override;
 
-  void initializeOmega3TableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors);
-  void initializeBOverATableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors);
-  void initializeCOverATableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors);
-  void initializeNeighborTableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors);
-  void initializeClusteringTableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors);
+  void initializeOmega3TableModel(QMap<QString, QVector<float>>& data) override;
+  void initializeBOverATableModel(QMap<QString, QVector<float>>& data) override;
+  void initializeCOverATableModel(QMap<QString, QVector<float>>& data) override;
+  void initializeNeighborTableModel(QMap<QString, QVector<float>>& data) override;
+  void initializeClusteringTableModel(QMap<QString, QVector<float>>& data) override;
 
-  void initializeAxisODFTableModel(QMap<QString, QVector<float>>& data);
+  unsigned int getDistributionType(const QString& distType) override;
 
-  /**
-   * @brief getDistributionType
-   * @return
-   */
-  virtual unsigned int getDistributionType(const QString& distType);
+  void initializeAxisODFTableModel(QMap<QString, QVector<float>>& data) override;
 
   SIMPL_INSTANCE_PROPERTY(float, AspectRatio1)
   SIMPL_INSTANCE_PROPERTY(float, AspectRatio2)

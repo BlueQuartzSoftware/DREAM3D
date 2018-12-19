@@ -53,7 +53,6 @@ H5EbsdVolumeReader::H5EbsdVolumeReader() :
   m_NumberOfElements(0),
   m_ReadAllArrays(true)
 {
-
 }
 
 // -----------------------------------------------------------------------------

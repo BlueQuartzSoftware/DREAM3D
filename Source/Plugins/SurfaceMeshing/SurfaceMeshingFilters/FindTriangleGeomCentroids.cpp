@@ -56,7 +56,6 @@ FindTriangleGeomCentroids::FindTriangleGeomCentroids()
 : m_FeatureAttributeMatrixName(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceFeatureAttributeMatrixName, "")
 , m_FaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
 , m_CentroidsArrayName(SIMPL::FeatureData::Centroids)
-, m_Centroids(nullptr)
 {
   initialize();
 }

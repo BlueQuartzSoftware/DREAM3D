@@ -98,10 +98,6 @@ ReadEdaxH5Data::ReadEdaxH5Data()
 , m_MaterialNameArrayName(SIMPL::EnsembleData::MaterialName)
 , m_RefFrameZDir(SIMPL::RefFrameZDir::UnknownRefFrameZDirection)
 , m_Manufacturer(Ebsd::UnknownManufacturer)
-, m_CellPhases(nullptr)
-, m_CellEulerAngles(nullptr)
-, m_CrystalStructures(nullptr)
-, m_LatticeConstants(nullptr)
 , d_ptr(new ReadEdaxH5DataPrivate(this))
 {
   FloatVec3_t value;
