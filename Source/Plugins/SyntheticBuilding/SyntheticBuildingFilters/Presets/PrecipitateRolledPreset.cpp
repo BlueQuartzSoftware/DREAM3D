@@ -37,7 +37,6 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
-#include "SIMPLib/Utilities/ColorUtilities.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -64,7 +63,7 @@ QString PrecipitateRolledPreset::getName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrecipitateRolledPreset::initializeOmega3TableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors)
+void PrecipitateRolledPreset::initializeOmega3TableModel(QMap<QString, QVector<float>>& data)
 {
   QVector<float>& binNumbers = data[kBinNumbers];
   qint32 count = binNumbers.count();
@@ -74,8 +73,6 @@ void PrecipitateRolledPreset::initializeOmega3TableModel(QMap<QString, QVector<f
 
   QVector<float> alphas;
   QVector<float> betas;
-  colors.clear();
-  colors.append(ColorUtilities::GenerateColors(count, 160, 255));
 
   for(qint32 i = 0; i < count; ++i)
   {
@@ -91,7 +88,7 @@ void PrecipitateRolledPreset::initializeOmega3TableModel(QMap<QString, QVector<f
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrecipitateRolledPreset::initializeBOverATableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors)
+void PrecipitateRolledPreset::initializeBOverATableModel(QMap<QString, QVector<float>>& data)
 {
   QVector<float>& binNumbers = data[kBinNumbers];
   qint32 count = binNumbers.count();
@@ -101,8 +98,6 @@ void PrecipitateRolledPreset::initializeBOverATableModel(QMap<QString, QVector<f
 
   QVector<float> alphas;
   QVector<float> betas;
-  colors.clear();
-  colors.append(ColorUtilities::GenerateColors(count, 160, 255));
 
   for(qint32 i = 0; i < count; ++i)
   {
@@ -119,7 +114,7 @@ void PrecipitateRolledPreset::initializeBOverATableModel(QMap<QString, QVector<f
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrecipitateRolledPreset::initializeCOverATableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors)
+void PrecipitateRolledPreset::initializeCOverATableModel(QMap<QString, QVector<float>>& data)
 {
   QVector<float>& binNumbers = data[kBinNumbers];
   qint32 count = binNumbers.count();
@@ -129,8 +124,6 @@ void PrecipitateRolledPreset::initializeCOverATableModel(QMap<QString, QVector<f
 
   QVector<float> alphas;
   QVector<float> betas;
-  colors.clear();
-  colors.append(ColorUtilities::GenerateColors(count, 160, 255));
 
   for(qint32 i = 0; i < count; ++i)
   {
@@ -147,7 +140,7 @@ void PrecipitateRolledPreset::initializeCOverATableModel(QMap<QString, QVector<f
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrecipitateRolledPreset::initializeClusteringTableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors)
+void PrecipitateRolledPreset::initializeClusteringTableModel(QMap<QString, QVector<float>>& data)
 {
   QVector<float>& binNumbers = data[kBinNumbers];
   qint32 count = binNumbers.count();
@@ -157,8 +150,6 @@ void PrecipitateRolledPreset::initializeClusteringTableModel(QMap<QString, QVect
 
   QVector<float> mus;
   QVector<float> sigmas;
-  colors.clear();
-  colors.append(ColorUtilities::GenerateColors(count, 160, 255));
 
   int middlebin = count / 2;
   for(qint32 i = 0; i < count; ++i)
@@ -176,7 +167,7 @@ void PrecipitateRolledPreset::initializeClusteringTableModel(QMap<QString, QVect
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrecipitateRolledPreset::initializeNeighborTableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors)
+void PrecipitateRolledPreset::initializeNeighborTableModel(QMap<QString, QVector<float>>& data)
 {
   Q_ASSERT(false);
 }

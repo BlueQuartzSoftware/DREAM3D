@@ -65,17 +65,13 @@ public:
 
   virtual QString getName();
 
-  void initializeOmega3TableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors);
-  void initializeBOverATableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors);
-  void initializeCOverATableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors);
-  void initializeNeighborTableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors);
-  void initializeClusteringTableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors);
+  void initializeOmega3TableModel(QMap<QString, QVector<float>>& data) override;
+  void initializeBOverATableModel(QMap<QString, QVector<float>>& data) override;
+  void initializeCOverATableModel(QMap<QString, QVector<float>>& data) override;
+  void initializeNeighborTableModel(QMap<QString, QVector<float>>& data) override;
+  void initializeClusteringTableModel(QMap<QString, QVector<float>>& data) override;
 
-  /**
-   * @brief getDistributionType
-   * @return
-   */
-  unsigned int getDistributionType(const QString& distType);
+  unsigned int getDistributionType(const QString& distType) override;
 
 protected:
   PrecipitateEquiaxedPreset();

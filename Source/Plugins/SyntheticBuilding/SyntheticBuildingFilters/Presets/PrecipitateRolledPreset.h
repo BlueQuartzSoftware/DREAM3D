@@ -64,15 +64,15 @@ public:
 
   virtual QString getName();
 
-  void initializeOmega3TableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors);
-  void initializeBOverATableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors);
-  void initializeCOverATableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors);
-  void initializeNeighborTableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors);
-  void initializeClusteringTableModel(QMap<QString, QVector<float>>& data, QVector<SIMPL::Rgb>& colors);
+  void initializeOmega3TableModel(QMap<QString, QVector<float>>& data) override;
+  void initializeBOverATableModel(QMap<QString, QVector<float>>& data) override;
+  void initializeCOverATableModel(QMap<QString, QVector<float>>& data) override;
+  void initializeNeighborTableModel(QMap<QString, QVector<float>>& data) override;
+  void initializeClusteringTableModel(QMap<QString, QVector<float>>& data) override;
+
+  unsigned int getDistributionType(const QString& distType) override;
 
   void initializeAxisODFTableModel(QMap<QString, QVector<float>>& data);
-
-  unsigned int getDistributionType(const QString& distType);
 
   SIMPL_INSTANCE_PROPERTY(float, AspectRatio1)
   SIMPL_INSTANCE_PROPERTY(float, AspectRatio2)

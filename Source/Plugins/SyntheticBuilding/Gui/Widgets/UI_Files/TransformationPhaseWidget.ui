@@ -41,29 +41,20 @@ font-size: 150%;
     </widget>
    </item>
    <item>
-    <widget class="QTabWidget" name="tabWidget">
-     <property name="tabPosition">
-      <enum>QTabWidget::North</enum>
-     </property>
-     <property name="tabShape">
-      <enum>QTabWidget::Rounded</enum>
-     </property>
+    <widget class="QTabWidget" name="statsGenPhaseTabWidget">
      <property name="currentIndex">
       <number>0</number>
      </property>
-     <widget class="QWidget" name="sizeDistributionTab">
+     <widget class="QWidget" name="featureSizeDistTab">
       <attribute name="title">
-       <string>Size Distribution</string>
+       <string>Size Dist.</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_5">
-       <property name="spacing">
-        <number>6</number>
-       </property>
+      <layout class="QGridLayout" name="gridLayout">
        <property name="leftMargin">
         <number>4</number>
        </property>
        <property name="topMargin">
-        <number>8</number>
+        <number>4</number>
        </property>
        <property name="rightMargin">
         <number>4</number>
@@ -71,7 +62,17 @@ font-size: 150%;
        <property name="bottomMargin">
         <number>4</number>
        </property>
-       <item>
+       <item row="1" column="0">
+        <widget class="StatsGenFeatureSizeWidget" name="m_FeatureSizeDistWidget" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="0">
         <layout class="QHBoxLayout" name="horizontalLayout">
          <item>
           <widget class="QComboBox" name="distributionTypeCombo">
@@ -95,381 +96,48 @@ font-size: 150%;
          </item>
         </layout>
        </item>
-       <item>
-        <widget class="QwtPlot" name="m_SizeDistributionPlot">
+      </layout>
+     </widget>
+     <widget class="QWidget" name="omega3Tab">
+      <attribute name="title">
+       <string>Omega3</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_4">
+       <property name="leftMargin">
+        <number>4</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>4</number>
+       </property>
+       <property name="bottomMargin">
+        <number>4</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="StatsGenPlotWidget" name="m_Omega3Plot" native="true">
          <property name="sizePolicy">
-          <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
            <horstretch>0</horstretch>
            <verstretch>0</verstretch>
           </sizepolicy>
          </property>
-         <property name="frameShape">
-          <enum>QFrame::NoFrame</enum>
+         <property name="maximumSize">
+          <size>
+           <width>16777215</width>
+           <height>16777215</height>
+          </size>
          </property>
         </widget>
        </item>
-       <item>
-        <layout class="QGridLayout" name="widgetLayout">
-         <item row="2" column="3">
-          <widget class="QLabel" name="label_5">
-           <property name="styleSheet">
-            <string notr="true">QLabel
-{
-font-weight: bold;
-font-size: 12px;
-}</string>
-           </property>
-           <property name="text">
-            <string>Bin Step Size:</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="2" rowspan="3">
-          <spacer name="horizontalSpacer_2">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>12</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="2" column="1">
-          <widget class="QLabel" name="m_NumberBinsGenerated">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>60</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>0</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="4">
-          <widget class="QDoubleSpinBox" name="m_BinStepSize">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>80</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="decimals">
-            <number>4</number>
-           </property>
-           <property name="minimum">
-            <double>0.001000000000000</double>
-           </property>
-           <property name="maximum">
-            <double>9999999.990000000223517</double>
-           </property>
-           <property name="value">
-            <double>0.500000000000000</double>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0">
-          <widget class="QLabel" name="label_3">
-           <property name="styleSheet">
-            <string notr="true">QLabel
-{
-font-weight: bold;
-font-size: 12px;
-}</string>
-           </property>
-           <property name="text">
-            <string>Sigma:</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_2">
-           <property name="styleSheet">
-            <string notr="true">QLabel
-{
-font-weight: bold;
-font-size: 12px;
-}</string>
-           </property>
-           <property name="text">
-            <string>Bins to be Created:</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="5" rowspan="3">
-          <spacer name="horizontalSpacer">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item row="0" column="1">
-          <widget class="QLineEdit" name="m_Mu_SizeDistribution">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>60</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>1.0</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="0">
-          <widget class="QLabel" name="label">
-           <property name="styleSheet">
-            <string notr="true">QLabel
-{
-font-weight: bold;
-font-size: 12px;
-}</string>
-           </property>
-           <property name="text">
-            <string>Mu:</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="1">
-          <widget class="QLineEdit" name="m_Sigma_SizeDistribution">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>60</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>0.1</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="4">
-          <widget class="QLineEdit" name="m_MinSigmaCutOff">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>80</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>5</string>
-           </property>
-          </widget>
-         </item>
-         <item row="0" column="3">
-          <widget class="QLabel" name="label_7">
-           <property name="styleSheet">
-            <string notr="true">QLabel
-{
-font-weight: bold;
-font-size: 12px;
-}</string>
-           </property>
-           <property name="text">
-            <string>Min Sigma Cut Off Value:</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="3">
-          <widget class="QLabel" name="label_4">
-           <property name="styleSheet">
-            <string notr="true">QLabel
-{
-font-weight: bold;
-font-size: 12px;
-}</string>
-           </property>
-           <property name="text">
-            <string>Max Sigma Cut Off Value:</string>
-           </property>
-           <property name="alignment">
-            <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="4">
-          <widget class="QLineEdit" name="m_MaxSigmaCutOff">
-           <property name="sizePolicy">
-            <sizepolicy hsizetype="Fixed" vsizetype="Preferred">
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
-           <property name="minimumSize">
-            <size>
-             <width>60</width>
-             <height>0</height>
-            </size>
-           </property>
-           <property name="maximumSize">
-            <size>
-             <width>80</width>
-             <height>16777215</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>5</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
-       <item>
-        <layout class="QHBoxLayout" name="horizontalLayout_3">
-         <item>
-          <widget class="QLabel" name="label_6">
-           <property name="text">
-            <string>Preset Statistic Models</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QComboBox" name="microstructurePresetCombo">
-           <property name="enabled">
-            <bool>true</bool>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_4">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="m_GenerateDefaultData">
-           <property name="text">
-            <string>Create Data</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <spacer name="horizontalSpacer_5">
-           <property name="orientation">
-            <enum>Qt::Horizontal</enum>
-           </property>
-           <property name="sizeType">
-            <enum>QSizePolicy::Fixed</enum>
-           </property>
-           <property name="sizeHint" stdset="0">
-            <size>
-             <width>40</width>
-             <height>20</height>
-            </size>
-           </property>
-          </spacer>
-         </item>
-         <item>
-          <widget class="QPushButton" name="m_ResetDataBtn">
-           <property name="text">
-            <string>Reset...</string>
-           </property>
-          </widget>
-         </item>
-        </layout>
-       </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="omega3DistributionTab">
+     <widget class="QWidget" name="bOverATab">
       <attribute name="title">
-       <string>Omega 3 Distributions</string>
+       <string>B/A</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_4">
+      <layout class="QGridLayout" name="gridLayout_3">
        <property name="leftMargin">
         <number>4</number>
        </property>
@@ -482,16 +150,29 @@ font-size: 12px;
        <property name="bottomMargin">
         <number>4</number>
        </property>
-       <item>
-        <widget class="StatsGenPlotWidget" name="m_Omega3Plot" native="true"/>
+       <item row="0" column="0">
+        <widget class="StatsGenPlotWidget" name="m_BOverAPlot" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="minimumSize">
+          <size>
+           <width>0</width>
+           <height>0</height>
+          </size>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="shapeDistributionTab">
+     <widget class="QWidget" name="cOverATab">
       <attribute name="title">
-       <string>Shape Distributions</string>
+       <string>C/A</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout_3">
+      <layout class="QGridLayout" name="gridLayout_5">
        <property name="leftMargin">
         <number>4</number>
        </property>
@@ -504,60 +185,191 @@ font-size: 12px;
        <property name="bottomMargin">
         <number>4</number>
        </property>
-       <item>
-        <widget class="QScrollArea" name="scrollArea">
-         <property name="widgetResizable">
-          <bool>true</bool>
+       <item row="0" column="0">
+        <widget class="StatsGenPlotWidget" name="m_COverAPlot" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
          </property>
-         <widget class="QWidget" name="scrollAreaWidgetContents">
-          <property name="geometry">
-           <rect>
-            <x>0</x>
-            <y>0</y>
-            <width>769</width>
-            <height>568</height>
-           </rect>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout">
-           <property name="leftMargin">
-            <number>4</number>
-           </property>
-           <property name="topMargin">
-            <number>4</number>
-           </property>
-           <property name="rightMargin">
-            <number>4</number>
-           </property>
-           <property name="bottomMargin">
-            <number>4</number>
-           </property>
-           <item>
-            <widget class="StatsGenPlotWidget" name="m_BOverAPlot" native="true"/>
-           </item>
-           <item>
-            <widget class="StatsGenPlotWidget" name="m_COverAPlot" native="true"/>
-           </item>
-          </layout>
-         </widget>
         </widget>
        </item>
       </layout>
      </widget>
-     <widget class="StatsGenODFWidget" name="m_ODFWidget">
+     <widget class="QWidget" name="neighborTab">
+      <attribute name="title">
+       <string>Neighbor</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_6">
+       <property name="leftMargin">
+        <number>4</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>4</number>
+       </property>
+       <property name="bottomMargin">
+        <number>4</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="StatsGenPlotWidget" name="m_NeighborPlot" native="true">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+           <horstretch>0</horstretch>
+           <verstretch>2</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="odfTab">
       <attribute name="title">
        <string>ODF</string>
       </attribute>
+      <layout class="QGridLayout" name="gridLayout_7">
+       <property name="leftMargin">
+        <number>4</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>4</number>
+       </property>
+       <property name="bottomMargin">
+        <number>4</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="StatsGenODFWidget" name="m_ODFWidget" native="true"/>
+       </item>
+      </layout>
      </widget>
-     <widget class="StatsGenAxisODFWidget" name="m_AxisODFWidget">
+     <widget class="QWidget" name="mdfTab">
+      <attribute name="title">
+       <string>MDF</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_2">
+       <property name="leftMargin">
+        <number>4</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>4</number>
+       </property>
+       <property name="bottomMargin">
+        <number>4</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="StatsGenMDFWidget" name="m_MDFWidget" native="true"/>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="axisOdfTab">
       <attribute name="title">
        <string>Axis ODF</string>
       </attribute>
+      <layout class="QGridLayout" name="gridLayout_8">
+       <property name="leftMargin">
+        <number>4</number>
+       </property>
+       <property name="topMargin">
+        <number>4</number>
+       </property>
+       <property name="rightMargin">
+        <number>4</number>
+       </property>
+       <property name="bottomMargin">
+        <number>4</number>
+       </property>
+       <item row="0" column="0">
+        <widget class="StatsGenAxisODFWidget" name="m_AxisODFWidget" native="true"/>
+       </item>
+      </layout>
      </widget>
     </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <item>
+      <widget class="QLabel" name="label_6">
+       <property name="text">
+        <string>Preset Statistic Models</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="microstructurePresetCombo">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer_4">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="m_GenerateDefaultData">
+       <property name="toolTip">
+        <string>Clicking this button will generate a default set of statistics data, over writing any custom data that has been entered into any of the sub tabs.</string>
+       </property>
+       <property name="text">
+        <string>Create Data</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType">
+        <enum>QSizePolicy::Preferred</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="m_ResetDataBtn">
+       <property name="toolTip">
+        <string>Clicking this button will reset all the user settable values to their default values when the phase was first instantiated.</string>
+       </property>
+       <property name="text">
+        <string>Reset...</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>StatsGenMDFWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">StatsGenMDFWidget.h</header>
+   <container>1</container>
+  </customwidget>
   <customwidget>
    <class>StatsGenWidget</class>
    <extends>QWidget</extends>
@@ -582,9 +394,9 @@ font-size: 12px;
    <header location="global">StatsGenAxisODFWidget.h</header>
   </customwidget>
   <customwidget>
-   <class>QwtPlot</class>
-   <extends>QFrame</extends>
-   <header>qwt_plot.h</header>
+   <class>StatsGenFeatureSizeWidget</class>
+   <extends>QWidget</extends>
+   <header location="global">StatsGenFeatureSizeWidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

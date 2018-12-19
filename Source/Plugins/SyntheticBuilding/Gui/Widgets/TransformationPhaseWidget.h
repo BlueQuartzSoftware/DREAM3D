@@ -63,39 +63,59 @@ public:
 
   void updatePlots();
 
-  SIMPL_INSTANCE_PROPERTY(PhaseType::Type, PhaseType)
   void setCrystalStructure(const unsigned int& xtal) override;
   unsigned int getCrystalStructure() const override;
   void setPhaseIndex(const int& index) override;
   int getPhaseIndex() const override;
-  SIMPL_INSTANCE_PROPERTY(float, PhaseFraction)
-  SIMPL_INSTANCE_PROPERTY(float, TotalPhaseFraction)
+
   SIMPL_INSTANCE_PROPERTY(unsigned int, ParentPhase)
-  SIMPL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
-  SIMPL_INSTANCE_PROPERTY(bool, BulkLoadFailure)
+
+  SIMPL_INSTANCE_PROPERTY(PhaseType::Type, PhaseType)
+
+  SIMPL_INSTANCE_PROPERTY(QList<StatsGenPlotWidget*>, SGPlotWidgets)
+
+  void setOmega3PlotWidget(StatsGenPlotWidget* w);
+  StatsGenPlotWidget* getOmega3PlotWidget();
+
+  void setBOverAPlotPlotWidget(StatsGenPlotWidget* w);
+  StatsGenPlotWidget* getBOverAPlotPlotWidget();
+
+  void setCOverAPlotWidget(StatsGenPlotWidget* w);
+  StatsGenPlotWidget* getCOverAPlotWidget();
+
+  void setODFWidget(StatsGenODFWidget* w);
+  StatsGenODFWidget* getODFWidget();
+
+  void setAxisODFWidget(StatsGenAxisODFWidget* w);
+  StatsGenAxisODFWidget* getAxisODFWidget();
+
+  void setMDFWidget(StatsGenMDFWidget* w);
+  StatsGenMDFWidget* getMDFWidget();
+
+  void setFeatureSizeWidget(StatsGenFeatureSizeWidget* w);
+  StatsGenFeatureSizeWidget* getFeatureSizeWidget();
+
+  QTabWidget* getTabWidget();
+
+  QPushButton* getGenerateDefaultDataBtn();
+
+  QComboBox* getMicrostructurePresetCombo();
+
+  void removeNeighborsPlotWidget();
 
   void extractStatsData(AttributeMatrix::Pointer attrMat, int index) override;
-
-  void plotSizeDistribution();
-  void updateSizeDistributionPlot();
-  int computeBinsAndCutOffs(float mu, float sigma, float minCutOff, float maxCutOff, float binStepSize, QwtArray<float>& binsizes, QwtArray<float>& xCo, QwtArray<float>& yCo, float& xMax, float& yMax,
-                            QwtArray<float>& x, QwtArray<float>& y);
-
-  void calculateNumberOfBins();
-  int calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize);
-  int gatherSizeDistributionFromGui(float& mu, float& sigma, float& minCutOff, float& maxCutOff, float& stepSize);
 
   int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false) override;
 
   void generateDefaultData() override;
 
 protected slots:
+
   void on_m_GenerateDefaultData_clicked();
-  void on_m_Mu_SizeDistribution_textChanged(const QString& text);
-  void on_m_Sigma_SizeDistribution_textChanged(const QString& text);
-  void on_m_MinSigmaCutOff_textChanged(const QString& text);
-  void on_m_MaxSigmaCutOff_textChanged(const QString& text);
-  void on_m_BinStepSize_valueChanged(double v);
+
+  void on_m_ResetDataBtn_clicked();
+
+  void on_microstructurePresetCombo_currentIndexChanged(int index);
 
   void dataWasEdited();
   void bulkLoadEvent(bool fail);
@@ -124,10 +144,8 @@ private:
   unsigned int m_CrystalStructure;
 
   QList<QWidget*> m_WidgetList;
-  QwtPlotCurve* m_SizeDistributionCurve;
-  QwtPlotMarker* m_CutOffMin;
-  QwtPlotMarker* m_CutOffMax;
-  QwtPlotGrid* m_grid;
+  bool m_ResetData = false;
+
   AbstractMicrostructurePreset::Pointer m_MicroPreset;
 
 public:

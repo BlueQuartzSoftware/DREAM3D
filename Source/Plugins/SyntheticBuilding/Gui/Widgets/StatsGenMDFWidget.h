@@ -76,9 +76,11 @@ public:
   int getMisorientationData(StatsData* statsData, PhaseType::Type phaseType, bool preflight = false);
   void extractStatsData(int index, StatsData* statsData, PhaseType::Type phaseType);
 
-  void updateMDFPlot(QVector<float>& odf);
 
   SGMDFTableModel* tableModel();
+
+public slots:
+  void updatePlots();
 
 protected slots:
   void on_addMDFRowBtn_clicked();
@@ -90,6 +92,9 @@ protected slots:
 
 signals:
   void dataChanged();
+
+protected:
+  void updateMDFPlot(QVector<float>& odf);
 
 private:
   SGMDFTableModel* m_MDFTableModel = nullptr;

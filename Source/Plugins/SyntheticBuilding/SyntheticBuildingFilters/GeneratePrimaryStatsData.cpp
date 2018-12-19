@@ -21,6 +21,7 @@
 #include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
+#include "SIMPLib/Utilities/ColorUtilities.h"
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 
@@ -409,7 +410,6 @@ void GeneratePrimaryStatsData::execute()
 
   QMap<QString, QVector<float>> dataMap;
   dataMap[AbstractMicrostructurePreset::kBinNumbers] = binSizes;
-  QVector<SIMPL::Rgb> colors;
 
   AbstractMicrostructurePreset::Pointer absPresetPtr;
   if(m_MicroPresetModel == 0)
@@ -452,7 +452,7 @@ void GeneratePrimaryStatsData::execute()
   }
 
   {
-    absPresetPtr->initializeOmega3TableModel(dataMap, colors); // Beta
+    absPresetPtr->initializeOmega3TableModel(dataMap); // Beta
     VectorOfFloatArray data;
     FloatArrayType::Pointer d1 = FloatArrayType::FromQVector(dataMap[AbstractMicrostructurePreset::kAlpha], SIMPL::StringConstants::Alpha);
     FloatArrayType::Pointer d2 = FloatArrayType::FromQVector(dataMap[AbstractMicrostructurePreset::kBeta], SIMPL::StringConstants::Beta);
@@ -463,7 +463,7 @@ void GeneratePrimaryStatsData::execute()
   }
 
   {
-    absPresetPtr->initializeBOverATableModel(dataMap, colors); // Beta
+    absPresetPtr->initializeBOverATableModel(dataMap); // Beta
     VectorOfFloatArray data;
     FloatArrayType::Pointer d1 = FloatArrayType::FromQVector(dataMap[AbstractMicrostructurePreset::kAlpha], SIMPL::StringConstants::Alpha);
     FloatArrayType::Pointer d2 = FloatArrayType::FromQVector(dataMap[AbstractMicrostructurePreset::kBeta], SIMPL::StringConstants::Beta);
@@ -474,7 +474,7 @@ void GeneratePrimaryStatsData::execute()
   }
 
   {
-    absPresetPtr->initializeCOverATableModel(dataMap, colors); // Beta
+    absPresetPtr->initializeCOverATableModel(dataMap); // Beta
     VectorOfFloatArray data;
     FloatArrayType::Pointer d1 = FloatArrayType::FromQVector(dataMap[AbstractMicrostructurePreset::kAlpha], SIMPL::StringConstants::Alpha);
     FloatArrayType::Pointer d2 = FloatArrayType::FromQVector(dataMap[AbstractMicrostructurePreset::kBeta], SIMPL::StringConstants::Beta);
@@ -485,7 +485,7 @@ void GeneratePrimaryStatsData::execute()
   }
 
   {
-    absPresetPtr->initializeNeighborTableModel(dataMap, colors); // LogNormal
+    absPresetPtr->initializeNeighborTableModel(dataMap); // LogNormal
 
     VectorOfFloatArray data;
     FloatArrayType::Pointer d1 = FloatArrayType::FromQVector(dataMap[AbstractMicrostructurePreset::kMu], SIMPL::StringConstants::Average);
