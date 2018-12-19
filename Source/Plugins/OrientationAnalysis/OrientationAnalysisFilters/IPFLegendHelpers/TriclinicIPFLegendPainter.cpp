@@ -91,7 +91,7 @@ QImage TriclinicIPFLegendPainter::overlayText(int pixelWidth, int pixelHeight, Q
     fontScale = 10;
   } // Do not use fonts below 10Point.
 
-  QFont font("Arial", fontScale, QFont::Bold);
+  QFont font("Lato", fontScale, QFont::Bold);
   {
     QPainter painter;
     QImage pImage(100, 100, QImage::Format_ARGB32_Premultiplied);
