@@ -165,7 +165,7 @@ font-size: 11px;
       </widget>
      </item>
      <item row="0" column="1">
-      <widget class="QLineEdit" name="m_FilePrefix">
+      <widget class="SVLineEdit" name="m_FilePrefix">
        <property name="toolTip">
         <string>The front part of the input file name</string>
        </property>
@@ -191,7 +191,7 @@ font-size: 11px;
       </widget>
      </item>
      <item row="0" column="3">
-      <widget class="QLineEdit" name="m_FileSuffix">
+      <widget class="SVLineEdit" name="m_FileSuffix">
        <property name="toolTip">
         <string>The part of the filename that comes AFTER the slice index</string>
        </property>
@@ -214,7 +214,7 @@ font-size: 11px;
       </widget>
      </item>
      <item row="0" column="5">
-      <widget class="QLineEdit" name="m_FileExt">
+      <widget class="SVLineEdit" name="m_FileExt">
        <property name="toolTip">
         <string>The file extension of the input files</string>
        </property>
@@ -355,9 +355,6 @@ font-size: 12px;
      </item>
      <item row="3" column="3">
       <widget class="QLabel" name="referenceFrameCheck">
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(255, 232, 61);</string>
-       </property>
        <property name="text">
         <string>Have you set the Reference Frame?</string>
        </property>
@@ -383,7 +380,7 @@ font-size: 11px;
       </widget>
      </item>
      <item row="2" column="1">
-      <widget class="QLineEdit" name="m_zSpacing">
+      <widget class="SVLineEdit" name="m_zSpacing">
        <property name="sizePolicy">
         <sizepolicy hsizetype="Ignored" vsizetype="Preferred">
          <horstretch>0</horstretch>
@@ -635,6 +632,11 @@ font-size: 12px;
   </layout>
  </widget>
  <customwidgets>
+  <customwidget>
+   <class>SVLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header location="global">SVControlWidgets.h</header>
+  </customwidget>
   <customwidget>
    <class>QtSLineEdit</class>
    <extends>QLineEdit</extends>

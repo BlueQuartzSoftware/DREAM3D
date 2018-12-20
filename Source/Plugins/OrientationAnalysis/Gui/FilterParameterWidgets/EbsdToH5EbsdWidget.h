@@ -84,12 +84,12 @@ class EbsdToH5EbsdWidget : public FilterParameterWidget, private Ui::EbsdToH5Ebs
     */
     EbsdToH5EbsdWidget(FilterParameter* parameter, AbstractFilter* filter = nullptr, QWidget* parent = nullptr);
 
-    virtual ~EbsdToH5EbsdWidget();
+    ~EbsdToH5EbsdWidget() override;
 
     /**
      * @brief Initializes some of the GUI elements with selections or other GUI related items
      */
-    virtual void setupGui();
+    void setupGui() override;
 
     void setFilter(AbstractFilter* value);
     AbstractFilter* getFilter() const;
@@ -103,7 +103,7 @@ class EbsdToH5EbsdWidget : public FilterParameterWidget, private Ui::EbsdToH5Ebs
     /**
      * @brief showFileInFileSystem
      */
-    virtual void showFileInFileSystem();
+    void showFileInFileSystem() override;
 
   protected slots:
     /* OIM Data Import Slots */
@@ -126,10 +126,10 @@ class EbsdToH5EbsdWidget : public FilterParameterWidget, private Ui::EbsdToH5Ebs
     void stackingOrderChanged(bool checked);
 
   protected:
-    void setInputDirectory(QString val);
+    void setInputDirectory(const QString &val);
     QString getInputDirectory();
 
-    void setOutputPath(QString val);
+    void setOutputPath(const QString &val);
     QString getOutputPath();
 
     /**
@@ -183,7 +183,7 @@ class EbsdToH5EbsdWidget : public FilterParameterWidget, private Ui::EbsdToH5Ebs
     * @brief
     * @param event
     */
-    void keyPressEvent(QKeyEvent* event);
+    void keyPressEvent(QKeyEvent* event) override;
 
     /**
      * @brief setupMenuField
