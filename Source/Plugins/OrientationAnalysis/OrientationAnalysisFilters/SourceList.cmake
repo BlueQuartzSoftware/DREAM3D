@@ -31,38 +31,39 @@ set(_PublicFilters
   FindAvgOrientations
   FindBoundaryStrengths
   FindCAxisLocations
+  FindDistsToCharactGBs
   FindFeatureNeighborCAxisMisalignments
   FindFeatureReferenceCAxisMisorientations
   FindFeatureReferenceMisorientations
+  FindGBCD
+  FindGBCDMetricBased
+  FindGBPDMetricBased
   FindKernelAvgMisorientations
   FindMisorientations
   FindSchmids
   FindSlipTransmissionMetrics
   FindTwinBoundaries
   FindTwinBoundarySchmidFactors
-  INLWriter
+  GenerateFaceIPFColoring
+  GenerateFaceMisorientationColoring
+  GenerateFZQuaternions
   GenerateIPFColors
+  GenerateOrientationMatrixTranspose
+  GenerateQuaternionConjugate
+  ImportEbsdMontage
+  INLWriter
   NeighborOrientationCorrelation
+  OrientationUtility
   ReadAngData
   ReadCtfData
   ReadEdaxH5Data
   ReadH5Ebsd
   ReplaceElementAttributesWithNeighborValues
+  RodriguesConvertor
   RotateEulerRefFrame
+  Stereographic3D
   WritePoleFigure
   WriteStatsGenOdfAngleFile
-  OrientationUtility
-  Stereographic3D
-  GenerateFZQuaternions
-  FindGBCD
-  FindGBCDMetricBased
-  FindGBPDMetricBased
-  FindDistsToCharactGBs
-  GenerateFaceIPFColoring
-  GenerateFaceMisorientationColoring
-  RodriguesConvertor
-  GenerateQuaternionConjugate
-  GenerateOrientationMatrixTranspose
 )
 
 
