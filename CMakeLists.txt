@@ -1,13 +1,20 @@
 
-#if(${CMAKE_MAJOR_VERSION} STREQUAL "3")
-  # CMake 3.1 introduces if() policies on dereferencing variables in quotes
-  cmake_policy(SET CMP0002 NEW)
-  cmake_policy(SET CMP0054 NEW)
-  cmake_policy(SET CMP0079 NEW)
-  cmake_policy(SET CMP0077 NEW)
-#endif()
+cmake_policy(SET CMP0002 NEW)
+cmake_policy(SET CMP0054 NEW)
+cmake_policy(SET CMP0079 NEW)
+cmake_policy(SET CMP0077 NEW)
 
 cmake_minimum_required(VERSION 3.13.0)
+
+# Request C++14 standard, using new CMake variables.
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_EXTENSIONS False)
+
+#--------------------------------------------------------------------------------------------------
+# Always write out the compile_commands.json file to help out things like QtCreator and VS Code
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 
 message(STATUS "********* STARTING DREAM.3D CONFIGURATION ***********************")
 if(NOT "${DREAM3D_SDK}" STREQUAL "")
@@ -47,12 +54,6 @@ else()
   endif()
 
 endif()
-
-# Request C++11 standard, using new CMake variables.
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_EXTENSIONS False)
-
 
 #------------------------------------------------------------------------------
 # Create the Top level Project
