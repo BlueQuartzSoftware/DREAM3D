@@ -351,7 +351,7 @@ void EbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString& text)
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::checkIOFiles()
 {
-  if(this->verifyPathExists(m_LineEdit->text(), this->m_LineEdit))
+  if(QtSFileUtils::VerifyPathExists(m_LineEdit->text(), this->m_LineEdit))
   {
     findEbsdMaxSliceAndPrefix();
   }
@@ -410,7 +410,7 @@ void EbsdToH5EbsdWidget::on_m_LineEdit_textChanged(const QString& text)
     inputAbsPathLabel->hide();
   }
 
-  if(verifyPathExists(inputPath, m_LineEdit))
+  if(QtSFileUtils::VerifyPathExists(inputPath, m_LineEdit))
   {
     m_ShowFileAction->setEnabled(true);
     m_RefFrameOptionsBtn->setEnabled(true);
@@ -903,7 +903,7 @@ void EbsdToH5EbsdWidget::setInputDirectory(const QString &val)
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::showFileInFileSystem()
 {
-  verifyPathExists(m_LineEdit->text(), m_LineEdit); // This basically sets an internal variable of the superclass.
+  QtSFileUtils::VerifyPathExists(m_LineEdit->text(), m_LineEdit); // This basically sets an internal variable of the superclass.
   FilterParameterWidget::showFileInFileSystem();
 #if 0
   QFileInfo fi(m_CurrentlyValidPath);
