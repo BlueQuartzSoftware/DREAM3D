@@ -84,6 +84,7 @@
 
 #include "SyntheticBuilding/Gui/Widgets/TableModels/SGMDFTableModel.h"
 #include "SyntheticBuilding/SyntheticBuildingFilters/StatsGeneratorUtilities.h"
+#include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -153,7 +154,7 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
 {
 
   QPalette pal;
-  pal.setColor(QPalette::Text, Qt::white);
+  pal.setColor(QPalette::Text, SVStyle::Instance()->getQLabel_color());
   pal.setColor(QPalette::Foreground, Qt::white);
   pal.setColor(QPalette::Window, Qt::black);
 
@@ -172,20 +173,23 @@ void StatsGenMDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlo
   canvas->setPalette(pal);
   plot->setCanvas(canvas);
 
-  QFont font;
-  font.setBold(true);
+  QFont font = SVStyle::Instance()->GetUIFont();
+  font.setWeight(QFont::Bold);
+  font.setPointSize(SG_FONT_SIZE);
 
   QwtText xAxis(xAxisName);
-  xAxis.setColor(Qt::white);
   xAxis.setRenderFlags(Qt::AlignHCenter | Qt::AlignTop);
   xAxis.setFont(font);
+  xAxis.setColor(SVStyle::Instance()->getQLabel_color());
+  plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
 
   QwtText yAxis(yAxisName);
-  yAxis.setColor(Qt::white);
   yAxis.setRenderFlags(Qt::AlignHCenter | Qt::AlignTop);
   yAxis.setFont(font);
+  yAxis.setColor(SVStyle::Instance()->getQLabel_color());
+  plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
 
-  const int margin = 5;
+  const int margin = 0;
   plot->setContentsMargins(margin, margin, margin, margin);
 
   plot->setAxisTitle(QwtPlot::xBottom, xAxis);
