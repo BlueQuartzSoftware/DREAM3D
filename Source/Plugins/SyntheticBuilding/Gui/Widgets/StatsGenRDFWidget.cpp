@@ -55,6 +55,7 @@
 #include "SVWidgetsLib/Widgets/SVStyle.h"
 
 #include "SyntheticBuilding/Gui/Widgets/TableModels/SGMDFTableModel.h"
+#include "SyntheticBuilding/SyntheticBuildingConstants.h"
 
 //-- Qwt Includes AFTER SIMPLib Math due to improper defines in qwt_plot_curve.h
 #include <qwt.h>
@@ -126,15 +127,47 @@ void StatsGenRDFWidget::setupGui()
 // -----------------------------------------------------------------------------
 void StatsGenRDFWidget::initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot)
 {
-  plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
-  plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
+
+
+  QPalette pal;
+  pal.setColor(QPalette::Text, SVStyle::Instance()->getQLabel_color());
+  pal.setColor(QPalette::Foreground, Qt::white);
+  pal.setColor(QPalette::Window, Qt::black);
+
+  plot->setPalette(pal);
+
+  plot->plotLayout()->setAlignCanvasToScales(true);
+  for(int axis = 0; axis < QwtPlot::axisCnt; axis++)
+  {
+    plot->axisWidget(axis)->setMargin(0);
+    plot->axisWidget(axis)->setPalette(pal);
+  }
 
   QwtPlotCanvas* canvas = new QwtPlotCanvas();
+
   canvas->setAutoFillBackground(false);
   canvas->setFrameStyle(QFrame::NoFrame);
-  // canvas->setPalette(pal);
+  canvas->setPalette(pal);
   plot->setCanvas(canvas);
-  plot->setCanvasBackground(Qt::black); // Set the Background color
+
+  QFont font = SVStyle::Instance()->GetUIFont();
+  font.setWeight(QFont::Bold);
+  font.setPointSize(SG_FONT_SIZE);
+
+  QwtText xAxis(xAxisName);
+  xAxis.setRenderFlags(Qt::AlignHCenter | Qt::AlignTop);
+  xAxis.setFont(font);
+  xAxis.setColor(SVStyle::Instance()->getQLabel_color());
+  plot->setAxisTitle(QwtPlot::xBottom, xAxisName);
+
+  QwtText yAxis(yAxisName);
+  yAxis.setRenderFlags(Qt::AlignHCenter | Qt::AlignTop);
+  yAxis.setFont(font);
+  yAxis.setColor(SVStyle::Instance()->getQLabel_color());
+  plot->setAxisTitle(QwtPlot::yLeft, yAxisName);
+
+  const int margin = 0;
+  plot->setContentsMargins(margin, margin, margin, margin);
 
   QwtPlotPicker* plotPicker = new QwtPlotPicker(plot->xBottom, plot->yLeft, QwtPicker::CrossRubberBand, QwtPicker::AlwaysOn, plot->canvas());
   QwtPickerMachine* pickerMachine = new QwtPickerClickPointMachine();

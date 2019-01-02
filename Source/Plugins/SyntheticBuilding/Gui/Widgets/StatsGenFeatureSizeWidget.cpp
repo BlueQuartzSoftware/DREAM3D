@@ -144,6 +144,8 @@ void StatsGenFeatureSizeWidget::initQwtPlot(const QString& title, const QString&
   pal.setColor(QPalette::Foreground, Qt::white);
   pal.setColor(QPalette::Window, Qt::black);
 
+  plot->setPalette(pal);
+
   plot->plotLayout()->setAlignCanvasToScales(true);
   for(int axis = 0; axis < QwtPlot::axisCnt; axis++)
   {
