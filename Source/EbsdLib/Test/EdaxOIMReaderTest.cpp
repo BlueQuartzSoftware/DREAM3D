@@ -116,7 +116,7 @@ public:
     {
       uint8_t* patterns = reader->getPatternData();
       DREAM3D_REQUIRE_VALID_POINTER(patterns)
-      int patternDims[2] = {0, 0};
+      std::array<int, 2> patternDims = {{0, 0}};
       reader->getPatternDims(patternDims);
       DREAM3D_REQUIRED(patternDims[0], ==, 60)
       DREAM3D_REQUIRED(patternDims[1], ==, 60)
@@ -126,6 +126,7 @@ public:
   void operator()()
   {
     int err = EXIT_SUCCESS;
+    std::cout << "#-- EdaxOIMReaderTest Starting " << std::endl;
 
     DREAM3D_REGISTER_TEST(TestH5OIMReader())
 

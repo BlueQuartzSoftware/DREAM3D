@@ -11,7 +11,7 @@ set(${PLUGIN_NAME}_PARAMETER_WIDGETS
   EnsembleInfoCreationWidget
   OrientationUtilityWidget
   ReadH5EbsdWidget
-  ReadEdaxH5DataWidget    
+  OEMEbsdScanSelectionWidget    
 )
 
 # --------------------------------------------------------------------

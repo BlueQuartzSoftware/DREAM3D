@@ -43,107 +43,113 @@
  * @brief These macros are used to read header values from an HDF5 file, NOT From a .ang or .ctf file
  */
 
-#define READ_EBSD_HEADER_DATA(cname, class, m_msgType, getName, key, gid)\
-  {\
-    m_msgType t = static_cast<m_msgType>(0);\
-    err = QH5Lite::readScalarDataset(gid, key, t);\
-    if (err < 0) {\
-      QString ss = QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?")\
-                   .arg(cname).arg(key);\
-      setErrorCode(-90001);\
-      setErrorMessage(ss);\
-      err = H5Gclose(gid);\
-      return -1; }\
-    else {\
-      EbsdHeaderEntry::Pointer p = m_HeaderMap[key];\
-      class* c = dynamic_cast<class*>(p.get());\
-      c->setValue(t);\
-    }\
+#define READ_EBSD_HEADER_DATA(cname, class, m_msgType, getName, key, gid)                                                                                                                              \
+  {                                                                                                                                                                                                    \
+    m_msgType t = static_cast<m_msgType>(0);                                                                                                                                                           \
+    err = QH5Lite::readScalarDataset(gid, key, t);                                                                                                                                                     \
+    if(err < 0)                                                                                                                                                                                        \
+    {                                                                                                                                                                                                  \
+      QString ss =                                                                                                                                                                                     \
+          QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?").arg(cname, key);      \
+      setErrorCode(-90001);                                                                                                                                                                            \
+      setErrorMessage(ss);                                                                                                                                                                             \
+      err = H5Gclose(gid);                                                                                                                                                                             \
+      return -1;                                                                                                                                                                                       \
+    }                                                                                                                                                                                                  \
+    EbsdHeaderEntry::Pointer p = m_HeaderMap[key];                                                                                                                                                     \
+    auto c = dynamic_cast<class*>(p.get());                                                                                                                                                            \
+    c->setValue(t);                                                                                                                                                                                    \
   }
 
-#define READ_EBSD_HEADER_STRING_DATA(cname, class, m_msgType, getName, key, gid)\
-  {\
-    QString t;\
-    err = QH5Lite::readStringDataset(gid, key, t);\
-    if (err < 0) {\
-      QString ss = QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?")\
-                   .arg(cname).arg(key);\
-      setErrorCode(-90002);\
-      setErrorMessage(ss);\
-      err = H5Gclose(gid);\
-      return -1; }\
-    else {\
-      EbsdHeaderEntry::Pointer p = m_HeaderMap[key];\
-      class* c = dynamic_cast<class*>(p.get());\
-      c->setValue(t);\
-    }\
+#define READ_EBSD_HEADER_STRING_DATA(cname, class, m_msgType, getName, key, gid)                                                                                                                       \
+  {                                                                                                                                                                                                    \
+    QString t;                                                                                                                                                                                         \
+    err = QH5Lite::readStringDataset(gid, key, t);                                                                                                                                                     \
+    if(err < 0)                                                                                                                                                                                        \
+    {                                                                                                                                                                                                  \
+      QString ss =                                                                                                                                                                                     \
+          QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?").arg(cname, key);      \
+      setErrorCode(-90002);                                                                                                                                                                            \
+      setErrorMessage(ss);                                                                                                                                                                             \
+      err = H5Gclose(gid);                                                                                                                                                                             \
+      return -1;                                                                                                                                                                                       \
+    }                                                                                                                                                                                                  \
+    EbsdHeaderEntry::Pointer p = m_HeaderMap[key];                                                                                                                                                     \
+    auto c = dynamic_cast<class*>(p.get());                                                                                                                                                            \
+    c->setValue(t);                                                                                                                                                                                    \
   }
 
-
-#define READ_PHASE_STRING_DATA(cname, pid, fqKey, key, phase)\
-  {\
-    QString t;\
-    err = QH5Lite::readStringDataset(pid, fqKey, t);\
-    if (err < 0) {\
-      QString ss = QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?")\
-                   .arg(cname).arg(fqKey);\
-      setErrorCode(-90003);\
-      setErrorMessage(ss);\
-      err = H5Gclose(pid); H5Gclose(phasesGid);H5Gclose(gid);\
-      return -1; }\
-    else {\
-      phase->set##key(t);\
-    }\
+#define READ_PHASE_STRING_DATA(cname, pid, fqKey, key, phase)                                                                                                                                          \
+  {                                                                                                                                                                                                    \
+    QString t;                                                                                                                                                                                         \
+    err = QH5Lite::readStringDataset(pid, fqKey, t);                                                                                                                                                   \
+    if(err < 0)                                                                                                                                                                                        \
+    {                                                                                                                                                                                                  \
+      QString ss =                                                                                                                                                                                     \
+          QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?").arg(cname, fqKey);    \
+      setErrorCode(-90003);                                                                                                                                                                            \
+      setErrorMessage(ss);                                                                                                                                                                             \
+      err = H5Gclose(pid);                                                                                                                                                                             \
+      H5Gclose(phasesGid);                                                                                                                                                                             \
+      H5Gclose(gid);                                                                                                                                                                                   \
+      return -1;                                                                                                                                                                                       \
+    }                                                                                                                                                                                                  \
+    phase->set##key(t);                                                                                                                                                                                \
   }
 
-#define READ_PHASE_HEADER_DATA(cname, pid, m_msgType, fqKey, key, phase)\
-  {\
-    m_msgType t;\
-    err = QH5Lite::readScalarDataset(pid, fqKey, t);\
-    if (err < 0) {\
-      QString ss = QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?")\
-                   .arg(cname).arg(fqKey);\
-      setErrorCode(-90004);\
-      setErrorMessage(ss);\
-      err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid);\
-      return -1; }\
-    else {\
-      phase->set##key(t);\
-    }\
+#define READ_PHASE_HEADER_DATA(cname, pid, m_msgType, fqKey, key, phase)                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    m_msgType t;                                                                                                                                                                                       \
+    err = QH5Lite::readScalarDataset(pid, fqKey, t);                                                                                                                                                   \
+    if(err < 0)                                                                                                                                                                                        \
+    {                                                                                                                                                                                                  \
+      QString ss =                                                                                                                                                                                     \
+          QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?").arg(cname, fqKey);    \
+      setErrorCode(-90004);                                                                                                                                                                            \
+      setErrorMessage(ss);                                                                                                                                                                             \
+      err = H5Gclose(pid);                                                                                                                                                                             \
+      H5Gclose(phasesGid);                                                                                                                                                                             \
+      H5Gclose(gid);                                                                                                                                                                                   \
+      return -1;                                                                                                                                                                                       \
+    }                                                                                                                                                                                                  \
+    phase->set##key(t);                                                                                                                                                                                \
   }
 
-#define READ_PHASE_HEADER_DATA_CAST(cname, pid, cast, m_msgType, fqKey, key, phase)\
-  {\
-    m_msgType t;\
-    err = QH5Lite::readScalarDataset(pid, fqKey, t);\
-    if (err < 0) {\
-      QString ss = QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?")\
-                   .arg(cname).arg(fqKey);\
-      setErrorCode(-90005);\
-      setErrorMessage(ss);\
-      err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid);\
-      return -1; }\
-    else {\
-      phase->set##key(static_cast<cast>(t));\
-    }\
+#define READ_PHASE_HEADER_DATA_CAST(cname, pid, cast, m_msgType, fqKey, key, phase)                                                                                                                    \
+  {                                                                                                                                                                                                    \
+    m_msgType t;                                                                                                                                                                                       \
+    err = QH5Lite::readScalarDataset(pid, fqKey, t);                                                                                                                                                   \
+    if(err < 0)                                                                                                                                                                                        \
+    {                                                                                                                                                                                                  \
+      QString ss =                                                                                                                                                                                     \
+          QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?").arg(cname, fqKey);    \
+      setErrorCode(-90005);                                                                                                                                                                            \
+      setErrorMessage(ss);                                                                                                                                                                             \
+      err = H5Gclose(pid);                                                                                                                                                                             \
+      H5Gclose(phasesGid);                                                                                                                                                                             \
+      H5Gclose(gid);                                                                                                                                                                                   \
+      return -1;                                                                                                                                                                                       \
+    }                                                                                                                                                                                                  \
+    phase->set##key(static_cast<cast>(t));                                                                                                                                                             \
   }
 
-#define READ_PHASE_HEADER_ARRAY(cname, pid, m_msgType, fqKey, key, phase)\
-  {\
-    std::vector<m_msgType> t;\
-    err = QH5Lite::readVectorDataset(pid, fqKey, t);\
-    if (err < 0) {\
-      QString ss = QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?")\
-                   .arg(cname).arg(fqKey);\
-      setErrorCode(-90006);\
-      setErrorMessage(ss);\
-      err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid);\
-      return -1; }\
-    else {\
-      phase->set##key(QVector<m_msgType>::fromStdVector(t));\
-    }\
+#define READ_PHASE_HEADER_ARRAY(cname, pid, m_msgType, fqKey, key, phase)                                                                                                                              \
+  {                                                                                                                                                                                                    \
+    std::vector<m_msgType> t;                                                                                                                                                                          \
+    err = QH5Lite::readVectorDataset(pid, fqKey, t);                                                                                                                                                   \
+    if(err < 0)                                                                                                                                                                                        \
+    {                                                                                                                                                                                                  \
+      QString ss =                                                                                                                                                                                     \
+          QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?").arg(cname, fqKey);    \
+      setErrorCode(-90006);                                                                                                                                                                            \
+      setErrorMessage(ss);                                                                                                                                                                             \
+      err = H5Gclose(pid);                                                                                                                                                                             \
+      H5Gclose(phasesGid);                                                                                                                                                                             \
+      H5Gclose(gid);                                                                                                                                                                                   \
+      return -1;                                                                                                                                                                                       \
+    }                                                                                                                                                                                                  \
+    phase->set##key(QVector<m_msgType>::fromStdVector(t));                                                                                                                                             \
   }
-
 
 #define SHUFFLE_ARRAY(name, var, m_msgType)\
   { m_msgType* f = allocateArray<m_msgType>(totalDataRows);\
@@ -154,5 +160,26 @@
     }\
     set##name##Pointer(f); }
 
-
-
+#define ANG_READER_ALLOCATE_AND_READ(name, h5name, type)                                                                                                                                               \
+  free##name##Pointer(); /* Always free the current data before reading new data */                                                                                                                    \
+  if(m_ReadAllArrays == true || m_ArrayNames.find(h5name) != m_ArrayNames.end())                                                                                                                       \
+  {                                                                                                                                                                                                    \
+    auto _##name = allocateArray<type>(totalDataRows);                                                                                                                                                 \
+    if(nullptr != _##name)                                                                                                                                                                             \
+    {                                                                                                                                                                                                  \
+      ::memset(_##name, 0, numBytes);                                                                                                                                                                  \
+      err = QH5Lite::readPointerDataset(gid, h5name, _##name);                                                                                                                                         \
+      if(err < 0)                                                                                                                                                                                      \
+      {                                                                                                                                                                                                \
+        deallocateArrayData(_##name); /*deallocate the array*/                                                                                                                                         \
+        setErrorCode(-90020);                                                                                                                                                                          \
+        ss << "Error reading dataset '" << #name                                                                                                                                                       \
+           << "' from the HDF5 file. This data set is required to be in the file because either "                                                                                                      \
+              "the program is set to read ALL the Data arrays or the program was instructed to read this array.";                                                                                      \
+        setErrorMessage(ss.string());                                                                                                                                                                  \
+        err = H5Gclose(gid);                                                                                                                                                                           \
+        return -90020;                                                                                                                                                                                 \
+      }                                                                                                                                                                                                \
+    }                                                                                                                                                                                                  \
+    set##name##Pointer(_##name);                                                                                                                                                                       \
+  }

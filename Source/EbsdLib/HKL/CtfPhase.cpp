@@ -134,7 +134,7 @@ void CtfPhase::printSelf(std::ostream& stream)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-unsigned int CtfPhase::determineCrystalStructure()
+unsigned int CtfPhase::determineLaueGroup()
 {
   Ebsd::Ctf::LaueGroupTable symmetry = getLaueGroup();
 

@@ -137,6 +137,7 @@ configure_file(${EbsdLib_SOURCE_DIR}/EbsdLibConfiguration.h.in
 #-- Include all the Source Files
 include( ${EbsdLib_SOURCE_DIR}/TSL/SourceList.cmake)
 include( ${EbsdLib_SOURCE_DIR}/HKL/SourceList.cmake)
+include( ${EbsdLib_SOURCE_DIR}/BrukerNano/SourceList.cmake)
 
 set(EbsdLib_Generated_HDRS
   ${${PROJECT_NAME}_BINARY_DIR}/${CMP_CONFIGURATION_FILE_NAME}
@@ -189,6 +190,8 @@ set(EbsdLib_PROJECT_SRCS
     ${TSL_HDRS}
     ${HKL_SRCS}
     ${HKL_HDRS}
+    ${BRUKER_NANO_SRCS}
+    ${BRUKER_NANO_HDRS}
     ${EbsdLib_Utilities_SRCS}
     ${EbsdLib_Utilities_HDRS}
     "${EbsdLib_Generated_SRCS}"

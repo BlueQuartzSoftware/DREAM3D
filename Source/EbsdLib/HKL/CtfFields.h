@@ -58,10 +58,10 @@ class EbsdLib_EXPORT CtfFields : public AbstractEbsdFields
 {
   public:
     CtfFields();
-    virtual ~CtfFields();
+    ~CtfFields() override;
     EBSD_TYPE_MACRO_SUPER(CtfFields, AbstractEbsdFields)
 
-    virtual QVector<QString> getFieldNames();
+    QVector<QString> getFieldNames() override;
 
     template<typename T>
     T getFilterFeatures()

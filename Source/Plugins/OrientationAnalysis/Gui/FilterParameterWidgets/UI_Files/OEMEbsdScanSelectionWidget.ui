@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>ReadEdaxH5DataWidget</class>
- <widget class="QWidget" name="ReadEdaxH5DataWidget">
+ <class>OEMEbsdScanSelectionWidget</class>
+ <widget class="QWidget" name="OEMEbsdScanSelectionWidget">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -152,7 +152,7 @@ font-size: 11px;
     </layout>
    </item>
    <item row="0" column="0" rowspan="2">
-    <widget class="DREAM3DListWidget" name="totalScanNames">
+    <widget class="DREAM3DListWidget" name="availableScanNames">
      <property name="editTriggers">
       <set>QAbstractItemView::NoEditTriggers</set>
      </property>

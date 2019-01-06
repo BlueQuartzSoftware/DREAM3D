@@ -112,14 +112,43 @@
 #define ANG_PATTERN_WIDTH "Pattern Width"
 #define ANG_PATTERN_HEIGHT "Pattern Height"
 
-
+enum ANG_READ_FLAG
+{
+  ANG_FULL_FILE,
+  ANG_HEADER_ONLY
+};
 
 namespace Ebsd
 {
 
+namespace H5OIM
+{
+const QString EDAX("EDAX");
+const QString Manufacturer(" Manufacturer");
+const QString Version(" Version");
+const QString H5FileExt("h5");
+
+const QString OriginalHeader("OriginalHeader");
+const QString OriginalFile("OriginalFile");
+const QString Index("Index");
+const QString Header("Header");
+const QString Phases("Phases");
+const QString Phase("Phase");
+const QString Data("Data");
+const QString EBSD("EBSD");
+const QString SEM_PRIAS_Images("SEM-PRIAS Images");
+const QString PatternCenterCalibration("Pattern Center Calibration");
+const QString SEM("SEM");
+
+const QString FileVersionStr("FileVersion");
+const unsigned int FileVersion = 5;
+const QString EbsdLibVersionStr("EbsdLibVersion");
+} // namespace H5OIM
+
   namespace Ang
   {
     const QString Manufacturer("TSL");
+    const QString EDAX("EDAX");
 
     /* These are courtesy of TSL */
 // LAUE Symmetry Identifiers
@@ -278,7 +307,6 @@ namespace Ebsd
 // These are the Lower Case versions of the constants
     const QString FileExtLower("ang");
     const QString FileExt("ang");
-    const QString H5FileExt("h5");
     const QString TEMPIXPerUMLower(ANG_TEM_PIXPERUM_LOWER);
     const QString XStarLower(ANG_X_STAR_LOWER);
     const QString YStarLower(ANG_Y_STAR_LOWER);

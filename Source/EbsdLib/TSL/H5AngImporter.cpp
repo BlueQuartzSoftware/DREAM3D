@@ -61,7 +61,7 @@ H5AngImporter::H5AngImporter()
 , yDim(0)
 , xRes(0)
 , yRes(0)
-, m_FileVersion(Ebsd::H5::FileVersion)
+, m_FileVersion(Ebsd::H5OIM::FileVersion)
 {
 }
 
@@ -201,22 +201,22 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString& angFile)
     H5T_class_t type_class;
     size_t type_size = 0;
     hid_t attr_type = -1;
-    err = QH5Lite::getAttributeInfo(fileId, "/", Ebsd::H5::FileVersionStr, dims, type_class, type_size, attr_type);
+    err = QH5Lite::getAttributeInfo(fileId, "/", Ebsd::H5OIM::FileVersionStr, dims, type_class, type_size, attr_type);
     if (attr_type < 0) // The attr_type variable was never set which means the attribute was NOT there
     {
       // The file version does not exist so write it to the file
-      err = QH5Lite::writeScalarAttribute(fileId, QString("/"), Ebsd::H5::FileVersionStr, m_FileVersion);
+      err = QH5Lite::writeScalarAttribute(fileId, QString("/"), Ebsd::H5OIM::FileVersionStr, m_FileVersion);
     }
     else
     {
       H5Aclose(attr_type);
     }
 
-    err = QH5Lite::getAttributeInfo(fileId, "/", Ebsd::H5::EbsdLibVersionStr, dims, type_class, type_size, attr_type);
+    err = QH5Lite::getAttributeInfo(fileId, "/", Ebsd::H5OIM::EbsdLibVersionStr, dims, type_class, type_size, attr_type);
     if (attr_type < 0) // The attr_type variable was never set which means the attribute was NOT there
     {
       // The file version does not exist so write it to the file
-      err = QH5Lite::writeStringAttribute(fileId, QString("/"), Ebsd::H5::EbsdLibVersionStr, EbsdLib::Version::Complete());
+      err = QH5Lite::writeStringAttribute(fileId, QString("/"), Ebsd::H5OIM::EbsdLibVersionStr, EbsdLib::Version::Complete());
     }
     else
     {
@@ -238,7 +238,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString& angFile)
     return -1;
   }
 
-  hid_t gid = QH5Utilities::createGroup(angGroup, Ebsd::H5::Header);
+  hid_t gid = QH5Utilities::createGroup(angGroup, Ebsd::H5OIM::Header);
   if (gid < 0)
   {
     ss.string()->clear();
@@ -256,7 +256,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString& angFile)
   WRITE_ANG_HEADER_DATA(reader, float, ZStar, Ebsd::Ang::ZStar)
   WRITE_ANG_HEADER_DATA(reader, float, WorkingDistance, Ebsd::Ang::WorkingDistance)
 
-  hid_t phasesGid = QH5Utilities::createGroup(gid, Ebsd::H5::Phases);
+  hid_t phasesGid = QH5Utilities::createGroup(gid, Ebsd::H5OIM::Phases);
   err = writePhaseData(reader, phasesGid);
   // Close this group
   err = H5Gclose(phasesGid);
@@ -276,14 +276,14 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString& angFile)
   WRITE_ANG_HEADER_STRING_DATA(reader, QString, SCANID, Ebsd::Ang::SCANID)
 
   QString angCompleteHeader = reader.getOriginalHeader();
-  err = QH5Lite::writeStringDataset(gid, Ebsd::H5::OriginalHeader, angCompleteHeader);
-  err = QH5Lite::writeStringDataset(gid, Ebsd::H5::OriginalFile, angFile);
+  err = QH5Lite::writeStringDataset(gid, Ebsd::H5OIM::OriginalHeader, angCompleteHeader);
+  err = QH5Lite::writeStringDataset(gid, Ebsd::H5OIM::OriginalFile, angFile);
 
   // Close the "Header" group
   err = H5Gclose(gid);
 
   // Create the "Data" group
-  gid = QH5Utilities::createGroup(angGroup, Ebsd::H5::Data);
+  gid = QH5Utilities::createGroup(angGroup, Ebsd::H5OIM::Data);
   if (gid < 0)
   {
     ss.string()->clear();

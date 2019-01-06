@@ -8,7 +8,7 @@ set (${PLUGIN_NAME}_FilterParameters_SRCS
     ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/ConvertHexGridToSquareGridFilterParameter.cpp
     ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/EbsdToH5EbsdFilterParameter.cpp
     ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/EnsembleInfoFilterParameter.cpp
-    ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/ReadEdaxH5DataFilterParameter.cpp
+    ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/OEMEbsdScanSelectionFilterParameter.cpp
     ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/ReadH5EbsdFilterParameter.cpp
     ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/OrientationUtilityFilterParameter.cpp
     ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/EbsdMontageImportFilterParameter.cpp
@@ -18,7 +18,7 @@ set (${PLUGIN_NAME}_FilterParameters_HDRS
     ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/ConvertHexGridToSquareGridFilterParameter.h
     ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/EbsdToH5EbsdFilterParameter.h
     ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/EnsembleInfoFilterParameter.h
-    ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/ReadEdaxH5DataFilterParameter.h
+    ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/OEMEbsdScanSelectionFilterParameter.h
     ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/ReadH5EbsdFilterParameter.h
     ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/OrientationUtilityFilterParameter.h
     ${${PLUGIN_NAME}_SOURCE_DIR}/FilterParameters/EbsdMontageImportFilterParameter.h

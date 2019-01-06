@@ -106,7 +106,7 @@ H5CtfImporter::H5CtfImporter()
 , yRes(0)
 , zRes(0)
 , m_NumSlicesImported(1)
-, m_FileVersion(Ebsd::H5::FileVersion)
+, m_FileVersion(Ebsd::H5Aztec::FileVersion)
 {
 }
 
@@ -197,22 +197,22 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const QString& ctfFile)
     H5T_class_t type_class;
     size_t type_size = 0;
     hid_t attr_type = -1;
-    err = QH5Lite::getAttributeInfo(fileId, "/", Ebsd::H5::FileVersionStr, dims, type_class, type_size, attr_type);
+    err = QH5Lite::getAttributeInfo(fileId, "/", Ebsd::H5Aztec::FileVersionStr, dims, type_class, type_size, attr_type);
     if (attr_type < 0) // The attr_type variable was never set which means the attribute was NOT there
     {
       // The file version does not exist so write it to the file
-      err = QH5Lite::writeScalarAttribute(fileId, QString("/"), Ebsd::H5::FileVersionStr, m_FileVersion);
+      err = QH5Lite::writeScalarAttribute(fileId, QString("/"), Ebsd::H5Aztec::FileVersionStr, m_FileVersion);
     }
     else
     {
       H5Aclose(attr_type);
     }
 
-    err = QH5Lite::getAttributeInfo(fileId, "/", Ebsd::H5::EbsdLibVersionStr, dims, type_class, type_size, attr_type);
+    err = QH5Lite::getAttributeInfo(fileId, "/", Ebsd::H5Aztec::EbsdLibVersionStr, dims, type_class, type_size, attr_type);
     if (attr_type < 0) // The attr_type variable was never set which means the attribute was NOT there
     {
       // The file version does not exist so write it to the file
-      err = QH5Lite::writeStringAttribute(fileId, QString("/"), Ebsd::H5::EbsdLibVersionStr, EbsdLib::Version::Complete());
+      err = QH5Lite::writeStringAttribute(fileId, QString("/"), Ebsd::H5Aztec::EbsdLibVersionStr, EbsdLib::Version::Complete());
     }
     else
     {
@@ -252,7 +252,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader& reader, int z, int ac
     return -1;
   }
 
-  hid_t gid = QH5Utilities::createGroup(ctfGroup, Ebsd::H5::Header);
+  hid_t gid = QH5Utilities::createGroup(ctfGroup, Ebsd::H5Aztec::Header);
   if(gid < 0)
   {
     QString ss = QObject::tr("H5CtfImporter Error: The 'Header' Group for Z index %1 could not be created. Please check other error messages from the HDF5 library for possible reasons.").arg(z);
@@ -295,7 +295,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader& reader, int z, int ac
   WRITE_EBSD_HEADER_DATA(reader, float, TiltAngle, Ebsd::Ctf::TiltAngle);
   WRITE_EBSD_HEADER_DATA(reader, float, TiltAxis, Ebsd::Ctf::TiltAxis)
 
-  hid_t phasesGid = QH5Utilities::createGroup(gid, Ebsd::H5::Phases);
+  hid_t phasesGid = QH5Utilities::createGroup(gid, Ebsd::H5Aztec::Phases);
   if(phasesGid < 0)
   {
     QString ss = QObject::tr("H5CtfImporter Error: The 'Header' Group for the Phases could not be created."
@@ -313,14 +313,14 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader& reader, int z, int ac
   err = H5Gclose(phasesGid);
 
   QString ctfCompleteHeader = reader.getOriginalHeader();
-  err = QH5Lite::writeStringDataset(gid, Ebsd::H5::OriginalHeader, ctfCompleteHeader);
-  err = QH5Lite::writeStringDataset(gid, Ebsd::H5::OriginalFile, reader.getFileName());
+  err = QH5Lite::writeStringDataset(gid, Ebsd::H5Aztec::OriginalHeader, ctfCompleteHeader);
+  err = QH5Lite::writeStringDataset(gid, Ebsd::H5Aztec::OriginalFile, reader.getFileName());
 
   // Close the "Header" group
   err = H5Gclose(gid);
 
   // Create the "Data" group
-  gid = QH5Utilities::createGroup(ctfGroup, Ebsd::H5::Data);
+  gid = QH5Utilities::createGroup(ctfGroup, Ebsd::H5Aztec::Data);
   if(gid < 0)
   {
     QString ss = QObject::tr("H5CtfImporter Error: The 'Data' Group for Z index %1 could not be created."
