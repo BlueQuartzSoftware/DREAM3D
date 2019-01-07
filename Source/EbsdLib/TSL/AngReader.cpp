@@ -108,10 +108,10 @@ AngReader::~AngReader()
     deallocateArrayData<float>(m_Phi);
     m_Phi = nullptr;
   }
-  if(m_Phi1Cleanup)
+  if(m_Phi2Cleanup)
   {
-    deallocateArrayData<float>(m_Phi1);
-    m_Phi1 = nullptr;
+    deallocateArrayData<float>(m_Phi2);
+    m_Phi2 = nullptr;
   }
   if(m_IqCleanup)
   {
