@@ -68,68 +68,7 @@ H5AngReader::H5AngReader()
 // -----------------------------------------------------------------------------
 H5AngReader::~H5AngReader()
 {
-  float* fptr = nullptr;
-  int32_t* iptr = nullptr;
-  if(getPhi1Ownership())
-  {
-    fptr = getPhi1Pointer();
-    deallocateArrayData<float>(fptr);
-    setPhi1Pointer(nullptr);
-  }
-  if(getPhiOwnership())
-  {
-    fptr = getPhiPointer();
-    deallocateArrayData<float>(fptr);
-    setPhiPointer(nullptr);
-  }
-  if(getPhi1Ownership())
-  {
-    fptr = getPhi1Pointer();
-    deallocateArrayData<float>(fptr);
-    setPhi1Pointer(nullptr);
-  }
-  if(getImageQualityOwnership())
-  {
-    fptr = getImageQualityPointer();
-    deallocateArrayData<float>(fptr);
-    setImageQualityPointer(nullptr);
-  }
-  if(getConfidenceIndexOwnership())
-  {
-    fptr = getConfidenceIndexPointer();
-    deallocateArrayData<float>(fptr);
-    setConfidenceIndexPointer(nullptr);
-  }
-  if(getPhaseDataOwnership())
-  {
-    iptr = getPhaseDataPointer();
-    deallocateArrayData<int32_t>(iptr);
-    setPhaseDataPointer(nullptr);
-  }
-  if(getXPositionOwnership())
-  {
-    fptr = getXPositionPointer();
-    deallocateArrayData<float>(fptr);
-    setXPositionPointer(nullptr);
-  }
-  if(getYPositionOwnership())
-  {
-    fptr = getYPositionPointer();
-    deallocateArrayData<float>(fptr);
-    setYPositionPointer(nullptr);
-  }
-  if(getSEMSignalOwnership())
-  {
-    fptr = getSEMSignalPointer();
-    deallocateArrayData<float>(fptr);
-    setSEMSignalPointer(nullptr);
-  }
-  if(getFitOwnership())
-  {
-    fptr = getFitPointer();
-    deallocateArrayData<float>(fptr);
-    setFitPointer(nullptr);
-  }
+
 }
 
 // -----------------------------------------------------------------------------
