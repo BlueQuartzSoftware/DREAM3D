@@ -160,9 +160,9 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
     virtual uint32_t getStackingOrder();
 
     virtual float getSampleTransformationAngle();
-    virtual QVector<float> getSampleTransformationAxis();
+    virtual std::array<float, 3> getSampleTransformationAxis();
     virtual float getEulerTransformationAngle();
-    virtual QVector<float> getEulerTransformationAxis();
+    virtual std::array<float, 3> getEulerTransformationAxis();
 
     /**
      * @brief updateToLatestVersion This will apply various attribute and data set updates to bring the
@@ -176,34 +176,30 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
      */
     virtual QSet<QString> getDataArrayNames();
 
-    //virtual QSet<QString> readMetaDataArrayNames();
-
-
   protected:
     H5EbsdVolumeInfo();
 
   private:
-    bool m_ValuesAreCached;
-    uint32_t m_FileVersion;
-    int m_XDim;
-    int m_YDim;
-    int m_ZDim;
-    float m_XRes;
-    float m_YRes;
-    float m_ZRes;
-    int m_ZStart;
-    int m_ZEnd;
-    uint32_t m_StackingOrder;
-    int m_NumPhases;
-    float m_SampleTransformationAngle;
-    QVector<float> m_SampleTransformationAxis;
-    float m_EulerTransformationAngle;
-    QVector<float> m_EulerTransformationAxis;
+    bool m_ValuesAreCached = false;
+    uint32_t m_FileVersion = 0;
+    int m_XDim = 0;
+    int m_YDim = 0;
+    int m_ZDim = 0;
+    float m_XRes = 0.0f;
+    float m_YRes = 0.0f;
+    float m_ZRes = 0.0f;
+    int m_ZStart = 0;
+    int m_ZEnd = 0;
+    uint32_t m_StackingOrder = SIMPL::RefFrameZDir::LowtoHigh;
+    int m_NumPhases = 0;
+    float m_SampleTransformationAngle = 0.0f;
+    std::array<float, 3> m_SampleTransformationAxis = {{0.0f, 0.0f, 1.0f}};
+    float m_EulerTransformationAngle = 0.0f;
+    std::array<float, 3> m_EulerTransformationAxis = {{0.0f, 0.0f, 1.0f}};
 
     QSet<QString> m_DataArrayNames;
-//    QSet<QString> m_MetaDataArrayNames;
 
-    QString m_Manufacturer;
+    QString m_Manufacturer = QString("Unknown");
 
   public:
     H5EbsdVolumeInfo(const H5EbsdVolumeInfo&) = delete;            // Copy Constructor Not Implemented

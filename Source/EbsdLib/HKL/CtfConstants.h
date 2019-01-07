@@ -100,7 +100,7 @@ const QString EbsdLibVersionStr("EbsdLibVersion");
           m_Values.push_back("Cubic-High m3m");
           m_Values.push_back("Unknown(12)");
         }
-        virtual ~LaueGroupStrings() {}
+        virtual ~LaueGroupStrings() = default;
 
         QString getString(LaueGroupTable i)
         {
@@ -115,8 +115,8 @@ const QString EbsdLibVersionStr("EbsdLibVersion");
     class SpaceGroupQuery
     {
       public:
-        SpaceGroupQuery() {}
-        virtual ~SpaceGroupQuery() {}
+        SpaceGroupQuery() = default;
+        ~SpaceGroupQuery() = default;
 
         static bool isCubic(int spaceGroup)
         {

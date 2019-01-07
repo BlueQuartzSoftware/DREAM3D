@@ -35,8 +35,7 @@
 
 #pragma once
 
-
-#include <string.h>
+#include <cstring>
 
 #include <QtCore/QString>
 #include <QtCore/QTextStream>
@@ -62,24 +61,27 @@ class EbsdLib_EXPORT AngHeaderEntry : public EbsdHeaderEntry
     EBSD_SHARED_POINTERS(AngHeaderEntry<T >)
     HEADERENTRY_NEW_SUPERCLASS(AngHeaderEntry<T>, EbsdHeaderEntry)
 
-    virtual ~AngHeaderEntry() {}
+    ~AngHeaderEntry() override = default;
 
-    QString getKey() { return m_key; }
+    QString getKey() override
+    {
+      return m_key;
+    }
 #if EbsdLib_HDF5_SUPPORT
-    QString getHDFType()
+    QString getHDFType() override
     {
       T value = static_cast<T>(0);
       return QString::fromStdString(H5Lite::HDFTypeForPrimitiveAsStr(value));
     }
 #endif
 
-    void parseValue(QByteArray& value)
+    void parseValue(QByteArray& value) override
     {
       if (value[0] == ':') { value = value.mid(1); } // move past the ":" character
       QTextStream ss(&value);
       ss >> m_value;
     }
-    void print(std::ostream& out)
+    void print(std::ostream& out) override
     {
       out << m_key.toStdString() << "  " << m_value << std::endl;
     }
@@ -94,7 +96,7 @@ class EbsdLib_EXPORT AngHeaderEntry : public EbsdHeaderEntry
     {
     }
 
-    AngHeaderEntry() {}
+    AngHeaderEntry() = default;
 
   private:
     T m_value;
@@ -120,18 +122,24 @@ class AngStringHeaderEntry : public EbsdHeaderEntry
     EBSD_SHARED_POINTERS(AngStringHeaderEntry)
     HEADERENTRY_NEW_SUPERCLASS(AngStringHeaderEntry, EbsdHeaderEntry)
 
-    virtual ~AngStringHeaderEntry() {}
+    ~AngStringHeaderEntry() override = default;
 
-    QString getKey() { return m_key; }
-    QString getHDFType() { return "H5T_STRING"; }
+    QString getKey() override
+    {
+      return m_key;
+    }
+    QString getHDFType() override
+    {
+      return "H5T_STRING";
+    }
 
-    void parseValue(QByteArray& value)
+    void parseValue(QByteArray& value) override
     {
       if (value[0] == ':') { value = value.mid(1); } // move past the ":" character
       value = value.trimmed(); // remove leading/trailing white space
       m_value = QString(value);
     }
-    void print(std::ostream& out)
+    void print(std::ostream& out) override
     {
       out << m_key.toStdString() << "  " << m_value.toStdString() << std::endl;
     }
@@ -143,24 +151,20 @@ class AngStringHeaderEntry : public EbsdHeaderEntry
     }
 
   protected:
-    AngStringHeaderEntry(const QString& key) :
-      m_key(key)
+    AngStringHeaderEntry(QString key)
+    : m_key(std::move(key))
     {
     }
 
-    AngStringHeaderEntry() {}
+    AngStringHeaderEntry() = default;
 
   private:
     QString m_value;
     QString m_key;
 
+  public:
     AngStringHeaderEntry(const AngStringHeaderEntry&) = delete; // Copy Constructor Not Implemented
-    void operator=(const AngStringHeaderEntry&) = delete;       // Move assignment Not Implemented
+    AngStringHeaderEntry(AngStringHeaderEntry&&) = delete;      // Move Constructor Not Implemented
+    AngStringHeaderEntry& operator=(const AngStringHeaderEntry&) = delete; // Copy Assignment Not Implemented
+    AngStringHeaderEntry& operator=(AngStringHeaderEntry&&) = delete;      // Move Assignment Not Implemented
 };
-
-
-
-
-
-
-

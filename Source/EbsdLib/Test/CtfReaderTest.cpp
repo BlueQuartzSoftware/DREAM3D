@@ -36,7 +36,7 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <string.h>
+#include <cstring>
 
 #include "EbsdLib/HKL/CtfReader.h"
 
@@ -47,12 +47,8 @@
 class CtfReaderTest
 {
 public:
-  CtfReaderTest()
-  {
-  }
-  virtual ~CtfReaderTest()
-  {
-  }
+  CtfReaderTest() = default;
+  virtual ~CtfReaderTest() = default;
 
   // -----------------------------------------------------------------------------
   //
@@ -236,7 +232,6 @@ public:
     int err = EXIT_SUCCESS;
     std::cout << "#-- CtfReaderTest Starting " << std::endl;
 
-
     DREAM3D_REGISTER_TEST(TestCtfReader())
     DREAM3D_REGISTER_TEST(TestMultiplePhases_European())
     DREAM3D_REGISTER_TEST(TestMultiplePhases_US())
@@ -246,5 +241,9 @@ public:
     DREAM3D_REGISTER_TEST(TestWriteCtfFile());
   }
 
-
+public:
+  CtfReaderTest(const CtfReaderTest&) = delete;            // Copy Constructor Not Implemented
+  CtfReaderTest(CtfReaderTest&&) = delete;                 // Move Constructor Not Implemented
+  CtfReaderTest& operator=(const CtfReaderTest&) = delete; // Copy Assignment Not Implemented
+  CtfReaderTest& operator=(CtfReaderTest&&) = delete;      // Move Assignment Not Implemented
 };

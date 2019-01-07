@@ -66,10 +66,7 @@ H5AngReader::H5AngReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5AngReader::~H5AngReader()
-{
-
-}
+H5AngReader::~H5AngReader() = default;
 
 // -----------------------------------------------------------------------------
 //
@@ -166,7 +163,6 @@ int H5AngReader::readHeaderOnly()
   sentinel.addGroupId(&gid);
 
   // Read all the header information
-  // qDebug() << "H5AngReader:: reading Header .. ";
   err = readHeader(gid);
   return err;
 }
@@ -221,12 +217,11 @@ int H5AngReader::readHeader(hid_t parId)
   }
   m_Phases.clear();
 
-
-  foreach(QString phaseGroupName, names)
-    //for (QStringList<QString>::iterator phaseGroupName = names.begin(); phaseGroupName != names.end(); ++phaseGroupName )
+  for(const auto& phaseGroupName : names)
   {
     hid_t pid = H5Gopen(phasesGid, phaseGroupName.toLatin1().data(), H5P_DEFAULT);
     AngPhase::Pointer m_CurrentPhase = AngPhase::New();
+
     READ_PHASE_HEADER_DATA("H5AngReader", pid, int, Ebsd::Ang::Phase, PhaseIndex, m_CurrentPhase)
     READ_PHASE_STRING_DATA("H5AngReader", pid, Ebsd::Ang::MaterialName, MaterialName, m_CurrentPhase)
     READ_PHASE_STRING_DATA("H5AngReader", pid, Ebsd::Ang::Formula, Formula, m_CurrentPhase)
@@ -365,7 +360,7 @@ int H5AngReader::readData(hid_t parId)
   {
     setErrorMessage("H5AngReader Error: Could not open 'Data' Group");
     setErrorCode(-90012);
-    return -90012;
+    return getErrorCode();
   }
   setNumberOfElements(totalDataRows);
   size_t numBytes = totalDataRows * sizeof(float);
@@ -411,7 +406,7 @@ int H5AngReader::readData(hid_t parId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5AngReader::setArraysToRead(QSet<QString> names)
+void H5AngReader::setArraysToRead(const QSet<QString>& names)
 {
   m_ArrayNames = names;
 }

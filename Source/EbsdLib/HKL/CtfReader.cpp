@@ -96,34 +96,30 @@ CtfReader::CtfReader() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-CtfReader::~CtfReader()
-{
-}
+CtfReader::~CtfReader() = default;
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void CtfReader::setPointerByName(const QString& name, void* p)
-{
-  // First we need to see if the pointer already exists
-  QMap<QString, DataParser::Pointer>::iterator iter = m_NamePointerMap.find(name);
-  if (iter == m_NamePointerMap.end())
-  {
-    // Data does not exist in Map
-    DataParser::Pointer dparser = getParser(name, nullptr, getXCells() * getYCells());
-    dparser->setVoidPointer(p);
-    m_NamePointerMap[name] = dparser;
-  }
-  else
-  {
-    DataParser::Pointer dparser = m_NamePointerMap[name];
-    void* ptr = dparser->getVoidPointer();
-    deallocateArrayData(ptr);
-    dparser->setVoidPointer(p);
-  }
-
-}
-
+//// -----------------------------------------------------------------------------
+////
+//// -----------------------------------------------------------------------------
+// void CtfReader::setPointerByName(const QString& name, void* p)
+//{
+//  // First we need to see if the pointer already exists
+//  QMap<QString, DataParser::Pointer>::iterator iter = m_NamePointerMap.find(name);
+//  if (iter == m_NamePointerMap.end())
+//  {
+//    // Data does not exist in Map
+//    DataParser::Pointer dparser = getParser(name, nullptr, getXCells() * getYCells());
+//    dparser->setVoidPointer(p);
+//    m_NamePointerMap[name] = dparser;
+//  }
+//  else
+//  {
+//    DataParser::Pointer dparser = m_NamePointerMap[name];
+//    void* ptr = dparser->getVoidPointer();
+//    deallocateArrayData(ptr);
+//    dparser->setVoidPointer(p);
+//  }
+//}
 
 // -----------------------------------------------------------------------------
 //
@@ -301,7 +297,6 @@ void CtfReader::readOnlySliceIndex(int slice)
 // -----------------------------------------------------------------------------
 int CtfReader::readData(QFile& in)
 {
-
   QString sBuf;
   QTextStream ss(&sBuf);
   // Initialize new pointers

@@ -501,13 +501,13 @@ void ReadH5Ebsd::execute()
     manufacturer = volumeInfoReader->getManufacturer();
     m_RefFrameZDir = volumeInfoReader->getStackingOrder();
 
-    QVector<float> sampleTransAxis = volumeInfoReader->getSampleTransformationAxis();
+    std::array<float, 3> sampleTransAxis = volumeInfoReader->getSampleTransformationAxis();
     m_SampleTransformation.h = sampleTransAxis[0];
     m_SampleTransformation.k = sampleTransAxis[1];
     m_SampleTransformation.l = sampleTransAxis[2];
     m_SampleTransformation.angle = volumeInfoReader->getSampleTransformationAngle();
 
-    QVector<float> eulerTransAxis = volumeInfoReader->getEulerTransformationAxis();
+    std::array<float, 3> eulerTransAxis = volumeInfoReader->getEulerTransformationAxis();
     m_EulerTransformation.h = eulerTransAxis[0];
     m_EulerTransformation.k = eulerTransAxis[1];
     m_EulerTransformation.l = eulerTransAxis[2];
@@ -527,9 +527,8 @@ void ReadH5Ebsd::execute()
   {
     setErrorCondition(-1);
 
-    QString ss = QObject::tr("Could not determine or match a supported manufacturer from the data file. Supported manufacturer codes are: %1, %2 and %3")
-                     .arg(Ebsd::Ctf::Manufacturer)
-                     .arg(Ebsd::Ang::Manufacturer);
+    QString ss =
+        QObject::tr("Could not determine or match a supported manufacturer from the data file. Supported manufacturer codes are: %1, %2 and %3").arg(Ebsd::Ctf::Manufacturer, Ebsd::Ang::Manufacturer);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }

@@ -71,7 +71,7 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
      * @param index The slice index for the file
      * @param angFile The absolute path to the input .ang file
      */
-    int importFile(hid_t fileId, int64_t index, const QString& angFile);
+    int importFile(hid_t fileId, int64_t index, const QString& angFile) override;
 
     /**
      * @brief Writes the phase data into the HDF5 file
@@ -114,14 +114,14 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
     int writeSliceData(hid_t fileId, CtfReader& reader, int z, int actualSlice);
 
   private:
-    int64_t xDim;
-    int64_t yDim;
-    int64_t zDim;
-    float xRes;
-    float yRes;
-    float zRes;
-    int m_NumSlicesImported;
-    int   m_FileVersion;
+    int64_t xDim = -1;
+    int64_t yDim = -1;
+    int64_t zDim = -1;
+    float xRes = 1.0f;
+    float yRes = 1.0f;
+    float zRes = 1.0f;
+    int m_NumSlicesImported = 1;
+    int m_FileVersion = Ebsd::H5Aztec::FileVersion;
 
   public:
     H5CtfImporter(const H5CtfImporter&) = delete;  // Copy Constructor Not Implemented

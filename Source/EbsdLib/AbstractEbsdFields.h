@@ -44,9 +44,8 @@
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdConstants.h"
 
-
-/*
- *
+/**
+ * @brief The AbstractEbsdFields class
  */
 class EbsdLib_EXPORT AbstractEbsdFields
 {

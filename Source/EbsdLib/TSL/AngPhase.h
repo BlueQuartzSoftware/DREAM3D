@@ -176,13 +176,10 @@ class EbsdLib_EXPORT AngPhase
     void setLatticeConstantBeta(float a);
     void setLatticeConstantGamma(float a);
 
-    //  void parsePhase(char* value, size_t start, size_t length);
     void parseMaterialName(QList<QByteArray>& tokens);
     void parseFormula(QList<QByteArray>& tokens);
     void parseInfo(QList<QByteArray>& tokens);
-    //  void parseSymmetry(char* value, size_t start, size_t length);
     void parseLatticeConstants(QList<QByteArray>& tokens);
-    //  void parseNumberFamilies(char* value, size_t start, size_t length);
     void parseHKLFamilies(QList<QByteArray>& tokens);
     void parseCategories(QList<QByteArray>& tokens);
 

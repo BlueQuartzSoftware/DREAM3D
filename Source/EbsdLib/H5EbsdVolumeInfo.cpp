@@ -54,20 +54,16 @@
     return err;\
   }
 
-#define EBSD_VOLREADER_READ_VECTOR_HEADER(fileId, path, var, type)\
-  {\
-    std::vector<type> data;\
-    err = H5Lite::readVectorDataset(fileId, path.toStdString(), data);\
-    if (err < 0) {\
-      qDebug() << "H5EbsdVolumeInfo Error: Could not load header (as vector) for " << path ;\
-      err = H5Utilities::closeFile(fileId);\
-      return err;\
-    } else {\
-      var.resize(static_cast<qint32>(data.size()));\
-      ::memcpy(var.data(), &(data.front()), sizeof(type) * var.size());\
-    }\
+#define EBSD_VOLREADER_READ_VECTOR3_HEADER(fileId, path, var, type)                                                                                                                                    \
+  {                                                                                                                                                                                                    \
+    err = H5Lite::readPointerDataset(fileId, path.toStdString(), var.data());                                                                                                                          \
+    if(err < 0)                                                                                                                                                                                        \
+    {                                                                                                                                                                                                  \
+      qDebug() << "H5EbsdVolumeInfo Error: Could not load header (as vector) for " << path;                                                                                                            \
+      err = H5Utilities::closeFile(fileId);                                                                                                                                                            \
+      return err;                                                                                                                                                                                      \
+    }                                                                                                                                                                                                  \
   }
-
 
 #define EBSD_VOLREADER_READ_HEADER_CAST(fileId, path, var, m_msgType, cast)\
   { cast t;\
@@ -87,35 +83,10 @@ using namespace H5Support_NAMESPACE;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5EbsdVolumeInfo::H5EbsdVolumeInfo() :
-  m_ErrorCode(0),
-  m_ErrorMessage(""),
-  m_ValuesAreCached(false),
-  m_FileVersion(0),
-  m_XDim(0),
-  m_YDim(0),
-  m_ZDim(0),
-  m_XRes(0.0f),
-  m_YRes(0.0f),
-  m_ZRes(0.0f),
-  m_ZStart(0),
-  m_ZEnd(0),
-  m_StackingOrder(SIMPL::RefFrameZDir::LowtoHigh),
-  m_NumPhases(0),
-  m_SampleTransformationAngle(0.0),
-  m_EulerTransformationAngle(0.0)
+H5EbsdVolumeInfo::H5EbsdVolumeInfo()
+: m_ErrorCode(0)
+, m_ErrorMessage("")
 {
-  m_Manufacturer = "Unknown";
-
-  m_SampleTransformationAxis.resize(3);
-  m_SampleTransformationAxis[0] = 0.0;
-  m_SampleTransformationAxis[1] = 0.0;
-  m_SampleTransformationAxis[2] = 1.0;
-
-  m_EulerTransformationAxis.resize(3);
-  m_EulerTransformationAxis[0] = 0.0;
-  m_EulerTransformationAxis[1] = 0.0;
-  m_EulerTransformationAxis[2] = 1.0;
 }
 
 // -----------------------------------------------------------------------------
@@ -196,9 +167,9 @@ int H5EbsdVolumeInfo::readVolumeInfo()
 
   EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5Ebsd::StackingOrder, m_StackingOrder);
   EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5Ebsd::SampleTransformationAngle, m_SampleTransformationAngle);
-  EBSD_VOLREADER_READ_VECTOR_HEADER(fileId, Ebsd::H5Ebsd::SampleTransformationAxis, m_SampleTransformationAxis, float);
+  EBSD_VOLREADER_READ_VECTOR3_HEADER(fileId, Ebsd::H5Ebsd::SampleTransformationAxis, m_SampleTransformationAxis, float);
   EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5Ebsd::EulerTransformationAngle, m_EulerTransformationAngle);
-  EBSD_VOLREADER_READ_VECTOR_HEADER(fileId, Ebsd::H5Ebsd::EulerTransformationAxis, m_EulerTransformationAxis, float);
+  EBSD_VOLREADER_READ_VECTOR3_HEADER(fileId, Ebsd::H5Ebsd::EulerTransformationAxis, m_EulerTransformationAxis, float);
 
   // Read the manufacturer from the file
   m_Manufacturer = "";
@@ -482,7 +453,7 @@ float H5EbsdVolumeInfo::getSampleTransformationAngle()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<float> H5EbsdVolumeInfo::getSampleTransformationAxis()
+std::array<float, 3> H5EbsdVolumeInfo::getSampleTransformationAxis()
 {
   int err = -1;
   if(!m_ValuesAreCached)
@@ -490,7 +461,7 @@ QVector<float> H5EbsdVolumeInfo::getSampleTransformationAxis()
     err = readVolumeInfo();
     if (err < 0)
     {
-      QVector<float> axis(3);
+      std::array<float, 3> axis;
       axis[0] = 0.0;
       axis[1] = 0.0;
       axis[2] = 1.0;
@@ -515,7 +486,7 @@ float H5EbsdVolumeInfo::getEulerTransformationAngle()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<float> H5EbsdVolumeInfo::getEulerTransformationAxis()
+std::array<float, 3> H5EbsdVolumeInfo::getEulerTransformationAxis()
 {
   int err = -1;
   if(!m_ValuesAreCached)
@@ -523,7 +494,7 @@ QVector<float> H5EbsdVolumeInfo::getEulerTransformationAxis()
     err = readVolumeInfo();
     if (err < 0)
     {
-      QVector<float> axis(3);
+      std::array<float, 3> axis;
       axis[0] = 0.0;
       axis[1] = 0.0;
       axis[2] = 1.0;

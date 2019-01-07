@@ -106,7 +106,8 @@ class EbsdLib_EXPORT H5AngReader : public AngReader
   public:
     EBSD_SHARED_POINTERS(H5AngReader)
     EBSD_STATIC_NEW_MACRO(H5AngReader)
-    EBSD_TYPE_MACRO(H5AngReader)
+    EBSD_TYPE_MACRO_SUPER(H5AngReader, AngReader)
+
     ~H5AngReader() override;
 
     /**
@@ -118,7 +119,7 @@ class EbsdLib_EXPORT H5AngReader : public AngReader
      * @brief Reads the file
      * @return error condition
      */
-    virtual int readFile();
+    int readFile() override;
 
     /**
      * @brief Reads the header section of the file
@@ -131,7 +132,7 @@ class EbsdLib_EXPORT H5AngReader : public AngReader
     * @brief Reads ONLY the header portion of the TSL .ang file
     * @return 1 on success
     */
-    virtual int readHeaderOnly();
+    int readHeaderOnly() override;
 
     /**
      * @brief Returns a vector of AngPhase objects corresponding to the phases
@@ -143,7 +144,7 @@ class EbsdLib_EXPORT H5AngReader : public AngReader
      * @brief Sets the names of the arrays to read out of the file
      * @param names
      */
-    void setArraysToRead(QSet<QString> names);
+    void setArraysToRead(const QSet<QString>& names);
 
     /**
      * @brief Over rides the setArraysToReads to tell the reader to load ALL the data from the HDF5 file. If the

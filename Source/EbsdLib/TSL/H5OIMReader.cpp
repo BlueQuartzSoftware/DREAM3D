@@ -59,14 +59,7 @@ using namespace H5Support_NAMESPACE;
 //
 // -----------------------------------------------------------------------------
 H5OIMReader::H5OIMReader()
-: m_HDF5Path()
-, m_ReadPatternData(false)
-, m_PatternData(nullptr)
-, m_ReadAllArrays(true)
 {
-
-  m_HeaderMap.clear();
-
   // Initialize the map of header key to header value
   m_HeaderMap[Ebsd::Ang::TEMPIXPerUM] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::TEMPIXPerUM);
   m_HeaderMap[Ebsd::Ang::XStar] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::XStar);

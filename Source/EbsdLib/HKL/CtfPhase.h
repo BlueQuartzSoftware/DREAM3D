@@ -35,8 +35,7 @@
 
 #pragma once
 
-#include <string.h>
-
+#include <cstring>
 
 #include <QtCore/QVector>
 #include <QtCore/QString>
@@ -60,7 +59,7 @@ class EbsdLib_EXPORT CtfPhase
     EBSD_SHARED_POINTERS(CtfPhase)
     EBSD_STATIC_NEW_MACRO(CtfPhase)
     EBSD_TYPE_MACRO(CtfPhase)
-    virtual ~CtfPhase();
+    ~CtfPhase();
 
     EBSD_INSTANCE_PROPERTY(int, PhaseIndex)
 

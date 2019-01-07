@@ -690,12 +690,12 @@ void ReadH5EbsdWidget::updateFileInfoWidgets()
       if(h5Reader->getFileVersion() >= 4)
       {
         m_SampleTransformation.angle = h5Reader->getSampleTransformationAngle();
-        QVector<float> sampleTransAxis = h5Reader->getSampleTransformationAxis();
+        std::array<float, 3> sampleTransAxis = h5Reader->getSampleTransformationAxis();
         m_SampleTransformation.h = sampleTransAxis[0];
         m_SampleTransformation.k = sampleTransAxis[1];
         m_SampleTransformation.l = sampleTransAxis[2];
         m_EulerTransformation.angle = h5Reader->getEulerTransformationAngle();
-        QVector<float> eulerTransAxis = h5Reader->getEulerTransformationAxis();
+        std::array<float, 3> eulerTransAxis = h5Reader->getEulerTransformationAxis();
         m_EulerTransformation.h = eulerTransAxis[0];
         m_EulerTransformation.k = eulerTransAxis[1];
         m_EulerTransformation.l = eulerTransAxis[2];
