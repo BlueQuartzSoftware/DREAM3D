@@ -470,7 +470,7 @@ void ImportH5EspritData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, 
       data.phases = reader->getPhaseVector();
       setFileCacheData(data);
 
-      std::array<int32_t, 2> patternDims = {0, 0};
+      std::array<int32_t, 2> patternDims = {{0, 0}};
       reader->getPatternDims(patternDims);
       QVector<int32_t> pDims(2);
       pDims[0] = patternDims[0];

@@ -171,7 +171,6 @@ class EbsdLib_EXPORT EbsdReader
 #if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
       T* m_buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
 #else
-      //T*  m_buffer = new T[numberOfElements];
       T* m_buffer = static_cast<T*>(malloc(sizeof(T) * numberOfElements));
 #endif
       return m_buffer;
