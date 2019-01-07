@@ -68,46 +68,6 @@ H5AngReader::H5AngReader()
 // -----------------------------------------------------------------------------
 H5AngReader::~H5AngReader()
 {
-  if(getPhi1Ownership())
-  {
-    setPhi1Pointer(nullptr);
-  }
-  if(getPhiOwnership())
-  {
-    setPhiPointer(nullptr);
-  }
-  if(getPhi2Ownership())
-  {
-    setPhi2Pointer(nullptr);
-  }
-  if(getImageQualityOwnership())
-  {
-    setImageQualityPointer(nullptr);
-  }
-  if(getConfidenceIndexOwnership())
-  {
-    setConfidenceIndexPointer(nullptr);
-  }
-  if(getPhaseDataOwnership())
-  {
-    setPhaseDataPointer(nullptr);
-  }
-  if(getXPositionOwnership())
-  {
-    setXPositionPointer(nullptr);
-  }
-  if(getYPositionOwnership())
-  {
-    setYPositionPointer(nullptr);
-  }
-  if(getSEMSignalOwnership())
-  {
-    setSEMSignalPointer(nullptr);
-  }
-  if(getFitOwnership())
-  {
-    setFitPointer(nullptr);
-  }
 }
 
 // -----------------------------------------------------------------------------
