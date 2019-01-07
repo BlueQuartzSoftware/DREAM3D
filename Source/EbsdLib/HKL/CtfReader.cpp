@@ -98,24 +98,6 @@ CtfReader::CtfReader() :
 // -----------------------------------------------------------------------------
 CtfReader::~CtfReader()
 {
-  deletePointers();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void CtfReader::initPointers(size_t numElements)
-{
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void CtfReader::deletePointers()
-{
-  // Clear out all the maps and vectors
-//  m_NameIndexMap.clear();
-//  m_DataParsers.clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -319,8 +301,7 @@ void CtfReader::readOnlySliceIndex(int slice)
 // -----------------------------------------------------------------------------
 int CtfReader::readData(QFile& in)
 {
-  // Delete any currently existing pointers
-  deletePointers();
+
   QString sBuf;
   QTextStream ss(&sBuf);
   // Initialize new pointers
@@ -382,7 +363,6 @@ int CtfReader::readData(QFile& in)
       ss.string()->clear();
       ss << "Column Header '" << tokens[i] << "' is not a recognized column for CTF Files. Please recheck your .ctf file and report this error to the DREAM3D developers.";
       setErrorMessage(ss.string());
-      deletePointers();
       return -107;
     }
 

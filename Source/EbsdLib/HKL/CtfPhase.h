@@ -86,7 +86,7 @@ class EbsdLib_EXPORT CtfPhase
     /**
      * @brief Returns the type of crystal structure for this phase.
      */
-    unsigned int determineCrystalStructure();
+    unsigned int determineLaueGroup();
 
     QString getMaterialName();
 

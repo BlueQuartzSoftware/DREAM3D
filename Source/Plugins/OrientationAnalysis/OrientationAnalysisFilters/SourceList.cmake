@@ -50,13 +50,13 @@ set(_PublicFilters
   GenerateIPFColors
   GenerateOrientationMatrixTranspose
   GenerateQuaternionConjugate
-  ImportEbsdMontage
+  ImportH5EspritData
+  ImportH5OimData
   INLWriter
   NeighborOrientationCorrelation
   OrientationUtility
   ReadAngData
   ReadCtfData
-  ReadEdaxH5Data
   ReadH5Ebsd
   ReplaceElementAttributesWithNeighborValues
   RodriguesConvertor

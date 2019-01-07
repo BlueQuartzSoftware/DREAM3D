@@ -49,60 +49,58 @@
  */
 namespace Ebsd
 {
-  enum Manufacturer
-  {
-    TSL = 0,
-    HKL = 1,
-    HEDM = 2,
-    EDAX = 3,
-    UnknownManufacturer
-  };
 
-  namespace CellData
-  {
-    const QString EulerAngles("EulerAngles");
-    const QString Phases("Phases");
-  }
+namespace H5Ebsd
+{
+const QString Manufacturer("Manufacturer");
+const QString Header("Header");
+const QString Phases("Phases");
+const QString Phase("Phase");
+const QString Data("Data");
+const QString Index("Index");
 
-  namespace H5
-  {
-    const QString OriginalHeader("OriginalHeader");
-    const QString ZStartIndex("ZStartIndex");
-    const QString ZEndIndex("ZEndIndex");
-    const QString ZResolution("Z Resolution");
-    const QString StackingOrder("Stacking Order");
-    const QString SampleTransformationAngle("SampleTransformationAngle");
-    const QString SampleTransformationAxis("SampleTransformationAxis");
-    const QString EulerTransformationAngle("EulerTransformationAngle");
-    const QString EulerTransformationAxis("EulerTransformationAxis");
+const QString ZStartIndex("ZStartIndex");
+const QString ZEndIndex("ZEndIndex");
+const QString ZResolution("Z Resolution");
+const QString StackingOrder("Stacking Order");
+const QString SampleTransformationAngle("SampleTransformationAngle");
+const QString SampleTransformationAxis("SampleTransformationAxis");
+const QString EulerTransformationAngle("EulerTransformationAngle");
+const QString EulerTransformationAxis("EulerTransformationAxis");
 
-    const QString Manufacturer("Manufacturer");
-    const QString OriginalFile("OriginalFile");
-    const QString Index("Index");
-    const QString Header("Header");
-    const QString Phases("Phases");
-    const QString Phase("Phase");
-    const QString Data("Data");
-    const QString EBSD("EBSD");
-    const QString SEM_PRIAS_Images("SEM-PRIAS Images");
-    const QString PatternCenterCalibration("Pattern Center Calibration");
+// Each Manufacturer has their own naming scheme for these variables but for
+// DREAM.3D we are going to settle on using these names for consistency
+const QString XResolution("X Resolution");
+const QString YResolution("Y Resolution");
 
+// We store the Maximum number of X and Y Points for the given volume. This
+// allows us to store slices that have different XY voxel dimensions.
+const QString XPoints("Max X Points");
+const QString YPoints("Max Y Points");
 
-    // Each Manufacturer has their own naming scheme for these variables but for
-    // DREAM.3D we are going to settle on using these names for consistency
-    const QString XResolution("X Resolution");
-    const QString YResolution("Y Resolution");
+const QString FileVersionStr("FileVersion");
+const unsigned int FileVersion = 5;
+const QString EbsdLibVersionStr("EbsdLibVersion");
+} // namespace H5Ebsd
 
-    // We store the Maximum number of X and Y Points for the given volume. This
-    // allows us to store slices that have different XY voxel dimensions.
-    const QString XPoints("Max X Points");
-    const QString YPoints("Max Y Points");
+using EnumType = int32_t;
+enum class OEM : EnumType
+{
+  EDAX = 0,
+  Oxford = 1,
+  Bruker = 2,
+  HEDM = 3,
+  Zeiss = 4,
+  Phillips = 5,
+  ThermoFisher = 6,
+  Unknown = 7
+};
 
-    const QString FileVersionStr("FileVersion");
-    const unsigned int FileVersion = 5;
-    const QString EbsdLibVersionStr("EbsdLibVersion");
-  }
-
+namespace CellData
+{
+const QString EulerAngles("EulerAngles");
+const QString Phases("Phases");
+} // namespace CellData
 
   enum EbsdToSampleCoordinateMapping
   {

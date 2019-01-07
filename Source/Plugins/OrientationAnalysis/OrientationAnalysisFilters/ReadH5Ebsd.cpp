@@ -70,7 +70,7 @@ ReadH5Ebsd::ReadH5Ebsd()
 , m_UseTransformations(true)
 , m_AngleRepresentation(Ebsd::AngleRepresentation::Radians)
 , m_RefFrameZDir(SIMPL::RefFrameZDir::UnknownRefFrameZDirection)
-, m_Manufacturer(Ebsd::UnknownManufacturer)
+, m_Manufacturer(Ebsd::OEM::Unknown)
 , m_CrystalStructuresArrayName(SIMPL::EnsembleData::CrystalStructures)
 , m_LatticeConstantsArrayName(SIMPL::EnsembleData::LatticeConstants)
 , m_CellPhasesArrayName(SIMPL::CellData::Phases)
@@ -205,13 +205,13 @@ void ReadH5Ebsd::readVolumeInfo()
     m_DataArrayNames = reader->getDataArrayNames();
 
     QString manufacturer = reader->getManufacturer();
-    if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
+    if(manufacturer == Ebsd::Ang::Manufacturer)
     {
-      m_Manufacturer = Ebsd::TSL;
+      m_Manufacturer = Ebsd::OEM::EDAX;
     }
-    else if(manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
+    else if(manufacturer == Ebsd::Ctf::Manufacturer)
     {
-      m_Manufacturer = Ebsd::HKL;
+      m_Manufacturer = Ebsd::OEM::Oxford;
     }
     else
     {
@@ -328,13 +328,13 @@ void ReadH5Ebsd::dataCheck()
     return;
   }
   QString manufacturer = volumeInfoReader->getManufacturer();
-  if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
+  if(manufacturer == Ebsd::Ang::Manufacturer)
   {
-    m_Manufacturer = Ebsd::TSL;
+    m_Manufacturer = Ebsd::OEM::EDAX;
   }
-  else if(manufacturer.compare(Ebsd::Ctf::Manufacturer) == 0)
+  else if(manufacturer == Ebsd::Ctf::Manufacturer)
   {
-    m_Manufacturer = Ebsd::HKL;
+    m_Manufacturer = Ebsd::OEM::Oxford;
   }
 
   if(m_ZEndIndex < m_ZStartIndex)
@@ -358,13 +358,13 @@ void ReadH5Ebsd::dataCheck()
   tDims[2] = dcDims[2];
   cellAttrMat->resizeAttributeArrays(tDims);
 
-  if(m_Manufacturer == Ebsd::TSL)
+  if(m_Manufacturer == Ebsd::OEM::EDAX)
   {
     AngFields angFeatures;
     reader = H5AngVolumeReader::New();
     names = angFeatures.getFilterFeatures<QVector<QString>>();
   }
-  else if(m_Manufacturer == Ebsd::HKL)
+  else if(m_Manufacturer == Ebsd::OEM::Oxford)
   {
     CtfFields cfeatures;
     reader = H5CtfVolumeReader::New();

@@ -234,6 +234,9 @@ public:
   void operator()()
   {
     int err = EXIT_SUCCESS;
+    std::cout << "#-- CtfReaderTest Starting " << std::endl;
+
+
     DREAM3D_REGISTER_TEST(TestCtfReader())
     DREAM3D_REGISTER_TEST(TestMultiplePhases_European())
     DREAM3D_REGISTER_TEST(TestMultiplePhases_US())
@@ -242,4 +245,6 @@ public:
     DREAM3D_REGISTER_TEST(TestZeroXYCells())
     DREAM3D_REGISTER_TEST(TestWriteCtfFile());
   }
+
+
 };

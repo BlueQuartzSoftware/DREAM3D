@@ -97,24 +97,38 @@ public:
 
   EBSD_INSTANCE_PROPERTY(bool, ReadHexGrid)
 
+  /**
+   * @brief These methods allow the developer to set/get the raw pointer for a given array, release ownership of the memory
+   * and forcibly release the memory for a given array.
+   *
+   * The methods will follow the form of:
+   * @brief This will return the raw pointer to the data. The Reader class WILL 'free' the memory when it goes out of
+   * scope. If you need the memory to persist longer then call the release[NAME]Ownership() method to tell the reader
+   * NOT to free the memory.
+   * @param releaseOwnerhsip If this is true then the internal pointer is set to nullptr and the Cleanup flag is set to false.
+   * [type]* get[NAME]Pointer(bool releaseOwnership = false);
+   *
+   * @brief This will get the ownership of the raw pointer. If 'true' then this class will 'free' the pointer before
+   * each read or when the object goes out of scope.
+   * bool get[NAME]Ownership();
+   *
+   * @brief This method will set the internal pointer to nullptr without calling 'free'. It is now up to the developer
+   * to 'free' the memory that was used.
+   * void release[NAME]Ownership();
+   *
+   * @brief This will free the internal pointer as long as it already isn't nullptr.
+   * void free[NAME]Pointer();
+   *
+   */
   EBSD_POINTER_PROPERTY(Phi1, Phi1, float)
-
   EBSD_POINTER_PROPERTY(Phi, Phi, float)
-
   EBSD_POINTER_PROPERTY(Phi2, Phi2, float)
-
   EBSD_POINTER_PROPERTY(XPosition, X, float)
-
   EBSD_POINTER_PROPERTY(YPosition, Y, float)
-
   EBSD_POINTER_PROPERTY(ImageQuality, Iq, float)
-
   EBSD_POINTER_PROPERTY(ConfidenceIndex, Ci, float)
-
   EBSD_POINTER_PROPERTY(PhaseData, PhaseData, int)
-
   EBSD_POINTER_PROPERTY(SEMSignal, SEMSignal, float)
-
   EBSD_POINTER_PROPERTY(Fit, Fit, float)
 
   /**
@@ -141,15 +155,6 @@ public:
    * @return 1 on success
    */
   int readHeaderOnly() override;
-
-  /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
-   * and then splats '0' across all the bytes of the memory allocation
-   */
-  void initPointers(size_t numElements) override;
-
-  /** @brief 'free's the allocated memory and sets the pointer to nullptr
-   */
-  void deletePointers() override;
 
   int getXDimension() override;
   void setXDimension(int xdim) override;

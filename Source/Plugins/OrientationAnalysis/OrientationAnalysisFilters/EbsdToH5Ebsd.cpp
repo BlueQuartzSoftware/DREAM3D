@@ -257,7 +257,7 @@ void EbsdToH5Ebsd::execute()
 
   H5ScopedFileSentinel sentinel(&fileId, true);
 
-  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::ZResolution, m_ZResolution);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5Ebsd::ZResolution, m_ZResolution);
   if(err < 0)
   {
     QString ss = QObject::tr("Could not write the Z Resolution Scalar to the HDF5 File");
@@ -265,7 +265,7 @@ void EbsdToH5Ebsd::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::StackingOrder, m_RefFrameZDir);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5Ebsd::StackingOrder, m_RefFrameZDir);
   if(err < 0)
   {
     QString ss = QObject::tr("Could not write the Stacking Order Scalar to the HDF5 File");
@@ -274,7 +274,7 @@ void EbsdToH5Ebsd::execute()
   }
 
   QString s = Ebsd::StackingOrder::Utils::getStringForEnum(m_RefFrameZDir);
-  err = QH5Lite::writeStringAttribute(fileId, Ebsd::H5::StackingOrder, "Name", s);
+  err = QH5Lite::writeStringAttribute(fileId, Ebsd::H5Ebsd::StackingOrder, "Name", s);
   if(err < 0)
   {
     QString ss = QObject::tr("Could not write the Stacking Order Name Attribute to the HDF5 File");
@@ -282,7 +282,7 @@ void EbsdToH5Ebsd::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::SampleTransformationAngle, m_SampleTransformation.angle);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5Ebsd::SampleTransformationAngle, m_SampleTransformation.angle);
   if(err < 0)
   {
     QString ss = QObject::tr("Could not write the Sample Transformation Angle to the HDF5 File");
@@ -292,7 +292,7 @@ void EbsdToH5Ebsd::execute()
 
   int32_t rank = 1;
   hsize_t dims[3] = {3, 0, 0};
-  err = QH5Lite::writePointerDataset<float>(fileId, Ebsd::H5::SampleTransformationAxis, rank, dims, &(m_SampleTransformation.h));
+  err = QH5Lite::writePointerDataset<float>(fileId, Ebsd::H5Ebsd::SampleTransformationAxis, rank, dims, &(m_SampleTransformation.h));
   if(err < 0)
   {
     QString ss = QObject::tr("Could not write the Sample Transformation Axis to the HDF5 File");
@@ -300,7 +300,7 @@ void EbsdToH5Ebsd::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::EulerTransformationAngle, m_EulerTransformation.angle);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5Ebsd::EulerTransformationAngle, m_EulerTransformation.angle);
   if(err < 0)
   {
     QString ss = QObject::tr("Could not write the Euler Transformation Angle to the HDF5 File");
@@ -308,7 +308,7 @@ void EbsdToH5Ebsd::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  err = QH5Lite::writePointerDataset<float>(fileId, Ebsd::H5::EulerTransformationAxis, rank, dims, &(m_EulerTransformation.h));
+  err = QH5Lite::writePointerDataset<float>(fileId, Ebsd::H5Ebsd::EulerTransformationAxis, rank, dims, &(m_EulerTransformation.h));
   if(err < 0)
   {
     QString ss = QObject::tr("Could not write the Euler Transformation Axis to the HDF5 File");
@@ -339,7 +339,7 @@ void EbsdToH5Ebsd::execute()
   QString ext = fiExt.suffix();
   if(ext.compare(Ebsd::Ang::FileExt) == 0)
   {
-    err = QH5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Ang::Manufacturer);
+    err = QH5Lite::writeStringDataset(fileId, Ebsd::H5Ebsd::Manufacturer, Ebsd::Ang::Manufacturer);
     if(err < 0)
     {
 
@@ -351,7 +351,7 @@ void EbsdToH5Ebsd::execute()
   }
   else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
   {
-    err = QH5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Ctf::Manufacturer);
+    err = QH5Lite::writeStringDataset(fileId, Ebsd::H5Ebsd::Manufacturer, Ebsd::Ctf::Manufacturer);
     if(err < 0)
     {
 
@@ -457,7 +457,7 @@ void EbsdToH5Ebsd::execute()
   }
 
   // Write Z index start, Z index end and Z Resolution to the HDF5 file
-  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::ZStartIndex, m_ZStartIndex);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5Ebsd::ZStartIndex, m_ZStartIndex);
   if(err < 0)
   {
     QString ss = QObject::tr("Could not write the Z Start Index Scalar to the HDF5 File");
@@ -466,7 +466,7 @@ void EbsdToH5Ebsd::execute()
   }
 
   m_ZEndIndex = m_ZStartIndex + totalSlicesImported - 1;
-  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::ZEndIndex, m_ZEndIndex);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5Ebsd::ZEndIndex, m_ZEndIndex);
   if(err < 0)
   {
     QString ss = QObject::tr("Could not write the Z End Index Scalar to the HDF5 File");
@@ -474,7 +474,7 @@ void EbsdToH5Ebsd::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::XPoints, biggestxDim);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5Ebsd::XPoints, biggestxDim);
   if(err < 0)
   {
     QString ss = QObject::tr("Could not write the XPoints Scalar to HDF5 file");
@@ -482,7 +482,7 @@ void EbsdToH5Ebsd::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::YPoints, biggestyDim);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5Ebsd::YPoints, biggestyDim);
   if(err < 0)
   {
     QString ss = QObject::tr("Could not write the YPoints Scalar to HDF5 file");
@@ -490,7 +490,7 @@ void EbsdToH5Ebsd::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::XResolution, xRes);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5Ebsd::XResolution, xRes);
   if(err < 0)
   {
     QString ss = QObject::tr("Could not write the XResolution Scalar to HDF5 file");
@@ -498,7 +498,7 @@ void EbsdToH5Ebsd::execute()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::YResolution, yRes);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5Ebsd::YResolution, yRes);
   if(err < 0)
   {
     QString ss = QObject::tr("Could not write the YResolution Scalar to HDF5 file");
@@ -511,7 +511,7 @@ void EbsdToH5Ebsd::execute()
     // Write an Index data set which contains all the z index values which
     // should help speed up the reading side of this file
     QVector<hsize_t> dimsL(1, indices.size());
-    err = QH5Lite::writeVectorDataset(fileId, Ebsd::H5::Index, dimsL, indices);
+    err = QH5Lite::writeVectorDataset(fileId, Ebsd::H5Ebsd::Index, dimsL, indices);
   }
   err = QH5Utilities::closeFile(fileId);
   fileId = -1;

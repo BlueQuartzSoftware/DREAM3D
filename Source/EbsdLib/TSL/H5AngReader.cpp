@@ -68,7 +68,68 @@ H5AngReader::H5AngReader()
 // -----------------------------------------------------------------------------
 H5AngReader::~H5AngReader()
 {
-  deletePointers();
+  float* fptr = nullptr;
+  int32_t* iptr = nullptr;
+  if(getPhi1Ownership())
+  {
+    fptr = getPhi1Pointer();
+    deallocateArrayData<float>(fptr);
+    setPhi1Pointer(nullptr);
+  }
+  if(getPhiOwnership())
+  {
+    fptr = getPhiPointer();
+    deallocateArrayData<float>(fptr);
+    setPhiPointer(nullptr);
+  }
+  if(getPhi1Ownership())
+  {
+    fptr = getPhi1Pointer();
+    deallocateArrayData<float>(fptr);
+    setPhi1Pointer(nullptr);
+  }
+  if(getImageQualityOwnership())
+  {
+    fptr = getImageQualityPointer();
+    deallocateArrayData<float>(fptr);
+    setImageQualityPointer(nullptr);
+  }
+  if(getConfidenceIndexOwnership())
+  {
+    fptr = getConfidenceIndexPointer();
+    deallocateArrayData<float>(fptr);
+    setConfidenceIndexPointer(nullptr);
+  }
+  if(getPhaseDataOwnership())
+  {
+    iptr = getPhaseDataPointer();
+    deallocateArrayData<int32_t>(iptr);
+    setPhaseDataPointer(nullptr);
+  }
+  if(getXPositionOwnership())
+  {
+    fptr = getXPositionPointer();
+    deallocateArrayData<float>(fptr);
+    setXPositionPointer(nullptr);
+  }
+  if(getYPositionOwnership())
+  {
+    fptr = getYPositionPointer();
+    deallocateArrayData<float>(fptr);
+    setYPositionPointer(nullptr);
+  }
+  if(getSEMSignalOwnership())
+  {
+    fptr = getSEMSignalPointer();
+    deallocateArrayData<float>(fptr);
+    setSEMSignalPointer(nullptr);
+  }
+  if(getFitOwnership())
+  {
+    fptr = getFitPointer();
+    deallocateArrayData<float>(fptr);
+    setFitPointer(nullptr);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -177,7 +238,7 @@ int H5AngReader::readHeaderOnly()
 int H5AngReader::readHeader(hid_t parId)
 {
   int err = -1;
-  hid_t gid = H5Gopen(parId, Ebsd::H5::Header.toLatin1().data(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(parId, Ebsd::H5OIM::Header.toLatin1().data(), H5P_DEFAULT);
   if (gid < 0)
   {
     setErrorCode(-90008);
@@ -200,7 +261,7 @@ int H5AngReader::readHeader(hid_t parId)
   READ_EBSD_HEADER_STRING_DATA("H5AngReader", AngStringHeaderEntry, QString, SampleID, Ebsd::Ang::SAMPLEID, gid)
   READ_EBSD_HEADER_STRING_DATA("H5AngReader", AngStringHeaderEntry, QString, SCANID, Ebsd::Ang::SCANID, gid)
 
-  hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.toLatin1().data(), H5P_DEFAULT);
+  hid_t phasesGid = H5Gopen(gid, Ebsd::H5OIM::Phases.toLatin1().data(), H5P_DEFAULT);
   if (phasesGid < 0)
   {
     setErrorCode(-90007);
@@ -255,7 +316,7 @@ int H5AngReader::readHeader(hid_t parId)
   }
 
   QString completeHeader;
-  err = QH5Lite::readStringDataset(gid, Ebsd::H5::OriginalHeader, completeHeader);
+  err = QH5Lite::readStringDataset(gid, Ebsd::H5OIM::OriginalHeader, completeHeader);
   if (err < 0)
   {
     setErrorCode(-90010);
@@ -309,26 +370,6 @@ int H5AngReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
   return status;
 }
 
-
-#define ANG_READER_ALLOCATE_AND_READ(name, type)\
-  if (m_ReadAllArrays == true || m_ArrayNames.find(Ebsd::Ang::name) != m_ArrayNames.end()) {\
-    type* _##name = allocateArray<type>(totalDataRows);\
-    if (nullptr != _##name) {\
-      ::memset(_##name, 0, numBytes);\
-      err = QH5Lite::readPointerDataset(gid, Ebsd::Ang::name, _##name);\
-      if (err < 0) {\
-        deallocateArrayData(_##name); /*deallocate the array*/\
-        setErrorCode(-90020);\
-        ss << "Error reading dataset '" << #name << "' from the HDF5 file. This data set is required to be in the file because either "\
-           "the program is set to read ALL the Data arrays or the program was instructed to read this array.";\
-        setErrorMessage(ss.string());\
-        err = H5Gclose(gid);\
-        return -90020;\
-      }\
-    }\
-    set##name##Pointer(_##name);\
-  }
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -336,9 +377,6 @@ int H5AngReader::readData(hid_t parId)
 {
   int err = -1;
 
-  // Delete any currently existing pointers
-  deletePointers();
-  // Initialize new pointers
   size_t totalDataRows = 0;
 
   QString grid = getGrid();
@@ -383,8 +421,7 @@ int H5AngReader::readData(hid_t parId)
     return -300;
   }
 
-
-  hid_t gid = H5Gopen(parId, Ebsd::H5::Data.toLatin1().data(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(parId, Ebsd::H5OIM::Data.toLatin1().data(), H5P_DEFAULT);
   if (gid < 0)
   {
     setErrorMessage("H5AngReader Error: Could not open 'Data' Group");
@@ -405,24 +442,22 @@ int H5AngReader::readData(hid_t parId)
     return err;
   }
 
-  ANG_READER_ALLOCATE_AND_READ(Phi1, float);
-  ANG_READER_ALLOCATE_AND_READ(Phi, float);
-  ANG_READER_ALLOCATE_AND_READ(Phi2, float);
-  ANG_READER_ALLOCATE_AND_READ(ImageQuality, float);
-  ANG_READER_ALLOCATE_AND_READ(ConfidenceIndex, float);
-
-  ANG_READER_ALLOCATE_AND_READ(PhaseData, int);
-
-  ANG_READER_ALLOCATE_AND_READ(XPosition, float);
-  ANG_READER_ALLOCATE_AND_READ(YPosition, float);
-
-  ANG_READER_ALLOCATE_AND_READ(Fit, float);
+  // Initialize new pointers
+  ANG_READER_ALLOCATE_AND_READ(Phi1, Ebsd::Ang::Phi1, float);
+  ANG_READER_ALLOCATE_AND_READ(Phi, Ebsd::Ang::Phi, float);
+  ANG_READER_ALLOCATE_AND_READ(Phi2, Ebsd::Ang::Phi2, float);
+  ANG_READER_ALLOCATE_AND_READ(ImageQuality, Ebsd::Ang::ImageQuality, float);
+  ANG_READER_ALLOCATE_AND_READ(ConfidenceIndex, Ebsd::Ang::ConfidenceIndex, float);
+  ANG_READER_ALLOCATE_AND_READ(PhaseData, Ebsd::Ang::PhaseData, int);
+  ANG_READER_ALLOCATE_AND_READ(XPosition, Ebsd::Ang::XPosition, float);
+  ANG_READER_ALLOCATE_AND_READ(YPosition, Ebsd::Ang::YPosition, float);
+  ANG_READER_ALLOCATE_AND_READ(Fit, Ebsd::Ang::Fit, float);
   if (err < 0)
   {
     setNumFeatures(9);
   }
 
-  ANG_READER_ALLOCATE_AND_READ(SEMSignal, float);
+  ANG_READER_ALLOCATE_AND_READ(SEMSignal, Ebsd::Ang::SEMSignal, float);
   if (err < 0)
   {
     setNumFeatures(8);

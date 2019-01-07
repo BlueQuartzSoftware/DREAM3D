@@ -152,7 +152,7 @@ public:
    * @brief Sets the names of the arrays to read out of the file
    * @param names
    */
-  void setArraysToRead(QSet<QString> names);
+  void setArraysToRead(const QSet<QString>& names);
 
   /**
    * @brief Over rides the setArraysToReads to tell the reader to load ALL the data from the HDF5 file. If the

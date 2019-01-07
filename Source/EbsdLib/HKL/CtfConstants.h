@@ -49,6 +49,19 @@
 namespace Ebsd
 {
 
+namespace H5Aztec
+{
+const QString Header("Header");
+const QString Phases("Phases");
+const QString OriginalHeader("OriginalHeader");
+const QString OriginalFile("OriginalFile");
+const QString Data("Data");
+
+const QString FileVersionStr("FileVersion");
+const unsigned int FileVersion = 5;
+const QString EbsdLibVersionStr("EbsdLibVersion");
+} // namespace H5Aztec
+
   namespace Ctf
   {
 

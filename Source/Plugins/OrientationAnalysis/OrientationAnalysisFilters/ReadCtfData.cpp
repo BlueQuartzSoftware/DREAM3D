@@ -90,7 +90,7 @@ ReadCtfData::ReadCtfData()
 , m_MaterialNameArrayName(SIMPL::EnsembleData::MaterialName)
 , m_InputFile("")
 , m_RefFrameZDir(SIMPL::RefFrameZDir::UnknownRefFrameZDirection)
-, m_Manufacturer(Ebsd::UnknownManufacturer)
+, m_Manufacturer(Ebsd::OEM::Unknown)
 , d_ptr(new ReadCtfDataPrivate(this))
 {
 }
@@ -185,7 +185,7 @@ void ReadCtfData::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if(m_InputFile.isEmpty() && m_Manufacturer == Ebsd::UnknownManufacturer)
+  if(m_InputFile.isEmpty() && m_Manufacturer == Ebsd::OEM::Unknown)
   {
     QString ss = QObject::tr("The input file must be set");
     setErrorCondition(-1);
@@ -419,7 +419,7 @@ int32_t ReadCtfData::loadMaterialInfo(CtfReader* reader)
   for(int32_t i = 0; i < phases.size(); i++)
   {
     int32_t phaseID = phases[i]->getPhaseIndex();
-    crystalStructures->setValue(phaseID, phases[i]->determineCrystalStructure());
+    crystalStructures->setValue(phaseID, phases[i]->determineLaueGroup());
     materialNames->setValue(phaseID, phases[i]->getMaterialName());
     QVector<float> lc = phases[i]->getLatticeConstants();
 

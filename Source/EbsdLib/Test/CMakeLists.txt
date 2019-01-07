@@ -60,9 +60,10 @@ configure_file(${SIMPLProj_SOURCE_DIR}/Resources/UnitTestSupport.hpp
 # be directly included in the main test source file. We list them here so that
 # they will show up in IDEs
 set(TEST_NAMES
-  AngImportTest
-  CtfReaderTest
-  EdaxOIMReaderTest
+	AngImportTest
+	CtfReaderTest
+	EdaxOIMReaderTest
+  H5EspritReaderTest
 )
 
 

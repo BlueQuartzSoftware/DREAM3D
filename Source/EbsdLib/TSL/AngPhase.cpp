@@ -230,7 +230,7 @@ void AngPhase::printSelf(QTextStream& stream)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-unsigned int AngPhase::determineCrystalStructure()
+unsigned int AngPhase::determineLaueGroup()
 {
   uint32_t symmetry = getSymmetry();
   unsigned int crystal_structure = Ebsd::CrystalStructure::UnknownCrystalStructure;

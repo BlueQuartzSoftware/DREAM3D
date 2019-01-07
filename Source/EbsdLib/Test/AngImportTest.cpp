@@ -174,6 +174,8 @@ public:
   {
     int err = EXIT_SUCCESS;
 
+    std::cout << "#-- AngImportTest Starting " << std::endl;
+
     DREAM3D_REGISTER_TEST(TestMissingHeaders())
     DREAM3D_REGISTER_TEST(TestHexGrid())
     DREAM3D_REGISTER_TEST(TestMissingGrid())

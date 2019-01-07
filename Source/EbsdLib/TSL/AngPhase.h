@@ -56,7 +56,7 @@
  * @struct HKLFamily_t is used to write the HKL Family to an HDF5 file using a
  * compound data type.
  */
-typedef struct
+using HKLFamily_t = struct
 {
   int h;
   int k;
@@ -64,7 +64,7 @@ typedef struct
   float diffractionIntensity;
   char s1;
   char s2;
-} HKLFamily_t;
+};
 
 #pragma pack(pop)
 
@@ -82,7 +82,7 @@ class EbsdLib_EXPORT HKLFamily
     EBSD_STATIC_NEW_MACRO(HKLFamily)
     EBSD_TYPE_MACRO(HKLFamily)
 
-    virtual ~HKLFamily() {}
+    ~HKLFamily() = default;
 
     int h;
     int k;
@@ -131,11 +131,13 @@ class EbsdLib_EXPORT HKLFamily
     }
 
   protected:
-    HKLFamily() {}
+    HKLFamily() = default;
 
-  private:
-    HKLFamily(const HKLFamily&) = delete;      // Copy Constructor Not Implemented
-    void operator=(const HKLFamily&) = delete; // Move assignment Not Implemented
+  public:
+    HKLFamily(const HKLFamily&) = delete;            // Copy Constructor Not Implemented
+    HKLFamily(HKLFamily&&) = delete;                 // Move Constructor Not Implemented
+    HKLFamily& operator=(const HKLFamily&) = delete; // Copy Assignment Not Implemented
+    HKLFamily& operator=(HKLFamily&&) = delete;      // Move Assignment Not Implemented
 };
 
 
@@ -189,9 +191,7 @@ class EbsdLib_EXPORT AngPhase
     /**
      * @brief Returns the type of crystal structure for this phase.
      */
-    unsigned int determineCrystalStructure();
-
-
+    unsigned int determineLaueGroup();
 
   protected:
     AngPhase();
@@ -210,12 +210,7 @@ struct Ang_Private_Data
   QVector<float> resolution;
   QVector<float> origin;
   QVector<AngPhase::Pointer> phases;
-};
-
-enum ANG_READ_FLAG
-{
-  ANG_FULL_FILE,
-  ANG_HEADER_ONLY
+  int32_t units;
 };
 
 Q_DECLARE_METATYPE(Ang_Private_Data)

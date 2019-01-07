@@ -154,7 +154,7 @@ public:
   /* These are non-exposed to the user through the GUI. Manual Pipelines are OK to set them */
   SIMPL_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
 
-  SIMPL_INSTANCE_PROPERTY(int, Manufacturer)
+  SIMPL_INSTANCE_PROPERTY(Ebsd::OEM, Manufacturer)
 
   SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
 
@@ -226,7 +226,7 @@ protected:
    * @param m DataContainer instance pointer
    * @param tDims Tuple dimensions
    */
-  void readDataFile(AngReader* reader, DataContainer::Pointer m, QVector<size_t>& tDims, ANG_READ_FLAG = ANG_FULL_FILE);
+  void readDataFile(AngReader* reader, const DataContainer::Pointer& m, QVector<size_t>& tDims, ANG_READ_FLAG = ANG_FULL_FILE);
 
 private:
   QScopedPointer<ReadAngDataPrivate> const d_ptr;

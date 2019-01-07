@@ -107,7 +107,7 @@ public:
   // Not sure why these are here. We would be reading all of these from the file
   //
   SIMPL_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
-  SIMPL_INSTANCE_PROPERTY(int32_t, Manufacturer)
+  SIMPL_INSTANCE_PROPERTY(Ebsd::OEM, Manufacturer)
   SIMPL_INSTANCE_PROPERTY(AxisAngleInput_t, SampleTransformation)
   SIMPL_INSTANCE_PROPERTY(AxisAngleInput_t, EulerTransformation)
   //-------------------------------------------------------
@@ -308,7 +308,7 @@ protected:
     for(size_t i = 0; i < phases.size(); i++)
     {
       int32_t phaseID = phases[i]->getPhaseIndex();
-      crystalStructures->setValue(phaseID, phases[i]->determineCrystalStructure());
+      crystalStructures->setValue(phaseID, phases[i]->determineLaueGroup());
       materialNames->setValue(phaseID, phases[i]->getMaterialName());
       QVector<float> lc = phases[i]->getLatticeConstants();
 

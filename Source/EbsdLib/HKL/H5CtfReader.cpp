@@ -62,7 +62,6 @@ H5CtfReader::H5CtfReader()
 // -----------------------------------------------------------------------------
 H5CtfReader::~H5CtfReader()
 {
-  deletePointers();
 }
 
 // -----------------------------------------------------------------------------
@@ -150,7 +149,7 @@ int H5CtfReader::readHeader(hid_t parId)
   QString sBuf;
   QTextStream ss(&sBuf);
   int err = -1;
-  hid_t gid = H5Gopen(parId, Ebsd::H5::Header.toLatin1().data(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(parId, Ebsd::H5Aztec::Header.toLatin1().data(), H5P_DEFAULT);
   if (gid < 0)
   {
     qDebug() << "H5CtfReader Error: Could not open 'Header' Group";
@@ -175,7 +174,7 @@ int H5CtfReader::readHeader(hid_t parId)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, TiltAngle, Ebsd::Ctf::TiltAngle, gid)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, TiltAxis, Ebsd::Ctf::TiltAxis, gid)
 
-  hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.toLatin1().data(), H5P_DEFAULT);
+  hid_t phasesGid = H5Gopen(gid, Ebsd::H5Aztec::Phases.toLatin1().data(), H5P_DEFAULT);
   if (phasesGid < 0)
   {
     qDebug() << "H5CtfReader Error: Could not open Header/Phases HDF Group. Is this an older file?";
@@ -218,33 +217,12 @@ int H5CtfReader::readHeader(hid_t parId)
   err = H5Gclose(phasesGid);
 
   QString completeHeader;
-  err = QH5Lite::readStringDataset(gid, Ebsd::H5::OriginalHeader, completeHeader);
+  err = QH5Lite::readStringDataset(gid, Ebsd::H5Aztec::OriginalHeader, completeHeader);
   setOriginalHeader(completeHeader);
 
   err = H5Gclose(gid);
   return err;
 }
-
-
-#define CTF_READER_ALLOCATE_AND_READ(name, type)\
-  if (m_ReadAllArrays == true || m_ArrayNames.find(Ebsd::Ctf::name) != m_ArrayNames.end()) {\
-    type* _##name = allocateArray<type>(totalDataRows);\
-    if (nullptr != _##name) {\
-      ::memset(_##name, 0, numBytes);\
-      err = QH5Lite::readPointerDataset(gid, Ebsd::Ctf::name, _##name);\
-      if (err < 0) {\
-        deallocateArrayData(_##name); /*deallocate the array*/\
-        _##name = nullptr;\
-        setErrorCode(-90020);\
-        ss << "Error reading dataset '" << #name << "' from the HDF5 file. This data set is required to be in the file because either "\
-           "the program is set to read ALL the Data arrays or the program was instructed to read this array.";\
-        setErrorMessage(ss.string());\
-        err = H5Gclose(gid);if (err < 0) {}\
-        return getErrorCode();\
-      }\
-    }\
-    setPointerByName(#name, _##name);\
-  }
 
 // -----------------------------------------------------------------------------
 //
@@ -252,9 +230,6 @@ int H5CtfReader::readHeader(hid_t parId)
 int H5CtfReader::readData(hid_t parId)
 {
   int err = -1;
-
-  // Delete any currently existing pointers
-  deletePointers();
 
   size_t yCells = getYCells();
   size_t xCells = getXCells();
@@ -266,8 +241,7 @@ int H5CtfReader::readData(hid_t parId)
     return -1;
   }
 
-
-  hid_t gid = H5Gopen(parId, Ebsd::H5::Data.toLatin1(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(parId, Ebsd::H5Aztec::Data.toLatin1(), H5P_DEFAULT);
   if (gid < 0)
   {
     std::cout << "H5CtfReader Error: Could not open 'Data' Group" << std::endl;
@@ -279,20 +253,19 @@ int H5CtfReader::readData(hid_t parId)
   QString sBuf;
   QTextStream ss(&sBuf);
 
-  CTF_READER_ALLOCATE_AND_READ(Phase, int);
-  CTF_READER_ALLOCATE_AND_READ(Bands, int);
-  CTF_READER_ALLOCATE_AND_READ(Error, int);
-  CTF_READER_ALLOCATE_AND_READ(Euler1, float);
-  CTF_READER_ALLOCATE_AND_READ(Euler2, float);
-  CTF_READER_ALLOCATE_AND_READ(Euler3, float);
-  CTF_READER_ALLOCATE_AND_READ(MAD, float);
-  CTF_READER_ALLOCATE_AND_READ(BC, int);
-  CTF_READER_ALLOCATE_AND_READ(BS, int);
-  CTF_READER_ALLOCATE_AND_READ(GrainIndex, int);
-  CTF_READER_ALLOCATE_AND_READ(GrainRandomColourR, int);
-  CTF_READER_ALLOCATE_AND_READ(GrainRandomColourG, int);
-  CTF_READER_ALLOCATE_AND_READ(GrainRandomColourB, int);
-
+  ANG_READER_ALLOCATE_AND_READ(Phase, Ebsd::Ctf::Phase, int);
+  ANG_READER_ALLOCATE_AND_READ(BandCount, Ebsd::Ctf::Bands, int);
+  ANG_READER_ALLOCATE_AND_READ(Error, Ebsd::Ctf::Error, int);
+  ANG_READER_ALLOCATE_AND_READ(Euler1, Ebsd::Ctf::Euler1, float);
+  ANG_READER_ALLOCATE_AND_READ(Euler2, Ebsd::Ctf::Euler2, float);
+  ANG_READER_ALLOCATE_AND_READ(Euler3, Ebsd::Ctf::Euler3, float);
+  ANG_READER_ALLOCATE_AND_READ(MeanAngularDeviation, Ebsd::Ctf::MAD, float);
+  ANG_READER_ALLOCATE_AND_READ(BandContrast, Ebsd::Ctf::BC, int);
+  ANG_READER_ALLOCATE_AND_READ(BandSlope, Ebsd::Ctf::BS, int);
+  ANG_READER_ALLOCATE_AND_READ(GrainIndex, Ebsd::Ctf::GrainIndex, int);
+  ANG_READER_ALLOCATE_AND_READ(GrainRandomColourR, Ebsd::Ctf::GrainRandomColourR, int);
+  ANG_READER_ALLOCATE_AND_READ(GrainRandomColourG, Ebsd::Ctf::GrainRandomColourG, int);
+  ANG_READER_ALLOCATE_AND_READ(GrainRandomColourB, Ebsd::Ctf::GrainRandomColourB, int);
 
   err = H5Gclose(gid);
 
