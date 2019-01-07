@@ -257,7 +257,7 @@ void StatsGeneratorUtilities::GenerateMisorientationBinData(StatsData* statsData
   }
   if(!mdf.empty())
   {
-    FloatArrayType::Pointer p = FloatArrayType::FromPointer(mdf.data(), mdf.size(), SIMPL::StringConstants::MisorientationBins);
+    FloatArrayType::Pointer p = FloatArrayType::CopyFromPointer(mdf.data(), mdf.size(), SIMPL::StringConstants::MisorientationBins);
     if(phaseType == PhaseType::Type::Primary)
     {
       PrimaryStatsData* pp = dynamic_cast<PrimaryStatsData*>(statsData);
@@ -276,9 +276,9 @@ void StatsGeneratorUtilities::GenerateMisorientationBinData(StatsData* statsData
 
     if(!angles.empty())
     {
-      FloatArrayType::Pointer anglesArray = FloatArrayType::FromPointer(angles.data(), angles.size(), SIMPL::StringConstants::Angle);
-      FloatArrayType::Pointer axisArray = FloatArrayType::FromPointer(axes.data(), axes.size(), SIMPL::StringConstants::Axis);
-      FloatArrayType::Pointer weightArray = FloatArrayType::FromPointer(weights.data(), weights.size(), SIMPL::StringConstants::Weight);
+      FloatArrayType::Pointer anglesArray = FloatArrayType::CopyFromPointer(angles.data(), angles.size(), SIMPL::StringConstants::Angle);
+      FloatArrayType::Pointer axisArray = FloatArrayType::CopyFromPointer(axes.data(), axes.size(), SIMPL::StringConstants::Axis);
+      FloatArrayType::Pointer weightArray = FloatArrayType::CopyFromPointer(weights.data(), weights.size(), SIMPL::StringConstants::Weight);
 
       VectorOfFloatArray mdfWeights;
       mdfWeights.push_back(anglesArray);

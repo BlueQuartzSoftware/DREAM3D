@@ -1,9 +1,9 @@
-Import EDAX EBSD Data (.h5) 
-=============
+# Import EDAX EBSD Data (.h5) #
+
 
 ## Group (Subgroup) ##
 
-IO (Input)
+Import/Export (Import)
 
 ## Description ##
 
@@ -51,7 +51,7 @@ Not Applicable
 
 None
 
-## Created Objects ## 
+## Created Objects ##
 
 
 | Kind | Default Name | Type | Component Dimensions | Description |

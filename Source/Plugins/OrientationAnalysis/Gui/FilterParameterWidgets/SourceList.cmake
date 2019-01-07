@@ -5,12 +5,13 @@ set(${PLUGIN_NAME}_ParameterWidgets_UIS "")
 
 
 set(${PLUGIN_NAME}_PARAMETER_WIDGETS
-      EbsdToH5EbsdWidget
-      EnsembleInfoCreationWidget
-      ReadH5EbsdWidget
-      ReadEdaxH5DataWidget
-      OrientationUtilityWidget
-      ConvertHexGridToSquareGridWidget
+  ConvertHexGridToSquareGridWidget  
+  EbsdMontageImportWidget      
+  EbsdToH5EbsdWidget
+  EnsembleInfoCreationWidget
+  OrientationUtilityWidget
+  ReadH5EbsdWidget
+  OEMEbsdScanSelectionWidget    
 )
 
 # --------------------------------------------------------------------

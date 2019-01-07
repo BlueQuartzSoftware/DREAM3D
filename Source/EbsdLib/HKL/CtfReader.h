@@ -110,38 +110,47 @@ public:
 
   EBSD_INSTANCE_PROPERTY(QVector<CtfPhase::Pointer>, PhaseVector)
 
-  EBSD_POINTER_PROP(Phase, Phase, int)
-
-  EBSD_POINTER_PROP(X, X, float)
-
-  EBSD_POINTER_PROP(Y, Y, float)
-
-  EBSD_POINTER_PROP(Z, Z, float)
-
-  EBSD_POINTER_PROP(BandCount, Bands, int)
-
-  EBSD_POINTER_PROP(Error, Error, int)
-
-  EBSD_POINTER_PROP(Euler1, Euler1, float)
-
-  EBSD_POINTER_PROP(Euler2, Euler2, float)
-
-  EBSD_POINTER_PROP(Euler3, Euler3, float)
-
-  EBSD_POINTER_PROP(MeanAngularDeviation, MAD, float)
-
-  EBSD_POINTER_PROP(BandContrast, BC, int)
-
-  EBSD_POINTER_PROP(BandSlope, BS, int)
+  /**
+   * @brief These methods allow the developer to set/get the raw pointer for a given array, release ownership of the memory
+   * and forcibly release the memory for a given array.
+   *
+   * The methods will follow the form of:
+   * @brief This will return the raw pointer to the data. The Reader class WILL 'free' the memory when it goes out of
+   * scope. If you need the memory to persist longer then call the release[NAME]Ownership() method to tell the reader
+   * NOT to free the memory.
+   * @param releaseOwnerhsip If this is true then the internal pointer is set to nullptr and the Cleanup flag is set to false.
+   * [type]* get[NAME]Pointer(bool releaseOwnership = false);
+   *
+   * @brief This will get the ownership of the raw pointer. If 'true' then this class will 'free' the pointer before
+   * each read or when the object goes out of scope.
+   * bool get[NAME]Ownership();
+   *
+   * @brief This method will set the internal pointer to nullptr without calling 'free'. It is now up to the developer
+   * to 'free' the memory that was used.
+   * void release[NAME]Ownership();
+   *
+   * @brief This will free the internal pointer as long as it already isn't nullptr.
+   * void free[NAME]Pointer();
+   *
+   */
+  EBSD_POINTER_PROPERTY(Phase, Phase, int)
+  EBSD_POINTER_PROPERTY(X, X, float)
+  EBSD_POINTER_PROPERTY(Y, Y, float)
+  EBSD_POINTER_PROPERTY(Z, Z, float)
+  EBSD_POINTER_PROPERTY(BandCount, Bands, int)
+  EBSD_POINTER_PROPERTY(Error, Error, int)
+  EBSD_POINTER_PROPERTY(Euler1, Euler1, float)
+  EBSD_POINTER_PROPERTY(Euler2, Euler2, float)
+  EBSD_POINTER_PROPERTY(Euler3, Euler3, float)
+  EBSD_POINTER_PROPERTY(MeanAngularDeviation, MAD, float)
+  EBSD_POINTER_PROPERTY(BandContrast, BC, int)
+  EBSD_POINTER_PROPERTY(BandSlope, BS, int)
 
   /* These will be in a 3D ctf file */
-  EBSD_POINTER_PROP(GrainIndex, GrainIndex, int)
-
-  EBSD_POINTER_PROP(GrainRandomColourR, GrainRandomColourR, int)
-
-  EBSD_POINTER_PROP(GrainRandomColourG, GrainRandomColourG, int)
-
-  EBSD_POINTER_PROP(GrainRandomColourB, GrainRandomColourB, int)
+  EBSD_POINTER_PROPERTY(GrainIndex, GrainIndex, int)
+  EBSD_POINTER_PROPERTY(GrainRandomColourR, GrainRandomColourR, int)
+  EBSD_POINTER_PROPERTY(GrainRandomColourG, GrainRandomColourG, int)
+  EBSD_POINTER_PROPERTY(GrainRandomColourB, GrainRandomColourB, int)
 
   /**
    * @brief Returns the pointer to the data for a given feature
@@ -174,15 +183,6 @@ public:
   int readHeaderOnly() override;
 
   void readOnlySliceIndex(int slice);
-
-  /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
-   * and then splats '0' across all the bytes of the memory allocation
-   */
-  void initPointers(size_t numElements) override;
-
-  /** @brief 'free's the allocated memory and sets the pointer to nullptr
-   */
-  void deletePointers() override;
 
   int getXDimension() override;
   void setXDimension(int xdim) override;

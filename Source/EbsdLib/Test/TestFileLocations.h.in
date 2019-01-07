@@ -90,6 +90,12 @@ namespace UnitTest
     const QString MicFile("@DREAM3D_DATA_DIR@/HEDMTestFiles/HedmTest.mic");
   }
 
+  namespace H5EspritReaderTest
+  {
+     const QString InputFile("@DREAM3D_DATA_DIR@/EbsdTestFiles/H5EspritReaderTest.h5");
+     const QString OutputFile("@EbsdLibTest_BINARY_DIR@/H5Esprit_Output_File.h5");
+  }
+
 }
 
 

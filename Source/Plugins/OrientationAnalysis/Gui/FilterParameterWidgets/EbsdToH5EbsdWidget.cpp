@@ -303,9 +303,6 @@ void EbsdToH5EbsdWidget::validateInputFile()
   QFileInfo fi(currentPath);
   if(!currentPath.isEmpty() && !fi.exists())
   {
-    //    QString Ftype = getFilterParameter()->getFileType();
-    //    QString ext = getFilterParameter()->getFileExtension();
-    //    QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
     QString defaultName = getInputDirectory();
     if(!m_LineEdit->text().isEmpty())
     {
@@ -327,19 +324,6 @@ void EbsdToH5EbsdWidget::validateInputFile()
   }
 }
 
-#if 0
-
-QEbsdReferenceFrameDialog d("", this);
-d.setEbsdFileName("");
-d.setTSLDefault(m_TSLchecked);
-d.setHKLDefault(m_HKLchecked);
-d.setHEDMDefault(m_HEDMchecked);
-d.setNoTrans(m_NoTranschecked);
-d.getSampleTranformation(m_SampleTransformation.angle, m_SampleTransformationAxis[0], m_SampleTransformationAxis[1], m_SampleTransformationAxis[2]);
-d.getEulerTranformation(m_EulerTransformationAngle, m_EulerTransformationAxis[0], m_EulerTransformationAxis[1], m_EulerTransformationAxis[2]);
-
-#endif
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -359,11 +343,6 @@ void EbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString& text)
     outputAbsPathLabel->hide();
   }
 
-  // if (verifyPathExists(text, m_OutputFile) == true )
-  //{
-  //  QFileInfo fi(text);
-  //  setOutputPath(fi.filePath());
-  //}
   emit parametersChanged();
 }
 
@@ -390,7 +369,6 @@ void EbsdToH5EbsdWidget::on_m_OutputFileBtn_clicked()
     return;
   }
   QFileInfo fi(file);
-  QString ext = fi.suffix();
   m_OutputFile->setText(fi.absoluteFilePath());
   setOutputPath(file);
 }
@@ -438,14 +416,12 @@ void EbsdToH5EbsdWidget::on_m_LineEdit_textChanged(const QString& text)
     m_RefFrameOptionsBtn->setEnabled(true);
     findEbsdMaxSliceAndPrefix();
     QDir dir(inputPath);
-    QString dirname = dir.dirName();
     dir.cdUp();
 
     generateExampleEbsdInputFile();
     m_LineEdit->blockSignals(true);
     m_LineEdit->setText(QDir::toNativeSeparators(m_LineEdit->text()));
     m_LineEdit->blockSignals(false);
-    referenceFrameCheck->setStyleSheet(QString("background-color: rgb(255, 232, 61);"));
     referenceFrameCheck->setText("Have you set the Reference Frame?");
   }
   else
@@ -579,9 +555,9 @@ void EbsdToH5EbsdWidget::generateExampleEbsdInputFile()
   m_FileListView->clear();
   QIcon greenDot = QIcon(QString(":/SIMPL/icons/images/bullet_ball_green.png"));
   QIcon redDot = QIcon(QString(":/SIMPL/icons/images/bullet_ball_red.png"));
-  for(QVector<QString>::size_type i = 0; i < fileList.size(); ++i)
+
+  for(const auto& filePath : fileList)
   {
-    QString filePath(fileList.at(i));
     QFileInfo fi(filePath);
     QListWidgetItem* item = new QListWidgetItem(filePath, m_FileListView);
     if(fi.exists())
@@ -612,7 +588,7 @@ void EbsdToH5EbsdWidget::generateExampleEbsdInputFile()
 // -----------------------------------------------------------------------------
 void EbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
 {
-  referenceFrameCheck->setStyleSheet(QString(""));
+  //referenceFrameCheck->setStyleSheet(QString(""));
   referenceFrameCheck->setText("");
 
   int start = m_ZStartIndex->value();
@@ -764,7 +740,6 @@ void EbsdToH5EbsdWidget::findEbsdMaxSliceAndPrefix()
       pos = 0;
       list.clear();
       QString fn = fi.baseName();
-      QString fns = fn;
       int length = fn.length();
       digitEnd = length - 1;
       while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd] <= '9')
@@ -886,14 +861,6 @@ void EbsdToH5EbsdWidget::afterPreflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::setInputDirectory(QString val)
-{
-  m_LineEdit->setText(val);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QString EbsdToH5EbsdWidget::getInputDirectory()
 {
   if(m_LineEdit->text().isEmpty())
@@ -906,7 +873,7 @@ QString EbsdToH5EbsdWidget::getInputDirectory()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdToH5EbsdWidget::setOutputPath(QString val)
+void EbsdToH5EbsdWidget::setOutputPath(const QString& val)
 {
   m_OutputFile->setText(val);
 }
@@ -921,6 +888,14 @@ QString EbsdToH5EbsdWidget::getOutputPath()
     return QDir::homePath();
   }
   return m_OutputFile->text();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EbsdToH5EbsdWidget::setInputDirectory(const QString &val)
+{
+  m_LineEdit->setText(val);
 }
 
 // -----------------------------------------------------------------------------

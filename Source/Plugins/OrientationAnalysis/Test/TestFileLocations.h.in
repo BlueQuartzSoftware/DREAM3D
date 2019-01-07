@@ -129,5 +129,14 @@ namespace UnitTest
   }
 }
 
+namespace UnitTest
+{
+  namespace  ImportH5EspritDataTest
+  {
+    const QString OutputFile("@TEST_TEMP_DIR@/ImportH5EspritDataTest_OutputFile.dream3d");
+    const QString InputFile("@DREAM3D_DATA_DIR@/EbsdTestFiles/H5EspritReaderTest.h5");
+  }
+}
+
 
 #endif

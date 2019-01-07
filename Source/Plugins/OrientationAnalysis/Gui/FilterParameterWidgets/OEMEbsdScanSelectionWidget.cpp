@@ -33,7 +33,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "ReadEdaxH5DataWidget.h"
+#include "OEMEbsdScanSelectionWidget.h"
 
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QLabel>
@@ -45,19 +45,19 @@
 #include "SVWidgetsLib/QtSupport/QtSHelpUrlGenerator.h"
 #include "SVWidgetsLib/QtSupport/QtSMacros.h"
 
-#include "OrientationAnalysis/FilterParameters/ReadEdaxH5DataFilterParameter.h"
-#include "OrientationAnalysis/OrientationAnalysisFilters/ReadEdaxH5Data.h"
+#include "OrientationAnalysis/FilterParameters/OEMEbsdScanSelectionFilterParameter.h"
+#include "OrientationAnalysis/OrientationAnalysisFilters/ImportH5OimData.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReadEdaxH5DataWidget::ReadEdaxH5DataWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent)
+OEMEbsdScanSelectionWidget::OEMEbsdScanSelectionWidget(FilterParameter* parameter, AbstractFilter* filter, QWidget* parent)
 : FilterParameterWidget(parameter, filter, parent)
 {
-  m_FilterParameter = dynamic_cast<ReadEdaxH5DataFilterParameter*>(parameter);
+  m_FilterParameter = dynamic_cast<OEMEbsdScanSelectionFilterParameter*>(parameter);
 
-  m_Filter = qobject_cast<ReadEdaxH5Data*>(filter);
-  Q_ASSERT_X(nullptr != m_Filter, "ReadEdaxH5DataWidget can ONLY be used with ReadH5Ebsd filter", __FILE__);
+  m_Filter = qobject_cast<ImportH5OimData*>(filter);
+  Q_ASSERT_X(nullptr != m_Filter, "OEMEbsdScanSelectionWidget can ONLY be used with ImportH5OimData filter", __FILE__);
 
   setupUi(this);
   setupGui();
@@ -66,20 +66,20 @@ ReadEdaxH5DataWidget::ReadEdaxH5DataWidget(FilterParameter* parameter, AbstractF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ReadEdaxH5DataWidget::~ReadEdaxH5DataWidget() = default;
+OEMEbsdScanSelectionWidget::~OEMEbsdScanSelectionWidget() = default;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadEdaxH5DataWidget::setFilter(AbstractFilter* value)
+void OEMEbsdScanSelectionWidget::setFilter(AbstractFilter* value)
 {
-  m_Filter = dynamic_cast<ReadEdaxH5Data*>(value);
+  m_Filter = dynamic_cast<ImportH5OimData*>(value);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter* ReadEdaxH5DataWidget::getFilter() const
+AbstractFilter* OEMEbsdScanSelectionWidget::getFilter() const
 {
   return m_Filter;
 }
@@ -87,15 +87,15 @@ AbstractFilter* ReadEdaxH5DataWidget::getFilter() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadEdaxH5DataWidget::setFilterParameter(FilterParameter* value)
+void OEMEbsdScanSelectionWidget::setFilterParameter(FilterParameter* value)
 {
-  m_FilterParameter = dynamic_cast<ReadEdaxH5DataFilterParameter*>(value);
+  m_FilterParameter = dynamic_cast<OEMEbsdScanSelectionFilterParameter*>(value);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FilterParameter* ReadEdaxH5DataWidget::getFilterParameter() const
+FilterParameter* OEMEbsdScanSelectionWidget::getFilterParameter() const
 {
   return m_FilterParameter;
 }
@@ -103,7 +103,7 @@ FilterParameter* ReadEdaxH5DataWidget::getFilterParameter() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadEdaxH5DataWidget::setupGui()
+void OEMEbsdScanSelectionWidget::setupGui()
 {
   // Catch when the filter is about to execute the preflight
   connect(m_Filter, SIGNAL(preflightAboutToExecute()), this, SLOT(beforePreflight()));
@@ -118,7 +118,7 @@ void ReadEdaxH5DataWidget::setupGui()
   selectedScanNames->addItems(selectedList);
 
   connect(selectedScanNames, SIGNAL(dropOccurred()), this, SLOT(on_addScanName_clicked()));
-  connect(totalScanNames, SIGNAL(dropOccurred()), this, SLOT(on_removeScanName_clicked()));
+  connect(availableScanNames, SIGNAL(dropOccurred()), this, SLOT(on_removeScanName_clicked()));
 
   updateList();
 }
@@ -126,7 +126,7 @@ void ReadEdaxH5DataWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadEdaxH5DataWidget::filterNeedsInputParameters(AbstractFilter* filter)
+void OEMEbsdScanSelectionWidget::filterNeedsInputParameters(AbstractFilter* filter)
 {
   if(nullptr == filter)
   {
@@ -134,8 +134,8 @@ void ReadEdaxH5DataWidget::filterNeedsInputParameters(AbstractFilter* filter)
     emit errorSettingFilterParameter(ss);
   }
 
-  ReadEdaxH5Data* readEdax = qobject_cast<ReadEdaxH5Data*>(filter);
-  Q_ASSERT_X(nullptr != readEdax, "ReadEdaxH5DataWidget can ONLY be used with ReadH5Ebsd filter", __FILE__);
+  ImportH5OimData* readEdax = qobject_cast<ImportH5OimData*>(filter);
+  Q_ASSERT_X(nullptr != readEdax, "OEMEbsdScanSelectionWidget can ONLY be used with ReadH5Ebsd filter", __FILE__);
 
   QStringList scanNames;
   for(int i = 0; i < selectedScanNames->count(); i++)
@@ -149,14 +149,14 @@ void ReadEdaxH5DataWidget::filterNeedsInputParameters(AbstractFilter* filter)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadEdaxH5DataWidget::beforePreflight()
+void OEMEbsdScanSelectionWidget::beforePreflight()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadEdaxH5DataWidget::afterPreflight()
+void OEMEbsdScanSelectionWidget::afterPreflight()
 {
   updateList();
 }
@@ -164,7 +164,7 @@ void ReadEdaxH5DataWidget::afterPreflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadEdaxH5DataWidget::updateList()
+void OEMEbsdScanSelectionWidget::updateList()
 {
   if(getFilter() != nullptr)
   {
@@ -175,80 +175,78 @@ void ReadEdaxH5DataWidget::updateList()
     if(!var.isValid())
     {
       qDebug() << "Error getting Property " << m_FilterParameter->getListProperty() << " from Filter";
+      return;
     }
     QStringList choices = var.toStringList();
 
-    totalScanNames->blockSignals(true);
-    totalScanNames->clear();
-    totalScanNames->addItems(choices);
+    availableScanNames->blockSignals(true);
+    availableScanNames->clear();
+    availableScanNames->addItems(choices);
 
-    sortList(totalScanNames, Qt::AscendingOrder);
+    sortList(availableScanNames, Qt::AscendingOrder);
 
     for(int i = 0; i < selectedScanNames->count(); i++)
     {
-      QString name = selectedScanNames->item(i)->text();
-      QList<QListWidgetItem*> list = totalScanNames->findItems(name, Qt::MatchExactly);
-      for(int j = 0; j < list.size(); j++)
+      QString selectedScanName = selectedScanNames->item(i)->text();
+      QList<QListWidgetItem*> selectedScanNameMatches = availableScanNames->findItems(selectedScanName, Qt::MatchExactly);
+      for(QListWidgetItem* selectedScanNameMatch : selectedScanNameMatches)
       {
-        list[j]->setFlags(list[j]->flags() & ~Qt::ItemIsEnabled & ~Qt::ItemIsSelectable);
+        selectedScanNameMatch->setFlags(selectedScanNameMatch->flags() & ~Qt::ItemIsEnabled & ~Qt::ItemIsSelectable);
       }
     }
 
-    totalScanNames->blockSignals(false);
+    availableScanNames->blockSignals(false);
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadEdaxH5DataWidget::on_addScanName_clicked()
+void OEMEbsdScanSelectionWidget::on_addScanName_clicked()
 {
-  if(nullptr != totalScanNames->currentItem())
+  if(nullptr != availableScanNames->currentItem())
   {
-    QModelIndexList indexList = totalScanNames->selectionModel()->selectedRows();
+    QModelIndexList indexList = availableScanNames->selectionModel()->selectedRows();
 
-    for(int i = 0; i < indexList.size(); i++)
+    for(const auto& index : indexList)
     {
-      QString currentName = totalScanNames->item(indexList[i].row())->text();
+      QString currentName = availableScanNames->item(index.row())->text();
       selectedScanNames->addItem(currentName);
     }
 
     on_stackLowToHighBtn_toggled(stackLowToHighBtn->isChecked());
-
-    emit parametersChanged();
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadEdaxH5DataWidget::on_removeScanName_clicked()
+void OEMEbsdScanSelectionWidget::on_removeScanName_clicked()
 {
   if(nullptr != selectedScanNames->currentItem())
   {
     QModelIndexList indexList = selectedScanNames->selectionModel()->selectedRows();
     QList<QPersistentModelIndex> persistentIndexList;
-    for(int i = 0; i < indexList.size(); i++)
+
+    for(const auto& index : indexList)
     {
-      persistentIndexList.push_back(QPersistentModelIndex(indexList[i]));
+      persistentIndexList.push_back(QPersistentModelIndex(index));
     }
 
-    for(int i = 0; i < persistentIndexList.size(); i++)
+    for(const auto& persistentIndex : persistentIndexList)
     {
-      QListWidgetItem* item = selectedScanNames->takeItem(persistentIndexList[i].row());
+      QListWidgetItem* item = selectedScanNames->takeItem(persistentIndex.row());
       delete item;
     }
 
     on_stackLowToHighBtn_toggled(stackLowToHighBtn->isChecked());
-
-    emit parametersChanged();
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadEdaxH5DataWidget::on_stackLowToHighBtn_toggled(bool checked)
+void OEMEbsdScanSelectionWidget::on_stackLowToHighBtn_toggled(bool checked)
 {
   if(checked)
   {
@@ -265,8 +263,11 @@ void ReadEdaxH5DataWidget::on_stackLowToHighBtn_toggled(bool checked)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadEdaxH5DataWidget::sortList(DREAM3DListWidget* listWidget, Qt::SortOrder order)
+void OEMEbsdScanSelectionWidget::sortList(DREAM3DListWidget* listWidget, Qt::SortOrder order)
 {
+#if 0
+  // This code will fail on a ScanName such as LEROY_0089_Section_435 in which case
+  // 2 entries will be made in the list.
   QMap<int, QString> sortingMap;
   for(int i = 0; i < listWidget->count(); i++)
   {
@@ -309,4 +310,5 @@ void ReadEdaxH5DataWidget::sortList(DREAM3DListWidget* listWidget, Qt::SortOrder
 
   listWidget->clear();
   listWidget->addItems(scanNames);
+#endif
 }

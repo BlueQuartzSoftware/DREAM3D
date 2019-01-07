@@ -34,6 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #pragma once
 
+#include <array>
 #include <cstring>
 #include <iostream>
 #include <sstream>
@@ -250,33 +251,54 @@
     return m_##prpty;                                                                                                                                                                                  \
   }
 
-#define EBSD_PTR_INSTANCE_PROPERTY(m_msgType, prpty)                                                                                                                                                   \
+#define EBSD_PTR_INSTANCE_PROPERTY(type, prpty)                                                                                                                                                        \
 private:                                                                                                                                                                                               \
-  m_msgType m_##prpty;                                                                                                                                                                                 \
+  type m_##prpty = nullptr;                                                                                                                                                                            \
+  bool m_##prpty##Cleanup = true;                                                                                                                                                                      \
                                                                                                                                                                                                        \
 public:                                                                                                                                                                                                \
-  EBSD_SET_PTR_PROPERTY(m_msgType, prpty)                                                                                                                                                              \
-  EBSD_GET_PTR_PROPERTY(m_msgType, prpty)
+  void set##prpty##PointerOwnership(bool owns)                                                                                                                                                         \
+  {                                                                                                                                                                                                    \
+    m_##prpty##Cleanup = owns;                                                                                                                                                                         \
+  }                                                                                                                                                                                                    \
+  bool get##prpty##PointerOwnership()                                                                                                                                                                  \
+  {                                                                                                                                                                                                    \
+    return m_##prpty##Cleanup;                                                                                                                                                                         \
+  }                                                                                                                                                                                                    \
+  EBSD_SET_PTR_PROPERTY(type, prpty)                                                                                                                                                                   \
+  EBSD_GET_PTR_PROPERTY(type, prpty)
 
-#define EBSD_SET_2DVECTOR_PROPERTY(m_msgType, prpty, varname)\
-  void set##prpty(m_msgType value[2]) {\
-    varname[0] = value[0]; varname[1] = value[1]; }\
-  void set##prpty(m_msgType value_0, m_msgType value_1) {\
-    varname[0] = value_0; varname[1] = value_1; }
+#define EBSD_SET_2DVECTOR_PROPERTY(type, prpty, varname)                                                                                                                                               \
+  void set##prpty(const std::array<type, 2>& value)                                                                                                                                                    \
+  {                                                                                                                                                                                                    \
+    varname[0] = value[0];                                                                                                                                                                             \
+    varname[1] = value[1];                                                                                                                                                                             \
+  }                                                                                                                                                                                                    \
+  void set##prpty(type value_0, type value_1)                                                                                                                                                          \
+  {                                                                                                                                                                                                    \
+    varname[0] = value_0;                                                                                                                                                                              \
+    varname[1] = value_1;                                                                                                                                                                              \
+  }
 
-#define EBSD_GET_2DVECTOR_PROPERTY(m_msgType, prpty, varname)\
-  void get##prpty(m_msgType value[2]) {\
-    value[0] = varname[0]; value[1] = varname[1]; }\
-  void get##prpty(m_msgType &value_0, m_msgType &value_1) {\
-    value_0 = varname[0]; value_1 = varname[1]; }
+#define EBSD_GET_2DVECTOR_PROPERTY(type, prpty, varname)                                                                                                                                               \
+  void get##prpty(std::array<type, 2>& value)                                                                                                                                                          \
+  {                                                                                                                                                                                                    \
+    value[0] = varname[0];                                                                                                                                                                             \
+    value[1] = varname[1];                                                                                                                                                                             \
+  }                                                                                                                                                                                                    \
+  void get##prpty(type& value_0, type& value_1)                                                                                                                                                        \
+  {                                                                                                                                                                                                    \
+    value_0 = varname[0];                                                                                                                                                                              \
+    value_1 = varname[1];                                                                                                                                                                              \
+  }
 
-
-#define EBSD_INSTANCE_2DVECTOR_PROPERTY(m_msgType, prpty)\
-  private:\
-  m_msgType   m_##prpty[2];\
-  public:\
-  EBSD_SET_2DVECTOR_PROPERTY(m_msgType, prpty, m_##prpty)\
-  EBSD_GET_2DVECTOR_PROPERTY(m_msgType, prpty, m_##prpty)
+#define EBSD_INSTANCE_2DVECTOR_PROPERTY(type, prpty)                                                                                                                                                   \
+private:                                                                                                                                                                                               \
+  std::array<type, 2> m_##prpty;                                                                                                                                                                       \
+                                                                                                                                                                                                       \
+public:                                                                                                                                                                                                \
+  EBSD_SET_2DVECTOR_PROPERTY(type, prpty, m_##prpty)                                                                                                                                                   \
+  EBSD_GET_2DVECTOR_PROPERTY(type, prpty, m_##prpty)
 
 /**
 * @brief Creates a "setter" method to set the property.
@@ -325,7 +347,7 @@ public:                                                                         
     }                                                                                                                                                                                                  \
     else                                                                                                                                                                                               \
     {                                                                                                                                                                                                  \
-      std::cout << "Value for Key: " << key.toStdString() << " was null." << std::endl;                                                                                                                \
+      std::cout << "Setting Property '" << #prpty << "': Value for Key: " << key.toStdString() << " was null." << std::endl;                                                                           \
     }                                                                                                                                                                                                  \
   }
 
@@ -340,7 +362,7 @@ public:                                                                         
     {                                                                                                                                                                                                  \
       return p->getValue();                                                                                                                                                                            \
     }                                                                                                                                                                                                  \
-    std::cout << "Value for Key: " << key.toStdString() << " was null." << std::endl;                                                                                                                  \
+    std::cout << "Getting Property '" << #prpty << "': Value for Key: " << key.toStdString() << " was null." << std::endl;                                                                             \
     return 0;                                                                                                                                                                                          \
   }
 
@@ -349,31 +371,51 @@ public:                                                                         
   EbsdHeader_SET_PROPERTY(HeaderType, m_msgType, prpty, key)\
   EbsdHeader_GET_PROPERTY(HeaderType, m_msgType, prpty, key)
 
-
-#define EBSD_POINTER_PROPERTY(name, var, m_msgType)\
-  private:\
-  m_msgType* m_##var;\
-  public:\
-  m_msgType* get##name##Pointer() { return m_##var; }\
-  void set##name##Pointer(m_msgType* f)\
-  {\
-    if (m_##var != nullptr && m_##var != f)\
-    {\
-      deallocateArrayData(m_##var);\
-      m_##var = nullptr;\
-    }\
-    m_##var = f;\
+#define EBSD_POINTER_PROPERTY(name, var, type)                                                                                                                                                         \
+private:                                                                                                                                                                                               \
+  type* m_##var = nullptr;                                                                                                                                                                             \
+  bool m_##var##Cleanup = true;                                                                                                                                                                        \
+                                                                                                                                                                                                       \
+protected:                                                                                                                                                                                             \
+  void set##name##Pointer(type* f)                                                                                                                                                                     \
+  {                                                                                                                                                                                                    \
+    if(m_##var != nullptr && m_##var != f && m_##var##Cleanup)                                                                                                                                         \
+    {                                                                                                                                                                                                  \
+      deallocateArrayData(m_##var);                                                                                                                                                                    \
+      m_##var = nullptr;                                                                                                                                                                               \
+    }                                                                                                                                                                                                  \
+    m_##var = f;                                                                                                                                                                                       \
+  }                                                                                                                                                                                                    \
+                                                                                                                                                                                                       \
+public:                                                                                                                                                                                                \
+  type* get##name##Pointer(bool releaseOwnership = false)                                                                                                                                              \
+  {                                                                                                                                                                                                    \
+    type* ptr = m_##var;                                                                                                                                                                               \
+    if(releaseOwnership)                                                                                                                                                                               \
+    {                                                                                                                                                                                                  \
+      m_##var##Cleanup = false;                                                                                                                                                                        \
+      m_##var = nullptr;                                                                                                                                                                               \
+    }                                                                                                                                                                                                  \
+    return ptr;                                                                                                                                                                                        \
+  }                                                                                                                                                                                                    \
+  bool get##name##Ownership()                                                                                                                                                                          \
+  {                                                                                                                                                                                                    \
+    return m_##var##Cleanup;                                                                                                                                                                           \
+  }                                                                                                                                                                                                    \
+  void release##name##Ownership()                                                                                                                                                                      \
+  {                                                                                                                                                                                                    \
+    m_##var##Cleanup = false;                                                                                                                                                                          \
+    m_##var = nullptr;                                                                                                                                                                                 \
+  }                                                                                                                                                                                                    \
+  void free##name##Pointer()                                                                                                                                                                           \
+  {                                                                                                                                                                                                    \
+    if(nullptr != m_##var)                                                                                                                                                                             \
+    {                                                                                                                                                                                                  \
+      free(m_##var);                                                                                                                                                                                   \
+      m_##var = nullptr;                                                                                                                                                                               \
+      m_##var##Cleanup = true;                                                                                                                                                                         \
+    }                                                                                                                                                                                                  \
   }
-
-#define EBSD_POINTER_PROP(name, var, m_msgType)\
-  public:\
-  m_msgType* get##name##Pointer() { return static_cast<m_msgType*>(getPointerByName(#var)); }\
-  void set##name##Pointer(m_msgType* p) { \
-    setPointerByName(#name,p);\
-  }
-
-
-
 
 // -----------------------------------------------------------------------------
 //
