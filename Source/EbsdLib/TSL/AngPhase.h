@@ -82,7 +82,7 @@ class EbsdLib_EXPORT HKLFamily
     EBSD_STATIC_NEW_MACRO(HKLFamily)
     EBSD_TYPE_MACRO(HKLFamily)
 
-    ~HKLFamily() = default;
+    virtual ~HKLFamily() = default;
 
     int h;
     int k;

@@ -59,7 +59,7 @@ class EbsdLib_EXPORT CtfPhase
     EBSD_SHARED_POINTERS(CtfPhase)
     EBSD_STATIC_NEW_MACRO(CtfPhase)
     EBSD_TYPE_MACRO(CtfPhase)
-    ~CtfPhase();
+    virtual ~CtfPhase();
 
     EBSD_INSTANCE_PROPERTY(int, PhaseIndex)
 
