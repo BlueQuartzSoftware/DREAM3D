@@ -15,6 +15,7 @@ jobs:
             cd / && git clone https://github.com/bluequartzsoftware/CMP.git
             cd / && git clone https://github.com/bluequartzsoftware/SIMPL.git
             cd / && git clone https://github.com/bluequartzsoftware/SIMPLView.git
+            cd /opt/DREAM3D_SDK && ls -laF
             cd / && ls -laF
       - checkout
       - run:
