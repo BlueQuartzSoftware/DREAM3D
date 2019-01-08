@@ -11,16 +11,11 @@ jobs:
       - setup_remote_docker
       - run:
           name: checkout CMP
-          command: git checkout http://www.github.com/bluequartzsoftware/CMP 
-      - run:
-          name: checkout SIMPL
-          command: git checkout http://www.github.com/bluequartzsoftware/SIMPL
-      - run:
-          name: checkout SIMPLView
-          command: git checkout http://www.github.com/bluequartzsoftware/SIMPLView
-      - run:
-          name: List root dir
-          command: cd / && ls -laF
+          command: |
+            cd / && git checkout http://www.github.com/bluequartzsoftware/CMP
+            cd / && git checkout http://www.github.com/bluequartzsoftware/SIMPL
+            cd / && git checkout http://www.github.com/bluequartzsoftware/SIMPLView
+            cd / && ls -laF
       - checkout
       - run:
           name: Run build ...
