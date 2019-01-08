@@ -6,7 +6,7 @@ jobs:
         environment:
           - CIRCLE_BRANCH: ${CIRCLE_BRANCH}
           - CIRCLE_BUILD_NUM: ${CIRCLE_BUILD_NUM}
-    working_directory: /
+    working_directory: /dream3d
     steps:
       - setup_remote_docker
       - run:
