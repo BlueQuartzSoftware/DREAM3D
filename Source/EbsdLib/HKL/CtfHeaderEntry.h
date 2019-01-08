@@ -1,7 +1,3 @@
-#include <utility>
-
-#include <utility>
-
 /* ============================================================================
 * Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
@@ -41,6 +37,8 @@
 #pragma once
 
 #include <cstring>
+#include <utility>
+
 #if EbsdLib_HDF5_SUPPORT
 #include "H5Support/QH5Lite.h"
 #endif
