@@ -6,21 +6,30 @@ jobs:
         environment:
           - CIRCLE_BRANCH: ${CIRCLE_BRANCH}
           - CIRCLE_BUILD_NUM: ${CIRCLE_BUILD_NUM}
-    working_directory: /dream3d
+    working_directory: /
     steps:
       - setup_remote_docker
-      - checkout
       - run:
-          name: Update submodules ...
-          command: |
-            git submodule sync
-            git submodule update --init
+          name: checkout CMP
+          command: git checkout http://www.github.com/bluequartzsoftware/CMP /CMP
+      - run:
+          name: checkout SIMPL
+          command: git checkout http://www.github.com/bluequartzsoftware/SIMPL /SIMPL
+      - run:
+          name: checkout SIMPLView
+          command: git checkout http://www.github.com/bluequartzsoftware/SIMPLView /SIMPLView
+      - run:
+          name: List root dir
+          command: cd / && ls -laF
+    working_directory: /
+    steps:
+      - checkout
       - run:
           name: Run build ...
           command: /build.sh
-
 workflows:
   version: 2
   ci:
     jobs:
       - build
+
