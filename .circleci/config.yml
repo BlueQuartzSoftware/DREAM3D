@@ -10,11 +10,11 @@ jobs:
     steps:
       - setup_remote_docker
       - run:
-          name: checkout CMP
+          name: Clone Supporting Repositories
           command: |
-            cd / && git checkout https://www.github.com/bluequartzsoftware/CMP
-            cd / && git checkout https://www.github.com/bluequartzsoftware/SIMPL
-            cd / && git checkout https://www.github.com/bluequartzsoftware/SIMPLView
+            cd / && git clone https://github.com/bluequartzsoftware/CMP.git
+            cd / && git clone https://github.com/bluequartzsoftware/SIMPL.git
+            cd / && git clone https://github.com/bluequartzsoftware/SIMPLView.git
             cd / && ls -laF
       - checkout
       - run:
