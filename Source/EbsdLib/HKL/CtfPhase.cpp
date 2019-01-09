@@ -33,10 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
-
-
-
 #include "CtfPhase.h"
 
 
@@ -60,16 +56,13 @@ CtfPhase::~CtfPhase() = default;
 void CtfPhase::convertEuropeanDecimals(QByteArray& line)
 {
   // Filter the line to convert European command style decimals to US/UK style points
-  //  QVector<char> cLine(line.size()+1);
-  //  ::memcpy( &(cLine.front()), line.c_str(), line.size() + 1);
-  for (int c = 0; c < line.size(); ++c)
+  for(char& c : line)
   {
-    if(line.at(c) == ',')
+    if(c == ',')
     {
-      line[c] = '.';
+      c = '.';
     }
   }
-
 }
 
 

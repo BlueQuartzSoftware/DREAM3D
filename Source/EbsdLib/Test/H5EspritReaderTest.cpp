@@ -214,5 +214,9 @@ public:
     DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
 
-private:
+public:
+  H5EspritReaderTest(const H5EspritReaderTest&) = delete;            // Copy Constructor Not Implemented
+  H5EspritReaderTest(H5EspritReaderTest&&) = delete;                 // Move Constructor Not Implemented
+  H5EspritReaderTest& operator=(const H5EspritReaderTest&) = delete; // Copy Assignment Not Implemented
+  H5EspritReaderTest& operator=(H5EspritReaderTest&&) = delete;      // Move Assignment Not Implemented
 };

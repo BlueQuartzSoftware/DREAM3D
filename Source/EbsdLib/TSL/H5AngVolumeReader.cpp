@@ -76,14 +76,15 @@ H5AngVolumeReader::~H5AngVolumeReader()
   deletePointers();
 }
 
-
-#define H5ANGREADER_ALLOCATE_ARRAY(name, type)\
-  if (readAllArrays == true || arrayNames.find(Ebsd::Ang::name) != arrayNames.end()) {\
-    type* _##name = allocateArray<type>(numElements);\
-    if (nullptr != _##name) {\
-      ::memset(_##name, 0, numBytes);\
-    }\
-    set##name##Pointer(_##name);\
+#define H5ANGREADER_ALLOCATE_ARRAY(name, type)                                                                                                                                                         \
+  if(readAllArrays == true || arrayNames.find(Ebsd::Ang::name) != arrayNames.end())                                                                                                                    \
+  {                                                                                                                                                                                                    \
+    auto _##name = allocateArray<type>(numElements);                                                                                                                                                   \
+    if(nullptr != _##name)                                                                                                                                                                             \
+    {                                                                                                                                                                                                  \
+      ::memset(_##name, 0, numBytes);                                                                                                                                                                  \
+    }                                                                                                                                                                                                  \
+    set##name##Pointer(_##name);                                                                                                                                                                       \
   }
 
 // -----------------------------------------------------------------------------

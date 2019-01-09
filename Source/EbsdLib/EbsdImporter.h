@@ -58,7 +58,7 @@ class EbsdLib_EXPORT EbsdImporter
     EBSD_SHARED_POINTERS(EbsdImporter)
     EBSD_TYPE_MACRO(EbsdImporter)
 
-    virtual ~EbsdImporter() {}
+    virtual ~EbsdImporter() = default;
 
     /**
      * @brief Sets an Error Message

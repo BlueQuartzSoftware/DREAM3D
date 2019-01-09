@@ -184,9 +184,8 @@ protected:
   int readData(hid_t parId);
 
 private:
-  // QVector<AngPhase::Pointer> m_Phases;
   QSet<QString> m_ArrayNames;
-  bool m_ReadAllArrays;
+  bool m_ReadAllArrays = true;
 
 public:
   H5OIMReader(const H5OIMReader&) = delete;            // Copy Constructor Not Implemented

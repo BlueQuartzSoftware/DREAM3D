@@ -81,7 +81,7 @@ class Int32Parser : public DataParser
 {
   public:
     EBSD_SHARED_POINTERS(Int32Parser)
-    EBSD_TYPE_MACRO(Int32Parser)
+    EBSD_TYPE_MACRO_SUPER(Int32Parser, DataParser)
     static Pointer New(int32_t* ptr, size_t size, const QString& name, int index)
     {
       Pointer sharedPtr (new Int32Parser(ptr, size, name, index));
@@ -165,7 +165,7 @@ class FloatParser : public DataParser
 {
   public:
     EBSD_SHARED_POINTERS(FloatParser)
-    EBSD_TYPE_MACRO(FloatParser)
+    EBSD_TYPE_MACRO_SUPER(FloatParser, DataParser)
     static Pointer New(float* ptr, size_t size, const QString& name, int index)
     {
       Pointer sharedPtr (new FloatParser(ptr, size, name, index));

@@ -50,6 +50,12 @@
 #include "EbsdLib/EbsdReader.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
 
+#define CTF_READER_PTR_PROP(name, var, type)                                                                                                                                                           \
+  type* get##name##Pointer()                                                                                                                                                                           \
+  {                                                                                                                                                                                                    \
+    return static_cast<type*>(getPointerByName(#var));                                                                                                                                                 \
+  }
+
 /**
  * @class CtfReader CtfReader.h EbsdLib/HKL/CtfReader.h
  * @brief This class is a self contained HKL .ctf file reader and will read a
@@ -67,97 +73,53 @@ public:
   EBSD_TYPE_MACRO_SUPER(CtfReader, EbsdReader)
 
   EBSDHEADER_INSTANCE_PROPERTY(CtfStringHeaderEntry, QString, Channel, Ebsd::Ctf::ChannelTextFile)
-
   EBSDHEADER_INSTANCE_PROPERTY(CtfStringHeaderEntry, QString, Prj, Ebsd::Ctf::Prj)
-
   EBSDHEADER_INSTANCE_PROPERTY(CtfStringHeaderEntry, QString, Author, Ebsd::Ctf::Author)
-
   EBSDHEADER_INSTANCE_PROPERTY(CtfStringHeaderEntry, QString, JobMode, Ebsd::Ctf::JobMode)
-
   EBSDHEADER_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, XCells, Ebsd::Ctf::XCells)
-
   EBSDHEADER_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, YCells, Ebsd::Ctf::YCells)
-
   EBSDHEADER_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, ZCells, Ebsd::Ctf::ZCells)
-
   EBSDHEADER_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, XStep, Ebsd::Ctf::XStep)
-
   EBSDHEADER_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, YStep, Ebsd::Ctf::YStep)
-
   EBSDHEADER_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, ZStep, Ebsd::Ctf::ZStep)
-
   EBSDHEADER_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, AcqE1, Ebsd::Ctf::AcqE1)
-
   EBSDHEADER_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, AcqE2, Ebsd::Ctf::AcqE2)
-
   EBSDHEADER_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, AcqE3, Ebsd::Ctf::AcqE3)
-
   EBSDHEADER_INSTANCE_PROPERTY(CtfStringHeaderEntry, QString, Euler, Ebsd::Ctf::Euler)
-
   EBSDHEADER_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Mag, Ebsd::Ctf::Mag)
-
   EBSDHEADER_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Coverage, Ebsd::Ctf::Coverage)
-
   EBSDHEADER_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Device, Ebsd::Ctf::Device)
-
   EBSDHEADER_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, KV, Ebsd::Ctf::KV)
-
   EBSDHEADER_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, TiltAngle, Ebsd::Ctf::TiltAngle)
-
   EBSDHEADER_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, TiltAxis, Ebsd::Ctf::TiltAxis)
-
   EBSDHEADER_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, NumPhases, Ebsd::Ctf::NumPhases)
-
   EBSD_INSTANCE_PROPERTY(QVector<CtfPhase::Pointer>, PhaseVector)
 
-  /**
-   * @brief These methods allow the developer to set/get the raw pointer for a given array, release ownership of the memory
-   * and forcibly release the memory for a given array.
-   *
-   * The methods will follow the form of:
-   * @brief This will return the raw pointer to the data. The Reader class WILL 'free' the memory when it goes out of
-   * scope. If you need the memory to persist longer then call the release[NAME]Ownership() method to tell the reader
-   * NOT to free the memory.
-   * @param releaseOwnerhsip If this is true then the internal pointer is set to nullptr and the Cleanup flag is set to false.
-   * [type]* get[NAME]Pointer(bool releaseOwnership = false);
-   *
-   * @brief This will get the ownership of the raw pointer. If 'true' then this class will 'free' the pointer before
-   * each read or when the object goes out of scope.
-   * bool get[NAME]Ownership();
-   *
-   * @brief This method will set the internal pointer to nullptr without calling 'free'. It is now up to the developer
-   * to 'free' the memory that was used.
-   * void release[NAME]Ownership();
-   *
-   * @brief This will free the internal pointer as long as it already isn't nullptr.
-   * void free[NAME]Pointer();
-   *
-   */
-  EBSD_POINTER_PROPERTY(Phase, Phase, int)
-  EBSD_POINTER_PROPERTY(X, X, float)
-  EBSD_POINTER_PROPERTY(Y, Y, float)
-  EBSD_POINTER_PROPERTY(Z, Z, float)
-  EBSD_POINTER_PROPERTY(BandCount, Bands, int)
-  EBSD_POINTER_PROPERTY(Error, Error, int)
-  EBSD_POINTER_PROPERTY(Euler1, Euler1, float)
-  EBSD_POINTER_PROPERTY(Euler2, Euler2, float)
-  EBSD_POINTER_PROPERTY(Euler3, Euler3, float)
-  EBSD_POINTER_PROPERTY(MeanAngularDeviation, MAD, float)
-  EBSD_POINTER_PROPERTY(BandContrast, BC, int)
-  EBSD_POINTER_PROPERTY(BandSlope, BS, int)
+  CTF_READER_PTR_PROP(Phase, Phase, int)
+  CTF_READER_PTR_PROP(X, X, float)
+  CTF_READER_PTR_PROP(Y, Y, float)
+  CTF_READER_PTR_PROP(Z, Z, float)
+  CTF_READER_PTR_PROP(BandCount, Bands, int)
+  CTF_READER_PTR_PROP(Error, Error, int)
+  CTF_READER_PTR_PROP(Euler1, Euler1, float)
+  CTF_READER_PTR_PROP(Euler2, Euler2, float)
+  CTF_READER_PTR_PROP(Euler3, Euler3, float)
+  CTF_READER_PTR_PROP(MeanAngularDeviation, MAD, float)
+  CTF_READER_PTR_PROP(BandContrast, BC, int)
+  CTF_READER_PTR_PROP(BandSlope, BS, int)
 
   /* These will be in a 3D ctf file */
-  EBSD_POINTER_PROPERTY(GrainIndex, GrainIndex, int)
-  EBSD_POINTER_PROPERTY(GrainRandomColourR, GrainRandomColourR, int)
-  EBSD_POINTER_PROPERTY(GrainRandomColourG, GrainRandomColourG, int)
-  EBSD_POINTER_PROPERTY(GrainRandomColourB, GrainRandomColourB, int)
+  CTF_READER_PTR_PROP(GrainIndex, GrainIndex, int)
+  CTF_READER_PTR_PROP(GrainRandomColourR, GrainRandomColourR, int)
+  CTF_READER_PTR_PROP(GrainRandomColourG, GrainRandomColourG, int)
+  CTF_READER_PTR_PROP(GrainRandomColourB, GrainRandomColourB, int)
 
   /**
    * @brief Returns the pointer to the data for a given feature
    * @param featureName The name of the feature to return the pointer to.
    */
   void* getPointerByName(const QString& featureName) override;
-  void setPointerByName(const QString& name, void* p);
+  //  void setPointerByName(const QString& name, void* p);
 
   /**
    * @brief Returns an enumeration value that depicts the numerical

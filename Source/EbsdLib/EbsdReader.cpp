@@ -52,8 +52,6 @@ EbsdReader::EbsdReader() :
   m_HeaderIsComplete(false),
   m_NumberOfElements(0)
 {
-  m_EulerTransformationAxis.resize(3);
-  m_SampleTransformationAxis.resize(3);
 }
 
 // -----------------------------------------------------------------------------
@@ -68,7 +66,3 @@ void EbsdReader::appendOriginalHeader(const QString& more)
 {
   m_OriginalHeader.append(more);
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------

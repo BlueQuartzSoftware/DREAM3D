@@ -35,8 +35,7 @@
 
 #pragma once
 
-#include <string.h>
-
+#include <cstring>
 
 #include <QtCore/QVector>
 #include <QtCore/QString>
