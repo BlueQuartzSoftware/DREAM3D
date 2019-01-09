@@ -337,9 +337,9 @@ int32_t PhReader::readHeader()
   int nx = 0;
   int ny = 0;
   int nz = 0;
-
+  int32_t nread = 0;
   // Read Line #1 which has the dimensions
-  fscanf(m_InStream, "%d %d %d\n", &nx, &ny, &nz);
+  nread = fscanf(m_InStream, "%d %d %d\n", &nx, &ny, &nz);
 
   // Set the values into the cache, so that they can be used later
   QVector<size_t> v;
@@ -357,13 +357,14 @@ int32_t PhReader::readHeader()
     }
   }
 
+  char* charPtr = nullptr;
   char buf[BUF_SIZE];
   // Read Line #2 and dump it
   ::memset(buf, 0, BUF_SIZE);
-  fgets(buf, BUF_SIZE, m_InStream);
+  charPtr = fgets(buf, BUF_SIZE, m_InStream);
   // Read Line #3 and dump it
   ::memset(buf, 0, BUF_SIZE);
-  fgets(buf, BUF_SIZE, m_InStream);
+  charPtr = fgets(buf, BUF_SIZE, m_InStream);
   return 0;
 }
 

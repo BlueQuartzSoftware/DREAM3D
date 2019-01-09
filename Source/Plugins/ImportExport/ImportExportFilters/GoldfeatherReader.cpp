@@ -341,7 +341,8 @@ void GoldfeatherReader::execute()
   ScopedFileMonitor fileMonitor(f);
 
   int nNodes = 0;
-  fscanf(f, "%d\n", &nNodes);
+  int32_t nread = 0;
+  nread = fscanf(f, "%d\n", &nNodes);
 
   // Allocate the Nodes, Normals, curvatures and principal direction vectors
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
@@ -356,7 +357,7 @@ void GoldfeatherReader::execute()
   float x, y, z, n0, n1, n2, p1, p2;
   for(int n = 0; n < nNodes; ++n)
   {
-    fscanf(f, "%f %f %f %f %f %f %f %f\n", &x, &y, &z, &n0, &n1, &n2, &p1, &p2);
+    nread = fscanf(f, "%f %f %f %f %f %f %f %f\n", &x, &y, &z, &n0, &n1, &n2, &p1, &p2);
     nodes[n * 3] = x;
     nodes[n * 3 + 1] = y;
     nodes[n * 3 + 2] = z;
@@ -367,7 +368,7 @@ void GoldfeatherReader::execute()
     m_SurfaceMeshPrincipalCurvature2s[n] = p2;
 
     // Read the next line of the data which is the principal direction vectors
-    fscanf(f, "%f %f %f %f %f %f\n", &x, &y, &z, &n0, &n1, &n2);
+    nread = fscanf(f, "%f %f %f %f %f %f\n", &x, &y, &z, &n0, &n1, &n2);
     m_SurfaceMeshPrincipalDirection1s[n * 3 + 0] = x;
     m_SurfaceMeshPrincipalDirection1s[n * 3 + 1] = y;
     m_SurfaceMeshPrincipalDirection1s[n * 3 + 2] = z;
@@ -395,7 +396,7 @@ void GoldfeatherReader::execute()
 
   for(int t = 0; t < nTriangles; ++t)
   {
-    fscanf(f, "%f %f %f %f %f %f", &x, &y, &z, &n0, &n1, &n2);
+    nread = fscanf(f, "%f %f %f %f %f %f", &x, &y, &z, &n0, &n1, &n2);
     triangles[t * 3] = x;
     triangles[t * 3 + 1] = y;
     triangles[t * 3 + 2] = z;

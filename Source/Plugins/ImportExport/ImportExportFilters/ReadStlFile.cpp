@@ -52,7 +52,10 @@
 #include "ImportExport/ImportExportConstants.h"
 #include "ImportExport/ImportExportVersion.h"
 
-#define STL_HEADER_LENGTH 80
+namespace
+{
+    static const size_t k_StlHeaderLength = 80;
+}
 
 /**
  * @brief The FindUniqueIdsImpl class implements a threaded algorithm that determines the set of
@@ -61,7 +64,7 @@
 class FindUniqueIdsImpl
 {
 public:
-  FindUniqueIdsImpl(SharedVertexList::Pointer vertex, QVector<QVector<size_t>> nodesInBin, int64_t* uniqueIds)
+  FindUniqueIdsImpl(SharedVertexList::Pointer vertex, std::vector<std::vector<size_t>> nodesInBin, int64_t* uniqueIds)
   : m_Vertex(vertex)
   , m_NodesInBin(nodesInBin)
   , m_UniqueIds(uniqueIds)
@@ -73,12 +76,12 @@ public:
     float* verts = m_Vertex->getPointer(0);
     for(size_t i = start; i < end; i++)
     {
-      for(int32_t j = 0; j < m_NodesInBin[i].size(); j++)
+      for(size_t j = 0; j < m_NodesInBin[i].size(); j++)
       {
         size_t node1 = m_NodesInBin[i][j];
         if(m_UniqueIds[node1] == node1)
         {
-          for(int32_t k = j + 1; k < m_NodesInBin[i].size(); k++)
+          for(size_t k = j + 1; k < m_NodesInBin[i].size(); k++)
           {
             size_t node2 = m_NodesInBin[i][k];
             if(verts[node1 * 3] == verts[node2 * 3] && verts[node1 * 3 + 1] == verts[node2 * 3 + 1] && verts[node1 * 3 + 2] == verts[node2 * 3 + 2])
@@ -99,7 +102,7 @@ public:
 #endif
 private:
   SharedVertexList::Pointer m_Vertex;
-  QVector<QVector<size_t>> m_NodesInBin;
+  std::vector<std::vector<size_t>> m_NodesInBin;
   int64_t* m_UniqueIds;
 };
 
@@ -272,9 +275,10 @@ void ReadStlFile::readFile()
   }
 
   // Read Header
-  char h[STL_HEADER_LENGTH];
+  char h[::k_StlHeaderLength];
   int32_t triCount = 0;
-  fread(h, STL_HEADER_LENGTH, 1, f);
+  size_t fReadElements = fread(h, ::k_StlHeaderLength, 1, f);
+  Q_UNUSED(fReadElements)
 
   // Look for the tell-tale signs that the file was written from Magics Materialise
   // If the file was written by Magics as a "Color STL" file then the 2byte int
@@ -282,7 +286,7 @@ void ReadStlFile::readFile()
   // This NON Zero value does NOT indicate a length but is some sort of color
   // value encoded into the file. Instead of being normal like everyone else and
   // using the STL spec they went off and did their own thing.
-  QByteArray headerArray(h, STL_HEADER_LENGTH);
+  QByteArray headerArray(h, ::k_StlHeaderLength);
   QString headerString(headerArray);
   bool magicsFile = false;
   static const QString k_ColorHeader("COLOR=");
@@ -292,7 +296,8 @@ void ReadStlFile::readFile()
     magicsFile = true;
   }
   // Read the number of triangles in the file.
-  fread(&triCount, sizeof(int32_t), 1, f);
+  fReadElements = fread(&triCount, sizeof(int32_t), 1, f);
+  Q_UNUSED(fReadElements)
 
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
   triangleGeom->resizeTriList(triCount);
@@ -311,13 +316,15 @@ void ReadStlFile::readFile()
   unsigned short attr;
   for(int32_t t = 0; t < triCount; ++t)
   {
-    fread(reinterpret_cast<void*>(v), sizeof(float), k_StlElementCount, f); // Read the Triangle
-
-    fread(reinterpret_cast<void*>(&attr), sizeof(unsigned short), 1, f); // Read the Triangle Attribute Data length
+    fReadElements = fread(reinterpret_cast<void*>(v), sizeof(float), k_StlElementCount, f); // Read the Triangle
+    Q_UNUSED(fReadElements)
+    fReadElements = fread(reinterpret_cast<void*>(&attr), sizeof(unsigned short), 1, f); // Read the Triangle Attribute Data length
+    Q_UNUSED(fReadElements)
     if(attr > 0 && !magicsFile)
     {
       std::vector<unsigned char> buffer(attr);                       // Allocate a buffer for the STL attribute data to be placed into
-      fread(reinterpret_cast<void*>(&(buffer.front())), attr, 1, f); // Read the bytes into the buffer so that we can skip it.
+      fReadElements = fread(reinterpret_cast<void*>(&(buffer.front())), attr, 1, f); // Read the bytes into the buffer so that we can skip it.
+      Q_UNUSED(fReadElements)
     }
     if(v[3] < m_minXcoord)
     {
@@ -430,7 +437,7 @@ void ReadStlFile::eliminate_duplicate_nodes()
   float stepY = (m_maxYcoord - m_minYcoord) / 100.0f;
   float stepZ = (m_maxZcoord - m_minZcoord) / 100.0f;
 
-  QVector<QVector<size_t>> nodesInBin(100 * 100 * 100);
+  std::vector<std::vector<size_t>> nodesInBin(100 * 100 * 100);
 
   // determine (xyz) bin each node falls in - used to speed up node comparison
   int32_t bin = 0, xBin = 0, yBin = 0, zBin = 0;
@@ -452,7 +459,7 @@ void ReadStlFile::eliminate_duplicate_nodes()
       zBin = 99;
     }
     bin = (zBin * 10000) + (yBin * 100) + xBin;
-    nodesInBin[bin].push_back(i);
+    nodesInBin[static_cast<size_t>(bin)].push_back(i);
   }
 
   // Create array to hold unique node numbers
@@ -529,7 +536,7 @@ AbstractFilter::Pointer ReadStlFile::newFilterInstance(bool copyFilterParameters
   {
     copyFilterParameterInstanceVariables(filter.get());
   }
-  return filter;
+  return std::move(filter);
 }
 
 // -----------------------------------------------------------------------------

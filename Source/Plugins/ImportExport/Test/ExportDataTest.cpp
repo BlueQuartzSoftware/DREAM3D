@@ -55,13 +55,12 @@
 class ExportDataTest
 {
 public:
-  ExportDataTest()
-  {
-  }
-  virtual ~ExportDataTest()
-  {
-  }
+  ExportDataTest() = default;
+  ~ExportDataTest() = default;
+
   SIMPL_TYPE_MACRO(ExportDataTest)
+
+
 
   enum ErrorCodes
   {
@@ -257,7 +256,8 @@ public:
 
       for(int i = 0; i < 20; i++) // compare file to what was written in array
       {
-        fscanf(f, "%d,", &num);
+        int32_t fread = fscanf(f, "%d,", &num);
+        Q_UNUSED(fread)
         if(i + 20 != num)
         {
           DREAM3D_REQUIRE_EQUAL(0, -3)
@@ -274,7 +274,8 @@ public:
 
       for(int i = 0; i < 20; i++) // compare file to what was written in array
       {
-        fscanf(f, "%d,", &num);
+       int32_t fread = fscanf(f, "%d,", &num);
+       Q_UNUSED(fread)
         if(i + 20 != num)
         {
           DREAM3D_REQUIRE_EQUAL(0, -3)
@@ -290,7 +291,8 @@ public:
       DREAM3D_REQUIRE_VALID_POINTER(f)
       for(int i = 0; i < 20; i++) // compare file to what was written in bool array
       {
-        fscanf(f, "%d,", &num);
+        int32_t fread = fscanf(f, "%d,", &num);
+        Q_UNUSED(fread)
         if((i % 2 == 0 && num == 1) || (i % 2 != 0 && num == 0))
         {
           DREAM3D_REQUIRE_EQUAL(0, -3)
@@ -316,7 +318,10 @@ public:
     DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
 
-private:
-  ExportDataTest(const ExportDataTest&); // Copy Constructor Not Implemented
-  void operator=(const ExportDataTest&); // Move assignment Not Implemented
+public:
+    ExportDataTest(const ExportDataTest&) = delete; // Copy Constructor Not Implemented
+ExportDataTest(ExportDataTest&&) = delete;      // Move Constructor Not Implemented
+ExportDataTest& operator=(const ExportDataTest&) = delete; // Copy Assignment Not Implemented
+ExportDataTest& operator=(ExportDataTest&&) = delete;      // Move Assignment Not Implemented
+
 };

@@ -180,7 +180,7 @@ void NodesTrianglesToStl::preflight()
 void NodesTrianglesToStl::execute()
 {
   // int err = 0;
-
+  int32_t nread = 0;
   dataCheck();
   if(getErrorCondition() < 0)
   {
@@ -211,7 +211,7 @@ void NodesTrianglesToStl::execute()
   ScopedFileMonitor nodesFilePtr(nodesFile);
   //  how many nodes are in the file
   int nNodes = 0;
-  fscanf(nodesFile, "%d", &nNodes);
+  nread = fscanf(nodesFile, "%d", &nNodes);
   {
     QString ss = QObject::tr("Node Count from %1 File: %2").arg(getNodesFile()).arg(nNodes);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
@@ -229,7 +229,7 @@ void NodesTrianglesToStl::execute()
   ScopedFileMonitor triFilePtr(triFile);
   // how many triangles are in the file
   int nTriangles = 0;
-  fscanf(triFile, "%d", &nTriangles);
+  nread = fscanf(triFile, "%d", &nTriangles);
 
   {
     QString ss = QObject::tr("Triangle Count from %1 File: %2").arg(getTrianglesFile()).arg(nTriangles);
@@ -239,7 +239,6 @@ void NodesTrianglesToStl::execute()
   int nodeId = 0;
   int nodeKind = 0;
   float pos[3] = {0.0f, 0.0f, 0.0f};
-  size_t nread = 0;
   // Read the POINTS data (Vertex)
   QMap<int, int> nodeIdToIndex;
   QVector<size_t> cDims(1, 3);

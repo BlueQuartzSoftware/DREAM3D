@@ -178,7 +178,7 @@ void NodesTrianglesToVtk::preflight()
 void NodesTrianglesToVtk::execute()
 {
   // int err = 0;
-
+  int32_t nread = 0;
   dataCheck();
   if(getErrorCondition() < 0)
   {
@@ -199,7 +199,7 @@ void NodesTrianglesToVtk::execute()
 
   //  how many nodes are in the file
   int nNodes = 0;
-  fscanf(nodesFile, "%d", &nNodes);
+  nread = fscanf(nodesFile, "%d", &nNodes);
   {
     QString ss = QObject::tr("Node Count from %1 File: %2").arg(getNodesFile()).arg(nNodes);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
@@ -217,8 +217,7 @@ void NodesTrianglesToVtk::execute()
   }
   // how many triangles are in the file
   int nTriangles = 0;
-  fscanf(triFile, "%d", &nTriangles);
-
+  nread = fscanf(triFile, "%d", &nTriangles);
   {
     QString ss = QObject::tr("Triangle Count from %1 File: %2").arg(getTrianglesFile()).arg(nTriangles);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
@@ -247,12 +246,13 @@ void NodesTrianglesToVtk::execute()
   fprintf(vtkFile, "DATASET POLYDATA\n");
   fprintf(vtkFile, "POINTS %d float\n", nNodes);
 
+
   int nodeId = 0;
   int nodeKind = 0;
   float pos[3] = {0.0f, 0.0f, 0.0f};
 
   size_t totalWritten = 0;
-  size_t nread = 0;
+
   // Write the POINTS data (Vertex)
   for(int i = 0; i < nNodes; i++)
   {
@@ -273,7 +273,7 @@ void NodesTrianglesToVtk::execute()
     }
     else
     {
-      fprintf(vtkFile, "%f %f %f\n", pos[0], pos[1], pos[2]); // Write the positions to the output file
+      nread = fprintf(vtkFile, "%f %f %f\n", pos[0], pos[1], pos[2]); // Write the positions to the output file
     }
   }
   fclose(nodesFile);
@@ -391,13 +391,13 @@ int NodesTrianglesToVtk::writeBinaryPointData(const QString& NodesFile, FILE* vt
   int nodeKind = 0;
   float pos[3] = {0.0f, 0.0f, 0.0f};
   int swapped;
-  int nread = 0;
+  int32_t nread = 0;
   FILE* nodesFile = fopen(NodesFile.toLatin1().data(), "rb");
   fprintf(vtkFile, "\n");
   fprintf(vtkFile, "POINT_DATA %d\n", nNodes);
   fprintf(vtkFile, "SCALARS Node_Type int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
-  fscanf(nodesFile, "%d", &nodeId); // Read the number of nodes
+  nread = fscanf(nodesFile, "%d", &nodeId); // Read the number of nodes
   std::vector<int> data(nNodes, 0);
   for(int i = 0; i < nNodes; i++)
   {
@@ -429,14 +429,14 @@ int NodesTrianglesToVtk::writeASCIIPointData(const QString& NodesFile, FILE* vtk
   int nodeId = 0;
   int nodeKind = 0;
   float pos[3] = {0.0f, 0.0f, 0.0f};
-  int nread = 0;
+  int32_t nread = 0;
 
   FILE* nodesFile = fopen(NodesFile.toLatin1().data(), "rb");
   fprintf(vtkFile, "\n");
   fprintf(vtkFile, "POINT_DATA %d\n", nNodes);
   fprintf(vtkFile, "SCALARS Node_Type int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
-  fscanf(nodesFile, "%d", &nodeId); // Read the number of nodes
+  nread = fscanf(nodesFile, "%d", &nodeId); // Read the number of nodes
   for(int i = 0; i < nNodes; i++)
   {
     nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos + 1, pos + 2); // Read one set of positions from the nodes file
@@ -465,10 +465,10 @@ int NodesTrianglesToVtk::writeBinaryCellData(const QString& TrianglesFile, FILE*
   //
   int err = 0;
   size_t offset = 1;
-  int nread = 0;
+  int32_t nread = 0;
   // Open the triangles file for reading
   FILE* triFile = fopen(TrianglesFile.toLatin1().data(), "rb");
-  fscanf(triFile, "%d", &nread); // Read the number of triangles and throw it away
+  nread = fscanf(triFile, "%d", &nread); // Read the number of triangles and throw it away
   int tData[9];
 
   int triangleCount = nTriangles;
@@ -534,7 +534,7 @@ int NodesTrianglesToVtk::writeASCIICellData(const QString& TrianglesFile, FILE* 
   int nread = 0;
   // Open the triangles file for reading
   FILE* triFile = fopen(TrianglesFile.toLatin1().data(), "rb");
-  fscanf(triFile, "%d", &nread); // Read the number of triangles and throw it away
+  nread = fscanf(triFile, "%d", &nread); // Read the number of triangles and throw it away
 
   // Write the FeatureId Data to the file
   int triangleCount = nTriangles;
