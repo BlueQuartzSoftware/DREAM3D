@@ -216,7 +216,6 @@ void LaplacianSmoothing::execute()
     return;
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

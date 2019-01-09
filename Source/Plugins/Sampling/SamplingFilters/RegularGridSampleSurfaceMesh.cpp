@@ -241,7 +241,6 @@ void RegularGridSampleSurfaceMesh::execute()
 
   SampleSurfaceMesh::execute();
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

@@ -383,8 +383,7 @@ void ReplaceElementAttributesWithNeighborValues::execute()
   // redundant code
   EXECUTE_FUNCTION_TEMPLATE(this, Detail::ExecuteTemplate, m_InArrayPtr.lock(), this, m_InArrayPtr.lock());
 
-  // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Complete");
+
 }
 
 // -----------------------------------------------------------------------------

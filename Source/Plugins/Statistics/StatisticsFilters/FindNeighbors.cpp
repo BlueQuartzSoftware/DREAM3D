@@ -426,7 +426,6 @@ void FindNeighbors::execute()
     m_SharedSurfaceAreaList.lock()->setList(static_cast<int32_t>(i), sharedSAL);
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

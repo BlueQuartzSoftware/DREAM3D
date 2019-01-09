@@ -181,8 +181,7 @@ void EstablishShapeTypes::execute()
     m_ShapeTypesPtr.lock()->setValue(i, static_cast<ShapeType::EnumType>(m_ShapeTypeData[i]));
   }
 
-  // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Complete");
+
 }
 
 // -----------------------------------------------------------------------------

@@ -239,8 +239,7 @@ void SampleSurfaceMeshSpecifiedPoints::execute()
     outFile << m_FeatureIds[i] << std::endl;
   }
 
-  /* Let the GUI know we are done with this filter */
-  notifyStatusMessage(getHumanLabel(), "Complete");
+
 }
 
 // -----------------------------------------------------------------------------

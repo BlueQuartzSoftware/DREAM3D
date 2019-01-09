@@ -607,7 +607,6 @@ void CropImageGeometry::execute()
     destCellDataContainer->getGeometryAs<ImageGeom>()->setOrigin(origin);
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

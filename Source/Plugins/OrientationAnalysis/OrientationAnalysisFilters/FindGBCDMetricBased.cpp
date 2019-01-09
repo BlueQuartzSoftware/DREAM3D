@@ -1054,7 +1054,6 @@ void FindGBCDMetricBased::execute()
   fclose(fDist);
   fclose(fErr);
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

@@ -345,7 +345,6 @@ int32_t EnsembleInfoReader::readFile()
     }
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
   return 0;
 }
 

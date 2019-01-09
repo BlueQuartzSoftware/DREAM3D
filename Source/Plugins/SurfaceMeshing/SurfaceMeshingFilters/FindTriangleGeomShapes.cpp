@@ -694,7 +694,6 @@ void FindTriangleGeomShapes::execute()
   find_axes();
   find_axiseulers();
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

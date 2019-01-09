@@ -571,7 +571,6 @@ void GeneratePrimaryStatsData::execute()
     }
     StatsGeneratorUtilities::GenerateAxisODFBinData(m_PrimaryStatsData, PhaseType::Type::Primary, e1s, e2s, e3s, weights, sigmas, true);
   }
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

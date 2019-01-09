@@ -316,7 +316,6 @@ void FindKernelAvgMisorientations::execute()
     }
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

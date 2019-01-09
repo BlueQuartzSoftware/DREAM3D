@@ -245,7 +245,6 @@ void ImportAvxmMDSim::execute()
     dc->setGeometry(vertex);
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

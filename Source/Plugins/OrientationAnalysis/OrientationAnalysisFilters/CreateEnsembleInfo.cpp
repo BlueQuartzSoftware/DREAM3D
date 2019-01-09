@@ -248,8 +248,7 @@ void CreateEnsembleInfo::execute()
     m_PhaseNamesPtr.lock()->setValue(i + 1, phaseName);
   }
 
-  /* Let the GUI know we are done with this filter */
-  notifyStatusMessage(getHumanLabel(), "Complete");
+
 }
 
 // -----------------------------------------------------------------------------

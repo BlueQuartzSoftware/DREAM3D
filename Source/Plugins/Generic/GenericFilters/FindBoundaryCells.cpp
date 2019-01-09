@@ -245,7 +245,6 @@ void FindBoundaryCells::execute()
     }
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

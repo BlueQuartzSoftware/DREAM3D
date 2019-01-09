@@ -304,7 +304,6 @@ This indicates a problem with the input cell phase data. DREAM.3D will give INCO
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

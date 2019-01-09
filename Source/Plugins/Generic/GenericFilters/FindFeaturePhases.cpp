@@ -221,7 +221,6 @@ void FindFeaturePhases::execute()
     notifyWarningMessage(getHumanLabel(), warnings.join("\n"), getWarningCondition());
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

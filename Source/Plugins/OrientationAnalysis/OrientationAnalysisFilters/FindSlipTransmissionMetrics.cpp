@@ -309,7 +309,6 @@ void FindSlipTransmissionMetrics::execute()
     m_mPrimeList.lock()->setList(static_cast<int32_t>(i), mPrimeL);
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

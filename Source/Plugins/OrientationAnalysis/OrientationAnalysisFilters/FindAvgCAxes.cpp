@@ -241,7 +241,6 @@ void FindAvgCAxes::execute()
     }
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

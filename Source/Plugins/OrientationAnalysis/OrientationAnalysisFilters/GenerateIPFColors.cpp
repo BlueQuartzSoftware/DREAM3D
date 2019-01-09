@@ -351,8 +351,7 @@ This indicates a problem with the input cell phase data. DREAM.3D will give INCO
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  /* Let the GUI know we are done with this filter */
-  notifyStatusMessage(getHumanLabel(), "Complete");
+
 }
 
 // -----------------------------------------------------------------------------

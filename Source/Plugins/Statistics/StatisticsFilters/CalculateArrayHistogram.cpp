@@ -319,7 +319,6 @@ void CalculateArrayHistogram::execute()
     notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

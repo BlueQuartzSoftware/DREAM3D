@@ -515,7 +515,6 @@ void EbsdToH5Ebsd::execute()
   }
   err = QH5Utilities::closeFile(fileId);
   fileId = -1;
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

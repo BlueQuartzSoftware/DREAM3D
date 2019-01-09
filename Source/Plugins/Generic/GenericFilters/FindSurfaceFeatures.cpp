@@ -316,7 +316,6 @@ void FindSurfaceFeatures::execute()
     find_surfacefeatures2D();
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
