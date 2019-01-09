@@ -251,7 +251,6 @@ void UncertainRegularGridSampleSurfaceMesh::execute()
 
   SampleSurfaceMesh::execute();
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

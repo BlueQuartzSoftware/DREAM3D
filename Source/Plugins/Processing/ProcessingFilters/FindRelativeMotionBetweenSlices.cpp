@@ -679,7 +679,6 @@ void FindRelativeMotionBetweenSlices::execute()
     m_MotionDirection[3 * i + 2] = v[2];
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

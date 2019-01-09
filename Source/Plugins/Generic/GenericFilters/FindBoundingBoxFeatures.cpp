@@ -465,7 +465,6 @@ void FindBoundingBoxFeatures::execute()
     find_boundingboxfeatures2D();
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

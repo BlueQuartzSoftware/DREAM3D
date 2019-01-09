@@ -449,7 +449,6 @@ void FindFeatureClustering::execute()
 
   find_clustering();
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

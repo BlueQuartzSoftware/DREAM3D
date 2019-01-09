@@ -470,7 +470,6 @@ void DetectEllipsoids::execute()
       std::cout << i.key() << ": " << i.value() << std::endl;
   }
 #endif
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

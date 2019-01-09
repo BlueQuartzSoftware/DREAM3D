@@ -643,7 +643,6 @@ void InsertAtoms::execute()
 
   assign_points(points, inFeature);
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

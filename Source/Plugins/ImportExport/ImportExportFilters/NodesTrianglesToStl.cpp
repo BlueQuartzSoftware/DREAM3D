@@ -404,7 +404,6 @@ void NodesTrianglesToStl::execute()
 
   setErrorCondition(0);
   setWarningCondition(0);
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

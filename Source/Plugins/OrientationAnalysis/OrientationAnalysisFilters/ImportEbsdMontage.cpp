@@ -288,7 +288,6 @@ void ImportEbsdMontage::execute()
   // The entire Reading of the data, whether that is in prefligth (so just read the header) or in execute is performed
   // in the dataCheck() method so we essentially do nothing here.
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

@@ -441,7 +441,6 @@ void StatsGeneratorFilter::execute()
     }
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

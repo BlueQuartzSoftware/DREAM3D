@@ -203,7 +203,6 @@ void ComputeFeatureRect::execute()
     }
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

@@ -284,7 +284,6 @@ void AbaqusHexahedronWriter::execute()
     return;
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

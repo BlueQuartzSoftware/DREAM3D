@@ -215,7 +215,6 @@ void FindTriangleGeomCentroids::execute()
     vertexSets[i].clear();
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

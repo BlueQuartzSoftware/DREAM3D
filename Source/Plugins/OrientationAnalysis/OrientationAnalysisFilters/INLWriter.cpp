@@ -441,7 +441,6 @@ int32_t INLWriter::writeFile()
 
   fclose(f);
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
   return err;
 }
 

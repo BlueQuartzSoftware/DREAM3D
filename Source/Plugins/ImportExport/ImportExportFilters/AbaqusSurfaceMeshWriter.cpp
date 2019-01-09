@@ -217,7 +217,6 @@ void AbaqusSurfaceMeshWriter::execute()
     return;
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

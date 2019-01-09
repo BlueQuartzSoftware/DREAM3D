@@ -458,7 +458,6 @@ void FindTwinBoundaries::execute()
     serial.generate(0, numTriangles);
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

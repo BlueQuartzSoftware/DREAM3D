@@ -385,7 +385,6 @@ void FindNeighborhoods::execute()
     m_NeighborhoodList.lock()->setList(static_cast<int32_t>(i), sharedNeiLst);
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

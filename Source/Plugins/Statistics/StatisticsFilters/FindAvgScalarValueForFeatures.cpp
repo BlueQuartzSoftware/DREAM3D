@@ -207,7 +207,6 @@ void FindAvgScalarValueForFeatures::execute()
 
   EXECUTE_FUNCTION_TEMPLATE(this, findAverage, m_InDataArrayPtr.lock(), m_InDataArrayPtr.lock(), m_NewFeatureArrayPtr.lock(), m_FeatureIds)
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

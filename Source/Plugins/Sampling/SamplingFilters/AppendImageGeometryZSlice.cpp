@@ -294,7 +294,6 @@ void AppendImageGeometryZSlice::execute()
     }
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 // -----------------------------------------------------------------------------
 //

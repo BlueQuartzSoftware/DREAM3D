@@ -76,7 +76,6 @@ void OrientationUtility::preflight()
 // -----------------------------------------------------------------------------
 void OrientationUtility::execute()
 {
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

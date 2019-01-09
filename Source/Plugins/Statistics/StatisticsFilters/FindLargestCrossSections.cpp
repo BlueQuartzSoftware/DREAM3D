@@ -265,7 +265,6 @@ void FindLargestCrossSections::execute()
 
   find_crosssections();
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

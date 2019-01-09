@@ -482,7 +482,6 @@ void ConvertHexGridToSquareGrid::execute()
       return;
     }
   }
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

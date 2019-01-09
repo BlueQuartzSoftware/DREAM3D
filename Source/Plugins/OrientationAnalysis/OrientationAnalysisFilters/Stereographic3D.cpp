@@ -249,7 +249,6 @@ void Stereographic3D::execute()
     serial.convert(0, totalPoints);
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

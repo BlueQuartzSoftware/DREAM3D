@@ -251,7 +251,6 @@ void VtkStructuredPointsReader::execute()
   // is executing then the file data will be read into the data arrays
   dataCheck();
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

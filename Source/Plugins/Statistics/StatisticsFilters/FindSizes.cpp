@@ -378,7 +378,6 @@ void FindSizes::execute()
 
   findSizes(igeom);
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

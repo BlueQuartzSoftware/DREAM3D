@@ -754,7 +754,6 @@ void FindEuclideanDistMap::execute()
     attrMat->removeAttributeArray(getNearestNeighborsArrayName());
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
