@@ -59,20 +59,6 @@ AngPhase::~AngPhase() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-//void AngPhase::parsePhase(char* value, size_t start, size_t length)
-//{
-//  if (value[start] == ':')
-//  {
-//    ++start;
-//  } // move past the ":" character
-//  QByteArray buf(&(value[start]), strlen(value) - start);
-//  bool ok = false;
-//  m_PhaseIndex = buf.toInt(&ok, 10);
-//}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void AngPhase::parseMaterialName(QList<QByteArray>& tokens)
 {
   m_MaterialName.clear();
@@ -203,25 +189,25 @@ void AngPhase::printSelf(QTextStream& stream)
   stream << Ebsd::Ang::Symmetry << ": " << m_Symmetry << QString("\n");
 
   stream << Ebsd::Ang::LatticeConstants;
-  for (QVector<float>::iterator iter = m_LatticeConstants.begin(); iter != m_LatticeConstants.end(); ++iter )
+
+  for(const auto& latticeConstant : m_LatticeConstants)
   {
-    stream << " " << *iter;
+    stream << " " << latticeConstant;
   }
   stream << QString("\n");
 
   stream << Ebsd::Ang::NumberFamilies << ": " << m_NumberFamilies << QString("\n");
 
-
-  for (QVector<HKLFamily::Pointer>::iterator iter = m_HKLFamilies.begin(); iter != m_HKLFamilies.end(); ++iter )
+  for(const auto& family : m_HKLFamilies)
   {
-    (*iter)->printSelf(stream);
+    family->printSelf(stream);
   }
 
 
   stream << Ebsd::Ang::Categories;
-  for (QVector<int>::iterator iter = m_Categories.begin(); iter != m_Categories.end(); ++iter )
+  for(const auto& category : m_Categories)
   {
-    stream << " " << *iter;
+    stream << " " << category;
   }
   stream << QString("\n");
 

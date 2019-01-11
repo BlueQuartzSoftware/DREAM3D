@@ -70,13 +70,14 @@ class EbsdLib_EXPORT EbsdReader
 
     EBSD_INSTANCE_STRING_PROPERTY(ErrorMessage)
 
+    using TransformationType = std::array<float, 3>;
 
     /** @brief Allow the user to set the origin of the scan */
     EBSD_INSTANCE_PROPERTY(uint32_t, UserZDir)
     EBSD_INSTANCE_PROPERTY(float, SampleTransformationAngle)
-    EBSD_INSTANCE_PROPERTY(QVector<float>, SampleTransformationAxis)
+    EBSD_INSTANCE_PROPERTY(TransformationType, SampleTransformationAxis)
     EBSD_INSTANCE_PROPERTY(float, EulerTransformationAngle)
-    EBSD_INSTANCE_PROPERTY(QVector<float>, EulerTransformationAxis)
+    EBSD_INSTANCE_PROPERTY(TransformationType, EulerTransformationAxis)
 
     /** @brief Sets the file name of the ebsd file to be read */
     EBSD_INSTANCE_STRING_PROPERTY(FileName)

@@ -49,12 +49,8 @@
 class EdaxOIMReaderTest
 {
 public:
-  EdaxOIMReaderTest()
-  {
-  }
-  virtual ~EdaxOIMReaderTest()
-  {
-  }
+  EdaxOIMReaderTest() = default;
+  virtual ~EdaxOIMReaderTest() = default;
 
   // -----------------------------------------------------------------------------
   //
@@ -132,4 +128,10 @@ public:
 
     DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
+
+public:
+  EdaxOIMReaderTest(const EdaxOIMReaderTest&) = delete;            // Copy Constructor Not Implemented
+  EdaxOIMReaderTest(EdaxOIMReaderTest&&) = delete;                 // Move Constructor Not Implemented
+  EdaxOIMReaderTest& operator=(const EdaxOIMReaderTest&) = delete; // Copy Assignment Not Implemented
+  EdaxOIMReaderTest& operator=(EdaxOIMReaderTest&&) = delete;      // Move Assignment Not Implemented
 };

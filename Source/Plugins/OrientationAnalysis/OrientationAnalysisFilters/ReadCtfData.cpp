@@ -416,12 +416,13 @@ int32_t ReadCtfData::loadMaterialInfo(CtfReader* reader)
   latticeConstants->setComponent(0, 4, 0.0f);
   latticeConstants->setComponent(0, 5, 0.0f);
 
-  for(int32_t i = 0; i < phases.size(); i++)
+  // for(int32_t i = 0; i < phases.size(); i++)
+  for(const auto& phase : phases)
   {
-    int32_t phaseID = phases[i]->getPhaseIndex();
-    crystalStructures->setValue(phaseID, phases[i]->determineLaueGroup());
-    materialNames->setValue(phaseID, phases[i]->getMaterialName());
-    QVector<float> lc = phases[i]->getLatticeConstants();
+    int32_t phaseID = phase->getPhaseIndex();
+    crystalStructures->setValue(phaseID, phase->determineLaueGroup());
+    materialNames->setValue(phaseID, phase->getMaterialName());
+    QVector<float> lc = phase->getLatticeConstants();
 
     latticeConstants->setComponent(phaseID, 0, lc[0]);
     latticeConstants->setComponent(phaseID, 1, lc[1]);

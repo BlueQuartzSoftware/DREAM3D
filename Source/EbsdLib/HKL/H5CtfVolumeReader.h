@@ -88,8 +88,7 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
      * @param filters
      * @return
      */
-    int loadData(int64_t xpoints, int64_t ypoints, int64_t zpoints,
-                 uint32_t ZDir);
+    int loadData(int64_t xpoints, int64_t ypoints, int64_t zpoints, uint32_t ZDir) override;
 
     /**
      * @brief
@@ -103,23 +102,23 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
      * @brief Returns the pointer to the data for a given feature
      * @param featureName The name of the feature to return the pointer to.
      */
-    void* getPointerByName(const QString& featureName);
+    void* getPointerByName(const QString& featureName) override;
 
     /**
      * @brief Returns an enumeration value that depicts the numerical
      * primitive type that the data is stored as (Int, Float, etc).
      * @param featureName The name of the feature.
      */
-    Ebsd::NumType getPointerType(const QString& featureName);
+    Ebsd::NumType getPointerType(const QString& featureName) override;
 
     /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
     * and then splats '0' across all the bytes of the memory allocation
     */
-    void initPointers(size_t numElements);
+    void initPointers(size_t numElements) override;
 
     /** @brief 'free's the allocated memory and sets the pointer to nullptr
     */
-    void deletePointers();
+    void deletePointers() override;
 
   protected:
     H5CtfVolumeReader();
@@ -154,7 +153,7 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
     template<typename T>
     void deallocateArrayData(T*& ptr)
     {
-      if (ptr != nullptr && getManageMemory() == true)
+      if(ptr != nullptr && getManageMemory())
       {
 #if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
         _mm_free(ptr );
@@ -162,7 +161,6 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
        free(ptr);
 #endif
         ptr = nullptr;
-        //       m_NumberOfElements = 0;
       }
     }
 

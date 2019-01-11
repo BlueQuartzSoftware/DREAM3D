@@ -144,53 +144,59 @@
 
 /** Macro used to add standard methods to all classes, mainly type
  * information. */
-#define EBSD_TYPE_MACRO(thisClass) \
-  public: \
-  virtual const char* getNameOfClass() const  {return #thisClass;}\
-  static int IsTypeOf(const char *m_msgType) \
-  { \
-    if ( !strcmp(#thisClass,m_msgType) ) \
-    { \
-      return 1; \
-    } \
-    return 0; \
-  } \
-  virtual int IsA(const char *m_msgType) \
-  { \
-    return this->thisClass::IsTypeOf(m_msgType); \
-  } \
-  template <class Target, class Source>\
-  inline Target polymorphic_downcast(Source* x) { \
-    if( dynamic_cast<Target>(x) != x ) { \
-      return nullptr;\
-    }\
-    return static_cast<Target>(x);\
+#define EBSD_TYPE_MACRO(thisClass)                                                                                                                                                                     \
+public:                                                                                                                                                                                                \
+  const char* getNameOfClass() const                                                                                                                                                                   \
+  {                                                                                                                                                                                                    \
+    return #thisClass;                                                                                                                                                                                 \
+  }                                                                                                                                                                                                    \
+  static int IsTypeOf(const char* m_msgType)                                                                                                                                                           \
+  {                                                                                                                                                                                                    \
+    if(!strcmp(#thisClass, m_msgType))                                                                                                                                                                 \
+    {                                                                                                                                                                                                  \
+      return 1;                                                                                                                                                                                        \
+    }                                                                                                                                                                                                  \
+    return 0;                                                                                                                                                                                          \
+  }                                                                                                                                                                                                    \
+  virtual int IsA(const char* m_msgType)                                                                                                                                                               \
+  {                                                                                                                                                                                                    \
+    return this->thisClass::IsTypeOf(m_msgType);                                                                                                                                                       \
+  }                                                                                                                                                                                                    \
+  template <class Target, class Source> inline Target polymorphic_downcast(Source* x)                                                                                                                  \
+  {                                                                                                                                                                                                    \
+    if(dynamic_cast<Target>(x) != x)                                                                                                                                                                   \
+    {                                                                                                                                                                                                  \
+      return nullptr;                                                                                                                                                                                  \
+    }                                                                                                                                                                                                  \
+    return static_cast<Target>(x);                                                                                                                                                                     \
   }
 
-
-#define EBSD_TYPE_MACRO_SUPER(thisClass,superclass) \
-  public: \
-  virtual const char* getNameOfClass() const  {return #thisClass;}\
-  static int IsTypeOf(const char *m_msgType) \
-  { \
-    if ( !strcmp(#thisClass,m_msgType) ) \
-    { \
-      return 1; \
-    } \
-    return superclass::IsTypeOf(m_msgType); \
-  } \
-  virtual int IsA(const char *m_msgType) \
-  { \
-    return this->thisClass::IsTypeOf(m_msgType); \
-  } \
-  template <class Target, class Source>\
-  static Target polymorphic_downcast(Source* x) { \
-    if( dynamic_cast<Target>(x) != x ) { \
-      return nullptr;\
-    }\
-    return static_cast<Target>(x);\
+#define EBSD_TYPE_MACRO_SUPER(thisClass, superclass)                                                                                                                                                   \
+public:                                                                                                                                                                                                \
+  virtual const char* getNameOfClass() const                                                                                                                                                           \
+  {                                                                                                                                                                                                    \
+    return #thisClass;                                                                                                                                                                                 \
+  }                                                                                                                                                                                                    \
+  static int IsTypeOf(const char* m_msgType)                                                                                                                                                           \
+  {                                                                                                                                                                                                    \
+    if(!strcmp(#thisClass, m_msgType))                                                                                                                                                                 \
+    {                                                                                                                                                                                                  \
+      return 1;                                                                                                                                                                                        \
+    }                                                                                                                                                                                                  \
+    return superclass::IsTypeOf(m_msgType);                                                                                                                                                            \
+  }                                                                                                                                                                                                    \
+  virtual int IsA(const char* m_msgType) override                                                                                                                                                      \
+  {                                                                                                                                                                                                    \
+    return this->thisClass::IsTypeOf(m_msgType);                                                                                                                                                       \
+  }                                                                                                                                                                                                    \
+  template <class Target, class Source> static Target polymorphic_downcast(Source* x)                                                                                                                  \
+  {                                                                                                                                                                                                    \
+    if(dynamic_cast<Target>(x) != x)                                                                                                                                                                   \
+    {                                                                                                                                                                                                  \
+      return nullptr;                                                                                                                                                                                  \
+    }                                                                                                                                                                                                  \
+    return static_cast<Target>(x);                                                                                                                                                                     \
   }
-
 
 //------------------------------------------------------------------------------
 // Macros for Properties
@@ -420,7 +426,6 @@ public:                                                                         
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-
 // These are simple over-rides from the boost distribution because we don't want the entire boost distribution just
 // for a few boost headers
 namespace Ebsd

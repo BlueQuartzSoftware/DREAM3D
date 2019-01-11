@@ -56,12 +56,8 @@
 class AngImportTest
 {
 public:
-  AngImportTest()
-  {
-  }
-  virtual ~AngImportTest()
-  {
-  }
+  AngImportTest() = default;
+  virtual ~AngImportTest() = default;
 
   // -----------------------------------------------------------------------------
   //
@@ -183,4 +179,10 @@ public:
     DREAM3D_REGISTER_TEST(TestNormalFile())
     DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
+
+public:
+  AngImportTest(const AngImportTest&) = delete;            // Copy Constructor Not Implemented
+  AngImportTest(AngImportTest&&) = delete;                 // Move Constructor Not Implemented
+  AngImportTest& operator=(const AngImportTest&) = delete; // Copy Assignment Not Implemented
+  AngImportTest& operator=(AngImportTest&&) = delete;      // Move Assignment Not Implemented
 };

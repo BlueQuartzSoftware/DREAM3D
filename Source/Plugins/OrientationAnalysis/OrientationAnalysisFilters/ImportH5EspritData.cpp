@@ -252,7 +252,6 @@ Ebsd::OEM ImportH5EspritData::readManufacturer() const
 // -----------------------------------------------------------------------------
 void ImportH5EspritData::dataCheckOEM()
 {
-  qDebug() << "ImportH5EspritData::dataCheckOEM";
   // Read the manufacturer from the file
   Ebsd::OEM manfacturer = readManufacturer();
   setManufacturer(manfacturer);
@@ -412,8 +411,6 @@ void ImportH5EspritData::dataCheckOEM()
 // -----------------------------------------------------------------------------
 void ImportH5EspritData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, QVector<size_t>& tDims, const QString& scanName, ANG_READ_FLAG flag)
 {
-  qDebug() << "ImportH5EspritData::readDataFile";
-
   auto reader = dynamic_cast<H5EspritReader*>(ebsdReader);
   QFileInfo fi(getInputFile());
   QDateTime timeStamp(fi.lastModified());
@@ -510,7 +507,6 @@ void ImportH5EspritData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, 
 // -----------------------------------------------------------------------------
 int32_t ImportH5EspritData::loadMaterialInfo(EbsdReader* ebsdReader)
 {
-  qDebug() << "ImportH5EspritData::loadMaterialInfo";
   auto reader = dynamic_cast<H5EspritReader*>(ebsdReader);
 
   QVector<EspritPhase::Pointer> phases = getFileCacheData().phases;
@@ -602,8 +598,6 @@ void copyPointerData(Reader* reader, const QString& name, const IDataArray::Poin
 // -----------------------------------------------------------------------------
 void ImportH5EspritData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>& tDims, QVector<size_t>& cDims, int index)
 {
-  qDebug() << "ImportH5EspritData::copyRawEbsdData";
-
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
 

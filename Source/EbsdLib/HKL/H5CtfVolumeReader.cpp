@@ -51,22 +51,7 @@ using namespace H5Support_NAMESPACE;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5CtfVolumeReader::H5CtfVolumeReader()
-{
-  m_Phase = nullptr;
-  m_X = nullptr;
-  m_Y = nullptr;
-  m_Z = nullptr;
-  m_Bands = nullptr;
-  m_Error = nullptr;
-  m_Euler1 = nullptr;
-  m_Euler2 = nullptr;
-  m_Euler3 = nullptr;
-  m_MAD = nullptr;
-  m_BC = nullptr;
-  m_BS = nullptr;
-}
-
+H5CtfVolumeReader::H5CtfVolumeReader() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -75,16 +60,16 @@ H5CtfVolumeReader::~H5CtfVolumeReader()
   deletePointers();
 }
 
-
-#define H5CTFREADER_ALLOCATE_ARRAY(name, type)\
-  if (readAllArrays == true || arrayNames.find(Ebsd::Ctf::name) != arrayNames.end()) {\
-    type* _##name = allocateArray<type>(numElements);\
-    if (nullptr != _##name) {\
-      ::memset(_##name, 0, numBytes);\
-    }\
-    set##name##Pointer(_##name);\
+#define H5CTFREADER_ALLOCATE_ARRAY(name, type)                                                                                                                                                         \
+  if(readAllArrays == true || arrayNames.find(Ebsd::Ctf::name) != arrayNames.end())                                                                                                                    \
+  {                                                                                                                                                                                                    \
+    auto _##name = allocateArray<type>(numElements);                                                                                                                                                   \
+    if(nullptr != _##name)                                                                                                                                                                             \
+    {                                                                                                                                                                                                  \
+      ::memset(_##name, 0, numBytes);                                                                                                                                                                  \
+    }                                                                                                                                                                                                  \
+    set##name##Pointer(_##name);                                                                                                                                                                       \
   }
-
 
 // -----------------------------------------------------------------------------
 //

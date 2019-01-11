@@ -43,9 +43,9 @@
  * @brief These macros are used to read header values from an HDF5 file, NOT From a .ang or .ctf file
  */
 
-#define READ_EBSD_HEADER_DATA(cname, class, m_msgType, getName, key, gid)                                                                                                                              \
+#define READ_EBSD_HEADER_DATA(cname, class, Type, getName, key, gid)                                                                                                                                   \
   {                                                                                                                                                                                                    \
-    m_msgType t = static_cast<m_msgType>(0);                                                                                                                                                           \
+    auto t = static_cast<Type>(0);                                                                                                                                                                     \
     err = QH5Lite::readScalarDataset(gid, key, t);                                                                                                                                                     \
     if(err < 0)                                                                                                                                                                                        \
     {                                                                                                                                                                                                  \
@@ -61,7 +61,7 @@
     c->setValue(t);                                                                                                                                                                                    \
   }
 
-#define READ_EBSD_HEADER_STRING_DATA(cname, class, m_msgType, getName, key, gid)                                                                                                                       \
+#define READ_EBSD_HEADER_STRING_DATA(cname, class, Type, getName, key, gid)                                                                                                                            \
   {                                                                                                                                                                                                    \
     QString t;                                                                                                                                                                                         \
     err = QH5Lite::readStringDataset(gid, key, t);                                                                                                                                                     \
@@ -97,9 +97,9 @@
     phase->set##key(t);                                                                                                                                                                                \
   }
 
-#define READ_PHASE_HEADER_DATA(cname, pid, m_msgType, fqKey, key, phase)                                                                                                                               \
+#define READ_PHASE_HEADER_DATA(cname, pid, Type, fqKey, key, phase)                                                                                                                                    \
   {                                                                                                                                                                                                    \
-    m_msgType t;                                                                                                                                                                                       \
+    Type t;                                                                                                                                                                                            \
     err = QH5Lite::readScalarDataset(pid, fqKey, t);                                                                                                                                                   \
     if(err < 0)                                                                                                                                                                                        \
     {                                                                                                                                                                                                  \
@@ -115,9 +115,9 @@
     phase->set##key(t);                                                                                                                                                                                \
   }
 
-#define READ_PHASE_HEADER_DATA_CAST(cname, pid, cast, m_msgType, fqKey, key, phase)                                                                                                                    \
+#define READ_PHASE_HEADER_DATA_CAST(cname, pid, cast, Type, fqKey, key, phase)                                                                                                                         \
   {                                                                                                                                                                                                    \
-    m_msgType t;                                                                                                                                                                                       \
+    Type t;                                                                                                                                                                                            \
     err = QH5Lite::readScalarDataset(pid, fqKey, t);                                                                                                                                                   \
     if(err < 0)                                                                                                                                                                                        \
     {                                                                                                                                                                                                  \
@@ -133,9 +133,9 @@
     phase->set##key(static_cast<cast>(t));                                                                                                                                                             \
   }
 
-#define READ_PHASE_HEADER_ARRAY(cname, pid, m_msgType, fqKey, key, phase)                                                                                                                              \
+#define READ_PHASE_HEADER_ARRAY(cname, pid, Type, fqKey, key, phase)                                                                                                                                   \
   {                                                                                                                                                                                                    \
-    std::vector<m_msgType> t;                                                                                                                                                                          \
+    std::vector<Type> t;                                                                                                                                                                               \
     err = QH5Lite::readVectorDataset(pid, fqKey, t);                                                                                                                                                   \
     if(err < 0)                                                                                                                                                                                        \
     {                                                                                                                                                                                                  \
@@ -148,17 +148,19 @@
       H5Gclose(gid);                                                                                                                                                                                   \
       return -1;                                                                                                                                                                                       \
     }                                                                                                                                                                                                  \
-    phase->set##key(QVector<m_msgType>::fromStdVector(t));                                                                                                                                             \
+    phase->set##key(QVector<Type>::fromStdVector(t));                                                                                                                                                  \
   }
 
-#define SHUFFLE_ARRAY(name, var, m_msgType)\
-  { m_msgType* f = allocateArray<m_msgType>(totalDataRows);\
-    for (size_t i = 0; i < totalDataRows; ++i)\
-    {\
-      size_t nIdx = shuffleTable[i];\
-      f[nIdx] = var[i];\
-    }\
-    set##name##Pointer(f); }
+#define SHUFFLE_ARRAY(name, var, Type)                                                                                                                                                                 \
+  {                                                                                                                                                                                                    \
+    Type* f = allocateArray<Type>(totalDataRows);                                                                                                                                                      \
+    for(size_t i = 0; i < totalDataRows; ++i)                                                                                                                                                          \
+    {                                                                                                                                                                                                  \
+      size_t nIdx = shuffleTable[i];                                                                                                                                                                   \
+      f[nIdx] = var[i];                                                                                                                                                                                \
+    }                                                                                                                                                                                                  \
+    set##name##Pointer(f);                                                                                                                                                                             \
+  }
 
 #define ANG_READER_ALLOCATE_AND_READ(name, h5name, type)                                                                                                                                               \
   free##name##Pointer(); /* Always free the current data before reading new data */                                                                                                                    \

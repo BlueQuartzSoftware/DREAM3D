@@ -85,6 +85,25 @@ class EbsdLib_EXPORT H5CtfReader : public CtfReader
      */
     EBSD_INSTANCE_STRING_PROPERTY(HDF5Path)
 
+    EBSD_POINTER_PROPERTY(Phase, Phase, int)
+    EBSD_POINTER_PROPERTY(X, X, float)
+    EBSD_POINTER_PROPERTY(Y, Y, float)
+    EBSD_POINTER_PROPERTY(Z, Z, float)
+    EBSD_POINTER_PROPERTY(BandCount, Bands, int)
+    EBSD_POINTER_PROPERTY(Error, Error, int)
+    EBSD_POINTER_PROPERTY(Euler1, Euler1, float)
+    EBSD_POINTER_PROPERTY(Euler2, Euler2, float)
+    EBSD_POINTER_PROPERTY(Euler3, Euler3, float)
+    EBSD_POINTER_PROPERTY(MeanAngularDeviation, MAD, float)
+    EBSD_POINTER_PROPERTY(BandContrast, BC, int)
+    EBSD_POINTER_PROPERTY(BandSlope, BS, int)
+
+    /* These will be in a 3D ctf file */
+    EBSD_POINTER_PROPERTY(GrainIndex, GrainIndex, int)
+    EBSD_POINTER_PROPERTY(GrainRandomColourR, GrainRandomColourR, int)
+    EBSD_POINTER_PROPERTY(GrainRandomColourG, GrainRandomColourG, int)
+    EBSD_POINTER_PROPERTY(GrainRandomColourB, GrainRandomColourB, int)
+
     /**
      * @brief Reads the file
      * @return error condition
@@ -114,7 +133,7 @@ class EbsdLib_EXPORT H5CtfReader : public CtfReader
      * @brief Sets the names of the arrays to read out of the file
      * @param names
      */
-    void setArraysToRead(QSet<QString> names);
+    void setArraysToRead(const QSet<QString>& names);
 
     /**
      * @brief Over rides the setArraysToReads to tell the reader to load ALL the data from the HDF5 file. If the
@@ -125,7 +144,6 @@ class EbsdLib_EXPORT H5CtfReader : public CtfReader
 
   protected:
     H5CtfReader();
-
 
     /**
      * @brief Reads the data section of the file
