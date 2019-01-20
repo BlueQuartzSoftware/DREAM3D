@@ -179,37 +179,25 @@ void EnsembleInfoCreationWidget::on_conditionalCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 QStringList EnsembleInfoCreationWidget::generateAttributeArrayList(const QString& currentDCName, const QString& currentAttrMatName)
 {
-  //  std::cout << "EnsembleInfoCreationWidget::generateAttributeArrayList()" << std::endl;
   QStringList attributeArrayList;
 
   // Loop over the data containers until we find the proper data container
-  QList<DataContainerProxy> containers = m_DcaProxy.dataContainers.values();
-  QListIterator<DataContainerProxy> containerIter(containers);
-  while(containerIter.hasNext())
+  DataContainerArrayProxy::StorageType& dcMap = m_DcaProxy.getDataContainers();
+  for(auto& dc : dcMap)
   {
-    DataContainerProxy dc = containerIter.next();
-    if(dc.name.compare(currentDCName) == 0)
+    if(dc.getName() == currentDCName)
     {
       // We found the proper Data Container, now populate the AttributeMatrix List
-      QMap<QString, AttributeMatrixProxy> attrMats = dc.attributeMatricies;
-      QMapIterator<QString, AttributeMatrixProxy> attrMatsIter(attrMats);
-      while(attrMatsIter.hasNext())
+      QMap<QString, AttributeMatrixProxy>& attrMats = dc.getAttributeMatricies();
+      for(auto& amProxy : attrMats)
       {
-        attrMatsIter.next();
-        QString amName = attrMatsIter.key();
-        if(amName.compare(currentAttrMatName) == 0)
+        if(amProxy.getName() == currentAttrMatName)
         {
-
           // We found the selected AttributeMatrix, so loop over this attribute matrix arrays and populate the list widget
-          AttributeMatrixProxy amProxy = attrMatsIter.value();
-          QMap<QString, DataArrayProxy> dataArrays = amProxy.dataArrays;
-          QMapIterator<QString, DataArrayProxy> dataArraysIter(dataArrays);
-          while(dataArraysIter.hasNext())
+          QMap<QString, DataArrayProxy>& dataArrays = amProxy.getDataArrays();
+          for(auto& daProxy : dataArrays)
           {
-            dataArraysIter.next();
-            // DataArrayProxy daProxy = dataArraysIter.value();
-            QString daName = dataArraysIter.key();
-            attributeArrayList << daName;
+            attributeArrayList << daProxy.getName();
           }
         }
       }
