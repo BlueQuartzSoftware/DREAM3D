@@ -1,7 +1,8 @@
 slnx.sqlite
 /DREAM3DProj.includes
 CMakeLists.txt.user
-/Build/
+/[Bb]uild/
+/[Bb]uilds/
 /Build-ninja/
 /Build-Xcode/
 /zRel/
