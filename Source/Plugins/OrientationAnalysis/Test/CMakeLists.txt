@@ -7,22 +7,23 @@ set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 # be directly included in the main test source file. We list them here so that
 # they will show up in IDEs
 set(TEST_NAMES
-  ImportH5EspritDataTest
-  GenerateOrientationMatrixTransposeTest
-  GenerateQuaternionConjugateTest
-  RodriguesConvertorTest
-  GenerateFZQuaternionsTest
-  Stereographic3DTest
-  AngCachingTest
-  CtfCachingTest
-  AngleFileIOTest
-  OrientationUtilityTest
+  #ImportH5EspritDataTest
+  #GenerateOrientationMatrixTransposeTest
+  #GenerateQuaternionConjugateTest
+  #RodriguesConvertorTest
+  #GenerateFZQuaternionsTest
+  #Stereographic3DTest
+  #AngCachingTest
+  #CtfCachingTest
+  #AngleFileIOTest
+  #OrientationUtilityTest
+  ImportEbsdMontageTest
 )
 
 if(SIMPL_USE_ITK)
   set(TEST_NAMES 
     ${TEST_NAMES}
-#    CreateLambertSphereTest
+    #CreateLambertSphereTest
   )
 endif()
 
