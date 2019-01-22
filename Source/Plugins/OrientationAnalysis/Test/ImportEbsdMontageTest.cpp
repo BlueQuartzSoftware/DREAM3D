@@ -28,6 +28,11 @@ class ImportEbsdMontageTest
   ImportEbsdMontageTest& operator=(const ImportEbsdMontageTest&) = delete; // Copy Assignment
   ImportEbsdMontageTest& operator=(ImportEbsdMontageTest&&) = delete;      // Move Assignment
 
+  int ValidateData()
+  {
+    return 0;
+  }
+
   int RemoveTestFiles()
   {
 #if REMOVE_TEST_FILES
@@ -57,10 +62,13 @@ public:
 
   int RunTest()
   {
-    int foo = -1;
-    DREAM3D_REQUIRE_EQUAL(foo, 0)
+    m_EBSDMontageFilter->execute();
+    int erred{m_EBSDMontageFilter->getErrorCondition()};
+    DREAM3D_REQUIRE_EQUAL(erred, 0)
+    int dataInvalidated{ValidateData()};
+    DREAM3D_REQUIRE_EQUAL(dataInvalidated, 0)
 
-    return EXIT_SUCCESS;
+    return erred + dataInvalidated;
   }
 
   int TearDown()

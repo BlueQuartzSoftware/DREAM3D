@@ -301,7 +301,7 @@ AbstractFilter::Pointer ImportEbsdMontage::newFilterInstance(bool copyFilterPara
   {
     copyFilterParameterInstanceVariables(filter.get());
   }
-  return filter;
+  return std::move(filter);
 }
 
 // -----------------------------------------------------------------------------

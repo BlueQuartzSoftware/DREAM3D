@@ -50,6 +50,7 @@ set(_PublicFilters
   GenerateIPFColors
   GenerateOrientationMatrixTranspose
   GenerateQuaternionConjugate
+  ImportEBSDMontage
   ImportH5EspritData
   ImportH5OimData
   INLWriter
