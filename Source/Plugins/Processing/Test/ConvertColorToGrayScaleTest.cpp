@@ -61,11 +61,6 @@
 
 class ConvertColorToGrayScaleTest
 {
-  ConvertColorToGrayScaleTest(const ConvertColorToGrayScaleTest&) = delete;            // Copy Constructor
-  ConvertColorToGrayScaleTest(ConvertColorToGrayScaleTest&&) = delete;                 // Move Constructor
-  ConvertColorToGrayScaleTest& operator=(const ConvertColorToGrayScaleTest&) = delete; // Copy Assignment
-  ConvertColorToGrayScaleTest& operator=(ConvertColorToGrayScaleTest&&) = delete;      // Move Assignment
-
   const FloatVec3_t m_defaultWeights{0.2125f, 0.7154f, 0.0721f};
   const bool m_createNewAM{false};
   const QString m_filtName{"ConvertColorToGrayScale"};
@@ -296,10 +291,8 @@ class ConvertColorToGrayScaleTest
   }
 
   static DataContainer::Pointer createVertexGeometryDataContainer(
-      const DataArray<uint8_t>::Pointer& aa, const QVector<size_t> tDims)
+      const DataArray<uint8_t>::Pointer& aa, const QVector<size_t>& tDims)
   {
-    QVector<size_t> cDims{aa->getComponentDimensions()};
-
     AttributeMatrix::Pointer am{AttributeMatrix::New(
       tDims, SIMPL::Defaults::VertexAttributeMatrixName, AttributeMatrix::Type::Vertex
     )};
@@ -316,7 +309,6 @@ class ConvertColorToGrayScaleTest
     return dc;
   }
 
-  // TODO
   int CheckFilterParameters(const QVariant& algorithm, const FloatVec3_t& cws,
                             const uint8_t& cc)
   {
@@ -463,14 +455,18 @@ class ConvertColorToGrayScaleTest
     #if REMOVE_TEST_FILES
     //    QFile::remove(UnitTest::ConvertColorToGrayScale::TestOutputPath);
     #endif
-
-    return;
   }
 
 public:
+  ConvertColorToGrayScaleTest(const ConvertColorToGrayScaleTest&) = delete;            // Copy Constructor
+  ConvertColorToGrayScaleTest(ConvertColorToGrayScaleTest&&) = delete;                 // Move Constructor
+  ConvertColorToGrayScaleTest& operator=(const ConvertColorToGrayScaleTest&) = delete; // Copy Assignment
+  ConvertColorToGrayScaleTest& operator=(ConvertColorToGrayScaleTest&&) = delete;      // Move Assignment
+
   ConvertColorToGrayScaleTest() : m_dca{DataContainerArray::New()}
   {
-    IFilterFactory::Pointer colorToGrayscaleFactory{
+    IFilterFactory::Pointer colorToGrayscaleFactory
+    {
       FilterManager::Instance()->getFactoryFromClassName(m_filtName)
     };
     DREAM3D_REQUIRE(colorToGrayscaleFactory.get() != nullptr);
@@ -493,86 +489,72 @@ public:
                                                                        aaName)};
     SetDataArrayTestValues(testAA);
 
-    // Create data containers of various geometries for testing
     // NOTE: This filter has no geometry requirements
     DataContainer::Pointer vertexDC{createVertexGeometryDataContainer(testAA, tDims)};
-//    DataContainer::Pointer vertexDC{createEdgeGeometryDataContainer(testAA, tDims)};
-//    DataContainer::Pointer vertexDC{createTriangleGeometryDataContainer(testAA, tDims)};
-//    DataContainer::Pointer vertexDC{createImageGeometryDataContainer(testAA, tDims)};
 
     // Luminosity Algorithm testing
     // Test defaults
-    printf("\nTesting luminosity algorithm...\n");
-    printf("Default weights (0.2125, 0.7154, 0.0721)...\n");
-    printf("Vertex  : ");
+    qDebug() << "Testing luminosity algorithm...";
+    qDebug() << "Default weights (0.2125, 0.7154, 0.0721)...";
     SetUp(Algorithms::LUMINOSITY, vertexDC);
     DREAM3D_REGISTER_TEST(RunTest(0))
     TearDown(vertexDC);
 
     // Test custom
     FloatVec3_t colorWeights{0.75, 0.75, 0.75};
-    printf("\nCustom weights (0.75, 0.75, 0.75)...\n");
-    printf("Vertex  : ");
+    qDebug() << "Custom weights (0.75, 0.75, 0.75)...";
     SetUp(Algorithms::LUMINOSITY, vertexDC, colorWeights);
     DREAM3D_REGISTER_TEST(RunTest(1))
     TearDown(vertexDC);
 
     // Test <0
     colorWeights = {-0.75, -0.75, -0.75};
-    printf("\nTesting weights < 0 (-0.75, -0.75, -0.75)...\n");
-    printf("Vertex  : ");
+    qDebug() << "Testing weights < 0 (-0.75, -0.75, -0.75)...";
     SetUp(Algorithms::LUMINOSITY, vertexDC, colorWeights);
     DREAM3D_REGISTER_TEST(RunTest	(2))
     TearDown(vertexDC);
 
     // Test >1
     colorWeights = {1.75, 1.75, 1.75};
-    printf("\nTesting weights > 1 (1.75, 1.75, 1.75)...\n");
-    printf("Vertex  : ");
+    qDebug() << "Testing weights > 1 (1.75, 1.75, 1.75)...";
     SetUp(Algorithms::LUMINOSITY, vertexDC, colorWeights);
     DREAM3D_REGISTER_TEST(RunTest(3))
     TearDown(vertexDC);
 
     // Test <-1
     colorWeights = {-1.75, -1.75, -1.75};
-    printf("\nTesting weights < -1 (-1.75, -1.75, -1.75)...\n");
-    printf("Vertex  : ");
+    qDebug() << "Testing weights < -1 (-1.75, -1.75, -1.75)...";
     SetUp(Algorithms::LUMINOSITY, vertexDC, colorWeights);
     DREAM3D_REGISTER_TEST(RunTest(4))
     TearDown(vertexDC);
 
     // Average Algorithm testing
-    printf("\nTesting average algorithm...\n");
-    printf("Vertex  : ");
+    qDebug() << "Testing average algorithm...";
     SetUp(Algorithms::AVERAGE, vertexDC);
     DREAM3D_REGISTER_TEST(RunTest(5))
     TearDown(vertexDC);
 
     // Lightness Algorithm testing
-    printf("\nTesting lightness algorithm...\n");
-    printf("Vertex  : ");
+    qDebug() << "Testing lightness algorithm...";
     SetUp(Algorithms::LIGHTNESS, vertexDC);
     DREAM3D_REGISTER_TEST(RunTest(6))
     TearDown(vertexDC);
 
     // Single Channel Algorithm testing
     // Red channel
-    printf("\nTesting red channel algorithm...\n");
-    printf("Vertex  : ");
+    qDebug() << "Testing red channel algorithm...";
     SetUp(Algorithms::SINGLE_CHANNEL, vertexDC);
     DREAM3D_REGISTER_TEST(RunTest(7))
     TearDown(vertexDC);
 
     // Green channel
-    printf("\nTesting green channel algorithm...\n");
-    printf("Vertex  : ");
+    qDebug() << "Testing green channel algorithm...";
     SetUp(Algorithms::SINGLE_CHANNEL, vertexDC, 1);
     DREAM3D_REGISTER_TEST(RunTest(8))
     TearDown(vertexDC);
 
     // Blue channel
-    printf("\nTesting blue channel algorithm...\n");
-    printf("Vertex  : ");
+    qDebug() << "Testing blue channel algorithm...";
     SetUp(Algorithms::SINGLE_CHANNEL, vertexDC, 2);
     DREAM3D_REGISTER_TEST(RunTest(9))
     TearDown(vertexDC);

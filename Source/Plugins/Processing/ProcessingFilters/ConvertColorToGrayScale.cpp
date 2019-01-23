@@ -44,6 +44,7 @@
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
+#include <algorithm>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -58,11 +59,6 @@
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
 
-
-/**
- * @brief The ParallelWrapper class implements a threaded algorithm
- * that flattens an RGB array into a grayscale array
- */
 class LuminosityImpl
 {
 private:
@@ -79,33 +75,29 @@ public:
   , m_NumComp(comp)
   {
   }
+  LuminosityImpl(const LuminosityImpl&) = default; // Copy Constructor Not Implemented
+  LuminosityImpl(LuminosityImpl&&) = default;      // Move Constructor Not Implemented
+  LuminosityImpl& operator=(const LuminosityImpl&) = delete; // Copy Assignment Not Implemented
+  LuminosityImpl& operator=(LuminosityImpl&&) = delete;      // Move Assignment Not Implemented
   ~LuminosityImpl()  = default;
 
   void convert(size_t start, size_t end) const
   {
     for(size_t i = start; i < end; i++)
     {
-      float floatedGrayscale{
+      m_FlatImageData[i] = static_cast<uint8_t>(roundf(
         (m_ImageData[m_NumComp * i] * m_ColorWeights.x)
         + (m_ImageData[m_NumComp * i + 1] * m_ColorWeights.y)
         + (m_ImageData[m_NumComp * i + 2] * m_ColorWeights.z)
-      };
-      uint8_t grayScaleValue{static_cast<uint8_t>(roundf(floatedGrayscale))};
-      m_FlatImageData[i] = grayScaleValue;
+      ));
     }
   }
-
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
    void operator()(const tbb::blocked_range<size_t>& r) const { convert(r.begin(), r.end()); }
 #endif
-
 };
 
-/**
- * @brief The ParallelWrapper class implements a threaded algorithm
- * that flattens an RGB array into a grayscale array
- */
 class LightnessImpl
 {
 private:
@@ -120,82 +112,28 @@ public:
   , m_NumComp(comp)
   {
   }
+  LightnessImpl(const LightnessImpl&) = default; // Copy Constructor Not Implemented
+  LightnessImpl(LightnessImpl&&) = default;      // Move Constructor Not Implemented
+  LightnessImpl& operator=(const LightnessImpl&) = delete; // Copy Assignment Not Implemented
+  LightnessImpl& operator=(LightnessImpl&&) = delete;      // Move Assignment Not Implemented
   ~LightnessImpl()  = default;
 
   void convert(size_t start, size_t end) const
   {
     for(size_t i = start; i < end; i++)
     {
-      uint8_t maxRGB = 0;
-      uint8_t minRGB = 255;
-
-      for(size_t j = 0; j < 3; j++)
-      {
-        if(m_ImageData[m_NumComp * i + j] > maxRGB)
-        {
-          maxRGB = m_ImageData[m_NumComp * i + j];
-        }
-        if(m_ImageData[m_NumComp * i + j] < minRGB)
-        {
-          minRGB = m_ImageData[m_NumComp * i + j];
-        }
-      }
-      m_FlatImageData[i] = static_cast<uint8_t>(roundf((maxRGB + minRGB) / 2.0f));
+      std::pair<uint8_t*, uint8_t*> minmax{
+        std::minmax_element(m_ImageData + (start * m_NumComp), m_ImageData + (end * m_NumComp))
+      };
+      m_FlatImageData[i] = static_cast<uint8_t>(roundf((minmax.first[0] + minmax.second[0]) / 2.0f));
     }
   }
-
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   void operator()(const tbb::blocked_range<size_t>& r) const { convert(r.begin(), r.end()); }
 #endif
 };
 
-/**
- * @brief The ConvertColorToGrayScaleImpl class implements a threaded algorithm
- * that flattens an RGB array into a grayscale array
- */
-class AverageImpl
-{
-public:
-  AverageImpl(uint8_t* data, uint8_t* newdata, size_t comp)
-  : m_ImageData(data)
-  , m_FlatImageData(newdata)
-  , m_NumComp(comp)
-  {
-  }
-  virtual ~AverageImpl() = default;
-
-  void convert(size_t start, size_t end) const
-  {
-    for(size_t i = start; i < end; i++)
-    {
-      uint16_t sum = 0;
-      for(size_t j = 0; j < 3; j++)
-      {
-        sum += static_cast<uint16_t>(m_ImageData[m_NumComp * i + j]);
-      }
-
-      sum = sum / 3;
-      m_FlatImageData[i] = static_cast<uint8_t>(sum);
-    }
-  }
-
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  void operator()(const tbb::blocked_range<size_t>& r) const
-  {
-    convert(r.begin(), r.end());
-  }
-#endif
-private:
-  uint8_t* m_ImageData;
-  uint8_t* m_FlatImageData;
-  size_t m_NumComp;
-};
-
-/**
- * @brief The ParallelWrapper class implements a threaded algorithm
- * that flattens an RGB array into a grayscale array
- */
 class SingleChannelImpl
 {
 private:
@@ -212,6 +150,10 @@ public:
   , m_Channel(channel)
   {
   }
+  SingleChannelImpl(const SingleChannelImpl&) = default; // Copy Constructor Not Implemented
+  SingleChannelImpl(SingleChannelImpl&&) = default;      // Move Constructor Not Implemented
+  SingleChannelImpl& operator=(const SingleChannelImpl&) = delete; // Copy Assignment Not Implemented
+  SingleChannelImpl& operator=(SingleChannelImpl&&) = delete;      // Move Assignment Not Implemented
   ~SingleChannelImpl()  = default;
 
   void convert(size_t start, size_t end) const
@@ -228,13 +170,10 @@ public:
 
 };
 
-
 class ParallelWrapper
 {
-
   public:
     ~ParallelWrapper() = default;
-
     ParallelWrapper(const ParallelWrapper&) = delete; // Copy Constructor Not Implemented
     ParallelWrapper(ParallelWrapper&&) = delete;      // Move Constructor Not Implemented
     ParallelWrapper& operator=(const ParallelWrapper&) = delete; // Copy Assignment Not Implemented
@@ -252,9 +191,7 @@ class ParallelWrapper
 
   protected:
     ParallelWrapper() = default;
-
 };
-
 
 // -----------------------------------------------------------------------------
 //
@@ -265,11 +202,8 @@ ConvertColorToGrayScale::ConvertColorToGrayScale()
 , m_CreateNewAttributeMatrix(false)
 , m_OutputAttributeMatrixName("GrayScaleData")
 , m_OutputArrayPrefix("")
-
+, m_ColorWeights{0.2125f, 0.7154f, 0.0721f}
 {
-  m_ColorWeights.x = 0.2125f;
-  m_ColorWeights.y = 0.7154f;
-  m_ColorWeights.z = 0.0721f;
 }
 
 // -----------------------------------------------------------------------------
@@ -451,19 +385,13 @@ void ConvertColorToGrayScale::execute()
   QVector<DataArrayPath> inputArrayPaths = getInputDataArrayVector();
   qint32 size = inputArrayPaths.size();
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-#endif
-
   for(qint32 i = 0; i < size; i++)
   {
     DataArrayPath arrayPath = inputArrayPaths[i];
 
-    // get volume container
     DataContainer::Pointer m = getDataContainerArray()->getDataContainer(arrayPath.getDataContainerName());
     AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(arrayPath);
 
-    // get input and output data
     IDataArray::Pointer inputData = attrMat->getAttributeArray(arrayPath.getDataArrayName());
     UInt8ArrayType::Pointer inputColorData = std::dynamic_pointer_cast<UInt8ArrayType>(inputData);
 
@@ -493,13 +421,17 @@ void ConvertColorToGrayScale::execute()
     size_t comp = inputColorData->getNumberOfComponents();
     size_t totalPoints = inputColorData->getNumberOfTuples();
 
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+  tbb::task_scheduler_init init;
+#endif
+
     switch (convType)
     {
       case ConversionType::Luminosity:
         ParallelWrapper::Run<LuminosityImpl>(LuminosityImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), m_ColorWeights, comp), totalPoints );
         break;
       case ConversionType::Average:
-        ParallelWrapper::Run<AverageImpl>(AverageImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp) , totalPoints);
+        ParallelWrapper::Run<LuminosityImpl>(LuminosityImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), {0.3333f, 0.3333f, 0.3333f}, comp) , totalPoints);
         break;
       case ConversionType::Lightness:
         ParallelWrapper::Run<LightnessImpl>(LightnessImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp) , totalPoints);
@@ -509,7 +441,6 @@ void ConvertColorToGrayScale::execute()
         break;
     }
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -551,6 +482,7 @@ const QString ConvertColorToGrayScale::getFilterVersion() const
   vStream << Processing::Version::Major() << "." << Processing::Version::Minor() << "." << Processing::Version::Patch();
   return version;
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
