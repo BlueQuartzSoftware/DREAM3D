@@ -38,6 +38,8 @@
 
 #include "ConvertColorToGrayScale.h"
 
+#include <algorithm>
+
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
@@ -58,10 +60,8 @@
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
 
-
 /**
- * @brief The ParallelWrapper class implements a threaded algorithm
- * that flattens an RGB array into a grayscale array
+ * @brief
  */
 class LuminosityImpl
 {
@@ -79,39 +79,35 @@ public:
   , m_NumComp(comp)
   {
   }
-  ~LuminosityImpl()  = default;
+  ~LuminosityImpl() = default;
 
   void convert(size_t start, size_t end) const
   {
     for(size_t i = start; i < end; i++)
     {
-      float floatedGrayscale{
-        (m_ImageData[m_NumComp * i] * m_ColorWeights.x)
-        + (m_ImageData[m_NumComp * i + 1] * m_ColorWeights.y)
-        + (m_ImageData[m_NumComp * i + 2] * m_ColorWeights.z)
-      };
+      float floatedGrayscale{(m_ImageData[m_NumComp * i] * m_ColorWeights.x) + (m_ImageData[m_NumComp * i + 1] * m_ColorWeights.y) + (m_ImageData[m_NumComp * i + 2] * m_ColorWeights.z)};
       uint8_t grayScaleValue{static_cast<uint8_t>(roundf(floatedGrayscale))};
       m_FlatImageData[i] = grayScaleValue;
     }
   }
 
-
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-   void operator()(const tbb::blocked_range<size_t>& r) const { convert(r.begin(), r.end()); }
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    convert(r.begin(), r.end());
+  }
 #endif
-
 };
 
 /**
- * @brief The ParallelWrapper class implements a threaded algorithm
- * that flattens an RGB array into a grayscale array
+ * @brief
  */
 class LightnessImpl
 {
 private:
-  uint8_t* m_ImageData;
-  uint8_t* m_FlatImageData;
-  size_t m_NumComp;
+  uint8_t* m_ImageData = nullptr;
+  uint8_t* m_FlatImageData = nullptr;
+  size_t m_NumComp = 1;
 
 public:
   LightnessImpl(uint8_t* data, uint8_t* newdata, size_t comp)
@@ -120,39 +116,28 @@ public:
   , m_NumComp(comp)
   {
   }
-  ~LightnessImpl()  = default;
+  ~LightnessImpl() = default;
 
   void convert(size_t start, size_t end) const
   {
     for(size_t i = start; i < end; i++)
     {
-      uint8_t maxRGB = 0;
-      uint8_t minRGB = 255;
+      auto minmax = std::minmax_element(m_ImageData + (m_NumComp * i), m_ImageData + (m_NumComp * i + 2));
 
-      for(size_t j = 0; j < 3; j++)
-      {
-        if(m_ImageData[m_NumComp * i + j] > maxRGB)
-        {
-          maxRGB = m_ImageData[m_NumComp * i + j];
-        }
-        if(m_ImageData[m_NumComp * i + j] < minRGB)
-        {
-          minRGB = m_ImageData[m_NumComp * i + j];
-        }
-      }
-      m_FlatImageData[i] = static_cast<uint8_t>(roundf((maxRGB + minRGB) / 2.0f));
+      m_FlatImageData[i] = static_cast<uint8_t>(roundf((*minmax.second + *minmax.first) / 2.0f));
     }
   }
 
-
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  void operator()(const tbb::blocked_range<size_t>& r) const { convert(r.begin(), r.end()); }
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    convert(r.begin(), r.end());
+  }
 #endif
 };
 
 /**
- * @brief The ConvertColorToGrayScaleImpl class implements a threaded algorithm
- * that flattens an RGB array into a grayscale array
+ * @brief
  */
 class AverageImpl
 {
@@ -169,13 +154,7 @@ public:
   {
     for(size_t i = start; i < end; i++)
     {
-      uint16_t sum = 0;
-      for(size_t j = 0; j < 3; j++)
-      {
-        sum += static_cast<uint16_t>(m_ImageData[m_NumComp * i + j]);
-      }
-
-      sum = sum / 3;
+      uint16_t sum = (static_cast<uint16_t>(m_ImageData[m_NumComp * i]) + static_cast<uint16_t>(m_ImageData[m_NumComp * i + 1]) + static_cast<uint16_t>(m_ImageData[m_NumComp * i + 2])) / 3;
       m_FlatImageData[i] = static_cast<uint8_t>(sum);
     }
   }
@@ -193,8 +172,7 @@ private:
 };
 
 /**
- * @brief The ParallelWrapper class implements a threaded algorithm
- * that flattens an RGB array into a grayscale array
+ * @brief
  */
 class SingleChannelImpl
 {
@@ -212,7 +190,7 @@ public:
   , m_Channel(channel)
   {
   }
-  ~SingleChannelImpl()  = default;
+  ~SingleChannelImpl() = default;
 
   void convert(size_t start, size_t end) const
   {
@@ -223,38 +201,39 @@ public:
   }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-   void operator()(const tbb::blocked_range<size_t>& r) const { convert(r.begin(), r.end()); }
+  void operator()(const tbb::blocked_range<size_t>& r) const
+  {
+    convert(r.begin(), r.end());
+  }
 #endif
-
 };
 
-
+/**
+ * @brief
+ */
 class ParallelWrapper
 {
 
-  public:
-    ~ParallelWrapper() = default;
+public:
+  ~ParallelWrapper() = default;
 
-    ParallelWrapper(const ParallelWrapper&) = delete; // Copy Constructor Not Implemented
-    ParallelWrapper(ParallelWrapper&&) = delete;      // Move Constructor Not Implemented
-    ParallelWrapper& operator=(const ParallelWrapper&) = delete; // Copy Assignment Not Implemented
-    ParallelWrapper& operator=(ParallelWrapper&&) = delete;      // Move Assignment Not Implemented
+  ParallelWrapper(const ParallelWrapper&) = delete;            // Copy Constructor Not Implemented
+  ParallelWrapper(ParallelWrapper&&) = delete;                 // Move Constructor Not Implemented
+  ParallelWrapper& operator=(const ParallelWrapper&) = delete; // Copy Assignment Not Implemented
+  ParallelWrapper& operator=(ParallelWrapper&&) = delete;      // Move Assignment Not Implemented
 
-    template<typename T>
-    static void Run(T impl, size_t totalPoints)
-    {
+  template <typename T> static void Run(T impl, size_t totalPoints)
+  {
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), impl, tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), impl, tbb::auto_partitioner());
 #else
-      impl.convert(0, totalPoints);
+    impl.convert(0, totalPoints);
 #endif
-    }
+  }
 
-  protected:
-    ParallelWrapper() = default;
-
+protected:
+  ParallelWrapper() = default;
 };
-
 
 // -----------------------------------------------------------------------------
 //
