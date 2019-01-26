@@ -154,7 +154,12 @@ public:
   {
     for(size_t i = start; i < end; i++)
     {
-      uint16_t sum = (static_cast<uint16_t>(m_ImageData[m_NumComp * i]) + static_cast<uint16_t>(m_ImageData[m_NumComp * i + 1]) + static_cast<uint16_t>(m_ImageData[m_NumComp * i + 2])) / 3;
+      uint16_t sum = 0;
+      for(size_t j = 0; j < 3; j++)
+      {
+        sum += static_cast<uint16_t>(m_ImageData[m_NumComp * i + j]);
+      }
+      sum = sum / 3;
       m_FlatImageData[i] = static_cast<uint8_t>(sum);
     }
   }

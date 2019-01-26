@@ -304,7 +304,7 @@ class ConvertColorToGrayScaleTest
 
   static DataContainer::Pointer createVertexGeometryDataContainer(const DataArray<uint8_t>::Pointer& aa, const QVector<size_t> tDims)
   {
-    QVector<size_t> cDims{aa->getComponentDimensions()};
+    //QVector<size_t> cDims{aa->getComponentDimensions()};
 
     AttributeMatrix::Pointer am{AttributeMatrix::New(tDims, SIMPL::Defaults::VertexAttributeMatrixName, AttributeMatrix::Type::Vertex)};
     am->addAttributeArray(aa->getName(), aa);
@@ -341,28 +341,29 @@ class ConvertColorToGrayScaleTest
   {
     QString amName{m_outputAMName};
     DataContainer::Pointer dc{m_dca->getDataContainers().first()};
-    if(!m_createNewAM)
+    if(!m_createNewAM) {
       amName = dc->getAttributeMatrices().first()->getName();
+    }
     AttributeMatrix::Pointer am{dc->getAttributeMatrix(amName)};
 
     UCharArrayType::Pointer testArray{};
     for(const auto& eachAAName : am->getAttributeArrayNames())
     {
       if(eachAAName.contains(m_outputArrayPrefix))
-        testArray = am->getAttributeArrayAs<UCharArrayType>(eachAAName);
+       { testArray = am->getAttributeArrayAs<UCharArrayType>(eachAAName); }
     }
 
     std::vector<uint8_t> colorArray{algorithmMap[algoMapIndex]};
 
     int wrongValues{0};
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, colorArray.size()), [&](const tbb::blocked_range<size_t>& r) {
-      for(size_t index = r.begin(); index < r.end(); ++index)
+   // tbb::parallel_for(tbb::blocked_range<size_t>(0, colorArray.size()), [&](const tbb::blocked_range<size_t>& r) {
+      for(size_t index = 0; index < colorArray.size(); ++index)
       {
         uint8_t testValue{testArray->getValue(index)};
         uint8_t checkValue{colorArray[index]};
         wrongValues += (testValue == checkValue) ? 0 : 1;
       }
-    });
+   // });
     return wrongValues;
   }
 
