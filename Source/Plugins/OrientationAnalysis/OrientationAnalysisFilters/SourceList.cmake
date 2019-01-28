@@ -65,6 +65,7 @@ set(_PublicFilters
   Stereographic3D
   WritePoleFigure
   WriteStatsGenOdfAngleFile
+  Gridify
 )
 
 
