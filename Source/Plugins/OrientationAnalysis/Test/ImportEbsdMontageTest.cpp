@@ -62,8 +62,8 @@ class ImportEbsdMontageTest
   int RemoveTestFiles()
   {
 #if REMOVE_TEST_FILES
-    QFile::remove(UnitTest::ImportEbsdMontageTest::TestFile1);
-    QFile::remove(UnitTest::ImportEbsdMontageTest::TestFile2);
+//    QFile::remove(UnitTest::ImportEbsdMontageTest::TestFile1);
+//    QFile::remove(UnitTest::ImportEbsdMontageTest::TestFile2);
 #endif
     return 0;
   }

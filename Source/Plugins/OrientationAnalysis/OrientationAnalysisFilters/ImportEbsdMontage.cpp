@@ -214,6 +214,10 @@ void ImportEbsdMontage::dataCheck()
     {
       QFileInfo fi(tile2D.FileName);
       QString fname = fi.completeBaseName();
+      if(!fi.exists())
+      {
+        continue;
+      }
 
       if(m_InputFileListInfo.FileExtension == Ebsd::Ang::FileExt)
       {
