@@ -34,30 +34,29 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <QTextStream>
 #include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
-#include <QTextStream>
 
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/Filtering/FilterPipeline.h"
-#include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
-#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
-#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
-#include "SIMPLib/Geometry/VertexGeom.h"
+#include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/Filtering/FilterPipeline.h"
 #include "SIMPLib/Geometry/EdgeGeom.h"
-#include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
-#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/Geometry/VertexGeom.h"
+#include "SIMPLib/Plugin/ISIMPLibPlugin.h"
+#include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
+#include "SIMPLib/SIMPLib.h"
 
 #include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include <tbb/parallel_for.h>
 
-#include "UnitTestSupport.hpp"
 #include "ProcessingTestFileLocations.h"
+#include "UnitTestSupport.hpp"
 
 class ConvertColorToGrayScaleTest
 {
@@ -69,248 +68,246 @@ class ConvertColorToGrayScaleTest
   AbstractFilter::Pointer m_colorToGrayscaleFilter;
   DataContainerArray::Pointer m_dca;
 
-  enum Algorithms { LUMINOSITY, AVERAGE, LIGHTNESS, SINGLE_CHANNEL };
+  enum Algorithms
+  {
+    LUMINOSITY,
+    AVERAGE,
+    LIGHTNESS,
+    SINGLE_CHANNEL
+  };
 
   const std::vector<std::vector<uint8_t>> testColors{
-    {0  , 0  , 0  }, // black
-    {0  , 0  , 128}, // navy
-    {0  , 0  , 255}, // blue
-    {128, 0  , 0  }, // maroon
-    {128, 0  , 128}, // purple
-    {255, 0  , 0  }, // red
-    {255, 0  , 255}, // fuchsia
-    {0  , 128, 0  }, // green
-    {0  , 128, 128}, // teal
-    {128, 128, 0  }, // olive
-    {128, 128, 128}, // gray
-    {0  , 255, 0  }, // lime
-    {192, 192, 192}, // silver
-    {0  , 255, 255}, // aqua
-    {255, 255, 0  }, // yellow
-    {255, 255, 255}, // white
+      {0, 0, 0},       // black
+      {0, 0, 128},     // navy
+      {0, 0, 255},     // blue
+      {128, 0, 0},     // maroon
+      {128, 0, 128},   // purple
+      {255, 0, 0},     // red
+      {255, 0, 255},   // fuchsia
+      {0, 128, 0},     // green
+      {0, 128, 128},   // teal
+      {128, 128, 0},   // olive
+      {128, 128, 128}, // gray
+      {0, 255, 0},     // lime
+      {192, 192, 192}, // silver
+      {0, 255, 255},   // aqua
+      {255, 255, 0},   // yellow
+      {255, 255, 255}, // white
   };
   const std::vector<uint8_t> checkDefaultLuminosityColors{
-    0  , // black
-    9  , // navy
-    18 , // blue
-    27 , // maroon
-    36 , // purple
-    54 , // red
-    73 , // fuchsia
-    92 , // green
-    101, // teal
-    119, // olive
-    128, // gray
-    182, // lime
-    192, // silver
-    201, // aqua
-    237, // yellow
-    255, // white
+      0,   // black
+      9,   // navy
+      18,  // blue
+      27,  // maroon
+      36,  // purple
+      54,  // red
+      73,  // fuchsia
+      92,  // green
+      101, // teal
+      119, // olive
+      128, // gray
+      182, // lime
+      192, // silver
+      201, // aqua
+      237, // yellow
+      255, // white
   };
   const std::vector<uint8_t> checkCustomLuminosityColors{
-    0  , // black
-    96 , // navy
-    191, // blue
-    96 , // maroon
-    192, // purple
-    191, // red
-    127, // fuchsia
-    96 , // green
-    192, // teal
-    192, // olive
-    32 , // gray
-    191, // lime
-    176, // silver
-    127, // aqua
-    127, // yellow
-    62 , // white
+      0,   // black
+      96,  // navy
+      191, // blue
+      96,  // maroon
+      192, // purple
+      191, // red
+      127, // fuchsia
+      96,  // green
+      192, // teal
+      192, // olive
+      32,  // gray
+      191, // lime
+      176, // silver
+      127, // aqua
+      127, // yellow
+      62,  // white
   };
   const std::vector<uint8_t> checkLessZeroLuminosityColors{
-    0  , // black
-    160, // navy
-    65 , // blue
-    160, // maroon
-    64 , // purple
-    65 , // red
-    129, // fuchsia
-    160, // green
-    64 , // teal
-    64 , // olive
-    224, // gray
-    65 , // lime
-    80 , // silver
-    129, // aqua
-    129, // yellow
-    194, // white
+      0,   // black
+      160, // navy
+      65,  // blue
+      160, // maroon
+      64,  // purple
+      65,  // red
+      129, // fuchsia
+      160, // green
+      64,  // teal
+      64,  // olive
+      224, // gray
+      65,  // lime
+      80,  // silver
+      129, // aqua
+      129, // yellow
+      194, // white
   };
   const std::vector<uint8_t> checkGreaterOneLuminosityColors{
-    0  , // black
-    224, // navy
-    190, // blue
-    224, // maroon
-    192, // purple
-    190, // red
-    125, // fuchsia
-    224, // green
-    192, // teal
-    192, // olive
-    160, // gray
-    190, // lime
-    240, // silver
-    125, // aqua
-    125, // yellow
-    59 , // white
+      0,   // black
+      224, // navy
+      190, // blue
+      224, // maroon
+      192, // purple
+      190, // red
+      125, // fuchsia
+      224, // green
+      192, // teal
+      192, // olive
+      160, // gray
+      190, // lime
+      240, // silver
+      125, // aqua
+      125, // yellow
+      59,  // white
   };
   const std::vector<uint8_t> checkLessNegativeOneLuminosityColors{
-    0  , // black
-    32 , // navy
-    66 , // blue
-    32 , // maroon
-    64 , // purple
-    66 , // red
-    131, // fuchsia
-    32 , // green
-    64 , // teal
-    64 , // olive
-    96 , // gray
-    66 , // lime
-    16 , // silver
-    131, // aqua
-    131, // yellow
-    197, // white
+      0,   // black
+      32,  // navy
+      66,  // blue
+      32,  // maroon
+      64,  // purple
+      66,  // red
+      131, // fuchsia
+      32,  // green
+      64,  // teal
+      64,  // olive
+      96,  // gray
+      66,  // lime
+      16,  // silver
+      131, // aqua
+      131, // yellow
+      197, // white
   };
   const std::vector<uint8_t> checkAverageColors{
-    0  , // black
-    43 , // navy
-    85 , // blue
-    43 , // maroon
-    85 , // purple
-    85 , // red
-    170, // fuchsia
-    43 , // green
-    85 , // teal
-    85 , // olive
-    128, // gray
-    85 , // lime
-    192, // silver
-    170, // aqua
-    170, // yellow
-    255, // white
+      0,   // black
+      43,  // navy
+      85,  // blue
+      43,  // maroon
+      85,  // purple
+      85,  // red
+      170, // fuchsia
+      43,  // green
+      85,  // teal
+      85,  // olive
+      128, // gray
+      85,  // lime
+      192, // silver
+      170, // aqua
+      170, // yellow
+      255, // white
   };
   const std::vector<uint8_t> checkLightnessColors{
-    0  , // black
-    64 , // navy
-    128, // blue
-    64 , // maroon
-    64 , // purple
-    128, // red
-    128, // fuchsia
-    64 , // green
-    64 , // teal
-    64 , // olive
-    128, // gray
-    128, // lime
-    192, // silver
-    128, // aqua
-    128, // yellow
-    255, // white
+      0,   // black
+      64,  // navy
+      128, // blue
+      64,  // maroon
+      64,  // purple
+      128, // red
+      128, // fuchsia
+      64,  // green
+      64,  // teal
+      64,  // olive
+      128, // gray
+      128, // lime
+      192, // silver
+      128, // aqua
+      128, // yellow
+      255, // white
   };
   const std::vector<uint8_t> checkRChannelColors{
-    0  , // black
-    0  , // navy
-    0  , // blue
-    128, // maroon
-    128, // purple
-    255, // red
-    255, // fuchsia
-    0  , // green
-    0  , // teal
-    128, // olive
-    128, // gray
-    0  , // lime
-    192, // silver
-    0  , // aqua
-    255, // yellow
-    255, // white
+      0,   // black
+      0,   // navy
+      0,   // blue
+      128, // maroon
+      128, // purple
+      255, // red
+      255, // fuchsia
+      0,   // green
+      0,   // teal
+      128, // olive
+      128, // gray
+      0,   // lime
+      192, // silver
+      0,   // aqua
+      255, // yellow
+      255, // white
   };
   const std::vector<uint8_t> checkGChannelColors{
-    0  , // black
-    0  , // navy
-    0  , // blue
-    0  , // maroon
-    0  , // purple
-    0  , // red
-    0  , // fuchsia
-    128, // green
-    128, // teal
-    128, // olive
-    128, // gray
-    255, // lime
-    192, // silver
-    255, // aqua
-    255, // yellow
-    255, // white
+      0,   // black
+      0,   // navy
+      0,   // blue
+      0,   // maroon
+      0,   // purple
+      0,   // red
+      0,   // fuchsia
+      128, // green
+      128, // teal
+      128, // olive
+      128, // gray
+      255, // lime
+      192, // silver
+      255, // aqua
+      255, // yellow
+      255, // white
   };
   const std::vector<uint8_t> checkBChannelColors{
-    0  , // black
-    128, // navy
-    255, // blue
-    0  , // maroon
-    128, // purple
-    0  , // red
-    255, // fuchsia
-    0  , // green
-    128, // teal
-    0  , // olive
-    128, // gray
-    0  , // lime
-    192, // silver
-    255, // aqua
-    0  , // yellow
-    255, // white
+      0,   // black
+      128, // navy
+      255, // blue
+      0,   // maroon
+      128, // purple
+      0,   // red
+      255, // fuchsia
+      0,   // green
+      128, // teal
+      0,   // olive
+      128, // gray
+      0,   // lime
+      192, // silver
+      255, // aqua
+      0,   // yellow
+      255, // white
   };
 
-  const std::vector<std::vector<uint8_t>> algorithmMap{
-    checkDefaultLuminosityColors,
-    checkCustomLuminosityColors,
-    checkLessZeroLuminosityColors,
-    checkGreaterOneLuminosityColors,
-    checkLessNegativeOneLuminosityColors,
-    checkAverageColors,
-    checkLightnessColors,
-    checkRChannelColors,
-    checkGChannelColors,
-    checkBChannelColors
-  };
+  const std::vector<std::vector<uint8_t>> algorithmMap{checkDefaultLuminosityColors,
+                                                       checkCustomLuminosityColors,
+                                                       checkLessZeroLuminosityColors,
+                                                       checkGreaterOneLuminosityColors,
+                                                       checkLessNegativeOneLuminosityColors,
+                                                       checkAverageColors,
+                                                       checkLightnessColors,
+                                                       checkRChannelColors,
+                                                       checkGChannelColors,
+                                                       checkBChannelColors};
 
   void SetDataArrayTestValues(DataArray<uint8_t>::Pointer& aa)
   {
     aa->initializeWithValue(0);
     size_t index{0};
-    for (const auto& eachColor : testColors) { aa->setTuple(index++, eachColor); }
+    for(const auto& eachColor : testColors)
+    {
+      aa->setTuple(index++, eachColor);
+    }
   }
 
-  static DataContainer::Pointer createVertexGeometryDataContainer(
-      const DataArray<uint8_t>::Pointer& aa, const QVector<size_t>& tDims)
+  static DataContainer::Pointer createVertexGeometryDataContainer(const DataArray<uint8_t>::Pointer& aa, const QVector<size_t>& tDims)
   {
-    AttributeMatrix::Pointer am{AttributeMatrix::New(
-      tDims, SIMPL::Defaults::VertexAttributeMatrixName, AttributeMatrix::Type::Vertex
-    )};
+    AttributeMatrix::Pointer am{AttributeMatrix::New(tDims, SIMPL::Defaults::VertexAttributeMatrixName, AttributeMatrix::Type::Vertex)};
     am->addAttributeArray(aa->getName(), aa);
 
     DataContainer::Pointer dc = DataContainer::New(SIMPL::Defaults::VertexDataContainerName);
     dc->addAttributeMatrix(SIMPL::Defaults::VertexAttributeMatrixName, am);
-    dc->setGeometry(
-      VertexGeom::CreateGeometry(
-                                 static_cast<int64_t>(aa->getNumberOfTuples()),
-                                 SIMPL::Geometry::VertexGeometry
-      )
-    );
+    dc->setGeometry(VertexGeom::CreateGeometry(static_cast<int64_t>(aa->getNumberOfTuples()), SIMPL::Geometry::VertexGeometry));
     return dc;
   }
 
-  int CheckFilterParameters(const QVariant& algorithm, const FloatVec3_t& cws,
-                            const uint8_t& cc)
+  int CheckFilterParameters(const QVariant& algorithm, const FloatVec3_t& cws, const uint8_t& cc)
   {
     QVariant conversionAlgorithm{m_colorToGrayscaleFilter->property("ConversionAlgorithm")};
     FloatVec3_t colorWeights{(m_colorToGrayscaleFilter->property("ColorWeights").value<FloatVec3_t>())};
@@ -322,11 +319,7 @@ class ConvertColorToGrayScaleTest
     int wrongParameters{0};
     wrongParameters += (conversionAlgorithm == algorithm) ? 0 : 1;
     float epsilon{0.000000001f};
-    wrongParameters += (
-          abs(colorWeights.x - cws.x) < epsilon &&
-          abs(colorWeights.y - cws.y) < epsilon &&
-          abs(colorWeights.z - cws.z) < epsilon
-    ) ? 0 : 1;
+    wrongParameters += (abs(colorWeights.x - cws.x) < epsilon && abs(colorWeights.y - cws.y) < epsilon && abs(colorWeights.z - cws.z) < epsilon) ? 0 : 1;
     wrongParameters += (outputArrayPrefix == m_outputArrayPrefix) ? 0 : 1;
     wrongParameters += (colorChannel == cc) ? 0 : 1;
     wrongParameters += (createNewAM == m_createNewAM) ? 0 : 1;
@@ -339,29 +332,28 @@ class ConvertColorToGrayScaleTest
   {
     QString amName{m_outputAMName};
     DataContainer::Pointer dc{m_dca->getDataContainers().first()};
-    if (!m_createNewAM) amName = dc->getAttributeMatrices().first()->getName();
+    if(!m_createNewAM)
+      amName = dc->getAttributeMatrices().first()->getName();
     AttributeMatrix::Pointer am{dc->getAttributeMatrix(amName)};
 
     UCharArrayType::Pointer testArray{};
-    for (const auto& eachAAName : am->getAttributeArrayNames())
+    for(const auto& eachAAName : am->getAttributeArrayNames())
     {
-      if (eachAAName.contains(m_outputArrayPrefix))
+      if(eachAAName.contains(m_outputArrayPrefix))
         testArray = am->getAttributeArrayAs<UCharArrayType>(eachAAName);
     }
 
     std::vector<uint8_t> colorArray{algorithmMap[algoMapIndex]};
 
     int wrongValues{0};
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, colorArray.size()),
-      [&](const tbb::blocked_range<size_t>& r) {
-        for (size_t index = r.begin(); index < r.end(); ++index)
-        {
-          uint8_t testValue{testArray->getValue(index)};
-          uint8_t checkValue{colorArray[index]};
-          wrongValues += (testValue == checkValue) ? 0 : 1;
-        }
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, colorArray.size()), [&](const tbb::blocked_range<size_t>& r) {
+      for(size_t index = r.begin(); index < r.end(); ++index)
+      {
+        uint8_t testValue{testArray->getValue(index)};
+        uint8_t checkValue{colorArray[index]};
+        wrongValues += (testValue == checkValue) ? 0 : 1;
       }
-    );
+    });
     return wrongValues;
   }
 
@@ -373,19 +365,17 @@ class ConvertColorToGrayScaleTest
    of the desired geometry is passed in here this method will sort out the input
    data array path and should work as expected
    */
-  void SetUp(const QVariant& algorithm, const DataContainer::Pointer& dc,
-             const FloatVec3_t& colorWeights = {0.2125f, 0.7154f, 0.0721f},
-             const uint8_t& colorChannel = 0)
+  void SetUp(const QVariant& algorithm, const DataContainer::Pointer& dc, const FloatVec3_t& colorWeights = {0.2125f, 0.7154f, 0.0721f}, const uint8_t& colorChannel = 0)
   {
     m_dca->addDataContainer(dc);
     QVector<DataArrayPath> daps{};
-    for (const AttributeMatrix::Pointer& eachAM : dc->getAttributeMatrices())
+    for(const AttributeMatrix::Pointer& eachAM : dc->getAttributeMatrices())
     {
       QString amName{eachAM->getName()};
-      for (const QString& eachAAName : eachAM->getAttributeArrayNames())
+      for(const QString& eachAAName : eachAM->getAttributeArrayNames())
       {
         // Make sure not to add an output AA
-        if (!eachAAName.contains(m_outputArrayPrefix))
+        if(!eachAAName.contains(m_outputArrayPrefix))
           daps.append(DataArrayPath(dc->getName(), amName, eachAAName));
       }
     }
@@ -409,9 +399,10 @@ class ConvertColorToGrayScaleTest
     DREAM3D_REQUIRE_EQUAL(0, wrongParameters)
   }
 
-  void SetUp(const QVariant& algorithm, const DataContainer::Pointer& dc,
-             const uint8_t& colorChannel)
-  { SetUp(algorithm, dc, m_defaultWeights, colorChannel); }
+  void SetUp(const QVariant& algorithm, const DataContainer::Pointer& dc, const uint8_t& colorChannel)
+  {
+    SetUp(algorithm, dc, m_defaultWeights, colorChannel);
+  }
 
   int RunTest(const uint8_t& algoMapIndex)
   {
@@ -428,19 +419,17 @@ class ConvertColorToGrayScaleTest
    */
   void TearDown(const DataContainer::Pointer& dc) const
   {
-    for (const auto& eachDC : m_dca->getDataContainers())
+    for(const auto& eachDC : m_dca->getDataContainers())
     {
-      for (const auto& eachAM : eachDC->getAttributeMatrices())
+      for(const auto& eachAM : eachDC->getAttributeMatrices())
       {
-        for (const auto& eachAAName : eachAM->getAttributeArrayNames())
+        for(const auto& eachAAName : eachAM->getAttributeArrayNames())
         {
-          if (eachAAName.contains(m_outputArrayPrefix))
+          if(eachAAName.contains(m_outputArrayPrefix))
           {
             eachAM->getAttributeArray(eachAAName)->releaseOwnership();
             eachAM->removeAttributeArray(eachAAName);
-            bool doesAAStillExist{m_dca->doesAttributeArrayExist(
-              DataArrayPath(eachDC->getName(), eachAM->getName(), eachAAName))
-            };
+            bool doesAAStillExist{m_dca->doesAttributeArrayExist(DataArrayPath(eachDC->getName(), eachAM->getName(), eachAAName))};
             DREAM3D_REQUIRE_EQUAL(false, doesAAStillExist)
           }
         }
@@ -452,9 +441,9 @@ class ConvertColorToGrayScaleTest
 
     m_dca->removeDataContainer(dc->getName());
 
-    #if REMOVE_TEST_FILES
-    //    QFile::remove(UnitTest::ConvertColorToGrayScale::TestOutputPath);
-    #endif
+#if REMOVE_TEST_FILES
+//    QFile::remove(UnitTest::ConvertColorToGrayScale::TestOutputPath);
+#endif
   }
 
 public:
@@ -463,15 +452,13 @@ public:
   ConvertColorToGrayScaleTest& operator=(const ConvertColorToGrayScaleTest&) = delete; // Copy Assignment
   ConvertColorToGrayScaleTest& operator=(ConvertColorToGrayScaleTest&&) = delete;      // Move Assignment
 
-  ConvertColorToGrayScaleTest() : m_dca{DataContainerArray::New()}
+  ConvertColorToGrayScaleTest()
+  : m_dca{DataContainerArray::New()}
   {
-    IFilterFactory::Pointer colorToGrayscaleFactory
-    {
-      FilterManager::Instance()->getFactoryFromClassName(m_filtName)
-    };
+    IFilterFactory::Pointer colorToGrayscaleFactory{FilterManager::Instance()->getFactoryFromClassName(m_filtName)};
     DREAM3D_REQUIRE(colorToGrayscaleFactory.get() != nullptr);
 
-    m_colorToGrayscaleFilter =  colorToGrayscaleFactory->create();
+    m_colorToGrayscaleFilter = colorToGrayscaleFactory->create();
     DREAM3D_REQUIRE(m_colorToGrayscaleFilter.get() != nullptr);
   }
   ~ConvertColorToGrayScaleTest() = default;
@@ -482,11 +469,9 @@ public:
 
     const QString aaName{SIMPL::VertexData::SurfaceMeshNodes};
     const QVector<size_t> tDims{16};
-    const QVector<size_t> cDims{3,1,1};
+    const QVector<size_t> cDims{3, 1, 1};
 
-    DataArray<uint8_t>::Pointer testAA{DataArray<uint8_t>::CreateArray(tDims,
-                                                                       cDims,
-                                                                       aaName)};
+    DataArray<uint8_t>::Pointer testAA{DataArray<uint8_t>::CreateArray(tDims, cDims, aaName)};
     SetDataArrayTestValues(testAA);
 
     // NOTE: This filter has no geometry requirements
@@ -511,7 +496,7 @@ public:
     colorWeights = {-0.75, -0.75, -0.75};
     qDebug() << "Testing weights < 0 (-0.75, -0.75, -0.75)...";
     SetUp(Algorithms::LUMINOSITY, vertexDC, colorWeights);
-    DREAM3D_REGISTER_TEST(RunTest	(2))
+    DREAM3D_REGISTER_TEST(RunTest(2))
     TearDown(vertexDC);
 
     // Test >1
