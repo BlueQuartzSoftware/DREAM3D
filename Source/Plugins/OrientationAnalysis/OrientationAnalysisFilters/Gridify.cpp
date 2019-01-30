@@ -86,17 +86,23 @@ void Gridify::dataCheck()
   uint16_t zIndex{0};
   for(const auto& eachDC : getDataContainerArray()->getDataContainers())
   {
+    // Check if the data container uses image geometry
+    if (eachDC->getGeometry()->getGeometryType() != IGeometry::Type::Image)
+    {
+      continue;
+    }
+
     std::vector<size_t> cDims{3};
     UInt16ArrayType::Pointer aa{UInt16ArrayType::CreateArray(1, cDims, m_aaName)};
 
     // Will need to compare these origin coordinates with those already in the
     // layout AA's so that order can be established
     // X Coordinate of origin
-    std::get<0>(eachDC->getGeometryAs<ImageGeom>()->getOrigin());
+//    std::get<0>(eachDC->getGeometryAs<ImageGeom>()->getOrigin());
     // Y Coordinate of origin
-    std::get<1>(eachDC->getGeometryAs<ImageGeom>()->getOrigin());
+//    std::get<1>(eachDC->getGeometryAs<ImageGeom>()->getOrigin());
     // Z Coordinate of origin
-    std::get<2>(eachDC->getGeometryAs<ImageGeom>()->getOrigin());
+//    std::get<2>(eachDC->getGeometryAs<ImageGeom>()->getOrigin());
 
     // r, c, and z index will change when they are ordered properly
     aa->setValue(0, rIndex++);
@@ -107,29 +113,6 @@ void Gridify::dataCheck()
     am->addAttributeArray(m_aaName, aa);
 
     eachDC->addAttributeMatrix(m_amName, am);
-  }
-
-  // In-house testing
-  for(const auto& eachDC : getDataContainerArray()->getDataContainers())
-  {
-    // Row index
-    uint16_t R{
-     eachDC->getAttributeMatrix(m_amName)
-          ->getAttributeArrayAs<UInt16ArrayType>(m_aaName)
-          ->getValue(0)
-    };
-    // Column index
-    uint16_t C{
-     eachDC->getAttributeMatrix(m_amName)
-          ->getAttributeArrayAs<UInt16ArrayType>(m_aaName)
-          ->getValue(1)
-    };
-    // Z Index
-    uint16_t Z{
-     eachDC->getAttributeMatrix(m_amName)
-          ->getAttributeArrayAs<UInt16ArrayType>(m_aaName)
-          ->getValue(2)
-    };
   }
 
   if(getErrorCondition() < 0)

@@ -51,8 +51,8 @@
 
 class ImportEbsdMontageTest
 {
-  AbstractFilter::Pointer m_EBSDMontageFilter{nullptr};
-  const QString m_filtName{"ImportEbsdMontage"};
+  AbstractFilter::Pointer m_filter{nullptr};
+  const QString m_filterName{"ImportEbsdMontage"};
 
   int ValidateData()
   {
@@ -62,27 +62,11 @@ class ImportEbsdMontageTest
   int RemoveTestFiles()
   {
 #if REMOVE_TEST_FILES
-//    QFile::remove(UnitTest::ImportEbsdMontageTest::TestFile1);
-//    QFile::remove(UnitTest::ImportEbsdMontageTest::TestFile2);
+    //    QFile::remove(UnitTest::ImportEbsdMontageTest::TestFile1);
+    //    QFile::remove(UnitTest::ImportEbsdMontageTest::TestFile2);
 #endif
     return 0;
   }
-
-public:
-  ImportEbsdMontageTest()
-  {
-    IFilterFactory::Pointer ebsdMontageFactory{FilterManager::Instance()->getFactoryFromClassName(m_filtName)};
-    DREAM3D_REQUIRE(ebsdMontageFactory.get() != nullptr);
-
-    m_EBSDMontageFilter = ebsdMontageFactory->create();
-    DREAM3D_REQUIRE(m_EBSDMontageFilter.get() != nullptr);
-  }
-  ImportEbsdMontageTest(const ImportEbsdMontageTest&) = delete;            // Copy Constructor
-  ImportEbsdMontageTest(ImportEbsdMontageTest&&) = delete;                 // Move Constructor
-  ImportEbsdMontageTest& operator=(const ImportEbsdMontageTest&) = delete; // Copy Assignment
-  ImportEbsdMontageTest& operator=(ImportEbsdMontageTest&&) = delete;      // Move Assignment
-
-  ~ImportEbsdMontageTest() = default;
 
   int SetUp()
   {
@@ -91,8 +75,8 @@ public:
 
   int RunTest()
   {
-    m_EBSDMontageFilter->execute();
-    int erred{m_EBSDMontageFilter->getErrorCondition()};
+    m_filter->execute();
+    int erred{m_filter->getErrorCondition()};
     DREAM3D_REQUIRE_EQUAL(erred, 0)
     int dataInvalidated{ValidateData()};
     DREAM3D_REQUIRE_EQUAL(dataInvalidated, 0)
@@ -106,10 +90,24 @@ public:
     return 0;
   }
 
+public:
+  ImportEbsdMontageTest()
+  {
+    IFilterFactory::Pointer filterFactory{FilterManager::Instance()->getFactoryFromClassName(m_filterName)};
+    DREAM3D_REQUIRE(filterFactory.get() != nullptr);
+
+    m_filter = filterFactory->create();
+    DREAM3D_REQUIRE(m_filter.get() != nullptr);
+  }
+  ImportEbsdMontageTest(const ImportEbsdMontageTest&) = delete;            // Copy Constructor
+  ImportEbsdMontageTest(ImportEbsdMontageTest&&) = delete;                 // Move Constructor
+  ImportEbsdMontageTest& operator=(const ImportEbsdMontageTest&) = delete; // Copy Assignment
+  ImportEbsdMontageTest& operator=(ImportEbsdMontageTest&&) = delete;      // Move Assignment
+  ~ImportEbsdMontageTest() = default;
+
   void operator()()
   {
     int err = EXIT_SUCCESS;
-
     DREAM3D_REGISTER_TEST(SetUp());
     DREAM3D_REGISTER_TEST(RunTest())
     DREAM3D_REGISTER_TEST(TearDown())
