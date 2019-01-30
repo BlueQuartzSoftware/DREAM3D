@@ -8,16 +8,16 @@ set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 # they will show up in IDEs
 set(TEST_NAMES
   GridifyTest
-  #ImportH5EspritDataTest
-  #GenerateOrientationMatrixTransposeTest
-  #GenerateQuaternionConjugateTest
-  #RodriguesConvertorTest
-  #GenerateFZQuaternionsTest
-  #Stereographic3DTest
-  #AngCachingTest
-  #CtfCachingTest
-  #AngleFileIOTest
-  #OrientationUtilityTest
+  ImportH5EspritDataTest
+  GenerateOrientationMatrixTransposeTest
+  GenerateQuaternionConjugateTest
+  RodriguesConvertorTest
+  GenerateFZQuaternionsTest
+  Stereographic3DTest
+  AngCachingTest
+  CtfCachingTest
+  AngleFileIOTest
+  OrientationUtilityTest
   ImportEbsdMontageTest
 )
 

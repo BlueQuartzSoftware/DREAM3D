@@ -50,6 +50,7 @@ set(_PublicFilters
   GenerateIPFColors
   GenerateOrientationMatrixTranspose
   GenerateQuaternionConjugate
+  Gridify
   ImportEbsdMontage
   ImportH5EspritData
   ImportH5OimData
@@ -65,7 +66,6 @@ set(_PublicFilters
   Stereographic3D
   WritePoleFigure
   WriteStatsGenOdfAngleFile
-  Gridify
 )
 
 
