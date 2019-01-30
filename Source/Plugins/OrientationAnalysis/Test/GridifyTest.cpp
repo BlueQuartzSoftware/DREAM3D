@@ -60,13 +60,12 @@ class GridifyTest
   const DataContainerArray::Pointer m_dca;
   AbstractFilter::Pointer m_filter{nullptr};
 
-  // Test validation objects
   std::unordered_map<std::string, std::vector<uint16_t>> checkValues{
       {"I",   {0, 0, 0}},
-      {"II",  {0, 2, 0}},
-      {"III", {3, 2, 0}},
-      {"IV",  {2, 0, 0}},
-      {"V",   {1, 3, 0}},
+      {"II",  {2, 0, 0}},
+      {"III", {2, 3, 0}},
+      {"IV",  {0, 2, 0}},
+      {"V",   {3, 1, 0}},
       {"VI",  {1, 1, 1}},
       {"VII", {3, 3, 2}},
   };
@@ -97,7 +96,6 @@ class GridifyTest
         wrongData++;
       }
     }
-
     return wrongData;
   }
 
@@ -120,10 +118,10 @@ class GridifyTest
     m_filter->execute();
     int erred{m_filter->getErrorCondition()};
     DREAM3D_REQUIRE_EQUAL(erred, 0)
-    int dataInvalidated{ValidateData()};
-    DREAM3D_REQUIRE_EQUAL(dataInvalidated, 0)
+    int invalidData{ValidateData()};
+    DREAM3D_REQUIRE_EQUAL(invalidData, 0)
 
-    return erred + dataInvalidated;
+    return erred + invalidData;
   }
 
   int TearDown()

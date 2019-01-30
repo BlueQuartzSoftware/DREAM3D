@@ -81,38 +81,69 @@ void Gridify::dataCheck()
   setErrorCondition(0);
   setWarningCondition(0);
 
-  uint16_t rIndex{0};
-  uint16_t cIndex{0};
-  uint16_t zIndex{0};
+  std::unordered_map<float, std::vector<QString>> xOrigins;
+  std::unordered_map<float, std::vector<QString>> yOrigins;
+  std::unordered_map<float, std::vector<QString>> zOrigins;
   for(const auto& eachDC : getDataContainerArray()->getDataContainers())
   {
-    // Check if the data container uses image geometry
     if (eachDC->getGeometry()->getGeometryType() != IGeometry::Type::Image)
     {
       continue;
     }
 
-    std::vector<size_t> cDims{3};
-    UInt16ArrayType::Pointer aa{UInt16ArrayType::CreateArray(1, cDims, m_aaName)};
+    QString dcName{eachDC->getName()};
+    xOrigins[std::get<0>(eachDC->getGeometryAs<ImageGeom>()->getOrigin())].push_back(dcName);
+    yOrigins[std::get<1>(eachDC->getGeometryAs<ImageGeom>()->getOrigin())].push_back(dcName);
+    zOrigins[std::get<2>(eachDC->getGeometryAs<ImageGeom>()->getOrigin())].push_back(dcName);
 
-    // Will need to compare these origin coordinates with those already in the
-    // layout AA's so that order can be established
-    // X Coordinate of origin
-//    std::get<0>(eachDC->getGeometryAs<ImageGeom>()->getOrigin());
-    // Y Coordinate of origin
-//    std::get<1>(eachDC->getGeometryAs<ImageGeom>()->getOrigin());
-    // Z Coordinate of origin
-//    std::get<2>(eachDC->getGeometryAs<ImageGeom>()->getOrigin());
-
-    // r, c, and z index will change when they are ordered properly
-    aa->setValue(0, rIndex++);
-    aa->setValue(1, cIndex++);
-    aa->setValue(2, zIndex++);
-
-    AttributeMatrix::Pointer am{AttributeMatrix::New({1}, m_amName, AttributeMatrix::Type::Vertex)};
-    am->addAttributeArray(m_aaName, aa);
-
+    AttributeMatrix::Pointer am{
+        AttributeMatrix::New({1}, m_amName, AttributeMatrix::Type::Vertex)
+    };
+    am->addAttributeArray( m_aaName, UInt16ArrayType::CreateArray(1, std::vector<size_t>{3}, m_aaName) );
     eachDC->addAttributeMatrix(m_amName, am);
+  }
+
+  std::map<float, std::vector<QString>> ordered_xOrigins{xOrigins.begin(), xOrigins.end()};
+  std::map<float, std::vector<QString>> ordered_yOrigins{yOrigins.begin(), yOrigins.end()};
+  std::map<float, std::vector<QString>> ordered_zOrigins{zOrigins.begin(), zOrigins.end()};
+
+  uint16_t index{0};
+  for(const auto& eachXOrigin : ordered_xOrigins)
+  {
+    for(const auto& eachDCName : eachXOrigin.second)
+    {
+      getDataContainerArray()->getDataContainer(eachDCName)
+                             ->getAttributeMatrix(m_amName)
+                             ->getAttributeArrayAs<UInt16ArrayType>(m_aaName)
+                             ->setValue(0, index);
+    }
+    index++;
+  }
+
+  index = 0;
+  for(const auto& eachYOrigin : ordered_yOrigins)
+  {
+    for(const auto& eachDCName : eachYOrigin.second)
+    {
+      getDataContainerArray()->getDataContainer(eachDCName)
+                             ->getAttributeMatrix(m_amName)
+                             ->getAttributeArrayAs<UInt16ArrayType>(m_aaName)
+                             ->setValue(1, index);
+    }
+    index++;
+  }
+
+  index = 0;
+  for(const auto& eachZOrigin : ordered_zOrigins)
+  {
+    for(const auto& eachDCName : eachZOrigin.second)
+    {
+      getDataContainerArray()->getDataContainer(eachDCName)
+                             ->getAttributeMatrix(m_amName)
+                             ->getAttributeArrayAs<UInt16ArrayType>(m_aaName)
+                             ->setValue(2, index);
+    }
+    index++;
   }
 
   if(getErrorCondition() < 0)
