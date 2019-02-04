@@ -90,36 +90,36 @@ H5EspritReader::H5EspritReader()
 // -----------------------------------------------------------------------------
 H5EspritReader::~H5EspritReader()
 {
-  if(m_DDCleanup)
-  {
-    deallocateArrayData<Ebsd::H5Esprit::DD_t>(m_DD);
-    m_DD = nullptr;
-  }
+  //  if(m_DDCleanup)
+  //  {
+  //    deallocateArrayData<Ebsd::H5Esprit::DD_t>(m_DD);
+  //    m_DD = nullptr;
+  //  }
   if(m_MADCleanup)
   {
     deallocateArrayData<Ebsd::H5Esprit::MAD_t>(m_MAD);
     m_MAD = nullptr;
   }
-  if(m_MADPhaseCleanup)
-  {
-    deallocateArrayData<Ebsd::H5Esprit::MADPhase_t>(m_MADPhase);
-    m_MADPhase = nullptr;
-  }
+  //  if(m_MADPhaseCleanup)
+  //  {
+  //    deallocateArrayData<Ebsd::H5Esprit::MADPhase_t>(m_MADPhase);
+  //    m_MADPhase = nullptr;
+  //  }
   if(m_NIndexedBandsCleanup)
   {
     deallocateArrayData<Ebsd::H5Esprit::NIndexedBands_t>(m_NIndexedBands);
     m_NIndexedBands = nullptr;
   }
-  if(m_PCXCleanup)
-  {
-    deallocateArrayData<Ebsd::H5Esprit::PCX_t>(m_PCX);
-    m_PCX = nullptr;
-  }
-  if(m_PCYCleanup)
-  {
-    deallocateArrayData<Ebsd::H5Esprit::PCY_t>(m_PCY);
-    m_PCY = nullptr;
-  }
+  //  if(m_PCXCleanup)
+  //  {
+  //    deallocateArrayData<Ebsd::H5Esprit::PCX_t>(m_PCX);
+  //    m_PCX = nullptr;
+  //  }
+  //  if(m_PCYCleanup)
+  //  {
+  //    deallocateArrayData<Ebsd::H5Esprit::PCY_t>(m_PCY);
+  //    m_PCY = nullptr;
+  //  }
   if(m_PHICleanup)
   {
     deallocateArrayData<Ebsd::H5Esprit::PHI_t>(m_PHI);
@@ -150,16 +150,16 @@ H5EspritReader::~H5EspritReader()
     deallocateArrayData<Ebsd::H5Esprit::YBEAM_t>(m_YBEAM);
     m_YBEAM = nullptr;
   }
-  if(m_XSAMPLECleanup)
-  {
-    deallocateArrayData<Ebsd::H5Esprit::XSAMPLE_t>(m_XSAMPLE);
-    m_XSAMPLE = nullptr;
-  }
-  if(m_YSAMPLECleanup)
-  {
-    deallocateArrayData<Ebsd::H5Esprit::YSAMPLE_t>(m_YSAMPLE);
-    m_YSAMPLE = nullptr;
-  }
+  //  if(m_XSAMPLECleanup)
+  //  {
+  //    deallocateArrayData<Ebsd::H5Esprit::XSAMPLE_t>(m_XSAMPLE);
+  //    m_XSAMPLE = nullptr;
+  //  }
+  //  if(m_YSAMPLECleanup)
+  //  {
+  //    deallocateArrayData<Ebsd::H5Esprit::YSAMPLE_t>(m_YSAMPLE);
+  //    m_YSAMPLE = nullptr;
+  //  }
   if(m_phi1Cleanup)
   {
     deallocateArrayData<Ebsd::H5Esprit::phi1_t>(m_phi1);
@@ -433,25 +433,25 @@ int H5EspritReader::readHeader(hid_t parId)
   }
   H5ScopedGroupSentinel sentinel(&gid, false);
 
-  ReadH5EbsdHeaderData<H5EspritReader, double, AngHeaderDoubleType>(this, Ebsd::H5Esprit::CameraTilt, gid, m_HeaderMap);
+  // ReadH5EbsdHeaderData<H5EspritReader, double, AngHeaderDoubleType>(this, Ebsd::H5Esprit::CameraTilt, gid, m_HeaderMap);
   ReadH5EbsdHeaderStringData<H5EspritReader, QString, AngStringHeaderEntry>(this, Ebsd::H5Esprit::GridType, gid, m_HeaderMap);
-  ReadH5EbsdHeaderData<H5EspritReader, double, AngHeaderDoubleType>(this, Ebsd::H5Esprit::KV, gid, m_HeaderMap);
-  ReadH5EbsdHeaderData<H5EspritReader, double, AngHeaderDoubleType>(this, Ebsd::H5Esprit::MADMax, gid, m_HeaderMap);
-  ReadH5EbsdHeaderData<H5EspritReader, double, AngHeaderDoubleType>(this, Ebsd::H5Esprit::Magnification, gid, m_HeaderMap);
-  ReadH5EbsdHeaderData<H5EspritReader, double, AngHeaderDoubleType>(this, Ebsd::H5Esprit::MapStepFactor, gid, m_HeaderMap);
-  ReadH5EbsdHeaderData<H5EspritReader, int32_t, AngHeaderIntType>(this, Ebsd::H5Esprit::MaxRadonBandCount, gid, m_HeaderMap);
-  ReadH5EbsdHeaderData<H5EspritReader, int32_t, AngHeaderIntType>(this, Ebsd::H5Esprit::MinIndexedBands, gid, m_HeaderMap);
+  //  ReadH5EbsdHeaderData<H5EspritReader, double, AngHeaderDoubleType>(this, Ebsd::H5Esprit::KV, gid, m_HeaderMap);
+  //  ReadH5EbsdHeaderData<H5EspritReader, double, AngHeaderDoubleType>(this, Ebsd::H5Esprit::MADMax, gid, m_HeaderMap);
+  //  ReadH5EbsdHeaderData<H5EspritReader, double, AngHeaderDoubleType>(this, Ebsd::H5Esprit::Magnification, gid, m_HeaderMap);
+  //  ReadH5EbsdHeaderData<H5EspritReader, double, AngHeaderDoubleType>(this, Ebsd::H5Esprit::MapStepFactor, gid, m_HeaderMap);
+  //  ReadH5EbsdHeaderData<H5EspritReader, int32_t, AngHeaderIntType>(this, Ebsd::H5Esprit::MaxRadonBandCount, gid, m_HeaderMap);
+  //  ReadH5EbsdHeaderData<H5EspritReader, int32_t, AngHeaderIntType>(this, Ebsd::H5Esprit::MinIndexedBands, gid, m_HeaderMap);
   ReadH5EbsdHeaderData<H5EspritReader, int32_t, AngHeaderIntType>(this, Ebsd::H5Esprit::NCOLS, gid, m_HeaderMap);
   ReadH5EbsdHeaderData<H5EspritReader, int32_t, AngHeaderIntType>(this, Ebsd::H5Esprit::NPoints, gid, m_HeaderMap);
   ReadH5EbsdHeaderData<H5EspritReader, int32_t, AngHeaderIntType>(this, Ebsd::H5Esprit::NROWS, gid, m_HeaderMap);
   ReadH5EbsdHeaderStringData<H5EspritReader, QString, AngStringHeaderEntry>(this, Ebsd::H5Esprit::OriginalFile, gid, m_HeaderMap);
-  ReadH5EbsdHeaderData<H5EspritReader, int32_t, AngHeaderIntType>(this, Ebsd::H5Esprit::PixelByteCount, gid, m_HeaderMap);
+  // ReadH5EbsdHeaderData<H5EspritReader, int32_t, AngHeaderIntType>(this, Ebsd::H5Esprit::PixelByteCount, gid, m_HeaderMap);
   ReadH5EbsdHeaderData<H5EspritReader, double, AngHeaderDoubleType>(this, Ebsd::H5Esprit::SEPixelSizeX, gid, m_HeaderMap);
   ReadH5EbsdHeaderData<H5EspritReader, double, AngHeaderDoubleType>(this, Ebsd::H5Esprit::SEPixelSizeY, gid, m_HeaderMap);
-  ReadH5EbsdHeaderData<H5EspritReader, double, AngHeaderDoubleType>(this, Ebsd::H5Esprit::SampleTilt, gid, m_HeaderMap);
-  ReadH5EbsdHeaderData<H5EspritReader, double, AngHeaderDoubleType>(this, Ebsd::H5Esprit::TopClip, gid, m_HeaderMap);
-  ReadH5EbsdHeaderData<H5EspritReader, int32_t, AngHeaderIntType>(this, Ebsd::H5Esprit::UnClippedPatternHeight, gid, m_HeaderMap);
-  ReadH5EbsdHeaderData<H5EspritReader, double, AngHeaderDoubleType>(this, Ebsd::H5Esprit::WD, gid, m_HeaderMap);
+  //  ReadH5EbsdHeaderData<H5EspritReader, double, AngHeaderDoubleType>(this, Ebsd::H5Esprit::SampleTilt, gid, m_HeaderMap);
+  //  ReadH5EbsdHeaderData<H5EspritReader, double, AngHeaderDoubleType>(this, Ebsd::H5Esprit::TopClip, gid, m_HeaderMap);
+  //  ReadH5EbsdHeaderData<H5EspritReader, int32_t, AngHeaderIntType>(this, Ebsd::H5Esprit::UnClippedPatternHeight, gid, m_HeaderMap);
+  //  ReadH5EbsdHeaderData<H5EspritReader, double, AngHeaderDoubleType>(this, Ebsd::H5Esprit::WD, gid, m_HeaderMap);
   ReadH5EbsdHeaderData<H5EspritReader, double, AngHeaderDoubleType>(this, Ebsd::H5Esprit::XSTEP, gid, m_HeaderMap);
   ReadH5EbsdHeaderData<H5EspritReader, double, AngHeaderDoubleType>(this, Ebsd::H5Esprit::YSTEP, gid, m_HeaderMap);
   ReadH5EbsdHeaderData<H5EspritReader, double, AngHeaderDoubleType>(this, Ebsd::H5Esprit::ZOffset, gid, m_HeaderMap);
@@ -624,20 +624,20 @@ int H5EspritReader::readData(hid_t parId)
     return err;
   }
 
-  ANG_READER_ALLOCATE_AND_READ(DD, Ebsd::H5Esprit::DD, Ebsd::H5Esprit::DD_t);
+  //  ANG_READER_ALLOCATE_AND_READ(DD, Ebsd::H5Esprit::DD, Ebsd::H5Esprit::DD_t);
   ANG_READER_ALLOCATE_AND_READ(MAD, Ebsd::H5Esprit::MAD, Ebsd::H5Esprit::MAD_t);
-  ANG_READER_ALLOCATE_AND_READ(MADPhase, Ebsd::H5Esprit::MADPhase, Ebsd::H5Esprit::MADPhase_t);
+  // ANG_READER_ALLOCATE_AND_READ(MADPhase, Ebsd::H5Esprit::MADPhase, Ebsd::H5Esprit::MADPhase_t);
   ANG_READER_ALLOCATE_AND_READ(NIndexedBands, Ebsd::H5Esprit::NIndexedBands, Ebsd::H5Esprit::NIndexedBands_t);
-  ANG_READER_ALLOCATE_AND_READ(PCX, Ebsd::H5Esprit::PCX, Ebsd::H5Esprit::PCX_t);
-  ANG_READER_ALLOCATE_AND_READ(PCY, Ebsd::H5Esprit::PCY, Ebsd::H5Esprit::PCY_t);
+  // ANG_READER_ALLOCATE_AND_READ(PCX, Ebsd::H5Esprit::PCX, Ebsd::H5Esprit::PCX_t);
+  // ANG_READER_ALLOCATE_AND_READ(PCY, Ebsd::H5Esprit::PCY, Ebsd::H5Esprit::PCY_t);
   ANG_READER_ALLOCATE_AND_READ(PHI, Ebsd::H5Esprit::PHI, Ebsd::H5Esprit::PHI_t);
   ANG_READER_ALLOCATE_AND_READ(Phase, Ebsd::H5Esprit::Phase, Ebsd::H5Esprit::Phase_t);
   ANG_READER_ALLOCATE_AND_READ(RadonBandCount, Ebsd::H5Esprit::RadonBandCount, Ebsd::H5Esprit::RadonBandCount_t);
   ANG_READER_ALLOCATE_AND_READ(RadonQuality, Ebsd::H5Esprit::RadonQuality, Ebsd::H5Esprit::RadonQuality_t);
   ANG_READER_ALLOCATE_AND_READ(XBEAM, Ebsd::H5Esprit::XBEAM, Ebsd::H5Esprit::XBEAM_t);
   ANG_READER_ALLOCATE_AND_READ(YBEAM, Ebsd::H5Esprit::YBEAM, Ebsd::H5Esprit::YBEAM_t);
-  ANG_READER_ALLOCATE_AND_READ(XSAMPLE, Ebsd::H5Esprit::XSAMPLE, Ebsd::H5Esprit::XSAMPLE_t);
-  ANG_READER_ALLOCATE_AND_READ(YSAMPLE, Ebsd::H5Esprit::YSAMPLE, Ebsd::H5Esprit::YSAMPLE_t);
+  // ANG_READER_ALLOCATE_AND_READ(XSAMPLE, Ebsd::H5Esprit::XSAMPLE, Ebsd::H5Esprit::XSAMPLE_t);
+  // ANG_READER_ALLOCATE_AND_READ(YSAMPLE, Ebsd::H5Esprit::YSAMPLE, Ebsd::H5Esprit::YSAMPLE_t);
   ANG_READER_ALLOCATE_AND_READ(phi1, Ebsd::H5Esprit::phi1, Ebsd::H5Esprit::phi1_t);
   ANG_READER_ALLOCATE_AND_READ(phi2, Ebsd::H5Esprit::phi2, Ebsd::H5Esprit::phi2_t);
 
@@ -716,36 +716,36 @@ void H5EspritReader::setYDimension(int ydim)
 // -----------------------------------------------------------------------------
 void H5EspritReader::releaseOwnership(const QString& name)
 {
-  if(name == Ebsd::H5Esprit::DD)
-  {
-    m_DD = nullptr;
-    m_DDCleanup = false;
-  }
+  //  if(name == Ebsd::H5Esprit::DD)
+  //  {
+  //    m_DD = nullptr;
+  //    m_DDCleanup = false;
+  //  }
   if(name == Ebsd::H5Esprit::MAD)
   {
     m_MAD = nullptr;
     m_MADCleanup = false;
   }
-  if(name == Ebsd::H5Esprit::MADPhase)
-  {
-    m_MADPhase = nullptr;
-    m_MADPhaseCleanup = false;
-  }
+  //  if(name == Ebsd::H5Esprit::MADPhase)
+  //  {
+  //    m_MADPhase = nullptr;
+  //    m_MADPhaseCleanup = false;
+  //  }
   if(name == Ebsd::H5Esprit::NIndexedBands)
   {
     m_NIndexedBands = nullptr;
     m_NIndexedBandsCleanup = false;
   }
-  if(name == Ebsd::H5Esprit::PCX)
-  {
-    m_PCX = nullptr;
-    m_PCXCleanup = false;
-  }
-  if(name == Ebsd::H5Esprit::PCY)
-  {
-    m_PCY = nullptr;
-    m_PCYCleanup = false;
-  }
+  //  if(name == Ebsd::H5Esprit::PCX)
+  //  {
+  //    m_PCX = nullptr;
+  //    m_PCXCleanup = false;
+  //  }
+  //  if(name == Ebsd::H5Esprit::PCY)
+  //  {
+  //    m_PCY = nullptr;
+  //    m_PCYCleanup = false;
+  //  }
   if(name == Ebsd::H5Esprit::PHI)
   {
     m_PHI = nullptr;
@@ -781,16 +781,16 @@ void H5EspritReader::releaseOwnership(const QString& name)
     m_YBEAM = nullptr;
     m_YBEAMCleanup = false;
   }
-  if(name == Ebsd::H5Esprit::XSAMPLE)
-  {
-    m_XSAMPLE = nullptr;
-    m_XSAMPLECleanup = false;
-  }
-  if(name == Ebsd::H5Esprit::YSAMPLE)
-  {
-    m_YSAMPLE = nullptr;
-    m_YSAMPLECleanup = false;
-  }
+  //  if(name == Ebsd::H5Esprit::XSAMPLE)
+  //  {
+  //    m_XSAMPLE = nullptr;
+  //    m_XSAMPLECleanup = false;
+  //  }
+  //  if(name == Ebsd::H5Esprit::YSAMPLE)
+  //  {
+  //    m_YSAMPLE = nullptr;
+  //    m_YSAMPLECleanup = false;
+  //  }
   if(name == Ebsd::H5Esprit::phi1)
   {
     m_phi1 = nullptr;
@@ -808,30 +808,30 @@ void H5EspritReader::releaseOwnership(const QString& name)
 // -----------------------------------------------------------------------------
 void* H5EspritReader::getPointerByName(const QString& featureName)
 {
-  if(featureName == Ebsd::H5Esprit::DD)
-  {
-    return static_cast<void*>(m_DD);
-  }
+  //  if(featureName == Ebsd::H5Esprit::DD)
+  //  {
+  //    return static_cast<void*>(m_DD);
+  //  }
   if(featureName == Ebsd::H5Esprit::MAD)
   {
     return static_cast<void*>(m_MAD);
   }
-  if(featureName == Ebsd::H5Esprit::MADPhase)
-  {
-    return static_cast<void*>(m_MADPhase);
-  }
+  //  if(featureName == Ebsd::H5Esprit::MADPhase)
+  //  {
+  //    return static_cast<void*>(m_MADPhase);
+  //  }
   if(featureName == Ebsd::H5Esprit::NIndexedBands)
   {
     return static_cast<void*>(m_NIndexedBands);
   }
-  if(featureName == Ebsd::H5Esprit::PCX)
-  {
-    return static_cast<void*>(m_PCX);
-  }
-  if(featureName == Ebsd::H5Esprit::PCY)
-  {
-    return static_cast<void*>(m_PCY);
-  }
+  //  if(featureName == Ebsd::H5Esprit::PCX)
+  //  {
+  //    return static_cast<void*>(m_PCX);
+  //  }
+  //  if(featureName == Ebsd::H5Esprit::PCY)
+  //  {
+  //    return static_cast<void*>(m_PCY);
+  //  }
   if(featureName == Ebsd::H5Esprit::PHI)
   {
     return static_cast<void*>(m_PHI);
@@ -860,14 +860,14 @@ void* H5EspritReader::getPointerByName(const QString& featureName)
   {
     return static_cast<void*>(m_YBEAM);
   }
-  if(featureName == Ebsd::H5Esprit::XSAMPLE)
-  {
-    return static_cast<void*>(m_XSAMPLE);
-  }
-  if(featureName == Ebsd::H5Esprit::YSAMPLE)
-  {
-    return static_cast<void*>(m_YSAMPLE);
-  }
+  //  if(featureName == Ebsd::H5Esprit::XSAMPLE)
+  //  {
+  //    return static_cast<void*>(m_XSAMPLE);
+  //  }
+  //  if(featureName == Ebsd::H5Esprit::YSAMPLE)
+  //  {
+  //    return static_cast<void*>(m_YSAMPLE);
+  //  }
   if(featureName == Ebsd::H5Esprit::phi1)
   {
     return static_cast<void*>(m_phi1);
@@ -886,30 +886,30 @@ void* H5EspritReader::getPointerByName(const QString& featureName)
 Ebsd::NumType H5EspritReader::getPointerType(const QString& featureName)
 {
 
-  if(featureName == Ebsd::H5Esprit::DD)
-  {
-    return Ebsd::Float;
-  }
+  //  if(featureName == Ebsd::H5Esprit::DD)
+  //  {
+  //    return Ebsd::Float;
+  //  }
   if(featureName == Ebsd::H5Esprit::MAD)
   {
     return Ebsd::Float;
   }
-  if(featureName == Ebsd::H5Esprit::MADPhase)
-  {
-    return Ebsd::Int32;
-  }
+  //  if(featureName == Ebsd::H5Esprit::MADPhase)
+  //  {
+  //    return Ebsd::Int32;
+  //  }
   if(featureName == Ebsd::H5Esprit::NIndexedBands)
   {
     return Ebsd::Int32;
   }
-  if(featureName == Ebsd::H5Esprit::PCX)
-  {
-    return Ebsd::Float;
-  }
-  if(featureName == Ebsd::H5Esprit::PCY)
-  {
-    return Ebsd::Float;
-  }
+  //  if(featureName == Ebsd::H5Esprit::PCX)
+  //  {
+  //    return Ebsd::Float;
+  //  }
+  //  if(featureName == Ebsd::H5Esprit::PCY)
+  //  {
+  //    return Ebsd::Float;
+  //  }
   if(featureName == Ebsd::H5Esprit::PHI)
   {
     return Ebsd::Float;
@@ -934,14 +934,14 @@ Ebsd::NumType H5EspritReader::getPointerType(const QString& featureName)
   {
     return Ebsd::Int32;
   }
-  if(featureName == Ebsd::H5Esprit::XSAMPLE)
-  {
-    return Ebsd::Float;
-  }
-  if(featureName == Ebsd::H5Esprit::YSAMPLE)
-  {
-    return Ebsd::Float;
-  }
+  //  if(featureName == Ebsd::H5Esprit::XSAMPLE)
+  //  {
+  //    return Ebsd::Float;
+  //  }
+  //  if(featureName == Ebsd::H5Esprit::YSAMPLE)
+  //  {
+  //    return Ebsd::Float;
+  //  }
   if(featureName == Ebsd::H5Esprit::phi1)
   {
     return Ebsd::Float;
