@@ -244,6 +244,10 @@ Ebsd::OEM ImportH5EspritData::readManufacturer() const
   {
     manuf = Ebsd::OEM::Bruker;
   }
+  if(manufacturer == "DREAM.3D")
+  {
+    manuf = Ebsd::OEM::DREAM3D;
+  }
 
   return manuf;
 }
@@ -252,9 +256,9 @@ Ebsd::OEM ImportH5EspritData::readManufacturer() const
 void ImportH5EspritData::dataCheckOEM()
 {
   // Read the manufacturer from the file
-  Ebsd::OEM manfacturer = readManufacturer();
-  setManufacturer(manfacturer);
-  if(manfacturer != Ebsd::OEM::Bruker)
+  Ebsd::OEM manufacturer = readManufacturer();
+  setManufacturer(manufacturer);
+  if(manufacturer != Ebsd::OEM::Bruker && manufacturer != Ebsd::OEM::DREAM3D)
   {
     QString ss = QObject::tr("The manufacturer is not recognized as a valid entry.");
     setErrorCondition(-384);
@@ -653,19 +657,19 @@ void ImportH5EspritData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>
   cDims[0] = 1;
 
   // Copy the rest of the data from the pointer in the reader into our IDataArrayPointer
-  copyPointerData<Ebsd::H5Esprit::DD_t, H5EspritReader>(reader, Ebsd::H5Esprit::DD, ebsdArrayMap.value(Ebsd::H5Esprit::DD), offset, totalPoints, ebsdAttrMat);
+  // copyPointerData<Ebsd::H5Esprit::DD_t, H5EspritReader>(reader, Ebsd::H5Esprit::DD, ebsdArrayMap.value(Ebsd::H5Esprit::DD), offset, totalPoints, ebsdAttrMat);
   copyPointerData<Ebsd::H5Esprit::MAD_t, H5EspritReader>(reader, Ebsd::H5Esprit::MAD, ebsdArrayMap.value(Ebsd::H5Esprit::MAD), offset, totalPoints, ebsdAttrMat);
-  copyPointerData<Ebsd::H5Esprit::MADPhase_t, H5EspritReader>(reader, Ebsd::H5Esprit::MADPhase, ebsdArrayMap.value(Ebsd::H5Esprit::MADPhase), offset, totalPoints, ebsdAttrMat);
+  // copyPointerData<Ebsd::H5Esprit::MADPhase_t, H5EspritReader>(reader, Ebsd::H5Esprit::MADPhase, ebsdArrayMap.value(Ebsd::H5Esprit::MADPhase), offset, totalPoints, ebsdAttrMat);
   copyPointerData<Ebsd::H5Esprit::NIndexedBands_t, H5EspritReader>(reader, Ebsd::H5Esprit::NIndexedBands, ebsdArrayMap.value(Ebsd::H5Esprit::NIndexedBands), offset, totalPoints, ebsdAttrMat);
-  copyPointerData<Ebsd::H5Esprit::PCX_t, H5EspritReader>(reader, Ebsd::H5Esprit::PCX, ebsdArrayMap.value(Ebsd::H5Esprit::PCX), offset, totalPoints, ebsdAttrMat);
-  copyPointerData<Ebsd::H5Esprit::PCY_t, H5EspritReader>(reader, Ebsd::H5Esprit::PCY, ebsdArrayMap.value(Ebsd::H5Esprit::PCY), offset, totalPoints, ebsdAttrMat);
+  // copyPointerData<Ebsd::H5Esprit::PCX_t, H5EspritReader>(reader, Ebsd::H5Esprit::PCX, ebsdArrayMap.value(Ebsd::H5Esprit::PCX), offset, totalPoints, ebsdAttrMat);
+  // copyPointerData<Ebsd::H5Esprit::PCY_t, H5EspritReader>(reader, Ebsd::H5Esprit::PCY, ebsdArrayMap.value(Ebsd::H5Esprit::PCY), offset, totalPoints, ebsdAttrMat);
   copyPointerData<Ebsd::H5Esprit::Phase_t, H5EspritReader>(reader, Ebsd::H5Esprit::Phase, ebsdArrayMap.value(Ebsd::H5Esprit::Phase), offset, totalPoints, ebsdAttrMat);
   copyPointerData<Ebsd::H5Esprit::RadonBandCount_t, H5EspritReader>(reader, Ebsd::H5Esprit::RadonBandCount, ebsdArrayMap.value(Ebsd::H5Esprit::RadonBandCount), offset, totalPoints, ebsdAttrMat);
   copyPointerData<Ebsd::H5Esprit::RadonQuality_t, H5EspritReader>(reader, Ebsd::H5Esprit::RadonQuality, ebsdArrayMap.value(Ebsd::H5Esprit::RadonQuality), offset, totalPoints, ebsdAttrMat);
   copyPointerData<Ebsd::H5Esprit::XBEAM_t, H5EspritReader>(reader, Ebsd::H5Esprit::XBEAM, ebsdArrayMap.value(Ebsd::H5Esprit::XBEAM), offset, totalPoints, ebsdAttrMat);
   copyPointerData<Ebsd::H5Esprit::YBEAM_t, H5EspritReader>(reader, Ebsd::H5Esprit::YBEAM, ebsdArrayMap.value(Ebsd::H5Esprit::YBEAM), offset, totalPoints, ebsdAttrMat);
-  copyPointerData<Ebsd::H5Esprit::XSAMPLE_t, H5EspritReader>(reader, Ebsd::H5Esprit::XSAMPLE, ebsdArrayMap.value(Ebsd::H5Esprit::XSAMPLE), offset, totalPoints, ebsdAttrMat);
-  copyPointerData<Ebsd::H5Esprit::YSAMPLE_t, H5EspritReader>(reader, Ebsd::H5Esprit::YSAMPLE, ebsdArrayMap.value(Ebsd::H5Esprit::YSAMPLE), offset, totalPoints, ebsdAttrMat);
+  // copyPointerData<Ebsd::H5Esprit::XSAMPLE_t, H5EspritReader>(reader, Ebsd::H5Esprit::XSAMPLE, ebsdArrayMap.value(Ebsd::H5Esprit::XSAMPLE), offset, totalPoints, ebsdAttrMat);
+  // copyPointerData<Ebsd::H5Esprit::YSAMPLE_t, H5EspritReader>(reader, Ebsd::H5Esprit::YSAMPLE, ebsdArrayMap.value(Ebsd::H5Esprit::YSAMPLE), offset, totalPoints, ebsdAttrMat);
 
   if(getReadPatternData()) // Get the pattern Data from the
   {

@@ -69,7 +69,6 @@ public:
   ~ReadAngData() override;
 
   SIMPL_FILTER_PARAMETER(QString, DataContainerName)
-
   Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
   SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
