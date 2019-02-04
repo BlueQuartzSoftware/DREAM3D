@@ -332,7 +332,6 @@ void NearestPointFuseRegularGrids::execute()
     }
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

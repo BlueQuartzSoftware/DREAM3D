@@ -655,7 +655,6 @@ void RotateSampleRefFrame::execute()
   m->getGeometryAs<ImageGeom>()->setDimensions(params.xpNew, params.ypNew, params.zpNew);
   m->getGeometryAs<ImageGeom>()->setOrigin(xMin, yMin, zMin);
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

@@ -433,7 +433,6 @@ void InitializeData::execute()
     delay(1); // Delay the execution by 1 second to avoid the exact same seedings for each array
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

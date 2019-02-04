@@ -294,7 +294,6 @@ void ConvertOrientations::execute()
     generateRepresentation<double>(this, dArray, outData);
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

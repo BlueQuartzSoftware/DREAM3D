@@ -209,7 +209,6 @@ void FindFeaturePhasesBinary::execute()
     // m_FeaturePhases[gnum] = m_CellPhases[i];
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

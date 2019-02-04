@@ -916,7 +916,6 @@ void FindShapes::execute()
   }
 
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

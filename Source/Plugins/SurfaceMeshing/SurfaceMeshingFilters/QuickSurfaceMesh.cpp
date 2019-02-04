@@ -1547,7 +1547,6 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
     }
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -1666,7 +1665,6 @@ void QuickSurfaceMesh::execute()
       edgeCount++;
     }
   }
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

@@ -527,7 +527,6 @@ int32_t DxReader::readFile()
 
   m_InStream.close();
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
   return 0;
 }
 

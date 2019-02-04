@@ -166,7 +166,6 @@ void FindVolFractions::execute()
     m_VolFractions[i] /= totalPoints;
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

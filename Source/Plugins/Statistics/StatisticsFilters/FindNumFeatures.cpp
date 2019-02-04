@@ -159,7 +159,6 @@ void FindNumFeatures::execute()
     m_NumFeatures[m_FeaturePhases[i]]++;
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

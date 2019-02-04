@@ -375,7 +375,6 @@ void CreateLambertSphere::execute()
   createTriangleGeometry();
   createQuadGeometry();
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

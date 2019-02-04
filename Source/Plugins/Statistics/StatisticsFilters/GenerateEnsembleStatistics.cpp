@@ -1460,7 +1460,6 @@ void GenerateEnsembleStatistics::execute()
 
   calculatePPTBoundaryFrac();
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

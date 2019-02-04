@@ -200,7 +200,6 @@ void FindBoundaryElementFractions::execute()
 
   find_surface_voxel_fractions();
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

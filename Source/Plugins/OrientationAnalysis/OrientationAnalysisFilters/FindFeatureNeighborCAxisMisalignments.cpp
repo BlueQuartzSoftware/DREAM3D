@@ -336,7 +336,6 @@ void FindFeatureNeighborCAxisMisalignments::execute()
     m_CAxisMisalignmentList.lock()->setList(static_cast<int32_t>(i), misaL);
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 // -----------------------------------------------------------------------------
 //

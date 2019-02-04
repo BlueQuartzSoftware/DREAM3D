@@ -297,7 +297,6 @@ void FindMisorientations::execute()
     misoL->assign(misorientationlists[i].begin(), misorientationlists[i].end());
     m_MisorientationList.lock()->setList(static_cast<int32_t>(i), misoL);
   }
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

@@ -340,8 +340,7 @@ void GenerateFaceSchuhMisorientationColoring::execute()
     serial.generate(0, numTriangles);
   }
 
-  /* Let the GUI know we are done with this filter */
-  notifyStatusMessage(getHumanLabel(), "Complete");
+
 }
 // -----------------------------------------------------------------------------
 //

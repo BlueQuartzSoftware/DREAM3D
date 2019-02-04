@@ -577,7 +577,6 @@ void ConvertColorToGrayScale::execute()
     }
 
 #endif
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

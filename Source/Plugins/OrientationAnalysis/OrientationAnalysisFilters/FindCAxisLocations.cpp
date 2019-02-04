@@ -181,7 +181,6 @@ void FindCAxisLocations::execute()
     m_CAxisLocations[index + 2] = c1[2];
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
