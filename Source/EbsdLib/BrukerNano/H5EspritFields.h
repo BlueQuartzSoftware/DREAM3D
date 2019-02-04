@@ -62,12 +62,12 @@ public:
   template <typename T> T getFilterFeatures()
   {
     T features;
-    features.push_back(Ebsd::H5Esprit::DD);
+    // features.push_back(Ebsd::H5Esprit::DD);
     features.push_back(Ebsd::H5Esprit::MAD);
-    features.push_back(Ebsd::H5Esprit::MADPhase);
+    // features.push_back(Ebsd::H5Esprit::MADPhase);
     features.push_back(Ebsd::H5Esprit::NIndexedBands);
-    features.push_back(Ebsd::H5Esprit::PCX);
-    features.push_back(Ebsd::H5Esprit::PCY);
+    //    features.push_back(Ebsd::H5Esprit::PCX);
+    //    features.push_back(Ebsd::H5Esprit::PCY);
     features.push_back(Ebsd::H5Esprit::PHI);
     features.push_back(Ebsd::H5Esprit::Phase);
     features.push_back(Ebsd::H5Esprit::RadonBandCount);
@@ -75,8 +75,8 @@ public:
     features.push_back(Ebsd::H5Esprit::RawPatterns);
     features.push_back(Ebsd::H5Esprit::XBEAM);
     features.push_back(Ebsd::H5Esprit::YBEAM);
-    features.push_back(Ebsd::H5Esprit::XSAMPLE);
-    features.push_back(Ebsd::H5Esprit::YSAMPLE);
+    //    features.push_back(Ebsd::H5Esprit::XSAMPLE);
+    //    features.push_back(Ebsd::H5Esprit::YSAMPLE);
     features.push_back(Ebsd::H5Esprit::phi1);
     features.push_back(Ebsd::H5Esprit::phi2);
     return features;

@@ -93,7 +93,8 @@ enum class OEM : EnumType
   Zeiss = 4,
   Phillips = 5,
   ThermoFisher = 6,
-  Unknown = 7
+  DREAM3D = 7,
+  Unknown = 8
 };
 
 namespace CellData
