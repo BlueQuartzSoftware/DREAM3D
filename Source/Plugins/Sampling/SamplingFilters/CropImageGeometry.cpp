@@ -64,7 +64,7 @@ CropImageGeometry::CropImageGeometry()
 , m_XMax(0)
 , m_YMax(0)
 , m_ZMax(0)
-, m_RenumberFeatures(true)
+, m_RenumberFeatures(false)
 , m_SaveAsNewDataContainer(false)
 , m_UpdateOrigin(true)
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
@@ -85,12 +85,12 @@ CropImageGeometry::~CropImageGeometry() = default;
 void CropImageGeometry::setupFilterParameters()
 {
   FilterParameterVector parameters;
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("X Min (Column)", XMin, FilterParameter::Parameter, CropImageGeometry));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Y Min (Row)", YMin, FilterParameter::Parameter, CropImageGeometry));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Z Min (Plane)", ZMin, FilterParameter::Parameter, CropImageGeometry));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("X Max (Column) [Inclusive]", XMax, FilterParameter::Parameter, CropImageGeometry));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Y Max (Row) [Inclusive]", YMax, FilterParameter::Parameter, CropImageGeometry));
-  parameters.push_back(SIMPL_NEW_INTEGER_FP("Z Max (Plane) [Inclusive]", ZMax, FilterParameter::Parameter, CropImageGeometry));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("X Min Voxel (Column) ", XMin, FilterParameter::Parameter, CropImageGeometry));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Y Min Voxel (Row)", YMin, FilterParameter::Parameter, CropImageGeometry));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Z Min Voxel (Plane)", ZMin, FilterParameter::Parameter, CropImageGeometry));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("X Max Voxel (Column) [Inclusive]", XMax, FilterParameter::Parameter, CropImageGeometry));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Y Max Voxel (Row) [Inclusive]", YMax, FilterParameter::Parameter, CropImageGeometry));
+  parameters.push_back(SIMPL_NEW_INTEGER_FP("Z Max Voxel (Plane) [Inclusive]", ZMax, FilterParameter::Parameter, CropImageGeometry));
   
   PreflightUpdatedValueFilterParameter::Pointer param =
       SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Old Box Size in Length Units", OldBoxDimensions, FilterParameter::Parameter, CropImageGeometry);
@@ -690,11 +690,11 @@ QString CropImageGeometry::getOldBoxDimensions()
         desc.clear();
         QTextStream ss(&desc);
         ss << "X Range: " << m_OldOrigin.x << " to " << (m_OldOrigin.x + (m_OldDimensions.x * m_OldResolution.x)) << " (Delta: " << (m_OldDimensions.x * m_OldResolution.x) << ") " 
-           << m_OldDimensions.x << " Voxels\n";
+           << 0 << "-" <<  m_OldDimensions.x-1 << " Voxels\n";
         ss << "Y Range: " << m_OldOrigin.y << " to " << (m_OldOrigin.y + (m_OldDimensions.y * m_OldResolution.y)) << " (Delta: " << (m_OldDimensions.y * m_OldResolution.y) << ") "
-           << m_OldDimensions.y << " Voxels\n";
+           << 0 << "-" <<  m_OldDimensions.y-1 << " Voxels\n";
         ss << "Z Range: " << m_OldOrigin.z << " to " << (m_OldOrigin.z + (m_OldDimensions.z * m_OldResolution.z)) << " (Delta: " << (m_OldDimensions.z * m_OldResolution.z) << ") "
-           << m_OldDimensions.z << " Voxels";
+           << 0 << "-" <<  m_OldDimensions.z-1 << " Voxels\n";
       }
     }
   }
@@ -719,11 +719,11 @@ QString CropImageGeometry::getNewBoxDimensions()
         desc.clear();
         QTextStream ss(&desc);
         ss << "X Range: " << m_NewOrigin.x << " to " << (m_NewOrigin.x + (m_NewDimensions.x * m_NewResolution.x)) << " (Delta: " << (m_NewDimensions.x * m_NewResolution.x) << ") "
-           << m_NewDimensions.x << " Voxels\n";
+           << 0 << "-" <<  m_NewDimensions.x-1 << " Voxels\n";
         ss << "Y Range: " << m_NewOrigin.y << " to " << (m_NewOrigin.y + (m_NewDimensions.y * m_NewResolution.y)) << " (Delta: " << (m_NewDimensions.y * m_NewResolution.y) << ") "
-           << m_NewDimensions.y << " Voxels\n";
+           << 0 << "-" <<  m_NewDimensions.y-1 << " Voxels\n";
         ss << "Z Range: " << m_NewOrigin.z << " to " << (m_NewOrigin.z + (m_NewDimensions.z * m_NewResolution.z)) << " (Delta: " << (m_NewDimensions.z * m_NewResolution.z) << ") "
-           << m_NewDimensions.z << " Voxels\n";
+           << 0 << "-" <<  m_NewDimensions.z-1 << " Voxels\n";
       }
     }
   }
