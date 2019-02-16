@@ -57,6 +57,7 @@ class Statistics_EXPORT GenerateEnsembleStatistics : public AbstractFilter
     PYB11_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixPath READ getCellEnsembleAttributeMatrixPath WRITE setCellEnsembleAttributeMatrixPath)
     PYB11_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
     PYB11_PROPERTY(PhaseType::Types PhaseTypeArray READ getPhaseTypeArray WRITE setPhaseTypeArray)
+    PYB11_PROPERTY(PhaseType::Types PhaseTypeData READ getPhaseTypeData WRITE setPhaseTypeData)
     PYB11_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
     PYB11_PROPERTY(DataArrayPath SharedSurfaceAreaListArrayPath READ getSharedSurfaceAreaListArrayPath WRITE setSharedSurfaceAreaListArrayPath)
     PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)

@@ -62,6 +62,8 @@ class OrientationAnalysis_EXPORT ReadH5Ebsd : public AbstractFilter
     PYB11_PROPERTY(int ZEndIndex READ getZEndIndex WRITE setZEndIndex)
     PYB11_PROPERTY(bool UseTransformations READ getUseTransformations WRITE setUseTransformations)
     PYB11_PROPERTY(int AngleRepresentation READ getAngleRepresentation WRITE setAngleRepresentation)
+    PYB11_PROPERTY(QSet<QString> SelectedArrayNames READ getSelectedArrayNames WRITE setSelectedArrayNames)
+
 public:
   SIMPL_SHARED_POINTERS(ReadH5Ebsd)
   SIMPL_FILTER_NEW_MACRO(ReadH5Ebsd)

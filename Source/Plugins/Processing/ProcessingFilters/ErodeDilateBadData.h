@@ -43,6 +43,7 @@
 #include "Processing/ProcessingVersion.h"
 
 #include "Processing/ProcessingDLLExport.h"
+#define Uint unsigned int
 
 /**
  * @brief The ErodeDilateBadData class. See [Filter documentation](@ref erodedilatebaddata) for details.
@@ -51,7 +52,7 @@ class Processing_EXPORT ErodeDilateBadData : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ErodeDilateBadData SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)
+    PYB11_PROPERTY(Uint Direction READ getDirection WRITE setDirection)
     PYB11_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations)
     PYB11_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn)
     PYB11_PROPERTY(bool YDirOn READ getYDirOn WRITE setYDirOn)

@@ -20,5 +20,8 @@ namespace BrandedStrings
   static const QString DefaultThemeFilePath(":/SIMPL/StyleSheets/Default.json");
 
   static const QStringList ExtraFonts;
+
+  static const QString CopyrightNotice ("All Source Codes Copyright to their respective owners. Please see the various licenses included in the package for details.");
+
 }
 

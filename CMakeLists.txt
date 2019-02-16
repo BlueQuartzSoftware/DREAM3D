@@ -1,18 +1,20 @@
 
-if(${CMAKE_MAJOR_VERSION} VERSION_GREATER_EQUAL "3.1.0")
-  cmake_policy(SET CMP0002 NEW)
-  cmake_policy(SET CMP0054 NEW)
-endif()
+cmake_policy(SET CMP0002 NEW)
+cmake_policy(SET CMP0054 NEW)
+cmake_policy(SET CMP0079 NEW)
+cmake_policy(SET CMP0077 NEW)
 
-if(${CMAKE_MAJOR_VERSION} VERSION_GREATER_EQUAL "3.12.0")
-  cmake_policy(SET CMP0074 NEW)
-endif()
+cmake_minimum_required(VERSION 3.13.0)
 
-if(${CMAKE_MAJOR_VERSION} VERSION_GREATER_EQUAL "3.13.0")
-  cmake_policy(SET CMP0079 NEW)
-endif()
+# Request C++14 standard, using new CMake variables.
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_CXX_EXTENSIONS False)
 
-cmake_minimum_required(VERSION 3.10.0)
+#--------------------------------------------------------------------------------------------------
+# Always write out the compile_commands.json file to help out things like QtCreator and VS Code
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
 
 message(STATUS "********* STARTING DREAM.3D CONFIGURATION ***********************")
 if(NOT "${DREAM3D_SDK}" STREQUAL "")
@@ -52,12 +54,6 @@ else()
   endif()
 
 endif()
-
-# Request C++11 standard, using new CMake variables.
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
-set(CMAKE_CXX_EXTENSIONS False)
-
 
 #------------------------------------------------------------------------------
 # Create the Top level Project
