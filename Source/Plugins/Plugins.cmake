@@ -9,7 +9,7 @@ endif()
 
 # --------------------------------------------------------------------
 # This function optionally compiles a named plugin when compiling DREAM3D
-# This function will add in an Option "DREAM3D_BUILD_PLUGIN_${NAME} which
+# This function will add in an Option "DREAM3D_ENABLE_${NAME} which
 # the programmer can use to enable/disable the compiling of specific plugins
 # Arguments:
 # PLUGIN_NAME The name of the Plugin
@@ -20,9 +20,9 @@ function(DREAM3D_COMPILE_PLUGIN)
     cmake_parse_arguments(PLUG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
     set_property(GLOBAL PROPERTY PluginNumFilters "-1")
 
-    option(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME} "Build the ${PLUG_PLUGIN_NAME}" ON)
+    option(DREAM3D_ENABLE_${PLUG_PLUGIN_NAME} "Build the ${PLUG_PLUGIN_NAME}" ON)
     
-    if(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME})
+    if(DREAM3D_ENABLE_${PLUG_PLUGIN_NAME})
         add_subdirectory(${PLUG_PLUGIN_SOURCE_DIR} ${PROJECT_BINARY_DIR}/Plugins/${PLUG_PLUGIN_NAME})
         get_property(PluginNumFilters GLOBAL PROPERTY PluginNumFilters)
         set_property(GLOBAL PROPERTY ${PLUG_PLUGIN_NAME}_NumFilters ${PluginNumFilters})
@@ -39,16 +39,16 @@ function(DREAM3D_COMPILE_PLUGIN)
           #- Now set up the dependency between the main application and each of the plugins so that
           #- things like Visual Studio are forced to rebuild the plugins when launching
           #- the DREAM3D application
-          if(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME} AND TARGET DREAM3D AND TARGET ${PLUG_PLUGIN_NAME})
+          if(DREAM3D_ENABLE_${PLUG_PLUGIN_NAME} AND TARGET DREAM3D AND TARGET ${PLUG_PLUGIN_NAME})
             add_dependencies(DREAM3D ${PLUG_PLUGIN_NAME})
           endif()
         else()
-          set(DREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME} "OFF" CACHE BOOL "Build the ${PLUG_PLUGIN_NAME}" FORCE)
-          message(STATUS "${PLUG_PLUGIN_NAME} [DISABLED]: Use -DDREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME}=ON to Enable Plugin")
+          set(DREAM3D_ENABLE_${PLUG_PLUGIN_NAME} "OFF" CACHE BOOL "Build the ${PLUG_PLUGIN_NAME}" FORCE)
+          message(STATUS "${PLUG_PLUGIN_NAME} [DISABLED]: Use -DDREAM3D_ENABLE_${PLUG_PLUGIN_NAME}=ON to Enable Plugin")
         endif()
 
     else()
-        message(STATUS "${PLUG_PLUGIN_NAME} [DISABLED]: Use -DDREAM3D_BUILD_PLUGIN_${PLUG_PLUGIN_NAME}=ON to Enable Plugin")
+        message(STATUS "${PLUG_PLUGIN_NAME} [DISABLED]: Use -DDREAM3D_ENABLE_${PLUG_PLUGIN_NAME}=ON to Enable Plugin")
     endif()
 endfunction()
 
@@ -70,51 +70,51 @@ function(DREAM3D_ADD_PLUGINS)
 
       # message(STATUS "Evaluating Plugin: ${d3dPlugin}...")
 
-      if(DEFINED ${d3dPlugin}_SOURCE_DIR AND "${${d3dPlugin}_SOURCE_DIR}" STREQUAL "")
+      if(DEFINED DREAM3D_${d3dPlugin}_SOURCE_DIR AND "${DREAM3D_${d3dPlugin}_SOURCE_DIR}" STREQUAL "")
         set(pluginSearchDir ${PROJECT_CODE_DIR}/Plugins/${d3dPlugin})
-        set(${d3dPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
+        set(DREAM3D_${d3dPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
       endif()
 
 
-      if(NOT DEFINED ${d3dPlugin}_SOURCE_DIR)
+      if(NOT DEFINED DREAM3D_${d3dPlugin}_SOURCE_DIR)
           set(pluginSearchDir ${PROJECT_CODE_DIR}/Plugins/${d3dPlugin})
           if(EXISTS ${pluginSearchDir})
-            set(${d3dPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
-            message(STATUS "Plugin: Defining ${d3dPlugin}_SOURCE_DIR to ${${d3dPlugin}_SOURCE_DIR}")
+            set(DREAM3D_${d3dPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
+            message(STATUS "Plugin: Defining DREAM3D_${d3dPlugin}_SOURCE_DIR to ${DREAM3D_${d3dPlugin}_SOURCE_DIR}")
           else()
 
             set(pluginSearchDir ${DREAM3DProj_SOURCE_DIR}/ExternalProjects/Plugins/${d3dPlugin})
             if(EXISTS ${pluginSearchDir})
-                set(${d3dPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
-                message(STATUS "Plugin: Defining ${d3dPlugin}_SOURCE_DIR to ${${d3dPlugin}_SOURCE_DIR}")
+                set(DREAM3D_${d3dPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
+                message(STATUS "Plugin: Defining DREAM3D_${d3dPlugin}_SOURCE_DIR to ${DREAM3D_${d3dPlugin}_SOURCE_DIR}")
             endif()
             set(pluginSearchDir ${DREAM3D_PARENT_DIR}/DREAM3D_Plugins/${d3dPlugin})
             if(EXISTS ${pluginSearchDir})
-                set(${d3dPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
-                message(STATUS "Plugin: Defining ${d3dPlugin}_SOURCE_DIR to ${${d3dPlugin}_SOURCE_DIR}")
+                set(DREAM3D_${d3dPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
+                message(STATUS "Plugin: Defining DREAM3D_${d3dPlugin}_SOURCE_DIR to ${DREAM3D_${d3dPlugin}_SOURCE_DIR}")
             endif()
           endif()
       endif()
 
       # Mark these variables as advanced
-      mark_as_advanced(${d3dPlugin}_SOURCE_DIR)
+      mark_as_advanced(DREAM3D_${d3dPlugin}_SOURCE_DIR)
 
 
     # Now that we have defined where the user's plugin directory is at we
     # need to make sure it have a CMakeLists.txt file in it
-      if(EXISTS ${${d3dPlugin}_SOURCE_DIR}/CMakeLists.txt)
-        set(${d3dPlugin}_IMPORT_FILE ${d3dPlugin}_SOURCE_DIR/CMakeLists.txt)
+      if(EXISTS ${DREAM3D_${d3dPlugin}_SOURCE_DIR}/CMakeLists.txt)
+        set(${d3dPlugin}_IMPORT_FILE DREAM3D_${d3dPlugin}_SOURCE_DIR/CMakeLists.txt)
       endif()
 
 
     # By this point we should have everything defined and ready to go...
-      if(DEFINED ${d3dPlugin}_SOURCE_DIR AND DEFINED ${d3dPlugin}_IMPORT_FILE)
-          #message(STATUS "Plugin: Adding Plugin ${${d3dPlugin}_SOURCE_DIR}")
+      if(DEFINED DREAM3D_${d3dPlugin}_SOURCE_DIR AND DEFINED ${d3dPlugin}_IMPORT_FILE)
+          #message(STATUS "Plugin: Adding Plugin ${DREAM3D_${d3dPlugin}_SOURCE_DIR}")
           DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${d3dPlugin}
-                                 PLUGIN_SOURCE_DIR ${${d3dPlugin}_SOURCE_DIR})
+                                 PLUGIN_SOURCE_DIR ${DREAM3D_${d3dPlugin}_SOURCE_DIR})
       else()
-          set(${d3dPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "" FORCE)
-          message(FATAL_ERROR "Plugin: The directory for plugin ${d3dPlugin} was not found. Use -D${d3dPlugin}_SOURCE_DIR=/Path/To/PluginDir")
+          set(DREAM3D_${d3dPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "" FORCE)
+          message(FATAL_ERROR "Plugin: The directory for plugin ${d3dPlugin} was not found. Use -DDREAM3D_${d3dPlugin}_SOURCE_DIR=/Path/To/PluginDir")
       endif()
 
     endforeach()

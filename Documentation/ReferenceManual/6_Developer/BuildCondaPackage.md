@@ -12,11 +12,11 @@
 
 Using CMake set the following Variables:
   
-    PYTHON_CONDA_DIRECTORY=c:/Applications/Anaconda3
-    PYTHON_CONDA_ENVIRONMENT_NAME=DREAM3D
-    SIMPL_WRAP_PYTHON=ON
-    SIMPL_PYTHON_BUILD_CONDA_PACKAGE=ON
-    SIMPL_PYTHON_INSTALL_CONDA_PACKAGE_LOCALLY=ON
+    ANACONDA_DIR=c:/Applications/Anaconda3
+    ANACONDA_ENVIRONMENT_NAME=DREAM3D
+    SIMPL_ENABLE_PYTHON=ON
+    SIMPL_ENABLE_ANACONDA_PACKAGE=ON
+    SIMPL_ENABLE_ANACONDA_LOCAL_INSTALL=ON
     
 These variables can be set through the DREAM3D_SDK.cmake file, through CMake-GUI.exe (by adding them manually), or by adding them manually as command line arguments to the cmake configuration invocation (using the -DXXXXX=YYY style).
 
@@ -40,7 +40,7 @@ These variables can be set through the DREAM3D_SDK.cmake file, through CMake-GUI
   * There should be something along the lines of “<dream3d.dream3d.simpl.DataContainerArray object at 0x00000208C665D308>”
 7. If there are no issues, DREAM3D has been successfully built and installed to the local Python environment
 
-* Alternatively, you can switch SIMPL_PYTHON_INSTALL_CONDA_PACKAGE_LOCALLY to ON and the dream3d Conda package will be installed to the Python Conda environment given in CMake
+* Alternatively, you can switch SIMPL_ENABLE_ANACONDA_LOCAL_INSTALL to ON and the dream3d Conda package will be installed to the Python Conda environment given in CMake
 
 ## Upload to Anaconda ##
 

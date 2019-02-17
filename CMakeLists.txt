@@ -467,7 +467,7 @@ message(STATUS "* TBB (${TBB_VERSION}) ${TBB_INSTALL_DIR}")
 message(STATUS "* -------------- Plugins ------------------------------------------------------")
 foreach(d3dPlugin ${DREAM3D_ALL_PLUGINS})
   get_property(PluginNumFilters GLOBAL PROPERTY ${d3dPlugin}_NumFilters)
-  message(STATUS "*   ${d3dPlugin}: [${DREAM3D_BUILD_PLUGIN_${d3dPlugin}}] ${PluginNumFilters} Filters")
+  message(STATUS "*   ${d3dPlugin}: [${DREAM3D_ENABLE_${d3dPlugin}}] ${PluginNumFilters} Filters")
 endforeach()
 message(STATUS "*******************************************************************************")
 
