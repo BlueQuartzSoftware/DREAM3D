@@ -61,10 +61,10 @@
 class ConvertColorToGrayScaleTest
 {
   const FloatVec3_t m_defaultWeights{0.2125f, 0.7154f, 0.0721f};
-  const bool m_createNewAM{false};
-  const QString m_filtName{"ConvertColorToGrayScale"};
-  const QString m_outputArrayPrefix{"grayTestImage"};
-  const QString m_outputAMName{"grayTestAM"};
+  const bool m_createNewAM = false;
+  const QString m_filtName = "ConvertColorToGrayScale";
+  const QString m_outputArrayPrefix = "grayTestImage";
+  const QString m_outputAMName = "grayTestAM";
   AbstractFilter::Pointer m_colorToGrayscaleFilter;
   DataContainerArray::Pointer m_dca;
 
@@ -289,7 +289,7 @@ class ConvertColorToGrayScaleTest
   void SetDataArrayTestValues(DataArray<uint8_t>::Pointer& aa)
   {
     aa->initializeWithValue(0);
-    size_t index{0};
+    size_t index = 0;
     for(const auto& eachColor : testColors)
     {
       aa->setTuple(index++, eachColor);
@@ -298,7 +298,7 @@ class ConvertColorToGrayScaleTest
 
   static DataContainer::Pointer createVertexGeometryDataContainer(const DataArray<uint8_t>::Pointer& aa, const QVector<size_t>& tDims)
   {
-    AttributeMatrix::Pointer am{AttributeMatrix::New(tDims, SIMPL::Defaults::VertexAttributeMatrixName, AttributeMatrix::Type::Vertex)};
+    AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, SIMPL::Defaults::VertexAttributeMatrixName, AttributeMatrix::Type::Vertex);
     am->addAttributeArray(aa->getName(), aa);
 
     DataContainer::Pointer dc = DataContainer::New(SIMPL::Defaults::VertexDataContainerName);
@@ -316,9 +316,9 @@ class ConvertColorToGrayScaleTest
     QVariant createNewAM{m_colorToGrayscaleFilter->property("CreateNewAttributeMatrix")};
     QVariant outputAMName{m_colorToGrayscaleFilter->property("OutputAttributeMatrixName")};
 
-    int wrongParameters{0};
+    int wrongParameters = 0;
     wrongParameters += (conversionAlgorithm == algorithm) ? 0 : 1;
-    float epsilon{0.000000001f};
+    float epsilon = 0.000000001f;
     wrongParameters += (abs(colorWeights.x - cws.x) < epsilon && abs(colorWeights.y - cws.y) < epsilon && abs(colorWeights.z - cws.z) < epsilon) ? 0 : 1;
     wrongParameters += (outputArrayPrefix == m_outputArrayPrefix) ? 0 : 1;
     wrongParameters += (colorChannel == cc) ? 0 : 1;
@@ -330,28 +330,30 @@ class ConvertColorToGrayScaleTest
 
   int CompareResults(const uint8_t& algoMapIndex) const
   {
-    QString amName{m_outputAMName};
-    DataContainer::Pointer dc{m_dca->getDataContainers().first()};
+    QString amName = m_outputAMName;
+    DataContainer::Pointer dc = m_dca->getDataContainers().first();
     if(!m_createNewAM)
+    {
       amName = dc->getAttributeMatrices().first()->getName();
-    AttributeMatrix::Pointer am{dc->getAttributeMatrix(amName)};
+    }
+    AttributeMatrix::Pointer am = dc->getAttributeMatrix(amName);
 
     UCharArrayType::Pointer testArray{};
     for(const auto& eachAAName : am->getAttributeArrayNames())
     {
       if(eachAAName.contains(m_outputArrayPrefix))
+      {
         testArray = am->getAttributeArrayAs<UCharArrayType>(eachAAName);
+      }
     }
 
     std::vector<uint8_t> colorArray{algorithmMap[algoMapIndex]};
 
-    int wrongValues{0};
+    int wrongValues = 0;
     tbb::parallel_for(tbb::blocked_range<size_t>(0, colorArray.size()), [&](const tbb::blocked_range<size_t>& r) {
       for(size_t index = r.begin(); index < r.end(); ++index)
       {
-        uint8_t testValue{testArray->getValue(index)};
-        uint8_t checkValue{colorArray[index]};
-        wrongValues += (testValue == checkValue) ? 0 : 1;
+        wrongValues += (testArray->getValue(index) == colorArray[index]) ? 0 : 1;
       }
     });
     return wrongValues;
@@ -371,19 +373,21 @@ class ConvertColorToGrayScaleTest
     QVector<DataArrayPath> daps{};
     for(const AttributeMatrix::Pointer& eachAM : dc->getAttributeMatrices())
     {
-      QString amName{eachAM->getName()};
+      QString amName = eachAM->getName();
       for(const QString& eachAAName : eachAM->getAttributeArrayNames())
       {
         // Make sure not to add an output AA
         if(!eachAAName.contains(m_outputArrayPrefix))
+        {
           daps.append(DataArrayPath(dc->getName(), amName, eachAAName));
+        }
       }
     }
 
     QVariant dataArrayVector{};
     dataArrayVector.setValue(daps);
 
-    QVariant cw;
+    QVariant cw{};
     cw.setValue(colorWeights);
 
     m_colorToGrayscaleFilter->setProperty("ConversionAlgorithm", algorithm);
@@ -395,7 +399,7 @@ class ConvertColorToGrayScaleTest
     m_colorToGrayscaleFilter->setProperty("InputDataArrayVector", dataArrayVector);
     m_colorToGrayscaleFilter->setDataContainerArray(m_dca);
 
-    int wrongParameters{CheckFilterParameters(algorithm, colorWeights, colorChannel)};
+    int wrongParameters = CheckFilterParameters(algorithm, colorWeights, colorChannel);
     DREAM3D_REQUIRE_EQUAL(0, wrongParameters)
   }
 
@@ -407,9 +411,9 @@ class ConvertColorToGrayScaleTest
   int RunTest(const uint8_t& algoMapIndex)
   {
     m_colorToGrayscaleFilter->execute();
-    int erred{m_colorToGrayscaleFilter->getErrorCondition()};
+    int erred = m_colorToGrayscaleFilter->getErrorCondition();
     DREAM3D_REQUIRE_EQUAL(erred, 0);
-    int wrongValues{CompareResults(algoMapIndex)};
+    int wrongValues = CompareResults(algoMapIndex);
     DREAM3D_REQUIRE_EQUAL(wrongValues, 0)
     return erred + wrongValues;
   }
@@ -429,12 +433,12 @@ class ConvertColorToGrayScaleTest
           {
             eachAM->getAttributeArray(eachAAName)->releaseOwnership();
             eachAM->removeAttributeArray(eachAAName);
-            bool doesAAStillExist{m_dca->doesAttributeArrayExist(DataArrayPath(eachDC->getName(), eachAM->getName(), eachAAName))};
+            bool doesAAStillExist = m_dca->doesAttributeArrayExist(DataArrayPath(eachDC->getName(), eachAM->getName(), eachAAName));
             DREAM3D_REQUIRE_EQUAL(false, doesAAStillExist)
           }
         }
         eachDC->removeAttributeMatrix(m_outputAMName);
-        bool doesAMStillExist{eachDC->doesAttributeMatrixExist(m_outputAMName)};
+        bool doesAMStillExist = eachDC->doesAttributeMatrixExist(m_outputAMName);
         DREAM3D_REQUIRE_EQUAL(false, doesAMStillExist)
       }
     }
@@ -455,7 +459,7 @@ public:
   ConvertColorToGrayScaleTest()
   : m_dca{DataContainerArray::New()}
   {
-    IFilterFactory::Pointer colorToGrayscaleFactory{FilterManager::Instance()->getFactoryFromClassName(m_filtName)};
+    IFilterFactory::Pointer colorToGrayscaleFactory = FilterManager::Instance()->getFactoryFromClassName(m_filtName);
     DREAM3D_REQUIRE(colorToGrayscaleFactory.get() != nullptr);
 
     m_colorToGrayscaleFilter = colorToGrayscaleFactory->create();
@@ -467,7 +471,7 @@ public:
   {
     int err = 0;
 
-    const QString aaName{SIMPL::VertexData::SurfaceMeshNodes};
+    const QString aaName = SIMPL::VertexData::SurfaceMeshNodes;
     const QVector<size_t> tDims{16};
     const QVector<size_t> cDims{3, 1, 1};
 
