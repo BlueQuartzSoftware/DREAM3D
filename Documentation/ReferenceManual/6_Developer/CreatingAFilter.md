@@ -1,7 +1,9 @@
-Creating A Filter 
-=========
+# Creating A Filter #
+
 <a name="prerequisites">
+
 ## Prerequisites ##
+
 </a>
 
 These prerequisites will get your system set up with a DREAM.3D SDK and compiling DREAM.3D.
