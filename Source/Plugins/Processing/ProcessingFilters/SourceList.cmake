@@ -16,7 +16,6 @@ SIMPL_START_FILTER_GROUP(
 # List your public filters here
 
 set(_PublicFilters
-  ConvertColorToGrayScale
   DetectEllipsoids
   ErodeDilateBadData
   ErodeDilateCoordinationNumber
@@ -25,7 +24,6 @@ set(_PublicFilters
   FindProjectedImageStatistics
   FindRelativeMotionBetweenSlices
   IdentifySample
-  InitializeData
   MinNeighbors
   MinSize
   RemoveFlaggedFeatures
