@@ -44,6 +44,7 @@
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
+#include <algorithm>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -58,12 +59,14 @@
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
 
-/**
- * @brief The ConvertColorToGrayScaleImpl class implements a threaded algorithm
- * that flattens an RGB array into a grayscale array
- */
 class LuminosityImpl
 {
+private:
+  uint8_t* m_ImageData;
+  uint8_t* m_FlatImageData;
+  FloatVec3_t m_ColorWeights;
+  size_t m_NumComp;
+
 public:
   LuminosityImpl(uint8_t* data, uint8_t* newdata, FloatVec3_t colorWeights, size_t comp)
   : m_ImageData(data)
@@ -72,78 +75,36 @@ public:
   , m_NumComp(comp)
   {
   }
-  virtual ~LuminosityImpl() = default;
+  LuminosityImpl(const LuminosityImpl&) = default; // Copy Constructor Not Implemented
+  LuminosityImpl(LuminosityImpl&&) = default;      // Move Constructor Not Implemented
+  LuminosityImpl& operator=(const LuminosityImpl&) = delete; // Copy Assignment Not Implemented
+  LuminosityImpl& operator=(LuminosityImpl&&) = delete;      // Move Assignment Not Implemented
+  ~LuminosityImpl()  = default;
 
   void convert(size_t start, size_t end) const
   {
     for(size_t i = start; i < end; i++)
     {
-      m_FlatImageData[i] =
-          static_cast<uint8_t>((m_ImageData[m_NumComp * i] * m_ColorWeights.x) + (m_ImageData[m_NumComp * i + 1] * m_ColorWeights.y) + (m_ImageData[m_NumComp * i + 2] * m_ColorWeights.z));
+      m_FlatImageData[i] = static_cast<uint8_t>(roundf(
+        (m_ImageData[m_NumComp * i] * m_ColorWeights.x)
+        + (m_ImageData[m_NumComp * i + 1] * m_ColorWeights.y)
+        + (m_ImageData[m_NumComp * i + 2] * m_ColorWeights.z)
+      ));
     }
   }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  void operator()(const tbb::blocked_range<size_t>& r) const
-  {
-    convert(r.begin(), r.end());
-  }
+   void operator()(const tbb::blocked_range<size_t>& r) const { convert(r.begin(), r.end()); }
 #endif
-private:
-  uint8_t* m_ImageData;
-  uint8_t* m_FlatImageData;
-  FloatVec3_t m_ColorWeights;
-  size_t m_NumComp;
 };
 
-/**
- * @brief The ConvertColorToGrayScaleImpl class implements a threaded algorithm
- * that flattens an RGB array into a grayscale array
- */
-class AverageImpl
-{
-public:
-  AverageImpl(uint8_t* data, uint8_t* newdata, size_t comp)
-  : m_ImageData(data)
-  , m_FlatImageData(newdata)
-  , m_NumComp(comp)
-  {
-  }
-  virtual ~AverageImpl() = default;
-
-  void convert(size_t start, size_t end) const
-  {
-    for(size_t i = start; i < end; i++)
-    {
-      uint16_t sum = 0;
-      for(size_t j = 0; j < 3; j++)
-      {
-        sum += static_cast<uint16_t>(m_ImageData[m_NumComp * i + j]);
-      }
-
-      sum = sum / 3;
-      m_FlatImageData[i] = static_cast<uint8_t>(sum);
-    }
-  }
-
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  void operator()(const tbb::blocked_range<size_t>& r) const
-  {
-    convert(r.begin(), r.end());
-  }
-#endif
-private:
-  uint8_t* m_ImageData;
-  uint8_t* m_FlatImageData;
-  size_t m_NumComp;
-};
-
-/**
- * @brief The ConvertColorToGrayScaleImpl class implements a threaded algorithm
- * that flattens an RGB array into a grayscale array
- */
 class LightnessImpl
 {
+private:
+  uint8_t* m_ImageData;
+  uint8_t* m_FlatImageData;
+  size_t m_NumComp;
+
 public:
   LightnessImpl(uint8_t* data, uint8_t* newdata, size_t comp)
   : m_ImageData(data)
@@ -151,48 +112,36 @@ public:
   , m_NumComp(comp)
   {
   }
-  virtual ~LightnessImpl() = default;
+  LightnessImpl(const LightnessImpl&) = default; // Copy Constructor Not Implemented
+  LightnessImpl(LightnessImpl&&) = default;      // Move Constructor Not Implemented
+  LightnessImpl& operator=(const LightnessImpl&) = delete; // Copy Assignment Not Implemented
+  LightnessImpl& operator=(LightnessImpl&&) = delete;      // Move Assignment Not Implemented
+  ~LightnessImpl()  = default;
 
   void convert(size_t start, size_t end) const
   {
     for(size_t i = start; i < end; i++)
     {
-      uint8_t maxRGB = 0;
-      uint8_t minRGB = 255;
-
-      for(size_t j = 0; j < 3; j++)
-      {
-        if(m_ImageData[m_NumComp * i + j] > maxRGB)
-        {
-          maxRGB = m_ImageData[m_NumComp * i + j];
-        }
-        if(m_ImageData[m_NumComp * i + j] < minRGB)
-        {
-          minRGB = m_ImageData[m_NumComp * i + j];
-        }
-      }
-      m_FlatImageData[i] = static_cast<uint8_t>((maxRGB + minRGB) / 2.0);
+      std::pair<uint8_t*, uint8_t*> minmax{
+        std::minmax_element(m_ImageData + (start * m_NumComp), m_ImageData + (end * m_NumComp))
+      };
+      m_FlatImageData[i] = static_cast<uint8_t>(roundf((minmax.first[0] + minmax.second[0]) / 2.0f));
     }
   }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  void operator()(const tbb::blocked_range<size_t>& r) const
-  {
-    convert(r.begin(), r.end());
-  }
+  void operator()(const tbb::blocked_range<size_t>& r) const { convert(r.begin(), r.end()); }
 #endif
+};
+
+class SingleChannelImpl
+{
 private:
   uint8_t* m_ImageData;
   uint8_t* m_FlatImageData;
-  size_t m_NumComp;
-};
+  size_t numComp;
+  int32_t m_Channel;
 
-/**
- * @brief The ConvertColorToGrayScaleImpl class implements a threaded algorithm
- * that flattens an RGB array into a grayscale array
- */
-class SingleChannelImpl
-{
 public:
   SingleChannelImpl(uint8_t* data, uint8_t* newdata, size_t comp, int32_t channel)
   : m_ImageData(data)
@@ -201,7 +150,11 @@ public:
   , m_Channel(channel)
   {
   }
-  virtual ~SingleChannelImpl() = default;
+  SingleChannelImpl(const SingleChannelImpl&) = default; // Copy Constructor Not Implemented
+  SingleChannelImpl(SingleChannelImpl&&) = default;      // Move Constructor Not Implemented
+  SingleChannelImpl& operator=(const SingleChannelImpl&) = delete; // Copy Assignment Not Implemented
+  SingleChannelImpl& operator=(SingleChannelImpl&&) = delete;      // Move Assignment Not Implemented
+  ~SingleChannelImpl()  = default;
 
   void convert(size_t start, size_t end) const
   {
@@ -212,16 +165,32 @@ public:
   }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  void operator()(const tbb::blocked_range<size_t>& r) const
-  {
-    convert(r.begin(), r.end());
-  }
+   void operator()(const tbb::blocked_range<size_t>& r) const { convert(r.begin(), r.end()); }
 #endif
-private:
-  uint8_t* m_ImageData;
-  uint8_t* m_FlatImageData;
-  size_t numComp;
-  int32_t m_Channel;
+
+};
+
+class ParallelWrapper
+{
+  public:
+    ~ParallelWrapper() = default;
+    ParallelWrapper(const ParallelWrapper&) = delete; // Copy Constructor Not Implemented
+    ParallelWrapper(ParallelWrapper&&) = delete;      // Move Constructor Not Implemented
+    ParallelWrapper& operator=(const ParallelWrapper&) = delete; // Copy Assignment Not Implemented
+    ParallelWrapper& operator=(ParallelWrapper&&) = delete;      // Move Assignment Not Implemented
+
+    template<typename T>
+    static void Run(T impl, size_t totalPoints)
+    {
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+      tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), impl, tbb::auto_partitioner());
+#else
+      impl.convert(0, totalPoints);
+#endif
+    }
+
+  protected:
+    ParallelWrapper() = default;
 };
 
 // -----------------------------------------------------------------------------
@@ -233,12 +202,8 @@ ConvertColorToGrayScale::ConvertColorToGrayScale()
 , m_CreateNewAttributeMatrix(false)
 , m_OutputAttributeMatrixName("GrayScaleData")
 , m_OutputArrayPrefix("")
-
+, m_ColorWeights{0.2125f, 0.7154f, 0.0721f}
 {
-  m_ColorWeights.x = 0.2125f;
-  m_ColorWeights.y = 0.7154f;
-  m_ColorWeights.z = 0.0721f;
-
 }
 
 // -----------------------------------------------------------------------------
@@ -295,9 +260,7 @@ void ConvertColorToGrayScale::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ConvertColorToGrayScale::initialize()
-{
-}
+void ConvertColorToGrayScale::initialize() { }
 
 // -----------------------------------------------------------------------------
 //
@@ -358,12 +321,10 @@ void ConvertColorToGrayScale::dataCheck()
   m_OutputArrayPaths.resize(arrayNames.size());
   for(int32_t i = 0; i < arrayNames.size(); i++)
   {
-    QString daName = arrayNames.at(i);
+    const QString& daName = arrayNames.at(i);
     QString newName = getOutputArrayPrefix() + arrayNames.at(i);
     inputAMPath.setDataArrayName(daName);
 
-    // getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, inputAMPath, cDims);
-    IDataArray::Pointer iDatArray = dca->getPrereqIDataArrayFromPath<IDataArray, ConvertColorToGrayScale>(this, inputAMPath);
     if(getErrorCondition() < 0)
     {
       return;
@@ -373,14 +334,14 @@ void ConvertColorToGrayScale::dataCheck()
     {
       outAM = dc->getPrereqAttributeMatrix(this, inputAMPath.getAttributeMatrixName(), -62105);
     }
-    outAM->createAndAddAttributeArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, newName, 0, outCDims);
+    outAM->createAndAddAttributeArray<UInt8ArrayType>(this, newName, 0, outCDims);
     DataArrayPath newPath(dc->getName(), outAM->getName(), newName);
     m_OutputArrayPaths[i] = newPath;
   }
 
   if(static_cast<ConversionType>(m_ConversionAlgorithm) == ConversionType::SingleChannel)
   {
-    if(m_ColorChannel > 2)
+    if(m_ColorChannel < 0 || m_ColorChannel > 2)
     {
       setErrorCondition(-62104);
       QString message = QObject::tr("The color channel should be 0, 1 or 2");
@@ -424,21 +385,13 @@ void ConvertColorToGrayScale::execute()
   QVector<DataArrayPath> inputArrayPaths = getInputDataArrayVector();
   qint32 size = inputArrayPaths.size();
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
-#endif
-
   for(qint32 i = 0; i < size; i++)
   {
     DataArrayPath arrayPath = inputArrayPaths[i];
 
-    // get volume container
     DataContainer::Pointer m = getDataContainerArray()->getDataContainer(arrayPath.getDataContainerName());
-    QString attrMatName = arrayPath.getAttributeMatrixName();
     AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(arrayPath);
 
-    // get input and output data
     IDataArray::Pointer inputData = attrMat->getAttributeArray(arrayPath.getDataArrayName());
     UInt8ArrayType::Pointer inputColorData = std::dynamic_pointer_cast<UInt8ArrayType>(inputData);
 
@@ -451,11 +404,9 @@ void ConvertColorToGrayScale::execute()
     }
 
     DataArrayPath newPath = m_OutputArrayPaths[i];
-
-    AttributeMatrix::Pointer outAttrMat = getDataContainerArray()->getAttributeMatrix(newPath);
-
-    IDataArray::Pointer outputData = outAttrMat->getAttributeArray(newPath.getDataArrayName());
-    UInt8ArrayType::Pointer outputGrayData = std::dynamic_pointer_cast<UInt8ArrayType>(outputData);
+    UInt8ArrayType::Pointer outputGrayData = getDataContainerArray()->
+                                             getAttributeMatrix(newPath)->
+                                             getAttributeArrayAs<UInt8ArrayType>(newPath.getDataArrayName());
 
     if(nullptr == outputGrayData.get())
     {
@@ -465,118 +416,31 @@ void ConvertColorToGrayScale::execute()
       continue;
     }
 
-    ConversionType convType = static_cast<ConversionType>(getConversionAlgorithm());
+    auto convType = static_cast<ConversionType>(getConversionAlgorithm());
 
     size_t comp = inputColorData->getNumberOfComponents();
     size_t totalPoints = inputColorData->getNumberOfTuples();
 
-    if(ConversionType::Luminosity == convType)
-    {
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      if(doParallel)
-      {
-        tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), LuminosityImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), m_ColorWeights, comp), tbb::auto_partitioner());
-      }
-      else
+  tbb::task_scheduler_init init;
 #endif
-      {
-        LuminosityImpl serial(inputColorData->getPointer(0), outputGrayData->getPointer(0), m_ColorWeights, comp);
-        serial.convert(0, totalPoints);
-      }
-    }
-    else if(ConversionType::Average == convType)
-    {
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      if(doParallel)
-      {
-        tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), AverageImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp), tbb::auto_partitioner());
-      }
-      else
-#endif
-      {
-        AverageImpl serial(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp);
-        serial.convert(0, totalPoints);
-      }
-    }
-    else if(ConversionType::Lightness == convType)
-    {
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      if(doParallel)
-      {
-        tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), LightnessImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp), tbb::auto_partitioner());
-      }
-      else
-#endif
-      {
-        LightnessImpl serial(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp);
-        serial.convert(0, totalPoints);
-      }
-    }
-    else if(ConversionType::SingleChannel == convType)
-    {
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      if(doParallel)
-      {
-        tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), SingleChannelImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp, getColorChannel()),
-                          tbb::auto_partitioner());
-      }
-      else
-#endif
-      {
-        SingleChannelImpl serial(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp, getColorChannel());
-        serial.convert(0, totalPoints);
-      }
-    }
-    else
-    {
 
-      setErrorCondition(-62107);
-      ss = QObject::tr("Conversion Algorithm did not match any available type. The type given was %1.").arg(getConversionAlgorithm());
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return;
+    switch (convType)
+    {
+      case ConversionType::Luminosity:
+        ParallelWrapper::Run<LuminosityImpl>(LuminosityImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), m_ColorWeights, comp), totalPoints );
+        break;
+      case ConversionType::Average:
+        ParallelWrapper::Run<LuminosityImpl>(LuminosityImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), {0.3333f, 0.3333f, 0.3333f}, comp) , totalPoints);
+        break;
+      case ConversionType::Lightness:
+        ParallelWrapper::Run<LightnessImpl>(LightnessImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp) , totalPoints);
+        break;
+      case ConversionType::SingleChannel:
+        ParallelWrapper::Run<SingleChannelImpl>(SingleChannelImpl(inputColorData->getPointer(0), outputGrayData->getPointer(0), comp, getColorChannel()) , totalPoints);
+        break;
     }
   }
-
-#if 0
-    size_t totalPoints = m_ImageDataPtr.lock()->getNumberOfTuples();
-
-    float Rfactor = 1.0f;
-    float Gfactor = 1.0f;
-    float Bfactor = 1.0f;
-    if(m_FlattenMethod == SIMPL::ConvertColorToGrayScaleMethod::Average)
-    {
-        Rfactor = 1.0f / 3.0f;
-        Gfactor = 1.0f / 3.0f;
-        Bfactor = 1.0f / 3.0f;
-    }
-    else if(m_FlattenMethod == SIMPL::ConvertColorToGrayScaleMethod::Luminosity)
-    {
-        Rfactor = 0.21f;
-        Gfactor = 0.72f;
-        Bfactor = 0.07f;
-    }
-
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    tbb::task_scheduler_init init;
-    bool doParallel = true;
-#endif
-
-    int32_t comp = m_ImageDataPtr.lock()->getNumberOfComponents();
-
-    //  qDebug() << "ConvertColorToGrayScale: " << m_ConversionFactor << "\n";
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-    if(doParallel == true)
-    {
-        tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), ConvertColorToGrayScaleImpl(m_ImageData, m_FlatImageData, Rfactor, Gfactor, Bfactor, comp), tbb::auto_partitioner());
-    }
-    else
-#endif
-    {
-        ConvertColorToGrayScaleImpl serial(m_ImageData, m_FlatImageData, Rfactor, Gfactor, Bfactor, comp);
-        serial.convert(0, totalPoints);
-    }
-
-#endif
 }
 
 // -----------------------------------------------------------------------------
@@ -589,7 +453,7 @@ AbstractFilter::Pointer ConvertColorToGrayScale::newFilterInstance(bool copyFilt
   {
     copyFilterParameterInstanceVariables(filter.get());
   }
-  return filter;
+  return std::move(filter);
 }
 
 // -----------------------------------------------------------------------------
@@ -618,6 +482,7 @@ const QString ConvertColorToGrayScale::getFilterVersion() const
   vStream << Processing::Version::Major() << "." << Processing::Version::Minor() << "." << Processing::Version::Patch();
   return version;
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
