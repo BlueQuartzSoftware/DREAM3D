@@ -25,15 +25,15 @@ install(DIRECTORY ${DREAM3D_SUPPORT_DIR}/PrebuiltPipelines
 #-------------------------------------------------------------------------------
 # Copy the Data Folder to the build directory
 set(DATA_DEST_DIR "${CMAKE_LIBRARY_OUTPUT_DIRECTORY}/${CMAKE_CFG_INTDIR}/Data/")
-# if(NOT APPLE AND NOT WIN32)
-#   set(DATA_DEST_DIR "${DREAM3DProj_BINARY_DIR}/Data/")
-# endif()
+if(NOT EXISTS ${DREAM3D_DATA_DIR}/Data)
+  message(FATAL_ERROR "=> DATA FOLDER MISSING: ${DREAM3D_DATA_DIR}/Data")
+endif()
+
 add_custom_target(DataFolderCopy ALL
             COMMAND ${CMAKE_COMMAND} -E copy_directory ${DREAM3D_DATA_DIR}/Data
             ${DATA_DEST_DIR}
             COMMENT "Copying Data Folder into Binary Directory")
 set_target_properties(DataFolderCopy PROPERTIES FOLDER ZZ_COPY_FILES)
-
 
 set(DREAM3D_DATA_DIRECTORIES
   ${DREAM3D_DATA_DIR}/Data/SmallIN100 
@@ -51,6 +51,3 @@ foreach(data_dir ${DREAM3D_DATA_DIRECTORIES})
           COMPONENT Applications)
   endif()
 endforeach()
-
-
-
