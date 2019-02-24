@@ -63,6 +63,13 @@ public:
   SIMPL_PIMPL_PROPERTY_DECL(Esprit_Private_Data, FileCacheData)
   Q_PROPERTY(Esprit_Private_Data FileCacheData READ getFileCacheData WRITE setFileCacheData)
 
+  SIMPL_FILTER_PARAMETER(bool, CombineEulerAngles)
+  Q_PROPERTY(bool CombineEulerAngles READ getCombineEulerAngles WRITE setCombineEulerAngles)
+
+  SIMPL_FILTER_PARAMETER(bool, DegreesToRadians)
+  Q_PROPERTY(bool DegreesToRadians READ getDegreesToRadians WRITE setDegreesToRadians)
+
+
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
@@ -85,6 +92,11 @@ public:
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
   const QString getHumanLabel() const override;
+
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  void setupFilterParameters() override;
 
   /**
    * @brief execute Reimplemented from @see AbstractFilter class
