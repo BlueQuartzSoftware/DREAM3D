@@ -78,7 +78,7 @@ FindTriangleGeomShapes::~FindTriangleGeomShapes() = default;
 // -----------------------------------------------------------------------------
 void FindTriangleGeomShapes::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
 	  DataArraySelectionFilterParameter::RequirementType req =

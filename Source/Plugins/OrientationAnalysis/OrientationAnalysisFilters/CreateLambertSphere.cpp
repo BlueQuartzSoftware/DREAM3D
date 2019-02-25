@@ -83,7 +83,7 @@ CreateLambertSphere::~CreateLambertSphere() = default;
 // -----------------------------------------------------------------------------
 void CreateLambertSphere::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVectorType parameters;
   ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
   parameter->setHumanLabel("Select Hemisphere to Generate");
   parameter->setPropertyName("Hemisphere");

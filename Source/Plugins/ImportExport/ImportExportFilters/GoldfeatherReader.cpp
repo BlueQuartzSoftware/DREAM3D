@@ -96,7 +96,7 @@ GoldfeatherReader::~GoldfeatherReader() = default;
 // -----------------------------------------------------------------------------
 void GoldfeatherReader::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   /*   For an input file use this code*/
   //  {
   //    FilterParameter::Pointer parameter = FilterParameter::New();

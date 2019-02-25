@@ -43,7 +43,7 @@ void ComputeFeatureRect::initialize()
 // -----------------------------------------------------------------------------
 void ComputeFeatureRect::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Any, IGeometry::Type::Any);

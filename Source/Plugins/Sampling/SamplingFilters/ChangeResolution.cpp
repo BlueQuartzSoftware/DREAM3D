@@ -75,7 +75,7 @@ ChangeResolution::~ChangeResolution() = default;
 // -----------------------------------------------------------------------------
 void ChangeResolution::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, ChangeResolution));
 
   QStringList linkedProps;

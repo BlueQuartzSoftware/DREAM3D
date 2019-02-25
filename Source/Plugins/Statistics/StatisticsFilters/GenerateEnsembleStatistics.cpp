@@ -129,7 +129,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   choices.push_back("Beta");
   choices.push_back("Lognormal");
   choices.push_back("Power");
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   QStringList phaseTypeStrings;
   PhaseType::getPhaseTypeStrings(phaseTypeStrings);
   PhaseTypeSelectionFilterParameter::Pointer phaseType_parameter = PhaseTypeSelectionFilterParameter::New(

@@ -303,7 +303,7 @@ FindEuclideanDistMap::~FindEuclideanDistMap() = default;
 // -----------------------------------------------------------------------------
 void FindEuclideanDistMap::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_BOOL_FP("Calculate Manhattan Distance", CalcManhattanDist, FilterParameter::Parameter, FindEuclideanDistMap));
   QStringList linkedProps("GBDistancesArrayName");
 

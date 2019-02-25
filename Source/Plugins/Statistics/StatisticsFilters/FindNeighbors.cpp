@@ -78,7 +78,7 @@ FindNeighbors::~FindNeighbors() = default;
 // -----------------------------------------------------------------------------
 void FindNeighbors::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   QStringList linkedProps("BoundaryCellsArrayName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Store Boundary Cells Array", StoreBoundaryCells, FilterParameter::Parameter, FindNeighbors, linkedProps));
   linkedProps.clear();

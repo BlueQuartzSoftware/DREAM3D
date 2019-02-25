@@ -65,7 +65,7 @@ ConvertOrientations::~ConvertOrientations() = default;
 // -----------------------------------------------------------------------------
 void ConvertOrientations::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();

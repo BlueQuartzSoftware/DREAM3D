@@ -65,7 +65,7 @@ FindFeatureCentroids::~FindFeatureCentroids() = default;
 // -----------------------------------------------------------------------------
 void FindFeatureCentroids::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =

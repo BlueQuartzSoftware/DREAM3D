@@ -57,7 +57,7 @@ GenerateNodeTriangleConnectivity::~GenerateNodeTriangleConnectivity() = default;
 // -----------------------------------------------------------------------------
 void GenerateNodeTriangleConnectivity::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   setFilterParameters(parameters);
 }

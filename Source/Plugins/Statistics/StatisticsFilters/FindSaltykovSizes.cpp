@@ -64,7 +64,7 @@ FindSaltykovSizes::~FindSaltykovSizes() = default;
 // -----------------------------------------------------------------------------
 void FindSaltykovSizes::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     DataArraySelectionFilterParameter::RequirementType req;

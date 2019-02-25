@@ -83,7 +83,7 @@ EMsoftSO3Sampler::~EMsoftSO3Sampler() = default;
 // -----------------------------------------------------------------------------
 void EMsoftSO3Sampler::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();
     parameter->setHumanLabel("Select the desired SO(3) sampling mode");

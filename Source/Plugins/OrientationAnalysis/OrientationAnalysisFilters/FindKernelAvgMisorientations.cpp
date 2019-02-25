@@ -76,7 +76,7 @@ FindKernelAvgMisorientations::~FindKernelAvgMisorientations() = default;
 // -----------------------------------------------------------------------------
 void FindKernelAvgMisorientations::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Kernel Radius", KernelSize, FilterParameter::Parameter, FindKernelAvgMisorientations));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
 

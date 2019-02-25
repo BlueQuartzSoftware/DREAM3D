@@ -165,7 +165,7 @@ GenerateIPFColors::~GenerateIPFColors() = default;
 // -----------------------------------------------------------------------------
 void GenerateIPFColors::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Reference Direction", ReferenceDir, FilterParameter::Parameter, GenerateIPFColors));
 
   QStringList linkedProps("GoodVoxelsArrayPath");

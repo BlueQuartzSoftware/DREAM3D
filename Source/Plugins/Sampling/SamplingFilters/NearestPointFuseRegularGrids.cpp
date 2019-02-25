@@ -64,7 +64,7 @@ NearestPointFuseRegularGrids::~NearestPointFuseRegularGrids() = default;
 // -----------------------------------------------------------------------------
 void NearestPointFuseRegularGrids::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);

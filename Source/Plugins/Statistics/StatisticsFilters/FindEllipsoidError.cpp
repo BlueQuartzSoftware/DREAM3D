@@ -71,7 +71,7 @@ FindEllipsoidError::~FindEllipsoidError() = default;
 // -----------------------------------------------------------------------------
 void FindEllipsoidError::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   QStringList linkedProps("IdealFeatureIdsArrayName");
   parameters.push_back(

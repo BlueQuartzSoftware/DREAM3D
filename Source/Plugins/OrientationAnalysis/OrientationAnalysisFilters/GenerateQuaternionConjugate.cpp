@@ -92,7 +92,7 @@ void GenerateQuaternionConjugate::initialize()
 // -----------------------------------------------------------------------------
 void GenerateQuaternionConjugate::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   DataArraySelectionFilterParameter::RequirementType dasReq;
   QVector<QVector<size_t>> comp;
   comp.push_back(QVector<size_t>(1, 4));

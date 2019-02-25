@@ -78,7 +78,7 @@ FindBoundaryStrengths::~FindBoundaryStrengths() = default;
 // -----------------------------------------------------------------------------
 void FindBoundaryStrengths::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Loading Direction (XYZ)", Loading, FilterParameter::Parameter, FindBoundaryStrengths));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
 

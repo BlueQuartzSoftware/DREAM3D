@@ -67,7 +67,7 @@ FindMicroTextureRegions::~FindMicroTextureRegions() = default;
 // -----------------------------------------------------------------------------
 void FindMicroTextureRegions::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Category::Any);

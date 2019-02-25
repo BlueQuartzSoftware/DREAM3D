@@ -82,7 +82,7 @@ StatsGeneratorFilter::~StatsGeneratorFilter() = default;
 // -----------------------------------------------------------------------------
 void StatsGeneratorFilter::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(StatsGeneratorFilterParameter::New("StatsGenerator", "StatsGenerator", "", FilterParameter::Parameter));
 
   parameters.push_back(SeparatorFilterParameter::New("Created Data Container", FilterParameter::CreatedArray));
@@ -162,7 +162,7 @@ void StatsGeneratorFilter::readFilterParameters(QJsonObject& obj)
   size_t numTuples = m_StatsDataArray->getNumberOfTuples();
   readArray(obj, numTuples);
 
-  QVector<FilterParameter::Pointer> filterParameters = getFilterParameters();
+  FilterParameterVectorType filterParameters = getFilterParameters();
   for(int i = 0; i < filterParameters.size(); i++)
   {
     FilterParameter::Pointer fp = filterParameters[i];
@@ -175,7 +175,7 @@ void StatsGeneratorFilter::readFilterParameters(QJsonObject& obj)
 // -----------------------------------------------------------------------------
 void StatsGeneratorFilter::writeFilterParameters(QJsonObject& obj) const
 {
-  QVector<FilterParameter::Pointer> filterParameters = getFilterParameters();
+  FilterParameterVectorType filterParameters = getFilterParameters();
   for(int i = 0; i < filterParameters.size(); i++)
   {
     FilterParameter::Pointer fp = filterParameters[i];

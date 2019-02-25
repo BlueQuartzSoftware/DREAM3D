@@ -94,7 +94,7 @@ WarpRegularGrid::~WarpRegularGrid() = default;
 // -----------------------------------------------------------------------------
 void WarpRegularGrid::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();

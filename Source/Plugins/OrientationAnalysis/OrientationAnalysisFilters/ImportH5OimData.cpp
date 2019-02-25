@@ -135,7 +135,7 @@ SIMPL_PIMPL_PROPERTY_DEF(ImportH5OimData, QDateTime, TimeStamp_Cache)
 // -----------------------------------------------------------------------------
 void ImportH5OimData::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, ImportH5OimData, "*.h5 *.hdf5"));
 
   // parameters.push_back(DynamicChoiceFilterParameter::New("Scan Name", "ScanName", getScanName(), "FileScanNames", FilterParameter::Parameter));

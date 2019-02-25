@@ -75,7 +75,7 @@ CalculateArrayHistogram::~CalculateArrayHistogram() = default;
 // -----------------------------------------------------------------------------
 void CalculateArrayHistogram::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Bins", NumberOfBins, FilterParameter::Parameter, CalculateArrayHistogram));
   QStringList linkedProps;
   linkedProps << "MinRange"

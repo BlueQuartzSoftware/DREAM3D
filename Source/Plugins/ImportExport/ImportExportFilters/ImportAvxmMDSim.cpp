@@ -41,7 +41,7 @@ void ImportAvxmMDSim::initialize()
 // -----------------------------------------------------------------------------
 void ImportAvxmMDSim::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_FILELISTINFO_FP("Input File List", InputFileListInfo, FilterParameter::Parameter, ImportAvxmMDSim));
 

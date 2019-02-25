@@ -147,7 +147,7 @@ FindRelativeMotionBetweenSlices::~FindRelativeMotionBetweenSlices() = default;
 // -----------------------------------------------------------------------------
 void FindRelativeMotionBetweenSlices::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Plane of Interest");

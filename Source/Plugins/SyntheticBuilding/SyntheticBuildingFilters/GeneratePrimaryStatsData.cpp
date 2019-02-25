@@ -80,7 +80,7 @@ void GeneratePrimaryStatsData::initialize()
 // -----------------------------------------------------------------------------
 void GeneratePrimaryStatsData::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_STRING_FP("Phase Name", PhaseName, FilterParameter::Parameter, GeneratePrimaryStatsData));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();

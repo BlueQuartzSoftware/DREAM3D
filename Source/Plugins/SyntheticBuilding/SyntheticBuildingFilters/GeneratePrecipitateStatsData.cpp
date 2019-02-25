@@ -90,7 +90,7 @@ void GeneratePrecipitateStatsData::initialize()
 // -----------------------------------------------------------------------------
 void GeneratePrecipitateStatsData::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_STRING_FP("Phase Name", PhaseName, FilterParameter::Parameter, GeneratePrecipitateStatsData));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();

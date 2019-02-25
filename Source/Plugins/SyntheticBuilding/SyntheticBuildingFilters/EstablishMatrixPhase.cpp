@@ -87,7 +87,7 @@ EstablishMatrixPhase::~EstablishMatrixPhase() = default;
 // -----------------------------------------------------------------------------
 void EstablishMatrixPhase::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   QStringList linkedProps("MaskArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask", UseMask, FilterParameter::Parameter, EstablishMatrixPhase, linkedProps));
 

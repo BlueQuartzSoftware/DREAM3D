@@ -111,7 +111,7 @@ EMMPMFilter::~EMMPMFilter() = default;
 // -----------------------------------------------------------------------------
 void EMMPMFilter::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     EMMPMFilterParameter::Pointer parameter = EMMPMFilterParameter::New();

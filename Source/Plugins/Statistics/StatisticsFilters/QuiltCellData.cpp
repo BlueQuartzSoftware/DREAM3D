@@ -74,7 +74,7 @@ QuiltCellData::~QuiltCellData() = default;
 // -----------------------------------------------------------------------------
 void QuiltCellData::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Quilt Step (Voxels)", QuiltStep, FilterParameter::Parameter, QuiltCellData));
   parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Patch Size (Voxels)", PatchSize, FilterParameter::Parameter, QuiltCellData));

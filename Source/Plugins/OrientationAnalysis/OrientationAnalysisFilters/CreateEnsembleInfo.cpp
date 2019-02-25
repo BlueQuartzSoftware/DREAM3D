@@ -71,7 +71,7 @@ CreateEnsembleInfo::~CreateEnsembleInfo() = default;
 // -----------------------------------------------------------------------------
 void CreateEnsembleInfo::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   {
     DataContainerSelectionFilterParameter::RequirementType req;
     parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Data Container", DataContainerName, FilterParameter::RequiredArray, CreateEnsembleInfo, req));

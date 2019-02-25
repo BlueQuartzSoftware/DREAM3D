@@ -136,7 +136,7 @@ FindOrientationFieldCurl::~FindOrientationFieldCurl() = default;
 // -----------------------------------------------------------------------------
 void FindOrientationFieldCurl::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Curl Radius (Pixels)", CurlSize, FilterParameter::Parameter, FindOrientationFieldCurl));
 

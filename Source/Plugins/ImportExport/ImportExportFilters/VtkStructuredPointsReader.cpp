@@ -80,7 +80,7 @@ VtkStructuredPointsReader::~VtkStructuredPointsReader() = default;
 // -----------------------------------------------------------------------------
 void VtkStructuredPointsReader::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input VTK File", InputFile, FilterParameter::Parameter, VtkStructuredPointsReader));
   QStringList linkedProps;
   linkedProps << "VertexDataContainerName"

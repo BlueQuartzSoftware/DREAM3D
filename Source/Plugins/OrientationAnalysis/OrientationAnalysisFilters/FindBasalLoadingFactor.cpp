@@ -72,7 +72,7 @@ FindBasalLoadingFactor::~FindBasalLoadingFactor() = default;
 // -----------------------------------------------------------------------------
 void FindBasalLoadingFactor::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Loading Direction", LoadingDirection, FilterParameter::Parameter, FindBasalLoadingFactor));
 

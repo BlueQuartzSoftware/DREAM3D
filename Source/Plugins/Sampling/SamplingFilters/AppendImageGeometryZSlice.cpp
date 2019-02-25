@@ -61,7 +61,7 @@ AppendImageGeometryZSlice::~AppendImageGeometryZSlice() = default;
 // -----------------------------------------------------------------------------
 void AppendImageGeometryZSlice::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);

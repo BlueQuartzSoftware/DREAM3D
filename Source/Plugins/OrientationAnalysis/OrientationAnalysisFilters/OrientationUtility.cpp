@@ -27,7 +27,7 @@ OrientationUtility::~OrientationUtility() = default;
 // -----------------------------------------------------------------------------
 void OrientationUtility::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(OrientationUtilityFilterParameter::New("", "", "", FilterParameter::Parameter));
 

@@ -114,7 +114,7 @@ InitializeSyntheticVolume::~InitializeSyntheticVolume() = default;
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   QStringList linkedProps("EstimatedPrimaryFeatures");
   linkedProps << "InputStatsFile"
               << "InputPhaseTypesArrayPath";
