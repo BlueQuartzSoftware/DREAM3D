@@ -55,7 +55,7 @@ class ImportExport_EXPORT DxReader : public FileReader
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(DxReader SUPERCLASS FileReader)
-  PYB11_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
+  PYB11_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
@@ -70,8 +70,8 @@ public:
 
   ~DxReader() override;
 
-  SIMPL_FILTER_PARAMETER(QString, VolumeDataContainerName)
-  Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, VolumeDataContainerName)
+  Q_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
 
   SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)

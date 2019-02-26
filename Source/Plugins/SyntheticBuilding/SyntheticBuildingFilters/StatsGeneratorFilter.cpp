@@ -86,7 +86,7 @@ void StatsGeneratorFilter::setupFilterParameters()
   parameters.push_back(StatsGeneratorFilterParameter::New("StatsGenerator", "StatsGenerator", "", FilterParameter::Parameter));
 
   parameters.push_back(SeparatorFilterParameter::New("Created Data Container", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Statistics Data Container Name", StatsGeneratorDataContainerName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Statistics Data Container Name", StatsGeneratorDataContainerName, FilterParameter::CreatedArray, StatsGeneratorFilter));
 
   parameters.push_back(SeparatorFilterParameter::New("Created Ensemble AttributeMatrix", FilterParameter::CreatedArray));
 
@@ -134,7 +134,7 @@ void StatsGeneratorFilter::readFilterParameters(AbstractFilterParametersReader* 
     readArray(jsonRoot, numTuples);
   }
 
-  setStatsGeneratorDataContainerName(reader->readString("StatsGeneratorDataContainerName", getStatsGeneratorDataContainerName()));
+  setStatsGeneratorDataContainerName(reader->readDataArrayPath("StatsGeneratorDataContainerName", getStatsGeneratorDataContainerName()));
   setCellEnsembleAttributeMatrixName(reader->readString("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName()));
   setStatsDataArrayName(reader->readString("StatsDataArrayName", getStatsDataArrayName()));
   setCrystalStructuresArrayName(reader->readString("CrystalStructuresArrayName", getCrystalStructuresArrayName()));

@@ -129,7 +129,7 @@ void WarpRegularGrid::setupFilterParameters()
   QStringList linkedProps;
   linkedProps << "NewDataContainerName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Save as New Data Container", SaveAsNewDataContainer, FilterParameter::Parameter, WarpRegularGrid, linkedProps));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", NewDataContainerName, FilterParameter::CreatedArray, WarpRegularGrid));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", NewDataContainerName, FilterParameter::CreatedArray, WarpRegularGrid));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
@@ -144,7 +144,7 @@ void WarpRegularGrid::setupFilterParameters()
 void WarpRegularGrid::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setNewDataContainerName(reader->readString("NewDataContainerName", getNewDataContainerName()));
+  setNewDataContainerName(reader->readDataArrayPath("NewDataContainerName", getNewDataContainerName()));
   setCellAttributeMatrixPath(reader->readDataArrayPath("CellAttributeMatrixPath", getCellAttributeMatrixPath()));
   setSecondOrderACoeff(reader->readFloat2ndOrderPoly("SecondOrderACoeff", getSecondOrderACoeff()));
   setSecondOrderBCoeff(reader->readFloat2ndOrderPoly("SecondOrderBCoeff", getSecondOrderBCoeff()));

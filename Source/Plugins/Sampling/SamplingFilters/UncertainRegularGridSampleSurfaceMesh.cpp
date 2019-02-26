@@ -95,7 +95,7 @@ void UncertainRegularGridSampleSurfaceMesh::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Uncertainty", Uncertainty, FilterParameter::Parameter, UncertainRegularGridSampleSurfaceMesh));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, UncertainRegularGridSampleSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, UncertainRegularGridSampleSurfaceMesh));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, UncertainRegularGridSampleSurfaceMesh));
   parameters.push_back(SIMPL_NEW_STRING_FP("Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, UncertainRegularGridSampleSurfaceMesh));
@@ -115,7 +115,7 @@ void UncertainRegularGridSampleSurfaceMesh::readFilterParameters(AbstractFilterP
   setResolution(reader->readFloatVec3("Resolution", getResolution()));
   setOrigin(reader->readFloatVec3("Origin", getOrigin()));
   setUncertainty(reader->readFloatVec3("Uncertainty", getUncertainty()));
-  setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
+  setDataContainerName(reader->readDataArrayPath("DataContainerName", getDataContainerName()));
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
   setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName()));
   reader->closeFilterGroup();

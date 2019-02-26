@@ -50,7 +50,7 @@ class Sampling_EXPORT CropImageGeometry : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(CropImageGeometry SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+    PYB11_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
     PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
     PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
     PYB11_PROPERTY(int XMin READ getXMin WRITE setXMin)
@@ -70,8 +70,8 @@ public:
 
   ~CropImageGeometry() override;
 
-  SIMPL_FILTER_PARAMETER(QString, NewDataContainerName)
-  Q_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, NewDataContainerName)
+  Q_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
   Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)

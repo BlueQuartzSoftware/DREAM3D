@@ -65,7 +65,7 @@ class OrientationAnalysis_EXPORT ImportH5OimData : public AbstractFilter
   PYB11_PROPERTY(int NumberOfScans READ getNumberOfScans WRITE setNumberOfScans)
   PYB11_PROPERTY(double ZSpacing READ getZSpacing WRITE setZSpacing)
   PYB11_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
-  PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(bool ReadPatternData READ getReadPatternData WRITE setReadPatternData)
@@ -94,8 +94,8 @@ public:
   SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
   Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
 
-  SIMPL_FILTER_PARAMETER(QString, DataContainerName)
-  Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
   SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
   Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)

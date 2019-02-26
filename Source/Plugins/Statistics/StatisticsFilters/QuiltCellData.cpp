@@ -84,7 +84,7 @@ void QuiltCellData::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Cell Array To Quilt", SelectedCellArrayPath, FilterParameter::RequiredArray, QuiltCellData, req));
   }
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Output DataContainer Name", OutputDataContainerName, FilterParameter::CreatedArray, QuiltCellData));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Output DataContainer Name", OutputDataContainerName, FilterParameter::CreatedArray, QuiltCellData));
   parameters.push_back(SIMPL_NEW_STRING_FP("Output AttributeMatrix Name", OutputAttributeMatrixName, FilterParameter::CreatedArray, QuiltCellData));
   parameters.push_back(SIMPL_NEW_STRING_FP("Output Data Array Name", OutputArrayName, FilterParameter::CreatedArray, QuiltCellData));
 
@@ -98,7 +98,7 @@ void QuiltCellData::readFilterParameters(AbstractFilterParametersReader* reader,
 {
   reader->openFilterGroup(this, index);
   setSelectedCellArrayPath(reader->readDataArrayPath("SelectedCellArrayPath", getSelectedCellArrayPath()));
-  setOutputDataContainerName(reader->readString("OutputDataContainerName", getOutputDataContainerName()));
+  setOutputDataContainerName(reader->readDataArrayPath("OutputDataContainerName", getOutputDataContainerName()));
   setOutputAttributeMatrixName(reader->readString("OutputAttributeMatrixName", getOutputAttributeMatrixName()));
   setOutputArrayName(reader->readString("OutputArrayName", getOutputArrayName()));
   setQuiltStep(reader->readIntVec3("QuiltStep", getQuiltStep()));

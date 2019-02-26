@@ -62,7 +62,7 @@ class Statistics_EXPORT QuiltCellData : public AbstractFilter
     PYB11_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
     PYB11_PROPERTY(IntVec3_t QuiltStep READ getQuiltStep WRITE setQuiltStep)
     PYB11_PROPERTY(IntVec3_t PatchSize READ getPatchSize WRITE setPatchSize)
-    PYB11_PROPERTY(QString OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName)
+    PYB11_PROPERTY(DataArrayPath OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName)
     PYB11_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
     PYB11_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName)
 public:
@@ -82,8 +82,8 @@ public:
   Q_PROPERTY(IntVec3_t PatchSize READ getPatchSize WRITE setPatchSize)
 
   // The user selects a new DataContainerName
-  SIMPL_FILTER_PARAMETER(QString, OutputDataContainerName)
-  Q_PROPERTY(QString OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, OutputDataContainerName)
+  Q_PROPERTY(DataArrayPath OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName)
   // Name the new AttributeMatrix that will get created
   SIMPL_FILTER_PARAMETER(QString, OutputAttributeMatrixName)
   Q_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)

@@ -49,7 +49,7 @@ class Sampling_EXPORT ChangeResolution : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ChangeResolution SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+    PYB11_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
     PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
     PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
     PYB11_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
@@ -63,8 +63,8 @@ public:
 
   ~ChangeResolution() override;
 
-  SIMPL_FILTER_PARAMETER(QString, NewDataContainerName)
-  Q_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, NewDataContainerName)
+  Q_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
   Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)

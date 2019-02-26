@@ -133,7 +133,7 @@ void AlignSectionsList::dataCheck()
   ImageGeom::Pointer geom = dc->getGeometryAs<ImageGeom>();
   if(nullptr == geom.get())
   {
-    QString ss = QObject::tr("DataContainer '%1' does not have an ImageGeometry").arg(getDataContainerName());
+    QString ss = QObject::tr("DataContainer '%1' does not have an ImageGeometry").arg(getDataContainerName().getDataContainerName());
     setErrorCondition(-15002);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;

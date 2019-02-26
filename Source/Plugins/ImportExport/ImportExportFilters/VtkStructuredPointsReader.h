@@ -49,10 +49,10 @@ class ImportExport_EXPORT VtkStructuredPointsReader : public AbstractFilter
   Q_OBJECT
   PYB11_CREATE_BINDINGS(VtkStructuredPointsReader SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(bool ReadCellData READ getReadCellData WRITE setReadCellData)
-  PYB11_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
+  PYB11_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(bool ReadPointData READ getReadPointData WRITE setReadPointData)
-  PYB11_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+  PYB11_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
   PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 public:
@@ -65,8 +65,8 @@ public:
   SIMPL_FILTER_PARAMETER(bool, ReadCellData)
   Q_PROPERTY(bool ReadCellData READ getReadCellData WRITE setReadCellData)
 
-  SIMPL_FILTER_PARAMETER(QString, VolumeDataContainerName)
-  Q_PROPERTY(QString VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, VolumeDataContainerName)
+  Q_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
 
   SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -74,8 +74,8 @@ public:
   SIMPL_FILTER_PARAMETER(bool, ReadPointData)
   Q_PROPERTY(bool ReadPointData READ getReadPointData WRITE setReadPointData)
 
-  SIMPL_FILTER_PARAMETER(QString, VertexDataContainerName)
-  Q_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, VertexDataContainerName)
+  Q_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
 
   SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)

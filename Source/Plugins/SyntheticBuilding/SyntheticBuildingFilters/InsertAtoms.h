@@ -49,7 +49,7 @@ class SyntheticBuilding_EXPORT InsertAtoms : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(InsertAtoms SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+    PYB11_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
     PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
     PYB11_PROPERTY(FloatVec3_t LatticeConstants READ getLatticeConstants WRITE setLatticeConstants)
     PYB11_PROPERTY(int Basis READ getBasis WRITE setBasis)
@@ -63,8 +63,8 @@ public:
 
   ~InsertAtoms() override;
 
-  SIMPL_FILTER_PARAMETER(QString, VertexDataContainerName)
-  Q_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, VertexDataContainerName)
+  Q_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
 
   SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
