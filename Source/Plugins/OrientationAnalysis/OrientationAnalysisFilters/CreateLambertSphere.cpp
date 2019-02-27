@@ -276,7 +276,7 @@ void CreateLambertSphere::dataCheck()
     edgeDC->setGeometry(edgetGeom);
     
     cDims[0] = 1;
-    DataArrayPath path(getEdgeDataContainerName(), getEdgeAttributeMatrixName(), m_EdgeDataName);
+    DataArrayPath path(getEdgeDataContainerName().getDataContainerName(), getEdgeAttributeMatrixName(), m_EdgeDataName);
     m_EdgeDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, path, 0, cDims);
     if(nullptr != m_EdgeDataPtr.lock())
     {
@@ -305,7 +305,7 @@ void CreateLambertSphere::dataCheck()
     triangleDC->setGeometry(triangleGeom);
 
     cDims[0] = 1;
-    DataArrayPath path(getTriangleDataContainerName(), getFaceAttributeMatrixName(), m_TriangleDataName);
+    DataArrayPath path(getTriangleDataContainerName().getDataContainerName(), getFaceAttributeMatrixName(), m_TriangleDataName);
     m_TriangleFaceDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, path, 0, cDims);
     if(nullptr != m_TriangleFaceDataPtr.lock())
     {
@@ -332,7 +332,7 @@ void CreateLambertSphere::dataCheck()
     quadDC->setGeometry(quadGeom);
 
     cDims[0] = 1;
-    DataArrayPath path(getQuadDataContainerName(), getFaceAttributeMatrixName(), m_QuadDataName);
+    DataArrayPath path(getQuadDataContainerName().getDataContainerName(), getFaceAttributeMatrixName(), m_QuadDataName);
     m_QuadFaceDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, path, 0, cDims);
     if(nullptr != m_QuadFaceDataPtr.lock())
     {

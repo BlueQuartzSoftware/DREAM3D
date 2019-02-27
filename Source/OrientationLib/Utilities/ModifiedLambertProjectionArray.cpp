@@ -432,9 +432,18 @@ int32_t ModifiedLambertProjectionArray::resizeTotalElements(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t ModifiedLambertProjectionArray::resize(size_t numTuples)
+int32_t ModifiedLambertProjectionArray::resizeTuples(size_t numTuples)
 {
-  return resizeTotalElements(numTuples);
+  Q_ASSERT(false);
+  return resizeTotalElements(numTuples);;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ModifiedLambertProjectionArray::resize(size_t numTuples)
+{
+  resizeTotalElements(numTuples);
 }
 
 // -----------------------------------------------------------------------------

@@ -144,7 +144,7 @@ public:
     FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
     CreateDataContainer::Pointer createDataContainer = CreateDataContainer::New();
-    createDataContainer->setDataContainerName(k_DataContainerName);
+    createDataContainer->setDataContainerName(DataArrayPath(k_DataContainerName, "", ""));
     pipeline->pushBack(createDataContainer);
 
     CreateGeometry::Pointer createGeom = CreateGeometry::New();
@@ -152,7 +152,7 @@ public:
     IntVec3_t dims;
     dims.IntVec3(64, 64, 64);
     createGeom->setDimensions(dims);
-    createGeom->setDataContainerName(k_DataContainerName);
+    createGeom->setDataContainerName(DataArrayPath(k_DataContainerName, "", ""));
     createGeom->setImageCellAttributeMatrixName(k_CellAMName);
     pipeline->pushBack(createGeom);
 

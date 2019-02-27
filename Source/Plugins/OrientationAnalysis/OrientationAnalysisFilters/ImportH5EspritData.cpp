@@ -108,10 +108,10 @@ Esprit_Private_Data ImportH5EspritData::getFileCacheData() const
 void ImportH5EspritData::setupFilterParameters()
 {
   ImportH5OimData::setupFilterParameters();
-  FilterParameterVector parameters = getFilterParameters();
+  FilterParameterVectorType parameters = getFilterParameters();
 
-  parameters.insert(4, SIMPL_NEW_BOOL_FP("Combine phi1, PHI, phi2 into Single Euler Angles Attribute Array", CombineEulerAngles, FilterParameter::Parameter, ImportH5EspritData));
-  parameters.insert(5, SIMPL_NEW_BOOL_FP("Convert Euler Angles to Radians", DegreesToRadians, FilterParameter::Parameter, ImportH5EspritData));
+  parameters.insert(parameters.begin() + 4, SIMPL_NEW_BOOL_FP("Combine phi1, PHI, phi2 into Single Euler Angles Attribute Array", CombineEulerAngles, FilterParameter::Parameter, ImportH5EspritData));
+  parameters.insert(parameters.begin() + 5, SIMPL_NEW_BOOL_FP("Convert Euler Angles to Radians", DegreesToRadians, FilterParameter::Parameter, ImportH5EspritData));
   setFilterParameters(parameters);
 }
 
@@ -375,7 +375,7 @@ void ImportH5EspritData::dataCheckOEM()
     cellAttrMat->removeAttributeArray(Ebsd::H5Esprit::PHI);
     cellAttrMat->removeAttributeArray(Ebsd::H5Esprit::phi2);
 
-    tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), Ebsd::Esprit::EulerAngles);
+    tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), Ebsd::Esprit::EulerAngles);
     m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims);
     if(nullptr != m_CellEulerAnglesPtr.lock())
     {
@@ -386,7 +386,7 @@ void ImportH5EspritData::dataCheckOEM()
 
 
   cDims[0] = 1;
-  tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::Esprit::CrystalStructures);
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::Esprit::CrystalStructures);
   m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims);
   if(nullptr != m_CrystalStructuresPtr.lock())
   {
@@ -395,7 +395,7 @@ void ImportH5EspritData::dataCheckOEM()
   ebsdArrayMap.insert(Ebsd::Esprit::CrystalStructures, getDataContainerArray()->getPrereqIDataArrayFromPath<UInt32ArrayType, AbstractFilter>(this, tempPath));
 
   cDims[0] = 6;
-  tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::Esprit::LatticeConstants);
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::Esprit::LatticeConstants);
   m_LatticeConstantsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0.0, cDims);
   if(nullptr != m_LatticeConstantsPtr.lock())
   {
@@ -418,7 +418,7 @@ void ImportH5EspritData::dataCheckOEM()
       // We will handle allocating the memory later on.
       bool areWeInPreflight = getInPreflight();
       setInPreflight(true);
-      tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), Ebsd::H5Esprit::RawPatterns);
+      tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), Ebsd::H5Esprit::RawPatterns);
       m_CellPatternDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, cDims);
       if(nullptr != m_CellPatternDataPtr.lock())
       {

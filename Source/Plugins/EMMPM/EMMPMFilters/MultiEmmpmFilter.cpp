@@ -74,7 +74,7 @@ MultiEmmpmFilter::~MultiEmmpmFilter() = default;
 void MultiEmmpmFilter::setupFilterParameters()
 {
   EMMPMFilter::setupFilterParameters();
-  FilterParameterVector parameters = getFilterParameters();
+  FilterParameterVectorType parameters = getFilterParameters();
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("Use Mu/Sigma from Previous Image as Initialization for Current Image", UsePreviousMuSigma, FilterParameter::Parameter, MultiEmmpmFilter));
   parameters.push_back(SIMPL_NEW_STRING_FP("Output Array Prefix", OutputArrayPrefix, FilterParameter::Parameter, MultiEmmpmFilter));

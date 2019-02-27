@@ -39,6 +39,7 @@
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -198,7 +199,7 @@ void CalculateArrayHistogram::dataCheck()
     {
       return;
     }
-    tempPath.update(getNewDataContainerName(), getNewAttributeMatrixName(), newArrayName);
+    tempPath.update(getNewDataContainerName().getDataContainerName(), getNewAttributeMatrixName(), newArrayName);
   }
   else // use existing data container
   {

@@ -231,7 +231,7 @@ void ExtractFlaggedFeatures::execute()
       newDCName.clear();
       newDCName = "Feature_" + QString::number(i);
       cropVol->setDataContainerArray(getDataContainerArray());
-      cropVol->setNewDataContainerName(newDCName);
+      cropVol->setNewDataContainerName(DataArrayPath(newDCName, "", ""));
       cropVol->setCellAttributeMatrixPath(m_FeatureIdsArrayPath);
       cropVol->setXMin(m_FeatureBounds[6 * i]);
       cropVol->setXMax(m_FeatureBounds[6 * i + 1]);

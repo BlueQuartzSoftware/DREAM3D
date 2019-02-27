@@ -179,7 +179,7 @@ void LaplacianSmoothing::dataCheck()
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, faceDataArrays);
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, nodeDataArrays);
 
-  setSurfaceDataContainerName(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
+  setSurfaceDataContainerName(DataArrayPath(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName(), "", ""));
 }
 
 // -----------------------------------------------------------------------------

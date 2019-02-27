@@ -80,7 +80,7 @@ void AlignSectionsMutualInformation::setupFilterParameters()
 {
   // getting the current parameters that were set by the parent and adding to it before resetting it
   AlignSections::setupFilterParameters();
-  FilterParameterVector parameters = getFilterParameters();
+  FilterParameterVectorType parameters = getFilterParameters();
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Misorientation Tolerance", MisorientationTolerance, FilterParameter::Parameter, AlignSectionsMutualInformation));
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Parameter, AlignSectionsMutualInformation, linkedProps));
@@ -141,7 +141,7 @@ void AlignSectionsMutualInformation::dataCheck()
   setWarningCondition(0);
 
   // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
-  setDataContainerName(m_QuatsArrayPath.getDataContainerName());
+  setDataContainerName(DataArrayPath(m_QuatsArrayPath.getDataContainerName(), "", ""));
   setCellAttributeMatrixName(m_QuatsArrayPath.getAttributeMatrixName());
 
   AlignSections::dataCheck();

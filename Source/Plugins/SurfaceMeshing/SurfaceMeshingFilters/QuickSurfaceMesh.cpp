@@ -46,6 +46,7 @@
 #include "SIMPLib/DataArrays/DynamicListArray.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -288,7 +289,7 @@ void QuickSurfaceMesh::dataCheck()
   sm->setGeometry(triangleGeom);
 
   cDims[0] = 2;
-  tempPath.update(getSurfaceDataContainerName(), getFaceAttributeMatrixName(), getFaceLabelsArrayName());
+  tempPath.update(getSurfaceDataContainerName().getDataContainerName(), getFaceAttributeMatrixName(), getFaceLabelsArrayName());
   m_FaceLabelsPtr =
       getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_FaceLabelsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -297,7 +298,7 @@ void QuickSurfaceMesh::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 1;
-  tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getNodeTypesArrayName());
+  tempPath.update(getSurfaceDataContainerName().getDataContainerName(), getVertexAttributeMatrixName(), getNodeTypesArrayName());
   m_NodeTypesPtr =
       getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_NodeTypesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -307,7 +308,7 @@ void QuickSurfaceMesh::dataCheck()
 
   for(int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
   {
-    tempPath.update(getSurfaceDataContainerName(), getFaceAttributeMatrixName(), m_SelectedDataArrayPaths[i].getDataArrayName());
+    tempPath.update(getSurfaceDataContainerName().getDataContainerName(), getFaceAttributeMatrixName(), m_SelectedDataArrayPaths[i].getDataArrayName());
     cDims = m_SelectedWeakPtrVector[i].lock()->getComponentDimensions();
     QVector<size_t> faceDims;
     // If the cell array is 1-dimensional, scale the face array accordingly

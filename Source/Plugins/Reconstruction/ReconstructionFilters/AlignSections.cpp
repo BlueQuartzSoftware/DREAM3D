@@ -224,7 +224,7 @@ void AlignSections::dataCheck()
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), "");
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), "");
   getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, tempPath, -301);
 
   if(m_WriteAlignmentShifts)

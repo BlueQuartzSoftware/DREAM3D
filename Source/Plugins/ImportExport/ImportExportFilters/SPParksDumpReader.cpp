@@ -40,6 +40,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -159,7 +160,7 @@ void SPParksDumpReader::dataCheck()
   // Creating a Feature Ids array here in preflight so that it appears in the current data structure
   // This is a temporary array that will be overwritten by the correct array at the end of reading the file
   QVector<size_t> cDims(1, 1);
-  DataArrayPath fIdsPath(getVolumeDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
+  DataArrayPath fIdsPath(getVolumeDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
   getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, fIdsPath, 0, cDims);
 
   QFileInfo fi(getInputFile());

@@ -39,6 +39,7 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Filtering/FilterManager.h"
@@ -403,7 +404,7 @@ void ReadH5Ebsd::dataCheck()
   if(m_SelectedArrayNames.contains(SIMPL::CellData::EulerAngles))
   {
     cDims[0] = 3;
-    tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getCellEulerAnglesArrayName());
+    tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getCellEulerAnglesArrayName());
     m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
         this, tempPath, 0, cDims);                   /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != m_CellEulerAnglesPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -416,7 +417,7 @@ void ReadH5Ebsd::dataCheck()
   if(m_SelectedArrayNames.contains(SIMPL::CellData::Phases))
   {
     cDims[0] = 1;
-    tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getCellPhasesArrayName());
+    tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getCellPhasesArrayName());
     m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
         this, tempPath, 0, cDims);              /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != m_CellPhasesPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -427,7 +428,7 @@ void ReadH5Ebsd::dataCheck()
 
   // Now create the Ensemble arrays for the XTal Structures, Material Names and LatticeConstants
   cDims[0] = 1;
-  tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName());
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName());
   m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(
       this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_CrystalStructuresPtr.lock())                                 /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -440,7 +441,7 @@ void ReadH5Ebsd::dataCheck()
   m_MaterialNamesPtr = materialNamesPtr;
 
   cDims[0] = 6;
-  tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getLatticeConstantsArrayName());
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), getLatticeConstantsArrayName());
   m_LatticeConstantsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
       this, tempPath, 0.0, cDims);                  /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_LatticeConstantsPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -634,7 +635,7 @@ void ReadH5Ebsd::execute()
           notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
         DataArrayPath tempPath;
-        tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), "");
+        tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), "");
         v.setValue(tempPath);
         propWasSet = rot_Sample->setProperty("CellAttributeMatrixPath", v);
         if(!propWasSet)
@@ -701,7 +702,7 @@ void ReadH5Ebsd::execute()
           notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
         DataArrayPath tempPath;
-        tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getCellEulerAnglesArrayName());
+        tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getCellEulerAnglesArrayName());
         v.setValue(tempPath);
         propWasSet = rot_Euler->setProperty("CellEulerAnglesArrayPath", v);
         if(!propWasSet)

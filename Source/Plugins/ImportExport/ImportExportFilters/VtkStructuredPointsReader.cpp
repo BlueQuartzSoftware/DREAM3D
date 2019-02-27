@@ -40,6 +40,7 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -167,7 +168,7 @@ void VtkStructuredPointsReader::dataCheck()
     return;
   }
 
-  ImageGeom::Pointer pointDataGeom = ImageGeom::CreateGeometry(getVertexDataContainerName());
+  ImageGeom::Pointer pointDataGeom = ImageGeom::CreateGeometry(getVertexDataContainerName().getDataContainerName());
   pointData_DataContainer->setGeometry(pointDataGeom);
 
   QVector<size_t> tDims(1, 0);
@@ -185,7 +186,7 @@ void VtkStructuredPointsReader::dataCheck()
     return;
   }
 
-  ImageGeom::Pointer cellDataGeom = ImageGeom::CreateGeometry(getVolumeDataContainerName());
+  ImageGeom::Pointer cellDataGeom = ImageGeom::CreateGeometry(getVolumeDataContainerName().getDataContainerName());
   cellData_DataContainer->setGeometry(cellDataGeom);
 
   tDims.resize(3);
@@ -204,23 +205,23 @@ void VtkStructuredPointsReader::dataCheck()
   // now check to see what the user wanted
   if(!getReadPointData())
   {
-    getDataContainerArray()->removeDataContainer(getVertexDataContainerName());
+    getDataContainerArray()->removeDataContainer(getVertexDataContainerName().getDataContainerName());
   }
   if(!getReadCellData())
   {
-    getDataContainerArray()->removeDataContainer(getVolumeDataContainerName());
+    getDataContainerArray()->removeDataContainer(getVolumeDataContainerName().getDataContainerName());
   }
 
   // If there was no Cell Data, remove that dataContainer
   if(cellAttrMat->getNumAttributeArrays() == 0)
   {
-    getDataContainerArray()->removeDataContainer(getVolumeDataContainerName());
+    getDataContainerArray()->removeDataContainer(getVolumeDataContainerName().getDataContainerName());
   }
 
   // If there were no Point Arrays then remove that dataContainer
   if(pointAttrMat->getNumAttributeArrays() == 0)
   {
-    getDataContainerArray()->removeDataContainer(getVertexDataContainerName());
+    getDataContainerArray()->removeDataContainer(getVertexDataContainerName().getDataContainerName());
   }
 }
 

@@ -305,7 +305,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
       m_DisplayedImage = QImage();
       return;
     }
-    dcName = reader->getDataContainerName();
+    dcName = reader->getDataContainerName().getDataContainerName();
     cellAttrMatName = reader->getCellAttributeMatrixName();
     cellEnsembleName = reader->getCellEnsembleAttributeMatrixName();
     cellPhasesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::AngFile::Phases);
@@ -335,7 +335,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
       m_DisplayedImage = QImage();
       return;
     }
-    dcName = reader->getDataContainerName();
+    dcName = reader->getDataContainerName().getDataContainerName();
     cellAttrMatName = reader->getCellAttributeMatrixName();
     cellEnsembleName = reader->getCellEnsembleAttributeMatrixName();
     cellPhasesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::CtfFile::Phases);

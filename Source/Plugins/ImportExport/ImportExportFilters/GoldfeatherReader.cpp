@@ -38,6 +38,7 @@
 #include <QtCore/QFileInfo>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -239,8 +240,10 @@ void GoldfeatherReader::dataCheck()
 
   sm->setGeometry(triangleGeom);
 
+  const QString surfaceDCName = getSurfaceDataContainerName().getDataContainerName();
+
   QVector<size_t> dims(1, 3);
-  tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getSurfaceMeshNodeNormalsArrayName());
+  tempPath.update(surfaceDCName, getVertexAttributeMatrixName(), getSurfaceMeshNodeNormalsArrayName());
   m_SurfaceMeshNodeNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
       this, tempPath, 0, dims);                     /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshNodeNormalsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -249,7 +252,7 @@ void GoldfeatherReader::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 1;
-  tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getSurfaceMeshPrincipalCurvature1sArrayName());
+  tempPath.update(surfaceDCName, getVertexAttributeMatrixName(), getSurfaceMeshPrincipalCurvature1sArrayName());
   m_SurfaceMeshPrincipalCurvature1sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
       this, tempPath, 0, dims);                              /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshPrincipalCurvature1sPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -257,7 +260,7 @@ void GoldfeatherReader::dataCheck()
     m_SurfaceMeshPrincipalCurvature1s = m_SurfaceMeshPrincipalCurvature1sPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getSurfaceMeshPrincipalCurvature2sArrayName());
+  tempPath.update(surfaceDCName, getVertexAttributeMatrixName(), getSurfaceMeshPrincipalCurvature2sArrayName());
   m_SurfaceMeshPrincipalCurvature2sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
       this, tempPath, 0, dims);                              /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshPrincipalCurvature2sPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -266,7 +269,7 @@ void GoldfeatherReader::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 3;
-  tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getSurfaceMeshPrincipalDirection1sArrayName());
+  tempPath.update(surfaceDCName, getVertexAttributeMatrixName(), getSurfaceMeshPrincipalDirection1sArrayName());
   m_SurfaceMeshPrincipalDirection1sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
       this, tempPath, 0, dims);                              /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshPrincipalDirection1sPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -274,7 +277,7 @@ void GoldfeatherReader::dataCheck()
     m_SurfaceMeshPrincipalDirection1s = m_SurfaceMeshPrincipalDirection1sPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getSurfaceMeshPrincipalDirection2sArrayName());
+  tempPath.update(surfaceDCName, getVertexAttributeMatrixName(), getSurfaceMeshPrincipalDirection2sArrayName());
   m_SurfaceMeshPrincipalDirection2sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
       this, tempPath, 0, dims);                              /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshPrincipalDirection2sPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -283,7 +286,7 @@ void GoldfeatherReader::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 2;
-  tempPath.update(getSurfaceDataContainerName(), getFaceAttributeMatrixName(), getSurfaceMeshFaceLabelsArrayName());
+  tempPath.update(surfaceDCName, getFaceAttributeMatrixName(), getSurfaceMeshFaceLabelsArrayName());
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
       this, tempPath, 0, dims);                    /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshFaceLabelsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -292,7 +295,7 @@ void GoldfeatherReader::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 3;
-  tempPath.update(getSurfaceDataContainerName(), getFaceAttributeMatrixName(), getSurfaceMeshFaceNormalsArrayName());
+  tempPath.update(surfaceDCName, getFaceAttributeMatrixName(), getSurfaceMeshFaceNormalsArrayName());
   m_SurfaceMeshFaceNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
       this, tempPath, 0, dims);                     /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshFaceNormalsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */

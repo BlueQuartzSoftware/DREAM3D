@@ -124,7 +124,7 @@ void MergeColonies::setupFilterParameters()
 {
   GroupFeatures::setupFilterParameters();
 
-  FilterParameterVector parameters = getFilterParameters();
+  FilterParameterVectorType parameters = getFilterParameters();
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Axis Tolerance (Degrees)", AxisTolerance, FilterParameter::Parameter, MergeColonies));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Angle Tolerance (Degrees)", AngleTolerance, FilterParameter::Parameter, MergeColonies));
   QStringList linkedProps("GlobAlphaArrayName");

@@ -1267,10 +1267,10 @@ Int32ArrayType::Pointer DetectEllipsoids::fillEllipse(Int32ArrayType::Pointer I,
       {
         // Increase stack size
         stackX->resize(maxStack + 1000);
-        stackX->initializeWithValue(0, maxStack);
+        stackX->initializeWithValue(0);
 
         stackY->resize(maxStack + 1000);
-        stackY->initializeWithValue(0, maxStack);
+        stackY->initializeWithValue(0);
         maxStack = maxStack + 1000;
       }
 

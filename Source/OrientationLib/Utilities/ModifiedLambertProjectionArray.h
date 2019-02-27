@@ -55,7 +55,7 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
   public:
     SIMPL_SHARED_POINTERS(ModifiedLambertProjectionArray)
     SIMPL_STATIC_NEW_MACRO(ModifiedLambertProjectionArray)
-     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ModifiedLambertProjectionArray, IDataArray)
+    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ModifiedLambertProjectionArray, IDataArray)
     SIMPL_CLASS_VERSION(2)
 
     virtual ~ModifiedLambertProjectionArray();
@@ -295,18 +295,24 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
     virtual IDataArray::Pointer deepCopy(bool forceNoAllocate = false);
 
     /**
-       * @brief Reseizes the internal array
-       * @param size The new size of the internal array
-       * @return 1 on success, 0 on failure
-       */
-    virtual int32_t resizeTotalElements(size_t size);
-
-    /**
      * @brief Reseizes the internal array
      * @param size The new size of the internal array
      * @return 1 on success, 0 on failure
      */
-    virtual int32_t resize(size_t numTuples);
+    int32_t resizeTotalElements(size_t size) override;
+
+    /**
+     * @brief Resizes the internal tuple count.
+     * @param numTuples
+     * @return 1 on success, 0 on failure
+     */
+    int32_t resizeTuples(size_t numTuples) override;
+
+    /**
+     * @brief Reseizes the internal array
+     * @param size The new size of the internal array
+     */
+    void resize(size_t numTuples) override;
 
     /**
      * @brief printTuple

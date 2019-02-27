@@ -239,7 +239,7 @@ void EMsoftSO3Sampler::dataCheck()
   QVector<size_t> cDims(1);
   cDims[0] = 3;
   DataArrayPath tempPath;
-  tempPath.update(getDataContainerName(), getEMsoftAttributeMatrixName(), getEulerAnglesArrayName());
+  tempPath.update(getDataContainerName().getDataContainerName(), getEMsoftAttributeMatrixName(), getEulerAnglesArrayName());
   m_EulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0.0f,
                                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_EulerAnglesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -544,7 +544,7 @@ void EMsoftSO3Sampler::execute()
   }
 
   // resize the EulerAngles array to the number of items in FZlist; don't forget to redefine the hard pointer
-  AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(DataArrayPath(getDataContainerName(), getEMsoftAttributeMatrixName(), ""));
+  AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(DataArrayPath(getDataContainerName().getDataContainerName(), getEMsoftAttributeMatrixName(), ""));
   QVector<size_t> tDims(1, FZlist.size());
   am->resizeAttributeArrays(tDims);
   m_EulerAngles = m_EulerAnglesPtr.lock()->getPointer(0);
