@@ -105,13 +105,6 @@ protected:
   void setupGui();
 
   /**
-   * @brief Verifies that a path exists on the file system.
-   * @param outFilePath The file path to check
-   * @param lineEdit The QLineEdit object to modify visuals of (Usually by placing a red line around the QLineEdit widget)
-   */
-  bool verifyPathExists(const QString& outFilePath, QLineEdit* lineEdit);
-
-  /**
    * @brief Verifies that a parent path exists on the file system.
    * @param outFilePath The parent file path to check
    * @param lineEdit The QLineEdit object to modify visuals of (Usually by placing a red line around the QLineEdit widget)

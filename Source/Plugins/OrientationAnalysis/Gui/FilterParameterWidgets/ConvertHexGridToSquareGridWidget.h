@@ -140,14 +140,6 @@ class ConvertHexGridToSquareGridWidget : public FilterParameterWidget, private U
     void validateInputFile();
 
     /**
-     * @brief verifyPathExists
-     * @param outFilePath
-     * @param lineEdit
-     * @return
-     */
-    bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
-
-    /**
      * @brief setWidgetListEnabled
      */
     void setWidgetListEnabled(bool v);

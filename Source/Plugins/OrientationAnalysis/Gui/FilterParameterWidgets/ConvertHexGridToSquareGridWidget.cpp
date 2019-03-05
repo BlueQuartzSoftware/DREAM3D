@@ -44,6 +44,7 @@
 #include "SIMPLib/Utilities/FilePathGenerator.h"
 
 #include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
+#include "SVWidgetsLib/QtSupport/QtSFileUtils.h"
 
 #include "OrientationAnalysis/FilterParameters/ConvertHexGridToSquareGridFilterParameter.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/ConvertHexGridToSquareGrid.h"
@@ -248,27 +249,9 @@ void ConvertHexGridToSquareGridWidget::resolutionChanged(const QString& string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool ConvertHexGridToSquareGridWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
-{
-  //  std::cout << "outFilePath: " << outFilePath << std::endl;
-  QFileInfo fileinfo(outFilePath);
-  if(!fileinfo.exists())
-  {
-    lineEdit->setStyleSheet("border: 1px solid red;");
-  }
-  else
-  {
-    lineEdit->setStyleSheet("");
-  }
-  return fileinfo.exists();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::checkIOFiles()
 {
-  if(this->verifyPathExists(m_InputDir->text(), this->m_InputDir))
+  if(QtSFileUtils::VerifyPathExists(m_InputDir->text(), this->m_InputDir))
   {
     findMaxSliceAndPrefix();
   }
@@ -296,7 +279,7 @@ void ConvertHexGridToSquareGridWidget::on_m_InputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::on_m_InputDir_textChanged(const QString& text)
 {
-  if(verifyPathExists(m_InputDir->text(), m_InputDir))
+  if(QtSFileUtils::VerifyPathExists(m_InputDir->text(), m_InputDir))
   {
     findMaxSliceAndPrefix();
     QDir dir(m_InputDir->text());
@@ -343,7 +326,7 @@ void ConvertHexGridToSquareGridWidget::on_m_OutputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGridWidget::on_m_OutputDir_textChanged(const QString& text)
 {
-  // if (verifyPathExists(text, m_OutputFile) == true )
+  // if (QtSFileUtils::VerifyPathExists(text, m_OutputFile) == true )
   //{
   //  QFileInfo fi(text);
   //  setOpenDialogLastFilePath(fi.path());
