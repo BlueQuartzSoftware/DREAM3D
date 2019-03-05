@@ -614,7 +614,7 @@ void ReadH5EbsdWidget::updateFileInfoWidgets()
       if(h5Reader->readVolumeInfo() >= 0)
       {
 
-        h5Reader->getResolution(xres, yres, zres);
+        h5Reader->getSpacing(xres, yres, zres);
         m_XRes->setText(QString::number(xres));
         m_YRes->setText(QString::number(yres));
         m_ZRes->setText(QString::number(zres));

@@ -579,9 +579,9 @@ void CreateLambertSphere::createQuadGeometry()
   SharedVertexList::Pointer vertices = quadGeom->getVertices();
 
   float res = (2.0f * L) / imageDims[0];
-  imageGeom->setResolution(res, res, res);
+  imageGeom->setSpacing(FloatVec3Type(res, res, res));
 
-  float origin[3] = {-(imageDims[0] * res) / 2.0f, -(imageDims[1] * res) / 2.0f, 0.0f};
+  FloatVec3Type origin = {-(imageDims[0] * res) / 2.0f, -(imageDims[1] * res) / 2.0f, 0.0f};
   imageGeom->setOrigin(origin);
 
   size_t vIndex = 0;

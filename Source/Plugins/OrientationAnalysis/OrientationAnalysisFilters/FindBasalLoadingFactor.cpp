@@ -56,10 +56,9 @@ FindBasalLoadingFactor::FindBasalLoadingFactor()
 : m_AvgQuatsArrayPath("", "", "")
 , m_BasalLoadingFactorArrayPath("", "", "")
 {
-  m_LoadingDirection.x = 1.0f;
-  m_LoadingDirection.y = 1.0f;
-  m_LoadingDirection.z = 1.0f;
-
+  m_LoadingDirection[0] = 1.0f;
+  m_LoadingDirection[1] = 1.0f;
+  m_LoadingDirection[2] = 1.0f;
 }
 
 // -----------------------------------------------------------------------------
@@ -171,9 +170,9 @@ void FindBasalLoadingFactor::execute()
   float caxis[3] = {0, 0, 1};
   float c1[3];
 
-  sampleLoading[0] = m_LoadingDirection.x;
-  sampleLoading[1] = m_LoadingDirection.y;
-  sampleLoading[2] = m_LoadingDirection.z;
+  sampleLoading[0] = m_LoadingDirection[0];
+  sampleLoading[1] = m_LoadingDirection[1];
+  sampleLoading[2] = m_LoadingDirection[2];
   MatrixMath::Normalize3x1(sampleLoading);
 
   for(size_t i = 1; i < totalFeatures; i++)

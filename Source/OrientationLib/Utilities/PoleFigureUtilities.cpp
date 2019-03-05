@@ -233,7 +233,7 @@ void PoleFigureUtilities::GenerateHexPoleFigures(FloatArrayType* eulers, int lam
 
 #if WRITE_LAMBERT_SQUARES
   size_t dims[3] = {lambert->getDimension(), lambert->getDimension(), 1 };
-  float res[3] = {lambert->getStepSize(), lambert->getStepSize(), lambert->getStepSize() };
+  FloatVec3Type res = {lambert->getStepSize(), lambert->getStepSize(), lambert->getStepSize()};
   DoubleArrayType::Pointer north = lambert->getNorthSquare();
   DoubleArrayType::Pointer south = lambert->getSouthSquare();
   VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/ModifiedLambert_North.vtk", north.get(), dims, res, "double", true);
@@ -295,7 +295,7 @@ void PoleFigureUtilities::GenerateOrthoPoleFigures(FloatArrayType* eulers, int l
 
 #if WRITE_LAMBERT_SQUARES
   size_t dims[3] = {lambert->getDimension(), lambert->getDimension(), 1 };
-  float res[3] = {lambert->getStepSize(), lambert->getStepSize(), lambert->getStepSize() };
+  FloatVec3Type res = {lambert->getStepSize(), lambert->getStepSize(), lambert->getStepSize()};
   DoubleArrayType::Pointer north = lambert->getNorthSquare();
   DoubleArrayType::Pointer south = lambert->getSouthSquare();
   VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/ModifiedLambert_North.vtk", north.get(), dims, res, "double", true);

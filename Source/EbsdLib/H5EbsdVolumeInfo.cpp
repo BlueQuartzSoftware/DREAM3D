@@ -334,7 +334,7 @@ int H5EbsdVolumeInfo::getDims(int64_t& xDim, int64_t& yDim, int64_t& zDim)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5EbsdVolumeInfo::getResolution(float& xRes, float& yRes, float& zRes)
+int H5EbsdVolumeInfo::getSpacing(float& xRes, float& yRes, float& zRes)
 {
   int err = -1;
   if(!m_ValuesAreCached)

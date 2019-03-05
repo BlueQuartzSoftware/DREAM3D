@@ -119,7 +119,7 @@ void H5CtfImporter::getDims(int64_t& x, int64_t& y)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5CtfImporter::getResolution(float& x, float& y)
+void H5CtfImporter::getSpacing(float& x, float& y)
 {
   x = xRes;
   y = yRes;

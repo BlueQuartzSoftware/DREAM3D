@@ -149,8 +149,7 @@ public:
 
     CreateGeometry::Pointer createGeom = CreateGeometry::New();
     createGeom->setGeometryType(k_ImageGeomType);
-    IntVec3_t dims;
-    dims.IntVec3(64, 64, 64);
+    IntVec3Type dims(64, 64, 64);
     createGeom->setDimensions(dims);
     createGeom->setDataContainerName(DataArrayPath(k_DataContainerName, "", ""));
     createGeom->setImageCellAttributeMatrixName(k_CellAMName);

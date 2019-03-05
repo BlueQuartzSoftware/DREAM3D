@@ -240,8 +240,8 @@ void WarpRegularGrid::execute()
 
   size_t dims[3] = {0, 0, 0};
   std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
-  float res[3] = {0.0f, 0.0f, 0.0f};
-  m->getGeometryAs<ImageGeom>()->getResolution(res);
+  FloatVec3Type res = {0.0f, 0.0f, 0.0f};
+  m->getGeometryAs<ImageGeom>()->getSpacing(res);
   size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
 
   float x = 0.0f, y = 0.0f, z = 0.0f;
@@ -314,11 +314,10 @@ void WarpRegularGrid::execute()
       }
     }
     cellAttrMat->removeAttributeArray(*iter);
-    newCellAttrMat->addAttributeArray(*iter, data);
+    newCellAttrMat->insert_or_assign(data);
   }
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
-  m->addAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName(), newCellAttrMat);
-
+  m->addAttributeMatrix(newCellAttrMat);
 }
 
 // -----------------------------------------------------------------------------

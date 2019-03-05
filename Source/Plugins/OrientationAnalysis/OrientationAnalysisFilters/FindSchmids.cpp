@@ -65,17 +65,17 @@ FindSchmids::FindSchmids()
 , m_StoreAngleComponents(false)
 , m_OverrideSystem(false)
 {
-  m_LoadingDirection.x = 1.0f;
-  m_LoadingDirection.y = 1.0f;
-  m_LoadingDirection.z = 1.0f;
+  m_LoadingDirection[0] = 1.0f;
+  m_LoadingDirection[1] = 1.0f;
+  m_LoadingDirection[2] = 1.0f;
 
-  m_SlipPlane.x = 0.0f;
-  m_SlipPlane.y = 0.0f;
-  m_SlipPlane.z = 1.0f;
+  m_SlipPlane[0] = 0.0f;
+  m_SlipPlane[1] = 0.0f;
+  m_SlipPlane[2] = 1.0f;
 
-  m_SlipDirection.x = 1.0f;
-  m_SlipDirection.y = 0.0f;
-  m_SlipDirection.z = 0.0f;
+  m_SlipDirection[0] = 1.0f;
+  m_SlipDirection[1] = 0.0f;
+  m_SlipDirection[2] = 0.0f;
 
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
@@ -250,7 +250,7 @@ void FindSchmids::dataCheck()
   if(m_OverrideSystem)
   {
     // make sure direction lies in plane
-    float cosVec = m_SlipPlane.x * m_SlipDirection.x + m_SlipPlane.y * m_SlipDirection.y + m_SlipPlane.z * m_SlipDirection.z;
+    float cosVec = m_SlipPlane[0] * m_SlipDirection[0] + m_SlipPlane[1] * m_SlipDirection[1] + m_SlipPlane[2] * m_SlipDirection[2];
     if(0 != cosVec)
     {
       QString ss = QObject::tr("Slip Plane and Slip Direction must be normal");
@@ -299,23 +299,23 @@ void FindSchmids::execute()
   float angleComps[2] = {0.0f, 0.0f};
   float schmid = 0.0f;
 
-  sampleLoading[0] = m_LoadingDirection.x;
-  sampleLoading[1] = m_LoadingDirection.y;
-  sampleLoading[2] = m_LoadingDirection.z;
+  sampleLoading[0] = m_LoadingDirection[0];
+  sampleLoading[1] = m_LoadingDirection[1];
+  sampleLoading[2] = m_LoadingDirection[2];
   MatrixMath::Normalize3x1(sampleLoading);
   float plane[3] = {0.0f, 0.0f};
   float direction[3] = {0.0f, 0.0f};
 
   if(m_OverrideSystem)
   {
-    plane[0] = m_SlipPlane.x;
-    plane[1] = m_SlipPlane.y;
-    plane[2] = m_SlipPlane.z;
+    plane[0] = m_SlipPlane[0];
+    plane[1] = m_SlipPlane[1];
+    plane[2] = m_SlipPlane[2];
     MatrixMath::Normalize3x1(plane);
 
-    direction[0] = m_SlipDirection.x;
-    direction[1] = m_SlipDirection.y;
-    direction[2] = m_SlipDirection.z;
+    direction[0] = m_SlipDirection[0];
+    direction[1] = m_SlipDirection[1];
+    direction[2] = m_SlipDirection[2];
     MatrixMath::Normalize3x1(direction);
   }
 

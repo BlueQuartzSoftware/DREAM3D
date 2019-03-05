@@ -104,7 +104,7 @@ class ComputeDistanceMapImpl
       double resx = 0.0;
       double resy = 0.0;
       double resz = 0.0;
-      std::tie(resx, resy, resz) = imageGeom->getResolution();
+      std::tie(resx, resy, resz) = imageGeom->getSpacing();
 
       neighbors[0] = -xpoints * ypoints;
       neighbors[1] = -xpoints;

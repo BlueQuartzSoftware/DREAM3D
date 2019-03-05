@@ -1721,10 +1721,10 @@ void QuickSurfaceMesh::generateTripleLines()
 
   std::set<int32_t> uFeatures;
 
-  float origin[3] = {0.0f, 0.0f, 0.0f};
+  FloatVec3Type origin = {0.0f, 0.0f, 0.0f};
   std::tie(origin[0], origin[1], origin[2]) = imageGeom->getOrigin();
-  float res[3] = {0.0f, 0.0f, 0.0f};
-  std::tie(res[0], res[1], res[2]) = imageGeom->getResolution();
+  FloatVec3Type res = {0.0f, 0.0f, 0.0f};
+  std::tie(res[0], res[1], res[2]) = imageGeom->getSpacing();
 
   VertexMap vertexMap;
   EdgeMap edgeMap;

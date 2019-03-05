@@ -71,13 +71,13 @@ class InsertAtomsImpl
   Int32Int32DynamicListArray::Pointer m_FaceIds;
   VertexGeom::Pointer m_FaceBBs;
   QuatF* m_AvgQuats;
-  FloatVec3_t m_LatticeConstants;
+  FloatVec3Type m_LatticeConstants;
   uint32_t m_Basis;
   QVector<VertexGeom::Pointer> m_Points;
   QVector<BoolArrayType::Pointer> m_InFeature;
 
 public:
-  InsertAtomsImpl(TriangleGeom::Pointer faces, Int32Int32DynamicListArray::Pointer faceIds, VertexGeom::Pointer faceBBs, QuatF* avgQuats, FloatVec3_t latticeConstants, uint32_t basis,
+  InsertAtomsImpl(TriangleGeom::Pointer faces, Int32Int32DynamicListArray::Pointer faceIds, VertexGeom::Pointer faceBBs, QuatF* avgQuats, FloatVec3Type latticeConstants, uint32_t basis,
                   QVector<VertexGeom::Pointer> points, QVector<BoolArrayType::Pointer> inFeature)
   : m_Faces(faces)
   , m_FaceIds(faceIds)
@@ -147,7 +147,7 @@ public:
   }
 #endif
 
-  void generatePoints(size_t iter, QVector<VertexGeom::Pointer> points, QVector<BoolArrayType::Pointer> inFeature, QuatF* m_AvgQuats, FloatVec3_t latticeConstants, uint32_t basis, float* ll,
+  void generatePoints(size_t iter, QVector<VertexGeom::Pointer> points, QVector<BoolArrayType::Pointer> inFeature, QuatF* m_AvgQuats, FloatVec3Type latticeConstants, uint32_t basis, float* ll,
                       float* ur) const
   {
     float g[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
@@ -180,9 +180,9 @@ public:
     {
       atomMult = 4;
     }
-    int64_t xPoints = (int64_t(deltaX / latticeConstants.x) + 1);
-    int64_t yPoints = (int64_t(deltaY / latticeConstants.y) + 1);
-    int64_t zPoints = (int64_t(deltaZ / latticeConstants.z) + 1);
+    int64_t xPoints = (int64_t(deltaX / latticeConstants[0]) + 1);
+    int64_t yPoints = (int64_t(deltaY / latticeConstants[1]) + 1);
+    int64_t zPoints = (int64_t(deltaZ / latticeConstants[2]) + 1);
     int64_t nPoints = atomMult * xPoints * yPoints * zPoints;
 
     points[iter]->resizeVertexList(nPoints);
@@ -197,17 +197,17 @@ public:
       {
         for(int64_t i = 0; i < xPoints; i++)
         {
-          coords[0] = float(i) * latticeConstants.x + minx;
-          coords[1] = float(j) * latticeConstants.y + miny;
-          coords[2] = float(k) * latticeConstants.z + minz;
+          coords[0] = float(i) * latticeConstants[0] + minx;
+          coords[1] = float(j) * latticeConstants[1] + miny;
+          coords[2] = float(k) * latticeConstants[2] + minz;
           MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
           points[iter]->setCoords(count, coordsT);
           count++;
           if(basis == 1)
           {
-            coords[0] = coords[0] + (0.5 * latticeConstants.x);
-            coords[1] = coords[1] + (0.5 * latticeConstants.y);
-            coords[2] = coords[2] + (0.5 * latticeConstants.z);
+            coords[0] = coords[0] + (0.5 * latticeConstants[0]);
+            coords[1] = coords[1] + (0.5 * latticeConstants[1]);
+            coords[2] = coords[2] + (0.5 * latticeConstants[2]);
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
             count++;
@@ -215,22 +215,22 @@ public:
           if(basis == 2)
           {
             // makes the (0.5,0.5,0) atom
-            coords[0] = coords[0] + (0.5 * latticeConstants.x);
-            coords[1] = coords[1] + (0.5 * latticeConstants.y);
+            coords[0] = coords[0] + (0.5 * latticeConstants[0]);
+            coords[1] = coords[1] + (0.5 * latticeConstants[1]);
             coords[2] = coords[2];
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
             count++;
             // makes the (0.5,0,0.5) atom
             coords[0] = coords[0];
-            coords[1] = coords[1] - (0.5 * latticeConstants.y);
-            coords[2] = coords[2] + (0.5 * latticeConstants.z);
+            coords[1] = coords[1] - (0.5 * latticeConstants[1]);
+            coords[2] = coords[2] + (0.5 * latticeConstants[2]);
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
             count++;
             // makes the (0,0.5,0.5) atom
-            coords[0] = coords[0] - (0.5 * latticeConstants.x);
-            coords[1] = coords[1] + (0.5 * latticeConstants.y);
+            coords[0] = coords[0] - (0.5 * latticeConstants[0]);
+            coords[1] = coords[1] + (0.5 * latticeConstants[1]);
             coords[2] = coords[2];
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
@@ -253,10 +253,9 @@ InsertAtoms::InsertAtoms()
 , m_AvgQuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgQuats)
 , m_AtomFeatureLabelsArrayName(SIMPL::VertexData::AtomFeatureLabels)
 {
-  m_LatticeConstants.x = 1.0f;
-  m_LatticeConstants.y = 1.0f;
-  m_LatticeConstants.z = 1.0f;
-
+  m_LatticeConstants[0] = 1.0f;
+  m_LatticeConstants[1] = 1.0f;
+  m_LatticeConstants[2] = 1.0f;
 }
 
 // -----------------------------------------------------------------------------
@@ -529,10 +528,10 @@ void InsertAtoms::execute()
     return;
   }
 
-  FloatVec3_t latticeConstants;
-  latticeConstants.x = m_LatticeConstants.x / 10000.0;
-  latticeConstants.y = m_LatticeConstants.y / 10000.0;
-  latticeConstants.z = m_LatticeConstants.z / 10000.0;
+  FloatVec3Type latticeConstants;
+  latticeConstants[0] = m_LatticeConstants[0] / 10000.0;
+  latticeConstants[1] = m_LatticeConstants[1] / 10000.0;
+  latticeConstants[2] = m_LatticeConstants[2] / 10000.0;
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
   SIMPL_RANDOMNG_NEW()

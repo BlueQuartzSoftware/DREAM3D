@@ -235,9 +235,9 @@ FindTwinBoundarySchmidFactors::FindTwinBoundarySchmidFactors()
 , m_SurfaceMeshTwinBoundaryArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshTwinBoundary)
 , m_SurfaceMeshTwinBoundarySchmidFactorsArrayName(SIMPL::FaceData::SurfaceMeshTwinBoundarySchmidFactors)
 {
-  m_LoadingDir.x = 1.0f;
-  m_LoadingDir.y = 1.0f;
-  m_LoadingDir.z = 1.0f;
+  m_LoadingDir[0] = 1.0f;
+  m_LoadingDir[1] = 1.0f;
+  m_LoadingDir[2] = 1.0f;
 
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
@@ -466,9 +466,9 @@ void FindTwinBoundarySchmidFactors::execute()
   size_t numTriangles = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
 
   float LoadingDir[3] = {0.0f, 0.0f, 0.0f};
-  LoadingDir[0] = m_LoadingDir.x;
-  LoadingDir[1] = m_LoadingDir.y;
-  LoadingDir[2] = m_LoadingDir.z;
+  LoadingDir[0] = m_LoadingDir[0];
+  LoadingDir[1] = m_LoadingDir[1];
+  LoadingDir[2] = m_LoadingDir[2];
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel)

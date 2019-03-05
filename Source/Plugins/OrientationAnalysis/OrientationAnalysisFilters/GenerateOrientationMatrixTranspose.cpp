@@ -22,9 +22,8 @@
 class GenerateOrientationMatrixTransposeImpl
 {
 public:
-  GenerateOrientationMatrixTransposeImpl(GenerateOrientationMatrixTranspose* filter, float* inputRod, float* outputRod)
+  GenerateOrientationMatrixTransposeImpl(GenerateOrientationMatrixTranspose* filter, float* outputRod)
   : m_Filter(filter)
-  , m_Input(inputRod)
   , m_Output(outputRod)
   {
   }
@@ -64,7 +63,6 @@ public:
 #endif
 private:
   GenerateOrientationMatrixTranspose* m_Filter = nullptr;
-  float* m_Input;
   float* m_Output;
 };
 
@@ -186,12 +184,12 @@ void GenerateOrientationMatrixTranspose::execute()
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), GenerateOrientationMatrixTransposeImpl(this, m_OrientationMatrix, m_OutputOrientationMatrix), tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), GenerateOrientationMatrixTransposeImpl(this, m_OutputOrientationMatrix), tbb::auto_partitioner());
   }
   else
 #endif
   {
-    GenerateOrientationMatrixTransposeImpl serial(this, m_OrientationMatrix, m_OutputOrientationMatrix);
+    GenerateOrientationMatrixTransposeImpl serial(this, m_OutputOrientationMatrix);
     serial.convert(0, totalPoints);
   }
 

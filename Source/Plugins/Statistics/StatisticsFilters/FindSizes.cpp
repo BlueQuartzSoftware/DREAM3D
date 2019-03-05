@@ -217,7 +217,7 @@ void FindSizes::findSizesImage(ImageGeom::Pointer image)
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = image->getResolution();
+  std::tie(xRes, yRes, zRes) = image->getSpacing();
 
   if(image->getXPoints() == 1 || image->getYPoints() == 1 || image->getZPoints() == 1)
   {

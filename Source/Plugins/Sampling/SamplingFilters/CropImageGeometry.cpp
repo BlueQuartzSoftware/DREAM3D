@@ -40,12 +40,12 @@
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPlib/FilterParameters/DataContainerCreationFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
-#include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
 
@@ -70,9 +70,14 @@ CropImageGeometry::CropImageGeometry()
 , m_UpdateOrigin(true)
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 {
-  m_OldDimensions.x = 0, m_OldDimensions.y = 0; m_OldDimensions.z = 0;
-  m_OldResolution.x = 0.0f; m_OldResolution.y = 0.0f; m_OldResolution.z = 0.0f;
-  m_OldOrigin.x = 0.0f; m_OldOrigin.y = 0.0f; m_OldOrigin.z = 0.0f;
+  m_OldDimensions[0] = 0, m_OldDimensions[1] = 0;
+  m_OldDimensions[2] = 0;
+  m_OldResolution[0] = 0.0f;
+  m_OldResolution[1] = 0.0f;
+  m_OldResolution[2] = 0.0f;
+  m_OldOrigin[0] = 0.0f;
+  m_OldOrigin[1] = 0.0f;
+  m_OldOrigin[2] = 0.0f;
 }
 
 // -----------------------------------------------------------------------------
@@ -186,7 +191,7 @@ void CropImageGeometry::dataCheck()
   m_OldResolution = getCurrentVolumeDataContainerResolutions();
   if(image)
   {
-    image->getOrigin(m_OldOrigin.x, m_OldOrigin.y, m_OldOrigin.z);
+    image->getOrigin(m_OldOrigin);
   } 
   
   DataContainer::Pointer destCellDataContainer = srcCellDataContainer;
@@ -203,7 +208,7 @@ void CropImageGeometry::dataCheck()
     destCellDataContainer->setGeometry(imageCopy);
 
     destCellAttrMat = srcCellAttrMat->deepCopy(getInPreflight());
-    destCellDataContainer->addAttributeMatrix(destCellAttrMat->getName(), destCellAttrMat);
+    destCellDataContainer->addAttributeMatrix(destCellAttrMat);
   }
   else
   {
@@ -294,17 +299,17 @@ void CropImageGeometry::dataCheck()
   tDims[0] = (getXMax() - getXMin()) + 1;
   tDims[1] = (getYMax() - getYMin()) + 1;
   tDims[2] = (getZMax() - getZMin()) + 1;
-  
-  m_NewDimensions.x = tDims[0];
-  m_NewDimensions.y = tDims[1];
-  m_NewDimensions.z = tDims[2];
+
+  m_NewDimensions[0] = tDims[0];
+  m_NewDimensions[1] = tDims[1];
+  m_NewDimensions[2] = tDims[2];
   m_NewResolution = m_OldResolution;
 
   if(m_UpdateOrigin)
   {
-    m_NewOrigin.x = getXMin() * m_NewResolution.x + m_OldOrigin.x;
-    m_NewOrigin.y = getYMin() * m_NewResolution.y + m_OldOrigin.y;
-    m_NewOrigin.z = getZMin() * m_NewResolution.z + m_OldOrigin.z;
+    m_NewOrigin[0] = getXMin() * m_NewResolution[0] + m_OldOrigin[0];
+    m_NewOrigin[1] = getYMin() * m_NewResolution[1] + m_OldOrigin[1];
+    m_NewOrigin[2] = getZMin() * m_NewResolution[2] + m_OldOrigin[2];
   }
   else
   {
@@ -336,10 +341,10 @@ void CropImageGeometry::dataCheck()
     IDataArray::Pointer data = p->createNewArray(totalPoints, p->getComponentDimensions(), p->getName(), false);
 
     destCellAttrMat->removeAttributeArray(*iter);
-    newCellAttrMat->addAttributeArray(*iter, data);
+    newCellAttrMat->insert_or_assign(data);
   }
   destCellDataContainer->removeAttributeMatrix(destCellAttrMat->getName());
-  destCellDataContainer->addAttributeMatrix(newCellAttrMat->getName(), newCellAttrMat);
+  destCellDataContainer->addAttributeMatrix(newCellAttrMat);
 
   if(m_RenumberFeatures)
   {
@@ -406,19 +411,20 @@ void CropImageGeometry::execute()
 
   if(m_SaveAsNewDataContainer)
   {
-    float ox = 0.0f, oy = 0.0f, oz = 0.0f, rx = 0.0f, ry = 0.0f, rz = 0.0f;
-    srcCellDataContainer->getGeometryAs<ImageGeom>()->getOrigin(ox, oy, oz);
-    srcCellDataContainer->getGeometryAs<ImageGeom>()->getResolution(rx, ry, rz);
+    FloatVec3Type o;
+    FloatVec3Type r;
+    srcCellDataContainer->getGeometryAs<ImageGeom>()->getOrigin(o);
+    srcCellDataContainer->getGeometryAs<ImageGeom>()->getSpacing(r);
 
     destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
     ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
     destCellDataContainer->setGeometry(image);
 
-    destCellDataContainer->getGeometryAs<ImageGeom>()->setOrigin(ox, oy, oz);
-    destCellDataContainer->getGeometryAs<ImageGeom>()->setResolution(rx, ry, rz);
+    destCellDataContainer->getGeometryAs<ImageGeom>()->setOrigin(o);
+    destCellDataContainer->getGeometryAs<ImageGeom>()->setSpacing(r);
 
     AttributeMatrix::Pointer cellAttrMatCopy = cellAttrMat->deepCopy(false);
-    destCellDataContainer->addAttributeMatrix(cellAttrMatCopy->getName(), cellAttrMatCopy);
+    destCellDataContainer->addAttributeMatrix(cellAttrMatCopy);
     cellAttrMat = destCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   }
 
@@ -444,7 +450,7 @@ void CropImageGeometry::execute()
   }
 
   // Get current origin
-  float oldOrigin[3] = {0.0f, 0.0f, 0.0f};
+  FloatVec3Type oldOrigin = {0.0f, 0.0f, 0.0f};
   destCellDataContainer->getGeometryAs<ImageGeom>()->getOrigin(oldOrigin);
 
   // Check to make sure the new dimensions are not "out of bounds" and warn the user if they are
@@ -595,10 +601,10 @@ void CropImageGeometry::execute()
 
   if(m_UpdateOrigin)
   {
-    float resolution[3] = {0.0f, 0.0f, 0.0f};
-    destCellDataContainer->getGeometryAs<ImageGeom>()->getResolution(resolution);
+    FloatVec3Type resolution = {0.0f, 0.0f, 0.0f};
+    destCellDataContainer->getGeometryAs<ImageGeom>()->getSpacing(resolution);
 
-    float origin[3] = {0.0f, 0.0f, 0.0f};
+    FloatVec3Type origin = {0.0f, 0.0f, 0.0f};
     destCellDataContainer->getGeometryAs<ImageGeom>()->getOrigin(origin);
 
     origin[0] = m_XMin * resolution[0] + oldOrigin[0];
@@ -613,32 +619,32 @@ void CropImageGeometry::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IntVec3_t CropImageGeometry::getCurrentVolumeDataContainerDimensions()
+IntVec3Type CropImageGeometry::getCurrentVolumeDataContainerDimensions()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
 
-  IntVec3_t data;
+  IntVec3Type data;
   if(nullptr != m.get())
   {
     ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
     if(image.get() != nullptr)
     {
-      data.x = image->getXPoints();
-      data.y = image->getYPoints();
-      data.z = image->getZPoints();
+      data[0] = image->getXPoints();
+      data[1] = image->getYPoints();
+      data[2] = image->getZPoints();
     }
     else
     {
-      data.x = 0;
-      data.y = 0;
-      data.z = 0;
+      data[0] = 0;
+      data[1] = 0;
+      data[2] = 0;
     }
   }
   else
   {
-    data.x = 0;
-    data.y = 0;
-    data.z = 0;
+    data[0] = 0;
+    data[1] = 0;
+    data[2] = 0;
   }
   return data;
 }
@@ -646,29 +652,29 @@ IntVec3_t CropImageGeometry::getCurrentVolumeDataContainerDimensions()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FloatVec3_t CropImageGeometry::getCurrentVolumeDataContainerResolutions()
+FloatVec3Type CropImageGeometry::getCurrentVolumeDataContainerResolutions()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
-  FloatVec3_t data;
+  FloatVec3Type data;
   if(nullptr != m)
   {
     ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
     if(image.get() != nullptr)
     {
-      std::tie(data.x, data.y, data.z) = image->getResolution();
+      std::tie(data[0], data[1], data[2]) = image->getSpacing();
     }
     else
     {
-      data.x = 0;
-      data.y = 0;
-      data.z = 0;
+      data[0] = 0;
+      data[1] = 0;
+      data[2] = 0;
     }
   }
   else
   {
-    data.x = 0;
-    data.y = 0;
-    data.z = 0;
+    data[0] = 0;
+    data[1] = 0;
+    data[2] = 0;
   }
   return data;
 }
@@ -690,12 +696,12 @@ QString CropImageGeometry::getOldBoxDimensions()
       {
         desc.clear();
         QTextStream ss(&desc);
-        ss << "X Range: " << m_OldOrigin.x << " to " << (m_OldOrigin.x + (m_OldDimensions.x * m_OldResolution.x)) << " (Delta: " << (m_OldDimensions.x * m_OldResolution.x) << ") " 
-           << 0 << "-" <<  m_OldDimensions.x-1 << " Voxels\n";
-        ss << "Y Range: " << m_OldOrigin.y << " to " << (m_OldOrigin.y + (m_OldDimensions.y * m_OldResolution.y)) << " (Delta: " << (m_OldDimensions.y * m_OldResolution.y) << ") "
-           << 0 << "-" <<  m_OldDimensions.y-1 << " Voxels\n";
-        ss << "Z Range: " << m_OldOrigin.z << " to " << (m_OldOrigin.z + (m_OldDimensions.z * m_OldResolution.z)) << " (Delta: " << (m_OldDimensions.z * m_OldResolution.z) << ") "
-           << 0 << "-" <<  m_OldDimensions.z-1 << " Voxels\n";
+        ss << "X Range: " << m_OldOrigin[0] << " to " << (m_OldOrigin[0] + (m_OldDimensions[0] * m_OldResolution[0])) << " (Delta: " << (m_OldDimensions[0] * m_OldResolution[0]) << ") " << 0 << "-"
+           << m_OldDimensions[0] - 1 << " Voxels\n";
+        ss << "Y Range: " << m_OldOrigin[1] << " to " << (m_OldOrigin[1] + (m_OldDimensions[1] * m_OldResolution[1])) << " (Delta: " << (m_OldDimensions[1] * m_OldResolution[1]) << ") " << 0 << "-"
+           << m_OldDimensions[1] - 1 << " Voxels\n";
+        ss << "Z Range: " << m_OldOrigin[2] << " to " << (m_OldOrigin[2] + (m_OldDimensions[2] * m_OldResolution[2])) << " (Delta: " << (m_OldDimensions[2] * m_OldResolution[2]) << ") " << 0 << "-"
+           << m_OldDimensions[2] - 1 << " Voxels\n";
       }
     }
   }
@@ -719,12 +725,12 @@ QString CropImageGeometry::getNewBoxDimensions()
       {
         desc.clear();
         QTextStream ss(&desc);
-        ss << "X Range: " << m_NewOrigin.x << " to " << (m_NewOrigin.x + (m_NewDimensions.x * m_NewResolution.x)) << " (Delta: " << (m_NewDimensions.x * m_NewResolution.x) << ") "
-           << 0 << "-" <<  m_NewDimensions.x-1 << " Voxels\n";
-        ss << "Y Range: " << m_NewOrigin.y << " to " << (m_NewOrigin.y + (m_NewDimensions.y * m_NewResolution.y)) << " (Delta: " << (m_NewDimensions.y * m_NewResolution.y) << ") "
-           << 0 << "-" <<  m_NewDimensions.y-1 << " Voxels\n";
-        ss << "Z Range: " << m_NewOrigin.z << " to " << (m_NewOrigin.z + (m_NewDimensions.z * m_NewResolution.z)) << " (Delta: " << (m_NewDimensions.z * m_NewResolution.z) << ") "
-           << 0 << "-" <<  m_NewDimensions.z-1 << " Voxels\n";
+        ss << "X Range: " << m_NewOrigin[0] << " to " << (m_NewOrigin[0] + (m_NewDimensions[0] * m_NewResolution[0])) << " (Delta: " << (m_NewDimensions[0] * m_NewResolution[0]) << ") " << 0 << "-"
+           << m_NewDimensions[0] - 1 << " Voxels\n";
+        ss << "Y Range: " << m_NewOrigin[1] << " to " << (m_NewOrigin[1] + (m_NewDimensions[1] * m_NewResolution[1])) << " (Delta: " << (m_NewDimensions[1] * m_NewResolution[1]) << ") " << 0 << "-"
+           << m_NewDimensions[1] - 1 << " Voxels\n";
+        ss << "Z Range: " << m_NewOrigin[2] << " to " << (m_NewOrigin[2] + (m_NewDimensions[2] * m_NewResolution[2])) << " (Delta: " << (m_NewDimensions[2] * m_NewResolution[2]) << ") " << 0 << "-"
+           << m_NewDimensions[2] - 1 << " Voxels\n";
       }
     }
   }

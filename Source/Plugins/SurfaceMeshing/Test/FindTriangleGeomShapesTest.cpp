@@ -151,12 +151,12 @@ public:
 
     QVector<size_t> tDims = {256, 128, 64};
     AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
-    idc->addAttributeMatrix(SIMPL::Defaults::CellAttributeMatrixName, attrMat);
+    idc->addAttributeMatrix(attrMat);
 
     QVector<size_t> cDims(1, 1);
     Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(tDims, cDims, SIMPL::CellData::FeatureIds);
     featureIds->initializeWithValue(1);
-    attrMat->addAttributeArray(SIMPL::CellData::FeatureIds, featureIds);
+    attrMat->insert_or_assign(featureIds);
 
     FilterManager* fm = FilterManager::Instance();
     bool propWasSet = true;

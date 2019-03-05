@@ -151,10 +151,10 @@ public:
       wait->setComponent(i, 0, faithful[i][2]);     // Duration first
     }
 
-    am->addAttributeArray(duration->getName(), duration); // int array
-    am->addAttributeArray(wait->getName(), wait);         // int array
+    am->insert_or_assign(duration); // int array
+    am->insert_or_assign(wait);     // int array
 
-    dc->addAttributeMatrix(am->getName(), am);
+    dc->addAttributeMatrix(am);
     dca->addDataContainer(dc);
 
     // Now instantiate the CalculateArrayHistogram Filter from the FilterManager

@@ -15,6 +15,8 @@ if(NOT Qt5Core_FOUND)
     message(FATAL_ERROR "Qt 5 is Needed for plugin ${PLUGIN_NAME}Plugin.")
 endif()
 
+Find_Package(Eigen REQUIRED)
+
 set(CMP_TOP_HEADER_FILE "")
 
 set(VERSION_HEADER_FILE_NAME "${PLUGIN_NAME}Version.h")

@@ -260,7 +260,7 @@ void ReadAngData::dataCheck()
   }
 
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), SIMPL::EnsembleData::MaterialName);
-  cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
+  cellEnsembleAttrMat->insert_or_assign(materialNames);
 }
 
 // -----------------------------------------------------------------------------
@@ -347,13 +347,13 @@ void ReadAngData::readDataFile(AngReader* reader, const DataContainer::Pointer& 
     tDims[2] = zDim; // We are reading a single slice
 
       Ang_Private_Data data;
-      data.dims = tDims;
-      data.resolution.push_back(reader->getXStep());
-      data.resolution.push_back(reader->getYStep());
-      data.resolution.push_back(zStep);
-      data.origin.push_back(xOrigin);
-      data.origin.push_back(yOrigin);
-      data.origin.push_back(zOrigin);
+      data.dims = SizeVec3Type(tDims[0], tDims[1], tDims[2]);
+      data.resolution[0] = (reader->getXStep());
+      data.resolution[1] = (reader->getYStep());
+      data.resolution[2] = (zStep);
+      data.origin[0] = (xOrigin);
+      data.origin[1] = (yOrigin);
+      data.origin[2] = (zOrigin);
       data.phases = reader->getPhaseVector();
 
       QString header = reader->getOriginalHeader();
@@ -388,8 +388,8 @@ void ReadAngData::readDataFile(AngReader* reader, const DataContainer::Pointer& 
   ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
 
   image->setDimensions(tDims[0], tDims[1], tDims[2]);
-  image->setResolution(data.resolution[0], data.resolution[1], data.resolution[2]);
-  image->setOrigin(data.origin[0], data.origin[1], data.origin[2]);
+  image->setSpacing(data.resolution);
+  image->setOrigin(data.origin);
   if(data.units == 0)
   {
     image->setUnits(IGeometry::LengthUnit::Nanometer);
@@ -464,9 +464,9 @@ int32_t ReadAngData::loadMaterialInfo(AngReader* reader)
   QVector<size_t> tDims(1, crystalStructures->getNumberOfTuples());
   attrMatrix->resizeAttributeArrays(tDims);
   // Now add the attributeArray to the AttributeMatrix
-  attrMatrix->addAttributeArray(Ebsd::AngFile::CrystalStructures, crystalStructures);
-  attrMatrix->addAttributeArray(Ebsd::AngFile::MaterialName, materialNames);
-  attrMatrix->addAttributeArray(Ebsd::AngFile::LatticeConstants, latticeConstants);
+  attrMatrix->insert_or_assign(crystalStructures);
+  attrMatrix->insert_or_assign(materialNames);
+  attrMatrix->insert_or_assign(latticeConstants);
 
   // Now reset the internal ensemble array references to these new arrays
   m_CrystalStructuresPtr = crystalStructures;
@@ -520,7 +520,7 @@ void ReadAngData::copyRawEbsdData(AngReader* reader, QVector<size_t>& tDims, QVe
     }
     iArray = Int32ArrayType::CreateArray(tDims, cDims, SIMPL::CellData::Phases);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    ebsdAttrMat->addAttributeArray(SIMPL::CellData::Phases, iArray);
+    ebsdAttrMat->insert_or_assign(iArray);
   }
 
   // Condense the Euler Angles from 3 separate arrays into a single 1x3 array
@@ -538,7 +538,7 @@ void ReadAngData::copyRawEbsdData(AngReader* reader, QVector<size_t>& tDims, QVe
       cellEulerAngles[3 * i + 1] = f2[i];
       cellEulerAngles[3 * i + 2] = f3[i];
     }
-    ebsdAttrMat->addAttributeArray(SIMPL::CellData::EulerAngles, fArray);
+    ebsdAttrMat->insert_or_assign(fArray);
   }
 
   cDims[0] = 1;
@@ -546,42 +546,42 @@ void ReadAngData::copyRawEbsdData(AngReader* reader, QVector<size_t>& tDims, QVe
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ImageQuality));
     fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ImageQuality);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::ImageQuality, fArray);
+    ebsdAttrMat->insert_or_assign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ConfidenceIndex));
     fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ConfidenceIndex);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::ConfidenceIndex, fArray);
+    ebsdAttrMat->insert_or_assign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::SEMSignal));
     fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::SEMSignal);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::SEMSignal, fArray);
+    ebsdAttrMat->insert_or_assign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Fit));
     fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::Fit);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::Fit, fArray);
+    ebsdAttrMat->insert_or_assign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::XPosition));
     fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::XPosition);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::XPosition, fArray);
+    ebsdAttrMat->insert_or_assign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::YPosition));
     fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::YPosition);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::YPosition, fArray);
+    ebsdAttrMat->insert_or_assign(fArray);
   }
 }
 

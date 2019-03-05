@@ -140,8 +140,8 @@ void M3CEntireVolume::dataCheck()
 
     sm->setNodes(vertices);
     sm->setTriangles(triangles);
-    sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(SIMPL::CellData::SurfaceMeshEdges, faceEdges);
-    sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(SIMPL::CellData::SurfaceMeshInternalEdges, internalEdges);
+    sm->getAttributeMatrix(getCellAttributeMatrixName())->insert_or_assign(faceEdges);
+    sm->getAttributeMatrix(getCellAttributeMatrixName())->insert_or_assign(internalEdges);
 
     addCreatedCellData(SIMPL::CellData::SurfaceMeshEdges);
     addCreatedCellData(SIMPL::CellData::SurfaceMeshInternalEdges);
@@ -395,9 +395,9 @@ int M3CEntireVolume::createMesh()
   // Set the updated Nodes & Triangles into the SurfaceMeshDataContainer
   sm->setTriangles(triangles);
   sm->setNodes(nodes);
-  sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(SIMPL::CellData::SurfaceMeshEdges, faceEdges);
-  sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(SIMPL::CellData::SurfaceMeshInternalEdges, internalEdges);
-  sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(SIMPL::CellData::SurfaceMeshNodeType, shortNodeKindPtr);
+  sm->getAttributeMatrix(getCellAttributeMatrixName())->insert_or_assign(faceEdges);
+  sm->getAttributeMatrix(getCellAttributeMatrixName())->insert_or_assign(internalEdges);
+  sm->getAttributeMatrix(getCellAttributeMatrixName())->insert_or_assign(shortNodeKindPtr);
 
   //  notifyStatusMessage(getHumanLabel(), "\nOutputting nodes and triangles...\n");
   //  get_output(vertex, fedge, iedge, triangle, NS, nNodes, nFEdge, tnIEdge, nTriangle, mp);

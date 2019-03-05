@@ -60,10 +60,9 @@ ChangeResolution::ChangeResolution()
 , m_SaveAsNewDataContainer(false)
 , m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
 {
-  m_Resolution.x = 1.0f;
-  m_Resolution.y = 1.0f;
-  m_Resolution.z = 1.0f;
-
+  m_Spacing[0] = 1.0f;
+  m_Spacing[1] = 1.0f;
+  m_Spacing[2] = 1.0f;
 }
 
 // -----------------------------------------------------------------------------
@@ -77,7 +76,7 @@ ChangeResolution::~ChangeResolution() = default;
 void ChangeResolution::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, ChangeResolution));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, ChangeResolution));
 
   QStringList linkedProps;
   linkedProps << "CellFeatureAttributeMatrixPath"
@@ -116,7 +115,7 @@ void ChangeResolution::readFilterParameters(AbstractFilterParametersReader* read
   setCellAttributeMatrixPath(reader->readDataArrayPath("CellAttributeMatrixPath", getCellAttributeMatrixPath()));
   setCellFeatureAttributeMatrixPath(reader->readDataArrayPath("CellFeatureAttributeMatrixPath", getCellFeatureAttributeMatrixPath()));
   setFeatureIdsArrayPath(reader->readDataArrayPath("FeatureIdsArrayPath", getFeatureIdsArrayPath()));
-  setResolution(reader->readFloatVec3("Resolution", getResolution()));
+  setSpacing(reader->readFloatVec3("Spacing", getSpacing()));
   setRenumberFeatures(reader->readValue("RenumberFeatures", getRenumberFeatures()));
   setSaveAsNewDataContainer(reader->readValue("SaveAsNewDataContainer", getSaveAsNewDataContainer()));
   reader->closeFilterGroup();
@@ -137,23 +136,23 @@ void ChangeResolution::dataCheck()
   setErrorCondition(0);
   setWarningCondition(0);
 
-  if(getResolution().x <= 0)
+  if(getSpacing()[0] <= 0)
   {
-    QString ss = QObject::tr("The X resolution (%1) must be positive").arg(getResolution().x);
+    QString ss = QObject::tr("The X resolution (%1) must be positive").arg(getSpacing()[0]);
     setErrorCondition(-5555);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if(getResolution().y <= 0)
+  if(getSpacing()[1] <= 0)
   {
-    QString ss = QObject::tr("The Y resolution (%1) must be positive").arg(getResolution().y);
+    QString ss = QObject::tr("The Y resolution (%1) must be positive").arg(getSpacing()[1]);
     setErrorCondition(-5556);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  if(getResolution().z <= 0)
+  if(getSpacing()[2] <= 0)
   {
-    QString ss = QObject::tr("The  resolution (%1) must be positive").arg(getResolution().z);
+    QString ss = QObject::tr("The  resolution (%1) must be positive").arg(getSpacing()[2]);
     setErrorCondition(-5557);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -217,14 +216,14 @@ void ChangeResolution::preflight()
   float sizex = 0.0f;
   float sizey = 0.0f;
   float sizez = 0.0f;
-  std::tie(sizex, sizey, sizez) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(sizex, sizey, sizez) = m->getGeometryAs<ImageGeom>()->getSpacing();
   sizex *= static_cast<float>(dims[0]);
   sizey *= static_cast<float>(dims[1]);
   sizez *= static_cast<float>(dims[2]);
 
-  size_t m_XP = size_t(sizex / m_Resolution.x);
-  size_t m_YP = size_t(sizey / m_Resolution.y);
-  size_t m_ZP = size_t(sizez / m_Resolution.z);
+  size_t m_XP = size_t(sizex / m_Spacing[0]);
+  size_t m_YP = size_t(sizey / m_Spacing[1]);
+  size_t m_ZP = size_t(sizez / m_Spacing[2]);
   if(m_XP == 0)
   {
     m_XP = 1;
@@ -239,7 +238,7 @@ void ChangeResolution::preflight()
   }
 
   image->setDimensions(std::make_tuple(m_XP, m_YP, m_ZP));
-  image->setResolution(std::make_tuple(m_Resolution.x, m_Resolution.y, m_Resolution.z));
+  image->setSpacing(std::make_tuple(m_Spacing[0], m_Spacing[1], m_Spacing[2]));
 
   QVector<size_t> tDims(3, 0);
   tDims[0] = m_XP;
@@ -267,10 +266,10 @@ void ChangeResolution::preflight()
     IDataArray::Pointer data = p->createNewArray(totalPoints, p->getComponentDimensions(), p->getName(), false);
 
     cellAttrMat->removeAttributeArray(*iter);
-    newCellAttrMat->addAttributeArray(*iter, data);
+    newCellAttrMat->insert_or_assign(data);
   }
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
-  m->addAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName(), newCellAttrMat);
+  m->addAttributeMatrix(newCellAttrMat);
 
   if(m_RenumberFeatures)
   {
@@ -310,9 +309,9 @@ void ChangeResolution::execute()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
-  if(xRes == m_Resolution.x && yRes == m_Resolution.y && zRes == m_Resolution.z)
+  if(xRes == m_Spacing[0] && yRes == m_Spacing[1] && zRes == m_Spacing[2])
   {
     return;
   }
@@ -325,14 +324,14 @@ void ChangeResolution::execute()
   float sizex = 0.0f;
   float sizey = 0.0f;
   float sizez = 0.0f;
-  std::tie(sizex, sizey, sizez) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(sizex, sizey, sizez) = m->getGeometryAs<ImageGeom>()->getSpacing();
   sizex *= static_cast<float>(dims[0]);
   sizey *= static_cast<float>(dims[1]);
   sizez *= static_cast<float>(dims[2]);
 
-  size_t m_XP = size_t(sizex / m_Resolution.x);
-  size_t m_YP = size_t(sizey / m_Resolution.y);
-  size_t m_ZP = size_t(sizez / m_Resolution.z);
+  size_t m_XP = size_t(sizex / m_Spacing[0]);
+  size_t m_YP = size_t(sizey / m_Spacing[1]);
+  size_t m_ZP = size_t(sizez / m_Spacing[2]);
   if(m_XP == 0)
   {
     m_XP = 1;
@@ -353,8 +352,8 @@ void ChangeResolution::execute()
   size_t index_old = 0;
   size_t progressInt = 0;
   std::vector<size_t> newindicies(totalPoints);
-  float res[3] = {0.0f, 0.0f, 0.0f};
-  m->getGeometryAs<ImageGeom>()->getResolution(res);
+  FloatVec3Type res = {0.0f, 0.0f, 0.0f};
+  m->getGeometryAs<ImageGeom>()->getSpacing(res);
 
   for(size_t i = 0; i < m_ZP; i++)
   {
@@ -363,15 +362,15 @@ void ChangeResolution::execute()
       break;
     }
     progressInt = static_cast<size_t>((static_cast<float>(i) / m_ZP) * 100.0f);
-    QString ss = QObject::tr("Changing Resolution || %1% Complete").arg(progressInt);
+    QString ss = QObject::tr("Changing Spacing || %1% Complete").arg(progressInt);
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     for(size_t j = 0; j < m_YP; j++)
     {
       for(size_t k = 0; k < m_XP; k++)
       {
-        x = (k * m_Resolution.x);
-        y = (j * m_Resolution.y);
-        z = (i * m_Resolution.z);
+        x = (k * m_Spacing[0]);
+        y = (j * m_Spacing[1]);
+        z = (i * m_Spacing[2]);
         col = size_t(x / res[0]);
         row = size_t(y / res[1]);
         plane = size_t(z / res[2]);
@@ -412,12 +411,12 @@ void ChangeResolution::execute()
       ::memcpy(destination, source, p->getTypeSize() * data->getNumberOfComponents());
     }
     cellAttrMat->removeAttributeArray(*iter);
-    newCellAttrMat->addAttributeArray(*iter, data);
+    newCellAttrMat->insert_or_assign(data);
   }
-  m->getGeometryAs<ImageGeom>()->setResolution(std::make_tuple(m_Resolution.x, m_Resolution.y, m_Resolution.z));
+  m->getGeometryAs<ImageGeom>()->setSpacing(std::make_tuple(m_Spacing[0], m_Spacing[1], m_Spacing[2]));
   m->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(m_XP, m_YP, m_ZP));
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
-  m->addAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName(), newCellAttrMat);
+  m->addAttributeMatrix(newCellAttrMat);
 
   // Feature Ids MUST already be renumbered.
   if(m_RenumberFeatures)
@@ -515,5 +514,5 @@ const QString ChangeResolution::getSubGroupName() const
 // -----------------------------------------------------------------------------
 const QString ChangeResolution::getHumanLabel() const
 {
-  return "Change Resolution";
+  return "Change Spacing";
 }

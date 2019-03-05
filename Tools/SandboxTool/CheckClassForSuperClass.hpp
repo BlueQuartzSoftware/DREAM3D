@@ -32,7 +32,7 @@ public:
       source.close();
     }
 
-    bool didReplace = false;
+    // bool didReplace = false;
     bool isFilter = false;
     QString searchString = "";
 

@@ -124,9 +124,9 @@ public:
 
     ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
     size_t dims[3] = {256, 128, 64};
-    float res[3] = {0.75f, 0.5f, 0.25f};
+    FloatVec3Type res = {0.75f, 0.5f, 0.25f};
     image->setDimensions(dims);
-    image->setResolution(res);
+    image->setSpacing(res);
     idc->setGeometry(image);
 
     ImageGeom::Pointer image2 = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
@@ -135,38 +135,38 @@ public:
     dims[2] = 1;
     res[2] = 1.0f;
     image2->setDimensions(dims);
-    image2->setResolution(res);
+    image2->setSpacing(res);
     idc2->setGeometry(image2);
 
     QVector<size_t> tDims = {256, 128, 64};
     AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
-    idc->addAttributeMatrix(SIMPL::Defaults::CellAttributeMatrixName, attrMat);
+    idc->addAttributeMatrix(attrMat);
 
     tDims.resize(1);
     tDims[0] = 2;
     AttributeMatrix::Pointer featAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellFeatureAttributeMatrixName, AttributeMatrix::Type::CellFeature);
-    idc->addAttributeMatrix(SIMPL::Defaults::CellFeatureAttributeMatrixName, featAttrMat);
+    idc->addAttributeMatrix(featAttrMat);
 
     QVector<size_t> cDims(1, 1);
     Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(256 * 128 * 64, cDims, SIMPL::CellData::FeatureIds);
     featureIds->initializeWithValue(1);
-    attrMat->addAttributeArray(SIMPL::CellData::FeatureIds, featureIds);
+    attrMat->insert_or_assign(featureIds);
 
     tDims.resize(3);
     tDims[0] = 256;
     tDims[1] = 128;
     tDims[2] = 1;
     attrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
-    idc2->addAttributeMatrix(SIMPL::Defaults::CellAttributeMatrixName, attrMat);
+    idc2->addAttributeMatrix(attrMat);
 
     tDims.resize(1);
     tDims[0] = 2;
     featAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellFeatureAttributeMatrixName, AttributeMatrix::Type::CellFeature);
-    idc2->addAttributeMatrix(SIMPL::Defaults::CellFeatureAttributeMatrixName, featAttrMat);
+    idc2->addAttributeMatrix(featAttrMat);
 
     featureIds = Int32ArrayType::CreateArray(256 * 128 * 1, cDims, SIMPL::CellData::FeatureIds);
     featureIds->initializeWithValue(1);
-    attrMat->addAttributeArray(SIMPL::CellData::FeatureIds, featureIds);
+    attrMat->insert_or_assign(featureIds);
 
     FilterManager* fm = FilterManager::Instance();
     bool propWasSet = true;

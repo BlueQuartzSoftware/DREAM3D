@@ -79,11 +79,11 @@ public:
   SIMPL_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
   Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
 
-  IntVec3_t getCurrentVolumeDataContainerDimensions();
-  Q_PROPERTY(IntVec3_t CurrentVolumeDataContainerDimensions READ getCurrentVolumeDataContainerDimensions)
+  IntVec3Type getCurrentVolumeDataContainerDimensions();
+  Q_PROPERTY(IntVec3Type CurrentVolumeDataContainerDimensions READ getCurrentVolumeDataContainerDimensions)
 
-  FloatVec3_t getCurrentVolumeDataContainerResolutions();
-  Q_PROPERTY(FloatVec3_t CurrentVolumeDataContainerResolutions READ getCurrentVolumeDataContainerResolutions)
+  FloatVec3Type getCurrentVolumeDataContainerResolutions();
+  Q_PROPERTY(FloatVec3Type CurrentVolumeDataContainerResolutions READ getCurrentVolumeDataContainerResolutions)
 
   SIMPL_FILTER_PARAMETER(int, XMin)
   Q_PROPERTY(int XMin READ getXMin WRITE setXMin)
@@ -224,14 +224,14 @@ protected:
 
 private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  
-  IntVec3_t m_OldDimensions;
-  FloatVec3_t m_OldResolution;
-  FloatVec3_t m_OldOrigin;
-  
-  IntVec3_t m_NewDimensions;
-  FloatVec3_t m_NewResolution;
-  FloatVec3_t m_NewOrigin;
+
+  IntVec3Type m_OldDimensions;
+  FloatVec3Type m_OldResolution;
+  FloatVec3Type m_OldOrigin;
+
+  IntVec3Type m_NewDimensions;
+  FloatVec3Type m_NewResolution;
+  FloatVec3Type m_NewOrigin;
 
 public:
   CropImageGeometry(const CropImageGeometry&) = delete; // Copy Constructor Not Implemented

@@ -55,14 +55,13 @@ QuiltCellData::QuiltCellData()
 , m_OutputAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_OutputArrayName("Quilt_Data")
 {
-  m_QuiltStep.x = 2;
-  m_QuiltStep.y = 2;
-  m_QuiltStep.z = 2;
+  m_QuiltStep[0] = 2;
+  m_QuiltStep[1] = 2;
+  m_QuiltStep[2] = 2;
 
-  m_PatchSize.x = 3;
-  m_PatchSize.y = 3;
-  m_PatchSize.z = 3;
-
+  m_PatchSize[0] = 3;
+  m_PatchSize[1] = 3;
+  m_PatchSize[2] = 3;
 }
 
 // -----------------------------------------------------------------------------
@@ -158,17 +157,17 @@ void QuiltCellData::dataCheck()
   }
 
   // Check to make sure the QuiltStep and Patch Size are non-zero
-  if(m_QuiltStep.x < 1 || m_QuiltStep.y < 1 || m_QuiltStep.z < 1)
+  if(m_QuiltStep[0] < 1 || m_QuiltStep[1] < 1 || m_QuiltStep[2] < 1)
   {
-    QString ss = QObject::tr("The QuiltStep parameter is invalid because one of the values is Negative or Zero. Value=(%1, %2, %3)").arg(m_QuiltStep.x).arg(m_QuiltStep.y).arg(m_QuiltStep.z);
+    QString ss = QObject::tr("The QuiltStep parameter is invalid because one of the values is Negative or Zero. Value=(%1, %2, %3)").arg(m_QuiltStep[0]).arg(m_QuiltStep[1]).arg(m_QuiltStep[2]);
     setErrorCondition(-11004);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   // Check to make sure the QuiltStep and Patch Size are non-zero
-  if(m_PatchSize.x < 1 || m_PatchSize.y < 1 || m_PatchSize.z < 1)
+  if(m_PatchSize[0] < 1 || m_PatchSize[1] < 1 || m_PatchSize[2] < 1)
   {
-    QString ss = QObject::tr("The Patch Size parameter is invalid because one of the values is Negative or Zero. Value=(%1, %2, %3)").arg(m_PatchSize.x).arg(m_PatchSize.y).arg(m_PatchSize.z);
+    QString ss = QObject::tr("The Patch Size parameter is invalid because one of the values is Negative or Zero. Value=(%1, %2, %3)").arg(m_PatchSize[0]).arg(m_PatchSize[1]).arg(m_PatchSize[2]);
     setErrorCondition(-11005);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -190,8 +189,8 @@ void QuiltCellData::dataCheck()
   // Establish the dimensions, resolutions and origin of the new data container
   size_t dcDims[3] = {0, 0, 0};
   std::tie(dcDims[0], dcDims[1], dcDims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
-  float res[3] = {0.0f, 0.0f, 0.0f};
-  std::tie(res[0], res[1], res[2]) = m->getGeometryAs<ImageGeom>()->getResolution();
+  FloatVec3Type res = {0.0f, 0.0f, 0.0f};
+  std::tie(res[0], res[1], res[2]) = m->getGeometryAs<ImageGeom>()->getSpacing();
   // Create a new DataContainer
   DataContainer::Pointer m2 = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getOutputDataContainerName());
   if(getErrorCondition() < 0)
@@ -202,9 +201,9 @@ void QuiltCellData::dataCheck()
   ImageGeom::Pointer newImage = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m2->setGeometry(newImage);
 
-  int newDimX = int(dcDims[0] / m_QuiltStep.x);
-  int newDimY = int(dcDims[1] / m_QuiltStep.y);
-  int newDimZ = int(dcDims[2] / m_QuiltStep.z);
+  int newDimX = int(dcDims[0] / m_QuiltStep[0]);
+  int newDimY = int(dcDims[1] / m_QuiltStep[1]);
+  int newDimZ = int(dcDims[2] / m_QuiltStep[2]);
   if(dcDims[0] == 1)
   {
     newDimX = 1;
@@ -219,8 +218,8 @@ void QuiltCellData::dataCheck()
   }
 
   m2->getGeometryAs<ImageGeom>()->setDimensions(newDimX, newDimY, newDimZ);
-  m2->getGeometryAs<ImageGeom>()->setResolution(res);
-  m2->getGeometryAs<ImageGeom>()->setOrigin(0.0f, 0.0f, 0.0f);
+  m2->getGeometryAs<ImageGeom>()->setSpacing(res);
+  m2->getGeometryAs<ImageGeom>()->setOrigin(FloatVec3Type(0.0f, 0.0f, 0.0f));
 
   // Create the cell attrMat in the new data container
   QVector<size_t> tDims(3, 0);
@@ -260,7 +259,7 @@ void QuiltCellData::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T> float quiltData(IDataArray::Pointer inputData, int64_t xc, int64_t yc, int64_t zc, IntVec3_t pSize, int64_t xDim, int64_t yDim, int64_t zDim)
+template <typename T> float quiltData(IDataArray::Pointer inputData, int64_t xc, int64_t yc, int64_t zc, IntVec3Type pSize, int64_t xDim, int64_t yDim, int64_t zDim)
 {
   float value = 0.0;
   typename DataArray<T>::Pointer cellArray = std::dynamic_pointer_cast<DataArray<T>>(inputData);
@@ -274,26 +273,26 @@ template <typename T> float quiltData(IDataArray::Pointer inputData, int64_t xc,
   int64_t zStride = 0, yStride = 0;
   float count = 0;
 
-  int xRangeMin = -floorf((float)pSize.x / 2.0f);
-  int xRangeMax = floorf((float)pSize.x / 2.0f);
-  int yRangeMin = -floorf((float)pSize.y / 2.0f);
-  int yRangeMax = floorf((float)pSize.y / 2.0f);
-  int zRangeMin = -floorf((float)pSize.z / 2.0f);
-  int zRangeMax = floorf((float)pSize.z / 2.0f);
+  int xRangeMin = -floorf((float)pSize[0] / 2.0f);
+  int xRangeMax = floorf((float)pSize[0] / 2.0f);
+  int yRangeMin = -floorf((float)pSize[1] / 2.0f);
+  int yRangeMax = floorf((float)pSize[1] / 2.0f);
+  int zRangeMin = -floorf((float)pSize[2] / 2.0f);
+  int zRangeMax = floorf((float)pSize[2] / 2.0f);
 
-  if(pSize.x == 1)
+  if(pSize[0] == 1)
   {
     xRangeMin = 0;
     xRangeMax = 1;
   }
 
-  if(pSize.y == 1)
+  if(pSize[1] == 1)
   {
     yRangeMin = 0;
     yRangeMax = 1;
   }
 
-  if(pSize.z == 1)
+  if(pSize[2] == 1)
   {
     zRangeMin = 0;
     zRangeMax = 1;
@@ -380,9 +379,9 @@ void QuiltCellData::execute()
       yStride = (j * dc2Dims[0]);
       for(size_t i = 0; i < dc2Dims[0]; i++)
       {
-        xc = i * m_QuiltStep.x + m_QuiltStep.x / 2;
-        yc = j * m_QuiltStep.y + m_QuiltStep.y / 2;
-        // zc = k * m_QuiltStep.z + m_QuiltStep.z / 2;
+        xc = i * m_QuiltStep[0] + m_QuiltStep[0] / 2;
+        yc = j * m_QuiltStep[1] + m_QuiltStep[1] / 2;
+        // zc = k * m_QuiltStep[2] + m_QuiltStep[2] / 2;
         zc = 0;
         if(dType.compare("int8_t") == 0)
         {

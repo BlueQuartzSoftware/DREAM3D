@@ -219,7 +219,7 @@ protected:
     tDims[1] = ny;
     tDims[2] = nz;
     AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
-    m->addAttributeMatrix(attrMat->getName(), attrMat);
+    m->addAttributeMatrix(attrMat);
   }
 
 private:

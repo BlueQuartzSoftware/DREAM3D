@@ -487,52 +487,46 @@ void IdentifyMicroTextureRegions::execute()
   int64_t totalPoints = static_cast<int64_t>(m_MTRIdsPtr.lock()->getNumberOfTuples());
 
   // calculate dimensions of DIC-like grid
-  size_t dcDims[3] = {0, 0, 0};
-  float xRes = 0.0f, yRes = 0.0f, zRes = 0.0f;
-  float origin[3] = {0.0f, 0.0f, 0.0f};
-  std::tie(dcDims[0], dcDims[1], dcDims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
-  m->getGeometryAs<ImageGeom>()->getResolution(xRes, yRes, zRes);
+  SizeVec3Type dcDims = {0, 0, 0};
+  FloatVec3Type spacing;
+  FloatVec3Type origin = {0.0f, 0.0f, 0.0f};
+  m->getGeometryAs<ImageGeom>()->getDimensions(dcDims);
+  m->getGeometryAs<ImageGeom>()->getSpacing(spacing);
   m->getGeometryAs<ImageGeom>()->getOrigin(origin);
 
   // Find number of original cells in radius of patch
   int64_t critDim[3] = {0, 0, 0};
-  critDim[0] = static_cast<int64_t>(m_MinMTRSize / (4.0f * xRes));
-  critDim[1] = static_cast<int64_t>(m_MinMTRSize / (4.0f * yRes));
-  critDim[2] = static_cast<int64_t>(m_MinMTRSize / (4.0f * zRes));
+  critDim[0] = static_cast<int64_t>(m_MinMTRSize / (4.0f * spacing[0]));
+  critDim[1] = static_cast<int64_t>(m_MinMTRSize / (4.0f * spacing[1]));
+  critDim[2] = static_cast<int64_t>(m_MinMTRSize / (4.0f * spacing[2]));
 
   // Find physical distance of patch steps
-  FloatVec3_t critRes;
-  critRes.x = static_cast<float>(critDim[0]) * xRes;
-  critRes.y = static_cast<float>(critDim[1]) * yRes;
-  critRes.z = static_cast<float>(critDim[2]) * zRes;
+  FloatVec3Type critRes;
+  critRes[0] = static_cast<float>(critDim[0]) * spacing[0];
+  critRes[1] = static_cast<float>(critDim[1]) * spacing[1];
+  critRes[2] = static_cast<float>(critDim[2]) * spacing[2];
 
   // Find number of patch steps in each dimension
-  int64_t newDimX = static_cast<int64_t>(dcDims[0] / critDim[0]);
-  int64_t newDimY = static_cast<int64_t>(dcDims[1] / critDim[1]);
-  int64_t newDimZ = static_cast<int64_t>(dcDims[2] / critDim[2]);
+  using Int64Vec3Type = IVec3<int64_t>;
+  Int64Vec3Type newDim(static_cast<int64_t>(dcDims[0] / critDim[0]), static_cast<int64_t>(dcDims[1] / critDim[1]), static_cast<int64_t>(dcDims[2] / critDim[2]));
+
   if(dcDims[0] == 1)
   {
-    newDimX = 1, critDim[0] = 0;
+    newDim[0] = 1, critDim[0] = 0;
   }
   if(dcDims[1] == 1)
   {
-    newDimY = 1, critDim[1] = 0;
+    newDim[1] = 1, critDim[1] = 0;
   }
   if(dcDims[2] == 1)
   {
-    newDimZ = 1, critDim[2] = 0;
+    newDim[2] = 1, critDim[2] = 0;
   }
 
   // Store the original and patch dimensions for passing into the parallel algo below
-  int64_t origDims[3] = {0, 0, 0};
-  origDims[0] = dcDims[0];
-  origDims[1] = dcDims[1];
-  origDims[2] = dcDims[2];
-  int64_t newDims[3] = {0, 0, 0};
-  newDims[0] = newDimX;
-  newDims[1] = newDimY;
-  newDims[2] = newDimZ;
-  size_t totalPatches = static_cast<size_t>(newDimX * newDimY * newDimZ);
+  Int64Vec3Type origDims(dcDims[0], dcDims[1], dcDims[2]);
+  Int64Vec3Type newDims = newDim;
+  size_t totalPatches = static_cast<size_t>(newDim[0] * newDim[1] * newDim[2]);
 
   // Create temporary DataContainer and AttributeMatrix for holding the patch data
   DataContainer::Pointer tmpDC = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "_INTERNAL_USE_ONLY_PatchDataContainer(Temp)");
@@ -540,14 +534,14 @@ void IdentifyMicroTextureRegions::execute()
   {
     return;
   }
-  tmpDC->getGeometryAs<ImageGeom>()->setDimensions(static_cast<size_t>(newDimX), static_cast<size_t>(newDimY), static_cast<size_t>(newDimZ));
-  tmpDC->getGeometryAs<ImageGeom>()->setResolution(critRes.x, critRes.y, critRes.z);
-  tmpDC->getGeometryAs<ImageGeom>()->setOrigin(origin[0], origin[1], origin[2]);
+  tmpDC->getGeometryAs<ImageGeom>()->setDimensions(SizeVec3Type(static_cast<size_t>(newDim[0]), static_cast<size_t>(newDim[1]), static_cast<size_t>(newDim[2])));
+  tmpDC->getGeometryAs<ImageGeom>()->setSpacing(critRes);
+  tmpDC->getGeometryAs<ImageGeom>()->setOrigin(origin);
 
-  QVector<size_t> tDims(3, 0);
-  tDims[0] = newDimX;
-  tDims[1] = newDimY;
-  tDims[2] = newDimZ;
+  QVector<size_t> tDims;
+  tDims[0] = newDim[0];
+  tDims[1] = newDim[1];
+  tDims[2] = newDim[2];
   tmpDC->createNonPrereqAttributeMatrix(this, "_INTERNAL_USE_ONLY_PatchAM(Temp)", tDims, AttributeMatrix::Type::Cell);
   if(getErrorCondition() < 0)
   {
@@ -594,14 +588,15 @@ void IdentifyMicroTextureRegions::execute()
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPatches),
-                      FindPatchMisalignmentsImpl(newDims, origDims, m_CAxisLocations, m_CellPhases, m_CrystalStructures, m_VolFrac, m_AvgCAxis, m_InMTR, critDim, m_MinVolFrac, m_CAxisToleranceRad),
-                      tbb::auto_partitioner());
+    tbb::parallel_for(
+        tbb::blocked_range<size_t>(0, totalPatches),
+        FindPatchMisalignmentsImpl(newDims.data(), origDims.data(), m_CAxisLocations, m_CellPhases, m_CrystalStructures, m_VolFrac, m_AvgCAxis, m_InMTR, critDim, m_MinVolFrac, m_CAxisToleranceRad),
+        tbb::auto_partitioner());
   }
   else
 #endif
   {
-    FindPatchMisalignmentsImpl serial(newDims, origDims, m_CAxisLocations, m_CellPhases, m_CrystalStructures, m_VolFrac, m_AvgCAxis, m_InMTR, critDim, m_MinVolFrac, m_CAxisToleranceRad);
+    FindPatchMisalignmentsImpl serial(newDims.data(), origDims.data(), m_CAxisLocations, m_CellPhases, m_CrystalStructures, m_VolFrac, m_AvgCAxis, m_InMTR, critDim, m_MinVolFrac, m_CAxisToleranceRad);
     serial.convert(0, totalPatches);
   }
 

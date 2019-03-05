@@ -57,8 +57,8 @@ class Sampling_EXPORT RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
     PYB11_PROPERTY(int XPoints READ getXPoints WRITE setXPoints)
     PYB11_PROPERTY(int YPoints READ getYPoints WRITE setYPoints)
     PYB11_PROPERTY(int ZPoints READ getZPoints WRITE setZPoints)
-    PYB11_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
-    PYB11_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+    PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
+    PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
     PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 public:
   SIMPL_SHARED_POINTERS(RegularGridSampleSurfaceMesh)
@@ -82,11 +82,11 @@ public:
   SIMPL_FILTER_PARAMETER(int, ZPoints)
   Q_PROPERTY(int ZPoints READ getZPoints WRITE setZPoints)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, Resolution)
-  Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
-  Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Origin)
+  Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
   SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
   Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)

@@ -113,10 +113,10 @@ public:
     dca->addDataContainer(m);
 
     AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New(QVector<size_t>(1, 20), SIMPL::Defaults::AttributeMatrixName, AttributeMatrix::Type::Generic);
-    m->addAttributeMatrix(SIMPL::Defaults::AttributeMatrixName, attrMatrix);
+    m->addAttributeMatrix(attrMatrix);
 
     AttributeMatrix::Pointer attrMatrix2 = AttributeMatrix::New(QVector<size_t>(1, 20), SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
-    m->addAttributeMatrix(SIMPL::Defaults::CellAttributeMatrixName, attrMatrix2);
+    m->addAttributeMatrix(attrMatrix2);
     int size = 20;
 
     {
@@ -125,7 +125,7 @@ public:
       {
         intArray->setValue(i, i + 20);
       }
-      attrMatrix->addAttributeArray(SIMPL::CellData::CellPhases, intArray);
+      attrMatrix->insert_or_assign(intArray);
     }
     {
       Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, SIMPL::CellData::ConfidenceIndexNoSpace);
@@ -133,7 +133,7 @@ public:
       {
         intArray->setValue(i, i + 20);
       }
-      attrMatrix->addAttributeArray(SIMPL::CellData::ConfidenceIndexNoSpace, intArray);
+      attrMatrix->insert_or_assign(intArray);
     }
     {
       BoolArrayType::Pointer boolArray = BoolArrayType::CreateArray(size, SIMPL::GeneralData::ThresholdArray);
@@ -148,7 +148,7 @@ public:
           boolArray->setValue(i, 1);
         }
       }
-      attrMatrix->addAttributeArray(SIMPL::GeneralData::ThresholdArray, boolArray);
+      attrMatrix->insert_or_assign(boolArray);
     }
     {
       Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, SIMPL::CellData::ConfidenceIndexNoSpace);
@@ -156,7 +156,7 @@ public:
       {
         intArray->setValue(i, i + 20);
       }
-      attrMatrix2->addAttributeArray(SIMPL::CellData::ConfidenceIndexNoSpace, intArray);
+      attrMatrix2->insert_or_assign(intArray);
     }
 
     Observer obs;

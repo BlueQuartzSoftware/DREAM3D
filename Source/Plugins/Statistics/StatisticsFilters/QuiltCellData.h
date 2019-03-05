@@ -60,8 +60,8 @@ class Statistics_EXPORT QuiltCellData : public AbstractFilter
   Q_OBJECT
     PYB11_CREATE_BINDINGS(QuiltCellData SUPERCLASS AbstractFilter)
     PYB11_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
-    PYB11_PROPERTY(IntVec3_t QuiltStep READ getQuiltStep WRITE setQuiltStep)
-    PYB11_PROPERTY(IntVec3_t PatchSize READ getPatchSize WRITE setPatchSize)
+    PYB11_PROPERTY(IntVec3Type QuiltStep READ getQuiltStep WRITE setQuiltStep)
+    PYB11_PROPERTY(IntVec3Type PatchSize READ getPatchSize WRITE setPatchSize)
     PYB11_PROPERTY(DataArrayPath OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName)
     PYB11_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
     PYB11_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName)
@@ -76,10 +76,10 @@ public:
   SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
   Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
-  SIMPL_FILTER_PARAMETER(IntVec3_t, QuiltStep)
-  Q_PROPERTY(IntVec3_t QuiltStep READ getQuiltStep WRITE setQuiltStep)
-  SIMPL_FILTER_PARAMETER(IntVec3_t, PatchSize)
-  Q_PROPERTY(IntVec3_t PatchSize READ getPatchSize WRITE setPatchSize)
+  SIMPL_FILTER_PARAMETER(IntVec3Type, QuiltStep)
+  Q_PROPERTY(IntVec3Type QuiltStep READ getQuiltStep WRITE setQuiltStep)
+  SIMPL_FILTER_PARAMETER(IntVec3Type, PatchSize)
+  Q_PROPERTY(IntVec3Type PatchSize READ getPatchSize WRITE setPatchSize)
 
   // The user selects a new DataContainerName
   SIMPL_FILTER_PARAMETER(DataArrayPath, OutputDataContainerName)

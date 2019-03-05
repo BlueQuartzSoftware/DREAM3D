@@ -60,10 +60,9 @@ FindKernelAvgMisorientations::FindKernelAvgMisorientations()
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
-  m_KernelSize.x = 1;
-  m_KernelSize.y = 1;
-  m_KernelSize.z = 1;
-
+  m_KernelSize[0] = 1;
+  m_KernelSize[1] = 1;
+  m_KernelSize[2] = 1;
 }
 
 // -----------------------------------------------------------------------------
@@ -255,13 +254,13 @@ void FindKernelAvgMisorientations::execute()
           numVoxel = 0;
           QuaternionMathF::Copy(quats[point], q1);
           phase1 = m_CrystalStructures[m_CellPhases[point]];
-          for(int32_t j = -m_KernelSize.z; j < m_KernelSize.z + 1; j++)
+          for(int32_t j = -m_KernelSize[2]; j < m_KernelSize[2] + 1; j++)
           {
             jStride = j * xPoints * yPoints;
-            for(int32_t k = -m_KernelSize.y; k < m_KernelSize.y + 1; k++)
+            for(int32_t k = -m_KernelSize[1]; k < m_KernelSize[1] + 1; k++)
             {
               kStride = k * xPoints;
-              for(int32_t l = -m_KernelSize.x; l < m_KernelSize.z + 1; l++)
+              for(int32_t l = -m_KernelSize[0]; l < m_KernelSize[0] + 1; l++)
               {
                 good = true;
                 neighbor = point + (jStride) + (kStride) + (l);

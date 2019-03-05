@@ -63,14 +63,13 @@ EMsoftSO3Sampler::EMsoftSO3Sampler()
 , m_DataContainerName(SIMPL::Defaults::ImageDataContainerName)
 , m_EMsoftAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 {
-  m_RefOr.x = 0.0;
-  m_RefOr.y = 0.0;
-  m_RefOr.z = 0.0;
+  m_RefOr[0] = 0.0;
+  m_RefOr[1] = 0.0;
+  m_RefOr[2] = 0.0;
 
-  m_RefOrFull.x = 0.0;
-  m_RefOrFull.y = 0.0;
-  m_RefOrFull.z = 0.0;
-
+  m_RefOrFull[0] = 0.0;
+  m_RefOrFull[1] = 0.0;
+  m_RefOrFull[2] = 0.0;
 }
 
 // -----------------------------------------------------------------------------
@@ -202,7 +201,7 @@ void EMsoftSO3Sampler::dataCheck()
       QString ss = QObject::tr("Misorientation angle must fall in interval [0,90]");
       notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
     }
-    if((getRefOr().x < 0.0) || (getRefOr().x > 360.0f) || (getRefOr().y < 0.0f) || (getRefOr().y > 180.0f) || (getRefOr().z < 0.0f) || (getRefOr().z > 360.0f))
+    if((getRefOr()[0] < 0.0) || (getRefOr()[0] > 360.0f) || (getRefOr()[1] < 0.0f) || (getRefOr()[1] > 180.0f) || (getRefOr()[2] < 0.0f) || (getRefOr()[2] > 360.0f))
     {
       setWarningCondition(-70003);
       QString ss = QObject::tr("Euler angles must be positive and less than [360°,180°,360°]");
@@ -217,7 +216,7 @@ void EMsoftSO3Sampler::dataCheck()
       QString ss = QObject::tr("Misorientation angle must fall in interval [0,90]");
       notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
     }
-    if((getRefOrFull().x < 0.0f) || (getRefOrFull().x > 360.0f) || (getRefOrFull().y < 0.0f) || (getRefOrFull().y > 180.0f) || (getRefOrFull().z < 0.0f) || (getRefOrFull().z > 360.0f))
+    if((getRefOrFull()[0] < 0.0f) || (getRefOrFull()[0] > 360.0f) || (getRefOrFull()[1] < 0.0f) || (getRefOrFull()[1] > 180.0f) || (getRefOrFull()[2] < 0.0f) || (getRefOrFull()[2] > 360.0f))
     {
       setWarningCondition(-70005);
       QString ss = QObject::tr("Euler angles must be positive and less than [360°,180°,360°]");
@@ -387,9 +386,9 @@ void EMsoftSO3Sampler::execute()
 
     // convert the reference orientation to a 3-component Rodrigues vector sigma
     DOrientArrayType sigm(4), sigma(3), referenceOrientation(3);
-    referenceOrientation[0] = static_cast<double>(getRefOr().x * SIMPLib::Constants::k_PiOver180);
-    referenceOrientation[1] = static_cast<double>(getRefOr().y * SIMPLib::Constants::k_PiOver180);
-    referenceOrientation[2] = static_cast<double>(getRefOr().z * SIMPLib::Constants::k_PiOver180);
+    referenceOrientation[0] = static_cast<double>(getRefOr()[0] * SIMPLib::Constants::k_PiOver180);
+    referenceOrientation[1] = static_cast<double>(getRefOr()[1] * SIMPLib::Constants::k_PiOver180);
+    referenceOrientation[2] = static_cast<double>(getRefOr()[2] * SIMPLib::Constants::k_PiOver180);
     OrientationTransformsType::eu2ro(referenceOrientation, sigm);
     sigma[0] = sigm[0] * sigm[3];
     sigma[1] = sigm[1] * sigm[3];

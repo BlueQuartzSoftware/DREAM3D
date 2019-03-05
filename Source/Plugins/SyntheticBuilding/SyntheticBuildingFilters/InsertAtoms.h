@@ -51,7 +51,7 @@ class SyntheticBuilding_EXPORT InsertAtoms : public AbstractFilter
     PYB11_CREATE_BINDINGS(InsertAtoms SUPERCLASS AbstractFilter)
     PYB11_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
     PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
-    PYB11_PROPERTY(FloatVec3_t LatticeConstants READ getLatticeConstants WRITE setLatticeConstants)
+    PYB11_PROPERTY(FloatVec3Type LatticeConstants READ getLatticeConstants WRITE setLatticeConstants)
     PYB11_PROPERTY(int Basis READ getBasis WRITE setBasis)
     PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
     PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
@@ -69,8 +69,8 @@ public:
   SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, LatticeConstants)
-  Q_PROPERTY(FloatVec3_t LatticeConstants READ getLatticeConstants WRITE setLatticeConstants)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, LatticeConstants)
+  Q_PROPERTY(FloatVec3Type LatticeConstants READ getLatticeConstants WRITE setLatticeConstants)
 
   SIMPL_FILTER_PARAMETER(int, Basis)
   Q_PROPERTY(int Basis READ getBasis WRITE setBasis)

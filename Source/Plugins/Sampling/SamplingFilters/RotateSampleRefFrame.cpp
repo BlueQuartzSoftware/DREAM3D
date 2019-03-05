@@ -168,10 +168,9 @@ RotateSampleRefFrame::RotateSampleRefFrame()
 , m_RotationAngle(0.0)
 , m_SliceBySlice(false)
 {
-  m_RotationAxis.x = 0.0;
-  m_RotationAxis.y = 0.0;
-  m_RotationAxis.z = 1.0;
-
+  m_RotationAxis[0] = 0.0;
+  m_RotationAxis[1] = 0.0;
+  m_RotationAxis[2] = 1.0;
 }
 
 // -----------------------------------------------------------------------------
@@ -266,7 +265,7 @@ void RotateSampleRefFrame::preflight()
   yp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
   zp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
 
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   params.xp = xp;
   params.xRes = xRes;
@@ -287,7 +286,7 @@ void RotateSampleRefFrame::preflight()
   float zMax = -zMin;
 
   FOrientArrayType om(9);
-  FOrientTransformsType::ax2om(FOrientArrayType(m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotAngle), om);
+  FOrientTransformsType::ax2om(FOrientArrayType(m_RotationAxis[0], m_RotationAxis[1], m_RotationAxis[2], rotAngle), om);
   om.toGMatrix(rotMat);
   for(int32_t i = 0; i < 8; i++)
   {
@@ -407,7 +406,7 @@ void RotateSampleRefFrame::preflight()
   params.zResNew = zResNew;
   params.zMinNew = zMin;
 
-  m->getGeometryAs<ImageGeom>()->setResolution(params.xResNew, params.yResNew, params.zResNew);
+  m->getGeometryAs<ImageGeom>()->setSpacing(FloatVec3Type(params.xResNew, params.yResNew, params.zResNew));
   m->getGeometryAs<ImageGeom>()->setDimensions(params.xpNew, params.ypNew, params.zpNew);
   setInPreflight(false);
 }
@@ -439,7 +438,7 @@ void RotateSampleRefFrame::execute()
   yp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
   zp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
 
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   params.xp = xp;
   params.xRes = xRes;
@@ -460,7 +459,7 @@ void RotateSampleRefFrame::execute()
   float zMax = std::numeric_limits<float>::min();
 
   FOrientArrayType om(9);
-  FOrientTransformsType::ax2om(FOrientArrayType(m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z, rotAngle), om);
+  FOrientTransformsType::ax2om(FOrientArrayType(m_RotationAxis[0], m_RotationAxis[1], m_RotationAxis[2], rotAngle), om);
   om.toGMatrix(rotMat);
   for(int32_t i = 0; i < 8; i++)
   {
@@ -588,7 +587,7 @@ void RotateSampleRefFrame::execute()
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
-  bool doParallel = true;
+  bool doParallel = false;
 #endif
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -616,32 +615,45 @@ void RotateSampleRefFrame::execute()
   tDims[2] = params.zpNew;
   m->getAttributeMatrix(attrMatName)->resizeAttributeArrays(tDims);
 
-  for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  for(const auto& attrArrayName : voxelArrayNames)
   {
-    IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(*iter);
+    IDataArray::Pointer p = m->getAttributeMatrix(attrMatName)->getAttributeArray(attrArrayName);
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with
     // the same name.
     IDataArray::Pointer data = p->createNewArray(newNumCellTuples, p->getComponentDimensions(), p->getName());
-    void* source = nullptr;
-    void* destination = nullptr;
+    //    void* source = nullptr;
+    //    void* destination = nullptr;
     int64_t newIndicies_I = 0;
-    int32_t nComp = data->getNumberOfComponents();
+    //   int32_t nComp = data->getNumberOfComponents();
     for(size_t i = 0; i < static_cast<size_t>(newNumCellTuples); i++)
     {
       newIndicies_I = newindicies[i];
       if(newIndicies_I >= 0)
       {
-        source = p->getVoidPointer((nComp * newIndicies_I));
-        if(nullptr == source)
+        //        source = p->getVoidPointer((nComp * newIndicies_I));
+        //        if(nullptr == source)
+        //        {
+        //          QString ss = QObject::tr("The index is outside the bounds of the source array");
+        //          setErrorCondition(-11004);
+        //          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        //          return;
+        //        }
+        //        destination = data->getVoidPointer((data->getNumberOfComponents() * i));
+        //        ::memcpy(destination, source, p->getTypeSize() * data->getNumberOfComponents());
+
+        if(!data->copyFromArray(i, p, newIndicies_I, 1))
         {
-          QString ss = QObject::tr("The index is outside the bounds of the source array");
+
+          QString ss = QObject::tr("copyFromArray Failed: ");
+          QTextStream out(&ss);
+          out << "Source Array Name: " << p->getName() << " Source Tuple Index: " << newIndicies_I << "\n";
+          out << "Dest Array Name: " << data->getName() << "  Dest. Tuple Index: " << i << "\n";
+
           setErrorCondition(-11004);
           notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
           return;
         }
-        destination = data->getVoidPointer((data->getNumberOfComponents() * i));
-        ::memcpy(destination, source, p->getTypeSize() * data->getNumberOfComponents());
       }
       else
       {
@@ -649,12 +661,11 @@ void RotateSampleRefFrame::execute()
         data->initializeTuple(i, &var);
       }
     }
-    m->getAttributeMatrix(attrMatName)->addAttributeArray(*iter, data);
+    m->getAttributeMatrix(attrMatName)->insert_or_assign(data);
   }
-  m->getGeometryAs<ImageGeom>()->setResolution(params.xResNew, params.yResNew, params.zResNew);
+  m->getGeometryAs<ImageGeom>()->setSpacing(FloatVec3Type(params.xResNew, params.yResNew, params.zResNew));
   m->getGeometryAs<ImageGeom>()->setDimensions(params.xpNew, params.ypNew, params.zpNew);
-  m->getGeometryAs<ImageGeom>()->setOrigin(xMin, yMin, zMin);
-
+  m->getGeometryAs<ImageGeom>()->setOrigin(FloatVec3Type(xMin, yMin, zMin));
 }
 
 // -----------------------------------------------------------------------------

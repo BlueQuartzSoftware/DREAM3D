@@ -260,7 +260,7 @@ void EbsdToH5Ebsd::execute()
   err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5Ebsd::ZResolution, m_ZResolution);
   if(err < 0)
   {
-    QString ss = QObject::tr("Could not write the Z Resolution Scalar to the HDF5 File");
+    QString ss = QObject::tr("Could not write the Z Spacing Scalar to the HDF5 File");
     setErrorCondition(-1);
     notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -431,7 +431,7 @@ void EbsdToH5Ebsd::execute()
     totalSlicesImported = totalSlicesImported + fileImporter->numberOfSlicesImported();
 
     fileImporter->getDims(xDim, yDim);
-    fileImporter->getResolution(xRes, yRes);
+    fileImporter->getSpacing(xRes, yRes);
     if(xDim > biggestxDim)
     {
       biggestxDim = xDim;
@@ -456,7 +456,7 @@ void EbsdToH5Ebsd::execute()
     }
   }
 
-  // Write Z index start, Z index end and Z Resolution to the HDF5 file
+  // Write Z index start, Z index end and Z Spacing to the HDF5 file
   err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5Ebsd::ZStartIndex, m_ZStartIndex);
   if(err < 0)
   {

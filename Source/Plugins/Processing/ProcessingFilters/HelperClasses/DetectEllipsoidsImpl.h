@@ -284,7 +284,7 @@ public:
       }
     }
 
-    indices->resize(count);
+    indices->resizeTuples(count);
     return indices;
   }
 

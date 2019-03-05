@@ -78,12 +78,12 @@ void GeneratePrecipitateStatsData::initialize()
   m_CrystalStructures = nullptr;
   m_PhaseTypes = nullptr;
   m_PhaseNames = nullptr;
-  m_RdfMinMaxDistance.x = 10;
-  m_RdfMinMaxDistance.y = 80;
+  m_RdfMinMaxDistance[0] = 10;
+  m_RdfMinMaxDistance[1] = 80;
   m_RdfNumBins = 50;
-  m_RdfBoxSize.x = 100;
-  m_RdfBoxSize.y = 100;
-  m_RdfBoxSize.z = 100;
+  m_RdfBoxSize[0] = 100;
+  m_RdfBoxSize[1] = 100;
+  m_RdfBoxSize[2] = 100;
 }
 
 // -----------------------------------------------------------------------------
@@ -259,7 +259,7 @@ void GeneratePrecipitateStatsData::dataCheck()
     }
     StatsDataArray::Pointer statsDataArray = StatsDataArray::New();
     statsDataArray->resize(tDims[0]);
-    cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::Statistics, statsDataArray);
+    cellEnsembleAttrMat->insert_or_assign(statsDataArray);
     m_StatsDataArray = statsDataArray.get();
 
     PrecipitateStatsData::Pointer PrecipitateStatsData = PrecipitateStatsData::New();
@@ -269,17 +269,17 @@ void GeneratePrecipitateStatsData::dataCheck()
     QVector<size_t> cDims(1, 1);
     UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::CrystalStructures);
     crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
-    cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::CrystalStructures, crystalStructures);
+    cellEnsembleAttrMat->insert_or_assign(crystalStructures);
     m_CrystalStructures = crystalStructures.get();
 
     UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::PhaseTypes);
     phaseTypes->setValue(0, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown));
-    cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseTypes, phaseTypes);
+    cellEnsembleAttrMat->insert_or_assign(phaseTypes);
     m_PhaseTypes = phaseTypes.get();
 
     StringDataArray::Pointer phaseNames = StringDataArray::CreateArray(tDims[0], SIMPL::EnsembleData::PhaseName);
     phaseNames->setValue(0, PhaseType::getPhaseTypeString(PhaseType::Type::Unknown));
-    cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseName, phaseNames);
+    cellEnsembleAttrMat->insert_or_assign(phaseNames);
     m_PhaseNames = phaseNames.get();
 
     setPhaseIndex(1); // If we are creating the StatsDataArray then we are the first phase
@@ -306,7 +306,7 @@ void GeneratePrecipitateStatsData::dataCheck()
     {
       statsDataArray = StatsDataArray::New();
       statsDataArray->resize(tDims[0]);
-      cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::Statistics, statsDataArray);
+      cellEnsembleAttrMat->insert_or_assign(statsDataArray);
     }
     m_StatsDataArray = statsDataArray.get();
 
@@ -321,7 +321,7 @@ void GeneratePrecipitateStatsData::dataCheck()
     {
       crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::CrystalStructures);
       crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
-      cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::CrystalStructures, crystalStructures);
+      cellEnsembleAttrMat->insert_or_assign(crystalStructures);
     }
     m_CrystalStructures = crystalStructures.get();
 
@@ -330,7 +330,7 @@ void GeneratePrecipitateStatsData::dataCheck()
     {
       phaseTypes = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::PhaseTypes);
       phaseTypes->setValue(0, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown));
-      cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseTypes, phaseTypes);
+      cellEnsembleAttrMat->insert_or_assign(phaseTypes);
     }
     m_PhaseTypes = phaseTypes.get();
 
@@ -339,7 +339,7 @@ void GeneratePrecipitateStatsData::dataCheck()
     {
       phaseNames = StringDataArray::CreateArray(tDims[0], SIMPL::EnsembleData::PhaseName);
       phaseNames->setValue(0, PhaseType::getPhaseTypeString(PhaseType::Type::Unknown));
-      cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseName, phaseNames);
+      cellEnsembleAttrMat->insert_or_assign(phaseNames);
     }
     m_PhaseNames = phaseNames.get();
 
@@ -611,16 +611,16 @@ void GeneratePrecipitateStatsData::execute()
 
   {
     std::vector<float> boxDims(3);
-    boxDims[0] = m_RdfBoxSize.x;
-    boxDims[1] = m_RdfBoxSize.y;
-    boxDims[2] = m_RdfBoxSize.z;
+    boxDims[0] = m_RdfBoxSize[0];
+    boxDims[1] = m_RdfBoxSize[1];
+    boxDims[2] = m_RdfBoxSize[2];
     std::vector<float> boxRes(3);
     boxRes[0] = 0.1f;
     boxRes[1] = 0.1f;
     boxRes[2] = 0.1f;
 
     // Generate the RDF Frequencies
-    std::vector<float> rdfFrequencies = RadialDistributionFunction::GenerateRandomDistribution(m_RdfMinMaxDistance.x, m_RdfMinMaxDistance.y, m_RdfNumBins, boxDims, boxRes);
+    std::vector<float> rdfFrequencies = RadialDistributionFunction::GenerateRandomDistribution(m_RdfMinMaxDistance[0], m_RdfMinMaxDistance[1], m_RdfNumBins, boxDims, boxRes);
     QVector<float> qFreq = QVector<float>::fromStdVector(rdfFrequencies);
   }
 

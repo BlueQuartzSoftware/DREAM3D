@@ -272,7 +272,7 @@ void FindFeatureClustering::find_clustering()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   sizex = dims[0] * xRes;
   sizey = dims[1] * yRes;
@@ -288,7 +288,7 @@ void FindFeatureClustering::find_clustering()
   boxdims[2] = sizez;
 
   std::vector<float> boxres = {0.0f, 0.0f, 0.0f};
-  std::tie(boxres.at(0), boxres.at(1), boxres.at(2)) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(boxres.at(0), boxres.at(1), boxres.at(2)) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   for(size_t i = 1; i < totalFeatures; i++)
   {

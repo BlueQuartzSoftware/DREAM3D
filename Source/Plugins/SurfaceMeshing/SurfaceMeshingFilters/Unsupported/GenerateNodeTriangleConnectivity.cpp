@@ -123,7 +123,7 @@ void GenerateNodeTriangleConnectivity::dataCheck()
     // We do not know the size of the array so we can not use the macro so we just manually call
     // the needed methods that will propagate these array additions to the pipeline
     DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, 2, SIMPL::CellData::SurfaceMeshUniqueEdges);
-    sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(SIMPL::CellData::SurfaceMeshUniqueEdges, uniqueEdgesArray);
+    sm->getAttributeMatrix(getCellAttributeMatrixName())->insert_or_assign(uniqueEdgesArray);
 
     // This is just for tracking what Arrays are being created by this filter. Normally the macro
     // would do this for us.

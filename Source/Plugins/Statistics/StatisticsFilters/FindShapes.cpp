@@ -237,12 +237,12 @@ void FindShapes::find_moments()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = imageGeom->getResolution();
+  std::tie(xRes, yRes, zRes) = imageGeom->getSpacing();
 
   float xOrigin = 0.0f;
   float yOrigin = 0.0f;
   float zOrigin = 0.0f;
-  imageGeom->getOrigin(xOrigin, yOrigin, zOrigin);
+  std::tie(xOrigin, yOrigin, zOrigin) = imageGeom->getOrigin();
 
   // using a modified resolution to keep the moment calculations "small" and prevent exceeding numerical bounds.
   // scaleFactor is applied later to rescale the calculated axis lengths
@@ -391,25 +391,25 @@ void FindShapes::find_moments2D()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   if(imageGeom->getXPoints() == 1)
   {
     xPoints = imageGeom->getYPoints();
     yPoints = imageGeom->getZPoints();
-    std::tie(zRes, xRes, yRes) = imageGeom->getResolution();
+    std::tie(zRes, xRes, yRes) = imageGeom->getSpacing();
   }
   if(imageGeom->getYPoints() == 1)
   {
     xPoints = imageGeom->getXPoints();
     yPoints = imageGeom->getZPoints();
-    std::tie(xRes, zRes, yRes) = imageGeom->getResolution();
+    std::tie(xRes, zRes, yRes) = imageGeom->getSpacing();
   }
   if(imageGeom->getZPoints() == 1)
   {
     xPoints = imageGeom->getXPoints();
     yPoints = imageGeom->getYPoints();
-    std::tie(xRes, yRes, zRes) = imageGeom->getResolution();
+    std::tie(xRes, yRes, zRes) = imageGeom->getSpacing();
   }
 
   float modXRes = xRes * m_ScaleFactor;
@@ -418,7 +418,7 @@ void FindShapes::find_moments2D()
   float xOrigin = 0.0f;
   float yOrigin = 0.0f;
   float zOrigin = 0.0f;
-  imageGeom->getOrigin(xOrigin, yOrigin, zOrigin);
+  std::tie(xOrigin, yOrigin, zOrigin) = imageGeom->getOrigin();
 
   for(size_t i = 0; i < 6 * numfeatures; i++)
   {
@@ -594,19 +594,19 @@ void FindShapes::find_axes2D()
   {
     xPoints = imageGeom->getYPoints();
     yPoints = imageGeom->getZPoints();
-    std::tie(zRes, xRes, yRes) = imageGeom->getResolution();
+    std::tie(zRes, xRes, yRes) = imageGeom->getSpacing();
   }
   if(imageGeom->getYPoints() == 1)
   {
     xPoints = imageGeom->getXPoints();
     yPoints = imageGeom->getZPoints();
-    std::tie(xRes, zRes, yRes) = imageGeom->getResolution();
+    std::tie(xRes, zRes, yRes) = imageGeom->getSpacing();
   }
   if(imageGeom->getZPoints() == 1)
   {
     xPoints = imageGeom->getXPoints();
     yPoints = imageGeom->getYPoints();
-    std::tie(xRes, yRes, zRes) = imageGeom->getResolution();
+    std::tie(xRes, yRes, zRes) = imageGeom->getSpacing();
   }
 
 
@@ -880,7 +880,7 @@ void FindShapes::execute()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = imageGeom->getResolution();
+  std::tie(xRes, yRes, zRes) = imageGeom->getSpacing();
 
   m_ScaleFactor = static_cast<double>(1.0f / xRes);
   if(yRes > xRes && yRes > zRes)

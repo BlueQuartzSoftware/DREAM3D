@@ -226,7 +226,7 @@ void FindSurfaceAreaToVolume::execute()
   float yRes = 0.0f;
   float zRes = 0.0f;
   ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
-  std::tie(xRes, yRes, zRes) = imageGeom->getResolution();
+  std::tie(xRes, yRes, zRes) = imageGeom->getSpacing();
 
   int64_t xPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
   int64_t yPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());

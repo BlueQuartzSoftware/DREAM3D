@@ -383,7 +383,7 @@ FindGBCD::~FindGBCD() = default;
 void FindGBCD::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("GBCD Resolution (Degrees)", GBCDRes, FilterParameter::Parameter, FindGBCD));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("GBCD Spacing (Degrees)", GBCDRes, FilterParameter::Parameter, FindGBCD));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);

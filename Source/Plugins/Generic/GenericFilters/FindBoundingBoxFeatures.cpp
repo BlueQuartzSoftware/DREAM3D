@@ -348,19 +348,19 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
   {
     xPoints = imageGeom->getYPoints();
     yPoints = imageGeom->getZPoints();
-    std::tie(zRes, xRes, yRes) = imageGeom->getResolution();
+    std::tie(zRes, xRes, yRes) = imageGeom->getSpacing();
   }
   if(imageGeom->getYPoints() == 1)
   {
     xPoints = imageGeom->getXPoints();
     yPoints = imageGeom->getZPoints();
-    std::tie(xRes, zRes, yRes) = imageGeom->getResolution();
+    std::tie(xRes, zRes, yRes) = imageGeom->getSpacing();
   }
   if(imageGeom->getZPoints() == 1)
   {
     xPoints = imageGeom->getXPoints();
     yPoints = imageGeom->getYPoints();
-    std::tie(xRes, yRes, zRes) = imageGeom->getResolution();
+    std::tie(xRes, yRes, zRes) = imageGeom->getSpacing();
   }
 
   boundbox[0] = xOrigin;

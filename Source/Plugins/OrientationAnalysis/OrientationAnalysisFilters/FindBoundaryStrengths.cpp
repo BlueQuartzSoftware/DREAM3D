@@ -62,10 +62,9 @@ FindBoundaryStrengths::FindBoundaryStrengths()
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
-  m_Loading.x = 1.0f;
-  m_Loading.y = 1.0f;
-  m_Loading.z = 1.0f;
-
+  m_Loading[0] = 1.0f;
+  m_Loading[1] = 1.0f;
+  m_Loading[2] = 1.0f;
 }
 
 // -----------------------------------------------------------------------------
@@ -284,9 +283,9 @@ void FindBoundaryStrengths::execute()
 
   float LD[3] = {0.0f, 0.0f, 0.0f};
 
-  LD[0] = m_Loading.x;
-  LD[1] = m_Loading.y;
-  LD[2] = m_Loading.z;
+  LD[0] = m_Loading[0];
+  LD[1] = m_Loading[1];
+  LD[2] = m_Loading[2];
   MatrixMath::Normalize3x1(LD);
 
   for(size_t i = 0; i < numTriangles; i++)

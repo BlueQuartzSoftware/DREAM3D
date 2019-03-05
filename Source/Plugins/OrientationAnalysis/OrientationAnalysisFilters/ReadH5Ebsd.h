@@ -322,13 +322,13 @@ protected:
       latticeConstants->setComponent(phaseID, 5, lc[5]);
     }
 
-    attrMatrix->addAttributeArray(SIMPL::EnsembleData::CrystalStructures, crystalStructures);
+    attrMatrix->insert_or_assign(crystalStructures);
     m_CrystalStructuresPtr = crystalStructures;
     m_CrystalStructures = crystalStructures->getPointer(0);
-    attrMatrix->addAttributeArray(SIMPL::EnsembleData::LatticeConstants, latticeConstants);
+    attrMatrix->insert_or_assign(latticeConstants);
     m_LatticeConstantsPtr = latticeConstants;
     m_LatticeConstants = latticeConstants->getPointer(0);
-    attrMatrix->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
+    attrMatrix->insert_or_assign(materialNames);
     m_MaterialNamesPtr = materialNames;
     return 0;
   }

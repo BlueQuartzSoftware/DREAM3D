@@ -341,7 +341,7 @@ void FindNeighborhoods::execute()
   }
 
   float m_OriginX = 0.0f, m_OriginY = 0.0f, m_OriginZ = 0.0f;
-  m->getGeometryAs<ImageGeom>()->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
+  std::tie(m_OriginX, m_OriginY, m_OriginZ) = m->getGeometryAs<ImageGeom>()->getOrigin();
   size_t udims[3] = {0, 0, 0};
   std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 

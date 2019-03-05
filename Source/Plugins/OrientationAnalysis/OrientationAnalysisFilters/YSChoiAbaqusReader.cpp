@@ -283,7 +283,7 @@ void YSChoiAbaqusReader::dataCheck()
         zpoints = tokens[3].toInt(&ok, 10);
         size_t dims[3] = {static_cast<size_t>(xpoints), static_cast<size_t>(ypoints), static_cast<size_t>(zpoints)};
         m->getGeometryAs<ImageGeom>()->setDimensions(dims);
-        m->getGeometryAs<ImageGeom>()->setOrigin(0, 0, 0);
+        m->getGeometryAs<ImageGeom>()->setOrigin(FloatVec3Type(0.0f, 0.0f, 0.0f));
       }
       if(RES == word)
       {
@@ -291,8 +291,8 @@ void YSChoiAbaqusReader::dataCheck()
         resx = tokens[1].toInt(&ok, 10);
         resy = tokens[2].toInt(&ok, 10);
         resz = tokens[3].toInt(&ok, 10);
-        float res[3] = {resx, resy, resz};
-        m->getGeometryAs<ImageGeom>()->setResolution(res);
+        FloatVec3Type res = {resx, resy, resz};
+        m->getGeometryAs<ImageGeom>()->setSpacing(res);
       }
     }
   }
@@ -399,7 +399,7 @@ void YSChoiAbaqusReader::execute()
       totalpoints = xpoints * ypoints * zpoints;
       size_t dims[3] = {static_cast<size_t>(xpoints), static_cast<size_t>(ypoints), static_cast<size_t>(zpoints)};
       m->getGeometryAs<ImageGeom>()->setDimensions(dims);
-      m->getGeometryAs<ImageGeom>()->setOrigin(0, 0, 0);
+      m->getGeometryAs<ImageGeom>()->setOrigin(FloatVec3Type(0.0f, 0.0f, 0.0f));
     }
     if(buf.startsWith(RES))
     {
@@ -407,8 +407,8 @@ void YSChoiAbaqusReader::execute()
       resx = tokens[1].toInt(&ok, 10);
       resy = tokens[2].toInt(&ok, 10);
       resz = tokens[3].toInt(&ok, 10);
-      float res[3] = {resx, resy, resz};
-      m->getGeometryAs<ImageGeom>()->setResolution(res);
+      FloatVec3Type res = {resx, resy, resz};
+      m->getGeometryAs<ImageGeom>()->setSpacing(res);
     }
     if(buf.startsWith(LOOKUP))
     {

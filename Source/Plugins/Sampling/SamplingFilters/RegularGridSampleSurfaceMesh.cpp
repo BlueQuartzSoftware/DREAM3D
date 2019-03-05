@@ -61,14 +61,13 @@ RegularGridSampleSurfaceMesh::RegularGridSampleSurfaceMesh()
 , m_ZPoints(0)
 , m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
 {
-  m_Resolution.x = 1.0f;
-  m_Resolution.y = 1.0f;
-  m_Resolution.z = 1.0f;
+  m_Spacing[0] = 1.0f;
+  m_Spacing[1] = 1.0f;
+  m_Spacing[2] = 1.0f;
 
-  m_Origin.x = 0.0f;
-  m_Origin.y = 0.0f;
-  m_Origin.z = 0.0f;
-
+  m_Origin[0] = 0.0f;
+  m_Origin[1] = 0.0f;
+  m_Origin[2] = 0.0f;
 }
 
 // -----------------------------------------------------------------------------
@@ -86,7 +85,7 @@ void RegularGridSampleSurfaceMesh::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("X Points", XPoints, FilterParameter::Parameter, RegularGridSampleSurfaceMesh));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Y Points", YPoints, FilterParameter::Parameter, RegularGridSampleSurfaceMesh));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Z Points", ZPoints, FilterParameter::Parameter, RegularGridSampleSurfaceMesh));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, RegularGridSampleSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, RegularGridSampleSurfaceMesh));
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, RegularGridSampleSurfaceMesh));
 
@@ -107,7 +106,7 @@ void RegularGridSampleSurfaceMesh::readFilterParameters(AbstractFilterParameters
   setXPoints(reader->readValue("XPoints", getXPoints()));
   setYPoints(reader->readValue("YPoints", getYPoints()));
   setZPoints(reader->readValue("ZPoints", getZPoints()));
-  setResolution(reader->readFloatVec3("Resolution", getResolution()));
+  setSpacing(reader->readFloatVec3("Spacing", getSpacing()));
   setOrigin(reader->readFloatVec3("Origin", getOrigin()));
   setDataContainerName(reader->readDataArrayPath("DataContainerName", getDataContainerName()));
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
@@ -140,10 +139,10 @@ void RegularGridSampleSurfaceMesh::dataCheck()
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
 
-  // Set the Dimensions, Resolution and Origin of the output data container
+  // Set the Dimensions, Spacing and Origin of the output data container
   m->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(m_XPoints, m_YPoints, m_ZPoints));
-  m->getGeometryAs<ImageGeom>()->setResolution(std::make_tuple(m_Resolution.x, m_Resolution.y, m_Resolution.z));
-  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin.x, m_Origin.y, m_Origin.z));
+  m->getGeometryAs<ImageGeom>()->setSpacing(std::make_tuple(m_Spacing[0], m_Spacing[1], m_Spacing[2]));
+  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin[0], m_Origin[1], m_Origin[2]));
 
   QVector<size_t> tDims(3, 0);
   tDims[0] = m_XPoints;
@@ -194,9 +193,9 @@ VertexGeom::Pointer RegularGridSampleSurfaceMesh::generate_points()
     {
       for(int64_t i = 0; i < m_XPoints; i++)
       {
-        coords[0] = (float(i) + 0.5f) * m_Resolution.x + m_Origin.x;
-        coords[1] = (float(j) + 0.5f) * m_Resolution.y + m_Origin.y;
-        coords[2] = (float(k) + 0.5f) * m_Resolution.z + m_Origin.z;
+        coords[0] = (float(i) + 0.5f) * m_Spacing[0] + m_Origin[0];
+        coords[1] = (float(j) + 0.5f) * m_Spacing[1] + m_Origin[1];
+        coords[2] = (float(k) + 0.5f) * m_Spacing[2] + m_Origin[2];
         points->setCoords(count, coords);
         count++;
       }
@@ -235,10 +234,10 @@ void RegularGridSampleSurfaceMesh::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
-  // Set the Dimensions, Resolution and Origin of the output data container
+  // Set the Dimensions, Spacing and Origin of the output data container
   m->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(m_XPoints, m_YPoints, m_ZPoints));
-  m->getGeometryAs<ImageGeom>()->setResolution(std::make_tuple(m_Resolution.x, m_Resolution.y, m_Resolution.z));
-  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin.x, m_Origin.y, m_Origin.z));
+  m->getGeometryAs<ImageGeom>()->setSpacing(std::make_tuple(m_Spacing[0], m_Spacing[1], m_Spacing[2]));
+  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin[0], m_Origin[1], m_Origin[2]));
 
   SampleSurfaceMesh::execute();
 

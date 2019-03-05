@@ -793,7 +793,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   m_ZPoints = static_cast<int64_t>(dims[2]);
   m_TotalPoints = dims[0] * dims[1] * dims[2];
 
-  std::tie(m_XRes, m_YRes, m_ZRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(m_XRes, m_YRes, m_ZRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   m_SizeX = dims[0] * m_XRes;
   m_SizeY = dims[1] * m_YRes;
@@ -1315,7 +1315,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 
     std::vector<float> boxres = {0.0f, 0.0f, 0.0f};
 
-    std::tie(boxres.at(1), boxres.at(1), boxres.at(2)) = m->getGeometryAs<ImageGeom>()->getResolution();
+    std::tie(boxres.at(1), boxres.at(1), boxres.at(2)) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
     float max_box_distance = sqrtf((m_SizeX * m_SizeX) + (m_SizeY * m_SizeY) + (m_SizeZ * m_SizeZ));
 
@@ -2440,7 +2440,7 @@ void InsertPrecipitatePhases::assign_voxels()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   int64_t column = 0, row = 0, plane = 0;
   float inside = 0.0f;
@@ -2836,7 +2836,7 @@ float InsertPrecipitatePhases::find_xcoord(int64_t index)
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   float x = xRes * static_cast<float>(index % m->getGeometryAs<ImageGeom>()->getXPoints());
   return x;
@@ -2851,7 +2851,7 @@ float InsertPrecipitatePhases::find_ycoord(int64_t index)
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
   float y = yRes * static_cast<float>((index / m->getGeometryAs<ImageGeom>()->getXPoints()) % m->getGeometryAs<ImageGeom>()->getYPoints());
   return y;
 }
@@ -2865,7 +2865,7 @@ float InsertPrecipitatePhases::find_zcoord(int64_t index)
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   float z = zRes * static_cast<float>(index / (m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getYPoints()));
   return z;
@@ -3029,7 +3029,7 @@ void InsertPrecipitatePhases::saveToNewAttributeMatrix(QList<IDataArray::Pointer
 
     foreach(IDataArray::Pointer incomingArray, incomingArrays)
     {
-      newAM->addAttributeArray(incomingArray->getName(), incomingArray);
+      newAM->insert_or_assign(incomingArray);
     }
   }
 }

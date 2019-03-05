@@ -138,7 +138,7 @@ void GenerateEnsembleStatistics::setupFilterParameters()
         SIMPL_BIND_GETTER(GenerateEnsembleStatistics, this, PhaseTypeData),
         "PhaseTypeArray", "PhaseCount", "CellEnsembleAttributeMatrixPath", phaseTypeStrings);
   parameters.push_back(phaseType_parameter);
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("Size Correlation Resolution", SizeCorrelationResolution, FilterParameter::Parameter, GenerateEnsembleStatistics));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("Size Correlation Spacing", SizeCorrelationResolution, FilterParameter::Parameter, GenerateEnsembleStatistics));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Category::Feature);
@@ -626,7 +626,7 @@ void GenerateEnsembleStatistics::dataCheck()
 
   m_StatsDataArray = StatsDataArray::CreateArray(m_PhaseTypesPtr.lock()->getNumberOfTuples(), getStatisticsArrayName());
   m_StatsDataArray->fillArrayWithNewStatsData(m_PhaseTypesPtr.lock()->getNumberOfTuples(), m_PhaseTypes);
-  attrMat->addAttributeArray(getStatisticsArrayName(), m_StatsDataArray);
+  attrMat->insert_or_assign(m_StatsDataArray);
 
   if(m_SizeDistributionFitType != SIMPL::DistributionType::LogNormal)
   {

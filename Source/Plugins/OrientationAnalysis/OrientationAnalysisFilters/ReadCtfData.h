@@ -48,9 +48,9 @@
 
 struct Ctf_Private_Data
 {
-  QVector<size_t> dims;
-  QVector<float> resolution;
-  QVector<float> origin;
+  SizeVec3Type dims;
+  FloatVec3Type resolution;
+  FloatVec3Type origin;
   QVector<CtfPhase::Pointer> phases;
 };
 

@@ -404,7 +404,7 @@ void ImportH5EspritData::dataCheckOEM()
   ebsdArrayMap.insert(Ebsd::Esprit::LatticeConstants, getDataContainerArray()->getPrereqIDataArrayFromPath<FloatArrayType, AbstractFilter>(this, tempPath));
 
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), SIMPL::EnsembleData::MaterialName);
-  cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
+  cellEnsembleAttrMat->insert_or_assign(materialNames);
   ebsdArrayMap.insert(SIMPL::EnsembleData::MaterialName, materialNames);
 
   if(getReadPatternData())
@@ -451,7 +451,10 @@ void ImportH5EspritData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, 
   // Drop into this if statement if we need to read from a file
   if(getInputFile() != getInputFile_Cache() || !getTimeStamp_Cache().isValid() || getTimeStamp_Cache() < timeStamp)
   {
-    float zStep = static_cast<float>(getZSpacing()), xOrigin = getOrigin().x, yOrigin = getOrigin().y, zOrigin = getOrigin().z;
+    float zStep = static_cast<float>(getZSpacing());
+    float xOrigin = getOrigin()[0];
+    float yOrigin = getOrigin()[1];
+    float zOrigin = getOrigin()[2];
     reader->setReadPatternData(getReadPatternData());
 
     // If the user has already set a Scan Name to read then we are good to go.
@@ -487,13 +490,13 @@ void ImportH5EspritData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, 
     // Set Cache with values from the file
     {
       Esprit_Private_Data data;
-      data.dims = tDims;
-      data.resolution.push_back(reader->getXStep());
-      data.resolution.push_back(reader->getYStep());
-      data.resolution.push_back(zStep);
-      data.origin.push_back(xOrigin);
-      data.origin.push_back(yOrigin);
-      data.origin.push_back(zOrigin);
+      data.dims = SizeVec3Type(tDims[0], tDims[1], tDims[2]);
+      data.resolution[0] = reader->getXStep();
+      data.resolution[1] = reader->getYStep();
+      data.resolution[2] = zStep;
+      data.origin[0] = xOrigin;
+      data.origin[1] = yOrigin;
+      data.origin[2] = zOrigin;
       data.phases = reader->getPhaseVector();
       setFileCacheData(data);
 
@@ -524,8 +527,8 @@ void ImportH5EspritData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, 
   if(image != nullptr)
   {
     image->setDimensions(tDims[0], tDims[1], tDims[2]);
-    image->setResolution(getFileCacheData().resolution[0], getFileCacheData().resolution[1], getFileCacheData().resolution[2]);
-    image->setOrigin(getFileCacheData().origin[0], getFileCacheData().origin[1], getFileCacheData().origin[2]);
+    image->setSpacing(getFileCacheData().resolution);
+    image->setOrigin(getFileCacheData().origin);
   }
 
   if(flag == ANG_FULL_FILE)
@@ -593,9 +596,9 @@ int32_t ImportH5EspritData::loadMaterialInfo(EbsdReader* ebsdReader)
   QVector<size_t> tDims(1, crystalStructures->getNumberOfTuples());
   attrMatrix->resizeAttributeArrays(tDims);
   // Now add the attributeArray to the AttributeMatrix
-  attrMatrix->addAttributeArray(SIMPL::EnsembleData::CrystalStructures, crystalStructures);
-  attrMatrix->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
-  attrMatrix->addAttributeArray(SIMPL::EnsembleData::LatticeConstants, latticeConstants);
+  attrMatrix->insert_or_assign(crystalStructures);
+  attrMatrix->insert_or_assign(materialNames);
+  attrMatrix->insert_or_assign(latticeConstants);
 
   // Now reset the internal ensemble array references to these new arrays
   m_CrystalStructuresPtr = crystalStructures;
@@ -622,7 +625,7 @@ void copyPointerData(Reader* reader, const QString& name, const IDataArray::Poin
   typename DataArrayType::Pointer fArray = std::dynamic_pointer_cast<DataArrayType>(dataArray);
   typename DataArrayType::Pointer freshArray = DataArrayType::WrapPointer(ptr, totalPoints, fArray->getComponentDimensions(), fArray->getName(), true);
   reader->releaseOwnership(name);
-  ebsdAttrMat->addAttributeArray(freshArray->getName(), freshArray);
+  ebsdAttrMat->insert_or_assign(freshArray);
 }
 
 // -----------------------------------------------------------------------------
@@ -684,7 +687,7 @@ void ImportH5EspritData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>
       cellEulerAngles[3 * i + 1] = f2[i] * degToRad;
       cellEulerAngles[3 * i + 2] = f3[i] * degToRad;
     }
-    ebsdAttrMat->addAttributeArray(SIMPL::CellData::EulerAngles, fArray);
+    ebsdAttrMat->insert_or_assign(fArray);
   }
   else
   {

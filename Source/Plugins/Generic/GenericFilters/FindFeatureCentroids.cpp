@@ -157,10 +157,10 @@ void FindFeatureCentroids::find_centroids()
   size_t yPoints = imageGeom->getYPoints();
   size_t zPoints = imageGeom->getZPoints();
 
-  std::array<float, 3> resolution = {{0.0f, 0.0f, 0.0f}};
-  imageGeom->getResolution(resolution.data());
-  std::array<float, 3> origin = {{0.0f, 0.0f, 0.0f}};
-  imageGeom->getOrigin(origin.data());
+  FloatVec3Type spacing(0.0f, 0.0f, 0.0f);
+  imageGeom->getSpacing(spacing);
+  FloatVec3Type origin(0.0f, 0.0f, 0.0f);
+  imageGeom->getOrigin(origin);
 
   size_t zStride = 0;
   size_t yStride = 0;

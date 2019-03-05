@@ -106,20 +106,20 @@ public:
     ImageGeom::Pointer geom = ImageGeom::CreateGeometry("ImageGeometry");
     m->setGeometry(geom);
     geom->setDimensions(tDims.data());
-    float res[3] = {1.0f, 2.0f, 1.0f};
-    geom->setResolution(res);
+    FloatVec3Type res = {1.0f, 2.0f, 1.0f};
+    geom->setSpacing(res);
 
     // Create Attribute Matrices with different tDims to test validation of tuple compatibility
 
     AttributeMatrix::Pointer attrMat1 = AttributeMatrix::New(tDims, k_FeatureIdsArrayPath.getAttributeMatrixName(), AttributeMatrix::Type::Cell);
 
-    m->addAttributeMatrix(k_FeatureIdsArrayPath.getAttributeMatrixName(), attrMat1);
+    m->addAttributeMatrix(attrMat1);
     dca->addDataContainer(m);
 
     QVector<size_t> cDims(1, 1);
 
     Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(tDims, cDims, k_FeatureIdsArrayPath.getDataArrayName());
-    int err = attrMat1->addAttributeArray(k_FeatureIdsArrayPath.getDataArrayName(), featureIds);
+    int err = attrMat1->insert_or_assign(featureIds);
     DREAM3D_REQUIRE(err >= 0);
     featureIds->initializeWithValue(1);
 

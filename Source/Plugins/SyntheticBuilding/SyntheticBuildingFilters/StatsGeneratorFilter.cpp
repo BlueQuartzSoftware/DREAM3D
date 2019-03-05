@@ -250,24 +250,24 @@ void StatsGeneratorFilter::dataCheck()
     AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
 
     m_StatsDataArray->setName(getStatsDataArrayName());
-    cellEnsembleAttrMat->addAttributeArray(getStatsDataArrayName(), m_StatsDataArray);
+    cellEnsembleAttrMat->insert_or_assign(m_StatsDataArray);
 
     if(nullptr != m_CrystalStructures)
     {
       m_CrystalStructures->setName(getCrystalStructuresArrayName());
-      cellEnsembleAttrMat->addAttributeArray(getCrystalStructuresArrayName(), m_CrystalStructures);
+      cellEnsembleAttrMat->insert_or_assign(m_CrystalStructures);
     }
 
     if(nullptr != m_PhaseTypes)
     {
       m_PhaseTypes->setName(getPhaseTypesArrayName());
-      cellEnsembleAttrMat->addAttributeArray(getPhaseTypesArrayName(), m_PhaseTypes);
+      cellEnsembleAttrMat->insert_or_assign(m_PhaseTypes);
     }
 
     if(nullptr != m_PhaseNames)
     {
       m_PhaseNames->setName(getPhaseNamesArrayName());
-      cellEnsembleAttrMat->addAttributeArray(getPhaseNamesArrayName(), m_PhaseNames);
+      cellEnsembleAttrMat->insert_or_assign(m_PhaseNames);
     }
   }
   else

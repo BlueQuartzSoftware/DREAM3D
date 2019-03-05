@@ -85,7 +85,6 @@ class AssignVoxelsGapsImpl
   int64_t dims[3];
   float Invradcur[3];
   float res[3];
-  int32_t* m_FeatureIds;
   float xc;
   float yc;
   float zc;
@@ -96,10 +95,9 @@ class AssignVoxelsGapsImpl
   FloatArrayType::Pointer ellipfuncsPtr;
 
 public:
-  AssignVoxelsGapsImpl(int64_t* dimensions, float* resolution, int32_t* featureIds, float* radCur, float* xx, ShapeOps* shapeOps, float gA[3][3], float* size, int32_t cur_feature,
-                       Int32ArrayType::Pointer newowners, FloatArrayType::Pointer ellipfuncs)
-  : m_FeatureIds(featureIds)
-  , m_ShapeOps(shapeOps)
+  AssignVoxelsGapsImpl(int64_t* dimensions, float* resolution, float* radCur, float* xx, ShapeOps* shapeOps, float gA[3][3], float* size, int32_t cur_feature, Int32ArrayType::Pointer newowners,
+                       FloatArrayType::Pointer ellipfuncs)
+  : m_ShapeOps(shapeOps)
   , curFeature(cur_feature)
   {
     size = nullptr;
@@ -916,7 +914,7 @@ void PackPrimaryPhases::execute()
   {
     AttributeMatrix::Pointer cellEnsembleAttrMat = m->getAttributeMatrix(m_OutputCellEnsembleAttributeMatrixName);
     IDataArray::Pointer outputPhaseNames = inputPhaseNames->deepCopy();
-    cellEnsembleAttrMat->addAttributeArray(outputPhaseNames->getName(), outputPhaseNames);
+    cellEnsembleAttrMat->insert_or_assign(outputPhaseNames);
   }
 
 }
@@ -1096,7 +1094,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
-  std::tie(m_SizeX, m_SizeY, m_SizeZ) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(m_SizeX, m_SizeY, m_SizeZ) = m->getGeometryAs<ImageGeom>()->getSpacing();
   m_SizeX *= static_cast<float>(dims[0]);
   m_SizeY *= static_cast<float>(dims[1]);
   m_SizeZ *= static_cast<float>(dims[2]);
@@ -1117,7 +1115,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   totalprimaryvol = totalprimaryvol * xRes * yRes * zRes;
 
@@ -1727,9 +1725,9 @@ Int32ArrayType::Pointer PackPrimaryPhases::initializePackingGrid()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
-  std::tie(m_PackingRes[0], m_PackingRes[1], m_PackingRes[2]) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(m_PackingRes[0], m_PackingRes[1], m_PackingRes[2]) = m->getGeometryAs<ImageGeom>()->getSpacing();
   m_PackingRes[0] *= 2.0f;
   m_PackingRes[1] *= 2.0f;
   m_PackingRes[2] *= 2.0f;
@@ -2649,8 +2647,8 @@ void PackPrimaryPhases::assignVoxels()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
-  float res[3] = {xRes, yRes, zRes};
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type res = {xRes, yRes, zRes};
 
   Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totalPoints, "_INTERNAL_USE_ONLY_newowners");
   newownersPtr->initializeWithValue(-1);
@@ -2794,12 +2792,12 @@ void PackPrimaryPhases::assignVoxels()
     if(doParallel)
     {
       tbb::parallel_for(tbb::blocked_range3d<int64_t, int64_t, int64_t>(zmin, zmax + 1, ymin, ymax + 1, xmin, xmax + 1),
-                        AssignVoxelsGapsImpl(dims, res, m_FeatureIds, radCur, xx, shapeOps, ga, size, i, newownersPtr, ellipfuncsPtr), tbb::auto_partitioner());
+                        AssignVoxelsGapsImpl(dims, res.data(), radCur, xx, shapeOps, ga, size, i, newownersPtr, ellipfuncsPtr), tbb::auto_partitioner());
     }
     else
 #endif
     {
-      AssignVoxelsGapsImpl serial(dims, res, m_FeatureIds, radCur, xx, shapeOps, ga, size, i, newownersPtr, ellipfuncsPtr);
+      AssignVoxelsGapsImpl serial(dims, res.data(), radCur, xx, shapeOps, ga, size, i, newownersPtr, ellipfuncsPtr);
       serial.convert(zmin, zmax + 1, ymin, ymax + 1, xmin, xmax + 1);
     }
   }
@@ -3083,7 +3081,7 @@ void PackPrimaryPhases::cleanupFeatures()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   float resConst = xRes * yRes * zRes;
   const double k_PiOver6 = M_PI / 6.0;
@@ -3505,7 +3503,7 @@ void PackPrimaryPhases::moveShapeDescriptions()
 
       foreach(IDataArray::Pointer incomingArray, attrArrays)
       {
-        newAM->addAttributeArray(incomingArray->getName(), incomingArray);
+        newAM->insert_or_assign(incomingArray);
       }
     }
   }

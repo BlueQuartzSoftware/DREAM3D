@@ -52,7 +52,7 @@
 
 #define CREATE_DATA_ARRAY(type, attrMat, tDims, cDims, initVal, err)                                                                                                                                   \
   DataArray<type>::Pointer _##type##_##attrMat##Array = DataArray<type>::CreateArray(tDims, cDims, #type, true);                                                                                       \
-  err = attrMat->addAttributeArray(#type, _##type##_##attrMat##Array);                                                                                                                                 \
+  err = attrMat->insert_or_assign(_##type##_##attrMat##Array);                                                                                                                                         \
   _##type##_##attrMat##Array->initializeWithValue(initVal);                                                                                                                                            \
   DREAM3D_REQUIRE(err >= 0);
 
@@ -178,11 +178,11 @@ public:
     tDims[0] = 10;
     AttributeMatrix::Pointer attrMat3 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat3", AttributeMatrix::Type::Cell);
 
-    m->addAttributeMatrix("DiffMapTestAttrMat1", attrMat1);
-    m->addAttributeMatrix("DiffMapTestAttrMat2", attrMat2);
-    m->addAttributeMatrix("DiffMapTestAttrMat11", attrMat11);
-    m->addAttributeMatrix("DiffMapTestAttrMat22", attrMat22);
-    m->addAttributeMatrix("DiffMapTestAttrMat3", attrMat3);
+    m->addAttributeMatrix(attrMat1);
+    m->addAttributeMatrix(attrMat2);
+    m->addAttributeMatrix(attrMat11);
+    m->addAttributeMatrix(attrMat22);
+    m->addAttributeMatrix(attrMat3);
     dca->addDataContainer(m);
 
     QVector<size_t> cDims(1, 3);

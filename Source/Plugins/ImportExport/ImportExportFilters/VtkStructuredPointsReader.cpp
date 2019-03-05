@@ -413,7 +413,7 @@ template <typename T> int32_t readDataChunk(AttributeMatrix::Pointer attrMat, st
 
   typename DataArray<T>::Pointer data = DataArray<T>::CreateArray(tDims, cDims, scalarName, !inPreflight);
   data->initializeWithZeros();
-  attrMat->addAttributeArray(data->getName(), data);
+  attrMat->insert_or_assign(data);
   if(inPreflight)
   {
     return skipVolume<T>(in, binary, numTuples * scalarNumComp);
@@ -594,8 +594,8 @@ int32_t VtkStructuredPointsReader::readFile()
   resolution[1] = tokens[2].toFloat(&ok);
   resolution[2] = tokens[3].toFloat(&ok);
 
-  volDc->getGeometryAs<ImageGeom>()->setResolution(resolution);
-  vertDc->getGeometryAs<ImageGeom>()->setResolution(resolution);
+  volDc->getGeometryAs<ImageGeom>()->setSpacing(resolution);
+  vertDc->getGeometryAs<ImageGeom>()->setSpacing(resolution);
 
   err = readLine(in, buffer, kBufferSize); // Read Line 6 which is the Origin values
   tokens = buf.split(' ');

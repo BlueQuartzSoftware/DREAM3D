@@ -369,7 +369,7 @@ void FindNeighbors::execute()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   // We do this to create new set of NeighborList objects
   for(size_t i = 1; i < totalFeatures; i++)

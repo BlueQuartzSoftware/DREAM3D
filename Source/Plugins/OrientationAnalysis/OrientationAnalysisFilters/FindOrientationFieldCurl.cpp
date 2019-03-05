@@ -120,10 +120,9 @@ FindOrientationFieldCurl::FindOrientationFieldCurl()
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
-  m_CurlSize.x = 1;
-  m_CurlSize.y = 1;
-  m_CurlSize.z = 1;
-
+  m_CurlSize[0] = 1;
+  m_CurlSize[1] = 1;
+  m_CurlSize[2] = 1;
 }
 
 // -----------------------------------------------------------------------------
@@ -372,7 +371,7 @@ void FindOrientationFieldCurl::execute()
           kappa13 = 0;
           kappa23 = 0;
           kappa33 = 0;
-          for(int j = -m_CurlSize.z; j < m_CurlSize.z; j++)
+          for(int j = -m_CurlSize[2]; j < m_CurlSize[2]; j++)
           {
             good = 1;
             if(plane + j < 0)
@@ -401,7 +400,7 @@ void FindOrientationFieldCurl::execute()
           }
 
           count = 0;
-          for(int k = -m_CurlSize.y; k < m_CurlSize.y; k++)
+          for(int k = -m_CurlSize[1]; k < m_CurlSize[1]; k++)
           {
             good = 1;
             if(row + k < 0)
@@ -429,7 +428,7 @@ void FindOrientationFieldCurl::execute()
             count = 0;
           }
 
-          for(int l = -m_CurlSize.x; l < m_CurlSize.z; l++)
+          for(int l = -m_CurlSize[0]; l < m_CurlSize[2]; l++)
           {
             good = 1;
             if(col + l < 0)

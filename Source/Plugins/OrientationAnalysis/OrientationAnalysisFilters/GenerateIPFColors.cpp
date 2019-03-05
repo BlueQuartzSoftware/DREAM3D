@@ -65,7 +65,7 @@
 class GenerateIPFColorsImpl
 {
 public:
-  GenerateIPFColorsImpl(GenerateIPFColors* filter, FloatVec3_t referenceDir, float* eulers, int32_t* phases, uint32_t* crystalStructures, int32_t numPhases, bool* goodVoxels, uint8_t* colors)
+  GenerateIPFColorsImpl(GenerateIPFColors* filter, FloatVec3Type referenceDir, float* eulers, int32_t* phases, uint32_t* crystalStructures, int32_t numPhases, bool* goodVoxels, uint8_t* colors)
   : m_Filter(filter)
   , m_ReferenceDir(referenceDir)
   , m_CellEulerAngles(eulers)
@@ -82,7 +82,7 @@ public:
   void convert(size_t start, size_t end) const
   {
     QVector<LaueOps::Pointer> ops = LaueOps::getOrientationOpsQVector();
-    double refDir[3] = {m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z};
+    double refDir[3] = {m_ReferenceDir[0], m_ReferenceDir[1], m_ReferenceDir[2]};
     double dEuler[3] = {0.0, 0.0, 0.0};
     SIMPL::Rgb argb = 0x00000000;
     int32_t phase = 0;
@@ -129,7 +129,7 @@ public:
 #endif
 private:
   GenerateIPFColors* m_Filter = nullptr;
-  FloatVec3_t m_ReferenceDir;
+  FloatVec3Type m_ReferenceDir;
   float* m_CellEulerAngles;
   int32_t* m_CellPhases;
   unsigned int* m_CrystalStructures;
@@ -149,10 +149,9 @@ GenerateIPFColors::GenerateIPFColors()
 , m_GoodVoxelsArrayPath("", "", "")
 , m_CellIPFColorsArrayName(SIMPL::CellData::IPFColor)
 {
-  m_ReferenceDir.x = 0.0f;
-  m_ReferenceDir.y = 0.0f;
-  m_ReferenceDir.z = 1.0f;
-
+  m_ReferenceDir[0] = 0.0f;
+  m_ReferenceDir[1] = 0.0f;
+  m_ReferenceDir[2] = 1.0f;
 }
 
 // -----------------------------------------------------------------------------
@@ -320,8 +319,8 @@ void GenerateIPFColors::execute()
   int32_t numPhases = static_cast<int32_t>(m_CrystalStructuresPtr.lock()->getNumberOfTuples());
 
   // Make sure we are dealing with a unit 1 vector.
-  FloatVec3_t normRefDir = m_ReferenceDir; // Make a copy of the reference Direction
-  MatrixMath::Normalize3x1(normRefDir.x, normRefDir.y, normRefDir.z);
+  FloatVec3Type normRefDir = m_ReferenceDir; // Make a copy of the reference Direction
+  MatrixMath::Normalize3x1(normRefDir[0], normRefDir[1], normRefDir[2]);
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;

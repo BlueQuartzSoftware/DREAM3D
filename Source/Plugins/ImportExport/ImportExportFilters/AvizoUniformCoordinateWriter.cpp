@@ -232,10 +232,10 @@ void AvizoUniformCoordinateWriter::generateHeader(FILE* f)
 
   fprintf(f, "     Content \"%llux%llux%llu int, uniform coordinates\",\n", static_cast<unsigned long long int>(x), static_cast<unsigned long long int>(y), static_cast<unsigned long long int>(z));
 
-  float origin[3];
+  FloatVec3Type origin;
   getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getOrigin(origin);
-  float res[3];
-  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getResolution(res);
+  FloatVec3Type res;
+  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getSpacing(res);
   fprintf(f, "     # Bounding Box is xmin xmax ymin ymax zmin zmax\n");
   fprintf(f, "     BoundingBox %f %f %f %f %f %f\n", origin[0], origin[0] + (res[0] * x), origin[1], origin[1] + (res[1] * y), origin[2], origin[2] + (res[2] * z));
 

@@ -123,7 +123,7 @@ void H5AngImporter::getDims(int64_t& x, int64_t& y)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5AngImporter::getResolution(float& x, float& y)
+void H5AngImporter::getSpacing(float& x, float& y)
 {
   x = xRes;
   y = yRes;

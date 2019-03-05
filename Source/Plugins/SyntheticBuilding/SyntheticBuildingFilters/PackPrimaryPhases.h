@@ -418,9 +418,9 @@ protected:
    * @param xpoints Extent of x dimension
    * @param ypoints Extent of y dimension
    * @param zpoints Extent of z dimension
-   * @param xres Resolution of x dimension
-   * @param yres Resolution of y dimension
-   * @param zres Resolution of z dimension
+   * @param xres Spacing of x dimension
+   * @param yres Spacing of y dimension
+   * @param zres Spacing of z dimension
    * @return Integer number of esimtated Features
    */
   int32_t estimateNumFeatures(size_t xpoints, size_t ypoints, size_t zpoints, float xres, float yres, float zres);

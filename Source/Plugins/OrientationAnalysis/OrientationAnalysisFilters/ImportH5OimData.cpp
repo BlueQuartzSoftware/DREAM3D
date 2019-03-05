@@ -108,10 +108,10 @@ ImportH5OimData::ImportH5OimData()
 , m_Manufacturer(Ebsd::OEM::Unknown)
 , d_ptr(new ImportH5OimDataPrivate(this))
 {
-  FloatVec3_t value;
-  value.x = 0;
-  value.y = 0;
-  value.z = 0;
+  FloatVec3Type value;
+  value[0] = 0;
+  value[1] = 0;
+  value[2] = 0;
   m_Origin = value;
 
   setPatternDims(QVector<int32_t>(2, 0)); // initialize this with a 2 element vector
@@ -270,7 +270,7 @@ void ImportH5OimData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, QVe
   // Drop into this if statement if we need to read from a file
   if(m_InputFile != getInputFile_Cache() || !getTimeStamp_Cache().isValid() || getTimeStamp_Cache() < timeStamp)
   {
-    float zStep = static_cast<float>(getZSpacing()), xOrigin = getOrigin().x, yOrigin = getOrigin().y, zOrigin = getOrigin().z;
+    float zStep = static_cast<float>(getZSpacing()), xOrigin = getOrigin()[0], yOrigin = getOrigin()[1], zOrigin = getOrigin()[2];
     reader->setReadPatternData(getReadPatternData());
 
     // If the user has already set a Scan Name to read then we are good to go.
@@ -307,13 +307,13 @@ void ImportH5OimData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, QVe
     // Set Cache with values from the file
     {
       Ang_Private_Data data;
-      data.dims = tDims;
-      data.resolution.push_back(reader->getXStep());
-      data.resolution.push_back(reader->getYStep());
-      data.resolution.push_back(zStep);
-      data.origin.push_back(xOrigin);
-      data.origin.push_back(yOrigin);
-      data.origin.push_back(zOrigin);
+      data.dims = SizeVec3Type(tDims[0], tDims[1], tDims[2]);
+      data.resolution[0] = (reader->getXStep());
+      data.resolution[1] = (reader->getYStep());
+      data.resolution[2] = (zStep);
+      data.origin[0] = (xOrigin);
+      data.origin[1] = (yOrigin);
+      data.origin[2] = (zOrigin);
       data.phases = reader->getPhaseVector();
       setData(data);
 
@@ -342,8 +342,8 @@ void ImportH5OimData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, QVe
     tDims[1] = getData().dims[1];
     tDims[2] = getData().dims[2];
     m->getGeometryAs<ImageGeom>()->setDimensions(tDims[0], tDims[1], tDims[2]);
-    m->getGeometryAs<ImageGeom>()->setResolution(getData().resolution[0], getData().resolution[1], getData().resolution[2]);
-    m->getGeometryAs<ImageGeom>()->setOrigin(getData().origin[0], getData().origin[1], getData().origin[2]);
+    m->getGeometryAs<ImageGeom>()->setSpacing(getData().resolution);
+    m->getGeometryAs<ImageGeom>()->setOrigin(getData().origin);
   }
 
   if(flag == ANG_FULL_FILE)
@@ -413,9 +413,9 @@ int32_t ImportH5OimData::loadMaterialInfo(EbsdReader* ebsdReader)
   QVector<size_t> tDims(1, crystalStructures->getNumberOfTuples());
   attrMatrix->resizeAttributeArrays(tDims);
   // Now add the attributeArray to the AttributeMatrix
-  attrMatrix->addAttributeArray(SIMPL::EnsembleData::CrystalStructures, crystalStructures);
-  attrMatrix->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
-  attrMatrix->addAttributeArray(SIMPL::EnsembleData::LatticeConstants, latticeConstants);
+  attrMatrix->insert_or_assign(crystalStructures);
+  attrMatrix->insert_or_assign(materialNames);
+  attrMatrix->insert_or_assign(latticeConstants);
 
   // Now reset the internal ensemble array references to these new arrays
   m_CrystalStructuresPtr = crystalStructures;
@@ -474,7 +474,7 @@ void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>& t
   }
   iArray = std::dynamic_pointer_cast<Int32ArrayType>(m_EbsdArrayMap.value(SIMPL::CellData::Phases));
   ::memcpy(iArray->getPointer(offset), phasePtr, sizeof(int32_t) * totalPoints);
-  ebsdAttrMat->addAttributeArray(SIMPL::CellData::Phases, iArray);
+  ebsdAttrMat->insert_or_assign(iArray);
 
   // Condense the Euler Angles from 3 separate arrays into a single 1x3 array
   {
@@ -491,7 +491,7 @@ void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>& t
       cellEulerAngles[3 * i + 1] = f2[i];
       cellEulerAngles[3 * i + 2] = f3[i];
     }
-    ebsdAttrMat->addAttributeArray(SIMPL::CellData::EulerAngles, fArray);
+    ebsdAttrMat->insert_or_assign(fArray);
   }
 
   cDims[0] = 1;
@@ -499,28 +499,28 @@ void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>& t
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ImageQuality));
     fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::ImageQuality));
     ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::ImageQuality, fArray);
+    ebsdAttrMat->insert_or_assign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ConfidenceIndex));
     fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::ConfidenceIndex));
     ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::ConfidenceIndex, fArray);
+    ebsdAttrMat->insert_or_assign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::SEMSignal));
     fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::SEMSignal));
     ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::SEMSignal, fArray);
+    ebsdAttrMat->insert_or_assign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Fit));
     fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::Fit));
     ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::Fit, fArray);
+    ebsdAttrMat->insert_or_assign(fArray);
   }
 
   if(getReadPatternData()) // Get the pattern Data from the
@@ -537,13 +537,13 @@ void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>& t
 
       UInt8ArrayType::Pointer patternData = std::dynamic_pointer_cast<UInt8ArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::PatternData));
       ::memcpy(patternData->getPointer(offset), ptr, sizeof(uint8_t) * totalPoints);
-      ebsdAttrMat->addAttributeArray(Ebsd::Ang::PatternData, patternData);
+      ebsdAttrMat->insert_or_assign(patternData);
 
       // Remove the current PatternData array
       ebsdAttrMat->removeAttributeArray(Ebsd::Ang::PatternData);
 
       // Push in our own PatternData array
-      ebsdAttrMat->addAttributeArray(patternData->getName(), patternData);
+      ebsdAttrMat->insert_or_assign(patternData);
       // Set the readers pattern data pointer to nullptr so that reader does not "free" the memory
       reader->setPatternData(nullptr);
     }
@@ -871,6 +871,6 @@ void ImportH5OimData::dataCheckOEM()
   }
 
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), SIMPL::EnsembleData::MaterialName);
-  cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
+  cellEnsembleAttrMat->insert_or_assign(materialNames);
   m_EbsdArrayMap.insert(SIMPL::EnsembleData::MaterialName, materialNames);
 }

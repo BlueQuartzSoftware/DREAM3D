@@ -51,7 +51,7 @@ class OrientationAnalysis_EXPORT FindBoundaryStrengths : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(FindBoundaryStrengths SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(FloatVec3_t Loading READ getLoading WRITE setLoading)
+    PYB11_PROPERTY(FloatVec3Type Loading READ getLoading WRITE setLoading)
     PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
     PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
     PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
@@ -67,8 +67,8 @@ public:
 
   ~FindBoundaryStrengths() override;
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, Loading)
-  Q_PROPERTY(FloatVec3_t Loading READ getLoading WRITE setLoading)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Loading)
+  Q_PROPERTY(FloatVec3Type Loading READ getLoading WRITE setLoading)
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
