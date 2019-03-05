@@ -151,8 +151,8 @@ public:
       wait->setComponent(i, 0, faithful[i][2]);     // Duration first
     }
 
-    am->insert_or_assign(duration); // int array
-    am->insert_or_assign(wait);     // int array
+    am->insertOrAssign(duration); // int array
+    am->insertOrAssign(wait);     // int array
 
     dc->addAttributeMatrix(am);
     dca->addDataContainer(dc);

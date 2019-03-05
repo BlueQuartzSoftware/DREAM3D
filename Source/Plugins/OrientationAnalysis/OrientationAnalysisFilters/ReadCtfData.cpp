@@ -265,7 +265,7 @@ void ReadCtfData::dataCheck()
     } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), Ebsd::CtfFile::MaterialName);
-    cellEnsembleAttrMat->insert_or_assign(materialNames);
+    cellEnsembleAttrMat->insertOrAssign(materialNames);
   }
 }
 
@@ -447,9 +447,9 @@ int32_t ReadCtfData::loadMaterialInfo(CtfReader* reader)
   QVector<size_t> tDims(1, crystalStructures->getNumberOfTuples());
   attrMatrix->resizeAttributeArrays(tDims);
   // Now add the attributeArray to the AttributeMatrix
-  attrMatrix->insert_or_assign(crystalStructures);
-  attrMatrix->insert_or_assign(materialNames);
-  attrMatrix->insert_or_assign(latticeConstants);
+  attrMatrix->insertOrAssign(crystalStructures);
+  attrMatrix->insertOrAssign(materialNames);
+  attrMatrix->insertOrAssign(latticeConstants);
 
   // Now reset the internal ensemble array references to these new arrays
   m_CrystalStructuresPtr = crystalStructures;
@@ -511,7 +511,7 @@ void ReadCtfData::copyRawEbsdData(CtfReader* reader, QVector<size_t>& tDims, QVe
     }
     iArray = Int32ArrayType::CreateArray(totalPoints, SIMPL::CellData::Phases);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    ebsdAttrMat->insert_or_assign(iArray);
+    ebsdAttrMat->insertOrAssign(iArray);
   }
   {
     //  radianconversion = M_PI / 180.0;
@@ -533,56 +533,56 @@ void ReadCtfData::copyRawEbsdData(CtfReader* reader, QVector<size_t>& tDims, QVe
         cellEulerAngles[3 * i + 2] = cellEulerAngles[3 * i + 2] + (30.0);
       }
     }
-    ebsdAttrMat->insert_or_assign(fArray);
+    ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
     phasePtr = reinterpret_cast<int32_t*>(reader->getPointerByName(Ebsd::Ctf::Bands));
     iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::Bands);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    ebsdAttrMat->insert_or_assign(iArray);
+    ebsdAttrMat->insertOrAssign(iArray);
   }
 
   {
     phasePtr = reinterpret_cast<int32_t*>(reader->getPointerByName(Ebsd::Ctf::Error));
     iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::Error);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    ebsdAttrMat->insert_or_assign(iArray);
+    ebsdAttrMat->insertOrAssign(iArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ctf::MAD));
     fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Ctf::MAD);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->insert_or_assign(fArray);
+    ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
     phasePtr = reinterpret_cast<int32_t*>(reader->getPointerByName(Ebsd::Ctf::BC));
     iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::BC);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    ebsdAttrMat->insert_or_assign(iArray);
+    ebsdAttrMat->insertOrAssign(iArray);
   }
 
   {
     phasePtr = reinterpret_cast<int32_t*>(reader->getPointerByName(Ebsd::Ctf::BS));
     iArray = Int32ArrayType::CreateArray(totalPoints, Ebsd::Ctf::BS);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    ebsdAttrMat->insert_or_assign(iArray);
+    ebsdAttrMat->insertOrAssign(iArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ctf::X));
     fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::X);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->insert_or_assign(fArray);
+    ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ctf::Y));
     fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::Y);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->insert_or_assign(fArray);
+    ebsdAttrMat->insertOrAssign(fArray);
   }
 }
 

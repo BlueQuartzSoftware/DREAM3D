@@ -201,7 +201,7 @@ public:
     tdc->addAttributeMatrix(featAttrMat);
     QVector<size_t> cDims(1, 2);
     Int32ArrayType::Pointer faceLabels = Int32ArrayType::CreateArray(12, cDims, SIMPL::FaceData::SurfaceMeshFaceLabels);
-    faceAttrMat->insert_or_assign(faceLabels);
+    faceAttrMat->insertOrAssign(faceLabels);
     int32_t* faceLabelsPtr = faceLabels->getPointer(0);
 
     faceLabelsPtr[2 * 0 + 0] = -1;

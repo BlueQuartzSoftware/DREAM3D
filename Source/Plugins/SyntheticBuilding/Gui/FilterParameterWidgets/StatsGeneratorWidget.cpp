@@ -127,11 +127,11 @@ void StatsGeneratorWidget::setupGui()
 
     QVector<size_t> tDims(1, ensembles);
     m_CellEnsembleAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellEnsembleAttributeMatrixName, AttributeMatrix::Type::CellEnsemble);
-    m_CellEnsembleAttrMat->insert_or_assign(sda);
+    m_CellEnsembleAttrMat->insertOrAssign(sda);
     UInt32ArrayType::Pointer phaseTypes = m_Filter->getPhaseTypes();
-    m_CellEnsembleAttrMat->insert_or_assign(phaseTypes);
+    m_CellEnsembleAttrMat->insertOrAssign(phaseTypes);
     UInt32ArrayType::Pointer crystalStructures = m_Filter->getCrystalStructures();
-    m_CellEnsembleAttrMat->insert_or_assign(crystalStructures);
+    m_CellEnsembleAttrMat->insertOrAssign(crystalStructures);
 
     for(size_t phase = 1; phase < ensembles; ++phase)
     {
@@ -670,20 +670,20 @@ DataContainerArray::Pointer StatsGeneratorWidget::generateDataContainerArray()
 
   StatsDataArray::Pointer statsDataArray = StatsDataArray::New();
   statsDataArray->resize(nPhases);
-  cellEnsembleAttrMat->insert_or_assign(statsDataArray);
+  cellEnsembleAttrMat->insertOrAssign(statsDataArray);
 
   QVector<size_t> cDims(1, 1);
   UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::CrystalStructures);
   crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
-  cellEnsembleAttrMat->insert_or_assign(crystalStructures);
+  cellEnsembleAttrMat->insertOrAssign(crystalStructures);
 
   UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::PhaseTypes);
   phaseTypes->setValue(0, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown));
-  cellEnsembleAttrMat->insert_or_assign(phaseTypes);
+  cellEnsembleAttrMat->insertOrAssign(phaseTypes);
 
   StringDataArray::Pointer phaseNames = StringDataArray::CreateArray(tDims[0], SIMPL::EnsembleData::PhaseName);
   phaseNames->setValue(0, PhaseType::UnknownStr());
-  cellEnsembleAttrMat->insert_or_assign(phaseNames);
+  cellEnsembleAttrMat->insertOrAssign(phaseNames);
 
   double phaseFractionTotal = 0.0;
   for(int p = 0; p < phaseTabs->count(); ++p)

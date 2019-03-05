@@ -84,10 +84,10 @@ public:
 
     QVector<size_t> cDims(1, 3);
     DataArray<float>::Pointer angles = DataArray<float>::CreateArray(k_AngleCount, cDims, SIMPL::CellData::EulerAngles, true);
-    attrMat1->insert_or_assign(angles);
+    attrMat1->insertOrAssign(angles);
     cDims[0] = 1;
     DataArray<int32_t>::Pointer phases = DataArray<int32_t>::CreateArray(k_AngleCount, cDims, SIMPL::CellData::Phases, true);
-    attrMat1->insert_or_assign(phases);
+    attrMat1->insertOrAssign(phases);
     for(int i = 0; i < k_AngleCount; i++)
     {
 

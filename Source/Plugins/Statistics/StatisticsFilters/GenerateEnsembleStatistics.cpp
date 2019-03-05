@@ -626,7 +626,7 @@ void GenerateEnsembleStatistics::dataCheck()
 
   m_StatsDataArray = StatsDataArray::CreateArray(m_PhaseTypesPtr.lock()->getNumberOfTuples(), getStatisticsArrayName());
   m_StatsDataArray->fillArrayWithNewStatsData(m_PhaseTypesPtr.lock()->getNumberOfTuples(), m_PhaseTypes);
-  attrMat->insert_or_assign(m_StatsDataArray);
+  attrMat->insertOrAssign(m_StatsDataArray);
 
   if(m_SizeDistributionFitType != SIMPL::DistributionType::LogNormal)
   {

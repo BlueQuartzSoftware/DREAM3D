@@ -119,7 +119,7 @@ public:
     QVector<size_t> cDims(1, 1);
 
     Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(tDims, cDims, k_FeatureIdsArrayPath.getDataArrayName());
-    int err = attrMat1->insert_or_assign(featureIds);
+    int err = attrMat1->insertOrAssign(featureIds);
     DREAM3D_REQUIRE(err >= 0);
     featureIds->initializeWithValue(1);
 

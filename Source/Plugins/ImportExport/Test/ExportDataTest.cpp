@@ -125,7 +125,7 @@ public:
       {
         intArray->setValue(i, i + 20);
       }
-      attrMatrix->insert_or_assign(intArray);
+      attrMatrix->insertOrAssign(intArray);
     }
     {
       Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, SIMPL::CellData::ConfidenceIndexNoSpace);
@@ -133,7 +133,7 @@ public:
       {
         intArray->setValue(i, i + 20);
       }
-      attrMatrix->insert_or_assign(intArray);
+      attrMatrix->insertOrAssign(intArray);
     }
     {
       BoolArrayType::Pointer boolArray = BoolArrayType::CreateArray(size, SIMPL::GeneralData::ThresholdArray);
@@ -148,7 +148,7 @@ public:
           boolArray->setValue(i, 1);
         }
       }
-      attrMatrix->insert_or_assign(boolArray);
+      attrMatrix->insertOrAssign(boolArray);
     }
     {
       Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, SIMPL::CellData::ConfidenceIndexNoSpace);
@@ -156,7 +156,7 @@ public:
       {
         intArray->setValue(i, i + 20);
       }
-      attrMatrix2->insert_or_assign(intArray);
+      attrMatrix2->insertOrAssign(intArray);
     }
 
     Observer obs;

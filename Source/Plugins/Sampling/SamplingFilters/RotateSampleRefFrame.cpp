@@ -661,7 +661,7 @@ void RotateSampleRefFrame::execute()
         data->initializeTuple(i, &var);
       }
     }
-    m->getAttributeMatrix(attrMatName)->insert_or_assign(data);
+    m->getAttributeMatrix(attrMatName)->insertOrAssign(data);
   }
   m->getGeometryAs<ImageGeom>()->setSpacing(FloatVec3Type(params.xResNew, params.yResNew, params.zResNew));
   m->getGeometryAs<ImageGeom>()->setDimensions(params.xpNew, params.ypNew, params.zpNew);

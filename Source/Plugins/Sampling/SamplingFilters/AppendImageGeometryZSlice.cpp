@@ -209,7 +209,7 @@ void AppendImageGeometryZSlice::dataCheck()
       IDataArray::Pointer data = p->createNewArray(totalPoints, p->getComponentDimensions(), p->getName(), false);
 
       destCellAttrMat->removeAttributeArray(*iter);
-      newCellAttrMat->insert_or_assign(data);
+      newCellAttrMat->insertOrAssign(data);
     }
     getDataContainerArray()->getDataContainer(getDestinationAttributeMatrix().getDataContainerName())->removeAttributeMatrix(destCellAttrMat->getName());
     getDataContainerArray()->getDataContainer(getDestinationAttributeMatrix().getDataContainerName())->addAttributeMatrix(newCellAttrMat);

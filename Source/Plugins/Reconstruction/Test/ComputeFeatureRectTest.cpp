@@ -93,7 +93,7 @@ public:
     featureIds->setValue(17, 1);
     featureIds->setValue(18, 1);
 
-    cellAM->insert_or_assign(featureIds);
+    cellAM->insertOrAssign(featureIds);
 
     dims.resize(1);
     dims[0] = 2;
@@ -116,7 +116,7 @@ public:
     rect->setValue(9, 3);
     rect->setValue(10, 3);
     rect->setValue(11, 0);
-    // featureAM->insert_or_assign(rect);
+    // featureAM->insertOrAssign(rect);
 
     return dca;
   }

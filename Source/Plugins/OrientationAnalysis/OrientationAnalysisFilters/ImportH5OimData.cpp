@@ -413,9 +413,9 @@ int32_t ImportH5OimData::loadMaterialInfo(EbsdReader* ebsdReader)
   QVector<size_t> tDims(1, crystalStructures->getNumberOfTuples());
   attrMatrix->resizeAttributeArrays(tDims);
   // Now add the attributeArray to the AttributeMatrix
-  attrMatrix->insert_or_assign(crystalStructures);
-  attrMatrix->insert_or_assign(materialNames);
-  attrMatrix->insert_or_assign(latticeConstants);
+  attrMatrix->insertOrAssign(crystalStructures);
+  attrMatrix->insertOrAssign(materialNames);
+  attrMatrix->insertOrAssign(latticeConstants);
 
   // Now reset the internal ensemble array references to these new arrays
   m_CrystalStructuresPtr = crystalStructures;
@@ -474,7 +474,7 @@ void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>& t
   }
   iArray = std::dynamic_pointer_cast<Int32ArrayType>(m_EbsdArrayMap.value(SIMPL::CellData::Phases));
   ::memcpy(iArray->getPointer(offset), phasePtr, sizeof(int32_t) * totalPoints);
-  ebsdAttrMat->insert_or_assign(iArray);
+  ebsdAttrMat->insertOrAssign(iArray);
 
   // Condense the Euler Angles from 3 separate arrays into a single 1x3 array
   {
@@ -491,7 +491,7 @@ void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>& t
       cellEulerAngles[3 * i + 1] = f2[i];
       cellEulerAngles[3 * i + 2] = f3[i];
     }
-    ebsdAttrMat->insert_or_assign(fArray);
+    ebsdAttrMat->insertOrAssign(fArray);
   }
 
   cDims[0] = 1;
@@ -499,28 +499,28 @@ void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>& t
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ImageQuality));
     fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::ImageQuality));
     ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->insert_or_assign(fArray);
+    ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ConfidenceIndex));
     fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::ConfidenceIndex));
     ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->insert_or_assign(fArray);
+    ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::SEMSignal));
     fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::SEMSignal));
     ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->insert_or_assign(fArray);
+    ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Fit));
     fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::Fit));
     ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->insert_or_assign(fArray);
+    ebsdAttrMat->insertOrAssign(fArray);
   }
 
   if(getReadPatternData()) // Get the pattern Data from the
@@ -537,13 +537,13 @@ void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>& t
 
       UInt8ArrayType::Pointer patternData = std::dynamic_pointer_cast<UInt8ArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::PatternData));
       ::memcpy(patternData->getPointer(offset), ptr, sizeof(uint8_t) * totalPoints);
-      ebsdAttrMat->insert_or_assign(patternData);
+      ebsdAttrMat->insertOrAssign(patternData);
 
       // Remove the current PatternData array
       ebsdAttrMat->removeAttributeArray(Ebsd::Ang::PatternData);
 
       // Push in our own PatternData array
-      ebsdAttrMat->insert_or_assign(patternData);
+      ebsdAttrMat->insertOrAssign(patternData);
       // Set the readers pattern data pointer to nullptr so that reader does not "free" the memory
       reader->setPatternData(nullptr);
     }
@@ -871,6 +871,6 @@ void ImportH5OimData::dataCheckOEM()
   }
 
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), SIMPL::EnsembleData::MaterialName);
-  cellEnsembleAttrMat->insert_or_assign(materialNames);
+  cellEnsembleAttrMat->insertOrAssign(materialNames);
   m_EbsdArrayMap.insert(SIMPL::EnsembleData::MaterialName, materialNames);
 }

@@ -264,7 +264,7 @@ void NearestPointFuseRegularGrids::execute()
     // the data container this will over write the current array with
     // the same name. At least in theory
     IDataArray::Pointer data = p->createNewArray(numRefTuples, p->getComponentDimensions(), p->getName());
-    refAttrMat->insert_or_assign(data);
+    refAttrMat->insertOrAssign(data);
   }
 
   bool outside = false;

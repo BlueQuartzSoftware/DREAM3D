@@ -329,7 +329,7 @@ void EstablishMatrixPhase::execute()
   {
     AttributeMatrix::Pointer cellEnsembleAttrMat = m->getAttributeMatrix(m_OutputCellEnsembleAttributeMatrixName);
     IDataArray::Pointer outputPhaseNames = inputPhaseNames->deepCopy();
-    cellEnsembleAttrMat->insert_or_assign(outputPhaseNames);
+    cellEnsembleAttrMat->insertOrAssign(outputPhaseNames);
   }
 
 

@@ -266,7 +266,7 @@ void RegularizeZSpacing::execute()
       ::memcpy(destination, source, p->getTypeSize() * data->getNumberOfComponents());
     }
     cellAttrMat->removeAttributeArray(*iter);
-    newCellAttrMat->insert_or_assign(data);
+    newCellAttrMat->insertOrAssign(data);
   }
   m->getGeometryAs<ImageGeom>()->setSpacing(std::make_tuple(xRes, yRes, m_NewZRes));
   m->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(m_XP, m_YP, m_ZP));

@@ -413,7 +413,7 @@ template <typename T> int32_t readDataChunk(AttributeMatrix::Pointer attrMat, st
 
   typename DataArray<T>::Pointer data = DataArray<T>::CreateArray(tDims, cDims, scalarName, !inPreflight);
   data->initializeWithZeros();
-  attrMat->insert_or_assign(data);
+  attrMat->insertOrAssign(data);
   if(inPreflight)
   {
     return skipVolume<T>(in, binary, numTuples * scalarNumComp);

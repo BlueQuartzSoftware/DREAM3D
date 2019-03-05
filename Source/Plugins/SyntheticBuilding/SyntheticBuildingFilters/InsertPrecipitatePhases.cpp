@@ -3029,7 +3029,7 @@ void InsertPrecipitatePhases::saveToNewAttributeMatrix(QList<IDataArray::Pointer
 
     foreach(IDataArray::Pointer incomingArray, incomingArrays)
     {
-      newAM->insert_or_assign(incomingArray);
+      newAM->insertOrAssign(incomingArray);
     }
   }
 }

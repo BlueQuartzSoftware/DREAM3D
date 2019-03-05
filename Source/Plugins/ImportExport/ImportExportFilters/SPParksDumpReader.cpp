@@ -505,7 +505,7 @@ int32_t SPParksDumpReader::readFile()
     AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
     if(nullptr != attrMat.get())
     {
-      attrMat->insert_or_assign(typePtr);
+      attrMat->insertOrAssign(typePtr);
     }
   }
 

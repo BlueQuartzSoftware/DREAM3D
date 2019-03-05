@@ -322,13 +322,13 @@ protected:
       latticeConstants->setComponent(phaseID, 5, lc[5]);
     }
 
-    attrMatrix->insert_or_assign(crystalStructures);
+    attrMatrix->insertOrAssign(crystalStructures);
     m_CrystalStructuresPtr = crystalStructures;
     m_CrystalStructures = crystalStructures->getPointer(0);
-    attrMatrix->insert_or_assign(latticeConstants);
+    attrMatrix->insertOrAssign(latticeConstants);
     m_LatticeConstantsPtr = latticeConstants;
     m_LatticeConstants = latticeConstants->getPointer(0);
-    attrMatrix->insert_or_assign(materialNames);
+    attrMatrix->insertOrAssign(materialNames);
     m_MaterialNamesPtr = materialNames;
     return 0;
   }

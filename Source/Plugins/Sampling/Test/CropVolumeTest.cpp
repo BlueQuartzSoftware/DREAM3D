@@ -244,13 +244,13 @@ public:
       }
     }
 
-    err = am1->insert_or_assign(genericData);
+    err = am1->insertOrAssign(genericData);
     DREAM3D_REQUIRE(err >= 0);
-    err = am1->insert_or_assign(fourCompData);
+    err = am1->insertOrAssign(fourCompData);
     DREAM3D_REQUIRE(err >= 0);
-    err = am1->insert_or_assign(featureIds);
+    err = am1->insertOrAssign(featureIds);
     DREAM3D_REQUIRE(err >= 0);
-    err = am2->insert_or_assign(actives);
+    err = am2->insertOrAssign(actives);
     DREAM3D_REQUIRE(err >= 0);
 
     foreach(QString da, am1->getAttributeArrayNames())

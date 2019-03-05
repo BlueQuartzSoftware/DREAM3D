@@ -156,7 +156,7 @@ public:
     QVector<size_t> cDims(1, 1);
     Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(tDims, cDims, SIMPL::CellData::FeatureIds);
     featureIds->initializeWithValue(1);
-    attrMat->insert_or_assign(featureIds);
+    attrMat->insertOrAssign(featureIds);
 
     FilterManager* fm = FilterManager::Instance();
     bool propWasSet = true;

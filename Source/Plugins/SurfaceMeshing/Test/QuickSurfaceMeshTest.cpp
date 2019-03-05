@@ -152,7 +152,7 @@ public:
     image3D_fIDs->initializeWithValue(1);
     image3D_fIDs->setValue(2, 2);
     image3D_fIDs->setValue(3, 2);
-    image3D_AttrMat->insert_or_assign(image3D_fIDs);
+    image3D_AttrMat->insertOrAssign(image3D_fIDs);
     image3D_DC->addAttributeMatrix(image3D_AttrMat);
 
     AttributeMatrix::Pointer rectGrid_AttrMat = AttributeMatrix::New(tDims, "RectGridData", AttributeMatrix::Type::Cell);
@@ -160,7 +160,7 @@ public:
     rectGrid_fIDs->initializeWithValue(1);
     rectGrid_fIDs->setValue(2, 2);
     rectGrid_fIDs->setValue(3, 2);
-    rectGrid_AttrMat->insert_or_assign(rectGrid_fIDs);
+    rectGrid_AttrMat->insertOrAssign(rectGrid_fIDs);
     rectGrid_DC->addAttributeMatrix(rectGrid_AttrMat);
 
     // Create a feature AttributeMatrix for each geometry, which all have 2 features

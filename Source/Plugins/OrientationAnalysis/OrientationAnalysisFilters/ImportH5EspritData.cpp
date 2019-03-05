@@ -404,7 +404,7 @@ void ImportH5EspritData::dataCheckOEM()
   ebsdArrayMap.insert(Ebsd::Esprit::LatticeConstants, getDataContainerArray()->getPrereqIDataArrayFromPath<FloatArrayType, AbstractFilter>(this, tempPath));
 
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), SIMPL::EnsembleData::MaterialName);
-  cellEnsembleAttrMat->insert_or_assign(materialNames);
+  cellEnsembleAttrMat->insertOrAssign(materialNames);
   ebsdArrayMap.insert(SIMPL::EnsembleData::MaterialName, materialNames);
 
   if(getReadPatternData())
@@ -596,9 +596,9 @@ int32_t ImportH5EspritData::loadMaterialInfo(EbsdReader* ebsdReader)
   QVector<size_t> tDims(1, crystalStructures->getNumberOfTuples());
   attrMatrix->resizeAttributeArrays(tDims);
   // Now add the attributeArray to the AttributeMatrix
-  attrMatrix->insert_or_assign(crystalStructures);
-  attrMatrix->insert_or_assign(materialNames);
-  attrMatrix->insert_or_assign(latticeConstants);
+  attrMatrix->insertOrAssign(crystalStructures);
+  attrMatrix->insertOrAssign(materialNames);
+  attrMatrix->insertOrAssign(latticeConstants);
 
   // Now reset the internal ensemble array references to these new arrays
   m_CrystalStructuresPtr = crystalStructures;
@@ -625,7 +625,7 @@ void copyPointerData(Reader* reader, const QString& name, const IDataArray::Poin
   typename DataArrayType::Pointer fArray = std::dynamic_pointer_cast<DataArrayType>(dataArray);
   typename DataArrayType::Pointer freshArray = DataArrayType::WrapPointer(ptr, totalPoints, fArray->getComponentDimensions(), fArray->getName(), true);
   reader->releaseOwnership(name);
-  ebsdAttrMat->insert_or_assign(freshArray);
+  ebsdAttrMat->insertOrAssign(freshArray);
 }
 
 // -----------------------------------------------------------------------------
@@ -687,7 +687,7 @@ void ImportH5EspritData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>
       cellEulerAngles[3 * i + 1] = f2[i] * degToRad;
       cellEulerAngles[3 * i + 2] = f3[i] * degToRad;
     }
-    ebsdAttrMat->insert_or_assign(fArray);
+    ebsdAttrMat->insertOrAssign(fArray);
   }
   else
   {

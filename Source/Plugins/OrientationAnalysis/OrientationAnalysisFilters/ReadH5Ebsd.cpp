@@ -437,7 +437,7 @@ void ReadH5Ebsd::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   StringDataArray::Pointer materialNamesPtr = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), getMaterialNameArrayName());
-  cellEnsembleAttrMat->insert_or_assign(materialNamesPtr);
+  cellEnsembleAttrMat->insertOrAssign(materialNamesPtr);
   m_MaterialNamesPtr = materialNamesPtr;
 
   cDims[0] = 6;
@@ -824,7 +824,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     phasePtr = reinterpret_cast<int32_t*>(ebsdReader->getPointerByName(Ebsd::Ang::PhaseData));
     iArray = Int32ArrayType::CreateArray(tDims, cDims, SIMPL::CellData::Phases);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    cellAttrMatrix->insert_or_assign(iArray);
+    cellAttrMatrix->insertOrAssign(iArray);
   }
 
   if(m_SelectedArrayNames.find(m_CellEulerAnglesArrayName) != m_SelectedArrayNames.end())
@@ -846,7 +846,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
       cellEulerAngles[3 * i + 1] = f2[i] * degToRad;
       cellEulerAngles[3 * i + 2] = f3[i] * degToRad;
     }
-    cellAttrMatrix->insert_or_assign(fArray);
+    cellAttrMatrix->insertOrAssign(fArray);
   }
 
   // Reset this back to 1 for the rest of the arrays
@@ -857,7 +857,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::ImageQuality));
     fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ImageQuality);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    cellAttrMatrix->insert_or_assign(fArray);
+    cellAttrMatrix->insertOrAssign(fArray);
   }
 
   if(m_SelectedArrayNames.find(Ebsd::Ang::ConfidenceIndex) != m_SelectedArrayNames.end())
@@ -865,7 +865,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::ConfidenceIndex));
     fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ConfidenceIndex);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    cellAttrMatrix->insert_or_assign(fArray);
+    cellAttrMatrix->insertOrAssign(fArray);
   }
 
   if(m_SelectedArrayNames.find(Ebsd::Ang::SEMSignal) != m_SelectedArrayNames.end())
@@ -873,7 +873,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::SEMSignal));
     fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::SEMSignal);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    cellAttrMatrix->insert_or_assign(fArray);
+    cellAttrMatrix->insertOrAssign(fArray);
   }
 
   if(m_SelectedArrayNames.find(Ebsd::Ang::Fit) != m_SelectedArrayNames.end())
@@ -881,7 +881,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::Fit));
     fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::Fit);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    cellAttrMatrix->insert_or_assign(fArray);
+    cellAttrMatrix->insertOrAssign(fArray);
   }
 
   if(m_SelectedArrayNames.find(Ebsd::Ang::XPosition) != m_SelectedArrayNames.end())
@@ -889,7 +889,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::XPosition));
     fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::XPosition);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    cellAttrMatrix->insert_or_assign(fArray);
+    cellAttrMatrix->insertOrAssign(fArray);
   }
 
   if(m_SelectedArrayNames.find(Ebsd::Ang::YPosition) != m_SelectedArrayNames.end())
@@ -897,7 +897,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ang::YPosition));
     fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::YPosition);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    cellAttrMatrix->insert_or_assign(fArray);
+    cellAttrMatrix->insertOrAssign(fArray);
   }
 }
 
@@ -926,7 +926,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
   phasePtr = reinterpret_cast<int32_t*>(ebsdReader->getPointerByName(Ebsd::Ctf::Phase));
   iArray = Int32ArrayType::CreateArray(tDims, cDims, SIMPL::CellData::Phases);
   ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-  cellAttrMatrix->insert_or_assign(iArray);
+  cellAttrMatrix->insertOrAssign(iArray);
 
   if(m_SelectedArrayNames.find(m_CellEulerAnglesArrayName) != m_SelectedArrayNames.end())
   {
@@ -953,7 +953,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
         cellEulerAngles[3 * i + 2] = cellEulerAngles[3 * i + 2] + (30.0 * degToRad);
       }
     }
-    cellAttrMatrix->insert_or_assign(fArray);
+    cellAttrMatrix->insertOrAssign(fArray);
   }
 
   cDims[0] = 1;
@@ -962,7 +962,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
     phasePtr = reinterpret_cast<int32_t*>(ebsdReader->getPointerByName(Ebsd::Ctf::Bands));
     iArray = Int32ArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::Bands);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    cellAttrMatrix->insert_or_assign(iArray);
+    cellAttrMatrix->insertOrAssign(iArray);
   }
 
   if(m_SelectedArrayNames.find(Ebsd::Ctf::Error) != m_SelectedArrayNames.end())
@@ -970,7 +970,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
     phasePtr = reinterpret_cast<int32_t*>(ebsdReader->getPointerByName(Ebsd::Ctf::Error));
     iArray = Int32ArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::Error);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    cellAttrMatrix->insert_or_assign(iArray);
+    cellAttrMatrix->insertOrAssign(iArray);
   }
 
   if(m_SelectedArrayNames.find(Ebsd::Ctf::MAD) != m_SelectedArrayNames.end())
@@ -978,7 +978,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::MAD));
     fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::MAD);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    cellAttrMatrix->insert_or_assign(fArray);
+    cellAttrMatrix->insertOrAssign(fArray);
   }
 
   if(m_SelectedArrayNames.find(Ebsd::Ctf::BC) != m_SelectedArrayNames.end())
@@ -986,7 +986,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
     phasePtr = reinterpret_cast<int32_t*>(ebsdReader->getPointerByName(Ebsd::Ctf::BC));
     iArray = Int32ArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::BC);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    cellAttrMatrix->insert_or_assign(iArray);
+    cellAttrMatrix->insertOrAssign(iArray);
   }
 
   if(m_SelectedArrayNames.find(Ebsd::Ctf::BS) != m_SelectedArrayNames.end())
@@ -994,21 +994,21 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
     phasePtr = reinterpret_cast<int32_t*>(ebsdReader->getPointerByName(Ebsd::Ctf::BS));
     iArray = Int32ArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::BS);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
-    cellAttrMatrix->insert_or_assign(iArray);
+    cellAttrMatrix->insertOrAssign(iArray);
   }
   if(m_SelectedArrayNames.find(Ebsd::Ctf::X) != m_SelectedArrayNames.end())
   {
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::X));
     fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::X);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    cellAttrMatrix->insert_or_assign(fArray);
+    cellAttrMatrix->insertOrAssign(fArray);
   }
   if(m_SelectedArrayNames.find(Ebsd::Ctf::Y) != m_SelectedArrayNames.end())
   {
     f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Ctf::Y));
     fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ctf::Y);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
-    cellAttrMatrix->insert_or_assign(fArray);
+    cellAttrMatrix->insertOrAssign(fArray);
   }
 }
 

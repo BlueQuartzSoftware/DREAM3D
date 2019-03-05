@@ -269,7 +269,7 @@ public:
     image2D_fIDs->initializeWithValue(1);
     image2D_fIDs->setValue(2, 2);
     image2D_fIDs->setValue(3, 2);
-    image2D_AttrMat->insert_or_assign(image2D_fIDs);
+    image2D_AttrMat->insertOrAssign(image2D_fIDs);
     image2D_DC->addAttributeMatrix(image2D_AttrMat);
 
     tDims[0] = 8;
@@ -280,7 +280,7 @@ public:
     image3D_fIDs->setValue(5, 2);
     image3D_fIDs->setValue(6, 2);
     image3D_fIDs->setValue(7, 2);
-    image3D_AttrMat->insert_or_assign(image3D_fIDs);
+    image3D_AttrMat->insertOrAssign(image3D_fIDs);
     image3D_DC->addAttributeMatrix(image3D_AttrMat);
 
     tDims[0] = 4;
@@ -289,7 +289,7 @@ public:
     rectGrid_fIDs->initializeWithValue(1);
     rectGrid_fIDs->setValue(2, 2);
     rectGrid_fIDs->setValue(3, 2);
-    rectGrid_AttrMat->insert_or_assign(rectGrid_fIDs);
+    rectGrid_AttrMat->insertOrAssign(rectGrid_fIDs);
     rectGrid_DC->addAttributeMatrix(rectGrid_AttrMat);
 
     tDims[0] = 2;
@@ -298,7 +298,7 @@ public:
     vertex_fIDs->initializeWithValue(1);
     ;
     vertex_fIDs->setValue(1, 2);
-    vertex_AttrMat->insert_or_assign(vertex_fIDs);
+    vertex_AttrMat->insertOrAssign(vertex_fIDs);
     vertex_DC->addAttributeMatrix(vertex_AttrMat);
 
     AttributeMatrix::Pointer edge_AttrMat = AttributeMatrix::New(tDims, "EdgeData", AttributeMatrix::Type::Edge);
@@ -306,7 +306,7 @@ public:
     edge_fIDs->initializeWithValue(1);
     ;
     edge_fIDs->setValue(1, 2);
-    edge_AttrMat->insert_or_assign(edge_fIDs);
+    edge_AttrMat->insertOrAssign(edge_fIDs);
     edge_DC->addAttributeMatrix(edge_AttrMat);
 
     AttributeMatrix::Pointer tri_AttrMat = AttributeMatrix::New(tDims, "TriData", AttributeMatrix::Type::Face);
@@ -314,7 +314,7 @@ public:
     tri_fIDs->initializeWithValue(1);
     ;
     tri_fIDs->setValue(1, 2);
-    tri_AttrMat->insert_or_assign(tri_fIDs);
+    tri_AttrMat->insertOrAssign(tri_fIDs);
     triangle_DC->addAttributeMatrix(tri_AttrMat);
 
     AttributeMatrix::Pointer quad_AttrMat = AttributeMatrix::New(tDims, "QuadData", AttributeMatrix::Type::Face);
@@ -322,7 +322,7 @@ public:
     quad_fIDs->initializeWithValue(1);
     ;
     quad_fIDs->setValue(1, 2);
-    quad_AttrMat->insert_or_assign(quad_fIDs);
+    quad_AttrMat->insertOrAssign(quad_fIDs);
     quad_DC->addAttributeMatrix(quad_AttrMat);
 
     AttributeMatrix::Pointer tet_AttrMat = AttributeMatrix::New(tDims, "TetData", AttributeMatrix::Type::Face);
@@ -330,7 +330,7 @@ public:
     tet_fIDs->initializeWithValue(1);
     ;
     tet_fIDs->setValue(1, 2);
-    tet_AttrMat->insert_or_assign(tet_fIDs);
+    tet_AttrMat->insertOrAssign(tet_fIDs);
     tet_DC->addAttributeMatrix(tet_AttrMat);
 
     // Create a feature AttributeMatrix for each geometry, which all have 2 features

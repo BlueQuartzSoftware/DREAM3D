@@ -266,7 +266,7 @@ void ChangeResolution::preflight()
     IDataArray::Pointer data = p->createNewArray(totalPoints, p->getComponentDimensions(), p->getName(), false);
 
     cellAttrMat->removeAttributeArray(*iter);
-    newCellAttrMat->insert_or_assign(data);
+    newCellAttrMat->insertOrAssign(data);
   }
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   m->addAttributeMatrix(newCellAttrMat);
@@ -411,7 +411,7 @@ void ChangeResolution::execute()
       ::memcpy(destination, source, p->getTypeSize() * data->getNumberOfComponents());
     }
     cellAttrMat->removeAttributeArray(*iter);
-    newCellAttrMat->insert_or_assign(data);
+    newCellAttrMat->insertOrAssign(data);
   }
   m->getGeometryAs<ImageGeom>()->setSpacing(std::make_tuple(m_Spacing[0], m_Spacing[1], m_Spacing[2]));
   m->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(m_XP, m_YP, m_ZP));
