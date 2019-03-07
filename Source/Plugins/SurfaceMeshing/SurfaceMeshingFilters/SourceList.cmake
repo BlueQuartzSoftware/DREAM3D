@@ -33,7 +33,7 @@ set(_PublicFilters
   GenerateGeometryConnectivity
 )
 
-if(EIGEN_FOUND)
+if(SIMPL_USE_EIGEN)
   set(_PublicFilters ${_PublicFilters} FeatureFaceCurvatureFilter)
 
   ADD_SIMPL_SUPPORT_HEADER(${SurfaceMeshing_SOURCE_DIR} ${_filterGroupName} CalculateTriangleGroupCurvatures.h)

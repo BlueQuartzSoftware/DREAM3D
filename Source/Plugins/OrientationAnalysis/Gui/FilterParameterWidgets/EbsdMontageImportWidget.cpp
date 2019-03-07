@@ -331,7 +331,7 @@ void EbsdMontageImportWidget::inputDir_textChanged(const QString& text)
 
   m_Ui->inputDir->setToolTip("Absolute File Path: " + inputPath);
 
-  if(verifyPathExists(inputPath, m_Ui->inputDir))
+  if(QtSFileUtils::VerifyPathExists(inputPath, m_Ui->inputDir))
   {
     m_ShowFileAction->setEnabled(true);
     QDir dir(inputPath);

@@ -106,14 +106,6 @@ class InitializeSyntheticVolumeWidget : public FilterParameterWidget, private Ui
     void setWidgetListEnabled(bool v);
 
     /**
-     * @brief verifyPathExists
-     * @param outFilePath
-     * @param lineEdit
-     * @return
-     */
-    bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
-
-    /**
      * @brief estimate_numFeatures
      * @param xpoints
      * @param ypoints
