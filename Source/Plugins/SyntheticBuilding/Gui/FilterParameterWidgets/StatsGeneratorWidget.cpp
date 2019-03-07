@@ -632,23 +632,6 @@ bool StatsGeneratorWidget::verifyOutputPathParentExists(QString outFilePath, QLi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool StatsGeneratorWidget::verifyPathExists(const QString& outFilePath, QLineEdit* lineEdit)
-{
-  QFileInfo fileinfo(outFilePath);
-  if(!fileinfo.exists())
-  {
-    lineEdit->setStyleSheet("border: 1px solid red;");
-  }
-  else
-  {
-    lineEdit->setStyleSheet("");
-  }
-  return fileinfo.exists();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void StatsGeneratorWidget::on_actionSaveAs_triggered()
 {
 }

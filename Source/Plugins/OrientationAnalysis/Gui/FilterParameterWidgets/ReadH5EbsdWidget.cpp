@@ -335,7 +335,7 @@ void ReadH5EbsdWidget::on_m_LineEdit_textChanged(const QString& text)
     absPathLabel->hide();
   }
   
-  if(verifyPathExists(inputPath, m_LineEdit))
+  if(QtSFileUtils::VerifyPathExists(inputPath, m_LineEdit))
   {
     m_ShowFileAction->setEnabled(true);
   }
@@ -591,7 +591,7 @@ void ReadH5EbsdWidget::updateFileInfoWidgets()
   SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
   QString inputPath = validator->convertToAbsolutePath(m_LineEdit->text());
 
-  if(verifyPathExists(inputPath, m_LineEdit))
+  if(QtSFileUtils::VerifyPathExists(inputPath, m_LineEdit))
   {
     QFileInfo fi(inputPath);
     if(fi.exists() && fi.isFile())

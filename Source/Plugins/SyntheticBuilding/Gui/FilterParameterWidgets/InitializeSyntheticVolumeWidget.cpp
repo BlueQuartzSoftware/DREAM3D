@@ -61,6 +61,7 @@
 #include "SIMPLib/StatsData/StatsData.h"
 
 #include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
+#include "SVWidgetsLib/QtSupport/QtSFileUtils.h"
 
 #include "SyntheticBuilding/SyntheticBuildingFilters/InitializeSyntheticVolume.h"
 
@@ -180,7 +181,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   {
     return;
   }
-  if(!verifyPathExists(m_InputFile->text(), m_InputFile))
+  if(!QtSFileUtils::VerifyPathExists(m_InputFile->text(), m_InputFile))
   {
     return;
   }
@@ -553,24 +554,6 @@ void InitializeSyntheticVolumeWidget::estimateNumFeaturesSetup()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool InitializeSyntheticVolumeWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
-{
-  //  std::cout << "outFilePath: " << outFilePath << std::endl;
-  QFileInfo fileinfo(outFilePath);
-  if(!fileinfo.exists())
-  {
-    lineEdit->setStyleSheet("border: 1px solid red;");
-  }
-  else
-  {
-    lineEdit->setStyleSheet("");
-  }
-  return fileinfo.exists();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void InitializeSyntheticVolumeWidget::setInputFilePath(QString val)
 {
   m_InputFile->setText(val);
@@ -732,23 +715,5 @@ QFilterWidget* InitializeSyntheticVolumeWidget::createDeepCopy()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolumeWidget::setShapeTypes(DataArray<unsigned int>::Pointer array)
 {}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool InitializeSyntheticVolumeWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
-{
-  //  qDebug() << "outFilePath: " << outFilePath() << "\n";
-  QFileInfo fileinfo(outFilePath);
-  if (false == fileinfo.exists() )
-  {
-    lineEdit->setStyleSheet("border: 1px solid red;");
-  }
-  else
-  {
-    lineEdit->setStyleSheet("");
-  }
-  return fileinfo.exists();
-}
 
 #endif
