@@ -333,7 +333,7 @@ void FindTriangleGeomShapes::find_moments()
   float u101 = 0.0f;
   float xx = 0.0f, yy = 0.0f, zz = 0.0f, xy = 0.0f, xz = 0.0f, yz = 0.0f;
   size_t numfeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
-  m_FeatureMoments->resize(numfeatures * 6);
+  m_FeatureMoments->resizeTuples(numfeatures * 6);
   featuremoments = m_FeatureMoments->getPointer(0);
 
   for(size_t i = 0; i < numfeatures; i++)
@@ -434,10 +434,10 @@ void FindTriangleGeomShapes::find_axes()
 
   size_t numfeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
 
-  m_FeatureMoments->resize(numfeatures * 6);
+  m_FeatureMoments->resizeTuples(numfeatures * 6);
   featuremoments = m_FeatureMoments->getPointer(0);
 
-  m_FeatureEigenVals->resize(numfeatures * 3);
+  m_FeatureEigenVals->resizeTuples(numfeatures * 3);
   featureeigenvals = m_FeatureEigenVals->getPointer(0);
 
   for(size_t i = 1; i < numfeatures; i++)

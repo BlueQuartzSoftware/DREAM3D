@@ -669,7 +669,7 @@ DataContainerArray::Pointer StatsGeneratorWidget::generateDataContainerArray()
   m->addAttributeMatrix(cellEnsembleAttrMat);
 
   StatsDataArray::Pointer statsDataArray = StatsDataArray::New();
-  statsDataArray->resize(nPhases);
+  statsDataArray->resizeTuples(nPhases);
   cellEnsembleAttrMat->insertOrAssign(statsDataArray);
 
   QVector<size_t> cDims(1, 1);

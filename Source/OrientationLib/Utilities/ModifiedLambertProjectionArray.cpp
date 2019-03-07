@@ -299,7 +299,7 @@ int ModifiedLambertProjectionArray::eraseTuples(QVector<size_t>& idxs)
 
   if (static_cast<size_t>(idxs.size()) >= getNumberOfTuples() )
   {
-    resize(0);
+    resizeTuples(0);
     return 0;
   }
 
@@ -410,7 +410,7 @@ IDataArray::Pointer ModifiedLambertProjectionArray::deepCopy(bool forceNoAllocat
   ModifiedLambertProjectionArray::Pointer daCopyPtr = ModifiedLambertProjectionArray::New();
   if(!forceNoAllocate)
   {
-    daCopyPtr->resize(getNumberOfTuples());
+    daCopyPtr->resizeTuples(getNumberOfTuples());
     ModifiedLambertProjectionArray& daCopy = *daCopyPtr;
     for(size_t i = 0; i < getNumberOfTuples(); i++)
     {
@@ -432,16 +432,7 @@ int32_t ModifiedLambertProjectionArray::resizeTotalElements(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t ModifiedLambertProjectionArray::resizeTuples(size_t numTuples)
-{
-  Q_ASSERT(false);
-  return resizeTotalElements(numTuples);;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ModifiedLambertProjectionArray::resize(size_t numTuples)
+void ModifiedLambertProjectionArray::resizeTuples(size_t numTuples)
 {
   resizeTotalElements(numTuples);
 }

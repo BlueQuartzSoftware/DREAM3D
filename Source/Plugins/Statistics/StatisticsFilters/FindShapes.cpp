@@ -893,10 +893,10 @@ void FindShapes::execute()
   }
 
   size_t numfeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
-  m_FeatureMomentsPtr->resize(numfeatures * 6);
+  m_FeatureMomentsPtr->resizeTuples(numfeatures * 6);
   m_FeatureMoments = m_FeatureMomentsPtr->getPointer(0);
 
-  m_FeatureEigenValsPtr->resize(numfeatures * 3);
+  m_FeatureEigenValsPtr->resizeTuples(numfeatures * 3);
   m_FeatureEigenVals = m_FeatureEigenValsPtr->getPointer(0);
 
 

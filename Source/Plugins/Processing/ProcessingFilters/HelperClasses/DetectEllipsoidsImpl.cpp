@@ -324,10 +324,10 @@ void DetectEllipsoidsImpl::operator()() const
             count++;
           }
         }
-        obj_edge_pair_a->resize(count);
-        obj_edge_pair_b->resize(count);
-        obj_edge_pair_a1->resize(count);
-        obj_edge_pair_b1->resize(count);
+        obj_edge_pair_a->resizeTuples(count);
+        obj_edge_pair_b->resizeTuples(count);
+        obj_edge_pair_a1->resizeTuples(count);
+        obj_edge_pair_b1->resizeTuples(count);
 
         // Analyze each edge pair using an accumulation array to gain votes to help determine that the sub-object is an ellipse
         size_t can_num = 0;
@@ -932,12 +932,12 @@ void DetectEllipsoidsImpl::analyzeEdgePair(SizeTArrayType::Pointer obj_edge_pair
           // Accept point as a new candidate
           if(can_num >= cenx_can->getNumberOfTuples())
           {
-            cenx_can->resize(cenx_can->getNumberOfTuples() + 5);
-            ceny_can->resize(cenx_can->getNumberOfTuples() + 5);
-            maj_can->resize(cenx_can->getNumberOfTuples() + 5);
-            min_can->resize(cenx_can->getNumberOfTuples() + 5);
-            rot_can->resize(cenx_can->getNumberOfTuples() + 5);
-            accum_can->resize(cenx_can->getNumberOfTuples() + 5);
+            cenx_can->resizeTuples(cenx_can->getNumberOfTuples() + 5);
+            ceny_can->resizeTuples(cenx_can->getNumberOfTuples() + 5);
+            maj_can->resizeTuples(cenx_can->getNumberOfTuples() + 5);
+            min_can->resizeTuples(cenx_can->getNumberOfTuples() + 5);
+            rot_can->resizeTuples(cenx_can->getNumberOfTuples() + 5);
+            accum_can->resizeTuples(cenx_can->getNumberOfTuples() + 5);
           }
 
           cenx_can->setComponent(can_num, 0, std::round(x0)); // x - coordinate of ellipse

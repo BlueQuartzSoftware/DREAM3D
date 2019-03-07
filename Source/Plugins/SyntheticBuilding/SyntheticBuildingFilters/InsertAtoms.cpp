@@ -186,7 +186,7 @@ public:
     int64_t nPoints = atomMult * xPoints * yPoints * zPoints;
 
     points[iter]->resizeVertexList(nPoints);
-    inFeature[iter]->resize(nPoints);
+    inFeature[iter]->resizeTuples(nPoints);
 
     int64_t count = 0;
     float coords[3] = {0.0f, 0.0f, 0.0f};

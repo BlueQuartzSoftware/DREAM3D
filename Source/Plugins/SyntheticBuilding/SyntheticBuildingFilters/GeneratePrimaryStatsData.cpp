@@ -244,7 +244,7 @@ void GeneratePrimaryStatsData::dataCheck()
       return;
     }
     StatsDataArray::Pointer statsDataArray = StatsDataArray::New();
-    statsDataArray->resize(tDims[0]);
+    statsDataArray->resizeTuples(tDims[0]);
     cellEnsembleAttrMat->insertOrAssign(statsDataArray);
     m_StatsDataArray = statsDataArray.get();
 
@@ -292,7 +292,7 @@ void GeneratePrimaryStatsData::dataCheck()
     if(nullptr == statsDataArray.get())
     {
       statsDataArray = StatsDataArray::New();
-      statsDataArray->resize(tDims[0]);
+      statsDataArray->resizeTuples(tDims[0]);
       cellEnsembleAttrMat->insertOrAssign(statsDataArray);
     }
     m_StatsDataArray = statsDataArray.get();

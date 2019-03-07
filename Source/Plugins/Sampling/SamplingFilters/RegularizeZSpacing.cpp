@@ -252,7 +252,7 @@ void RegularizeZSpacing::execute()
     // the data container this will over write the current array with
     // the same name. At least in theory
     IDataArray::Pointer data = p->createNewArray(p->getNumberOfTuples(), p->getComponentDimensions(), p->getName());
-    data->resize(totalPoints);
+    data->resizeTuples(totalPoints);
     void* source = nullptr;
     void* destination = nullptr;
     size_t newIndicies_I = 0;

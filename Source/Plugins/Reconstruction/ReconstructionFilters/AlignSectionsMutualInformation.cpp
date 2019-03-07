@@ -460,7 +460,7 @@ void AlignSectionsMutualInformation::form_features_sections()
 
   float misorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pif / 180.0f;
 
-  m_FeatureCounts->resize(dims[2]);
+  m_FeatureCounts->resizeTuples(dims[2]);
   featurecounts = m_FeatureCounts->getPointer(0);
 
   int32_t* miFeatureIds = m_MIFeaturesPtr->getPointer(0);
