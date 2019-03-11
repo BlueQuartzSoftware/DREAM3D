@@ -42,6 +42,7 @@
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/DataContainers/DataArrayPath.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
@@ -146,7 +147,7 @@ public:
       filter->setDataContainerArray(dca);
       var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileDoc); // should return -10018, .doc extension
       propWasSet = filter->setProperty("InputFile", var);
-      var.setValue(SIMPL::Defaults::DataContainerName);
+      var.setValue(DataArrayPath(SIMPL::Defaults::DataContainerName, "", ""));
       filter->setProperty("DataContainerName", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
       filter->preflight();
@@ -214,7 +215,7 @@ public:
       filter->setDataContainerArray(dca);
       var.setValue(UnitTest::EnsembleInfoReaderTest::TestFileIni); // should pass
       propWasSet = filter->setProperty("InputFile", var);
-      var.setValue(SIMPL::Defaults::DataContainerName);
+      var.setValue(DataArrayPath(SIMPL::Defaults::DataContainerName, "", ""));
       filter->setProperty("DataContainerName", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
       filter->execute();
