@@ -183,8 +183,8 @@ public:
     int err = 0;
 
     DataArrayPath imageGeom3D_featureIds("ImageGeom3D", "Image3DData", "FeatureIds");
-    QString imageSurfMesh = "ImageSurfMesh";
-    QString imageSurfMeshTripleLineDCName = "SurfaceMesh TripleLines";
+    DataArrayPath imageSurfMesh("ImageSurfMesh", "", "");
+    DataArrayPath imageSurfMeshTripleLineDCName("SurfaceMesh TripleLines", "", "");
 
     SET_FILTER_PROPERTY_WITH_CHECK(filter, "FeatureIdsArrayPath", imageGeom3D_featureIds, err)
     SET_FILTER_PROPERTY_WITH_CHECK(filter, "SurfaceDataContainerName", imageSurfMesh, err)
@@ -196,8 +196,8 @@ public:
 
     // Now setup to create a surface mesh from a RectilinearGrid Geometry
     DataArrayPath rectGrid_featureIds("RectGrid", "RectGridData", "FeatureIds");
-    QString rectGridSurfMesh = "RectGridSurfMesh";
-    QString rectGridSurfMeshTripleLineDCName = "RectGrid TripleLines";
+    DataArrayPath rectGridSurfMesh("RectGridSurfMesh", "", "");
+    DataArrayPath rectGridSurfMeshTripleLineDCName("RectGrid TripleLines", "", "");
 
     SET_FILTER_PROPERTY_WITH_CHECK(filter, "FeatureIdsArrayPath", rectGrid_featureIds, err)
     SET_FILTER_PROPERTY_WITH_CHECK(filter, "SurfaceDataContainerName", rectGridSurfMesh, err)
