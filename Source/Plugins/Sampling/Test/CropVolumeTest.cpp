@@ -614,7 +614,7 @@ public:
 
       if(createNewDC)
       {
-        var.setValue(k_NewDataContainerName);
+        var.setValue(DataArrayPath(k_NewDataContainerName, "", ""));
         propWasSet = cropVolume->setProperty("NewDataContainerName", var);
         require_equal<bool, bool>(propWasSet, "propWasSet", true, "true");
       }
