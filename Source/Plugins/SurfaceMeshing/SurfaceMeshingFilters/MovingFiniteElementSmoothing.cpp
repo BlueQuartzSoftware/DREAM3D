@@ -1081,8 +1081,7 @@ void MovingFiniteElementSmoothing::execute()
     nodesF[n].pos[2] = nodes[n].pos[2];
   }
 
-  /* Let the GUI know we are done with this filter */
-  notifyStatusMessage(getHumanLabel(), "Complete");
+
 }
 
 // -----------------------------------------------------------------------------

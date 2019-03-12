@@ -290,7 +290,6 @@ void ComputeMomentInvariants2D::execute()
     notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

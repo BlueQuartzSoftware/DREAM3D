@@ -207,7 +207,6 @@ void M3CEntireVolume::execute()
     return;
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

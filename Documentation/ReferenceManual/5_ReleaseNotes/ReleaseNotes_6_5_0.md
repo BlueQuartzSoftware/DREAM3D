@@ -10,6 +10,31 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+
+## Version 6.5.XXX ##
+
+### New Filters & Features ###
+
++ Import Bruker Nano HDF5 based files (#856)
++ Import Zeiss AxioVisio montage image sets
++ Import HDF5 now allows drag-and-drop to select the input file and is consistent with other filters in DREAM.3D
+
+### Fixed DREAM3D Issues ###
+
++ Export ASCII Data now allows all data into a single file (#878)
++ Fixed calculation of Ensemble Fractions. Reported by Helal Chowdhury (#881)
++ Fixed calculation of Feature Volumes when number of voxels exceeds a certain value (#862)
+
+### Fixed SIMPL Issues ###
+
++ Import ASCII data supports relative file paths (#298)
++ PipelineRunner does not search in lib directory for plugins on Linux (#300)
++ Import ASCII data does not compute the number of columns correctly (#302)
++ Provide improved feedback when the JSON parser encounters errors (#308)
++ Export ASCII Data now allows all data into a single file. (#309)
++ Incorrecct use of lambda inside a QUndo stack object was leading to crashes in the UI. (#313)
++ Import HDF5 File does not check for duplicate DataArrayPath entries. (#316)
+
 ## Version 6.5.83 ##
 
 ### New Filters & Features ###

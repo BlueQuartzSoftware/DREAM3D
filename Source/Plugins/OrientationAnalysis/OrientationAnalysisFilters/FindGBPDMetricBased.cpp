@@ -1156,7 +1156,6 @@ void FindGBPDMetricBased::execute()
     return;
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

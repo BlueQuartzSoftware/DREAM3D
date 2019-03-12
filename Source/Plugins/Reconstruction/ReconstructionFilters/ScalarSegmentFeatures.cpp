@@ -59,7 +59,7 @@
 class CompareFunctor
 {
 public:
-  ~CompareFunctor() = default;
+  virtual ~CompareFunctor() = default;
 
   virtual bool operator()(int64_t index, int64_t neighIndex, int32_t gnum) // call using () operator
   {
@@ -79,9 +79,9 @@ public:
   {
     m_Data = reinterpret_cast<bool*>(data);
   }
-  ~TSpecificCompareFunctorBool() = default;
+  virtual ~TSpecificCompareFunctorBool() = default;
 
-  virtual bool operator()(int64_t referencepoint, int64_t neighborpoint, int32_t gnum)
+  bool operator()(int64_t referencepoint, int64_t neighborpoint, int32_t gnum) override
   {
     // Sanity check the indices that are being passed in.
     if(referencepoint >= m_Length || neighborpoint >= m_Length)
@@ -119,9 +119,9 @@ public:
   {
     m_Data = reinterpret_cast<T*>(data);
   }
-   ~TSpecificCompareFunctor() = default;
+  virtual ~TSpecificCompareFunctor() = default;
 
-  virtual bool operator()(int64_t referencepoint, int64_t neighborpoint, int32_t gnum)
+  bool operator()(int64_t referencepoint, int64_t neighborpoint, int32_t gnum) override
   {
     // Sanity check the indices that are being passed in.
     if(referencepoint >= m_Length || neighborpoint >= m_Length)
@@ -546,8 +546,7 @@ void ScalarSegmentFeatures::execute()
   }
   
 
-  // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Complete");
+
 }
 
 // -----------------------------------------------------------------------------

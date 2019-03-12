@@ -286,7 +286,6 @@ void FitFeatureData::execute()
   EXECUTE_FUNCTION_TEMPLATE(this, fitData, m_InDataArrayPtr.lock(), m_InDataArrayPtr.lock(), m_NewEnsembleArray, m_FeaturePhases, numEnsembles, m_DistributionType, m_RemoveBiasedFeatures,
                             m_BiasedFeatures)
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

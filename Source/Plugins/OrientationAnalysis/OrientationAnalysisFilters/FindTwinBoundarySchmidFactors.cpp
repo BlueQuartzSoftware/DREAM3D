@@ -499,7 +499,6 @@ void FindTwinBoundarySchmidFactors::execute()
     outFile.close();
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

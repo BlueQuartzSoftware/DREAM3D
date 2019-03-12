@@ -308,7 +308,6 @@ void FindDifferenceMap::execute()
 
   EXECUTE_TEMPLATE(this, ExecuteFindDifferenceMap, m_FirstInputArrayPtr.lock(), m_FirstInputArrayPtr.lock(), m_SecondInputArrayPtr.lock(), m_DifferenceMapPtr.lock())
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

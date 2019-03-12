@@ -152,21 +152,26 @@ void FindVolFractions::execute()
   size_t totalPoints = m_CellPhasesPtr.lock()->getNumberOfTuples();
   size_t totalEnsembles = m_VolFractionsPtr.lock()->getNumberOfTuples();
 
+  std::vector<size_t> ensembleElements(totalEnsembles);
+
+  // Initialize everythign
   for(size_t i = 1; i < totalEnsembles; i++)
   {
     m_VolFractions[i] = 0;
+    ensembleElements[i] = 0;
   }
+
+  // Calculate the total number of elements in each Ensemble
   for(size_t i = 0; i < totalPoints; i++)
   {
-    m_VolFractions[m_CellPhases[i]]++;
+    ensembleElements[m_CellPhases[i]]++;
   }
-
+  // Calculate the Volume Fraction
   for(size_t i = 1; i < totalEnsembles; i++)
   {
-    m_VolFractions[i] /= totalPoints;
+    m_VolFractions[i] = static_cast<double>(ensembleElements[i]) / static_cast<double>(totalPoints);
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

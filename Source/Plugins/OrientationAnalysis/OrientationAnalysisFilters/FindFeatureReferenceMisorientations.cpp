@@ -379,7 +379,6 @@ void FindFeatureReferenceMisorientations::execute()
     }
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

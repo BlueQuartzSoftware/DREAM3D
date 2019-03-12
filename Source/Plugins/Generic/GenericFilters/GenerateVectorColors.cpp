@@ -282,8 +282,7 @@ void GenerateVectorColors::execute()
     }
   }
 
-  /* Let the GUI know we are done with this filter */
-  notifyStatusMessage(getHumanLabel(), "Complete");
+
 }
 
 // -----------------------------------------------------------------------------

@@ -269,7 +269,6 @@ void FindAvgOrientations::execute()
     FOrientArrayType eu(m_FeatureEulerAngles + (3 * i), 3);
     FOrientTransformsType::qu2eu(FOrientArrayType(avgQuats[i]), eu);
   }
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

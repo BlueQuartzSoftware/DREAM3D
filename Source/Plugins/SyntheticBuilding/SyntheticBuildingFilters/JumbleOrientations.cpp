@@ -255,8 +255,7 @@ void JumbleOrientations::execute()
     QuaternionMathF::Copy(quat.toQuaternion(), avgQuats[i]);
   }
 
-  // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Complete");
+
 }
 
 // -----------------------------------------------------------------------------

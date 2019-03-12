@@ -172,8 +172,7 @@ void GenerateNodeTriangleConnectivity::execute()
   // Generate the connectivity data
   generateConnectivity();
 
-  /* Let the GUI know we are done with this filter */
-  notifyStatusMessage(getHumanLabel(), "Complete");
+
 }
 
 #if 0

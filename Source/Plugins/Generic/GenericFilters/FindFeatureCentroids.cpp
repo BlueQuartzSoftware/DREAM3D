@@ -211,7 +211,6 @@ void FindFeatureCentroids::execute()
 
   find_centroids();
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

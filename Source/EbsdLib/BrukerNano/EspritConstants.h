@@ -92,12 +92,12 @@ const QString Setting("Setting");
 const QString SpaceGroup("SpaceGroup");
 
 // Data Section for EBSD Data
-const QString DD("DD");
+// const QString DD("DD");
 const QString MAD("MAD");
-const QString MADPhase("MADPhase");
+// const QString MADPhase("MADPhase");
 const QString NIndexedBands("NIndexedBands");
-const QString PCX("PCX");
-const QString PCY("PCY");
+// const QString PCX("PCX");
+// const QString PCY("PCY");
 const QString PHI("PHI");
 const QString Phase("Phase");
 const QString RadonBandCount("RadonBandCount");
@@ -105,8 +105,8 @@ const QString RadonQuality("RadonQuality");
 const QString RawPatterns("RawPatterns");
 const QString XBEAM("X BEAM");
 const QString YBEAM("Y BEAM");
-const QString XSAMPLE("X SAMPLE");
-const QString YSAMPLE("Y SAMPLE");
+// const QString XSAMPLE("X SAMPLE");
+// const QString YSAMPLE("Y SAMPLE");
 const QString phi1("phi1");
 const QString phi2("phi2");
 

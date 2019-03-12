@@ -106,20 +106,20 @@ public:
    * void free[NAME]Pointer();
    *
    */
-  EBSD_POINTER_PROPERTY(DD, DD, Ebsd::H5Esprit::DD_t)
+  // EBSD_POINTER_PROPERTY(DD, DD, Ebsd::H5Esprit::DD_t)
   EBSD_POINTER_PROPERTY(MAD, MAD, Ebsd::H5Esprit::MAD_t)
-  EBSD_POINTER_PROPERTY(MADPhase, MADPhase, Ebsd::H5Esprit::MADPhase_t)
+  //  EBSD_POINTER_PROPERTY(MADPhase, MADPhase, Ebsd::H5Esprit::MADPhase_t)
   EBSD_POINTER_PROPERTY(NIndexedBands, NIndexedBands, Ebsd::H5Esprit::NIndexedBands_t)
-  EBSD_POINTER_PROPERTY(PCX, PCX, Ebsd::H5Esprit::PCX_t)
-  EBSD_POINTER_PROPERTY(PCY, PCY, Ebsd::H5Esprit::PCY_t)
+  //  EBSD_POINTER_PROPERTY(PCX, PCX, Ebsd::H5Esprit::PCX_t)
+  //  EBSD_POINTER_PROPERTY(PCY, PCY, Ebsd::H5Esprit::PCY_t)
   EBSD_POINTER_PROPERTY(PHI, PHI, Ebsd::H5Esprit::PHI_t)
   EBSD_POINTER_PROPERTY(Phase, Phase, Ebsd::H5Esprit::Phase_t)
   EBSD_POINTER_PROPERTY(RadonBandCount, RadonBandCount, Ebsd::H5Esprit::RadonBandCount_t)
   EBSD_POINTER_PROPERTY(RadonQuality, RadonQuality, Ebsd::H5Esprit::RadonQuality_t)
   EBSD_POINTER_PROPERTY(XBEAM, XBEAM, Ebsd::H5Esprit::XBEAM_t)
   EBSD_POINTER_PROPERTY(YBEAM, YBEAM, Ebsd::H5Esprit::YBEAM_t)
-  EBSD_POINTER_PROPERTY(XSAMPLE, XSAMPLE, Ebsd::H5Esprit::XSAMPLE_t)
-  EBSD_POINTER_PROPERTY(YSAMPLE, YSAMPLE, Ebsd::H5Esprit::YSAMPLE_t)
+  //  EBSD_POINTER_PROPERTY(XSAMPLE, XSAMPLE, Ebsd::H5Esprit::XSAMPLE_t)
+  //  EBSD_POINTER_PROPERTY(YSAMPLE, YSAMPLE, Ebsd::H5Esprit::YSAMPLE_t)
   EBSD_POINTER_PROPERTY(phi1, phi1, Ebsd::H5Esprit::phi1_t)
   EBSD_POINTER_PROPERTY(phi2, phi2, Ebsd::H5Esprit::phi2_t)
 

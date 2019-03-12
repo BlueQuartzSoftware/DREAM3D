@@ -197,7 +197,6 @@ void FixNonmanifoldVoxels::execute()
     }
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

@@ -341,7 +341,6 @@ void FindBoundaryStrengths::execute()
     m_SurfaceMeshF7s[2 * i + 1] = F7_2;
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

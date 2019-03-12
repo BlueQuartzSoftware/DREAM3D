@@ -562,7 +562,6 @@ void EMsoftSO3Sampler::execute()
     m_EulerAngles[j * 3 + 2] = static_cast<float>(eu[2]);
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

@@ -213,7 +213,6 @@ void FindTriangleGeomSizes::execute()
     }
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

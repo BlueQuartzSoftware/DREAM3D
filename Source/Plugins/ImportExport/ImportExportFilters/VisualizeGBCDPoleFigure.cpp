@@ -489,8 +489,7 @@ void VisualizeGBCDPoleFigure::execute()
   }
   fclose(f);
 
-  /* Let the GUI know we are done with this filter */
-  notifyStatusMessage(getHumanLabel(), "Complete");
+
 }
 
 // -----------------------------------------------------------------------------

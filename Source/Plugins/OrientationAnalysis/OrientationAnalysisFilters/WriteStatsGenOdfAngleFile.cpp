@@ -318,8 +318,7 @@ void WriteStatsGenOdfAngleFile::execute()
     file.close(); // Close the file
   }
 
-  /* Let the GUI know we are done with this filter */
-  notifyStatusMessage(getHumanLabel(), "Complete");
+
 }
 
 // -----------------------------------------------------------------------------

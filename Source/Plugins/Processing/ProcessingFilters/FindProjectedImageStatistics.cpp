@@ -590,7 +590,6 @@ void FindProjectedImageStatistics::execute()
     return;
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

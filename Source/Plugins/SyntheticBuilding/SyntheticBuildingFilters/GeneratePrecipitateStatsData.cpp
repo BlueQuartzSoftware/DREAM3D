@@ -623,7 +623,6 @@ void GeneratePrecipitateStatsData::execute()
     QVector<float> qFreq = QVector<float>::fromStdVector(rdfFrequencies);
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

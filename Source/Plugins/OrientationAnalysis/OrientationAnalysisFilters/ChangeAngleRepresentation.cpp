@@ -223,7 +223,6 @@ void ChangeAngleRepresentation::execute()
     serial.convert(0, totalPoints);
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

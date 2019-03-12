@@ -286,7 +286,6 @@ void FindTriangleGeomNeighbors::execute()
     m_NeighborList.lock()->setList(static_cast<int32_t>(i), sharedNeiLst);
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

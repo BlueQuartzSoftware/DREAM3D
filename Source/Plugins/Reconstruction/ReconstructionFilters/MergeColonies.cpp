@@ -686,7 +686,6 @@ void MergeColonies::execute()
     identify_globAlpha();
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

@@ -444,7 +444,6 @@ void ChangeResolution::execute()
     cellFeatureAttrMat->removeInactiveObjects(activeObjects, featureIds.get());
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

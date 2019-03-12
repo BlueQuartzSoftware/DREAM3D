@@ -399,7 +399,6 @@ int32_t PhReader::readFile()
   m->getGeometryAs<ImageGeom>()->setResolution(std::make_tuple(m_Resolution.x, m_Resolution.y, m_Resolution.z));
   m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin.x, m_Origin.y, m_Origin.z));
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
   return 0;
 }
 

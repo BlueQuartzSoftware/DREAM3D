@@ -251,7 +251,6 @@ int32_t LosAlamosFFTWriter::writeFile()
 
   fclose(f);
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
   return err;
 }
 

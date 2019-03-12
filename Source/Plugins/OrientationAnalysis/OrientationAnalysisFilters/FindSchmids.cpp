@@ -353,7 +353,6 @@ void FindSchmids::execute()
     }
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

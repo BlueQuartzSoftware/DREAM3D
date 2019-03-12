@@ -517,7 +517,6 @@ void FindDistsToCharactGBs::execute()
     }
   }
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------

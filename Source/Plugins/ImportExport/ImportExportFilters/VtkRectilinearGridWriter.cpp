@@ -444,7 +444,6 @@ void VtkRectilinearGridWriter::execute()
 
   // The scopedFileMonitor will fclose() the FILE pointer for us
 
-  notifyStatusMessage(getHumanLabel(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
