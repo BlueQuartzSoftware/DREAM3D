@@ -269,7 +269,7 @@ void ChangeResolution::preflight()
     newCellAttrMat->insertOrAssign(data);
   }
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
-  m->addAttributeMatrix(newCellAttrMat);
+  m->addOrReplaceAttributeMatrix(newCellAttrMat);
 
   if(m_RenumberFeatures)
   {
@@ -416,7 +416,7 @@ void ChangeResolution::execute()
   m->getGeometryAs<ImageGeom>()->setSpacing(std::make_tuple(m_Spacing[0], m_Spacing[1], m_Spacing[2]));
   m->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(m_XP, m_YP, m_ZP));
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
-  m->addAttributeMatrix(newCellAttrMat);
+  m->addOrReplaceAttributeMatrix(newCellAttrMat);
 
   // Feature Ids MUST already be renumbered.
   if(m_RenumberFeatures)

@@ -179,7 +179,7 @@ void EMsoftSO3Sampler::dataCheck()
   //  QVector<size_t> tDims(1, 1);
   //  AttributeMatrix::Pointer emsoftAttrMat = m->createNonPrereqAttributeMatrix(this, getEMsoftAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic);
   //  if (getErrorCondition() < 0) { return; }
-  //  m->addAttributeMatrix(emsoftAttrMat->getName(),emsoftAttrMat);
+  //  m->addOrReplaceAttributeMatrix(emsoftAttrMat->getName(),emsoftAttrMat);
 
   // check on the point group index; must be between 1 and 32.
   if(getsampleModeSelector() == 0)

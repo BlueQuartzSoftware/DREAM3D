@@ -220,7 +220,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   DataContainerArray::Pointer dca = DataContainerArray::New();
 
   m_DataContainer = DataContainer::New("DataContainer");
-  dca->addDataContainer(m_DataContainer);
+  dca->addOrReplaceDataContainer(m_DataContainer);
 
   //      QSet<QString> selectedArrays;
   //      selectedArrays.insert(SIMPL::EnsembleData::Statistics);

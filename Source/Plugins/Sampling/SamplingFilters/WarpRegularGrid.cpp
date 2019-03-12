@@ -317,7 +317,7 @@ void WarpRegularGrid::execute()
     newCellAttrMat->insertOrAssign(data);
   }
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
-  m->addAttributeMatrix(newCellAttrMat);
+  m->addOrReplaceAttributeMatrix(newCellAttrMat);
 }
 
 // -----------------------------------------------------------------------------

@@ -117,10 +117,10 @@ public:
     DataContainerArray::Pointer dca = DataContainerArray::New();
 
     DataContainer::Pointer idc = DataContainer::New(SIMPL::Defaults::ImageDataContainerName);
-    dca->addDataContainer(idc);
+    dca->addOrReplaceDataContainer(idc);
 
     DataContainer::Pointer idc2 = DataContainer::New("ImageDataContainer2");
-    dca->addDataContainer(idc2);
+    dca->addOrReplaceDataContainer(idc2);
 
     ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
     size_t dims[3] = {256, 128, 64};
@@ -140,12 +140,12 @@ public:
 
     QVector<size_t> tDims = {256, 128, 64};
     AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
-    idc->addAttributeMatrix(attrMat);
+    idc->addOrReplaceAttributeMatrix(attrMat);
 
     tDims.resize(1);
     tDims[0] = 2;
     AttributeMatrix::Pointer featAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellFeatureAttributeMatrixName, AttributeMatrix::Type::CellFeature);
-    idc->addAttributeMatrix(featAttrMat);
+    idc->addOrReplaceAttributeMatrix(featAttrMat);
 
     QVector<size_t> cDims(1, 1);
     Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(256 * 128 * 64, cDims, SIMPL::CellData::FeatureIds);
@@ -157,12 +157,12 @@ public:
     tDims[1] = 128;
     tDims[2] = 1;
     attrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
-    idc2->addAttributeMatrix(attrMat);
+    idc2->addOrReplaceAttributeMatrix(attrMat);
 
     tDims.resize(1);
     tDims[0] = 2;
     featAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellFeatureAttributeMatrixName, AttributeMatrix::Type::CellFeature);
-    idc2->addAttributeMatrix(featAttrMat);
+    idc2->addOrReplaceAttributeMatrix(featAttrMat);
 
     featureIds = Int32ArrayType::CreateArray(256 * 128 * 1, cDims, SIMPL::CellData::FeatureIds);
     featureIds->initializeWithValue(1);

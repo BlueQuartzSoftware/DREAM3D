@@ -1883,7 +1883,7 @@ void QuickSurfaceMesh::generateTripleLines()
 
   DataContainerArray::Pointer dca = getDataContainerArray();
   DataContainer::Pointer dc = DataContainer::New("Edges");
-  dca->addDataContainer(dc);
+  dca->addOrReplaceDataContainer(dc);
   dc->setGeometry(tripleLineEdge);
 }
 

@@ -113,8 +113,8 @@ public:
 
     AttributeMatrix::Pointer attrMat1 = AttributeMatrix::New(tDims, k_FeatureIdsArrayPath.getAttributeMatrixName(), AttributeMatrix::Type::Cell);
 
-    m->addAttributeMatrix(attrMat1);
-    dca->addDataContainer(m);
+    m->addOrReplaceAttributeMatrix(attrMat1);
+    dca->addOrReplaceDataContainer(m);
 
     QVector<size_t> cDims(1, 1);
 

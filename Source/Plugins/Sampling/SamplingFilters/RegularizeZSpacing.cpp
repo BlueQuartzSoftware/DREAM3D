@@ -271,7 +271,7 @@ void RegularizeZSpacing::execute()
   m->getGeometryAs<ImageGeom>()->setSpacing(std::make_tuple(xRes, yRes, m_NewZRes));
   m->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(m_XP, m_YP, m_ZP));
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
-  m->addAttributeMatrix(newCellAttrMat);
+  m->addOrReplaceAttributeMatrix(newCellAttrMat);
 }
 
 // -----------------------------------------------------------------------------

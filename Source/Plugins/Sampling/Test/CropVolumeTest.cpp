@@ -258,10 +258,10 @@ public:
       DREAM3D_REQUIRE_EQUAL(am1->getAttributeArray(da)->getNumberOfTuples(), tDims[0] * tDims[1] * tDims[2]);
     }
 
-    dc1->addAttributeMatrix(am1);
-    dc1->addAttributeMatrix(am2);
+    dc1->addOrReplaceAttributeMatrix(am1);
+    dc1->addOrReplaceAttributeMatrix(am2);
 
-    dca->addDataContainer(dc1);
+    dca->addOrReplaceDataContainer(dc1);
 
     return dca;
   }

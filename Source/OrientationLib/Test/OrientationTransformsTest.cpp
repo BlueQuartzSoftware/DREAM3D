@@ -369,8 +369,8 @@ public:
 
       QVector<size_t> tDims(1, nStepsCubed);
       AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, AMName, AttributeMatrix::Type::Cell);
-      m->addAttributeMatrix(attrMat);
-      dca->addDataContainer(m);
+      m->addOrReplaceAttributeMatrix(attrMat);
+      dca->addOrReplaceDataContainer(m);
 
       // Make all the starting data
       GenerateEulers<K>(nSteps, attrMat);

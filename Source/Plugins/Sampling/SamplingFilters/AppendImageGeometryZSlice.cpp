@@ -212,7 +212,7 @@ void AppendImageGeometryZSlice::dataCheck()
       newCellAttrMat->insertOrAssign(data);
     }
     getDataContainerArray()->getDataContainer(getDestinationAttributeMatrix().getDataContainerName())->removeAttributeMatrix(destCellAttrMat->getName());
-    getDataContainerArray()->getDataContainer(getDestinationAttributeMatrix().getDataContainerName())->addAttributeMatrix(newCellAttrMat);
+    getDataContainerArray()->getDataContainer(getDestinationAttributeMatrix().getDataContainerName())->addOrReplaceAttributeMatrix(newCellAttrMat);
   }
 }
 

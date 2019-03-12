@@ -645,11 +645,11 @@ DataContainerArray::Pointer StatsGeneratorWidget::generateDataContainerArray()
   int nPhases = phaseTabs->count() + 1;
   DataContainerArray::Pointer dca = DataContainerArray::New();
   DataContainer::Pointer m = DataContainer::New(SIMPL::Defaults::StatsGenerator);
-  dca->addDataContainer(m);
+  dca->addOrReplaceDataContainer(m);
 
   QVector<size_t> tDims(1, nPhases);
   AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellEnsembleAttributeMatrixName, AttributeMatrix::Type::CellEnsemble);
-  m->addAttributeMatrix(cellEnsembleAttrMat);
+  m->addOrReplaceAttributeMatrix(cellEnsembleAttrMat);
 
   StatsDataArray::Pointer statsDataArray = StatsDataArray::New();
   statsDataArray->resizeTuples(nPhases);
@@ -839,10 +839,10 @@ void StatsGeneratorWidget::on_openStatsFile_clicked()
 
   DataContainerArray::Pointer dca = DataContainerArray::New();
   DataContainer::Pointer m = DataContainer::New(SIMPL::Defaults::StatsGenerator);
-  dca->addDataContainer(m);
+  dca->addOrReplaceDataContainer(m);
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellEnsembleAttributeMatrixName, AttributeMatrix::Type::CellEnsemble);
-  m->addAttributeMatrix(cellEnsembleAttrMat);
+  m->addOrReplaceAttributeMatrix(cellEnsembleAttrMat);
 
   hid_t fileId = QH5Utilities::openFile(h5file, true); // Open the file Read Only
   if(fileId < 0)

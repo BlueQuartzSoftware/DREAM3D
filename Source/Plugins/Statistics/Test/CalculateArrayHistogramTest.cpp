@@ -154,8 +154,8 @@ public:
     am->insertOrAssign(duration); // int array
     am->insertOrAssign(wait);     // int array
 
-    dc->addAttributeMatrix(am);
-    dca->addDataContainer(dc);
+    dc->addOrReplaceAttributeMatrix(am);
+    dca->addOrReplaceDataContainer(dc);
 
     // Now instantiate the CalculateArrayHistogram Filter from the FilterManager
     QString filtName = "CalculateArrayHistogram";

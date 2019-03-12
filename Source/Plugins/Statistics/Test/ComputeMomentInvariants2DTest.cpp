@@ -102,7 +102,7 @@ public:
   {
     DataContainerArray::Pointer dca = DataContainerArray::New();
     DataContainer::Pointer dc = DataContainer::New("Test");
-    dca->addDataContainer(dc);
+    dca->addOrReplaceDataContainer(dc);
 
     ImageGeom::Pointer igeom = ImageGeom::New();
     size_t dims_in[3] = { 5, 5, 1};
@@ -113,7 +113,7 @@ public:
     dims[1] = 5;
     dims[2] = 1;
     AttributeMatrix::Pointer cellAM = AttributeMatrix::New(dims, "CellData", AttributeMatrix::Type::Cell);
-    dc->addAttributeMatrix(cellAM);
+    dc->addOrReplaceAttributeMatrix(cellAM);
 
     Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(25, "FeatureIds", true);
     featureIds->initializeWithZeros();
@@ -134,7 +134,7 @@ public:
     dims.resize(1);
     dims[0] = 2;
     AttributeMatrix::Pointer featureAM = AttributeMatrix::New(dims, "FeatureData", AttributeMatrix::Type::CellFeature);
-    dc->addAttributeMatrix(featureAM);
+    dc->addOrReplaceAttributeMatrix(featureAM);
 
 #if 0
       0, 0, 0, 0, 0,

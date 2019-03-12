@@ -208,7 +208,7 @@ void CropImageGeometry::dataCheck()
     destCellDataContainer->setGeometry(imageCopy);
 
     destCellAttrMat = srcCellAttrMat->deepCopy(getInPreflight());
-    destCellDataContainer->addAttributeMatrix(destCellAttrMat);
+    destCellDataContainer->addOrReplaceAttributeMatrix(destCellAttrMat);
   }
   else
   {
@@ -344,7 +344,7 @@ void CropImageGeometry::dataCheck()
     newCellAttrMat->insertOrAssign(data);
   }
   destCellDataContainer->removeAttributeMatrix(destCellAttrMat->getName());
-  destCellDataContainer->addAttributeMatrix(newCellAttrMat);
+  destCellDataContainer->addOrReplaceAttributeMatrix(newCellAttrMat);
 
   if(m_RenumberFeatures)
   {
@@ -424,7 +424,7 @@ void CropImageGeometry::execute()
     destCellDataContainer->getGeometryAs<ImageGeom>()->setSpacing(r);
 
     AttributeMatrix::Pointer cellAttrMatCopy = cellAttrMat->deepCopy(false);
-    destCellDataContainer->addAttributeMatrix(cellAttrMatCopy);
+    destCellDataContainer->addOrReplaceAttributeMatrix(cellAttrMatCopy);
     cellAttrMat = destCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   }
 

@@ -100,7 +100,7 @@ public:
     DataContainerArray::Pointer dca = DataContainerArray::New();
 
     DataContainer::Pointer tdc = DataContainer::New(SIMPL::Defaults::TriangleDataContainerName);
-    dca->addDataContainer(tdc);
+    dca->addOrReplaceDataContainer(tdc);
 
     // Basic idea is to create a surface mesh of a rectangular prism with edge lengths of 3x1x1, with
     // three total features (one voxel each)
@@ -306,10 +306,10 @@ public:
 
     QVector<size_t> tDims(1, 32);
     AttributeMatrix::Pointer faceAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::FaceAttributeMatrixName, AttributeMatrix::Type::Face);
-    tdc->addAttributeMatrix(faceAttrMat);
+    tdc->addOrReplaceAttributeMatrix(faceAttrMat);
     tDims[0] = 4;
     AttributeMatrix::Pointer featAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::FaceFeatureAttributeMatrixName, AttributeMatrix::Type::FaceFeature);
-    tdc->addAttributeMatrix(featAttrMat);
+    tdc->addOrReplaceAttributeMatrix(featAttrMat);
     QVector<size_t> cDims(1, 2);
     Int32ArrayType::Pointer faceLabels = Int32ArrayType::CreateArray(32, cDims, SIMPL::FaceData::SurfaceMeshFaceLabels);
     faceAttrMat->insertOrAssign(faceLabels);

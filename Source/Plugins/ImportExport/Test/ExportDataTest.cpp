@@ -110,13 +110,13 @@ public:
 
     // A DataContainer that mimics some real data
     DataContainer::Pointer m = DataContainer::New(SIMPL::Defaults::DataContainerName);
-    dca->addDataContainer(m);
+    dca->addOrReplaceDataContainer(m);
 
     AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New(QVector<size_t>(1, 20), SIMPL::Defaults::AttributeMatrixName, AttributeMatrix::Type::Generic);
-    m->addAttributeMatrix(attrMatrix);
+    m->addOrReplaceAttributeMatrix(attrMatrix);
 
     AttributeMatrix::Pointer attrMatrix2 = AttributeMatrix::New(QVector<size_t>(1, 20), SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
-    m->addAttributeMatrix(attrMatrix2);
+    m->addOrReplaceAttributeMatrix(attrMatrix2);
     int size = 20;
 
     {

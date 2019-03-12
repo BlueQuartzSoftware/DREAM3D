@@ -115,10 +115,10 @@ public:
 
     // Create a DataContainer for each geometry
     DataContainer::Pointer image3D_DC = DataContainer::New("ImageGeom3D");
-    dca->addDataContainer(image3D_DC);
+    dca->addOrReplaceDataContainer(image3D_DC);
 
     DataContainer::Pointer rectGrid_DC = DataContainer::New("RectGrid");
-    dca->addDataContainer(rectGrid_DC);
+    dca->addOrReplaceDataContainer(rectGrid_DC);
 
     // Create an instance of each geometry for testing
     ImageGeom::Pointer image3D = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
@@ -153,7 +153,7 @@ public:
     image3D_fIDs->setValue(2, 2);
     image3D_fIDs->setValue(3, 2);
     image3D_AttrMat->insertOrAssign(image3D_fIDs);
-    image3D_DC->addAttributeMatrix(image3D_AttrMat);
+    image3D_DC->addOrReplaceAttributeMatrix(image3D_AttrMat);
 
     AttributeMatrix::Pointer rectGrid_AttrMat = AttributeMatrix::New(tDims, "RectGridData", AttributeMatrix::Type::Cell);
     Int32ArrayType::Pointer rectGrid_fIDs = Int32ArrayType::CreateArray(4, SIMPL::CellData::FeatureIds);
@@ -161,16 +161,16 @@ public:
     rectGrid_fIDs->setValue(2, 2);
     rectGrid_fIDs->setValue(3, 2);
     rectGrid_AttrMat->insertOrAssign(rectGrid_fIDs);
-    rectGrid_DC->addAttributeMatrix(rectGrid_AttrMat);
+    rectGrid_DC->addOrReplaceAttributeMatrix(rectGrid_AttrMat);
 
     // Create a feature AttributeMatrix for each geometry, which all have 2 features
     tDims[0] = 3;
 
     AttributeMatrix::Pointer image3D_featureAttrMat = AttributeMatrix::New(tDims, "Image3DFeatureData", AttributeMatrix::Type::CellFeature);
-    image3D_DC->addAttributeMatrix(image3D_featureAttrMat);
+    image3D_DC->addOrReplaceAttributeMatrix(image3D_featureAttrMat);
 
     AttributeMatrix::Pointer rectGrid_featureAttrMat = AttributeMatrix::New(tDims, "RectGridFeatureData", AttributeMatrix::Type::CellFeature);
-    rectGrid_DC->addAttributeMatrix(rectGrid_featureAttrMat);
+    rectGrid_DC->addOrReplaceAttributeMatrix(rectGrid_featureAttrMat);
 
     return dca;
   }

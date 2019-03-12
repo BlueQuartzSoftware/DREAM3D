@@ -178,12 +178,12 @@ public:
     tDims[0] = 10;
     AttributeMatrix::Pointer attrMat3 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat3", AttributeMatrix::Type::Cell);
 
-    m->addAttributeMatrix(attrMat1);
-    m->addAttributeMatrix(attrMat2);
-    m->addAttributeMatrix(attrMat11);
-    m->addAttributeMatrix(attrMat22);
-    m->addAttributeMatrix(attrMat3);
-    dca->addDataContainer(m);
+    m->addOrReplaceAttributeMatrix(attrMat1);
+    m->addOrReplaceAttributeMatrix(attrMat2);
+    m->addOrReplaceAttributeMatrix(attrMat11);
+    m->addOrReplaceAttributeMatrix(attrMat22);
+    m->addOrReplaceAttributeMatrix(attrMat3);
+    dca->addOrReplaceDataContainer(m);
 
     QVector<size_t> cDims(1, 3);
     int32_t initVal = 10;
