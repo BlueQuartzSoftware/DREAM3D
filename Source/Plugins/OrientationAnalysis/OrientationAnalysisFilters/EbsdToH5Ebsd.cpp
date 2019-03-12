@@ -43,6 +43,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/Utilities/SIMPLDataPathValidator.h"
 
 #include "EbsdLib/HKL/H5CtfImporter.h"
 #include "EbsdLib/TSL/H5AngImporter.h"
@@ -150,16 +151,19 @@ void EbsdToH5Ebsd::dataCheck()
   const bool stackLowToHigh = true;
   int increment = 1;
 
+  SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
+  QString inputPath = validator->convertToAbsolutePath(m_InputPath);
+
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList =
-      FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex, increment, hasMissingFiles, stackLowToHigh, m_InputPath, m_FilePrefix, m_FileSuffix, m_FileExtension, m_PaddingDigits);
+      FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex, increment, hasMissingFiles, stackLowToHigh, inputPath, m_FilePrefix, m_FileSuffix, m_FileExtension, m_PaddingDigits);
 
   if(fileList.empty())
   {
     ss.clear();
     QTextStream out(&ss);
     out << " No files have been selected for import. Have you set the input directory and other values so that input files will be generated?\n";
-    out << "InputPath: " << m_InputPath << "\n";
+    out << "InputPath: " << inputPath << "\n";
     out << "FilePrefix: " << m_FilePrefix << "\n";
     out << "FileSuffix: " << m_FileSuffix << "\n";
     out << "FileExtension: " << m_FileExtension << "\n";
@@ -327,9 +331,12 @@ void EbsdToH5Ebsd::execute()
   // if( SIMPL::RefFrameZDir::LowtoHigh == m_RefFrameZDir) { stackLowToHigh = true; }
   // else if (SIMPL::RefFrameZDir::HightoLow == m_RefFrameZDir) { stackLowToHigh = false; }
 
+  SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
+  QString inputPath = validator->convertToAbsolutePath(m_InputPath);
+
   // Now generate all the file names the user is asking for and populate the table
   QVector<QString> fileList =
-      FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex, increment, hasMissingFiles, stackLowToHigh, m_InputPath, m_FilePrefix, m_FileSuffix, m_FileExtension, m_PaddingDigits);
+      FilePathGenerator::GenerateFileList(m_ZStartIndex, m_ZEndIndex, increment, hasMissingFiles, stackLowToHigh, inputPath, m_FilePrefix, m_FileSuffix, m_FileExtension, m_PaddingDigits);
 
   EbsdImporter::Pointer fileImporter;
 
