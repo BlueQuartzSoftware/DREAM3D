@@ -36,6 +36,7 @@
 #include "FindMisorientations.h"
 
 #include <cmath>
+#include <stdexcept>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -255,6 +256,10 @@ void FindMisorientations::execute()
     {
       w = std::numeric_limits<float>::max();
       nname = neighborlist[i][j];
+	  if(nname < 0)
+	  {
+		  throw std::out_of_range("Invalid index");
+	  }
       QuaternionMathF::Copy(avgQuats[nname], q2);
       xtalType2 = m_CrystalStructures[m_FeaturePhases[nname]];
       tempMisoList = neighborlist[i].size();
