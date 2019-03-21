@@ -61,7 +61,7 @@ const QString Index("Index");
 
 const QString ZStartIndex("ZStartIndex");
 const QString ZEndIndex("ZEndIndex");
-const QString ZResolution("Z Spacing");
+const QString ZResolution("Z Resolution");
 const QString StackingOrder("Stacking Order");
 const QString SampleTransformationAngle("SampleTransformationAngle");
 const QString SampleTransformationAxis("SampleTransformationAxis");
@@ -70,8 +70,8 @@ const QString EulerTransformationAxis("EulerTransformationAxis");
 
 // Each Manufacturer has their own naming scheme for these variables but for
 // DREAM.3D we are going to settle on using these names for consistency
-const QString XResolution("X Spacing");
-const QString YResolution("Y Spacing");
+const QString XResolution("X Resolution");
+const QString YResolution("Y Resolution");
 
 // We store the Maximum number of X and Y Points for the given volume. This
 // allows us to store slices that have different XY voxel dimensions.
