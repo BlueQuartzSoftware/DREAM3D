@@ -201,20 +201,21 @@ void ReadAngData::dataCheck()
   {
     return;
   }
+
+  // Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
+  cellAttrMat->resizeAttributeArrays(tDims);
+
   tDims.resize(1);
-  tDims[0] = 0;
+  tDims[0] = 1;
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
   if(getErrorCondition() < 0)
   {
     return;
   }
 
-  // Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
-  cellAttrMat->resizeAttributeArrays(tDims);
   AngFields angfeatures;
   QVector<QString> names = angfeatures.getFilterFeatures<QVector<QString>>();
-  tDims.resize(1);
-  tDims[0] = 1;
+
   for(const QString& name : names)
   {
     if(reader->getPointerType(name) == Ebsd::Int32)

@@ -250,14 +250,17 @@ void FindMisorientations::execute()
   {
     QuaternionMathF::Copy(avgQuats[i], q1);
     xtalType1 = m_CrystalStructures[m_FeaturePhases[i]];
-    misorientationlists[i].assign(neighborlist[i].size(), -1.0);
-    for(size_t j = 0; j < neighborlist[i].size(); j++)
+    NeighborList<int32_t>::VectorType& featureNeighborList = neighborlist[i];
+
+    misorientationlists[i].assign(featureNeighborList.size(), -1.0);
+
+    for(size_t j = 0; j < featureNeighborList.size(); j++)
     {
       w = std::numeric_limits<float>::max();
-      nname = neighborlist[i][j];
+      nname = featureNeighborList[j];
       QuaternionMathF::Copy(avgQuats[nname], q2);
       xtalType2 = m_CrystalStructures[m_FeaturePhases[nname]];
-      tempMisoList = neighborlist[i].size();
+      tempMisoList = featureNeighborList.size();
       if(xtalType1 == xtalType2 && static_cast<int64_t>(xtalType1) < static_cast<int64_t>(m_OrientationOps.size()))
       {
         w = m_OrientationOps[xtalType1]->getMisoQuat(q1, q2, n1, n2, n3);
