@@ -141,7 +141,7 @@ void EMCalculation::execute()
   acvmpm->setMessagePrefix(getMessagePrefix());
 
   // Connect up the Error/Warning/Progress object so the filter can report those things
-  connect(acvmpm.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+  connect(acvmpm.get(), SIGNAL(messageGenerated(const AbstractMessage&)), this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
 
   acvmpm->execute();
 

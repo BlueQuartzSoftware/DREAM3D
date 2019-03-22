@@ -275,7 +275,7 @@ public:
     }
 
     Observer obs;
-    obs.connect(convFilt.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
+    obs.connect(convFilt.get(), SIGNAL(messageGenerated(const AbstractMessage&)), &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
 
     convFilt->execute();
     int err = convFilt->getErrorCondition();
@@ -456,7 +456,7 @@ public:
         }
 
         //      Observer obs;
-        //      obs.connect(diffMapFilt.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)),
+        //      obs.connect(diffMapFilt.get(), SIGNAL(messageGenerated(const AbstractMessage&)),
         //                  &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
 
         diffMapFilt->execute();

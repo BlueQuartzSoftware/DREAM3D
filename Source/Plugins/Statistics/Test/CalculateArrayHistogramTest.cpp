@@ -167,7 +167,7 @@ public:
       // horribly gone wrong in which case the system is going to come down quickly after this.
       AbstractFilter::Pointer filter = filterFactory->create();
       filter->setDataContainerArray(dca);
-      filter->connect(filter.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
+      filter->connect(filter.get(), SIGNAL(messageGenerated(const AbstractMessage&)), &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
 
       QVariant var;
       QString str;

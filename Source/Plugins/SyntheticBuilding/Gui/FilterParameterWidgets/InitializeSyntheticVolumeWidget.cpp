@@ -212,7 +212,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   // reader->setDataContainerArrayProxy(dcaProxy);
 
   // Connect up to get any errors
-  connect(reader.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), this, SLOT(displayErrorMessage(const PipelineMessage&)));
+  connect(reader.get(), SIGNAL(messageGenerated(const AbstractMessage&)), this, SLOT(displayErrorMessage(const PipelineMessage&)));
 
   // Read the structure from file
   DataContainerArrayProxy dcaProxy = reader->readDataContainerArrayStructure(m_InputFile->text());
@@ -246,7 +246,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   reader->setDataContainerArray(dca);
   reader->setInputFile(m_InputFile->text());
   reader->setInputFileDataContainerArrayProxy(dcaProxy);
-  connect(reader.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), this, SLOT(displayErrorMessage(const PipelineMessage&)));
+  connect(reader.get(), SIGNAL(messageGenerated(const AbstractMessage&)), this, SLOT(displayErrorMessage(const PipelineMessage&)));
 
   reader->execute();
   int err = reader->getErrorCondition();

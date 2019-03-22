@@ -255,7 +255,7 @@ void EMMPM::execute()
   em->setMessagePrefix(getMessagePrefix());
 
   // Connect up the Error/Warning/Progress object so the filter can report those things
-  connect(em.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+  connect(em.get(), SIGNAL(messageGenerated(const AbstractMessage&)), this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
 
   em->execute();
 
