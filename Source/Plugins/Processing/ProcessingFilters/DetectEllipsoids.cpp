@@ -38,6 +38,7 @@
 #define NOMINMAX
 
 #include <QtCore/QDateTime>
+#include <QtCore/QMutexLocker>
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/atomic.h>
@@ -92,14 +93,6 @@ DetectEllipsoids::DetectEllipsoids()
 , m_HoughTransformThreshold(0.5f)
 , m_MinAspectRatio(0.4f)
 , m_ImageScaleBarLength(100)
-, m_Ellipse_Count(0)
-, m_MaxFeatureId(0)
-, m_NextExecutedFeatureId(1)
-, m_TotalNumberOfFeatures(0)
-, m_FeaturesCompleted(0)
-, m_MaxFeatureIdSem(1)
-, m_NextExecutedFeatureIdSem(1)
-, m_FeaturesCompletedSem(1)
 {
   initialize();
 }
@@ -1267,10 +1260,10 @@ Int32ArrayType::Pointer DetectEllipsoids::fillEllipse(Int32ArrayType::Pointer I,
       {
         // Increase stack size
         stackX->resizeTuples(maxStack + 1000);
-        stackX->initializeWithValue(0);
+        stackX->initializeWithValue(0, maxStack);
 
         stackY->resizeTuples(maxStack + 1000);
-        stackY->initializeWithValue(0);
+        stackY->initializeWithValue(0, maxStack);
         maxStack = maxStack + 1000;
       }
 
@@ -1339,10 +1332,9 @@ void DetectEllipsoids::ind2sub(QVector<size_t> tDims, size_t index, size_t& x, s
 // -----------------------------------------------------------------------------
 int32_t DetectEllipsoids::getUniqueFeatureId()
 {
-  m_MaxFeatureIdSem.acquire();
+  QMutexLocker locker(&m_MaxFeatureIdMutex);
   m_MaxFeatureId++;
   int32_t id = m_MaxFeatureId;
-  m_MaxFeatureIdSem.release();
   return id;
 }
 
@@ -1351,18 +1343,20 @@ int32_t DetectEllipsoids::getUniqueFeatureId()
 // -----------------------------------------------------------------------------
 size_t DetectEllipsoids::getNextFeatureId()
 {
-  m_NextExecutedFeatureIdSem.acquire();
-  int32_t featureId = m_NextExecutedFeatureId;
-  if(m_NextExecutedFeatureId >= m_TotalNumberOfFeatures)
+  QMutexLocker locker(&m_NextExecutedFeatureIdMutex);
+  int32_t featureId = m_NextExecutedFeatureId++;
+  if(m_NextExecutedFeatureId > m_TotalNumberOfFeatures)
   {
     featureId = -1;
   }
-  else
-  {
-    m_NextExecutedFeatureId++;
-  }
-  m_NextExecutedFeatureIdSem.release();
   return featureId;
+}
+
+// -----------------------------------------------------------------------------
+void DetectEllipsoids::incrementEllipseCount()
+{
+  QMutexLocker locker(&m_IncrementCountMutex);
+  ++m_Ellipse_Count;
 }
 
 // -----------------------------------------------------------------------------
@@ -1370,13 +1364,11 @@ size_t DetectEllipsoids::getNextFeatureId()
 // -----------------------------------------------------------------------------
 void DetectEllipsoids::notifyFeatureCompleted(int featureId, int threadIndex)
 {
-
-  m_FeaturesCompletedSem.acquire();
+  QMutexLocker locker(&m_FeaturesCompletedMutex);
   m_ThreadWork[threadIndex]++;
   m_FeaturesCompleted++;
   QString ss = QObject::tr("[%1/%2] Completed:").arg(m_FeaturesCompleted).arg(m_TotalNumberOfFeatures);
   notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-  m_FeaturesCompletedSem.release();
 }
 
 // -----------------------------------------------------------------------------

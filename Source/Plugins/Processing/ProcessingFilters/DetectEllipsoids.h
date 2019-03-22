@@ -37,6 +37,7 @@
 
 #include <complex>
 
+#include <QtCore/QMutex>
 #include <QtCore/QSemaphore>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -125,7 +126,7 @@ public:
   SIMPL_FILTER_PARAMETER(int, ImageScaleBarLength)
   Q_PROPERTY(int ImageScaleBarLength READ getImageScaleBarLength WRITE setImageScaleBarLength)
 
-  SIMPL_FILTER_PARAMETER(size_t, Ellipse_Count)
+  void incrementEllipseCount();
 
   /**
    * @brief getUniqueFeatureId
@@ -249,13 +250,17 @@ protected:
 
 private:
   static double m_img_scale_length;
-  int32_t m_MaxFeatureId;
-  int32_t m_NextExecutedFeatureId;
-  int32_t m_TotalNumberOfFeatures;
-  int32_t m_FeaturesCompleted;
-  QSemaphore m_MaxFeatureIdSem;
-  QSemaphore m_NextExecutedFeatureIdSem;
-  QSemaphore m_FeaturesCompletedSem;
+  int32_t m_MaxFeatureId = 0;
+  int32_t m_NextExecutedFeatureId = 1;
+  int32_t m_TotalNumberOfFeatures = 0;
+  int32_t m_FeaturesCompleted = 0;
+  size_t m_Ellipse_Count = 0;
+
+  QMutex m_MaxFeatureIdMutex;
+  QMutex m_NextExecutedFeatureIdMutex;
+  QMutex m_FeaturesCompletedMutex;
+  QMutex m_IncrementCountMutex;
+
   int m_ThreadIndex = 0;
   QMap<int, int> m_ThreadWork;
 

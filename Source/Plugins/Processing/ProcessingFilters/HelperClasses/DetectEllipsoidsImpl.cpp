@@ -340,8 +340,7 @@ void DetectEllipsoidsImpl::operator()() const
         if(can_num > 0) // Assume best match is the ellipse
         {
           // Increment the ellipse counter
-          m_Filter->setEllipse_Count(m_Filter->getEllipse_Count() + 1);
-
+          m_Filter->incrementEllipseCount();
           // Get the index into the ellipse value arrays that has the most votes
           int accum_idx = getIdOfMax<double>(accum_can);
 

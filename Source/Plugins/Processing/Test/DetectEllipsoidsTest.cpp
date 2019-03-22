@@ -38,6 +38,7 @@
 
 #include "SIMPLib/Common/Observer.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/CoreFilters/DataContainerWriter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
@@ -55,12 +56,8 @@ class DetectEllipsoidsTest
 {
 
 public:
-  DetectEllipsoidsTest()
-  {
-  }
-  virtual ~DetectEllipsoidsTest()
-  {
-  }
+  DetectEllipsoidsTest() = default;
+  ~DetectEllipsoidsTest() = default;
 
   QFile testOutFile;
   QFile exemplaryOutFile;
@@ -72,6 +69,7 @@ public:
   {
 #if REMOVE_TEST_FILES
     QFile::remove(UnitTest::DetectEllipsoidsTest::TestOutputPath);
+    QFile::remove(UnitTest::DetectEllipsoidsTest::OutputDREAM3DFile);
 #endif
   }
 
@@ -106,7 +104,7 @@ public:
     DREAM3D_REQUIRE_VALID_POINTER(pipeline.get());
 
     FilterPipeline::FilterContainerType container = pipeline->getFilterContainer();
-    DREAM3D_REQUIRE_EQUAL(container.size(), 7); // There should be 7 filters... if not, bail
+    DREAM3D_REQUIRE_EQUAL(container.size(), 8); // There should be 8 filters... if not, bail
 
     AbstractFilter::Pointer readerFilter = container[0];
 
@@ -114,24 +112,34 @@ public:
     QString propName = "FileName";
     var.setValue(UnitTest::DetectEllipsoidsTest::InputSegmentationPath);
     bool propWasSet = readerFilter->setProperty(propName.toStdString().c_str(), var);
-    if(false == propWasSet)
+    if(!propWasSet)
     {
       qDebug() << "Unable to set property '" + propName + "' in filter " << readerFilter->getNameOfClass();
       DREAM3D_REQUIRE_EQUAL(0, 1);
     }
 
-    AbstractFilter::Pointer writerFilter = container[container.size() - 1];
+    AbstractFilter::Pointer writerFilter = container[container.size() - 2];
 
     propName = "OutputPath";
     var.setValue(UnitTest::DetectEllipsoidsTest::TestOutputDirectory);
     propWasSet = writerFilter->setProperty(propName.toStdString().c_str(), var);
-    if(false == propWasSet)
+    if(!propWasSet)
     {
       qDebug() << "Unable to set property '" + propName + "' in filter " << writerFilter->getNameOfClass();
       DREAM3D_REQUIRE_EQUAL(0, 1);
     }
 
-    AbstractFilter::Pointer detectEllipsoidsFilter = container[container.size() - 2];
+    AbstractFilter::Pointer writeDataContainerFilter = container[container.size() - 1];
+    propName = "OutputFile";
+    var.setValue(UnitTest::DetectEllipsoidsTest::OutputDREAM3DFile);
+    propWasSet = writeDataContainerFilter->setProperty(propName.toStdString().c_str(), var);
+    if(!propWasSet)
+    {
+      qDebug() << "Unable to set property '" + propName + "' in filter " << writeDataContainerFilter->getNameOfClass();
+      DREAM3D_REQUIRE_EQUAL(0, 1);
+    }
+
+    AbstractFilter::Pointer detectEllipsoidsFilter = container[container.size() - 3];
 
     Observer obs;
     obs.connect(detectEllipsoidsFilter.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
@@ -143,7 +151,7 @@ public:
     DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), 0);
 
     // Compare output with exemplary output
-    if(exemplaryOutFile.open(QFile::ReadOnly) == false || testOutFile.open(QFile::ReadOnly) == false)
+    if(!exemplaryOutFile.open(QFile::ReadOnly) || !testOutFile.open(QFile::ReadOnly))
     {
       // Bail
       DREAM3D_REQUIRE_EQUAL(0, 1);
@@ -175,14 +183,14 @@ public:
 
         bool ok = true;
         int exemplaryInt = exemplaryStr.toInt(&ok);
-        if(ok == false)
+        if(!ok)
         {
           // Bail
           DREAM3D_REQUIRE_EQUAL(0, 1);
         }
 
         int testInt = testStr.toInt(&ok);
-        if(ok == false)
+        if(!ok)
         {
           // Bail
           DREAM3D_REQUIRE_EQUAL(0, 1);
@@ -194,8 +202,8 @@ public:
         }
         else if(exemplaryInt > 0)
         {
-          DREAM3D_REQUIRE(exemplaryInt > 0);
-          DREAM3D_REQUIRE(testInt > 0);
+          DREAM3D_REQUIRED(exemplaryInt, >, 0);
+          DREAM3D_REQUIRED(testInt, >, 0);
         }
         else
         {
@@ -215,6 +223,8 @@ public:
   {
     int err = EXIT_SUCCESS;
 
+    std::cout << "#### DetectEllipsoidsTest Starting ####" << std::endl;
+
     DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
     DREAM3D_REGISTER_TEST(TestDetectEllipsoids());
@@ -231,7 +241,9 @@ public:
     DREAM3D_REGISTER_TEST(RemoveTestFiles());
   }
 
-private:
-  DetectEllipsoidsTest(const DetectEllipsoidsTest&); // Copy Constructor Not Implemented
-  void operator=(const DetectEllipsoidsTest&);       // Move assignment Not Implemented
+public:
+  DetectEllipsoidsTest(const DetectEllipsoidsTest&) = delete;            // Copy Constructor Not Implemented
+  DetectEllipsoidsTest(DetectEllipsoidsTest&&) = delete;                 // Move Constructor Not Implemented
+  DetectEllipsoidsTest& operator=(const DetectEllipsoidsTest&) = delete; // Copy Assignment Not Implemented
+  DetectEllipsoidsTest& operator=(DetectEllipsoidsTest&&) = delete;      // Move Assignment Not Implemented
 };
