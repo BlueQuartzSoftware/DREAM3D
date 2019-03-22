@@ -343,7 +343,7 @@ void ReadCtfData::readDataFile(CtfReader* reader, DataContainer::Pointer m, QVec
     // Set Cache with values from the file
     {
       Ctf_Private_Data data;
-      data.dims = SizeVec3Type(tDims[0] = tDims[1], tDims[2]);
+      data.dims = SizeVec3Type(tDims[0], tDims[1], tDims[2]);
       data.resolution[0] = (reader->getXStep());
       data.resolution[1] = (reader->getYStep());
       if(reader->getZStep() != 0.0f)
