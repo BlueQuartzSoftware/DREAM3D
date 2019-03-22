@@ -10,8 +10,24 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+## Version 6.5.119 ##
 
-## Version 6.5.XXX ##
+### New Filters & Features ###
+
++ Python bindings are now available if you build your own version of DREAM.3D/SIMPL.
++ Options to combine Euler angles and/or convert them to radians in the Bruker Esprit Importer
+
+### Fixed DREAM3D Issues ###
+
++ Fixed issue where the Feature Face Curvature Filter was not being compiled (#889)
++ Fixed issue where the grid dimensions from .ang and .ctf files were not honored
++ Fixed issue where reading certain kinds of NeighborList arrays from HDF5 would fail or end up with corrupted data
+
+### Fixed SIMPL Issues ###
+
++ Fixed crash in RawBinaryReader when the number of skipped header bytes was larger then the amount of data being read into DREAM.3D
+
+## Version 6.5.104 ##
 
 ### New Filters & Features ###
 
