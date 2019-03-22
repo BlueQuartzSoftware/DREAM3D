@@ -2,10 +2,16 @@
     "0": {
         "CellAttributeMatrixName": "Scan Data",
         "CellEnsembleAttributeMatrixName": "Phase Data",
-        "DataContainerName": "EBSD Scan",
-        "FilterVersion": "6.4.499",
+        "DataContainerName": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": "EBSD Scan"
+        },
+        "FilterVersion": "6.5.135",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Import EDAX EBSD Data (.ang)",
         "Filter_Name": "ReadAngData",
+        "Filter_Uuid": "{b8e128a8-c2a3-5e6c-a7ad-e4fb864e5d40}",
         "InputFile": "Data/SmallIN100/Slice_1.ang"
     },
     "1": {
@@ -14,9 +20,11 @@
             "Data Array Name": "",
             "Data Container Name": "EBSD Scan"
         },
-        "FilterVersion": "6.4.499",
+        "FilterVersion": "6.5.135",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Rotate Sample Reference Frame",
         "Filter_Name": "RotateSampleRefFrame",
+        "Filter_Uuid": "{e25d9b4c-2b37-578c-b1de-cf7032b5ef19}",
         "RotationAngle": 180,
         "RotationAxis": {
             "x": 0,
@@ -30,9 +38,11 @@
             "Data Array Name": "EulerAngles",
             "Data Container Name": "EBSD Scan"
         },
-        "FilterVersion": "6.4.499",
+        "FilterVersion": "6.5.135",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Rotate Euler Reference Frame",
         "Filter_Name": "RotateEulerRefFrame",
+        "Filter_Uuid": "{ef9420b2-8c46-55f3-8ae4-f53790639de4}",
         "RotationAngle": 90,
         "RotationAxis": {
             "x": 0,
@@ -42,9 +52,11 @@
     },
     "3": {
         "DestinationArrayName": "Mask",
-        "FilterVersion": "6.4.499",
+        "FilterVersion": "1.2.863",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Threshold Objects",
         "Filter_Name": "MultiThresholdObjects",
+        "Filter_Uuid": "{014b7300-cf36-5ede-a751-5faf9b119dae}",
         "SelectedThresholds": [
             {
                 "Attribute Array Name": "Confidence Index",
@@ -72,9 +84,11 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "EBSD Scan"
         },
-        "FilterVersion": "6.4.499",
+        "FilterVersion": "6.5.135",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
+        "Filter_Uuid": "{a50e6532-8075-5de5-ab63-945feb0de7f7}",
         "GoodVoxelsArrayPath": {
             "Attribute Matrix Name": "Scan Data",
             "Data Array Name": "Mask",
@@ -89,17 +103,20 @@
     },
     "5": {
         "FileName": "Data/Output/Small_IN100_Slice_1.png",
-        "FilterVersion": "1.0.358",
-        "Filter_Human_Label": "ITK::Image Writer (KW)",
+        "FilterVersion": "1.0.499",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "ITK::Image Writer",
         "Filter_Name": "ITKImageWriter",
+        "Filter_Uuid": "{11473711-f94d-5d96-b749-ec36a81ad338}",
         "ImageArrayPath": {
             "Attribute Matrix Name": "Scan Data",
             "Data Array Name": "IPFColor",
             "Data Container Name": "EBSD Scan"
-        }
+        },
+        "Plane": 0
     },
     "PipelineBuilder": {
-        "Name": "Edax IPF Colors",
+        "Name": "Edax_IPF_Colors",
         "Number_Filters": 6,
         "Version": 6
     }
