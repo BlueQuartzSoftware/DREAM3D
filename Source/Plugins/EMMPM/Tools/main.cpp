@@ -165,7 +165,7 @@ int main(int argc, char* argv[])
 #else
   char* infile = (char*)(malloc(1024));
   memset(infile, 0, 1024);
-  snprintf(infile, 1024, "/Users/mjackson/Desktop/EMMPM.tif");
+  snprintf(infile, 1024, "Data/Images/EMMPM.tif");
   char* outfile = (char*)(malloc(1024));
   memset(outfile, 0, 1024);
   snprintf(outfile, 1024, "/tmp/out.tif");

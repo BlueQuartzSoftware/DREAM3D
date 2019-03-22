@@ -326,7 +326,7 @@
         "Filter_Uuid": "{5fbf9204-2c6c-597b-856a-f4612adbac38}",
         "MaxValPerLine": -1,
         "OutputFilePath": "Data/Output/INL_Example/Data.csv",
-        "OutputPath": "/Users/mjackson",
+        "OutputPath": "",
         "OutputType": 1,
         "SelectedDataArrayPaths": [
             {
