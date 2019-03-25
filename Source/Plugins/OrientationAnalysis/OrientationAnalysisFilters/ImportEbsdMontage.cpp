@@ -106,8 +106,7 @@ void readEbsdFile(ImportEbsdMontage* filter, const QString& fileName, std::map<Q
   QString fname = fi.completeBaseName();
   if(filter->getDataContainerArray()->doesDataContainerExist(fname))
   {
-    filter->setErrorCondition(-74000);
-    QString msg = QString("Error: DataContainer '%1' already exists in the DataContainerArray.").arg(fname);
+    filter->QString msg = QString("Error: DataContainer '%1' already exists in the DataContainerArray.").arg(fname);
     filter->notifyErrorMessage(filter->getHumanLabel(), msg, filter->getErrorCondition());
     return;
   }
@@ -165,7 +164,7 @@ void ImportEbsdMontage::dataCheck()
   {
     ss = QObject::tr("The input directory must be set");
     setErrorCondition(-13);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -74000);
     m_FilterCache.clear();
   }
   bool hasMissingFiles = false;
@@ -190,8 +189,7 @@ void ImportEbsdMontage::dataCheck()
 
     m_FilterCache.clear();
 
-    setErrorCondition(-11);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -11);
     return;
   }
 
@@ -252,7 +250,7 @@ void ImportEbsdMontage::dataCheck()
         if(!getInPreflight())
         {
           QString msg = QString("==> [%1/%2] %3").arg(tilesRead).arg(totalTiles).arg(tile2D.FileName);
-          notifyStatusMessage(getHumanLabel(), msg);
+          notifyStatusMessage("", msg);
         }
       }
     }

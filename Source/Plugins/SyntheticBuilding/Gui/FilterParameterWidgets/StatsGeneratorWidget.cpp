@@ -301,21 +301,19 @@ void StatsGeneratorWidget::beforePreflight()
     {
       if(!sgwidget->getDataHasBeenGenerated())
       {
-        m_Filter->setErrorCondition(-1);
         QString ss = QObject::tr("Statistics data needs to be generated for phase %1 (%2)\n"
                                  "Click the Create Data button to generate the statistics data")
                          .arg(sgwidget->getPhaseIndex())
                          .arg(sgwidget->getTabTitle());
-        m_Filter->notifyErrorMessage(m_Filter->getHumanLabel(), ss, m_Filter->getErrorCondition());
+        m_Filter->notifyErrorMessage("", ss, -1);
       }
       if(sgwidget->getBulkLoadFailure())
       {
-        m_Filter->setErrorCondition(-1);
         QString ss = QObject::tr("A valid angles file is needed to bulk load orientaiton weights and spreads for phase %1 (%2)\n"
                                  "Select an angles file and click the Load Data button to load the orientations")
                          .arg(sgwidget->getPhaseIndex())
                          .arg(sgwidget->getTabTitle());
-        m_Filter->notifyErrorMessage(m_Filter->getHumanLabel(), ss, m_Filter->getErrorCondition());
+        m_Filter->notifyErrorMessage("", ss, -1);
       }
     }
   }

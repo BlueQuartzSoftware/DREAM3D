@@ -153,7 +153,7 @@ public:
     {
 
       filter = filterFactory->create();
-      filter->connect(filter.get(), SIGNAL(messageGenerated(const AbstractMessage&)), &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
+      filter->connect(filter.get(), SIGNAL(messageGenerated(AbstractMessage::Pointer)), &obs, SLOT(processPipelineMessage(AbstractMessage::Pointer)));
 
       QVariant var;
       var.setValue(outputFile);
@@ -581,7 +581,7 @@ public:
 
       cropVolume = filterFactory->create();
       cropVolume->setDataContainerArray(dca);
-      cropVolume->connect(cropVolume.get(), SIGNAL(messageGenerated(const AbstractMessage&)), &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
+      cropVolume->connect(cropVolume.get(), SIGNAL(messageGenerated(AbstractMessage::Pointer)), &obs, SLOT(processPipelineMessage(AbstractMessage::Pointer)));
 
       QVariant var;
       var.setValue(x.getMax());

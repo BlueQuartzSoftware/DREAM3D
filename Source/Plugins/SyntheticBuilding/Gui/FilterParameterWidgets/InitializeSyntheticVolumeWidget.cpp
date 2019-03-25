@@ -56,6 +56,9 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/Messages/AbstractMessageHandler.h"
+#include "SIMPLib/Messages/FilterErrorMessage.h"
+#include "SIMPLib/Messages/FilterWarningMessage.h"
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/StatsData/StatsData.h"
@@ -64,6 +67,32 @@
 #include "SVWidgetsLib/QtSupport/QtSFileUtils.h"
 
 #include "SyntheticBuilding/SyntheticBuildingFilters/InitializeSyntheticVolume.h"
+
+class FilterMessageHandler : public AbstractMessageHandler
+{
+  public:
+    explicit FilterMessageHandler() {}
+
+    /**
+     * @brief processMessage
+     * @param msg
+     */
+    void processMessage(FilterErrorMessage* msg) const override
+    {
+      qDebug() << msg->getClassName() << msg->getCode() << msg->getPrefix() << msg->getMessageText();
+    }
+
+    /**
+     * @brief processMessage
+     * @param msg
+     */
+    void processMessage(FilterWarningMessage* msg) const override
+    {
+      qDebug() << msg->getClassName() << msg->getCode() << msg->getPrefix() << msg->getMessageText();
+    }
+
+  private:
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -212,7 +241,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   // reader->setDataContainerArrayProxy(dcaProxy);
 
   // Connect up to get any errors
-  connect(reader.get(), SIGNAL(messageGenerated(const AbstractMessage&)), this, SLOT(displayErrorMessage(const PipelineMessage&)));
+  connect(reader.get(), SIGNAL(messageGenerated(AbstractMessage::Pointer)), this, SLOT(displayErrorMessage(AbstractMessage::Pointer)));
 
   // Read the structure from file
   DataContainerArrayProxy dcaProxy = reader->readDataContainerArrayStructure(m_InputFile->text());
@@ -246,7 +275,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   reader->setDataContainerArray(dca);
   reader->setInputFile(m_InputFile->text());
   reader->setInputFileDataContainerArrayProxy(dcaProxy);
-  connect(reader.get(), SIGNAL(messageGenerated(const AbstractMessage&)), this, SLOT(displayErrorMessage(const PipelineMessage&)));
+  connect(reader.get(), SIGNAL(messageGenerated(AbstractMessage::Pointer)), this, SLOT(displayErrorMessage(AbstractMessage::Pointer)));
 
   reader->execute();
   int err = reader->getErrorCondition();
@@ -374,10 +403,10 @@ void InitializeSyntheticVolumeWidget::afterPreflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InitializeSyntheticVolumeWidget::displayErrorMessage(const PipelineMessage& msg)
+void InitializeSyntheticVolumeWidget::displayErrorMessage(AbstractMessage::Pointer msg)
 {
-
-  qDebug() << msg.getFilterClassName() << msg.getCode() << msg.getPrefix() << msg.getText();
+  FilterMessageHandler msgHandler;
+  msg->visit(&msgHandler);
 }
 
 // -----------------------------------------------------------------------------

@@ -164,16 +164,14 @@ template <typename DataType> void validateArrayTypes(AbstractFilter* filter, QVe
   {
     if(TemplateHelpers::CanDynamicCast<DataArray<bool>>()(*it))
     {
-      filter->setErrorCondition(-90000);
       QString ss = QObject::tr("Selected Attribute Arrays cannot be of type bool");
-      filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+      filter->notifyErrorMessage("", ss, -90000);
       return;
     }
     if(!TemplateHelpers::CanDynamicCast<DataArray<DataType>>()(*it))
     {
-      filter->setErrorCondition(-90001);
       QString ss = QObject::tr("Selected Attribute Arrays must all be of the same type");
-      filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+      filter->notifyErrorMessage("", ss, -90001);
       return;
     }
   }
@@ -186,27 +184,23 @@ template <typename DataType> void warnOnUnsignedTypes(AbstractFilter* filter, ID
 {
   if(TemplateHelpers::CanDynamicCast<DataArray<uint8_t>>()(ptr))
   {
-    filter->setWarningCondition(-90004);
     QString ss = QObject::tr("Selected Attribute Arrays are of type uint8_t. Using unsigned integer types may result in underflow leading to extremely large values!");
-    filter->notifyWarningMessage(filter->getHumanLabel(), ss, filter->getWarningCondition());
+    filter->notifyWarningMessage("", ss, -90004);
   }
   if(TemplateHelpers::CanDynamicCast<DataArray<uint16_t>>()(ptr))
   {
-    filter->setWarningCondition(-90005);
     QString ss = QObject::tr("Selected Attribute Arrays are of type uint16_t. Using unsigned integer types may result in underflow leading to extremely large values!");
-    filter->notifyWarningMessage(filter->getHumanLabel(), ss, filter->getWarningCondition());
+    filter->notifyWarningMessage("", ss, -90005);
   }
   if(TemplateHelpers::CanDynamicCast<DataArray<uint32_t>>()(ptr))
   {
-    filter->setWarningCondition(-90006);
     QString ss = QObject::tr("Selected Attribute Arrays are of type uint32_t. Using unsigned integer types may result in underflow leading to extremely large values!");
-    filter->notifyWarningMessage(filter->getHumanLabel(), ss, filter->getWarningCondition());
+    filter->notifyWarningMessage("", ss, -90006);
   }
   if(TemplateHelpers::CanDynamicCast<DataArray<uint64_t>>()(ptr))
   {
-    filter->setWarningCondition(-90007);
     QString ss = QObject::tr("Selected Attribute Arrays are of type uint64_t. Using unsigned integer types may result in underflow leading to extremely large values!");
-    filter->notifyWarningMessage(filter->getHumanLabel(), ss, filter->getWarningCondition());
+    filter->notifyWarningMessage("", ss, -90007);
   }
 }
 
@@ -257,9 +251,8 @@ void FindDifferenceMap::dataCheck()
   // Safe to check array component dimensions since we won't get here if the pointers are null
   if(m_FirstInputArrayPtr.lock()->getComponentDimensions() != m_SecondInputArrayPtr.lock()->getComponentDimensions())
   {
-    setErrorCondition(-90003);
     QString ss = QObject::tr("Selected Attribute Arrays must have the same component dimensions");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -90003);
   }
 
   if(getErrorCondition() < 0)

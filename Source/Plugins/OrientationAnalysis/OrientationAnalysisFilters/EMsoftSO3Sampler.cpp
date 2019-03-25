@@ -187,9 +187,8 @@ void EMsoftSO3Sampler::dataCheck()
   {
     if((getPointGroup() < 1) || (getPointGroup() > 32))
     {
-      setWarningCondition(-70001);
       QString ss = QObject::tr("Point group number must fall in interval [1,32]");
-      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+      notifyWarningMessage("", ss, -70001);
     }
   }
 
@@ -198,39 +197,34 @@ void EMsoftSO3Sampler::dataCheck()
   {
     if((getMisOr() < 0.0) || (getMisOr() > 90.0))
     {
-      setWarningCondition(-70002);
       QString ss = QObject::tr("Misorientation angle must fall in interval [0,90]");
-      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+      notifyWarningMessage("", ss, -70002);
     }
     if((getRefOr().x < 0.0) || (getRefOr().x > 360.0f) || (getRefOr().y < 0.0f) || (getRefOr().y > 180.0f) || (getRefOr().z < 0.0f) || (getRefOr().z > 360.0f))
     {
-      setWarningCondition(-70003);
       QString ss = QObject::tr("Euler angles must be positive and less than [360°,180°,360°]");
-      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+      notifyWarningMessage("", ss, -70003);
     }
   }
   if(getsampleModeSelector() == 2)
   {
     if((getMisOrFull() < 0.0) || (getMisOrFull() > 90.0))
     {
-      setWarningCondition(-70004);
       QString ss = QObject::tr("Misorientation angle must fall in interval [0,90]");
-      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+      notifyWarningMessage("", ss, -70004);
     }
     if((getRefOrFull().x < 0.0f) || (getRefOrFull().x > 360.0f) || (getRefOrFull().y < 0.0f) || (getRefOrFull().y > 180.0f) || (getRefOrFull().z < 0.0f) || (getRefOrFull().z > 360.0f))
     {
-      setWarningCondition(-70005);
       QString ss = QObject::tr("Euler angles must be positive and less than [360°,180°,360°]");
-      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+      notifyWarningMessage("", ss, -70005);
     }
   }
 
   // check on the number of sampling intervals (>1)
   if(getNumsp() < 1)
   {
-    setWarningCondition(-70002);
     QString ss = QObject::tr("Number of sampling intervals must be at least 1 ");
-    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+    notifyWarningMessage("", ss, -70002);
   }
 
   QVector<DataArrayPath> dataArraypaths;
@@ -363,7 +357,7 @@ void EMsoftSO3Sampler::execute()
       if(Di > Dc)
       {
         QString ss = QString("Euler Angles | Tested: %1 of %2 | Inside RFZ: %3 ").arg(QString::number(Di), QString::number(Totp), QString::number(Dg));
-        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+        notifyStatusMessage(getMessagePrefix(), ss);
         Dc += Dn;
       }
       if(getCancel())
@@ -499,7 +493,7 @@ void EMsoftSO3Sampler::execute()
       if(Dg > Dc)
       {
         QString ss = QString("Euler Angles | Generated: %1 / %2").arg(QString::number(Dg), QString::number(Totp));
-        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+        notifyStatusMessage(getMessagePrefix(), ss);
         Dc += Dn;
       }
     }
@@ -536,7 +530,7 @@ void EMsoftSO3Sampler::execute()
         if(Dg > Dc)
         {
           QString ss = QString("Euler Angles | Generated: %1 / %2").arg(QString::number(Dg), QString::number(Totp));
-          notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+          notifyStatusMessage(getMessagePrefix(), ss);
           Dc += Dn;
         }
       }

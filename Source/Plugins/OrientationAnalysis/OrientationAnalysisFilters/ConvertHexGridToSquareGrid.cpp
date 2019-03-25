@@ -128,21 +128,18 @@ void ConvertHexGridToSquareGrid::dataCheck()
 
   if(getOutputPath().isEmpty())
   {
-    setErrorCondition(-1003);
-    notifyErrorMessage(getHumanLabel(), "The output directory must be set", getErrorCondition());
+    notifyErrorMessage("", "The output directory must be set", -1003);
   }
   else if(!dir.exists())
   {
-    setWarningCondition(-1004);
     QString ss = QObject::tr("The output directory path does not exist. DREAM.3D will attempt to create this path during execution");
-    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+    notifyWarningMessage("", ss, -1004);
   }
 
   if(m_InputPath.isEmpty())
   {
     ss = QObject::tr("The input directory must be set");
-    setErrorCondition(-13);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -13);
   }
 
   bool hasMissingFiles = false;
@@ -154,8 +151,7 @@ void ConvertHexGridToSquareGrid::dataCheck()
   if(fileList.empty())
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
-    setErrorCondition(-11);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -11);
   }
 }
 
@@ -314,7 +310,7 @@ void ConvertHexGridToSquareGrid::execute()
       progress = static_cast<int32_t>(z - m_ZStartIndex);
       progress = (int32_t)(100.0f * (float)(progress) / total);
       QString msg = "Converting File: " + ebsdFName;
-      notifyStatusMessage(getHumanLabel(), msg.toLatin1().data());
+      notifyStatusMessage("", msg.toLatin1().data());
     }
     if(getCancel())
     {
@@ -335,30 +331,26 @@ void ConvertHexGridToSquareGrid::execute()
       err = reader.readFile();
       if(err < 0 && err != -600)
       {
-        setErrorCondition(reader.getErrorCode());
-        notifyErrorMessage(getHumanLabel(), reader.getErrorMessage(), reader.getErrorCode());
+        notifyErrorMessage("", reader.getErrorMessage(), reader.getErrorCode());
         return;
       }
       if(reader.getGrid().startsWith(Ebsd::Ang::SquareGrid))
       {
         QString ss = QObject::tr("Ang file is already a square grid: %1").arg(ebsdFName);
-        setErrorCondition(-55000);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        notifyErrorMessage("", ss, -55000);
         return;
       }
 
         if(err == -600)
         {
-          setWarningCondition(reader.getErrorCode());
-          notifyWarningMessage(getHumanLabel(), reader.getErrorMessage(), getWarningCondition());
+          notifyWarningMessage("", reader.getErrorMessage(), reader.getErrorCode());
         }
         QString origHeader = reader.getOriginalHeader();
         if(origHeader.isEmpty())
         {
 
           QString ss = QObject::tr("Header could not be retrieved: %1").arg(ebsdFName);
-          setErrorCondition(-55001);
-          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+          notifyErrorMessage("", ss, -55001);
         }
 
         QTextStream in(&origHeader);
@@ -368,8 +360,7 @@ void ConvertHexGridToSquareGrid::execute()
         if(newEbsdFName.compare(ebsdFName) == 0)
         {
           QString msg = QObject::tr("New ang file is the same as the old ang file. Overwriting is NOT allowed");
-          setErrorCondition(-201);
-          notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
+          notifyErrorMessage("", msg, -201);
           return;
         }
 
@@ -385,8 +376,7 @@ void ConvertHexGridToSquareGrid::execute()
         if(!outFile.open(QIODevice::WriteOnly | QIODevice::Text))
         {
           QString msg = QObject::tr("Ang square output file could not be opened for writing: %1").arg(newEbsdFName);
-          setErrorCondition(-200);
-          notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
+          notifyErrorMessage("", msg, -200);
           return;
         }
 
@@ -469,16 +459,14 @@ void ConvertHexGridToSquareGrid::execute()
     else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
     {
       QString ss = QObject::tr("Ctf files are not on a hexagonal grid and do not need to be converted");
-      setErrorCondition(-1);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      notifyErrorMessage("", ss, -1);
       return;
     }
     else
     {
       err = -1;
       QString ss = QObject::tr("The file extension was not detected correctly");
-      setErrorCondition(-1);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      notifyErrorMessage("", ss, -1);
       return;
     }
   }

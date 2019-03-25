@@ -230,8 +230,7 @@ void FindRelativeMotionBetweenSlices::dataCheck()
     if(TemplateHelpers::CanDynamicCast<BoolArrayType>()(m_InDataPtr.lock()))
     {
       QString ss = QObject::tr("Selected array cannot be of type bool.  The path is %1").arg(getSelectedArrayPath().serialize());
-      setErrorCondition(-11001);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      notifyErrorMessage("", ss, -11001);
     }
   }
 
@@ -253,22 +252,19 @@ void FindRelativeMotionBetweenSlices::dataCheck()
   if(image->getXPoints() <= 1 || image->getYPoints() <= 1 || image->getZPoints() <= 1)
   {
     ss = QObject::tr("The Image Geometry is not 3D and cannot be run through this filter. The dimensions are (%1,%2,%3)").arg(image->getXPoints()).arg(image->getYPoints()).arg(image->getZPoints());
-    setErrorCondition(-3000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -3000);
   }
 
   if(getPSize1() <= 0 || getPSize2() <= 0)
   {
     ss = QObject::tr("The patch dimensions (%1, %2) must both be positive numbers").arg(getPSize1()).arg(getPSize2());
-    setErrorCondition(-3001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -3001);
   }
 
   if(getSSize1() <= 0 || getSSize2() <= 0)
   {
     ss = QObject::tr("The search dimensions (%1, %2) must both be positive numbers").arg(getSSize1()).arg(getSSize2());
-    setErrorCondition(-3002);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -3002);
   }
 
   if(getPlane() == 0)
@@ -276,8 +272,7 @@ void FindRelativeMotionBetweenSlices::dataCheck()
     if(getSliceStep() >= static_cast<int64_t>(image->getZPoints()))
     {
       ss = QObject::tr("The Image Geometry extent (%1) is smaller than the supplied slice step (%2)").arg(image->getZPoints()).arg(getSliceStep());
-      setErrorCondition(-3003);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      notifyErrorMessage("", ss, -3003);
     }
   }
 
@@ -286,8 +281,7 @@ void FindRelativeMotionBetweenSlices::dataCheck()
     if(getSliceStep() >= static_cast<int64_t>(image->getYPoints()))
     {
       ss = QObject::tr("The Image Geometry Y extent (%1) is smaller than the supplied slice step (%2)").arg(image->getYPoints()).arg(getSliceStep());
-      setErrorCondition(-3004);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      notifyErrorMessage("", ss, -3004);
     }
   }
 
@@ -296,8 +290,7 @@ void FindRelativeMotionBetweenSlices::dataCheck()
     if(getSliceStep() >= static_cast<int64_t>(image->getXPoints()))
     {
       ss = QObject::tr("The Image Geometry X extent (%1) is smaller than the supplied slice step (%2)").arg(image->getXPoints()).arg(getSliceStep());
-      setErrorCondition(-3005);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      notifyErrorMessage("", ss, -3005);
     }
   }
 }
@@ -479,8 +472,7 @@ void FindRelativeMotionBetweenSlices::execute()
   if(nullptr == patchPoints || nullptr == searchPoints || nullptr == validPoints)
   {
     QString ss = QObject::tr("Unable to establish search space for supplied parameters");
-    setErrorCondition(-11001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -11001);
     return;
   }
 
@@ -657,8 +649,7 @@ void FindRelativeMotionBetweenSlices::execute()
   else
   {
     QString ss = QObject::tr("Selected array is of unsupported type. The type is %1").arg(m_InDataPtr.lock()->getTypeAsString());
-    setErrorCondition(-3007);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -3007);
     return;
   }
 

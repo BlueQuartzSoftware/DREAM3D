@@ -47,6 +47,7 @@
 #include "EMMPMLib/Core/EMMPM.h"
 #include "EMMPMLib/Common/StatsDelegate.h"
 
+class EMCalculationMessageHandler;
 
 /**
  * @class EMCalculation EMCalculation Common/CurvatureEM.h
@@ -65,6 +66,8 @@ class EMMPMLib_EXPORT EMCalculation : public Observable
     SIMPL_TYPE_MACRO(EMCalculation)
 
     virtual ~EMCalculation();
+
+    friend EMCalculationMessageHandler;
 
     SIMPL_INSTANCE_PROPERTY(EMMPM_Data::Pointer, Data)
     SIMPL_POINTER_PROPERTY(StatsDelegate, StatsDelegate)

@@ -179,15 +179,13 @@ void WriteStatsGenOdfAngleFile::dataCheck()
   if(getWeight() < 1.0f)
   {
     ss = QObject::tr("The default 'Weight' value should be at least 1.0. Undefined results will occur from this filter.");
-    setErrorCondition(-94002);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -94002);
   }
 
   if(getSigma() < 1)
   {
     ss = QObject::tr("The default 'Sigma' value should be at least 1. Undefined results will occur from this filter.");
-    setErrorCondition(-94003);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -94003);
   }
 
   QVector<size_t> cDims(1, 1);
@@ -269,8 +267,7 @@ void WriteStatsGenOdfAngleFile::execute()
   {
     QString ss;
     ss = QObject::tr("Error creating parent path '%1'").arg(dir.path());
-    setErrorCondition(-45001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -45001);
     return;
   }
 
@@ -286,21 +283,20 @@ void WriteStatsGenOdfAngleFile::execute()
     if(lineCount == 0)
     {
       QString ss = QObject::tr("No valid data for phase '%1'. No ODF Angle file written for phase.").arg(*iter);
-      notifyWarningMessage(getHumanLabel(), ss, 0);
+      notifyWarningMessage("", ss, 0);
       continue;
     }
 
     QString ss = QObject::tr("Writing file for phase '%1'").arg(*iter);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage("", ss);
 
     QString absFilePath = absPath + "/" + fname + "_Phase_" + QString::number(*iter) + "." + suffix;
 
     QFile file(absFilePath);
     if(!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate))
     {
-      setErrorCondition(-99000);
       QString ss = QObject::tr("Error creating output file '%1'").arg(absFilePath);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      notifyErrorMessage("", ss, -99000);
       return;
     }
 
@@ -309,9 +305,8 @@ void WriteStatsGenOdfAngleFile::execute()
     int err = writeOutputFile(out, lineCount, totalPoints, *iter);
     if(err < 0)
     {
-      setErrorCondition(-99001);
       QString ss = QObject::tr("Error writing output file '%1'").arg(absFilePath);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      notifyErrorMessage("", ss, -99001);
       return;
     }
     out.flush();

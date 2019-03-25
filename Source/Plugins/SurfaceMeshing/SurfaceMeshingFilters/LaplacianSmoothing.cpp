@@ -212,7 +212,7 @@ void LaplacianSmoothing::execute()
 
   if(err < 0)
   {
-    notifyErrorMessage(getHumanLabel(), "Error smoothing the surface mesh", getErrorCondition());
+    notifyErrorMessage("", "Error smoothing the surface mesh", err);
     return;
   }
 
@@ -276,8 +276,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
   err = generateLambdaArray();
   if(err < 0)
   {
-    setErrorCondition(-557);
-    notifyErrorMessage(getHumanLabel(), "Error generating the lambda array", getErrorCondition());
+    notifyErrorMessage("", "Error generating the lambda array", -557);
     return err;
   }
 
@@ -292,8 +291,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
   }
   if(err < 0)
   {
-    setErrorCondition(-560);
-    notifyErrorMessage(getHumanLabel(), "Error retrieving the shared edge list", getErrorCondition());
+    notifyErrorMessage("", "Error retrieving the shared edge list", -560);
     return getErrorCondition();
   }
 
@@ -317,7 +315,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
       return -1;
     }
     QString ss = QObject::tr("Iteration %1 of %2").arg(q).arg(m_IterationSteps);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), ss);
     // Compute the Deltas for each point
     for(int64_t i = 0; i < nedges; i++)
     {
@@ -363,7 +361,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
         return -1;
       }
       QString ss = QObject::tr("Iteration %1 of %2").arg(q).arg(m_IterationSteps);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyStatusMessage(getMessagePrefix(), ss);
       // Compute the Delta's
       for(int64_t i = 0; i < nedges; i++)
       {
@@ -419,9 +417,8 @@ void LaplacianSmoothing::writeVTKFile(const QString& outputVtkFile)
   vtkFile = fopen(outputVtkFile.toLatin1().data(), "wb");
   if (nullptr == vtkFile)
   {
-    setErrorCondition(-90123);
-    QString ss = QObject::tr("Error creating file '%1'").arg(outputVtkFile);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        QString ss = QObject::tr("Error creating file '%1'").arg(outputVtkFile);
+    notifyErrorMessage("", ss, -90123);
     return;
   }
   Detail::ScopedFileMonitor vtkFileMonitor(vtkFile);

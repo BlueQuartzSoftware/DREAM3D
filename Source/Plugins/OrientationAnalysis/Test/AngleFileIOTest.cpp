@@ -124,7 +124,7 @@ public:
     filter = filterFactory->create();
     DREAM3D_REQUIRE_VALID_POINTER(filter.get())
     filter->setDataContainerArray(dca);
-    filter->connect(filter.get(), SIGNAL(messageGenerated(const AbstractMessage&)), &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
+    filter->connect(filter.get(), SIGNAL(messageGenerated(AbstractMessage::Pointer)), &obs, SLOT(processPipelineMessage(AbstractMessage::Pointer)));
 
     QVariant var;
     bool propWasSet = filter->setProperty("OutputFile", UnitTest::AngleFileIOTest::OutputFile);

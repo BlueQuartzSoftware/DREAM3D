@@ -171,7 +171,7 @@ public:
     // manually. Normally the Pipeline Object would do this for us. We are NOT using a Pipeline Object because using the
     // Pipeline Object would over write the DataContainer Array that we have created with a blank one thus defeating the
     // entire purpose of the test.
-    QObject::connect(writer.get(), SIGNAL(messageGenerated(const AbstractMessage&)), &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
+    QObject::connect(writer.get(), SIGNAL(messageGenerated(AbstractMessage::Pointer)), &obs, SLOT(processPipelineMessage(AbstractMessage::Pointer)));
 
     writer->execute();
     int err = writer->getErrorCondition();

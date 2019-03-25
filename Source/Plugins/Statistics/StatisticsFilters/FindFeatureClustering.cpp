@@ -307,7 +307,7 @@ void FindFeatureClustering::find_clustering()
       if(i % 1000 == 0)
       {
         QString ss = QObject::tr("Working on Feature %1 of %2").arg(i).arg(totalPPTfeatures);
-        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+        notifyStatusMessage(getMessagePrefix(), ss);
       }
 
       x = m_Centroids[3 * i];

@@ -201,14 +201,12 @@ void PhReader::dataCheck()
   if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -387);
   }
   else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
-    setErrorCondition(-388);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -388);
   }
 
   if(!getInputFile().isEmpty() && fi.exists())
@@ -236,9 +234,8 @@ void PhReader::dataCheck()
       m_InStream = fopen(getInputFile().toLatin1().data(), "r");
       if(m_InStream == nullptr)
       {
-        setErrorCondition(-48802);
         QString ss = QObject::tr("Error opening input file '%1'").arg(getInputFile());
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        notifyErrorMessage("", ss, -48802);
         return;
       }
       int32_t error = readHeader();
@@ -246,9 +243,8 @@ void PhReader::dataCheck()
       m_InStream = nullptr;
       if(error < 0)
       {
-        setErrorCondition(error);
         QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file");
-        notifyErrorMessage(getHumanLabel(), ss, -48010);
+        notifyErrorMessage("", ss, error);
       }
 
       // Set the file path and time stamp into the cache
@@ -305,9 +301,8 @@ void PhReader::execute()
   m_InStream = fopen(getInputFile().toLatin1().data(), "r");
   if(m_InStream == nullptr)
   {
-    setErrorCondition(-48030);
     QString ss = QObject::tr("Error opening input file '%1'").arg(getInputFile());
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -48030);
     return;
   }
 
@@ -389,8 +384,7 @@ int32_t PhReader::readFile()
     {
       fclose(m_InStream);
       m_InStream = nullptr;
-      setErrorCondition(-48040);
-      notifyErrorMessage(getHumanLabel(), "Error reading Ph data", getErrorCondition());
+      notifyErrorMessage("", "Error reading Ph data", -48040);
       return getErrorCondition();
     }
   }

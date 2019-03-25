@@ -292,8 +292,7 @@ void ScalarSegmentFeatures::dataCheck()
     if(m_InputDataPtr.lock()->getNumberOfComponents() != 1)
     {
       QString ss = QObject::tr("The selected array is not a scalar array. The number of components is %1").arg(m_InputDataPtr.lock()->getNumberOfComponents());
-      setErrorCondition(-3011);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      notifyErrorMessage("", ss, -3011);
     }
   }
   if(getErrorCondition() >= 0)
@@ -344,7 +343,7 @@ void ScalarSegmentFeatures::preflight()
 // -----------------------------------------------------------------------------
 void ScalarSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures)
 {
-  notifyStatusMessage(getHumanLabel(), "Randomizing Feature Ids");
+  notifyStatusMessage("", "Randomizing Feature Ids");
   // Generate an even distribution of numbers between the min and max range
   const int64_t rangeMin = 1;
   const int64_t rangeMax = totalFeatures - 1;
@@ -533,8 +532,7 @@ void ScalarSegmentFeatures::execute()
   int64_t totalFeatures = static_cast<int64_t>(m_ActivePtr.lock()->getNumberOfTuples());
   if(totalFeatures < 2)
   {
-    setErrorCondition(-87000);
-    notifyErrorMessage(getHumanLabel(), "The number of Features was 0 or 1 which means no Features were detected. A threshold value may be set too high", getErrorCondition());
+    notifyErrorMessage("", "The number of Features was 0 or 1 which means no Features were detected. A threshold value may be set too high", -87000);
     return;
   }
   

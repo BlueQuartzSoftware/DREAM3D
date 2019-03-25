@@ -69,7 +69,7 @@
   if(m_##var <= 0)                                                                                                                                                                                     \
   {                                                                                                                                                                                                    \
     QString ss = QObject::tr("%1 must be positive").arg(#var);                                                                                                                                         \
-    notifyErrorMessage(getHumanLabel(), ss, errCond);                                                                                                                                                  \
+    notifyErrorMessage("", ss, errCond);                                                                                                                                                               \
   }
 
 // -----------------------------------------------------------------------------
@@ -297,8 +297,7 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
   {
     QString ss =
         QObject::tr("Phase types array could not be downcast using std::dynamic_pointer_cast<T> when estimating the number of grains. The path is %1").arg(getInputPhaseTypesArrayPath().serialize());
-    setErrorCondition(-11002);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -11002);
     return "0";
   }
 
@@ -308,7 +307,7 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
   {
     QString ss =
         QObject::tr("Statistics array could not be downcast using std::dynamic_pointer_cast<T> when estimating the number of grains. The path is %1").arg(getInputStatsArrayPath().serialize());
-    notifyErrorMessage(getHumanLabel(), ss, -11001);
+    notifyErrorMessage("", ss, -11001);
     return "0";
   }
 
@@ -360,8 +359,7 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
                                  "pointer but this resulted in a nullptr pointer.\n")
                          .arg(phase)
                          .arg(phase);
-        setErrorCondition(-666);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        notifyErrorMessage("", ss, -666);
         return "-1";
       }
       while(!volgood)

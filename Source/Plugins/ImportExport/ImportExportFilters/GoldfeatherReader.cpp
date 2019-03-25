@@ -224,14 +224,12 @@ void GoldfeatherReader::dataCheck()
   if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -387);
   }
   else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
-    setErrorCondition(-388);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -388);
   }
 
   SharedVertexList::Pointer sharedVertList = TriangleGeom::CreateSharedVertexList(0);
@@ -334,8 +332,7 @@ void GoldfeatherReader::execute()
   FILE* f = fopen(m_InputFile.toLatin1().data(), "r");
   if(nullptr == f)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage(getHumanLabel(), "Error opening Input file", getErrorCondition());
+    notifyErrorMessage("", "Error opening Input file", -999);
     return;
   }
   ScopedFileMonitor fileMonitor(f);
@@ -381,8 +378,7 @@ void GoldfeatherReader::execute()
   err = fscanf(f, "%d\n", &nTriangles);
   if(err < 0)
   {
-    setErrorCondition(-876);
-    notifyErrorMessage(getHumanLabel(), "Error Reading the number of Triangles from the file.", getErrorCondition());
+    notifyErrorMessage("", "Error Reading the number of Triangles from the file.", -876);
     return;
   }
 

@@ -160,9 +160,8 @@ void ComputeFeatureRect::execute()
 
         if(featureId >= corners->getNumberOfTuples())
         {
-          setErrorCondition(-31000);
           QString ss = QObject::tr("The feature attribute matrix '%1' has a smaller tuple count than the maximum feature id in '%2'").arg(featureAM->getName()).arg(cellFeatureIds->getName());
-          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+          notifyErrorMessage("", ss, -31000);
           return;
         }
 

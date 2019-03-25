@@ -137,8 +137,7 @@ void MinNeighbors::dataCheck()
   if(getMinNumNeighbors() < 0)
   {
     QString ss = QObject::tr("The minimum number of neighbors (%1) must be 0 or positive").arg(getMinNumNeighbors());
-    setErrorCondition(-5555);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -5555);
   }
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
@@ -199,8 +198,7 @@ void MinNeighbors::dataCheck()
     }
   }
 
-  setWarningCondition(-5556);
-  notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+  notifyWarningMessage("", ss, -5556);
 }
 
 // -----------------------------------------------------------------------------
@@ -251,8 +249,7 @@ void MinNeighbors::execute()
     if(unavailablePhase)
     {
       QString ss = QObject::tr("The phase number (%1) is not available in the supplied Feature phases array with path (%2)").arg(m_PhaseNumber).arg(m_FeaturePhasesArrayPath.serialize());
-      setErrorCondition(-5555);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      notifyErrorMessage("", ss, -5555);
       return;
     }
   }
@@ -477,8 +474,7 @@ QVector<bool> MinNeighbors::merge_containedfeatures()
   }
   if(!good)
   {
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), "The minimum number of neighbors is larger than the Feature with the most neighbors.  All Features would be removed", getErrorCondition());
+    notifyErrorMessage("", "The minimum number of neighbors is larger than the Feature with the most neighbors.  All Features would be removed", -1);
     return activeObjects;
   }
   for(size_t i = 0; i < totalPoints; i++)

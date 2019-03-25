@@ -123,8 +123,7 @@ void LammpsFileWriter::dataCheck()
   // We MUST have Nodes
   if(nullptr == vertices->getVertices().get())
   {
-    setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), "VertexDataContainer missing Nodes", getErrorCondition());
+    notifyErrorMessage("", "VertexDataContainer missing Nodes", -384);
   }
 }
 
@@ -166,8 +165,7 @@ void LammpsFileWriter::execute()
   if(nullptr == lammpsFile)
   {
     QString ss = QObject::tr(": Error creating LAMMPS output file '%1'").arg(getLammpsFile());
-    setErrorCondition(-11000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -11000);
     return;
   }
 

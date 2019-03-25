@@ -54,6 +54,7 @@
 // SIMPLib includes
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
+#include "SIMPLib/Messages/PipelineErrorMessage.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/PluginManager.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
@@ -171,7 +172,7 @@ int main(int argc, char* argv[])
   SIMPLibPluginLoader::LoadPluginFilters(fm);
 #endif
   // Send progress messages from PipelineBuilder to this object for display
-  qRegisterMetaType<PipelineMessage>();
+  qRegisterMetaType<PipelineErrorMessage::Pointer>();
 
   std::list<QDir> dirs;
   //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPL/Source"));

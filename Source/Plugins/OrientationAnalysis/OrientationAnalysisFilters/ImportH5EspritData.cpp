@@ -278,8 +278,7 @@ void ImportH5EspritData::dataCheckOEM()
   if(manufacturer != Ebsd::OEM::Bruker && manufacturer != Ebsd::OEM::DREAM3D)
   {
     QString ss = QObject::tr("The manufacturer is not recognized as a valid entry.");
-    setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -384);
     return;
   }
 
@@ -319,8 +318,7 @@ void ImportH5EspritData::dataCheckOEM()
   int32_t err = reader->readScanNames(scanNames);
   if(err < 0)
   {
-    setErrorCondition(reader->getErrorCode());
-    notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+    notifyErrorMessage("", reader->getErrorMessage(), reader->getErrorCode());
     return;
   }
   setFileScanNames(scanNames);
@@ -359,9 +357,8 @@ void ImportH5EspritData::dataCheckOEM()
   }
   else
   {
-    setErrorCondition(-996);
     QString ss = QObject::tr("At least one scan must be chosen.  Please select a scan from the list.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -996);
     return;
   }
 
@@ -429,9 +426,8 @@ void ImportH5EspritData::dataCheckOEM()
     }
     else
     {
-      setErrorCondition(-998);
       QString ss = QObject::tr("The filter parameter 'Read Pattern Data' has been enabled but there does not seem to be any pattern data in the file for the scan name selected");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      notifyErrorMessage("", ss, -998);
     }
   }
 
@@ -462,8 +458,7 @@ void ImportH5EspritData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, 
       int err = reader->readHeaderOnly();
       if(err < 0)
       {
-        setErrorCondition(err);
-        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+        notifyErrorMessage("", reader->getErrorMessage(), err);
         setFileWasRead(false);
         return;
       }
@@ -474,9 +469,8 @@ void ImportH5EspritData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, 
       int32_t err = reader->readFile();
       if(err < 0)
       {
-        setErrorCondition(err);
-        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
-        notifyErrorMessage(getHumanLabel(), "H5OIMReader could not read the .h5 file.", getErrorCondition());
+        notifyErrorMessage("", reader->getErrorMessage(), err);
+        notifyErrorMessage("", "H5OIMReader could not read the .h5 file.", err);
         return;
       }
     }
@@ -542,8 +536,7 @@ int32_t ImportH5EspritData::loadMaterialInfo(EbsdReader* ebsdReader)
   QVector<EspritPhase::Pointer> phases = getFileCacheData().phases;
   if(phases.empty())
   {
-    setErrorCondition(reader->getErrorCode());
-    notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), getErrorCondition());
+    notifyErrorMessage("", reader->getErrorMessage(), reader->getErrorCode());
     return getErrorCondition();
   }
 

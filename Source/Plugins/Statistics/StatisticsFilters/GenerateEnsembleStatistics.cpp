@@ -591,14 +591,12 @@ void GenerateEnsembleStatistics::dataCheck()
 
   if(m_PhaseTypeData.empty())
   {
-    setErrorCondition(-1000);
-    notifyErrorMessage(getHumanLabel(), "The phase type array must contain at least one member. An Ensemble Attribute Matrix must be selected", getErrorCondition());
+    notifyErrorMessage("", "The phase type array must contain at least one member. An Ensemble Attribute Matrix must be selected", -1000);
     return;
   }
   if(m_PhaseTypeData.size() == 1 && m_PhaseTypeData[0] == PhaseType::Type::Unknown)
   {
-    setErrorCondition(-1001);
-    notifyErrorMessage(getHumanLabel(), "The phase type array must contain at least one member. An Ensemble Attribute Matrix must be selected", getErrorCondition());
+    notifyErrorMessage("", "The phase type array must contain at least one member. An Ensemble Attribute Matrix must be selected", -1001);
     return;
   }
 
@@ -630,23 +628,19 @@ void GenerateEnsembleStatistics::dataCheck()
 
   if(m_SizeDistributionFitType != SIMPL::DistributionType::LogNormal)
   {
-    setWarningCondition(-1000);
-    notifyWarningMessage(getHumanLabel(), "The size distribution needs to be a lognormal distribution otherwise unpredictable results may occur", getWarningCondition());
+    notifyWarningMessage("", "The size distribution needs to be a lognormal distribution otherwise unpredictable results may occur", -1000);
   }
   if(m_AspectRatioDistributionFitType != SIMPL::DistributionType::Beta)
   {
-    setWarningCondition(-1000);
-    notifyWarningMessage(getHumanLabel(), "The aspect ratio distribution needs to be a beta distribution otherwise unpredictable results may occur", getWarningCondition());
+    notifyWarningMessage("", "The aspect ratio distribution needs to be a beta distribution otherwise unpredictable results may occur", -1000);
   }
   if(m_Omega3DistributionFitType != SIMPL::DistributionType::Beta)
   {
-    setWarningCondition(-1000);
-    notifyWarningMessage(getHumanLabel(), "The Omega3 distribution needs to be a beta distribution otherwise unpredictable results may occur", getWarningCondition());
+    notifyWarningMessage("", "The Omega3 distribution needs to be a beta distribution otherwise unpredictable results may occur", -1000);
   }
   if(m_NeighborhoodDistributionFitType != SIMPL::DistributionType::LogNormal)
   {
-    setWarningCondition(-1000);
-    notifyWarningMessage(getHumanLabel(), "The neighborhood distribution type needs to be a lognormal distribution otherwise unpredictable results may occur", getWarningCondition());
+    notifyWarningMessage("", "The neighborhood distribution type needs to be a lognormal distribution otherwise unpredictable results may occur", -1000);
   }
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
@@ -1409,14 +1403,13 @@ void GenerateEnsembleStatistics::execute()
   {
     if(static_cast<int32_t>(m_PhaseTypeData.size()) < totalEnsembles)
     {
-      setErrorCondition(-3013);
-      notifyErrorMessage(getHumanLabel(), "The number of phase types entered is less than the number of Ensembles", -999);
+      notifyErrorMessage("", "The number of phase types entered is less than the number of Ensembles", -3013);
       return;
     }
     if(static_cast<int32_t>(m_PhaseTypeData.size()) > totalEnsembles)
     {
       QString ss = QObject::tr("The number of phase types entered is more than the number of Ensembles. Only the first %1 will be used").arg(totalEnsembles - 1);
-      notifyErrorMessage(getHumanLabel(), ss, -3014);
+      notifyErrorMessage("", ss, -3014);
     }
     for(int32_t r = 0; r < totalEnsembles; ++r)
     {

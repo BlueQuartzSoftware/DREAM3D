@@ -45,6 +45,8 @@
 
 #include "EMMPM/EMMPMDLLExport.h"
 
+class EMMPMFilterMessageHandler;
+
 /**
  * @brief The EMMPMFilter class. See [Filter documentation](@ref emmpmfilter) for details.
  */
@@ -74,6 +76,8 @@ public:
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(EMMPMFilter, AbstractFilter)
 
   ~EMMPMFilter() override;
+
+  friend EMMPMFilterMessageHandler;
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, InputDataArrayPath)
   Q_PROPERTY(DataArrayPath InputDataArrayPath READ getInputDataArrayPath WRITE setInputDataArrayPath)
@@ -251,6 +255,12 @@ protected:
    * @param prevSigma
    */
   void setPreviousSigma(std::vector<float> prevSigma);
+
+  /**
+   * @brief handleEmmpmMessage
+   * @param msg
+   */
+  virtual void handleEmmpmMessage(AbstractMessage::Pointer msg);
 
 private:
   DEFINE_DATAARRAY_VARIABLE(uint8_t, InputImage)

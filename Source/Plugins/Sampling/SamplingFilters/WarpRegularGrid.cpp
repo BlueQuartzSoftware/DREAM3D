@@ -254,7 +254,7 @@ void WarpRegularGrid::execute()
   for(size_t i = 0; i < dims[2]; i++)
   {
     QString ss = QObject::tr("Warping Data - %1 Percent Complete").arg(((float)i / dims[2]) * 100);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), ss);
     for(size_t j = 0; j < dims[1]; j++)
     {
       for(size_t k = 0; k < dims[0]; k++)

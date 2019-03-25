@@ -37,6 +37,12 @@
 #include <cstdlib>
 #include <cstring>
 
+#include "SIMPLib/Messages/AbstractMessageHandler.h"
+#include "SIMPLib/Messages/GenericProgressMessage.h"
+#include "SIMPLib/Messages/GenericStatusMessage.h"
+#include "SIMPLib/Messages/GenericErrorMessage.h"
+#include "SIMPLib/Messages/GenericWarningMessage.h"
+
 #include "EMMPMLib/Common/EMMPM_Math.h"
 #include "EMMPMLib/Common/EMTime.h"
 #include "EMMPMLib/Common/MSVCDefines.h"
@@ -44,6 +50,47 @@
 #include "EMMPMLib/Core/EMMPMUtilities.h"
 #include "EMMPMLib/Core/InitializationFunctions.h"
 #include "EMMPMLib/EMMPMLib.h"
+
+class EMMPMMessageHandler : public AbstractMessageHandler
+{
+  public:
+    explicit EMMPMMessageHandler(EMMPM* emmpmObj) : m_EmmpmObject(emmpmObj) {}
+
+    /**
+     * @brief Handle incoming GenericProgressMessages
+     */
+    void processMessage(GenericProgressMessage* msg) const override
+    {
+      emit m_EmmpmObject->notifyProgressMessage(msg->getPrefix(), msg->getMessageText(), msg->getProgressValue());
+    }
+
+    /**
+     * @brief Handle incoming GenericStatusMessages
+     */
+    void processMessage(GenericStatusMessage* msg) const override
+    {
+      emit m_EmmpmObject->notifyStatusMessage(msg->getPrefix(), msg->getMessageText());
+    }
+
+    /**
+     * @brief Handle incoming GenericErrorMessages
+     */
+    void processMessage(GenericErrorMessage* msg) const override
+    {
+      emit m_EmmpmObject->notifyErrorMessage(msg->getPrefix(), msg->getMessageText(), msg->getCode());
+    }
+
+    /**
+     * @brief Handle incoming GenericWarningMessages
+     */
+    void processMessage(GenericWarningMessage* msg) const override
+    {
+      emit m_EmmpmObject->notifyWarningMessage(msg->getPrefix(), msg->getMessageText(), msg->getCode());
+    }
+
+  private:
+    EMMPM* m_EmmpmObject = nullptr;
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -199,8 +246,7 @@ void EMMPM::execute()
 
     if(data->ccost == nullptr)
     {
-      setErrorCondition(-55100);
-      notifyErrorMessage(getHumanLabel(), "Error Allocating Curvature Variables Memory", getErrorCondition());
+      notifyErrorMessage("", "Error Allocating Curvature Variables Memory", -55100);
       return;
     }
   }
@@ -217,8 +263,7 @@ void EMMPM::execute()
 
     if(data->ns == nullptr || data->ew == nullptr || data->nw == nullptr || data->sw == nullptr)
     {
-      setErrorCondition(-55000);
-      notifyErrorMessage(getHumanLabel(), "Error Allocating Gradient Variables Memory", getErrorCondition());
+      notifyErrorMessage("", "Error Allocating Gradient Variables Memory", -55000);
       return;
     }
   }
@@ -252,10 +297,12 @@ void EMMPM::execute()
   EMCalculation::Pointer em = EMCalculation::New();
   em->setData(getData());
   em->setStatsDelegate(getStatsDelegate());
-  em->setMessagePrefix(getMessagePrefix());
 
   // Connect up the Error/Warning/Progress object so the filter can report those things
-  connect(em.get(), SIGNAL(messageGenerated(const AbstractMessage&)), this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+  connect(em.get(), &EMCalculation::messageGenerated, [=] (AbstractMessage::Pointer msg) {
+    EMMPMMessageHandler msgHandler(this);
+    msg->visit(&msgHandler);
+  });
 
   em->execute();
 

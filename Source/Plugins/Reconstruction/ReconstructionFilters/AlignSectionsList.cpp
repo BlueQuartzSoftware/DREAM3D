@@ -119,14 +119,12 @@ void AlignSectionsList::dataCheck()
   if(m_InputFile.isEmpty())
   {
     ss = QObject::tr("The input file must be set for property %1").arg("InputFile");
-    setErrorCondition(-15000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -15000);
   }
   if(!fi.exists())
   {
     ss = QObject::tr("The input file does not exist: '%1'").arg(getInputFile());
-    setErrorCondition(-15001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -15001);
   }
 
   DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer(this, getDataContainerName(), false);
@@ -134,8 +132,7 @@ void AlignSectionsList::dataCheck()
   if(nullptr == geom.get())
   {
     QString ss = QObject::tr("DataContainer '%1' does not have an ImageGeometry").arg(getDataContainerName());
-    setErrorCondition(-15002);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -15002);
     return;
   }
   Q_UNUSED(dc)

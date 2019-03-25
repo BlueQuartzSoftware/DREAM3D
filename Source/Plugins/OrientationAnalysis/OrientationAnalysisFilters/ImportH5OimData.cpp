@@ -195,8 +195,7 @@ void ImportH5OimData::dataCheck()
   if(m_InputFile.isEmpty())
   {
     QString ss = QObject::tr("The input file must be set for property %1").arg("InputFile");
-    setErrorCondition(-380);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
+    notifyErrorMessage("", ss, -1);
     return;
   }
 
@@ -205,16 +204,14 @@ void ImportH5OimData::dataCheck()
   if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist: '%1'").arg(getInputFile());
-    setErrorCondition(-381);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -380);
     return;
   }
 
   if(fi.suffix() != Ebsd::H5OIM::H5FileExt)
   {
-    setErrorCondition(-997);
     QString ss = QObject::tr("The file extension '%1' was not recognized. The reader only recognizes the .h5 file extension").arg(fi.suffix());
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -997);
     return;
   }
 
@@ -222,8 +219,7 @@ void ImportH5OimData::dataCheck()
   if(m_ZSpacing <= 0)
   {
     QString ss = QObject::tr("The Z Spacing field contains a value that is non-positive.  The Z Spacing field must be set to a positive value.");
-    setErrorCondition(-382);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -382);
     return;
   }
 
@@ -281,7 +277,7 @@ void ImportH5OimData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, QVe
       if(err < 0)
       {
         setErrorCondition(err);
-        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+        notifyErrorMessage("", reader->getErrorMessage(), err);
         m_FileWasRead = false;
         return;
       }
@@ -294,8 +290,8 @@ void ImportH5OimData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, QVe
       if(err < 0)
       {
         setErrorCondition(err);
-        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
-        notifyErrorMessage(getHumanLabel(), "H5OIMReader could not read the .h5 file.", getErrorCondition());
+        notifyErrorMessage("", reader->getErrorMessage(), err);
+        notifyErrorMessage("", "H5OIMReader could not read the .h5 file.", -381);
         return;
       }
     }
@@ -361,8 +357,7 @@ int32_t ImportH5OimData::loadMaterialInfo(EbsdReader* ebsdReader)
   QVector<AngPhase::Pointer> phases = getData().phases;
   if(phases.empty())
   {
-    setErrorCondition(reader->getErrorCode());
-    notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), getErrorCondition());
+    notifyErrorMessage("", reader->getErrorMessage(), reader->getErrorCode());
     return getErrorCondition();
   }
 
@@ -729,8 +724,7 @@ void ImportH5OimData::dataCheckOEM()
   if(manfacturer != Ebsd::OEM::EDAX)
   {
     QString ss = QObject::tr("The manufacturer is not recognized as a valid entry.");
-    setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -384);
     return;
   }
 
@@ -771,7 +765,7 @@ void ImportH5OimData::dataCheckOEM()
   if(err < 0)
   {
     setErrorCondition(reader->getErrorCode());
-    notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+    notifyErrorMessage("", reader->getErrorMessage(), err);
     return;
   }
   setFileScanNames(scanNames);
@@ -803,9 +797,8 @@ void ImportH5OimData::dataCheckOEM()
   }
   else
   {
-    setErrorCondition(-996);
     QString ss = QObject::tr("At least one scan must be chosen.  Please select a scan from the list.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -996);
     return;
   }
 
@@ -863,9 +856,8 @@ void ImportH5OimData::dataCheckOEM()
     }
     else
     {
-      setErrorCondition(-998);
       QString ss = QObject::tr("The filter parameter 'Read Pattern Data' has been enabled but there does not seem to be any pattern data in the file for the scan name selected");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      notifyErrorMessage("", ss, -998);
     }
   }
 

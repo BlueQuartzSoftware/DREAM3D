@@ -308,9 +308,8 @@ void DetectEllipsoids::execute()
 
           if(featureId >= corners->getNumberOfTuples())
           {
-            setErrorCondition(-31000);
             QString ss = QObject::tr("The feature attribute matrix '%1' has a smaller tuple count than the maximum feature id in '%2'").arg(featureAM->getName()).arg(cellFeatureIds->getName());
-            notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+            notifyErrorMessage("", ss, -31000);
             return;
           }
 
@@ -362,9 +361,8 @@ void DetectEllipsoids::execute()
 
     if(orientArray->getNumberOfTuples() != houghCircleVector.size())
     {
-      setErrorCondition(-31001);
       QString ss = QObject::tr("There was an internal error.  Please ask the DREAM.3D developers for more information.");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      notifyErrorMessage("", ss, -31001);
     }
 
     // This convolution function fills the convCoords_X, convCoords_Y, and convCoords_Z arrays with values
@@ -393,7 +391,7 @@ void DetectEllipsoids::execute()
     Int32ArrayType::Pointer smoothOffsetArray = createOffsetArray(smooth_tDims);
 
     QString ss = QObject::tr("0/%2").arg(m_TotalNumberOfFeatures);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), ss);
 
     m_MaxFeatureId = m_TotalNumberOfFeatures;
 
@@ -1375,7 +1373,7 @@ void DetectEllipsoids::notifyFeatureCompleted(int featureId, int threadIndex)
   m_ThreadWork[threadIndex]++;
   m_FeaturesCompleted++;
   QString ss = QObject::tr("[%1/%2] Completed:").arg(m_FeaturesCompleted).arg(m_TotalNumberOfFeatures);
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+  notifyStatusMessage(getMessagePrefix(), ss);
   m_FeaturesCompletedSem.release();
 }
 

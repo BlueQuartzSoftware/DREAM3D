@@ -57,9 +57,55 @@
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Messages/AbstractMessageHandler.h"
+#include "SIMPLib/Messages/GenericProgressMessage.h"
+#include "SIMPLib/Messages/GenericStatusMessage.h"
+#include "SIMPLib/Messages/GenericErrorMessage.h"
+#include "SIMPLib/Messages/GenericWarningMessage.h"
 #include "SIMPLib/SIMPLibVersion.h"
 
 #include "EMMPM/EMMPMVersion.h"
+
+class EMMPMFilterMessageHandler : public AbstractMessageHandler
+{
+  public:
+    explicit EMMPMFilterMessageHandler(EMMPMFilter* filter) : m_Filter(filter) {}
+
+    /**
+     * @brief Handle incoming GenericProgressMessages
+     */
+    void processMessage(GenericProgressMessage* msg) const override
+    {
+      emit m_Filter->notifyProgressMessage(msg->getPrefix(), msg->getMessageText(), msg->getProgressValue());
+    }
+
+    /**
+     * @brief Handle incoming GenericStatusMessages
+     */
+    void processMessage(GenericStatusMessage* msg) const override
+    {
+      emit m_Filter->notifyStatusMessage(msg->getPrefix(), msg->getMessageText());
+    }
+
+    /**
+     * @brief Handle incoming GenericErrorMessages
+     */
+    void processMessage(GenericErrorMessage* msg) const override
+    {
+      emit m_Filter->notifyErrorMessage(msg->getPrefix(), msg->getMessageText(), msg->getCode());
+    }
+
+    /**
+     * @brief Handle incoming GenericWarningMessages
+     */
+    void processMessage(GenericWarningMessage* msg) const override
+    {
+      emit m_Filter->notifyWarningMessage(msg->getPrefix(), msg->getMessageText(), msg->getCode());
+    }
+
+  private:
+    EMMPMFilter* m_Filter = nullptr;
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -226,15 +272,13 @@ void EMMPMFilter::dataCheck()
 
   if(getNumClasses() > 15)
   {
-    setErrorCondition(-89100);
     QString ss = QObject::tr("The maximum number of classes is 15");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -89100);
   }
   if(getNumClasses() < 2)
   {
-    setErrorCondition(-89101);
     QString ss = QObject::tr("The minimum number of classes is 2");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -89101);
   }
 }
 
@@ -373,10 +417,9 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   emmpm->setData(m_Data);
   emmpm->setStatsDelegate(statsDelegate.get());
   emmpm->setInitializationFunction(initFunction);
-  emmpm->setMessagePrefix(getMessagePrefix());
 
   // Connect up the Error/Warning/Progress object so the filter can report those things
-  connect(emmpm.get(), SIGNAL(messageGenerated(const AbstractMessage&)), this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+  connect(emmpm.get(), SIGNAL(messageGenerated(AbstractMessage::Pointer)), this, SLOT(handleEmmpmMessage(AbstractMessage::Pointer)));
 
   emmpm->execute();
 
@@ -388,6 +431,15 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   // into the initialization of the next Image to be Segmented
   m_PreviousMu.resize(getNumClasses() * m_Data->dims);
   m_PreviousSigma.resize(getNumClasses() * m_Data->dims);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EMMPMFilter::handleEmmpmMessage(AbstractMessage::Pointer msg)
+{
+  EMMPMFilterMessageHandler msgHandler(this);
+  msg->visit(&msgHandler);
 }
 
 // -----------------------------------------------------------------------------

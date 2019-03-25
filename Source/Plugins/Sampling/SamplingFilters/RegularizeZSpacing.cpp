@@ -109,8 +109,7 @@ void RegularizeZSpacing::dataCheck()
   if(getNewZRes() <= 0)
   {
     QString ss = QObject::tr("The new Z resolution Y (%1) must be positive").arg(getNewZRes());
-    setErrorCondition(-5555);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -5555);
   }
 
   std::ifstream inFile;
@@ -119,8 +118,7 @@ void RegularizeZSpacing::dataCheck()
   if(!inFile.good())
   {
     QString ss = QObject::tr("Unable to open input file with name '%1'").arg(getInputFile());
-    setErrorCondition(-5556);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -5556);
     return;
   }
 

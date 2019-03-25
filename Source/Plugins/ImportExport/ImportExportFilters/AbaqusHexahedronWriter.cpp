@@ -117,18 +117,16 @@ void AbaqusHexahedronWriter::dataCheck()
 
   if(m_OutputPath.isEmpty())
   {
-    setErrorCondition(-12001);
     QString ss = QObject::tr("The output path must be set");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -12001);
   }
 
   QFileInfo fi(m_OutputPath);
   QDir parentPath = fi.path();
   if(!parentPath.exists())
   {
-    setWarningCondition(-10100);
     QString ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
-    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+    notifyWarningMessage("", ss, -10100);
   }
 
   QVector<size_t> cDims(1, 1); // The component dimensions of the needed array.
@@ -149,11 +147,10 @@ void AbaqusHexahedronWriter::dataCheck()
 
   if(volTuples != m_FeatureIdsPtr.lock()->getNumberOfTuples())
   {
-    setErrorCondition(-10200);
     QString ss = QObject::tr("The number of Tuples for the DataArray %1 is %2 and for the associated Image Geometry is %3. The number of tuples must match")
                      .arg(m_FeatureIdsPtr.lock()->getName())
                      .arg(m_FeatureIdsPtr.lock()->getNumberOfTuples());
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -10200);
   }
 }
 
@@ -189,8 +186,7 @@ void AbaqusHexahedronWriter::execute()
   if(!dir.mkpath(m_OutputPath))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(m_OutputPath);
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -1);
     return;
   }
 
@@ -218,8 +214,7 @@ void AbaqusHexahedronWriter::execute()
   if(err < 0)
   {
     QString ss = QObject::tr("Error writing output nodes file '%1'").arg(nodesFile);
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -1);
     return;
   }
   if(getCancel()) // Filter has been cancelled
@@ -232,8 +227,7 @@ void AbaqusHexahedronWriter::execute()
   if(err < 0)
   {
     QString ss = QObject::tr("Error writing output elems file '%1'").arg(elemsFile);
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -1);
     return;
   }
   if(getCancel()) // Filter has been cancelled
@@ -246,8 +240,7 @@ void AbaqusHexahedronWriter::execute()
   if(err < 0)
   {
     QString ss = QObject::tr("Error writing output sects file '%1'").arg(sectsFile);
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -1);
     return;
   }
   if(getCancel()) // Filter has been cancelled
@@ -260,8 +253,7 @@ void AbaqusHexahedronWriter::execute()
   if(err < 0)
   {
     QString ss = QObject::tr("Error writing output elset file '%1'").arg(elsetFile);
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -1);
     return;
   }
   if(getCancel()) // Filter has been cancelled
@@ -274,8 +266,7 @@ void AbaqusHexahedronWriter::execute()
   if(err < 0)
   {
     QString ss = QObject::tr("Error writing output master file '%1'").arg(masterFile);
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -1);
     return;
   }
   if(getCancel()) // Filter has been cancelled
@@ -339,7 +330,7 @@ int32_t AbaqusHexahedronWriter::writeNodes(const QList<QString>& fileNames, size
             timeDiff = ((float)nodeIndex / (float)(currentMillis - startMillis));
             estimatedTime = (float)(totalPoints - nodeIndex) / timeDiff;
             ss << " || Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);
-            notifyStatusMessage(getHumanLabel(), buf);
+            notifyStatusMessage("", buf);
             millis = QDateTime::currentMSecsSinceEpoch();
             if(getCancel()) // Filter has been cancelled
             {
@@ -358,7 +349,7 @@ int32_t AbaqusHexahedronWriter::writeNodes(const QList<QString>& fileNames, size
   fprintf(f, "**\n** ----------------------------------------------------------------\n**\n");
 
   // Close the file
-  notifyStatusMessage(getHumanLabel(), "Writing Nodes (File 1/5) Complete");
+  notifyStatusMessage("", "Writing Nodes (File 1/5) Complete");
   fclose(f);
   return err;
 }
@@ -415,7 +406,7 @@ int32_t AbaqusHexahedronWriter::writeElems(const QList<QString>& fileNames, size
             timeDiff = ((float)index / (float)(currentMillis - startMillis));
             estimatedTime = (float)(totalPoints - index) / timeDiff;
             ss << " || Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);
-            notifyStatusMessage(getHumanLabel(), buf);
+            notifyStatusMessage("", buf);
             millis = QDateTime::currentMSecsSinceEpoch();
             if(getCancel()) // Filter has been cancelled
             {
@@ -432,7 +423,7 @@ int32_t AbaqusHexahedronWriter::writeElems(const QList<QString>& fileNames, size
   fprintf(f, "**\n** ----------------------------------------------------------------\n**\n");
 
   // Close the file
-  notifyStatusMessage(getHumanLabel(), "Writing Elements (File 2/5) Complete");
+  notifyStatusMessage("", "Writing Elements (File 2/5) Complete");
   fclose(f);
   return err;
 }
@@ -463,7 +454,7 @@ int32_t AbaqusHexahedronWriter::writeElset(const QList<QString>& fileNames, size
   fprintf(f, "*Elset, elset=cube, generate\n");
   fprintf(f, "1, %llu, 1\n", static_cast<unsigned long long int>(totalPoints));
   fprintf(f, "**\n** Each Grain is made up of multiple elements\n**");
-  notifyStatusMessage(getHumanLabel(), (getMessagePrefix() + " Writing Element Sets (File 4/5) 1% Completed || Est. Time Remain: "));
+  notifyStatusMessage("", (getMessagePrefix() + " Writing Element Sets (File 4/5) 1% Completed || Est. Time Remain: "));
 
   // find total number of Grain Ids
   int32_t maxGrainId = 0;
@@ -516,7 +507,7 @@ int32_t AbaqusHexahedronWriter::writeElset(const QList<QString>& fileNames, size
         timeDiff = ((float)voxelId / (float)(currentMillis - startMillis));
         estimatedTime = (float)(maxGrainId - voxelId) / timeDiff;
         ss << " || Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);
-        notifyStatusMessage(getHumanLabel(), buf);
+        notifyStatusMessage("", buf);
         millis = QDateTime::currentMSecsSinceEpoch();
         if(getCancel()) // Filter has been cancelled
         {
@@ -530,7 +521,7 @@ int32_t AbaqusHexahedronWriter::writeElset(const QList<QString>& fileNames, size
   fprintf(f, "\n**\n** ----------------------------------------------------------------\n**\n");
 
   // Close the file
-  notifyStatusMessage(getHumanLabel(), "Writing Element Sets (File 4/5) Complete");
+  notifyStatusMessage("", "Writing Element Sets (File 4/5) Complete");
   fclose(f);
   return err;
 }
@@ -561,7 +552,7 @@ int32_t AbaqusHexahedronWriter::writeMaster(const QString& file)
   fprintf(f, "**\n** ----------------------------------------------------------------\n**\n");
 
   // Close the file
-  notifyStatusMessage(getHumanLabel(), "Writing Master (File 5/5) Complete");
+  notifyStatusMessage("", "Writing Master (File 5/5) Complete");
   fclose(f);
   return err;
 }
@@ -604,7 +595,7 @@ int32_t AbaqusHexahedronWriter::writeSects(const QString& file, size_t totalPoin
   fprintf(f, "**\n** ----------------------------------------------------------------\n**\n");
 
   // Close the file
-  notifyStatusMessage(getHumanLabel(), "Writing Sections (File 3/5) Complete");
+  notifyStatusMessage("", "Writing Sections (File 3/5) Complete");
   fclose(f);
   return err;
 }

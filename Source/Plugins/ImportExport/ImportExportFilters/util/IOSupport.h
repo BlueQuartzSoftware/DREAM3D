@@ -40,7 +40,7 @@
 #include <QtCore/QString>
 #include <QtCore/QVector>
 
-#include "SIMPLib/Common/PipelineMessage.h"
+#include "SIMPLib/Messages/PipelineMessage.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/SIMPLib.h"

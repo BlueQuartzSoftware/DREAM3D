@@ -131,8 +131,7 @@ void AlignSectionsFeatureCentroid::dataCheck()
   if(m_ReferenceSlice > image->getZPoints())
   {
     QString ss = QObject::tr("The Image Geometry extent (%1) is smaller than the supplied reference slice (%2)").arg(image->getZPoints()).arg(m_ReferenceSlice);
-    setErrorCondition(-5556);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -5556);
   }
 
   QVector<size_t> cDims(1, 1);
@@ -203,7 +202,7 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
     yCentroid[iter] = 0;
 
     QString ss = QObject::tr("Aligning Sections || Determining Shifts || %1% Complete").arg((static_cast<double>(iter) / dims[2]) * 100);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), ss);
     slice = static_cast<size_t>((dims[2] - 1) - iter);
     for(size_t l = 0; l < dims[1]; l++)
     {
@@ -241,40 +240,36 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
 
     if((xshifts[iter] < -sdims[0] || xshifts[iter] > sdims[0]) && !xWarning)
     {
-      setWarningCondition(100);
       QString msg;
       QTextStream ss(&msg);
       ss << "A shift was greater than the X dimension of the Image Geometry. All subsequent slices are probably wrong. Slice=" << iter << " X Dim=" << dims[0] << " X Shift=" << xshifts[iter]
          << " sDims[0]=" << sdims[0];
-      notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
+      notifyWarningMessage("", msg, 100);
       xWarning = true;
     }
     if((yshifts[iter] < -sdims[1] || yshifts[iter] > sdims[1]) && !yWarning)
     {
-      setWarningCondition(101);
       QString msg;
       QTextStream ss(&msg);
       ss << "A shift was greater than the Y dimension of the Image Geometry. All subsequent slices are probably wrong. Slice=" << iter << " Y Dim=" << dims[1] << " Y Shift=" << yshifts[iter]
          << " sDims[1]=" << sdims[1];
-      notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
+      notifyWarningMessage("", msg, 101);
       yWarning = true;
     }
     if(std::isnan(xCentroid[iter]) && !xWarning)
     {
-      setWarningCondition(102);
       QString msg;
       QTextStream ss(&msg);
       ss << "The X Centoird was NaN. All subsequent slices are probably wrong. Slice=" << iter;
-      notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
+      notifyWarningMessage("", msg, 102);
       xWarning = true;
     }
     if(std::isnan(yCentroid[iter]) && !yWarning)
     {
-      setWarningCondition(103);
       QString msg;
       QTextStream ss(&msg);
       ss << "The Y Centoird was NaN. All subsequent slices are probably wrong. Slice=" << iter;
-      notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
+      notifyWarningMessage("", msg, 103);
       yWarning = true;
     }
     if(getWriteAlignmentShifts())

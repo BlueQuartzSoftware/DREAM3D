@@ -172,7 +172,7 @@ void RemoveFlaggedFeatures::execute()
   cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock().get());
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Remove Flagged Features Filter Complete");
+  notifyStatusMessage("", "Remove Flagged Features Filter Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -366,8 +366,7 @@ QVector<bool> RemoveFlaggedFeatures::remove_flaggedfeatures()
   }
   if(!good)
   {
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), "All Features were flagged and would all be removed.  The filter has quit.", -1);
+    notifyErrorMessage("", "All Features were flagged and would all be removed.  The filter has quit.", -1);
     return activeObjects;
   }
   for(size_t i = 0; i < totalPoints; i++)

@@ -636,8 +636,7 @@ void RotateSampleRefFrame::execute()
         if(nullptr == source)
         {
           QString ss = QObject::tr("The index is outside the bounds of the source array");
-          setErrorCondition(-11004);
-          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+          notifyErrorMessage("", ss, -11004);
           return;
         }
         destination = data->getVoidPointer((data->getNumberOfComponents() * i));

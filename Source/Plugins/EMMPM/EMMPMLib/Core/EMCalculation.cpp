@@ -41,6 +41,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cstring>
 
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Messages/AbstractMessageHandler.h"
+#include "SIMPLib/Messages/GenericProgressMessage.h"
+#include "SIMPLib/Messages/GenericStatusMessage.h"
+#include "SIMPLib/Messages/GenericErrorMessage.h"
+#include "SIMPLib/Messages/GenericWarningMessage.h"
 
 #include "EMMPMLib/Common/EMMPM_Math.h"
 #include "EMMPMLib/Common/MSVCDefines.h"
@@ -56,6 +61,53 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #if EMMPM_USE_PARALLEL_ALGORITHMS
 #include <tbb/task_scheduler_init.h>
 #endif
+
+class EMCalculationMessageHandler : public AbstractMessageHandler
+{
+  public:
+    explicit EMCalculationMessageHandler(EMCalculation* calcObj) : m_CalculationObject(calcObj) {}
+
+    /**
+     * @brief Handle incoming GenericProgressMessages
+     */
+    void processMessage(GenericProgressMessage* msg) const override
+    {
+      emit m_CalculationObject->notifyProgressMessage(msg->getPrefix(), msg->getMessageText(), msg->getProgressValue());
+    }
+
+    /**
+     * @brief Handle incoming GenericStatusMessages
+     */
+    void processMessage(GenericStatusMessage* msg) const override
+    {
+      EMMPM_Data* data = m_CalculationObject->m_Data.get();
+      QString messageText = QObject::tr("EM Loop %1").arg(data->currentEMLoop);
+      if (!msg->getMessageText().isEmpty())
+      {
+        messageText.append(QObject::tr(" - %1").arg(msg->getMessageText()));
+      }
+      emit m_CalculationObject->notifyStatusMessage(msg->getPrefix(), messageText);
+    }
+
+    /**
+     * @brief Handle incoming GenericErrorMessages
+     */
+    void processMessage(GenericErrorMessage* msg) const override
+    {
+      emit m_CalculationObject->notifyErrorMessage(msg->getPrefix(), msg->getMessageText(), msg->getCode());
+    }
+
+    /**
+     * @brief Handle incoming GenericWarningMessages
+     */
+    void processMessage(GenericWarningMessage* msg) const override
+    {
+      emit m_CalculationObject->notifyWarningMessage(msg->getPrefix(), msg->getMessageText(), msg->getCode());
+    }
+
+  private:
+    EMCalculation* m_CalculationObject = nullptr;
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -126,22 +178,24 @@ void EMCalculation::execute()
   /* After curveLoopDelay iterations, begin calculating curvature costs */
   if(k >= ccostLoopDelay && (data->useCurvaturePenalty != 0))
   {
-    notifyStatusMessage(getHumanLabel(), "Performing Morphological Filter on input data");
+    notifyStatusMessage("", "Performing Morphological Filter on input data");
     morphFilt->multiSE(data);
   }
 
   // Zero out the Mean, Variance and N values for both the current and previous
   EMMPMUtilities::ZeroMeanVariance(data->classes, data->dims, data->prev_mu, data->prev_variance, data->N);
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Performing Initial MPM Loop");
+  notifyStatusMessage("", "Performing Initial MPM Loop");
 
   /* Perform initial MPM - (Estimation) */
   MPMCalculation::Pointer acvmpm = MPMCalculation::New();
   acvmpm->setData(getData());
   acvmpm->setStatsDelegate(getStatsDelegate());
-  acvmpm->setMessagePrefix(getMessagePrefix());
 
   // Connect up the Error/Warning/Progress object so the filter can report those things
-  connect(acvmpm.get(), SIGNAL(messageGenerated(const AbstractMessage&)), this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+  connect(acvmpm.get(), &MPMCalculation::messageGenerated, [=] (AbstractMessage::Pointer msg) {
+    EMCalculationMessageHandler msgHandler(this);
+    msg->visit(&msgHandler);
+  });
 
   acvmpm->execute();
 
@@ -155,7 +209,7 @@ void EMCalculation::execute()
 
     ss.clear();
     msgOut << "EM Loop " << data->currentEMLoop << " - Converting Xt Data to Output Image..";
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage("", ss);
 
     /* Send back the Progress Stats and the segmented image. If we never get into this loop because
     * emiter == 0 then we will still send back the stats just after the end of the EM Loops */
@@ -190,21 +244,21 @@ void EMCalculation::execute()
 
     ss.clear();
     msgOut << "EM Loop " << data->currentEMLoop << " - Copying Current Mean & Variance Values ...";
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage("", ss);
 
     /* Copy the current Mean and Variance Values to the "prev_*" variables */
     EMMPMUtilities::copyCurrentMeanVarianceValues(getData());
 
     ss.clear();
     msgOut << "EM Loop " << data->currentEMLoop << " - Zeroing Mean & Variance Values...";
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage("", ss);
 
     /* Reset model parameters to zero */
     EMMPMUtilities::ZeroMeanVariance(data->classes, data->dims, data->mean, data->variance, data->N);
 
     ss.clear();
     msgOut << "EM Loop " << data->currentEMLoop << " - Updating Mean & Variance Values...";
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage("", ss);
     /* Update Means and Variances */
     EMMPMUtilities::UpdateMeansAndVariances(getData());
 
@@ -219,7 +273,7 @@ void EMCalculation::execute()
 #if 1
     ss.clear();
     msgOut << "EM Loop " << data->currentEMLoop << " - Removing Zero Probability Classes ...";
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage("", ss);
     /* Eliminate any classes that have zero probability */
     EMMPMUtilities::RemoveZeroProbClasses(getData());
 #endif
@@ -236,19 +290,17 @@ void EMCalculation::execute()
     {
       ss.clear();
       msgOut << "EM Loop " << data->currentEMLoop << " - Performing Morphological filtering ...";
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyStatusMessage("", ss);
       morphFilt->multiSE(data);
     }
 
     /* Perform MPM - (Estimation) */
     ss.clear();
-    msgOut << getMessagePrefix() << "EM Loop " << data->currentEMLoop;
-    acvmpm->setMessagePrefix(ss);
     acvmpm->execute();
   } /* EM Loop End */
 
   msgOut << "EM Loop " << data->currentEMLoop << " - Converting Xt Data to Output final Array..";
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+  notifyStatusMessage("", ss);
   EMMPMUtilities::ConvertXtToOutputImage(getData());
 
   data->inside_em_loop = 0;

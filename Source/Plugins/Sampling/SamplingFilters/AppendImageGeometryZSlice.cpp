@@ -149,35 +149,30 @@ void AppendImageGeometryZSlice::dataCheck()
     if(inputRes[0] != destRes[0])
     {
       QString ss = QObject::tr("Input X Resolution (%1) not equal to Destination X Resolution (%2)").arg(inputRes[0]).arg(destRes[0]);
-      setErrorCondition(-8205);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      notifyErrorMessage("", ss, -8205);
     }
     if(inputRes[1] != destRes[1])
     {
       QString ss = QObject::tr("Input Y Resolution (%1) not equal to Destination Y Resolution (%2)").arg(inputRes[1]).arg(destRes[1]);
-      setErrorCondition(-8206);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      notifyErrorMessage("", ss, -8206);
     }
     if(inputRes[2] != destRes[2])
     {
       QString ss = QObject::tr("Input Z Resolution (%1) not equal to Destination Z Resolution (%2)").arg(inputRes[2]).arg(destRes[2]);
-      setErrorCondition(-8207);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      notifyErrorMessage("", ss, -8207);
     }
   }
 
   if(destGeomDims[0] != inputGeomDims[0])
   {
     QString ss = QObject::tr("Input X Dim (%1) not equal to Destination X Dim (%2)").arg(inputGeomDims[0]).arg(destGeomDims[0]);
-    setErrorCondition(-8202);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -8202);
   }
 
   if(destGeomDims[0] != inputGeomDims[0])
   {
     QString ss = QObject::tr("Input Y Dim (%1) not equal to Destination Y Dim (%2)").arg(inputGeomDims[1]).arg(destGeomDims[1]);
-    setErrorCondition(-8203);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -8203);
   }
 
   if(getInPreflight())
@@ -289,8 +284,7 @@ void AppendImageGeometryZSlice::execute()
     else
     {
       QString ss = QObject::tr("Data Array '%1' does not exist in the Input Cell AttributeMatrix.").arg(*iter);
-      setWarningCondition(-8203);
-      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+      notifyWarningMessage("", ss, -8203);
     }
   }
 

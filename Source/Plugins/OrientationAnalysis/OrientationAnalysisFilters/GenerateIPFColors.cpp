@@ -343,12 +343,11 @@ void GenerateIPFColors::execute()
 
   if(m_PhaseWarningCount > 0)
   {
-    setErrorCondition(-48000);
     QString ss = QObject::tr("The Ensemble Phase information only references %2 phase(s) but %1 cell(s) had a phase value greater than %2. \
 This indicates a problem with the input cell phase data. DREAM.3D will give INCORRECT RESULTS.")
                      .arg(m_PhaseWarningCount)
                      .arg(numPhases - 1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -48000);
   }
 
 

@@ -127,32 +127,28 @@ void QuiltCellData::dataCheck()
   if(m_SelectedCellArrayPath.isEmpty())
   {
     QString ss = QObject::tr("The input array name is empty. Please select a name for the input array");
-    setErrorCondition(-11000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -11000);
     return;
   }
 
   if(getOutputDataContainerName().isEmpty())
   {
     QString ss = QObject::tr("The output DataContainer name is empty. Please assign a name for the created DataContainer");
-    setErrorCondition(-11001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -11001);
     return;
   }
 
   if(getOutputAttributeMatrixName().isEmpty())
   {
     QString ss = QObject::tr("The output AttributeMatrix name is empty. Please assign a name for the created AttributeMatrix");
-    setErrorCondition(-11002);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -11002);
     return;
   }
 
   if(getOutputArrayName().isEmpty())
   {
     QString ss = QObject::tr("The output array name is empty. Please assign a name for the created array");
-    setErrorCondition(-11003);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -11003);
     return;
   }
 
@@ -160,16 +156,14 @@ void QuiltCellData::dataCheck()
   if(m_QuiltStep.x < 1 || m_QuiltStep.y < 1 || m_QuiltStep.z < 1)
   {
     QString ss = QObject::tr("The QuiltStep parameter is invalid because one of the values is Negative or Zero. Value=(%1, %2, %3)").arg(m_QuiltStep.x).arg(m_QuiltStep.y).arg(m_QuiltStep.z);
-    setErrorCondition(-11004);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -11004);
     return;
   }
   // Check to make sure the QuiltStep and Patch Size are non-zero
   if(m_PatchSize.x < 1 || m_PatchSize.y < 1 || m_PatchSize.z < 1)
   {
     QString ss = QObject::tr("The Patch Size parameter is invalid because one of the values is Negative or Zero. Value=(%1, %2, %3)").arg(m_PatchSize.x).arg(m_PatchSize.y).arg(m_PatchSize.z);
-    setErrorCondition(-11005);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -11005);
     return;
   }
 
@@ -357,8 +351,7 @@ void QuiltCellData::execute()
   if(nullptr == inputData.get())
   {
     ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedCellArrayPath.getDataArrayName());
-    setErrorCondition(-11001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -11001);
     return;
   }
 

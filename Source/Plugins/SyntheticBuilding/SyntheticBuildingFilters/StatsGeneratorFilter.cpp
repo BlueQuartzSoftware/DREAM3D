@@ -272,9 +272,8 @@ void StatsGeneratorFilter::dataCheck()
   }
   else
   {
-    setErrorCondition(-1);
     QString ss = QObject::tr("Unable to retrieve a valid pointer for statistics data");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -1);
     return;
   }
 }

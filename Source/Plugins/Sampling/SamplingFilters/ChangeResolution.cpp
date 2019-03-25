@@ -139,22 +139,19 @@ void ChangeResolution::dataCheck()
   if(getResolution().x <= 0)
   {
     QString ss = QObject::tr("The X resolution (%1) must be positive").arg(getResolution().x);
-    setErrorCondition(-5555);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -5555);
   }
 
   if(getResolution().y <= 0)
   {
     QString ss = QObject::tr("The Y resolution (%1) must be positive").arg(getResolution().y);
-    setErrorCondition(-5556);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -5556);
   }
 
   if(getResolution().z <= 0)
   {
     QString ss = QObject::tr("The  resolution (%1) must be positive").arg(getResolution().z);
-    setErrorCondition(-5557);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    notifyErrorMessage("", ss, -5557);
   }
 
   if(!getSaveAsNewDataContainer())
@@ -363,7 +360,7 @@ void ChangeResolution::execute()
     }
     progressInt = static_cast<size_t>((static_cast<float>(i) / m_ZP) * 100.0f);
     QString ss = QObject::tr("Changing Resolution || %1% Complete").arg(progressInt);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(getMessagePrefix(), ss);
     for(size_t j = 0; j < m_YP; j++)
     {
       for(size_t k = 0; k < m_XP; k++)
@@ -382,7 +379,7 @@ void ChangeResolution::execute()
   }
 
   QString ss = QObject::tr("Copying Data...");
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+  notifyStatusMessage(getMessagePrefix(), ss);
 
   QVector<size_t> tDims(3, 0);
   tDims[0] = m_XP;
@@ -427,7 +424,7 @@ void ChangeResolution::execute()
     QVector<bool> activeObjects(totalFeatures, false);
     if(0 == totalFeatures)
     {
-      notifyErrorMessage(getHumanLabel(), "The number of Features is 0 and should be greater than 0", -600);
+      notifyErrorMessage("", "The number of Features is 0 and should be greater than 0", -600);
       return;
     }
 

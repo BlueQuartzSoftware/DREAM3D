@@ -175,7 +175,7 @@ void FindMicroTextureRegions::execute()
   }
 
   find_microtextureregions();
-  notifyStatusMessage(getHumanLabel(), "FindMicroTextureRegions Completed");
+  notifyStatusMessage("", "FindMicroTextureRegions Completed");
 }
 
 // -----------------------------------------------------------------------------
