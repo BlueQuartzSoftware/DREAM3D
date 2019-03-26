@@ -66,6 +66,11 @@
 #define RES "SPACING"
 #define LOOKUP "LOOKUP_TABLE"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -211,7 +216,7 @@ void YSChoiAbaqusReader::dataCheck()
   setErrorCondition(0);
   setWarningCondition(0);
 
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
   if(getErrorCondition() < 0)
   {
     return;

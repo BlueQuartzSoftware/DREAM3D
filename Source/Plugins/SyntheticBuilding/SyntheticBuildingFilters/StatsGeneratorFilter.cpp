@@ -59,6 +59,11 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -237,7 +242,7 @@ void StatsGeneratorFilter::dataCheck()
 {
   if(nullptr != m_StatsDataArray)
   {
-    getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getStatsGeneratorDataContainerName());
+    getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getStatsGeneratorDataContainerName(), DataContainerID);
 
     if(getErrorCondition() < 0)
     {

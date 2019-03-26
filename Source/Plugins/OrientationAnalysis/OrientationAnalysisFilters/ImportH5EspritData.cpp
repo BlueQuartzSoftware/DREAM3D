@@ -51,6 +51,11 @@
 
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
+
 /**
  * @brief The ReadH5EspritDataPrivate class is a private implementation of the ImportH5EspritData class
  */
@@ -283,7 +288,7 @@ void ImportH5EspritData::dataCheckOEM()
     return;
   }
 
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
   if(getErrorCondition() < 0)
   {
     return;

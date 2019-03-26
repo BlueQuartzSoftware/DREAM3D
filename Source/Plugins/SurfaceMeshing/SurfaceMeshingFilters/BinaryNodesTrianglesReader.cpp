@@ -48,6 +48,11 @@
 
 #include "BinaryNodesTrianglesReader.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -150,7 +155,7 @@ void BinaryNodesTrianglesReader::dataCheck()
 
   QVector<size_t> dims(1, 1);
 
-  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName(), DataContainerID);
   if(getErrorCondition() < 0)
   {
     return;

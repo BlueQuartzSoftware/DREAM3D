@@ -46,6 +46,11 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -192,7 +197,7 @@ void QuiltCellData::dataCheck()
   FloatVec3Type res = {0.0f, 0.0f, 0.0f};
   std::tie(res[0], res[1], res[2]) = m->getGeometryAs<ImageGeom>()->getSpacing();
   // Create a new DataContainer
-  DataContainer::Pointer m2 = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getOutputDataContainerName());
+  DataContainer::Pointer m2 = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getOutputDataContainerName(), DataContainerID);
   if(getErrorCondition() < 0)
   {
     return;

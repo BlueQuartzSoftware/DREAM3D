@@ -52,6 +52,11 @@
 
 #define BUF_SIZE 1024
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
+
 /* ############## Start Private Implementation ############################### */
 // -----------------------------------------------------------------------------
 //
@@ -190,7 +195,7 @@ void PhReader::dataCheck()
   setWarningCondition(0);
   DataArrayPath tempPath;
 
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName(), DataContainerID);
   if(getErrorCondition() < 0)
   {
     return;

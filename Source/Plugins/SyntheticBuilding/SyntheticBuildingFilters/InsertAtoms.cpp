@@ -62,6 +62,11 @@
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
+
 /**
  * @brief The InsertAtomsImpl class implements a threaded algorithm that inserts vertex points ('atoms') onto surface meshed Features
  */
@@ -357,7 +362,7 @@ void InsertAtoms::dataCheck()
     dataArrays.push_back(triangles->getTriangles());
   }
 
-  DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName());
+  DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName(), DataContainerID);
   if(getErrorCondition() < 0)
   {
     return;

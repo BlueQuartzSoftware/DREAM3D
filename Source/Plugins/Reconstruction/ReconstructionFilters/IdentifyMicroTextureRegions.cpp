@@ -67,6 +67,11 @@
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
+
 /**
  * @brief The FindPatchMisalignmentsImpl class implements a threaded algorithm that determines the misorientations
  * between for all cell faces in the structure
@@ -529,7 +534,7 @@ void IdentifyMicroTextureRegions::execute()
   size_t totalPatches = static_cast<size_t>(newDim[0] * newDim[1] * newDim[2]);
 
   // Create temporary DataContainer and AttributeMatrix for holding the patch data
-  DataContainer::Pointer tmpDC = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "_INTERNAL_USE_ONLY_PatchDataContainer(Temp)");
+  DataContainer::Pointer tmpDC = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "_INTERNAL_USE_ONLY_PatchDataContainer(Temp)", DataContainerID);
   if(getErrorCondition() < 0)
   {
     return;

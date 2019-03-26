@@ -50,6 +50,11 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
+
 /**
  * @brief The ReadAngDataPrivate class is a private implementation of the ReadAngData class
  */
@@ -179,7 +184,7 @@ void ReadAngData::dataCheck()
   }
 
   // Reading the header worked, now start setting up our DataContainer
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
   if(getErrorCondition() < 0)
   {
     return;

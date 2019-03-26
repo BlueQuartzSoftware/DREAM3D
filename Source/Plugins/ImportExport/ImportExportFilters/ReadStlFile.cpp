@@ -55,6 +55,11 @@
 
 #define STL_HEADER_LENGTH 80
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
+
 /**
  * @brief The FindUniqueIdsImpl class implements a threaded algorithm that determines the set of
  * unique vertices in the triangle geometry
@@ -199,7 +204,7 @@ void ReadStlFile::dataCheck()
   }
 
   // Create a SufaceMesh Data Container with Faces, Vertices, Feature Labels and optionally Phase labels
-  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshDataContainerName(), DataContainerID);
   if(getErrorCondition() < 0)
   {
     return;

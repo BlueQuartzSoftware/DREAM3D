@@ -52,6 +52,11 @@
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -199,7 +204,7 @@ void CropImageGeometry::dataCheck()
 
   if(m_SaveAsNewDataContainer)
   {
-    destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
+    destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName(), DataContainerID);
     if(nullptr == destCellDataContainer.get() || getErrorCondition() < 0)
     {
       return;
@@ -416,7 +421,7 @@ void CropImageGeometry::execute()
     srcCellDataContainer->getGeometryAs<ImageGeom>()->getOrigin(o);
     srcCellDataContainer->getGeometryAs<ImageGeom>()->getSpacing(r);
 
-    destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
+    destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName(), DataContainerID);
     ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
     destCellDataContainer->setGeometry(image);
 

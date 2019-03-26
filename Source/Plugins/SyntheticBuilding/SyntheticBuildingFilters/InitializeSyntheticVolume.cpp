@@ -73,6 +73,11 @@
     notifyErrorMessage(getHumanLabel(), ss, errCond);                                                                                                                                                  \
   }
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -197,7 +202,7 @@ void InitializeSyntheticVolume::dataCheck()
   setWarningCondition(0);
 
   // Create the output Data Container
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
   if(getErrorCondition() < 0)
   {
     return;

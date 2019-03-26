@@ -47,6 +47,11 @@
 #include "ImportExport/ImportExportConstants.h"
 #include "ImportExport/ImportExportVersion.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
+
 /**
  * @brief The ScopedFileMonitor class will automatically close an open FILE pointer
  * when the object goes out of scope.
@@ -204,7 +209,7 @@ void GoldfeatherReader::dataCheck()
 {
   DataArrayPath tempPath;
 
-  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName(), DataContainerID);
   if(getErrorCondition() < 0)
   {
     return;

@@ -52,6 +52,11 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -232,7 +237,7 @@ void CreateLambertSphere::dataCheck()
   // Create a Vertex Geometry
   if(getCreateVertexGeometry())
   {
-    DataContainer::Pointer vertDC = dca->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName());
+    DataContainer::Pointer vertDC = dca->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName(), DataContainerID);
     if(getErrorCondition() < 0)
     {
       return;
@@ -257,7 +262,7 @@ void CreateLambertSphere::dataCheck()
   // Create a Edge Geometry
   if(getCreateEdgeGeometry())
   {
-    DataContainer::Pointer edgeDC = dca->createNonPrereqDataContainer<AbstractFilter>(this, getEdgeDataContainerName());
+    DataContainer::Pointer edgeDC = dca->createNonPrereqDataContainer<AbstractFilter>(this, getEdgeDataContainerName(), DataContainerID);
     if(getErrorCondition() < 0)
     {
       return;
@@ -287,7 +292,7 @@ void CreateLambertSphere::dataCheck()
   // Create a Triangle Geometry
   if(getCreateTriangleGeometry())
   {
-    DataContainer::Pointer triangleDC = dca->createNonPrereqDataContainer<AbstractFilter>(this, getTriangleDataContainerName());
+    DataContainer::Pointer triangleDC = dca->createNonPrereqDataContainer<AbstractFilter>(this, getTriangleDataContainerName(), DataContainerID);
     if(getErrorCondition() < 0)
     {
       return;
@@ -316,7 +321,7 @@ void CreateLambertSphere::dataCheck()
   // Create a QuadGeometry
   if(getCreateQuadGeometry())
   {
-    DataContainer::Pointer quadDC = dca->createNonPrereqDataContainer<AbstractFilter>(this, getQuadDataContainerName());
+    DataContainer::Pointer quadDC = dca->createNonPrereqDataContainer<AbstractFilter>(this, getQuadDataContainerName(), DataContainerID);
     if(getErrorCondition() < 0)
     {
       return;

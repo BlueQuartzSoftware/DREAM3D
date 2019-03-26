@@ -59,6 +59,11 @@
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
+
 namespace
 {
 template <class T> inline void hashCombine(size_t& seed, const T& obj)
@@ -273,7 +278,7 @@ void QuickSurfaceMesh::dataCheck()
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 
   // Create a SufaceMesh Data Container with Faces, Vertices, Feature Labels and optionally Phase labels
-  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName(), DataContainerID);
   if(getErrorCondition() < 0)
   {
     return;
@@ -338,7 +343,7 @@ void QuickSurfaceMesh::dataCheck()
   sm->createNonPrereqAttributeMatrix(this, getFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::FaceFeature);
 
   // Create the TripleLines DataContainer
-  getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getTripleLineDataContainerName());
+  getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getTripleLineDataContainerName(), DataContainerID);
 }
 
 // -----------------------------------------------------------------------------

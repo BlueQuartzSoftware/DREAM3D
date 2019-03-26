@@ -48,7 +48,10 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
-
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -161,7 +164,7 @@ void EMsoftSO3Sampler::dataCheck()
     return;
   } // This truly is an error condition.
 
-  // DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  // DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
   // if (getErrorCondition() < 0) { return; }
 
   // Now try to either get or create the needed AttributeMatrix

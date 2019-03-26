@@ -47,6 +47,11 @@
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -126,7 +131,7 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
 
   FileSystemPathHelper::CheckOutputFile(this, "Output File Path", getOutputFilePath(), true);
 
-  DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "SpecifiedPoints");
+  DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "SpecifiedPoints", DataContainerID);
   if(getErrorCondition() < 0 || nullptr == v.get())
   {
     return;

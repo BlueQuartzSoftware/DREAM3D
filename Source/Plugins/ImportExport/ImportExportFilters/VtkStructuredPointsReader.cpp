@@ -54,6 +54,11 @@
 
 #define kBufferSize 1024
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataContainerID = 1
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -162,7 +167,7 @@ void VtkStructuredPointsReader::dataCheck()
 
   // Create a Vertex Data Container even though we may remove it later. We need it later
   // on in order to set the proper AttributeMatrix
-  DataContainer::Pointer pointData_DataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName());
+  DataContainer::Pointer pointData_DataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName(), DataContainerID);
   if(getErrorCondition() < 0 && nullptr == pointData_DataContainer)
   {
     return;
@@ -180,7 +185,7 @@ void VtkStructuredPointsReader::dataCheck()
 
   // Create a Volume Data Container even though we may remove it later. We need it later
   // on in order to set the proper AttributeMatrix
-  DataContainer::Pointer cellData_DataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
+  DataContainer::Pointer cellData_DataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName(), DataContainerID);
   if(getErrorCondition() < 0 && nullptr == cellData_DataContainer)
   {
     return;
