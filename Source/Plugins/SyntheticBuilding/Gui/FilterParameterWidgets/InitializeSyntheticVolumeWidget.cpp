@@ -68,6 +68,10 @@
 
 #include "SyntheticBuilding/SyntheticBuildingFilters/InitializeSyntheticVolume.h"
 
+/**
+ * @brief This message handler is used by the InitializeSyntheticVolumeWidget
+ * to dump DataContainerReader error and warning messages to the debugger.
+ */
 class ReaderMessageHandler : public AbstractMessageHandler
 {
   public:

@@ -51,6 +51,10 @@
 #include "EMMPMLib/Core/InitializationFunctions.h"
 #include "EMMPMLib/EMMPMLib.h"
 
+/**
+ * @brief This message handler is used by EMMPM instances to re-emit incoming generic messages from the
+ * EMCalculation observable object as its own generic messages
+ */
 class EMMPMMessageHandler : public AbstractMessageHandler
 {
   public:

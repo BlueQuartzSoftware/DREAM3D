@@ -62,6 +62,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <tbb/task_scheduler_init.h>
 #endif
 
+/**
+ * @brief This message handler is used by EMCalculation instances to re-emit incoming generic messages from the
+ * MPMCalculation observable object as its own generic messages.  It also prepends the EM Loop number to the
+ * message text of status messages received from MPMCalculation objects.
+ */
 class EMCalculationMessageHandler : public AbstractMessageHandler
 {
   public:

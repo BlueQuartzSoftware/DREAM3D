@@ -66,6 +66,10 @@
 
 #include "EMMPM/EMMPMVersion.h"
 
+/**
+ * @brief This message handler is used by EMMPMFilter instances to re-emit incoming generic messages from the
+ * EMMPM observable object as its own filter messages
+ */
 class EMMPMFilterMessageHandler : public AbstractMessageHandler
 {
   public:

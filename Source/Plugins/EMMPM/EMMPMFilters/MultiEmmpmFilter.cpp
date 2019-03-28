@@ -58,6 +58,11 @@
 
 #include "EMMPM/EMMPMVersion.h"
 
+/**
+ * @brief This message handler is used by MultiEmmpmFilter instances to re-emit incoming generic messages from the
+ * EMMPM observable object as its own filter messages.  It also prepends the current Array number to the prefix of
+ * status messages received from MPMCalculation objects.
+ */
 class MultiEmmpmFilterMessageHandler : public AbstractMessageHandler
 {
   public:
