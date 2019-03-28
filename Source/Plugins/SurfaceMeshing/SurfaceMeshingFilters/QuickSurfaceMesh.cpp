@@ -61,6 +61,9 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+
   DataContainerID = 1
 };
 
@@ -295,8 +298,7 @@ void QuickSurfaceMesh::dataCheck()
 
   cDims[0] = 2;
   tempPath.update(getSurfaceDataContainerName().getDataContainerName(), getFaceAttributeMatrixName(), getFaceLabelsArrayName());
-  m_FaceLabelsPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FaceLabelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, tempPath, 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
   if(nullptr != m_FaceLabelsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0);
@@ -304,8 +306,7 @@ void QuickSurfaceMesh::dataCheck()
 
   cDims[0] = 1;
   tempPath.update(getSurfaceDataContainerName().getDataContainerName(), getVertexAttributeMatrixName(), getNodeTypesArrayName());
-  m_NodeTypesPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NodeTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, tempPath, 0, cDims, "", DataArrayID32); /* @ADD_DATAARRAY_ID@ */
   if(nullptr != m_NodeTypesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_NodeTypes = m_NodeTypesPtr.lock()->getPointer(0);

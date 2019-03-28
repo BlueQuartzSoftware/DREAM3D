@@ -13,6 +13,13 @@
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -78,7 +85,8 @@ void ComputeFeatureRect::dataCheck()
   }
 
   cDims[0] = 6;
-  m_FeatureRectPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, getFeatureRectArrayPath(), 0, cDims);
+  m_FeatureRectPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, getFeatureRectArrayPath(), 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
   if(nullptr != m_FeatureRectPtr.lock())
   {
     m_FeatureRect = m_FeatureRectPtr.lock()->getPointer(0);

@@ -25,6 +25,13 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 /**
  * @brief The GenerateFZQuatsImpl class implements a threaded algorithm that computes the IPF
  * colors for each element in a geometry
@@ -213,7 +220,7 @@ void GenerateFZQuaternions::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 4;
-  m_FZQuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getFZQuatsArrayPath(), 0, cDims);
+  m_FZQuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getFZQuatsArrayPath(), 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
   if(nullptr != m_FZQuatsPtr.lock())
   {
     m_FZQuats = m_FZQuatsPtr.lock()->getPointer(0);

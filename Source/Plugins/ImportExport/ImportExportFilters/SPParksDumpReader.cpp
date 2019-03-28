@@ -53,6 +53,8 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  DataArrayID31 = 31,
+
   DataContainerID = 1
 };
 
@@ -166,8 +168,7 @@ void SPParksDumpReader::dataCheck()
   // This is a temporary array that will be overwritten by the correct array at the end of reading the file
   QVector<size_t> cDims(1, 1);
   DataArrayPath fIdsPath(getVolumeDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
-  getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, fIdsPath, 0, cDims);
-
+  getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, fIdsPath, 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
   QFileInfo fi(getInputFile());
   if(getInputFile().isEmpty())
   {

@@ -61,6 +61,17 @@
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
+
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+  DataArrayID33 = 33,
+  DataArrayID34 = 34,
+};
+
 #endif
 
 const double FindDistsToCharactGBs::INF_DIST = 999.0;
@@ -391,8 +402,8 @@ void FindDistsToCharactGBs::dataCheck()
   // Distances
   QVector<IDataArray::Pointer> dataArrays;
   cDims[0] = 1;
-  m_DistToTiltPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getDistToTiltArrayPath(), 0,
-                                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_DistToTiltPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getDistToTiltArrayPath(), 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
   if(nullptr != m_DistToTiltPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_DistToTilt = m_DistToTiltPtr.lock()->getPointer(0);
@@ -403,8 +414,8 @@ void FindDistsToCharactGBs::dataCheck()
   }
 
   cDims[0] = 1;
-  m_DistToTwistPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
-      this, getDistToTwistArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_DistToTwistPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getDistToTwistArrayPath(), 0, cDims, "", DataArrayID32); /* @ADD_DATAARRAY_ID@ */
   if(nullptr != m_DistToTwistPtr.lock())          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_DistToTwist = m_DistToTwistPtr.lock()->getPointer(0);
@@ -415,8 +426,8 @@ void FindDistsToCharactGBs::dataCheck()
   }
 
   cDims[0] = 1;
-  m_DistToSymmetricPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
-      this, getDistToSymmetricArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_DistToSymmetricPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getDistToSymmetricArrayPath(), 0, cDims, "", DataArrayID33); /* @ADD_DATAARRAY_ID@ */
   if(nullptr != m_DistToSymmetricPtr.lock())          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_DistToSymmetric = m_DistToSymmetricPtr.lock()->getPointer(0);
@@ -427,8 +438,8 @@ void FindDistsToCharactGBs::dataCheck()
   }
 
   cDims[0] = 1;
-  m_DistTo180TiltPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
-      this, getDistTo180TiltArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_DistTo180TiltPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getDistTo180TiltArrayPath(), 0, cDims, "", DataArrayID34); /* @ADD_DATAARRAY_ID@ */
   if(nullptr != m_DistTo180TiltPtr.lock())          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_DistTo180Tilt = m_DistTo180TiltPtr.lock()->getPointer(0);

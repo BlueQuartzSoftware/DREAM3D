@@ -57,6 +57,18 @@
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+  DataArrayID33 = 33,
+  DataArrayID34 = 34,
+  DataArrayID35 = 35,
+  DataArrayID36 = 36,
+};
+
 /**
  * @brief The ComputeDistanceMapImpl class implements a threaded algorithm that computes the  distance map
  * for each point in the supplied volume
@@ -384,7 +396,8 @@ void FindEuclideanDistMap::dataCheck()
     tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getGBDistancesArrayName());
     if(m_CalcManhattanDist)
     {
-      m_GBManhattanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, cDims);
+      m_GBManhattanDistancesPtr =
+          getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
       if(nullptr != m_GBManhattanDistancesPtr.lock())
       {
         m_GBManhattanDistances = m_GBManhattanDistancesPtr.lock()->getPointer(0);
@@ -392,7 +405,7 @@ void FindEuclideanDistMap::dataCheck()
     }
     else
     {
-      m_GBEuclideanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, -1, cDims);
+      m_GBEuclideanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, -1, cDims, "", DataArrayID32); /* @ADD_DATAARRAY_ID@ */
       if(nullptr != m_GBEuclideanDistancesPtr.lock())
       {
         m_GBEuclideanDistances = m_GBEuclideanDistancesPtr.lock()->getPointer(0);
@@ -405,7 +418,8 @@ void FindEuclideanDistMap::dataCheck()
     tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getTJDistancesArrayName());
     if(m_CalcManhattanDist)
     {
-      m_TJManhattanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, cDims);
+      m_TJManhattanDistancesPtr =
+          getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, cDims, "", DataArrayID33); /* @ADD_DATAARRAY_ID@ */
       if(nullptr != m_TJManhattanDistancesPtr.lock())
       {
         m_TJManhattanDistances = m_TJManhattanDistancesPtr.lock()->getPointer(0);
@@ -413,7 +427,7 @@ void FindEuclideanDistMap::dataCheck()
     }
     else
     {
-      m_TJEuclideanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, -1, cDims);
+      m_TJEuclideanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, -1, cDims, "", DataArrayID34); /* @ADD_DATAARRAY_ID@ */
       if(nullptr != m_TJEuclideanDistancesPtr.lock())
       {
         m_TJEuclideanDistances = m_TJEuclideanDistancesPtr.lock()->getPointer(0);
@@ -426,7 +440,8 @@ void FindEuclideanDistMap::dataCheck()
     tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getQPDistancesArrayName());
     if(m_CalcManhattanDist)
     {
-      m_QPManhattanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, cDims);
+      m_QPManhattanDistancesPtr =
+          getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, -1, cDims, "", DataArrayID35); /* @ADD_DATAARRAY_ID@ */
       if(nullptr != m_QPManhattanDistancesPtr.lock())
       {
         m_QPManhattanDistances = m_QPManhattanDistancesPtr.lock()->getPointer(0);
@@ -434,7 +449,7 @@ void FindEuclideanDistMap::dataCheck()
     }
     else
     {
-      m_QPEuclideanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, -1, cDims);
+      m_QPEuclideanDistancesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, -1, cDims, "", DataArrayID36); /* @ADD_DATAARRAY_ID@ */
       if(nullptr != m_QPEuclideanDistancesPtr.lock())
       {
         m_QPEuclideanDistances = m_QPEuclideanDistancesPtr.lock()->getPointer(0);

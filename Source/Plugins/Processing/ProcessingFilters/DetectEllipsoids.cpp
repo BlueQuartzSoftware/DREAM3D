@@ -69,6 +69,17 @@
 #include <cmath>
 #include <limits>
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+  DataArrayID33 = 33,
+  DataArrayID34 = 34,
+  DataArrayID35 = 35,
+};
+
 #define STORE_PIXEL_VALUES(array, count)                                                                                                                                                               \
   array->setComponent(count, 0, xc + x);                                                                                                                                                               \
   array->setComponent(count, 1, yc + y);                                                                                                                                                               \
@@ -186,9 +197,8 @@ void DetectEllipsoids::dataCheck()
 
   getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, m_FeatureIdsArrayPath, QVector<size_t>(1, 1));
 
-  m_DetectedEllipsoidsFeatureIdsPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<Int32ArrayType, AbstractFilter, int32_t>(this, m_DetectedEllipsoidsFeatureIdsArrayPath, 0, QVector<size_t>(1, 1));
-
+  m_DetectedEllipsoidsFeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<Int32ArrayType, AbstractFilter, int32_t>(this, m_DetectedEllipsoidsFeatureIdsArrayPath, 0,
+                                                                                                                                     QVector<size_t>(1, 1), "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
   DataContainer::Pointer ellipseDC = getDataContainerArray()->getPrereqDataContainer(this, m_EllipseFeatureAttributeMatrixPath.getDataContainerName());
   if(getErrorCondition() < 0)
   {
@@ -209,19 +219,17 @@ void DetectEllipsoids::dataCheck()
 
   DataArrayPath tmp = m_EllipseFeatureAttributeMatrixPath;
   tmp.setDataArrayName(m_CenterCoordinatesArrayName);
-  m_CenterCoordinatesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), QVector<size_t>(1, 2));
-
+  m_CenterCoordinatesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), QVector<size_t>(1, 2),
+                                                                                                                          "", DataArrayID32); /* @ADD_DATAARRAY_ID@ */
   tmp.setDataArrayName(m_MajorAxisLengthArrayName);
-  m_MajorAxisLengthArrayPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), QVector<size_t>(1, 1));
-
+  m_MajorAxisLengthArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), QVector<size_t>(1, 1),
+                                                                                                                             "", DataArrayID33); /* @ADD_DATAARRAY_ID@ */
   tmp.setDataArrayName(m_MinorAxisLengthArrayName);
-  m_MinorAxisLengthArrayPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), QVector<size_t>(1, 1));
-
+  m_MinorAxisLengthArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), QVector<size_t>(1, 1),
+                                                                                                                             "", DataArrayID34); /* @ADD_DATAARRAY_ID@ */
   tmp.setDataArrayName(m_RotationalAnglesArrayName);
-  m_RotationalAnglesArrayPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), QVector<size_t>(1, 1));
+  m_RotationalAnglesArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(),
+                                                                                                                              QVector<size_t>(1, 1), "", DataArrayID35); /* @ADD_DATAARRAY_ID@ */
 }
 
 // -----------------------------------------------------------------------------
