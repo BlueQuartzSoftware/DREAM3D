@@ -59,7 +59,7 @@ class EMMPMMessageHandler : public AbstractMessageHandler
     /**
      * @brief Handle incoming GenericProgressMessages
      */
-    void processMessage(GenericProgressMessage* msg) const override
+    void processMessage(const GenericProgressMessage* msg) const override
     {
       emit m_EmmpmObject->notifyProgressMessage(msg->getPrefix(), msg->getMessageText(), msg->getProgressValue());
     }
@@ -67,7 +67,7 @@ class EMMPMMessageHandler : public AbstractMessageHandler
     /**
      * @brief Handle incoming GenericStatusMessages
      */
-    void processMessage(GenericStatusMessage* msg) const override
+    void processMessage(const GenericStatusMessage* msg) const override
     {
       emit m_EmmpmObject->notifyStatusMessage(msg->getPrefix(), msg->getMessageText());
     }
@@ -75,7 +75,7 @@ class EMMPMMessageHandler : public AbstractMessageHandler
     /**
      * @brief Handle incoming GenericErrorMessages
      */
-    void processMessage(GenericErrorMessage* msg) const override
+    void processMessage(const GenericErrorMessage* msg) const override
     {
       emit m_EmmpmObject->notifyErrorMessage(msg->getPrefix(), msg->getMessageText(), msg->getCode());
     }
@@ -83,7 +83,7 @@ class EMMPMMessageHandler : public AbstractMessageHandler
     /**
      * @brief Handle incoming GenericWarningMessages
      */
-    void processMessage(GenericWarningMessage* msg) const override
+    void processMessage(const GenericWarningMessage* msg) const override
     {
       emit m_EmmpmObject->notifyWarningMessage(msg->getPrefix(), msg->getMessageText(), msg->getCode());
     }

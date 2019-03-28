@@ -77,7 +77,7 @@ class FilterMessageHandler : public AbstractMessageHandler
      * @brief processMessage
      * @param msg
      */
-    void processMessage(FilterErrorMessage* msg) const override
+    void processMessage(const FilterErrorMessage* msg) const override
     {
       qDebug() << msg->getClassName() << msg->getCode() << msg->getPrefix() << msg->getMessageText();
     }
@@ -86,7 +86,7 @@ class FilterMessageHandler : public AbstractMessageHandler
      * @brief processMessage
      * @param msg
      */
-    void processMessage(FilterWarningMessage* msg) const override
+    void processMessage(const FilterWarningMessage* msg) const override
     {
       qDebug() << msg->getClassName() << msg->getCode() << msg->getPrefix() << msg->getMessageText();
     }
