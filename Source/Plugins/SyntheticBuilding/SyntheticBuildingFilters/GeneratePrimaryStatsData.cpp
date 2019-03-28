@@ -34,6 +34,13 @@
 #include "SyntheticBuilding/SyntheticBuildingFilters/StatsGeneratorUtilities.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID20 = 20,
+  AttributeMatrixID21 = 21,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -238,7 +245,7 @@ void GeneratePrimaryStatsData::dataCheck()
     }
 
     QVector<size_t> tDims(1, 2); // we need 2 slots in the array. ZERO=Junk, 1 = our new primary stats data
-    AttributeMatrix::Pointer cellEnsembleAttrMat = dc->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
+    AttributeMatrix::Pointer cellEnsembleAttrMat = dc->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID21);
     if(getErrorCondition() < 0)
     {
       return;

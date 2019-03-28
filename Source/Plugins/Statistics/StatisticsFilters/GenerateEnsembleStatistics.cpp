@@ -612,7 +612,7 @@ void GenerateEnsembleStatistics::dataCheck()
     cDims[0] = 1;
     tempPath.update(getCellEnsembleAttributeMatrixPath().getDataContainerName(), getCellEnsembleAttributeMatrixPath().getAttributeMatrixName(), getPhaseTypesArrayName());
     m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown),
-                                                                                                                           cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+                                                                                                                           cDims, "", DataArrayID31);
     if(nullptr != m_PhaseTypesPtr.lock())                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);

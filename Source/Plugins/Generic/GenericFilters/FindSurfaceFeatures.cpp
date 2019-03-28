@@ -124,8 +124,7 @@ void FindSurfaceFeatures::dataCheck()
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_SurfaceFeaturesPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, getSurfaceFeaturesArrayPath(), false, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_SurfaceFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, getSurfaceFeaturesArrayPath(), false, cDims, "", DataArrayID31);
   if(nullptr != m_SurfaceFeaturesPtr.lock())              /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0);

@@ -61,6 +61,8 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+
   DataContainerID = 1
 };
 
@@ -252,7 +254,7 @@ void StatsGeneratorFilter::dataCheck()
     DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getStatsGeneratorDataContainerName());
 
     QVector<size_t> tDims(1, m_StatsDataArray->getNumberOfTuples());
-    AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
+    AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID21);
 
     m_StatsDataArray->setName(getStatsDataArrayName());
     cellEnsembleAttrMat->insertOrAssign(m_StatsDataArray);

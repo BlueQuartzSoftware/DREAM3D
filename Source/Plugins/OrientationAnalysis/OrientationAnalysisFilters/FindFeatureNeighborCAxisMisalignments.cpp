@@ -206,7 +206,7 @@ void FindFeatureNeighborCAxisMisalignments::dataCheck()
   }
 
   tempPath.update(m_NeighborListArrayPath.getDataContainerName(), getNeighborListArrayPath().getAttributeMatrixName(), getCAxisMisalignmentListArrayName());
-  m_CAxisMisalignmentList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_CAxisMisalignmentList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID31);
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 }

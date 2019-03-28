@@ -130,8 +130,7 @@ void GenerateQuaternionConjugate::dataCheck()
   }
 
   cDims[0] = 4;
-  m_OutputQuaternionsPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_OutputQuaternionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_OutputQuaternionsPtr.lock())
   {
     m_OutputQuaternions = m_OutputQuaternionsPtr.lock()->getPointer(0);

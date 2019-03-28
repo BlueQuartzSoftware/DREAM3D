@@ -50,6 +50,9 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+  AttributeMatrixID22 = 22,
+
   DataArrayID31 = 31,
 
   DataContainerID = 1
@@ -174,7 +177,7 @@ void EMsoftSO3Sampler::dataCheck()
   AttributeMatrix::Pointer emsoftAttrMat = m->getAttributeMatrix(getEMsoftAttributeMatrixName());
   if(nullptr == emsoftAttrMat.get())
   {
-    emsoftAttrMat = m->createNonPrereqAttributeMatrix(this, getEMsoftAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic);
+    emsoftAttrMat = m->createNonPrereqAttributeMatrix(this, getEMsoftAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic, AttributeMatrixID21);
   }
   if(getErrorCondition() < 0 || nullptr == emsoftAttrMat.get())
   {
@@ -182,7 +185,7 @@ void EMsoftSO3Sampler::dataCheck()
   }
 
   //  QVector<size_t> tDims(1, 1);
-  //  AttributeMatrix::Pointer emsoftAttrMat = m->createNonPrereqAttributeMatrix(this, getEMsoftAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic);
+  //  AttributeMatrix::Pointer emsoftAttrMat = m->createNonPrereqAttributeMatrix(this, getEMsoftAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic, AttributeMatrixID22);
   //  if (getErrorCondition() < 0) { return; }
   //  m->addOrReplaceAttributeMatrix(emsoftAttrMat->getName(),emsoftAttrMat);
 
@@ -244,7 +247,7 @@ void EMsoftSO3Sampler::dataCheck()
   cDims[0] = 3;
   DataArrayPath tempPath;
   tempPath.update(getDataContainerName().getDataContainerName(), getEMsoftAttributeMatrixName(), getEulerAnglesArrayName());
-  m_EulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0.0f, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_EulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0.0f, cDims, "", DataArrayID31);
   if(nullptr != m_EulerAnglesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_EulerAngles = m_EulerAnglesPtr.lock()->getPointer(0);

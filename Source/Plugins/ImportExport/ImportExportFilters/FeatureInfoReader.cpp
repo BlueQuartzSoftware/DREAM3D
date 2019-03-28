@@ -55,6 +55,8 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+
   DataContainerID = 1,
   DataArrayID30 = 30,
   DataArrayID31 = 31,
@@ -194,7 +196,7 @@ void FeatureInfoReader::dataCheck()
   }
 
   QVector<size_t> tDims(1, 0);
-  m->createNonPrereqAttributeMatrix(this, getCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
+  m->createNonPrereqAttributeMatrix(this, getCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID21);
 
   QFileInfo fi(getInputFile());
   if(getInputFile().isEmpty())

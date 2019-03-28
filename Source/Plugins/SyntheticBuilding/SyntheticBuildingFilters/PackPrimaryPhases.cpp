@@ -76,6 +76,10 @@
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+  AttributeMatrixID22 = 22,
+  AttributeMatrixID23 = 23,
+
   DataArrayID30 = 30,
   DataArrayID31 = 31,
   DataArrayID32 = 32,
@@ -685,12 +689,12 @@ void PackPrimaryPhases::dataCheck()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
   QVector<size_t> tDims(1, 0);
-  m->createNonPrereqAttributeMatrix(this, getOutputCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
+  m->createNonPrereqAttributeMatrix(this, getOutputCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID21);
 
   PackPrimaryPhases::SaveMethod saveMethod = static_cast<PackPrimaryPhases::SaveMethod>(getSaveGeometricDescriptions());
   if(saveMethod == PackPrimaryPhases::SaveMethod::SaveToNew)
   {
-    m->createNonPrereqAttributeMatrix(this, getNewAttributeMatrixPath().getAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
+    m->createNonPrereqAttributeMatrix(this, getNewAttributeMatrixPath().getAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID22);
   }
   else if(saveMethod == PackPrimaryPhases::SaveMethod::AppendToExisting)
   {
@@ -706,45 +710,45 @@ void PackPrimaryPhases::dataCheck()
   else
   {
     tDims[0] = m_PhaseTypesPtr.lock()->getNumberOfTuples();
-    outEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getOutputCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
+    outEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getOutputCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID23);
   }
 
   tempPath = getOutputCellAttributeMatrixPath();
   tempPath.setAttributeMatrixName(getOutputCellEnsembleAttributeMatrixName());
   tempPath.setDataArrayName(SIMPL::EnsembleData::PhaseName);
-  m_PhaseNamesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<StringDataArray, AbstractFilter, QString>(this, tempPath, nullptr, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_PhaseNamesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<StringDataArray, AbstractFilter, QString>(this, tempPath, nullptr, cDims, "", DataArrayID31);
 
   // Feature Data
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), getFeaturePhasesArrayName());
-  m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID32); /* @ADD_DATAARRAY_ID@ */
+  m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID32);
   if(nullptr != m_FeaturePhasesPtr.lock())
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   }
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_NeighborhoodsArrayName);
-  m_NeighborhoodsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID33); /* @ADD_DATAARRAY_ID@ */
+  m_NeighborhoodsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID33);
   if(nullptr != m_NeighborhoodsPtr.lock())
   {
     m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0);
   }
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_EquivalentDiametersArrayName);
-  m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID34); /* @ADD_DATAARRAY_ID@ */
+  m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID34);
   if(nullptr != m_EquivalentDiametersPtr.lock())
   {
     m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0);
   }
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_VolumesArrayName);
-  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID35); /* @ADD_DATAARRAY_ID@ */
+  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID35);
   if(nullptr != m_VolumesPtr.lock())
   {
     m_Volumes = m_VolumesPtr.lock()->getPointer(0);
   }
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_Omega3sArrayName);
-  m_Omega3sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID36); /* @ADD_DATAARRAY_ID@ */
+  m_Omega3sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID36);
   if(nullptr != m_Omega3sPtr.lock())
   {
     m_Omega3s = m_Omega3sPtr.lock()->getPointer(0);
@@ -752,21 +756,21 @@ void PackPrimaryPhases::dataCheck()
 
   cDims[0] = 3;
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_CentroidsArrayName);
-  m_CentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID37); /* @ADD_DATAARRAY_ID@ */
+  m_CentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID37);
   if(nullptr != m_CentroidsPtr.lock())
   {
     m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
   }
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_AxisEulerAnglesArrayName);
-  m_AxisEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID38); /* @ADD_DATAARRAY_ID@ */
+  m_AxisEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID38);
   if(nullptr != m_AxisEulerAnglesPtr.lock())
   {
     m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0);
   }
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_AxisLengthsArrayName);
-  m_AxisLengthsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID39); /* @ADD_DATAARRAY_ID@ */
+  m_AxisLengthsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID39);
   if(nullptr != m_AxisLengthsPtr.lock())
   {
     m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0);
@@ -775,7 +779,7 @@ void PackPrimaryPhases::dataCheck()
   // Ensemble Data
   cDims[0] = 1;
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellEnsembleAttributeMatrixName(), getNumFeaturesArrayName());
-  m_NumFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID40); /* @ADD_DATAARRAY_ID@ */
+  m_NumFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID40);
   if(nullptr != m_NumFeaturesPtr.lock())
   {
     m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0);

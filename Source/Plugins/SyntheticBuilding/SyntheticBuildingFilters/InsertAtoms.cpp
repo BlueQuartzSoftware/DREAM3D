@@ -64,6 +64,8 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+
   DataContainerID = 1
 };
 
@@ -372,7 +374,7 @@ void InsertAtoms::dataCheck()
   v->setGeometry(vertices);
 
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer vertexAttrMat = v->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
+  AttributeMatrix::Pointer vertexAttrMat = v->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID21);
   if(getErrorCondition() < 0 || nullptr == vertexAttrMat.get())
   {
     return;

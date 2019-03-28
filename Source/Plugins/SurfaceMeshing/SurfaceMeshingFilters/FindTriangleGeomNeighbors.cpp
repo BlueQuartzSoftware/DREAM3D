@@ -142,7 +142,7 @@ void FindTriangleGeomNeighbors::dataCheck()
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   tempPath.update(getFeatureAttributeMatrixPath().getDataContainerName(), getFeatureAttributeMatrixPath().getAttributeMatrixName(), getNeighborListArrayName());
-  m_NeighborList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_NeighborList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID31);
   if(getErrorCondition() < 0)
   {
     return;

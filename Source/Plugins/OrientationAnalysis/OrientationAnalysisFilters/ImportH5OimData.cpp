@@ -64,13 +64,16 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
-  DataArrayID31 = 31,
-  DataArrayID32 = 32,
-  DataArrayID33 = 33,
-  DataArrayID34 = 34,
-  DataArrayID35 = 35,
-  DataArrayID36 = 36,
-  DataArrayID37 = 37,
+  AttributeMatrixID21 = 21,
+  AttributeMatrixID22 = 22,
+
+  //  DataArrayID31 = 31,
+  //  DataArrayID32 = 32,
+  //  DataArrayID33 = 33,
+  //  DataArrayID34 = 34,
+  //  DataArrayID35 = 35,
+  //  DataArrayID36 = 36,
+  //  DataArrayID37 = 37,
 
   DataContainerID = 1
 };
@@ -759,14 +762,14 @@ void ImportH5OimData::dataCheckOEM()
   image->setUnits(IGeometry::LengthUnit::Micrometer);
 
   QVector<size_t> tDims(3, 0);
-  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCondition() < 0)
   {
     return;
   }
   tDims.resize(1);
   tDims[0] = 0;
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID22);
   if(getErrorCondition() < 0)
   {
     return;
@@ -805,12 +808,12 @@ void ImportH5OimData::dataCheckOEM()
     {
       if(reader->getPointerType(name) == Ebsd::Int32)
       {
-        cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, name, 0, cDims, DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+        cellAttrMat->createAndAddAttributeArray<DataArray<int32_t>, AbstractFilter, int32_t>(this, name, 0, cDims);
         m_EbsdArrayMap.insert(name, cellAttrMat->getAttributeArray(name));
       }
       else if(reader->getPointerType(name) == Ebsd::Float)
       {
-        cellAttrMat->createAndAddAttributeArray<DataArray<float>, AbstractFilter, float>(this, name, 0, cDims, DataArrayID32); /* @ADD_DATAARRAY_ID@ */
+        cellAttrMat->createAndAddAttributeArray<DataArray<float>, AbstractFilter, float>(this, name, 0, cDims);
         m_EbsdArrayMap.insert(name, cellAttrMat->getAttributeArray(name));
       }
     }
@@ -826,7 +829,7 @@ void ImportH5OimData::dataCheckOEM()
   cDims.resize(1);
   cDims[0] = 3;
   tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), Ebsd::AngFile::EulerAngles);
-  m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID33); /* @ADD_DATAARRAY_ID@ */
+  m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims);
   if(nullptr != m_CellEulerAnglesPtr.lock())
   {
     m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
@@ -835,7 +838,7 @@ void ImportH5OimData::dataCheckOEM()
 
   cDims[0] = 1;
   tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), Ebsd::AngFile::Phases);
-  m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID34); /* @ADD_DATAARRAY_ID@ */
+  m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims);
   if(nullptr != m_CellPhasesPtr.lock())
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
@@ -843,8 +846,7 @@ void ImportH5OimData::dataCheckOEM()
   m_EbsdArrayMap.insert(Ebsd::AngFile::Phases, getDataContainerArray()->getPrereqIDataArrayFromPath<Int32ArrayType, AbstractFilter>(this, tempPath));
 
   tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::AngFile::CrystalStructures);
-  m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims,
-                                                                                                                                "", DataArrayID35); /* @ADD_DATAARRAY_ID@ */
+  m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims);
   if(nullptr != m_CrystalStructuresPtr.lock())
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
@@ -853,7 +855,7 @@ void ImportH5OimData::dataCheckOEM()
 
   cDims[0] = 6;
   tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::AngFile::LatticeConstants);
-  m_LatticeConstantsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0.0, cDims, "", DataArrayID36); /* @ADD_DATAARRAY_ID@ */
+  m_LatticeConstantsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0.0, cDims);
   if(nullptr != m_LatticeConstantsPtr.lock())
   {
     m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0);
@@ -868,7 +870,7 @@ void ImportH5OimData::dataCheckOEM()
     if(cDims[0] != 0 && cDims[1] != 0)
     {
       tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), Ebsd::Ang::PatternData);
-      m_CellPatternDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, cDims, "", DataArrayID37); /* @ADD_DATAARRAY_ID@ */
+      m_CellPatternDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, cDims);
       if(nullptr != m_CellPatternDataPtr.lock())
       {
         m_CellPatternData = m_CellPatternDataPtr.lock()->getPointer(0);

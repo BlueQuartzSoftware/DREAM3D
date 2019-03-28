@@ -56,6 +56,9 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+  AttributeMatrixID22 = 22,
+
   DataContainerID = 1
 };
 
@@ -177,7 +180,7 @@ void VtkStructuredPointsReader::dataCheck()
   pointData_DataContainer->setGeometry(pointDataGeom);
 
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer pointAttrMat = pointData_DataContainer->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+  AttributeMatrix::Pointer pointAttrMat = pointData_DataContainer->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCondition() < 0)
   {
     return;
@@ -198,7 +201,7 @@ void VtkStructuredPointsReader::dataCheck()
   tDims[0] = 0;
   tDims[1] = 0;
   tDims[2] = 0;
-  AttributeMatrix::Pointer cellAttrMat = cellData_DataContainer->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+  AttributeMatrix::Pointer cellAttrMat = cellData_DataContainer->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID22);
   if(getErrorCondition() < 0)
   {
     return;

@@ -50,6 +50,9 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+  AttributeMatrixID22 = 22,
+
   DataArrayID31 = 31,
   DataArrayID32 = 32,
 
@@ -164,12 +167,12 @@ void BinaryNodesTrianglesReader::dataCheck()
     return;
   }
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer vertexAttrMat = sm->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
+  AttributeMatrix::Pointer vertexAttrMat = sm->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID21);
   if(getErrorCondition() < 0)
   {
     return;
   }
-  AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face);
+  AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face, AttributeMatrixID22);
   if(getErrorCondition() < 0)
   {
     return;
@@ -181,14 +184,14 @@ void BinaryNodesTrianglesReader::dataCheck()
 
   dims[0] = 2;
   tempPath.update(getSurfaceDataContainerName(), getFaceAttributeMatrixName(), getFaceLabelsArrayName());
-  m_FaceLabelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, tempPath, 0, dims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_FaceLabelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, tempPath, 0, dims, "", DataArrayID31);
   if(nullptr != m_FaceLabelsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
   tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getSurfaceMeshNodeTypesArrayName());
-  m_SurfaceMeshNodeTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, tempPath, 0, dims, "", DataArrayID32); /* @ADD_DATAARRAY_ID@ */
+  m_SurfaceMeshNodeTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, tempPath, 0, dims, "", DataArrayID32);
   if(nullptr != m_SurfaceMeshNodeTypesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_SurfaceMeshNodeTypes = m_SurfaceMeshNodeTypesPtr.lock()->getPointer(0);

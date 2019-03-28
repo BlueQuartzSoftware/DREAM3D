@@ -203,14 +203,14 @@ void ConvertOrientations::dataCheck()
   if(nullptr != fArray.get())
   {
     QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);
-    getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, outputArrayPath, 0, outputCDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+    getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, outputArrayPath, 0, outputCDims, "", DataArrayID31);
   }
 
   DoubleArrayType::Pointer dArray = std::dynamic_pointer_cast<DoubleArrayType>(iDataArrayPtr);
   if(nullptr != dArray.get())
   {
     QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);
-    getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, outputArrayPath, 0, outputCDims, "", DataArrayID32); /* @ADD_DATAARRAY_ID@ */
+    getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, outputArrayPath, 0, outputCDims, "", DataArrayID32);
   }
 }
 

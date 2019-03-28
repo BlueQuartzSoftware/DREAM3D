@@ -68,6 +68,10 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+  AttributeMatrixID22 = 22,
+  AttributeMatrixID23 = 23,
+
   DataArrayID31 = 31,
   DataArrayID32 = 32,
   DataArrayID33 = 33,
@@ -233,7 +237,7 @@ void YSChoiAbaqusReader::dataCheck()
   m->setGeometry(image);
 
   QVector<size_t> tDims(3, 0);
-  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCondition() < 0 || nullptr == cellAttrMat.get())
   {
     return;
@@ -241,13 +245,13 @@ void YSChoiAbaqusReader::dataCheck()
   tDims.resize(1);
   tDims[0] = 0;
 
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix(this, getCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix(this, getCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID22);
   if(getErrorCondition() < 0 || nullptr == cellFeatureAttrMat.get())
   {
     return;
   }
 
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
+  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID23);
   if(getErrorCondition() < 0 || nullptr == cellEnsembleAttrMat.get())
   {
     return;
@@ -319,13 +323,13 @@ void YSChoiAbaqusReader::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 4;
   tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getQuatsArrayName());
-  m_QuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_QuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims, "", DataArrayID31);
   if(nullptr != m_QuatsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_Quats = m_QuatsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
   tempPath.update(getDataContainerName().getDataContainerName(), getCellFeatureAttributeMatrixName(), getAvgQuatsArrayName());
-  m_AvgQuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims, "", DataArrayID32); /* @ADD_DATAARRAY_ID@ */
+  m_AvgQuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims, "", DataArrayID32);
   if(nullptr != m_AvgQuatsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);
@@ -339,7 +343,7 @@ void YSChoiAbaqusReader::dataCheck()
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
   tempPath.update(getDataContainerName().getDataContainerName(), getCellFeatureAttributeMatrixName(), getSurfaceFeaturesArrayName());
-  m_SurfaceFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, false, dims, "", DataArrayID33); /* @ADD_DATAARRAY_ID@ */
+  m_SurfaceFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, false, dims, "", DataArrayID33);
   if(nullptr != m_SurfaceFeaturesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0);
@@ -354,8 +358,8 @@ void YSChoiAbaqusReader::dataCheck()
 
   // typedef DataArray<unsigned int> XTalStructArrayType;
   tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName());
-  m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, Ebsd::CrystalStructure::Cubic_High, dims, "",
-                                                                                                                                DataArrayID34); /* @ADD_DATAARRAY_ID@ */
+  m_CrystalStructuresPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, Ebsd::CrystalStructure::Cubic_High, dims, "", DataArrayID34);
   if(nullptr != m_CrystalStructuresPtr.lock())                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);

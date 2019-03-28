@@ -56,6 +56,8 @@
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+
   DataArrayID30 = 30,
   DataArrayID31 = 31,
   DataArrayID32 = 32,
@@ -174,7 +176,7 @@ void MultiEmmpmFilter::dataCheck()
   ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getInputDataArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
   if (getErrorCondition() < 0 || nullptr == image.get()) { return; }
 
-  m_OutputImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31);/* @ADD_DATAARRAY_ID@ */
+  m_OutputImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31);
   if (nullptr != m_OutputImagePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_OutputImage = m_OutputImagePtr.lock()->getPointer(0);
@@ -209,7 +211,7 @@ void MultiEmmpmFilter::dataCheck()
   QVector<size_t> tDims = inAM->getTupleDimensions();
   AttributeMatrix::Pointer outAM = getDataContainerArray()
                                        ->getDataContainer(inputAMPath.getDataContainerName())
-                                       ->createNonPrereqAttributeMatrix(this, getOutputAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+                                       ->createNonPrereqAttributeMatrix(this, getOutputAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCondition() < 0 || nullptr == outAM.get())
   {
     return;
@@ -230,7 +232,7 @@ void MultiEmmpmFilter::dataCheck()
       return;
     }
 
-    outAM->createAndAddAttributeArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, newName, 0, cDims, DataArrayID32); /* @ADD_DATAARRAY_ID@ */
+    outAM->createAndAddAttributeArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, newName, 0, cDims, DataArrayID32);
   }
 
   // The EM/MPM Library has a hard coded MAX Classes of 16

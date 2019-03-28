@@ -149,7 +149,7 @@ void FindAvgCAxes::dataCheck()
   }
 
   cDims[0] = 3;
-  m_AvgCAxesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getAvgCAxesArrayPath(), 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_AvgCAxesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getAvgCAxesArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_AvgCAxesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_AvgCAxes = m_AvgCAxesPtr.lock()->getPointer(0);

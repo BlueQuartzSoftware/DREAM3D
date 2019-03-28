@@ -7,7 +7,7 @@
 
 #include "Sandbox.h"
 
-#define K_START_ID 30
+#define K_START_ID 20
 
 class UpdateRenameIds : public Sandbox
 {
@@ -43,7 +43,7 @@ public:
     int idIndex = 1;
     bool didReplace = false;
     bool isIOFilter = false;
-    QString searchString = "/* @ADD_DATAARRAY_ID@ */";
+    QString searchString = "";
 
     QVector<QString> outLines;
     QStringList list = contents.split(QRegExp("\\n"));
@@ -58,13 +58,13 @@ public:
       if(line.contains(searchString))
       {
         out << "    Line: " << lineIndex + 1 << '\n';
-        QString idString = QString(", DataArrayID%1);").arg(idIndex + K_START_ID);
+        QString idString = QString(", AttributeMatrixID%1);").arg(idIndex + K_START_ID);
         line = line.replace(");", idString);
 
         didReplace = true;
         idIndex++;
       }
-#if 1
+#if 0
       if(line.contains("return \"IO\";"))
       {
         isIOFilter = true;
@@ -100,7 +100,7 @@ public:
       c << "enum createdPathID : RenameDataPath::DataID_t {\n";
       for(int i = 0; i < idIndex; i++)
       {
-        c << "  DataArrayID" << i + K_START_ID << " = " << i + K_START_ID;
+        c << "  AttributeMatrixID" << i + K_START_ID << " = " << i + K_START_ID;
         if(idIndex > 1)
         {
           c << ",";
@@ -117,25 +117,25 @@ public:
 
       for(int i = 1; i < idIndex; i++)
       {
-        c << "  DataArrayID" << i + K_START_ID << " = " << i + K_START_ID << ",\n";
+        c << "  AttributeMatrixID" << i + K_START_ID << " = " << i + K_START_ID << ",\n";
       }
       outLines.insert(existingEnumDef + 2, code);
     }
 
-    if(isIOFilter)
-    {
-      QString program = "/usr/bin/open";
-      QStringList arguments;
-      arguments << hFile;
-
-      QProcess* myProcess = new QProcess(nullptr);
-      myProcess->start(program, arguments);
-    }
-
-    //    if(didReplace && !isIOFilter)
+    //    if(isIOFilter)
     //    {
-    //      std::cout << msg.toStdString() << std::endl;
-    //      writeOutput(didReplace, outLines, hFile);
+    //      QString program = "/usr/bin/open";
+    //      QStringList arguments;
+    //      arguments << hFile;
+
+    //      QProcess* myProcess = new QProcess(nullptr);
+    //      myProcess->start(program, arguments);
     //    }
+
+    if(didReplace && !isIOFilter)
+    {
+      std::cout << msg.toStdString() << std::endl;
+      writeOutput(didReplace, outLines, hFile);
+    }
   }
 };

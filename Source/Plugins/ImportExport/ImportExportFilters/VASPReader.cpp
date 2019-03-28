@@ -53,6 +53,8 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+
   DataArrayID31 = 31,
   DataArrayID32 = 32,
   DataContainerID = 1
@@ -159,7 +161,7 @@ void VASPReader::dataCheck()
     return;
   }
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer vertexAttrMat = m->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
+  AttributeMatrix::Pointer vertexAttrMat = m->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID21);
   if(getErrorCondition() < 0 || nullptr == vertexAttrMat.get())
   {
     return;
@@ -193,7 +195,7 @@ void VASPReader::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
   tempPath.update(getVertexDataContainerName().getDataContainerName(), getVertexAttributeMatrixName(), getAtomTypesArrayName());
-  m_AtomTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims, "", DataArrayID32); /* @ADD_DATAARRAY_ID@ */
+  m_AtomTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims, "", DataArrayID32);
   if(nullptr != m_AtomTypesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_AtomTypes = m_AtomTypesPtr.lock()->getPointer(0);

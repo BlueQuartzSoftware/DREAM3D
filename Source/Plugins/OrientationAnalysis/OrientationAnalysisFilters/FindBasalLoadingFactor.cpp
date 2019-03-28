@@ -128,8 +128,7 @@ void FindBasalLoadingFactor::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 1;
-  m_BasalLoadingFactorPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getBasalLoadingFactorArrayPath(), 0, dims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_BasalLoadingFactorPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getBasalLoadingFactorArrayPath(), 0, dims, "", DataArrayID31);
   if(nullptr != m_BasalLoadingFactorPtr.lock())         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_BasalLoadingFactor = m_BasalLoadingFactorPtr.lock()->getPointer(0);

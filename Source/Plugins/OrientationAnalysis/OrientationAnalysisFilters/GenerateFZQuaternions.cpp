@@ -220,7 +220,7 @@ void GenerateFZQuaternions::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 4;
-  m_FZQuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getFZQuatsArrayPath(), 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_FZQuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getFZQuatsArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_FZQuatsPtr.lock())
   {
     m_FZQuats = m_FZQuatsPtr.lock()->getPointer(0);

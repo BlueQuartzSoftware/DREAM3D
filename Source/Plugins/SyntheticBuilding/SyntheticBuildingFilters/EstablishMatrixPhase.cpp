@@ -56,6 +56,9 @@
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+  AttributeMatrixID22 = 22,
+
   DataArrayID30 = 30,
   DataArrayID31 = 31,
 };
@@ -255,7 +258,7 @@ void EstablishMatrixPhase::dataCheck()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix(this, getOutputCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix(this, getOutputCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID21);
   if(getErrorCondition() < 0 || nullptr == cellFeatureAttrMat.get())
   {
     return;
@@ -269,13 +272,13 @@ void EstablishMatrixPhase::dataCheck()
   else
   {
     tDims[0] = m_PhaseTypesPtr.lock()->getNumberOfTuples();
-    outEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getOutputCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
+    outEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getOutputCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID22);
   }
 
   tempPath = getOutputCellAttributeMatrixPath();
   tempPath.setAttributeMatrixName(getOutputCellEnsembleAttributeMatrixName());
   tempPath.setDataArrayName(SIMPL::EnsembleData::PhaseName);
-  m_PhaseNamesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<StringDataArray, AbstractFilter, QString>(this, tempPath, nullptr, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_PhaseNamesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<StringDataArray, AbstractFilter, QString>(this, tempPath, nullptr, cDims, "", DataArrayID31);
 
   // Feature Data
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), getFeaturePhasesArrayName());

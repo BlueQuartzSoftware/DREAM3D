@@ -49,6 +49,8 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+
   DataContainerID = 1
 };
 
@@ -141,7 +143,7 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
   v->setGeometry(vertices);
 
   QVector<size_t> tDims(1, 0);
-  v->createNonPrereqAttributeMatrix(this, "SpecifiedPointsData", tDims, AttributeMatrix::Type::Vertex);
+  v->createNonPrereqAttributeMatrix(this, "SpecifiedPointsData", tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID21);
 
   QVector<size_t> cDims(1, 1);
   tempPath.update("SpecifiedPoints", "SpecifiedPointsData", "FeatureIds");

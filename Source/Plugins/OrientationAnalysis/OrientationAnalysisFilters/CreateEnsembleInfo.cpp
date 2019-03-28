@@ -52,6 +52,8 @@
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+
   DataArrayID30 = 30,
   DataArrayID31 = 31,
   DataArrayID32 = 32,
@@ -146,7 +148,7 @@ void CreateEnsembleInfo::dataCheck()
   }
 
   QVector<size_t> tDims(1, numPhases + 1);
-  m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
+  m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID21);
   if(getErrorCondition() < 0)
   {
     return;
@@ -155,8 +157,8 @@ void CreateEnsembleInfo::dataCheck()
   QVector<size_t> cDims(1, 1);
   DataArrayPath tempPath;
   tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName());
-  m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims,
-                                                                                                                                "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_CrystalStructuresPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims, "", DataArrayID31);
   if(nullptr != m_CrystalStructuresPtr.lock())                                 /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
@@ -164,14 +166,14 @@ void CreateEnsembleInfo::dataCheck()
 
   tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), getPhaseTypesArrayName());
   m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt32ArrayType, AbstractFilter, uint32_t>(this, tempPath, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown), cDims,
-                                                                                                                     "", DataArrayID32); /* @ADD_DATAARRAY_ID@ */
+                                                                                                                     "", DataArrayID32);
   if(nullptr != m_PhaseTypesPtr.lock())                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), getPhaseNamesArrayName());
-  m_PhaseNamesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<StringDataArray, AbstractFilter, QString>(this, tempPath, "_PHASE_NAME_", cDims, "", DataArrayID33); /* @ADD_DATAARRAY_ID@ */
+  m_PhaseNamesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<StringDataArray, AbstractFilter, QString>(this, tempPath, "_PHASE_NAME_", cDims, "", DataArrayID33);
 }
 
 // -----------------------------------------------------------------------------

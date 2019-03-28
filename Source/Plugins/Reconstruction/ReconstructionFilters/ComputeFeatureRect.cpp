@@ -85,8 +85,7 @@ void ComputeFeatureRect::dataCheck()
   }
 
   cDims[0] = 6;
-  m_FeatureRectPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, getFeatureRectArrayPath(), 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_FeatureRectPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, getFeatureRectArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_FeatureRectPtr.lock())
   {
     m_FeatureRect = m_FeatureRectPtr.lock()->getPointer(0);

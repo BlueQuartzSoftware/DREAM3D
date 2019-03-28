@@ -143,8 +143,7 @@ void FindFeaturePhases::dataCheck()
     dataArrayPaths.push_back(getCellPhasesArrayPath());
   }
 
-  m_FeaturePhasesPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, getFeaturePhasesArrayPath(), 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, getFeaturePhasesArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_FeaturePhasesPtr.lock())          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);

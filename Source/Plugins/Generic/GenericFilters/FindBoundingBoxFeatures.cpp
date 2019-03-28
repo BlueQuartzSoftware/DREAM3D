@@ -160,7 +160,7 @@ void FindBoundingBoxFeatures::dataCheck()
   }
 
   tempPath.update(getCentroidsArrayPath().getDataContainerName(), getCentroidsArrayPath().getAttributeMatrixName(), getBiasedFeaturesArrayName());
-  m_BiasedFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, false, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_BiasedFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, false, cDims, "", DataArrayID31);
   if(nullptr != m_BiasedFeaturesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0);

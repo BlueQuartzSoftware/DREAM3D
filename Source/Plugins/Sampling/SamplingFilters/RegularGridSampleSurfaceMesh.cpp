@@ -52,6 +52,8 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+
   DataContainerID = 1
 };
 
@@ -153,7 +155,7 @@ void RegularGridSampleSurfaceMesh::dataCheck()
   tDims[0] = m_XPoints;
   tDims[1] = m_YPoints;
   tDims[2] = m_ZPoints;
-  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCondition() < 0 || nullptr == cellAttrMat.get())
   {
     return;

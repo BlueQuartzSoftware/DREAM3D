@@ -54,6 +54,14 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+  AttributeMatrixID22 = 22,
+  AttributeMatrixID23 = 23,
+  AttributeMatrixID24 = 24,
+  AttributeMatrixID25 = 25,
+  AttributeMatrixID26 = 26,
+  AttributeMatrixID27 = 27,
+
   DataArrayID31 = 31,
   DataArrayID32 = 32,
   DataArrayID33 = 33,
@@ -253,11 +261,11 @@ void CreateLambertSphere::dataCheck()
     vertDC->setGeometry(vertGeom);
     
     QVector<size_t> tDims = {static_cast<size_t>(totalVerts)};
-    vertDC->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
+    vertDC->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID21);
 
     //    QVector<size_t> cDims = {1};
     //    DataArrayPath path(getVertexDataContainerName(), getVertexAttributeMatrixName(), m_VertexDataName);
-    //    m_VertexDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, path, 0, cDims, "", DataArrayID31);/* @ADD_DATAARRAY_ID@ */    //
+    //    m_VertexDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, path, 0, cDims, "", DataArrayID31);    //
     //    if(nullptr != m_VertexDataPtr.lock())
     //    {
     //      m_VertexData = m_VertexDataPtr.lock()->getPointer(0);
@@ -276,10 +284,10 @@ void CreateLambertSphere::dataCheck()
     size_t numEdges = ((imageDims[0] + 1) * imageDims[0]) + ((imageDims[1] + 1) * imageDims[1]);
 
     QVector<size_t> tDims = {static_cast<size_t>(totalVerts)};
-    edgeDC->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
+    edgeDC->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID22);
     tDims[0] = numEdges;
-    edgeDC->createNonPrereqAttributeMatrix(this, getEdgeAttributeMatrixName(), tDims, AttributeMatrix::Type::Edge);
-    
+    edgeDC->createNonPrereqAttributeMatrix(this, getEdgeAttributeMatrixName(), tDims, AttributeMatrix::Type::Edge, AttributeMatrixID23);
+
     // Create Edge Geometry
     QVector<size_t> cDims = {2};
     EdgeGeom::Pointer edgetGeom = EdgeGeom::CreateGeometry(numEdges, m_Vertices, "EdgeGeometry");
@@ -287,7 +295,7 @@ void CreateLambertSphere::dataCheck()
     
     cDims[0] = 1;
     DataArrayPath path(getEdgeDataContainerName().getDataContainerName(), getEdgeAttributeMatrixName(), m_EdgeDataName);
-    m_EdgeDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, path, 0, cDims, "", DataArrayID32); /* @ADD_DATAARRAY_ID@ */
+    m_EdgeDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, path, 0, cDims, "", DataArrayID32);
     if(nullptr != m_EdgeDataPtr.lock())
     {
       m_EdgeData = m_EdgeDataPtr.lock()->getPointer(0);
@@ -304,10 +312,10 @@ void CreateLambertSphere::dataCheck()
     }
 
     QVector<size_t> tDims = {static_cast<size_t>(totalVerts)};
-    triangleDC->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
+    triangleDC->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID24);
     tDims[0] = static_cast<size_t>(totalQuads * 2);
-    triangleDC->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face);
-    
+    triangleDC->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face, AttributeMatrixID25);
+
     // Create a Triangle Geometry
     size_t numTris = imageDims[0] * imageDims[1] * 2; // Twice the number of Quads
     QVector<size_t> cDims = {3};
@@ -316,7 +324,7 @@ void CreateLambertSphere::dataCheck()
 
     cDims[0] = 1;
     DataArrayPath path(getTriangleDataContainerName().getDataContainerName(), getFaceAttributeMatrixName(), m_TriangleDataName);
-    m_TriangleFaceDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, path, 0, cDims, "", DataArrayID33); /* @ADD_DATAARRAY_ID@ */
+    m_TriangleFaceDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, path, 0, cDims, "", DataArrayID33);
     if(nullptr != m_TriangleFaceDataPtr.lock())
     {
       m_TriangleFaceData = m_TriangleFaceDataPtr.lock()->getPointer(0);
@@ -333,9 +341,9 @@ void CreateLambertSphere::dataCheck()
     }
 
     QVector<size_t> tDims(1, static_cast<size_t>(totalVerts));
-    quadDC->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
+    quadDC->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID26);
     tDims[0] = static_cast<size_t>(totalQuads);
-    quadDC->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face);
+    quadDC->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face, AttributeMatrixID27);
 
     // Create a Quad Geometry
     QuadGeom::Pointer quadGeom = QuadGeom::CreateGeometry(totalQuads, m_Vertices, SIMPL::Geometry::QuadGeometry, !getInPreflight());
@@ -343,7 +351,7 @@ void CreateLambertSphere::dataCheck()
 
     cDims[0] = 1;
     DataArrayPath path(getQuadDataContainerName().getDataContainerName(), getFaceAttributeMatrixName(), m_QuadDataName);
-    m_QuadFaceDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, path, 0, cDims, "", DataArrayID34); /* @ADD_DATAARRAY_ID@ */
+    m_QuadFaceDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, path, 0, cDims, "", DataArrayID34);
     if(nullptr != m_QuadFaceDataPtr.lock())
     {
       m_QuadFaceData = m_QuadFaceDataPtr.lock()->getPointer(0);

@@ -157,7 +157,7 @@ void FindSurfaceAreaToVolume::dataCheck()
   if(getCalculateSphericity())
   {
     tempPath.setDataArrayName(getSphericityArrayName());
-    m_SphericityPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+    m_SphericityPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID31);
     if(nullptr != m_SphericityPtr.lock())
     {
       m_Sphericity = m_SphericityPtr.lock()->getPointer(0);

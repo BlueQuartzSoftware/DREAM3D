@@ -173,8 +173,8 @@ void TriangleNormalFilter::dataCheck()
   }
 
   QVector<size_t> cDims(1, 3);
-  m_SurfaceMeshTriangleNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getSurfaceMeshTriangleNormalsArrayPath(), 0, cDims, "",
-                                                                                                                                     DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_SurfaceMeshTriangleNormalsPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getSurfaceMeshTriangleNormalsArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_SurfaceMeshTriangleNormalsPtr.lock())          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_SurfaceMeshTriangleNormals = m_SurfaceMeshTriangleNormalsPtr.lock()->getPointer(0);

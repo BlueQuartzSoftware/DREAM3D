@@ -117,8 +117,8 @@ void FindSaltykovSizes::dataCheck()
   {
     m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_SaltykovEquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getSaltykovEquivalentDiametersArrayPath(), 0, dims, "",
-                                                                                                                                    DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_SaltykovEquivalentDiametersPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getSaltykovEquivalentDiametersArrayPath(), 0, dims, "", DataArrayID31);
   if(nullptr != m_SaltykovEquivalentDiametersPtr.lock())         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_SaltykovEquivalentDiameters = m_SaltykovEquivalentDiametersPtr.lock()->getPointer(0);

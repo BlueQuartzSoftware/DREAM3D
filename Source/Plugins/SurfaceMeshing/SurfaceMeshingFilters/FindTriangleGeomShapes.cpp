@@ -170,7 +170,7 @@ void FindTriangleGeomShapes::dataCheck()
 
   //CREATED FEATURE DATA
   tempPath.update(getFeatureAttributeMatrixName().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getOmega3sArrayName());
-  m_Omega3sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_Omega3sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID31);
   if(nullptr != m_Omega3sPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_Omega3s = m_Omega3sPtr.lock()->getPointer(0);
@@ -178,7 +178,7 @@ void FindTriangleGeomShapes::dataCheck()
 
   cDims[0] = 3;
   tempPath.update(getFeatureAttributeMatrixName().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getAxisLengthsArrayName());
-  m_AxisLengthsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID32); /* @ADD_DATAARRAY_ID@ */
+  m_AxisLengthsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID32);
   if(nullptr != m_AxisLengthsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0);
@@ -194,7 +194,7 @@ void FindTriangleGeomShapes::dataCheck()
 
   cDims[0] = 2;
   tempPath.update(getFeatureAttributeMatrixName().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getAspectRatiosArrayName());
-  m_AspectRatiosPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID33); /* @ADD_DATAARRAY_ID@ */
+  m_AspectRatiosPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID33);
   if(nullptr != m_AspectRatiosPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_AspectRatios = m_AspectRatiosPtr.lock()->getPointer(0);

@@ -75,6 +75,8 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+
   DataContainerID = 1
 };
 
@@ -229,7 +231,7 @@ void InitializeSyntheticVolume::dataCheck()
   tDims[0] = static_cast<size_t>(m_Dimensions[0]);
   tDims[1] = static_cast<size_t>(m_Dimensions[1]);
   tDims[2] = static_cast<size_t>(m_Dimensions[2]);
-  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCondition() < 0 && cellAttrMat == nullptr)
   {
     return;

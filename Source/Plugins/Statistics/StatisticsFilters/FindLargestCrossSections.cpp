@@ -136,8 +136,7 @@ void FindLargestCrossSections::dataCheck()
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_LargestCrossSectionsPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getLargestCrossSectionsArrayPath(), 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_LargestCrossSectionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getLargestCrossSectionsArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_LargestCrossSectionsPtr.lock())          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_LargestCrossSections = m_LargestCrossSectionsPtr.lock()->getPointer(0);

@@ -195,7 +195,7 @@ void Stereographic3D::dataCheck()
   cDims[0] = 3;
   DataArrayPath path = getQuatsArrayPath();
   path.setDataArrayName(getCoordinatesArrayName());
-  m_CellCoordinatesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter, float>(this, path, 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_CellCoordinatesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter, float>(this, path, 0, cDims, "", DataArrayID31);
   if(nullptr != m_CellCoordinatesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_CellCoordinates = m_CellCoordinatesPtr.lock()->getPointer(0);

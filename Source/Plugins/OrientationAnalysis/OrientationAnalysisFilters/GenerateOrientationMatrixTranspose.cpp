@@ -134,8 +134,7 @@ void GenerateOrientationMatrixTranspose::dataCheck()
   }
 
   cDims[0] = 9;
-  m_OutputOrientationMatrixPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_OutputOrientationMatrixPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_OutputOrientationMatrixPtr.lock())
   {
     m_OutputOrientationMatrix = m_OutputOrientationMatrixPtr.lock()->getPointer(0);

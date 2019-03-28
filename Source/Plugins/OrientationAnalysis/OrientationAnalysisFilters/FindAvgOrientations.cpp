@@ -177,7 +177,7 @@ void FindAvgOrientations::dataCheck()
     dataArrayPaths.push_back(getQuatsArrayPath());
   }
 
-  m_AvgQuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getAvgQuatsArrayPath(), 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_AvgQuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getAvgQuatsArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_AvgQuatsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);

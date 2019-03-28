@@ -57,6 +57,8 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+
   DataArrayID31 = 31,
 
   DataContainerID = 1
@@ -218,11 +220,11 @@ void ReadStlFile::dataCheck()
   sm->setGeometry(triangleGeom);
 
   QVector<size_t> tDims(1, 0);
-  sm->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face);
+  sm->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face, AttributeMatrixID21);
 
   QVector<size_t> cDims(1, 3);
   tempPath.update(getSurfaceMeshDataContainerName().getDataContainerName(), getFaceAttributeMatrixName(), getFaceNormalsArrayName());
-  m_FaceNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_FaceNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims, "", DataArrayID31);
   if(nullptr != m_FaceNormalsPtr.lock())
   {
     m_FaceNormals = m_FaceNormalsPtr.lock()->getPointer(0);

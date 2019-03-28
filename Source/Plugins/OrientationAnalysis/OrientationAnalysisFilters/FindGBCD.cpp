@@ -64,6 +64,8 @@
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+
   DataArrayID30 = 30,
   DataArrayID31 = 31,
 };
@@ -486,7 +488,7 @@ void FindGBCD::dataCheckSurfaceMesh()
   }
 
   QVector<size_t> tDims(1, m_CrystalStructuresPtr.lock()->getNumberOfTuples());
-  sm->createNonPrereqAttributeMatrix(this, getFaceEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::FaceEnsemble);
+  sm->createNonPrereqAttributeMatrix(this, getFaceEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::FaceEnsemble, AttributeMatrixID21);
 
   QVector<size_t> cDims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(),
@@ -523,7 +525,7 @@ void FindGBCD::dataCheckSurfaceMesh()
   cDims[5] = 2;
 
   tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), getFaceEnsembleAttributeMatrixName(), getGBCDArrayName());
-  m_GBCDPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_GBCDPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims, "", DataArrayID31);
   if(nullptr != m_GBCDPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_GBCD = m_GBCDPtr.lock()->getPointer(0);

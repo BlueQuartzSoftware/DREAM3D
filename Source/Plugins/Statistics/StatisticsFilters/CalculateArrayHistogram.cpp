@@ -51,6 +51,9 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+  AttributeMatrixID22 = 22,
+
   DataContainerID = 1
 };
 
@@ -199,7 +202,7 @@ void CalculateArrayHistogram::dataCheck()
     {
       return;
     }
-    AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix(this, getNewAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic);
+    AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix(this, getNewAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic, AttributeMatrixID21);
     if(getErrorCondition() < 0 || nullptr == attrMat.get())
     {
       return;
@@ -209,7 +212,7 @@ void CalculateArrayHistogram::dataCheck()
   else // use existing data container
   {
     DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_SelectedArrayPath.getDataContainerName());
-    AttributeMatrix::Pointer attrMat = dc->createNonPrereqAttributeMatrix(this, getNewAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic);
+    AttributeMatrix::Pointer attrMat = dc->createNonPrereqAttributeMatrix(this, getNewAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic, AttributeMatrixID22);
     if(getErrorCondition() < 0 || nullptr == attrMat.get())
     {
       return;

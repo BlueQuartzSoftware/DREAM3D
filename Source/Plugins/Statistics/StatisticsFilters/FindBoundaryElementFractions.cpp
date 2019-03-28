@@ -141,8 +141,7 @@ void FindBoundaryElementFractions::dataCheck()
 
   getDataContainerArray()->validateNumberOfTuples(this, dataArrayPaths);
 
-  m_BoundaryCellFractionsPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getBoundaryCellFractionsArrayPath(), 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_BoundaryCellFractionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getBoundaryCellFractionsArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_BoundaryCellFractionsPtr.lock())          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_BoundaryCellFractions = m_BoundaryCellFractionsPtr.lock()->getPointer(0);

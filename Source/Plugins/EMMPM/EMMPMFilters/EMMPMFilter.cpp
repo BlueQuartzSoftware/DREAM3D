@@ -224,8 +224,7 @@ void EMMPMFilter::dataCheck()
     m_InputImage = m_InputImagePtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to Data from the DataArray<T> object */
 
-  m_OutputImagePtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_OutputImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_OutputImagePtr.lock())         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_OutputImage = m_OutputImagePtr.lock()->getPointer(0);

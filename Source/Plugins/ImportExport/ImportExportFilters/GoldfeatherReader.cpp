@@ -49,6 +49,9 @@
 
 enum createdPathID : RenameDataPath::DataID_t
 {
+  AttributeMatrixID21 = 21,
+  AttributeMatrixID22 = 22,
+
   DataContainerID = 1,
   DataArrayID30 = 30,
   DataArrayID31 = 31,
@@ -222,12 +225,12 @@ void GoldfeatherReader::dataCheck()
     return;
   }
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer vertAttrMat = sm->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
+  AttributeMatrix::Pointer vertAttrMat = sm->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID21);
   if(getErrorCondition() < 0 || nullptr == vertAttrMat.get())
   {
     return;
   }
-  AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face);
+  AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face, AttributeMatrixID22);
   if(getErrorCondition() < 0 || nullptr == faceAttrMat.get())
   {
     return;

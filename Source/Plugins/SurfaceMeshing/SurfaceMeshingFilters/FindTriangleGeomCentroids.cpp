@@ -144,7 +144,7 @@ void FindTriangleGeomCentroids::dataCheck()
 
   DataArrayPath path(getFeatureAttributeMatrixName().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getCentroidsArrayName());
   cDims[0] = 3;
-  m_CentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, path, 0.0, cDims, "", DataArrayID31); /* @ADD_DATAARRAY_ID@ */
+  m_CentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, path, 0.0, cDims, "", DataArrayID31);
   if(nullptr != m_CentroidsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
