@@ -136,7 +136,7 @@ public:
     filter->setDataContainerArray(dca);
 
     Observer obs;
-    obs.connect(filter.get(), SIGNAL(messageGenerated(AbstractMessage::Pointer)), &obs, SLOT(processPipelineMessage(AbstractMessage::Pointer)));
+    obs.connect(filter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), &obs, SLOT(processPipelineMessage(const AbstractMessage::Pointer&)));
 
     DataArrayPath path("Test", "CellData", "FeatureIds");
     QVariant variant;

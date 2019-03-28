@@ -275,7 +275,7 @@ public:
     }
 
     Observer obs;
-    obs.connect(convFilt.get(), SIGNAL(messageGenerated(AbstractMessage::Pointer)), &obs, SLOT(processPipelineMessage(AbstractMessage::Pointer)));
+    obs.connect(convFilt.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), &obs, SLOT(processPipelineMessage(const AbstractMessage::Pointer&)));
 
     convFilt->execute();
     int err = convFilt->getErrorCondition();
@@ -456,8 +456,8 @@ public:
         }
 
         //      Observer obs;
-        //      obs.connect(diffMapFilt.get(), SIGNAL(messageGenerated(AbstractMessage::Pointer)),
-        //                  &obs, SLOT(processPipelineMessage(AbstractMessage::Pointer)));
+        //      obs.connect(diffMapFilt.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)),
+        //                  &obs, SLOT(processPipelineMessage(const AbstractMessage::Pointer&)));
 
         diffMapFilt->execute();
         int err = diffMapFilt->getErrorCondition();

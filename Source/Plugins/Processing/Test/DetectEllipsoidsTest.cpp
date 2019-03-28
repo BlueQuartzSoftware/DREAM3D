@@ -134,7 +134,7 @@ public:
     AbstractFilter::Pointer detectEllipsoidsFilter = container[container.size() - 2];
 
     Observer obs;
-    obs.connect(detectEllipsoidsFilter.get(), SIGNAL(messageGenerated(AbstractMessage::Pointer)), &obs, SLOT(processPipelineMessage(AbstractMessage::Pointer)));
+    obs.connect(detectEllipsoidsFilter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), &obs, SLOT(processPipelineMessage(const AbstractMessage::Pointer&)));
 
     pipeline->preflightPipeline();
     DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), 0);

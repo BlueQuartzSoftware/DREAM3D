@@ -419,7 +419,7 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   emmpm->setInitializationFunction(initFunction);
 
   // Connect up the Error/Warning/Progress object so the filter can report those things
-  connect(emmpm.get(), SIGNAL(messageGenerated(AbstractMessage::Pointer)), this, SLOT(handleEmmpmMessage(AbstractMessage::Pointer)));
+  connect(emmpm.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SLOT(handleEmmpmMessage(const AbstractMessage::Pointer&)));
 
   emmpm->execute();
 

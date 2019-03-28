@@ -581,7 +581,7 @@ void ReadH5Ebsd::execute()
         AbstractFilter::Pointer rot_Sample = rotSampleFactory->create();
 
         // Connect up the Error/Warning/Progress object so the filter can report those things
-        connect(rot_Sample.get(), SIGNAL(messageGenerated(AbstractMessage::Pointer)), this, SIGNAL(messageGenerated(AbstractMessage::Pointer)));
+        connect(rot_Sample.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SIGNAL(messageGenerated(const AbstractMessage::Pointer&)));
         rot_Sample->setDataContainerArray(getDataContainerArray()); // AbstractFilter implements this so no problem
         // Now set the filter parameters for the filter using QProperty System since we can not directly
         // instantiate the filter since it resides in a plugin. These calls are SLOW. DO NOT EVER do this in a
@@ -654,7 +654,7 @@ void ReadH5Ebsd::execute()
         AbstractFilter::Pointer rot_Euler = rotEulerFactory->create();
 
         // Connect up the Error/Warning/Progress object so the filter can report those things
-        connect(rot_Euler.get(), SIGNAL(messageGenerated(AbstractMessage::Pointer)), this, SIGNAL(messageGenerated(AbstractMessage::Pointer)));
+        connect(rot_Euler.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SIGNAL(messageGenerated(const AbstractMessage::Pointer&)));
         rot_Euler->setDataContainerArray(getDataContainerArray()); // AbstractFilter implements this so no problem
         // Now set the filter parameters for the filter using QProperty System since we can not directly
         // instantiate the filter since it resides in a plugin. These calls are SLOW. DO NOT EVER do this in a
