@@ -68,13 +68,13 @@
 
 #include "SyntheticBuilding/SyntheticBuildingFilters/InitializeSyntheticVolume.h"
 
-class FilterMessageHandler : public AbstractMessageHandler
+class ReaderMessageHandler : public AbstractMessageHandler
 {
   public:
-    explicit FilterMessageHandler() {}
+    explicit ReaderMessageHandler() {}
 
     /**
-     * @brief processMessage
+     * @brief Dumps the DataContainerReader error messages to the debugger.
      * @param msg
      */
     void processMessage(const FilterErrorMessage* msg) const override
@@ -83,7 +83,7 @@ class FilterMessageHandler : public AbstractMessageHandler
     }
 
     /**
-     * @brief processMessage
+     * @brief Dumps the DataContainerReader warning messages to the debugger.
      * @param msg
      */
     void processMessage(const FilterWarningMessage* msg) const override
@@ -405,7 +405,7 @@ void InitializeSyntheticVolumeWidget::afterPreflight()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolumeWidget::displayErrorMessage(const AbstractMessage::Pointer& msg)
 {
-  FilterMessageHandler msgHandler;
+  ReaderMessageHandler msgHandler;
   msg->visit(&msgHandler);
 }
 

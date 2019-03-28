@@ -72,7 +72,7 @@ class EMMPMFilterMessageHandler : public AbstractMessageHandler
     explicit EMMPMFilterMessageHandler(EMMPMFilter* filter) : m_Filter(filter) {}
 
     /**
-     * @brief Handle incoming GenericProgressMessages
+     * @brief Re-emits incoming GenericProgressMessages as FilterProgressMessages.
      */
     void processMessage(const GenericProgressMessage* msg) const override
     {
@@ -80,7 +80,7 @@ class EMMPMFilterMessageHandler : public AbstractMessageHandler
     }
 
     /**
-     * @brief Handle incoming GenericStatusMessages
+     * @brief Re-emits incoming GenericStatusMessages as FilterStatusMessages.
      */
     void processMessage(const GenericStatusMessage* msg) const override
     {
@@ -88,7 +88,7 @@ class EMMPMFilterMessageHandler : public AbstractMessageHandler
     }
 
     /**
-     * @brief Handle incoming GenericErrorMessages
+     * @brief Re-emits incoming GenericErrorMessages as FilterErrorMessages.
      */
     void processMessage(const GenericErrorMessage* msg) const override
     {
@@ -96,7 +96,7 @@ class EMMPMFilterMessageHandler : public AbstractMessageHandler
     }
 
     /**
-     * @brief Handle incoming GenericWarningMessages
+     * @brief Re-emits incoming GenericWarningMessages as FilterWarningMessages.
      */
     void processMessage(const GenericWarningMessage* msg) const override
     {

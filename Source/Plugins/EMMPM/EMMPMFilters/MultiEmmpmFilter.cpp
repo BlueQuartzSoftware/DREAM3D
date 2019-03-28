@@ -64,7 +64,7 @@ class MultiEmmpmFilterMessageHandler : public AbstractMessageHandler
     explicit MultiEmmpmFilterMessageHandler(MultiEmmpmFilter* filter) : m_Filter(filter) {}
 
     /**
-     * @brief Handle incoming GenericProgressMessages
+     * @brief Re-emits incoming GenericProgressMessages as FilterProgressMessages.
      */
     void processMessage(const GenericProgressMessage* msg) const override
     {
@@ -72,7 +72,8 @@ class MultiEmmpmFilterMessageHandler : public AbstractMessageHandler
     }
 
     /**
-     * @brief Handle incoming GenericStatusMessages
+     * @brief Re-emits incoming GenericStatusMessages as FilterStatusMessages.  Adds a prefix that
+     * shows what array the filter is on.
      */
     void processMessage(const GenericStatusMessage* msg) const override
     {
@@ -86,7 +87,7 @@ class MultiEmmpmFilterMessageHandler : public AbstractMessageHandler
     }
 
     /**
-     * @brief Handle incoming GenericErrorMessages
+     * @brief Re-emits incoming GenericErrorMessages as FilterErrorMessages.
      */
     void processMessage(const GenericErrorMessage* msg) const override
     {
@@ -94,7 +95,7 @@ class MultiEmmpmFilterMessageHandler : public AbstractMessageHandler
     }
 
     /**
-     * @brief Handle incoming GenericWarningMessages
+     * @brief Re-emits incoming GenericWarningMessages as FilterWarningMessages.
      */
     void processMessage(const GenericWarningMessage* msg) const override
     {

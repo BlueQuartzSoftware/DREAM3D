@@ -68,7 +68,7 @@ class EMCalculationMessageHandler : public AbstractMessageHandler
     explicit EMCalculationMessageHandler(EMCalculation* calcObj) : m_CalculationObject(calcObj) {}
 
     /**
-     * @brief Handle incoming GenericProgressMessages
+     * @brief Re-emits incoming GenericProgressMessages as FilterProgressMessages.
      */
     void processMessage(const GenericProgressMessage* msg) const override
     {
@@ -76,7 +76,8 @@ class EMCalculationMessageHandler : public AbstractMessageHandler
     }
 
     /**
-     * @brief Handle incoming GenericStatusMessages
+     * @brief Re-emits incoming GenericStatusMessages as FilterStatusMessages.  Appends a message to
+     * the end of the message text that shows what EM Loop number the filter is on.
      */
     void processMessage(const GenericStatusMessage* msg) const override
     {
