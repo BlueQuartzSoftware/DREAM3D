@@ -436,7 +436,7 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EMMPMFilter::handleEmmpmMessage(AbstractMessage::Pointer msg)
+void EMMPMFilter::handleEmmpmMessage(const AbstractMessage::Pointer &msg)
 {
   EMMPMFilterMessageHandler msgHandler(this);
   msg->visit(&msgHandler);
