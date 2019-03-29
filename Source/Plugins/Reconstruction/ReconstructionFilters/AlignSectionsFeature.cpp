@@ -175,7 +175,7 @@ void AlignSectionsFeature::find_shifts(std::vector<int64_t>& xshifts, std::vecto
   for(int64_t iter = 1; iter < dims[2]; iter++)
   {
     QString ss = QObject::tr("Aligning Sections || Determining Shifts || %1% Complete").arg(((float)iter / dims[2]) * 100);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
     mindisorientation = std::numeric_limits<float>::max();
     slice = (dims[2] - 1) - iter;
     oldxshift = -1;

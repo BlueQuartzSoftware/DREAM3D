@@ -242,7 +242,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   }
   ScopedFileMonitor vtkFileMonitor(vtkFile);
 
-  notifyStatusMessage(getHumanLabel(), "Writing Vertex Data ....");
+  notifyStatusMessage("Writing Vertex Data ....");
 
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
   fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
@@ -303,7 +303,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   }
 
   // Write the triangle indices into the vtk File
-  notifyStatusMessage(getHumanLabel(), "Writing Faces ....");
+  notifyStatusMessage("Writing Faces ....");
 
   int tData[4];
 
@@ -868,21 +868,21 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int
 
   QString attrMatName = m_SurfaceMeshFaceLabelsArrayPath.getAttributeMatrixName();
 
-  notifyStatusMessage(getHumanLabel(), "Writing Face Normals...");
+  notifyStatusMessage("Writing Face Normals...");
   writeCellNormalData<double>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshFaceNormals, "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
-  notifyStatusMessage(getHumanLabel(), "Writing Principal Curvature 1");
+  notifyStatusMessage("Writing Principal Curvature 1");
   writeCellScalarData<double>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshPrincipalCurvature1, "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
-  notifyStatusMessage(getHumanLabel(), "Writing Principal Curvature 2");
+  notifyStatusMessage("Writing Principal Curvature 2");
   writeCellScalarData<double>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshPrincipalCurvature2, "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
-  notifyStatusMessage(getHumanLabel(), "Writing Feature Face Id");
+  notifyStatusMessage("Writing Feature Face Id");
   writeCellScalarData<int32_t>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshFeatureFaceId, "int", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
-  notifyStatusMessage(getHumanLabel(), "Writing Gaussian Curvature");
+  notifyStatusMessage("Writing Gaussian Curvature");
   writeCellScalarData<double>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshGaussianCurvatures, "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
-  notifyStatusMessage(getHumanLabel(), "Writing Mean Curvature");
+  notifyStatusMessage("Writing Mean Curvature");
   writeCellScalarData<double>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshMeanCurvatures, "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 #if 0
   writeCellVectorData<double>(sm, attrMatName, SIMPL::CellData::SurfaceMeshPrincipalDirection1,

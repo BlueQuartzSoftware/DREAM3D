@@ -83,12 +83,7 @@ class MultiEmmpmFilterMessageHandler : public AbstractMessageHandler
     void processMessage(const GenericStatusMessage* msg) const override
     {
       QString prefix = QObject::tr("(Array %2 of %3)").arg(m_Filter->m_CurrentArrayIndex + 1).arg(m_Filter->m_ArrayCount);
-      if (!msg->getPrefix().isEmpty())
-      {
-        prefix.append(QObject::tr("%1 ").arg(msg->getPrefix()));
-      }
-
-      emit m_Filter->notifyStatusMessage(prefix, msg->getMessageText());
+      emit m_Filter->notifyStatusMessageWithPrefix(prefix, msg->getMessageText());
     }
 
     /**

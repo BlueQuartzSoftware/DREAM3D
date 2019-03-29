@@ -317,7 +317,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
       return -1;
     }
     QString ss = QObject::tr("Iteration %1 of %2").arg(q).arg(m_IterationSteps);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
     // Compute the Deltas for each point
     for(int64_t i = 0; i < nedges; i++)
     {
@@ -363,7 +363,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
         return -1;
       }
       QString ss = QObject::tr("Iteration %1 of %2").arg(q).arg(m_IterationSteps);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
       // Compute the Delta's
       for(int64_t i = 0; i < nedges; i++)
       {

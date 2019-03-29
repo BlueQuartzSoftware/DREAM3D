@@ -520,7 +520,7 @@ void GeneratePrecipitateStatsData::execute()
   QTextStream ss(&msg);
 
   ss << getPhaseName() << ":: Initialize ODF Values....";
-  notifyStatusMessage(getHumanLabel(), msg);
+  notifyStatusMessage(msg);
 
   {
     absPresetPtr->initializeODFTableModel(dataMap);
@@ -546,7 +546,7 @@ void GeneratePrecipitateStatsData::execute()
 
   msg.clear();
   ss << getPhaseName() << ":: Initialize MDF Values....";
-  notifyStatusMessage(getHumanLabel(), msg);
+  notifyStatusMessage(msg);
   {
     absPresetPtr->initializeMDFTableModel(dataMap);
     QVector<float> e1s;
@@ -584,7 +584,7 @@ void GeneratePrecipitateStatsData::execute()
 
   msg.clear();
   ss << getPhaseName() << ":: Initialize Axis ODF Values....";
-  notifyStatusMessage(getHumanLabel(), msg);
+  notifyStatusMessage(msg);
   {
     absPresetPtr->initializeAxisODFTableModel(dataMap);
     QVector<float> e1s;
@@ -606,7 +606,7 @@ void GeneratePrecipitateStatsData::execute()
 
   msg.clear();
   ss << getPhaseName() << ":: Initialize RDF Values....";
-  notifyStatusMessage(getHumanLabel(), msg);
+  notifyStatusMessage(msg);
 
   {
     std::vector<float> boxDims(3);

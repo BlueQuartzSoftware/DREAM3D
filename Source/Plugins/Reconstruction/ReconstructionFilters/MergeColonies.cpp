@@ -634,7 +634,7 @@ void MergeColonies::execute()
   }
   numParents += 1;
 
-  notifyStatusMessage(getHumanLabel(), "Characterizing Colonies");
+  notifyStatusMessage("Characterizing Colonies");
   characterize_colonies();
 
   if(m_RandomizeParentIds)

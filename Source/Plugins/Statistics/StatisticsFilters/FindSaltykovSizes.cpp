@@ -146,7 +146,7 @@ void FindSaltykovSizes::execute()
 
   find_saltykov_sizes();
 
-  notifyStatusMessage(getHumanLabel(), "Find Feature Saltykov Sizes Completed");
+  notifyStatusMessage("Find Feature Saltykov Sizes Completed");
 }
 
 // -----------------------------------------------------------------------------

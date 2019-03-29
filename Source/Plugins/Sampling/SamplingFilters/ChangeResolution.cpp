@@ -363,7 +363,7 @@ void ChangeResolution::execute()
     }
     progressInt = static_cast<size_t>((static_cast<float>(i) / m_ZP) * 100.0f);
     QString ss = QObject::tr("Changing Resolution || %1% Complete").arg(progressInt);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
     for(size_t j = 0; j < m_YP; j++)
     {
       for(size_t k = 0; k < m_XP; k++)
@@ -382,7 +382,7 @@ void ChangeResolution::execute()
   }
 
   QString ss = QObject::tr("Copying Data...");
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+  notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
 
   QVector<size_t> tDims(3, 0);
   tDims[0] = m_XP;

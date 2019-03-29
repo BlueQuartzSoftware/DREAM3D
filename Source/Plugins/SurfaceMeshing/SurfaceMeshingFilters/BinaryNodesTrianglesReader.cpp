@@ -261,7 +261,7 @@ int BinaryNodesTrianglesReader::read()
   }
   {
     QString ss = QObject::tr("Calc Node Count from Nodes.bin File: ").arg(nNodes);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
   }
   // Open the triangles file for reading
   FILE* triFile = fopen(m_BinaryTrianglesFile.toLatin1().data(), "rb+");
@@ -290,7 +290,7 @@ int BinaryNodesTrianglesReader::read()
 
   {
     QString ss = QObject::tr("Calc Triangle Count from Triangles.bin File: %1").arg(nTriangles);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
   }
 
   // Allocate all the nodes
@@ -302,7 +302,7 @@ int BinaryNodesTrianglesReader::read()
   updateVertexInstancePointers();
   {
     QString ss = QObject::tr("Reading Nodes file into Memory");
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
   }
   size_t nread = 0;
   SurfaceMesh::NodesFile::NodesFileRecord_t nRecord;
@@ -322,7 +322,7 @@ int BinaryNodesTrianglesReader::read()
 
   {
     QString ss = QObject::tr("Reading Triangles file into Memory");
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
   }
 
   // Allocate all the Triangle Objects

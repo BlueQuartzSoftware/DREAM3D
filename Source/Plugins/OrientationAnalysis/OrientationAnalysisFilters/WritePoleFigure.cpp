@@ -391,7 +391,7 @@ void WritePoleFigure::writeImage(QImage image, QString label)
 {
   QString filename = generateImagePath(label);
   QString ss = QObject::tr("Writing Image %1").arg(filename);
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+  notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
   bool saved = image.save(filename);
   if(!saved)
   {
@@ -761,8 +761,8 @@ void WritePoleFigure::execute()
     label.append(QString::number(phase));
 
     QString ss = QObject::tr("Generating Pole Figures for Phase %1").arg(phase);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-    
+    notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+
     switch(m_CrystalStructures[phase])
     {
     case Ebsd::CrystalStructure::Cubic_High:

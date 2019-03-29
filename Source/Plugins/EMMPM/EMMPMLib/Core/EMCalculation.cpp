@@ -87,12 +87,8 @@ class EMCalculationMessageHandler : public AbstractMessageHandler
     void processMessage(const GenericStatusMessage* msg) const override
     {
       EMMPM_Data* data = m_CalculationObject->m_Data.get();
-      QString messageText = QObject::tr("EM Loop %1").arg(data->currentEMLoop);
-      if (!msg->getMessageText().isEmpty())
-      {
-        messageText.append(QObject::tr(" - %1").arg(msg->getMessageText()));
-      }
-      emit m_CalculationObject->notifyStatusMessage(msg->getPrefix(), messageText);
+      QString prefix = QObject::tr("EM Loop %1").arg(data->currentEMLoop);
+      emit m_CalculationObject->notifyStatusMessageWithPrefix(prefix, msg->getMessageText());
     }
 
     /**
@@ -184,13 +180,13 @@ void EMCalculation::execute()
   /* After curveLoopDelay iterations, begin calculating curvature costs */
   if(k >= ccostLoopDelay && (data->useCurvaturePenalty != 0))
   {
-    notifyStatusMessage("", "Performing Morphological Filter on input data");
+    notifyStatusMessage("Performing Morphological Filter on input data");
     morphFilt->multiSE(data);
   }
 
   // Zero out the Mean, Variance and N values for both the current and previous
   EMMPMUtilities::ZeroMeanVariance(data->classes, data->dims, data->prev_mu, data->prev_variance, data->N);
-  notifyStatusMessage("", "Performing Initial MPM Loop");
+  notifyStatusMessage("Performing Initial MPM Loop");
 
   /* Perform initial MPM - (Estimation) */
   MPMCalculation::Pointer acvmpm = MPMCalculation::New();
@@ -215,7 +211,7 @@ void EMCalculation::execute()
 
     ss.clear();
     msgOut << "EM Loop " << data->currentEMLoop << " - Converting Xt Data to Output Image..";
-    notifyStatusMessage("", ss);
+    notifyStatusMessage(ss);
 
     /* Send back the Progress Stats and the segmented image. If we never get into this loop because
     * emiter == 0 then we will still send back the stats just after the end of the EM Loops */
@@ -250,21 +246,21 @@ void EMCalculation::execute()
 
     ss.clear();
     msgOut << "EM Loop " << data->currentEMLoop << " - Copying Current Mean & Variance Values ...";
-    notifyStatusMessage("", ss);
+    notifyStatusMessage(ss);
 
     /* Copy the current Mean and Variance Values to the "prev_*" variables */
     EMMPMUtilities::copyCurrentMeanVarianceValues(getData());
 
     ss.clear();
     msgOut << "EM Loop " << data->currentEMLoop << " - Zeroing Mean & Variance Values...";
-    notifyStatusMessage("", ss);
+    notifyStatusMessage(ss);
 
     /* Reset model parameters to zero */
     EMMPMUtilities::ZeroMeanVariance(data->classes, data->dims, data->mean, data->variance, data->N);
 
     ss.clear();
     msgOut << "EM Loop " << data->currentEMLoop << " - Updating Mean & Variance Values...";
-    notifyStatusMessage("", ss);
+    notifyStatusMessage(ss);
     /* Update Means and Variances */
     EMMPMUtilities::UpdateMeansAndVariances(getData());
 
@@ -279,7 +275,7 @@ void EMCalculation::execute()
 #if 1
     ss.clear();
     msgOut << "EM Loop " << data->currentEMLoop << " - Removing Zero Probability Classes ...";
-    notifyStatusMessage("", ss);
+    notifyStatusMessage(ss);
     /* Eliminate any classes that have zero probability */
     EMMPMUtilities::RemoveZeroProbClasses(getData());
 #endif
@@ -296,7 +292,7 @@ void EMCalculation::execute()
     {
       ss.clear();
       msgOut << "EM Loop " << data->currentEMLoop << " - Performing Morphological filtering ...";
-      notifyStatusMessage("", ss);
+      notifyStatusMessage(ss);
       morphFilt->multiSE(data);
     }
 
@@ -306,7 +302,7 @@ void EMCalculation::execute()
   } /* EM Loop End */
 
   msgOut << "EM Loop " << data->currentEMLoop << " - Converting Xt Data to Output final Array..";
-  notifyStatusMessage("", ss);
+  notifyStatusMessage(ss);
   EMMPMUtilities::ConvertXtToOutputImage(getData());
 
   data->inside_em_loop = 0;

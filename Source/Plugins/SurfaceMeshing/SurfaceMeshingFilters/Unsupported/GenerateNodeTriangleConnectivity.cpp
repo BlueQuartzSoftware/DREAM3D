@@ -167,7 +167,7 @@ void GenerateNodeTriangleConnectivity::execute()
   clearErrorCondition();
   clearWarningCondition();
 
-  notifyStatusMessage(getHumanLabel(), "Starting");
+  notifyStatusMessage("Starting");
 
   // Generate the connectivity data
   generateConnectivity();
@@ -201,7 +201,7 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
   }
   int ntri = trianglesPtr->GetNumberOfTuples();
   NodeTrianglesMap_t m_Node2Triangle;
-  notifyStatusMessage(getHumanLabel(), "Creating the Mapping of Triangles to Node");
+  notifyStatusMessage("Creating the Mapping of Triangles to Node");
   // get the triangle definitions - use the pointer to the start of the Struct Array
   Triangle* triangles = trianglesPtr->GetPointer(0);
   // Generate the map of node_id -> Triangles that include that node_id value
@@ -230,7 +230,7 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
     {
       ss.str("");
       ss << (progIndex / total * 100.0f) << "% Complete";
-      notifyStatusMessage(getHumanLabel(), ss.str());
+      notifyStatusMessage(ss.str());
       curPercent += 5.0f;
     }
     progIndex++;

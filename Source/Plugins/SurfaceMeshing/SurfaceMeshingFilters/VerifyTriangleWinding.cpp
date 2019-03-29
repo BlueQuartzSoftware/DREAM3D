@@ -370,7 +370,7 @@ void VerifyTriangleWinding::execute()
 
   FaceArray::Pointer facesPtr = sm->getFaces();
 
-  notifyStatusMessage(getHumanLabel(), "Generating Face List for each Node");
+  notifyStatusMessage("Generating Face List for each Node");
   // Make sure the Face Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
   if(nullptr == facesPtr->getFacesContainingVert())
@@ -395,7 +395,7 @@ void VerifyTriangleWinding::execute()
   }
 
   // Execute the actual verification step.
-  notifyStatusMessage(getHumanLabel(), "Generating Connectivity Complete. Starting Analysis");
+  notifyStatusMessage("Generating Connectivity Complete. Starting Analysis");
   verifyTriangleWinding();
 
 
@@ -630,7 +630,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     if((progressIndex / total * 100.0f) > (curPercent))
     {
       QString ss = QObject::tr("%1% Complete").arg(static_cast<int>(progressIndex / total * 100.0f));
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
       curPercent += 5.0f;
     }
     ++progressIndex;

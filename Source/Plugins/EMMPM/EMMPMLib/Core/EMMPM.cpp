@@ -73,7 +73,7 @@ class EMMPMMessageHandler : public AbstractMessageHandler
      */
     void processMessage(const GenericStatusMessage* msg) const override
     {
-      emit m_EmmpmObject->notifyStatusMessage(msg->getPrefix(), msg->getMessageText());
+      emit m_EmmpmObject->notifyStatusMessage(msg->getMessageText());
     }
 
     /**

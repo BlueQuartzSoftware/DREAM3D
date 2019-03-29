@@ -252,7 +252,7 @@ void ImportEbsdMontage::dataCheck()
         if(!getInPreflight())
         {
           QString msg = QString("==> [%1/%2] %3").arg(tilesRead).arg(totalTiles).arg(tile2D.FileName);
-          notifyStatusMessage(getHumanLabel(), msg);
+          notifyStatusMessage(msg);
         }
       }
     }

@@ -469,7 +469,7 @@ void MPMCalculation::execute()
 
     data->currentMPMLoop = k;
     QString ss = QString("MPM Loop %1").arg(k);
-    notifyStatusMessage("", ss);
+    notifyStatusMessage(ss);
 
     currentLoopCount = data->mpmIterations * data->currentEMLoop + data->currentMPMLoop;
     data->progress = currentLoopCount / totalLoops * 100.0;

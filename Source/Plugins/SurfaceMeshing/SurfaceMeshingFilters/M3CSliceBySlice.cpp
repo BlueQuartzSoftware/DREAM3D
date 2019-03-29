@@ -536,7 +536,7 @@ void M3CSliceBySlice::execute()
   {
     QString ss = QObject::tr(" Layers %1 and %2 of %3").arg(i).arg(i + 1).arg(sliceCount);
     // notifyProgressValue((i * 90 / sliceCount));
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
 
     if(getCancel())
     {
@@ -673,7 +673,7 @@ void M3CSliceBySlice::execute()
     renumberVoxelFeatureIds(renumberFeatureValue);
   }
 
-  notifyStatusMessage(getHumanLabel(), "Surface Meshing Complete");
+  notifyStatusMessage("Surface Meshing Complete");
 }
 
 // -----------------------------------------------------------------------------

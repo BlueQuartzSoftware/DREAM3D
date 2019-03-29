@@ -346,7 +346,7 @@ void SampleSurfaceMesh::execute()
   float* ur = urPtr->getPointer(0);
   VertexGeom::Pointer faceBBs = VertexGeom::CreateGeometry(2 * numFaces, "_INTERNAL_USE_ONLY_faceBBs");
 
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Counting number of Features...");
+  notifyStatusMessageWithPrefix(getMessagePrefix(), "Counting number of Features...");
 
   // walk through faces to see how many features there are
   int32_t g1 = 0, g2 = 0;
@@ -383,7 +383,7 @@ void SampleSurfaceMesh::execute()
   linkLocPtr->initializeWithZeros();
   int32_t* linkLoc = linkLocPtr->getPointer(0);
 
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Counting number of triangle faces per feature ...");
+  notifyStatusMessageWithPrefix(getMessagePrefix(), "Counting number of triangle faces per feature ...");
 
   // traverse data to determine number of faces belonging to each feature
   for(int64_t i = 0; i < numFaces; i++)
@@ -409,7 +409,7 @@ void SampleSurfaceMesh::execute()
   // now allocate storage for the faces
   faceLists->allocateLists(linkCount);
 
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Allocating triangle faces per feature ...");
+  notifyStatusMessageWithPrefix(getMessagePrefix(), "Allocating triangle faces per feature ...");
 
   // traverse data again to get the faces belonging to each feature
   for(int64_t i = 0; i < numFaces; i++)
@@ -436,7 +436,7 @@ void SampleSurfaceMesh::execute()
     return;
   }
 
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Vertex Geometry generating sampling points");
+  notifyStatusMessageWithPrefix(getMessagePrefix(), "Vertex Geometry generating sampling points");
 
   // generate the list of sampling points from subclass
   VertexGeom::Pointer points = generate_points();
@@ -452,7 +452,7 @@ void SampleSurfaceMesh::execute()
   iArray->initializeWithZeros();
   int32_t* polyIds = iArray->getPointer(0);
 
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Sampling triangle geometry ...");
+  notifyStatusMessageWithPrefix(getMessagePrefix(), "Sampling triangle geometry ...");
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
@@ -500,7 +500,7 @@ void SampleSurfaceMesh::execute()
   }
   assign_points(iArray);
 
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Complete");
+  notifyStatusMessageWithPrefix(getMessagePrefix(), "Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -518,7 +518,7 @@ void SampleSurfaceMesh::sendThreadSafeProgressMessage(int featureId, size_t numC
     qint64 remainMillis = inverseRate * (totalFeatures - m_NumCompleted);
     QString ss = QObject::tr("Feature %3 | Points Completed: %1 of %2").arg(m_NumCompleted).arg(totalFeatures).arg(featureId);
     ss = ss + QObject::tr(" || Est. Time Remain: %1").arg(DREAM3D::convertMillisToHrsMinSecs(remainMillis));
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
     m_Millis = QDateTime::currentMSecsSinceEpoch();
     m_LastCompletedPoints = m_NumCompleted;
   }

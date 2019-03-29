@@ -172,7 +172,7 @@ void RemoveFlaggedFeatures::execute()
   cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock().get());
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Remove Flagged Features Filter Complete");
+  notifyStatusMessage("Remove Flagged Features Filter Complete");
 }
 
 // -----------------------------------------------------------------------------

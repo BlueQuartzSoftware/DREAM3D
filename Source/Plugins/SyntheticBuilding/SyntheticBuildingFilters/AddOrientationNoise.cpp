@@ -151,7 +151,7 @@ void AddOrientationNoise::execute()
 // -----------------------------------------------------------------------------
 void AddOrientationNoise::add_orientation_noise()
 {
-  notifyStatusMessage(getHumanLabel(), "Adding Orientation Noise");
+  notifyStatusMessage("Adding Orientation Noise");
   SIMPL_RANDOMNG_NEW()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellEulerAnglesArrayPath().getDataContainerName());

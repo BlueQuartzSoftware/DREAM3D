@@ -160,7 +160,7 @@ void ImportAvxmMDSim::execute()
 
     QString filePath = m_FilePathList[i];
 
-    notifyStatusMessage(getHumanLabel(), tr("Importing file %1 of %2").arg(i + 1).arg(m_FilePathList.size()));
+    notifyStatusMessage(tr("Importing file %1 of %2").arg(i + 1).arg(m_FilePathList.size()));
 
     QFileInfo fi(filePath);
     DataArrayPath typeDAPath(fi.baseName(), "CellData", "Type");

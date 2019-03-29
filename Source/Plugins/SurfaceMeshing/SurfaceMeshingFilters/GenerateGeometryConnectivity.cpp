@@ -132,7 +132,7 @@ void GenerateGeometryConnectivity::execute()
 
   if(m_GenerateVertexTriangleLists || m_GenerateTriangleNeighbors)
   {
-    notifyStatusMessage(getHumanLabel(), "Generating Vertex Element List");
+    notifyStatusMessage("Generating Vertex Element List");
     err = geom->findElementsContainingVert();
     if(err < 0)
     {
@@ -143,7 +143,7 @@ void GenerateGeometryConnectivity::execute()
   }
   if(m_GenerateTriangleNeighbors)
   {
-    notifyStatusMessage(getHumanLabel(), "Generating Element Neighbors List");
+    notifyStatusMessage("Generating Element Neighbors List");
     err = geom->findElementNeighbors();
     if(err < 0)
     {

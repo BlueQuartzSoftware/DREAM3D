@@ -621,7 +621,7 @@ void QuickSurfaceMesh::correctProblemVoxels()
       }
     }
     QString ss = QObject::tr("Correcting Problem Voxels: Iteration - '%1'; Problem Voxels - '%2'").arg(iter).arg(count);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(ss);
   }
 }
 

@@ -420,7 +420,7 @@ void EbsdToH5Ebsd::execute()
     progress = (int32_t)(100.0f * (float)(progress) / total);
     QString msg = "Converting File: " + ebsdFName;
 
-    notifyStatusMessage(getHumanLabel(), msg.toLatin1().data());
+    notifyStatusMessage(msg.toLatin1().data());
     err = fileImporter->importFile(fileId, z, ebsdFName);
     if(err < 0)
     {

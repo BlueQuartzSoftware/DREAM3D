@@ -340,7 +340,7 @@ void EstablishMatrixPhase::execute()
 // -----------------------------------------------------------------------------
 void EstablishMatrixPhase::establish_matrix()
 {
-  notifyStatusMessage(getHumanLabel(), "Establishing Matrix");
+  notifyStatusMessage("Establishing Matrix");
   SIMPL_RANDOMNG_NEW()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());

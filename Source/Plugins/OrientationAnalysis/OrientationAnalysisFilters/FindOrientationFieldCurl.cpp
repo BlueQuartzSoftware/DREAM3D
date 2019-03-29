@@ -471,7 +471,7 @@ void FindOrientationFieldCurl::execute()
     }
   }
 
-  notifyStatusMessage(getHumanLabel(), "FindOrientationFieldCurl Completed");
+  notifyStatusMessage("FindOrientationFieldCurl Completed");
 }
 
 // -----------------------------------------------------------------------------

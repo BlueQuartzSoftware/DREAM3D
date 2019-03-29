@@ -314,7 +314,7 @@ void ConvertHexGridToSquareGrid::execute()
       progress = static_cast<int32_t>(z - m_ZStartIndex);
       progress = (int32_t)(100.0f * (float)(progress) / total);
       QString msg = "Converting File: " + ebsdFName;
-      notifyStatusMessage(getHumanLabel(), msg.toLatin1().data());
+      notifyStatusMessage(msg.toLatin1().data());
     }
     if(getCancel())
     {

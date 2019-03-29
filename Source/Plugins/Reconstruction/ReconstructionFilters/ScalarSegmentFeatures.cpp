@@ -344,7 +344,7 @@ void ScalarSegmentFeatures::preflight()
 // -----------------------------------------------------------------------------
 void ScalarSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures)
 {
-  notifyStatusMessage(getHumanLabel(), "Randomizing Feature Ids");
+  notifyStatusMessage("Randomizing Feature Ids");
   // Generate an even distribution of numbers between the min and max range
   const int64_t rangeMin = 1;
   const int64_t rangeMax = totalFeatures - 1;

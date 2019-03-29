@@ -281,7 +281,7 @@ void CorrelateValuesWithVectorDirection::execute()
   createSterographicProjections(numComps);
   writePFStats(numComps);
 
-  notifyStatusMessage(getHumanLabel(), "Completed");
+  notifyStatusMessage("Completed");
 }
 
 // -----------------------------------------------------------------------------

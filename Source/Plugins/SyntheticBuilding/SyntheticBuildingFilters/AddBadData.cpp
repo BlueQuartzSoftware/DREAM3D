@@ -168,7 +168,7 @@ void AddBadData::execute()
 // -----------------------------------------------------------------------------
 void AddBadData::add_noise()
 {
-  notifyStatusMessage(getHumanLabel(), "Adding Noise");
+  notifyStatusMessage("Adding Noise");
   SIMPL_RANDOMNG_NEW()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getGBEuclideanDistancesArrayPath().getDataContainerName());

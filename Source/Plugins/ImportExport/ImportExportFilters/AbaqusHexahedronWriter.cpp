@@ -339,7 +339,7 @@ int32_t AbaqusHexahedronWriter::writeNodes(const QList<QString>& fileNames, size
             timeDiff = ((float)nodeIndex / (float)(currentMillis - startMillis));
             estimatedTime = (float)(totalPoints - nodeIndex) / timeDiff;
             ss << " || Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);
-            notifyStatusMessage(getHumanLabel(), buf);
+            notifyStatusMessage(buf);
             millis = QDateTime::currentMSecsSinceEpoch();
             if(getCancel()) // Filter has been cancelled
             {
@@ -358,7 +358,7 @@ int32_t AbaqusHexahedronWriter::writeNodes(const QList<QString>& fileNames, size
   fprintf(f, "**\n** ----------------------------------------------------------------\n**\n");
 
   // Close the file
-  notifyStatusMessage(getHumanLabel(), "Writing Nodes (File 1/5) Complete");
+  notifyStatusMessage("Writing Nodes (File 1/5) Complete");
   fclose(f);
   return err;
 }
@@ -415,7 +415,7 @@ int32_t AbaqusHexahedronWriter::writeElems(const QList<QString>& fileNames, size
             timeDiff = ((float)index / (float)(currentMillis - startMillis));
             estimatedTime = (float)(totalPoints - index) / timeDiff;
             ss << " || Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);
-            notifyStatusMessage(getHumanLabel(), buf);
+            notifyStatusMessage(buf);
             millis = QDateTime::currentMSecsSinceEpoch();
             if(getCancel()) // Filter has been cancelled
             {
@@ -432,7 +432,7 @@ int32_t AbaqusHexahedronWriter::writeElems(const QList<QString>& fileNames, size
   fprintf(f, "**\n** ----------------------------------------------------------------\n**\n");
 
   // Close the file
-  notifyStatusMessage(getHumanLabel(), "Writing Elements (File 2/5) Complete");
+  notifyStatusMessage("Writing Elements (File 2/5) Complete");
   fclose(f);
   return err;
 }
@@ -463,7 +463,7 @@ int32_t AbaqusHexahedronWriter::writeElset(const QList<QString>& fileNames, size
   fprintf(f, "*Elset, elset=cube, generate\n");
   fprintf(f, "1, %llu, 1\n", static_cast<unsigned long long int>(totalPoints));
   fprintf(f, "**\n** Each Grain is made up of multiple elements\n**");
-  notifyStatusMessage(getHumanLabel(), (getMessagePrefix() + " Writing Element Sets (File 4/5) 1% Completed || Est. Time Remain: "));
+  notifyStatusMessage((getMessagePrefix() + " Writing Element Sets (File 4/5) 1% Completed || Est. Time Remain: "));
 
   // find total number of Grain Ids
   int32_t maxGrainId = 0;
@@ -516,7 +516,7 @@ int32_t AbaqusHexahedronWriter::writeElset(const QList<QString>& fileNames, size
         timeDiff = ((float)voxelId / (float)(currentMillis - startMillis));
         estimatedTime = (float)(maxGrainId - voxelId) / timeDiff;
         ss << " || Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);
-        notifyStatusMessage(getHumanLabel(), buf);
+        notifyStatusMessage(buf);
         millis = QDateTime::currentMSecsSinceEpoch();
         if(getCancel()) // Filter has been cancelled
         {
@@ -530,7 +530,7 @@ int32_t AbaqusHexahedronWriter::writeElset(const QList<QString>& fileNames, size
   fprintf(f, "\n**\n** ----------------------------------------------------------------\n**\n");
 
   // Close the file
-  notifyStatusMessage(getHumanLabel(), "Writing Element Sets (File 4/5) Complete");
+  notifyStatusMessage("Writing Element Sets (File 4/5) Complete");
   fclose(f);
   return err;
 }
@@ -561,7 +561,7 @@ int32_t AbaqusHexahedronWriter::writeMaster(const QString& file)
   fprintf(f, "**\n** ----------------------------------------------------------------\n**\n");
 
   // Close the file
-  notifyStatusMessage(getHumanLabel(), "Writing Master (File 5/5) Complete");
+  notifyStatusMessage("Writing Master (File 5/5) Complete");
   fclose(f);
   return err;
 }
@@ -604,7 +604,7 @@ int32_t AbaqusHexahedronWriter::writeSects(const QString& file, size_t totalPoin
   fprintf(f, "**\n** ----------------------------------------------------------------\n**\n");
 
   // Close the file
-  notifyStatusMessage(getHumanLabel(), "Writing Sections (File 3/5) Complete");
+  notifyStatusMessage("Writing Sections (File 3/5) Complete");
   fclose(f);
   return err;
 }

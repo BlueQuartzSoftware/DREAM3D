@@ -265,7 +265,7 @@ void FindEllipsoidError::execute()
     find_error2D();
   }
 
-  notifyStatusMessage(getHumanLabel(), "FindEllipsoidError Completed");
+  notifyStatusMessage("FindEllipsoidError Completed");
 }
 
 // -----------------------------------------------------------------------------

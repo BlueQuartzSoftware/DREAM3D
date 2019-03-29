@@ -242,7 +242,7 @@ void SineParamsSegmentFeatures::execute()
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
   // Tell the user we are starting the filter
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
+  notifyStatusMessageWithPrefix(getMessagePrefix(), "Starting");
 
   // Convert user defined tolerance to radians.
   // angleTolerance = m_AngleTolerance * SIMPLib::Constants::k_Pi / 180.0f;
@@ -273,7 +273,7 @@ void SineParamsSegmentFeatures::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Completed");
+  notifyStatusMessage("Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -281,7 +281,7 @@ void SineParamsSegmentFeatures::execute()
 // -----------------------------------------------------------------------------
 void SineParamsSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, size_t totalFeatures)
 {
-  notifyStatusMessage(getHumanLabel(), "Randomizing Feature Ids");
+  notifyStatusMessage("Randomizing Feature Ids");
   // Generate an even distribution of numbers between the min and max range
   const size_t rangeMin = 1;
   const size_t rangeMax = totalFeatures - 1;

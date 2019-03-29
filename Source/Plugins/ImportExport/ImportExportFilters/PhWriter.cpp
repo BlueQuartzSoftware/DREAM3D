@@ -232,7 +232,7 @@ int32_t PhWriter::writeFile()
   outfile.close();
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Writing Ph File Complete");
+  notifyStatusMessage("Writing Ph File Complete");
   return 0;
 }
 

@@ -291,7 +291,7 @@ void WriteStatsGenOdfAngleFile::execute()
     }
 
     QString ss = QObject::tr("Writing file for phase '%1'").arg(*iter);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(ss);
 
     QString absFilePath = absPath + "/" + fname + "_Phase_" + QString::number(*iter) + "." + suffix;
 

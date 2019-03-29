@@ -790,7 +790,7 @@ void FindGBPDMetricBased::execute()
   // ------------------------------ generation of sampling points ----------------------------------
 
   QString ss = QObject::tr("--> Generating sampling points");
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+  notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
 
   // generate "Golden Section Spiral", see http://www.softimageblog.com/archives/115
   int numSamplPts_WholeSph = 2 * m_NumSamplPts; // here we generate points on the whole sphere
@@ -1008,7 +1008,7 @@ void FindGBPDMetricBased::execute()
       return;
     }
     ss = QObject::tr("--> Selecting triangles corresponding to Phase Of Interest");
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
     if(i + trisChunkSize >= numMeshTris)
     {
       trisChunkSize = numMeshTris - i;
@@ -1079,7 +1079,7 @@ void FindGBPDMetricBased::execute()
       return;
     }
     ss = QObject::tr("--> Determining GBPD values (%1%)").arg(int(100.0 * float(i) / float(samplPtsX.size())));
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
     if(i + pointsChunkSize >= samplPtsX.size())
     {
       pointsChunkSize = samplPtsX.size() - i;
