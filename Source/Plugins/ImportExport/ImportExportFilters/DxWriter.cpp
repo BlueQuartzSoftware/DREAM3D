@@ -133,10 +133,11 @@ void DxWriter::dataCheck()
 
   if(volTuples != m_FeatureIdsPtr.lock()->getNumberOfTuples())
   {
+    setErrorCondition(-10200);
     QString ss = QObject::tr("The number of Tuples for the DataArray %1 is %2 and for the associated Image Geometry is %3. The number of tuples must match")
                      .arg(m_FeatureIdsPtr.lock()->getName())
                      .arg(m_FeatureIdsPtr.lock()->getNumberOfTuples());
-    notifyErrorMessage("", ss, -10200);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 }
 
@@ -195,7 +196,8 @@ int32_t DxWriter::writeFile()
   {
     QString ss;
     ss = QObject::tr("Error creating parent path '%1'").arg(dir.path());
-    notifyErrorMessage("", ss, -1);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
 
@@ -203,7 +205,8 @@ int32_t DxWriter::writeFile()
   if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
-    notifyErrorMessage("", ss, -100);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return getErrorCondition();
   }
 

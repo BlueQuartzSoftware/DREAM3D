@@ -245,12 +245,14 @@ void YSChoiAbaqusReader::dataCheck()
   if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
-    notifyErrorMessage("", ss, -387);
+    setErrorCondition(-387);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
-    notifyErrorMessage("", ss, -388);
+    setErrorCondition(-388);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
@@ -261,7 +263,8 @@ void YSChoiAbaqusReader::dataCheck()
     if(!in.open(QIODevice::ReadOnly | QIODevice::Text))
     {
       QString msg = QObject::tr("Abaqus file could not be opened: %1").arg(getInputFile());
-      notifyErrorMessage("", "", -100);
+      setErrorCondition(-100);
+      notifyErrorMessage(getHumanLabel(), "", getErrorCondition());
       return;
     }
     QString word;
@@ -375,7 +378,8 @@ void YSChoiAbaqusReader::execute()
   if(!in.open(QIODevice::ReadOnly | QIODevice::Text))
   {
     QString msg = QObject::tr("Abaqus file could not be opened: %1").arg(getInputFile());
-    notifyErrorMessage("", "", -100);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), "", getErrorCondition());
     return;
   }
 
@@ -418,7 +422,8 @@ void YSChoiAbaqusReader::execute()
   if(!in2.open(QIODevice::ReadOnly | QIODevice::Text))
   {
     QString msg = QObject::tr("Abaqus Feature Info file could not be opened: %1").arg(getInputFeatureInfoFile());
-    notifyErrorMessage("", "", -100);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), "", getErrorCondition());
     return;
   }
 

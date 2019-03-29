@@ -124,7 +124,8 @@ void CreateEnsembleInfo::dataCheck()
 
   if(m_Ensemble.size() == 0)
   {
-    notifyErrorMessage("", "You must add at least 1 ensemble phase.", -15000);
+    setErrorCondition(-15000);
+    notifyErrorMessage(getHumanLabel(), "You must add at least 1 ensemble phase.", getErrorCondition());
   }
 
   int numPhases = m_Ensemble.size();
@@ -199,7 +200,8 @@ void CreateEnsembleInfo::execute()
   if(0 == numPhases) // Either the group name "EnsembleInfo" is incorrect or 0 was entered as the Number_Phases
   {
     QString ss = QObject::tr("Check the group name EnsembleInfo and that the number of phases > 0");
-    notifyErrorMessage("", ss, -10003);
+    setErrorCondition(-10003);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -214,7 +216,8 @@ void CreateEnsembleInfo::execute()
     if(crystalStructure == Ebsd::CrystalStructure::UnknownCrystalStructure)
     {
       QString ss = QObject::tr("Incorrect crystal structure name '%1'").arg(crystalStructure);
-      notifyErrorMessage("", ss, -10006);
+      setErrorCondition(-10006);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
 
@@ -225,7 +228,8 @@ void CreateEnsembleInfo::execute()
     if(static_cast<PhaseType::Type>(phaseType) == PhaseType::Type::Unknown)
     {
       QString ss = QObject::tr("Incorrect phase type '%1'").arg(phaseType); // The phase type name was not found in the lookup table
-      notifyErrorMessage("", ss, -10007);
+      setErrorCondition(-10007);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
 
@@ -236,7 +240,8 @@ void CreateEnsembleInfo::execute()
     if(phaseName.isEmpty())
     {
       QString ss = QObject::tr("Phase name cannot be empty'"); // The phase name was not found
-      notifyErrorMessage("", ss, -10008);
+      setErrorCondition(-10008);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
 

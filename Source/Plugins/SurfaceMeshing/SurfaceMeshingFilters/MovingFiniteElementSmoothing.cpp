@@ -205,13 +205,15 @@ void MovingFiniteElementSmoothing::dataCheck()
   // We MUST have Nodes
   if(sm->getVertices().get() == nullptr)
   {
-    notifyErrorMessage("", "SurfaceMesh DataContainer missing Nodes", -384);
+    setErrorCondition(-384);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
   }
 
   // We MUST have Triangles defined also.
   if(sm->getFaces().get() == nullptr)
   {
-    notifyErrorMessage("", "SurfaceMesh DataContainer missing Triangles", -385);
+    setErrorCondition(-385);
+    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
   }
 
   if(getErrorCondition() >= 0)
@@ -231,7 +233,8 @@ void MovingFiniteElementSmoothing::dataCheck()
   {
     if(sm->getEdges().get() == nullptr)
     {
-      notifyErrorMessage("", "Constraining Quad Points or Triples lines requires Edges array", -385);
+      setErrorCondition(-385);
+      notifyErrorMessage(getHumanLabel(), "Constraining Quad Points or Triples lines requires Edges array", getErrorCondition());
     }
   }
 }
@@ -249,8 +252,9 @@ void MovingFiniteElementSmoothing::preflight()
   setInPreflight(false);
 
   /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
   QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, 0xABABABAB);
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
@@ -432,7 +436,8 @@ void MovingFiniteElementSmoothing::execute()
               {
                 qDebug() << "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad"
                          << "\n";
-                notifyErrorMessage("", "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad", -666);
+                setErrorCondition(-666);
+                notifyErrorMessage(getHumanLabel(), "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad", -666);
               }
               return;
             }
@@ -457,7 +462,8 @@ void MovingFiniteElementSmoothing::execute()
               {
                 qDebug() << "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad"
                          << "\n";
-                notifyErrorMessage("", "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad", -666);
+                setErrorCondition(-666);
+                notifyErrorMessage(getHumanLabel(), "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad", -666);
               }
               return;
             }
@@ -720,7 +726,7 @@ void MovingFiniteElementSmoothing::execute()
       qDebug() << "Update loop: " << updates << "\n";
     }
     QString ss = QObject::tr("Iteration: %1").arg(updates);
-    notifyStatusMessage(getMessagePrefix(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
     Dihedral_min = 180.;
     Dihedral_max = 0.;

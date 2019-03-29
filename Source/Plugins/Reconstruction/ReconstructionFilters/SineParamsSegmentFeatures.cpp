@@ -242,7 +242,7 @@ void SineParamsSegmentFeatures::execute()
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
   // Tell the user we are starting the filter
-  notifyStatusMessage(getMessagePrefix(), "Starting");
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
 
   // Convert user defined tolerance to radians.
   // angleTolerance = m_AngleTolerance * SIMPLib::Constants::k_Pi / 180.0f;
@@ -261,7 +261,8 @@ void SineParamsSegmentFeatures::execute()
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumberOfTuples();
   if(totalFeatures < 2)
   {
-    notifyErrorMessage("", "The number of Features was 0 or 1 which means no features were detected. Is a threshold value set to high?", -87000);
+    setErrorCondition(-87000);
+    notifyErrorMessage(getHumanLabel(), "The number of Features was 0 or 1 which means no features were detected. Is a threshold value set to high?", getErrorCondition());
     return;
   }
 
@@ -272,7 +273,7 @@ void SineParamsSegmentFeatures::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("", "Completed");
+  notifyStatusMessage(getHumanLabel(), "Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -280,7 +281,7 @@ void SineParamsSegmentFeatures::execute()
 // -----------------------------------------------------------------------------
 void SineParamsSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, size_t totalFeatures)
 {
-  notifyStatusMessage("", "Randomizing Feature Ids");
+  notifyStatusMessage(getHumanLabel(), "Randomizing Feature Ids");
   // Generate an even distribution of numbers between the min and max range
   const size_t rangeMin = 1;
   const size_t rangeMax = totalFeatures - 1;

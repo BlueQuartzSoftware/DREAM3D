@@ -329,7 +329,7 @@ void NeighborOrientationCorrelation::execute()
       {
         progressInt = static_cast<int64_t>((static_cast<float>(i) / totalPoints) * 100.0f);
         QString ss = QObject::tr("Level %1 of %2 || Processing Data %3%").arg((startLevel - currentLevel) + 1).arg(startLevel - m_Level).arg(progressInt);
-        notifyStatusMessage(getMessagePrefix(), ss);
+        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
         prog = prog + progIncrement;
       }
 
@@ -521,7 +521,7 @@ void NeighborOrientationCorrelation::execute()
         {
           progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
           QString ss = QObject::tr("Level %1 of %2 || Copying Data %3%").arg((startLevel - currentLevel) + 2).arg(startLevel - m_Level).arg(progressInt);
-          notifyStatusMessage(getMessagePrefix(), ss);
+          notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
           prog = prog + progIncrement;
         }
         neighbor = bestNeighbor[i];
@@ -556,7 +556,7 @@ void NeighborOrientationCorrelation::updateProgress(size_t p)
   m_Progress += p;
   int32_t progressInt = static_cast<int>((static_cast<float>(m_Progress) / static_cast<float>(m_TotalProgress)) * 100.0f);
   QString ss = QObject::tr("Level %1 of %2 || Copying Data %3%").arg((6 - m_CurrentLevel) + 2).arg(6 - m_Level).arg(progressInt);
-  notifyStatusMessage(getMessagePrefix(), ss);
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 }
 
 // -----------------------------------------------------------------------------

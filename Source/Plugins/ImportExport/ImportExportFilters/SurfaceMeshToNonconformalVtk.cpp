@@ -135,12 +135,14 @@ void SurfaceMeshToNonconformalVtk::dataCheck()
   // We MUST have Nodes
   if(nullptr == triangles->getVertices().get())
   {
-    notifyErrorMessage("", "DataContainer Geometry missing Vertices", -386);
+    setErrorCondition(-386);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Vertices", getErrorCondition());
   }
   // We MUST have Triangles defined also.
   if(nullptr == triangles->getTriangles().get())
   {
-    notifyErrorMessage("", "DataContainer Geometry missing Triangles", -387);
+    setErrorCondition(-387);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
   }
   QVector<size_t> dims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(),
@@ -223,7 +225,8 @@ void SurfaceMeshToNonconformalVtk::execute()
   if(!parentPath.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    notifyErrorMessage("", ss, -1);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -233,12 +236,13 @@ void SurfaceMeshToNonconformalVtk::execute()
   if(nullptr == vtkFile)
   {
     QString ss = QObject::tr("Error creating file '%1'").arg(getOutputVtkFile());
-    notifyErrorMessage("", ss, -18542);
+    setErrorCondition(-18542);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   ScopedFileMonitor vtkFileMonitor(vtkFile);
 
-  notifyStatusMessage("", "Writing Vertex Data ....");
+  notifyStatusMessage(getHumanLabel(), "Writing Vertex Data ....");
 
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
   fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
@@ -299,7 +303,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   }
 
   // Write the triangle indices into the vtk File
-  notifyStatusMessage("", "Writing Faces ....");
+  notifyStatusMessage(getHumanLabel(), "Writing Faces ....");
 
   int tData[4];
 
@@ -864,21 +868,21 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int
 
   QString attrMatName = m_SurfaceMeshFaceLabelsArrayPath.getAttributeMatrixName();
 
-  notifyStatusMessage("", "Writing Face Normals...");
+  notifyStatusMessage(getHumanLabel(), "Writing Face Normals...");
   writeCellNormalData<double>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshFaceNormals, "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
-  notifyStatusMessage("", "Writing Principal Curvature 1");
+  notifyStatusMessage(getHumanLabel(), "Writing Principal Curvature 1");
   writeCellScalarData<double>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshPrincipalCurvature1, "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
-  notifyStatusMessage("", "Writing Principal Curvature 2");
+  notifyStatusMessage(getHumanLabel(), "Writing Principal Curvature 2");
   writeCellScalarData<double>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshPrincipalCurvature2, "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
-  notifyStatusMessage("", "Writing Feature Face Id");
+  notifyStatusMessage(getHumanLabel(), "Writing Feature Face Id");
   writeCellScalarData<int32_t>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshFeatureFaceId, "int", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
-  notifyStatusMessage("", "Writing Gaussian Curvature");
+  notifyStatusMessage(getHumanLabel(), "Writing Gaussian Curvature");
   writeCellScalarData<double>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshGaussianCurvatures, "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
-  notifyStatusMessage("", "Writing Mean Curvature");
+  notifyStatusMessage(getHumanLabel(), "Writing Mean Curvature");
   writeCellScalarData<double>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshMeanCurvatures, "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 #if 0
   writeCellVectorData<double>(sm, attrMatName, SIMPL::CellData::SurfaceMeshPrincipalDirection1,

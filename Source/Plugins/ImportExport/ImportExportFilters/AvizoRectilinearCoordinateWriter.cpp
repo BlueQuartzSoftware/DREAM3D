@@ -174,15 +174,17 @@ void AvizoRectilinearCoordinateWriter::execute()
   if(!dir.mkpath(parentPath))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    notifyErrorMessage("", ss, -93000);
+    setErrorCondition(-93000);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
   FILE* avizoFile = fopen(getOutputFile().toLatin1().data(), "wb");
   if(nullptr == avizoFile)
   {
+    setErrorCondition(-93001);
     QString ss = QObject::tr("Error creating file '%1'").arg(getOutputFile());
-    notifyErrorMessage("", ss, -93001);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 

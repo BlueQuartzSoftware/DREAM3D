@@ -295,28 +295,32 @@ void VerifyTriangleWinding::dataCheck()
   IGeometry::Pointer geom = sm->getGeometry();
   if(nullptr == geom.get())
   {
+    setErrorCondition(-385);
     QString ss = QObject::tr("DataContainer Geometry is missing.");
-    notifyErrorMessage("", ss, -385);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
   TriangleGeom::Pointer triangles = sm->getGeometryAs<TriangleGeom>();
   if(nullptr == triangles.get())
   {
+    setErrorCondition(-384);
     QString ss = QObject::tr("DataContainer Geometry is not compatible. The Geometry type is %1").arg(geom->getGeometryTypeAsString());
-    notifyErrorMessage("", ss, -384);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
   // We MUST have Nodes
   if(nullptr == triangles->getVertices().get())
   {
-    notifyErrorMessage("", "DataContainer Geometry missing Vertices", -386);
+    setErrorCondition(-386);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Vertices", getErrorCondition());
   }
   // We MUST have Triangles defined also.
   if(nullptr == triangles->getTriangles().get())
   {
-    notifyErrorMessage("", "DataContainer Geometry missing Triangles", -387);
+    setErrorCondition(-387);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
   }
   else
   {
@@ -343,8 +347,9 @@ void VerifyTriangleWinding::preflight()
   setInPreflight(false);
 
   /* *** THIS FILTER NEEDS TO BE CHECKED *** */
+  setErrorCondition(0xABABABAB);
   QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, 0xABABABAB);
+  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
@@ -365,7 +370,7 @@ void VerifyTriangleWinding::execute()
 
   FaceArray::Pointer facesPtr = sm->getFaces();
 
-  notifyStatusMessage("", "Generating Face List for each Node");
+  notifyStatusMessage(getHumanLabel(), "Generating Face List for each Node");
   // Make sure the Face Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
   if(nullptr == facesPtr->getFacesContainingVert())
@@ -390,7 +395,7 @@ void VerifyTriangleWinding::execute()
   }
 
   // Execute the actual verification step.
-  notifyStatusMessage("", "Generating Connectivity Complete. Starting Analysis");
+  notifyStatusMessage(getHumanLabel(), "Generating Connectivity Complete. Starting Analysis");
   verifyTriangleWinding();
 
 
@@ -405,7 +410,8 @@ void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t& trianglesToLabel
   FaceArray::Pointer masterFaceList = sm->getFaces();
   if(nullptr == masterFaceList.get())
   {
-    notifyErrorMessage("", "The SurfaceMesh DataContainer Does NOT contain Faces", -556);
+    setErrorCondition(-556);
+    notifyErrorMessage(getHumanLabel(), "The SurfaceMesh DataContainer Does NOT contain Faces", -556);
     return;
   }
 
@@ -519,7 +525,8 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   FaceArray::Pointer masterFaceList = sm->getFaces();
   if(nullptr == masterFaceList.get())
   {
-    notifyErrorMessage("", "The SurfaceMesh DataContainer Does NOT contain Faces", -556);
+    setErrorCondition(-556);
+    notifyErrorMessage(getHumanLabel(), "The SurfaceMesh DataContainer Does NOT contain Faces", -556);
     return getErrorCondition();
   }
   FaceArray::Face_t* triangles = masterFaceList->getPointer(0);
@@ -529,7 +536,8 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   VertexArray::Pointer masterNodeListPtr = sm->getVertices();
   if(nullptr == masterNodeListPtr.get())
   {
-    notifyErrorMessage("", "The SurfaceMesh DataContainer Does NOT contain Nodes", -555);
+    setErrorCondition(-555);
+    notifyErrorMessage(getHumanLabel(), "The SurfaceMesh DataContainer Does NOT contain Nodes", -555);
     return getErrorCondition();
   }
 
@@ -622,7 +630,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     if((progressIndex / total * 100.0f) > (curPercent))
     {
       QString ss = QObject::tr("%1% Complete").arg(static_cast<int>(progressIndex / total * 100.0f));
-      notifyStatusMessage(getMessagePrefix(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       curPercent += 5.0f;
     }
     ++progressIndex;

@@ -217,7 +217,8 @@ void FindFeaturePhases::execute()
       warnings.append(str);
     }
 
-    notifyWarningMessage("", warnings.join("\n"), -500);
+    setWarningCondition(-500);
+    notifyWarningMessage(getHumanLabel(), warnings.join("\n"), getWarningCondition());
   }
 
 }

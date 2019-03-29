@@ -166,7 +166,8 @@ void AbaqusSurfaceMeshWriter::execute()
   if(!parentPath.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    notifyErrorMessage("", ss, -8005);
+    setErrorCondition(-8005);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -187,28 +188,32 @@ void AbaqusSurfaceMeshWriter::execute()
   if(err < 0)
   {
     QString ss = QObject::tr("Error writing header for file '%1'").arg(m_OutputFile);
-    notifyErrorMessage("", ss, -8001);
+    setErrorCondition(-8001);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   err = writeNodes(f);
   if(err < 0)
   {
     QString ss = QObject::tr("Error writing nodes for file '%1'").arg(m_OutputFile);
-    notifyErrorMessage("", ss, -8002);
+    setErrorCondition(-8002);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   err = writeTriangles(f);
   if(err < 0)
   {
     QString ss = QObject::tr("Error writing triangles for file '%1'").arg(m_OutputFile);
-    notifyErrorMessage("", ss, -8003);
+    setErrorCondition(-8003);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   err = writeFeatures(f);
   if(err < 0)
   {
     QString ss = QObject::tr("Error writing Features for file '%1'").arg(m_OutputFile);
-    notifyErrorMessage("", ss, -8004);
+    setErrorCondition(-8004);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -313,7 +318,7 @@ int32_t AbaqusSurfaceMeshWriter::writeFeatures(FILE* f)
 
     {
       QString ss = QObject::tr("Writing ELSET for Feature Id %1").arg(spin);
-      notifyStatusMessage(getMessagePrefix(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
 
     // Loop over all the triangles for this spin

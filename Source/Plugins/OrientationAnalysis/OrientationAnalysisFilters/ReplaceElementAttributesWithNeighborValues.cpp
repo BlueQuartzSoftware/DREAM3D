@@ -218,7 +218,7 @@ template <typename T> void ExecuteTemplate(ReplaceElementAttributesWithNeighborV
       {
         progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
         QString ss = QObject::tr("|| Processing Data Current Loop (%1) Progress: %2% Complete").arg(count).arg(progressInt);
-        filter->notifyStatusMessage(filter->getMessagePrefix(), ss);
+        filter->notifyStatusMessage(filter->getMessagePrefix(), filter->getHumanLabel(), ss);
         prog = prog + progIncrement;
       }
     }
@@ -237,7 +237,7 @@ template <typename T> void ExecuteTemplate(ReplaceElementAttributesWithNeighborV
       {
         progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
         QString ss = QObject::tr("|| Processing Data Current Loop (%1) || Transferring Cell Data: %2% Complete").arg(count).arg(progressInt);
-        filter->notifyStatusMessage(filter->getMessagePrefix(), ss);
+        filter->notifyStatusMessage(filter->getMessagePrefix(), filter->getHumanLabel(), ss);
         prog = prog + progIncrement;
       }
 
@@ -347,7 +347,8 @@ void ReplaceElementAttributesWithNeighborValues::dataCheck()
   if(cDims.size() != 1 && cDims.at(0) != 1)
   {
     QString ss = QObject::tr("The number of components must be 1.");
-    notifyErrorMessage("", ss, -5655);
+    setErrorCondition(-5655);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 }
 

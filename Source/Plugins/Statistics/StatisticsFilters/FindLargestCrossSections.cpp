@@ -148,7 +148,8 @@ void FindLargestCrossSections::dataCheck()
   if(dims[0] <= 1 || dims[1] <= 1 || dims[2] <= 1)
   {
     QString ss = QObject::tr("Image Geometry is not 3D.  The dimensions are (%1, %2, %3)").arg(dims[0]).arg(dims[1]).arg(dims[2]);
-    notifyErrorMessage("", ss, -3012);
+    setErrorCondition(-3012);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 }

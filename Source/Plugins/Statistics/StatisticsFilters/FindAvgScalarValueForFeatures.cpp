@@ -137,7 +137,8 @@ void FindAvgScalarValueForFeatures::dataCheck()
     if(cDims != 1)
     {
       QString ss = QObject::tr("Selected array has number of components %1 and is not a scalar array. The path is %2").arg(cDims).arg(getSelectedCellArrayPath().serialize());
-      notifyErrorMessage("", ss, -11003);
+      setErrorCondition(-11003);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }
 }

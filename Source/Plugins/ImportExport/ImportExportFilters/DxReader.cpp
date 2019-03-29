@@ -203,12 +203,14 @@ void DxReader::dataCheck()
   if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
-    notifyErrorMessage("", ss, -387);
+    setErrorCondition(-387);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
-    notifyErrorMessage("", ss, -388);
+    setErrorCondition(-388);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if(m_InStream.isOpen())
@@ -241,7 +243,8 @@ void DxReader::dataCheck()
       if(!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
       {
         QString ss = QObject::tr("Error opening input file: %1").arg(getInputFile());
-        notifyErrorMessage("", ss, -100);
+        setErrorCondition(-100);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
 
@@ -249,8 +252,9 @@ void DxReader::dataCheck()
       m_InStream.close();
       if(error < 0)
       {
+        setErrorCondition(error);
         QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Dx file?");
-        notifyErrorMessage("", ss, error);
+        notifyErrorMessage(getHumanLabel(), ss, -11000);
       }
 
       // Set the file path and time stamp into the cache
@@ -308,7 +312,8 @@ void DxReader::execute()
   if(!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
   {
     QString ss = QObject::tr("Error opening input file '%1'").arg(getInputFile());
-    notifyErrorMessage("", ss, -100);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -401,7 +406,8 @@ int32_t DxReader::readHeader()
       if(tokens.size() == 20)
       {
         ss = QObject::tr("Unable to locate the last header line");
-        notifyErrorMessage("", ss, -8);
+        setErrorCondition(-8);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         m_InStream.close();
         return getErrorCondition();
       }
@@ -513,7 +519,8 @@ int32_t DxReader::readFile()
   if(count != static_cast<size_t>(m->getGeometryAs<ImageGeom>()->getNumberOfElements()))
   {
     QString ss = QObject::tr("Data size does not match header dimensions\t%1\t%2").arg(index).arg(m->getGeometryAs<ImageGeom>()->getNumberOfElements());
-    notifyErrorMessage("", ss, -495);
+    setErrorCondition(-495);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     m_InStream.close();
     return getErrorCondition();
   }

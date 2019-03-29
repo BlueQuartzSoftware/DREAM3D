@@ -209,8 +209,9 @@ void MultiEmmpmFilter::dataCheck()
 
   if(!DataArrayPath::ValidateVector(getInputDataArrayVector()))
   {
+    setErrorCondition(-89004);
     QString ss = QObject::tr("All Attribute Arrays must belong to the same Data Container and Attribute Matrix");
-    notifyErrorMessage("", ss, -89004);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QVector<size_t> cDims(1, 1); // We need a single component, gray scale image
@@ -236,14 +237,16 @@ void MultiEmmpmFilter::dataCheck()
 
   if(getOutputArrayPrefix().isEmpty())
   {
+    setErrorCondition(-89002);
     QString message = QObject::tr("Using a prefix (even a single alphanumeric value) is required so that the output Xdmf files can be written correctly");
-    notifyErrorMessage("", message, -89002);
+    notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
   }
 
   if(getInputDataArrayVector().isEmpty())
   {
+    setErrorCondition(-89003);
     QString message = QObject::tr("At least one Attribute Array must be selected");
-    notifyErrorMessage("", message, -89003);
+    notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
     return;
   }
 
@@ -286,14 +289,16 @@ void MultiEmmpmFilter::dataCheck()
   // The EM/MPM Library has a hard coded MAX Classes of 16
   if(getNumClasses() > 15)
   {
+    setErrorCondition(-89000);
     QString ss = QObject::tr("The maximum number of classes is 15");
-    notifyErrorMessage("", ss, -89000);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   // It does not make any sense if we want anything less than 2 classes
   if(getNumClasses() < 2)
   {
+    setErrorCondition(-89001);
     QString ss = QObject::tr("The minimum number of classes is 2");
-    notifyErrorMessage("", ss, -89001);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 }
 
@@ -374,7 +379,8 @@ void MultiEmmpmFilter::execute()
   if(getErrorCondition() < 0)
   {
     QString ss = QObject::tr("Error occurred running the EM/MPM algorithm");
-    notifyErrorMessage("", ss, -60009);
+    setErrorCondition(-60009);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 

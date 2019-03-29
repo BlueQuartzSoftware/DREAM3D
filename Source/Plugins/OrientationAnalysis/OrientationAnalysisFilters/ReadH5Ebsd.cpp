@@ -146,7 +146,8 @@ int32_t ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], DataContainer::Poi
   {
     err = -1;
     QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version").arg((dims[0] * dims[1] * dims[2]));
-    notifyErrorMessage("", ss, err);
+    setErrorCondition(err);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return err;
   }
 
@@ -158,7 +159,8 @@ int32_t ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], DataContainer::Poi
                      .arg(dims[0])
                      .arg(dims[1])
                      .arg(dims[2]);
-    notifyErrorMessage("", ss, err);
+    setErrorCondition(err);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return err;
   }
   return err;
@@ -175,13 +177,15 @@ void ReadH5Ebsd::readVolumeInfo()
   if(m_InputFile.isEmpty())
   {
     QString ss = QObject::tr("The input file must be set for property %1").arg("InputFile");
-    notifyErrorMessage("", ss, -1);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     return;
   }
   if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist. '%1'").arg(getInputFile());
-    notifyErrorMessage("", ss, -388);
+    setErrorCondition(-388);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   if(!m_InputFile.isEmpty())
@@ -192,7 +196,8 @@ void ReadH5Ebsd::readVolumeInfo()
     if(err < 0)
     {
       QString ss = QObject::tr("Error reading VolumeInfo from H5Ebsd File");
-      notifyErrorMessage("", ss, -1);
+      setErrorCondition(-1);
+      notifyErrorMessage(getHumanLabel(), ss, -1);
       return;
     }
 
@@ -211,7 +216,8 @@ void ReadH5Ebsd::readVolumeInfo()
     else
     {
       QString ss = QObject::tr("Original Data source could not be determined. It should be TSL, HKL or HEDM");
-      notifyErrorMessage("", ss, -1);
+      setErrorCondition(-1);
+      notifyErrorMessage(getHumanLabel(), ss, -1);
       return;
     }
 
@@ -232,7 +238,7 @@ void ReadH5Ebsd::readVolumeInfo()
       err = -1;
       QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version").arg(dims[0] * dims[1] * dims[2]);
       setErrorCondition(err);
-      notifyErrorMessage("", ss, -1);
+      notifyErrorMessage(getHumanLabel(), ss, -1);
       return;
     }
 
@@ -245,7 +251,7 @@ void ReadH5Ebsd::readVolumeInfo()
                        .arg(dims[1])
                        .arg(dims[0]);
       setErrorCondition(err);
-      notifyErrorMessage("", ss, -1);
+      notifyErrorMessage(getHumanLabel(), ss, -1);
       return;
     }
     /* ************ End Sanity Check *************************** */
@@ -278,7 +284,8 @@ void ReadH5Ebsd::dataCheck()
   if(!fi.exists())
   {
     QString ss = QObject::tr("The input file was not specified or was empty");
-    notifyErrorMessage("", ss, -10);
+    setErrorCondition(-10);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -316,7 +323,8 @@ void ReadH5Ebsd::dataCheck()
   if(err < 0)
   {
     QString ss = QObject::tr("File counld not be read properly");
-    notifyErrorMessage("", ss, -11);
+    setErrorCondition(-11);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   QString manufacturer = volumeInfoReader->getManufacturer();
@@ -332,7 +340,8 @@ void ReadH5Ebsd::dataCheck()
   if(m_ZEndIndex < m_ZStartIndex)
   {
     QString ss = QObject::tr("The End Slice [%1] MUST be larger than the Start Slice [%2]. This condition was not met.").arg(m_ZEndIndex).arg(m_ZStartIndex);
-    notifyErrorMessage("", ss, -12);
+    setErrorCondition(-12);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -364,7 +373,8 @@ void ReadH5Ebsd::dataCheck()
   else
   {
     QString ss = QObject::tr("Original Data source could not be determined. It should be TSL or HKL");
-    notifyErrorMessage("", ss, -1);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     return;
   }
 
@@ -515,9 +525,11 @@ void ReadH5Ebsd::execute()
   }
   else
   {
+    setErrorCondition(-1);
+
     QString ss =
         QObject::tr("Could not determine or match a supported manufacturer from the data file. Supported manufacturer codes are: %1, %2 and %3").arg(Ebsd::Ctf::Manufacturer, Ebsd::Ang::Manufacturer);
-    notifyErrorMessage("", ss, -1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -530,7 +542,7 @@ void ReadH5Ebsd::execute()
   // Initialize all the arrays with some default values
   {
     QString ss = QObject::tr("Reading Ebsd Data from file %1").arg(getInputFile());
-    notifyStatusMessage(getMessagePrefix(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   }
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
@@ -539,8 +551,9 @@ void ReadH5Ebsd::execute()
   err = ebsdReader->loadData(m->getGeometryAs<ImageGeom>()->getXPoints(), m->getGeometryAs<ImageGeom>()->getYPoints(), m->getGeometryAs<ImageGeom>()->getZPoints(), m_RefFrameZDir);
   if(err < 0)
   {
-    notifyErrorMessage(ebsdReader->getNameOfClass(), ebsdReader->getErrorMessage(), err);
-    notifyErrorMessage("", "Error Loading Data from Ebsd Data file.", -1);
+    setErrorCondition(err);
+    notifyErrorMessage(ebsdReader->getNameOfClass(), ebsdReader->getErrorMessage(), getErrorCondition());
+    notifyErrorMessage(getHumanLabel(), "Error Loading Data from Ebsd Data file.", -1);
     return;
   }
 
@@ -558,7 +571,8 @@ void ReadH5Ebsd::execute()
   {
     QString ss =
         QObject::tr("Could not determine or match a supported manufacturer from the data file. Supported manufacturer codes are: %1 and %2").arg(Ebsd::Ctf::Manufacturer).arg(Ebsd::Ang::Manufacturer);
-    notifyErrorMessage("", ss, -109875);
+    setErrorCondition(-109875);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -593,7 +607,8 @@ void ReadH5Ebsd::execute()
                                    "with a Q_PROPERTY macro. Please notify the developers")
                            .arg("RotationAngle")
                            .arg(filtName);
-          notifyErrorMessage("", ss, -109874);
+          setErrorCondition(-109874);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
         QVariant v;
         v.setValue(sampleAxis);
@@ -604,7 +619,8 @@ void ReadH5Ebsd::execute()
                                    "with a Q_PROPERTY macro. Please notify the developers")
                            .arg("RotationAxis")
                            .arg(filtName);
-          notifyErrorMessage("", ss, -109873);
+          setErrorCondition(-109873);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
         v.setValue(true);
         propWasSet = rot_Sample->setProperty("SliceBySlice", v);
@@ -614,7 +630,8 @@ void ReadH5Ebsd::execute()
                                    "with a Q_PROPERTY macro. Please notify the developers")
                            .arg("SliceBySlice")
                            .arg(filtName);
-          notifyErrorMessage("", ss, -109872);
+          setErrorCondition(-109872);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
         DataArrayPath tempPath;
         tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), "");
@@ -626,14 +643,16 @@ void ReadH5Ebsd::execute()
                                    "with a Q_PROPERTY macro. Please notify the developers")
                            .arg("CellAttributeMatrixName")
                            .arg(filtName);
-          notifyErrorMessage("", ss, -109871);
+          setErrorCondition(-109871);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
         rot_Sample->execute();
       }
       else
       {
         QString ss = QObject::tr("Error creating filter '%1' which is a subfilter called by ReadH5Ebsd. Filter was not created/executed. Please notify the developers").arg(filtName);
-        notifyErrorMessage("", ss, -109870);
+        setErrorCondition(-109870);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       }
     }
 
@@ -666,7 +685,8 @@ void ReadH5Ebsd::execute()
                                    "exposed with a Q_PROPERTY macro. Please notify the developers")
                            .arg("RotationAngle")
                            .arg(filtName);
-          notifyErrorMessage("", ss, -109874);
+          setErrorCondition(-109874);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
         QVariant v;
         v.setValue(eulerAxis);
@@ -677,7 +697,8 @@ void ReadH5Ebsd::execute()
                                    "exposed with a Q_PROPERTY macro. Please notify the developers")
                            .arg("RotationAxis")
                            .arg(filtName);
-          notifyErrorMessage("", ss, -109873);
+          setErrorCondition(-109873);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
         DataArrayPath tempPath;
         tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getCellEulerAnglesArrayName());
@@ -689,14 +710,16 @@ void ReadH5Ebsd::execute()
                                    "exposed with a Q_PROPERTY macro. Please notify the developers")
                            .arg("CellEulerAnglesArrayPath")
                            .arg(filtName);
-          notifyErrorMessage("", ss, -109872);
+          setErrorCondition(-109872);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
         rot_Euler->execute();
       }
       else
       {
         QString ss = QObject::tr("ReadH5Ebsd Error creating filter '%1' which is a subfilter called by ReadH5Ebsd. Filter was not created/executed. Please notify the developers").arg(filtName);
-        notifyErrorMessage("", ss, -109870);
+        setErrorCondition(-109870);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       }
     }
   }
@@ -713,14 +736,16 @@ H5EbsdVolumeReader::Pointer ReadH5Ebsd::initTSLEbsdVolumeReader()
   H5EbsdVolumeReader::Pointer ebsdReader = H5AngVolumeReader::New();
   if(nullptr == ebsdReader)
   {
-    notifyErrorMessage("", "Could not Create H5AngVolumeReader object.", -1);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), "Could not Create H5AngVolumeReader object.", -1);
     return H5EbsdVolumeReader::NullPointer();
   }
   H5AngVolumeReader* angReader = dynamic_cast<H5AngVolumeReader*>(ebsdReader.get());
   err = loadInfo<H5AngVolumeReader, AngPhase>(angReader);
   if(err < 0)
   {
-    notifyErrorMessage("", "Could not read information about the Ebsd Volume.", -1);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), "Could not read information about the Ebsd Volume.", -1);
     return H5EbsdVolumeReader::NullPointer();
   }
   if(m_SelectedArrayNames.find(m_CellEulerAnglesArrayName) != m_SelectedArrayNames.end())
@@ -745,14 +770,16 @@ H5EbsdVolumeReader::Pointer ReadH5Ebsd::initHKLEbsdVolumeReader()
   H5EbsdVolumeReader::Pointer ebsdReader = H5CtfVolumeReader::New();
   if(nullptr == ebsdReader)
   {
-    notifyErrorMessage("", "Could not Create H5CtfVolumeReader object.", -1);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), "Could not Create H5CtfVolumeReader object.", -1);
     return H5EbsdVolumeReader::NullPointer();
   }
   H5CtfVolumeReader* ctfReader = dynamic_cast<H5CtfVolumeReader*>(ebsdReader.get());
   err = loadInfo<H5CtfVolumeReader, CtfPhase>(ctfReader);
   if(err < 0)
   {
-    notifyErrorMessage("", "Could not read information about the Ebsd Volume.", -1);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), "Could not read information about the Ebsd Volume.", -1);
     return H5EbsdVolumeReader::NullPointer();
   }
   if(m_SelectedArrayNames.find(m_CellEulerAnglesArrayName) != m_SelectedArrayNames.end())

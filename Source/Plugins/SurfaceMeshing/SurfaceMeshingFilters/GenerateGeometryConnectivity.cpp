@@ -132,22 +132,24 @@ void GenerateGeometryConnectivity::execute()
 
   if(m_GenerateVertexTriangleLists || m_GenerateTriangleNeighbors)
   {
-    notifyStatusMessage("", "Generating Vertex Element List");
+    notifyStatusMessage(getHumanLabel(), "Generating Vertex Element List");
     err = geom->findElementsContainingVert();
     if(err < 0)
     {
+      setErrorCondition(-400);
       QString ss = QObject::tr("Error generating vertex element list for Geometry type %1").arg(geom->getGeometryTypeAsString());
-      notifyErrorMessage("", ss, -400);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }
   if(m_GenerateTriangleNeighbors)
   {
-    notifyStatusMessage("", "Generating Element Neighbors List");
+    notifyStatusMessage(getHumanLabel(), "Generating Element Neighbors List");
     err = geom->findElementNeighbors();
     if(err < 0)
     {
+      setErrorCondition(-401);
       QString ss = QObject::tr("Error generating element neighbor list for Geometry type %1").arg(geom->getGeometryTypeAsString());
-      notifyErrorMessage("", ss, -401);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }
 

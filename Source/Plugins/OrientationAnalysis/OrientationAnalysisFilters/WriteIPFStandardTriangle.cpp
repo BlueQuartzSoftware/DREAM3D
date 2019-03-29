@@ -127,19 +127,22 @@ void WriteIPFStandardTriangle::dataCheck()
   if(ext != "tif" && ext != "bmp" && ext != "png")
   {
     ss = QObject::tr("The output file has an unsupported extension.  Please select a TIF, BMP, or PNG file");
-    notifyErrorMessage("", ss, -1004);
+    setErrorCondition(-1004);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
   if(m_ImageSize <= 0)
   {
-    notifyErrorMessage("", "The size of the image must be positive", -1005);
+    setErrorCondition(-1005);
+    notifyErrorMessage(getHumanLabel(), "The size of the image must be positive", getErrorCondition());
     return;
   }
 
   if(m_LaueClass < 0 || m_LaueClass > 10)
   {
-    notifyErrorMessage("", "The Laue Class value must be in the range [0-10]. See documentation for the complete list of values.", -1006);
+    setErrorCondition(-1006);
+    notifyErrorMessage(getHumanLabel(), "The Laue Class value must be in the range [0-10]. See documentation for the complete list of values.", getErrorCondition());
     return;
   }
 }
@@ -243,7 +246,7 @@ void WriteIPFStandardTriangle::writeImage(QImage& image)
 {
 
   QString ss = QObject::tr("Writing Image %1").arg(getOutputFile());
-  notifyStatusMessage(getMessagePrefix(), ss);
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
   QFileInfo fi((m_OutputFile));
   QDir parent(fi.absolutePath());
@@ -256,7 +259,8 @@ void WriteIPFStandardTriangle::writeImage(QImage& image)
   if(!saved)
   {
     QString ss = QObject::tr("The Triangle image file '%1' was not saved").arg(getOutputFile());
-    notifyErrorMessage("", ss, -90011);
+    setErrorCondition(-90011);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 }
 

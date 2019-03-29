@@ -172,15 +172,17 @@ void AvizoUniformCoordinateWriter::execute()
   if(!dir.mkpath(parentPath))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    notifyErrorMessage("", ss, -1);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
   FILE* avizoFile = fopen(getOutputFile().toLatin1().data(), "wb");
   if(nullptr == avizoFile)
   {
+    setErrorCondition(-93001);
     QString ss = QObject::tr("Error creating file '%1'").arg(getOutputFile());
-    notifyErrorMessage("", ss, -93001);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 

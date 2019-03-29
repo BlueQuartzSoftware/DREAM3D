@@ -135,19 +135,22 @@ void VtkStructuredPointsReader::dataCheck()
   if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
-    notifyErrorMessage("", ss, -61000);
+    setErrorCondition(-61000);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
-    notifyErrorMessage("", ss, -61001);
+    setErrorCondition(-61001);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   // First shot Sanity Checks.
   if(!getReadCellData() && !getReadPointData())
   {
     QString ss = QObject::tr("At least one of Read Point Data or Read Cell Data must be checked");
-    notifyErrorMessage("", ss, -61002);
+    setErrorCondition(-61002);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   // Last chance sanity check
@@ -519,7 +522,8 @@ int32_t VtkStructuredPointsReader::readFile()
   if(!in.is_open())
   {
     QString msg = QObject::tr("Error opening output file '%1'").arg(getInputFile());
-    notifyErrorMessage("", msg, -61003);
+    setErrorCondition(-61003);
+    notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
     return -100;
   }
 
@@ -542,7 +546,8 @@ int32_t VtkStructuredPointsReader::readFile()
   else
   {
     QString ss = QObject::tr("The file type of the VTK legacy file could not be determined. It should be 'ASCII' or 'BINARY' and should appear on line 3 of the file");
-    notifyErrorMessage("", ss, -61004);
+    setErrorCondition(-61004);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return getErrorCondition();
   }
 
@@ -552,7 +557,8 @@ int32_t VtkStructuredPointsReader::readFile()
   if(words.size() != 2)
   {
     QString ss = QObject::tr("Error reading the type of data set. Was expecting 2 words but got %1").arg(QString(buf));
-    notifyErrorMessage("", ss, -61005);
+    setErrorCondition(-61005);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return getErrorCondition();
   }
   QString dataset(words.at(1));
@@ -615,7 +621,8 @@ int32_t VtkStructuredPointsReader::readFile()
     ncells = tokens[1].toInt(&ok);
     if(m_CurrentAttrMat->getNumberOfTuples() != ncells)
     {
-      notifyErrorMessage("", QString("Number of cells does not match number of tuples in the Attribute Matrix"), -61006);
+      setErrorCondition(-61006);
+      notifyErrorMessage(getHumanLabel(), QString("Number of cells does not match number of tuples in the Attribute Matrix"), getErrorCondition());
       return getErrorCondition();
     }
     this->readDataTypeSection(in, ncells, "point_data");
@@ -627,7 +634,8 @@ int32_t VtkStructuredPointsReader::readFile()
     npts = tokens[1].toInt(&ok);
     if(m_CurrentAttrMat->getNumberOfTuples() != npts)
     {
-      notifyErrorMessage("", QString("Number of points does not match number of tuples in the Attribute Matrix"), -61007);
+      setErrorCondition(-61007);
+      notifyErrorMessage(getHumanLabel(), QString("Number of points does not match number of tuples in the Attribute Matrix"), getErrorCondition());
       return getErrorCondition();
     }
     this->readDataTypeSection(in, numPts, "cell_data");
@@ -1088,7 +1096,8 @@ void VtkStructuredPointsReader::readData(std::istream& instream)
       if (tokens.size() < 3 || tokens.size() > 4)
       {
         QString ss = QObject::tr("Error reading SCALARS header section of VTK file. 3 or 4 words are needed. Found %1. Read Line was\n  %2").arg(tokens.size()).arg(QString(buf));
-                notifyErrorMessage("", ss, -61009);
+        setErrorCondition(-61009);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
 
@@ -1103,7 +1112,8 @@ void VtkStructuredPointsReader::readData(std::istream& instream)
       else
       {
         QString ss = QObject::tr("Error reading Dataset section. Unknown Keyword found. %1").arg(scalarKeyWord);
-                notifyErrorMessage("", ss, -61010);
+        setErrorCondition(-61010);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
       QString scalarName = tokens[1];
@@ -1122,7 +1132,8 @@ void VtkStructuredPointsReader::readData(std::istream& instream)
       if (lookupKeyWord.compare("LOOKUP_TABLE") != 0 || tokens.size() != 2)
       {
         QString ss = QObject::tr("Error reading LOOKUP_TABLE header section of VTK file. 2 words are needed. Found %1. Read Line was\n  %2").arg(tokens.size()).arg(QString(buf));
-                notifyErrorMessage("", ss, -61011);
+        setErrorCondition(-61011);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
 
@@ -1170,7 +1181,8 @@ void VtkStructuredPointsReader::readData(std::istream& instream)
       if(err < 0)
       {
         QString ss = QObject::tr("Error Reading Dataset from VTK File. Dataset Type %1\n  DataSet Name %2\n  Numerical Type: %3\n  File Pos").arg(scalarKeyWord).arg(scalarKeyWord).arg(scalarType).arg(filePos);
-        notifyErrorMessage("", ss, err);
+        setErrorCondition(err);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
 

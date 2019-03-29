@@ -220,7 +220,8 @@ void GBCDTriangleDumper::execute()
   if(nullptr == f)
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(m_OutputFile);
-    notifyErrorMessage("", ss, -87000);
+    setErrorCondition(-87000);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 

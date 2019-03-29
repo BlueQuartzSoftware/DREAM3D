@@ -113,44 +113,51 @@ void NodesTrianglesToStl::dataCheck()
 
   if(m_TrianglesFile.isEmpty())
   {
-    notifyErrorMessage("", "Triangles file path or name is emtpy", -1001);
+    setErrorCondition(-1001);
+    notifyErrorMessage(getHumanLabel(), "Triangles file path or name is emtpy", -1001);
   }
   else if(!fi.exists())
   {
 
     if(getInPreflight())
     {
+      setWarningCondition(-1005);
       QString ss = "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline";
-      notifyWarningMessage("", ss, -1005);
+      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
     }
     else
     {
-      notifyErrorMessage("", "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004);
+      setErrorCondition(-1001);
+      notifyErrorMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004);
     }
   }
 
   QFileInfo fii(m_NodesFile);
   if(m_NodesFile.isEmpty())
   {
-    notifyErrorMessage("", "Nodes file path or name is emtpy", -1002);
+    setErrorCondition(-1002);
+    notifyErrorMessage(getHumanLabel(), "Nodes file path or name is emtpy", -1002);
   }
   else if(!fii.exists())
   {
 
     if(getInPreflight())
     {
+      setWarningCondition(-1005);
       QString ss = "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline";
-      notifyWarningMessage("", ss, -1005);
+      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
     }
     else
     {
-      notifyErrorMessage("", "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1002);
+      setErrorCondition(-1002);
+      notifyErrorMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005);
     }
   }
 
   if(m_OutputStlDirectory.isEmpty())
   {
-    notifyErrorMessage("", "Stl Output Directory is Not set correctly", -1003);
+    setErrorCondition(-1003);
+    notifyErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
   }
 }
 
@@ -186,7 +193,8 @@ void NodesTrianglesToStl::execute()
   {
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(getOutputStlDirectory());
-    notifyErrorMessage("", ss, -1001);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -196,7 +204,8 @@ void NodesTrianglesToStl::execute()
   {
 
     QString ss = QObject::tr("Error opening nodes file '%1'").arg(m_NodesFile);
-    notifyErrorMessage("", ss, -666);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, -666);
     return;
   }
   ScopedFileMonitor nodesFilePtr(nodesFile);
@@ -205,7 +214,7 @@ void NodesTrianglesToStl::execute()
   fscanf(nodesFile, "%d", &nNodes);
   {
     QString ss = QObject::tr("Node Count from %1 File: %2").arg(getNodesFile()).arg(nNodes);
-    notifyStatusMessage(getMessagePrefix(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   }
   // Open the triangles file for reading
   FILE* triFile = fopen(m_TrianglesFile.toLatin1().data(), "rb+");
@@ -213,7 +222,8 @@ void NodesTrianglesToStl::execute()
   {
 
     QString ss = QObject::tr(": Error opening Triangles file '%1'").arg(m_TrianglesFile);
-    notifyErrorMessage("", ss, -666);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, -666);
     return;
   }
   ScopedFileMonitor triFilePtr(triFile);
@@ -223,7 +233,7 @@ void NodesTrianglesToStl::execute()
 
   {
     QString ss = QObject::tr("Triangle Count from %1 File: %2").arg(getTrianglesFile()).arg(nTriangles);
-    notifyStatusMessage(getMessagePrefix(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   }
 
   int nodeId = 0;
@@ -305,7 +315,7 @@ void NodesTrianglesToStl::execute()
 
     {
       QString ss = QObject::tr("Writing STL for Feature Id %1").arg(spin);
-      notifyStatusMessage(getMessagePrefix(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
 
     {
@@ -314,7 +324,7 @@ void NodesTrianglesToStl::execute()
       if(err < 0)
       {
         QString ss = QObject::tr("Error Writing STL header").arg(spin);
-        notifyStatusMessage(getMessagePrefix(), ss);
+        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       }
     }
     triCount = 0; // Reset this to Zero. Increment for every triangle written
@@ -378,8 +388,9 @@ void NodesTrianglesToStl::execute()
       totalWritten = fwrite(data, 1, 50, f);
       if(totalWritten != 50)
       {
+
         QString ss = QObject::tr("Error Writing STL File. Not enough elements written for feature id %1 Wrote %2 of 50.").arg(spin).arg(totalWritten);
-        notifyErrorMessage("", ss, -1201);
+        notifyErrorMessage(getHumanLabel(), ss, -1201);
       }
       triCount++;
     }
@@ -387,7 +398,7 @@ void NodesTrianglesToStl::execute()
     if(err < 0)
     {
       QString ss = QObject::tr("Error writing number of Triangles to STL file");
-      notifyErrorMessage("", ss, -1202);
+      notifyErrorMessage(getHumanLabel(), ss, -1201);
     }
   }
 

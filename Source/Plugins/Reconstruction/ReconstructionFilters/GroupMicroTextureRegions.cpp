@@ -300,7 +300,7 @@ void GroupMicroTextureRegions::preflight()
 // -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures)
 {
-  notifyStatusMessage("", "Randomizing Parent Ids");
+  notifyStatusMessage(getHumanLabel(), "Randomizing Parent Ids");
   // Generate an even distribution of numbers between the min and max range
   const int32_t rangeMin = 0;
   const int32_t rangeMax = totalFeatures - 1;
@@ -518,7 +518,8 @@ void GroupMicroTextureRegions::execute()
   size_t totalFeatures = m_ActivePtr.lock()->getNumberOfTuples();
   if(totalFeatures < 2)
   {
-    notifyErrorMessage("", "The number of grouped Features was 0 or 1 which means no grouped Features were detected. A grouping value may be set too high", -87000);
+    setErrorCondition(-87000);
+    notifyErrorMessage(getHumanLabel(), "The number of grouped Features was 0 or 1 which means no grouped Features were detected. A grouping value may be set too high", getErrorCondition());
     return;
   }
 

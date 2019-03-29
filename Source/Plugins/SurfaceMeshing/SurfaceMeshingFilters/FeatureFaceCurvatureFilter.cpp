@@ -419,7 +419,7 @@ void FeatureFaceCurvatureFilter::execute()
   for(SharedFeatureFaceIterator_t iter = sharedFeatureFaces.begin(); iter != sharedFeatureFaces.end(); ++iter)
   {
     QString ss = QObject::tr("Working on Face Id %1/%2").arg((*iter).first).arg(maxFaceId);
-    notifyStatusMessage(getMessagePrefix(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
     FaceIds_t& triangleIds = (*iter).second;
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -459,7 +459,7 @@ void FeatureFaceCurvatureFilter::tbbTaskProgress()
   m_CompletedFeatureFaces++;
 
   QString ss = QObject::tr("%1/%2 Complete").arg(m_CompletedFeatureFaces).arg(m_TotalFeatureFaces);
-  notifyStatusMessage(getMessagePrefix(), ss);
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 }
 
 #endif

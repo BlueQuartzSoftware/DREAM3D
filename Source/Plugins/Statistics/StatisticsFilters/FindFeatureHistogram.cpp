@@ -144,7 +144,8 @@ void FindFeatureHistogram::dataCheck()
 
   if(m_SelectedFeatureArrayPath.isEmpty())
   {
-    notifyErrorMessage("", "An array from the Volume DataContainer must be selected.", -11000);
+    setErrorCondition(-11000);
+    notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
   }
 
   int numComp = m_NumberOfBins;
@@ -251,7 +252,8 @@ void FindFeatureHistogram::execute()
   if(nullptr == inputData.get())
   {
     ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFeatureArrayPath.getDataArrayName());
-    notifyErrorMessage("", ss, -11001);
+    setErrorCondition(-11001);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 

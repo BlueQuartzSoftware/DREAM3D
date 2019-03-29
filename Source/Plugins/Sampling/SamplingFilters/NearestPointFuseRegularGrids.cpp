@@ -126,7 +126,8 @@ void NearestPointFuseRegularGrids::dataCheck()
       if(refArrayNames.contains(*iter))
       {
         QString ss = QObject::tr("There is already an attribute array with the name %1 in the reference attribute matrix").arg(*iter);
-        notifyErrorMessage("", ss, -5559);
+        setErrorCondition(-5559);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       }
       else
       {
@@ -157,7 +158,8 @@ void NearestPointFuseRegularGrids::dataCheck()
         if(refAttrMatNames.contains(tmpAttrMat->getName()))
         {
           QString ss = QObject::tr("There is already an attribute matrix with the name %1 in the reference data container").arg(tmpAttrMat->getName());
-          notifyErrorMessage("", ss, -5559);
+          setErrorCondition(-5559);
+          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         }
         else
         {
@@ -232,7 +234,8 @@ void NearestPointFuseRegularGrids::execute()
   {
     QString ss = QObject::tr("A component of the resolution for the Image Geometry associated with DataContainer '%1' is 0. This would result in a division by 0 operation")
                      .arg(m_SamplingCellAttributeMatrixPath.getDataContainerName());
-    notifyErrorMessage("", ss, -5555);
+    setErrorCondition(-5555);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 

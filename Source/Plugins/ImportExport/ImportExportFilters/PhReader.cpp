@@ -201,12 +201,14 @@ void PhReader::dataCheck()
   if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
-    notifyErrorMessage("", ss, -387);
+    setErrorCondition(-387);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
-    notifyErrorMessage("", ss, -388);
+    setErrorCondition(-388);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if(!getInputFile().isEmpty() && fi.exists())
@@ -234,8 +236,9 @@ void PhReader::dataCheck()
       m_InStream = fopen(getInputFile().toLatin1().data(), "r");
       if(m_InStream == nullptr)
       {
+        setErrorCondition(-48802);
         QString ss = QObject::tr("Error opening input file '%1'").arg(getInputFile());
-        notifyErrorMessage("", ss, -48802);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
       int32_t error = readHeader();
@@ -243,8 +246,9 @@ void PhReader::dataCheck()
       m_InStream = nullptr;
       if(error < 0)
       {
+        setErrorCondition(error);
         QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file");
-        notifyErrorMessage("", ss, error);
+        notifyErrorMessage(getHumanLabel(), ss, -48010);
       }
 
       // Set the file path and time stamp into the cache
@@ -301,8 +305,9 @@ void PhReader::execute()
   m_InStream = fopen(getInputFile().toLatin1().data(), "r");
   if(m_InStream == nullptr)
   {
+    setErrorCondition(-48030);
     QString ss = QObject::tr("Error opening input file '%1'").arg(getInputFile());
-    notifyErrorMessage("", ss, -48030);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -384,7 +389,8 @@ int32_t PhReader::readFile()
     {
       fclose(m_InStream);
       m_InStream = nullptr;
-      notifyErrorMessage("", "Error reading Ph data", -48040);
+      setErrorCondition(-48040);
+      notifyErrorMessage(getHumanLabel(), "Error reading Ph data", getErrorCondition());
       return getErrorCondition();
     }
   }

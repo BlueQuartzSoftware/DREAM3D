@@ -563,28 +563,32 @@ void FindGBCDMetricBased::dataCheck()
   if(getMisorientationRotation().angle <= 0.0 || getMisorientationRotation().angle > 180.0)
   {
     QString degSymbol = QChar(0x00B0);
+    setErrorCondition(-1000);
     QString ss = "The misorientation angle should be in the range (0, 180" + degSymbol + "]";
-    notifyErrorMessage("", ss, -1000);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if(getMisorientationRotation().h == 0.0f && getMisorientationRotation().k == 0.0f && getMisorientationRotation().l == 0.0f)
   {
+    setErrorCondition(-1001);
     QString ss = QObject::tr("All three indices of the misorientation axis cannot be 0");
-    notifyErrorMessage("", ss, -1001);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   // Number of Sampling Points (filter params.)
   if(getNumSamplPts() < 1)
   {
+    setErrorCondition(-1002);
     QString ss = QObject::tr("The number of sampling points must be greater than zero");
-    notifyErrorMessage("", ss, -1002);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   // Set some reasonable value, but allow user to use more if he/she knows what he/she does
   if(getNumSamplPts() > 5000)
   {
+    setWarningCondition(-1003);
     QString ss = QObject::tr("The number of sampling points is greater than 5000, but it is unlikely that many are needed");
-    notifyWarningMessage("", ss, -1003);
+    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
   }
 
   // Output files (filter params.)
@@ -623,8 +627,9 @@ void FindGBCDMetricBased::dataCheck()
 
   if(!getDistOutputFile().isEmpty() && getDistOutputFile() == getErrOutputFile())
   {
+    setErrorCondition(-1008);
     QString ss = QObject::tr("The output files must be different");
-    notifyErrorMessage("", ss, -1008);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   // Crystal Structures
@@ -641,8 +646,9 @@ void FindGBCDMetricBased::dataCheck()
   {
     if(getPhaseOfInterest() >= static_cast<int>(m_CrystalStructuresPtr.lock()->getNumberOfTuples()) || getPhaseOfInterest() <= 0)
     {
+      setErrorCondition(-1009);
       QString ss = QObject::tr("The phase index is either larger than the number of Ensembles or smaller than 1");
-      notifyErrorMessage("", ss, -1009);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }
 
@@ -770,7 +776,8 @@ void FindGBCDMetricBased::execute()
   {
     QString ss;
     ss = QObject::tr("Error creating parent path '%1'").arg(distOutFileDir.path());
-    notifyErrorMessage("", ss, -1000);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
+    setErrorCondition(-1);
     return;
   }
 
@@ -778,7 +785,8 @@ void FindGBCDMetricBased::execute()
   if(!distOutFile.open(QIODevice::WriteOnly | QIODevice::Text))
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(getDistOutputFile());
-    notifyErrorMessage("", ss, -1001);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -789,7 +797,8 @@ void FindGBCDMetricBased::execute()
   {
     QString ss;
     ss = QObject::tr("Error creating parent path '%1'").arg(errOutFileDir.path());
-    notifyErrorMessage("", ss, -1002);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
+    setErrorCondition(-1);
     return;
   }
 
@@ -797,7 +806,8 @@ void FindGBCDMetricBased::execute()
   if(!errOutFile.open(QIODevice::WriteOnly | QIODevice::Text))
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(getDistOutputFile());
-    notifyErrorMessage("", ss, -1003);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -807,7 +817,8 @@ void FindGBCDMetricBased::execute()
   if(nullptr == fDist)
   {
     QString ss = QObject::tr("Error opening distribution output file '%1'").arg(m_DistOutputFile);
-    notifyErrorMessage("", ss, -1004);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -816,7 +827,8 @@ void FindGBCDMetricBased::execute()
   if(nullptr == fErr)
   {
     QString ss = QObject::tr("Error opening distribution errors output file '%1'").arg(m_ErrOutputFile);
-    notifyErrorMessage("", ss, -1005);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -837,7 +849,7 @@ void FindGBCDMetricBased::execute()
 
   // ------------------------------ generation of sampling points ----------------------------------
   QString ss = QObject::tr("|| Generating sampling points");
-  notifyStatusMessage(getMessagePrefix(), ss);
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
   // generate "Golden Section Spiral", see http://www.softimageblog.com/archives/115
   int numSamplPts_WholeSph = 2 * m_NumSamplPts; // here we generate points on the whole sphere
@@ -918,7 +930,7 @@ void FindGBCDMetricBased::execute()
       return;
     }
     ss = QObject::tr("|| Step 1/2: Selecting Triangles with the Specified Misorientation (%1% completed)").arg(int(100.0 * float(i) / float(numMeshTris)));
-    notifyStatusMessage(getMessagePrefix(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     if(i + trisChunkSize >= numMeshTris)
     {
       trisChunkSize = numMeshTris - i;
@@ -989,7 +1001,7 @@ void FindGBCDMetricBased::execute()
       return;
     }
     ss = QObject::tr("|| Step 2/2: Computing Distribution Values at the Section of Interest (%1% completed)").arg(int(100.0 * float(i) / float(samplPtsX.size())));
-    notifyStatusMessage(getMessagePrefix(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     if(i + pointsChunkSize >= samplPtsX.size())
     {
       pointsChunkSize = samplPtsX.size() - i;

@@ -234,7 +234,7 @@ void VectorSegmentFeatures::preflight()
 // -----------------------------------------------------------------------------
 void VectorSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures)
 {
-  notifyStatusMessage("", "Randomizing Feature Ids");
+  notifyStatusMessage(getHumanLabel(), "Randomizing Feature Ids");
   // Generate an even distribution of numbers between the min and max range
   const int64_t rangeMin = 1;
   const int64_t rangeMax = totalFeatures - 1;
@@ -399,7 +399,8 @@ void VectorSegmentFeatures::execute()
   int32_t totalFeatures = static_cast<int32_t>(m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumberOfTuples());
   if(totalFeatures < 2)
   {
-    notifyErrorMessage("", "The number of Features was 0 or 1 which means no Features were detected. A threshold value may be set too high", -87000);
+    setErrorCondition(-87000);
+    notifyErrorMessage(getHumanLabel(), "The number of Features was 0 or 1 which means no Features were detected. A threshold value may be set too high", getErrorCondition());
     return;
   }
 
@@ -410,7 +411,7 @@ void VectorSegmentFeatures::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("", "Completed");
+  notifyStatusMessage(getHumanLabel(), "Completed");
 }
 
 // -----------------------------------------------------------------------------

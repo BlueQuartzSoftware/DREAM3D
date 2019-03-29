@@ -193,7 +193,8 @@ void ReadStlFile::dataCheck()
 
   if(m_StlFilePath.isEmpty())
   {
-    notifyErrorMessage("", "The input file must be set", -1003);
+    setErrorCondition(-1003);
+    notifyErrorMessage(getHumanLabel(), "The input file must be set", -1003);
   }
 
   // Create a SufaceMesh Data Container with Faces, Vertices, Feature Labels and optionally Phase labels
@@ -264,7 +265,8 @@ void ReadStlFile::readFile()
   FILE* f = fopen(m_StlFilePath.toLatin1().data(), "rb");
   if(nullptr == f)
   {
-    notifyErrorMessage("", "Error opening STL file", -1003);
+    setErrorCondition(-1003);
+    notifyErrorMessage(getHumanLabel(), "Error opening STL file", -1003);
     return;
   }
 

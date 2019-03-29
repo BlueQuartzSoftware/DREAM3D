@@ -150,7 +150,8 @@ void SurfaceMeshToVtk::dataCheck()
   {
     if(dap.getDataContainerName().compare(dcName) != 0)
     {
-      notifyErrorMessage("", "The Face arrays and Vertex arrays must come from the same Data Container.", -385);
+      setErrorCondition(-385);
+      notifyErrorMessage(getHumanLabel(), "The Face arrays and Vertex arrays must come from the same Data Container.", getErrorCondition());
       return;
     }
   }
@@ -158,7 +159,8 @@ void SurfaceMeshToVtk::dataCheck()
   {
     if(dap.getDataContainerName().compare(dcName) != 0)
     {
-      notifyErrorMessage("", "The Face arrays and Vertex arrays must come from the same Data Container.", -386);
+      setErrorCondition(-386);
+      notifyErrorMessage(getHumanLabel(), "The Face arrays and Vertex arrays must come from the same Data Container.", getErrorCondition());
       return;
     }
   }
@@ -178,12 +180,14 @@ void SurfaceMeshToVtk::dataCheck()
   // We MUST have Nodes
   if(nullptr == triangles->getVertices().get())
   {
-    notifyErrorMessage("", "DataContainer Geometry missing Vertices", -386);
+    setErrorCondition(-386);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Vertices", getErrorCondition());
   }
   // We MUST have Triangles defined also.
   if(nullptr == triangles->getTriangles().get())
   {
-    notifyErrorMessage("", "DataContainer Geometry missing Triangles", -387);
+    setErrorCondition(-387);
+    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
   }
 
   QVector<size_t> dims(1, 2);
@@ -269,7 +273,8 @@ void SurfaceMeshToVtk::execute()
   {
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    notifyErrorMessage("", ss, -1);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -280,7 +285,8 @@ void SurfaceMeshToVtk::execute()
   {
 
     QString ss = QObject::tr("Error creating file '%1'").arg(getOutputVtkFile());
-    notifyErrorMessage("", ss, -18542);
+    setErrorCondition(-18542);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   ScopedFileMonitor vtkFileMonitor(vtkFile);

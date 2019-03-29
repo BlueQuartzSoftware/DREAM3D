@@ -146,25 +146,29 @@ void EnsembleInfoReader::dataCheck()
   if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
-    notifyErrorMessage("", ss, -387);
+    setErrorCondition(-387);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
-    notifyErrorMessage("", ss, -388);
+    setErrorCondition(-388);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QString ext = fi.suffix();
   if(ext != "ini" && ext != "txt")
   {
     QString ss = QObject::tr("Incorrect file extension in '%1'. The file extension must be .ini or .txt").arg(getInputFile());
-    notifyErrorMessage("", ss, -10018);
+    setErrorCondition(-10018);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if(m_CellEnsembleAttributeMatrixName.isEmpty())
   {
     QString ss = QObject::tr("Ensemble Attribute Matrix name must be set");
-    notifyErrorMessage("", ss, -1);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, getDataContainerName());
@@ -183,7 +187,8 @@ void EnsembleInfoReader::dataCheck()
   if(0 == numphases) // Either the group name "EnsembleInfo" is incorrect or 0 was entered as the Number_Phases
   {
     QString ss = QObject::tr("Check the group name EnsembleInfo and that Number_Phases > 0");
-    notifyErrorMessage("", ss, -10003);
+    setErrorCondition(-10003);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QVector<size_t> tDims(1, numphases + 1);
@@ -258,7 +263,8 @@ int32_t EnsembleInfoReader::readFile()
   if(0 == numphases) // Either the group name "EnsembleInfo" is incorrect or 0 was entered as the Number_Phases
   {
     QString ss = QObject::tr("Check the group name EnsembleInfo and that Number_Phases > 0");
-    notifyErrorMessage("", ss, -10003);
+    setErrorCondition(-10003);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
 
@@ -280,14 +286,16 @@ int32_t EnsembleInfoReader::readFile()
     if(xtalString.compare("MissingCrystalStructure") == 0)
     {
       QString ss = QObject::tr("Missing crystal structure for phase '%1'").arg(group);
-      notifyErrorMessage("", ss, -10008);
+      setErrorCondition(-10008);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return -1;
     }
 
     if(phaseTypeString.compare("MissingPhaseType") == 0)
     {
       QString ss = QObject::tr("Missing phase type for phase '%1'").arg(group);
-      notifyErrorMessage("", ss, -10009);
+      setErrorCondition(-10009);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return -1;
     }
 
@@ -301,7 +309,8 @@ int32_t EnsembleInfoReader::readFile()
     if(m_crystruct == Ebsd::CrystalStructure::UnknownCrystalStructure) // The crystal structure name read from the file was not found in the lookup table
     {
       QString ss = QObject::tr("Incorrect crystal structure name '%1'").arg(xtalString);
-      notifyErrorMessage("", ss, -10006);
+      setErrorCondition(-10006);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return -1;
     }
 
@@ -311,7 +320,8 @@ int32_t EnsembleInfoReader::readFile()
     if(m_ptype == PhaseType::Type::Unknown)
     {
       QString ss = QObject::tr("Incorrect phase type name '%1'").arg(phaseTypeString); // The phase type name read from the file was not found in the lookup table
-      notifyErrorMessage("", ss, -10007);
+      setErrorCondition(-10007);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return -1;
     }
 
@@ -329,7 +339,8 @@ int32_t EnsembleInfoReader::readFile()
     {
       QString ss = QObject::tr("Phase '%1' did not have entries in the file. Phase numbering must start at 1 and no phases may be skipped")
                        .arg(i); // The phase type name read from the file was not found in the lookup table
-      notifyErrorMessage("", ss, -10005);
+      setErrorCondition(-10005);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return -1;
     }
   }

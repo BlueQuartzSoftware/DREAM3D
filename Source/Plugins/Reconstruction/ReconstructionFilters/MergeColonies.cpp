@@ -616,7 +616,8 @@ void MergeColonies::execute()
   size_t totalFeatures = m_ActivePtr.lock()->getNumberOfTuples();
   if(totalFeatures < 2)
   {
-    notifyErrorMessage("", "The number of Grouped Features was 0 or 1 which means no grouped Features were detected. A grouping value may be set too high", -87000);
+    setErrorCondition(-87000);
+    notifyErrorMessage(getHumanLabel(), "The number of Grouped Features was 0 or 1 which means no grouped Features were detected. A grouping value may be set too high", getErrorCondition());
     return;
   }
 
@@ -633,7 +634,7 @@ void MergeColonies::execute()
   }
   numParents += 1;
 
-  notifyStatusMessage("", "Characterizing Colonies");
+  notifyStatusMessage(getHumanLabel(), "Characterizing Colonies");
   characterize_colonies();
 
   if(m_RandomizeParentIds)

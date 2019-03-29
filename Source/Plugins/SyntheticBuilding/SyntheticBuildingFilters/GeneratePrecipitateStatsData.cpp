@@ -215,7 +215,8 @@ void GeneratePrecipitateStatsData::setupFilterParameters()
 #define FLOAT_RANGE_CHECK(var, min, max, error)                                                                                                                                                        \
   if(m_##var < min || m_##var > max)                                                                                                                                                                   \
   {                                                                                                                                                                                                    \
-    notifyErrorMessage("", "Valid range for " #var " is " #min "~" #max, error);                                                                                                                       \
+    setErrorCondition(error);                                                                                                                                                                          \
+    notifyErrorMessage(getHumanLabel(), "Valid range for " #var " is " #min "~" #max, getErrorCondition());                                                                                            \
   }
 
 // -----------------------------------------------------------------------------
@@ -234,7 +235,8 @@ void GeneratePrecipitateStatsData::dataCheck()
 
   if((m_CreateEnsembleAttributeMatrix && m_AppendToExistingAttributeMatrix) || (!m_CreateEnsembleAttributeMatrix && !m_AppendToExistingAttributeMatrix))
   {
-    notifyErrorMessage("", "CreateEnsembleAttributeMatrix & AppendToExistingAttributeMatrix can NOT both be true or false. One must be true and one must be false.", -95010);
+    setErrorCondition(-95010);
+    notifyErrorMessage(getHumanLabel(), "CreateEnsembleAttributeMatrix & AppendToExistingAttributeMatrix can NOT both be true or false. One must be true and one must be false.", getErrorCondition());
     return;
   }
 
@@ -289,7 +291,8 @@ void GeneratePrecipitateStatsData::dataCheck()
     AttributeMatrix::Pointer cellEnsembleAttrMat = dca->getAttributeMatrix(m_SelectedEnsembleAttributeMatrix);
     if(nullptr == cellEnsembleAttrMat.get())
     {
-      notifyErrorMessage("", QString("AttributeMatrix does not exist at path %1").arg(m_SelectedEnsembleAttributeMatrix.serialize("/")), -95020);
+      setErrorCondition(-95020);
+      notifyErrorMessage(getHumanLabel(), QString("AttributeMatrix does not exist at path %1").arg(m_SelectedEnsembleAttributeMatrix.serialize("/")), getErrorCondition());
       return;
     }
 
@@ -386,7 +389,8 @@ void GeneratePrecipitateStatsData::execute()
   if(getErrorCondition() < 0)
   {
     QString ss = QObject::tr("Some error message");
-    notifyErrorMessage("", ss, -95012);
+    setErrorCondition(-95012);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -398,7 +402,8 @@ void GeneratePrecipitateStatsData::execute()
   err = StatsGen::GenLogNormalPlotData<FloatVectorType>(m_Mu, m_Sigma, x, y, size, m_MinCutOff, m_MaxCutOff);
   if(err == 1)
   {
-    notifyErrorMessage("", "Error generating the LogNormal Data", -95011);
+    setErrorCondition(-95011);
+    notifyErrorMessage(getHumanLabel(), "Error generating the LogNormal Data", getErrorCondition());
     return;
   }
   float yMax = 0.0f;
@@ -418,7 +423,8 @@ void GeneratePrecipitateStatsData::execute()
   err = StatsGen::GenCutOff<float, FloatVectorType>(m_Mu, m_Sigma, m_MinCutOff, m_MaxCutOff, m_BinStepSize, xCo, yCo, yMax, numsizebins, binSizes);
   if(err == 1)
   {
-    notifyErrorMessage("", "Error generating the Min or Max Cut Off values", -95012);
+    setErrorCondition(-95012);
+    notifyErrorMessage(getHumanLabel(), "Error generating the Min or Max Cut Off values", getErrorCondition());
     return;
   }
 
@@ -514,7 +520,7 @@ void GeneratePrecipitateStatsData::execute()
   QTextStream ss(&msg);
 
   ss << getPhaseName() << ":: Initialize ODF Values....";
-  notifyStatusMessage("", msg);
+  notifyStatusMessage(getHumanLabel(), msg);
 
   {
     absPresetPtr->initializeODFTableModel(dataMap);
@@ -540,7 +546,7 @@ void GeneratePrecipitateStatsData::execute()
 
   msg.clear();
   ss << getPhaseName() << ":: Initialize MDF Values....";
-  notifyStatusMessage("", msg);
+  notifyStatusMessage(getHumanLabel(), msg);
   {
     absPresetPtr->initializeMDFTableModel(dataMap);
     QVector<float> e1s;
@@ -578,7 +584,7 @@ void GeneratePrecipitateStatsData::execute()
 
   msg.clear();
   ss << getPhaseName() << ":: Initialize Axis ODF Values....";
-  notifyStatusMessage("", msg);
+  notifyStatusMessage(getHumanLabel(), msg);
   {
     absPresetPtr->initializeAxisODFTableModel(dataMap);
     QVector<float> e1s;
@@ -600,7 +606,7 @@ void GeneratePrecipitateStatsData::execute()
 
   msg.clear();
   ss << getPhaseName() << ":: Initialize RDF Values....";
-  notifyStatusMessage("", msg);
+  notifyStatusMessage(getHumanLabel(), msg);
 
   {
     std::vector<float> boxDims(3);

@@ -60,8 +60,9 @@ void FixNonmanifoldVoxels::dataCheck()
   ImageGeom::Pointer imageGeom = std::dynamic_pointer_cast<ImageGeom>(geom);
   if(nullptr == imageGeom)
   {
+    setErrorCondition(-12001);
     QString ss = QObject::tr("This filter only works on ImageGeometry.");
-    notifyErrorMessage("", ss, -12001);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QVector<size_t> cDims(1, 1);

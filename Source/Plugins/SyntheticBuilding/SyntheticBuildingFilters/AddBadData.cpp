@@ -119,7 +119,8 @@ void AddBadData::dataCheck()
   if((!m_PoissonNoise) && (!m_BoundaryNoise))
   {
     QString ss = QObject::tr("At least one type of noise must be selected");
-    notifyErrorMessage("", ss, -1);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   QVector<size_t> cDims(1, 1);
@@ -167,7 +168,7 @@ void AddBadData::execute()
 // -----------------------------------------------------------------------------
 void AddBadData::add_noise()
 {
-  notifyStatusMessage("", "Adding Noise");
+  notifyStatusMessage(getHumanLabel(), "Adding Noise");
   SIMPL_RANDOMNG_NEW()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getGBEuclideanDistancesArrayPath().getDataContainerName());

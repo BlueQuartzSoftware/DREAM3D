@@ -79,7 +79,8 @@ public:
       {
         m_Filter->setCancel(true);
         QString ss = QObject::tr("The scalar value of a quaterion was <= -1.0. The value was %1").arg(m_Quats[quatIndex + 3]);
-        m_Filter->notifyErrorMessage("", ss, -95000);
+        m_Filter->setErrorCondition(-95000);
+        m_Filter->notifyErrorMessage(m_Filter->getHumanLabel(), ss, m_Filter->getErrorCondition());
         return;
       }
       if(m_Quats[quatIndex + 3] != 0.0f)

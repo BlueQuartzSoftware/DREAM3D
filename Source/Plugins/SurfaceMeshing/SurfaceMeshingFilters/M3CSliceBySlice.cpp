@@ -536,13 +536,14 @@ void M3CSliceBySlice::execute()
   {
     QString ss = QObject::tr(" Layers %1 and %2 of %3").arg(i).arg(i + 1).arg(sliceCount);
     // notifyProgressValue((i * 90 / sliceCount));
-    notifyStatusMessage(getMessagePrefix(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
 
     if(getCancel())
     {
 
       ss = QObject::tr("Cancelling filter");
-      notifyErrorMessage("", ss, -1);
+      setErrorCondition(-1);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       break;
     }
 
@@ -609,7 +610,8 @@ void M3CSliceBySlice::execute()
     {
 
       ss = QObject::tr("Error writing Nodes file '%1'").arg(nodesFile);
-      notifyErrorMessage("", ss, -1);
+      setErrorCondition(-1);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
 
@@ -618,7 +620,8 @@ void M3CSliceBySlice::execute()
     {
 
       ss = QObject::tr("Error writing triangles file '%1'").arg(trianglesFile);
-      notifyErrorMessage("", ss, -1);
+      setErrorCondition(-1);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
     cNodeID = nNodes;
@@ -670,7 +673,7 @@ void M3CSliceBySlice::execute()
     renumberVoxelFeatureIds(renumberFeatureValue);
   }
 
-  notifyStatusMessage("", "Surface Meshing Complete");
+  notifyStatusMessage(getHumanLabel(), "Surface Meshing Complete");
 }
 
 // -----------------------------------------------------------------------------

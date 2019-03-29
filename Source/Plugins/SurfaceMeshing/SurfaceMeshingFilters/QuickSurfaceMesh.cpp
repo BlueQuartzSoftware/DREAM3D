@@ -254,8 +254,9 @@ void QuickSurfaceMesh::dataCheck()
 
   if(!DataArrayPath::ValidateVector(paths))
   {
+    setErrorCondition(-11004);
     QString ss = QObject::tr("There are Attribute Arrays selected that are not contained in the same Attribute Matrix. All selected Attribute Arrays must belong to the same Attribute Matrix");
-    notifyErrorMessage("", ss, -11004);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   for(const auto& path : paths)
@@ -319,16 +320,18 @@ void QuickSurfaceMesh::dataCheck()
       // If the cell array is multi-dimensional, error out for now because the Xdmf hyperslab output
       // will crash ParaView every time. This requires re-engineering the Xdmdf writing to support
       // the correct "standard" for writing "owners" of an array
+      setErrorCondition(-11005);
       QString ss = QObject::tr("Selected Cell Attribute Arrays must have a single component dimension");
-      notifyErrorMessage("", ss, -11005);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
     m_CreatedWeakPtrVector.push_back(TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath, faceDims, m_SelectedWeakPtrVector[i].lock()));
   }
 
   if(m_SelectedWeakPtrVector.size() != m_CreatedWeakPtrVector.size())
   {
+    setErrorCondition(-11006);
     QString ss = QObject::tr("The number of selected Cell Attribute Arrays available does not match the number of Face Attribute Arrays created");
-    notifyErrorMessage("", ss, -11006);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   sm->createNonPrereqAttributeMatrix(this, getFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::FaceFeature);
@@ -618,7 +621,7 @@ void QuickSurfaceMesh::correctProblemVoxels()
       }
     }
     QString ss = QObject::tr("Correcting Problem Voxels: Iteration - '%1'; Problem Voxels - '%2'").arg(iter).arg(count);
-    notifyStatusMessage("", ss);
+    notifyStatusMessage(getHumanLabel(), ss);
   }
 }
 

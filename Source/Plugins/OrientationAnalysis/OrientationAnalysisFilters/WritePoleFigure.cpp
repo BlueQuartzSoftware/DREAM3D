@@ -253,12 +253,14 @@ void WritePoleFigure::dataCheck()
 
   if(m_OutputPath.isEmpty())
   {
-    notifyErrorMessage("", "The output directory must be set", -1003);
+    setErrorCondition(-1003);
+    notifyErrorMessage(getHumanLabel(), "The output directory must be set", getErrorCondition());
   }
   else if(!path.exists())
   {
+    setWarningCondition(-1004);
     QString ss = QObject::tr("The directory path for the output file does not exist. DREAM.3D will attempt to create this path during execution of the filter");
-    notifyWarningMessage("", ss, -1004);
+    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
   }
 
   QVector<DataArrayPath> dataArrayPaths;
@@ -389,12 +391,13 @@ void WritePoleFigure::writeImage(QImage image, QString label)
 {
   QString filename = generateImagePath(label);
   QString ss = QObject::tr("Writing Image %1").arg(filename);
-  notifyStatusMessage(getMessagePrefix(), ss);
+  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   bool saved = image.save(filename);
   if(!saved)
   {
-        QString ss = QObject::tr("The Pole Figure image file '%1' was not saved").arg(filename);
-    notifyErrorMessage("", ss, -90011);
+    setErrorCondition(-90011);
+    QString ss = QObject::tr("The Pole Figure image file '%1' was not saved").arg(filename);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 }
 #endif
@@ -682,7 +685,8 @@ void WritePoleFigure::execute()
   if(!path.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(path.absolutePath());
-    notifyErrorMessage("", ss, -1);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -757,8 +761,8 @@ void WritePoleFigure::execute()
     label.append(QString::number(phase));
 
     QString ss = QObject::tr("Generating Pole Figures for Phase %1").arg(phase);
-    notifyStatusMessage(getMessagePrefix(), ss);
-
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    
     switch(m_CrystalStructures[phase])
     {
     case Ebsd::CrystalStructure::Cubic_High:
@@ -775,19 +779,23 @@ void WritePoleFigure::execute()
       break;
     case Ebsd::CrystalStructure::Trigonal_High:
       figures = makePoleFigures<TrigonalOps>(config);
-      //         //   notifyWarningMessage("", "Trigonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
+      //   setWarningCondition(-1010);
+      //   notifyWarningMessage(getHumanLabel(), "Trigonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", getWarningCondition());
       break;
     case Ebsd::CrystalStructure::Trigonal_Low:
       figures = makePoleFigures<TrigonalLowOps>(config);
-      //        //  notifyWarningMessage("", "Trigonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
+      //  setWarningCondition(-1010);
+      //  notifyWarningMessage(getHumanLabel(), "Trigonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", getWarningCondition());
       break;
     case Ebsd::CrystalStructure::Tetragonal_High:
       figures = makePoleFigures<TetragonalOps>(config);
-      //      //  notifyWarningMessage("", "Tetragonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
+    //  setWarningCondition(-1010);
+    //  notifyWarningMessage(getHumanLabel(), "Tetragonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", getWarningCondition());
       break;
     case Ebsd::CrystalStructure::Tetragonal_Low:
       figures = makePoleFigures<TetragonalLowOps>(config);
-      //       // notifyWarningMessage("", "Tetragonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
+      // setWarningCondition(-1010);
+      // notifyWarningMessage(getHumanLabel(), "Tetragonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", getWarningCondition());
       break;
     case Ebsd::CrystalStructure::OrthoRhombic:
       figures = makePoleFigures<OrthoRhombicOps>(config);

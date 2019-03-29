@@ -137,7 +137,8 @@ void MinSize::dataCheck()
   if(getMinAllowedFeatureSize() < 0)
   {
     QString ss = QObject::tr("The minimum Feature size (%1) must be 0 or positive").arg(getMinAllowedFeatureSize());
-    notifyErrorMessage("", ss, -5555);
+    setErrorCondition(-5555);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
@@ -195,7 +196,8 @@ void MinSize::dataCheck()
     }
   }
 
-  notifyWarningMessage("", ss, -5556);
+  setWarningCondition(-5556);
+  notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
 }
 
 // -----------------------------------------------------------------------------
@@ -246,7 +248,8 @@ void MinSize::execute()
     if(unavailablePhase)
     {
       QString ss = QObject::tr("The phase number (%1) is not available in the supplied Feature phases array with path (%2)").arg(m_PhaseNumber).arg(m_FeaturePhasesArrayPath.serialize());
-      notifyErrorMessage("", ss, -5555);
+      setErrorCondition(-5555);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
   }
@@ -469,7 +472,8 @@ QVector<bool> MinSize::remove_smallfeatures()
   }
   if(!good)
   {
-    notifyErrorMessage("", "The minimum size is larger than the largest Feature.  All Features would be removed", -1);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), "The minimum size is larger than the largest Feature.  All Features would be removed", -1);
     return activeObjects;
   }
   for(size_t i = 0; i < totalPoints; i++)

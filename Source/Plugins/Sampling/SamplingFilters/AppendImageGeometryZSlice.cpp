@@ -149,30 +149,35 @@ void AppendImageGeometryZSlice::dataCheck()
     if(inputRes[0] != destRes[0])
     {
       QString ss = QObject::tr("Input X Resolution (%1) not equal to Destination X Resolution (%2)").arg(inputRes[0]).arg(destRes[0]);
-      notifyErrorMessage("", ss, -8205);
+      setErrorCondition(-8205);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
     if(inputRes[1] != destRes[1])
     {
       QString ss = QObject::tr("Input Y Resolution (%1) not equal to Destination Y Resolution (%2)").arg(inputRes[1]).arg(destRes[1]);
-      notifyErrorMessage("", ss, -8206);
+      setErrorCondition(-8206);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
     if(inputRes[2] != destRes[2])
     {
       QString ss = QObject::tr("Input Z Resolution (%1) not equal to Destination Z Resolution (%2)").arg(inputRes[2]).arg(destRes[2]);
-      notifyErrorMessage("", ss, -8207);
+      setErrorCondition(-8207);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }
 
   if(destGeomDims[0] != inputGeomDims[0])
   {
     QString ss = QObject::tr("Input X Dim (%1) not equal to Destination X Dim (%2)").arg(inputGeomDims[0]).arg(destGeomDims[0]);
-    notifyErrorMessage("", ss, -8202);
+    setErrorCondition(-8202);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if(destGeomDims[0] != inputGeomDims[0])
   {
     QString ss = QObject::tr("Input Y Dim (%1) not equal to Destination Y Dim (%2)").arg(inputGeomDims[1]).arg(destGeomDims[1]);
-    notifyErrorMessage("", ss, -8203);
+    setErrorCondition(-8203);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if(getInPreflight())
@@ -284,7 +289,8 @@ void AppendImageGeometryZSlice::execute()
     else
     {
       QString ss = QObject::tr("Data Array '%1' does not exist in the Input Cell AttributeMatrix.").arg(*iter);
-      notifyWarningMessage("", ss, -8203);
+      setWarningCondition(-8203);
+      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
     }
   }
 

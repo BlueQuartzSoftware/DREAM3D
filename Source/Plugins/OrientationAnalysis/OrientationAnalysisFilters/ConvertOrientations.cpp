@@ -136,19 +136,22 @@ void ConvertOrientations::dataCheck()
   if(getInputType() == getOutputType())
   {
     QString ss = QObject::tr("Input and output orientation representation types must be different");
-    notifyErrorMessage("", ss, -1000);
+    setErrorCondition(-1000);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if(getInputType() < OrientationConverter<float>::GetMinIndex() || getInputType() > OrientationConverter<float>::GetMaxIndex())
   {
     QString ss = QObject::tr("There was an error with the selection of the input orientation type. The valid values range from 0 to %1").arg(OrientationConverter<float>::GetMaxIndex());
-    notifyErrorMessage("", ss, -1001);
+    setErrorCondition(-1001);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if(getOutputType() < OrientationConverter<float>::GetMinIndex() || getOutputType() > OrientationConverter<float>::GetMaxIndex())
   {
     QString ss = QObject::tr("There was an error with the selection of the output orientation type. The valid values range from 0 to %1").arg(OrientationConverter<float>::GetMaxIndex());
-    notifyErrorMessage("", ss, -1002);
+    setErrorCondition(-1002);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   // We need to return NOW because the next lines assume we have and index that is within
@@ -181,7 +184,8 @@ void ConvertOrientations::dataCheck()
                      .arg(numComps)
                      .arg(componentCounts[getInputType()])
                      .arg(sizeNameMappingString);
-    notifyErrorMessage("", ss, -1006);
+    setErrorCondition(-1006);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   DataArrayPath outputArrayPath = getInputOrientationArrayPath();
@@ -241,14 +245,16 @@ template <typename T> void generateRepresentation(ConvertOrientations* filter, t
   if(nullptr == output.get())
   {
     QString ss = QObject::tr("There was an error converting the input data using convertor %1").arg(converters[filter->getInputType()]->getNameOfClass());
-    filter->notifyErrorMessage("", ss, -1004);
+    filter->setErrorCondition(-1004);
+    filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
     return;
   }
 
   if(!output->copyIntoArray(outputOrientations))
   {
     QString ss = QObject::tr("There was an error copying the final results into the output array.");
-    filter->notifyErrorMessage("", ss, -1003);
+    filter->setErrorCondition(-1003);
+    filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
   }
 }
 

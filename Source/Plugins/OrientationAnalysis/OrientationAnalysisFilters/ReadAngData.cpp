@@ -155,22 +155,25 @@ void ReadAngData::dataCheck()
   if(m_InputFile.isEmpty() && m_Manufacturer == Ebsd::OEM::Unknown)
   {
     QString ss = QObject::tr("The input file must be set for property %1").arg("InputFile");
-    notifyErrorMessage("", ss, -1);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
     return;
   }
 
   QString ext = fi.suffix();
   if(ext != Ebsd::Ang::FileExt)
   {
+    setErrorCondition(-997);
     QString ss = QObject::tr("The file extension '%1' was not recognized. The reader only recognizes the .ang file extension").arg(ext);
-    notifyErrorMessage("", ss, -1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
   if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist: '%1'").arg(getInputFile());
-    notifyErrorMessage("", ss, -388);
+    setErrorCondition(-388);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -307,8 +310,9 @@ void ReadAngData::readDataFile(AngReader* reader, const DataContainer::Pointer& 
       int32_t err = reader->readHeaderOnly();
       if(err < 0)
       {
-        notifyErrorMessage("", reader->getErrorMessage(), err);
-        notifyErrorMessage("", "AngReader could not read the .ang file header.", -997);
+        setErrorCondition(err);
+        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+        notifyErrorMessage(getHumanLabel(), "AngReader could not read the .ang file header.", getErrorCondition());
         m_FileWasRead = false;
         return;
       }
@@ -317,9 +321,11 @@ void ReadAngData::readDataFile(AngReader* reader, const DataContainer::Pointer& 
 
       if(reader->getGrid().compare(Ebsd::Ang::HexGrid) == 0)
       {
+        setErrorCondition(-1000);
         notifyErrorMessage(
-            "", "DREAM.3D does not directly read HEX grid .ang files. Please use the 'Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang)' filter first to batch convert the Hex grid files.",
-            -3004);
+            getHumanLabel(),
+            "DREAM.3D does not directly read HEX grid .ang files. Please use the 'Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang)' filter first to batch convert the Hex grid files.",
+            getErrorCondition());
         m_FileWasRead = false;
         return;
       }
@@ -329,8 +335,9 @@ void ReadAngData::readDataFile(AngReader* reader, const DataContainer::Pointer& 
       int32_t err = reader->readFile();
       if(err < 0)
       {
-        notifyErrorMessage("", reader->getErrorMessage(), err);
-        notifyErrorMessage("", "AngReader could not read the .ang file.", -1000);
+        setErrorCondition(err);
+        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+        notifyErrorMessage(getHumanLabel(), "AngReader could not read the .ang file.", getErrorCondition());
         return;
       }
     }
@@ -405,7 +412,8 @@ int32_t ReadAngData::loadMaterialInfo(AngReader* reader)
   QVector<AngPhase::Pointer> phases = getData().phases;
   if(phases.empty())
   {
-    notifyErrorMessage("", reader->getErrorMessage(), reader->getErrorCode());
+    setErrorCondition(reader->getErrorCode());
+    notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), getErrorCondition());
     return getErrorCondition();
   }
 

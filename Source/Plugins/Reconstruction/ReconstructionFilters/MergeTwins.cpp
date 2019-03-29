@@ -372,7 +372,8 @@ void MergeTwins::execute()
   size_t totalFeatures = m_ActivePtr.lock()->getNumberOfTuples();
   if(totalFeatures < 2)
   {
-    notifyErrorMessage("", "The number of grouped Features was 0 or 1 which means no grouped Features were detected. A grouping value may be set too high", -87000);
+    setErrorCondition(-87000);
+    notifyErrorMessage(getHumanLabel(), "The number of grouped Features was 0 or 1 which means no grouped Features were detected. A grouping value may be set too high", getErrorCondition());
     return;
   }
 
@@ -389,13 +390,13 @@ void MergeTwins::execute()
   }
   numParents += 1;
 
-  notifyStatusMessage("", "Characterizing Twins Starting");
+  notifyStatusMessage(getHumanLabel(), "Characterizing Twins Starting");
   characterize_twins();
-  notifyStatusMessage("", "Characterizing Twins Complete");
+  notifyStatusMessage(getHumanLabel(), "Characterizing Twins Complete");
 
   if(m_RandomizeParentIds)
   {
-    notifyStatusMessage("", "Randomizing Parent Ids....");
+    notifyStatusMessage(getHumanLabel(), "Randomizing Parent Ids....");
     // Generate all the numbers up front
     const int32_t rangeMin = 1;
     const int32_t rangeMax = numParents - 1;
@@ -414,7 +415,7 @@ void MergeTwins::execute()
       parentIdSet.insert(pid[i]);
     }
 
-    notifyStatusMessage("", "Shuffle elements ....");
+    notifyStatusMessage(getHumanLabel(), "Shuffle elements ....");
     //--- Shuffle elements by randomly exchanging each with one other.
     for(size_t i = 1; i < static_cast<size_t>(numParents); i++)
     {
@@ -429,7 +430,7 @@ void MergeTwins::execute()
 	  rndNumbers->setValue(r, pid_i);
     }
 
-    notifyStatusMessage("", "Adjusting Feature Ids Array....");
+    notifyStatusMessage(getHumanLabel(), "Adjusting Feature Ids Array....");
     // Now adjust all the Feature Id values for each Voxel
     for(size_t i = 0; i < totalPoints; ++i)
     {

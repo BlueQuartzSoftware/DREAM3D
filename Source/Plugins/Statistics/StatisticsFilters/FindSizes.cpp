@@ -170,12 +170,13 @@ void FindSizes::dataCheck()
 
   if(m_FeatureIdsPtr.lock()->getNumberOfTuples() != numElements)
   {
+    setErrorCondition(-10200);
     QString ss = QObject::tr("The number of tuples for the DataArray %1 is %2 and for Geometry %3 is %4. The number of tuples must match.")
                      .arg(m_FeatureIdsPtr.lock()->getName())
                      .arg(m_FeatureIdsPtr.lock()->getNumberOfTuples())
                      .arg(igeom->getGeometryTypeAsString())
                      .arg(numElements);
-    notifyErrorMessage("", ss, -10200);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 }
 
@@ -238,8 +239,9 @@ void FindSizes::findSizesImage(ImageGeom::Pointer image)
       m_NumElements[i] = static_cast<int32_t>(featurecounts[i]);
       if(featurecounts[i] > 9007199254740992ULL)
       {
+        setErrorCondition(-78231);
         QString ss = QObject::tr("Number of voxels belonging to feature %1 (%2) is greater than 9007199254740992").arg(i).arg(featurecounts[i]);
-        notifyErrorMessage("", ss, -78231);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
       m_Volumes[i] = (static_cast<double>(featurecounts[i]) * static_cast<double>(res_scalar));
@@ -258,8 +260,9 @@ void FindSizes::findSizesImage(ImageGeom::Pointer image)
       m_NumElements[i] = static_cast<int32_t>(featurecounts[i]);
       if(featurecounts[i] > 9007199254740992ULL)
       {
+        setErrorCondition(-78231);
         QString ss = QObject::tr("Number of voxels belonging to feature %1 (%2) is greater than 9007199254740992").arg(i).arg(featurecounts[i]);
-        notifyErrorMessage("", ss, -78231);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
 
@@ -278,8 +281,9 @@ void FindSizes::findSizesImage(ImageGeom::Pointer image)
       int32_t err = image->findElementSizes();
       if(err < 0)
       {
+        setErrorCondition(err);
         QString ss = QObject::tr("Error computing Element sizes for Geometry type %1").arg(image->getGeometryTypeAsString());
-        notifyErrorMessage("", ss, err);
+        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
         return;
       }
     }
@@ -296,8 +300,9 @@ void FindSizes::findSizesUnstructured(IGeometry::Pointer igeom)
     int32_t err = igeom->findElementSizes();
     if(err < 0)
     {
+      setErrorCondition(err);
       QString ss = QObject::tr("Error computing Element sizes for Geometry type %1").arg(igeom->getGeometryTypeAsString());
-      notifyErrorMessage("", ss, err);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
   }

@@ -121,7 +121,8 @@ void CorrelateValuesWithVectorDirection::dataCheck()
   if(m_CorrelatedDataArrayPath.isEmpty())
   {
     QString ss = QObject::tr("The correlated data array name is empty. Please select a name for the correlated data array");
-    notifyErrorMessage("", ss, -11000);
+    setErrorCondition(-11000);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   IDataArray::Pointer inputData = getDataContainerArray()
@@ -131,7 +132,8 @@ void CorrelateValuesWithVectorDirection::dataCheck()
   if(nullptr == inputData.get())
   {
     QString ss = QObject::tr("Correlated Data array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_CorrelatedDataArrayPath.getDataArrayName());
-    notifyErrorMessage("", ss, -11001);
+    setErrorCondition(-11001);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   if(inputData->getNumberOfTuples() != m_VectorDataPtr.lock()->getNumberOfTuples())
@@ -139,7 +141,8 @@ void CorrelateValuesWithVectorDirection::dataCheck()
     QString ss = QObject::tr("Correlated Data array '%1' has a different number of tuples from the Vector Data array '%2'")
                      .arg(m_CorrelatedDataArrayPath.getDataArrayName())
                      .arg(getVectorDataArrayPath().getDataArrayName());
-    notifyErrorMessage("", ss, -11002);
+    setErrorCondition(-11002);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 }
@@ -278,7 +281,7 @@ void CorrelateValuesWithVectorDirection::execute()
   createSterographicProjections(numComps);
   writePFStats(numComps);
 
-  notifyStatusMessage("", "Completed");
+  notifyStatusMessage(getHumanLabel(), "Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -431,8 +434,9 @@ void CorrelateValuesWithVectorDirection::createSterographicProjections(size_t nu
   f = fopen(m_OutputFile.toLatin1().data(), "wb");
   if(nullptr == f)
   {
+
     QString ss = QObject::tr("Could not open GBCD viz file %1 for writing. Please check access permissions and the path to the output location exists").arg(m_OutputFile);
-    notifyErrorMessage("", ss, -2001);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -524,8 +528,9 @@ void CorrelateValuesWithVectorDirection::writeLambertProjection(size_t numComps)
   f = fopen(m_OutputFile.toLatin1().data(), "wb");
   if(nullptr == f)
   {
+
     QString ss = QObject::tr("Could not open GBCD viz file %1 for writing. Please check access permissions and the path to the output location exists").arg(m_OutputFile);
-    notifyErrorMessage("", ss, -2002);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -641,8 +646,9 @@ void CorrelateValuesWithVectorDirection::writePFStats(size_t numComps)
   f = fopen(m_OutputFile.toLatin1().data(), "wb");
   if(nullptr == f)
   {
+
     QString ss = QObject::tr("Could not open GBCD viz file %1 for writing. Please check access permissions and the path to the output location exists").arg(m_OutputFile);
-    notifyErrorMessage("", ss, -2003);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 

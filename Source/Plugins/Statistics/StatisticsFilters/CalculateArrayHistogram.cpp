@@ -150,8 +150,9 @@ void CalculateArrayHistogram::dataCheck()
 
   if(m_NumberOfBins <= 0)
   {
+    setErrorCondition(-11011);
     QString ss = QObject::tr("The number of bins (%1) must be positive").arg(m_NumberOfBins);
-    notifyErrorMessage("", ss, -11011);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -179,7 +180,8 @@ void CalculateArrayHistogram::dataCheck()
     if(cDims != 1)
     {
       QString ss = QObject::tr("Selected array has number of components %1 and is not a scalar array. The path is %2").arg(cDims).arg(getSelectedArrayPath().serialize());
-      notifyErrorMessage("", ss, -11003);
+      setErrorCondition(-11003);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
   }
@@ -312,8 +314,9 @@ void CalculateArrayHistogram::execute()
 
   if(overflow > 0)
   {
+    setWarningCondition(-2000);
     QString ss = QString("%1 values were not catagorized into a bin.").arg(overflow);
-    notifyWarningMessage("", ss, -2000);
+    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
   }
 
 }

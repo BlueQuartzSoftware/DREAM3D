@@ -115,38 +115,44 @@ void NodesTrianglesToVtk::dataCheck()
   QFileInfo fi(m_TrianglesFile);
   if(m_TrianglesFile.isEmpty())
   {
-    notifyErrorMessage("", "Triangles file is not set correctly", -1001);
+    setErrorCondition(-1000);
+    notifyErrorMessage(getHumanLabel(), "Triangles file is not set correctly", -1001);
   }
   else if(!fi.exists())
   {
 
     if(getInPreflight())
     {
+      setWarningCondition(-1001);
       QString ss = "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline";
-      notifyWarningMessage("", ss, -1001);
+      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
     }
     else
     {
-      notifyErrorMessage("", "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004);
+      setErrorCondition(-1002);
+      notifyErrorMessage(getHumanLabel(), "Triangles file does not exist currently.\nYou must have another filter that creates these files before this filter in your pipeline", -1004);
     }
   }
 
   QFileInfo fii(m_NodesFile);
   if(m_NodesFile.isEmpty())
   {
-    notifyErrorMessage("", "Nodes file path or name is emtpy", -1002);
+    setErrorCondition(-1003);
+    notifyErrorMessage(getHumanLabel(), "Nodes file path or name is emtpy", -1002);
   }
   else if(!fii.exists())
   {
 
     if(getInPreflight())
     {
+      setWarningCondition(-1004);
       QString ss = "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline";
-      notifyWarningMessage("", ss, -1004);
+      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
     }
     else
     {
-      notifyErrorMessage("", "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005);
+      setErrorCondition(-1005);
+      notifyErrorMessage(getHumanLabel(), "Nodes file does not exist currently. You must have another filter that creates these files before this filter in your pipeline", -1005);
     }
   }
 
@@ -186,7 +192,8 @@ void NodesTrianglesToVtk::execute()
   {
 
     QString ss = QObject::tr("Error opening nodes file '%1'").arg(m_NodesFile);
-    notifyErrorMessage("", ss, -666);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, -666);
     return;
   }
 
@@ -195,7 +202,7 @@ void NodesTrianglesToVtk::execute()
   fscanf(nodesFile, "%d", &nNodes);
   {
     QString ss = QObject::tr("Node Count from %1 File: %2").arg(getNodesFile()).arg(nNodes);
-    notifyStatusMessage(getMessagePrefix(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   }
 
   // Open the triangles file for reading
@@ -204,7 +211,8 @@ void NodesTrianglesToVtk::execute()
   {
 
     QString ss = QObject::tr(": Error opening Triangles file '%1'").arg(m_TrianglesFile);
-    notifyErrorMessage("", ss, -666);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, -666);
     return;
   }
   // how many triangles are in the file
@@ -213,7 +221,7 @@ void NodesTrianglesToVtk::execute()
 
   {
     QString ss = QObject::tr("Triangle Count from %1 File: %2").arg(getTrianglesFile()).arg(nTriangles);
-    notifyStatusMessage(getMessagePrefix(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
   }
   // Open the output VTK File for writing
   FILE* vtkFile = nullptr;
@@ -222,7 +230,8 @@ void NodesTrianglesToVtk::execute()
   {
 
     QString ss = QObject::tr(": Error creating Triangles VTK Visualization '%1'").arg(getOutputVtkFile());
-    notifyErrorMessage("", ss, -666);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, -666);
     return;
   }
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");

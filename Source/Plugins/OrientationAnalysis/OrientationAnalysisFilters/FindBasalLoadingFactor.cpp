@@ -198,7 +198,7 @@ void FindBasalLoadingFactor::execute()
     m_BasalLoadingFactor[i] = w;
   }
 
-  notifyStatusMessage("", "FindBasalLoadingFactor Completed");
+  notifyStatusMessage(getHumanLabel(), "FindBasalLoadingFactor Completed");
 }
 
 // -----------------------------------------------------------------------------

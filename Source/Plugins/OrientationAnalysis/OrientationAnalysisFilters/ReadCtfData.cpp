@@ -181,13 +181,15 @@ void ReadCtfData::dataCheck()
   if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist: '%1'").arg(getInputFile());
-    notifyErrorMessage("", ss, -388);
+    setErrorCondition(-388);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if(m_InputFile.isEmpty() && m_Manufacturer == Ebsd::OEM::Unknown)
   {
     QString ss = QObject::tr("The input file must be set");
-    notifyErrorMessage("", ss, -1);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, -1);
   }
 
   if(!m_InputFile.isEmpty()) // User set a filename, so lets check it
@@ -220,8 +222,9 @@ void ReadCtfData::dataCheck()
     }
     else
     {
+      setErrorCondition(-997);
       QString ss = QObject::tr("The file extension '%1' was not recognized. The reader only recognizes the .ctf file extension").arg(ext);
-      notifyErrorMessage("", ss, -1);
+      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
       return;
     }
 
@@ -312,8 +315,8 @@ void ReadCtfData::readDataFile(CtfReader* reader, DataContainer::Pointer m, QVec
       if(err < 0)
       {
         setErrorCondition(err);
-        notifyErrorMessage("", "CtfReader could not read the .ctf file header.", -997);
-        notifyErrorMessage("", reader->getErrorMessage(), err);
+        notifyErrorMessage(getHumanLabel(), "CtfReader could not read the .ctf file header.", getErrorCondition());
+        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
         m_FileWasRead = false;
         return;
       }
@@ -325,8 +328,9 @@ void ReadCtfData::readDataFile(CtfReader* reader, DataContainer::Pointer m, QVec
       int32_t err = reader->readFile();
       if(err < 0)
       {
-        notifyErrorMessage("", reader->getErrorMessage(), err);
-        notifyErrorMessage("", "CtfReader could not read the .ctf file.", err);
+        setErrorCondition(err);
+        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+        notifyErrorMessage(getHumanLabel(), "CtfReader could not read the .ctf file.", getErrorCondition());
         return;
       }
     }
@@ -391,7 +395,8 @@ int32_t ReadCtfData::loadMaterialInfo(CtfReader* reader)
   QVector<CtfPhase::Pointer> phases = getData().phases;
   if(phases.empty())
   {
-    notifyErrorMessage("", reader->getErrorMessage(), reader->getErrorCode());
+    setErrorCondition(reader->getErrorCode());
+    notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), getErrorCondition());
     return getErrorCondition();
   }
 

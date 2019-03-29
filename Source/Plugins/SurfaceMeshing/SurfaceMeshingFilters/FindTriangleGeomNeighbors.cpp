@@ -187,7 +187,7 @@ void FindTriangleGeomNeighbors::execute()
     if(currentMillis - millis > 1000)
     {
       QString ss = QObject::tr("Finding Neighbors || Initializing Neighbor Lists || %1% Complete").arg((static_cast<float>(i) / totalFeatures) * 100);
-      notifyStatusMessage(getMessagePrefix(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       millis = QDateTime::currentMSecsSinceEpoch();
     }
 
@@ -206,7 +206,7 @@ void FindTriangleGeomNeighbors::execute()
     if(currentMillis - millis > 1000)
     {
       QString ss = QObject::tr("Finding Neighbors || Determining Neighbor Lists || %1% Complete").arg((static_cast<float>(j) / totalFaces) * 100);
-      notifyStatusMessage(getMessagePrefix(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       millis = QDateTime::currentMSecsSinceEpoch();
     }
 
@@ -246,7 +246,7 @@ void FindTriangleGeomNeighbors::execute()
     if(currentMillis - millis > 1000)
     {
       QString ss = QObject::tr("Finding Neighbors || Calculating Surface Areas || %1% Complete").arg(((float)i / totalFeatures) * 100);
-      notifyStatusMessage(getMessagePrefix(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
       millis = QDateTime::currentMSecsSinceEpoch();
     }
 

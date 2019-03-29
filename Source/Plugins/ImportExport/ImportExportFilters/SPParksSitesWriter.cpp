@@ -157,7 +157,8 @@ int32_t SPParksSitesWriter::writeHeader()
   if(!outfile)
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
-    notifyErrorMessage("", ss, -100);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return getErrorCondition();
   }
 
@@ -208,7 +209,8 @@ int32_t SPParksSitesWriter::writeFile()
   if(!outfile)
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
-    notifyErrorMessage("", ss, -100);
+    setErrorCondition(-100);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return getErrorCondition();
   }
 
@@ -238,7 +240,7 @@ int32_t SPParksSitesWriter::writeFile()
         timeDiff = ((float)k / (float)(currentMillis - startMillis));
         estimatedTime = (float)(totalpoints - k) / timeDiff;
         ss << " || Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);
-        notifyStatusMessage("", buf);
+        notifyStatusMessage(getHumanLabel(), buf);
         millis = QDateTime::currentMSecsSinceEpoch();
       }
     }

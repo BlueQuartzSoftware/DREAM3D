@@ -304,7 +304,7 @@ void FindFeatureReferenceMisorientations::execute()
   if(totalPoints > maxUInt32)
   {
     QString ss = QObject::tr("The volume is too large for a 32 bit machine. Try reducing the input volume size. Total Voxels: %1").arg(totalPoints);
-    notifyStatusMessage(getMessagePrefix(), ss);
+    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     return;
   }
 

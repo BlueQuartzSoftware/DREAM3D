@@ -153,7 +153,8 @@ void WriteStlFile::dataCheck()
 
   if(m_OutputStlDirectory.isEmpty())
   {
-    notifyErrorMessage("", "The output directory must be set", -1003);
+    setErrorCondition(-1003);
+    notifyErrorMessage(getHumanLabel(), "The output directory must be set", -1003);
   }
 
   QVector<size_t> cDims(1, 2);
@@ -218,7 +219,8 @@ void WriteStlFile::execute()
   if(!stlDir.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(getOutputStlDirectory());
-    notifyErrorMessage("", ss, -1003);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -230,7 +232,8 @@ void WriteStlFile::execute()
   if(nTriangles > std::numeric_limits<int32_t>::max())
   {
     QString ss = QObject::tr("The number of triangles is %1, but the STL specification only supports triangle counts up to %2").arg(nTriangles).arg(std::numeric_limits<int32_t>::max());
-    notifyErrorMessage("", ss, -1);
+    setErrorCondition(-1);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -283,7 +286,7 @@ void WriteStlFile::execute()
     FILE* f = fopen(filename.toLatin1().data(), "wb");
     {
       QString ss = QObject::tr("Writing STL for Feature Id %1").arg(spin);
-      notifyStatusMessage(getMessagePrefix(), ss);
+      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
     }
 
     QString header = "DREAM3D Generated For Feature ID " + QString::number(spin);
@@ -356,7 +359,7 @@ void WriteStlFile::execute()
       if(totalWritten != 50)
       {
         QString ss = QObject::tr("Error Writing STL File. Not enough elements written for Feature Id %1. Wrote %2 of 50.").arg(spin).arg(totalWritten);
-        notifyErrorMessage("", ss, -1201);
+        notifyErrorMessage(getHumanLabel(), ss, -1201);
       }
       triCount++;
     }

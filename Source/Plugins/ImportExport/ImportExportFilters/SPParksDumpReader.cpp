@@ -166,12 +166,14 @@ void SPParksDumpReader::dataCheck()
   if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
-    notifyErrorMessage("", ss, -387);
+    setErrorCondition(-387);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
-    notifyErrorMessage("", ss, -388);
+    setErrorCondition(-388);
+    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
@@ -185,7 +187,8 @@ void SPParksDumpReader::dataCheck()
     if(!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
     {
       QString msg = QObject::tr("Input SPParks file could not be opened: %1").arg(getInputFile());
-      notifyErrorMessage("", msg, -102);
+      setErrorCondition(-102);
+      notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
     }
     else
     {
@@ -193,8 +196,9 @@ void SPParksDumpReader::dataCheck()
       m_InStream.close();
       if(error < 0)
       {
+        setErrorCondition(error);
         QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file");
-        notifyErrorMessage("", ss, error);
+        notifyErrorMessage(getHumanLabel(), ss, -48010);
       }
     }
   }
@@ -362,7 +366,8 @@ int32_t SPParksDumpReader::readHeader()
   if(numAtoms != nx * ny * nz)
   {
     QString msg = QObject::tr("Number of sites does not match the calculated number of sites %1 != %2 * %3 * %4").arg(numAtoms).arg(nx).arg(ny).arg(nz);
-    notifyErrorMessage("", msg, -101);
+    setErrorCondition(-101);
+    notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
     return -100;
   }
 
@@ -450,14 +455,16 @@ int32_t SPParksDumpReader::readFile()
     else
     {
       QString msg = QObject::tr("Column header %1 is not a recognized column for SPParks files. Please recheck your file and report this error to the DREAM.3D developers").arg(QString(tokens[i]));
-      notifyErrorMessage("", msg, -107);
+      setErrorCondition(-107);
+      notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
       return getErrorCondition();
     }
 
     if(!didAllocate)
     {
       QString msg = QObject::tr("Unable to allocate memory for the data");
-      notifyErrorMessage("", msg, -106);
+      setErrorCondition(-106);
+      notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
       return getErrorCondition();
     }
   }
@@ -548,7 +555,8 @@ void SPParksDumpReader::parseDataLine(QByteArray& line, QVector<size_t> dims, in
     ss << "The calculated offset into the data array " << offset << " is larger "
        << " than the total number of elements " << m_CachedGeometry->getNumberOfElements() << " in the array."
        << "Line Number: " << lineNum << " Content\"" << line << "\"\n";
-    notifyErrorMessage("", msg, -48100);
+    setErrorCondition(-48100);
+    notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
     return;
   }
 
@@ -576,7 +584,8 @@ void SPParksDumpReader::parseDataLine(QByteArray& line, QVector<size_t> dims, in
          << " than the total number of elements " << dparser->getSize() << " in the array."
          << "The content of the current line is\"\n"
          << line << "\"\n";
-      notifyErrorMessage("", msg, -48100);
+      setErrorCondition(-48100);
+      notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
       return;
     }
   }

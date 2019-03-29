@@ -282,7 +282,8 @@ protected:
     QVector<typename EbsdPhase::Pointer> phases = reader->getPhases();
     if(phases.size() == 0)
     {
-      notifyErrorMessage("", reader->getErrorMessage(), reader->getErrorCode());
+      setErrorCondition(reader->getErrorCode());
+      notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), getErrorCondition());
       return getErrorCondition();
     }
 

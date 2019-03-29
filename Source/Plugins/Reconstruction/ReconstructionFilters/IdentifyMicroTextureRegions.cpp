@@ -413,7 +413,7 @@ void IdentifyMicroTextureRegions::preflight()
 // -----------------------------------------------------------------------------
 void IdentifyMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures)
 {
-  notifyStatusMessage("", "Randomizing Feature Ids");
+  notifyStatusMessage(getHumanLabel(), "Randomizing Feature Ids");
   // Generate an even distribution of numbers between the min and max range
   const int32_t rangeMin = 1;
   const int32_t rangeMax = totalFeatures - 1;
