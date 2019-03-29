@@ -145,7 +145,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString& angFile)
 {
   herr_t err = -1;
   setCancel(false);
-  setErrorCondition(0);
+  clearErrorCondition();
   setPipelineMessage("");
   QString streamBuf;
   QTextStream ss(&streamBuf);

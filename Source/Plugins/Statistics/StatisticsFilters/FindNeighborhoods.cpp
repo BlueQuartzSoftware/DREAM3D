@@ -218,8 +218,8 @@ void FindNeighborhoods::initialize()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   initialize();
   DataArrayPath tempPath;
 
@@ -306,8 +306,8 @@ void FindNeighborhoods::find_neighborhoods()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

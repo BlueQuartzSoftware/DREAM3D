@@ -128,8 +128,8 @@ void ErodeDilateMask::initialize()
 // -----------------------------------------------------------------------------
 void ErodeDilateMask::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   initialize();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getMaskArrayPath().getDataContainerName());
@@ -168,8 +168,8 @@ void ErodeDilateMask::preflight()
 // -----------------------------------------------------------------------------
 void ErodeDilateMask::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

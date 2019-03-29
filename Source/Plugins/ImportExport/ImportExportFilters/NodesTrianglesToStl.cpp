@@ -106,8 +106,8 @@ void NodesTrianglesToStl::initialize()
 // -----------------------------------------------------------------------------
 void NodesTrianglesToStl::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   QFileInfo fi(m_TrianglesFile);
 
@@ -402,8 +402,8 @@ void NodesTrianglesToStl::execute()
     }
   }
 
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 }
 
 // -----------------------------------------------------------------------------

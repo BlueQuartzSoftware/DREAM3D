@@ -128,8 +128,8 @@ void MinNeighbors::initialize()
 // -----------------------------------------------------------------------------
 void MinNeighbors::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   initialize();
 
   QVector<DataArrayPath> dataArrayPaths;
@@ -221,8 +221,8 @@ void MinNeighbors::preflight()
 // -----------------------------------------------------------------------------
 void MinNeighbors::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

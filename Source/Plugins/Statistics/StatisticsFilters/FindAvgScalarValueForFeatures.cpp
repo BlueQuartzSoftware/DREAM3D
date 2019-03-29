@@ -107,8 +107,8 @@ void FindAvgScalarValueForFeatures::initialize()
 // -----------------------------------------------------------------------------
 void FindAvgScalarValueForFeatures::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   QVector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
@@ -197,8 +197,8 @@ template <typename T> void findAverage(IDataArray::Pointer inDataPtr, FloatArray
 // -----------------------------------------------------------------------------
 void FindAvgScalarValueForFeatures::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

@@ -123,8 +123,8 @@ void VisualizeGBCDPoleFigure::initialize()
 // -----------------------------------------------------------------------------
 void VisualizeGBCDPoleFigure::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getGBCDArrayPath().getDataContainerName());
 
@@ -186,8 +186,8 @@ void VisualizeGBCDPoleFigure::preflight()
 // -----------------------------------------------------------------------------
 void VisualizeGBCDPoleFigure::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

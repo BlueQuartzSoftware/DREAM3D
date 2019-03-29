@@ -109,8 +109,8 @@ void FindMicroTextureRegions::initialize()
 void FindMicroTextureRegions::dataCheck()
 {
   DataArrayPath tempPath;
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   QVector<size_t> dims(1, 1);
   // Cell Data
@@ -166,8 +166,8 @@ void FindMicroTextureRegions::preflight()
 // -----------------------------------------------------------------------------
 void FindMicroTextureRegions::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

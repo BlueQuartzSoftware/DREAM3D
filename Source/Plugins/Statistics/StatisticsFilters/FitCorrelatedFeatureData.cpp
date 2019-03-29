@@ -148,8 +148,8 @@ void FitCorrelatedFeatureData::initialize()
 // -----------------------------------------------------------------------------
 void FitCorrelatedFeatureData::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   QVector<size_t> dims(1, 1);
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(),
@@ -349,8 +349,8 @@ template <typename T> Int32ArrayType::Pointer binData(typename DataArray<T>::Poi
 // -----------------------------------------------------------------------------
 void FitCorrelatedFeatureData::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

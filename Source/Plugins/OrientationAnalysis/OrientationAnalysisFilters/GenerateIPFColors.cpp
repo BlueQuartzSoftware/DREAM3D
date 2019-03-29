@@ -217,8 +217,8 @@ void GenerateIPFColors::initialize()
 // -----------------------------------------------------------------------------
 void GenerateIPFColors::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   DataArrayPath tempPath;
 
   QVector<DataArrayPath> dataArraypaths;
@@ -306,8 +306,8 @@ void GenerateIPFColors::preflight()
 void GenerateIPFColors::execute()
 {
   initialize();
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

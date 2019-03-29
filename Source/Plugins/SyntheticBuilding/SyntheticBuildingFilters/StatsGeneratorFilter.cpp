@@ -298,8 +298,8 @@ void StatsGeneratorFilter::preflight()
 // -----------------------------------------------------------------------------
 void StatsGeneratorFilter::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

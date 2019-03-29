@@ -192,8 +192,8 @@ void NeighborOrientationCorrelation::initialize()
 // -----------------------------------------------------------------------------
 void NeighborOrientationCorrelation::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getConfidenceIndexArrayPath().getDataContainerName());
 
@@ -262,8 +262,8 @@ void NeighborOrientationCorrelation::preflight()
 // -----------------------------------------------------------------------------
 void NeighborOrientationCorrelation::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

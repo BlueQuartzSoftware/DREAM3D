@@ -70,8 +70,8 @@ FindTriangleGeomCentroids::~FindTriangleGeomCentroids() = default;
 // -----------------------------------------------------------------------------
 void FindTriangleGeomCentroids::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   setCancel(false);
 }
 
@@ -102,8 +102,8 @@ void FindTriangleGeomCentroids::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void FindTriangleGeomCentroids::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   QVector<IDataArray::Pointer> dataArrays;
 

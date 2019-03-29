@@ -131,8 +131,8 @@ void FindFeatureHistogram::initialize()
 // -----------------------------------------------------------------------------
 void FindFeatureHistogram::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   QVector<size_t> dims(1, 1);
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(),
@@ -236,8 +236,8 @@ template <typename T> void findHistogram(IDataArray::Pointer inputData, int32_t*
 // -----------------------------------------------------------------------------
 void FindFeatureHistogram::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

@@ -33,8 +33,8 @@ ComputeFeatureRect::~ComputeFeatureRect() = default;
 // -----------------------------------------------------------------------------
 void ComputeFeatureRect::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   setCancel(false);
 }
 
@@ -65,8 +65,8 @@ void ComputeFeatureRect::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ComputeFeatureRect::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   IGeometry::Pointer igeom = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 

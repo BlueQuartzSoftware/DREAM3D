@@ -234,8 +234,8 @@ void FindProjectedImageStatistics::initialize()
 // -----------------------------------------------------------------------------
 void FindProjectedImageStatistics::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   DataArrayPath tempPath;
 
@@ -322,8 +322,8 @@ void FindProjectedImageStatistics::preflight()
 // -----------------------------------------------------------------------------
 void FindProjectedImageStatistics::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

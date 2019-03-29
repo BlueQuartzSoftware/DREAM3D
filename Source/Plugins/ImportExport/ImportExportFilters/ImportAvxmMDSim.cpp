@@ -31,8 +31,8 @@ ImportAvxmMDSim::~ImportAvxmMDSim() = default;
 // -----------------------------------------------------------------------------
 void ImportAvxmMDSim::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   setCancel(false);
 }
 
@@ -58,8 +58,8 @@ void ImportAvxmMDSim::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ImportAvxmMDSim::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   QString ss;
 

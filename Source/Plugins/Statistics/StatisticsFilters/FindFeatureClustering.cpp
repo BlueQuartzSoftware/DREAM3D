@@ -154,8 +154,8 @@ void FindFeatureClustering::initialize()
 // -----------------------------------------------------------------------------
 void FindFeatureClustering::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   initialize();
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getEquivalentDiametersArrayPath().getDataContainerName());
 
@@ -439,8 +439,8 @@ void FindFeatureClustering::find_clustering()
 // -----------------------------------------------------------------------------
 void FindFeatureClustering::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

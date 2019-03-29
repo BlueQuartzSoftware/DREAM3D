@@ -114,8 +114,8 @@ DetectEllipsoids::~DetectEllipsoids() = default;
 // -----------------------------------------------------------------------------
 void DetectEllipsoids::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   setCancel(false);
 
   m_TotalNumberOfFeatures = 0;
@@ -188,8 +188,8 @@ void DetectEllipsoids::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void DetectEllipsoids::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, m_FeatureIdsArrayPath, QVector<size_t>(1, 1));
 

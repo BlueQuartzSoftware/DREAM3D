@@ -147,8 +147,8 @@ void EMsoftSO3Sampler::initialize()
 // -----------------------------------------------------------------------------
 void EMsoftSO3Sampler::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   // Try to get the DataContainer that the user has named.
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
@@ -269,8 +269,8 @@ void EMsoftSO3Sampler::preflight()
 // -----------------------------------------------------------------------------
 void EMsoftSO3Sampler::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

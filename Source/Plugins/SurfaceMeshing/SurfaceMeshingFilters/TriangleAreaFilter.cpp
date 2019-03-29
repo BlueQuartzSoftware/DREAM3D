@@ -154,8 +154,8 @@ void TriangleAreaFilter::initialize()
 // -----------------------------------------------------------------------------
 void TriangleAreaFilter::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshTriangleAreasArrayPath().getDataContainerName());
 
@@ -199,8 +199,8 @@ void TriangleAreaFilter::preflight()
 // -----------------------------------------------------------------------------
 void TriangleAreaFilter::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

@@ -119,8 +119,8 @@ void ConvertHexGridToSquareGrid::initialize()
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGrid::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   DataArrayPath tempPath;
   QString ss;
 
@@ -262,8 +262,8 @@ QString ConvertHexGridToSquareGrid::modifyAngHeaderLine(QString& buf)
 // -----------------------------------------------------------------------------
 void ConvertHexGridToSquareGrid::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

@@ -128,8 +128,8 @@ void VtkStructuredPointsReader::initialize()
 void VtkStructuredPointsReader::dataCheck()
 {
   initialize();
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   QFileInfo fi(getInputFile());
   if(getInputFile().isEmpty())
@@ -242,8 +242,8 @@ void VtkStructuredPointsReader::preflight()
 // -----------------------------------------------------------------------------
 void VtkStructuredPointsReader::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   // The dataCheck function will do everything based on boolean "InPreflight". If
   // the filter is preflighting then the filter will just gather all the scalar

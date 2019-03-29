@@ -107,8 +107,8 @@ void M3CEntireVolume::initialize()
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   VoxelDataContainer* m = getVoxelDataContainer();
 
@@ -175,8 +175,8 @@ void M3CEntireVolume::execute()
     notifyErrorMessage(getNameOfClass(), ss.str(), -1);
     return;
   }
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   if(getSurfaceMeshDataContainer() == nullptr)
   {
@@ -186,8 +186,8 @@ void M3CEntireVolume::execute()
     return;
   }
 
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   int64_t totalPoints = /* FIXME: ImageGeom */ m->getGeometryAs<ImageGeom>()->getNumberOfTuples();
   size_t totalFeatures = m->getNumFeatureTuples();
   size_t totalEnsembles = m->getNumEnsembleTuples();

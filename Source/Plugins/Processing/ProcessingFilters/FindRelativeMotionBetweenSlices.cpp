@@ -218,8 +218,8 @@ void FindRelativeMotionBetweenSlices::initialize()
 // -----------------------------------------------------------------------------
 void FindRelativeMotionBetweenSlices::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   DataArrayPath tempPath;
   QString ss;
@@ -320,8 +320,8 @@ void FindRelativeMotionBetweenSlices::preflight()
 // -----------------------------------------------------------------------------
 void FindRelativeMotionBetweenSlices::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

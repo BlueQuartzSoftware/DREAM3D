@@ -103,8 +103,8 @@ void AbaqusSurfaceMeshWriter::initialize()
 // -----------------------------------------------------------------------------
 void AbaqusSurfaceMeshWriter::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   FileSystemPathHelper::CheckOutputFile(this, "Output File Path", getOutputFile(), true);
 

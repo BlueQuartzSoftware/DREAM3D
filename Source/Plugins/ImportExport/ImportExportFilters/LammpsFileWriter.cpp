@@ -103,8 +103,8 @@ void LammpsFileWriter::initialize()
 // -----------------------------------------------------------------------------
 void LammpsFileWriter::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   FileSystemPathHelper::CheckOutputFile(this, "Output LAMMPS File", getLammpsFile(), true);
 
@@ -239,8 +239,8 @@ void LammpsFileWriter::execute()
   // Close the input and output files
   fclose(lammpsFile);
 
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 }
 
 // -----------------------------------------------------------------------------

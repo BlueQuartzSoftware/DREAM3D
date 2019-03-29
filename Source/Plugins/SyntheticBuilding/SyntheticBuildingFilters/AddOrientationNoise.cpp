@@ -97,8 +97,8 @@ void AddOrientationNoise::initialize()
 // -----------------------------------------------------------------------------
 void AddOrientationNoise::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   QVector<size_t> cDims(1, 3);
   m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(),
@@ -131,8 +131,8 @@ void AddOrientationNoise::preflight()
 // -----------------------------------------------------------------------------
 void AddOrientationNoise::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

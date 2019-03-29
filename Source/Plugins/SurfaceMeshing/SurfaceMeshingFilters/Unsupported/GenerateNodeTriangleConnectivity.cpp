@@ -84,8 +84,8 @@ void GenerateNodeTriangleConnectivity::initialize()
 // -----------------------------------------------------------------------------
 void GenerateNodeTriangleConnectivity::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(nullptr == sm)
@@ -164,8 +164,8 @@ void GenerateNodeTriangleConnectivity::execute()
     notifyErrorMessage(getHumanLabel(), "The SurfaceMesh DataContainer Object was nullptr", -999);
     return;
   }
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   notifyStatusMessage(getHumanLabel(), "Starting");
 

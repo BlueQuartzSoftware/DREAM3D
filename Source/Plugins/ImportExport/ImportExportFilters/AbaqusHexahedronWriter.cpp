@@ -112,8 +112,8 @@ void AbaqusHexahedronWriter::initialize()
 // -----------------------------------------------------------------------------
 void AbaqusHexahedronWriter::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   if(m_OutputPath.isEmpty())
   {

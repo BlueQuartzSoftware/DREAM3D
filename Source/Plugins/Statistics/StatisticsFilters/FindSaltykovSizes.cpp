@@ -100,8 +100,8 @@ void FindSaltykovSizes::initialize()
 // -----------------------------------------------------------------------------
 void FindSaltykovSizes::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   QVector<size_t> dims(1, 1);
   m_EquivalentDiametersPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getEquivalentDiametersArrayPath(),
@@ -136,8 +136,8 @@ void FindSaltykovSizes::preflight()
 // -----------------------------------------------------------------------------
 void FindSaltykovSizes::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

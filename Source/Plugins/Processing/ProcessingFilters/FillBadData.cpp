@@ -119,8 +119,8 @@ void FillBadData::initialize()
 // -----------------------------------------------------------------------------
 void FillBadData::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   initialize();
 
   QVector<DataArrayPath> dataArrayPaths;
@@ -174,8 +174,8 @@ void FillBadData::preflight()
 // -----------------------------------------------------------------------------
 void FillBadData::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

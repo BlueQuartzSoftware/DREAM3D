@@ -246,8 +246,8 @@ void WritePoleFigure::initialize()
 // -----------------------------------------------------------------------------
 void WritePoleFigure::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   QDir path(getOutputPath());
 
@@ -670,8 +670,8 @@ void drawDiscreteInfoArea(HPDF_Page page, const PoleFigureConfiguration_t &confi
 // -----------------------------------------------------------------------------
 void WritePoleFigure::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

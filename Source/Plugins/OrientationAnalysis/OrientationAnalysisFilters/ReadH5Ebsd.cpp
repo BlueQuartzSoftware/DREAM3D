@@ -271,8 +271,8 @@ void ReadH5Ebsd::initialize()
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   initialize();
 
   DataArrayPath tempPath;

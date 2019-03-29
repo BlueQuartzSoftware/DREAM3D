@@ -109,8 +109,8 @@ void NodesTrianglesToVtk::initialize()
 // -----------------------------------------------------------------------------
 void NodesTrianglesToVtk::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   QFileInfo fi(m_TrianglesFile);
   if(m_TrianglesFile.isEmpty())
@@ -366,8 +366,8 @@ void NodesTrianglesToVtk::execute()
   // Close the input and output files
   fclose(vtkFile);
 
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 }
 
 // -----------------------------------------------------------------------------

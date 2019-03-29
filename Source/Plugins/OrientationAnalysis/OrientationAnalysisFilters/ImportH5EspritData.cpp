@@ -129,8 +129,8 @@ void ImportH5EspritData::preflight()
 // -----------------------------------------------------------------------------
 void ImportH5EspritData::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

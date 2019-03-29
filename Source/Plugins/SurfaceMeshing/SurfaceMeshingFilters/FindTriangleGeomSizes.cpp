@@ -70,8 +70,8 @@ FindTriangleGeomSizes::~FindTriangleGeomSizes() = default;
 // -----------------------------------------------------------------------------
 void FindTriangleGeomSizes::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   setCancel(false);
 }
 
@@ -97,8 +97,8 @@ void FindTriangleGeomSizes::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void FindTriangleGeomSizes::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   QVector<IDataArray::Pointer> dataArrays;
 

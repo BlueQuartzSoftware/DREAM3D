@@ -36,8 +36,8 @@ public:
   }
   virtual void execute()
   {
-    setErrorCondition(0);
-    setWarningCondition(0);
+    clearErrorCondition();
+    clearWarningCondition();
     dataCheck();
     if(getErrorCondition() < 0)
     {
@@ -93,8 +93,8 @@ private:
 
   void dataCheck()
   {
-    setErrorCondition(0);
-    setWarningCondition(0);
+    clearErrorCondition();
+    clearWarningCondition();
     DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, getDataContainerName());
     if(getErrorCondition() < 0)
     {

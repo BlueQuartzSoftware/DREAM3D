@@ -107,8 +107,8 @@ void ExtractFlaggedFeatures::initialize()
 // -----------------------------------------------------------------------------
 void ExtractFlaggedFeatures::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
@@ -210,8 +210,8 @@ void ExtractFlaggedFeatures::find_feature_bounds()
 // -----------------------------------------------------------------------------
 void ExtractFlaggedFeatures::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

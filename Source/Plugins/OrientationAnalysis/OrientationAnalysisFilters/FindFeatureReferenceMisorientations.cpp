@@ -165,8 +165,8 @@ void FindFeatureReferenceMisorientations::initialize()
 // -----------------------------------------------------------------------------
 void FindFeatureReferenceMisorientations::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
@@ -276,8 +276,8 @@ void FindFeatureReferenceMisorientations::preflight()
 // -----------------------------------------------------------------------------
 void FindFeatureReferenceMisorientations::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

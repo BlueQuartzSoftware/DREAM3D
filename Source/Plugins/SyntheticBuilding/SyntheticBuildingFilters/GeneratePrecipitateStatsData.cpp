@@ -69,8 +69,8 @@ GeneratePrecipitateStatsData::~GeneratePrecipitateStatsData() = default;
 // -----------------------------------------------------------------------------
 void GeneratePrecipitateStatsData::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   setCancel(false);
   m_StatsDataArray = nullptr;
   m_PrecipitateStatsData = nullptr;
@@ -225,8 +225,8 @@ void GeneratePrecipitateStatsData::setupFilterParameters()
 void GeneratePrecipitateStatsData::dataCheck()
 {
   initialize();
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   FLOAT_RANGE_CHECK(Mu, 0.0001, 10.0, -95000);
   FLOAT_RANGE_CHECK(Sigma, 0.0, 5.0, -95001);

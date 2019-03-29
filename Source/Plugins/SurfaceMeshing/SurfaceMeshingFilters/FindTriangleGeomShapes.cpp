@@ -122,8 +122,8 @@ void FindTriangleGeomShapes::initialize()
 // -----------------------------------------------------------------------------
 void FindTriangleGeomShapes::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   initialize();
   DataArrayPath tempPath;
 
@@ -682,8 +682,8 @@ void FindTriangleGeomShapes::find_axiseulers()
 // -----------------------------------------------------------------------------
 void FindTriangleGeomShapes::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

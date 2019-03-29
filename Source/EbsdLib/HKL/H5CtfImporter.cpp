@@ -140,7 +140,7 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const QString& ctfFile)
 {
   herr_t err = -1;
   setCancel(false);
-  setErrorCondition(0);
+  clearErrorCondition();
   setPipelineMessage("");
 
   //  std::cout << "H5CtfImporter: Importing " << ctfFile << std::endl;

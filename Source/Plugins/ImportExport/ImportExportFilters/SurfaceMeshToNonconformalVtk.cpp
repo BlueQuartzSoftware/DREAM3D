@@ -114,8 +114,8 @@ void SurfaceMeshToNonconformalVtk::initialize()
 // -----------------------------------------------------------------------------
 void SurfaceMeshToNonconformalVtk::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   QString ss;
 
   FileSystemPathHelper::CheckOutputFile(this, "Output VTK File", getOutputVtkFile(), true);
@@ -413,8 +413,8 @@ void SurfaceMeshToNonconformalVtk::execute()
 
   fprintf(vtkFile, "\n");
 
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 }
 
 // -----------------------------------------------------------------------------

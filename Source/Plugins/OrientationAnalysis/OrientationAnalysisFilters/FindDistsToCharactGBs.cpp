@@ -340,8 +340,8 @@ void FindDistsToCharactGBs::initialize()
 // -----------------------------------------------------------------------------
 void FindDistsToCharactGBs::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   // Crystal Structures
   QVector<size_t> cDims(1, 1);
@@ -460,8 +460,8 @@ void FindDistsToCharactGBs::preflight()
 // -----------------------------------------------------------------------------
 void FindDistsToCharactGBs::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

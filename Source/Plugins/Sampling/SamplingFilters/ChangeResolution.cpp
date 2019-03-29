@@ -133,8 +133,8 @@ void ChangeResolution::initialize()
 // -----------------------------------------------------------------------------
 void ChangeResolution::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   if(getResolution().x <= 0)
   {
@@ -289,8 +289,8 @@ void ChangeResolution::preflight()
 // -----------------------------------------------------------------------------
 void ChangeResolution::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

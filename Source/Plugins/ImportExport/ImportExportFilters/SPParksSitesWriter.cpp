@@ -103,8 +103,8 @@ void SPParksSitesWriter::initialize()
 // -----------------------------------------------------------------------------
 void SPParksSitesWriter::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   FileSystemPathHelper::CheckOutputFile(this, "Output SPPARKS File", getOutputFile(), true);
 
@@ -137,8 +137,8 @@ void SPParksSitesWriter::preflight()
 // -----------------------------------------------------------------------------
 int32_t SPParksSitesWriter::writeHeader()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {
@@ -189,8 +189,8 @@ int32_t SPParksSitesWriter::writeHeader()
 // -----------------------------------------------------------------------------
 int32_t SPParksSitesWriter::writeFile()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {

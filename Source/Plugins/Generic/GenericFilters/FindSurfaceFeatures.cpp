@@ -104,8 +104,8 @@ void FindSurfaceFeatures::initialize()
 // -----------------------------------------------------------------------------
 void FindSurfaceFeatures::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
@@ -297,8 +297,8 @@ void FindSurfaceFeatures::find_surfacefeatures2D()
 // -----------------------------------------------------------------------------
 void FindSurfaceFeatures::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {
