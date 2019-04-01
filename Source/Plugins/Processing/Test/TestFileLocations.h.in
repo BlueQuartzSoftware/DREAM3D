@@ -30,6 +30,7 @@ namespace UnitTest
     // Output directories and files
     const QString TestOutputDirectory("@TEST_TEMP_DIR@");
     const QString TestOutputPath("@TEST_TEMP_DIR@/EllipsoidFeatureIds.txt");
+    const QString OutputDREAM3DFile("@TEST_TEMP_DIR@/EllipsoidFeatureIds.dream3d");
   }
 
   namespace FixNonmanifoldVoxelsTest

@@ -70,7 +70,7 @@ BadDataNeighborOrientationCheck::~BadDataNeighborOrientationCheck() = default;
 // -----------------------------------------------------------------------------
 void BadDataNeighborOrientationCheck::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Misorientation Tolerance (Degrees)", MisorientationTolerance, FilterParameter::Parameter, BadDataNeighborOrientationCheck));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Required Number of Neighbors", NumberOfNeighbors, FilterParameter::Parameter, BadDataNeighborOrientationCheck));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));

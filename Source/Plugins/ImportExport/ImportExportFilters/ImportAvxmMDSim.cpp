@@ -13,6 +13,15 @@
 #include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -41,7 +50,7 @@ void ImportAvxmMDSim::initialize()
 // -----------------------------------------------------------------------------
 void ImportAvxmMDSim::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_FILELISTINFO_FP("Input File List", InputFileListInfo, FilterParameter::Parameter, ImportAvxmMDSim));
 
@@ -120,8 +129,8 @@ void ImportAvxmMDSim::dataCheck()
     QVector<size_t> cDims(1, 1);
 
     DataContainerShPtr dc = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, typeDAPath.getDataContainerName());
-    AttributeMatrixShPtr am = dc->createNonPrereqAttributeMatrix(this, typeDAPath, tDims, AttributeMatrix::Type::Cell);
-    UInt8ArrayType::Pointer da = am->createNonPrereqArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, typeDAPath.getDataArrayName(), 0, cDims);
+    AttributeMatrixShPtr am = dc->createNonPrereqAttributeMatrix(this, typeDAPath, tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
+    UInt8ArrayType::Pointer da = am->createNonPrereqArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, typeDAPath.getDataArrayName(), 0, cDims, DataArrayID31);
   }
 }
 

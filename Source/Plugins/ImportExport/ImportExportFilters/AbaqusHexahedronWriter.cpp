@@ -73,7 +73,7 @@ AbaqusHexahedronWriter::~AbaqusHexahedronWriter() = default;
 // -----------------------------------------------------------------------------
 void AbaqusHexahedronWriter::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Hourglass Stiffness", HourglassStiffness, FilterParameter::Parameter, AbaqusHexahedronWriter, 0));
   parameters.push_back(SIMPL_NEW_STRING_FP("Job Name", JobName, FilterParameter::Parameter, AbaqusHexahedronWriter));
   parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output Path", OutputPath, FilterParameter::Parameter, AbaqusHexahedronWriter));
@@ -199,10 +199,10 @@ void AbaqusHexahedronWriter::execute()
   size_t cDims[3] = {0, 0, 0};
   std::tie(cDims[0], cDims[1], cDims[2]) = r->getGeometryAs<ImageGeom>()->getDimensions();
   size_t pDims[3] = {cDims[0] + 1, cDims[1] + 1, cDims[2] + 1};
-  float origin[3] = {0.0f, 0.0f, 0.0f};
+  FloatVec3Type origin = {0.0f, 0.0f, 0.0f};
   r->getGeometryAs<ImageGeom>()->getOrigin(origin);
-  float spacing[3] = {0.0f, 0.0f, 0.0f};
-  r->getGeometryAs<ImageGeom>()->getResolution(spacing);
+  FloatVec3Type spacing = {0.0f, 0.0f, 0.0f};
+  r->getGeometryAs<ImageGeom>()->getSpacing(spacing);
   size_t totalPoints = r->getGeometryAs<ImageGeom>()->getNumberOfElements();
 
   // Create file names
@@ -214,7 +214,7 @@ void AbaqusHexahedronWriter::execute()
   QList<QString> fileNames;
   fileNames << nodesFile << elemsFile << sectsFile << elsetFile << masterFile;
 
-  err = writeNodes(fileNames, cDims, origin, spacing); // Nodes file
+  err = writeNodes(fileNames, cDims, origin.data(), spacing.data()); // Nodes file
   if(err < 0)
   {
     QString ss = QObject::tr("Error writing output nodes file '%1'").arg(nodesFile);

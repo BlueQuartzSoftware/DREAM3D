@@ -49,7 +49,7 @@ class OrientationAnalysis_EXPORT GenerateIPFColors : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(GenerateIPFColors SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(FloatVec3_t ReferenceDir READ getReferenceDir WRITE setReferenceDir)
+    PYB11_PROPERTY(FloatVec3Type ReferenceDir READ getReferenceDir WRITE setReferenceDir)
     PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
     PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
     PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
@@ -63,8 +63,8 @@ public:
 
   ~GenerateIPFColors() override;
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, ReferenceDir)
-  Q_PROPERTY(FloatVec3_t ReferenceDir READ getReferenceDir WRITE setReferenceDir)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, ReferenceDir)
+  Q_PROPERTY(FloatVec3Type ReferenceDir READ getReferenceDir WRITE setReferenceDir)
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)

@@ -14,6 +14,7 @@
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DynamicTableFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
@@ -32,6 +33,13 @@
 #include "SyntheticBuilding/SyntheticBuildingFilters/Presets/PrimaryRolledPreset.h"
 #include "SyntheticBuilding/SyntheticBuildingFilters/StatsGeneratorUtilities.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
+
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID20 = 20,
+  AttributeMatrixID21 = 21,
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -80,7 +88,7 @@ void GeneratePrimaryStatsData::initialize()
 // -----------------------------------------------------------------------------
 void GeneratePrimaryStatsData::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_STRING_FP("Phase Name", PhaseName, FilterParameter::Parameter, GeneratePrimaryStatsData));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
@@ -187,7 +195,7 @@ void GeneratePrimaryStatsData::setupFilterParameters()
   linkedProps << "CellEnsembleAttributeMatrixName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Data Container & Ensemble AttributeMatrix", CreateEnsembleAttributeMatrix, FilterParameter::Parameter, GeneratePrimaryStatsData, linkedProps));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, GeneratePrimaryStatsData));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, GeneratePrimaryStatsData));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, GeneratePrimaryStatsData));
 
   linkedProps.clear();
@@ -237,14 +245,14 @@ void GeneratePrimaryStatsData::dataCheck()
     }
 
     QVector<size_t> tDims(1, 2); // we need 2 slots in the array. ZERO=Junk, 1 = our new primary stats data
-    AttributeMatrix::Pointer cellEnsembleAttrMat = dc->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
+    AttributeMatrix::Pointer cellEnsembleAttrMat = dc->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID21);
     if(getErrorCondition() < 0)
     {
       return;
     }
     StatsDataArray::Pointer statsDataArray = StatsDataArray::New();
-    statsDataArray->resize(tDims[0]);
-    cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::Statistics, statsDataArray);
+    statsDataArray->resizeTuples(tDims[0]);
+    cellEnsembleAttrMat->insertOrAssign(statsDataArray);
     m_StatsDataArray = statsDataArray.get();
 
     PrimaryStatsData::Pointer primaryStatsData = PrimaryStatsData::New();
@@ -254,17 +262,17 @@ void GeneratePrimaryStatsData::dataCheck()
     QVector<size_t> cDims(1, 1);
     UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::CrystalStructures);
     crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
-    cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::CrystalStructures, crystalStructures);
+    cellEnsembleAttrMat->insertOrAssign(crystalStructures);
     m_CrystalStructures = crystalStructures.get();
 
     UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::PhaseTypes);
     phaseTypes->setValue(0, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown));
-    cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseTypes, phaseTypes);
+    cellEnsembleAttrMat->insertOrAssign(phaseTypes);
     m_PhaseTypes = phaseTypes.get();
 
     StringDataArray::Pointer phaseNames = StringDataArray::CreateArray(tDims[0], SIMPL::EnsembleData::PhaseName);
     phaseNames->setValue(0, PhaseType::getPhaseTypeString(PhaseType::Type::Unknown));
-    cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseName, phaseNames);
+    cellEnsembleAttrMat->insertOrAssign(phaseNames);
     m_PhaseNames = phaseNames.get();
 
     setPhaseIndex(1); // If we are creating the StatsDataArray then we are the first phase
@@ -291,8 +299,8 @@ void GeneratePrimaryStatsData::dataCheck()
     if(nullptr == statsDataArray.get())
     {
       statsDataArray = StatsDataArray::New();
-      statsDataArray->resize(tDims[0]);
-      cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::Statistics, statsDataArray);
+      statsDataArray->resizeTuples(tDims[0]);
+      cellEnsembleAttrMat->insertOrAssign(statsDataArray);
     }
     m_StatsDataArray = statsDataArray.get();
 
@@ -307,7 +315,7 @@ void GeneratePrimaryStatsData::dataCheck()
     {
       crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::CrystalStructures);
       crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
-      cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::CrystalStructures, crystalStructures);
+      cellEnsembleAttrMat->insertOrAssign(crystalStructures);
     }
     m_CrystalStructures = crystalStructures.get();
 
@@ -316,7 +324,7 @@ void GeneratePrimaryStatsData::dataCheck()
     {
       phaseTypes = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::PhaseTypes);
       phaseTypes->setValue(0, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown));
-      cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseTypes, phaseTypes);
+      cellEnsembleAttrMat->insertOrAssign(phaseTypes);
     }
     m_PhaseTypes = phaseTypes.get();
 
@@ -325,7 +333,7 @@ void GeneratePrimaryStatsData::dataCheck()
     {
       phaseNames = StringDataArray::CreateArray(tDims[0], SIMPL::EnsembleData::PhaseName);
       phaseNames->setValue(0, PhaseType::getPhaseTypeString(PhaseType::Type::Unknown));
-      cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseName, phaseNames);
+      cellEnsembleAttrMat->insertOrAssign(phaseNames);
     }
     m_PhaseNames = phaseNames.get();
 

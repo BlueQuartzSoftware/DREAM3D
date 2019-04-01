@@ -35,16 +35,16 @@ class SyntheticBuilding_EXPORT GeneratePrecipitateStatsData : public AbstractFil
   PYB11_PROPERTY(double MaxCutOff READ getMaxCutOff WRITE setMaxCutOff)
   PYB11_PROPERTY(double BinStepSize READ getBinStepSize WRITE setBinStepSize)
   PYB11_PROPERTY(bool CreateEnsembleAttributeMatrix READ getCreateEnsembleAttributeMatrix WRITE setCreateEnsembleAttributeMatrix)
-  PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
   PYB11_PROPERTY(bool AppendToExistingAttributeMatrix READ getAppendToExistingAttributeMatrix WRITE setAppendToExistingAttributeMatrix)
   PYB11_PROPERTY(DataArrayPath SelectedEnsembleAttributeMatrix READ getSelectedEnsembleAttributeMatrix WRITE setSelectedEnsembleAttributeMatrix)
   PYB11_PROPERTY(DynamicTableData OdfData READ getOdfData WRITE setOdfData)
   PYB11_PROPERTY(DynamicTableData MdfData READ getMdfData WRITE setMdfData)
   PYB11_PROPERTY(DynamicTableData AxisOdfData READ getAxisOdfData WRITE setAxisOdfData)
-  PYB11_PROPERTY(FloatVec2_t RdfMinMaxDistance READ getRdfMinMaxDistance WRITE setRdfMinMaxDistance)
+  PYB11_PROPERTY(FloatVec2Type RdfMinMaxDistance READ getRdfMinMaxDistance WRITE setRdfMinMaxDistance)
   PYB11_PROPERTY(int RdfNumBins READ getRdfNumBins WRITE setRdfNumBins)
-  PYB11_PROPERTY(FloatVec3_t RdfBoxSize READ getRdfBoxSize WRITE setRdfBoxSize)
+  PYB11_PROPERTY(FloatVec3Type RdfBoxSize READ getRdfBoxSize WRITE setRdfBoxSize)
 
 public:
   SIMPL_SHARED_POINTERS(GeneratePrecipitateStatsData)
@@ -86,8 +86,8 @@ public:
   SIMPL_FILTER_PARAMETER(bool, CreateEnsembleAttributeMatrix)
   Q_PROPERTY(bool CreateEnsembleAttributeMatrix READ getCreateEnsembleAttributeMatrix WRITE setCreateEnsembleAttributeMatrix)
 
-  SIMPL_FILTER_PARAMETER(QString, DataContainerName)
-  Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
   SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
   Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
@@ -113,14 +113,14 @@ public:
   SIMPL_FILTER_PARAMETER(DynamicTableData, AxisOdfData)
   Q_PROPERTY(DynamicTableData AxisOdfData READ getAxisOdfData WRITE setAxisOdfData)
 
-  SIMPL_FILTER_PARAMETER(FloatVec2_t, RdfMinMaxDistance)
-  Q_PROPERTY(FloatVec2_t RdfMinMaxDistance READ getRdfMinMaxDistance WRITE setRdfMinMaxDistance)
+  SIMPL_FILTER_PARAMETER(FloatVec2Type, RdfMinMaxDistance)
+  Q_PROPERTY(FloatVec2Type RdfMinMaxDistance READ getRdfMinMaxDistance WRITE setRdfMinMaxDistance)
 
   SIMPL_FILTER_PARAMETER(int, RdfNumBins)
   Q_PROPERTY(int RdfNumBins READ getRdfNumBins WRITE setRdfNumBins)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, RdfBoxSize)
-  Q_PROPERTY(FloatVec3_t RdfBoxSize READ getRdfBoxSize WRITE setRdfBoxSize)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, RdfBoxSize)
+  Q_PROPERTY(FloatVec3Type RdfBoxSize READ getRdfBoxSize WRITE setRdfBoxSize)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class

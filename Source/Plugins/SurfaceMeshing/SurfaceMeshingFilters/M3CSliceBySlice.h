@@ -73,7 +73,7 @@ class SurfaceMeshing_EXPORT M3CSliceBySlice : public AbstractFilter
 {
   Q_OBJECT
   //  PYB11_CREATE_BINDINGS(M3CSliceBySlice SUPERCLASS AbstractFilter)
-  // PYB11_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+  // PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
   // PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
   // PYB11_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
   // PYB11_PROPERTY(QString FaceLabelsArrayName READ getFaceLabelsArrayName WRITE setFaceLabelsArrayName)
@@ -86,8 +86,8 @@ public:
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(M3CSliceBySlice, AbstractFilter)
 
   ~M3CSliceBySlice() override;
-  SIMPL_FILTER_PARAMETER(QString, SurfaceDataContainerName)
-  Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceDataContainerName)
+  Q_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
   SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
   SIMPL_FILTER_PARAMETER(QString, FaceAttributeMatrixName)

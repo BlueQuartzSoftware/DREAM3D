@@ -40,6 +40,7 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -52,6 +53,14 @@
 #define vtkErrorMacro(msg) std::cout msg
 
 #define kBufferSize 1024
+
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+  AttributeMatrixID22 = 22,
+
+  DataContainerID = 1
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -80,7 +89,7 @@ VtkStructuredPointsReader::~VtkStructuredPointsReader() = default;
 // -----------------------------------------------------------------------------
 void VtkStructuredPointsReader::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input VTK File", InputFile, FilterParameter::Parameter, VtkStructuredPointsReader));
   QStringList linkedProps;
   linkedProps << "VertexDataContainerName"
@@ -90,8 +99,8 @@ void VtkStructuredPointsReader::setupFilterParameters()
   linkedProps << "VolumeDataContainerName"
               << "CellAttributeMatrixName";
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Read Cell Data", ReadCellData, FilterParameter::Parameter, VtkStructuredPointsReader, linkedProps));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Point Data Data Container", VertexDataContainerName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Data Data Container", VolumeDataContainerName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Point Data Data Container", VertexDataContainerName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Cell Data Data Container", VolumeDataContainerName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Point Data Attribute Matrix", VertexAttributeMatrixName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Data Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
@@ -104,8 +113,8 @@ void VtkStructuredPointsReader::setupFilterParameters()
 void VtkStructuredPointsReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setVertexDataContainerName(reader->readString("VertexDataContainerName", getVertexDataContainerName()));
-  setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName()));
+  setVertexDataContainerName(reader->readDataArrayPath("VertexDataContainerName", getVertexDataContainerName()));
+  setVolumeDataContainerName(reader->readDataArrayPath("VolumeDataContainerName", getVolumeDataContainerName()));
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
   setVertexAttributeMatrixName(reader->readString("VertexAttributeMatrixName", getVertexAttributeMatrixName()));
   setInputFile(reader->readString("InputFile", getInputFile()));
@@ -161,17 +170,17 @@ void VtkStructuredPointsReader::dataCheck()
 
   // Create a Vertex Data Container even though we may remove it later. We need it later
   // on in order to set the proper AttributeMatrix
-  DataContainer::Pointer pointData_DataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName());
+  DataContainer::Pointer pointData_DataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName(), DataContainerID);
   if(getErrorCondition() < 0 && nullptr == pointData_DataContainer)
   {
     return;
   }
 
-  ImageGeom::Pointer pointDataGeom = ImageGeom::CreateGeometry(getVertexDataContainerName());
+  ImageGeom::Pointer pointDataGeom = ImageGeom::CreateGeometry(getVertexDataContainerName().getDataContainerName());
   pointData_DataContainer->setGeometry(pointDataGeom);
 
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer pointAttrMat = pointData_DataContainer->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+  AttributeMatrix::Pointer pointAttrMat = pointData_DataContainer->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCondition() < 0)
   {
     return;
@@ -179,20 +188,20 @@ void VtkStructuredPointsReader::dataCheck()
 
   // Create a Volume Data Container even though we may remove it later. We need it later
   // on in order to set the proper AttributeMatrix
-  DataContainer::Pointer cellData_DataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
+  DataContainer::Pointer cellData_DataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName(), DataContainerID);
   if(getErrorCondition() < 0 && nullptr == cellData_DataContainer)
   {
     return;
   }
 
-  ImageGeom::Pointer cellDataGeom = ImageGeom::CreateGeometry(getVolumeDataContainerName());
+  ImageGeom::Pointer cellDataGeom = ImageGeom::CreateGeometry(getVolumeDataContainerName().getDataContainerName());
   cellData_DataContainer->setGeometry(cellDataGeom);
 
   tDims.resize(3);
   tDims[0] = 0;
   tDims[1] = 0;
   tDims[2] = 0;
-  AttributeMatrix::Pointer cellAttrMat = cellData_DataContainer->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+  AttributeMatrix::Pointer cellAttrMat = cellData_DataContainer->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID22);
   if(getErrorCondition() < 0)
   {
     return;
@@ -204,23 +213,23 @@ void VtkStructuredPointsReader::dataCheck()
   // now check to see what the user wanted
   if(!getReadPointData())
   {
-    getDataContainerArray()->removeDataContainer(getVertexDataContainerName());
+    getDataContainerArray()->removeDataContainer(getVertexDataContainerName().getDataContainerName());
   }
   if(!getReadCellData())
   {
-    getDataContainerArray()->removeDataContainer(getVolumeDataContainerName());
+    getDataContainerArray()->removeDataContainer(getVolumeDataContainerName().getDataContainerName());
   }
 
   // If there was no Cell Data, remove that dataContainer
   if(cellAttrMat->getNumAttributeArrays() == 0)
   {
-    getDataContainerArray()->removeDataContainer(getVolumeDataContainerName());
+    getDataContainerArray()->removeDataContainer(getVolumeDataContainerName().getDataContainerName());
   }
 
   // If there were no Point Arrays then remove that dataContainer
   if(pointAttrMat->getNumAttributeArrays() == 0)
   {
-    getDataContainerArray()->removeDataContainer(getVertexDataContainerName());
+    getDataContainerArray()->removeDataContainer(getVertexDataContainerName().getDataContainerName());
   }
 }
 
@@ -412,7 +421,7 @@ template <typename T> int32_t readDataChunk(AttributeMatrix::Pointer attrMat, st
 
   typename DataArray<T>::Pointer data = DataArray<T>::CreateArray(tDims, cDims, scalarName, !inPreflight);
   data->initializeWithZeros();
-  attrMat->addAttributeArray(data->getName(), data);
+  attrMat->insertOrAssign(data);
   if(inPreflight)
   {
     return skipVolume<T>(in, binary, numTuples * scalarNumComp);
@@ -593,8 +602,8 @@ int32_t VtkStructuredPointsReader::readFile()
   resolution[1] = tokens[2].toFloat(&ok);
   resolution[2] = tokens[3].toFloat(&ok);
 
-  volDc->getGeometryAs<ImageGeom>()->setResolution(resolution);
-  vertDc->getGeometryAs<ImageGeom>()->setResolution(resolution);
+  volDc->getGeometryAs<ImageGeom>()->setSpacing(resolution);
+  vertDc->getGeometryAs<ImageGeom>()->setSpacing(resolution);
 
   err = readLine(in, buffer, kBufferSize); // Read Line 6 which is the Origin values
   tokens = buf.split(' ');

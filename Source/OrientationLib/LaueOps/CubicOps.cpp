@@ -1496,15 +1496,15 @@ void CubicOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArray
   // Sanity Check the size of the arrays
   if (xyz001->getNumberOfTuples() < nOrientations * Detail::CubicHigh::symSize0)
   {
-    xyz001->resize(nOrientations * Detail::CubicHigh::symSize0 * 3);
+    xyz001->resizeTuples(nOrientations * Detail::CubicHigh::symSize0 * 3);
   }
   if (xyz011->getNumberOfTuples() < nOrientations * Detail::CubicHigh::symSize1)
   {
-    xyz011->resize(nOrientations * Detail::CubicHigh::symSize1 * 3);
+    xyz011->resizeTuples(nOrientations * Detail::CubicHigh::symSize1 * 3);
   }
   if (xyz111->getNumberOfTuples() < nOrientations * Detail::CubicHigh::symSize2)
   {
-    xyz111->resize(nOrientations * Detail::CubicHigh::symSize2 * 3);
+    xyz111->resizeTuples(nOrientations * Detail::CubicHigh::symSize2 * 3);
   }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -1946,7 +1946,7 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
 
 #if 0
   size_t dim[3] = {config.imageDim, config.imageDim, 1};
-  float res[3] = {1.0, 1.0, 1.0};
+  FloatVec3Type res = {1.0, 1.0, 1.0};
   VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/" + intensity001->getName() + ".vtk",
                                                  intensity001.get(), dim, res, "double", true );
   VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/" + intensity011->getName() + ".vtk",

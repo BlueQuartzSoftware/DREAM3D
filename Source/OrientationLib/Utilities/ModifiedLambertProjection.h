@@ -71,7 +71,7 @@ class OrientationLib_EXPORT ModifiedLambertProjection
      * spherical coordinates.
      * @param coords The XYZ cartesian coords that are all on the Unit Sphere (Radius = 1)
      * @param dimension The Dimension of the modified lambert projections images
-     * @param resolution The Resolution of the modified lambert projections
+     * @param resolution The Spacing of the modified lambert projections
      * @param sphereRadius The radius of the sphere from where the coordinates are coming from.
      * @return
      */

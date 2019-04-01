@@ -71,7 +71,7 @@ WriteStlFile::~WriteStlFile() = default;
 // -----------------------------------------------------------------------------
 void WriteStlFile::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output STL Directory", OutputStlDirectory, FilterParameter::Parameter, WriteStlFile));
   parameters.push_back(SIMPL_NEW_STRING_FP("STL File Prefix", OutputStlPrefix, FilterParameter::Parameter, WriteStlFile));
   // QStringList linkedProps("SurfaceMeshFacePhasesArrayPath");

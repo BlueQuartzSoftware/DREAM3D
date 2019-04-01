@@ -165,7 +165,7 @@ FindProjectedImageStatistics::~FindProjectedImageStatistics() = default;
 // -----------------------------------------------------------------------------
 void FindProjectedImageStatistics::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Plane of Interest");
@@ -347,7 +347,7 @@ void FindProjectedImageStatistics::execute()
   size_t depth = 0;
   if(m_Plane == 0)
   {
-    startingPoints->resize(xP * yP);
+    startingPoints->resizeTuples(xP * yP);
     startPoints = startingPoints->getPointer(0);
     stride = xP * yP;
     depth = zP;
@@ -363,7 +363,7 @@ void FindProjectedImageStatistics::execute()
   }
   if(m_Plane == 1)
   {
-    startingPoints->resize(xP * zP);
+    startingPoints->resizeTuples(xP * zP);
     startPoints = startingPoints->getPointer(0);
     stride = xP;
     depth = yP;
@@ -379,7 +379,7 @@ void FindProjectedImageStatistics::execute()
   }
   if(m_Plane == 2)
   {
-    startingPoints->resize(yP * zP);
+    startingPoints->resizeTuples(yP * zP);
     startPoints = startingPoints->getPointer(0);
     stride = 1;
     depth = xP;

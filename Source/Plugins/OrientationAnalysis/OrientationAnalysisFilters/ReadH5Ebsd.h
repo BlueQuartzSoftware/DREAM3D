@@ -54,7 +54,7 @@ class OrientationAnalysis_EXPORT ReadH5Ebsd : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ReadH5Ebsd SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
     PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
     PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
     PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
@@ -71,8 +71,8 @@ public:
 
   ~ReadH5Ebsd() override;
 
-  SIMPL_FILTER_PARAMETER(QString, DataContainerName)
-  Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
   SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
   Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
@@ -322,13 +322,13 @@ protected:
       latticeConstants->setComponent(phaseID, 5, lc[5]);
     }
 
-    attrMatrix->addAttributeArray(SIMPL::EnsembleData::CrystalStructures, crystalStructures);
+    attrMatrix->insertOrAssign(crystalStructures);
     m_CrystalStructuresPtr = crystalStructures;
     m_CrystalStructures = crystalStructures->getPointer(0);
-    attrMatrix->addAttributeArray(SIMPL::EnsembleData::LatticeConstants, latticeConstants);
+    attrMatrix->insertOrAssign(latticeConstants);
     m_LatticeConstantsPtr = latticeConstants;
     m_LatticeConstants = latticeConstants->getPointer(0);
-    attrMatrix->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
+    attrMatrix->insertOrAssign(materialNames);
     m_MaterialNamesPtr = materialNames;
     return 0;
   }

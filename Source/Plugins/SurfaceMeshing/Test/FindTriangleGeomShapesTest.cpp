@@ -142,7 +142,7 @@ public:
     DataContainerArray::Pointer dca = DataContainerArray::New();
 
     DataContainer::Pointer idc = DataContainer::New(SIMPL::Defaults::ImageDataContainerName);
-    dca->addDataContainer(idc);
+    dca->addOrReplaceDataContainer(idc);
 
     ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
     size_t dims[3] = {256, 128, 64};
@@ -151,12 +151,12 @@ public:
 
     QVector<size_t> tDims = {256, 128, 64};
     AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
-    idc->addAttributeMatrix(SIMPL::Defaults::CellAttributeMatrixName, attrMat);
+    idc->addOrReplaceAttributeMatrix(attrMat);
 
     QVector<size_t> cDims(1, 1);
     Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(tDims, cDims, SIMPL::CellData::FeatureIds);
     featureIds->initializeWithValue(1);
-    attrMat->addAttributeArray(SIMPL::CellData::FeatureIds, featureIds);
+    attrMat->insertOrAssign(featureIds);
 
     FilterManager* fm = FilterManager::Instance();
     bool propWasSet = true;

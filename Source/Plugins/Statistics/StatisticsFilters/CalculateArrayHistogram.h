@@ -57,165 +57,165 @@ class Statistics_EXPORT CalculateArrayHistogram : public AbstractFilter
     PYB11_PROPERTY(QString NewAttributeMatrixName READ getNewAttributeMatrixName WRITE setNewAttributeMatrixName)
     PYB11_PROPERTY(QString NewDataArrayName READ getNewDataArrayName WRITE setNewDataArrayName)
     PYB11_PROPERTY(bool NewDataContainer READ getNewDataContainer WRITE setNewDataContainer)
-    PYB11_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
-public:
-  SIMPL_SHARED_POINTERS(CalculateArrayHistogram)
-  SIMPL_FILTER_NEW_MACRO(CalculateArrayHistogram)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CalculateArrayHistogram, AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+  public:
+    SIMPL_SHARED_POINTERS(CalculateArrayHistogram)
+    SIMPL_FILTER_NEW_MACRO(CalculateArrayHistogram)
+    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CalculateArrayHistogram, AbstractFilter)
 
-  ~CalculateArrayHistogram() override;
+    ~CalculateArrayHistogram() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
-  Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
+    Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
 
-  SIMPL_FILTER_PARAMETER(int, NumberOfBins)
-  Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
+    SIMPL_FILTER_PARAMETER(int, NumberOfBins)
+    Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
 
-  SIMPL_FILTER_PARAMETER(double, MinRange)
-  Q_PROPERTY(double MinRange READ getMinRange WRITE setMinRange)
+    SIMPL_FILTER_PARAMETER(double, MinRange)
+    Q_PROPERTY(double MinRange READ getMinRange WRITE setMinRange)
 
-  SIMPL_FILTER_PARAMETER(double, MaxRange)
-  Q_PROPERTY(double MaxRange READ getMaxRange WRITE setMaxRange)
+    SIMPL_FILTER_PARAMETER(double, MaxRange)
+    Q_PROPERTY(double MaxRange READ getMaxRange WRITE setMaxRange)
 
-  SIMPL_FILTER_PARAMETER(bool, UserDefinedRange)
-  Q_PROPERTY(bool UserDefinedRange READ getUserDefinedRange WRITE setUserDefinedRange)
+    SIMPL_FILTER_PARAMETER(bool, UserDefinedRange)
+    Q_PROPERTY(bool UserDefinedRange READ getUserDefinedRange WRITE setUserDefinedRange)
 
-  SIMPL_FILTER_PARAMETER(bool, Normalize)
-  Q_PROPERTY(bool Normalize READ getNormalize WRITE setNormalize)
+    SIMPL_FILTER_PARAMETER(bool, Normalize)
+    Q_PROPERTY(bool Normalize READ getNormalize WRITE setNormalize)
 
-  SIMPL_FILTER_PARAMETER(QString, NewAttributeMatrixName)
-  Q_PROPERTY(QString NewAttributeMatrixName READ getNewAttributeMatrixName WRITE setNewAttributeMatrixName)
+    SIMPL_FILTER_PARAMETER(QString, NewAttributeMatrixName)
+    Q_PROPERTY(QString NewAttributeMatrixName READ getNewAttributeMatrixName WRITE setNewAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, NewDataArrayName)
-  Q_PROPERTY(QString NewDataArrayName READ getNewDataArrayName WRITE setNewDataArrayName)
+    SIMPL_FILTER_PARAMETER(QString, NewDataArrayName)
+    Q_PROPERTY(QString NewDataArrayName READ getNewDataArrayName WRITE setNewDataArrayName)
 
-  SIMPL_FILTER_PARAMETER(bool, NewDataContainer)
-  Q_PROPERTY(bool NewDataContainer READ getNewDataContainer WRITE setNewDataContainer)
+    SIMPL_FILTER_PARAMETER(bool, NewDataContainer)
+    Q_PROPERTY(bool NewDataContainer READ getNewDataContainer WRITE setNewDataContainer)
 
-  SIMPL_FILTER_PARAMETER(QString, NewDataContainerName)
-  Q_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, NewDataContainerName)
+    Q_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
 
-  /**
-   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-   */
-  const QString getCompiledLibraryName() const override;
+    /**
+     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+     */
+    const QString getCompiledLibraryName() const override;
 
-  /**
-   * @brief getBrandingString Returns the branding string for the filter, which is a tag
-   * used to denote the filter's association with specific plugins
-   * @return Branding string
-  */
-  const QString getBrandingString() const override;
+    /**
+     * @brief getBrandingString Returns the branding string for the filter, which is a tag
+     * used to denote the filter's association with specific plugins
+     * @return Branding string
+     */
+    const QString getBrandingString() const override;
 
-  /**
-   * @brief getFilterVersion Returns a version string for this filter. Default
-   * value is an empty string.
-   * @return
-   */
-  const QString getFilterVersion() const override;
+    /**
+     * @brief getFilterVersion Returns a version string for this filter. Default
+     * value is an empty string.
+     * @return
+     */
+    const QString getFilterVersion() const override;
 
-  /**
-   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-   */
-  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+    /**
+     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+     */
+    AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
-  /**
-   * @brief getGroupName Reimplemented from @see AbstractFilter class
-   */
-  const QString getGroupName() const override;
+    /**
+     * @brief getGroupName Reimplemented from @see AbstractFilter class
+     */
+    const QString getGroupName() const override;
 
-  /**
-   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-   */
-  const QString getSubGroupName() const override;
+    /**
+     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+     */
+    const QString getSubGroupName() const override;
 
-  /**
-   * @brief getUuid Return the unique identifier for this filter.
-   * @return A QUuid object.
-   */
-  const QUuid getUuid() override;
+    /**
+     * @brief getUuid Return the unique identifier for this filter.
+     * @return A QUuid object.
+     */
+    const QUuid getUuid() override;
 
-  /**
-   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-   */
-  const QString getHumanLabel() const override;
+    /**
+     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+     */
+    const QString getHumanLabel() const override;
 
-  /**
-   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-   */
-  void setupFilterParameters() override;
+    /**
+     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+     */
+    void setupFilterParameters() override;
 
-  /**
-   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-   */
-  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+    /**
+     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+     */
+    void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
-  /**
-  * @brief readFilterParametersFromJson Reads the filter parameters from a file
-  * @param reader Reader that is used to read the parameters from a file
-  */
-  void readFilterParameters(QJsonObject& obj) override;
+    /**
+     * @brief readFilterParametersFromJson Reads the filter parameters from a file
+     * @param reader Reader that is used to read the parameters from a file
+     */
+    void readFilterParameters(QJsonObject& obj) override;
 
-  /**
-  * @brief writeFilterParametersToJson Writes the filter parameters to a file
-  * @param root The root json object
-  */
-  void writeFilterParameters(QJsonObject& obj) const override;
+    /**
+     * @brief writeFilterParametersToJson Writes the filter parameters to a file
+     * @param root The root json object
+     */
+    void writeFilterParameters(QJsonObject& obj) const override;
 
-  /**
-   * @brief execute Reimplemented from @see AbstractFilter class
-   */
-  void execute() override;
+    /**
+     * @brief execute Reimplemented from @see AbstractFilter class
+     */
+    void execute() override;
 
-  /**
-  * @brief preflight Reimplemented from @see AbstractFilter class
-  */
-  void preflight() override;
+    /**
+     * @brief preflight Reimplemented from @see AbstractFilter class
+     */
+    void preflight() override;
 
-signals:
-  /**
-   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-   * be pushed from a user-facing control (such as a widget)
-   * @param filter Filter instance pointer
-   */
-  void updateFilterParameters(AbstractFilter* filter);
+  signals:
+    /**
+     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+     * be pushed from a user-facing control (such as a widget)
+     * @param filter Filter instance pointer
+     */
+    void updateFilterParameters(AbstractFilter* filter);
 
-  /**
-   * @brief parametersChanged Emitted when any Filter parameter is changed internally
-   */
-  void parametersChanged();
+    /**
+     * @brief parametersChanged Emitted when any Filter parameter is changed internally
+     */
+    void parametersChanged();
 
-  /**
-   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-   */
-  void preflightAboutToExecute();
+    /**
+     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+     */
+    void preflightAboutToExecute();
 
-  /**
-   * @brief preflightExecuted Emitted just after calling dataCheck()
-   */
-  void preflightExecuted();
+    /**
+     * @brief preflightExecuted Emitted just after calling dataCheck()
+     */
+    void preflightExecuted();
 
-protected:
-  CalculateArrayHistogram();
-  /**
-   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-   */
-  void dataCheck();
+  protected:
+    CalculateArrayHistogram();
+    /**
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+     */
+    void dataCheck();
 
-  /**
-   * @brief Initializes all the private instance variables.
-   */
-  void initialize();
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
 
-private:
-  DEFINE_IDATAARRAY_VARIABLE(InDataArray)
+  private:
+    DEFINE_IDATAARRAY_VARIABLE(InDataArray)
 
-  DEFINE_DATAARRAY_VARIABLE(double, NewDataArray)
+    DEFINE_DATAARRAY_VARIABLE(double, NewDataArray)
 
-public:
-  CalculateArrayHistogram(const CalculateArrayHistogram&) = delete; // Copy Constructor Not Implemented
-  CalculateArrayHistogram(CalculateArrayHistogram&&) = delete;      // Move Constructor Not Implemented
-  CalculateArrayHistogram& operator=(const CalculateArrayHistogram&) = delete; // Copy Assignment Not Implemented
-  CalculateArrayHistogram& operator=(CalculateArrayHistogram&&) = delete;      // Move Assignment Not Implemented
+  public:
+    CalculateArrayHistogram(const CalculateArrayHistogram&) = delete;            // Copy Constructor Not Implemented
+    CalculateArrayHistogram(CalculateArrayHistogram&&) = delete;                 // Move Constructor Not Implemented
+    CalculateArrayHistogram& operator=(const CalculateArrayHistogram&) = delete; // Copy Assignment Not Implemented
+    CalculateArrayHistogram& operator=(CalculateArrayHistogram&&) = delete;      // Move Assignment Not Implemented
 };
 

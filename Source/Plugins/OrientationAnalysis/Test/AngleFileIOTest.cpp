@@ -75,19 +75,19 @@ public:
 
     DataContainer::Pointer m = DataContainer::New("AngleFileIO");
 
-    dca->addDataContainer(m);
+    dca->addOrReplaceDataContainer(m);
 
     // Create Attribute Matrices with different tDims to test validation of tuple compatibility
     QVector<size_t> tDims(1, k_AngleCount);
     AttributeMatrix::Pointer attrMat1 = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
-    m->addAttributeMatrix(attrMat1->getName(), attrMat1);
+    m->addOrReplaceAttributeMatrix(attrMat1);
 
     QVector<size_t> cDims(1, 3);
     DataArray<float>::Pointer angles = DataArray<float>::CreateArray(k_AngleCount, cDims, SIMPL::CellData::EulerAngles, true);
-    attrMat1->addAttributeArray(angles->getName(), angles);
+    attrMat1->insertOrAssign(angles);
     cDims[0] = 1;
     DataArray<int32_t>::Pointer phases = DataArray<int32_t>::CreateArray(k_AngleCount, cDims, SIMPL::CellData::Phases, true);
-    attrMat1->addAttributeArray(phases->getName(), phases);
+    attrMat1->insertOrAssign(phases);
     for(int i = 0; i < k_AngleCount; i++)
     {
 

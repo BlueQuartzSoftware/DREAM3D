@@ -49,6 +49,13 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -56,10 +63,9 @@ FindBasalLoadingFactor::FindBasalLoadingFactor()
 : m_AvgQuatsArrayPath("", "", "")
 , m_BasalLoadingFactorArrayPath("", "", "")
 {
-  m_LoadingDirection.x = 1.0f;
-  m_LoadingDirection.y = 1.0f;
-  m_LoadingDirection.z = 1.0f;
-
+  m_LoadingDirection[0] = 1.0f;
+  m_LoadingDirection[1] = 1.0f;
+  m_LoadingDirection[2] = 1.0f;
 }
 
 // -----------------------------------------------------------------------------
@@ -72,7 +78,7 @@ FindBasalLoadingFactor::~FindBasalLoadingFactor() = default;
 // -----------------------------------------------------------------------------
 void FindBasalLoadingFactor::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Loading Direction", LoadingDirection, FilterParameter::Parameter, FindBasalLoadingFactor));
 
@@ -122,8 +128,7 @@ void FindBasalLoadingFactor::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 1;
-  m_BasalLoadingFactorPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-      this, getBasalLoadingFactorArrayPath(), 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_BasalLoadingFactorPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getBasalLoadingFactorArrayPath(), 0, dims, "", DataArrayID31);
   if(nullptr != m_BasalLoadingFactorPtr.lock())         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_BasalLoadingFactor = m_BasalLoadingFactorPtr.lock()->getPointer(0);
@@ -171,9 +176,9 @@ void FindBasalLoadingFactor::execute()
   float caxis[3] = {0, 0, 1};
   float c1[3];
 
-  sampleLoading[0] = m_LoadingDirection.x;
-  sampleLoading[1] = m_LoadingDirection.y;
-  sampleLoading[2] = m_LoadingDirection.z;
+  sampleLoading[0] = m_LoadingDirection[0];
+  sampleLoading[1] = m_LoadingDirection[1];
+  sampleLoading[2] = m_LoadingDirection[2];
   MatrixMath::Normalize3x1(sampleLoading);
 
   for(size_t i = 1; i < totalFeatures; i++)

@@ -70,7 +70,7 @@ AbaqusSurfaceMeshWriter::~AbaqusSurfaceMeshWriter() = default;
 // -----------------------------------------------------------------------------
 void AbaqusSurfaceMeshWriter::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, AbaqusSurfaceMeshWriter, "*.inp"));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {

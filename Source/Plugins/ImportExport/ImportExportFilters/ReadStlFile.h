@@ -48,7 +48,7 @@ class ImportExport_EXPORT ReadStlFile : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(ReadStlFile SUPERCLASS AbstractFilter)
-  PYB11_PROPERTY(QString SurfaceMeshDataContainerName READ getSurfaceMeshDataContainerName WRITE setSurfaceMeshDataContainerName)
+  PYB11_PROPERTY(DataArrayPath SurfaceMeshDataContainerName READ getSurfaceMeshDataContainerName WRITE setSurfaceMeshDataContainerName)
   PYB11_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
   PYB11_PROPERTY(QString StlFilePath READ getStlFilePath WRITE setStlFilePath)
   PYB11_PROPERTY(QString FaceNormalsArrayName READ getFaceNormalsArrayName WRITE setFaceNormalsArrayName)
@@ -59,8 +59,8 @@ public:
 
   ~ReadStlFile() override;
 
-  SIMPL_FILTER_PARAMETER(QString, SurfaceMeshDataContainerName)
-  Q_PROPERTY(QString SurfaceMeshDataContainerName READ getSurfaceMeshDataContainerName WRITE setSurfaceMeshDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshDataContainerName)
+  Q_PROPERTY(DataArrayPath SurfaceMeshDataContainerName READ getSurfaceMeshDataContainerName WRITE setSurfaceMeshDataContainerName)
 
   SIMPL_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
   Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
