@@ -10,38 +10,50 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+## Version 6.5.121 ##
+
+### 6.5.121 New Filters & Features ###
+
+### 6.5.121 Fixed DREAM3D Issues ###
+
++ ITK ImageImageStack (3D): Will now correctly import images with color channels. Previous versions of this filter would import images forcibly to Gray Scale without any input from the user.
+
+### 6.5.121 Fixed SIMPL Issues ###
+
++ Fixed SVPipelineView execution lock on error (#332)
+
 ## Version 6.5.119 ##
 
-### New Filters & Features ###
+### 6.5.119 New Filters & Features ###
 
 + Python bindings are now available if you build your own version of DREAM.3D/SIMPL.
 + Options to combine Euler angles and/or convert them to radians in the Bruker Esprit Importer
 
-### Fixed DREAM3D Issues ###
+### 6.5.119 Fixed DREAM3D Issues ###
 
 + Fixed issue where the Feature Face Curvature Filter was not being compiled (#889)
 + Fixed issue where the grid dimensions from .ang and .ctf files were not honored
 + Fixed issue where reading certain kinds of NeighborList arrays from HDF5 would fail or end up with corrupted data
 
-### Fixed SIMPL Issues ###
+### 6.5.119 Fixed SIMPL Issues ###
 
 + Fixed crash in RawBinaryReader when the number of skipped header bytes was larger then the amount of data being read into DREAM.3D
 
 ## Version 6.5.104 ##
 
-### New Filters & Features ###
+### 6.5.104 New Filters & Features ###
 
 + Import Bruker Nano HDF5 based files (#856)
 + Import Zeiss AxioVisio montage image sets
 + Import HDF5 now allows drag-and-drop to select the input file and is consistent with other filters in DREAM.3D
 
-### Fixed DREAM3D Issues ###
+### 6.5.104 Fixed DREAM3D Issues ###
 
 + Export ASCII Data now allows all data into a single file (#878)
 + Fixed calculation of Ensemble Fractions. Reported by Helal Chowdhury (#881)
 + Fixed calculation of Feature Volumes when number of voxels exceeds a certain value (#862)
 
-### Fixed SIMPL Issues ###
+### 6.5.104 Fixed SIMPL Issues ###
 
 + Import ASCII data supports relative file paths (#298)
 + PipelineRunner does not search in lib directory for plugins on Linux (#300)
@@ -53,9 +65,9 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 ## Version 6.5.83 ##
 
-### New Filters & Features ###
+### 6.5.83 New Filters & Features ###
 
-### Fixed DREAM3D Issues ###
+### 6.5.83 Fixed DREAM3D Issues ###
 
 + Improvements to StatsGenerator Documentation and Axis ODF Widget. (#824)
 + Fix incorrect labeling on pole figures for Hexagonal High Laue Class (#826)
@@ -70,14 +82,14 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 + Multiple entries in the AxisODF table were not deserialized correctly. (#846)
 + Additional fixes to QuickSurfaceMesh to address triangle winding issues. (#847)
 
-### Fixed SIMPLView Issues ###
+### 6.5.83 Fixed SIMPLView Issues ###
 
 + Fix issue in generated Filter that would cause compile errors on MSVC due to lack of EXPORT macro
 + Use distinct output name for the GUI plugin. Not doing so causes issues with debugging on MSVC
 + Fix bad CMake code generation in the Python wrapping code. Incorrect template filename was used.
 + Update codes to modern C++ standards using clang-tidy
 
-### Fixed SIMPL Issues ###
+### 6.5.83 Fixed SIMPL Issues ###
 
 + LINUX: Properly move up a directory so that relative paths work correctly
 + Use the SVDialog as a superclass so that more GUI classes pick up the stying
@@ -100,24 +112,24 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 ## Version 6.5.47 ##
 
-### New Filters & Features ###
+### 6.5.47 New Filters & Features ###
 
 + ITKImageProcessing::ITKImageWriter gained the ability to write out various orthogonal planes from the image geometry.
 
-### Fixed DREAM3D Issues ###
+### 6.5.47 Fixed DREAM3D Issues ###
 
 + Update documentation for StatsGenerator to reflect Neighbor Distribution generation
 + Removed Write IPF Standard Triangle from available filters. Static images are available in the Data folder
 + Issue 817: Correctly calculate the northern hemisphere XYZ coord from the southern hemisphere
 + Issue 819: Allow users to pick either a Lambert or Discrete pole figure for the ODF tab in StatsGenerator
 
-### Fixed SIMPLView Issues ###
+### 6.5.47 Fixed SIMPLView Issues ###
 
 + Change from 'Clear Cache' to 'Reset Preferences' which is more descriptive
 + Window settings are saved each time any dock widgets are moved or updated
 + Dock widgets with Tabs are now located at the top instead of the bottom.
 
-### Fixed SIMPL Issues ###
+### 6.5.47 Fixed SIMPL Issues ###
 
 + Fix issue in MultiAttributeMatrixSelectionWidget where the selections would not deserialize from a pipeline file correctly.
 + Issue #228: Fix issue where the contents of the QTextEdit would not be saved to the filter in the Pipeline Annotation Filter
@@ -129,11 +141,11 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 ## Version 6.5.36 ##
 
-### New Filters & Features ###
+### 6.5.36 New Filters & Features ###
 
 No new features or filters were added. This bug fix is mainly a bug fix release based on feedback from users.
 
-### Fixed DREAM3D Issues ###
+### 6.5.36 Fixed DREAM3D Issues ###
 
 + Pack Primary Phases and Insert Precipitates now use "Feature Generation" filter parameter instead of "Alread Have Features"
 + Issue #809: changed the Feature Attribute Array Default Name from "AxisLengths" to "SemiAxisLengths," with other consistency changes (J. Tucker)
@@ -146,11 +158,11 @@ No new features or filters were added. This bug fix is mainly a bug fix release 
 + Update the Reference Frame documentation with edits from M.D. Graef.
 + Promote the "Detect Ellipsoids" filter into the Processing plugin
 
-### Fixed SIMPLView Issues ###
+### 6.5.36 Fixed SIMPLView Issues ###
 
 + Updating the text in the dialog box that appears when the SIMPL_RELATIVE_PATH_CHECK CMake variable is On and no data directory path has been set previously.  The dialog text is now consistent with the menu system text when telling users how to set a different data directory location.
 
-### Fixed SIMPL Issues ###
+### 6.5.36 Fixed SIMPL Issues ###
 
 + Import HDF5 Dataset: Now import multiple datasets per filter. Better guessing for the component dimensions
 + Fix bug where filter parameters were shared among multiple filter instances in certain situations.
@@ -164,7 +176,7 @@ No new features or filters were added. This bug fix is mainly a bug fix release 
 
 ## Version 6.5.10 ##
 
-### New Filters & Features ###
+### 6.5.10 New Filters & Features ###
 
 + Implemented a custom style for the BrandedDREAM3D folder where any intrepid developer can use any Qt5 supported CSS (Cascading Style Sheet) codes to completely customize the look of DREAM.3D/SIMPLView.
 + DREAM3D Issue #752: Add filter to reduce orientations to their fundamental zone.
@@ -176,7 +188,7 @@ No new features or filters were added. This bug fix is mainly a bug fix release 
 + Add filter to compute the transpose of an Orientation Matrix
 + Updated the organization of the Prebuilt pipelines.
 
-### Fixed DREAM3D Issues ###
+### 6.5.10 Fixed DREAM3D Issues ###
 
 + Add cancel checks for the EMsoftSO3Sampler filter
 + Add information parameter that shows the size of the image geometry in real length units.
@@ -206,13 +218,13 @@ No new features or filters were added. This bug fix is mainly a bug fix release 
 + Fixing bug where choosing the Precipitate Rolled Preset in StatsGenerator would not display a dialog box.
 + Remove the IPF Legend filter due to use of QtGui. Insert into its place static 2kx2k pre-rendered images in the data folder
 
-### Fixed SIMPLView Issues ###
+### 6.5.10 Fixed SIMPLView Issues ###
 
 + SIMPLView Issue #29: Updated the Show / Hide on Error preference values
 + SIMPLView Issue #33: Filter Parameter Input widget should add the pipeline index to the title
 + SIMPLView Issue #34: Add more information to the Image Geoemtry InfoString
 
-### Fixed SIMPL Issues ###
+### 6.5.10 Fixed SIMPL Issues ###
 
 + Add new filter that allows the user to Summarize a pipeline
 + Added UUID to every filter. Loading pipelines now prefers to use the UUID, then falls back to the C++ classname
