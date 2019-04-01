@@ -44,7 +44,7 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
-typedef std::vector<std::complex<double>> DE_ComplexDoubleVector;
+using DE_ComplexDoubleVector = std::vector<std::complex<double>>;
 
 class DetectEllipsoidsImpl;
 
@@ -70,7 +70,6 @@ class Processing_EXPORT DetectEllipsoids : public AbstractFilter
   PYB11_PROPERTY(float HoughTransformThreshold READ getHoughTransformThreshold WRITE setHoughTransformThreshold)
   PYB11_PROPERTY(float MinAspectRatio READ getMinAspectRatio WRITE setMinAspectRatio)
   PYB11_PROPERTY(int ImageScaleBarLength READ getImageScaleBarLength WRITE setImageScaleBarLength)
-  PYB11_PROPERTY(size_t Ellipse_Count READ getEllipse_Count WRITE setEllipse_Count)
 
 public:
   SIMPL_SHARED_POINTERS(DetectEllipsoids)
