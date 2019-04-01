@@ -119,8 +119,7 @@ void AddBadData::dataCheck()
   if((!m_PoissonNoise) && (!m_BoundaryNoise))
   {
     QString ss = QObject::tr("At least one type of noise must be selected");
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
   }
 
   QVector<size_t> cDims(1, 1);
@@ -153,7 +152,7 @@ void AddBadData::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

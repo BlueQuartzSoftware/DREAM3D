@@ -230,7 +230,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     DataContainerArray::Pointer dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, 0)
 
     // Try an input file with Comments and semicolon delimited while in semicolon mode
@@ -241,7 +241,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, 0)
 
     // Try an input file with Comments and colon delimited while in colon mode
@@ -252,7 +252,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, 0)
 
     // Try an input file with Comments and tab delimited while in tab mode
@@ -263,7 +263,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, 0)
 
     // Try an input file with Comments and space delimited while in space mode
@@ -274,7 +274,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, 0)
 
     // Try an input file without Comments and comma delimited while in comma mode
@@ -285,7 +285,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, 0)
 
     // Try an input file without Comments and semicolon delimited while in semicolon mode
@@ -296,7 +296,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, 0)
 
     // Try an input file without Comments and colon delimited while in colon mode
@@ -307,7 +307,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, 0)
 
     // Try an input file without Comments and tab delimited while in tab mode
@@ -318,7 +318,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, 0)
 
     // Try an input file without Comments and space delimited while in space mode
@@ -329,7 +329,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, 0)
 
     // Try an input file without Comments and comma delimited while in semicolon mode which will induce a runtime error
@@ -340,7 +340,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, -68001)
 
     // Try an input file without Comments and comma delimited while in colon mode which will induce a runtime error
@@ -351,7 +351,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, -68001)
 
     // Try an input file without Comments and comma delimited while in tab mode which will induce a runtime error
@@ -362,7 +362,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, -68001)
 
     // Try an input file without Comments and comma delimited while in space mode which will induce a runtime error
@@ -373,7 +373,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, -68001)
 
     // Try an input file without Comments and semicolon delimited while in comma mode which will induce a runtime error
@@ -384,7 +384,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, -68001)
 
     // Try an input file without Comments and semicolon delimited while in colon mode which will induce a runtime error
@@ -395,7 +395,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, -68001)
 
     // Try an input file without Comments and semicolon delimited while in tab mode which will induce a runtime error
@@ -406,7 +406,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, -68001)
 
     // Try an input file without Comments and semicolon delimited while in space mode which will induce a runtime error
@@ -417,7 +417,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, -68001)
 
     // Try an input file without Comments and colon delimited while in comma mode which will induce a runtime error
@@ -428,7 +428,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, -68001)
 
     // Try an input file without Comments and colon delimited while in semicolon mode which will induce a runtime error
@@ -439,7 +439,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, -68001)
 
     // Try an input file without Comments and colon delimited while in tab mode which will induce a runtime error
@@ -450,7 +450,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, -68001)
 
     // Try an input file without Comments and colon delimited while in space mode which will induce a runtime error
@@ -461,7 +461,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, -68001)
 
     // Try an input file without Comments and tab delimited while in comma mode which will induce a runtime error
@@ -472,7 +472,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, -68001)
 
     // Try an input file without Comments and tab delimited while in semicolon mode which will induce a runtime error
@@ -483,7 +483,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, -68001)
 
     // Try an input file without Comments and tab delimited while in colon mode which will induce a runtime error
@@ -494,7 +494,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, -68001)
 
     // Try an input file without Comments and tab delimited while in space mode which will induce a runtime error
@@ -505,7 +505,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, -68001)
 
     // Try an input file without Comments and space delimited while in comma mode which will induce a runtime error
@@ -516,7 +516,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, -68001)
 
     // Try an input file without Comments and space delimited while in semicolon mode which will induce a runtime error
@@ -527,7 +527,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, -68001)
 
     // Try an input file without Comments and space delimited while in colon mode which will induce a runtime error
@@ -538,7 +538,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, -68001)
 
     // Try an input file without Comments and space delimited while in tab mode which will induce a runtime error
@@ -549,7 +549,7 @@ public:
     DREAM3D_REQUIRE(err >= 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, >=, -68001)
 
     // Change the init value to 10 so that we induce a runtime error
@@ -561,7 +561,7 @@ public:
     DREAM3D_REQUIRED(err, >=, 0)
 
     dca = pipeline->execute();
-    err = pipeline->getErrorCondition();
+    err = pipeline->getErrorCode();
     DREAM3D_REQUIRED(err, ==, -68000)
   }
 

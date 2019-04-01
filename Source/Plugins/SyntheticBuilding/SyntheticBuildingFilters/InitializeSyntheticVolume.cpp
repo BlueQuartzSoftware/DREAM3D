@@ -69,7 +69,7 @@
   if(m_##var <= 0)                                                                                                                                                                                     \
   {                                                                                                                                                                                                    \
     QString ss = QObject::tr("%1 must be positive").arg(#var);                                                                                                                                         \
-    notifyErrorMessage(getHumanLabel(), ss, errCond);                                                                                                                                                  \
+    setErrorCondition(errCond, ss);                                                                                                                                                                    \
   }
 
 // -----------------------------------------------------------------------------
@@ -197,7 +197,7 @@ void InitializeSyntheticVolume::dataCheck()
 
   // Create the output Data Container
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -224,7 +224,7 @@ void InitializeSyntheticVolume::dataCheck()
   tDims[1] = static_cast<size_t>(m_Dimensions.y);
   tDims[2] = static_cast<size_t>(m_Dimensions.z);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
-  if(getErrorCondition() < 0 && cellAttrMat == nullptr)
+  if(getErrorCode() < 0 && cellAttrMat == nullptr)
   {
     return;
   }
@@ -256,7 +256,7 @@ void InitializeSyntheticVolume::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -297,8 +297,7 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
   {
     QString ss =
         QObject::tr("Phase types array could not be downcast using std::dynamic_pointer_cast<T> when estimating the number of grains. The path is %1").arg(getInputPhaseTypesArrayPath().serialize());
-    setErrorCondition(-11002);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11002, ss);
     return "0";
   }
 
@@ -308,7 +307,7 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
   {
     QString ss =
         QObject::tr("Statistics array could not be downcast using std::dynamic_pointer_cast<T> when estimating the number of grains. The path is %1").arg(getInputStatsArrayPath().serialize());
-    notifyErrorMessage(getHumanLabel(), ss, -11001);
+    setErrorCondition(-11001, ss);
     return "0";
   }
 
@@ -360,8 +359,7 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3
                                  "pointer but this resulted in a nullptr pointer.\n")
                          .arg(phase)
                          .arg(phase);
-        setErrorCondition(-666);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        setErrorCondition(-666, ss);
         return "-1";
       }
       while(!volgood)

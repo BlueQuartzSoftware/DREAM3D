@@ -211,7 +211,7 @@ void AlignSections::dataCheck()
   DataArrayPath tempPath;
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -220,8 +220,7 @@ void AlignSections::dataCheck()
   {
     QString ss =
         QObject::tr("The Image Geometry is not 3D and cannot be run through this filter. The dimensions are (%1,%2,%3)").arg(image->getXPoints()).arg(image->getYPoints()).arg(image->getZPoints());
-    setErrorCondition(-3010);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-3010, ss);
   }
 
   tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), "");
@@ -272,7 +271,7 @@ void AlignSections::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

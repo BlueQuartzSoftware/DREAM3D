@@ -131,7 +131,7 @@ void RegularGridSampleSurfaceMesh::dataCheck()
   DataArrayPath tempPath;
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -149,7 +149,7 @@ void RegularGridSampleSurfaceMesh::dataCheck()
   tDims[1] = m_YPoints;
   tDims[2] = m_ZPoints;
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
-  if(getErrorCondition() < 0 || nullptr == cellAttrMat.get())
+  if(getErrorCode() < 0 || nullptr == cellAttrMat.get())
   {
     return;
   }
@@ -225,7 +225,7 @@ void RegularGridSampleSurfaceMesh::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

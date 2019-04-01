@@ -4,11 +4,11 @@
 
 #include "Sandbox.h"
 
-class RemoveSetupFilterParameters : public Sandbox
+class MassReplaceMessagingCalls : public Sandbox
 {
 
 public:
-  RemoveSetupFilterParameters() = default;
+  MassReplaceMessagingCalls() = default;
 
   void operator()(const QString& hFile)
   {
@@ -16,10 +16,10 @@ public:
     QString contents;
     QFileInfo fi(hFile);
 
-    if(fi.baseName().compare("CopyObject") != 0)
-    {
-      return;
-    }
+    //    if(fi.baseName().compare("CreateFEAInputFiles") != 0)
+    //    {
+    //      return;
+    //    }
 
     {
       // Read the Source File
@@ -30,7 +30,10 @@ public:
     }
 
     bool didReplace = false;
-    QString searchString = "";
+    QString setterSearchString = "@@SET_WARNING_CONDITION@@";
+    QString errCodeSearchString = "@@WARNING_CODE@@";
+    QString placedErrCodeString = "@@getWarningCondition()@@";
+    QString placedErrCodeToken = "getWarningCondition()";
 
     QStringList outLines;
     QStringList list = contents.split(QRegExp("\\n"));
@@ -38,13 +41,76 @@ public:
 
     QString baseName = fi.baseName();
 
+    int lineCount = 0;
+    bool readLine = true;
     while(sourceLines.hasNext())
     {
-      QString line = sourceLines.next();
-      if(line.contains("notifyErrorMessage("))
+      QString line;
+      if (readLine)
       {
+        line = sourceLines.next();
+        lineCount++;
+      }
+      readLine = true;
+      int startLine = lineCount;
+      if(line.contains(errCodeSearchString))
+      {
+        QString errCodeLine = line;
+        QStringList errorCodeParts = errCodeLine.trimmed().split("@@", QString::SplitBehavior::SkipEmptyParts);
+        QString errCode = errorCodeParts[2];
+
+        bool found = false;
+        int counter = 0;
+        while(sourceLines.hasNext() && counter < 20 && !found && readLine)
+        {
+          line = sourceLines.next();
+          lineCount++;
+          if(line.contains(setterSearchString))
+          {
+            found = true;
+            didReplace = true;
+            QString errorFuncLine = line;
+            QStringList errorFuncParts = errorFuncLine.trimmed().split("@@", QString::SplitBehavior::KeepEmptyParts);
+            QString placedErrCode = errorFuncParts[3].trimmed();
+            if(placedErrCode.contains(placedErrCodeToken) == false && placedErrCode != errCode)
+            {
+              qDebug() << fi.fileName() << ":" << startLine << " Warning code that was set does not match error code passed into notifyWarningCondition!";
+            }
+
+            placedErrCode.prepend("@@");
+            placedErrCode.append("@@");
+            line.replace(placedErrCode, errCode);
+
+            line.replace(setterSearchString, "setWarningCondition");
+          }
+          else if (line.contains(errCodeSearchString))
+          {
+            readLine = false;
+          }
+
+          outLines.push_back(line);
+          counter++;
+        }
+
+        if(!found)
+        {
+          qDebug() << fi.fileName() << ":" << startLine << "Did NOT find matching " << setterSearchString << " for " << errCodeSearchString;
+        }
+      }
+      else if(line.contains(setterSearchString))
+      {
+        QString errorFuncLine = line;
+        QStringList errorFuncParts = errorFuncLine.trimmed().split("@@", QString::SplitBehavior::KeepEmptyParts);
+        QString errCode = errorFuncParts[3].trimmed();
+
+        QString placedErrCode = errCode;
+        placedErrCode.prepend("@@");
+        placedErrCode.append("@@");
+        line.replace(placedErrCode, errCode);
+
+        line.replace(setterSearchString, "setWarningCondition");
+
         outLines.push_back(line);
-        checkConstructorForSetupFilterParameters(sourceLines, outLines, &didReplace);
       }
       else
       {
@@ -53,48 +119,6 @@ public:
     }
 
     writeOutput(didReplace, outLines, hFile);
-  }
-
-  void checkConstructorForSetupFilterParameters(QStringListIterator& sourceLines, QStringList& outLines, bool* didReplace)
-  {
-
-    // get through the initializer list
-    while(sourceLines.hasNext())
-    {
-      QString line = sourceLines.next();
-      outLines.push_back(line);
-      if(line.contains("{"))
-      {
-        break;
-      }
-    }
-
-    // Now walk the body of the constructor looking for the setupFilterParameters(); call
-    bool foundFunction = false;
-    while(sourceLines.hasNext())
-    {
-      QString line = sourceLines.next();
-
-      if(line.contains("}"))
-      {
-        if(foundFunction == false)
-        {
-          outLines.push_back(QString("  setupFilterParameters();"));
-        }
-        outLines.push_back(line);
-        break;
-      }
-      else if(line.contains("setupFilterParameters();"))
-      {
-        // outLines.push_back(line);
-        *didReplace = true;
-        foundFunction = true;
-      }
-      else
-      {
-        outLines.push_back(line);
-      }
-    }
   }
 
   // -----------------------------------------------------------------------------
@@ -288,60 +312,60 @@ public:
     outLines.push_back("{");
   }
 
-#if 0 
-    // ----------------------------------------------------------------------------- 
-    // 
-    // ----------------------------------------------------------------------------- 
-    bool CorrectInitializerList( AbstractFilter::Pointer filter, const QString& hFile, const QString& cppFile) 
-    { 
-      QString contents; 
-      { 
-        // Read the Source File 
-        QFileInfo fi(cppFile); 
-        // 
-        if (fi.baseName().compare("RegisterPointSets") != 0) 
-        { 
-          return false; 
-        } 
-        QFile source(cppFile); 
-        source.open(QFile::ReadOnly); 
-        contents = source.readAll(); 
-        source.close(); 
-      } 
-      
-      
-      QStringList names; 
-      bool didReplace = false; 
-      
-      QString searchString = filter->getNameOfClass() + "::" + filter->getNameOfClass(); 
-      QStringList outLines; 
-      QStringList list = contents.split(QRegExp("\\n")); 
-      QStringListIterator sourceLines(list); 
-      
-      int index = 0; 
-      while (sourceLines.hasNext()) 
-      { 
-        QString line = sourceLines.next(); 
-        if(line.contains(searchString) ) 
-        { 
-          outLines.push_back(line); 
-          line = sourceLines.next(); 
-          outLines.push_back(line); // get the call to the superclass 
-          
-          fixInitializerList(sourceLines, outLines, hFile, cppFile); 
-          didReplace = true; 
-        } 
-        else 
-        { 
-          outLines.push_back(line); 
-        } 
-      } 
-      
-      
-      writeOutput(didReplace, outLines, cppFile); 
-      index++; 
-      
-      return didReplace; 
+#if 0
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    bool CorrectInitializerList( AbstractFilter::Pointer filter, const QString& hFile, const QString& cppFile)
+    {
+      QString contents;
+      {
+        // Read the Source File
+        QFileInfo fi(cppFile);
+        //
+        if (fi.baseName().compare("RegisterPointSets") != 0)
+        {
+          return false;
+        }
+        QFile source(cppFile);
+        source.open(QFile::ReadOnly);
+        contents = source.readAll();
+        source.close();
+      }
+
+
+      QStringList names;
+      bool didReplace = false;
+
+      QString searchString = filter->getNameOfClass() + "::" + filter->getNameOfClass();
+      QStringList outLines;
+      QStringList list = contents.split(QRegExp("\\n"));
+      QStringListIterator sourceLines(list);
+
+      int index = 0;
+      while (sourceLines.hasNext())
+      {
+        QString line = sourceLines.next();
+        if(line.contains(searchString) )
+        {
+          outLines.push_back(line);
+          line = sourceLines.next();
+          outLines.push_back(line); // get the call to the superclass
+
+          fixInitializerList(sourceLines, outLines, hFile, cppFile);
+          didReplace = true;
+        }
+        else
+        {
+          outLines.push_back(line);
+        }
+      }
+
+
+      writeOutput(didReplace, outLines, cppFile);
+      index++;
+
+      return didReplace;
     }
 #endif
 

@@ -338,7 +338,7 @@ void ReplaceElementAttributesWithNeighborValues::dataCheck()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getConfidenceIndexArrayPath().getDataContainerName());
 
   m_InArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getConfidenceIndexArrayPath());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -347,8 +347,7 @@ void ReplaceElementAttributesWithNeighborValues::dataCheck()
   if(cDims.size() != 1 && cDims.at(0) != 1)
   {
     QString ss = QObject::tr("The number of components must be 1.");
-    setErrorCondition(-5655);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5655, ss);
   }
 }
 
@@ -373,7 +372,7 @@ void ReplaceElementAttributesWithNeighborValues::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

@@ -263,14 +263,14 @@ void SampleSurfaceMesh::initialize()
 void SampleSurfaceMesh::dataCheck()
 {
   TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   QVector<IDataArray::Pointer> dataArrays;
 
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(triangles->getTriangles());
   }
@@ -282,7 +282,7 @@ void SampleSurfaceMesh::dataCheck()
   {
     m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock());
   }
@@ -326,7 +326,7 @@ void SampleSurfaceMesh::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -440,7 +440,7 @@ void SampleSurfaceMesh::execute()
 
   // generate the list of sampling points from subclass
   VertexGeom::Pointer points = generate_points();
-  if(getErrorCondition() < 0 || nullptr == points.get())
+  if(getErrorCode() < 0 || nullptr == points.get())
   {
     return;
   }

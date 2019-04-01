@@ -192,7 +192,7 @@ void GenerateFZQuaternions::dataCheck()
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArraypaths.push_back(getCellPhasesArrayPath());
   }
@@ -229,7 +229,7 @@ void GenerateFZQuaternions::dataCheck()
     {
       m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() >= 0)
+    if(getErrorCode() >= 0)
     {
       dataArraypaths.push_back(getGoodVoxelsArrayPath());
     }
@@ -263,7 +263,7 @@ void GenerateFZQuaternions::execute()
 {
   initialize();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -296,12 +296,11 @@ void GenerateFZQuaternions::execute()
 
   if(m_PhaseWarningCount > 0)
   {
-    setErrorCondition(-49000);
     QString ss = QObject::tr("The Ensemble Phase information only references %2 phase(s) but %1 cell(s) had a phase value greater than %2. \
 This indicates a problem with the input cell phase data. DREAM.3D will give INCORRECT RESULTS.")
                      .arg(m_PhaseWarningCount)
                      .arg(numPhases - 1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-49000, ss);
   }
 
 }

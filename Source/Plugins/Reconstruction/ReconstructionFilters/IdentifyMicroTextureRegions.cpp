@@ -331,7 +331,7 @@ void IdentifyMicroTextureRegions::dataCheck()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCAxisLocationsArrayPath().getDataContainerName());
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, getCAxisLocationsArrayPath().getDataContainerName(), false);
-  if(getErrorCondition() < 0 || nullptr == m.get())
+  if(getErrorCode() < 0 || nullptr == m.get())
   {
     return;
   }
@@ -350,7 +350,7 @@ void IdentifyMicroTextureRegions::dataCheck()
   {
     m_CAxisLocations = m_CAxisLocationsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getCAxisLocationsArrayPath());
   }
@@ -362,7 +362,7 @@ void IdentifyMicroTextureRegions::dataCheck()
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getCellPhasesArrayPath());
   }
@@ -478,7 +478,7 @@ void IdentifyMicroTextureRegions::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -536,7 +536,7 @@ void IdentifyMicroTextureRegions::execute()
 
   // Create temporary DataContainer and AttributeMatrix for holding the patch data
   DataContainer::Pointer tmpDC = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "_INTERNAL_USE_ONLY_PatchDataContainer(Temp)");
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -549,7 +549,7 @@ void IdentifyMicroTextureRegions::execute()
   tDims[1] = newDimY;
   tDims[2] = newDimZ;
   tmpDC->createNonPrereqAttributeMatrix(this, "_INTERNAL_USE_ONLY_PatchAM(Temp)", tDims, AttributeMatrix::Type::Cell);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

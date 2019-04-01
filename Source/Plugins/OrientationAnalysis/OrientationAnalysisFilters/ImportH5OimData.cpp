@@ -195,8 +195,7 @@ void ImportH5OimData::dataCheck()
   if(m_InputFile.isEmpty())
   {
     QString ss = QObject::tr("The input file must be set for property %1").arg("InputFile");
-    setErrorCondition(-380);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
+    setErrorCondition(-380, ss);
     return;
   }
 
@@ -205,16 +204,14 @@ void ImportH5OimData::dataCheck()
   if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist: '%1'").arg(getInputFile());
-    setErrorCondition(-381);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-381, ss);
     return;
   }
 
   if(fi.suffix() != Ebsd::H5OIM::H5FileExt)
   {
-    setErrorCondition(-997);
     QString ss = QObject::tr("The file extension '%1' was not recognized. The reader only recognizes the .h5 file extension").arg(fi.suffix());
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-997, ss);
     return;
   }
 
@@ -222,8 +219,7 @@ void ImportH5OimData::dataCheck()
   if(m_ZSpacing <= 0)
   {
     QString ss = QObject::tr("The Z Spacing field contains a value that is non-positive.  The Z Spacing field must be set to a positive value.");
-    setErrorCondition(-382);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-382, ss);
     return;
   }
 
@@ -280,8 +276,7 @@ void ImportH5OimData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, QVe
       int err = reader->readHeaderOnly();
       if(err < 0)
       {
-        setErrorCondition(err);
-        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+        setErrorCondition(err, reader->getErrorMessage());
         m_FileWasRead = false;
         return;
       }
@@ -293,9 +288,8 @@ void ImportH5OimData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, QVe
       int32_t err = reader->readFile();
       if(err < 0)
       {
-        setErrorCondition(err);
-        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
-        notifyErrorMessage(getHumanLabel(), "H5OIMReader could not read the .h5 file.", getErrorCondition());
+        setErrorCondition(err, reader->getErrorMessage());
+        setErrorCondition(getErrorCode(), "H5OIMReader could not read the .h5 file.");
         return;
       }
     }
@@ -361,9 +355,8 @@ int32_t ImportH5OimData::loadMaterialInfo(EbsdReader* ebsdReader)
   QVector<AngPhase::Pointer> phases = getData().phases;
   if(phases.empty())
   {
-    setErrorCondition(reader->getErrorCode());
-    notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(reader->getErrorCode(), reader->getErrorMessage());
+    return getErrorCode();
   }
 
   DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, Ebsd::AngFile::CrystalStructures);
@@ -557,7 +550,7 @@ void ImportH5OimData::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -577,13 +570,13 @@ void ImportH5OimData::execute()
     QString currentScanName = scanNames[index];
 
     readDataFile(reader.get(), m.get(), tDims, currentScanName, ANG_FULL_FILE);
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
 
     copyRawEbsdData(reader.get(), tDims, cDims, index);
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
@@ -729,13 +722,12 @@ void ImportH5OimData::dataCheckOEM()
   if(manfacturer != Ebsd::OEM::EDAX)
   {
     QString ss = QObject::tr("The manufacturer is not recognized as a valid entry.");
-    setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-384, ss);
     return;
   }
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -746,14 +738,14 @@ void ImportH5OimData::dataCheckOEM()
 
   QVector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
   tDims.resize(1);
   tDims[0] = 0;
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -770,8 +762,7 @@ void ImportH5OimData::dataCheckOEM()
   int32_t err = reader->readScanNames(scanNames);
   if(err < 0)
   {
-    setErrorCondition(reader->getErrorCode());
-    notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+    setErrorCondition(err, reader->getErrorMessage());
     return;
   }
   setFileScanNames(scanNames);
@@ -803,9 +794,8 @@ void ImportH5OimData::dataCheckOEM()
   }
   else
   {
-    setErrorCondition(-996);
     QString ss = QObject::tr("At least one scan must be chosen.  Please select a scan from the list.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-996, ss);
     return;
   }
 
@@ -863,9 +853,8 @@ void ImportH5OimData::dataCheckOEM()
     }
     else
     {
-      setErrorCondition(-998);
       QString ss = QObject::tr("The filter parameter 'Read Pattern Data' has been enabled but there does not seem to be any pattern data in the file for the scan name selected");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-998, ss);
     }
   }
 

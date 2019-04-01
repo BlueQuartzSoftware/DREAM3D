@@ -140,9 +140,9 @@ int32_t SPParksSitesWriter::writeHeader()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
-    return getErrorCondition();
+    return getErrorCode();
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
@@ -157,9 +157,8 @@ int32_t SPParksSitesWriter::writeHeader()
   if(!outfile)
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
-    setErrorCondition(-100);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(-100, ss);
+    return getErrorCode();
   }
 
   outfile << "-"
@@ -192,9 +191,9 @@ int32_t SPParksSitesWriter::writeFile()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
-    return getErrorCondition();
+    return getErrorCode();
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
@@ -209,9 +208,8 @@ int32_t SPParksSitesWriter::writeFile()
   if(!outfile)
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
-    setErrorCondition(-100);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(-100, ss);
+    return getErrorCode();
   }
 
   qint64 millis = QDateTime::currentMSecsSinceEpoch();

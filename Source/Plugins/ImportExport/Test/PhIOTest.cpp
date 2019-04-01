@@ -166,7 +166,7 @@ public:
       err = pipeline->preflightPipeline();
       DREAM3D_REQUIRE_EQUAL(err, 0);
       pipeline->execute();
-      err = pipeline->getErrorCondition();
+      err = pipeline->getErrorCode();
       DREAM3D_REQUIRE_EQUAL(err, 0);
     }
 
@@ -216,7 +216,7 @@ public:
       err = pipeline->preflightPipeline();
       DREAM3D_REQUIRE_EQUAL(err, 0);
       pipeline->execute();
-      err = pipeline->getErrorCondition();
+      err = pipeline->getErrorCode();
       DREAM3D_REQUIRE_EQUAL(err, 0);
     }
 
@@ -245,7 +245,7 @@ public:
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
       phReader->setDataContainerArray(dca);
       phReader->execute();
-      int err = phReader->getErrorCondition();
+      int err = phReader->getErrorCode();
       DREAM3D_REQUIRE_EQUAL(err, 0);
       // pipeline->pushBack(phReader);
     }
@@ -321,7 +321,7 @@ public:
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
         phReader->setDataContainerArray(dca);
         phReader->preflight();
-        int err = phReader->getErrorCondition();
+        int err = phReader->getErrorCode();
         DREAM3D_REQUIRE_EQUAL(err, 0);
       }
       else
@@ -358,7 +358,7 @@ public:
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
         phReader->setDataContainerArray(dca);
         phReader->preflight();
-        int err = phReader->getErrorCondition();
+        int err = phReader->getErrorCode();
         DREAM3D_REQUIRE_EQUAL(err, 0);
       }
       else
@@ -395,7 +395,7 @@ public:
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
         phReader->setDataContainerArray(dca);
         phReader->preflight();
-        int err = phReader->getErrorCondition();
+        int err = phReader->getErrorCode();
         DREAM3D_REQUIRE_EQUAL(err, 0);
       }
       else
@@ -443,7 +443,7 @@ public:
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
         phReader->setDataContainerArray(dca);
         phReader->preflight();
-        int err = phReader->getErrorCondition();
+        int err = phReader->getErrorCode();
         DREAM3D_REQUIRE_EQUAL(err, 0);
       }
       else
@@ -484,7 +484,7 @@ public:
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
         phReader->setDataContainerArray(dca);
         phReader->preflight();
-        int err = phReader->getErrorCondition();
+        int err = phReader->getErrorCode();
         DREAM3D_REQUIRE_EQUAL(err, 0);
       }
       else

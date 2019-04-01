@@ -590,13 +590,13 @@ void PackPrimaryPhases::dataCheck()
   {
     m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
   }
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     ensembleDataArrayPaths.push_back(getInputPhaseTypesArrayPath());
   }
 
   m_PhaseNamesPtr = getDataContainerArray()->getPrereqArrayFromPath<StringDataArray, AbstractFilter>(this, getInputPhaseNamesArrayPath(), cDims);
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     ensembleDataArrayPaths.push_back(getInputPhaseNamesArrayPath());
   }
@@ -606,7 +606,7 @@ void PackPrimaryPhases::dataCheck()
   {
     m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0);
   }
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     ensembleDataArrayPaths.push_back(getInputShapeTypesArrayPath());
   }
@@ -617,17 +617,15 @@ void PackPrimaryPhases::dataCheck()
     if(m_StatsDataArray.lock() == nullptr)
     {
       QString ss = QObject::tr("Statistics array is not initialized correctly. The path is %1").arg(getInputStatsArrayPath().serialize());
-      setErrorCondition(-78000);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-78000, ss);
     }
   }
   if(getFeatureGeneration() > 1 || getFeatureGeneration() < 0)
   {
       QString ss = QObject::tr("The value for 'Feature Generation' can only be 0 or 1. The value being used is ").arg(getFeatureGeneration());
-      setErrorCondition(-78001);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-78001, ss);
   }
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     ensembleDataArrayPaths.push_back(getInputStatsArrayPath());
   }
@@ -639,7 +637,7 @@ void PackPrimaryPhases::dataCheck()
     {
       m_Mask = m_MaskPtr.lock()->getPointer(0);
     }
-    if(getErrorCondition() >= 0)
+    if(getErrorCode() >= 0)
     {
       cellDataArrayPaths.push_back(getMaskArrayPath());
     }
@@ -663,7 +661,7 @@ void PackPrimaryPhases::dataCheck()
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   }
 
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -788,14 +786,12 @@ void PackPrimaryPhases::dataCheck()
     if(getFeatureInputFile().isEmpty())
     {
       QString ss = QObject::tr("The input feature file must be set");
-      setErrorCondition(-78003);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-78003, ss);
     }
     else if(!fi.exists())
     {
       QString ss = QObject::tr("The input feature file does not exist");
-      setErrorCondition(-78004);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-78004, ss);
     }
   }
 }
@@ -839,7 +835,7 @@ void PackPrimaryPhases::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -849,13 +845,13 @@ void PackPrimaryPhases::execute()
     notifyStatusMessageWithPrefix(getMessagePrefix(), "Packing Features || Initializing Volume");
     // this initializes the arrays to hold the details of the locations of all of the features during packing
     Int32ArrayType::Pointer featureOwnersPtr = initializePackingGrid();
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
     notifyStatusMessageWithPrefix(getMessagePrefix(), "Packing Features || Placing Features");
     placeFeatures(featureOwnersPtr);
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
@@ -877,7 +873,7 @@ void PackPrimaryPhases::execute()
 
   notifyStatusMessageWithPrefix(getMessagePrefix(), "Packing Features || Assigning Voxels");
   assignVoxels();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -901,7 +897,7 @@ void PackPrimaryPhases::execute()
   {
     writeGoalAttributes();
   }
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -932,8 +928,7 @@ int32_t PackPrimaryPhases::writeVtkFile(int32_t* featureOwners, int32_t* exclusi
   if(!outFile.is_open() )
   {
     qDebug() << "m_VtkOutputFile: " << m_VtkOutputFile << "\n";
-    notifyErrorMessage(getHumanLabel(), "Could not open Vtk File for writing from PackFeatures", -1);
-    setErrorCondition(-78005);
+    setErrorCondition(-78005, "Could not open Vtk File for writing from PackFeatures");
     return -1;
   }
   outFile << "# vtk DataFile Version 2.0"
@@ -1018,14 +1013,13 @@ void PackPrimaryPhases::loadFeatures()
   if(!inFile)
   {
     QString ss = QObject::tr("Failed to open: %1").arg(getFeatureInputFile());
-    setErrorCondition(-78006);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
+    setErrorCondition(-78006, ss);
   }
   int32_t numFeatures = 0;
   inFile >> numFeatures;
   if(0 == numFeatures)
   {
-    notifyErrorMessage(getHumanLabel(), "The number of Features is 0 and should be greater than 0", -600);
+    setErrorCondition(-600, "The number of Features is 0 and should be greater than 0");
   }
 
   m_FirstPrimaryFeature = 1;
@@ -1148,8 +1142,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
                          .arg(i)
                          .arg(i)
                          .arg(m_PhaseTypes[i]);
-        setErrorCondition(-78007);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        setErrorCondition(-78007, ss);
         return;
       }
       m_PrimaryPhases.push_back(static_cast<int32_t>(i));
@@ -1438,7 +1431,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
     m_Centroids[3 * i + 1] = yc;
     m_Centroids[3 * i + 2] = zc;
     insertFeature(i);
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
@@ -1710,8 +1703,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
     if(err < 0)
     {
       QString ss = QObject::tr("Error writing Vtk file");
-      setErrorCondition(-78008);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-78008, ss);
       return;
     }
   }
@@ -2516,8 +2508,7 @@ void PackPrimaryPhases::insertFeature(size_t gnum)
   if(shapeclass >= static_cast<ShapeType::EnumType>(ShapeType::Type::ShapeTypeEnd))
   {
     QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
-    setErrorCondition(-78009);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-78009, ss);
     return;
   }
 
@@ -2692,8 +2683,7 @@ void PackPrimaryPhases::assignVoxels()
     if(shapeclass != 0 && shapeclass != 1 && shapeclass != 2 && shapeclass != 3)
     {
       QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
-      setErrorCondition(-78010);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-78010, ss);
       return;
     }
 
@@ -3276,8 +3266,7 @@ int32_t PackPrimaryPhases::estimateNumFeatures(size_t xpoints, size_t ypoints, s
   if(m_StatsDataArray.lock() == nullptr)
   {
     QString ss = QObject::tr("Stats Array Not Initialized correctly");
-    setErrorCondition(-78011);
-    notifyErrorMessage(getHumanLabel(), ss, -308);
+    setErrorCondition(-78011, ss);
     return 1;
   }
 
@@ -3381,8 +3370,7 @@ void PackPrimaryPhases::writeGoalAttributes()
   if(!parentPath.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    setErrorCondition(-78013);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-78013, ss);
     return;
   }
 
@@ -3390,8 +3378,7 @@ void PackPrimaryPhases::writeGoalAttributes()
   if(!outFile.open(QIODevice::WriteOnly))
   {
     QString msg = QObject::tr("CSV Output file could not be opened: %1").arg(getCsvOutputFile());
-    setErrorCondition(-78014);
-    notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
+    setErrorCondition(-78014, msg);
     return;
   }
 

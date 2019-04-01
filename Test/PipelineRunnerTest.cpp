@@ -127,7 +127,7 @@ void ExecutePipeline(const QString& pipelineFile)
   // Now actually execute the pipeline
   std::cout << "EXECUTING PIPELINE STARTING ============================================" << std::endl;
   pipeline->execute();
-  err = pipeline->getErrorCondition();
+  err = pipeline->getErrorCode();
   if(err < 0)
   {
     std::cout << "Error Condition of Pipeline: " << err << std::endl;

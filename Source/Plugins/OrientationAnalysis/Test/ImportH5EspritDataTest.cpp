@@ -130,11 +130,11 @@ public:
     pipeline->pushBack(writer);
 
     pipeline->preflightPipeline();
-    int error = pipeline->getErrorCondition();
+    int error = pipeline->getErrorCode();
     DREAM3D_REQUIRED(error, >=, 0)
 
     pipeline->execute();
-    error = pipeline->getErrorCondition();
+    error = pipeline->getErrorCode();
     DREAM3D_REQUIRED(error, >=, 0)
 
     return EXIT_SUCCESS;

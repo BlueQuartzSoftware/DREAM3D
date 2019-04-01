@@ -174,7 +174,7 @@ public:
     QObject::connect(writer.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), &obs, SLOT(processPipelineMessage(const AbstractMessage::Pointer&)));
 
     writer->execute();
-    int err = writer->getErrorCondition();
+    int err = writer->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, NO_ERROR);
 
     // Now instantiate the EnsembleInfoReader Filter from the FilterManager
@@ -220,7 +220,7 @@ public:
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
       filter->execute();
-      err = filter->getErrorCondition();
+      err = filter->getErrorCode();
       DREAM3D_REQUIRE_EQUAL(err, NO_ERROR);
 
       DataArrayPath path3 = DataArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ConfidenceIndexNoSpace);
@@ -232,7 +232,7 @@ public:
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
       filter->execute();
-      err = filter->getErrorCondition();
+      err = filter->getErrorCode();
       DREAM3D_REQUIRE_EQUAL(err, DIFF_MATRICES);
     }
     else

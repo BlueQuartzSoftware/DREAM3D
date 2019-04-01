@@ -230,7 +230,7 @@ void GenerateFaceSchuhMisorientationColoring::dataCheckSurfaceMesh()
   clearWarningCondition();
 
   DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -303,16 +303,16 @@ void GenerateFaceSchuhMisorientationColoring::preflight()
 // -----------------------------------------------------------------------------
 void GenerateFaceSchuhMisorientationColoring::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheckSurfaceMesh();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   dataCheckVoxel();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

@@ -411,7 +411,7 @@ void M3CSliceBySlice::preflight()
   binaryReader->preflight();
   if(binaryReader->getErrorCondition() < 0)
   {
-    setErrorCondition(binaryReader->getErrorCondition());
+    setErrorCondition(binaryReader->getErrorCondition(), "Binary Reader failed its preflight.");
   }
   setInPreflight(false);
 }
@@ -542,8 +542,7 @@ void M3CSliceBySlice::execute()
     {
 
       ss = QObject::tr("Cancelling filter");
-      setErrorCondition(-1);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-1, ss);
       break;
     }
 
@@ -610,8 +609,7 @@ void M3CSliceBySlice::execute()
     {
 
       ss = QObject::tr("Error writing Nodes file '%1'").arg(nodesFile);
-      setErrorCondition(-1);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-1, ss);
       return;
     }
 
@@ -620,8 +618,7 @@ void M3CSliceBySlice::execute()
     {
 
       ss = QObject::tr("Error writing triangles file '%1'").arg(trianglesFile);
-      setErrorCondition(-1);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-1, ss);
       return;
     }
     cNodeID = nNodes;
@@ -660,7 +657,7 @@ void M3CSliceBySlice::execute()
   binaryReader->execute();
   if(binaryReader->getErrorCondition() < 0)
   {
-    setErrorCondition(binaryReader->getErrorCondition());
+    setErrorCondition(binaryReader->getErrorCondition(), "Binary Reader failed during execution.");
   }
 
   // This will possibly delete the triangles and Nodes file depending on the

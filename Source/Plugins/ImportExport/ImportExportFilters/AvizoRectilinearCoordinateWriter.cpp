@@ -115,13 +115,13 @@ void AvizoRectilinearCoordinateWriter::dataCheck()
   clearWarningCondition();
 
   DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer(this, getFeatureIdsArrayPath().getDataContainerName(), false);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   ImageGeom::Pointer image = dc->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || nullptr == image.get())
+  if(getErrorCode() < 0 || nullptr == image.get())
   {
     return;
   }
@@ -158,10 +158,10 @@ void AvizoRectilinearCoordinateWriter::preflight()
 // -----------------------------------------------------------------------------
 void AvizoRectilinearCoordinateWriter::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -174,23 +174,21 @@ void AvizoRectilinearCoordinateWriter::execute()
   if(!dir.mkpath(parentPath))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    setErrorCondition(-93000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-93000, ss);
     return;
   }
 
   FILE* avizoFile = fopen(getOutputFile().toLatin1().data(), "wb");
   if(nullptr == avizoFile)
   {
-    setErrorCondition(-93001);
     QString ss = QObject::tr("Error creating file '%1'").arg(getOutputFile());
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-93001, ss);
     return;
   }
 
   generateHeader(avizoFile);
 
-  err = writeData(avizoFile);
+  int err = writeData(avizoFile);
 
   fclose(avizoFile);
 

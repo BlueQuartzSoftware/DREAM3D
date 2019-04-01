@@ -156,7 +156,7 @@ void RemoveFlaggedFeatures::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -366,8 +366,7 @@ QVector<bool> RemoveFlaggedFeatures::remove_flaggedfeatures()
   }
   if(!good)
   {
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), "All Features were flagged and would all be removed.  The filter has quit.", -1);
+    setErrorCondition(-1, "All Features were flagged and would all be removed.  The filter has quit.");
     return activeObjects;
   }
   for(size_t i = 0; i < totalPoints; i++)

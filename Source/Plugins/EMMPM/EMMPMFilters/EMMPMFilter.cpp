@@ -80,7 +80,7 @@ class EMMPMFilterMessageHandler : public AbstractMessageHandler
      */
     void processMessage(const GenericProgressMessage* msg) const override
     {
-      emit m_Filter->notifyProgressMessage(msg->getPrefix(), msg->getMessageText(), msg->getProgressValue());
+      emit m_Filter->notifyProgressMessage(msg->getProgressValue(), msg->getMessageText());
     }
 
     /**
@@ -96,7 +96,7 @@ class EMMPMFilterMessageHandler : public AbstractMessageHandler
      */
     void processMessage(const GenericErrorMessage* msg) const override
     {
-      emit m_Filter->notifyErrorMessage(msg->getPrefix(), msg->getMessageText(), msg->getCode());
+      emit m_Filter->setErrorCondition(msg->getCode(), msg->getMessageText());
     }
 
     /**
@@ -104,7 +104,7 @@ class EMMPMFilterMessageHandler : public AbstractMessageHandler
      */
     void processMessage(const GenericWarningMessage* msg) const override
     {
-      emit m_Filter->notifyWarningMessage(msg->getPrefix(), msg->getMessageText(), msg->getCode());
+      emit m_Filter->setWarningCondition(msg->getCode(), msg->getMessageText());
     }
 
   private:
@@ -276,15 +276,13 @@ void EMMPMFilter::dataCheck()
 
   if(getNumClasses() > 15)
   {
-    setErrorCondition(-89100);
     QString ss = QObject::tr("The maximum number of classes is 15");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-89100, ss);
   }
   if(getNumClasses() < 2)
   {
-    setErrorCondition(-89101);
     QString ss = QObject::tr("The minimum number of classes is 2");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-89101, ss);
   }
 }
 
@@ -310,7 +308,7 @@ void EMMPMFilter::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

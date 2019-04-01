@@ -127,7 +127,7 @@ void FindAvgScalarValueForFeatures::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   m_InDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedCellArrayPath());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -137,8 +137,7 @@ void FindAvgScalarValueForFeatures::dataCheck()
     if(cDims != 1)
     {
       QString ss = QObject::tr("Selected array has number of components %1 and is not a scalar array. The path is %2").arg(cDims).arg(getSelectedCellArrayPath().serialize());
-      setErrorCondition(-11003);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-11003, ss);
     }
   }
 }
@@ -200,7 +199,7 @@ void FindAvgScalarValueForFeatures::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

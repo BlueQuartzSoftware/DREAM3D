@@ -146,13 +146,13 @@ void VASPReader::dataCheck()
   clearWarningCondition();
   initialize();
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer vertexAttrMat = m->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
-  if(getErrorCondition() < 0 || nullptr == vertexAttrMat.get())
+  if(getErrorCode() < 0 || nullptr == vertexAttrMat.get())
   {
     return;
   }
@@ -165,14 +165,12 @@ void VASPReader::dataCheck()
   if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-387, ss);
   }
   else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist.");
-    setErrorCondition(-388);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-388, ss);
   }
 
   QVector<size_t> dims(1, 3);
@@ -199,8 +197,7 @@ void VASPReader::dataCheck()
     if(!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
     {
       QString ss = QObject::tr("VASPReader Input file could not be opened: %1").arg(getInputFile());
-      setErrorCondition(-100);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-100, ss);
       return;
     }
 
@@ -208,9 +205,8 @@ void VASPReader::dataCheck()
     m_InStream.close();
     if(error < 0)
     {
-      setErrorCondition(error);
       QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a VASP file?");
-      notifyErrorMessage(getHumanLabel(), ss, -11000);
+      setErrorCondition(error, ss);
     }
   }
 }
@@ -236,7 +232,7 @@ void VASPReader::execute()
   int err = 0;
 
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -245,8 +241,7 @@ void VASPReader::execute()
   if(!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
   {
     QString ss = QObject::tr("VASPReader Input file could not be opened: %1").arg(getInputFile());
-    setErrorCondition(-100);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-100, ss);
     return;
   }
 

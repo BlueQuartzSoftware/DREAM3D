@@ -65,7 +65,7 @@ class EMMPMMessageHandler : public AbstractMessageHandler
      */
     void processMessage(const GenericProgressMessage* msg) const override
     {
-      emit m_EmmpmObject->notifyProgressMessage(msg->getPrefix(), msg->getMessageText(), msg->getProgressValue());
+      emit m_EmmpmObject->notifyProgressMessage(msg->getProgressValue(), msg->getMessageText());
     }
 
     /**
@@ -81,7 +81,7 @@ class EMMPMMessageHandler : public AbstractMessageHandler
      */
     void processMessage(const GenericErrorMessage* msg) const override
     {
-      emit m_EmmpmObject->notifyErrorMessage(msg->getPrefix(), msg->getMessageText(), msg->getCode());
+      emit m_EmmpmObject->setErrorCondition(msg->getCode(), msg->getMessageText());
     }
 
     /**
@@ -89,7 +89,7 @@ class EMMPMMessageHandler : public AbstractMessageHandler
      */
     void processMessage(const GenericWarningMessage* msg) const override
     {
-      emit m_EmmpmObject->notifyWarningMessage(msg->getPrefix(), msg->getMessageText(), msg->getCode());
+      emit m_EmmpmObject->setWarningCondition(msg->getCode(), msg->getMessageText());
     }
 
   private:
@@ -100,7 +100,7 @@ class EMMPMMessageHandler : public AbstractMessageHandler
 //
 // -----------------------------------------------------------------------------
 EMMPM::EMMPM()
-: m_ErrorCondition(0)
+: m_ErrorCode(0)
 {
 }
 
@@ -250,7 +250,7 @@ void EMMPM::execute()
 
     if(data->ccost == nullptr)
     {
-      notifyErrorMessage("", "Error Allocating Curvature Variables Memory", -55100);
+      setErrorCondition(-55100, "Error Allocating Curvature Variables Memory");
       return;
     }
   }
@@ -267,7 +267,7 @@ void EMMPM::execute()
 
     if(data->ns == nullptr || data->ew == nullptr || data->nw == nullptr || data->sw == nullptr)
     {
-      notifyErrorMessage("", "Error Allocating Gradient Variables Memory", -55000);
+      setErrorCondition(-55000, "Error Allocating Gradient Variables Memory");
       return;
     }
   }

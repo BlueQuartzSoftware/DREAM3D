@@ -245,8 +245,7 @@ void FindProjectedImageStatistics::dataCheck()
     if(TemplateHelpers::CanDynamicCast<BoolArrayType>()(m_InDataPtr.lock()))
     {
       QString ss = QObject::tr("Selected array cannot be of type bool.  The path is %1").arg(getSelectedArrayPath().serialize());
-      setErrorCondition(-11001);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-11001, ss);
     }
   }
 
@@ -292,15 +291,14 @@ void FindProjectedImageStatistics::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getSelectedArrayPath().getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   if(image->getXPoints() <= 1 || image->getYPoints() <= 1 || image->getZPoints() <= 1)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage(getHumanLabel(), "The Image Geometry is not 3D and cannot be run through this Filter", getErrorCondition());
+    setErrorCondition(-999, "The Image Geometry is not 3D and cannot be run through this Filter");
   }
 }
 
@@ -325,7 +323,7 @@ void FindProjectedImageStatistics::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -397,8 +395,7 @@ void FindProjectedImageStatistics::execute()
   if(nullptr == startPoints)
   {
     QString ss = QObject::tr("Unable to establish starting location for supplied plane. The plane is %1").arg(m_Plane);
-    setErrorCondition(-11001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11001, ss);
     return;
   }
 
@@ -585,8 +582,7 @@ void FindProjectedImageStatistics::execute()
   else
   {
     QString ss = QObject::tr("Selected array is of unsupported type. The type is %1").arg(m_InDataPtr.lock()->getTypeAsString());
-    setErrorCondition(-11001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11001, ss);
     return;
   }
 

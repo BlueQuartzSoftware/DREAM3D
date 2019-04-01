@@ -160,7 +160,7 @@ protected slots:
    * @brief generateEmmpmMessage
    * @param msg
    */
-  virtual void handleEmmpmMessage(AbstractMessage::Pointer msg);
+  virtual void handleEmmpmMessage(const AbstractMessage::Pointer& msg);
 
 private:
   DEFINE_DATAARRAY_VARIABLE(uint8_t, InputImage)

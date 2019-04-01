@@ -119,10 +119,10 @@ void GenerateGeometryConnectivity::preflight()
 // -----------------------------------------------------------------------------
 void GenerateGeometryConnectivity::execute()
 {
-  int32_t err = 0;
-  setErrorCondition(err);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -133,23 +133,21 @@ void GenerateGeometryConnectivity::execute()
   if(m_GenerateVertexTriangleLists || m_GenerateTriangleNeighbors)
   {
     notifyStatusMessage("Generating Vertex Element List");
-    err = geom->findElementsContainingVert();
+    int err = geom->findElementsContainingVert();
     if(err < 0)
     {
-      setErrorCondition(-400);
       QString ss = QObject::tr("Error generating vertex element list for Geometry type %1").arg(geom->getGeometryTypeAsString());
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-400, ss);
     }
   }
   if(m_GenerateTriangleNeighbors)
   {
     notifyStatusMessage("Generating Element Neighbors List");
-    err = geom->findElementNeighbors();
+    int err = geom->findElementNeighbors();
     if(err < 0)
     {
-      setErrorCondition(-401);
       QString ss = QObject::tr("Error generating element neighbor list for Geometry type %1").arg(geom->getGeometryTypeAsString());
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-401, ss);
     }
   }
 

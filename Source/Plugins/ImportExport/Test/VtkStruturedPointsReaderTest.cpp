@@ -244,12 +244,12 @@ public:
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
       filter->preflight();
-      DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
+      DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
 
       filter->setDataContainerArray(DataContainerArray::New());
 
       filter->execute();
-      DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
+      DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
       dca = filter->getDataContainerArray();
 
       // Need to actually check the data against what _should_ have been written

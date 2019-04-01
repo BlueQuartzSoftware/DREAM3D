@@ -144,7 +144,7 @@ void VisualizeGBCDPoleFigure::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   IDataArray::Pointer tmpGBCDPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getGBCDArrayPath());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -163,8 +163,7 @@ void VisualizeGBCDPoleFigure::dataCheck()
   if(nullptr != m_GBCDPtr.lock() && getPhaseOfInterest() >= m_GBCDPtr.lock()->getNumberOfTuples())
   {
     QString ss = QObject::tr("The phase index is larger than the number of Ensembles").arg(ClassName());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
   }
 }
 
@@ -189,7 +188,7 @@ void VisualizeGBCDPoleFigure::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -203,8 +202,7 @@ void VisualizeGBCDPoleFigure::execute()
   {
     QString ss;
     ss = QObject::tr("Error creating parent path '%1'").arg(dir.path());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
     return;
   }
 
@@ -212,8 +210,7 @@ void VisualizeGBCDPoleFigure::execute()
   if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
-    setErrorCondition(-100);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-100, ss);
     return;
   }
 
@@ -439,8 +436,7 @@ void VisualizeGBCDPoleFigure::execute()
   if(nullptr == f)
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(m_OutputFile);
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
     return;
   }
 
@@ -481,8 +477,7 @@ void VisualizeGBCDPoleFigure::execute()
     if(totalWritten != (total))
     {
       QString ss = QObject::tr("Error writing binary VTK data to file '%1'").arg(m_OutputFile);
-      setErrorCondition(-1);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-1, ss);
       fclose(f);
       return;
     }
@@ -537,10 +532,9 @@ int32_t VisualizeGBCDPoleFigure::writeCoords(FILE* f, const char* axis, const ch
   if(totalWritten != static_cast<size_t>(npoints))
   {
     QString ss = QObject::tr("Error writing binary VTK data to file '%1'").arg(m_OutputFile);
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
     fclose(f);
-    return getErrorCondition();
+    return getErrorCode();
   }
   return err;
 }

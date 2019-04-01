@@ -210,13 +210,13 @@ public:
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
       filter->execute();
-      DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
+      DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
 
       DataContainerWriter::Pointer writer = DataContainerWriter::New();
       writer->setDataContainerArray(dca);
       writer->setOutputFile(UnitTest::CalculateArrayHistogramTest::OldFaithfulFile);
       writer->execute();
-      DREAM3D_REQUIRED(writer->getErrorCondition(), >=, 0);
+      DREAM3D_REQUIRED(writer->getErrorCode(), >=, 0);
 
       // Now lets get the output data
       path = DataArrayPath(DCName, Hist_AMName, DurationHistogram_Name);

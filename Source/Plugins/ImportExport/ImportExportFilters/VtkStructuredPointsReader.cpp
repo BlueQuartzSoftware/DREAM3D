@@ -135,26 +135,23 @@ void VtkStructuredPointsReader::dataCheck()
   if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
-    setErrorCondition(-61000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-61000, ss);
   }
   else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
-    setErrorCondition(-61001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-61001, ss);
   }
 
   // First shot Sanity Checks.
   if(!getReadCellData() && !getReadPointData())
   {
     QString ss = QObject::tr("At least one of Read Point Data or Read Cell Data must be checked");
-    setErrorCondition(-61002);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-61002, ss);
   }
 
   // Last chance sanity check
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -162,7 +159,7 @@ void VtkStructuredPointsReader::dataCheck()
   // Create a Vertex Data Container even though we may remove it later. We need it later
   // on in order to set the proper AttributeMatrix
   DataContainer::Pointer pointData_DataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName());
-  if(getErrorCondition() < 0 && nullptr == pointData_DataContainer)
+  if(getErrorCode() < 0 && nullptr == pointData_DataContainer)
   {
     return;
   }
@@ -172,7 +169,7 @@ void VtkStructuredPointsReader::dataCheck()
 
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer pointAttrMat = pointData_DataContainer->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -180,7 +177,7 @@ void VtkStructuredPointsReader::dataCheck()
   // Create a Volume Data Container even though we may remove it later. We need it later
   // on in order to set the proper AttributeMatrix
   DataContainer::Pointer cellData_DataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
-  if(getErrorCondition() < 0 && nullptr == cellData_DataContainer)
+  if(getErrorCode() < 0 && nullptr == cellData_DataContainer)
   {
     return;
   }
@@ -193,7 +190,7 @@ void VtkStructuredPointsReader::dataCheck()
   tDims[1] = 0;
   tDims[2] = 0;
   AttributeMatrix::Pointer cellAttrMat = cellData_DataContainer->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -522,8 +519,7 @@ int32_t VtkStructuredPointsReader::readFile()
   if(!in.is_open())
   {
     QString msg = QObject::tr("Error opening output file '%1'").arg(getInputFile());
-    setErrorCondition(-61003);
-    notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
+    setErrorCondition(-61003, msg);
     return -100;
   }
 
@@ -546,9 +542,8 @@ int32_t VtkStructuredPointsReader::readFile()
   else
   {
     QString ss = QObject::tr("The file type of the VTK legacy file could not be determined. It should be 'ASCII' or 'BINARY' and should appear on line 3 of the file");
-    setErrorCondition(-61004);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(-61004, ss);
+    return getErrorCode();
   }
 
   // Read Line 4 - Type of Dataset
@@ -557,9 +552,8 @@ int32_t VtkStructuredPointsReader::readFile()
   if(words.size() != 2)
   {
     QString ss = QObject::tr("Error reading the type of data set. Was expecting 2 words but got %1").arg(QString(buf));
-    setErrorCondition(-61005);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(-61005, ss);
+    return getErrorCode();
   }
   QString dataset(words.at(1));
   dataset = dataset.trimmed();
@@ -621,9 +615,8 @@ int32_t VtkStructuredPointsReader::readFile()
     ncells = tokens[1].toInt(&ok);
     if(m_CurrentAttrMat->getNumberOfTuples() != ncells)
     {
-      setErrorCondition(-61006);
-      notifyErrorMessage(getHumanLabel(), QString("Number of cells does not match number of tuples in the Attribute Matrix"), getErrorCondition());
-      return getErrorCondition();
+      setErrorCondition(-61006, QString("Number of cells does not match number of tuples in the Attribute Matrix"));
+      return getErrorCode();
     }
     this->readDataTypeSection(in, ncells, "point_data");
   }
@@ -634,9 +627,8 @@ int32_t VtkStructuredPointsReader::readFile()
     npts = tokens[1].toInt(&ok);
     if(m_CurrentAttrMat->getNumberOfTuples() != npts)
     {
-      setErrorCondition(-61007);
-      notifyErrorMessage(getHumanLabel(), QString("Number of points does not match number of tuples in the Attribute Matrix"), getErrorCondition());
-      return getErrorCondition();
+      setErrorCondition(-61007, QString("Number of points does not match number of tuples in the Attribute Matrix"));
+      return getErrorCode();
     }
     this->readDataTypeSection(in, numPts, "cell_data");
   }
@@ -1096,8 +1088,7 @@ void VtkStructuredPointsReader::readData(std::istream& instream)
       if (tokens.size() < 3 || tokens.size() > 4)
       {
         QString ss = QObject::tr("Error reading SCALARS header section of VTK file. 3 or 4 words are needed. Found %1. Read Line was\n  %2").arg(tokens.size()).arg(QString(buf));
-        setErrorCondition(-61009);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        setErrorCondition(-61009, ss);
         return;
       }
 
@@ -1112,8 +1103,7 @@ void VtkStructuredPointsReader::readData(std::istream& instream)
       else
       {
         QString ss = QObject::tr("Error reading Dataset section. Unknown Keyword found. %1").arg(scalarKeyWord);
-        setErrorCondition(-61010);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        setErrorCondition(-61010, ss);
         return;
       }
       QString scalarName = tokens[1];
@@ -1132,8 +1122,7 @@ void VtkStructuredPointsReader::readData(std::istream& instream)
       if (lookupKeyWord.compare("LOOKUP_TABLE") != 0 || tokens.size() != 2)
       {
         QString ss = QObject::tr("Error reading LOOKUP_TABLE header section of VTK file. 2 words are needed. Found %1. Read Line was\n  %2").arg(tokens.size()).arg(QString(buf));
-        setErrorCondition(-61011);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        setErrorCondition(-61011, ss);
         return;
       }
 
@@ -1181,8 +1170,7 @@ void VtkStructuredPointsReader::readData(std::istream& instream)
       if(err < 0)
       {
         QString ss = QObject::tr("Error Reading Dataset from VTK File. Dataset Type %1\n  DataSet Name %2\n  Numerical Type: %3\n  File Pos").arg(scalarKeyWord).arg(scalarKeyWord).arg(scalarType).arg(filePos);
-        setErrorCondition(err);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        setErrorCondition(err, ss);
         return;
       }
 

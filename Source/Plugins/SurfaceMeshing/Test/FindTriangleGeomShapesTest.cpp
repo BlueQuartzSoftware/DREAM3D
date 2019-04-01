@@ -178,7 +178,7 @@ public:
       qDebug() << "Unable to set property FeatureIdsArrayPath";
     }
     meshFilter->execute();
-    int32_t err = meshFilter->getErrorCondition();
+    int32_t err = meshFilter->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, 0);
 
     //##################################################################################################################
@@ -204,7 +204,7 @@ public:
       qDebug() << "Unable to set property FeatureAttributeMatrixName";
     }
     centroidsFilter->execute();
-    err = centroidsFilter->getErrorCondition();
+    err = centroidsFilter->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, 0);
 
     //##################################################################################################################
@@ -230,7 +230,7 @@ public:
       qDebug() << "Unable to set property FeatureAttributeMatrixName";
     }
     sizesFilter->execute();
-    err = sizesFilter->getErrorCondition();
+    err = sizesFilter->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, 0);
 
     //##################################################################################################################
@@ -270,7 +270,7 @@ public:
       qDebug() << "Unable to set property VolumesArrayPath";
     }
     shapesFilter->execute();
-    err = shapesFilter->getErrorCondition();
+    err = shapesFilter->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, 0);
 
     //##################################################################################################################
@@ -287,7 +287,7 @@ public:
       qDebug() << "Unable to set property OutputFile";
     }
     writer->execute();
-    err = writer->getErrorCondition();
+    err = writer->getErrorCode();
     DREAM3D_REQUIRED(err, >=, 0)
 
     AttributeMatrix::Pointer faceFeatAttrMat = dca->getDataContainer(SIMPL::Defaults::TriangleDataContainerName)->getAttributeMatrix(SIMPL::Defaults::FaceFeatureAttributeMatrixName);

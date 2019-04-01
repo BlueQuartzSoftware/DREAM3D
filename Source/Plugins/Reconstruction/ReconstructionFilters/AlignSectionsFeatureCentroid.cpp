@@ -117,13 +117,13 @@ void AlignSectionsFeatureCentroid::dataCheck()
   setCellAttributeMatrixName(m_GoodVoxelsArrayPath.getAttributeMatrixName());
 
   AlignSections::dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, m_GoodVoxelsArrayPath.getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -131,8 +131,7 @@ void AlignSectionsFeatureCentroid::dataCheck()
   if(m_ReferenceSlice > image->getZPoints())
   {
     QString ss = QObject::tr("The Image Geometry extent (%1) is smaller than the supplied reference slice (%2)").arg(image->getZPoints()).arg(m_ReferenceSlice);
-    setErrorCondition(-5556);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5556, ss);
   }
 
   QVector<size_t> cDims(1, 1);
@@ -142,7 +141,7 @@ void AlignSectionsFeatureCentroid::dataCheck()
   {
     m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -241,40 +240,36 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
 
     if((xshifts[iter] < -sdims[0] || xshifts[iter] > sdims[0]) && !xWarning)
     {
-      setWarningCondition(100);
       QString msg;
       QTextStream ss(&msg);
       ss << "A shift was greater than the X dimension of the Image Geometry. All subsequent slices are probably wrong. Slice=" << iter << " X Dim=" << dims[0] << " X Shift=" << xshifts[iter]
          << " sDims[0]=" << sdims[0];
-      notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
+      setWarningCondition(100, msg);
       xWarning = true;
     }
     if((yshifts[iter] < -sdims[1] || yshifts[iter] > sdims[1]) && !yWarning)
     {
-      setWarningCondition(101);
       QString msg;
       QTextStream ss(&msg);
       ss << "A shift was greater than the Y dimension of the Image Geometry. All subsequent slices are probably wrong. Slice=" << iter << " Y Dim=" << dims[1] << " Y Shift=" << yshifts[iter]
          << " sDims[1]=" << sdims[1];
-      notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
+      setWarningCondition(101, msg);
       yWarning = true;
     }
     if(std::isnan(xCentroid[iter]) && !xWarning)
     {
-      setWarningCondition(102);
       QString msg;
       QTextStream ss(&msg);
       ss << "The X Centoird was NaN. All subsequent slices are probably wrong. Slice=" << iter;
-      notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
+      setWarningCondition(102, msg);
       xWarning = true;
     }
     if(std::isnan(yCentroid[iter]) && !yWarning)
     {
-      setWarningCondition(103);
       QString msg;
       QTextStream ss(&msg);
       ss << "The Y Centoird was NaN. All subsequent slices are probably wrong. Slice=" << iter;
-      notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
+      setWarningCondition(103, msg);
       yWarning = true;
     }
     if(getWriteAlignmentShifts())
@@ -296,7 +291,7 @@ void AlignSectionsFeatureCentroid::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

@@ -461,7 +461,7 @@ void FindEuclideanDistMap::preflight()
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     emit preflightExecuted();
     setInPreflight(false);
@@ -740,7 +740,7 @@ void FindEuclideanDistMap::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

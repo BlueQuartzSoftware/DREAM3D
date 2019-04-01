@@ -135,15 +135,13 @@ void BinaryNodesTrianglesReader::dataCheck()
   if(getBinaryNodesFile().isEmpty())
   {
     QString ss = QObject::tr("%1 needs the Binary Nodes File path set and it was not.").arg(ClassName());
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-387, ss);
   }
 
   if(getBinaryNodesFile().isEmpty())
   {
     QString ss = QObject::tr("%1 needs the Binary Nodes File path set and it was not.").arg(ClassName());
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-387, ss);
   }
 
   DataArrayPath tempPath;
@@ -151,18 +149,18 @@ void BinaryNodesTrianglesReader::dataCheck()
   QVector<size_t> dims(1, 1);
 
   DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer vertexAttrMat = sm->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
   AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -207,20 +205,20 @@ void BinaryNodesTrianglesReader::preflight()
 // -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::execute()
 {
-  int err = 0;
-  QString ss;
-  setErrorCondition(err);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   /* Place all your code to execute your filter here. */
-  err = read();
-  setErrorCondition(err);
-
-
+  int err = read();
+  if (err < 0)
+  {
+    return;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -228,8 +226,8 @@ void BinaryNodesTrianglesReader::execute()
 // -----------------------------------------------------------------------------
 int BinaryNodesTrianglesReader::read()
 {
-  int err = 0;
-  setErrorCondition(err);
+  clearErrorCondition();
+  clearWarningCondition();
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
@@ -241,8 +239,8 @@ int BinaryNodesTrianglesReader::read()
   if(nodesFile == nullptr)
   {
     QString ss = QObject::tr("Error opening nodes file '%1'").arg(m_BinaryNodesFile);
-    setErrorCondition(786);
-    return getErrorCondition();
+    setErrorCondition(-786, ss);
+    return getErrorCode();
   }
   ScopedFileMonitor nodesMonitor(nodesFile);
 
@@ -255,9 +253,8 @@ int BinaryNodesTrianglesReader::read()
   if(0 != fLength)
   {
     QString ss = QObject::tr("%1: Error Could not rewind to beginning of file after nodes count.'%2'").arg(getNameOfClass()).arg(m_BinaryNodesFile);
-    setErrorCondition(787);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(-787, ss);
+    return getErrorCode();
   }
   {
     QString ss = QObject::tr("Calc Node Count from Nodes.bin File: ").arg(nNodes);
@@ -268,9 +265,8 @@ int BinaryNodesTrianglesReader::read()
   if(triFile == nullptr)
   {
     QString ss = QObject::tr("%1: Error opening Triangles file '%2'").arg(getNameOfClass()).arg(m_BinaryTrianglesFile);
-    setErrorCondition(788);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(-788, ss);
+    return getErrorCode();
   }
 
   ScopedFileMonitor trianglesMonitor(triFile);
@@ -283,9 +279,8 @@ int BinaryNodesTrianglesReader::read()
   if(0 != fLength)
   {
     QString ss = QObject::tr("%1: Error Could not rewind to beginning of file after triangles count.'%2'").arg(getNameOfClass()).arg(m_BinaryTrianglesFile);
-    setErrorCondition(789);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(-789, ss);
+    return getErrorCode();
   }
 
   {
@@ -352,5 +347,5 @@ int BinaryNodesTrianglesReader::read()
 
   // The ScopedFileMonitor classes will take care of closing the files
 
-  return getErrorCondition();
+  return getErrorCode();
 }

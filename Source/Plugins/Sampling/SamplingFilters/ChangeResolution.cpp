@@ -139,22 +139,19 @@ void ChangeResolution::dataCheck()
   if(getResolution().x <= 0)
   {
     QString ss = QObject::tr("The X resolution (%1) must be positive").arg(getResolution().x);
-    setErrorCondition(-5555);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5555, ss);
   }
 
   if(getResolution().y <= 0)
   {
     QString ss = QObject::tr("The Y resolution (%1) must be positive").arg(getResolution().y);
-    setErrorCondition(-5556);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5556, ss);
   }
 
   if(getResolution().z <= 0)
   {
     QString ss = QObject::tr("The  resolution (%1) must be positive").arg(getResolution().z);
-    setErrorCondition(-5557);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5557, ss);
   }
 
   if(!getSaveAsNewDataContainer())
@@ -191,7 +188,7 @@ void ChangeResolution::preflight()
   emit updateFilterParameters(this);
   dataCheck();
 
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     emit preflightExecuted();
     setInPreflight(false);
@@ -292,7 +289,7 @@ void ChangeResolution::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -427,7 +424,7 @@ void ChangeResolution::execute()
     QVector<bool> activeObjects(totalFeatures, false);
     if(0 == totalFeatures)
     {
-      notifyErrorMessage(getHumanLabel(), "The number of Features is 0 and should be greater than 0", -600);
+      setErrorCondition(-600, "The number of Features is 0 and should be greater than 0");
       return;
     }
 

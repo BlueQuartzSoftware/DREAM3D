@@ -397,7 +397,7 @@ void FindDistsToCharactGBs::dataCheck()
   {
     m_DistToTilt = m_DistToTiltPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_DistToTiltPtr.lock());
   }
@@ -409,7 +409,7 @@ void FindDistsToCharactGBs::dataCheck()
   {
     m_DistToTwist = m_DistToTwistPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_DistToTwistPtr.lock());
   }
@@ -421,7 +421,7 @@ void FindDistsToCharactGBs::dataCheck()
   {
     m_DistToSymmetric = m_DistToSymmetricPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_DistToSymmetricPtr.lock());
   }
@@ -433,7 +433,7 @@ void FindDistsToCharactGBs::dataCheck()
   {
     m_DistTo180Tilt = m_DistTo180TiltPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_DistTo180TiltPtr.lock());
   }
@@ -463,7 +463,7 @@ void FindDistsToCharactGBs::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

@@ -264,7 +264,7 @@ public:
     DREAM3D_REQUIRE(err >= 0);
 
     filter->execute();
-    DREAM3D_REQUIRE(filter->getErrorCondition() >= 0);
+    DREAM3D_REQUIRE(filter->getErrorCode() >= 0);
 
     //-------------------------------------------
     boundaryArrayName = "GBManhattanDistance";
@@ -291,14 +291,14 @@ public:
     DREAM3D_REQUIRE(err >= 0);
 
     filter->execute();
-    DREAM3D_REQUIRE(filter->getErrorCondition() >= 0);
+    DREAM3D_REQUIRE(filter->getErrorCode() >= 0);
 
     DataContainerWriter::Pointer writer = DataContainerWriter::New();
     writer->setOutputFile(UnitTest::StatisticsTempDir + QDir::separator() + "FindEuclideanDistMap.dream3d");
     writer->setDataContainerArray(dca);
 
     writer->execute();
-    DREAM3D_REQUIRE(writer->getErrorCondition() >= 0);
+    DREAM3D_REQUIRE(writer->getErrorCode() >= 0);
 
     err = validateResults(dca);
 

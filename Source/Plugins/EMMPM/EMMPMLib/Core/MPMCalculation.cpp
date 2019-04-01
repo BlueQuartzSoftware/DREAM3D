@@ -322,7 +322,7 @@ private:
 //
 // -----------------------------------------------------------------------------
 MPMCalculation::MPMCalculation()
-: m_ErrorCondition(0)
+: m_ErrorCode(0)
 {
 }
 

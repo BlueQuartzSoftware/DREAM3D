@@ -90,23 +90,20 @@ void GenerateNodeTriangleConnectivity::dataCheck()
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(nullptr == sm)
   {
-    setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
+    setErrorCondition(-384, "SurfaceMeshDataContainer is missing");
   }
   else
   {
     // We MUST have Nodes
     if(sm->getVertices().get() == nullptr)
     {
-      setErrorCondition(-384);
-      notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
+      setErrorCondition(-384, "SurfaceMesh DataContainer missing Nodes");
     }
 
     // We MUST have Triangles defined also.
     if(sm->getFaces().get() == nullptr)
     {
-      setErrorCondition(-384);
-      notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+      setErrorCondition(-384, "SurfaceMesh DataContainer missing Triangles");
     }
     else
     {
@@ -147,7 +144,8 @@ void GenerateNodeTriangleConnectivity::preflight()
 // -----------------------------------------------------------------------------
 void GenerateNodeTriangleConnectivity::execute()
 {
-  int err = 0;
+  clearErrorCondition();
+  clearWarningCondition();
 
   // Just to double check we have everything.
   dataCheck();
@@ -156,16 +154,12 @@ void GenerateNodeTriangleConnectivity::execute()
     return;
   }
 
-  setErrorCondition(err);
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
   if(nullptr == m)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage(getHumanLabel(), "The SurfaceMesh DataContainer Object was nullptr", -999);
+    setErrorCondition(-999, "The SurfaceMesh DataContainer Object was nullptr");
     return;
   }
-  clearErrorCondition();
-  clearWarningCondition();
 
   notifyStatusMessage("Starting");
 
@@ -195,8 +189,7 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
   StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer trianglesPtr = getSurfaceMeshDataContainer()->getTriangles();
   if(nullptr == trianglesPtr.get())
   {
-    setErrorCondition(-556);
-    notifyErrorMessage(getHumanLabel(), "The SurfaceMesh DataContainer Does NOT contain Triangles", -556);
+    setErrorCondition(-556, "The SurfaceMesh DataContainer Does NOT contain Triangles");
     return;
   }
   int ntri = trianglesPtr->GetNumberOfTuples();

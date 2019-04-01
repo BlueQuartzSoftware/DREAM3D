@@ -124,7 +124,7 @@ void DxWriter::dataCheck()
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -133,11 +133,10 @@ void DxWriter::dataCheck()
 
   if(volTuples != m_FeatureIdsPtr.lock()->getNumberOfTuples())
   {
-    setErrorCondition(-10200);
     QString ss = QObject::tr("The number of Tuples for the DataArray %1 is %2 and for the associated Image Geometry is %3. The number of tuples must match")
                      .arg(m_FeatureIdsPtr.lock()->getName())
                      .arg(m_FeatureIdsPtr.lock()->getNumberOfTuples());
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-10200, ss);
   }
 }
 
@@ -170,9 +169,9 @@ int32_t DxWriter::writeFile()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
-    return getErrorCondition();
+    return getErrorCode();
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
@@ -196,8 +195,7 @@ int32_t DxWriter::writeFile()
   {
     QString ss;
     ss = QObject::tr("Error creating parent path '%1'").arg(dir.path());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
     return -1;
   }
 
@@ -205,9 +203,8 @@ int32_t DxWriter::writeFile()
   if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
-    setErrorCondition(-100);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(-100, ss);
+    return getErrorCode();
   }
 
   QTextStream out(&file);

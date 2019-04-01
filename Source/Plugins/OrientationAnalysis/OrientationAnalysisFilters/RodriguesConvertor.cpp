@@ -194,7 +194,10 @@ void RodriguesConvertor::execute()
 {
   initialize();
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
 
   if (getCancel()) { return; }
 

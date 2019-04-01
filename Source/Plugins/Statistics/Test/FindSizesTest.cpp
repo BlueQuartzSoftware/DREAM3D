@@ -70,7 +70,7 @@
     qDebug() << "Unable to set property FeatureAttributeMatrixName";                                                                                                                                   \
   }                                                                                                                                                                                                    \
   filter->execute();                                                                                                                                                                                   \
-  err = filter->getErrorCondition();                                                                                                                                                                   \
+  err = filter->getErrorCode();                                                                                                                                                                        \
   DREAM3D_REQUIRE_EQUAL(err, 0);
 
 class FindSizesTest

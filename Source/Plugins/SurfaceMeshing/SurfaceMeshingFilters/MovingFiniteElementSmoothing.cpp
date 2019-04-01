@@ -205,15 +205,13 @@ void MovingFiniteElementSmoothing::dataCheck()
   // We MUST have Nodes
   if(sm->getVertices().get() == nullptr)
   {
-    setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
+    setErrorCondition(-384, "SurfaceMesh DataContainer missing Nodes");
   }
 
   // We MUST have Triangles defined also.
   if(sm->getFaces().get() == nullptr)
   {
-    setErrorCondition(-385);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+    setErrorCondition(-385, "SurfaceMesh DataContainer missing Triangles");
   }
 
   if(getErrorCondition() >= 0)
@@ -233,8 +231,7 @@ void MovingFiniteElementSmoothing::dataCheck()
   {
     if(sm->getEdges().get() == nullptr)
     {
-      setErrorCondition(-385);
-      notifyErrorMessage(getHumanLabel(), "Constraining Quad Points or Triples lines requires Edges array", getErrorCondition());
+      setErrorCondition(-385, "Constraining Quad Points or Triples lines requires Edges array");
     }
   }
 }
@@ -252,9 +249,8 @@ void MovingFiniteElementSmoothing::preflight()
   setInPreflight(false);
 
   /* *** THIS FILTER NEEDS TO BE CHECKED *** */
-  setErrorCondition(0xABABABAB);
   QString ss = QObject::tr("Filter is NOT updated for IGeometry Redesign. A Programmer needs to check this filter. Please report this to the DREAM3D developers.");
-  notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+  setErrorCondition(0xABABABAB, ss);
   /* *** THIS FILTER NEEDS TO BE CHECKED *** */
 }
 
@@ -263,8 +259,8 @@ void MovingFiniteElementSmoothing::preflight()
 // -----------------------------------------------------------------------------
 void MovingFiniteElementSmoothing::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
   if(getErrorCondition() < 0)
   {
@@ -361,11 +357,7 @@ void MovingFiniteElementSmoothing::execute()
     IDataArray::Pointer iEdgesDataArray = m->getPointData(SIMPL::CellData::SurfaceMeshInternalEdges);
     if((edgesDataArray.get() == nullptr || iEdgesDataArray.get() == nullptr) && m_SmoothTripleLines == true)
     {
-      setErrorCondition(-596);
-      notifyErrorMessage(
-          getHumanLabel(),
-          "Either the Edges or Internal Edges array was nullptr which means those arrays have not been created and you have selected to smooth triple lines. Disable the smoothing of triple lines.",
-          -556);
+      setErrorCondition(-596, "Either the Edges or Internal Edges array was nullptr which means those arrays have not been created and you have selected to smooth triple lines. Disable the smoothing of triple lines.");
       return;
     }
 
@@ -436,8 +428,7 @@ void MovingFiniteElementSmoothing::execute()
               {
                 qDebug() << "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad"
                          << "\n";
-                setErrorCondition(-666);
-                notifyErrorMessage(getHumanLabel(), "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad", -666);
+                setErrorCondition(-666, "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad");
               }
               return;
             }
@@ -462,8 +453,7 @@ void MovingFiniteElementSmoothing::execute()
               {
                 qDebug() << "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad"
                          << "\n";
-                setErrorCondition(-666);
-                notifyErrorMessage(getHumanLabel(), "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad", -666);
+                setErrorCondition(-666, "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad");
               }
               return;
             }

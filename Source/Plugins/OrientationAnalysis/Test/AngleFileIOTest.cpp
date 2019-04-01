@@ -149,12 +149,12 @@ public:
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
     filter->preflight();
-    int32_t err = filter->getErrorCondition();
+    int32_t err = filter->getErrorCode();
 
     DREAM3D_REQUIRED(err, >=, 0)
 
     filter->execute();
-    err = filter->getErrorCondition();
+    err = filter->getErrorCode();
 
     DREAM3D_REQUIRE(err >= 0)
   }

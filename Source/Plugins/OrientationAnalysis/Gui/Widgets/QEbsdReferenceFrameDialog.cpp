@@ -289,7 +289,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     reader->setInputFile(m_EbsdFileName);
     reader->setDataContainerArray(dca);
     reader->execute();
-    int err = reader->getErrorCondition();
+    int err = reader->getErrorCode();
     if(err < 0)
     {
       QMessageBox msgBox;
@@ -318,7 +318,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     reader->setInputFile(m_EbsdFileName);
     reader->setDataContainerArray(dca);
     reader->execute();
-    int err = reader->getErrorCondition();
+    int err = reader->getErrorCode();
 
     if(err < 0)
     {
@@ -363,7 +363,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
 
       convert->setDataContainerArray(dca);
       convert->execute();
-      int err = convert->getErrorCondition();
+      int err = convert->getErrorCode();
       if(err < 0)
       {
         m_BaseImage = QImage();
@@ -463,7 +463,7 @@ int QEbsdReferenceFrameDialog::createIpfColors(DataContainerArray::Pointer dca, 
   ipfColorFilter->setCellEulerAnglesArrayPath(cellEulerAnglesArrayPath);
   ipfColorFilter->setCrystalStructuresArrayPath(crystalStructuresArrayPath);
   ipfColorFilter->execute();
-  int err = ipfColorFilter->getErrorCondition();
+  int err = ipfColorFilter->getErrorCode();
   if(err < 0)
   {
     m_BaseImage = QImage();
@@ -539,7 +539,7 @@ int QEbsdReferenceFrameDialog::createArrayColors(DataContainerArray::Pointer dca
   colorTableFilter->setSelectedPresetControlPoints(controlPointsArray);
   colorTableFilter->setSelectedPresetName("Grayscale");
   colorTableFilter->execute();
-  int err = colorTableFilter->getErrorCondition();
+  int err = colorTableFilter->getErrorCode();
   if(err < 0)
   {
     m_BaseImage = QImage();

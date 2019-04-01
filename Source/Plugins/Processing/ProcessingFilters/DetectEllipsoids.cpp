@@ -197,14 +197,14 @@ void DetectEllipsoids::dataCheck()
       getDataContainerArray()->createNonPrereqArrayFromPath<Int32ArrayType, AbstractFilter, int32_t>(this, m_DetectedEllipsoidsFeatureIdsArrayPath, 0, QVector<size_t>(1, 1));
 
   DataContainer::Pointer ellipseDC = getDataContainerArray()->getPrereqDataContainer(this, m_EllipseFeatureAttributeMatrixPath.getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   int err = 0;
   AttributeMatrix::Pointer featureAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, m_FeatureAttributeMatrixPath, err);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -252,14 +252,14 @@ void DetectEllipsoids::execute()
 {
   initialize();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   /* Finding the top-left and bottom-right corners of each featureId  */
   Int32ArrayType::Pointer cellFeatureIds = getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, m_FeatureIdsArrayPath, QVector<size_t>(1, 1));
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -308,9 +308,8 @@ void DetectEllipsoids::execute()
 
           if(featureId >= corners->getNumberOfTuples())
           {
-            setErrorCondition(-31000);
             QString ss = QObject::tr("The feature attribute matrix '%1' has a smaller tuple count than the maximum feature id in '%2'").arg(featureAM->getName()).arg(cellFeatureIds->getName());
-            notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+            setErrorCondition(-31000, ss);
             return;
           }
 
@@ -362,9 +361,8 @@ void DetectEllipsoids::execute()
 
     if(orientArray->getNumberOfTuples() != houghCircleVector.size())
     {
-      setErrorCondition(-31001);
       QString ss = QObject::tr("There was an internal error.  Please ask the DREAM.3D developers for more information.");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-31001, ss);
     }
 
     // This convolution function fills the convCoords_X, convCoords_Y, and convCoords_Z arrays with values

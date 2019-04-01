@@ -441,7 +441,7 @@ public:
     }
 
     neighborsFilter->execute();
-    int32_t err = neighborsFilter->getErrorCondition();
+    int32_t err = neighborsFilter->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, 0);
 
     AttributeMatrix::Pointer faceFeatAttrMat = tdc->getAttributeMatrix(SIMPL::Defaults::FaceFeatureAttributeMatrixName);

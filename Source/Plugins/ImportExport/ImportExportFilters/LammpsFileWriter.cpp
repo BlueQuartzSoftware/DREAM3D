@@ -109,13 +109,13 @@ void LammpsFileWriter::dataCheck()
   FileSystemPathHelper::CheckOutputFile(this, "Output LAMMPS File", getLammpsFile(), true);
 
   DataContainer::Pointer v = getDataContainerArray()->getPrereqDataContainer(this, m_VertexDataContainerName);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   VertexGeom::Pointer vertices = v->getPrereqGeometry<VertexGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -123,8 +123,7 @@ void LammpsFileWriter::dataCheck()
   // We MUST have Nodes
   if(nullptr == vertices->getVertices().get())
   {
-    setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), "VertexDataContainer missing Nodes", getErrorCondition());
+    setErrorCondition(-384, "VertexDataContainer missing Nodes");
   }
 }
 
@@ -149,7 +148,7 @@ void LammpsFileWriter::execute()
   // int err = 0;
 
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -166,8 +165,7 @@ void LammpsFileWriter::execute()
   if(nullptr == lammpsFile)
   {
     QString ss = QObject::tr(": Error creating LAMMPS output file '%1'").arg(getLammpsFile());
-    setErrorCondition(-11000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11000, ss);
     return;
   }
 

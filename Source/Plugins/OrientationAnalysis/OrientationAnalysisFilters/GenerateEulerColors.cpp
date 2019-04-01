@@ -197,11 +197,10 @@ void GenerateEulerColors::preflight()
 // -----------------------------------------------------------------------------
 void GenerateEulerColors::execute()
 {
-  int err = 0;
-  QString ss;
-  setErrorCondition(err);
+  clearErrorCondition();
+  clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

@@ -352,13 +352,13 @@ void InsertAtoms::dataCheck()
 
   QVector<IDataArray::Pointer> dataArrays;
 
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(triangles->getTriangles());
   }
 
   DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -368,7 +368,7 @@ void InsertAtoms::dataCheck()
 
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer vertexAttrMat = v->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
-  if(getErrorCondition() < 0 || nullptr == vertexAttrMat.get())
+  if(getErrorCode() < 0 || nullptr == vertexAttrMat.get())
   {
     return;
   }
@@ -380,7 +380,7 @@ void InsertAtoms::dataCheck()
   {
     m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock());
   }
@@ -477,7 +477,7 @@ void InsertAtoms::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -515,16 +515,14 @@ void InsertAtoms::execute()
   if(mismatchedFeatures)
   {
     QString ss = QObject::tr("The number of Features in the AvgQuats array (%1) is larger than the largest Feature Id in the SurfaceMeshFaceLabels array").arg(numFeaturesIn);
-    setErrorCondition(-5555);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5555, ss);
     return;
   }
 
   if(largestFeature != (numFeaturesIn - 1))
   {
     QString ss = QObject::tr("The number of Features in the AvgQuats array (%1) does not match the largest Feature Id in the SurfaceMeshFaceLabels array").arg(numFeaturesIn);
-    setErrorCondition(-5555);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5555, ss);
     return;
   }
 

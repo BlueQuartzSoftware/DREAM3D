@@ -106,9 +106,8 @@ void readEbsdFile(ImportEbsdMontage* filter, const QString& fileName, std::map<Q
   QString fname = fi.completeBaseName();
   if(filter->getDataContainerArray()->doesDataContainerExist(fname))
   {
-    filter->setErrorCondition(-74000);
     QString msg = QString("Error: DataContainer '%1' already exists in the DataContainerArray.").arg(fname);
-    filter->notifyErrorMessage(filter->getHumanLabel(), msg, filter->getErrorCondition());
+    filter->setErrorCondition(-74000, msg);
     return;
   }
 
@@ -139,9 +138,8 @@ void readEbsdFile(ImportEbsdMontage* filter, const QString& fileName, std::map<Q
   }
   if(reader->getErrorCondition() < 0)
   {
-    filter->setErrorCondition(reader->getErrorCondition());
     QString msg = QString("Sub filter (%1) caused an error during preflight.").arg(reader->getHumanLabel());
-    filter->notifyErrorMessage(filter->getHumanLabel(), msg, filter->getErrorCondition());
+    filter->setErrorCondition(reader->getErrorCondition(), msg);
     return;
   }
 
@@ -164,8 +162,7 @@ void ImportEbsdMontage::dataCheck()
   if(m_InputFileListInfo.InputPath.isEmpty())
   {
     ss = QObject::tr("The input directory must be set");
-    setErrorCondition(-13);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-13, ss);
     m_FilterCache.clear();
   }
   bool hasMissingFiles = false;
@@ -190,8 +187,7 @@ void ImportEbsdMontage::dataCheck()
 
     m_FilterCache.clear();
 
-    setErrorCondition(-11);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11, ss);
     return;
   }
 

@@ -278,7 +278,7 @@ public:
     obs.connect(convFilt.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), &obs, SLOT(processPipelineMessage(const AbstractMessage::Pointer&)));
 
     convFilt->execute();
-    int err = convFilt->getErrorCondition();
+    int err = convFilt->getErrorCode();
     DREAM3D_REQUIRED(err, >=, 0)
 
     return outputName;
@@ -460,7 +460,7 @@ public:
         //                  &obs, SLOT(processPipelineMessage(const AbstractMessage::Pointer&)));
 
         diffMapFilt->execute();
-        int err = diffMapFilt->getErrorCondition();
+        int err = diffMapFilt->getErrorCode();
         DREAM3D_REQUIRED(err, >=, 0)
 
         DataArrayPath daPath(DCName, AMName, diffMapArrayName);
@@ -576,7 +576,7 @@ public:
           qDebug() << "Unable to set property OutputFile";
         }
         writer->execute();
-        int err = writer->getErrorCondition();
+        int err = writer->getErrorCode();
         DREAM3D_REQUIRED(err, >=, 0)
       }
 #endif

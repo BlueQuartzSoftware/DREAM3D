@@ -238,7 +238,7 @@ void RotateSampleRefFrame::preflight()
   dataCheck();
   emit preflightExecuted();
 
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     setInPreflight(false);
     return;
@@ -246,7 +246,7 @@ void RotateSampleRefFrame::preflight()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
   getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellAttributeMatrixPath(), -301);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     setInPreflight(false);
     return;
@@ -420,7 +420,7 @@ void RotateSampleRefFrame::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -636,8 +636,7 @@ void RotateSampleRefFrame::execute()
         if(nullptr == source)
         {
           QString ss = QObject::tr("The index is outside the bounds of the source array");
-          setErrorCondition(-11004);
-          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+          setErrorCondition(-11004, ss);
           return;
         }
         destination = data->getVoidPointer((data->getNumberOfComponents() * i));

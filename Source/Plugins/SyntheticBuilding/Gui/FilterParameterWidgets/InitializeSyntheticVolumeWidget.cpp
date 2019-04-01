@@ -83,7 +83,7 @@ class ReaderMessageHandler : public AbstractMessageHandler
      */
     void processMessage(const FilterErrorMessage* msg) const override
     {
-      qDebug() << msg->getClassName() << msg->getCode() << msg->getPrefix() << msg->getMessageText();
+      qDebug() << msg->getClassName() << msg->getCode() << msg->getMessageText();
     }
 
     /**
@@ -92,7 +92,7 @@ class ReaderMessageHandler : public AbstractMessageHandler
      */
     void processMessage(const FilterWarningMessage* msg) const override
     {
-      qDebug() << msg->getClassName() << msg->getCode() << msg->getPrefix() << msg->getMessageText();
+      qDebug() << msg->getClassName() << msg->getCode() << msg->getMessageText();
     }
 
   private:
@@ -282,7 +282,7 @@ void InitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString& 
   connect(reader.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SLOT(displayErrorMessage(const AbstractMessage::Pointer&)));
 
   reader->execute();
-  int err = reader->getErrorCondition();
+  int err = reader->getErrorCode();
   if(err < 0)
   {
     m_DataContainer = DataContainer::NullPointer();

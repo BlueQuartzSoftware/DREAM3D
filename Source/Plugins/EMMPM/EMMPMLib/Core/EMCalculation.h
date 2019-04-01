@@ -71,7 +71,7 @@ class EMMPMLib_EXPORT EMCalculation : public Observable
 
     SIMPL_INSTANCE_PROPERTY(EMMPM_Data::Pointer, Data)
     SIMPL_POINTER_PROPERTY(StatsDelegate, StatsDelegate)
-    SIMPL_INSTANCE_PROPERTY(int, ErrorCondition)
+    SIMPL_INSTANCE_PROPERTY(int, ErrorCode)
     SIMPL_INSTANCE_PROPERTY(QString, MessagePrefix)
 
     /**

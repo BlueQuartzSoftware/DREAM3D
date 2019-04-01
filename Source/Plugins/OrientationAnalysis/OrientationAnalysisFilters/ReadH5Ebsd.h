@@ -282,9 +282,8 @@ protected:
     QVector<typename EbsdPhase::Pointer> phases = reader->getPhases();
     if(phases.size() == 0)
     {
-      setErrorCondition(reader->getErrorCode());
-      notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), getErrorCondition());
-      return getErrorCondition();
+      setErrorCondition(reader->getErrorCode(), reader->getErrorMessage());
+      return getErrorCode();
     }
 
     // Resize the Ensemble Attribute Matrix to be the correct number of phases.

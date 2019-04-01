@@ -382,7 +382,7 @@ void InsertPrecipitatePhases::dataCheck()
   {
     m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
   }
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     ensembleDataArrayPaths.push_back(getInputPhaseTypesArrayPath());
   }
@@ -392,7 +392,7 @@ void InsertPrecipitatePhases::dataCheck()
   {
     m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0);
   }
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     ensembleDataArrayPaths.push_back(getInputShapeTypesArrayPath());
   }
@@ -403,17 +403,15 @@ void InsertPrecipitatePhases::dataCheck()
     if(m_StatsDataArray.lock() == nullptr)
     {
       QString ss = QObject::tr("Statistics array is not initialized correctly. The path is %1").arg(getInputStatsArrayPath().serialize());
-      setErrorCondition(-78000);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-78000, ss);
     }
   }
   if(getFeatureGeneration() > 1 || getFeatureGeneration() < 0)
   {
       QString ss = QObject::tr("The value for 'Precipitate Generation' can only be 0 or 1. The value being used is ").arg(getFeatureGeneration());
-      setErrorCondition(-78001);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-78001, ss);
   }
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     ensembleDataArrayPaths.push_back(getInputStatsArrayPath());
   }
@@ -425,7 +423,7 @@ void InsertPrecipitatePhases::dataCheck()
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   }
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     cellDataArrayPaths.push_back(getFeatureIdsArrayPath());
   }
@@ -436,7 +434,7 @@ void InsertPrecipitatePhases::dataCheck()
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   }
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     cellDataArrayPaths.push_back(getCellPhasesArrayPath());
   }
@@ -447,7 +445,7 @@ void InsertPrecipitatePhases::dataCheck()
   {
     m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0);
   }
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     cellDataArrayPaths.push_back(getBoundaryCellsArrayPath());
   }
@@ -459,7 +457,7 @@ void InsertPrecipitatePhases::dataCheck()
     {
       m_Mask = m_MaskPtr.lock()->getPointer(0);
     }
-    if(getErrorCondition() >= 0)
+    if(getErrorCode() >= 0)
     {
       cellDataArrayPaths.push_back(getMaskArrayPath());
     }
@@ -467,7 +465,7 @@ void InsertPrecipitatePhases::dataCheck()
 
   QVector<size_t> tDims(1, 0);
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, getFeaturePhasesArrayPath().getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -569,14 +567,12 @@ void InsertPrecipitatePhases::dataCheck()
     if(getPrecipInputFile().isEmpty())
     {
       QString ss = QObject::tr("The input precipitate file must be set");
-      setErrorCondition(-78003);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-78003, ss);
     }
     else if(!fi.exists())
     {
       QString ss = QObject::tr("The input precipitate file does not exist");
-      setErrorCondition(-78004);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-78004, ss);
     }
   }
 
@@ -617,7 +613,7 @@ void InsertPrecipitatePhases::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -641,7 +637,7 @@ void InsertPrecipitatePhases::execute()
     Int32ArrayType::Pointer exclusionZonesPtr = Int32ArrayType::CreateArray(m_TotalPoints, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::exclusion_zones");
     exclusionZonesPtr->initializeWithZeros();
     place_precipitates(exclusionZonesPtr);
-    if(getErrorCondition() < 0 || getWarningCondition() < 0)
+    if(getErrorCode() < 0 || getWarningCode() < 0)
     {
       return;
     }
@@ -709,15 +705,13 @@ void InsertPrecipitatePhases::load_precipitates()
   if(!inFile)
   {
     QString ss = QObject::tr("Failed to open: %1").arg(getPrecipInputFile());
-    setErrorCondition(-1000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1000, ss);
   }
   int32_t numPrecips = 0;
   inFile >> numPrecips;
   if(0 == numPrecips)
   {
-    setWarningCondition(-1001);
-    notifyWarningMessage(getHumanLabel(), "The number of precipitates is 0 and should be greater than 0", getWarningCondition());
+    setWarningCondition(-1001, "The number of precipitates is 0 and should be greater than 0");
     return;
   }
 
@@ -853,8 +847,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
                          .arg(i)
                          .arg(i)
                          .arg(m_PhaseTypes[i]);
-        setErrorCondition(-666);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        setErrorCondition(-666, ss);
         return;
       }
       m_NumFeatures[i] = 0;
@@ -1149,8 +1142,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   //          precipitates and the target statistics precipitate fraction is
   //          greater than 0. This Filter will run without trying to match
   //          the precipitate fraction");
-  //          setWarningCondition(-5010);
-  //          notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
+  //          setWarningCondition(-5010, msg);
   //        }
 
   //        if (availablePointsCount > 0)
@@ -1265,8 +1257,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
                     "fraction is greater than 0. This Filter will run without "
                     "trying to match the "
                     "precipitate fraction");
-        setWarningCondition(-5010);
-        notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
+        setWarningCondition(-5010, msg);
       }
 
       if(m_AvailablePointsCount > 0)
@@ -1469,8 +1460,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
                         "greater than 0. This Filter will run without trying "
                         "to match the "
                         "precipitate fraction");
-            setWarningCondition(-5010);
-            notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
+            setWarningCondition(-5010, msg);
           }
 
           if(m_AvailablePointsCount > 0)
@@ -2322,8 +2312,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   if(shapeclass >= ShapeType::Type::ShapeTypeEnd)
   {
     QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
-    setErrorCondition(-667);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-667, ss);
     return;
   }
 
@@ -2876,8 +2865,8 @@ float InsertPrecipitatePhases::find_zcoord(int64_t index)
 // -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::write_goal_attributes()
 {
-  int err = 0;
-  setErrorCondition(err);
+  clearErrorCondition();
+  clearWarningCondition();
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   // Make sure any directory path is also available as the user may have just
@@ -2890,8 +2879,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   if(!dir.mkpath(parentPath))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
     return;
   }
 
@@ -2899,8 +2887,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   if(!outFile.open(QIODevice::WriteOnly))
   {
     QString msg = QObject::tr("CSV Output file could not be opened: %1").arg(getCsvOutputFile());
-    setErrorCondition(-200);
-    notifyErrorMessage(getHumanLabel(), "", getErrorCondition());
+    setErrorCondition(-200, "");
     return;
   }
 

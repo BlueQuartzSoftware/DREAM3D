@@ -239,7 +239,7 @@ void StatsGeneratorFilter::dataCheck()
   {
     getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getStatsGeneratorDataContainerName());
 
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
@@ -272,9 +272,8 @@ void StatsGeneratorFilter::dataCheck()
   }
   else
   {
-    setErrorCondition(-1);
     QString ss = QObject::tr("Unable to retrieve a valid pointer for statistics data");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
     return;
   }
 }
@@ -301,7 +300,7 @@ void StatsGeneratorFilter::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

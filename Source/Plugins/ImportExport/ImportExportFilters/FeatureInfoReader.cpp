@@ -179,7 +179,7 @@ void FeatureInfoReader::dataCheck()
   DataArrayPath tempPath;
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, m_FeatureIdsArrayPath.getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -191,21 +191,18 @@ void FeatureInfoReader::dataCheck()
   if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("The input file must be set").arg(ClassName());
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-387, ss);
   }
   else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
-    setErrorCondition(-388);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-388, ss);
   }
 
   if(m_CellFeatureAttributeMatrixName.isEmpty())
   {
     QString ss = QObject::tr("Feature Attribute Matrix name must be set");
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
   }
 
   QVector<size_t> cDims(1, 1);
@@ -256,8 +253,7 @@ void FeatureInfoReader::dataCheck()
 
   if(getDelimiter() < 0 || getDelimiter() > 4)
   {
-    setErrorCondition(-10001);
-    notifyErrorMessage(getHumanLabel(), "The dilimiter can only have values of 0,1,2,3,4", getErrorCondition());
+    setErrorCondition(-10001, "The dilimiter can only have values of 0,1,2,3,4");
   }
 }
 
@@ -290,9 +286,9 @@ int32_t FeatureInfoReader::readFile()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
-    return getErrorCondition();
+    return getErrorCode();
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
@@ -306,9 +302,8 @@ int32_t FeatureInfoReader::readFile()
   if(!inStream.isOpen())
   {
     QString ss = QObject::tr("Error opening input file: %1").arg(getInputFile());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(-1, ss);
+    return getErrorCode();
   }
   bool ok = false;
   int32_t numfeatures = 0;
@@ -327,9 +322,8 @@ int32_t FeatureInfoReader::readFile()
   if(0 == numfeatures)
   {
     QString ss = QObject::tr("The number of Features (%1) specified in the file must be greater than zero").arg(numfeatures);
-    setErrorCondition(-68000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(-68000, ss);
+    return getErrorCode();
   }
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
@@ -347,9 +341,8 @@ int32_t FeatureInfoReader::readFile()
   {
     QString ss =
         QObject::tr("The number of Features (%1) specified in the file does not correspond to the maximum Feature Id (%2) in the selected Feature Ids array").arg(numfeatures).arg(maxFeatureId);
-    setErrorCondition(-68000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(-68000, ss);
+    return getErrorCode();
   }
 
   QVector<size_t> tDims(1, static_cast<size_t>(numfeatures + 1));
@@ -398,60 +391,53 @@ int32_t FeatureInfoReader::readFile()
 
     if(tokens.size() != 5)
     {
-      setErrorCondition(-68001);
       ss.clear();
       errStream << "There are not enough values at line " << lineNum << ". 5 values are required";
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return getErrorCondition();
+      setErrorCondition(-68001, ss);
+      return getErrorCode();
     }
     ok = false;
     gnum = tokens[0].toInt(&ok);
     if(!ok)
     {
-      setErrorCondition(-68002);
       ss.clear();
       errStream << "Line " << lineNum << ": Error converting Feature Id with token '" << tokens[0] << "' into integer";
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-68002, ss);
     }
     phase = tokens[1].toInt(&ok);
     if(!ok)
     {
-      setErrorCondition(-68003);
       ss.clear();
       errStream << "Line " << lineNum << ": Error converting Ensemble Id with token '" << tokens[1] << "' into integer";
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-68003, ss);
     }
     ea1 = tokens[2].toFloat(&ok);
     if(!ok)
     {
-      setErrorCondition(-68004);
       ss.clear();
       errStream << "Line " << lineNum << ": Error converting Euler 1 with token '" << tokens[2] << "' into float";
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-68004, ss);
     }
     ea2 = tokens[3].toFloat(&ok);
     if(!ok)
     {
-      setErrorCondition(-68005);
       ss.clear();
       errStream << "Line " << lineNum << ": Error converting Euler 2 with token '" << tokens[3] << "' into float";
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-68005, ss);
     }
     ea3 = tokens[4].toFloat(&ok);
     if(!ok)
     {
-      setErrorCondition(-68006);
       ss.clear();
       errStream << "Line " << lineNum << ": Error converting Euler 3 with token '" << tokens[4] << "' into float";
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-68006, ss);
     }
 
     if(gnum > maxFeatureId)
     {
       QString ss = QObject::tr("A Feature Id (%1) specified in the file is larger than the maximum Feature Id (%2) in the selected Feature Ids array").arg(numfeatures).arg(maxFeatureId);
-      setErrorCondition(-68000);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return getErrorCondition();
+      setErrorCondition(-68000, ss);
+      return getErrorCode();
     }
 
     m_FeatureEulerAngles[3 * gnum] = ea1;

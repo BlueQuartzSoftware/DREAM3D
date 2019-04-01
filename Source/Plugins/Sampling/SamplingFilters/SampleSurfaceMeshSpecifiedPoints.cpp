@@ -120,14 +120,13 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
   if(m_InputFilePath.isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
+    setErrorCondition(-1, ss);
   }
 
   FileSystemPathHelper::CheckOutputFile(this, "Output File Path", getOutputFilePath(), true);
 
   DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "SpecifiedPoints");
-  if(getErrorCondition() < 0 || nullptr == v.get())
+  if(getErrorCode() < 0 || nullptr == v.get())
   {
     return;
   }
@@ -179,8 +178,7 @@ VertexGeom::Pointer SampleSurfaceMeshSpecifiedPoints::generate_points()
   if(m_NumPoints <= 0)
   {
     QString ss = QObject::tr("Number of points to sample (%1) must be positive").arg(m_NumPoints);
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
     return VertexGeom::NullPointer();
   }
 
@@ -225,7 +223,7 @@ void SampleSurfaceMeshSpecifiedPoints::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

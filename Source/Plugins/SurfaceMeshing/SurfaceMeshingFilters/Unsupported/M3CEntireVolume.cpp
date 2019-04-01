@@ -121,8 +121,7 @@ void M3CEntireVolume::dataCheck()
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(nullptr == sm)
   {
-    setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
+    setErrorCondition(-384, "SurfaceMeshDataContainer is missing");
   }
   else
   {
@@ -164,15 +163,14 @@ void M3CEntireVolume::preflight() void M3CEntireVolume::preflight()
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::execute()
 {
-  int err = 0;
+  clearErrorCondition();
+  clearWarningCondition();
 
-  setErrorCondition(err);
   VoxelDataContainer* m = getVoxelDataContainer();
   if(nullptr == m)
   {
-    setErrorCondition(-1);
     ss << " VoxelDataContainer was nullptr";
-    notifyErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-1, ss.str());
     return;
   }
   clearErrorCondition();
@@ -180,9 +178,8 @@ void M3CEntireVolume::execute()
 
   if(getSurfaceMeshDataContainer() == nullptr)
   {
-    setErrorCondition(-1);
     ss << " SurfaceMeshDataContainer was nullptr";
-    notifyErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-1, ss.str());
     return;
   }
 
@@ -200,10 +197,9 @@ void M3CEntireVolume::execute()
   err = createMesh();
   if(err < 0)
   {
-    setErrorCondition(-1);
 
     ss << "Error Creating the Surface Mesh";
-    notifyErrorMessage(getNameOfClass(), ss.str(), -1);
+    setErrorCondition(-1, ss.str());
     return;
   }
 
@@ -992,7 +988,7 @@ int M3CEntireVolume::get_number_fEdges(Face* sq, DataArray<int32_t>::Pointer poi
         }
         else if(atBulk == 1)
         {
-          notifyErrorMessage(getHumanLabel(), "one negative spin case is not supposed to happen! Wrong!", -1001);
+          setErrorCondition(-1001, "one negative spin case is not supposed to happen! Wrong!");
         }
         else
         {
@@ -1126,7 +1122,7 @@ void M3CEntireVolume::get_nodes_fEdges(Face* sq, DataArray<int32_t>::Pointer poi
 
                   if(atBulk == 1)
                   {
-                    notifyErrorMessage(getHumanLabel(), "one negative spin case is not supposed to happen! Wrong!", -1001);
+                    setErrorCondition(-1001, "one negative spin case is not supposed to happen! Wrong!");
                   }
                 }
                 else if(sqIndex == 19)
@@ -1322,7 +1318,7 @@ int M3CEntireVolume::treat_anomaly(int tnst[4], DataArray<int32_t>::Pointer poin
 
   if(minid == -1)
   {
-    notifyErrorMessage(getHumanLabel(), "Something wrong with counting same-spin neighbors for each corner of the square!", -1001);
+    setErrorCondition(-1001, "Something wrong with counting same-spin neighbors for each corner of the square!");
     tempFlag = 0;
   }
   else if(minid == 1 || minid == 3)
@@ -1653,7 +1649,7 @@ int M3CEntireVolume::get_number_triangles(DataArray<int32_t>::Pointer points, Fa
       {
         ss.str("");
         ss << "corners are wrongfully burnt in this marching cube: cube id =" << i << " number burnt = " << nburnt;
-        notifyErrorMessage(getHumanLabel(), ss.str(), -1001);
+        setErrorCondition(-1001, ss.str());
       }
       // update nodeKind of body center node in the current marching cube...
       if(nkFlag > 0)
@@ -1683,7 +1679,7 @@ int M3CEntireVolume::get_number_triangles(DataArray<int32_t>::Pointer points, Fa
     }
     else
     {
-      notifyErrorMessage(getHumanLabel(), "get_number_triangles - what?", -10666);
+      setErrorCondition(-10666, "get_number_triangles - what?");
     }
 
     // if the current marching cube is a collection of 6 effective squares...and
@@ -1713,7 +1709,7 @@ int M3CEntireVolume::get_number_triangles(DataArray<int32_t>::Pointer points, Fa
 
       if(tindex != nFE)
       {
-        notifyErrorMessage(getHumanLabel(), "something wrong with counting number of edges for marching cube...", -10667);
+        setErrorCondition(-10667, "something wrong with counting number of edges for marching cube...");
       }
 
       // Consider each case as Z. Wu's paper...
@@ -1934,7 +1930,7 @@ int M3CEntireVolume::get_number_case0_triangles(int* afe, Node* v, Segment* e1, 
       // do nothing...
       ss.str("");
       ss << "something wrong in counting # case 0 triangles... " << numN << " " << nfedge;
-      notifyErrorMessage(getHumanLabel(), ss.str(), -1000);
+      setErrorCondition(-1000, ss.str());
     }
   }
 
@@ -2722,7 +2718,7 @@ int M3CEntireVolume::get_triangles(VoxelCoord* p, Triangle* t, int* mCubeID, Fac
     }
     else
     {
-      notifyErrorMessage(getHumanLabel(), "get_triangles - what?", -1001);
+      setErrorCondition(-1001, "get_triangles - what?");
     }
 
     // if the current marching cube is a collection of 6 effective squares...and
@@ -2760,7 +2756,7 @@ int M3CEntireVolume::get_triangles(VoxelCoord* p, Triangle* t, int* mCubeID, Fac
 
       if(tindex != nFE)
       {
-        notifyErrorMessage(getHumanLabel(), "Something wrong with counting number of edges for marching cube...", -1001);
+        setErrorCondition(-1001, "Something wrong with counting number of edges for marching cube...");
       }
 
       // Consider each case as Z. Wu's paper...
@@ -2788,7 +2784,7 @@ int M3CEntireVolume::get_triangles(VoxelCoord* p, Triangle* t, int* mCubeID, Fac
       {
         ss.str("");
         ss << "Somthing's wrong in counting face centers turned on..." << nFC << "  " << i;
-        notifyErrorMessage(getHumanLabel(), ss.str(), -1001);
+        setErrorCondition(-1001, ss.str());
       }
 
       free(arrayFE);
@@ -4803,7 +4799,7 @@ void M3CEntireVolume::get_unique_inner_edges(Triangle* t, int* mCubeID, ISegment
           {
             ss.str("");
             ss << "something's wrong in counting inner edge kind!!! " << tedgeKind;
-            notifyErrorMessage(getHumanLabel(), ss.str(), -1001);
+            setErrorCondition(-1001, ss.str());
           }
           IEindex++;
         }

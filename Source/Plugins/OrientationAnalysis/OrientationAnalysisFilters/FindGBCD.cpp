@@ -473,7 +473,7 @@ void FindGBCD::dataCheckSurfaceMesh()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 
   DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
-  if(getErrorCondition() < 0 || nullptr == sm.get())
+  if(getErrorCode() < 0 || nullptr == sm.get())
   {
     return;
   }
@@ -568,7 +568,7 @@ void FindGBCD::preflight()
   emit updateFilterParameters(this);
   dataCheckVoxel();
   // order here matters...because we are going to use the size of the crystal structures out of the dataCheckVoxel to size the faceAttrMat in dataCheckSurfaceMesh
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataCheckSurfaceMesh();
   }
@@ -584,13 +584,13 @@ void FindGBCD::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheckVoxel();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
   // order here matters...because we are going to use the size of the crystal structures out of the dataCheckVoxel to size the faceAttrMat in dataCheckSurfaceMesh
   dataCheckSurfaceMesh();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

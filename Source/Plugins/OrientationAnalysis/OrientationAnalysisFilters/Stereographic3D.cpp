@@ -79,8 +79,7 @@ public:
       {
         m_Filter->setCancel(true);
         QString ss = QObject::tr("The scalar value of a quaterion was <= -1.0. The value was %1").arg(m_Quats[quatIndex + 3]);
-        m_Filter->setErrorCondition(-95000);
-        m_Filter->notifyErrorMessage(m_Filter->getHumanLabel(), ss, m_Filter->getErrorCondition());
+        m_Filter->setErrorCondition(-95000, ss);
         return;
       }
       if(m_Quats[quatIndex + 3] != 0.0f)
@@ -220,7 +219,7 @@ void Stereographic3D::execute()
 {
   initialize();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

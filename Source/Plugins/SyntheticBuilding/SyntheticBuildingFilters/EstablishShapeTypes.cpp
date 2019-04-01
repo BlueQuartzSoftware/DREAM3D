@@ -129,14 +129,14 @@ void EstablishShapeTypes::dataCheck()
 
   // Get the DataContainer first - same as phase types
   DataContainer::Pointer m = dca->getPrereqDataContainer(this, getInputPhaseTypesArrayPath().getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   // Now get the AttributeMatrix that the user wants to use to store the ShapeTypes array - same as phase types
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix(this, getInputPhaseTypesArrayPath().getAttributeMatrixName(), -990);
-  if(getErrorCondition() < 0 || nullptr == cellEnsembleAttrMat.get())
+  if(getErrorCode() < 0 || nullptr == cellEnsembleAttrMat.get())
   {
     return;
   }
@@ -170,7 +170,7 @@ void EstablishShapeTypes::execute()
   clearErrorCondition();
   clearWarningCondition();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

@@ -77,7 +77,7 @@ class EMCalculationMessageHandler : public AbstractMessageHandler
      */
     void processMessage(const GenericProgressMessage* msg) const override
     {
-      emit m_CalculationObject->notifyProgressMessage(msg->getPrefix(), msg->getMessageText(), msg->getProgressValue());
+      emit m_CalculationObject->notifyProgressMessage(msg->getProgressValue(), msg->getMessageText());
     }
 
     /**
@@ -96,7 +96,7 @@ class EMCalculationMessageHandler : public AbstractMessageHandler
      */
     void processMessage(const GenericErrorMessage* msg) const override
     {
-      emit m_CalculationObject->notifyErrorMessage(msg->getPrefix(), msg->getMessageText(), msg->getCode());
+      emit m_CalculationObject->setErrorCondition(msg->getCode(), msg->getMessageText());
     }
 
     /**
@@ -104,7 +104,7 @@ class EMCalculationMessageHandler : public AbstractMessageHandler
      */
     void processMessage(const GenericWarningMessage* msg) const override
     {
-      emit m_CalculationObject->notifyWarningMessage(msg->getPrefix(), msg->getMessageText(), msg->getCode());
+      emit m_CalculationObject->setWarningCondition(msg->getCode(), msg->getMessageText());
     }
 
   private:
@@ -115,7 +115,7 @@ class EMCalculationMessageHandler : public AbstractMessageHandler
 //
 // -----------------------------------------------------------------------------
 EMCalculation::EMCalculation()
-: m_ErrorCondition(0)
+: m_ErrorCode(0)
 {
 }
 

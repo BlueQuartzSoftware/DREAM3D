@@ -52,6 +52,7 @@
 #include <QtCore/QUuid>
 
 // SIMPLib includes
+#if 0
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
@@ -59,13 +60,15 @@
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/SIMPLibVersion.h"
+#endif
 
 #include "DREAM3DToolsConfiguration.h"
 
-#include "SandboxTool/AddPybindMacros.hpp"
-#include "SandboxTool/CheckClassForSuperClass.hpp"
-#include "SandboxTool/RemoveSetupFilterParameters.hpp"
-#include "SandboxTool/UpdateFilterHeaders.hpp"
+//#include "SandboxTool/AddPybindMacros.hpp"
+//#include "SandboxTool/CheckClassForSuperClass.hpp"
+#include "SandboxTool/MassReplaceMessagingCalls.hpp"
+//#include "SandboxTool/RemoveSetupFilterParameters.hpp"
+//#include "SandboxTool/UpdateFilterHeaders.hpp"
 
 /**
  * @brief findPath
@@ -87,35 +90,35 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
     }
   }
 
-  PluginManager* pm = PluginManager::Instance();
-  QStringList libs = pm->getPluginNames();
+  //  PluginManager* pm = PluginManager::Instance();
+  //  QStringList libs = pm->getPluginNames();
 
-  prefix = D3DTools::GetSIMPLibPluginDir();
+  //  prefix = D3DTools::GetSIMPLibPluginDir();
 
-  for(int i = 0; i < libs.size(); ++i)
-  {
-    QString path = prefix + "/" + libs.at(i) + "/" + libs.at(i) + "Filters/" + filtName + ext;
-    // std::cout << "    ****" << path.toStdString() << std::endl;
+  //  for(int i = 0; i < libs.size(); ++i)
+  //  {
+  //    QString path = prefix + "/" + libs.at(i) + "/" + libs.at(i) + "Filters/" + filtName + ext;
+  //    // std::cout << "    ****" << path.toStdString() << std::endl;
 
-    QFileInfo fi(path);
-    if(fi.exists())
-    {
-      return path;
-    }
-  }
+  //    QFileInfo fi(path);
+  //    if(fi.exists())
+  //    {
+  //      return path;
+  //    }
+  //  }
 
-  prefix = D3DTools::GetDREAM3DProjParentDir() + "/DREAM3D_Plugins";
-  for(int i = 0; i < libs.size(); ++i)
-  {
-    QString path = prefix + "/" + libs.at(i) + "/" + libs.at(i) + "Filters/" + filtName + ext;
-    //  std::cout << "    ****" << path.toStdString() << std::endl;
+  //  prefix = D3DTools::GetDREAM3DProjParentDir() + "/DREAM3D_Plugins";
+  //  for(int i = 0; i < libs.size(); ++i)
+  //  {
+  //    QString path = prefix + "/" + libs.at(i) + "/" + libs.at(i) + "Filters/" + filtName + ext;
+  //    //  std::cout << "    ****" << path.toStdString() << std::endl;
 
-    QFileInfo fi(path);
-    if(fi.exists())
-    {
-      return path;
-    }
-  }
+  //    QFileInfo fi(path);
+  //    if(fi.exists())
+  //    {
+  //      return path;
+  //    }
+  //  }
 
   qDebug() << "Error Finding File for " << groupName << "/" << filtName << "/" << ext;
   return "NOT FOUND";
@@ -154,8 +157,12 @@ template <typename T> void RecursiveFileSearch(const QDir& currentDir, const QSt
 // -----------------------------------------------------------------------------
 int main(int argc, char* argv[])
 {
-
-  Q_ASSERT(true); // We don't want anyone to run this program.
+  if (true)
+  {
+    // Uncomment this to run this program
+    qDebug() << "Exited SandboxTool early.  Uncomment logic statement at the top of main to allow the program to run.";
+    return 0;
+  }
 
   // Instantiate the QCoreApplication that we need to get the current path and load plugins.
   QCoreApplication app(argc, argv);
@@ -163,7 +170,7 @@ int main(int argc, char* argv[])
   QCoreApplication::setOrganizationDomain("bluequartz.net");
   QCoreApplication::setApplicationName("SandboxTool");
 
-  std::cout << "SandboxTool Starting.\nVersion " << SIMPLib::Version::PackageComplete().toStdString() << std::endl;
+  //  std::cout << "SandboxTool Starting.\nVersion " << SIMPLib::Version::PackageComplete().toStdString() << std::endl;
 
 #if 0
   // Register all the filters including trying to load those from Plugins
@@ -201,6 +208,7 @@ int main(int argc, char* argv[])
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/ProcessModeling/ProcessModelingFilters"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/ProgWorkshop/ProgWorkshopFilters"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/SMTKPlugin/SMTKPluginFilters"));
+  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/SimulationIO/SimulationIOFilters"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/TomvizToolbox/TomvizToolboxFilters"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/TransformationPhase/TransformationPhaseFilters"));
   dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/UCSBUtilities/UCSBUtilitiesFilters"));
@@ -214,7 +222,7 @@ int main(int argc, char* argv[])
 
   for(auto const& dir : dirs)
   {
-    RecursiveFileSearch<UpdateFilterHeaders>(dir, filters);
+    RecursiveFileSearch<MassReplaceMessagingCalls>(dir, filters);
   }
 
 

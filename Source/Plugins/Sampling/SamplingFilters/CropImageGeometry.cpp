@@ -164,7 +164,7 @@ void CropImageGeometry::initialize()
 // -----------------------------------------------------------------------------
 void CropImageGeometry::dataCheck()
 {
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -176,7 +176,7 @@ void CropImageGeometry::dataCheck()
   DataContainer::Pointer srcCellDataContainer = getDataContainerArray()->getPrereqDataContainer(this, getCellAttributeMatrixPath().getDataContainerName());
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
   AttributeMatrix::Pointer srcCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellAttributeMatrixPath(), -301);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -194,7 +194,7 @@ void CropImageGeometry::dataCheck()
   if(m_SaveAsNewDataContainer)
   {
     destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
-    if(nullptr == destCellDataContainer.get() || getErrorCondition() < 0)
+    if(nullptr == destCellDataContainer.get() || getErrorCode() < 0)
     {
       return;
     }
@@ -209,7 +209,7 @@ void CropImageGeometry::dataCheck()
     destCellAttrMat = srcCellAttrMat;
   }
 
-  if(nullptr == destCellDataContainer.get() || nullptr == destCellAttrMat.get() || getErrorCondition() < 0)
+  if(nullptr == destCellDataContainer.get() || nullptr == destCellAttrMat.get() || getErrorCode() < 0)
   {
     return;
   }
@@ -217,62 +217,53 @@ void CropImageGeometry::dataCheck()
   if(getXMax() < getXMin())
   {
     QString ss = QObject::tr("X Max (%1) less than X Min (%2)").arg(getXMax()).arg(getXMin());
-    setErrorCondition(-5550);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5550, ss);
   }
   if(getYMax() < getYMin())
   {
     QString ss = QObject::tr("Y Max (%1) less than Y Min (%2)").arg(getYMax()).arg(getYMin());
-    setErrorCondition(-5550);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5550, ss);
   }
   if(getZMax() < getZMin())
   {
     QString ss = QObject::tr("Z Max (%1) less than Z Min (%2)").arg(getZMax()).arg(getZMin());
-    setErrorCondition(-5550);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5550, ss);
   }
   if(getXMin() < 0)
   {
     QString ss = QObject::tr("X Min (%1) less than 0").arg(getXMin());
-    setErrorCondition(-5550);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5550, ss);
   }
   if(getYMin() < 0)
   {
     QString ss = QObject::tr("Y Min (%1) less than 0").arg(getYMin());
-    setErrorCondition(-5550);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5550, ss);
   }
   if(getZMin() < 0)
   {
     QString ss = QObject::tr("Z Min (%1) less than 0").arg(getZMin());
-    setErrorCondition(-5550);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5550, ss);
   }
 
   if(getXMax() > (static_cast<int64_t>(destCellDataContainer->getGeometryAs<ImageGeom>()->getXPoints()) - 1))
   {
     QString ss =
         QObject::tr("The X Max (%1) is greater than the Image Geometry X extent (%2)").arg(getXMax()).arg(static_cast<int64_t>(destCellDataContainer->getGeometryAs<ImageGeom>()->getXPoints()) - 1);
-    setErrorCondition(-5550);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5550, ss);
   }
 
   if(getYMax() > (static_cast<int64_t>(destCellDataContainer->getGeometryAs<ImageGeom>()->getYPoints()) - 1))
   {
     QString ss =
         QObject::tr("The Y Max (%1) is greater than the Image Geometry Y extent (%2)").arg(getYMax()).arg(static_cast<int64_t>(destCellDataContainer->getGeometryAs<ImageGeom>()->getYPoints()) - 1);
-    setErrorCondition(-5550);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5550, ss);
   }
 
   if(getZMax() > (static_cast<int64_t>(destCellDataContainer->getGeometryAs<ImageGeom>()->getZPoints()) - 1))
   {
     QString ss =
         QObject::tr("The Z Max (%1) is greater than the Image Geometry Z extent (%2)").arg(getZMax()).arg(static_cast<int64_t>(destCellDataContainer->getGeometryAs<ImageGeom>()->getZPoints()) - 1);
-    setErrorCondition(-5550);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5550, ss);
   }
 
   QVector<size_t> tDims(3, 0);
@@ -312,7 +303,7 @@ void CropImageGeometry::dataCheck()
   destCellDataContainer->getGeometryAs<ImageGeom>()->setDimensions(tDims[0], tDims[1], tDims[2]);
 
   // If any of the sanity checks fail above then we should NOT attempt to go any further.
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -351,8 +342,7 @@ void CropImageGeometry::dataCheck()
     else
     {
       QString ss = QObject::tr("The DataArray '%1' which defines the Feature Ids to renumber is invalid. Does it exist? Is it the correct type?").arg(getFeatureIdsArrayPath().serialize("/"));
-      setErrorCondition(-55500);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-55500, ss);
     }
 
     AttributeMatrix::Pointer cellFeatureAttrMat = srcCellDataContainer->getPrereqAttributeMatrix(nullptr, getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), -56);
@@ -360,8 +350,7 @@ void CropImageGeometry::dataCheck()
     {
       QString ss = QObject::tr("The AttributeMatrix '%1' is invalid. Does it exist? Is it the correct type?. The AttributeMatrix defines where the segmented features are stored.")
                        .arg(getCellFeatureAttributeMatrixPath().serialize("/"));
-      setErrorCondition(-55501);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-55501, ss);
       return;
     }
 
@@ -397,7 +386,7 @@ void CropImageGeometry::execute()
    * and be careful when reusing code from either of these functions.  Make sure
    * you understand how this works before you reuse any code. */
   // dataCheck();
-  // if(getErrorCondition() < 0) { return; }
+  // if(getErrorCode() < 0) { return; }
 
   DataContainer::Pointer srcCellDataContainer = getDataContainerArray()->getPrereqDataContainer(this, getCellAttributeMatrixPath().getDataContainerName());
   AttributeMatrix::Pointer cellAttrMat = srcCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
@@ -421,7 +410,7 @@ void CropImageGeometry::execute()
     cellAttrMat = destCellDataContainer->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   }
 
-  if(nullptr == destCellDataContainer.get() || nullptr == cellAttrMat.get() || getErrorCondition() < 0)
+  if(nullptr == destCellDataContainer.get() || nullptr == cellAttrMat.get() || getErrorCode() < 0)
   {
     return;
   }
@@ -453,8 +442,7 @@ void CropImageGeometry::execute()
                              " This may lead to junk data being filled into the extra space.")
                      .arg(m_XMax)
                      .arg(dims[0]);
-    setErrorCondition(-950);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-950, ss);
     return;
   }
   if(dims[1] <= m_YMax)
@@ -464,8 +452,7 @@ void CropImageGeometry::execute()
                              " This may lead to junk data being filled into the extra space.")
                      .arg(m_YMax)
                      .arg(dims[1]);
-    setErrorCondition(-951);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-951, ss);
     return;
   }
   if(dims[2] <= m_ZMax)
@@ -475,8 +462,7 @@ void CropImageGeometry::execute()
                              " This may lead to junk data being filled into the extra space.")
                      .arg(m_ZMax)
                      .arg(dims[2]);
-    setErrorCondition(-952);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-952, ss);
     return;
   }
 
@@ -539,8 +525,7 @@ void CropImageGeometry::execute()
     QVector<bool> activeObjects(totalFeatures, false);
     if(0 == totalFeatures)
     {
-      setErrorCondition(-600);
-      notifyErrorMessage(getHumanLabel(), "The number of Features is 0 and should be greater than 0", getErrorCondition());
+      setErrorCondition(-600, "The number of Features is 0 and should be greater than 0");
       return;
     }
 
@@ -557,9 +542,8 @@ void CropImageGeometry::execute()
     } /* Now assign the raw pointer to data from the DataArray<T> object */
     else
     {
-      setErrorCondition(-601);
       QString ss = QObject::tr("The FeatureIds array with name '%1' was not found in the destination DataContainer. The expected path was '%2'").arg(dap.getDataArrayName()).arg(dap.serialize("/"));
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-601, ss);
       return;
     }
 
@@ -578,14 +562,13 @@ void CropImageGeometry::execute()
       }
       else
       {
-        setErrorCondition(-601);
         QString ss = QObject::tr("The total number of Features from %1 is %2, but a value of %3 was found in DataArray %4.")
                          .arg(cellFeatureAttrMat->getName())
                          .arg(totalFeatures)
                          .arg(currentFeatureId)
                          .arg(getFeatureIdsArrayPath().serialize("/"));
         qDebug() << ss;
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        setErrorCondition(-601, ss);
         return;
       }
     }
