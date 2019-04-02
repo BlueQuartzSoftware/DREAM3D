@@ -313,7 +313,7 @@ int32_t AbaqusSurfaceMeshWriter::writeFeatures(FILE* f)
 
     {
       QString ss = QObject::tr("Writing ELSET for Feature Id %1").arg(spin);
-      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+      notifyStatusMessage(ss);
     }
 
     // Loop over all the triangles for this spin

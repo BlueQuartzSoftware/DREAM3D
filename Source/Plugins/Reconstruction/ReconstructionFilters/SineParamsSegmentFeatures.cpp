@@ -242,7 +242,7 @@ void SineParamsSegmentFeatures::execute()
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
   // Tell the user we are starting the filter
-  notifyStatusMessageWithPrefix(getMessagePrefix(), "Starting");
+  notifyStatusMessage("Starting");
 
   // Convert user defined tolerance to radians.
   // angleTolerance = m_AngleTolerance * SIMPLib::Constants::k_Pi / 180.0f;

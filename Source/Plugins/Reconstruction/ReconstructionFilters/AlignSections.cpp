@@ -260,7 +260,7 @@ void AlignSections::updateProgress(size_t p)
   m_Progress += p;
   int32_t progressInt = static_cast<int>((static_cast<float>(m_Progress) / static_cast<float>(m_TotalProgress)) * 100.0f);
   QString ss = QObject::tr("Transferring Cell Data %1%").arg(progressInt);
-  notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+  notifyStatusMessage(ss);
 }
 
 // -----------------------------------------------------------------------------
@@ -331,7 +331,7 @@ void AlignSections::execute()
       {
         progressInt = static_cast<int>((static_cast<float>(i) / static_cast<float>(dims[2])) * 100.0f);
         QString ss = QObject::tr("Transferring Cell Data %1%").arg(progressInt);
-        notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+        notifyStatusMessage(ss);
         prog = prog + progIncrement;
       }
       if(getCancel())

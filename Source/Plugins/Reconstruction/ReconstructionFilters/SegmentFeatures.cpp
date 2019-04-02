@@ -223,7 +223,7 @@ void SegmentFeatures::execute()
       QString ss = QObject::tr("Total Features: %1").arg(gnum);
       if(gnum % 100 == 0)
       {
-        notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+        notifyStatusMessage(ss);
       }
     }
     if(getCancel())

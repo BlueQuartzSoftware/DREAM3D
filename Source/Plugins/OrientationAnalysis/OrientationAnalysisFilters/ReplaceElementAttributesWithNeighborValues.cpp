@@ -217,8 +217,8 @@ template <typename T> void ExecuteTemplate(ReplaceElementAttributesWithNeighborV
       if(int64_t(i) > prog)
       {
         progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
-        QString ss = QObject::tr("|| Processing Data Current Loop (%1) Progress: %2% Complete").arg(count).arg(progressInt);
-        filter->notifyStatusMessageWithPrefix(filter->getMessagePrefix(), ss);
+        QString ss = QObject::tr("Processing Data Current Loop (%1) Progress: %2% Complete").arg(count).arg(progressInt);
+        filter->notifyStatusMessage(ss);
         prog = prog + progIncrement;
       }
     }
@@ -236,8 +236,8 @@ template <typename T> void ExecuteTemplate(ReplaceElementAttributesWithNeighborV
       if(int64_t(i) > prog)
       {
         progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
-        QString ss = QObject::tr("|| Processing Data Current Loop (%1) || Transferring Cell Data: %2% Complete").arg(count).arg(progressInt);
-        filter->notifyStatusMessageWithPrefix(filter->getMessagePrefix(), ss);
+        QString ss = QObject::tr("Processing Data Current Loop (%1) || Transferring Cell Data: %2% Complete").arg(count).arg(progressInt);
+        filter->notifyStatusMessage(ss);
         prog = prog + progIncrement;
       }
 

@@ -228,7 +228,7 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
     if(m_CalcByPhase)
     {
       QString ss = QObject::tr("Working on Phase %1 of %2").arg(iter).arg(numPhases);
-      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+      notifyStatusMessage(ss);
     }
     // reset boundbox for each phase
     imageGeom->getBoundingBox(boundbox);

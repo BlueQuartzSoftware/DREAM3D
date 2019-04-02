@@ -411,7 +411,7 @@ void FindNeighborhoods::updateProgress(size_t numCompleted, size_t totalFeatures
   {
     m_IncCount = 0;
     QString ss = QObject::tr("Working on Feature %1 of %2").arg(m_NumCompleted).arg(totalFeatures);
-    notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+    notifyStatusMessage(ss);
   }
 }
 

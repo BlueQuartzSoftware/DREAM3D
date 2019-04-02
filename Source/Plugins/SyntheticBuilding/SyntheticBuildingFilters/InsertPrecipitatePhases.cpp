@@ -631,7 +631,7 @@ void InsertPrecipitatePhases::execute()
 
   if(getFeatureGeneration() == 0)
   {
-    notifyStatusMessageWithPrefix(getMessagePrefix(), "Packing Precipitates || Generating and Placing Precipitates");
+    notifyStatusMessage("Packing Precipitates || Generating and Placing Precipitates");
     // this initializes the arrays to hold the details of the locations of all
     // of the features during packing
     Int32ArrayType::Pointer exclusionZonesPtr = Int32ArrayType::CreateArray(m_TotalPoints, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::exclusion_zones");
@@ -656,14 +656,14 @@ void InsertPrecipitatePhases::execute()
     }
   }
 
-  notifyStatusMessageWithPrefix(getMessagePrefix(), "Packing Precipitates || Assigning Voxels");
+  notifyStatusMessage("Packing Precipitates || Assigning Voxels");
   assign_voxels();
   if(getCancel())
   {
     return;
   }
 
-  notifyStatusMessageWithPrefix(getMessagePrefix(), "Packing Precipitates || Filling Gaps");
+  notifyStatusMessage("Packing Precipitates || Filling Gaps");
   assign_gaps();
   if(getCancel())
   {
@@ -943,7 +943,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
         if(currentnumfeatures % 100 == 0)
         {
           QString ss = QObject::tr("Packing Precipitates || Generating Feature #%1").arg(currentnumfeatures);
-          notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+          notifyStatusMessage(ss);
 
           if(getCancel())
           {
@@ -971,7 +971,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   }
 
   QString ss = QObject::tr("Packing Precipitates || Starting Feature Placement...");
-  notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+  notifyStatusMessage(ss);
 
   // initializing the target RDF vector - this is the radial distribution
   // function we are trying to match to
@@ -1060,7 +1060,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   //    {
   //      QString ss = QObject::tr("Packing Precipitates || Placing Precipitate
   //      #%1").arg(i);
-  //      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+  //      notifyStatusMessage(ss);
   //      progFeature = i;
   //    }
 
@@ -1194,7 +1194,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
       return;
     }
     QString ss = QObject::tr("Packing Precipitates || Placing Precipitate #%1").arg(i);
-    notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+    notifyStatusMessage(ss);
 
     PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[m_FeaturePhases[i]]);
     precipboundaryfraction = pp->getPrecipBoundaryFraction();
@@ -1375,7 +1375,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
                  .arg(totalAdjustments);
         if(iteration % 100 == 0)
         {
-          notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+          notifyStatusMessage(ss);
         }
 
         if(writeErrorFile && iteration % 25 == 0)
@@ -2807,7 +2807,7 @@ void InsertPrecipitatePhases::assign_gaps()
                                "Unassigned Voxel Count: %2")
                        .arg(iterationCounter)
                        .arg(gapVoxelCount);
-      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+      notifyStatusMessage(ss);
     }
     if(getCancel())
     {
@@ -2945,7 +2945,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
     if(((float)i / numTuples) * 100.0f > threshold)
     {
       QString ss = QObject::tr("Writing Feature Data - %1% Complete").arg(((float)i / numTuples) * 100);
-      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+      notifyStatusMessage(ss);
       threshold = threshold + 5.0f;
       if(threshold < ((float)i / numTuples) * 100.0f)
       {

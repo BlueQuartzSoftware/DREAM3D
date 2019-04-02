@@ -65,7 +65,6 @@ class EMMPMLib_EXPORT EMMPM : public Observable
     SIMPL_INSTANCE_PROPERTY(InitializationFunction::Pointer, InitializationFunction)
     SIMPL_POINTER_PROPERTY(StatsDelegate, StatsDelegate)
     SIMPL_INSTANCE_PROPERTY(int, ErrorCode)
-    SIMPL_INSTANCE_PROPERTY(QString, MessagePrefix)
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable

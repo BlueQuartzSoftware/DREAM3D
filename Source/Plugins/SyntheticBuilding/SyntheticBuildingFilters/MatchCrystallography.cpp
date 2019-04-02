@@ -362,7 +362,7 @@ void MatchCrystallography::execute()
 
   QString ss;
   ss = QObject::tr("Determining Volumes");
-  notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+  notifyStatusMessage(ss);
   determine_volumes();
   if(getCancel())
   {
@@ -370,7 +370,7 @@ void MatchCrystallography::execute()
   }
 
   ss = QObject::tr("Determining Boundary Areas");
-  notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+  notifyStatusMessage(ss);
   determine_boundary_areas();
   if(getCancel())
   {
@@ -395,7 +395,7 @@ void MatchCrystallography::execute()
       }
 
       ss = QObject::tr("Assigning Eulers to Phase %1").arg(i);
-      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+      notifyStatusMessage(ss);
       assign_eulers(i);
       if(getErrorCode() < 0)
       {
@@ -407,7 +407,7 @@ void MatchCrystallography::execute()
       }
 
       ss = QObject::tr("Measuring Misorientations of Phase %1").arg(i);
-      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+      notifyStatusMessage(ss);
       measure_misorientations(i);
       if(getCancel())
       {
@@ -415,7 +415,7 @@ void MatchCrystallography::execute()
       }
 
       ss = QObject::tr("Matching Crystallography of Phase %1").arg(i);
-      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+      notifyStatusMessage(ss);
       matchCrystallography(i);
       if(getCancel())
       {
@@ -785,7 +785,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
       float estimatedTime = (float)(m_MaxIterations - iterations) / timeDiff;
 
       ss += QObject::tr(" || Est. Time Remain: %1 || Iterations/Sec: %2").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime)).arg(timeDiff * 1000);
-      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+      notifyStatusMessage(ss);
 
       millis = QDateTime::currentMSecsSinceEpoch();
       lastIteration = iterations;

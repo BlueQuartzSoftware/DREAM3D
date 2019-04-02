@@ -272,7 +272,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
   {
     progInt = ((float)iter / dims[2]) * 100.0f;
     QString ss = QObject::tr("Aligning Sections || Determining Shifts || %1% Complete").arg(progInt);
-    notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+    notifyStatusMessage(ss);
     if(getCancel())
     {
       return;

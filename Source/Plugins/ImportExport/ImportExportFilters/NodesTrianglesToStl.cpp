@@ -205,7 +205,7 @@ void NodesTrianglesToStl::execute()
   fscanf(nodesFile, "%d", &nNodes);
   {
     QString ss = QObject::tr("Node Count from %1 File: %2").arg(getNodesFile()).arg(nNodes);
-    notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+    notifyStatusMessage(ss);
   }
   // Open the triangles file for reading
   FILE* triFile = fopen(m_TrianglesFile.toLatin1().data(), "rb+");
@@ -223,7 +223,7 @@ void NodesTrianglesToStl::execute()
 
   {
     QString ss = QObject::tr("Triangle Count from %1 File: %2").arg(getTrianglesFile()).arg(nTriangles);
-    notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+    notifyStatusMessage(ss);
   }
 
   int nodeId = 0;
@@ -305,7 +305,7 @@ void NodesTrianglesToStl::execute()
 
     {
       QString ss = QObject::tr("Writing STL for Feature Id %1").arg(spin);
-      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+      notifyStatusMessage(ss);
     }
 
     {
@@ -314,7 +314,7 @@ void NodesTrianglesToStl::execute()
       if(err < 0)
       {
         QString ss = QObject::tr("Error Writing STL header").arg(spin);
-        notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+        notifyStatusMessage(ss);
       }
     }
     triCount = 0; // Reset this to Zero. Increment for every triangle written

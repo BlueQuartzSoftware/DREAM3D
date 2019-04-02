@@ -234,7 +234,7 @@ int32_t SPParksSitesWriter::writeFile()
       if(currentMillis - millis > 1000)
       {
         buf.clear();
-        ss << getMessagePrefix() << " " << static_cast<int>((float)(k) / (float)(totalpoints)*100) << " % Completed ";
+        ss << static_cast<int>((float)(k) / (float)(totalpoints)*100) << " % Completed ";
         timeDiff = ((float)k / (float)(currentMillis - startMillis));
         estimatedTime = (float)(totalpoints - k) / timeDiff;
         ss << " || Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);

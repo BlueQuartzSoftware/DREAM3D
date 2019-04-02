@@ -497,7 +497,7 @@ void FindDistsToCharactGBs::execute()
       return;
     }
     QString ss = QObject::tr("--> %1% completed").arg(int(100.0 * float(i) / float(numMeshTris)));
-    notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+    notifyStatusMessage(ss);
     if(i + trisChunkSize >= numMeshTris)
     {
       trisChunkSize = numMeshTris - i;

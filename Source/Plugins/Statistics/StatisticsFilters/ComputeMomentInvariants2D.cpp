@@ -284,7 +284,7 @@ void ComputeMomentInvariants2D::execute()
 #endif
 
     QString ss = QObject::tr("[%1/%2] Completed:").arg(featureId).arg(numFeatures);
-    notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+    notifyStatusMessage(ss);
   }
 
 }

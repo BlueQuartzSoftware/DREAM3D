@@ -621,7 +621,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     if((progressIndex / total * 100.0f) > (curPercent))
     {
       QString ss = QObject::tr("%1% Complete").arg(static_cast<int>(progressIndex / total * 100.0f));
-      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+      notifyStatusMessage(ss);
       curPercent += 5.0f;
     }
     ++progressIndex;

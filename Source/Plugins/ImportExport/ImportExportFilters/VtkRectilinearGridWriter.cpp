@@ -144,7 +144,7 @@ template <typename T> int WriteCoords(FILE* f, const char* axis, const char* typ
 template <typename T> void WriteDataArray(AbstractFilter* filter, FILE* f, IDataArray::Pointer iDataPtr, bool writeBinary)
 {
   QString ss = QObject::tr("Writing Cell Data %1").arg(iDataPtr->getName());
-  filter->notifyStatusMessageWithPrefix(filter->getMessagePrefix(), ss);
+  filter->notifyStatusMessage(ss);
   // qDebug() << "Writing DataArray " << iDataPtr->getName() << " To a VTK File";
 
   typedef DataArray<T> ArrayType;
@@ -412,7 +412,7 @@ void VtkRectilinearGridWriter::execute()
     if (className.startsWith("DataArray"))
     {
       QString ss = QObject::tr("Writing Cell Data %1").arg(iDataPtr->getName());
-      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+      notifyStatusMessage(ss);
       //qDebug() << "Writing DataArray " << iDataPtr->getName() << " To a VTK File";
       VTK_WRITE_RECTILINEAR_DATA(UInt8ArrayType, iDataPtr, "unsigned_char", quint8, "%d ");
       VTK_WRITE_RECTILINEAR_DATA(Int8ArrayType, iDataPtr, "char", int8_t, "%d ");

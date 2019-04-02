@@ -317,7 +317,7 @@ void GenerateFaceSchuhMisorientationColoring::execute()
     return;
   }
 
-  notifyStatusMessageWithPrefix(getMessagePrefix(), "Starting");
+  notifyStatusMessage("Starting");
 
   // Run the data check to allocate the memory for the centroid array
   int64_t numTriangles = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();

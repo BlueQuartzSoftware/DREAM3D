@@ -661,7 +661,7 @@ void FindGBCD::execute()
       estimatedTime = (float)(totalFaces - i) / timeDiff;
       ss = ss + QObject::tr(" || Est. Time Remain: %1").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime));
       millis = QDateTime::currentMSecsSinceEpoch();
-      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+      notifyStatusMessage(ss);
     }
 
     if(getCancel())
@@ -697,7 +697,7 @@ void FindGBCD::execute()
   }
 
   ss = QObject::tr("Starting GBCD Normalization");
-  notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+  notifyStatusMessage(ss);
 
   for(int32_t i = 0; i < totalPhases; i++)
   {

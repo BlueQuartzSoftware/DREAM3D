@@ -391,7 +391,7 @@ void DetectEllipsoids::execute()
     Int32ArrayType::Pointer smoothOffsetArray = createOffsetArray(smooth_tDims);
 
     QString ss = QObject::tr("0/%2").arg(m_TotalNumberOfFeatures);
-    notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+    notifyStatusMessage(ss);
 
     m_MaxFeatureId = m_TotalNumberOfFeatures;
 
@@ -1373,7 +1373,7 @@ void DetectEllipsoids::notifyFeatureCompleted(int featureId, int threadIndex)
   m_ThreadWork[threadIndex]++;
   m_FeaturesCompleted++;
   QString ss = QObject::tr("[%1/%2] Completed:").arg(m_FeaturesCompleted).arg(m_TotalNumberOfFeatures);
-  notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+  notifyStatusMessage(ss);
   m_FeaturesCompletedSem.release();
 }
 

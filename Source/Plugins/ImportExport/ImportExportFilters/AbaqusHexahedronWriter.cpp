@@ -326,7 +326,7 @@ int32_t AbaqusHexahedronWriter::writeNodes(const QList<QString>& fileNames, size
           if(currentMillis - millis > 1000)
           {
             buf.clear();
-            ss << getMessagePrefix() << " Writing Nodes (File 1/5) " << static_cast<int>((float)(nodeIndex) / (float)(totalPoints)*100) << "% Completed ";
+            ss << "Writing Nodes (File 1/5) " << static_cast<int>((float)(nodeIndex) / (float)(totalPoints)*100) << "% Completed ";
             timeDiff = ((float)nodeIndex / (float)(currentMillis - startMillis));
             estimatedTime = (float)(totalPoints - nodeIndex) / timeDiff;
             ss << " || Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);
@@ -402,7 +402,7 @@ int32_t AbaqusHexahedronWriter::writeElems(const QList<QString>& fileNames, size
           if(currentMillis - millis > 1000)
           {
             buf.clear();
-            ss << getMessagePrefix() << " Writing Elements (File 2/5) " << static_cast<int>((float)(index) / (float)(totalPoints)*100) << "% Completed ";
+            ss << "Writing Elements (File 2/5) " << static_cast<int>((float)(index) / (float)(totalPoints)*100) << "% Completed ";
             timeDiff = ((float)index / (float)(currentMillis - startMillis));
             estimatedTime = (float)(totalPoints - index) / timeDiff;
             ss << " || Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);
@@ -454,7 +454,7 @@ int32_t AbaqusHexahedronWriter::writeElset(const QList<QString>& fileNames, size
   fprintf(f, "*Elset, elset=cube, generate\n");
   fprintf(f, "1, %llu, 1\n", static_cast<unsigned long long int>(totalPoints));
   fprintf(f, "**\n** Each Grain is made up of multiple elements\n**");
-  notifyStatusMessage((getMessagePrefix() + " Writing Element Sets (File 4/5) 1% Completed || Est. Time Remain: "));
+  notifyStatusMessage(("Writing Element Sets (File 4/5) 1% Completed || Est. Time Remain: "));
 
   // find total number of Grain Ids
   int32_t maxGrainId = 0;
@@ -503,7 +503,7 @@ int32_t AbaqusHexahedronWriter::writeElset(const QList<QString>& fileNames, size
       if(currentMillis - millis > 1000)
       {
         buf.clear();
-        ss << getMessagePrefix() << " Writing Element Sets (File 4/5) " << static_cast<int>((float)(voxelId) / (float)(maxGrainId)*100) << "% Completed ";
+        ss << "Writing Element Sets (File 4/5) " << static_cast<int>((float)(voxelId) / (float)(maxGrainId)*100) << "% Completed ";
         timeDiff = ((float)voxelId / (float)(currentMillis - startMillis));
         estimatedTime = (float)(maxGrainId - voxelId) / timeDiff;
         ss << " || Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);

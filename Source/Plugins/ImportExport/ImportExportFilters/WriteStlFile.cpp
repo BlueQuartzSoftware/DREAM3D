@@ -283,7 +283,7 @@ void WriteStlFile::execute()
     FILE* f = fopen(filename.toLatin1().data(), "wb");
     {
       QString ss = QObject::tr("Writing STL for Feature Id %1").arg(spin);
-      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+      notifyStatusMessage(ss);
     }
 
     QString header = "DREAM3D Generated For Feature ID " + QString::number(spin);

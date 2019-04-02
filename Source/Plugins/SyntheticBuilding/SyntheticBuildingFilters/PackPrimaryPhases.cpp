@@ -842,14 +842,14 @@ void PackPrimaryPhases::execute()
 
   if(getFeatureGeneration() == 0)
   {
-    notifyStatusMessageWithPrefix(getMessagePrefix(), "Packing Features || Initializing Volume");
+    notifyStatusMessage("Packing Features || Initializing Volume");
     // this initializes the arrays to hold the details of the locations of all of the features during packing
     Int32ArrayType::Pointer featureOwnersPtr = initializePackingGrid();
     if(getErrorCode() < 0)
     {
       return;
     }
-    notifyStatusMessageWithPrefix(getMessagePrefix(), "Packing Features || Placing Features");
+    notifyStatusMessage("Packing Features || Placing Features");
     placeFeatures(featureOwnersPtr);
     if(getErrorCode() < 0)
     {
@@ -863,7 +863,7 @@ void PackPrimaryPhases::execute()
 
   if(getFeatureGeneration() == 1)
   {
-    notifyStatusMessageWithPrefix(getMessagePrefix(), "Loading Features");
+    notifyStatusMessage("Loading Features");
     loadFeatures();
     if(getCancel())
     {
@@ -871,7 +871,7 @@ void PackPrimaryPhases::execute()
     }
   }
 
-  notifyStatusMessageWithPrefix(getMessagePrefix(), "Packing Features || Assigning Voxels");
+  notifyStatusMessage("Packing Features || Assigning Voxels");
   assignVoxels();
   if(getErrorCode() < 0)
   {
@@ -882,14 +882,14 @@ void PackPrimaryPhases::execute()
     return;
   }
 
-  notifyStatusMessageWithPrefix(getMessagePrefix(), "Packing Features || Assigning Gaps");
+  notifyStatusMessage("Packing Features || Assigning Gaps");
   assignGapsOnly();
   if(getCancel())
   {
     return;
   }
 
-  // notifyStatusMessageWithPrefix(getMessagePrefix(), "Packing Features || Cleaning Up Volume");
+  // notifyStatusMessage("Packing Features || Cleaning Up Volume");
   // cleanup_features();
   // if (getCancel() == true) { return; }
 
@@ -1257,7 +1257,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
         if(gid % 100 == 0)
         {
           QString ss = QObject::tr("Packing Features (1/2) || Generating Feature #%1").arg(gid);
-          notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+          notifyStatusMessage(ss);
         }
         if(gid + 1 >= static_cast<int32_t>(m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumberOfTuples()))
         {
@@ -1302,7 +1302,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
         if(change > 0 || m_CurrentSizeDistError > (1.0f - (iter * 0.001f)) || curphasevol[j] < (0.75f * factor * curphasetotalvol))
         {
           QString ss = QObject::tr("Packing Features (2/2) || Generating Feature #%1").arg(gid);
-          notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+          notifyStatusMessage(ss);
           if(gid + 1 >= static_cast<int32_t>(m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumberOfTuples()))
           {
             tDims[0] = static_cast<size_t>(gid + 1);
@@ -1325,7 +1325,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
   }
 
   QString ss = QObject::tr("Packing Features || Starting Feature Placement...");
-  notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+  notifyStatusMessage(ss);
 
   tDims[0] = static_cast<size_t>(gid);
   m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
@@ -1412,14 +1412,14 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
     if(static_cast<int32_t>(i) > progFeature + progFeatureInc)
     {
       QString ss = QObject::tr("Placing Feature #%1/%2").arg(i).arg(totalFeatures);
-      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+      notifyStatusMessage(ss);
       progFeature = i;
     }
 
     if(i == (totalFeatures - 1))
     {
       QString ss = QObject::tr("Placing Feature #%1/%2").arg(i + 1).arg(totalFeatures);
-      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+      notifyStatusMessage(ss);
     }
 
     // we always put the feature in the center of the box to make sure the feature has the optimal chance to not touch the edge of the box
@@ -1479,7 +1479,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
       timeDiff = ((float)i / (float)(currentMillis - startMillis));
       estimatedTime = (float)(totalFeatures - i) / timeDiff;
       ss += QObject::tr(" || Est. Time Remain: %1 || Iterations/Sec: %2").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime)).arg(timeDiff * 1000);
-      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+      notifyStatusMessage(ss);
 
       millis = QDateTime::currentMSecsSinceEpoch();
     }
@@ -1522,7 +1522,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
       estimatedTime = (float)(totalAdjustments - iteration) / timeDiff;
 
       ss += QObject::tr(" || Est. Time Remain: %1 || Iterations/Sec: %2").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime)).arg(timeDiff * 1000);
-      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+      notifyStatusMessage(ss);
 
       millis = QDateTime::currentMSecsSinceEpoch();
       lastIteration = iteration;
@@ -2665,7 +2665,7 @@ void PackPrimaryPhases::assignVoxels()
       float rate = featuresPerTime / ((float)(currentMillis - millis)) * 1000.0f;
 
       QString ss = QObject::tr("Assign Voxels & Gaps|| Features Checked: %1 || Features/Second: %2").arg(i).arg((int)rate);
-      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+      notifyStatusMessage(ss);
       featuresPerTime = 0;
       millis = QDateTime::currentMSecsSinceEpoch();
     }
@@ -3003,7 +3003,7 @@ void PackPrimaryPhases::assignGapsOnly()
     if(iterationCounter >= 1)
     {
       QString ss = QObject::tr("Assign Gaps || Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(iterationCounter).arg(gapVoxelCount);
-      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+      notifyStatusMessage(ss);
     }
     if(getCancel())
     {
@@ -3433,7 +3433,7 @@ void PackPrimaryPhases::writeGoalAttributes()
     {
 
       QString ss = QObject::tr("Writing Feature Data || %1% Complete").arg(((float)i / numTuples) * 100);
-      notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+      notifyStatusMessage(ss);
       threshold = threshold + 5.0f;
       if(threshold < ((float)i / numTuples) * 100.0f)
       {

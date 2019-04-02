@@ -536,7 +536,7 @@ void M3CSliceBySlice::execute()
   {
     QString ss = QObject::tr(" Layers %1 and %2 of %3").arg(i).arg(i + 1).arg(sliceCount);
     // notifyProgressValue((i * 90 / sliceCount));
-    notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+    notifyStatusMessage(ss);
 
     if(getCancel())
     {

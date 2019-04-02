@@ -357,7 +357,7 @@ void EMsoftSO3Sampler::execute()
       if(Di > Dc)
       {
         QString ss = QString("Euler Angles | Tested: %1 of %2 | Inside RFZ: %3 ").arg(QString::number(Di), QString::number(Totp), QString::number(Dg));
-        notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+        notifyStatusMessage(ss);
         Dc += Dn;
       }
       if(getCancel())
@@ -493,7 +493,7 @@ void EMsoftSO3Sampler::execute()
       if(Dg > Dc)
       {
         QString ss = QString("Euler Angles | Generated: %1 / %2").arg(QString::number(Dg), QString::number(Totp));
-        notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+        notifyStatusMessage(ss);
         Dc += Dn;
       }
     }
@@ -530,7 +530,7 @@ void EMsoftSO3Sampler::execute()
         if(Dg > Dc)
         {
           QString ss = QString("Euler Angles | Generated: %1 / %2").arg(QString::number(Dg), QString::number(Totp));
-          notifyStatusMessageWithPrefix(getMessagePrefix(), ss);
+          notifyStatusMessage(ss);
           Dc += Dn;
         }
       }
