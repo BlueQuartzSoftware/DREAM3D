@@ -110,7 +110,7 @@ ReverseTriangleWinding::~ReverseTriangleWinding() = default;
 void ReverseTriangleWinding::setupFilterParameters()
 {
   SurfaceMeshFilter::setupFilterParameters();
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   {
     DataContainerSelectionFilterParameter::RequirementType req;
     req.dcGeometryTypes = IGeometry::Types(1, IGeometry::Type::Triangle);
@@ -125,7 +125,7 @@ void ReverseTriangleWinding::setupFilterParameters()
 void ReverseTriangleWinding::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSurfaceDataContainerName(reader->readString("SurfaceDataContainerName", getSurfaceDataContainerName()));
+  setSurfaceDataContainerName(reader->readDataArrayPath("SurfaceDataContainerName", getSurfaceDataContainerName()));
   reader->closeFilterGroup();
 }
 

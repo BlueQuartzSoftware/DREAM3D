@@ -110,7 +110,7 @@ ModifiedLambertProjection::Pointer forwardProjectGreyScaleImage(QImage image)
 void forwardAndReverse()
 {
 
-  QImageReader origStereoReader("/Users/mjackson/Desktop/MikeJackson/Ni-circle.jpeg");
+  QImageReader origStereoReader("Data/Images/Ni-circle.jpeg");
   QImage origStereoImage = origStereoReader.read();
   ModifiedLambertProjection::Pointer lambert = forwardProjectGreyScaleImage(origStereoImage);
 
@@ -137,7 +137,7 @@ int main(int argc, char* argv[])
     return EXIT_SUCCESS;
   }
 
-  QImageReader reader("/Users/mjackson/Desktop/MikeJackson/Ni-Lambert.jpeg");
+  QImageReader reader("Data/Images/Ni-Lambert.jpeg");
 
   QImage image = reader.read();
 

@@ -126,7 +126,7 @@ void RodriguesConvertor::initialize()
 // -----------------------------------------------------------------------------
 void RodriguesConvertor::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   DataArraySelectionFilterParameter::RequirementType dasReq;
   QVector<QVector<size_t>> comp;
   comp.push_back(QVector<size_t>(1, 3));

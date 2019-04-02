@@ -182,8 +182,8 @@ void GenerateCopyCode()
     std::cout << "  " << cn << "::Pointer filter = " << cn << "::New();" << std::endl;
     std::cout << "  if(true == copyFilterParameters)\n  {" << std::endl;
 
-    QVector<FilterParameter::Pointer> options = filter->getFilterParameters();
-    for(QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter)
+    FilterParameterVectorType options = filter->getFilterParameters();
+    for(FilterParameterVectorType::iterator iter = options.begin(); iter != options.end(); ++iter)
     {
       FilterParameter* option = (*iter).get();
       QByteArray normType = QString("%1").arg(option->getPropertyName()).toLatin1();
@@ -226,8 +226,8 @@ void verifyFilterParameters()
     AbstractFilter::Pointer filter = factory->create();
     const QMetaObject* meta = filter->metaObject();
     //    qDebug() << filter->getNameOfClass() << "Default Values";
-    QVector<FilterParameter::Pointer> options = filter->getFilterParameters();
-    for(QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter)
+    FilterParameterVectorType options = filter->getFilterParameters();
+    for(FilterParameterVectorType::iterator iter = options.begin(); iter != options.end(); ++iter)
     {
       FilterParameter* option = (*iter).get();
       if(option->getHumanLabel().compare("Required Information") == 0 || option->getHumanLabel().compare("Created Information") == 0 || option->getHumanLabel().compare("Optional Information") == 0)
@@ -463,7 +463,7 @@ void TestUncategorizedFilterParameters()
       AbstractFilter::Pointer filter = factory->create();
       if(filter.get() != nullptr)
       {
-        QVector<FilterParameter::Pointer> parameters = filter->getFilterParameters();
+        FilterParameterVectorType parameters = filter->getFilterParameters();
         foreach(FilterParameter::Pointer fp, parameters)
         {
           if(fp->getCategory() == FilterParameter::Uncategorized)

@@ -58,7 +58,7 @@ class ImportExport_EXPORT LammpsFileWriter : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(LammpsFileWriter SUPERCLASS AbstractFilter)
-  PYB11_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+  PYB11_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
   PYB11_PROPERTY(QString LammpsFile READ getLammpsFile WRITE setLammpsFile)
 public:
   SIMPL_SHARED_POINTERS(LammpsFileWriter)
@@ -67,8 +67,8 @@ public:
 
   ~LammpsFileWriter() override;
 
-  SIMPL_FILTER_PARAMETER(QString, VertexDataContainerName)
-  Q_PROPERTY(QString VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, VertexDataContainerName)
+  Q_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
 
   SIMPL_FILTER_PARAMETER(QString, LammpsFile)
   Q_PROPERTY(QString LammpsFile READ getLammpsFile WRITE setLammpsFile)

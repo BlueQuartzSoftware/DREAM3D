@@ -50,12 +50,12 @@ class SyntheticBuilding_EXPORT InitializeSyntheticVolume : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(InitializeSyntheticVolume SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
     PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
     PYB11_PROPERTY(QString EnsembleAttributeMatrixName READ getEnsembleAttributeMatrixName WRITE setEnsembleAttributeMatrixName)
-    PYB11_PROPERTY(IntVec3_t Dimensions READ getDimensions WRITE setDimensions)
-    PYB11_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
-    PYB11_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+    PYB11_PROPERTY(IntVec3Type Dimensions READ getDimensions WRITE setDimensions)
+    PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
+    PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
     PYB11_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
     PYB11_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
     PYB11_PROPERTY(DataArrayPath InputPhaseNamesArrayPath READ getInputPhaseNamesArrayPath WRITE setInputPhaseNamesArrayPath)
@@ -67,8 +67,8 @@ public:
 
   ~InitializeSyntheticVolume() override;
 
-  SIMPL_FILTER_PARAMETER(QString, DataContainerName)
-  Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
   SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -76,14 +76,14 @@ public:
   SIMPL_FILTER_PARAMETER(QString, EnsembleAttributeMatrixName)
   Q_PROPERTY(QString EnsembleAttributeMatrixName READ getEnsembleAttributeMatrixName WRITE setEnsembleAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(IntVec3_t, Dimensions)
-  Q_PROPERTY(IntVec3_t Dimensions READ getDimensions WRITE setDimensions)
+  SIMPL_FILTER_PARAMETER(IntVec3Type, Dimensions)
+  Q_PROPERTY(IntVec3Type Dimensions READ getDimensions WRITE setDimensions)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, Resolution)
-  Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, Origin)
-  Q_PROPERTY(FloatVec3_t Origin READ getOrigin WRITE setOrigin)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Origin)
+  Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
   // These are for estimating the number of features that will be generated farther down the line.
 
@@ -212,7 +212,7 @@ protected:
    * @param res Vector containing resolution of the volume
    * @return String Number of estimated features as a string
    */
-  QString estimateNumFeatures(IntVec3_t dimensions, FloatVec3_t res);
+  QString estimateNumFeatures(IntVec3Type dimensions, FloatVec3Type res);
 
 private:
   QString m_EstimatedPrimaryFeatures;

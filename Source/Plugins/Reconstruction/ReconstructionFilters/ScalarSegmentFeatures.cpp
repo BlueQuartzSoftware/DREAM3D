@@ -51,6 +51,15 @@
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 /* from http://www.newty.de/fpt/functor.html */
 /**
  * @brief The CompareFunctor class serves as a functor superclass for specific implementations
@@ -184,7 +193,7 @@ ScalarSegmentFeatures::~ScalarSegmentFeatures() = default;
 void ScalarSegmentFeatures::setupFilterParameters()
 {
   SegmentFeatures::setupFilterParameters();
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Scalar Tolerance", ScalarTolerance, FilterParameter::Parameter, ScalarSegmentFeatures));
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Parameter, ScalarSegmentFeatures, linkedProps));
@@ -271,7 +280,7 @@ void ScalarSegmentFeatures::dataCheck()
   }
 
   QVector<size_t> tDims(1, 0);
-  m->createNonPrereqAttributeMatrix(this, getCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
+  m->createNonPrereqAttributeMatrix(this, getCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID21);
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -315,8 +324,7 @@ void ScalarSegmentFeatures::dataCheck()
   }
 
   tempPath.update(getDataContainerName(), getCellFeatureAttributeMatrixName(), getActiveArrayName());
-  m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true,
-                                                                                                             cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, cDims, "", DataArrayID31);
   if(nullptr != m_ActivePtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_Active = m_ActivePtr.lock()->getPointer(0);

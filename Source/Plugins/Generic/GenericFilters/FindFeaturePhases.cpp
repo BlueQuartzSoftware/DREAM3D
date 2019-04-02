@@ -45,6 +45,13 @@
 #include "Generic/GenericConstants.h"
 #include "Generic/GenericVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -65,7 +72,7 @@ FindFeaturePhases::~FindFeaturePhases() = default;
 // -----------------------------------------------------------------------------
 void FindFeaturePhases::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Category::Element);
@@ -136,8 +143,7 @@ void FindFeaturePhases::dataCheck()
     dataArrayPaths.push_back(getCellPhasesArrayPath());
   }
 
-  m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
-      this, getFeaturePhasesArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, getFeaturePhasesArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_FeaturePhasesPtr.lock())          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);

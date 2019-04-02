@@ -179,7 +179,7 @@ public:
     euConv->toOrientationMatrix();
     typename DataArray<T>::Pointer om = euConv->getOutputData();
     om->setName(k_InputNames[1]);
-    attrMat->addAttributeArray(om->getName(), om);
+    attrMat->insertOrAssign(om);
 
     // Create an Orientation matrix from the Eulers and then transform BACK to Eulers to transform
     // the values of the Eulers into the convention set forth in the Rotations Paper.
@@ -190,32 +190,32 @@ public:
     eulers->setName(k_InputNames[0]);
     euConv->setInputData(eulers);
 
-    attrMat->addAttributeArray(eulers->getName(), eulers);
+    attrMat->insertOrAssign(eulers);
 
     euConv->toQuaternion();
     typename DataArray<T>::Pointer q = euConv->getOutputData();
     q->setName(k_InputNames[2]);
-    attrMat->addAttributeArray(q->getName(), q);
+    attrMat->insertOrAssign(q);
 
     euConv->toAxisAngle();
     typename DataArray<T>::Pointer ax = euConv->getOutputData();
     ax->setName(k_InputNames[3]);
-    attrMat->addAttributeArray(ax->getName(), ax);
+    attrMat->insertOrAssign(ax);
 
     euConv->toRodrigues();
     typename DataArray<T>::Pointer ro = euConv->getOutputData();
     ro->setName(k_InputNames[4]);
-    attrMat->addAttributeArray(ro->getName(), ro);
+    attrMat->insertOrAssign(ro);
 
     euConv->toHomochoric();
     typename DataArray<T>::Pointer ho = euConv->getOutputData();
     ho->setName(k_InputNames[5]);
-    attrMat->addAttributeArray(ho->getName(), ho);
+    attrMat->insertOrAssign(ho);
 
     euConv->toCubochoric();
     typename DataArray<T>::Pointer cu = euConv->getOutputData();
     cu->setName(k_InputNames[6]);
-    attrMat->addAttributeArray(cu->getName(), cu);
+    attrMat->insertOrAssign(cu);
   }
 
   // -----------------------------------------------------------------------------
@@ -369,8 +369,8 @@ public:
 
       QVector<size_t> tDims(1, nStepsCubed);
       AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, AMName, AttributeMatrix::Type::Cell);
-      m->addAttributeMatrix(AMName, attrMat);
-      dca->addDataContainer(m);
+      m->addOrReplaceAttributeMatrix(attrMat);
+      dca->addOrReplaceDataContainer(m);
 
       // Make all the starting data
       GenerateEulers<K>(nSteps, attrMat);

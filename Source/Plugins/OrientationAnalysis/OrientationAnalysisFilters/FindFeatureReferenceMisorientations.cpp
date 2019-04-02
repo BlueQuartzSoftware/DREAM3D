@@ -76,7 +76,7 @@ FindFeatureReferenceMisorientations::~FindFeatureReferenceMisorientations() = de
 // -----------------------------------------------------------------------------
 void FindFeatureReferenceMisorientations::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();

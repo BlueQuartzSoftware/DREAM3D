@@ -102,7 +102,7 @@ public:
   {
     DataContainerArray::Pointer dca = DataContainerArray::New();
     DataContainer::Pointer dc = DataContainer::New("Test");
-    dca->addDataContainer(dc);
+    dca->addOrReplaceDataContainer(dc);
 
     ImageGeom::Pointer igeom = ImageGeom::New();
     size_t dims_in[3] = { 5, 5, 1};
@@ -113,7 +113,7 @@ public:
     dims[1] = 5;
     dims[2] = 1;
     AttributeMatrix::Pointer cellAM = AttributeMatrix::New(dims, "CellData", AttributeMatrix::Type::Cell);
-    dc->addAttributeMatrix(cellAM->getName(), cellAM);
+    dc->addOrReplaceAttributeMatrix(cellAM);
 
     Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(25, "FeatureIds", true);
     featureIds->initializeWithZeros();
@@ -129,12 +129,12 @@ public:
     featureIds->setValue(17, 1);
     featureIds->setValue(18, 1);
 
-    cellAM->addAttributeArray(featureIds->getName(), featureIds);
+    cellAM->insertOrAssign(featureIds);
 
     dims.resize(1);
     dims[0] = 2;
     AttributeMatrix::Pointer featureAM = AttributeMatrix::New(dims, "FeatureData", AttributeMatrix::Type::CellFeature);
-    dc->addAttributeMatrix(featureAM->getName(), featureAM);
+    dc->addOrReplaceAttributeMatrix(featureAM);
 
 #if 0
       0, 0, 0, 0, 0,
@@ -152,7 +152,7 @@ public:
     rect->setValue(9, 3);
     rect->setValue(10, 3);
     rect->setValue(11, 0);
-    featureAM->addAttributeArray(rect->getName(), rect);
+    featureAM->insertOrAssign(rect);
 
     return dca;
   }

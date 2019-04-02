@@ -111,6 +111,13 @@ class EMMPMFilterMessageHandler : public AbstractMessageHandler
     EMMPMFilter* m_Filter = nullptr;
 };
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -161,7 +168,7 @@ EMMPMFilter::~EMMPMFilter() = default;
 // -----------------------------------------------------------------------------
 void EMMPMFilter::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     EMMPMFilterParameter::Pointer parameter = EMMPMFilterParameter::New();
@@ -267,8 +274,7 @@ void EMMPMFilter::dataCheck()
     m_InputImage = m_InputImagePtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to Data from the DataArray<T> object */
 
-  m_OutputImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(
-      this, getOutputDataArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_OutputImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_OutputImagePtr.lock())         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_OutputImage = m_OutputImagePtr.lock()->getPointer(0);

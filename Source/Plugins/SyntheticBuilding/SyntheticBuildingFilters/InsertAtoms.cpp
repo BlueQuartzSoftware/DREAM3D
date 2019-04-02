@@ -49,6 +49,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -61,6 +62,13 @@
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataContainerID = 1
+};
+
 /**
  * @brief The InsertAtomsImpl class implements a threaded algorithm that inserts vertex points ('atoms') onto surface meshed Features
  */
@@ -70,13 +78,13 @@ class InsertAtomsImpl
   Int32Int32DynamicListArray::Pointer m_FaceIds;
   VertexGeom::Pointer m_FaceBBs;
   QuatF* m_AvgQuats;
-  FloatVec3_t m_LatticeConstants;
+  FloatVec3Type m_LatticeConstants;
   uint32_t m_Basis;
   QVector<VertexGeom::Pointer> m_Points;
   QVector<BoolArrayType::Pointer> m_InFeature;
 
 public:
-  InsertAtomsImpl(TriangleGeom::Pointer faces, Int32Int32DynamicListArray::Pointer faceIds, VertexGeom::Pointer faceBBs, QuatF* avgQuats, FloatVec3_t latticeConstants, uint32_t basis,
+  InsertAtomsImpl(TriangleGeom::Pointer faces, Int32Int32DynamicListArray::Pointer faceIds, VertexGeom::Pointer faceBBs, QuatF* avgQuats, FloatVec3Type latticeConstants, uint32_t basis,
                   QVector<VertexGeom::Pointer> points, QVector<BoolArrayType::Pointer> inFeature)
   : m_Faces(faces)
   , m_FaceIds(faceIds)
@@ -146,7 +154,7 @@ public:
   }
 #endif
 
-  void generatePoints(size_t iter, QVector<VertexGeom::Pointer> points, QVector<BoolArrayType::Pointer> inFeature, QuatF* m_AvgQuats, FloatVec3_t latticeConstants, uint32_t basis, float* ll,
+  void generatePoints(size_t iter, QVector<VertexGeom::Pointer> points, QVector<BoolArrayType::Pointer> inFeature, QuatF* m_AvgQuats, FloatVec3Type latticeConstants, uint32_t basis, float* ll,
                       float* ur) const
   {
     float g[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
@@ -179,13 +187,13 @@ public:
     {
       atomMult = 4;
     }
-    int64_t xPoints = (int64_t(deltaX / latticeConstants.x) + 1);
-    int64_t yPoints = (int64_t(deltaY / latticeConstants.y) + 1);
-    int64_t zPoints = (int64_t(deltaZ / latticeConstants.z) + 1);
+    int64_t xPoints = (int64_t(deltaX / latticeConstants[0]) + 1);
+    int64_t yPoints = (int64_t(deltaY / latticeConstants[1]) + 1);
+    int64_t zPoints = (int64_t(deltaZ / latticeConstants[2]) + 1);
     int64_t nPoints = atomMult * xPoints * yPoints * zPoints;
 
     points[iter]->resizeVertexList(nPoints);
-    inFeature[iter]->resize(nPoints);
+    inFeature[iter]->resizeTuples(nPoints);
 
     int64_t count = 0;
     float coords[3] = {0.0f, 0.0f, 0.0f};
@@ -196,17 +204,17 @@ public:
       {
         for(int64_t i = 0; i < xPoints; i++)
         {
-          coords[0] = float(i) * latticeConstants.x + minx;
-          coords[1] = float(j) * latticeConstants.y + miny;
-          coords[2] = float(k) * latticeConstants.z + minz;
+          coords[0] = float(i) * latticeConstants[0] + minx;
+          coords[1] = float(j) * latticeConstants[1] + miny;
+          coords[2] = float(k) * latticeConstants[2] + minz;
           MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
           points[iter]->setCoords(count, coordsT);
           count++;
           if(basis == 1)
           {
-            coords[0] = coords[0] + (0.5 * latticeConstants.x);
-            coords[1] = coords[1] + (0.5 * latticeConstants.y);
-            coords[2] = coords[2] + (0.5 * latticeConstants.z);
+            coords[0] = coords[0] + (0.5 * latticeConstants[0]);
+            coords[1] = coords[1] + (0.5 * latticeConstants[1]);
+            coords[2] = coords[2] + (0.5 * latticeConstants[2]);
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
             count++;
@@ -214,22 +222,22 @@ public:
           if(basis == 2)
           {
             // makes the (0.5,0.5,0) atom
-            coords[0] = coords[0] + (0.5 * latticeConstants.x);
-            coords[1] = coords[1] + (0.5 * latticeConstants.y);
+            coords[0] = coords[0] + (0.5 * latticeConstants[0]);
+            coords[1] = coords[1] + (0.5 * latticeConstants[1]);
             coords[2] = coords[2];
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
             count++;
             // makes the (0.5,0,0.5) atom
             coords[0] = coords[0];
-            coords[1] = coords[1] - (0.5 * latticeConstants.y);
-            coords[2] = coords[2] + (0.5 * latticeConstants.z);
+            coords[1] = coords[1] - (0.5 * latticeConstants[1]);
+            coords[2] = coords[2] + (0.5 * latticeConstants[2]);
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
             count++;
             // makes the (0,0.5,0.5) atom
-            coords[0] = coords[0] - (0.5 * latticeConstants.x);
-            coords[1] = coords[1] + (0.5 * latticeConstants.y);
+            coords[0] = coords[0] - (0.5 * latticeConstants[0]);
+            coords[1] = coords[1] + (0.5 * latticeConstants[1]);
             coords[2] = coords[2];
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
@@ -252,10 +260,9 @@ InsertAtoms::InsertAtoms()
 , m_AvgQuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgQuats)
 , m_AtomFeatureLabelsArrayName(SIMPL::VertexData::AtomFeatureLabels)
 {
-  m_LatticeConstants.x = 1.0f;
-  m_LatticeConstants.y = 1.0f;
-  m_LatticeConstants.z = 1.0f;
-
+  m_LatticeConstants[0] = 1.0f;
+  m_LatticeConstants[1] = 1.0f;
+  m_LatticeConstants[2] = 1.0f;
 }
 
 // -----------------------------------------------------------------------------
@@ -268,7 +275,7 @@ InsertAtoms::~InsertAtoms() = default;
 // -----------------------------------------------------------------------------
 void InsertAtoms::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Lattice Constants (Angstroms)", LatticeConstants, FilterParameter::Parameter, InsertAtoms));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
@@ -296,7 +303,7 @@ void InsertAtoms::setupFilterParameters()
         DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, AttributeMatrix::Type::CellFeature, IGeometry::Type::Image);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Average Quaternions", AvgQuatsArrayPath, FilterParameter::RequiredArray, InsertAtoms, req));
   }
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", VertexDataContainerName, FilterParameter::CreatedArray, InsertAtoms));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", VertexDataContainerName, FilterParameter::CreatedArray, InsertAtoms));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, FilterParameter::CreatedArray, InsertAtoms));
   parameters.push_back(SIMPL_NEW_STRING_FP("Atom Feature Labels", AtomFeatureLabelsArrayName, FilterParameter::CreatedArray, InsertAtoms));
@@ -309,7 +316,7 @@ void InsertAtoms::setupFilterParameters()
 void InsertAtoms::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setVertexDataContainerName(reader->readString("VertexDataContainerName", getVertexDataContainerName()));
+  setVertexDataContainerName(reader->readDataArrayPath("VertexDataContainerName", getVertexDataContainerName()));
   setVertexAttributeMatrixName(reader->readString("VertexAttributeMatrixName", getVertexAttributeMatrixName()));
   setAtomFeatureLabelsArrayName(reader->readString("AtomFeatureLabelsArrayName", getAtomFeatureLabelsArrayName()));
   setAvgQuatsArrayPath(reader->readDataArrayPath("AvgQuatsArrayPath", getAvgQuatsArrayPath()));
@@ -357,7 +364,7 @@ void InsertAtoms::dataCheck()
     dataArrays.push_back(triangles->getTriangles());
   }
 
-  DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName());
+  DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName(), DataContainerID);
   if(getErrorCode() < 0)
   {
     return;
@@ -367,7 +374,7 @@ void InsertAtoms::dataCheck()
   v->setGeometry(vertices);
 
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer vertexAttrMat = v->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
+  AttributeMatrix::Pointer vertexAttrMat = v->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID21);
   if(getErrorCode() < 0 || nullptr == vertexAttrMat.get())
   {
     return;
@@ -394,7 +401,7 @@ void InsertAtoms::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 1;
-  tempPath.update(getVertexDataContainerName(), getVertexAttributeMatrixName(), getAtomFeatureLabelsArrayName());
+  tempPath.update(getVertexDataContainerName().getDataContainerName(), getVertexAttributeMatrixName(), getAtomFeatureLabelsArrayName());
   m_AtomFeatureLabelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
       this, tempPath, -301, cDims);                  /* Assigns the shared_ptr<>(this, tempPath, -301, dims);  Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_AtomFeatureLabelsPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -526,10 +533,10 @@ void InsertAtoms::execute()
     return;
   }
 
-  FloatVec3_t latticeConstants;
-  latticeConstants.x = m_LatticeConstants.x / 10000.0;
-  latticeConstants.y = m_LatticeConstants.y / 10000.0;
-  latticeConstants.z = m_LatticeConstants.z / 10000.0;
+  FloatVec3Type latticeConstants;
+  latticeConstants[0] = m_LatticeConstants[0] / 10000.0;
+  latticeConstants[1] = m_LatticeConstants[1] / 10000.0;
+  latticeConstants[2] = m_LatticeConstants[2] / 10000.0;
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
   SIMPL_RANDOMNG_NEW()

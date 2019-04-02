@@ -70,7 +70,7 @@ NodesTrianglesToStl::~NodesTrianglesToStl() = default;
 // -----------------------------------------------------------------------------
 void NodesTrianglesToStl::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Nodes File", NodesFile, FilterParameter::Parameter, NodesTrianglesToStl));
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Triangles File", TrianglesFile, FilterParameter::Parameter, NodesTrianglesToStl));

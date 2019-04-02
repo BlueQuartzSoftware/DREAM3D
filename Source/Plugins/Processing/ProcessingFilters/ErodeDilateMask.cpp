@@ -71,7 +71,7 @@ ErodeDilateMask::~ErodeDilateMask() = default;
 // -----------------------------------------------------------------------------
 void ErodeDilateMask::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();

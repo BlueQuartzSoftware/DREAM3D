@@ -40,6 +40,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -49,6 +50,15 @@
 
 #include "ImportExport/ImportExportConstants.h"
 #include "ImportExport/ImportExportVersion.h"
+
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataArrayID31 = 31,
+
+  DataContainerID = 1
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -60,13 +70,13 @@ SPParksDumpReader::SPParksDumpReader()
 , m_OneBasedArrays(false)
 , m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
 {
-  m_Origin.x = 0.0f;
-  m_Origin.y = 0.0f;
-  m_Origin.z = 0.0f;
+  m_Origin[0] = 0.0f;
+  m_Origin[1] = 0.0f;
+  m_Origin[2] = 0.0f;
 
-  m_Resolution.x = 1.0f;
-  m_Resolution.y = 1.0f;
-  m_Resolution.z = 1.0f;
+  m_Spacing[0] = 1.0f;
+  m_Spacing[1] = 1.0f;
+  m_Spacing[2] = 1.0f;
 }
 
 // -----------------------------------------------------------------------------
@@ -80,14 +90,14 @@ SPParksDumpReader::~SPParksDumpReader() = default;
 void SPParksDumpReader::setupFilterParameters()
 {
   FileReader::setupFilterParameters();
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, SPParksDumpReader, "*.dump", "SPParks Dump File"));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, SPParksDumpReader));
 
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, SPParksDumpReader));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, SPParksDumpReader));
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("One Based Arrays", OneBasedArrays, FilterParameter::Parameter, SPParksDumpReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", VolumeDataContainerName, FilterParameter::CreatedArray, SPParksDumpReader));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", VolumeDataContainerName, FilterParameter::CreatedArray, SPParksDumpReader));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, SPParksDumpReader));
   parameters.push_back(SIMPL_NEW_STRING_FP("Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, SPParksDumpReader));
@@ -100,12 +110,12 @@ void SPParksDumpReader::setupFilterParameters()
 void SPParksDumpReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName()));
+  setVolumeDataContainerName(reader->readDataArrayPath("VolumeDataContainerName", getVolumeDataContainerName()));
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
   setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName()));
   setInputFile(reader->readString("InputFile", getInputFile()));
   setOrigin(reader->readFloatVec3("Origin", getOrigin()));
-  setResolution(reader->readFloatVec3("Resolution", getResolution()));
+  setSpacing(reader->readFloatVec3("Spacing", getSpacing()));
   setOneBasedArrays(reader->readValue("OneBasedArrays", getOneBasedArrays()));
   reader->closeFilterGroup();
 }
@@ -143,14 +153,14 @@ void SPParksDumpReader::dataCheck()
   clearWarningCondition();
   initialize();
 
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName(), DataContainerID);
   if(getErrorCode() < 0)
   {
     return;
   }
 
   QVector<size_t> tDims(3, 0);
-  m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+  m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCode() < 0)
   {
     return;
@@ -159,9 +169,8 @@ void SPParksDumpReader::dataCheck()
   // Creating a Feature Ids array here in preflight so that it appears in the current data structure
   // This is a temporary array that will be overwritten by the correct array at the end of reading the file
   QVector<size_t> cDims(1, 1);
-  DataArrayPath fIdsPath(getVolumeDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
-  getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, fIdsPath, 0, cDims);
-
+  DataArrayPath fIdsPath(getVolumeDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
+  getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, fIdsPath, 0, cDims, "", DataArrayID31);
   QFileInfo fi(getInputFile());
   if(getInputFile().isEmpty())
   {
@@ -368,10 +377,10 @@ int32_t SPParksDumpReader::readHeader()
 
   m_CachedGeometry = m->getGeometryAs<ImageGeom>().get();
   m_CachedGeometry->setDimensions(std::make_tuple(nx, ny, nz));
-  FloatVec3_t res = getResolution();
-  m_CachedGeometry->setResolution(std::make_tuple(res.x, res.y, res.z));
-  FloatVec3_t origin = getOrigin();
-  m_CachedGeometry->setOrigin(std::make_tuple(origin.x, origin.y, origin.z));
+  FloatVec3Type res = getSpacing();
+  m_CachedGeometry->setSpacing(res);
+  FloatVec3Type origin = getOrigin();
+  m_CachedGeometry->setOrigin(origin);
 
   return 0;
 }
@@ -497,13 +506,13 @@ int32_t SPParksDumpReader::readFile()
     AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
     if(nullptr != attrMat.get())
     {
-      attrMat->addAttributeArray(typePtr->getName(), typePtr);
+      attrMat->insertOrAssign(typePtr);
     }
   }
 
-  // Now set the Resolution and Origin that the user provided on the GUI or as parameters
-  m->getGeometryAs<ImageGeom>()->setResolution(std::make_tuple(m_Resolution.x, m_Resolution.y, m_Resolution.z));
-  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin.x, m_Origin.y, m_Origin.z));
+  // Now set the Spacing and Origin that the user provided on the GUI or as parameters
+  m->getGeometryAs<ImageGeom>()->setSpacing(std::make_tuple(m_Spacing[0], m_Spacing[1], m_Spacing[2]));
+  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin[0], m_Origin[1], m_Origin[2]));
 
   return 0;
 }

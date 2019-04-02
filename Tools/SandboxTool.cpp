@@ -64,11 +64,12 @@
 
 #include "DREAM3DToolsConfiguration.h"
 
-//#include "SandboxTool/AddPybindMacros.hpp"
-//#include "SandboxTool/CheckClassForSuperClass.hpp"
+#include "SandboxTool/AddPybindMacros.hpp"
+#include "SandboxTool/CheckClassForSuperClass.hpp"
+#include "SandboxTool/RemoveSetupFilterParameters.hpp"
 #include "SandboxTool/MassReplaceMessagingCalls.hpp"
-//#include "SandboxTool/RemoveSetupFilterParameters.hpp"
-//#include "SandboxTool/UpdateFilterHeaders.hpp"
+#include "SandboxTool/UpdateFilterHeaders.hpp"
+#include "SandboxTool/UpdateRenameIds.hpp"
 
 /**
  * @brief findPath
@@ -224,7 +225,6 @@ int main(int argc, char* argv[])
   {
     RecursiveFileSearch<MassReplaceMessagingCalls>(dir, filters);
   }
-
 
   return 0;
 }

@@ -64,7 +64,7 @@ NearestPointFuseRegularGrids::~NearestPointFuseRegularGrids() = default;
 // -----------------------------------------------------------------------------
 void NearestPointFuseRegularGrids::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
@@ -162,7 +162,7 @@ void NearestPointFuseRegularGrids::dataCheck()
         else
         {
           AttributeMatrix::Pointer attrMat = tmpAttrMat->deepCopy(getInPreflight());
-          mR->addAttributeMatrix(*it, attrMat);
+          mR->addOrReplaceAttributeMatrix(attrMat);
         }
       }
     }
@@ -202,16 +202,16 @@ void NearestPointFuseRegularGrids::execute()
   AttributeMatrix::Pointer sampleAttrMat = sampleDC->getAttributeMatrix(m_SamplingCellAttributeMatrixPath.getAttributeMatrixName());
 
   // Get dimensions and resolutions of two grids
-  size_t _refDims[3] = {0, 0, 0};
-  size_t _sampleDims[3] = {0, 0, 0};
-  float refRes[3] = {0.0f, 0.0f, 0.0f};
-  float sampleRes[3] = {0.0f, 0.0f, 0.0f};
-  float refOrigin[3] = {0.0f, 0.0f, 0.0f};
-  float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
-  std::tie(_refDims[0], _refDims[1], _refDims[2]) = refDC->getGeometryAs<ImageGeom>()->getDimensions();
-  std::tie(_sampleDims[0], _sampleDims[1], _sampleDims[2]) = sampleDC->getGeometryAs<ImageGeom>()->getDimensions();
-  refDC->getGeometryAs<ImageGeom>()->getResolution(refRes);
-  sampleDC->getGeometryAs<ImageGeom>()->getResolution(sampleRes);
+  SizeVec3Type _refDims;
+  SizeVec3Type _sampleDims;
+  FloatVec3Type refRes = {0.0f, 0.0f, 0.0f};
+  FloatVec3Type sampleRes = {0.0f, 0.0f, 0.0f};
+  FloatVec3Type refOrigin = {0.0f, 0.0f, 0.0f};
+  FloatVec3Type sampleOrigin = {0.0f, 0.0f, 0.0f};
+  refDC->getGeometryAs<ImageGeom>()->getDimensions(_refDims);
+  sampleDC->getGeometryAs<ImageGeom>()->getDimensions(_sampleDims);
+  refDC->getGeometryAs<ImageGeom>()->getSpacing(refRes);
+  sampleDC->getGeometryAs<ImageGeom>()->getSpacing(sampleRes);
   refDC->getGeometryAs<ImageGeom>()->getOrigin(refOrigin);
   sampleDC->getGeometryAs<ImageGeom>()->getOrigin(sampleOrigin);
 
@@ -261,7 +261,7 @@ void NearestPointFuseRegularGrids::execute()
     // the data container this will over write the current array with
     // the same name. At least in theory
     IDataArray::Pointer data = p->createNewArray(numRefTuples, p->getComponentDimensions(), p->getName());
-    refAttrMat->addAttributeArray(p->getName(), data);
+    refAttrMat->insertOrAssign(data);
   }
 
   bool outside = false;

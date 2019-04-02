@@ -51,6 +51,13 @@
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 #define SQR(value) (value) * (value)
 
 /**
@@ -123,7 +130,7 @@ TriangleAreaFilter::~TriangleAreaFilter() = default;
 void TriangleAreaFilter::setupFilterParameters()
 {
   SurfaceMeshFilter::setupFilterParameters();
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
@@ -167,8 +174,8 @@ void TriangleAreaFilter::dataCheck()
   }
 
   QVector<size_t> cDims(1, 1);
-  m_SurfaceMeshTriangleAreasPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
-      this, getSurfaceMeshTriangleAreasArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshTriangleAreasPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getSurfaceMeshTriangleAreasArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_SurfaceMeshTriangleAreasPtr.lock())          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_SurfaceMeshTriangleAreas = m_SurfaceMeshTriangleAreasPtr.lock()->getPointer(0);

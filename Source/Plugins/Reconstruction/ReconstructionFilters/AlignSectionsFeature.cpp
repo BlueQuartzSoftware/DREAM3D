@@ -67,7 +67,7 @@ void AlignSectionsFeature::setupFilterParameters()
 {
   // getting the current parameters that were set by the parent and adding to it before resetting it
   AlignSections::setupFilterParameters();
-  FilterParameterVector parameters = getFilterParameters();
+  FilterParameterVectorType parameters = getFilterParameters();
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -105,7 +105,7 @@ void AlignSectionsFeature::dataCheck()
 
   // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
   // These are checked for validity in the Parent Class dataCheck
-  setDataContainerName(m_GoodVoxelsArrayPath.getDataContainerName());
+  setDataContainerName(DataArrayPath(m_GoodVoxelsArrayPath.getDataContainerName(), "", ""));
   setCellAttributeMatrixName(m_GoodVoxelsArrayPath.getAttributeMatrixName());
 
   AlignSections::dataCheck();

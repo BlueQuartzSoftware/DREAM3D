@@ -53,6 +53,16 @@
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+  AttributeMatrixID22 = 22,
+
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -87,7 +97,7 @@ EstablishMatrixPhase::~EstablishMatrixPhase() = default;
 // -----------------------------------------------------------------------------
 void EstablishMatrixPhase::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   QStringList linkedProps("MaskArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask", UseMask, FilterParameter::Parameter, EstablishMatrixPhase, linkedProps));
 
@@ -247,7 +257,7 @@ void EstablishMatrixPhase::dataCheck()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix(this, getOutputCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix(this, getOutputCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID21);
   if(getErrorCode() < 0 || nullptr == cellFeatureAttrMat.get())
   {
     return;
@@ -261,14 +271,13 @@ void EstablishMatrixPhase::dataCheck()
   else
   {
     tDims[0] = m_PhaseTypesPtr.lock()->getNumberOfTuples();
-    outEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getOutputCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
+    outEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getOutputCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID22);
   }
 
   tempPath = getOutputCellAttributeMatrixPath();
   tempPath.setAttributeMatrixName(getOutputCellEnsembleAttributeMatrixName());
   tempPath.setDataArrayName(SIMPL::EnsembleData::PhaseName);
-  m_PhaseNamesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<StringDataArray, AbstractFilter, QString>(this, tempPath, nullptr,
-                                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_PhaseNamesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<StringDataArray, AbstractFilter, QString>(this, tempPath, nullptr, cDims, "", DataArrayID31);
 
   // Feature Data
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), getFeaturePhasesArrayName());
@@ -328,7 +337,7 @@ void EstablishMatrixPhase::execute()
   {
     AttributeMatrix::Pointer cellEnsembleAttrMat = m->getAttributeMatrix(m_OutputCellEnsembleAttributeMatrixName);
     IDataArray::Pointer outputPhaseNames = inputPhaseNames->deepCopy();
-    cellEnsembleAttrMat->addAttributeArray(outputPhaseNames->getName(), outputPhaseNames);
+    cellEnsembleAttrMat->insertOrAssign(outputPhaseNames);
   }
 
 
@@ -356,7 +365,7 @@ void EstablishMatrixPhase::establish_matrix()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   sizex = dims[0] * xRes;
   sizey = dims[1] * yRes;

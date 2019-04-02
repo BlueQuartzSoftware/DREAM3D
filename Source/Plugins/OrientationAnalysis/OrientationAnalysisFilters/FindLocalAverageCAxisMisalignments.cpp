@@ -84,7 +84,7 @@ FindLocalAverageCAxisMisalignments::~FindLocalAverageCAxisMisalignments() = defa
 // -----------------------------------------------------------------------------
 void FindLocalAverageCAxisMisalignments::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   QStringList linkedProps("LocalCAxisMisalignmentsArrayName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Local C-Axis Misalignments", CalcBiasedAvg, FilterParameter::Parameter, FindLocalAverageCAxisMisalignments, linkedProps));

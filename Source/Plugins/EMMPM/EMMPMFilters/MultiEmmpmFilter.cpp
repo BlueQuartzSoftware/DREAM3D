@@ -106,6 +106,16 @@ class MultiEmmpmFilterMessageHandler : public AbstractMessageHandler
     MultiEmmpmFilter* m_Filter = nullptr;
 };
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -127,7 +137,7 @@ MultiEmmpmFilter::~MultiEmmpmFilter() = default;
 void MultiEmmpmFilter::setupFilterParameters()
 {
   EMMPMFilter::setupFilterParameters();
-  FilterParameterVector parameters = getFilterParameters();
+  FilterParameterVectorType parameters = getFilterParameters();
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("Use Mu/Sigma from Previous Image as Initialization for Current Image", UsePreviousMuSigma, FilterParameter::Parameter, MultiEmmpmFilter));
   parameters.push_back(SIMPL_NEW_STRING_FP("Output Array Prefix", OutputArrayPrefix, FilterParameter::Parameter, MultiEmmpmFilter));
@@ -221,7 +231,7 @@ void MultiEmmpmFilter::dataCheck()
   ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getInputDataArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
   if (getErrorCode() < 0 || nullptr == image.get()) { return; }
 
-  m_OutputImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, getOutputDataArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_OutputImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31);
   if (nullptr != m_OutputImagePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_OutputImage = m_OutputImagePtr.lock()->getPointer(0);
@@ -254,7 +264,7 @@ void MultiEmmpmFilter::dataCheck()
   QVector<size_t> tDims = inAM->getTupleDimensions();
   AttributeMatrix::Pointer outAM = getDataContainerArray()
                                        ->getDataContainer(inputAMPath.getDataContainerName())
-                                       ->createNonPrereqAttributeMatrix(this, getOutputAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+                                       ->createNonPrereqAttributeMatrix(this, getOutputAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCode() < 0 || nullptr == outAM.get())
   {
     return;
@@ -275,7 +285,7 @@ void MultiEmmpmFilter::dataCheck()
       return;
     }
 
-    outAM->createAndAddAttributeArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, newName, 0, cDims);
+    outAM->createAndAddAttributeArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, newName, 0, cDims, DataArrayID32);
   }
 
   // The EM/MPM Library has a hard coded MAX Classes of 16

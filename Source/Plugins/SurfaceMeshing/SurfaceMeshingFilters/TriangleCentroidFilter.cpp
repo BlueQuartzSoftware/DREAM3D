@@ -50,6 +50,13 @@
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 /**
  * @brief The CalculateCentroidsImpl class implements a threaded algorithm that computes the centroids of
  * each triangle in a set of triangles
@@ -109,7 +116,7 @@ TriangleCentroidFilter::~TriangleCentroidFilter() = default;
 void TriangleCentroidFilter::setupFilterParameters()
 {
   SurfaceMeshFilter::setupFilterParameters();
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   {
     DataArrayCreationFilterParameter::RequirementType req = DataArrayCreationFilterParameter::CreateRequirement(AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
@@ -153,8 +160,8 @@ void TriangleCentroidFilter::dataCheck()
   }
 
   QVector<size_t> cDims(1, 3);
-  m_SurfaceMeshTriangleCentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
-      this, getSurfaceMeshTriangleCentroidsArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshTriangleCentroidsPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getSurfaceMeshTriangleCentroidsArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_SurfaceMeshTriangleCentroidsPtr.lock())          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_SurfaceMeshTriangleCentroids = m_SurfaceMeshTriangleCentroidsPtr.lock()->getPointer(0);

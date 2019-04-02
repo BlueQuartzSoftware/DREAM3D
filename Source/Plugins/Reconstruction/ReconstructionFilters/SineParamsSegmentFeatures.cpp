@@ -48,6 +48,15 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 #define ERROR_TXT_OUT 1
 #define ERROR_TXT_OUT1 1
 
@@ -77,7 +86,7 @@ SineParamsSegmentFeatures::~SineParamsSegmentFeatures() = default;
 void SineParamsSegmentFeatures::setupFilterParameters()
 {
   SegmentFeatures::setupFilterParameters();
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Good Voxels Array", UseGoodVoxels, FilterParameter::Parameter, SineParamsSegmentFeatures, linkedProps));
@@ -161,7 +170,7 @@ void SineParamsSegmentFeatures::dataCheck()
     return;
   }
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix(this, getCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
+  AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix(this, getCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID21);
   if(getErrorCode() < 0 || nullptr == cellFeatureAttrMat.get())
   {
     return;
@@ -198,8 +207,7 @@ void SineParamsSegmentFeatures::dataCheck()
     } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
   tempPath.update(getDataContainerName(), getCellFeatureAttributeMatrixName(), getActiveArrayName());
-  m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true,
-                                                                                                             dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_ActivePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, true, dims, "", DataArrayID31);
   if(nullptr != m_ActivePtr.lock())                                                                                 /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_Active = m_ActivePtr.lock()->getPointer(0);

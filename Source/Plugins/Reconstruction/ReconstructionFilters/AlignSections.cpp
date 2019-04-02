@@ -176,7 +176,7 @@ AlignSections::~AlignSections() = default;
 // -----------------------------------------------------------------------------
 void AlignSections::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   QStringList linkedProps("AlignmentShiftFileName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Alignment Shift File", WriteAlignmentShifts, FilterParameter::Parameter, AlignSections, linkedProps));
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Alignment File", AlignmentShiftFileName, FilterParameter::Parameter, AlignSections, "", "*.txt"));
@@ -223,7 +223,7 @@ void AlignSections::dataCheck()
     setErrorCondition(-3010, ss);
   }
 
-  tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), "");
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), "");
   getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, tempPath, -301);
 
   if(m_WriteAlignmentShifts)

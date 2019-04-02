@@ -63,7 +63,7 @@ IdentifySample::~IdentifySample() = default;
 // -----------------------------------------------------------------------------
 void IdentifySample::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_BOOL_FP("Fill Holes in Largest Feature", FillHoles, FilterParameter::Parameter, IdentifySample));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {

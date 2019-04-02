@@ -75,7 +75,7 @@ AvizoRectilinearCoordinateWriter::~AvizoRectilinearCoordinateWriter() = default;
 // -----------------------------------------------------------------------------
 void AvizoRectilinearCoordinateWriter::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, AvizoRectilinearCoordinateWriter, "*.am", "Amira Mesh"));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Write Binary File", WriteBinaryFile, FilterParameter::Parameter, AvizoRectilinearCoordinateWriter));
@@ -230,10 +230,10 @@ void AvizoRectilinearCoordinateWriter::generateHeader(FILE* f)
   fprintf(f, "     Units {\n");
   fprintf(f, "         Coordinates \"%s\"\n", getUnits().toLatin1().data());
   fprintf(f, "     }\n");
-  float origin[3];
-  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getOrigin(origin);
-  float res[3];
-  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getResolution(res);
+  //  FloatVec3Type origin;
+  //  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getOrigin(origin);
+  //  FloatVec3Type res;
+  //  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getSpacing(res);
 
   fprintf(f, "     CoordType \"rectilinear\"\n");
   fprintf(f, "}\n\n");
@@ -252,10 +252,10 @@ int AvizoRectilinearCoordinateWriter::writeData(FILE* f)
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   size_t dims[3];
   std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
-  float origin[3];
+  FloatVec3Type origin;
   m->getGeometryAs<ImageGeom>()->getOrigin(origin);
-  float res[3];
-  m->getGeometryAs<ImageGeom>()->getResolution(res);
+  FloatVec3Type res;
+  m->getGeometryAs<ImageGeom>()->getSpacing(res);
 
   QString start("@1 # FeatureIds in z, y, x with X moving fastest, then Y, then Z\n");
   fprintf(f, "%s", start.toLatin1().data());

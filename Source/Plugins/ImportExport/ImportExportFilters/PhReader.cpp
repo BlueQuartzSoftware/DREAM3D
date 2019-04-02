@@ -40,6 +40,7 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -50,6 +51,15 @@
 #include "ImportExport/ImportExportVersion.h"
 
 #define BUF_SIZE 1024
+
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataArrayID31 = 31,
+
+  DataContainerID = 1
+};
 
 /* ############## Start Private Implementation ############################### */
 // -----------------------------------------------------------------------------
@@ -86,13 +96,13 @@ PhReader::PhReader()
 , m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
 , d_ptr(new PhReaderPrivate(this))
 {
-  m_Origin.x = 0.0f;
-  m_Origin.y = 0.0f;
-  m_Origin.z = 0.0f;
+  m_Origin[0] = 0.0f;
+  m_Origin[1] = 0.0f;
+  m_Origin[2] = 0.0f;
 
-  m_Resolution.x = 1.0f;
-  m_Resolution.y = 1.0f;
-  m_Resolution.z = 1.0f;
+  m_Spacing[0] = 1.0f;
+  m_Spacing[1] = 1.0f;
+  m_Spacing[2] = 1.0f;
 
   m_Dims[0] = 0;
   m_Dims[1] = 0;
@@ -117,13 +127,13 @@ SIMPL_PIMPL_PROPERTY_DEF(PhReader, QDateTime, LastRead)
 void PhReader::setupFilterParameters()
 {
   FileReader::setupFilterParameters();
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, PhReader, "*.ph", "CMU Grain Growth"));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, PhReader));
 
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, PhReader));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, PhReader));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", VolumeDataContainerName, FilterParameter::CreatedArray, PhReader));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", VolumeDataContainerName, FilterParameter::CreatedArray, PhReader));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, PhReader));
   parameters.push_back(SIMPL_NEW_STRING_FP("Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, PhReader));
@@ -136,12 +146,12 @@ void PhReader::setupFilterParameters()
 void PhReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName()));
+  setVolumeDataContainerName(reader->readDataArrayPath("VolumeDataContainerName", getVolumeDataContainerName()));
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
   setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName()));
   setInputFile(reader->readString("InputFile", getInputFile()));
   setOrigin(reader->readFloatVec3("Origin", getOrigin()));
-  setResolution(reader->readFloatVec3("Resolution", getResolution()));
+  setSpacing(reader->readFloatVec3("Spacing", getSpacing()));
   reader->closeFilterGroup();
 }
 
@@ -189,7 +199,7 @@ void PhReader::dataCheck()
   clearWarningCondition();
   DataArrayPath tempPath;
 
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName(), DataContainerID);
   if(getErrorCode() < 0)
   {
     return;
@@ -254,22 +264,22 @@ void PhReader::dataCheck()
   }
 
   QVector<size_t> tDims = getDims();
-  m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+  m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCode() < 0)
   {
     return;
   }
 
   QVector<size_t> cDims(1, 1);
-  tempPath.update(getVolumeDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
-  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims);
+  tempPath.update(getVolumeDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
+  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID31);
   if(nullptr != m_FeatureIdsPtr.lock())
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   }
 
-  m->getGeometryAs<ImageGeom>()->setResolution(std::make_tuple(m_Resolution.x, m_Resolution.y, m_Resolution.z));
-  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin.x, m_Origin.y, m_Origin.z));
+  m->getGeometryAs<ImageGeom>()->setSpacing(std::make_tuple(m_Spacing[0], m_Spacing[1], m_Spacing[2]));
+  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin[0], m_Origin[1], m_Origin[2]));
 }
 
 // -----------------------------------------------------------------------------
@@ -389,9 +399,9 @@ int32_t PhReader::readFile()
     }
   }
 
-  // Now set the Resolution and Origin that the user provided on the GUI or as parameters
-  m->getGeometryAs<ImageGeom>()->setResolution(std::make_tuple(m_Resolution.x, m_Resolution.y, m_Resolution.z));
-  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin.x, m_Origin.y, m_Origin.z));
+  // Now set the Spacing and Origin that the user provided on the GUI or as parameters
+  m->getGeometryAs<ImageGeom>()->setSpacing(std::make_tuple(m_Spacing[0], m_Spacing[1], m_Spacing[2]));
+  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin[0], m_Origin[1], m_Origin[2]));
 
   return 0;
 }

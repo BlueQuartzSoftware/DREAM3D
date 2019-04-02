@@ -49,10 +49,10 @@ class Sampling_EXPORT ChangeResolution : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ChangeResolution SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+    PYB11_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
     PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
     PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
-    PYB11_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
+    PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
     PYB11_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
     PYB11_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
     PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
@@ -63,8 +63,8 @@ public:
 
   ~ChangeResolution() override;
 
-  SIMPL_FILTER_PARAMETER(QString, NewDataContainerName)
-  Q_PROPERTY(QString NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, NewDataContainerName)
+  Q_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
   Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
@@ -72,8 +72,8 @@ public:
   SIMPL_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
   Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, Resolution)
-  Q_PROPERTY(FloatVec3_t Resolution READ getResolution WRITE setResolution)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
   SIMPL_FILTER_PARAMETER(bool, RenumberFeatures)
   Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)

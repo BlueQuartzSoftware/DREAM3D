@@ -222,7 +222,7 @@ GenerateFaceIPFColoring::~GenerateFaceIPFColoring() = default;
 // -----------------------------------------------------------------------------
 void GenerateFaceIPFColoring::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);

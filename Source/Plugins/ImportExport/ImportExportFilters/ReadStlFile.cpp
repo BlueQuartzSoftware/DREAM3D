@@ -44,6 +44,7 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -53,6 +54,15 @@
 #include "ImportExport/ImportExportVersion.h"
 
 #define STL_HEADER_LENGTH 80
+
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataArrayID31 = 31,
+
+  DataContainerID = 1
+};
 
 /**
  * @brief The FindUniqueIdsImpl class implements a threaded algorithm that determines the set of
@@ -130,10 +140,10 @@ ReadStlFile::~ReadStlFile() = default;
 // -----------------------------------------------------------------------------
 void ReadStlFile::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("STL File", StlFilePath, FilterParameter::Parameter, ReadStlFile, "*.stl", "STL File"));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", SurfaceMeshDataContainerName, FilterParameter::CreatedArray, ReadStlFile));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", SurfaceMeshDataContainerName, FilterParameter::CreatedArray, ReadStlFile));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Face Attribute Matrix", FaceAttributeMatrixName, FilterParameter::CreatedArray, ReadStlFile));
   parameters.push_back(SIMPL_NEW_STRING_FP("Face Normals", FaceNormalsArrayName, FilterParameter::CreatedArray, ReadStlFile));
@@ -148,7 +158,7 @@ void ReadStlFile::readFilterParameters(AbstractFilterParametersReader* reader, i
   reader->openFilterGroup(this, index);
   setStlFilePath(reader->readString("StlFilePath", getStlFilePath()));
   setFaceAttributeMatrixName(reader->readString("FaceAttributeMatrixName", getFaceAttributeMatrixName()));
-  setSurfaceMeshDataContainerName(reader->readString("SurfaceMeshDataContainerName", getSurfaceMeshDataContainerName()));
+  setSurfaceMeshDataContainerName(reader->readDataArrayPath("SurfaceMeshDataContainerName", getSurfaceMeshDataContainerName()));
   setFaceNormalsArrayName(reader->readString("FaceNormalsArrayName", getFaceNormalsArrayName()));
   reader->closeFilterGroup();
 }
@@ -197,7 +207,7 @@ void ReadStlFile::dataCheck()
   }
 
   // Create a SufaceMesh Data Container with Faces, Vertices, Feature Labels and optionally Phase labels
-  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshDataContainerName(), DataContainerID);
   if(getErrorCode() < 0)
   {
     return;
@@ -209,11 +219,11 @@ void ReadStlFile::dataCheck()
   sm->setGeometry(triangleGeom);
 
   QVector<size_t> tDims(1, 0);
-  sm->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face);
+  sm->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face, AttributeMatrixID21);
 
   QVector<size_t> cDims(1, 3);
-  tempPath.update(getSurfaceMeshDataContainerName(), getFaceAttributeMatrixName(), getFaceNormalsArrayName());
-  m_FaceNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims);
+  tempPath.update(getSurfaceMeshDataContainerName().getDataContainerName(), getFaceAttributeMatrixName(), getFaceNormalsArrayName());
+  m_FaceNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims, "", DataArrayID31);
   if(nullptr != m_FaceNormalsPtr.lock())
   {
     m_FaceNormals = m_FaceNormalsPtr.lock()->getPointer(0);

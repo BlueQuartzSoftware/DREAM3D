@@ -19,6 +19,15 @@
 #include "Statistics/StatisticsFilters/util/MomentInvariants2D.h"
 #include "Statistics/StatisticsVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+  DataArrayID33 = 33,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -54,7 +63,7 @@ void ComputeMomentInvariants2D::initialize()
 // -----------------------------------------------------------------------------
 void ComputeMomentInvariants2D::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Any, IGeometry::Type::Any);
@@ -125,12 +134,12 @@ void ComputeMomentInvariants2D::dataCheck()
   }
 
   cDims[0] = 1;
-  m_Omega1Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getOmega1ArrayPath(), 0.0f, cDims);
+  m_Omega1Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getOmega1ArrayPath(), 0.0f, cDims, "", DataArrayID31);
   if(nullptr != m_Omega1Ptr.lock())
   {
     m_Omega1 = m_Omega1Ptr.lock()->getPointer(0);
   }
-  m_Omega2Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getOmega2ArrayPath(), 0.0f, cDims);
+  m_Omega2Ptr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getOmega2ArrayPath(), 0.0f, cDims, "", DataArrayID32);
   if(nullptr != m_Omega2Ptr.lock())
   {
     m_Omega2 = m_Omega2Ptr.lock()->getPointer(0);
@@ -141,7 +150,7 @@ void ComputeMomentInvariants2D::dataCheck()
   cDims[1] = 3;
   if(getSaveCentralMoments())
   {
-    m_CentralMomentsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getCentralMomentsArrayPath(), 0.0f, cDims);
+    m_CentralMomentsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getCentralMomentsArrayPath(), 0.0f, cDims, "", DataArrayID33);
   }
   if(nullptr != m_CentralMomentsPtr.lock())
   {

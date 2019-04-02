@@ -26,3 +26,4 @@ Support/Scripts/GMT/gmt.history
 .ctags
 .vscode
 /ExternalProjects
+.DS_Store

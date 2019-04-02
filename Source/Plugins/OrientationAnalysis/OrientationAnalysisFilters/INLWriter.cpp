@@ -76,7 +76,7 @@ INLWriter::~INLWriter() = default;
 void INLWriter::setupFilterParameters()
 {
   FileWriter::setupFilterParameters();
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, INLWriter, "*.txt", "INL Format"));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
@@ -297,9 +297,9 @@ int32_t INLWriter::writeFile()
   int32_t err = 0;
   size_t dims[3] = {0, 0, 0};
   std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
-  float res[3] = {0.0f, 0.0f, 0.0f};
-  m->getGeometryAs<ImageGeom>()->getResolution(res);
-  float origin[3] = {0.0f, 0.0f, 0.0f};
+  FloatVec3Type res = {0.0f, 0.0f, 0.0f};
+  m->getGeometryAs<ImageGeom>()->getSpacing(res);
+  FloatVec3Type origin = {0.0f, 0.0f, 0.0f};
   m->getGeometryAs<ImageGeom>()->getOrigin(origin);
 
   // Make sure any directory path is also available as the user may have just typed

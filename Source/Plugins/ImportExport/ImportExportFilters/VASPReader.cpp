@@ -41,6 +41,7 @@
 #include <QtCore/QFileInfo>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -49,6 +50,15 @@
 
 #include "ImportExport/ImportExportConstants.h"
 #include "ImportExport/ImportExportVersion.h"
+
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+  DataContainerID = 1
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -73,11 +83,11 @@ VASPReader::~VASPReader() = default;
 void VASPReader::setupFilterParameters()
 {
   FileReader::setupFilterParameters();
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, VASPReader, "*"));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Vertex Data Container", VertexDataContainerName, FilterParameter::CreatedArray, VASPReader));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Vertex Data Container", VertexDataContainerName, FilterParameter::CreatedArray, VASPReader));
   parameters.push_back(SIMPL_NEW_STRING_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, FilterParameter::CreatedArray, VASPReader));
   parameters.push_back(SIMPL_NEW_STRING_FP("AtomVelocities", AtomVelocitiesArrayName, FilterParameter::CreatedArray, VASPReader));
   parameters.push_back(SIMPL_NEW_STRING_FP("AtomTypes", AtomTypesArrayName, FilterParameter::CreatedArray, VASPReader));
@@ -89,7 +99,7 @@ void VASPReader::setupFilterParameters()
 void VASPReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setVertexDataContainerName(reader->readString("VertexDataContainerName", getVertexDataContainerName()));
+  setVertexDataContainerName(reader->readDataArrayPath("VertexDataContainerName", getVertexDataContainerName()));
   setVertexAttributeMatrixName(reader->readString("VertexAttributeMatrixName", getVertexAttributeMatrixName()));
   setAtomTypesArrayName(reader->readString("AtomTypesArrayName", getAtomTypesArrayName()));
   setAtomVelocitiesArrayName(reader->readString("AtomVelocitiesArrayName", getAtomVelocitiesArrayName()));
@@ -145,13 +155,14 @@ void VASPReader::dataCheck()
   clearErrorCondition();
   clearWarningCondition();
   initialize();
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName());
+
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName(), DataContainerID);
   if(getErrorCode() < 0)
   {
     return;
   }
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer vertexAttrMat = m->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
+  AttributeMatrix::Pointer vertexAttrMat = m->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID21);
   if(getErrorCode() < 0 || nullptr == vertexAttrMat.get())
   {
     return;
@@ -174,17 +185,16 @@ void VASPReader::dataCheck()
   }
 
   QVector<size_t> dims(1, 3);
-  tempPath.update(getVertexDataContainerName(), getVertexAttributeMatrixName(), getAtomVelocitiesArrayName());
+  tempPath.update(getVertexDataContainerName().getDataContainerName(), getVertexAttributeMatrixName(), getAtomVelocitiesArrayName());
   m_AtomVelocitiesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-      this, tempPath, 0.0, dims);           /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      this, tempPath, 0.0, dims, "", DataArrayID31); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_AtomVelocitiesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_AtomVelocities = m_AtomVelocitiesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
-  tempPath.update(getVertexDataContainerName(), getVertexAttributeMatrixName(), getAtomTypesArrayName());
-  m_AtomTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0,
-                                                                                                                      dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getVertexDataContainerName().getDataContainerName(), getVertexAttributeMatrixName(), getAtomTypesArrayName());
+  m_AtomTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, dims, "", DataArrayID32);
   if(nullptr != m_AtomTypesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_AtomTypes = m_AtomTypesPtr.lock()->getPointer(0);

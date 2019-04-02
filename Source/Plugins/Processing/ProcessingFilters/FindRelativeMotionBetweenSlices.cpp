@@ -147,7 +147,7 @@ FindRelativeMotionBetweenSlices::~FindRelativeMotionBetweenSlices() = default;
 // -----------------------------------------------------------------------------
 void FindRelativeMotionBetweenSlices::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Plane of Interest");
@@ -657,7 +657,7 @@ void FindRelativeMotionBetweenSlices::execute()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   for(size_t i = 0; i < totalPoints; i++)
   {

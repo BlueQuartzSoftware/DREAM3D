@@ -46,6 +46,7 @@
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
@@ -72,6 +73,13 @@
     setErrorCondition(errCond, ss);                                                                                                                                                                    \
   }
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataContainerID = 1
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -80,7 +88,7 @@ InitializeSyntheticVolume::InitializeSyntheticVolume()
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_EnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName)
 , m_Dimensions()
-, m_Resolution()
+, m_Spacing()
 , m_Origin()
 , m_InputStatsArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::Statistics)
 , m_InputPhaseTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes)
@@ -88,17 +96,17 @@ InitializeSyntheticVolume::InitializeSyntheticVolume()
 , m_EstimateNumberOfFeatures(false)
 , m_EstimatedPrimaryFeatures("")
 {
-  m_Dimensions.x = 128;
-  m_Dimensions.y = 128;
-  m_Dimensions.z = 128;
+  m_Dimensions[0] = 128;
+  m_Dimensions[1] = 128;
+  m_Dimensions[2] = 128;
 
-  m_Resolution.x = 0.25;
-  m_Resolution.y = 0.25;
-  m_Resolution.z = 0.25;
+  m_Spacing[0] = 0.25;
+  m_Spacing[1] = 0.25;
+  m_Spacing[2] = 0.25;
 
-  m_Origin.x = 0.0f;
-  m_Origin.y = 0.0f;
-  m_Origin.z = 0.0f;
+  m_Origin[0] = 0.0f;
+  m_Origin[1] = 0.0f;
+  m_Origin[2] = 0.0f;
 
   m_EstimatedPrimaryFeatures = "";
 
@@ -114,7 +122,7 @@ InitializeSyntheticVolume::~InitializeSyntheticVolume() = default;
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   QStringList linkedProps("EstimatedPrimaryFeatures");
   linkedProps << "InputStatsFile"
               << "InputPhaseTypesArrayPath";
@@ -147,13 +155,13 @@ void InitializeSyntheticVolume::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Types", InputPhaseTypesArrayPath, FilterParameter::RequiredArray, InitializeSyntheticVolume, req));
   }
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Synthetic Volume Data Container", DataContainerName, FilterParameter::CreatedArray, InitializeSyntheticVolume));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Synthetic Volume Data Container", DataContainerName, FilterParameter::CreatedArray, InitializeSyntheticVolume));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, InitializeSyntheticVolume));
   parameters.push_back(SIMPL_NEW_STRING_FP("Ensemble Attribute Matrix", EnsembleAttributeMatrixName, FilterParameter::CreatedArray, InitializeSyntheticVolume));
 
   parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Dimensions", Dimensions, FilterParameter::Parameter, InitializeSyntheticVolume));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, InitializeSyntheticVolume));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, InitializeSyntheticVolume));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, InitializeSyntheticVolume));
 
   param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Box Size in Length Units", BoxDimensions, FilterParameter::Parameter, InitializeSyntheticVolume);
@@ -169,10 +177,10 @@ void InitializeSyntheticVolume::setupFilterParameters()
 void InitializeSyntheticVolume::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
+  setDataContainerName(reader->readDataArrayPath("DataContainerName", getDataContainerName()));
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
   setDimensions(reader->readIntVec3("Dimensions", getDimensions()));
-  setResolution(reader->readFloatVec3("Resolution", getResolution()));
+  setSpacing(reader->readFloatVec3("Spacing", getSpacing()));
   setOrigin(reader->readFloatVec3("Origin", getOrigin()));
   setInputStatsArrayPath(reader->readDataArrayPath("InputStatsArrayPath", getInputStatsArrayPath()));
   setInputPhaseTypesArrayPath(reader->readDataArrayPath("InputPhaseTypesArrayPath", getInputPhaseTypesArrayPath()));
@@ -196,7 +204,7 @@ void InitializeSyntheticVolume::dataCheck()
   clearWarningCondition();
 
   // Create the output Data Container
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
   if(getErrorCode() < 0)
   {
     return;
@@ -205,25 +213,25 @@ void InitializeSyntheticVolume::dataCheck()
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
 
-  // Sanity Check the Dimensions and Resolution
-  INIT_SYNTH_VOLUME_CHECK(Dimensions.x, -5000);
-  INIT_SYNTH_VOLUME_CHECK(Dimensions.y, -5001);
-  INIT_SYNTH_VOLUME_CHECK(Dimensions.z, -5002);
-  INIT_SYNTH_VOLUME_CHECK(Resolution.x, -5003);
-  INIT_SYNTH_VOLUME_CHECK(Resolution.y, -5004);
-  INIT_SYNTH_VOLUME_CHECK(Resolution.z, -5005);
+  // Sanity Check the Dimensions and Spacing
+  INIT_SYNTH_VOLUME_CHECK(Dimensions[0], -5000);
+  INIT_SYNTH_VOLUME_CHECK(Dimensions[1], -5001);
+  INIT_SYNTH_VOLUME_CHECK(Dimensions[2], -5002);
+  INIT_SYNTH_VOLUME_CHECK(Spacing[0], -5003);
+  INIT_SYNTH_VOLUME_CHECK(Spacing[1], -5004);
+  INIT_SYNTH_VOLUME_CHECK(Spacing[2], -5005);
 
-  // Set the Dimensions, Resolution and Origin of the output data container
-  image->setDimensions(static_cast<size_t>(m_Dimensions.x), static_cast<size_t>(m_Dimensions.y), static_cast<size_t>(m_Dimensions.z));
-  image->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
-  image->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+  // Set the Dimensions, Spacing and Origin of the output data container
+  image->setDimensions(static_cast<size_t>(m_Dimensions[0]), static_cast<size_t>(m_Dimensions[1]), static_cast<size_t>(m_Dimensions[2]));
+  image->setSpacing(m_Spacing);
+  image->setOrigin(m_Origin);
 
   // Create our output Cell and Ensemble Attribute Matrix objects
   QVector<size_t> tDims(3, 0);
-  tDims[0] = static_cast<size_t>(m_Dimensions.x);
-  tDims[1] = static_cast<size_t>(m_Dimensions.y);
-  tDims[2] = static_cast<size_t>(m_Dimensions.z);
-  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+  tDims[0] = static_cast<size_t>(m_Dimensions[0]);
+  tDims[1] = static_cast<size_t>(m_Dimensions[1]);
+  tDims[2] = static_cast<size_t>(m_Dimensions[2]);
+  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCode() < 0 && cellAttrMat == nullptr)
   {
     return;
@@ -231,7 +239,7 @@ void InitializeSyntheticVolume::dataCheck()
 
   if(m_EstimateNumberOfFeatures)
   {
-    m_EstimatedPrimaryFeatures = estimateNumFeatures(m_Dimensions, m_Resolution);
+    m_EstimatedPrimaryFeatures = estimateNumFeatures(m_Dimensions, m_Spacing);
   }
 }
 
@@ -277,12 +285,12 @@ void InitializeSyntheticVolume::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3_t dims, FloatVec3_t res)
+QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3Type dims, FloatVec3Type res)
 {
   float totalvol = 0.0f;
   int32_t phase = 0;
 
-  totalvol = (dims.x * res.x) * (dims.y * res.y) * (dims.z * res.z);
+  totalvol = (dims[0] * res[0]) * (dims[1] * res[1]) * (dims[2] * res[2]);
   if(totalvol == 0.0f)
   {
     return "-1";
@@ -416,9 +424,9 @@ QString InitializeSyntheticVolume::getBoxDimensions()
   QString desc;
   QTextStream ss(&desc);
 
-  ss << "X Range: " << m_Origin.x << " to " << (m_Origin.x + (m_Dimensions.x * m_Resolution.x)) << " (Delta: " << (m_Dimensions.x * m_Resolution.x) << ")\n";
-  ss << "Y Range: " << m_Origin.y << " to " << (m_Origin.y + (m_Dimensions.y * m_Resolution.y)) << " (Delta: " << (m_Dimensions.y * m_Resolution.y) << ")\n";
-  ss << "Z Range: " << m_Origin.z << " to " << (m_Origin.z + (m_Dimensions.z * m_Resolution.z)) << " (Delta: " << (m_Dimensions.z * m_Resolution.z) << ")";
+  ss << "X Range: " << m_Origin[0] << " to " << (m_Origin[0] + (m_Dimensions[0] * m_Spacing[0])) << " (Delta: " << (m_Dimensions[0] * m_Spacing[0]) << ")\n";
+  ss << "Y Range: " << m_Origin[1] << " to " << (m_Origin[1] + (m_Dimensions[1] * m_Spacing[1])) << " (Delta: " << (m_Dimensions[1] * m_Spacing[1]) << ")\n";
+  ss << "Z Range: " << m_Origin[2] << " to " << (m_Origin[2] + (m_Dimensions[2] * m_Spacing[2])) << " (Delta: " << (m_Dimensions[2] * m_Spacing[2]) << ")";
 
   return desc;
 }

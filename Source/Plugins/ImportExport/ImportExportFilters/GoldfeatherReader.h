@@ -56,7 +56,7 @@ class ImportExport_EXPORT GoldfeatherReader : public AbstractFilter
 {
   Q_OBJECT
   PYB11_CREATE_BINDINGS(GoldfeatherReader SUPERCLASS AbstractFilter)
-  PYB11_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+  PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
   PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
   PYB11_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
   PYB11_PROPERTY(QString SurfaceMeshPrincipalCurvature1sArrayName READ getSurfaceMeshPrincipalCurvature1sArrayName WRITE setSurfaceMeshPrincipalCurvature1sArrayName)
@@ -74,8 +74,8 @@ public:
 
   ~GoldfeatherReader() override;
 
-  SIMPL_FILTER_PARAMETER(QString, SurfaceDataContainerName)
-  Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceDataContainerName)
+  Q_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
   SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
   SIMPL_FILTER_PARAMETER(QString, FaceAttributeMatrixName)

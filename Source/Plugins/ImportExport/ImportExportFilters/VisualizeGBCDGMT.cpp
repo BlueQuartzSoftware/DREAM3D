@@ -79,7 +79,7 @@ VisualizeGBCDGMT::~VisualizeGBCDGMT() = default;
 // -----------------------------------------------------------------------------
 void VisualizeGBCDGMT::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Phase of Interest", PhaseOfInterest, FilterParameter::Parameter, VisualizeGBCDGMT));
   parameters.push_back(SIMPL_NEW_AXISANGLE_FP("Misorientation Axis-Angle", MisorientationRotation, FilterParameter::Parameter, VisualizeGBCDGMT));
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output GMT File", OutputFile, FilterParameter::Parameter, VisualizeGBCDGMT, "*.dat", "DAT File"));

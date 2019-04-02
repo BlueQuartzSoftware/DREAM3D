@@ -113,10 +113,9 @@ WritePoleFigure::~WritePoleFigure() = default;
 // -----------------------------------------------------------------------------
 void WritePoleFigure::setupFilterParameters()
 {
-  FilterParameterVector parameters;
-  
-  
-   parameters.push_back(SIMPL_NEW_STRING_FP("Figure Title", Title, FilterParameter::Parameter, WritePoleFigure));
+  FilterParameterVectorType parameters;
+
+  parameters.push_back(SIMPL_NEW_STRING_FP("Figure Title", Title, FilterParameter::Parameter, WritePoleFigure));
 
   {
     LinkedChoicesFilterParameter::Pointer parameter = LinkedChoicesFilterParameter::New();

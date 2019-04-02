@@ -237,7 +237,7 @@ FindTwinBoundaries::~FindTwinBoundaries() = default;
 // -----------------------------------------------------------------------------
 void FindTwinBoundaries::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Axis Tolerance (Degrees)", AxisTolerance, FilterParameter::Parameter, FindTwinBoundaries));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Angle Tolerance (Degrees)", AngleTolerance, FilterParameter::Parameter, FindTwinBoundaries));
   QStringList linkedProps;

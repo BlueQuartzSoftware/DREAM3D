@@ -71,7 +71,7 @@ void AlignSectionsFeatureCentroid::setupFilterParameters()
 {
   AlignSections::setupFilterParameters();
   // getting the current parameters that were set by the parent and adding to it before resetting it
-  FilterParameterVector parameters = getFilterParameters();
+  FilterParameterVectorType parameters = getFilterParameters();
   QStringList linkedProps("ReferenceSlice");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Reference Slice", UseReferenceSlice, FilterParameter::Parameter, AlignSectionsFeatureCentroid, linkedProps));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Reference Slice", ReferenceSlice, FilterParameter::Parameter, AlignSectionsFeatureCentroid));
@@ -113,7 +113,7 @@ void AlignSectionsFeatureCentroid::dataCheck()
 
   // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
   // These are checked for validity in the Parent Class dataCheck
-  setDataContainerName(m_GoodVoxelsArrayPath.getDataContainerName());
+  setDataContainerName(DataArrayPath(m_GoodVoxelsArrayPath.getDataContainerName(), "", ""));
   setCellAttributeMatrixName(m_GoodVoxelsArrayPath.getAttributeMatrixName());
 
   AlignSections::dataCheck();
@@ -191,7 +191,7 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
   std::vector<float> xCentroid(dims[2], 0.0f);
   std::vector<float> yCentroid(dims[2], 0.0f);
 

@@ -2,8 +2,12 @@
     "0": {
         "CellAttributeMatrixName": "EBSD Scan Data",
         "CellEnsembleAttributeMatrixName": "Phase Data",
-        "DataContainerName": "Small IN100 Slice 1",
-        "FilterVersion": "6.5.85",
+        "DataContainerName": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "FilterVersion": "6.5.136",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Import EDAX EBSD Data (.ang)",
         "Filter_Name": "ReadAngData",
@@ -16,7 +20,7 @@
             "Data Array Name": "",
             "Data Container Name": "Small IN100 Slice 1"
         },
-        "FilterVersion": "6.5.85",
+        "FilterVersion": "6.5.136",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Rotate Sample Reference Frame",
         "Filter_Name": "RotateSampleRefFrame",
@@ -34,7 +38,7 @@
             "Data Array Name": "EulerAngles",
             "Data Container Name": "Small IN100 Slice 1"
         },
-        "FilterVersion": "6.5.85",
+        "FilterVersion": "6.5.136",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Rotate Euler Reference Frame",
         "Filter_Name": "RotateEulerRefFrame",
@@ -48,7 +52,7 @@
     },
     "3": {
         "DestinationArrayName": "Mask",
-        "FilterVersion": "1.2.718",
+        "FilterVersion": "1.2.864",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Threshold Objects",
         "Filter_Name": "MultiThresholdObjects",
@@ -80,7 +84,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "Small IN100 Slice 1"
         },
-        "FilterVersion": "6.5.85",
+        "FilterVersion": "6.5.136",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
@@ -99,7 +103,7 @@
     },
     "5": {
         "ArrayHandling": 0,
-        "FilterVersion": "1.2.718",
+        "FilterVersion": "1.2.864",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Extract Vertex Geometry",
         "Filter_Name": "ExtractVertexGeometry",
@@ -121,11 +125,19 @@
                 "Data Container Name": "Small IN100 Slice 1"
             }
         ],
-        "SelectedDataContainerName": "Small IN100 Slice 1",
-        "VertexDataContainerName": "VertexDataContainer"
+        "SelectedDataContainerName": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": "Small IN100 Slice 1"
+        },
+        "VertexDataContainerName": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": "VertexDataContainer"
+        }
     },
     "6": {
-        "FilterVersion": "1.2.718",
+        "FilterVersion": "1.2.864",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
@@ -135,7 +147,7 @@
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {
-        "Name": "Extract Vertex Geometry",
+        "Name": "ExtractVertexGeometry",
         "Number_Filters": 7,
         "Version": 6
     }

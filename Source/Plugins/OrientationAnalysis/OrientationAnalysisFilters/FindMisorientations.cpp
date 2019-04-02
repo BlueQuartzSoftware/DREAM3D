@@ -47,6 +47,13 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -76,7 +83,7 @@ FindMisorientations::~FindMisorientations() = default;
 // -----------------------------------------------------------------------------
 void FindMisorientations::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   QStringList linkedProps("AvgMisorientationsArrayName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Find Average Misorientation Per Feature", FindAvgMisors, FilterParameter::Parameter, FindMisorientations, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::RequiredArray));
@@ -194,8 +201,7 @@ void FindMisorientations::dataCheck()
   }
 
   tempPath.update(m_NeighborListArrayPath.getDataContainerName(), getNeighborListArrayPath().getAttributeMatrixName(), getMisorientationListArrayName());
-  m_MisorientationList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(
-      this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_MisorientationList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID31);
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 }
@@ -250,14 +256,17 @@ void FindMisorientations::execute()
   {
     QuaternionMathF::Copy(avgQuats[i], q1);
     xtalType1 = m_CrystalStructures[m_FeaturePhases[i]];
-    misorientationlists[i].assign(neighborlist[i].size(), -1.0);
-    for(size_t j = 0; j < neighborlist[i].size(); j++)
+    NeighborList<int32_t>::VectorType& featureNeighborList = neighborlist[i];
+
+    misorientationlists[i].assign(featureNeighborList.size(), -1.0);
+
+    for(size_t j = 0; j < featureNeighborList.size(); j++)
     {
       w = std::numeric_limits<float>::max();
-      nname = neighborlist[i][j];
+      nname = featureNeighborList[j];
       QuaternionMathF::Copy(avgQuats[nname], q2);
       xtalType2 = m_CrystalStructures[m_FeaturePhases[nname]];
-      tempMisoList = neighborlist[i].size();
+      tempMisoList = featureNeighborList.size();
       if(xtalType1 == xtalType2 && static_cast<int64_t>(xtalType1) < static_cast<int64_t>(m_OrientationOps.size()))
       {
         w = m_OrientationOps[xtalType1]->getMisoQuat(q1, q2, n1, n2, n3);

@@ -70,7 +70,7 @@ MinSize::~MinSize() = default;
 // -----------------------------------------------------------------------------
 void MinSize::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Minimum Allowed Feature Size", MinAllowedFeatureSize, FilterParameter::Parameter, MinSize));
   QStringList linkedProps;
   linkedProps << "PhaseNumber"

@@ -80,7 +80,7 @@ WriteIPFStandardTriangle::~WriteIPFStandardTriangle() = default;
 // -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   QVector<QString> choices = QVector<QString>::fromStdVector(LaueOps::GetLaueNames());
   choices.pop_back(); // Remove the last name because we don't need it.

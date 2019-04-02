@@ -280,7 +280,7 @@ ReplaceElementAttributesWithNeighborValues::~ReplaceElementAttributesWithNeighbo
 // -----------------------------------------------------------------------------
 void ReplaceElementAttributesWithNeighborValues::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Threshold Value", MinConfidence, FilterParameter::Parameter, ReplaceElementAttributesWithNeighborValues));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();

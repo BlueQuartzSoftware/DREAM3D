@@ -73,7 +73,7 @@ FitFeatureData::~FitFeatureData() = default;
 // -----------------------------------------------------------------------------
 void FitFeatureData::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Distribution Type");

@@ -61,6 +61,15 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 /**
  * @brief The CalculateGBCDImpl class implements a threaded algorithm that calculates the
  * grain boundary character distribution (GBCD) for a surface mesh
@@ -382,8 +391,8 @@ FindGBCD::~FindGBCD() = default;
 // -----------------------------------------------------------------------------
 void FindGBCD::setupFilterParameters()
 {
-  FilterParameterVector parameters;
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("GBCD Resolution (Degrees)", GBCDRes, FilterParameter::Parameter, FindGBCD));
+  FilterParameterVectorType parameters;
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("GBCD Spacing (Degrees)", GBCDRes, FilterParameter::Parameter, FindGBCD));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 2, AttributeMatrix::Type::Face, IGeometry::Type::Triangle);
@@ -479,7 +488,7 @@ void FindGBCD::dataCheckSurfaceMesh()
   }
 
   QVector<size_t> tDims(1, m_CrystalStructuresPtr.lock()->getNumberOfTuples());
-  sm->createNonPrereqAttributeMatrix(this, getFaceEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::FaceEnsemble);
+  sm->createNonPrereqAttributeMatrix(this, getFaceEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::FaceEnsemble, AttributeMatrixID21);
 
   QVector<size_t> cDims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(),
@@ -516,8 +525,7 @@ void FindGBCD::dataCheckSurfaceMesh()
   cDims[5] = 2;
 
   tempPath.update(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), getFaceEnsembleAttributeMatrixName(), getGBCDArrayName());
-  m_GBCDPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0,
-                                                                                                               cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_GBCDPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims, "", DataArrayID31);
   if(nullptr != m_GBCDPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_GBCD = m_GBCDPtr.lock()->getPointer(0);

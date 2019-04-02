@@ -49,6 +49,14 @@
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -78,7 +86,7 @@ FindNeighbors::~FindNeighbors() = default;
 // -----------------------------------------------------------------------------
 void FindNeighbors::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   QStringList linkedProps("BoundaryCellsArrayName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Store Boundary Cells Array", StoreBoundaryCells, FilterParameter::Parameter, FindNeighbors, linkedProps));
   linkedProps.clear();
@@ -190,13 +198,17 @@ void FindNeighbors::dataCheck()
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getNeighborListArrayName());
-  m_NeighborList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter, int32_t>(
-      this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NeighborList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID31);
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
+  m_NeighborList.lock()->setNumNeighborsArrayName(getNumNeighborsArrayName());
 
   // And we do the same for the SharedSurfaceArea list
   tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getSharedSurfaceAreaListArrayName());
-  m_SharedSurfaceAreaList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(
-      this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SharedSurfaceAreaList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID32);
+  m_SharedSurfaceAreaList.lock()->setNumNeighborsArrayName(getNumNeighborsArrayName());
 }
 
 // -----------------------------------------------------------------------------
@@ -369,7 +381,7 @@ void FindNeighbors::execute()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   // We do this to create new set of NeighborList objects
   for(size_t i = 1; i < totalFeatures; i++)

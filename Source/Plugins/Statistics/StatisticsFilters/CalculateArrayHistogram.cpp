@@ -39,6 +39,7 @@
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -47,6 +48,14 @@
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
+
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+  AttributeMatrixID22 = 22,
+
+  DataContainerID = 1
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -75,7 +84,7 @@ CalculateArrayHistogram::~CalculateArrayHistogram() = default;
 // -----------------------------------------------------------------------------
 void CalculateArrayHistogram::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Bins", NumberOfBins, FilterParameter::Parameter, CalculateArrayHistogram));
   QStringList linkedProps;
   linkedProps << "MinRange"
@@ -90,7 +99,7 @@ void CalculateArrayHistogram::setupFilterParameters()
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::Defaults::AnyPrimitive, 1, AttributeMatrix::Category::Any);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Histogram", SelectedArrayPath, FilterParameter::RequiredArray, CalculateArrayHistogram, req));
   }
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container ", NewDataContainerName, FilterParameter::CreatedArray, CalculateArrayHistogram));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container ", NewDataContainerName, FilterParameter::CreatedArray, CalculateArrayHistogram));
   parameters.push_back(SIMPL_NEW_STRING_FP("Attribute Matrix", NewAttributeMatrixName, FilterParameter::CreatedArray, CalculateArrayHistogram));
   parameters.push_back(SIMPL_NEW_STRING_FP("Histogram", NewDataArrayName, FilterParameter::CreatedArray, CalculateArrayHistogram));
   setFilterParameters(parameters);
@@ -108,7 +117,7 @@ void CalculateArrayHistogram::readFilterParameters(AbstractFilterParametersReade
   setNewAttributeMatrixName(reader->readString("NewAttributeMatrixName", getNewAttributeMatrixName()));
   setNewDataArrayName(reader->readString("NewDataArrayName", getNewDataArrayName()));
   setNewDataContainer(reader->readValue("NewDataContainer", false));
-  setNewDataContainerName(reader->readString("NewDataContainerName", getNewDataContainerName()));
+  setNewDataContainerName(reader->readDataArrayPath("NewDataContainerName", getNewDataContainerName()));
   reader->closeFilterGroup();
 }
 
@@ -186,22 +195,22 @@ void CalculateArrayHistogram::dataCheck()
 
   if(m_NewDataContainer) // create a new data container
   {
-    DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName());
+    DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName(), DataContainerID);
     if(getErrorCode() < 0)
     {
       return;
     }
-    AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix(this, getNewAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic);
+    AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix(this, getNewAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic, AttributeMatrixID21);
     if(getErrorCode() < 0 || nullptr == attrMat.get())
     {
       return;
     }
-    tempPath.update(getNewDataContainerName(), getNewAttributeMatrixName(), newArrayName);
+    tempPath.update(getNewDataContainerName().getDataContainerName(), getNewAttributeMatrixName(), newArrayName);
   }
   else // use existing data container
   {
     DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_SelectedArrayPath.getDataContainerName());
-    AttributeMatrix::Pointer attrMat = dc->createNonPrereqAttributeMatrix(this, getNewAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic);
+    AttributeMatrix::Pointer attrMat = dc->createNonPrereqAttributeMatrix(this, getNewAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic, AttributeMatrixID22);
     if(getErrorCode() < 0 || nullptr == attrMat.get())
     {
       return;

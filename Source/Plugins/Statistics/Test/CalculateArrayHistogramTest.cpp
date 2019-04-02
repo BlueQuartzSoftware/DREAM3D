@@ -151,11 +151,11 @@ public:
       wait->setComponent(i, 0, faithful[i][2]);     // Duration first
     }
 
-    am->addAttributeArray(duration->getName(), duration); // int array
-    am->addAttributeArray(wait->getName(), wait);         // int array
+    am->insertOrAssign(duration); // int array
+    am->insertOrAssign(wait);     // int array
 
-    dc->addAttributeMatrix(am->getName(), am);
-    dca->addDataContainer(dc);
+    dc->addOrReplaceAttributeMatrix(am);
+    dca->addOrReplaceDataContainer(dc);
 
     // Now instantiate the CalculateArrayHistogram Filter from the FilterManager
     QString filtName = "CalculateArrayHistogram";

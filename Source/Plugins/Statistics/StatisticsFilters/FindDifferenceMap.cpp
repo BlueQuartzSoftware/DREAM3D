@@ -127,7 +127,7 @@ FindDifferenceMap::~FindDifferenceMap() = default;
 // -----------------------------------------------------------------------------
 void FindDifferenceMap::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   {
     DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("First Attribute Array", FirstInputArrayPath, FilterParameter::RequiredArray, FindDifferenceMap, req));

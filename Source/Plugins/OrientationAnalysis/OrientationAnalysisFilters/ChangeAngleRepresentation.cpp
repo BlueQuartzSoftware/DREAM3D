@@ -106,7 +106,7 @@ ChangeAngleRepresentation::~ChangeAngleRepresentation() = default;
 // -----------------------------------------------------------------------------
 void ChangeAngleRepresentation::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();

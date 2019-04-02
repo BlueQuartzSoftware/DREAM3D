@@ -73,6 +73,26 @@
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+  AttributeMatrixID22 = 22,
+  AttributeMatrixID23 = 23,
+
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+  DataArrayID33 = 33,
+  DataArrayID34 = 34,
+  DataArrayID35 = 35,
+  DataArrayID36 = 36,
+  DataArrayID37 = 37,
+  DataArrayID38 = 38,
+  DataArrayID39 = 39,
+  DataArrayID40 = 40,
+};
+
 // Macro to determine if we are going to show the Debugging Output files
 #define PPP_SHOW_DEBUG_OUTPUTS 0
 
@@ -85,7 +105,6 @@ class AssignVoxelsGapsImpl
   int64_t dims[3];
   float Invradcur[3];
   float res[3];
-  int32_t* m_FeatureIds;
   float xc;
   float yc;
   float zc;
@@ -96,10 +115,9 @@ class AssignVoxelsGapsImpl
   FloatArrayType::Pointer ellipfuncsPtr;
 
 public:
-  AssignVoxelsGapsImpl(int64_t* dimensions, float* resolution, int32_t* featureIds, float* radCur, float* xx, ShapeOps* shapeOps, float gA[3][3], float* size, int32_t cur_feature,
-                       Int32ArrayType::Pointer newowners, FloatArrayType::Pointer ellipfuncs)
-  : m_FeatureIds(featureIds)
-  , m_ShapeOps(shapeOps)
+  AssignVoxelsGapsImpl(int64_t* dimensions, float* resolution, float* radCur, float* xx, ShapeOps* shapeOps, float gA[3][3], float* size, int32_t cur_feature, Int32ArrayType::Pointer newowners,
+                       FloatArrayType::Pointer ellipfuncs)
+  : m_ShapeOps(shapeOps)
   , curFeature(cur_feature)
   {
     size = nullptr;
@@ -337,7 +355,7 @@ void PackPrimaryPhases::initialize()
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_BOOL_FP("Periodic Boundaries", PeriodicBoundaries, FilterParameter::Parameter, PackPrimaryPhases));
   QStringList linkedProps("MaskArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask", UseMask, FilterParameter::Parameter, PackPrimaryPhases, linkedProps));
@@ -669,12 +687,12 @@ void PackPrimaryPhases::dataCheck()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
   QVector<size_t> tDims(1, 0);
-  m->createNonPrereqAttributeMatrix(this, getOutputCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
+  m->createNonPrereqAttributeMatrix(this, getOutputCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID21);
 
   PackPrimaryPhases::SaveMethod saveMethod = static_cast<PackPrimaryPhases::SaveMethod>(getSaveGeometricDescriptions());
   if(saveMethod == PackPrimaryPhases::SaveMethod::SaveToNew)
   {
-    m->createNonPrereqAttributeMatrix(this, getNewAttributeMatrixPath().getAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
+    m->createNonPrereqAttributeMatrix(this, getNewAttributeMatrixPath().getAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID22);
   }
   else if(saveMethod == PackPrimaryPhases::SaveMethod::AppendToExisting)
   {
@@ -690,50 +708,45 @@ void PackPrimaryPhases::dataCheck()
   else
   {
     tDims[0] = m_PhaseTypesPtr.lock()->getNumberOfTuples();
-    outEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getOutputCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
+    outEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getOutputCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID23);
   }
 
   tempPath = getOutputCellAttributeMatrixPath();
   tempPath.setAttributeMatrixName(getOutputCellEnsembleAttributeMatrixName());
   tempPath.setDataArrayName(SIMPL::EnsembleData::PhaseName);
-  m_PhaseNamesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<StringDataArray, AbstractFilter, QString>(this, tempPath, nullptr,
-                                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_PhaseNamesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<StringDataArray, AbstractFilter, QString>(this, tempPath, nullptr, cDims, "", DataArrayID31);
 
   // Feature Data
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), getFeaturePhasesArrayName());
-  m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
-      this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID32);
   if(nullptr != m_FeaturePhasesPtr.lock())
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   }
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_NeighborhoodsArrayName);
-  m_NeighborhoodsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims);
+  m_NeighborhoodsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID33);
   if(nullptr != m_NeighborhoodsPtr.lock())
   {
     m_Neighborhoods = m_NeighborhoodsPtr.lock()->getPointer(0);
   }
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_EquivalentDiametersArrayName);
-  m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-      this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_EquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID34);
   if(nullptr != m_EquivalentDiametersPtr.lock())
   {
     m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0);
   }
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_VolumesArrayName);
-  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0,
-                                                                                                                cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID35);
   if(nullptr != m_VolumesPtr.lock())
   {
     m_Volumes = m_VolumesPtr.lock()->getPointer(0);
   }
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_Omega3sArrayName);
-  m_Omega3sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0,
-                                                                                                                cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_Omega3sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID36);
   if(nullptr != m_Omega3sPtr.lock())
   {
     m_Omega3s = m_Omega3sPtr.lock()->getPointer(0);
@@ -741,24 +754,21 @@ void PackPrimaryPhases::dataCheck()
 
   cDims[0] = 3;
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_CentroidsArrayName);
-  m_CentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0,
-                                                                                                                  cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CentroidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID37);
   if(nullptr != m_CentroidsPtr.lock())
   {
     m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
   }
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_AxisEulerAnglesArrayName);
-  m_AxisEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-      this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_AxisEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID38);
   if(nullptr != m_AxisEulerAnglesPtr.lock())
   {
     m_AxisEulerAngles = m_AxisEulerAnglesPtr.lock()->getPointer(0);
   }
 
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellFeatureAttributeMatrixName(), m_AxisLengthsArrayName);
-  m_AxisLengthsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0,
-                                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_AxisLengthsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID39);
   if(nullptr != m_AxisLengthsPtr.lock())
   {
     m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0);
@@ -767,8 +777,7 @@ void PackPrimaryPhases::dataCheck()
   // Ensemble Data
   cDims[0] = 1;
   tempPath.update(getOutputCellAttributeMatrixPath().getDataContainerName(), getOutputCellEnsembleAttributeMatrixName(), getNumFeaturesArrayName());
-  m_NumFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
-      this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NumFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID40);
   if(nullptr != m_NumFeaturesPtr.lock())
   {
     m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0);
@@ -912,7 +921,7 @@ void PackPrimaryPhases::execute()
   {
     AttributeMatrix::Pointer cellEnsembleAttrMat = m->getAttributeMatrix(m_OutputCellEnsembleAttributeMatrixName);
     IDataArray::Pointer outputPhaseNames = inputPhaseNames->deepCopy();
-    cellEnsembleAttrMat->addAttributeArray(outputPhaseNames->getName(), outputPhaseNames);
+    cellEnsembleAttrMat->insertOrAssign(outputPhaseNames);
   }
 
 }
@@ -1090,7 +1099,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
-  std::tie(m_SizeX, m_SizeY, m_SizeZ) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(m_SizeX, m_SizeY, m_SizeZ) = m->getGeometryAs<ImageGeom>()->getSpacing();
   m_SizeX *= static_cast<float>(dims[0]);
   m_SizeY *= static_cast<float>(dims[1]);
   m_SizeZ *= static_cast<float>(dims[2]);
@@ -1111,7 +1120,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   totalprimaryvol = totalprimaryvol * xRes * yRes * zRes;
 
@@ -1719,9 +1728,9 @@ Int32ArrayType::Pointer PackPrimaryPhases::initializePackingGrid()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
-  std::tie(m_PackingRes[0], m_PackingRes[1], m_PackingRes[2]) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(m_PackingRes[0], m_PackingRes[1], m_PackingRes[2]) = m->getGeometryAs<ImageGeom>()->getSpacing();
   m_PackingRes[0] *= 2.0f;
   m_PackingRes[1] *= 2.0f;
   m_PackingRes[2] *= 2.0f;
@@ -2640,8 +2649,8 @@ void PackPrimaryPhases::assignVoxels()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
-  float res[3] = {xRes, yRes, zRes};
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type res = {xRes, yRes, zRes};
 
   Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totalPoints, "_INTERNAL_USE_ONLY_newowners");
   newownersPtr->initializeWithValue(-1);
@@ -2784,12 +2793,12 @@ void PackPrimaryPhases::assignVoxels()
     if(doParallel)
     {
       tbb::parallel_for(tbb::blocked_range3d<int64_t, int64_t, int64_t>(zmin, zmax + 1, ymin, ymax + 1, xmin, xmax + 1),
-                        AssignVoxelsGapsImpl(dims, res, m_FeatureIds, radCur, xx, shapeOps, ga, size, i, newownersPtr, ellipfuncsPtr), tbb::auto_partitioner());
+                        AssignVoxelsGapsImpl(dims, res.data(), radCur, xx, shapeOps, ga, size, i, newownersPtr, ellipfuncsPtr), tbb::auto_partitioner());
     }
     else
 #endif
     {
-      AssignVoxelsGapsImpl serial(dims, res, m_FeatureIds, radCur, xx, shapeOps, ga, size, i, newownersPtr, ellipfuncsPtr);
+      AssignVoxelsGapsImpl serial(dims, res.data(), radCur, xx, shapeOps, ga, size, i, newownersPtr, ellipfuncsPtr);
       serial.convert(zmin, zmax + 1, ymin, ymax + 1, xmin, xmax + 1);
     }
   }
@@ -3073,7 +3082,7 @@ void PackPrimaryPhases::cleanupFeatures()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   float resConst = xRes * yRes * zRes;
   const double k_PiOver6 = M_PI / 6.0;
@@ -3492,7 +3501,7 @@ void PackPrimaryPhases::moveShapeDescriptions()
 
       foreach(IDataArray::Pointer incomingArray, attrArrays)
       {
-        newAM->addAttributeArray(incomingArray->getName(), incomingArray);
+        newAM->insertOrAssign(incomingArray);
       }
     }
   }

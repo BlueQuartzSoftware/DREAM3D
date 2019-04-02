@@ -118,10 +118,9 @@ RotateEulerRefFrame::RotateEulerRefFrame()
 : m_RotationAngle(0.0f)
 , m_CellEulerAnglesArrayPath("", "", "")
 {
-  m_RotationAxis.x = 0.0f;
-  m_RotationAxis.y = 0.0f;
-  m_RotationAxis.z = 1.0f;
-
+  m_RotationAxis[0] = 0.0f;
+  m_RotationAxis[1] = 0.0f;
+  m_RotationAxis[2] = 1.0f;
 }
 
 // -----------------------------------------------------------------------------
@@ -134,7 +133,7 @@ RotateEulerRefFrame::~RotateEulerRefFrame() = default;
 // -----------------------------------------------------------------------------
 void RotateEulerRefFrame::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Rotation Angle (Degrees)", RotationAngle, FilterParameter::Parameter, RotateEulerRefFrame));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Rotation Axis (ijk)", RotationAxis, FilterParameter::Parameter, RotateEulerRefFrame));
   {
@@ -209,7 +208,7 @@ void RotateEulerRefFrame::execute()
   size_t totalPoints = m_CellEulerAnglesPtr.lock()->getNumberOfTuples();
 
   float rotAngle = m_RotationAngle * SIMPLib::Constants::k_Pi / 180.0f;
-  float rotAxis[3] = {m_RotationAxis.x, m_RotationAxis.y, m_RotationAxis.z};
+  float rotAxis[3] = {m_RotationAxis[0], m_RotationAxis[1], m_RotationAxis[2]};
   MatrixMath::Normalize3x1(rotAxis);
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS

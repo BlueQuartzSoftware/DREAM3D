@@ -99,7 +99,7 @@ WriteStatsGenOdfAngleFile::~WriteStatsGenOdfAngleFile() = default;
 // -----------------------------------------------------------------------------
 void WriteStatsGenOdfAngleFile::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   /* For String input use this code */
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, WriteStatsGenOdfAngleFile));

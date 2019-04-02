@@ -38,6 +38,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/DynamicListArray.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -50,6 +51,13 @@
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataContainerID = 1
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -61,17 +69,16 @@ UncertainRegularGridSampleSurfaceMesh::UncertainRegularGridSampleSurfaceMesh()
 , m_ZPoints(0)
 , m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
 {
-  m_Resolution.x = 1.0f;
-  m_Resolution.y = 1.0f;
-  m_Resolution.z = 1.0f;
+  m_Spacing[0] = 1.0f;
+  m_Spacing[1] = 1.0f;
+  m_Spacing[2] = 1.0f;
 
-  m_Origin.x = 0.0f;
-  m_Origin.y = 0.0f;
-  m_Origin.z = 0.0f;
-  m_Uncertainty.x = 0.1f;
-  m_Uncertainty.y = 0.1f;
-  m_Uncertainty.z = 0.1f;
-
+  m_Origin[0] = 0.0f;
+  m_Origin[1] = 0.0f;
+  m_Origin[2] = 0.0f;
+  m_Uncertainty[0] = 0.1f;
+  m_Uncertainty[1] = 0.1f;
+  m_Uncertainty[2] = 0.1f;
 }
 
 // -----------------------------------------------------------------------------
@@ -85,17 +92,17 @@ UncertainRegularGridSampleSurfaceMesh::~UncertainRegularGridSampleSurfaceMesh() 
 void UncertainRegularGridSampleSurfaceMesh::setupFilterParameters()
 {
   SampleSurfaceMesh::setupFilterParameters();
-  FilterParameterVector parameters = getFilterParameters();
+  FilterParameterVectorType parameters = getFilterParameters();
   parameters.push_back(SIMPL_NEW_INTEGER_FP("X Points", XPoints, FilterParameter::Parameter, UncertainRegularGridSampleSurfaceMesh));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Y Points", YPoints, FilterParameter::Parameter, UncertainRegularGridSampleSurfaceMesh));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Z Points", ZPoints, FilterParameter::Parameter, UncertainRegularGridSampleSurfaceMesh));
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, UncertainRegularGridSampleSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, UncertainRegularGridSampleSurfaceMesh));
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, UncertainRegularGridSampleSurfaceMesh));
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Uncertainty", Uncertainty, FilterParameter::Parameter, UncertainRegularGridSampleSurfaceMesh));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, UncertainRegularGridSampleSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, UncertainRegularGridSampleSurfaceMesh));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, UncertainRegularGridSampleSurfaceMesh));
   parameters.push_back(SIMPL_NEW_STRING_FP("Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, UncertainRegularGridSampleSurfaceMesh));
@@ -112,10 +119,10 @@ void UncertainRegularGridSampleSurfaceMesh::readFilterParameters(AbstractFilterP
   setXPoints(reader->readValue("XPoints", getXPoints()));
   setYPoints(reader->readValue("YPoints", getYPoints()));
   setZPoints(reader->readValue("ZPoints", getZPoints()));
-  setResolution(reader->readFloatVec3("Resolution", getResolution()));
+  setSpacing(reader->readFloatVec3("Spacing", getSpacing()));
   setOrigin(reader->readFloatVec3("Origin", getOrigin()));
   setUncertainty(reader->readFloatVec3("Uncertainty", getUncertainty()));
-  setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
+  setDataContainerName(reader->readDataArrayPath("DataContainerName", getDataContainerName()));
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
   setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName()));
   reader->closeFilterGroup();
@@ -137,7 +144,7 @@ void UncertainRegularGridSampleSurfaceMesh::dataCheck()
   clearWarningCondition();
   DataArrayPath tempPath;
 
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
   if(getErrorCode() < 0)
   {
     return;
@@ -146,23 +153,24 @@ void UncertainRegularGridSampleSurfaceMesh::dataCheck()
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
 
-  // Set the Dimensions, Resolution and Origin of the output data container
+  // Set the Dimensions, Spacing and Origin of the output data container
   m->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(m_XPoints, m_YPoints, m_ZPoints));
-  m->getGeometryAs<ImageGeom>()->setResolution(std::make_tuple(m_Resolution.x, m_Resolution.y, m_Resolution.z));
-  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin.x, m_Origin.y, m_Origin.z));
-  
+  m->getGeometryAs<ImageGeom>()->setSpacing(std::make_tuple(m_Spacing[0], m_Spacing[1], m_Spacing[2]));
+  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin[0], m_Origin[1], m_Origin[2]));
+
   QVector<size_t> tDims(3, 0);
   tDims[0] = m_XPoints;
   tDims[1] = m_YPoints;
   tDims[2] = m_ZPoints;
-  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
+
+  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCode() < 0 || nullptr == cellAttrMat.get())
   {
     return;
   }
 
   QVector<size_t> cDims(1, 1);
-  tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
       this, tempPath, 0, cDims);              /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_FeatureIdsPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -205,9 +213,9 @@ VertexGeom::Pointer UncertainRegularGridSampleSurfaceMesh::generate_points()
       for(int64_t i = 0; i < m_XPoints; i++)
       {
         float randomX = 2.0f * static_cast<float>(rg.genrand_res53()) - 1.0f;
-        coords[0] = ((float(i) + 0.5f) * m_Resolution.x) + (m_Uncertainty.x * randomX) + m_Origin.x;
-        coords[1] = ((float(j) + 0.5f) * m_Resolution.y) + (m_Uncertainty.y * randomY) + m_Origin.y;
-        coords[2] = ((float(k) + 0.5f) * m_Resolution.z) + (m_Uncertainty.z * randomZ) + m_Origin.z;
+        coords[0] = ((float(i) + 0.5f) * m_Spacing[0]) + (m_Uncertainty[0] * randomX) + m_Origin[0];
+        coords[1] = ((float(j) + 0.5f) * m_Spacing[1]) + (m_Uncertainty[1] * randomY) + m_Origin[1];
+        coords[2] = ((float(k) + 0.5f) * m_Spacing[2]) + (m_Uncertainty[2] * randomZ) + m_Origin[2];
         points->setCoords(count, coords);
         count++;
       }
@@ -246,8 +254,8 @@ void UncertainRegularGridSampleSurfaceMesh::execute()
   SIMPL_RANDOMNG_NEW()
 
   m->getGeometryAs<ImageGeom>()->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
-  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
-  m->getGeometryAs<ImageGeom>()->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin);
+  m->getGeometryAs<ImageGeom>()->setSpacing(m_Spacing);
 
   SampleSurfaceMesh::execute();
 

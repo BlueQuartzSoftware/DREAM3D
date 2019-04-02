@@ -69,7 +69,7 @@ FindBoundaryCells::~FindBoundaryCells() = default;
 // -----------------------------------------------------------------------------
 void FindBoundaryCells::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("Ignore Feature 0", IgnoreFeatureZero, FilterParameter::Parameter, FindBoundaryCells));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Include Volume Boundary", IncludeVolumeBoundary, FilterParameter::Parameter, FindBoundaryCells));

@@ -73,7 +73,7 @@ GenerateEulerColors::~GenerateEulerColors() = default;
 // -----------------------------------------------------------------------------
 void GenerateEulerColors::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply to Good Voxels Only (Bad Voxels Will Be Black)", UseGoodVoxels, FilterParameter::Parameter, GenerateEulerColors, linkedProps));

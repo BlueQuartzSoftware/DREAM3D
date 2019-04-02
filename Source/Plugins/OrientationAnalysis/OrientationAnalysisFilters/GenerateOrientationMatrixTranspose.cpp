@@ -17,14 +17,21 @@
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
+
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 #endif
 
 class GenerateOrientationMatrixTransposeImpl
 {
 public:
-  GenerateOrientationMatrixTransposeImpl(GenerateOrientationMatrixTranspose* filter, float* inputRod, float* outputRod)
+  GenerateOrientationMatrixTransposeImpl(GenerateOrientationMatrixTranspose* filter, float* outputRod)
   : m_Filter(filter)
-  , m_Input(inputRod)
   , m_Output(outputRod)
   {
   }
@@ -64,7 +71,6 @@ public:
 #endif
 private:
   GenerateOrientationMatrixTranspose* m_Filter = nullptr;
-  float* m_Input;
   float* m_Output;
 };
 
@@ -97,7 +103,7 @@ void GenerateOrientationMatrixTranspose::initialize()
 // -----------------------------------------------------------------------------
 void GenerateOrientationMatrixTranspose::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   DataArraySelectionFilterParameter::RequirementType dasReq;
   QVector<QVector<size_t>> comp;
   comp.push_back(QVector<size_t>(1, 9));
@@ -128,8 +134,7 @@ void GenerateOrientationMatrixTranspose::dataCheck()
   }
 
   cDims[0] = 9;
-  m_OutputOrientationMatrixPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-      this, getOutputDataArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_OutputOrientationMatrixPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_OutputOrientationMatrixPtr.lock())
   {
     m_OutputOrientationMatrix = m_OutputOrientationMatrixPtr.lock()->getPointer(0);
@@ -186,12 +191,12 @@ void GenerateOrientationMatrixTranspose::execute()
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), GenerateOrientationMatrixTransposeImpl(this, m_OrientationMatrix, m_OutputOrientationMatrix), tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints), GenerateOrientationMatrixTransposeImpl(this, m_OutputOrientationMatrix), tbb::auto_partitioner());
   }
   else
 #endif
   {
-    GenerateOrientationMatrixTransposeImpl serial(this, m_OrientationMatrix, m_OutputOrientationMatrix);
+    GenerateOrientationMatrixTransposeImpl serial(this, m_OutputOrientationMatrix);
     serial.convert(0, totalPoints);
   }
 

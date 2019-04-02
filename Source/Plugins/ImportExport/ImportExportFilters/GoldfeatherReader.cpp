@@ -38,6 +38,7 @@
 #include <QtCore/QFileInfo>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -45,6 +46,21 @@
 
 #include "ImportExport/ImportExportConstants.h"
 #include "ImportExport/ImportExportVersion.h"
+
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+  AttributeMatrixID22 = 22,
+
+  DataContainerID = 1,
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+  DataArrayID33 = 33,
+  DataArrayID34 = 34,
+  DataArrayID35 = 35,
+  DataArrayID36 = 36
+};
 
 /**
  * @brief The ScopedFileMonitor class will automatically close an open FILE pointer
@@ -96,7 +112,7 @@ GoldfeatherReader::~GoldfeatherReader() = default;
 // -----------------------------------------------------------------------------
 void GoldfeatherReader::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   /*   For an input file use this code*/
   //  {
   //    FilterParameter::Pointer parameter = FilterParameter::New();
@@ -108,7 +124,7 @@ void GoldfeatherReader::setupFilterParameters()
   //  }
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, GoldfeatherReader, "*.jg"));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Surface DataContainer", SurfaceDataContainerName, FilterParameter::CreatedArray, GoldfeatherReader));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Surface DataContainer", SurfaceDataContainerName, FilterParameter::CreatedArray, GoldfeatherReader));
   parameters.push_back(SIMPL_NEW_STRING_FP("Vertex AttributeMatrix", VertexAttributeMatrixName, FilterParameter::CreatedArray, GoldfeatherReader));
   parameters.push_back(SIMPL_NEW_STRING_FP("Face AttributeMatrix", FaceAttributeMatrixName, FilterParameter::CreatedArray, GoldfeatherReader));
   parameters.push_back(SIMPL_NEW_STRING_FP("SurfaceMesh PrincipalCurvature 1 Array Name", SurfaceMeshPrincipalCurvature1sArrayName, FilterParameter::CreatedArray, GoldfeatherReader));
@@ -128,7 +144,7 @@ void GoldfeatherReader::readFilterParameters(AbstractFilterParametersReader* rea
 {
   reader->openFilterGroup(this, index);
   setInputFile(reader->readString("InputFile", getInputFile()));
-  setSurfaceDataContainerName(reader->readString("SurfaceDataContainerName", getSurfaceDataContainerName()));
+  setSurfaceDataContainerName(reader->readDataArrayPath("SurfaceDataContainerName", getSurfaceDataContainerName()));
   setVertexAttributeMatrixName(reader->readString("VertexAttributeMatrixName", getVertexAttributeMatrixName()));
   setFaceAttributeMatrixName(reader->readString("FaceAttributeMatrixName", getFaceAttributeMatrixName()));
   setSurfaceMeshPrincipalCurvature1sArrayName(reader->readString("SurfaceMeshPrincipalCurvature1sArrayName", getSurfaceMeshPrincipalCurvature1sArrayName()));
@@ -203,18 +219,18 @@ void GoldfeatherReader::dataCheck()
 {
   DataArrayPath tempPath;
 
-  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName());
+  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName(), DataContainerID);
   if(getErrorCode() < 0)
   {
     return;
   }
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer vertAttrMat = sm->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
+  AttributeMatrix::Pointer vertAttrMat = sm->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID21);
   if(getErrorCode() < 0 || nullptr == vertAttrMat.get())
   {
     return;
   }
-  AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face);
+  AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face, AttributeMatrixID22);
   if(getErrorCode() < 0 || nullptr == faceAttrMat.get())
   {
     return;
@@ -237,62 +253,64 @@ void GoldfeatherReader::dataCheck()
 
   sm->setGeometry(triangleGeom);
 
+  const QString surfaceDCName = getSurfaceDataContainerName().getDataContainerName();
+
   QVector<size_t> dims(1, 3);
-  tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getSurfaceMeshNodeNormalsArrayName());
+  tempPath.update(surfaceDCName, getVertexAttributeMatrixName(), getSurfaceMeshNodeNormalsArrayName());
   m_SurfaceMeshNodeNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
-      this, tempPath, 0, dims);                     /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      this, tempPath, 0, dims, "", DataArrayID30);  /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshNodeNormalsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_SurfaceMeshNodeNormals = m_SurfaceMeshNodeNormalsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 1;
-  tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getSurfaceMeshPrincipalCurvature1sArrayName());
+  tempPath.update(surfaceDCName, getVertexAttributeMatrixName(), getSurfaceMeshPrincipalCurvature1sArrayName());
   m_SurfaceMeshPrincipalCurvature1sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
-      this, tempPath, 0, dims);                              /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      this, tempPath, 0, dims, "", DataArrayID31);           /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshPrincipalCurvature1sPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_SurfaceMeshPrincipalCurvature1s = m_SurfaceMeshPrincipalCurvature1sPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getSurfaceMeshPrincipalCurvature2sArrayName());
+  tempPath.update(surfaceDCName, getVertexAttributeMatrixName(), getSurfaceMeshPrincipalCurvature2sArrayName());
   m_SurfaceMeshPrincipalCurvature2sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
-      this, tempPath, 0, dims);                              /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      this, tempPath, 0, dims, "", DataArrayID32);           /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshPrincipalCurvature2sPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_SurfaceMeshPrincipalCurvature2s = m_SurfaceMeshPrincipalCurvature2sPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 3;
-  tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getSurfaceMeshPrincipalDirection1sArrayName());
+  tempPath.update(surfaceDCName, getVertexAttributeMatrixName(), getSurfaceMeshPrincipalDirection1sArrayName());
   m_SurfaceMeshPrincipalDirection1sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
-      this, tempPath, 0, dims);                              /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      this, tempPath, 0, dims, "", DataArrayID33);           /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshPrincipalDirection1sPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_SurfaceMeshPrincipalDirection1s = m_SurfaceMeshPrincipalDirection1sPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getSurfaceMeshPrincipalDirection2sArrayName());
+  tempPath.update(surfaceDCName, getVertexAttributeMatrixName(), getSurfaceMeshPrincipalDirection2sArrayName());
   m_SurfaceMeshPrincipalDirection2sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
-      this, tempPath, 0, dims);                              /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      this, tempPath, 0, dims, "", DataArrayID34);           /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshPrincipalDirection2sPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_SurfaceMeshPrincipalDirection2s = m_SurfaceMeshPrincipalDirection2sPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 2;
-  tempPath.update(getSurfaceDataContainerName(), getFaceAttributeMatrixName(), getSurfaceMeshFaceLabelsArrayName());
+  tempPath.update(surfaceDCName, getFaceAttributeMatrixName(), getSurfaceMeshFaceLabelsArrayName());
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
-      this, tempPath, 0, dims);                    /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      this, tempPath, 0, dims, "", DataArrayID35); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshFaceLabelsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   dims[0] = 3;
-  tempPath.update(getSurfaceDataContainerName(), getFaceAttributeMatrixName(), getSurfaceMeshFaceNormalsArrayName());
+  tempPath.update(surfaceDCName, getFaceAttributeMatrixName(), getSurfaceMeshFaceNormalsArrayName());
   m_SurfaceMeshFaceNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
-      this, tempPath, 0, dims);                     /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+      this, tempPath, 0, dims, "", DataArrayID36);  /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshFaceNormalsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0);

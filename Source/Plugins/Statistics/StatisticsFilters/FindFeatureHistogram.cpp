@@ -70,7 +70,7 @@ FindFeatureHistogram::~FindFeatureHistogram() = default;
 // -----------------------------------------------------------------------------
 void FindFeatureHistogram::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();

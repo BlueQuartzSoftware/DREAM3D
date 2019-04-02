@@ -183,7 +183,7 @@ public:
 
     dc1->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(X.getMax(), Y.getMax(), Z.getMax()));
     dc1->getGeometryAs<ImageGeom>()->setOrigin(originalOrigin);
-    dc1->getGeometryAs<ImageGeom>()->setResolution(originalRes);
+    dc1->getGeometryAs<ImageGeom>()->setSpacing(originalRes);
 
     QVector<size_t> amDims;
     amDims.push_back(X.getMax());
@@ -244,13 +244,13 @@ public:
       }
     }
 
-    err = am1->addAttributeArray(k_DataArrayName, genericData);
+    err = am1->insertOrAssign(genericData);
     DREAM3D_REQUIRE(err >= 0);
-    err = am1->addAttributeArray(k_4CompDataArrayName, fourCompData);
+    err = am1->insertOrAssign(fourCompData);
     DREAM3D_REQUIRE(err >= 0);
-    err = am1->addAttributeArray(k_FeatureIdsName, featureIds);
+    err = am1->insertOrAssign(featureIds);
     DREAM3D_REQUIRE(err >= 0);
-    err = am2->addAttributeArray(k_ActivesName, actives);
+    err = am2->insertOrAssign(actives);
     DREAM3D_REQUIRE(err >= 0);
 
     foreach(QString da, am1->getAttributeArrayNames())
@@ -258,10 +258,10 @@ public:
       DREAM3D_REQUIRE_EQUAL(am1->getAttributeArray(da)->getNumberOfTuples(), tDims[0] * tDims[1] * tDims[2]);
     }
 
-    dc1->addAttributeMatrix(am1->getName(), am1);
-    dc1->addAttributeMatrix(am2->getName(), am2);
+    dc1->addOrReplaceAttributeMatrix(am1);
+    dc1->addOrReplaceAttributeMatrix(am2);
 
-    dca->addDataContainer(dc1);
+    dca->addOrReplaceDataContainer(dc1);
 
     return dca;
   }
@@ -614,7 +614,7 @@ public:
 
       if(createNewDC)
       {
-        var.setValue(k_NewDataContainerName);
+        var.setValue(DataArrayPath(k_NewDataContainerName, "", ""));
         propWasSet = cropVolume->setProperty("NewDataContainerName", var);
         require_equal<bool, bool>(propWasSet, "propWasSet", true, "true");
       }
