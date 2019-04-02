@@ -322,7 +322,7 @@ void DxReader::execute()
     return;
   }
 
-  int err = readHeader();
+  int32_t err = readHeader();
   if(err < 0)
   {
     m_InStream.close();

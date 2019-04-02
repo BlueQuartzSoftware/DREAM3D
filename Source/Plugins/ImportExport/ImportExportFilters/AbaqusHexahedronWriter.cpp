@@ -210,7 +210,7 @@ void AbaqusHexahedronWriter::execute()
   QList<QString> fileNames;
   fileNames << nodesFile << elemsFile << sectsFile << elsetFile << masterFile;
 
-  int err = writeNodes(fileNames, cDims, origin.data(), spacing.data()); // Nodes file
+  int32_t err = writeNodes(fileNames, cDims, origin.data(), spacing.data()); // Nodes file
   if(err < 0)
   {
     QString ss = QObject::tr("Error writing output nodes file '%1'").arg(nodesFile);

@@ -183,7 +183,7 @@ void AbaqusSurfaceMeshWriter::execute()
   FILE* f = fopen(m_OutputFile.toLatin1().data(), "wb");
   ScopedFileMonitor fileMonitor(f);
 
-  int err = writeHeader(f, triangleGeom->getNumberOfVertices(), triangleGeom->getNumberOfTris(), uniqueSpins.size() - 1);
+  int32_t err = writeHeader(f, triangleGeom->getNumberOfVertices(), triangleGeom->getNumberOfTris(), uniqueSpins.size() - 1);
   if(err < 0)
   {
     QString ss = QObject::tr("Error writing header for file '%1'").arg(m_OutputFile);

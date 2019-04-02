@@ -316,7 +316,7 @@ void PhReader::execute()
     return;
   }
 
-  int err = readHeader();
+  int32_t err = readHeader();
   if(err < 0)
   {
     fclose(m_InStream);
