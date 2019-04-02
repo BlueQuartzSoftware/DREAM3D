@@ -233,8 +233,8 @@ void GenerateFaceMisorientationColoring::readFilterParameters(AbstractFilterPara
 // -----------------------------------------------------------------------------
 void GenerateFaceMisorientationColoring::dataCheckSurfaceMesh()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName());
@@ -275,8 +275,8 @@ void GenerateFaceMisorientationColoring::dataCheckSurfaceMesh()
 // -----------------------------------------------------------------------------
 void GenerateFaceMisorientationColoring::dataCheckVoxel()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -335,8 +335,8 @@ void GenerateFaceMisorientationColoring::preflight()
 // -----------------------------------------------------------------------------
 void GenerateFaceMisorientationColoring::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheckSurfaceMesh();
   if(getErrorCode() < 0)
   {

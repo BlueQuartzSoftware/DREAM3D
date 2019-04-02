@@ -550,8 +550,8 @@ void PackPrimaryPhases::writeFilterParameters(QJsonObject& obj) const
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::updateFeatureInstancePointers()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   if(nullptr != m_FeaturePhasesPtr.lock())
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
@@ -591,8 +591,8 @@ void PackPrimaryPhases::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   // Make sure we have our input DataContainer with the proper Ensemble data
@@ -841,8 +841,8 @@ void PackPrimaryPhases::execute()
 {
   initialize();
 
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -109,8 +109,8 @@ void AvizoUniformCoordinateWriter::initialize()
 // -----------------------------------------------------------------------------
 void AvizoUniformCoordinateWriter::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer(this, getFeatureIdsArrayPath().getDataContainerName(), false);
   if(getErrorCode() < 0 || nullptr == dc.get())
@@ -156,8 +156,8 @@ void AvizoUniformCoordinateWriter::preflight()
 // -----------------------------------------------------------------------------
 void AvizoUniformCoordinateWriter::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -128,8 +128,8 @@ void EbsdToH5Ebsd::initialize()
 // -----------------------------------------------------------------------------
 void EbsdToH5Ebsd::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   QString ss;
 
   if(m_OutputFile.isEmpty())
@@ -207,8 +207,8 @@ void EbsdToH5Ebsd::preflight()
 // -----------------------------------------------------------------------------
 void EbsdToH5Ebsd::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

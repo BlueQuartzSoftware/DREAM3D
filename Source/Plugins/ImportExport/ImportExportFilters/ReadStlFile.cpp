@@ -168,8 +168,8 @@ void ReadStlFile::readFilterParameters(AbstractFilterParametersReader* reader, i
 // -----------------------------------------------------------------------------
 void ReadStlFile::updateFaceInstancePointers()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_FaceNormalsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -196,8 +196,8 @@ void ReadStlFile::initialize()
 void ReadStlFile::dataCheck()
 {
   initialize();
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   DataArrayPath tempPath;
 
@@ -248,8 +248,8 @@ void ReadStlFile::preflight()
 // -----------------------------------------------------------------------------
 void ReadStlFile::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {
@@ -259,8 +259,8 @@ void ReadStlFile::execute()
   readFile();
   eliminate_duplicate_nodes();
 
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 }
 
 // -----------------------------------------------------------------------------

@@ -556,8 +556,8 @@ void FindGBCDMetricBased::initialize()
 // -----------------------------------------------------------------------------
 void FindGBCDMetricBased::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   // Fixed Misorientation (filter params.)
   if(getMisorientationRotation().angle <= 0.0 || getMisorientationRotation().angle > 180.0)
@@ -729,8 +729,8 @@ void FindGBCDMetricBased::preflight()
 // -----------------------------------------------------------------------------
 void FindGBCDMetricBased::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

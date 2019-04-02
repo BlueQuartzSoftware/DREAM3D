@@ -130,8 +130,8 @@ void CreateEnsembleInfo::initialize()
 // -----------------------------------------------------------------------------
 void CreateEnsembleInfo::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   if(m_Ensemble.size() == 0)
   {
@@ -193,8 +193,8 @@ void CreateEnsembleInfo::preflight()
 // -----------------------------------------------------------------------------
 void CreateEnsembleInfo::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

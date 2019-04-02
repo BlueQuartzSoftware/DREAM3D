@@ -189,8 +189,8 @@ void FeatureFaceCurvatureFilter::initialize()
 // -----------------------------------------------------------------------------
 void FeatureFaceCurvatureFilter::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   DataArrayPath tempPath;
@@ -344,8 +344,8 @@ void FeatureFaceCurvatureFilter::preflight()
 // -----------------------------------------------------------------------------
 void FeatureFaceCurvatureFilter::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

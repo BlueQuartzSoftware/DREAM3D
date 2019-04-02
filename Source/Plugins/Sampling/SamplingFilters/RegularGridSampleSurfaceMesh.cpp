@@ -133,8 +133,8 @@ void RegularGridSampleSurfaceMesh::initialize()
 // -----------------------------------------------------------------------------
 void RegularGridSampleSurfaceMesh::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
@@ -230,8 +230,8 @@ void RegularGridSampleSurfaceMesh::assign_points(Int32ArrayType::Pointer iArray)
 // -----------------------------------------------------------------------------
 void RegularGridSampleSurfaceMesh::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

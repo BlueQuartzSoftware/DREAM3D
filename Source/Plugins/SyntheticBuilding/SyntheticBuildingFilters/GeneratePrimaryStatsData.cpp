@@ -73,8 +73,8 @@ GeneratePrimaryStatsData::~GeneratePrimaryStatsData() = default;
 // -----------------------------------------------------------------------------
 void GeneratePrimaryStatsData::initialize()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
   m_StatsDataArray = nullptr;
   m_PrimaryStatsData = nullptr;
@@ -218,8 +218,8 @@ void GeneratePrimaryStatsData::setupFilterParameters()
 void GeneratePrimaryStatsData::dataCheck()
 {
   initialize();
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   FLOAT_RANGE_CHECK(Mu, 0.0001, 10.0, -95000);
   FLOAT_RANGE_CHECK(Sigma, 0.0, 5.0, -95001);

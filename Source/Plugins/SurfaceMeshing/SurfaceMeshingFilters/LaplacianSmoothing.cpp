@@ -200,8 +200,8 @@ void LaplacianSmoothing::preflight()
 // -----------------------------------------------------------------------------
 void LaplacianSmoothing::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -114,8 +114,8 @@ void FindFeaturePhases::initialize()
 // -----------------------------------------------------------------------------
 void FindFeaturePhases::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -170,8 +170,8 @@ void FindFeaturePhases::preflight()
 // -----------------------------------------------------------------------------
 void FindFeaturePhases::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

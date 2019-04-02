@@ -119,8 +119,8 @@ void FindAvgCAxes::initialize()
 // -----------------------------------------------------------------------------
 void FindAvgCAxes::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -176,8 +176,8 @@ void FindAvgCAxes::preflight()
 // -----------------------------------------------------------------------------
 void FindAvgCAxes::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

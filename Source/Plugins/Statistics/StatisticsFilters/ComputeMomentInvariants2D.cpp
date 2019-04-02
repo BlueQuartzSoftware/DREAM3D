@@ -53,8 +53,8 @@ ComputeMomentInvariants2D::~ComputeMomentInvariants2D() = default;
 // -----------------------------------------------------------------------------
 void ComputeMomentInvariants2D::initialize()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -100,8 +100,8 @@ void ComputeMomentInvariants2D::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ComputeMomentInvariants2D::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   IGeometry::Pointer igeom = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
   if(nullptr == igeom.get())

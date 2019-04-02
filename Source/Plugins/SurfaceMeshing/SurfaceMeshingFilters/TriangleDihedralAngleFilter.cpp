@@ -181,8 +181,8 @@ void TriangleDihedralAngleFilter::initialize()
 // -----------------------------------------------------------------------------
 void TriangleDihedralAngleFilter::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   TriangleGeom::Pointer triangles =
       getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshTriangleDihedralAnglesArrayPath().getDataContainerName());
@@ -227,8 +227,8 @@ void TriangleDihedralAngleFilter::preflight()
 // -----------------------------------------------------------------------------
 void TriangleDihedralAngleFilter::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

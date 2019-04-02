@@ -139,8 +139,8 @@ void AlignSectionsMisorientation::initialize()
 // -----------------------------------------------------------------------------
 void AlignSectionsMisorientation::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
@@ -381,8 +381,8 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
 // -----------------------------------------------------------------------------
 void AlignSectionsMisorientation::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   dataCheck();
   if(getErrorCode() < 0)

@@ -84,8 +84,8 @@ void GenerateNodeTriangleConnectivity::initialize()
 // -----------------------------------------------------------------------------
 void GenerateNodeTriangleConnectivity::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(nullptr == sm)
@@ -144,8 +144,8 @@ void GenerateNodeTriangleConnectivity::preflight()
 // -----------------------------------------------------------------------------
 void GenerateNodeTriangleConnectivity::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   // Just to double check we have everything.
   dataCheck();

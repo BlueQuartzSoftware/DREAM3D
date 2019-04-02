@@ -271,8 +271,8 @@ public:
   // -----------------------------------------------------------------------------
   void resetTest(AbstractFilter::Pointer cropVolume, NumPackage X, NumPackage Y, NumPackage Z, int numComponents)
   {
-    cropVolume->clearErrorCondition();
-    cropVolume->clearWarningCondition();
+    cropVolume->clearErrorCode();
+    cropVolume->clearWarningCode();
     DataContainerArray::Pointer dca = CreateDataContainerArrayTestStructure(X, Y, Z, numComponents);
     cropVolume->setDataContainerArray(dca);
   }

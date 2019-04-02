@@ -112,8 +112,8 @@ void AbaqusHexahedronWriter::initialize()
 // -----------------------------------------------------------------------------
 void AbaqusHexahedronWriter::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   if(m_OutputPath.isEmpty())
   {
@@ -173,8 +173,8 @@ void AbaqusHexahedronWriter::preflight()
 // -----------------------------------------------------------------------------
 void AbaqusHexahedronWriter::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

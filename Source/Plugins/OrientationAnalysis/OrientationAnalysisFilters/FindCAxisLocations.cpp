@@ -101,8 +101,8 @@ void FindCAxisLocations::initialize()
 // -----------------------------------------------------------------------------
 void FindCAxisLocations::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   QVector<size_t> cDims(1, 4);
@@ -141,8 +141,8 @@ void FindCAxisLocations::preflight()
 // -----------------------------------------------------------------------------
 void FindCAxisLocations::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

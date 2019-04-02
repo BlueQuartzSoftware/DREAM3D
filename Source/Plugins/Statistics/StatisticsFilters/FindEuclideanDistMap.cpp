@@ -377,8 +377,8 @@ void FindEuclideanDistMap::initialize()
 // -----------------------------------------------------------------------------
 void FindEuclideanDistMap::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
@@ -749,8 +749,8 @@ void FindEuclideanDistMap::findDistanceMap()
 // -----------------------------------------------------------------------------
 void FindEuclideanDistMap::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

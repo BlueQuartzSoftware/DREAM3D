@@ -323,8 +323,8 @@ void SampleSurfaceMesh::assign_points(Int32ArrayType::Pointer iArray)
 // -----------------------------------------------------------------------------
 void SampleSurfaceMesh::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

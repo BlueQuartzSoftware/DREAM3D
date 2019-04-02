@@ -198,8 +198,8 @@ void MergeColonies::readFilterParameters(AbstractFilterParametersReader* reader,
 // -----------------------------------------------------------------------------
 void MergeColonies::updateFeatureInstancePointers()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_ActivePtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -220,8 +220,8 @@ void MergeColonies::initialize()
 // -----------------------------------------------------------------------------
 void MergeColonies::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   DataArrayPath tempPath;
@@ -356,8 +356,8 @@ void MergeColonies::preflight()
 // -----------------------------------------------------------------------------
 int32_t MergeColonies::getSeed(int32_t newFid)
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   int32_t numfeatures = static_cast<int32_t>(m_FeaturePhasesPtr.lock()->getNumberOfTuples());
 
@@ -609,8 +609,8 @@ void MergeColonies::identify_globAlpha()
 // -----------------------------------------------------------------------------
 void MergeColonies::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -109,8 +109,8 @@ void FindBoundaryCells::initialize()
 // -----------------------------------------------------------------------------
 void FindBoundaryCells::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   DataArrayPath tempPath;
 
@@ -151,8 +151,8 @@ void FindBoundaryCells::preflight()
 // -----------------------------------------------------------------------------
 void FindBoundaryCells::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

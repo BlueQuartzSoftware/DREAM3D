@@ -154,8 +154,8 @@ void ChangeAngleRepresentation::initialize()
 // -----------------------------------------------------------------------------
 void ChangeAngleRepresentation::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> cDims(1, 3);
   m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(),
@@ -184,8 +184,8 @@ void ChangeAngleRepresentation::preflight()
 // -----------------------------------------------------------------------------
 void ChangeAngleRepresentation::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

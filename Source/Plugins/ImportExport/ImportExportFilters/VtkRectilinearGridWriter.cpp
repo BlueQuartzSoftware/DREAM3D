@@ -264,8 +264,8 @@ void VtkRectilinearGridWriter::initialize()
 // -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   FileSystemPathHelper::CheckOutputFile(this, "Output VTK File", getOutputFile(), true);
@@ -328,8 +328,8 @@ void VtkRectilinearGridWriter::preflight()
 // -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

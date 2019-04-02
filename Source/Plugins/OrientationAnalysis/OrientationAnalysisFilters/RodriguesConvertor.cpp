@@ -116,8 +116,8 @@ RodriguesConvertor::~RodriguesConvertor() = default;
 // -----------------------------------------------------------------------------
 void RodriguesConvertor::initialize()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -144,8 +144,8 @@ void RodriguesConvertor::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void RodriguesConvertor::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> cDims(1, 1);
   cDims[0] = 3;

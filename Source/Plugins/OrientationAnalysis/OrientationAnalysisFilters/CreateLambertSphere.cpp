@@ -168,8 +168,8 @@ void CreateLambertSphere::initialize()
 // -----------------------------------------------------------------------------
 void CreateLambertSphere::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   if(getHemisphere() < 0 || getHemisphere() > 2)
@@ -374,8 +374,8 @@ void CreateLambertSphere::preflight()
 void CreateLambertSphere::execute()
 {
   // 1.253314137315501
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

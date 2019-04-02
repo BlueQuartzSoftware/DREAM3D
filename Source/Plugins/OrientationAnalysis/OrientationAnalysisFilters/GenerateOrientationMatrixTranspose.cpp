@@ -93,8 +93,8 @@ GenerateOrientationMatrixTranspose::~GenerateOrientationMatrixTranspose() = defa
 // -----------------------------------------------------------------------------
 void GenerateOrientationMatrixTranspose::initialize()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -122,8 +122,8 @@ void GenerateOrientationMatrixTranspose::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void GenerateOrientationMatrixTranspose::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> cDims(1, 1);
   cDims[0] = 9;

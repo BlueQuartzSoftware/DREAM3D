@@ -108,8 +108,8 @@ void AlignSectionsFeatureCentroid::initialize()
 // -----------------------------------------------------------------------------
 void AlignSectionsFeatureCentroid::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
   // These are checked for validity in the Parent Class dataCheck
@@ -288,8 +288,8 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
 // -----------------------------------------------------------------------------
 void AlignSectionsFeatureCentroid::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -220,8 +220,8 @@ void RotateSampleRefFrame::initialize()
 // -----------------------------------------------------------------------------
 void RotateSampleRefFrame::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 }
 
 // -----------------------------------------------------------------------------
@@ -230,8 +230,8 @@ void RotateSampleRefFrame::dataCheck()
 void RotateSampleRefFrame::preflight()
 {
   setInPreflight(true);
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
@@ -416,8 +416,8 @@ void RotateSampleRefFrame::preflight()
 // -----------------------------------------------------------------------------
 void RotateSampleRefFrame::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

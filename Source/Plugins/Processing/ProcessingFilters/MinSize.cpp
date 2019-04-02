@@ -128,8 +128,8 @@ void MinSize::initialize()
 // -----------------------------------------------------------------------------
 void MinSize::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   QVector<DataArrayPath> dataArrayPaths;
@@ -216,8 +216,8 @@ void MinSize::preflight()
 // -----------------------------------------------------------------------------
 void MinSize::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -277,8 +277,8 @@ void GenerateFaceIPFColoring::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 void GenerateFaceIPFColoring::dataCheckSurfaceMesh()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName());
@@ -331,8 +331,8 @@ void GenerateFaceIPFColoring::dataCheckSurfaceMesh()
 // -----------------------------------------------------------------------------
 void GenerateFaceIPFColoring::dataCheckVoxel()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   QVector<DataArrayPath> dataArrayPaths;
@@ -392,8 +392,8 @@ void GenerateFaceIPFColoring::preflight()
 // -----------------------------------------------------------------------------
 void GenerateFaceIPFColoring::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheckSurfaceMesh();
   if(getErrorCode() < 0)
   {

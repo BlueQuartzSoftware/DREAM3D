@@ -386,8 +386,8 @@ void GenerateEnsembleStatistics::initialize()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   DataArrayPath tempPath;
@@ -1395,8 +1395,8 @@ int GenerateEnsembleStatistics::getPhaseCount()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

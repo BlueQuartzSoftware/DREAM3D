@@ -130,8 +130,8 @@ void FindKernelAvgMisorientations::initialize()
 // -----------------------------------------------------------------------------
 void FindKernelAvgMisorientations::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
@@ -209,8 +209,8 @@ void FindKernelAvgMisorientations::preflight()
 // -----------------------------------------------------------------------------
 void FindKernelAvgMisorientations::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

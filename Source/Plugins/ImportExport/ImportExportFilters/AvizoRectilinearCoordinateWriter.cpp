@@ -111,8 +111,8 @@ void AvizoRectilinearCoordinateWriter::initialize()
 // -----------------------------------------------------------------------------
 void AvizoRectilinearCoordinateWriter::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer(this, getFeatureIdsArrayPath().getDataContainerName(), false);
   if(getErrorCode() < 0)
@@ -158,8 +158,8 @@ void AvizoRectilinearCoordinateWriter::preflight()
 // -----------------------------------------------------------------------------
 void AvizoRectilinearCoordinateWriter::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

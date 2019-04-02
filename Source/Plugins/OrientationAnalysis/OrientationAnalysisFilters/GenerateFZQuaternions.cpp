@@ -140,8 +140,8 @@ GenerateFZQuaternions::~GenerateFZQuaternions() = default;
 // -----------------------------------------------------------------------------
 void GenerateFZQuaternions::initialize()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -186,8 +186,8 @@ void GenerateFZQuaternions::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void GenerateFZQuaternions::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   QVector<DataArrayPath> dataArraypaths;

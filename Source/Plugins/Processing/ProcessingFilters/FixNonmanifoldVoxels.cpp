@@ -30,8 +30,8 @@ FixNonmanifoldVoxels::~FixNonmanifoldVoxels() = default;
 // -----------------------------------------------------------------------------
 void FixNonmanifoldVoxels::initialize()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -53,8 +53,8 @@ void FixNonmanifoldVoxels::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void FixNonmanifoldVoxels::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   IGeometry::Pointer geom = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
   ImageGeom::Pointer imageGeom = std::dynamic_pointer_cast<ImageGeom>(geom);

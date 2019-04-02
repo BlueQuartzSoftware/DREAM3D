@@ -110,8 +110,8 @@ void FindTriangleGeomNeighbors::initialize()
 // -----------------------------------------------------------------------------
 void FindTriangleGeomNeighbors::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   initialize();
   DataArrayPath tempPath;
 
@@ -168,8 +168,8 @@ void FindTriangleGeomNeighbors::preflight()
 // -----------------------------------------------------------------------------
 void FindTriangleGeomNeighbors::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

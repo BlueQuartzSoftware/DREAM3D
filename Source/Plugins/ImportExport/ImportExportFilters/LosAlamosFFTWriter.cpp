@@ -115,8 +115,8 @@ void LosAlamosFFTWriter::initialize()
 // -----------------------------------------------------------------------------
 void LosAlamosFFTWriter::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
@@ -188,8 +188,8 @@ int32_t LosAlamosFFTWriter::writeHeader()
 // -----------------------------------------------------------------------------
 int32_t LosAlamosFFTWriter::writeFile()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

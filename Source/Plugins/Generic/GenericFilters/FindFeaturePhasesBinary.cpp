@@ -125,8 +125,8 @@ void FindFeaturePhasesBinary::initialize()
 // -----------------------------------------------------------------------------
 void FindFeaturePhasesBinary::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -192,8 +192,8 @@ void FindFeaturePhasesBinary::preflight()
 // -----------------------------------------------------------------------------
 void FindFeaturePhasesBinary::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

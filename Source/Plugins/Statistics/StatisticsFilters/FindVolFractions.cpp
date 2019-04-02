@@ -109,8 +109,8 @@ void FindVolFractions::initialize()
 // -----------------------------------------------------------------------------
 void FindVolFractions::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellPhasesArrayPath().getDataContainerName());
 
@@ -147,8 +147,8 @@ void FindVolFractions::preflight()
 // -----------------------------------------------------------------------------
 void FindVolFractions::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

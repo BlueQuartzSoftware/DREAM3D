@@ -147,8 +147,8 @@ void TriangleCentroidFilter::initialize()
 // -----------------------------------------------------------------------------
 void TriangleCentroidFilter::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshTriangleCentroidsArrayPath().getDataContainerName());
 
@@ -192,8 +192,8 @@ void TriangleCentroidFilter::preflight()
 // -----------------------------------------------------------------------------
 void TriangleCentroidFilter::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

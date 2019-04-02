@@ -101,8 +101,8 @@ void AppendImageGeometryZSlice::initialize()
 // -----------------------------------------------------------------------------
 void AppendImageGeometryZSlice::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   // Validate the Source & Destination Attribute Matrix are available
   AttributeMatrix::Pointer inputCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getInputAttributeMatrix(), -8201);
@@ -229,8 +229,8 @@ void AppendImageGeometryZSlice::preflight()
 // -----------------------------------------------------------------------------
 void AppendImageGeometryZSlice::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   dataCheck();
   if(getErrorCode() < 0)

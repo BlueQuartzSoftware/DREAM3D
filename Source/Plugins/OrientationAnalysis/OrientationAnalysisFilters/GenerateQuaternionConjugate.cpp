@@ -90,8 +90,8 @@ GenerateQuaternionConjugate::~GenerateQuaternionConjugate() = default;
 // -----------------------------------------------------------------------------
 void GenerateQuaternionConjugate::initialize()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -118,8 +118,8 @@ void GenerateQuaternionConjugate::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void GenerateQuaternionConjugate::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> cDims(1, 1);
   cDims[0] = 4;

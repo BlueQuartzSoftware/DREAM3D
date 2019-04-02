@@ -140,8 +140,8 @@ void UncertainRegularGridSampleSurfaceMesh::initialize()
 // -----------------------------------------------------------------------------
 void UncertainRegularGridSampleSurfaceMesh::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
@@ -242,8 +242,8 @@ void UncertainRegularGridSampleSurfaceMesh::assign_points(Int32ArrayType::Pointe
 // -----------------------------------------------------------------------------
 void UncertainRegularGridSampleSurfaceMesh::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

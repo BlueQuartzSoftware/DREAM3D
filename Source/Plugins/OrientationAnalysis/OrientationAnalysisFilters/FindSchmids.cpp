@@ -174,8 +174,8 @@ void FindSchmids::initialize()
 // -----------------------------------------------------------------------------
 void FindSchmids::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   QVector<size_t> cDims(1, 1);
@@ -284,8 +284,8 @@ void FindSchmids::preflight()
 // -----------------------------------------------------------------------------
 void FindSchmids::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

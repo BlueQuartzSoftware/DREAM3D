@@ -115,8 +115,8 @@ void GenerateVectorColors::initialize()
 // -----------------------------------------------------------------------------
 void GenerateVectorColors::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   DataArrayPath tempPath;
 
@@ -184,8 +184,8 @@ void GenerateVectorColors::preflight()
 // -----------------------------------------------------------------------------
 void GenerateVectorColors::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

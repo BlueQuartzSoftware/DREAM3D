@@ -146,8 +146,8 @@ void FindNeighbors::initialize()
 // -----------------------------------------------------------------------------
 void FindNeighbors::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   initialize();
   DataArrayPath tempPath;
 
@@ -229,8 +229,8 @@ void FindNeighbors::preflight()
 // -----------------------------------------------------------------------------
 void FindNeighbors::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

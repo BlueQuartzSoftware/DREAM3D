@@ -170,8 +170,8 @@ void WriteStatsGenOdfAngleFile::initialize()
 // -----------------------------------------------------------------------------
 void WriteStatsGenOdfAngleFile::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   FileSystemPathHelper::CheckOutputFile(this, "Output File Path", getOutputFile(), true);
 
@@ -241,8 +241,8 @@ void WriteStatsGenOdfAngleFile::preflight()
 // -----------------------------------------------------------------------------
 void WriteStatsGenOdfAngleFile::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

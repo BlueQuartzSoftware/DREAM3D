@@ -167,8 +167,8 @@ void RotateEulerRefFrame::initialize()
 // -----------------------------------------------------------------------------
 void RotateEulerRefFrame::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> cDims(1, 3);
   m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(),
@@ -197,8 +197,8 @@ void RotateEulerRefFrame::preflight()
 // -----------------------------------------------------------------------------
 void RotateEulerRefFrame::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -105,8 +105,8 @@ void AlignSectionsList::initialize()
 // -----------------------------------------------------------------------------
 void AlignSectionsList::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   QString ss;
 
   AlignSections::dataCheck();
@@ -204,8 +204,8 @@ void AlignSectionsList::find_shifts(std::vector<int64_t>& xshifts, std::vector<i
 // -----------------------------------------------------------------------------
 void AlignSectionsList::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

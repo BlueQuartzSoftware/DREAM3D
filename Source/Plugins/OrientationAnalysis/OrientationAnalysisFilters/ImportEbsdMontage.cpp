@@ -75,8 +75,8 @@ ImportEbsdMontage::~ImportEbsdMontage() = default;
 // -----------------------------------------------------------------------------
 void ImportEbsdMontage::initialize()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -152,9 +152,9 @@ void readEbsdFile(ImportEbsdMontage* filter, const QString& fileName, std::map<Q
 // -----------------------------------------------------------------------------
 void ImportEbsdMontage::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
+  clearWarningCode();
 
   DataArrayPath tempPath;
   QString ss;
@@ -256,7 +256,7 @@ void ImportEbsdMontage::dataCheck()
   }
 
   m_FilterCache = newFilterCache; // Swap our maps. This dumps any previous instantiations of the reader filter that are not used any more.
-  clearWarningCondition();
+  clearWarningCode();
 }
 
 // -----------------------------------------------------------------------------

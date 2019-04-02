@@ -209,8 +209,8 @@ void MultiEmmpmFilter::initialize()
 // -----------------------------------------------------------------------------
 void MultiEmmpmFilter::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   if(!DataArrayPath::ValidateVector(getInputDataArrayVector()))
   {
@@ -321,8 +321,8 @@ void MultiEmmpmFilter::preflight()
 // -----------------------------------------------------------------------------
 void MultiEmmpmFilter::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

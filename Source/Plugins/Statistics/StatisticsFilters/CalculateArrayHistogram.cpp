@@ -153,8 +153,8 @@ void CalculateArrayHistogram::initialize()
 // -----------------------------------------------------------------------------
 void CalculateArrayHistogram::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   if(m_NumberOfBins <= 0)
@@ -309,8 +309,8 @@ void findHistogram(IDataArray::Pointer inDataPtr, int32_t numberOfBins, bool use
 // -----------------------------------------------------------------------------
 void CalculateArrayHistogram::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

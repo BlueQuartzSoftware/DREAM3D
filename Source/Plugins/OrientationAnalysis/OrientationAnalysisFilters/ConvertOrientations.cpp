@@ -138,8 +138,8 @@ void ConvertOrientations::initialize()
 // -----------------------------------------------------------------------------
 void ConvertOrientations::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   if(getInputType() == getOutputType())
   {
@@ -265,8 +265,8 @@ template <typename T> void generateRepresentation(ConvertOrientations* filter, t
 // -----------------------------------------------------------------------------
 void ConvertOrientations::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

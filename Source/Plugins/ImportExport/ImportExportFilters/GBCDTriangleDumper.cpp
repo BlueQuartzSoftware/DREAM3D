@@ -112,8 +112,8 @@ void GBCDTriangleDumper::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 void GBCDTriangleDumper::dataCheckSurfaceMesh()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   FileSystemPathHelper::CheckOutputFile(this, "Output File Path", getOutputFile(), true);
 
@@ -170,8 +170,8 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh()
 // -----------------------------------------------------------------------------
 void GBCDTriangleDumper::dataCheckVoxel()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureEulerAnglesArrayPath().getDataContainerName());
 
@@ -203,8 +203,8 @@ void GBCDTriangleDumper::preflight()
 // -----------------------------------------------------------------------------
 void GBCDTriangleDumper::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheckSurfaceMesh();
   dataCheckVoxel();
   if(getErrorCode() < 0)

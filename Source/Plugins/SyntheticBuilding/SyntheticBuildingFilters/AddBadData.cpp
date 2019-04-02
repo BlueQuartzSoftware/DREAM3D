@@ -111,8 +111,8 @@ void AddBadData::initialize()
 // -----------------------------------------------------------------------------
 void AddBadData::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getGBEuclideanDistancesArrayPath().getDataContainerName());
 
@@ -149,8 +149,8 @@ void AddBadData::preflight()
 // -----------------------------------------------------------------------------
 void AddBadData::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

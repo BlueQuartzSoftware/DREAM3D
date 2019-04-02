@@ -145,8 +145,8 @@ void MergeTwins::readFilterParameters(AbstractFilterParametersReader* reader, in
 // -----------------------------------------------------------------------------
 void MergeTwins::updateFeatureInstancePointers()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_ActivePtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -167,8 +167,8 @@ void MergeTwins::initialize()
 // -----------------------------------------------------------------------------
 void MergeTwins::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   GroupFeatures::dataCheck();
@@ -276,8 +276,8 @@ void MergeTwins::preflight()
 // -----------------------------------------------------------------------------
 int32_t MergeTwins::getSeed(int32_t newFid)
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   int32_t numfeatures = static_cast<int32_t>(m_FeaturePhasesPtr.lock()->getNumberOfTuples());
 
@@ -363,8 +363,8 @@ void MergeTwins::characterize_twins()
 // -----------------------------------------------------------------------------
 void MergeTwins::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

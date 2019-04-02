@@ -137,8 +137,8 @@ void AlignSectionsMutualInformation::initialize()
 // -----------------------------------------------------------------------------
 void AlignSectionsMutualInformation::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
   setDataContainerName(DataArrayPath(m_QuatsArrayPath.getDataContainerName(), "", ""));
@@ -594,8 +594,8 @@ void AlignSectionsMutualInformation::form_features_sections()
 // -----------------------------------------------------------------------------
 void AlignSectionsMutualInformation::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

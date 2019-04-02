@@ -129,8 +129,8 @@ void FindSizes::initialize()
 // -----------------------------------------------------------------------------
 void FindSizes::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   QVector<IDataArray::Pointer> dataArrays;
@@ -366,8 +366,8 @@ void FindSizes::findSizes(IGeometry::Pointer igeom)
 // -----------------------------------------------------------------------------
 void FindSizes::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

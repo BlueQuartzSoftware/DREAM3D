@@ -261,8 +261,8 @@ void EMMPMFilter::initialize()
 // -----------------------------------------------------------------------------
 void EMMPMFilter::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getInputDataArrayPath().getDataContainerName());
 
@@ -311,8 +311,8 @@ void EMMPMFilter::preflight()
 // -----------------------------------------------------------------------------
 void EMMPMFilter::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

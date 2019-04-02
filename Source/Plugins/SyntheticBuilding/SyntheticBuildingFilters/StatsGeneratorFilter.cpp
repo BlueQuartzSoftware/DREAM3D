@@ -304,8 +304,8 @@ void StatsGeneratorFilter::preflight()
 // -----------------------------------------------------------------------------
 void StatsGeneratorFilter::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

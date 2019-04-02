@@ -353,8 +353,8 @@ void VerifyTriangleWinding::preflight()
 // -----------------------------------------------------------------------------
 void VerifyTriangleWinding::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCondition() < 0)
   {

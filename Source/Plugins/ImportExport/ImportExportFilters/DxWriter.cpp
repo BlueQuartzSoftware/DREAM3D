@@ -104,8 +104,8 @@ void DxWriter::initialize()
 // -----------------------------------------------------------------------------
 void DxWriter::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
@@ -166,8 +166,8 @@ int32_t DxWriter::writeHeader()
 // -----------------------------------------------------------------------------
 int32_t DxWriter::writeFile()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -206,8 +206,8 @@ void ImportH5OimData::dataCheck()
   // Reset FileWasRead flag
   m_FileWasRead = false;
 
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   if(m_InputFile.isEmpty())
   {
@@ -564,8 +564,8 @@ void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>& t
 // -----------------------------------------------------------------------------
 void ImportH5OimData::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

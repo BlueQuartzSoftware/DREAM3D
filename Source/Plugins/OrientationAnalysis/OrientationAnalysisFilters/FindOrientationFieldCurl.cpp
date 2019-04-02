@@ -182,8 +182,8 @@ void FindOrientationFieldCurl::initialize()
 void FindOrientationFieldCurl::dataCheck()
 {
   DataArrayPath tempPath;
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> dims(1, 1);
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(),
@@ -248,8 +248,8 @@ void FindOrientationFieldCurl::preflight()
 // -----------------------------------------------------------------------------
 void FindOrientationFieldCurl::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

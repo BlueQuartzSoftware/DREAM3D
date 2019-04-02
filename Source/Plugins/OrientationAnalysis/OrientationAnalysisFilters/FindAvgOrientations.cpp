@@ -137,8 +137,8 @@ void FindAvgOrientations::initialize()
 // -----------------------------------------------------------------------------
 void FindAvgOrientations::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -220,8 +220,8 @@ void FindAvgOrientations::preflight()
 // -----------------------------------------------------------------------------
 void FindAvgOrientations::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

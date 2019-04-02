@@ -133,8 +133,8 @@ void ChangeResolution::initialize()
 // -----------------------------------------------------------------------------
 void ChangeResolution::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   if(getSpacing()[0] <= 0)
   {
@@ -286,8 +286,8 @@ void ChangeResolution::preflight()
 // -----------------------------------------------------------------------------
 void ChangeResolution::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

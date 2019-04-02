@@ -108,8 +108,8 @@ void BinaryNodesTrianglesReader::readFilterParameters(AbstractFilterParametersRe
 // -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::updateVertexInstancePointers()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_SurfaceMeshNodeTypesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -122,8 +122,8 @@ void BinaryNodesTrianglesReader::updateVertexInstancePointers()
 // -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::updateFaceInstancePointers()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_FaceLabelsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -215,8 +215,8 @@ void BinaryNodesTrianglesReader::preflight()
 // -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {
@@ -236,8 +236,8 @@ void BinaryNodesTrianglesReader::execute()
 // -----------------------------------------------------------------------------
 int BinaryNodesTrianglesReader::read()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();

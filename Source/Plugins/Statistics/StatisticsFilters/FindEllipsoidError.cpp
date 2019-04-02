@@ -141,8 +141,8 @@ void FindEllipsoidError::initialize()
 // -----------------------------------------------------------------------------
 void FindEllipsoidError::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   initialize();
   DataArrayPath tempPath;
 
@@ -233,8 +233,8 @@ void FindEllipsoidError::preflight()
 // -----------------------------------------------------------------------------
 void FindEllipsoidError::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

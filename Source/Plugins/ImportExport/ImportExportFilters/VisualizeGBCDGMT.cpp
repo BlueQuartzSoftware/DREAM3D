@@ -123,8 +123,8 @@ void VisualizeGBCDGMT::initialize()
 // -----------------------------------------------------------------------------
 void VisualizeGBCDGMT::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getGBCDArrayPath().getDataContainerName());
@@ -196,8 +196,8 @@ void VisualizeGBCDGMT::preflight()
 // -----------------------------------------------------------------------------
 void VisualizeGBCDGMT::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

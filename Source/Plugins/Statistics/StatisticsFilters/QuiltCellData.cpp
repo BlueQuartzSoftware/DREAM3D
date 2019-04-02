@@ -128,8 +128,8 @@ void QuiltCellData::initialize()
 void QuiltCellData::dataCheck()
 {
   DataArrayPath tempPath;
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   // First sanity check the inputs and output names. All must be filled in
 
@@ -340,8 +340,8 @@ template <typename T> float quiltData(IDataArray::Pointer inputData, int64_t xc,
 void QuiltCellData::execute()
 {
   QString ss;
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

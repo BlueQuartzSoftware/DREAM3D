@@ -109,8 +109,8 @@ void ErodeDilateCoordinationNumber::initialize()
 // -----------------------------------------------------------------------------
 void ErodeDilateCoordinationNumber::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
@@ -148,8 +148,8 @@ void ErodeDilateCoordinationNumber::preflight()
 // -----------------------------------------------------------------------------
 void ErodeDilateCoordinationNumber::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -206,8 +206,8 @@ void AlignSections::initialize()
 // -----------------------------------------------------------------------------
 void AlignSections::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getDataContainerName());
@@ -268,8 +268,8 @@ void AlignSections::updateProgress(size_t p)
 // -----------------------------------------------------------------------------
 void AlignSections::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

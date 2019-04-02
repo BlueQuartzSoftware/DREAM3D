@@ -473,8 +473,8 @@ void FindGBCD::initialize()
 // -----------------------------------------------------------------------------
 void FindGBCD::dataCheckSurfaceMesh()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   DataArrayPath tempPath;
@@ -537,8 +537,8 @@ void FindGBCD::dataCheckSurfaceMesh()
 // -----------------------------------------------------------------------------
 void FindGBCD::dataCheckVoxel()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureEulerAnglesArrayPath().getDataContainerName());
 
@@ -589,8 +589,8 @@ void FindGBCD::preflight()
 // -----------------------------------------------------------------------------
 void FindGBCD::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheckVoxel();
   if(getErrorCode() < 0)
   {

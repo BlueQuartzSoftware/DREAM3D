@@ -217,8 +217,8 @@ void WarpRegularGrid::determine_warped_coordinates(float x, float y, float& newX
 // -----------------------------------------------------------------------------
 void WarpRegularGrid::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

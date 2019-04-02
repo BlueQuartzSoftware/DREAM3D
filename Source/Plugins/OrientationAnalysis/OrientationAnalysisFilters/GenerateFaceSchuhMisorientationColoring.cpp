@@ -226,8 +226,8 @@ void GenerateFaceSchuhMisorientationColoring::readFilterParameters(AbstractFilte
 void GenerateFaceSchuhMisorientationColoring::dataCheckSurfaceMesh()
 {
   DataArrayPath tempPath;
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
   if(getErrorCode() < 0)
@@ -258,8 +258,8 @@ void GenerateFaceSchuhMisorientationColoring::dataCheckSurfaceMesh()
 void GenerateFaceSchuhMisorientationColoring::dataCheckVoxel()
 {
   DataArrayPath tempPath;
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> dims(1, 4);
   m_AvgQuatsPtr =
@@ -303,8 +303,8 @@ void GenerateFaceSchuhMisorientationColoring::preflight()
 // -----------------------------------------------------------------------------
 void GenerateFaceSchuhMisorientationColoring::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheckSurfaceMesh();
   if(getErrorCode() < 0)
   {

@@ -98,8 +98,8 @@ void PhWriter::initialize()
 // -----------------------------------------------------------------------------
 void PhWriter::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
@@ -155,8 +155,8 @@ int32_t PhWriter::writeHeader()
 // -----------------------------------------------------------------------------
 int32_t PhWriter::writeFile()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

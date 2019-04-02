@@ -139,8 +139,8 @@ void WriteStlFile::initialize()
 // -----------------------------------------------------------------------------
 void WriteStlFile::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 
@@ -204,8 +204,8 @@ void WriteStlFile::preflight()
 void WriteStlFile::execute()
 {
   int32_t err = 0;
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {
@@ -364,8 +364,8 @@ void WriteStlFile::execute()
     err = writeNumTrianglesToFile(filename, triCount);
   }
 
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 }
 
 // -----------------------------------------------------------------------------

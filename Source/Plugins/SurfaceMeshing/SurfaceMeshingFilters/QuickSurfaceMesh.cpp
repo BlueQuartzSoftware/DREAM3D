@@ -182,8 +182,8 @@ void QuickSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 void QuickSurfaceMesh::updateVertexInstancePointers()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   if(nullptr != m_NodeTypesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_NodeTypes = m_NodeTypesPtr.lock()->getPointer(0);
@@ -195,8 +195,8 @@ void QuickSurfaceMesh::updateVertexInstancePointers()
 // -----------------------------------------------------------------------------
 void QuickSurfaceMesh::updateFaceInstancePointers()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   if(nullptr != m_FaceLabelsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0);
@@ -239,8 +239,8 @@ void QuickSurfaceMesh::initialize()
 // -----------------------------------------------------------------------------
 void QuickSurfaceMesh::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   DataArrayPath tempPath;
@@ -1562,8 +1562,8 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
 // -----------------------------------------------------------------------------
 void QuickSurfaceMesh::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

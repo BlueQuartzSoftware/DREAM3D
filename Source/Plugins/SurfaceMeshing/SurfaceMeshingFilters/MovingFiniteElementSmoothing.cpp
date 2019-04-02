@@ -193,8 +193,8 @@ void MovingFiniteElementSmoothing::initialize()
 // -----------------------------------------------------------------------------
 void MovingFiniteElementSmoothing::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer(this, getSurfaceMeshNodeTypeArrayPath().getDataContainerName(), false);
   if(getErrorCondition() < 0)
@@ -259,8 +259,8 @@ void MovingFiniteElementSmoothing::preflight()
 // -----------------------------------------------------------------------------
 void MovingFiniteElementSmoothing::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCondition() < 0)
   {
@@ -272,8 +272,8 @@ void MovingFiniteElementSmoothing::execute()
   VertexArray::Pointer floatNodesPtr = sm->getVertices();
   FaceArray::Pointer trianglesPtr = sm->getFaces();
 
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   /* Place all your code to execute your filter here. */
   VertexArray::Vert_t* nodesF = floatNodesPtr->getPointer(0); // Get the pointer to the from of the array so we can use [] notation
   FaceArray::Face_t* triangles = trianglesPtr->getPointer(0); // Get the pointer to the from of the array so we can use [] notation

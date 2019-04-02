@@ -139,8 +139,8 @@ void FitFeatureData::initialize()
 // -----------------------------------------------------------------------------
 void FitFeatureData::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> cDims(1, 1);
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(),
@@ -273,8 +273,8 @@ template <typename T> void fitData(IDataArray::Pointer inDataPtr, float* ensembl
 // -----------------------------------------------------------------------------
 void FitFeatureData::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

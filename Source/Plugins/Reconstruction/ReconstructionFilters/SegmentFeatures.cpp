@@ -76,8 +76,8 @@ void SegmentFeatures::initialize()
 // -----------------------------------------------------------------------------
 void SegmentFeatures::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometryGrid, AbstractFilter>(this, getDataContainerName());
 }
@@ -116,8 +116,8 @@ bool SegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neighbor
 // -----------------------------------------------------------------------------
 void SegmentFeatures::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

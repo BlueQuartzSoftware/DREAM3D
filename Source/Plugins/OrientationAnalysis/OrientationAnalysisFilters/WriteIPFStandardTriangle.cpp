@@ -115,8 +115,8 @@ void WriteIPFStandardTriangle::initialize()
 // -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   QString ss;
 
@@ -162,8 +162,8 @@ void WriteIPFStandardTriangle::preflight()
 // -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

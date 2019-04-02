@@ -147,8 +147,8 @@ void EBSDSegmentFeatures::readFilterParameters(AbstractFilterParametersReader* r
 // -----------------------------------------------------------------------------
 void EBSDSegmentFeatures::updateFeatureInstancePointers()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_ActivePtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -168,8 +168,8 @@ void EBSDSegmentFeatures::initialize()
 // -----------------------------------------------------------------------------
 void EBSDSegmentFeatures::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   // Set the DataContainerName for the Parent Class (SegmentFeatures) to Use
@@ -316,8 +316,8 @@ void EBSDSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t total
 // -----------------------------------------------------------------------------
 int64_t EBSDSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
@@ -407,8 +407,8 @@ void EBSDSegmentFeatures::initializeVoxelSeedGenerator(const int64_t rangeMin, c
 // -----------------------------------------------------------------------------
 void EBSDSegmentFeatures::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

@@ -119,8 +119,8 @@ void GenerateGeometryConnectivity::preflight()
 // -----------------------------------------------------------------------------
 void GenerateGeometryConnectivity::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

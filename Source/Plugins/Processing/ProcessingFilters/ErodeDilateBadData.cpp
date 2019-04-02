@@ -132,8 +132,8 @@ void ErodeDilateBadData::initialize()
 // -----------------------------------------------------------------------------
 void ErodeDilateBadData::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   initialize();
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
@@ -170,8 +170,8 @@ void ErodeDilateBadData::preflight()
 // -----------------------------------------------------------------------------
 void ErodeDilateBadData::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

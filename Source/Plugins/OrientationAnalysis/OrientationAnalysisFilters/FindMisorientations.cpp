@@ -140,8 +140,8 @@ void FindMisorientations::initialize()
 // -----------------------------------------------------------------------------
 void FindMisorientations::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   DataArrayPath tempPath;
@@ -224,8 +224,8 @@ void FindMisorientations::preflight()
 // -----------------------------------------------------------------------------
 void FindMisorientations::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

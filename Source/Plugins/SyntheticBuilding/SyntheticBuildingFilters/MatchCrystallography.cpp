@@ -232,8 +232,8 @@ void MatchCrystallography::initialize()
 // -----------------------------------------------------------------------------
 void MatchCrystallography::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   initialize();
   DataArrayPath tempPath;
 
@@ -357,8 +357,8 @@ void MatchCrystallography::preflight()
 // -----------------------------------------------------------------------------
 void MatchCrystallography::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {

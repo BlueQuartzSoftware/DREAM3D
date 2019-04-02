@@ -148,8 +148,8 @@ void FindSlipTransmissionMetrics::initialize()
 // -----------------------------------------------------------------------------
 void FindSlipTransmissionMetrics::dataCheck()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   DataArrayPath tempPath;
@@ -227,8 +227,8 @@ void FindSlipTransmissionMetrics::preflight()
 // -----------------------------------------------------------------------------
 void FindSlipTransmissionMetrics::execute()
 {
-  clearErrorCondition();
-  clearWarningCondition();
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCode() < 0)
   {
