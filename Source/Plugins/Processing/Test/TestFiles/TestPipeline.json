@@ -128,9 +128,20 @@
             }
         ]
     },
+    "7": {
+        "FilterVersion": "1.2.771",
+        "Filter_Enabled": true,
+        "Filter_Human_Label": "Write DREAM.3D Data File",
+        "Filter_Name": "DataContainerWriter",
+        "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
+        "OutputFile": "",
+        "WriteTimeSeries": 0,
+        "WriteXdmfFile": 1
+    },
+  
     "PipelineBuilder": {
         "Name": "TestPipeline",
-        "Number_Filters": 7,
+        "Number_Filters": 8,
         "Version": 6
     }
 }

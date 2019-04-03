@@ -117,7 +117,7 @@ class EbsdLib_EXPORT EbsdImporter
      * @param x The x resolution (out)
      * @param y The y resolution (out)
      */
-    virtual void getResolution(float& x, float& y) = 0;
+    virtual void getSpacing(float& x, float& y) = 0;
 
     /**
      * @brief Return the number of slices imported

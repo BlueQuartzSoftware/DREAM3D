@@ -1,7 +1,11 @@
 {
     "0": {
-        "DataContainerName": "ImageDataContainer",
-        "FilterVersion": "1.1.572",
+        "DataContainerName": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "FilterVersion": "1.2.863",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Data Container",
         "Filter_Name": "CreateDataContainer",
@@ -14,7 +18,7 @@
             "y": 101,
             "z": 1
         },
-        "FilterVersion": "1.1.572",
+        "FilterVersion": "1.2.863",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Geometry (Image)",
         "Filter_Name": "CreateImageGeometry",
@@ -24,12 +28,16 @@
             "y": 0,
             "z": 0
         },
-        "Resolution": {
+        "SelectedDataContainer": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": "ImageDataContainer"
+        },
+        "Spacing": {
             "x": 1,
             "y": 1,
             "z": 1
-        },
-        "SelectedDataContainer": "ImageDataContainer"
+        }
     },
     "2": {
         "AttributeMatrixType": 3,
@@ -38,7 +46,7 @@
             "Data Array Name": "",
             "Data Container Name": "ImageDataContainer"
         },
-        "FilterVersion": "1.1.572",
+        "FilterVersion": "1.2.863",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Attribute Matrix",
         "Filter_Name": "CreateAttributeMatrix",
@@ -68,7 +76,7 @@
         }
     },
     "3": {
-        "FilterVersion": "1.1.572",
+        "FilterVersion": "1.2.863",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Data Array",
         "Filter_Name": "CreateDataArray",
@@ -92,8 +100,12 @@
         "CreateQuadGeometry": 1,
         "CreateTriangleGeometry": 1,
         "CreateVertexGeometry": 1,
-        "EdgeDataContainerName": "EdgeDataContainer",
-        "FilterVersion": "6.4.436",
+        "EdgeDataContainerName": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": "EdgeDataContainer"
+        },
+        "FilterVersion": "6.5.135",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Sphere (Lambert Projection Technique)",
         "Filter_Name": "CreateLambertSphere",
@@ -104,12 +116,24 @@
             "Data Array Name": "ScalarValues",
             "Data Container Name": "ImageDataContainer"
         },
-        "QuadDataContainerName": "QuadDataContainer",
-        "TriangleDataContainerName": "TriangleDataContainer",
-        "VertexDataContainerName": "VertexDataContainer"
+        "QuadDataContainerName": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": "QuadDataContainer"
+        },
+        "TriangleDataContainerName": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": "TriangleDataContainer"
+        },
+        "VertexDataContainerName": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": "VertexDataContainer"
+        }
     },
     "5": {
-        "FilterVersion": "1.1.572",
+        "FilterVersion": "1.2.863",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",

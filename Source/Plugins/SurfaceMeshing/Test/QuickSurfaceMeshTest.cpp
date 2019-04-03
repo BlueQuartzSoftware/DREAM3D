@@ -115,10 +115,10 @@ public:
 
     // Create a DataContainer for each geometry
     DataContainer::Pointer image3D_DC = DataContainer::New("ImageGeom3D");
-    dca->addDataContainer(image3D_DC);
+    dca->addOrReplaceDataContainer(image3D_DC);
 
     DataContainer::Pointer rectGrid_DC = DataContainer::New("RectGrid");
-    dca->addDataContainer(rectGrid_DC);
+    dca->addOrReplaceDataContainer(rectGrid_DC);
 
     // Create an instance of each geometry for testing
     ImageGeom::Pointer image3D = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
@@ -152,25 +152,25 @@ public:
     image3D_fIDs->initializeWithValue(1);
     image3D_fIDs->setValue(2, 2);
     image3D_fIDs->setValue(3, 2);
-    image3D_AttrMat->addAttributeArray(SIMPL::CellData::FeatureIds, image3D_fIDs);
-    image3D_DC->addAttributeMatrix("Image3DData", image3D_AttrMat);
+    image3D_AttrMat->insertOrAssign(image3D_fIDs);
+    image3D_DC->addOrReplaceAttributeMatrix(image3D_AttrMat);
 
     AttributeMatrix::Pointer rectGrid_AttrMat = AttributeMatrix::New(tDims, "RectGridData", AttributeMatrix::Type::Cell);
     Int32ArrayType::Pointer rectGrid_fIDs = Int32ArrayType::CreateArray(4, SIMPL::CellData::FeatureIds);
     rectGrid_fIDs->initializeWithValue(1);
     rectGrid_fIDs->setValue(2, 2);
     rectGrid_fIDs->setValue(3, 2);
-    rectGrid_AttrMat->addAttributeArray(SIMPL::CellData::FeatureIds, rectGrid_fIDs);
-    rectGrid_DC->addAttributeMatrix("RectGridData", rectGrid_AttrMat);
+    rectGrid_AttrMat->insertOrAssign(rectGrid_fIDs);
+    rectGrid_DC->addOrReplaceAttributeMatrix(rectGrid_AttrMat);
 
     // Create a feature AttributeMatrix for each geometry, which all have 2 features
     tDims[0] = 3;
 
     AttributeMatrix::Pointer image3D_featureAttrMat = AttributeMatrix::New(tDims, "Image3DFeatureData", AttributeMatrix::Type::CellFeature);
-    image3D_DC->addAttributeMatrix("Image3DFeatureData", image3D_featureAttrMat);
+    image3D_DC->addOrReplaceAttributeMatrix(image3D_featureAttrMat);
 
     AttributeMatrix::Pointer rectGrid_featureAttrMat = AttributeMatrix::New(tDims, "RectGridFeatureData", AttributeMatrix::Type::CellFeature);
-    rectGrid_DC->addAttributeMatrix("RectGridFeatureData", rectGrid_featureAttrMat);
+    rectGrid_DC->addOrReplaceAttributeMatrix(rectGrid_featureAttrMat);
 
     return dca;
   }
@@ -183,8 +183,8 @@ public:
     int err = 0;
 
     DataArrayPath imageGeom3D_featureIds("ImageGeom3D", "Image3DData", "FeatureIds");
-    QString imageSurfMesh = "ImageSurfMesh";
-    QString imageSurfMeshTripleLineDCName = "SurfaceMesh TripleLines";
+    DataArrayPath imageSurfMesh("ImageSurfMesh", "", "");
+    DataArrayPath imageSurfMeshTripleLineDCName("SurfaceMesh TripleLines", "", "");
 
     SET_FILTER_PROPERTY_WITH_CHECK(filter, "FeatureIdsArrayPath", imageGeom3D_featureIds, err)
     SET_FILTER_PROPERTY_WITH_CHECK(filter, "SurfaceDataContainerName", imageSurfMesh, err)
@@ -196,8 +196,8 @@ public:
 
     // Now setup to create a surface mesh from a RectilinearGrid Geometry
     DataArrayPath rectGrid_featureIds("RectGrid", "RectGridData", "FeatureIds");
-    QString rectGridSurfMesh = "RectGridSurfMesh";
-    QString rectGridSurfMeshTripleLineDCName = "RectGrid TripleLines";
+    DataArrayPath rectGridSurfMesh("RectGridSurfMesh", "", "");
+    DataArrayPath rectGridSurfMeshTripleLineDCName("RectGrid TripleLines", "", "");
 
     SET_FILTER_PROPERTY_WITH_CHECK(filter, "FeatureIdsArrayPath", rectGrid_featureIds, err)
     SET_FILTER_PROPERTY_WITH_CHECK(filter, "SurfaceDataContainerName", rectGridSurfMesh, err)

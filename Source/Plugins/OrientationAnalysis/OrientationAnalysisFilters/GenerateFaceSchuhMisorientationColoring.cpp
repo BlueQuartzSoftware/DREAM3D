@@ -182,7 +182,7 @@ GenerateFaceSchuhMisorientationColoring::~GenerateFaceSchuhMisorientationColorin
 // -----------------------------------------------------------------------------
 void GenerateFaceSchuhMisorientationColoring::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   {
     DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("SurfaceMeshFaceLabels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, GenerateFaceSchuhMisorientationColoring, req));

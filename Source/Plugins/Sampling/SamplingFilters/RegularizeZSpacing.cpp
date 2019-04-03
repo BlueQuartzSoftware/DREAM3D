@@ -68,9 +68,9 @@ RegularizeZSpacing::~RegularizeZSpacing() = default;
 // -----------------------------------------------------------------------------
 void RegularizeZSpacing::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Current Z Positions File", InputFile, FilterParameter::Parameter, RegularizeZSpacing, "*.txt"));
-  parameters.push_back(SIMPL_NEW_FLOAT_FP("New Z Resolution", NewZRes, FilterParameter::Parameter, RegularizeZSpacing));
+  parameters.push_back(SIMPL_NEW_FLOAT_FP("New Z Spacing", NewZRes, FilterParameter::Parameter, RegularizeZSpacing));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
@@ -201,7 +201,7 @@ void RegularizeZSpacing::execute()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   float sizez = zboundvalues[dims[2]];
   size_t m_XP = dims[0];
@@ -252,7 +252,7 @@ void RegularizeZSpacing::execute()
     // the data container this will over write the current array with
     // the same name. At least in theory
     IDataArray::Pointer data = p->createNewArray(p->getNumberOfTuples(), p->getComponentDimensions(), p->getName());
-    data->resize(totalPoints);
+    data->resizeTuples(totalPoints);
     void* source = nullptr;
     void* destination = nullptr;
     size_t newIndicies_I = 0;
@@ -266,13 +266,12 @@ void RegularizeZSpacing::execute()
       ::memcpy(destination, source, p->getTypeSize() * data->getNumberOfComponents());
     }
     cellAttrMat->removeAttributeArray(*iter);
-    newCellAttrMat->addAttributeArray(*iter, data);
+    newCellAttrMat->insertOrAssign(data);
   }
-  m->getGeometryAs<ImageGeom>()->setResolution(std::make_tuple(xRes, yRes, m_NewZRes));
+  m->getGeometryAs<ImageGeom>()->setSpacing(std::make_tuple(xRes, yRes, m_NewZRes));
   m->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(m_XP, m_YP, m_ZP));
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
-  m->addAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName(), newCellAttrMat);
-
+  m->addOrReplaceAttributeMatrix(newCellAttrMat);
 }
 
 // -----------------------------------------------------------------------------

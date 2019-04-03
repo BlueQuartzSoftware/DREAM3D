@@ -67,7 +67,7 @@ RemoveFlaggedFeatures::~RemoveFlaggedFeatures() = default;
 // -----------------------------------------------------------------------------
 void RemoveFlaggedFeatures::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_BOOL_FP("Fill-in Removed Features", FillRemovedFeatures, FilterParameter::Parameter, RemoveFlaggedFeatures));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {

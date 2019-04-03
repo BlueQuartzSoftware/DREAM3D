@@ -68,7 +68,7 @@ LammpsFileWriter::~LammpsFileWriter() = default;
 // -----------------------------------------------------------------------------
 void LammpsFileWriter::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Lammps File", LammpsFile, FilterParameter::Parameter, LammpsFileWriter));
 
@@ -87,7 +87,7 @@ void LammpsFileWriter::readFilterParameters(AbstractFilterParametersReader* read
 {
   reader->openFilterGroup(this, index);
   setLammpsFile(reader->readString("LammpsFile", getLammpsFile()));
-  setVertexDataContainerName(reader->readString("VertexDataContainerName", getVertexDataContainerName()));
+  setVertexDataContainerName(reader->readDataArrayPath("VertexDataContainerName", getVertexDataContainerName()));
   reader->closeFilterGroup();
 }
 

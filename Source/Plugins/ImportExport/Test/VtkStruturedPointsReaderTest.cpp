@@ -170,12 +170,12 @@ public:
     FILE* f = fopen(filePath.c_str(), "wb");
 
     int dims[3] = {10, 20, 30};
-    float origin[3] = {0.0f, 0.0f, 0.0f};
-    float scaling[3] = {0.25f, 0.35f, 0.45f};
+    FloatVec3Type origin = {0.0f, 0.0f, 0.0f};
+    FloatVec3Type scaling = {0.25f, 0.35f, 0.45f};
 
     size_t total = dims[0] * dims[1] * dims[2];
 
-    WriteHeader(f, binary, dims, origin, scaling);
+    WriteHeader(f, binary, dims, origin.data(), scaling.data());
 
     // Start the POINT_DATA Section
     fprintf(f, "POINT_DATA %lu\n", static_cast<unsigned long>(total));

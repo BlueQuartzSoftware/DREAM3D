@@ -56,7 +56,7 @@ ComputeStereographicProjection::~ComputeStereographicProjection() = default;
 // -----------------------------------------------------------------------------
 void ComputeStereographicProjection::operator()() const
 {
-  m_Intensity->resize(static_cast<size_t>(m_Config->imageDim * m_Config->imageDim));
+  m_Intensity->resizeTuples(static_cast<size_t>(m_Config->imageDim * m_Config->imageDim));
   m_Intensity->initializeWithZeros();
 
   if(m_Config->discrete)

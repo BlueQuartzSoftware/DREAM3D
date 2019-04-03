@@ -73,7 +73,7 @@ M3CEntireVolume::~M3CEntireVolume() = default;
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Add Surface Layer");
@@ -140,8 +140,8 @@ void M3CEntireVolume::dataCheck()
 
     sm->setNodes(vertices);
     sm->setTriangles(triangles);
-    sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(SIMPL::CellData::SurfaceMeshEdges, faceEdges);
-    sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(SIMPL::CellData::SurfaceMeshInternalEdges, internalEdges);
+    sm->getAttributeMatrix(getCellAttributeMatrixName())->insertOrAssign(faceEdges);
+    sm->getAttributeMatrix(getCellAttributeMatrixName())->insertOrAssign(internalEdges);
 
     addCreatedCellData(SIMPL::CellData::SurfaceMeshEdges);
     addCreatedCellData(SIMPL::CellData::SurfaceMeshInternalEdges);
@@ -395,9 +395,9 @@ int M3CEntireVolume::createMesh()
   // Set the updated Nodes & Triangles into the SurfaceMeshDataContainer
   sm->setTriangles(triangles);
   sm->setNodes(nodes);
-  sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(SIMPL::CellData::SurfaceMeshEdges, faceEdges);
-  sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(SIMPL::CellData::SurfaceMeshInternalEdges, internalEdges);
-  sm->getAttributeMatrix(getCellAttributeMatrixName())->addAttributeArray(SIMPL::CellData::SurfaceMeshNodeType, shortNodeKindPtr);
+  sm->getAttributeMatrix(getCellAttributeMatrixName())->insertOrAssign(faceEdges);
+  sm->getAttributeMatrix(getCellAttributeMatrixName())->insertOrAssign(internalEdges);
+  sm->getAttributeMatrix(getCellAttributeMatrixName())->insertOrAssign(shortNodeKindPtr);
 
   //  notifyStatusMessage(getHumanLabel(), "\nOutputting nodes and triangles...\n");
   //  get_output(vertex, fedge, iedge, triangle, NS, nNodes, nFEdge, tnIEdge, nTriangle, mp);

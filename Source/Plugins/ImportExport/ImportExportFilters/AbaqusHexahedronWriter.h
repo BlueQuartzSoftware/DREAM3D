@@ -185,7 +185,7 @@ private:
    * @param fileNames QList of output file names
    * @param cDims Dimensions of incoming volume (points)
    * @param origin Origin of volume
-   * @param spacing Resolution of volume
+   * @param spacing Spacing of volume
    * @return Integer error value
    */
   int32_t writeNodes(const QList<QString>& fileNames, size_t* cDims, float* origin, float* spacing);

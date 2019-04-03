@@ -80,7 +80,7 @@ LaplacianSmoothing::~LaplacianSmoothing() = default;
 void LaplacianSmoothing::setupFilterParameters()
 {
   SurfaceMeshFilter::setupFilterParameters();
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Iteration Steps", IterationSteps, FilterParameter::Parameter, LaplacianSmoothing));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Default Lambda", Lambda, FilterParameter::Parameter, LaplacianSmoothing));
@@ -179,7 +179,7 @@ void LaplacianSmoothing::dataCheck()
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, faceDataArrays);
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, nodeDataArrays);
 
-  setSurfaceDataContainerName(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
+  setSurfaceDataContainerName(DataArrayPath(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName(), "", ""));
 }
 
 // -----------------------------------------------------------------------------

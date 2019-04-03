@@ -3,19 +3,25 @@
         "AngleRepresentation": 0,
         "CellAttributeMatrixName": "EBSD Scan Data",
         "CellEnsembleAttributeMatrixName": "Phase Data",
-        "DataContainerName": "Small IN100",
-        "FilterVersion": "6.4.440",
+        "DataContainerName": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": "Small IN100"
+        },
+        "FilterVersion": "6.5.115",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Import H5EBSD File",
         "Filter_Name": "ReadH5Ebsd",
+        "Filter_Uuid": "{4ef7f56b-616e-5a80-9e68-1da8f35ad235}",
         "InputFile": "Data/Output/Reconstruction/SmallIN100.h5ebsd",
         "RefFrameZDir": 1,
         "SelectedArrayNames": [
-            "Phases",
-            "Image Quality",
+            "Confidence Index",
             "Fit",
-            "EulerAngles",
             "SEM Signal",
-            "Confidence Index"
+            "EulerAngles",
+            "Phases",
+            "Image Quality"
         ],
         "UseTransformations": 1,
         "ZEndIndex": 117,
@@ -23,9 +29,11 @@
     },
     "1": {
         "DestinationArrayName": "Mask",
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "1.2.802",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Threshold Objects",
         "Filter_Name": "MultiThresholdObjects",
+        "Filter_Uuid": "{014b7300-cf36-5ede-a751-5faf9b119dae}",
         "SelectedThresholds": [
             {
                 "Attribute Array Name": "Confidence Index",
@@ -44,9 +52,11 @@
         ]
     },
     "2": {
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.115",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Convert Orientation Representation",
         "Filter_Name": "ConvertOrientations",
+        "Filter_Uuid": "{e5629880-98c4-5656-82b8-c9fe2b9744de}",
         "InputOrientationArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "EulerAngles",
@@ -57,7 +67,7 @@
         "OutputType": 2
     },
     "3": {
-        "AlignmentShiftFileName": "",
+        "AlignmentShiftFileName": "/Users/mjackson",
         "CellPhasesArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Phases",
@@ -68,9 +78,11 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.115",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Align Sections (Misorientation)",
         "Filter_Name": "AlignSectionsMisorientation",
+        "Filter_Uuid": "{4fb2b9de-3124-534b-b914-dbbbdbc14604}",
         "GoodVoxelsArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Mask",
@@ -87,9 +99,11 @@
     },
     "4": {
         "FillHoles": 0,
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.115",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Isolate Largest Feature (Identify Sample)",
         "Filter_Name": "IdentifySample",
+        "Filter_Uuid": "{0e8c0818-a3fb-57d4-a5c8-7cb8ae54a40a}",
         "GoodVoxelsArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Mask",
@@ -97,10 +111,12 @@
         }
     },
     "5": {
-        "AlignmentShiftFileName": "",
-        "FilterVersion": "6.4.440",
+        "AlignmentShiftFileName": "/Users/mjackson",
+        "FilterVersion": "6.5.115",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Align Sections (Feature Centroid)",
         "Filter_Name": "AlignSectionsFeatureCentroid",
+        "Filter_Uuid": "{886f8b46-51b6-5682-a289-6febd10b7ef0}",
         "GoodVoxelsArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Mask",
@@ -127,26 +143,26 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "Small IN100"
         },
-        "FilterVersion": "6.4.440",
+        "FilterVersion": "6.5.115",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
+        "Filter_Uuid": "{a50e6532-8075-5de5-ab63-945feb0de7f7}",
         "GoodVoxelsArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Mask",
             "Data Container Name": "Small IN100"
         },
-        "ReferenceDir": {
-            "x": 0,
-            "y": 0,
-            "z": 1
-        },
         "UseGoodVoxels": 1
     },
     "7": {
-        "FilterVersion": "1.0.858",
+        "FilterVersion": "1.2.802",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
+        "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
         "OutputFile": "Data/Output/Reconstruction/03_SmallIN100_Aligned.dream3d",
+        "WriteTimeSeries": 0,
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {

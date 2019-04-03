@@ -40,6 +40,8 @@
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
 
+#include "SIMPLib/Common/SIMPLArray.hpp"
+
 class EbsdLib_EXPORT EspritPhase
 {
 public:
@@ -83,9 +85,9 @@ public:
 
 struct Esprit_Private_Data
 {
-  QVector<size_t> dims;
-  QVector<float> resolution;
-  QVector<float> origin;
+  SizeVec3Type dims;
+  FloatVec3Type resolution;
+  FloatVec3Type origin;
   QVector<EspritPhase::Pointer> phases;
   int32_t units;
 };

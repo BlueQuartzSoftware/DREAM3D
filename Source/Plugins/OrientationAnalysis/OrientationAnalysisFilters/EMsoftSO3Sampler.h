@@ -52,12 +52,12 @@ class OrientationAnalysis_EXPORT EMsoftSO3Sampler : public AbstractFilter
     PYB11_PROPERTY(int PointGroup READ getPointGroup WRITE setPointGroup)
     PYB11_PROPERTY(int Numsp READ getNumsp WRITE setNumsp)
     PYB11_PROPERTY(double MisOr READ getMisOr WRITE setMisOr)
-    PYB11_PROPERTY(FloatVec3_t RefOr READ getRefOr WRITE setRefOr)
+    PYB11_PROPERTY(FloatVec3Type RefOr READ getRefOr WRITE setRefOr)
     PYB11_PROPERTY(double MisOrFull READ getMisOrFull WRITE setMisOrFull)
-    PYB11_PROPERTY(FloatVec3_t RefOrFull READ getRefOrFull WRITE setRefOrFull)
+    PYB11_PROPERTY(FloatVec3Type RefOrFull READ getRefOrFull WRITE setRefOrFull)
     PYB11_PROPERTY(bool OffsetGrid READ getOffsetGrid WRITE setOffsetGrid)
     PYB11_PROPERTY(QString EulerAnglesArrayName READ getEulerAnglesArrayName WRITE setEulerAnglesArrayName)
-    PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+    PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
     PYB11_PROPERTY(QString EMsoftAttributeMatrixName READ getEMsoftAttributeMatrixName WRITE setEMsoftAttributeMatrixName)
 
 public:
@@ -83,14 +83,14 @@ public:
   SIMPL_FILTER_PARAMETER(double, MisOr)
   Q_PROPERTY(int MisOr READ getMisOr WRITE setMisOr)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, RefOr)
-  Q_PROPERTY(FloatVec3_t RefOr READ getRefOr WRITE setRefOr)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, RefOr)
+  Q_PROPERTY(FloatVec3Type RefOr READ getRefOr WRITE setRefOr)
 
   SIMPL_FILTER_PARAMETER(double, MisOrFull)
   Q_PROPERTY(int MisOrFull READ getMisOrFull WRITE setMisOrFull)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, RefOrFull)
-  Q_PROPERTY(FloatVec3_t RefOrFull READ getRefOrFull WRITE setRefOrFull)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, RefOrFull)
+  Q_PROPERTY(FloatVec3Type RefOrFull READ getRefOrFull WRITE setRefOrFull)
 
   SIMPL_FILTER_PARAMETER(bool, OffsetGrid)
   Q_PROPERTY(bool OffsetGrid READ getOffsetGrid WRITE setOffsetGrid)
@@ -98,8 +98,8 @@ public:
   SIMPL_FILTER_PARAMETER(QString, EulerAnglesArrayName)
   Q_PROPERTY(QString EulerAnglesArrayName READ getEulerAnglesArrayName WRITE setEulerAnglesArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, DataContainerName)
-  Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
   SIMPL_FILTER_PARAMETER(QString, EMsoftAttributeMatrixName)
   Q_PROPERTY(QString EMsoftAttributeMatrixName READ getEMsoftAttributeMatrixName WRITE setEMsoftAttributeMatrixName)

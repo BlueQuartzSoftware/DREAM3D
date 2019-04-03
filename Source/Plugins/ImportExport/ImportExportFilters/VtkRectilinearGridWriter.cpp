@@ -228,7 +228,7 @@ VtkRectilinearGridWriter::~VtkRectilinearGridWriter() = default;
 // -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, VtkRectilinearGridWriter, "*.vtk", "VTK Rectilinear Grid"));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Write Binary File", WriteBinaryFile, FilterParameter::Parameter, VtkRectilinearGridWriter));
@@ -359,9 +359,9 @@ void VtkRectilinearGridWriter::execute()
   ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
   size_t dims[3] = {0, 0, 0};
   std::tie(dims[0], dims[1], dims[2]) = image->getDimensions();
-  float res[3] = {0.0f, 0.0f, 0.0f};
-  image->getResolution(res);
-  float origin[3] = {0.0f, 0.0f, 0.0f};
+  FloatVec3Type res = {0.0f, 0.0f, 0.0f};
+  image->getSpacing(res);
+  FloatVec3Type origin = {0.0f, 0.0f, 0.0f};
   image->getOrigin(origin);
 
   int err = 0;

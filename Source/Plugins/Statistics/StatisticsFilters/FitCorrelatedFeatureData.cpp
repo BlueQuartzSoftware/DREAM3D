@@ -73,7 +73,7 @@ FitCorrelatedFeatureData::~FitCorrelatedFeatureData() = default;
 // -----------------------------------------------------------------------------
 void FitCorrelatedFeatureData::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();

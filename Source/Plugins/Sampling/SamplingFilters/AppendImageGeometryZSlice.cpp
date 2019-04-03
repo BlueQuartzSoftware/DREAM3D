@@ -61,7 +61,7 @@ AppendImageGeometryZSlice::~AppendImageGeometryZSlice() = default;
 // -----------------------------------------------------------------------------
 void AppendImageGeometryZSlice::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
@@ -72,7 +72,7 @@ void AppendImageGeometryZSlice::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Destination Cell Data", DestinationAttributeMatrix, FilterParameter::RequiredArray, AppendImageGeometryZSlice, req));
   }
 
-  parameters.push_back(SIMPL_NEW_BOOL_FP("Check Resolution", CheckResolution, FilterParameter::Parameter, AppendImageGeometryZSlice));
+  parameters.push_back(SIMPL_NEW_BOOL_FP("Check Spacing", CheckResolution, FilterParameter::Parameter, AppendImageGeometryZSlice));
 
   setFilterParameters(parameters);
 }
@@ -140,27 +140,27 @@ void AppendImageGeometryZSlice::dataCheck()
 
   if(getCheckResolution())
   {
-    float inputRes[3] = {0.0f, 0.0f, 0.0f};
-    inputGeometry->getResolution(inputRes);
+    FloatVec3Type inputRes = {0.0f, 0.0f, 0.0f};
+    inputGeometry->getSpacing(inputRes);
 
-    float destRes[3] = {0.0f, 0.0f, 0.0f};
-    destGeometry->getResolution(destRes);
+    FloatVec3Type destRes = {0.0f, 0.0f, 0.0f};
+    destGeometry->getSpacing(destRes);
 
     if(inputRes[0] != destRes[0])
     {
-      QString ss = QObject::tr("Input X Resolution (%1) not equal to Destination X Resolution (%2)").arg(inputRes[0]).arg(destRes[0]);
+      QString ss = QObject::tr("Input X Spacing (%1) not equal to Destination X Spacing (%2)").arg(inputRes[0]).arg(destRes[0]);
       setErrorCondition(-8205);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
     if(inputRes[1] != destRes[1])
     {
-      QString ss = QObject::tr("Input Y Resolution (%1) not equal to Destination Y Resolution (%2)").arg(inputRes[1]).arg(destRes[1]);
+      QString ss = QObject::tr("Input Y Spacing (%1) not equal to Destination Y Spacing (%2)").arg(inputRes[1]).arg(destRes[1]);
       setErrorCondition(-8206);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
     if(inputRes[2] != destRes[2])
     {
-      QString ss = QObject::tr("Input Z Resolution (%1) not equal to Destination Z Resolution (%2)").arg(inputRes[2]).arg(destRes[2]);
+      QString ss = QObject::tr("Input Z Spacing (%1) not equal to Destination Z Spacing (%2)").arg(inputRes[2]).arg(destRes[2]);
       setErrorCondition(-8207);
       notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
@@ -209,10 +209,10 @@ void AppendImageGeometryZSlice::dataCheck()
       IDataArray::Pointer data = p->createNewArray(totalPoints, p->getComponentDimensions(), p->getName(), false);
 
       destCellAttrMat->removeAttributeArray(*iter);
-      newCellAttrMat->addAttributeArray(*iter, data);
+      newCellAttrMat->insertOrAssign(data);
     }
     getDataContainerArray()->getDataContainer(getDestinationAttributeMatrix().getDataContainerName())->removeAttributeMatrix(destCellAttrMat->getName());
-    getDataContainerArray()->getDataContainer(getDestinationAttributeMatrix().getDataContainerName())->addAttributeMatrix(newCellAttrMat->getName(), newCellAttrMat);
+    getDataContainerArray()->getDataContainer(getDestinationAttributeMatrix().getDataContainerName())->addOrReplaceAttributeMatrix(newCellAttrMat);
   }
 }
 
