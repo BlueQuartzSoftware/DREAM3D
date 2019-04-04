@@ -19,37 +19,33 @@ If the data has come from a HKL acquisition system and the settings of the acqui
 
 The user also may want to assign un-indexed pixels to be ignored by flagging them as "bad". The [Threshold Objects](@ref multithresholdobjects) **Filter** can be used to define this _mask_ by thresholding on values such as _Error_ = 0.
 
-
 ### Radians and Degrees ###
 
 2D .ctf files have their angles in **degrees**. Please be sure to [convert](@ref changeanglerepresentation) the Euler angles from degrees to radians before running any other **Filter**.
-
 
 ### The Axis Alignment Issue for Hexagonal Symmetry [1] ###
 
 + The issue with hexagonal materials is the alignment of the Cartesian coordinate system used for calculations with the crystal coordinate system (the Bravais lattice).
 + In one convention (e.g. EDAX.TSL), the x-axis, i.e. [1,0,0], is aligned with the crystal a1 axis, i.e. the [2,-1,-1,0] direction. In this case, the y-axis is aligned with the [0,1,-1,0] direction. (Green Axis in Figure 1)
 + In the other convention, (e.g. Oxford Instr, Univ. Metz software), the x-axis, i.e. [1,0,0], is aligned with the crystal [1,0,-1,0] direction. In this case, the y-axis is aligned with the [-1,2,-1,0] direction. (Red Axis in Figure 1)
-+ This is important because texture analysis can lead to an ambiguity as to the alignment of [2,-1,-1,0] versus [1,0,-1,0], with apparent **30  ** shifts in the data.
++ This is important because texture analysis can lead to an ambiguity as to the alignment of [2,-1,-1,0] versus [1,0,-1,0], with apparent **30 Degree** shifts in the data.
 + Caution: it appears that the axis alignment is a choice that must be made when installing TSL software so determination of which convention is in use must be made on a case-by-case basis. It is fixed to the y-convention in the HKL software.
 + The main clue that something is wrong in a conversion is that either the 2110 & 1010 pole figures are transposed, or that a peak in the inverse pole figure that should be present at 2110 has shifted over to 1010.
 + DREAM.3D uses the TSL/EDAX convention.
-+ **The result of this is that the filter will _AUTOMATICALLY_ add 30   to phi2 when reading Oxford Instr (.ctf) files. There is no way to turn off this behavior. **
++ __The result of this is that the filter will by default add 30 degrees to phi2 when reading Oxford Instr (.ctf) files. This can be disabled by the user if necessary.__
 
 | Figure 1 |
 |--------|
-| ![](Images/Hexagonal_Axis_Alignment.png) |
+| ![Figure showing 30 Degree conversions](Images/Hexagonal_Axis_Alignment.png) |
 | **Figure 1:** showing TSL and Oxford Instr. conventions. EDAX/TSL is in **Green**. Oxford Inst. is in **Red** |
-
-
-
-
 
 ## Parameters ##
 
 | Name | Type | Description |
 |------|------| ----------- |
 | Input File | File Path |The input .ctf file path |
+| Convert to Radians | bool | Should the filter convert the Eulers to Radians (Default = true)|
+| Hexagonal Axis Alignment | bool | Should the filter convert a Hexagonal phase to the EDAX standard for x-axis alignment |
 
 ## Required Geometry ##
 

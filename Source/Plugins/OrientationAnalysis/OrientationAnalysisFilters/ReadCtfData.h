@@ -70,6 +70,8 @@ class OrientationAnalysis_EXPORT ReadCtfData : public AbstractFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(ReadCtfData SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(bool DegreesToRadians READ getDegreesToRadians WRITE setDegreesToRadians)
+    PYB11_PROPERTY(bool EdaxHexagonalAlignment READ getEdaxHexagonalAlignment WRITE setEdaxHexagonalAlignment)
     PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
     PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
     PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -83,6 +85,12 @@ public:
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ReadCtfData, AbstractFilter)
 
   ~ReadCtfData() override;
+
+  SIMPL_FILTER_PARAMETER(bool, DegreesToRadians)
+  Q_PROPERTY(bool DegreesToRadians READ getDegreesToRadians WRITE setDegreesToRadians)
+
+  SIMPL_FILTER_PARAMETER(bool, EdaxHexagonalAlignment)
+  Q_PROPERTY(bool EdaxHexagonalAlignment READ getEdaxHexagonalAlignment WRITE setEdaxHexagonalAlignment)
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
@@ -245,7 +253,7 @@ protected:
   * @param m DataContainer instance pointer
   * @param tDims Tuple dimensions
   */
-  void readDataFile(CtfReader* reader, DataContainer::Pointer m, QVector<size_t>& tDims, CTF_READ_FLAG flag);
+  void readDataFile(CtfReader* reader, const DataContainer::Pointer &m, QVector<size_t>& tDims, CTF_READ_FLAG flag);
 
 private:
   QScopedPointer<ReadCtfDataPrivate> const d_ptr;
