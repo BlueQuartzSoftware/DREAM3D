@@ -49,6 +49,7 @@
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -338,10 +339,10 @@ void FindEuclideanDistMap::setupFilterParameters()
   }
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Boundary Distances", GBDistancesArrayName, FilterParameter::CreatedArray, FindEuclideanDistMap));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Triple Line Distances", TJDistancesArrayName, FilterParameter::CreatedArray, FindEuclideanDistMap));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Quadruple Point Distances", QPDistancesArrayName, FilterParameter::CreatedArray, FindEuclideanDistMap));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Nearest Neighbors", NearestNeighborsArrayName, FilterParameter::CreatedArray, FindEuclideanDistMap));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Boundary Distances", GBDistancesArrayName, FeatureIdsArrayPath, FilterParameter::CreatedArray, FindEuclideanDistMap));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Triple Line Distances", TJDistancesArrayName, FeatureIdsArrayPath, FilterParameter::CreatedArray, FindEuclideanDistMap));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Quadruple Point Distances", QPDistancesArrayName, FeatureIdsArrayPath, FilterParameter::CreatedArray, FindEuclideanDistMap));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Nearest Neighbors", NearestNeighborsArrayName, FeatureIdsArrayPath, FilterParameter::CreatedArray, FindEuclideanDistMap));
 
   setFilterParameters(parameters);
 }

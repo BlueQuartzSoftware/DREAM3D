@@ -40,6 +40,7 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
@@ -132,11 +133,11 @@ void FindSchmids::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindSchmids, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Schmids", SchmidsArrayName, FilterParameter::CreatedArray, FindSchmids));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Slip Systems", SlipSystemsArrayName, FilterParameter::CreatedArray, FindSchmids));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Poles", PolesArrayName, FilterParameter::CreatedArray, FindSchmids));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Phis", PhisArrayName, FilterParameter::CreatedArray, FindSchmids));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Lambdas", LambdasArrayName, FilterParameter::CreatedArray, FindSchmids));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Schmids", SchmidsArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindSchmids));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Slip Systems", SlipSystemsArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindSchmids));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Poles", PolesArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindSchmids));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Phis", PhisArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindSchmids));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Lambdas", LambdasArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindSchmids));
   setFilterParameters(parameters);
 }
 

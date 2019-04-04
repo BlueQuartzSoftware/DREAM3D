@@ -39,6 +39,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -174,11 +175,11 @@ void MatchCrystallography::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Number of Features", NumFeaturesArrayPath, FilterParameter::RequiredArray, MatchCrystallography, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Euler Angles", CellEulerAnglesArrayName, FilterParameter::CreatedArray, MatchCrystallography));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Euler Angles", CellEulerAnglesArrayName, FeatureIdsArrayPath, FilterParameter::CreatedArray, MatchCrystallography));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Volumes", VolumesArrayName, FilterParameter::CreatedArray, MatchCrystallography));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Average Euler Angles", FeatureEulerAnglesArrayName, FilterParameter::CreatedArray, MatchCrystallography));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Average Quaternions", AvgQuatsArrayName, FilterParameter::CreatedArray, MatchCrystallography));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Volumes", VolumesArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, MatchCrystallography));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Average Euler Angles", FeatureEulerAnglesArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, MatchCrystallography));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Average Quaternions", AvgQuatsArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, MatchCrystallography));
   setFilterParameters(parameters);
 }
 

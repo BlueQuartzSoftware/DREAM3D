@@ -42,6 +42,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
@@ -112,11 +113,11 @@ void MergeTwins::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, MergeTwins, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Parent Ids", CellParentIdsArrayName, FilterParameter::CreatedArray, MergeTwins));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Parent Ids", CellParentIdsArrayName, FeatureIdsArrayPath, FilterParameter::CreatedArray, MergeTwins));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Attribute Matrix", NewCellFeatureAttributeMatrixName, FilterParameter::CreatedArray, MergeTwins));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Parent Ids", FeatureParentIdsArrayName, FilterParameter::CreatedArray, MergeTwins));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Active", ActiveArrayName, FilterParameter::CreatedArray, MergeTwins));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_SUBPATH("Feature Attribute Matrix", NewCellFeatureAttributeMatrixName, FeatureIdsArrayPath, FilterParameter::CreatedArray, MergeTwins));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Parent Ids", FeatureParentIdsArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, MergeTwins));
+  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_SUBPATH("Active", ActiveArrayName, FeatureIdsArrayPath, NewCellFeatureAttributeMatrixName, FilterParameter::CreatedArray, MergeTwins));
   setFilterParameters(parameters);
 }
 

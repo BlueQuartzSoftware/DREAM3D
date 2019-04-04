@@ -106,7 +106,7 @@ void FindNeighbors::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixPath, FilterParameter::RequiredArray, FindNeighbors, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Boundary Cells", BoundaryCellsArrayName, FilterParameter::CreatedArray, FindNeighbors));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Boundary Cells", BoundaryCellsArrayName, FeatureIdsArrayPath, FilterParameter::CreatedArray, FindNeighbors));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Number of Neighbors", NumNeighborsArrayName, CellFeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindNeighbors));
   parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Neighbor List", NeighborListArrayName, CellFeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindNeighbors));

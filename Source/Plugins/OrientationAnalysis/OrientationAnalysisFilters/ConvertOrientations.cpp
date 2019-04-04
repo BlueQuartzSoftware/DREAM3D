@@ -38,6 +38,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
@@ -108,7 +109,7 @@ void ConvertOrientations::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Input Orientations", InputOrientationArrayPath, FilterParameter::RequiredArray, ConvertOrientations, req, 0));
   }
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Output Orientations", OutputOrientationArrayName, FilterParameter::CreatedArray, ConvertOrientations, 0));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Output Orientations", OutputOrientationArrayName, InputOrientationArrayPath, FilterParameter::CreatedArray, ConvertOrientations, 0));
 
   setFilterParameters(parameters);
 }

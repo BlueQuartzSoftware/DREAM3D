@@ -39,6 +39,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -91,11 +92,11 @@ void FindSurfaceAreaToVolume::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Number of Cells", NumCellsArrayPath, FilterParameter::RequiredArray, FindSurfaceAreaToVolume, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Surface Area to Volume Ratio", SurfaceAreaVolumeRatioArrayName, FilterParameter::CreatedArray, FindSurfaceAreaToVolume));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Surface Area to Volume Ratio", SurfaceAreaVolumeRatioArrayName, NumCellsArrayPath, FilterParameter::CreatedArray, FindSurfaceAreaToVolume));
 
   QStringList linkedProps("SphericityArrayName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Sphericity", CalculateSphericity, FilterParameter::Parameter, FindSurfaceAreaToVolume, linkedProps));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Sphericity Array Name", SphericityArrayName, FilterParameter::CreatedArray, FindSurfaceAreaToVolume));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Sphericity Array Name", SphericityArrayName, NumCellsArrayPath, FilterParameter::CreatedArray, FindSurfaceAreaToVolume));
 
   setFilterParameters(parameters);
 }

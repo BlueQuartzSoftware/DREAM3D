@@ -43,6 +43,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -195,8 +196,8 @@ void FindNeighborhoods::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Centroids", CentroidsArrayPath, FilterParameter::RequiredArray, FindNeighborhoods, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Neighborhoods", NeighborhoodsArrayName, FilterParameter::CreatedArray, FindNeighborhoods));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Neighborhood List", NeighborhoodListArrayName, FilterParameter::CreatedArray, FindNeighborhoods));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Neighborhoods", NeighborhoodsArrayName, EquivalentDiametersArrayPath, FilterParameter::CreatedArray, FindNeighborhoods));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Neighborhood List", NeighborhoodListArrayName, EquivalentDiametersArrayPath, FilterParameter::CreatedArray, FindNeighborhoods));
   setFilterParameters(parameters);
 }
 

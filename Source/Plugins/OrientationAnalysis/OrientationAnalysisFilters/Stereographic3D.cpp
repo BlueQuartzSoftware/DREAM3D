@@ -42,6 +42,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
@@ -156,7 +157,7 @@ void Stereographic3D::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternions", QuatsArrayPath, FilterParameter::RequiredArray, Stereographic3D, req));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Coordinates", CoordinatesArrayName, FilterParameter::CreatedArray, Stereographic3D));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Coordinates", CoordinatesArrayName, QuatsArrayPath, FilterParameter::CreatedArray, Stereographic3D));
 
   setFilterParameters(parameters);
 }

@@ -44,6 +44,7 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -211,10 +212,10 @@ void ScalarSegmentFeatures::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, ScalarSegmentFeatures, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, ScalarSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Feature Ids", FeatureIdsArrayName, ScalarArrayPath, FilterParameter::CreatedArray, ScalarSegmentFeatures));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, ScalarSegmentFeatures));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Active", ActiveArrayName, FilterParameter::CreatedArray, ScalarSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_SUBPATH("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixName, ScalarArrayPath, FilterParameter::CreatedArray, ScalarSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_SUBPATH("Active", ActiveArrayName, ScalarArrayPath, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, ScalarSegmentFeatures));
   setFilterParameters(parameters);
 }
 

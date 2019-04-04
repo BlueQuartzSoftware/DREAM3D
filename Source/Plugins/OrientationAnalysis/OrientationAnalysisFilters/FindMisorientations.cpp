@@ -41,6 +41,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
@@ -105,8 +106,8 @@ void FindMisorientations::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindMisorientations, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Misorientation List", MisorientationListArrayName, FilterParameter::CreatedArray, FindMisorientations));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Average Misorientations", AvgMisorientationsArrayName, FilterParameter::CreatedArray, FindMisorientations));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Misorientation List", MisorientationListArrayName, NeighborListArrayPath, FilterParameter::CreatedArray, FindMisorientations));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Average Misorientations", AvgMisorientationsArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindMisorientations));
   setFilterParameters(parameters);
 }
 

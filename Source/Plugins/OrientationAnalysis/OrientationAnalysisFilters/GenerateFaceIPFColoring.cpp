@@ -43,6 +43,7 @@
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -253,7 +254,7 @@ void GenerateFaceIPFColoring::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, GenerateFaceIPFColoring, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("IPF Colors", SurfaceMeshFaceIPFColorsArrayName, FilterParameter::CreatedArray, GenerateFaceIPFColoring));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("IPF Colors", SurfaceMeshFaceIPFColorsArrayName, SurfaceMeshFaceLabelsArrayPath, FilterParameter::CreatedArray, GenerateFaceIPFColoring));
   setFilterParameters(parameters);
 }
 
