@@ -44,6 +44,7 @@
 #include "SIMPLib/FilterParameters/H5FilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/JsonFilterParametersWriter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
@@ -97,14 +98,14 @@ void StatsGeneratorFilter::setupFilterParameters()
 
   parameters.push_back(SeparatorFilterParameter::New("Created Ensemble AttributeMatrix", FilterParameter::CreatedArray));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix Name", CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Cell Ensemble Attribute Matrix Name", CellEnsembleAttributeMatrixName, StatsGeneratorDataContainerName, FilterParameter::CreatedArray, StatsGeneratorFilter));
 
   parameters.push_back(SeparatorFilterParameter::New("Created Ensemble Arrays", FilterParameter::CreatedArray));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Statistics Array Name", StatsDataArrayName, FilterParameter::CreatedArray, StatsGeneratorFilter));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Crystal Structures Array Name", CrystalStructuresArrayName, FilterParameter::CreatedArray, StatsGeneratorFilter));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Phase Types Array Name", PhaseTypesArrayName, FilterParameter::CreatedArray, StatsGeneratorFilter));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Phase Names Array Name", PhaseNamesArrayName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_AM("Statistics Array Name", StatsDataArrayName, StatsGeneratorDataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_AM("Crystal Structures Array Name", CrystalStructuresArrayName, StatsGeneratorDataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_AM("Phase Types Array Name", PhaseTypesArrayName, StatsGeneratorDataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_AM("Phase Names Array Name", PhaseNamesArrayName, StatsGeneratorDataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, StatsGeneratorFilter));
 
   setFilterParameters(parameters);
 }

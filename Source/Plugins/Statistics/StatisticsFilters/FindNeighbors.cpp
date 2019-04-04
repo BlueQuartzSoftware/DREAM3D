@@ -42,6 +42,7 @@
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -107,10 +108,10 @@ void FindNeighbors::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Boundary Cells", BoundaryCellsArrayName, FilterParameter::CreatedArray, FindNeighbors));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Number of Neighbors", NumNeighborsArrayName, FilterParameter::CreatedArray, FindNeighbors));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Neighbor List", NeighborListArrayName, FilterParameter::CreatedArray, FindNeighbors));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Shared Surface Area List", SharedSurfaceAreaListArrayName, FilterParameter::CreatedArray, FindNeighbors));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Surface Features", SurfaceFeaturesArrayName, FilterParameter::CreatedArray, FindNeighbors));
+  parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Number of Neighbors", NumNeighborsArrayName, CellFeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindNeighbors));
+  parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Neighbor List", NeighborListArrayName, CellFeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindNeighbors));
+  parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Shared Surface Area List", SharedSurfaceAreaListArrayName, CellFeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindNeighbors));
+  parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Surface Features", SurfaceFeaturesArrayName, CellFeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindNeighbors));
   setFilterParameters(parameters);
 }
 

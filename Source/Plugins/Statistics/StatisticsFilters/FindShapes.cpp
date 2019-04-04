@@ -38,6 +38,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -106,11 +107,11 @@ void FindShapes::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Centroids", CentroidsArrayPath, FilterParameter::RequiredArray, FindShapes, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Omega3s", Omega3sArrayName, FilterParameter::CreatedArray, FindShapes));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Axis Lengths", AxisLengthsArrayName, FilterParameter::CreatedArray, FindShapes));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Axis Euler Angles", AxisEulerAnglesArrayName, FilterParameter::CreatedArray, FindShapes));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Aspect Ratios", AspectRatiosArrayName, FilterParameter::CreatedArray, FindShapes));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Volumes", VolumesArrayName, FilterParameter::CreatedArray, FindShapes));
+  parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Omega3s", Omega3sArrayName, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FindShapes));
+  parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Axis Lengths", AxisLengthsArrayName, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FindShapes));
+  parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Axis Euler Angles", AxisEulerAnglesArrayName, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FindShapes));
+  parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Aspect Ratios", AspectRatiosArrayName, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FindShapes));
+  parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Volumes", VolumesArrayName, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FindShapes));
   setFilterParameters(parameters);
 }
 
