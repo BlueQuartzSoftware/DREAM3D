@@ -21,7 +21,7 @@ The user also may want to assign un-indexed pixels to be ignored by flagging the
 
 ### Radians and Degrees ###
 
-2D .ctf files have their angles in **degrees**. Please be sure to [convert](@ref changeanglerepresentation) the Euler angles from degrees to radians before running any other **Filter**.
+Most 2D .ctf files have their angles in **degrees** where as DREAM.3D expects radians. The filter provides an option to convert the Euler Angles to Radians and is turned on by default. The user is encouraged to create an IPF Image of their EBSD data to ensure that they do in-fact need to have this option enabled.
 
 ### The Axis Alignment Issue for Hexagonal Symmetry [1] ###
 
@@ -32,7 +32,7 @@ The user also may want to assign un-indexed pixels to be ignored by flagging the
 + Caution: it appears that the axis alignment is a choice that must be made when installing TSL software so determination of which convention is in use must be made on a case-by-case basis. It is fixed to the y-convention in the HKL software.
 + The main clue that something is wrong in a conversion is that either the 2110 & 1010 pole figures are transposed, or that a peak in the inverse pole figure that should be present at 2110 has shifted over to 1010.
 + DREAM.3D uses the TSL/EDAX convention.
-+ __The result of this is that the filter will by default add 30 degrees to phi2 when reading Oxford Instr (.ctf) files. This can be disabled by the user if necessary.__
++ __The result of this is that the filter will by default add 30 degrees to the second Euler Angle (phi2) when reading Oxford Instr (.ctf) files. This can be disabled by the user if necessary.__
 
 | Figure 1 |
 |--------|

@@ -55,7 +55,6 @@
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 #include "ChangeAngleRepresentation.h"
 
-
 enum createdPathID : RenameDataPath::DataID_t
 {
   AttributeMatrixID21 = 21,
@@ -249,8 +248,8 @@ void ReadCtfData::dataCheck()
     QVector<size_t> cDims(1, 3);
     tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), Ebsd::CtfFile::EulerAngles);
     m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-        this, tempPath, 0, cDims);                   /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_CellEulerAnglesPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+        this, tempPath, 0, cDims);             /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_CellEulerAnglesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -258,8 +257,8 @@ void ReadCtfData::dataCheck()
     cDims[0] = 1;
     tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), Ebsd::CtfFile::Phases);
     m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
-        this, tempPath, 0, cDims);              /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_CellPhasesPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+        this, tempPath, 0, cDims);        /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_CellPhasesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -267,7 +266,7 @@ void ReadCtfData::dataCheck()
     tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::CtfFile::CrystalStructures);
     m_CrystalStructuresPtr =
         getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims);
-    if(nullptr != m_CrystalStructuresPtr.lock())                                 /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+    if(nullptr != m_CrystalStructuresPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -275,8 +274,8 @@ void ReadCtfData::dataCheck()
     cDims[0] = 6;
     tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::CtfFile::LatticeConstants);
     m_LatticeConstantsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-        this, tempPath, 0.0, cDims);                  /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-    if(nullptr != m_LatticeConstantsPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+        this, tempPath, 0.0, cDims);            /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    if(nullptr != m_LatticeConstantsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -339,7 +338,7 @@ void ReadCtfData::readDataFile(CtfReader* reader, const DataContainer::Pointer& 
         return;
       }
 
-        m_FileWasRead = true;
+      m_FileWasRead = true;
     }
     else
     {
@@ -509,15 +508,15 @@ void ReadCtfData::copyRawEbsdData(CtfReader* reader, QVector<size_t>& tDims, QVe
   ebsdAttrMat->resizeAttributeArrays(tDims);
   {
     /* Take from H5CtfVolumeReader.cpp
-    * For HKL OIM Files if there is a single phase then the value of the phase
-    * data is one (1). If there are 2 or more phases then the lowest value
-    * of phase is also one (1). However, if there are "zero solutions" in the data
-    * then those points are assigned a phase of zero.  Since those points can be identified
-    * by other methods, the phase of these points should be changed to one since in the rest
-    * of the reconstruction code we follow the convention that the lowest value is One (1)
-    * even if there is only a single phase. The next if statement converts all zeros to ones
-    * if there is a single phase in the OIM data.
-    */
+     * For HKL OIM Files if there is a single phase then the value of the phase
+     * data is one (1). If there are 2 or more phases then the lowest value
+     * of phase is also one (1). However, if there are "zero solutions" in the data
+     * then those points are assigned a phase of zero.  Since those points can be identified
+     * by other methods, the phase of these points should be changed to one since in the rest
+     * of the reconstruction code we follow the convention that the lowest value is One (1)
+     * even if there is only a single phase. The next if statement converts all zeros to ones
+     * if there is a single phase in the OIM data.
+     */
     phasePtr = reinterpret_cast<int32_t*>(reader->getPointerByName(Ebsd::Ctf::Phase));
     for(size_t i = 0; i < totalPoints; i++)
     {
@@ -542,9 +541,9 @@ void ReadCtfData::copyRawEbsdData(CtfReader* reader, QVector<size_t>& tDims, QVe
 
     for(size_t i = 0; i < totalPoints; i++)
     {
-      cellEulerAngles[3 * i] = f1[i] ;
-      cellEulerAngles[3 * i + 1] = f2[i] ;
-      cellEulerAngles[3 * i + 2] = f3[i] ;
+      cellEulerAngles[3 * i] = f1[i];
+      cellEulerAngles[3 * i + 1] = f2[i];
+      cellEulerAngles[3 * i + 2] = f3[i];
       if(m_CrystalStructures[cellPhases[i]] == Ebsd::CrystalStructure::Hexagonal_High && m_EdaxHexagonalAlignment)
       {
         cellEulerAngles[3 * i + 2] = cellEulerAngles[3 * i + 2] + (30.0); // See the documentation for this correction factor
@@ -554,7 +553,7 @@ void ReadCtfData::copyRawEbsdData(CtfReader* reader, QVector<size_t>& tDims, QVe
       {
         cellEulerAngles[3 * i] = cellEulerAngles[3 * i] * SIMPLib::Constants::k_PiOver180;
         cellEulerAngles[3 * i + 1] = cellEulerAngles[3 * i + 1] * SIMPLib::Constants::k_PiOver180;
-        cellEulerAngles[3 * i + 2] = cellEulerAngles[3 * i + 2] * SIMPLib::Constants::k_PiOver180;;
+        cellEulerAngles[3 * i + 2] = cellEulerAngles[3 * i + 2] * SIMPLib::Constants::k_PiOver180;
       }
     }
     ebsdAttrMat->insertOrAssign(fArray);
@@ -649,8 +648,6 @@ void ReadCtfData::execute()
       setInputFile_Cache(m_InputFile);
     }
   }
-
-
 }
 
 // -----------------------------------------------------------------------------
