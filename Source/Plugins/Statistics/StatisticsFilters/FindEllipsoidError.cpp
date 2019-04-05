@@ -141,8 +141,8 @@ void FindEllipsoidError::initialize()
 // -----------------------------------------------------------------------------
 void FindEllipsoidError::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
   DataArrayPath tempPath;
 
@@ -153,13 +153,13 @@ void FindEllipsoidError::dataCheck()
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || nullptr == image.get())
+  if(getErrorCode() < 0 || nullptr == image.get())
   {
     return;
   }
@@ -233,10 +233,10 @@ void FindEllipsoidError::preflight()
 // -----------------------------------------------------------------------------
 void FindEllipsoidError::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -265,7 +265,7 @@ void FindEllipsoidError::execute()
     find_error2D();
   }
 
-  notifyStatusMessage(getHumanLabel(), "FindEllipsoidError Completed");
+  notifyStatusMessage("FindEllipsoidError Completed");
 }
 
 // -----------------------------------------------------------------------------

@@ -76,8 +76,8 @@ void SegmentFeatures::initialize()
 // -----------------------------------------------------------------------------
 void SegmentFeatures::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometryGrid, AbstractFilter>(this, getDataContainerName());
 }
@@ -116,10 +116,10 @@ bool SegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neighbor
 // -----------------------------------------------------------------------------
 void SegmentFeatures::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -223,7 +223,7 @@ void SegmentFeatures::execute()
       QString ss = QObject::tr("Total Features: %1").arg(gnum);
       if(gnum % 100 == 0)
       {
-        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+        notifyStatusMessage(ss);
       }
     }
     if(getCancel())

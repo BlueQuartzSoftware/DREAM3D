@@ -53,8 +53,8 @@ ComputeMomentInvariants2D::~ComputeMomentInvariants2D() = default;
 // -----------------------------------------------------------------------------
 void ComputeMomentInvariants2D::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -100,15 +100,14 @@ void ComputeMomentInvariants2D::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ComputeMomentInvariants2D::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   IGeometry::Pointer igeom = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
   if(nullptr == igeom.get())
   {
-    setErrorCondition(-73001);
     QString ss = QObject::tr("The ImageGeometry or DataContainer for %1 does not exist or is invalid.").arg(getFeatureIdsArrayPath().getDataContainerName());
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-73001, ss);
     return;
   }
   ImageGeom::Pointer imageGeom = std::dynamic_pointer_cast<ImageGeom>(igeom);
@@ -116,9 +115,8 @@ void ComputeMomentInvariants2D::dataCheck()
   std::tie(imageDims[0], imageDims[1], imageDims[2]) = imageGeom->getDimensions();
   if (imageDims[2] != 1)
   {
-    setErrorCondition(-73000);
     QString ss = QObject::tr("This filter currently only works on XY Planes in 2D data. Either crop the 3D data down to 2D in the Z Direction or use other data.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-73000, ss);
   }
 
   QVector<size_t> cDims(1, 1);
@@ -181,7 +179,7 @@ void ComputeMomentInvariants2D::execute()
 {
   initialize();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -222,8 +220,7 @@ void ComputeMomentInvariants2D::execute()
       m_Omega1[featureId] = 0.0f;
       m_Omega2[featureId] = 0.0f;
       QString ss = QObject::tr("Feature %1 is NOT strictly 2D in the XY plane. Skipping this feature.").arg(featureId);
-      setWarningCondition(-3000);
-      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+      setWarningCondition(-3000, ss);
       continue;
     }
 
@@ -296,7 +293,7 @@ void ComputeMomentInvariants2D::execute()
 #endif
 
     QString ss = QObject::tr("[%1/%2] Completed:").arg(featureId).arg(numFeatures);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(ss);
   }
 
 }

@@ -131,8 +131,8 @@ void FindFeatureHistogram::initialize()
 // -----------------------------------------------------------------------------
 void FindFeatureHistogram::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> dims(1, 1);
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(),
@@ -144,8 +144,7 @@ void FindFeatureHistogram::dataCheck()
 
   if(m_SelectedFeatureArrayPath.isEmpty())
   {
-    setErrorCondition(-11000);
-    notifyErrorMessage(getHumanLabel(), "An array from the Volume DataContainer must be selected.", getErrorCondition());
+    setErrorCondition(-11000, "An array from the Volume DataContainer must be selected.");
   }
 
   int numComp = m_NumberOfBins;
@@ -236,10 +235,10 @@ template <typename T> void findHistogram(IDataArray::Pointer inputData, int32_t*
 // -----------------------------------------------------------------------------
 void FindFeatureHistogram::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -252,8 +251,7 @@ void FindFeatureHistogram::execute()
   if(nullptr == inputData.get())
   {
     ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFeatureArrayPath.getDataArrayName());
-    setErrorCondition(-11001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11001, ss);
     return;
   }
 

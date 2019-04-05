@@ -103,14 +103,13 @@ void RegularizeZSpacing::initialize()
 // -----------------------------------------------------------------------------
 void RegularizeZSpacing::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(getNewZRes() <= 0)
   {
     QString ss = QObject::tr("The new Z resolution Y (%1) must be positive").arg(getNewZRes());
-    setErrorCondition(-5555);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5555, ss);
   }
 
   std::ifstream inFile;
@@ -119,14 +118,13 @@ void RegularizeZSpacing::dataCheck()
   if(!inFile.good())
   {
     QString ss = QObject::tr("Unable to open input file with name '%1'").arg(getInputFile());
-    setErrorCondition(-5556);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5556, ss);
     return;
   }
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
   AttributeMatrix::Pointer cellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellAttributeMatrixPath(), -301);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -173,10 +171,10 @@ void RegularizeZSpacing::preflight()
 // -----------------------------------------------------------------------------
 void RegularizeZSpacing::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

@@ -142,7 +142,7 @@ int main(int argc, char** argv)
   err = h5Reader->getErrorCondition();
   if(err < 0)
   {
-    setErrorCondition(err);
+    setErrorCondition(err); // @@ERROR_CODE@@err@@
     //   addErrorMessages(h5Reader->getErrorMessages());
     return EXIT_FAILURE;
   }
@@ -166,7 +166,7 @@ int main(int argc, char** argv)
     err = -1;
     std::stringstream s;
     s << "The total number of elements '" << (dims[0] * dims[1] * dims[2]) << "' is greater than this program can hold. Try the 64 bit version.";
-    setErrorCondition(err);
+    setErrorCondition(err); // @@ERROR_CODE@@err@@
     setErrorMessage(s.str());
     return EXIT_FAILURE;
   }
@@ -177,7 +177,7 @@ int main(int argc, char** argv)
     std::stringstream s;
     s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
     s << " dim[0]=" << dims[0] << "  dim[1]=" << dims[1] << "  dim[2]=" << dims[2];
-    setErrorCondition(err);
+    setErrorCondition(err); // @@ERROR_CODE@@err@@
     setErrorMessage(s.str());
     return EXIT_FAILURE;
   }
@@ -207,7 +207,7 @@ int main(int argc, char** argv)
        << "::"
        << "FeatureIds"
        << "' to already be created prior to execution." << std::endl;
-    setErrorCondition(-300);
+    setErrorCondition(-300); // @@ERROR_CODE@@-300@@
   }
 
   WRITE_VTK_GRAIN_IDS_ASCII(m, SIMPL::CellData::FeatureIds, m_FeatureIds)

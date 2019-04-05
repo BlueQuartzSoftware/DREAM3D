@@ -47,6 +47,7 @@
 #include "EMMPMLib/Core/EMMPM.h"
 #include "EMMPMLib/Common/StatsDelegate.h"
 
+class EMCalculationMessageHandler;
 
 /**
  * @class EMCalculation EMCalculation Common/CurvatureEM.h
@@ -66,10 +67,11 @@ class EMMPMLib_EXPORT EMCalculation : public Observable
 
     virtual ~EMCalculation();
 
+    friend EMCalculationMessageHandler;
+
     SIMPL_INSTANCE_PROPERTY(EMMPM_Data::Pointer, Data)
     SIMPL_POINTER_PROPERTY(StatsDelegate, StatsDelegate)
-    SIMPL_INSTANCE_PROPERTY(int, ErrorCondition)
-    SIMPL_INSTANCE_PROPERTY(QString, MessagePrefix)
+    SIMPL_INSTANCE_PROPERTY(int, ErrorCode)
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable

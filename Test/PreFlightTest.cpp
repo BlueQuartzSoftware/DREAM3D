@@ -125,7 +125,7 @@ void RemoveTestFiles()
       (*filter)->setVoxelDataContainer(m.get());                                                                                                                                                       \
       setCurrentFilter(*filter);                                                                                                                                                                       \
       (*filter)->preflight();                                                                                                                                                                          \
-      err = (*filter)->getErrorCondition();                                                                                                                                                            \
+      err = (*filter)->getErrorCode();                                                                                                                                                                 \
       if(err < 0)                                                                                                                                                                                      \
       {                                                                                                                                                                                                \
         preflightError |= err;                                                                                                                                                                         \
@@ -398,11 +398,11 @@ void TestPreflight(bool dataContainer = false, bool attributeMatrix = false, boo
       pipeline->preflightPipeline();
 
       // DREAM3D_REQUIRE_EQUAL(filter->getInPreflight(), false);
-      err = pipeline->getErrorCondition();
+      err = pipeline->getErrorCode();
       // An error condition GREATER than ZERO is an anomoly and should be looked at.
       if(err > 0)
       {
-        qDebug() << "Anomalous result for Preflight for " << filter->getGroupName() << "/" << filter->getNameOfClass() << " Error Condition = " << filter->getErrorCondition();
+        qDebug() << "Anomalous result for Preflight for " << filter->getGroupName() << "/" << filter->getNameOfClass() << " Error Condition = " << filter->getErrorCode();
       }
       pipeline->popBack();
     }

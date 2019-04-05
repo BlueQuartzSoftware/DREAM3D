@@ -124,8 +124,8 @@ void FindSurfaceAreaToVolume::initialize()
 // -----------------------------------------------------------------------------
 void FindSurfaceAreaToVolume::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
@@ -183,10 +183,10 @@ void FindSurfaceAreaToVolume::preflight()
 // -----------------------------------------------------------------------------
 void FindSurfaceAreaToVolume::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -215,16 +215,14 @@ void FindSurfaceAreaToVolume::execute()
   if(mismatchedFeatures)
   {
     QString ss = QObject::tr("The number of Features in the NumCells array (%1) is larger than the largest Feature Id in the FeatureIds array").arg(numFeatures);
-    setErrorCondition(-5555);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5555, ss);
     return;
   }
 
   if(largestFeature != (numFeatures - 1))
   {
     QString ss = QObject::tr("The number of Features in the NumCells array (%1) does not match the largest Feature Id in the FeatureIds array").arg(numFeatures);
-    setErrorCondition(-5555);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5555, ss);
     return;
   }
 

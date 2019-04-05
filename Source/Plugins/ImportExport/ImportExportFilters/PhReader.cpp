@@ -160,8 +160,8 @@ void PhReader::readFilterParameters(AbstractFilterParametersReader* reader, int 
 // -----------------------------------------------------------------------------
 void PhReader::updateCellInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_FeatureIdsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -195,12 +195,12 @@ void PhReader::initialize()
 // -----------------------------------------------------------------------------
 void PhReader::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName(), DataContainerID);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -211,14 +211,12 @@ void PhReader::dataCheck()
   if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-387, ss);
   }
   else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
-    setErrorCondition(-388);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-388, ss);
   }
 
   if(!getInputFile().isEmpty() && fi.exists())
@@ -246,9 +244,8 @@ void PhReader::dataCheck()
       m_InStream = fopen(getInputFile().toLatin1().data(), "r");
       if(m_InStream == nullptr)
       {
-        setErrorCondition(-48802);
         QString ss = QObject::tr("Error opening input file '%1'").arg(getInputFile());
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        setErrorCondition(-48802, ss);
         return;
       }
       int32_t error = readHeader();
@@ -256,9 +253,8 @@ void PhReader::dataCheck()
       m_InStream = nullptr;
       if(error < 0)
       {
-        setErrorCondition(error);
         QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file");
-        notifyErrorMessage(getHumanLabel(), ss, -48010);
+        setErrorCondition(error, ss);
       }
 
       // Set the file path and time stamp into the cache
@@ -269,7 +265,7 @@ void PhReader::dataCheck()
 
   QVector<size_t> tDims = getDims();
   m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -304,10 +300,10 @@ void PhReader::preflight()
 // -----------------------------------------------------------------------------
 void PhReader::execute()
 {
-  int32_t err = 0;
-  setErrorCondition(err);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -315,13 +311,12 @@ void PhReader::execute()
   m_InStream = fopen(getInputFile().toLatin1().data(), "r");
   if(m_InStream == nullptr)
   {
-    setErrorCondition(-48030);
     QString ss = QObject::tr("Error opening input file '%1'").arg(getInputFile());
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-48030, ss);
     return;
   }
 
-  err = readHeader();
+  int32_t err = readHeader();
   if(err < 0)
   {
     fclose(m_InStream);
@@ -399,9 +394,8 @@ int32_t PhReader::readFile()
     {
       fclose(m_InStream);
       m_InStream = nullptr;
-      setErrorCondition(-48040);
-      notifyErrorMessage(getHumanLabel(), "Error reading Ph data", getErrorCondition());
-      return getErrorCondition();
+      setErrorCondition(-48040, "Error reading Ph data");
+      return getErrorCode();
     }
   }
 

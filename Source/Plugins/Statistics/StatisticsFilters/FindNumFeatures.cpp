@@ -109,8 +109,8 @@ void FindNumFeatures::initialize()
 // -----------------------------------------------------------------------------
 void FindNumFeatures::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> cDims(1, 1);
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, m_FeaturePhasesArrayPath,
@@ -145,10 +145,10 @@ void FindNumFeatures::preflight()
 // -----------------------------------------------------------------------------
 void FindNumFeatures::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

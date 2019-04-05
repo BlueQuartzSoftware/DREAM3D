@@ -159,12 +159,12 @@ void ReadCtfData::dataCheck()
   // Reset FileWasRead flag
   m_FileWasRead = false;
 
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -174,14 +174,14 @@ void ReadCtfData::dataCheck()
 
   QVector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
   tDims.resize(1);
   tDims[0] = 0;
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID22);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -190,15 +190,13 @@ void ReadCtfData::dataCheck()
   if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist: '%1'").arg(getInputFile());
-    setErrorCondition(-388);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-388, ss);
   }
 
   if(m_InputFile.isEmpty() && m_Manufacturer == Ebsd::OEM::Unknown)
   {
     QString ss = QObject::tr("The input file must be set");
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
+    setErrorCondition(-1, ss);
   }
 
   if(!m_InputFile.isEmpty()) // User set a filename, so lets check it
@@ -231,9 +229,8 @@ void ReadCtfData::dataCheck()
     }
     else
     {
-      setErrorCondition(-997);
       QString ss = QObject::tr("The file extension '%1' was not recognized. The reader only recognizes the .ctf file extension").arg(ext);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-997, ss);
       return;
     }
 
@@ -323,9 +320,8 @@ void ReadCtfData::readDataFile(CtfReader* reader, DataContainer::Pointer m, QVec
       int32_t err = reader->readHeaderOnly();
       if(err < 0)
       {
-        setErrorCondition(err);
-        notifyErrorMessage(getHumanLabel(), "CtfReader could not read the .ctf file header.", getErrorCondition());
-        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+        setErrorCondition(err, "CtfReader could not read the .ctf file header.");
+        setErrorCondition(err, reader->getErrorMessage());
         m_FileWasRead = false;
         return;
       }
@@ -337,9 +333,8 @@ void ReadCtfData::readDataFile(CtfReader* reader, DataContainer::Pointer m, QVec
       int32_t err = reader->readFile();
       if(err < 0)
       {
-        setErrorCondition(err);
-        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
-        notifyErrorMessage(getHumanLabel(), "CtfReader could not read the .ctf file.", getErrorCondition());
+        setErrorCondition(err, reader->getErrorMessage());
+        setErrorCondition(getErrorCode(), "CtfReader could not read the .ctf file.");
         return;
       }
     }
@@ -404,9 +399,8 @@ int32_t ReadCtfData::loadMaterialInfo(CtfReader* reader)
   QVector<CtfPhase::Pointer> phases = getData().phases;
   if(phases.empty())
   {
-    setErrorCondition(reader->getErrorCode());
-    notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(reader->getErrorCode(), reader->getErrorMessage());
+    return getErrorCode();
   }
 
   DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, Ebsd::CtfFile::CrystalStructures);
@@ -599,10 +593,10 @@ void ReadCtfData::copyRawEbsdData(CtfReader* reader, QVector<size_t>& tDims, QVe
 // -----------------------------------------------------------------------------
 void ReadCtfData::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -615,7 +609,7 @@ void ReadCtfData::execute()
   ebsdAttrMat->setType(AttributeMatrix::Type::Cell);
 
   readDataFile(reader.get(), m, tDims, CTF_FULL_FILE);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

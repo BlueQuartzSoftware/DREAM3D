@@ -111,8 +111,8 @@ void FindBoundaryElementFractions::initialize()
 // -----------------------------------------------------------------------------
 void FindBoundaryElementFractions::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -123,7 +123,7 @@ void FindBoundaryElementFractions::dataCheck()
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getFeatureIdsArrayPath());
   }
@@ -134,7 +134,7 @@ void FindBoundaryElementFractions::dataCheck()
   {
     m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getBoundaryCellsArrayPath());
   }
@@ -196,10 +196,10 @@ void FindBoundaryElementFractions::find_surface_voxel_fractions()
 // -----------------------------------------------------------------------------
 void FindBoundaryElementFractions::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

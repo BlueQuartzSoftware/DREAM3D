@@ -101,31 +101,31 @@ void AppendImageGeometryZSlice::initialize()
 // -----------------------------------------------------------------------------
 void AppendImageGeometryZSlice::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   // Validate the Source & Destination Attribute Matrix are available
   AttributeMatrix::Pointer inputCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getInputAttributeMatrix(), -8201);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   AttributeMatrix::Pointer destCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getDestinationAttributeMatrix(), -8200);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   // Validate each AttributeMatrix is associated with an Image Geometry.
   ImageGeom::Pointer inputGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getInputAttributeMatrix().getDataContainerName());
-  if(nullptr == inputGeometry.get() || getErrorCondition() < 0)
+  if(nullptr == inputGeometry.get() || getErrorCode() < 0)
   {
     return;
   }
 
   ImageGeom::Pointer destGeometry = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getDestinationAttributeMatrix().getDataContainerName());
-  if(nullptr == destGeometry.get() || getErrorCondition() < 0)
+  if(nullptr == destGeometry.get() || getErrorCode() < 0)
   {
     return;
   }
@@ -149,35 +149,30 @@ void AppendImageGeometryZSlice::dataCheck()
     if(inputRes[0] != destRes[0])
     {
       QString ss = QObject::tr("Input X Spacing (%1) not equal to Destination X Spacing (%2)").arg(inputRes[0]).arg(destRes[0]);
-      setErrorCondition(-8205);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-8205, ss);
     }
     if(inputRes[1] != destRes[1])
     {
       QString ss = QObject::tr("Input Y Spacing (%1) not equal to Destination Y Spacing (%2)").arg(inputRes[1]).arg(destRes[1]);
-      setErrorCondition(-8206);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-8206, ss);
     }
     if(inputRes[2] != destRes[2])
     {
       QString ss = QObject::tr("Input Z Spacing (%1) not equal to Destination Z Spacing (%2)").arg(inputRes[2]).arg(destRes[2]);
-      setErrorCondition(-8207);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-8207, ss);
     }
   }
 
   if(destGeomDims[0] != inputGeomDims[0])
   {
     QString ss = QObject::tr("Input X Dim (%1) not equal to Destination X Dim (%2)").arg(inputGeomDims[0]).arg(destGeomDims[0]);
-    setErrorCondition(-8202);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-8202, ss);
   }
 
   if(destGeomDims[0] != inputGeomDims[0])
   {
     QString ss = QObject::tr("Input Y Dim (%1) not equal to Destination Y Dim (%2)").arg(inputGeomDims[1]).arg(destGeomDims[1]);
-    setErrorCondition(-8203);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-8203, ss);
   }
 
   if(getInPreflight())
@@ -234,11 +229,11 @@ void AppendImageGeometryZSlice::preflight()
 // -----------------------------------------------------------------------------
 void AppendImageGeometryZSlice::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -289,8 +284,7 @@ void AppendImageGeometryZSlice::execute()
     else
     {
       QString ss = QObject::tr("Data Array '%1' does not exist in the Input Cell AttributeMatrix.").arg(*iter);
-      setWarningCondition(-8203);
-      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+      setWarningCondition(-8203, ss);
     }
   }
 

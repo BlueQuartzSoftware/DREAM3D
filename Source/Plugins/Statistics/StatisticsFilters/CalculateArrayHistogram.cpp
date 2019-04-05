@@ -153,15 +153,14 @@ void CalculateArrayHistogram::initialize()
 // -----------------------------------------------------------------------------
 void CalculateArrayHistogram::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   if(m_NumberOfBins <= 0)
   {
-    setErrorCondition(-11011);
     QString ss = QObject::tr("The number of bins (%1) must be positive").arg(m_NumberOfBins);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11011, ss);
     return;
   }
 
@@ -179,7 +178,7 @@ void CalculateArrayHistogram::dataCheck()
   }
 
   m_InDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getSelectedArrayPath());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -189,8 +188,7 @@ void CalculateArrayHistogram::dataCheck()
     if(cDims != 1)
     {
       QString ss = QObject::tr("Selected array has number of components %1 and is not a scalar array. The path is %2").arg(cDims).arg(getSelectedArrayPath().serialize());
-      setErrorCondition(-11003);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-11003, ss);
       return;
     }
   }
@@ -198,12 +196,12 @@ void CalculateArrayHistogram::dataCheck()
   if(m_NewDataContainer) // create a new data container
   {
     DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName(), DataContainerID);
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
     AttributeMatrix::Pointer attrMat = m->createNonPrereqAttributeMatrix(this, getNewAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic, AttributeMatrixID21);
-    if(getErrorCondition() < 0 || nullptr == attrMat.get())
+    if(getErrorCode() < 0 || nullptr == attrMat.get())
     {
       return;
     }
@@ -213,7 +211,7 @@ void CalculateArrayHistogram::dataCheck()
   {
     DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(m_SelectedArrayPath.getDataContainerName());
     AttributeMatrix::Pointer attrMat = dc->createNonPrereqAttributeMatrix(this, getNewAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic, AttributeMatrixID22);
-    if(getErrorCondition() < 0 || nullptr == attrMat.get())
+    if(getErrorCode() < 0 || nullptr == attrMat.get())
     {
       return;
     }
@@ -311,10 +309,10 @@ void findHistogram(IDataArray::Pointer inDataPtr, int32_t numberOfBins, bool use
 // -----------------------------------------------------------------------------
 void CalculateArrayHistogram::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -323,9 +321,8 @@ void CalculateArrayHistogram::execute()
 
   if(overflow > 0)
   {
-    setWarningCondition(-2000);
     QString ss = QString("%1 values were not catagorized into a bin.").arg(overflow);
-    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+    setWarningCondition(-2000, ss);
   }
 
 }

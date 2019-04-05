@@ -165,8 +165,8 @@ void FindFeatureReferenceMisorientations::initialize()
 // -----------------------------------------------------------------------------
 void FindFeatureReferenceMisorientations::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
@@ -180,7 +180,7 @@ void FindFeatureReferenceMisorientations::dataCheck()
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getFeatureIdsArrayPath());
   }
@@ -191,7 +191,7 @@ void FindFeatureReferenceMisorientations::dataCheck()
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getCellPhasesArrayPath());
   }
@@ -226,7 +226,7 @@ void FindFeatureReferenceMisorientations::dataCheck()
   {
     m_Quats = m_QuatsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getQuatsArrayPath());
   }
@@ -249,7 +249,7 @@ void FindFeatureReferenceMisorientations::dataCheck()
     {
       m_GBEuclideanDistances = m_GBEuclideanDistancesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() >= 0)
+    if(getErrorCode() >= 0)
     {
       dataArrayPaths.push_back(getGBEuclideanDistancesArrayPath());
     }
@@ -276,10 +276,10 @@ void FindFeatureReferenceMisorientations::preflight()
 // -----------------------------------------------------------------------------
 void FindFeatureReferenceMisorientations::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -304,7 +304,7 @@ void FindFeatureReferenceMisorientations::execute()
   if(totalPoints > maxUInt32)
   {
     QString ss = QObject::tr("The volume is too large for a 32 bit machine. Try reducing the input volume size. Total Voxels: %1").arg(totalPoints);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(ss);
     return;
   }
 

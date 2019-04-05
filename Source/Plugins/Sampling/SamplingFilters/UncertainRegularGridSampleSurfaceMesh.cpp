@@ -140,12 +140,12 @@ void UncertainRegularGridSampleSurfaceMesh::initialize()
 // -----------------------------------------------------------------------------
 void UncertainRegularGridSampleSurfaceMesh::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -162,8 +162,9 @@ void UncertainRegularGridSampleSurfaceMesh::dataCheck()
   tDims[0] = m_XPoints;
   tDims[1] = m_YPoints;
   tDims[2] = m_ZPoints;
+
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
-  if(getErrorCondition() < 0 || nullptr == cellAttrMat.get())
+  if(getErrorCode() < 0 || nullptr == cellAttrMat.get())
   {
     return;
   }
@@ -241,10 +242,10 @@ void UncertainRegularGridSampleSurfaceMesh::assign_points(Int32ArrayType::Pointe
 // -----------------------------------------------------------------------------
 void UncertainRegularGridSampleSurfaceMesh::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

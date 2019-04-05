@@ -115,8 +115,8 @@ void LosAlamosFFTWriter::initialize()
 // -----------------------------------------------------------------------------
 void LosAlamosFFTWriter::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
@@ -131,7 +131,7 @@ void LosAlamosFFTWriter::dataCheck()
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getFeatureIdsArrayPath());
   }
@@ -142,7 +142,7 @@ void LosAlamosFFTWriter::dataCheck()
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getCellPhasesArrayPath());
   }
@@ -154,7 +154,7 @@ void LosAlamosFFTWriter::dataCheck()
   {
     m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getCellEulerAnglesArrayPath());
   }
@@ -188,12 +188,12 @@ int32_t LosAlamosFFTWriter::writeHeader()
 // -----------------------------------------------------------------------------
 int32_t LosAlamosFFTWriter::writeFile()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
-    return getErrorCondition();
+    return getErrorCode();
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
@@ -213,8 +213,7 @@ int32_t LosAlamosFFTWriter::writeFile()
   if(!parentPath.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
     return -1;
   }
 
@@ -222,8 +221,7 @@ int32_t LosAlamosFFTWriter::writeFile()
   if(nullptr == f)
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
     return -1;
   }
 

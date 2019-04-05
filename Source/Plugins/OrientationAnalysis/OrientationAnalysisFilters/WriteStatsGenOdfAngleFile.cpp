@@ -170,8 +170,8 @@ void WriteStatsGenOdfAngleFile::initialize()
 // -----------------------------------------------------------------------------
 void WriteStatsGenOdfAngleFile::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   FileSystemPathHelper::CheckOutputFile(this, "Output File Path", getOutputFile(), true);
 
@@ -179,15 +179,13 @@ void WriteStatsGenOdfAngleFile::dataCheck()
   if(getWeight() < 1.0f)
   {
     ss = QObject::tr("The default 'Weight' value should be at least 1.0. Undefined results will occur from this filter.");
-    setErrorCondition(-94002);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-94002, ss);
   }
 
   if(getSigma() < 1)
   {
     ss = QObject::tr("The default 'Sigma' value should be at least 1. Undefined results will occur from this filter.");
-    setErrorCondition(-94003);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-94003, ss);
   }
 
   QVector<size_t> cDims(1, 1);
@@ -243,10 +241,10 @@ void WriteStatsGenOdfAngleFile::preflight()
 // -----------------------------------------------------------------------------
 void WriteStatsGenOdfAngleFile::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -269,8 +267,7 @@ void WriteStatsGenOdfAngleFile::execute()
   {
     QString ss;
     ss = QObject::tr("Error creating parent path '%1'").arg(dir.path());
-    setErrorCondition(-45001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-45001, ss);
     return;
   }
 
@@ -286,21 +283,20 @@ void WriteStatsGenOdfAngleFile::execute()
     if(lineCount == 0)
     {
       QString ss = QObject::tr("No valid data for phase '%1'. No ODF Angle file written for phase.").arg(*iter);
-      notifyWarningMessage(getHumanLabel(), ss, 0);
+      setWarningCondition(0, ss);
       continue;
     }
 
     QString ss = QObject::tr("Writing file for phase '%1'").arg(*iter);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(ss);
 
     QString absFilePath = absPath + "/" + fname + "_Phase_" + QString::number(*iter) + "." + suffix;
 
     QFile file(absFilePath);
     if(!file.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate))
     {
-      setErrorCondition(-99000);
       QString ss = QObject::tr("Error creating output file '%1'").arg(absFilePath);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-99000, ss);
       return;
     }
 
@@ -309,9 +305,8 @@ void WriteStatsGenOdfAngleFile::execute()
     int err = writeOutputFile(out, lineCount, totalPoints, *iter);
     if(err < 0)
     {
-      setErrorCondition(-99001);
       QString ss = QObject::tr("Error writing output file '%1'").arg(absFilePath);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-99001, ss);
       return;
     }
     out.flush();

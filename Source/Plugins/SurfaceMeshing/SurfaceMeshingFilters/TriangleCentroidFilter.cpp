@@ -147,14 +147,14 @@ void TriangleCentroidFilter::initialize()
 // -----------------------------------------------------------------------------
 void TriangleCentroidFilter::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshTriangleCentroidsArrayPath().getDataContainerName());
 
   QVector<IDataArray::Pointer> dataArrays;
 
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(triangles->getTriangles());
   }
@@ -166,7 +166,7 @@ void TriangleCentroidFilter::dataCheck()
   {
     m_SurfaceMeshTriangleCentroids = m_SurfaceMeshTriangleCentroidsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_SurfaceMeshTriangleCentroidsPtr.lock());
   }
@@ -192,10 +192,10 @@ void TriangleCentroidFilter::preflight()
 // -----------------------------------------------------------------------------
 void TriangleCentroidFilter::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

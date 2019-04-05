@@ -36,10 +36,10 @@ public:
   }
   virtual void execute()
   {
-    setErrorCondition(0);
-    setWarningCondition(0);
+    clearErrorCode();
+    clearWarningCode();
     dataCheck();
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
@@ -93,15 +93,15 @@ private:
 
   void dataCheck()
   {
-    setErrorCondition(0);
-    setWarningCondition(0);
+    clearErrorCode();
+    clearWarningCode();
     DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, getDataContainerName());
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
     AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix(this, getCellAttributeMatrixName(), -301);
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }

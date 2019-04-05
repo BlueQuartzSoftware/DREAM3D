@@ -126,8 +126,8 @@ void FindBoundingBoxFeatures::initialize()
 // -----------------------------------------------------------------------------
 void FindBoundingBoxFeatures::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   DataArrayPath tempPath;
 
@@ -142,7 +142,7 @@ void FindBoundingBoxFeatures::dataCheck()
   {
     m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getCentroidsArrayPath());
   }
@@ -154,7 +154,7 @@ void FindBoundingBoxFeatures::dataCheck()
   {
     m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getSurfaceFeaturesArrayPath());
   }
@@ -174,7 +174,7 @@ void FindBoundingBoxFeatures::dataCheck()
     {
       m_Phases = m_PhasesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() >= 0)
+    if(getErrorCode() >= 0)
     {
       dataArrayPaths.push_back(getPhasesArrayPath());
     }
@@ -234,7 +234,7 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
     if(m_CalcByPhase)
     {
       QString ss = QObject::tr("Working on Phase %1 of %2").arg(iter).arg(numPhases);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyStatusMessage(ss);
     }
     // reset boundbox for each phase
     imageGeom->getBoundingBox(boundbox);
@@ -451,10 +451,10 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
 // -----------------------------------------------------------------------------
 void FindBoundingBoxFeatures::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

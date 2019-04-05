@@ -128,8 +128,8 @@ void MinNeighbors::initialize()
 // -----------------------------------------------------------------------------
 void MinNeighbors::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   QVector<DataArrayPath> dataArrayPaths;
@@ -137,8 +137,7 @@ void MinNeighbors::dataCheck()
   if(getMinNumNeighbors() < 0)
   {
     QString ss = QObject::tr("The minimum number of neighbors (%1) must be 0 or positive").arg(getMinNumNeighbors());
-    setErrorCondition(-5555);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5555, ss);
   }
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
@@ -157,7 +156,7 @@ void MinNeighbors::dataCheck()
   {
     m_NumNeighbors = m_NumNeighborsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getNumNeighborsArrayPath());
   }
@@ -170,7 +169,7 @@ void MinNeighbors::dataCheck()
     {
       m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() >= 0)
+    if(getErrorCode() >= 0)
     {
       dataArrayPaths.push_back(getFeaturePhasesArrayPath());
     }
@@ -199,8 +198,7 @@ void MinNeighbors::dataCheck()
     }
   }
 
-  setWarningCondition(-5556);
-  notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+  setWarningCondition(-5556, ss);
 }
 
 // -----------------------------------------------------------------------------
@@ -221,10 +219,10 @@ void MinNeighbors::preflight()
 // -----------------------------------------------------------------------------
 void MinNeighbors::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -251,14 +249,13 @@ void MinNeighbors::execute()
     if(unavailablePhase)
     {
       QString ss = QObject::tr("The phase number (%1) is not available in the supplied Feature phases array with path (%2)").arg(m_PhaseNumber).arg(m_FeaturePhasesArrayPath.serialize());
-      setErrorCondition(-5555);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-5555, ss);
       return;
     }
   }
 
   QVector<bool> activeObjects = merge_containedfeatures();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -477,8 +474,7 @@ QVector<bool> MinNeighbors::merge_containedfeatures()
   }
   if(!good)
   {
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), "The minimum number of neighbors is larger than the Feature with the most neighbors.  All Features would be removed", getErrorCondition());
+    setErrorCondition(-1, "The minimum number of neighbors is larger than the Feature with the most neighbors.  All Features would be removed");
     return activeObjects;
   }
   for(size_t i = 0; i < totalPoints; i++)

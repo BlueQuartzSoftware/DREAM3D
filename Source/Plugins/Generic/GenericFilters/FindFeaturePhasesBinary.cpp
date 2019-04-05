@@ -125,8 +125,8 @@ void FindFeaturePhasesBinary::initialize()
 // -----------------------------------------------------------------------------
 void FindFeaturePhasesBinary::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -139,7 +139,7 @@ void FindFeaturePhasesBinary::dataCheck()
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getFeatureIdsArrayPath());
   }
@@ -150,7 +150,7 @@ void FindFeaturePhasesBinary::dataCheck()
   {
     m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getGoodVoxelsArrayPath());
   }
@@ -162,7 +162,7 @@ void FindFeaturePhasesBinary::dataCheck()
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -192,10 +192,10 @@ void FindFeaturePhasesBinary::preflight()
 // -----------------------------------------------------------------------------
 void FindFeaturePhasesBinary::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

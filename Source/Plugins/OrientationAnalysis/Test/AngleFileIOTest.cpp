@@ -124,7 +124,7 @@ public:
     filter = filterFactory->create();
     DREAM3D_REQUIRE_VALID_POINTER(filter.get())
     filter->setDataContainerArray(dca);
-    filter->connect(filter.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
+    filter->connect(filter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), &obs, SLOT(processPipelineMessage(const AbstractMessage::Pointer&)));
 
     QVariant var;
     bool propWasSet = filter->setProperty("OutputFile", UnitTest::AngleFileIOTest::OutputFile);
@@ -149,12 +149,12 @@ public:
     DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
     filter->preflight();
-    int32_t err = filter->getErrorCondition();
+    int32_t err = filter->getErrorCode();
 
     DREAM3D_REQUIRED(err, >=, 0)
 
     filter->execute();
-    err = filter->getErrorCondition();
+    err = filter->getErrorCode();
 
     DREAM3D_REQUIRE(err >= 0)
   }

@@ -128,8 +128,8 @@ void SineParamsSegmentFeatures::readFilterParameters(AbstractFilterParametersRea
 // -----------------------------------------------------------------------------
 void SineParamsSegmentFeatures::updateFeatureInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_ActivePtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -152,32 +152,32 @@ void SineParamsSegmentFeatures::dataCheck()
 {
   DataArrayPath tempPath;
   initialize();
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   // Set the DataContainerName for the Parent Class (SegmentFeatures) to Use
   setDataContainerName(m_SineParamsArrayPath.getDataContainerName());
 
   SegmentFeatures::dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || nullptr == m)
+  if(getErrorCode() < 0 || nullptr == m)
   {
     return;
   }
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix(this, getCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID21);
-  if(getErrorCondition() < 0 || nullptr == cellFeatureAttrMat.get())
+  if(getErrorCode() < 0 || nullptr == cellFeatureAttrMat.get())
   {
     return;
   }
 
   ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || nullptr == image.get())
+  if(getErrorCode() < 0 || nullptr == image.get())
   {
     return;
   }
@@ -232,11 +232,11 @@ void SineParamsSegmentFeatures::preflight()
 // -----------------------------------------------------------------------------
 void SineParamsSegmentFeatures::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -250,7 +250,7 @@ void SineParamsSegmentFeatures::execute()
   int64_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
 
   // Tell the user we are starting the filter
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
+  notifyStatusMessage("Starting");
 
   // Convert user defined tolerance to radians.
   // angleTolerance = m_AngleTolerance * SIMPLib::Constants::k_Pi / 180.0f;
@@ -269,8 +269,7 @@ void SineParamsSegmentFeatures::execute()
   size_t totalFeatures = m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->getNumberOfTuples();
   if(totalFeatures < 2)
   {
-    setErrorCondition(-87000);
-    notifyErrorMessage(getHumanLabel(), "The number of Features was 0 or 1 which means no features were detected. Is a threshold value set to high?", getErrorCondition());
+    setErrorCondition(-87000, "The number of Features was 0 or 1 which means no features were detected. Is a threshold value set to high?");
     return;
   }
 
@@ -281,7 +280,7 @@ void SineParamsSegmentFeatures::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Completed");
+  notifyStatusMessage("Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -289,7 +288,7 @@ void SineParamsSegmentFeatures::execute()
 // -----------------------------------------------------------------------------
 void SineParamsSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, size_t totalFeatures)
 {
-  notifyStatusMessage(getHumanLabel(), "Randomizing Feature Ids");
+  notifyStatusMessage("Randomizing Feature Ids");
   // Generate an even distribution of numbers between the min and max range
   const size_t rangeMin = 1;
   const size_t rangeMax = totalFeatures - 1;
@@ -331,8 +330,8 @@ void SineParamsSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, size_t 
 // -----------------------------------------------------------------------------
 int64_t SineParamsSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();

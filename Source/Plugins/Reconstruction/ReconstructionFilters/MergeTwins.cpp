@@ -145,8 +145,8 @@ void MergeTwins::readFilterParameters(AbstractFilterParametersReader* reader, in
 // -----------------------------------------------------------------------------
 void MergeTwins::updateFeatureInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_ActivePtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -167,18 +167,18 @@ void MergeTwins::initialize()
 // -----------------------------------------------------------------------------
 void MergeTwins::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   GroupFeatures::dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, m_FeatureIdsArrayPath.getDataContainerName(), false);
-  if(getErrorCondition() < 0 || nullptr == m.get())
+  if(getErrorCode() < 0 || nullptr == m.get())
   {
     return;
   }
@@ -213,7 +213,7 @@ void MergeTwins::dataCheck()
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getFeaturePhasesArrayPath());
   }
@@ -233,7 +233,7 @@ void MergeTwins::dataCheck()
   {
     m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getAvgQuatsArrayPath());
   }
@@ -276,8 +276,8 @@ void MergeTwins::preflight()
 // -----------------------------------------------------------------------------
 int32_t MergeTwins::getSeed(int32_t newFid)
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   int32_t numfeatures = static_cast<int32_t>(m_FeaturePhasesPtr.lock()->getNumberOfTuples());
 
@@ -363,10 +363,10 @@ void MergeTwins::characterize_twins()
 // -----------------------------------------------------------------------------
 void MergeTwins::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -380,8 +380,7 @@ void MergeTwins::execute()
   size_t totalFeatures = m_ActivePtr.lock()->getNumberOfTuples();
   if(totalFeatures < 2)
   {
-    setErrorCondition(-87000);
-    notifyErrorMessage(getHumanLabel(), "The number of grouped Features was 0 or 1 which means no grouped Features were detected. A grouping value may be set too high", getErrorCondition());
+    setErrorCondition(-87000, "The number of grouped Features was 0 or 1 which means no grouped Features were detected. A grouping value may be set too high");
     return;
   }
 
@@ -398,13 +397,13 @@ void MergeTwins::execute()
   }
   numParents += 1;
 
-  notifyStatusMessage(getHumanLabel(), "Characterizing Twins Starting");
+  notifyStatusMessage("Characterizing Twins Starting");
   characterize_twins();
-  notifyStatusMessage(getHumanLabel(), "Characterizing Twins Complete");
+  notifyStatusMessage("Characterizing Twins Complete");
 
   if(m_RandomizeParentIds)
   {
-    notifyStatusMessage(getHumanLabel(), "Randomizing Parent Ids....");
+    notifyStatusMessage("Randomizing Parent Ids....");
     // Generate all the numbers up front
     const int32_t rangeMin = 1;
     const int32_t rangeMax = numParents - 1;
@@ -423,7 +422,7 @@ void MergeTwins::execute()
       parentIdSet.insert(pid[i]);
     }
 
-    notifyStatusMessage(getHumanLabel(), "Shuffle elements ....");
+    notifyStatusMessage("Shuffle elements ....");
     //--- Shuffle elements by randomly exchanging each with one other.
     for(size_t i = 1; i < static_cast<size_t>(numParents); i++)
     {
@@ -438,7 +437,7 @@ void MergeTwins::execute()
 	  rndNumbers->setValue(r, pid_i);
     }
 
-    notifyStatusMessage(getHumanLabel(), "Adjusting Feature Ids Array....");
+    notifyStatusMessage("Adjusting Feature Ids Array....");
     // Now adjust all the Feature Id values for each Voxel
     for(size_t i = 0; i < totalPoints; ++i)
     {

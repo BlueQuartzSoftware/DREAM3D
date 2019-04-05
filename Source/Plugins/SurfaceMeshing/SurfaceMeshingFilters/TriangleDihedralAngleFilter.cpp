@@ -181,15 +181,15 @@ void TriangleDihedralAngleFilter::initialize()
 // -----------------------------------------------------------------------------
 void TriangleDihedralAngleFilter::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   TriangleGeom::Pointer triangles =
       getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshTriangleDihedralAnglesArrayPath().getDataContainerName());
 
   QVector<IDataArray::Pointer> dataArrays;
 
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(triangles->getTriangles());
   }
@@ -201,7 +201,7 @@ void TriangleDihedralAngleFilter::dataCheck()
   {
     m_SurfaceMeshTriangleDihedralAngles = m_SurfaceMeshTriangleDihedralAnglesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_SurfaceMeshTriangleDihedralAnglesPtr.lock());
   }
@@ -227,10 +227,10 @@ void TriangleDihedralAngleFilter::preflight()
 // -----------------------------------------------------------------------------
 void TriangleDihedralAngleFilter::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

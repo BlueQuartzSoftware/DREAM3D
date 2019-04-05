@@ -130,26 +130,25 @@ void CreateEnsembleInfo::initialize()
 // -----------------------------------------------------------------------------
 void CreateEnsembleInfo::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(m_Ensemble.size() == 0)
   {
-    setErrorCondition(-15000);
-    notifyErrorMessage(getHumanLabel(), "You must add at least 1 ensemble phase.", getErrorCondition());
+    setErrorCondition(-15000, "You must add at least 1 ensemble phase.");
   }
 
   int numPhases = m_Ensemble.size();
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   QVector<size_t> tDims(1, numPhases + 1);
   m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID21);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -194,10 +193,10 @@ void CreateEnsembleInfo::preflight()
 // -----------------------------------------------------------------------------
 void CreateEnsembleInfo::execute()
 {
-  int32_t err = 0;
-  setErrorCondition(err);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -210,8 +209,7 @@ void CreateEnsembleInfo::execute()
   if(0 == numPhases) // Either the group name "EnsembleInfo" is incorrect or 0 was entered as the Number_Phases
   {
     QString ss = QObject::tr("Check the group name EnsembleInfo and that the number of phases > 0");
-    setErrorCondition(-10003);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-10003, ss);
     return;
   }
 
@@ -226,8 +224,7 @@ void CreateEnsembleInfo::execute()
     if(crystalStructure == Ebsd::CrystalStructure::UnknownCrystalStructure)
     {
       QString ss = QObject::tr("Incorrect crystal structure name '%1'").arg(crystalStructure);
-      setErrorCondition(-10006);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-10006, ss);
       return;
     }
 
@@ -238,8 +235,7 @@ void CreateEnsembleInfo::execute()
     if(static_cast<PhaseType::Type>(phaseType) == PhaseType::Type::Unknown)
     {
       QString ss = QObject::tr("Incorrect phase type '%1'").arg(phaseType); // The phase type name was not found in the lookup table
-      setErrorCondition(-10007);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-10007, ss);
       return;
     }
 
@@ -250,8 +246,7 @@ void CreateEnsembleInfo::execute()
     if(phaseName.isEmpty())
     {
       QString ss = QObject::tr("Phase name cannot be empty'"); // The phase name was not found
-      setErrorCondition(-10008);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-10008, ss);
       return;
     }
 

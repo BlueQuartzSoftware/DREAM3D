@@ -194,7 +194,7 @@ public:
       qDebug() << "Unable to set property CentroidsArrayPath";
     }
     centroidsFilter->execute();
-    int32_t err = centroidsFilter->getErrorCondition();
+    int32_t err = centroidsFilter->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, 0);
 
     path.update("ImageDataContainer2", SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds);
@@ -212,7 +212,7 @@ public:
       qDebug() << "Unable to set property CentroidsArrayPath";
     }
     centroidsFilter->execute();
-    err = centroidsFilter->getErrorCondition();
+    err = centroidsFilter->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, 0);
 
     filtName = "FindShapes";
@@ -244,7 +244,7 @@ public:
       qDebug() << "Unable to set property CentroidsArrayPath";
     }
     shapesFilter->execute();
-    err = shapesFilter->getErrorCondition();
+    err = shapesFilter->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, 0);
 
     path.update("ImageDataContainer2", SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds);
@@ -269,7 +269,7 @@ public:
       qDebug() << "Unable to set property CentroidsArrayPath";
     }
     shapesFilter->execute();
-    err = shapesFilter->getErrorCondition();
+    err = shapesFilter->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, 0);
 
     featAttrMat = dca->getDataContainer(SIMPL::Defaults::ImageDataContainerName)->getAttributeMatrix(SIMPL::Defaults::CellFeatureAttributeMatrixName);

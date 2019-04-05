@@ -270,7 +270,7 @@ public:
     }
 
     sizeFilter->execute();
-    int32_t err = sizeFilter->getErrorCondition();
+    int32_t err = sizeFilter->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, 0);
 
     AttributeMatrix::Pointer faceFeatAttrMat = tdc->getAttributeMatrix(SIMPL::Defaults::FaceFeatureAttributeMatrixName);

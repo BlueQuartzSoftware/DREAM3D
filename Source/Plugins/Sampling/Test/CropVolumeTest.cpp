@@ -153,7 +153,7 @@ public:
     {
 
       filter = filterFactory->create();
-      filter->connect(filter.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
+      filter->connect(filter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), &obs, SLOT(processPipelineMessage(const AbstractMessage::Pointer&)));
 
       QVariant var;
       var.setValue(outputFile);
@@ -271,8 +271,8 @@ public:
   // -----------------------------------------------------------------------------
   void resetTest(AbstractFilter::Pointer cropVolume, NumPackage X, NumPackage Y, NumPackage Z, int numComponents)
   {
-    cropVolume->setErrorCondition(0);
-    cropVolume->setWarningCondition(0);
+    cropVolume->clearErrorCode();
+    cropVolume->clearWarningCode();
     DataContainerArray::Pointer dca = CreateDataContainerArrayTestStructure(X, Y, Z, numComponents);
     cropVolume->setDataContainerArray(dca);
   }
@@ -447,7 +447,7 @@ public:
     cropVolume->preflight();
     // Fails because getPrereqGeometryFromDataContainer catches the nullptr DataContainer
     // Error code should be -999
-    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -999)
+    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -999)
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
 
     // Test Source Attribute Matrix Does Not Exist
@@ -458,7 +458,7 @@ public:
     cropVolume->preflight();
     // Fails because getPrereqAttributeMatrixFromPath catches the nullptr AttributeMatrix
     // Error code should be -301 * 1020 = -307020
-    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -307020)
+    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -307020)
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
 
     path.setAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName);
@@ -476,7 +476,7 @@ public:
     propWasSet = cropVolume->setProperty("XMin", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     cropVolume->preflight();
-    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -5550)
+    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -5550)
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
     var.setValue(s_CroppedX.getMin());
     propWasSet = cropVolume->setProperty("XMin", var);
@@ -486,7 +486,7 @@ public:
     propWasSet = cropVolume->setProperty("YMin", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     cropVolume->preflight();
-    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -5550)
+    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -5550)
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
     var.setValue(s_CroppedY.getMin());
     propWasSet = cropVolume->setProperty("YMin", var);
@@ -496,7 +496,7 @@ public:
     propWasSet = cropVolume->setProperty("ZMin", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     cropVolume->preflight();
-    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -5550)
+    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -5550)
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
     var.setValue(s_CroppedZ.getMin());
     propWasSet = cropVolume->setProperty("ZMin", var);
@@ -506,7 +506,7 @@ public:
     propWasSet = cropVolume->setProperty("XMin", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     cropVolume->preflight();
-    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -5550)
+    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -5550)
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
     var.setValue(s_CroppedX.getMin());
     propWasSet = cropVolume->setProperty("XMin", var);
@@ -516,7 +516,7 @@ public:
     propWasSet = cropVolume->setProperty("YMin", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     cropVolume->preflight();
-    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -5550)
+    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -5550)
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
     var.setValue(s_CroppedY.getMin());
     propWasSet = cropVolume->setProperty("YMin", var);
@@ -526,7 +526,7 @@ public:
     propWasSet = cropVolume->setProperty("ZMin", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     cropVolume->preflight();
-    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -5550)
+    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -5550)
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
     var.setValue(s_CroppedZ.getMin());
     propWasSet = cropVolume->setProperty("ZMin", var);
@@ -536,7 +536,7 @@ public:
     propWasSet = cropVolume->setProperty("XMax", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     cropVolume->preflight();
-    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -5550)
+    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -5550)
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
     var.setValue(s_CroppedX.getMax());
     propWasSet = cropVolume->setProperty("XMax", var);
@@ -546,7 +546,7 @@ public:
     propWasSet = cropVolume->setProperty("YMax", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     cropVolume->preflight();
-    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -5550)
+    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -5550)
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
     var.setValue(s_CroppedY.getMax());
     propWasSet = cropVolume->setProperty("YMax", var);
@@ -556,7 +556,7 @@ public:
     propWasSet = cropVolume->setProperty("ZMax", var);
     DREAM3D_REQUIRE_EQUAL(propWasSet, true);
     cropVolume->preflight();
-    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCondition(), -5550)
+    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -5550)
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
     var.setValue(s_CroppedZ.getMax());
     propWasSet = cropVolume->setProperty("ZMax", var);
@@ -581,7 +581,7 @@ public:
 
       cropVolume = filterFactory->create();
       cropVolume->setDataContainerArray(dca);
-      cropVolume->connect(cropVolume.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
+      cropVolume->connect(cropVolume.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), &obs, SLOT(processPipelineMessage(const AbstractMessage::Pointer&)));
 
       QVariant var;
       var.setValue(x.getMax());
@@ -671,14 +671,14 @@ public:
     }
     int err = 0;
     cropVolume->preflight();
-    err = cropVolume->getErrorCondition();
+    err = cropVolume->getErrorCode();
     require_equal<int, int>(err, "err", 0, "Value", __FILE__, __LINE__);
 
     // Create a new DataContainer Array for the actual execution of the filter. this mimics
     // what the PipelinRunner would do.
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 1);
     cropVolume->execute();
-    err = cropVolume->getErrorCondition();
+    err = cropVolume->getErrorCode();
     // Make sure we executed without any error
     require_greater_than<int, int>(err, "err", -1, "Value");
     // Get the data array and check the crop on it.
@@ -740,14 +740,14 @@ public:
 
     int err = 0;
     cropVolume->preflight();
-    err = cropVolume->getErrorCondition();
+    err = cropVolume->getErrorCode();
     require_equal<int, int>(err, "err", 0, "Value", __FILE__, __LINE__);
 
     // Create a new DataContainer Array for the actual execution of the filter. this mimics
     // what the PipelinRunner would do.
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 1);
     cropVolume->execute();
-    err = cropVolume->getErrorCondition();
+    err = cropVolume->getErrorCode();
     // Make sure we executed without any error
     require_greater_than<int, int>(err, "err", -1, "Value");
     // Get the data array and check the crop on it.
@@ -822,21 +822,21 @@ public:
 
     int err = 0;
     cropVolume->preflight();
-    err = cropVolume->getErrorCondition();
+    err = cropVolume->getErrorCode();
     require_equal<int, int>(err, "err", 0, "Value", __FILE__, __LINE__);
 
     // Create a new DataContainer Array for the actual execution of the filter. this mimics
     // what the PipelinRunner would do.
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 1);
     cropVolume->execute();
-    err = cropVolume->getErrorCondition();
+    err = cropVolume->getErrorCode();
     // Make sure we executed without any error
     require_greater_than<int, int>(err, "err", -1, "Value");
 
     AbstractFilter::Pointer writer = CreateDataContainerWriter(UnitTest::CropVolumeTest::CropVolumeTest_3);
     writer->setDataContainerArray(cropVolume->getDataContainerArray());
     writer->execute();
-    DREAM3D_REQUIRE(writer->getErrorCondition() > -1);
+    DREAM3D_REQUIRE(writer->getErrorCode() > -1);
 
     // Get the data array and check the crop on it.
     dap = DataArrayPath(k_DataContainerName, k_CellAttributeMatrixName, k_DataArrayName);
@@ -912,14 +912,14 @@ public:
 
     int err = 0;
     cropVolume->preflight();
-    err = cropVolume->getErrorCondition();
+    err = cropVolume->getErrorCode();
     require_equal<int, int>(err, "err", 0, "Value", __FILE__, __LINE__);
 
     // Create a new DataContainer Array for the actual execution of the filter. this mimics
     // what the PipelinRunner would do.
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 1);
     cropVolume->execute();
-    err = cropVolume->getErrorCondition();
+    err = cropVolume->getErrorCode();
     // Make sure we executed without any error
     require_greater_than<int, int>(err, "err", -1, "Value");
     // Get the data array and check the crop on it.
@@ -956,7 +956,7 @@ public:
     AbstractFilter::Pointer writer = CreateDataContainerWriter(UnitTest::CropVolumeTest::CropVolumeTest_4);
     writer->setDataContainerArray(cropVolume->getDataContainerArray());
     writer->execute();
-    DREAM3D_REQUIRE(writer->getErrorCondition() > -1);
+    DREAM3D_REQUIRE(writer->getErrorCode() > -1);
 
     //  AttributeMatrix::Pointer am = cropVolume->getDataContainerArray()->getAttributeMatrix(dap);
     //  QVector<size_t> tDims = am->getTupleDimensions();

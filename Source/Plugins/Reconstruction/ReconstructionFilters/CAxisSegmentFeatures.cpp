@@ -153,8 +153,8 @@ void CAxisSegmentFeatures::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 void CAxisSegmentFeatures::updateFeatureInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_ActivePtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -176,20 +176,20 @@ void CAxisSegmentFeatures::initialize()
 void CAxisSegmentFeatures::dataCheck()
 {
   DataArrayPath tempPath;
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   // Set the DataContainerName for the Parent Class (SegmentFeatures) to Use
   setDataContainerName(m_QuatsArrayPath.getDataContainerName());
 
   SegmentFeatures::dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, getDataContainerName(), false);
-  if(getErrorCondition() < 0 || nullptr == m)
+  if(getErrorCode() < 0 || nullptr == m)
   {
     return;
   }
@@ -208,7 +208,7 @@ void CAxisSegmentFeatures::dataCheck()
     {
       m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() >= 0)
+    if(getErrorCode() >= 0)
     {
       dataArrayPaths.push_back(getGoodVoxelsArrayPath());
     }
@@ -220,7 +220,7 @@ void CAxisSegmentFeatures::dataCheck()
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getCellPhasesArrayPath());
   }
@@ -254,7 +254,7 @@ void CAxisSegmentFeatures::dataCheck()
   {
     m_Quats = m_QuatsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getQuatsArrayPath());
   }
@@ -280,7 +280,7 @@ void CAxisSegmentFeatures::preflight()
 // -----------------------------------------------------------------------------
 void CAxisSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures)
 {
-  notifyStatusMessage(getHumanLabel(), "Randomizing Feature Ids");
+  notifyStatusMessage("Randomizing Feature Ids");
   // Generate an even distribution of numbers between the min and max range
   const int64_t rangeMin = 1;
   const int64_t rangeMax = totalFeatures - 1;
@@ -323,8 +323,8 @@ void CAxisSegmentFeatures::randomizeFeatureIds(int64_t totalPoints, int64_t tota
 // -----------------------------------------------------------------------------
 int64_t CAxisSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
@@ -430,10 +430,10 @@ void CAxisSegmentFeatures::initializeVoxelSeedGenerator(const int64_t rangeMin, 
 // -----------------------------------------------------------------------------
 void CAxisSegmentFeatures::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -458,8 +458,7 @@ void CAxisSegmentFeatures::execute()
   int64_t totalFeatures = static_cast<int64_t>(m_ActivePtr.lock()->getNumberOfTuples());
   if(totalFeatures < 2)
   {
-    setErrorCondition(-87000);
-    notifyErrorMessage(getHumanLabel(), "The number of Features was 0 or 1 which means no Features were detected. A threshold value may be set too high", getErrorCondition());
+    setErrorCondition(-87000, "The number of Features was 0 or 1 which means no Features were detected. A threshold value may be set too high");
     return;
   }
 

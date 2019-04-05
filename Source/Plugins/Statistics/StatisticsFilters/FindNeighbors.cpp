@@ -146,8 +146,8 @@ void FindNeighbors::initialize()
 // -----------------------------------------------------------------------------
 void FindNeighbors::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
   DataArrayPath tempPath;
 
@@ -199,7 +199,7 @@ void FindNeighbors::dataCheck()
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   tempPath.update(getCellFeatureAttributeMatrixPath().getDataContainerName(), getCellFeatureAttributeMatrixPath().getAttributeMatrixName(), getNeighborListArrayName());
   m_NeighborList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID31);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -229,10 +229,10 @@ void FindNeighbors::preflight()
 // -----------------------------------------------------------------------------
 void FindNeighbors::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -279,7 +279,7 @@ void FindNeighbors::execute()
     if(currentMillis - millis > 1000)
     {
       QString ss = QObject::tr("Finding Neighbors || Initializing Neighbor Lists || %1% Complete").arg((static_cast<float>(i) / totalFeatures) * 100);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyStatusMessage(ss);
       millis = QDateTime::currentMSecsSinceEpoch();
     }
 
@@ -303,7 +303,7 @@ void FindNeighbors::execute()
     if(currentMillis - millis > 1000)
     {
       QString ss = QObject::tr("Finding Neighbors || Determining Neighbor Lists || %1% Complete").arg((static_cast<float>(j) / totalPoints) * 100);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyStatusMessage(ss);
       millis = QDateTime::currentMSecsSinceEpoch();
     }
 
@@ -390,7 +390,7 @@ void FindNeighbors::execute()
     if(currentMillis - millis > 1000)
     {
       QString ss = QObject::tr("Finding Neighbors || Calculating Surface Areas || %1% Complete").arg(((float)i / totalFeatures) * 100);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyStatusMessage(ss);
       millis = QDateTime::currentMSecsSinceEpoch();
     }
 

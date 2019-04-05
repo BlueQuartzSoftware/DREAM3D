@@ -136,7 +136,7 @@ public:
     filter->setDataContainerArray(dca);
 
     Observer obs;
-    obs.connect(filter.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
+    obs.connect(filter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), &obs, SLOT(processPipelineMessage(const AbstractMessage::Pointer&)));
 
     DataArrayPath path("Test", "CellData", "FeatureIds");
     QVariant variant;
@@ -151,14 +151,14 @@ public:
     DREAM3D_REQUIRE_EQUAL(ok, true)
 
     filter->preflight();
-    int err = filter->getErrorCondition();
+    int err = filter->getErrorCode();
     DREAM3D_REQUIRE(err >= 0)
 
     dca = CreateTestData();
     filter->setDataContainerArray(dca);
 
     filter->execute();
-    err = filter->getErrorCondition();
+    err = filter->getErrorCode();
     DREAM3D_REQUIRE(err >= 0)
 
     AttributeMatrix::Pointer featureAM = dca->getAttributeMatrix(DataArrayPath("Test", "FeatureData", ""));

@@ -226,8 +226,8 @@ void FindNeighborhoods::initialize()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
   DataArrayPath tempPath;
 
@@ -242,7 +242,7 @@ void FindNeighborhoods::dataCheck()
   QVector<size_t> cDims(1, 1);
   tempPath.update(m_EquivalentDiametersArrayPath.getDataContainerName(), m_EquivalentDiametersArrayPath.getAttributeMatrixName(), getNeighborhoodListArrayName());
   m_NeighborhoodList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID31);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -254,7 +254,7 @@ void FindNeighborhoods::dataCheck()
   {
     m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getEquivalentDiametersArrayPath());
   }
@@ -265,7 +265,7 @@ void FindNeighborhoods::dataCheck()
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getFeaturePhasesArrayPath());
   }
@@ -285,7 +285,7 @@ void FindNeighborhoods::dataCheck()
   {
     m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getCentroidsArrayPath());
   }
@@ -318,10 +318,10 @@ void FindNeighborhoods::find_neighborhoods()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -423,7 +423,7 @@ void FindNeighborhoods::updateProgress(size_t numCompleted, size_t totalFeatures
   {
     m_IncCount = 0;
     QString ss = QObject::tr("Working on Feature %1 of %2").arg(m_NumCompleted).arg(totalFeatures);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(ss);
   }
 }
 

@@ -133,28 +133,25 @@ void ChangeResolution::initialize()
 // -----------------------------------------------------------------------------
 void ChangeResolution::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(getSpacing()[0] <= 0)
   {
-    QString ss = QObject::tr("The X resolution (%1) must be positive").arg(getSpacing()[0]);
-    setErrorCondition(-5555);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    QString ss = QObject::tr("The X spacing (%1) must be positive").arg(getSpacing()[0]);
+    setErrorCondition(-5555, ss);
   }
 
   if(getSpacing()[1] <= 0)
   {
-    QString ss = QObject::tr("The Y resolution (%1) must be positive").arg(getSpacing()[1]);
-    setErrorCondition(-5556);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    QString ss = QObject::tr("The Y spacing (%1) must be positive").arg(getSpacing()[1]);
+    setErrorCondition(-5556, ss);
   }
 
   if(getSpacing()[2] <= 0)
   {
-    QString ss = QObject::tr("The  resolution (%1) must be positive").arg(getSpacing()[2]);
-    setErrorCondition(-5557);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    QString ss = QObject::tr("The  spacing (%1) must be positive").arg(getSpacing()[2]);
+    setErrorCondition(-5557, ss);
   }
 
   if(!getSaveAsNewDataContainer())
@@ -191,7 +188,7 @@ void ChangeResolution::preflight()
   emit updateFilterParameters(this);
   dataCheck();
 
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     emit preflightExecuted();
     setInPreflight(false);
@@ -289,10 +286,10 @@ void ChangeResolution::preflight()
 // -----------------------------------------------------------------------------
 void ChangeResolution::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -363,7 +360,7 @@ void ChangeResolution::execute()
     }
     progressInt = static_cast<size_t>((static_cast<float>(i) / m_ZP) * 100.0f);
     QString ss = QObject::tr("Changing Spacing || %1% Complete").arg(progressInt);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(ss);
     for(size_t j = 0; j < m_YP; j++)
     {
       for(size_t k = 0; k < m_XP; k++)
@@ -382,7 +379,7 @@ void ChangeResolution::execute()
   }
 
   QString ss = QObject::tr("Copying Data...");
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+  notifyStatusMessage(ss);
 
   QVector<size_t> tDims(3, 0);
   tDims[0] = m_XP;
@@ -427,7 +424,7 @@ void ChangeResolution::execute()
     QVector<bool> activeObjects(totalFeatures, false);
     if(0 == totalFeatures)
     {
-      notifyErrorMessage(getHumanLabel(), "The number of Features is 0 and should be greater than 0", -600);
+      setErrorCondition(-600, "The number of Features is 0 and should be greater than 0");
       return;
     }
 

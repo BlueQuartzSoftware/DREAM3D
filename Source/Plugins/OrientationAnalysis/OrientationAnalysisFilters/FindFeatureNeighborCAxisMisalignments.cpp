@@ -145,8 +145,8 @@ void FindFeatureNeighborCAxisMisalignments::initialize()
 // -----------------------------------------------------------------------------
 void FindFeatureNeighborCAxisMisalignments::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   DataArrayPath tempPath;
@@ -161,7 +161,7 @@ void FindFeatureNeighborCAxisMisalignments::dataCheck()
   {
     m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getAvgQuatsArrayPath());
   }
@@ -173,7 +173,7 @@ void FindFeatureNeighborCAxisMisalignments::dataCheck()
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getFeaturePhasesArrayPath());
   }
@@ -200,7 +200,7 @@ void FindFeatureNeighborCAxisMisalignments::dataCheck()
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter>(this, getNeighborListArrayPath(), cDims);
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getNeighborListArrayPath());
   }
@@ -229,10 +229,10 @@ void FindFeatureNeighborCAxisMisalignments::preflight()
 // -----------------------------------------------------------------------------
 void FindFeatureNeighborCAxisMisalignments::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

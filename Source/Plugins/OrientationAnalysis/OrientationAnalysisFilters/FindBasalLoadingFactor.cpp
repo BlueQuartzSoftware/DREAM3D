@@ -116,8 +116,8 @@ void FindBasalLoadingFactor::initialize()
 // -----------------------------------------------------------------------------
 void FindBasalLoadingFactor::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> dims(1, 4);
   m_AvgQuatsPtr =
@@ -153,10 +153,10 @@ void FindBasalLoadingFactor::preflight()
 // -----------------------------------------------------------------------------
 void FindBasalLoadingFactor::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -203,7 +203,7 @@ void FindBasalLoadingFactor::execute()
     m_BasalLoadingFactor[i] = w;
   }
 
-  notifyStatusMessage(getHumanLabel(), "FindBasalLoadingFactor Completed");
+  notifyStatusMessage("FindBasalLoadingFactor Completed");
 }
 
 // -----------------------------------------------------------------------------

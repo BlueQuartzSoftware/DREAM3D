@@ -116,21 +116,21 @@ void SharedFeatureFaceFilter::initialize()
 // -----------------------------------------------------------------------------
 void SharedFeatureFaceFilter::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 
   DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer facefeatureAttrMat = sm->createNonPrereqAttributeMatrix(this, getFaceFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::FaceFeature, AttributeMatrixID21);
-  if(getErrorCondition() < 0 || nullptr == facefeatureAttrMat.get())
+  if(getErrorCode() < 0 || nullptr == facefeatureAttrMat.get())
   {
     return;
   }
@@ -188,10 +188,10 @@ void SharedFeatureFaceFilter::preflight()
 // -----------------------------------------------------------------------------
 void SharedFeatureFaceFilter::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

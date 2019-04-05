@@ -191,7 +191,7 @@ public:
     SET_FILTER_PROPERTY_WITH_CHECK(filter, "TripleLineDataContainerName", imageSurfMeshTripleLineDCName, err)
     // Run the filter NOW to create the ImageGeom based surface mesh
     filter->execute();
-    err = filter->getErrorCondition();
+    err = filter->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, 0);
 
     // Now setup to create a surface mesh from a RectilinearGrid Geometry
@@ -204,7 +204,7 @@ public:
     SET_FILTER_PROPERTY_WITH_CHECK(filter, "TripleLineDataContainerName", rectGridSurfMeshTripleLineDCName, err)
 
     filter->execute();
-    err = filter->getErrorCondition();
+    err = filter->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, 0);
 
     //##################################################################################################################
@@ -222,7 +222,7 @@ public:
       qDebug() << "Unable to set property OutputFile";
     }
     writer->execute();
-    err = writer->getErrorCondition();
+    err = writer->getErrorCode();
     DREAM3D_REQUIRED(err, >=, 0)
 
     //##################################################################################################################

@@ -123,8 +123,8 @@ void VisualizeGBCDGMT::initialize()
 // -----------------------------------------------------------------------------
 void VisualizeGBCDGMT::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getGBCDArrayPath().getDataContainerName());
@@ -155,7 +155,7 @@ void VisualizeGBCDGMT::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   IDataArray::Pointer tmpGBCDPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getGBCDArrayPath());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -174,8 +174,7 @@ void VisualizeGBCDGMT::dataCheck()
   if(nullptr != m_GBCDPtr.lock() && getPhaseOfInterest() >= m_GBCDPtr.lock()->getNumberOfTuples())
   {
     QString ss = QObject::tr("The phase index is larger than the number of Ensembles").arg(ClassName());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
   }
 }
 
@@ -197,10 +196,10 @@ void VisualizeGBCDGMT::preflight()
 // -----------------------------------------------------------------------------
 void VisualizeGBCDGMT::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -216,8 +215,7 @@ void VisualizeGBCDGMT::execute()
   {
     QString ss;
     ss = QObject::tr("Error creating parent path '%1'").arg(dir.path());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
     return;
   }
 
@@ -225,8 +223,7 @@ void VisualizeGBCDGMT::execute()
   if(!file.open(QIODevice::WriteOnly | QIODevice::Text))
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
-    setErrorCondition(-100);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-100, ss);
     return;
   }
 
@@ -438,8 +435,7 @@ void VisualizeGBCDGMT::execute()
   if(nullptr == f)
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(m_OutputFile);
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
     return;
   }
 

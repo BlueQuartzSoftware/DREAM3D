@@ -98,8 +98,8 @@ void SampleSurfaceMeshSpecifiedPoints::readFilterParameters(AbstractFilterParame
 // -----------------------------------------------------------------------------
 void SampleSurfaceMeshSpecifiedPoints::updateVertexInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   if(nullptr != m_FeatureIdsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
@@ -119,22 +119,21 @@ void SampleSurfaceMeshSpecifiedPoints::initialize()
 // -----------------------------------------------------------------------------
 void SampleSurfaceMeshSpecifiedPoints::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
   DataArrayPath tempPath;
 
   if(m_InputFilePath.isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
+    setErrorCondition(-1, ss);
   }
 
   FileSystemPathHelper::CheckOutputFile(this, "Output File Path", getOutputFilePath(), true);
 
   DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "SpecifiedPoints", DataContainerID);
-  if(getErrorCondition() < 0 || nullptr == v.get())
+  if(getErrorCode() < 0 || nullptr == v.get())
   {
     return;
   }
@@ -186,8 +185,7 @@ VertexGeom::Pointer SampleSurfaceMeshSpecifiedPoints::generate_points()
   if(m_NumPoints <= 0)
   {
     QString ss = QObject::tr("Number of points to sample (%1) must be positive").arg(m_NumPoints);
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
     return VertexGeom::NullPointer();
   }
 
@@ -229,10 +227,10 @@ void SampleSurfaceMeshSpecifiedPoints::assign_points(Int32ArrayType::Pointer iAr
 // -----------------------------------------------------------------------------
 void SampleSurfaceMeshSpecifiedPoints::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

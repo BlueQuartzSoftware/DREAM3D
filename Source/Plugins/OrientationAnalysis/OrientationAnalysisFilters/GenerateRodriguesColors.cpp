@@ -140,8 +140,8 @@ void GenerateRodriguesColors::initialize()
 void GenerateRodriguesColors::dataCheck()
 {
   DataArrayPath tempPath;
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> dims(1, 1);
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(),
@@ -209,11 +209,10 @@ void GenerateRodriguesColors::preflight()
 // -----------------------------------------------------------------------------
 void GenerateRodriguesColors::execute()
 {
-  int err = 0;
-  QString ss;
-  setErrorCondition(err);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

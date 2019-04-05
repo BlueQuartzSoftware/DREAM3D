@@ -43,6 +43,8 @@
 
 #include "EMMPM/EMMPMDLLExport.h"
 
+class MultiEmmpmFilterMessageHandler;
+
 /**
  * @brief The MultiEmmpmFilter class. See [Filter documentation](@ref multiemmpmfilter) for details.
  */
@@ -61,6 +63,8 @@ public:
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(MultiEmmpmFilter, AbstractFilter)
 
   virtual ~MultiEmmpmFilter();
+
+  friend MultiEmmpmFilterMessageHandler;
 
   SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, InputDataArrayVector)
   Q_PROPERTY(QVector<DataArrayPath> InputDataArrayVector READ getInputDataArrayVector WRITE setInputDataArrayVector)
@@ -151,9 +155,19 @@ protected:
    */
   void initialize();
 
+protected slots:
+  /**
+   * @brief generateEmmpmMessage
+   * @param msg
+   */
+  virtual void handleEmmpmMessage(const AbstractMessage::Pointer& msg);
+
 private:
   DEFINE_DATAARRAY_VARIABLE(uint8_t, InputImage)
   DEFINE_DATAARRAY_VARIABLE(uint8_t, OutputImage)
+
+  int m_ArrayCount;
+  int m_CurrentArrayIndex = 1;
 
 public:
   MultiEmmpmFilter(const MultiEmmpmFilter&) = delete; // Copy Constructor Not Implemented

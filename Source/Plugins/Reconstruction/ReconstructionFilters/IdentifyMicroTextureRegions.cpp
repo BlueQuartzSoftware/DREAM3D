@@ -313,8 +313,8 @@ void IdentifyMicroTextureRegions::readFilterParameters(AbstractFilterParametersR
 // -----------------------------------------------------------------------------
 void IdentifyMicroTextureRegions::updateFeatureInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_ActivePtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -336,8 +336,8 @@ void IdentifyMicroTextureRegions::initialize()
 // -----------------------------------------------------------------------------
 void IdentifyMicroTextureRegions::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   DataArrayPath tempPath;
@@ -345,7 +345,7 @@ void IdentifyMicroTextureRegions::dataCheck()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCAxisLocationsArrayPath().getDataContainerName());
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, getCAxisLocationsArrayPath().getDataContainerName(), false);
-  if(getErrorCondition() < 0 || nullptr == m.get())
+  if(getErrorCode() < 0 || nullptr == m.get())
   {
     return;
   }
@@ -364,7 +364,7 @@ void IdentifyMicroTextureRegions::dataCheck()
   {
     m_CAxisLocations = m_CAxisLocationsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getCAxisLocationsArrayPath());
   }
@@ -376,7 +376,7 @@ void IdentifyMicroTextureRegions::dataCheck()
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getCellPhasesArrayPath());
   }
@@ -425,7 +425,7 @@ void IdentifyMicroTextureRegions::preflight()
 // -----------------------------------------------------------------------------
 void IdentifyMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures)
 {
-  notifyStatusMessage(getHumanLabel(), "Randomizing Feature Ids");
+  notifyStatusMessage("Randomizing Feature Ids");
   // Generate an even distribution of numbers between the min and max range
   const int32_t rangeMin = 1;
   const int32_t rangeMax = totalFeatures - 1;
@@ -487,10 +487,10 @@ void IdentifyMicroTextureRegions::initializeVoxelSeedGenerator(const int32_t ran
 // -----------------------------------------------------------------------------
 void IdentifyMicroTextureRegions::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -542,7 +542,7 @@ void IdentifyMicroTextureRegions::execute()
 
   // Create temporary DataContainer and AttributeMatrix for holding the patch data
   DataContainer::Pointer tmpDC = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "_INTERNAL_USE_ONLY_PatchDataContainer(Temp)", DataContainerID);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -555,7 +555,7 @@ void IdentifyMicroTextureRegions::execute()
   tDims[1] = newDim[1];
   tDims[2] = newDim[2];
   tmpDC->createNonPrereqAttributeMatrix(this, "_INTERNAL_USE_ONLY_PatchAM(Temp)", tDims, AttributeMatrix::Type::Cell, AttributeMatrixID22);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

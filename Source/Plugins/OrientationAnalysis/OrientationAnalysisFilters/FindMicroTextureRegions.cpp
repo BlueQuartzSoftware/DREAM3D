@@ -109,8 +109,8 @@ void FindMicroTextureRegions::initialize()
 void FindMicroTextureRegions::dataCheck()
 {
   DataArrayPath tempPath;
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> dims(1, 1);
   // Cell Data
@@ -120,13 +120,13 @@ void FindMicroTextureRegions::dataCheck()
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || nullptr == image.get())
+  if(getErrorCode() < 0 || nullptr == image.get())
   {
     return;
   }
@@ -166,16 +166,16 @@ void FindMicroTextureRegions::preflight()
 // -----------------------------------------------------------------------------
 void FindMicroTextureRegions::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   find_microtextureregions();
-  notifyStatusMessage(getHumanLabel(), "FindMicroTextureRegions Completed");
+  notifyStatusMessage("FindMicroTextureRegions Completed");
 }
 
 // -----------------------------------------------------------------------------

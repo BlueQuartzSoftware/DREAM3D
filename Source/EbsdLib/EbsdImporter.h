@@ -68,7 +68,7 @@ class EbsdLib_EXPORT EbsdImporter
     /**
      * @brief Sets an error condition
      */
-    EBSD_VIRTUAL_INSTANCE_PROPERTY(int, ErrorCondition)
+    EBSD_VIRTUAL_INSTANCE_PROPERTY(int, ErrorCode)
 
     /**
      * @brief Cancel the operation
@@ -133,9 +133,9 @@ class EbsdLib_EXPORT EbsdImporter
     virtual void setFileVersion(uint32_t version) = 0;
 
   protected:
-    EbsdImporter() :
-      m_ErrorCondition(0),
-      m_Cancel(false)
+    EbsdImporter()
+    : m_ErrorCode(0)
+    , m_Cancel(false)
     {
       m_PipelineMessage = "";
     }

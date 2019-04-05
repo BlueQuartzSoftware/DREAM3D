@@ -158,8 +158,8 @@ void YSChoiAbaqusReader::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 void YSChoiAbaqusReader::updateCellInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_CellEulerAnglesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -184,8 +184,8 @@ void YSChoiAbaqusReader::updateCellInstancePointers()
 // -----------------------------------------------------------------------------
 void YSChoiAbaqusReader::updateFeatureInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_AvgQuatsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -202,8 +202,8 @@ void YSChoiAbaqusReader::updateFeatureInstancePointers()
 // -----------------------------------------------------------------------------
 void YSChoiAbaqusReader::updateEnsembleInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_CrystalStructuresPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -224,11 +224,11 @@ void YSChoiAbaqusReader::initialize()
 void YSChoiAbaqusReader::dataCheck()
 {
   DataArrayPath tempPath;
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -238,7 +238,7 @@ void YSChoiAbaqusReader::dataCheck()
 
   QVector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
-  if(getErrorCondition() < 0 || nullptr == cellAttrMat.get())
+  if(getErrorCode() < 0 || nullptr == cellAttrMat.get())
   {
     return;
   }
@@ -246,13 +246,13 @@ void YSChoiAbaqusReader::dataCheck()
   tDims[0] = 0;
 
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix(this, getCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID22);
-  if(getErrorCondition() < 0 || nullptr == cellFeatureAttrMat.get())
+  if(getErrorCode() < 0 || nullptr == cellFeatureAttrMat.get())
   {
     return;
   }
 
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID23);
-  if(getErrorCondition() < 0 || nullptr == cellEnsembleAttrMat.get())
+  if(getErrorCode() < 0 || nullptr == cellEnsembleAttrMat.get())
   {
     return;
   }
@@ -261,14 +261,12 @@ void YSChoiAbaqusReader::dataCheck()
   if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-387, ss);
   }
   else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
-    setErrorCondition(-388);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-388, ss);
   }
   else
   {
@@ -279,8 +277,7 @@ void YSChoiAbaqusReader::dataCheck()
     if(!in.open(QIODevice::ReadOnly | QIODevice::Text))
     {
       QString msg = QObject::tr("Abaqus file could not be opened: %1").arg(getInputFile());
-      setErrorCondition(-100);
-      notifyErrorMessage(getHumanLabel(), "", getErrorCondition());
+      setErrorCondition(-100, "");
       return;
     }
     QString word;
@@ -391,8 +388,7 @@ void YSChoiAbaqusReader::execute()
   if(!in.open(QIODevice::ReadOnly | QIODevice::Text))
   {
     QString msg = QObject::tr("Abaqus file could not be opened: %1").arg(getInputFile());
-    setErrorCondition(-100);
-    notifyErrorMessage(getHumanLabel(), "", getErrorCondition());
+    setErrorCondition(-100, "");
     return;
   }
 
@@ -435,8 +431,7 @@ void YSChoiAbaqusReader::execute()
   if(!in2.open(QIODevice::ReadOnly | QIODevice::Text))
   {
     QString msg = QObject::tr("Abaqus Feature Info file could not be opened: %1").arg(getInputFeatureInfoFile());
-    setErrorCondition(-100);
-    notifyErrorMessage(getHumanLabel(), "", getErrorCondition());
+    setErrorCondition(-100, "");
     return;
   }
 

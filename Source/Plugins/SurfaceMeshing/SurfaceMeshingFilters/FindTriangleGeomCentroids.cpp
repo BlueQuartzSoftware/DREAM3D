@@ -77,8 +77,8 @@ FindTriangleGeomCentroids::~FindTriangleGeomCentroids() = default;
 // -----------------------------------------------------------------------------
 void FindTriangleGeomCentroids::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -109,14 +109,14 @@ void FindTriangleGeomCentroids::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void FindTriangleGeomCentroids::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<IDataArray::Pointer> dataArrays;
 
   TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getFaceLabelsArrayPath().getDataContainerName());
 
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -131,13 +131,13 @@ void FindTriangleGeomCentroids::dataCheck()
   {
     m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_FaceLabelsPtr.lock());
   }
 
   DataContainer::Pointer tdc = getDataContainerArray()->getPrereqDataContainer(this, getFaceLabelsArrayPath().getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -172,7 +172,7 @@ void FindTriangleGeomCentroids::execute()
 {
   initialize();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

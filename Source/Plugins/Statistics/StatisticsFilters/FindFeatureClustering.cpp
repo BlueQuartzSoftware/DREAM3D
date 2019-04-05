@@ -162,8 +162,8 @@ void FindFeatureClustering::initialize()
 // -----------------------------------------------------------------------------
 void FindFeatureClustering::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getEquivalentDiametersArrayPath().getDataContainerName());
 
@@ -314,7 +314,7 @@ void FindFeatureClustering::find_clustering()
       if(i % 1000 == 0)
       {
         QString ss = QObject::tr("Working on Feature %1 of %2").arg(i).arg(totalPPTfeatures);
-        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+        notifyStatusMessage(ss);
       }
 
       x = m_Centroids[3 * i];
@@ -446,10 +446,10 @@ void FindFeatureClustering::find_clustering()
 // -----------------------------------------------------------------------------
 void FindFeatureClustering::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
