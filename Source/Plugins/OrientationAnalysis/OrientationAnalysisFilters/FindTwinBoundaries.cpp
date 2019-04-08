@@ -300,8 +300,8 @@ void FindTwinBoundaries::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 void FindTwinBoundaries::dataCheckVoxel()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -314,7 +314,7 @@ void FindTwinBoundaries::dataCheckVoxel()
   {
     m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getAvgQuatsArrayPath());
   }
@@ -326,7 +326,7 @@ void FindTwinBoundaries::dataCheckVoxel()
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getFeaturePhasesArrayPath());
   }
@@ -346,8 +346,8 @@ void FindTwinBoundaries::dataCheckVoxel()
 // -----------------------------------------------------------------------------
 void FindTwinBoundaries::dataCheckSurfaceMesh()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   QVector<DataArrayPath> dataArrayPaths;
@@ -361,7 +361,7 @@ void FindTwinBoundaries::dataCheckSurfaceMesh()
   {
     m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getSurfaceMeshFaceLabelsArrayPath());
   }
@@ -375,7 +375,7 @@ void FindTwinBoundaries::dataCheckSurfaceMesh()
     {
       m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() >= 0)
+    if(getErrorCode() >= 0)
     {
       dataArrayPaths.push_back(getSurfaceMeshFaceNormalsArrayPath());
     }
@@ -421,15 +421,15 @@ void FindTwinBoundaries::preflight()
 // -----------------------------------------------------------------------------
 void FindTwinBoundaries::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheckVoxel();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
   dataCheckSurfaceMesh();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

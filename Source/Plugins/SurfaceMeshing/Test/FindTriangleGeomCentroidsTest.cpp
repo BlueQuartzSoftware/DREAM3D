@@ -268,7 +268,7 @@ public:
     }
 
     centroidsFilter->execute();
-    int32_t err = centroidsFilter->getErrorCondition();
+    int32_t err = centroidsFilter->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, 0);
 
     AttributeMatrix::Pointer faceFeatAttrMat = tdc->getAttributeMatrix(SIMPL::Defaults::FaceFeatureAttributeMatrixName);

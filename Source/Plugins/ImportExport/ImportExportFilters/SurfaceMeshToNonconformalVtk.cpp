@@ -114,20 +114,20 @@ void SurfaceMeshToNonconformalVtk::initialize()
 // -----------------------------------------------------------------------------
 void SurfaceMeshToNonconformalVtk::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   QString ss;
 
   FileSystemPathHelper::CheckOutputFile(this, "Output VTK File", getOutputVtkFile(), true);
 
   DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   TriangleGeom::Pointer triangles = sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -135,14 +135,12 @@ void SurfaceMeshToNonconformalVtk::dataCheck()
   // We MUST have Nodes
   if(nullptr == triangles->getVertices().get())
   {
-    setErrorCondition(-386);
-    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Vertices", getErrorCondition());
+    setErrorCondition(-386, "DataContainer Geometry missing Vertices");
   }
   // We MUST have Triangles defined also.
   if(nullptr == triangles->getTriangles().get())
   {
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
+    setErrorCondition(-387, "DataContainer Geometry missing Triangles");
   }
   QVector<size_t> dims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(),
@@ -200,11 +198,11 @@ private:
 // -----------------------------------------------------------------------------
 void SurfaceMeshToNonconformalVtk::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
+  clearErrorCode();
+  clearWarningCode();
 
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -225,8 +223,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   if(!parentPath.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
     return;
   }
 
@@ -236,13 +233,12 @@ void SurfaceMeshToNonconformalVtk::execute()
   if(nullptr == vtkFile)
   {
     QString ss = QObject::tr("Error creating file '%1'").arg(getOutputVtkFile());
-    setErrorCondition(-18542);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-18542, ss);
     return;
   }
   ScopedFileMonitor vtkFileMonitor(vtkFile);
 
-  notifyStatusMessage(getHumanLabel(), "Writing Vertex Data ....");
+  notifyStatusMessage("Writing Vertex Data ....");
 
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
   fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
@@ -303,7 +299,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   }
 
   // Write the triangle indices into the vtk File
-  notifyStatusMessage(getHumanLabel(), "Writing Faces ....");
+  notifyStatusMessage("Writing Faces ....");
 
   int tData[4];
 
@@ -406,15 +402,15 @@ void SurfaceMeshToNonconformalVtk::execute()
   }
 
   // Write the POINT_DATA section
-  err = writePointData(vtkFile);
+  int err = writePointData(vtkFile);
 
   // Write the CELL_DATA section
   err = writeCellData(vtkFile, featureTriangleCount);
 
   fprintf(vtkFile, "\n");
 
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 }
 
 // -----------------------------------------------------------------------------
@@ -868,21 +864,21 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int
 
   QString attrMatName = m_SurfaceMeshFaceLabelsArrayPath.getAttributeMatrixName();
 
-  notifyStatusMessage(getHumanLabel(), "Writing Face Normals...");
+  notifyStatusMessage("Writing Face Normals...");
   writeCellNormalData<double>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshFaceNormals, "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
-  notifyStatusMessage(getHumanLabel(), "Writing Principal Curvature 1");
+  notifyStatusMessage("Writing Principal Curvature 1");
   writeCellScalarData<double>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshPrincipalCurvature1, "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
-  notifyStatusMessage(getHumanLabel(), "Writing Principal Curvature 2");
+  notifyStatusMessage("Writing Principal Curvature 2");
   writeCellScalarData<double>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshPrincipalCurvature2, "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
-  notifyStatusMessage(getHumanLabel(), "Writing Feature Face Id");
+  notifyStatusMessage("Writing Feature Face Id");
   writeCellScalarData<int32_t>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshFeatureFaceId, "int", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
-  notifyStatusMessage(getHumanLabel(), "Writing Gaussian Curvature");
+  notifyStatusMessage("Writing Gaussian Curvature");
   writeCellScalarData<double>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshGaussianCurvatures, "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 
-  notifyStatusMessage(getHumanLabel(), "Writing Mean Curvature");
+  notifyStatusMessage("Writing Mean Curvature");
   writeCellScalarData<double>(sm, attrMatName, SIMPL::FaceData::SurfaceMeshMeanCurvatures, "double", m_WriteBinaryFile, vtkFile, featureIds, m_SurfaceMeshFaceLabels);
 #if 0
   writeCellVectorData<double>(sm, attrMatName, SIMPL::CellData::SurfaceMeshPrincipalDirection1,

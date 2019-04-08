@@ -142,13 +142,13 @@ public:
     AbstractFilter::Pointer detectEllipsoidsFilter = container[container.size() - 3];
 
     Observer obs;
-    obs.connect(detectEllipsoidsFilter.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
+    obs.connect(detectEllipsoidsFilter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), &obs, SLOT(processPipelineMessage(const AbstractMessage::Pointer&)));
 
     pipeline->preflightPipeline();
-    DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), 0);
+    DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCode(), 0);
 
     pipeline->execute();
-    DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCondition(), 0);
+    DREAM3D_REQUIRE_EQUAL(pipeline->getErrorCode(), 0);
 
     // Compare output with exemplary output
     if(!exemplaryOutFile.open(QFile::ReadOnly) || !testOutFile.open(QFile::ReadOnly))

@@ -155,8 +155,8 @@ void EMsoftSO3Sampler::initialize()
 // -----------------------------------------------------------------------------
 void EMsoftSO3Sampler::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   // Try to get the DataContainer that the user has named.
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
@@ -165,13 +165,13 @@ void EMsoftSO3Sampler::dataCheck()
   {
     m = getDataContainerArray()->createNonPrereqDataContainer(this, getDataContainerName());
   }
-  if(getErrorCondition() < 0 || nullptr == m.get())
+  if(getErrorCode() < 0 || nullptr == m.get())
   {
     return;
   } // This truly is an error condition.
 
   // DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
-  // if (getErrorCondition() < 0) { return; }
+  // if (getErrorCode() < 0) { return; }
 
   // Now try to either get or create the needed AttributeMatrix
   QVector<size_t> tDims(1, 1);
@@ -180,14 +180,14 @@ void EMsoftSO3Sampler::dataCheck()
   {
     emsoftAttrMat = m->createNonPrereqAttributeMatrix(this, getEMsoftAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic, AttributeMatrixID21);
   }
-  if(getErrorCondition() < 0 || nullptr == emsoftAttrMat.get())
+  if(getErrorCode() < 0 || nullptr == emsoftAttrMat.get())
   {
     return;
   }
 
   //  QVector<size_t> tDims(1, 1);
   //  AttributeMatrix::Pointer emsoftAttrMat = m->createNonPrereqAttributeMatrix(this, getEMsoftAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic, AttributeMatrixID22);
-  //  if (getErrorCondition() < 0) { return; }
+  //  if (getErrorCode() < 0) { return; }
   //  m->addOrReplaceAttributeMatrix(emsoftAttrMat->getName(),emsoftAttrMat);
 
   // check on the point group index; must be between 1 and 32.
@@ -195,9 +195,8 @@ void EMsoftSO3Sampler::dataCheck()
   {
     if((getPointGroup() < 1) || (getPointGroup() > 32))
     {
-      setWarningCondition(-70001);
       QString ss = QObject::tr("Point group number must fall in interval [1,32]");
-      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+      setWarningCondition(-70001, ss);
     }
   }
 
@@ -206,39 +205,34 @@ void EMsoftSO3Sampler::dataCheck()
   {
     if((getMisOr() < 0.0) || (getMisOr() > 90.0))
     {
-      setWarningCondition(-70002);
       QString ss = QObject::tr("Misorientation angle must fall in interval [0,90]");
-      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+      setWarningCondition(-70002, ss);
     }
     if((getRefOr()[0] < 0.0) || (getRefOr()[0] > 360.0f) || (getRefOr()[1] < 0.0f) || (getRefOr()[1] > 180.0f) || (getRefOr()[2] < 0.0f) || (getRefOr()[2] > 360.0f))
     {
-      setWarningCondition(-70003);
       QString ss = QObject::tr("Euler angles must be positive and less than [360°,180°,360°]");
-      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+      setWarningCondition(-70003, ss);
     }
   }
   if(getsampleModeSelector() == 2)
   {
     if((getMisOrFull() < 0.0) || (getMisOrFull() > 90.0))
     {
-      setWarningCondition(-70004);
       QString ss = QObject::tr("Misorientation angle must fall in interval [0,90]");
-      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+      setWarningCondition(-70004, ss);
     }
     if((getRefOrFull()[0] < 0.0f) || (getRefOrFull()[0] > 360.0f) || (getRefOrFull()[1] < 0.0f) || (getRefOrFull()[1] > 180.0f) || (getRefOrFull()[2] < 0.0f) || (getRefOrFull()[2] > 360.0f))
     {
-      setWarningCondition(-70005);
       QString ss = QObject::tr("Euler angles must be positive and less than [360°,180°,360°]");
-      notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+      setWarningCondition(-70005, ss);
     }
   }
 
   // check on the number of sampling intervals (>1)
   if(getNumsp() < 1)
   {
-    setWarningCondition(-70002);
     QString ss = QObject::tr("Number of sampling intervals must be at least 1 ");
-    notifyWarningMessage(getHumanLabel(), ss, getWarningCondition());
+    setWarningCondition(-70002, ss);
   }
 
   QVector<DataArrayPath> dataArraypaths;
@@ -276,10 +270,10 @@ void EMsoftSO3Sampler::preflight()
 // -----------------------------------------------------------------------------
 void EMsoftSO3Sampler::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -370,7 +364,7 @@ void EMsoftSO3Sampler::execute()
       if(Di > Dc)
       {
         QString ss = QString("Euler Angles | Tested: %1 of %2 | Inside RFZ: %3 ").arg(QString::number(Di), QString::number(Totp), QString::number(Dg));
-        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+        notifyStatusMessage(ss);
         Dc += Dn;
       }
       if(getCancel())
@@ -506,7 +500,7 @@ void EMsoftSO3Sampler::execute()
       if(Dg > Dc)
       {
         QString ss = QString("Euler Angles | Generated: %1 / %2").arg(QString::number(Dg), QString::number(Totp));
-        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+        notifyStatusMessage(ss);
         Dc += Dn;
       }
     }
@@ -543,7 +537,7 @@ void EMsoftSO3Sampler::execute()
         if(Dg > Dc)
         {
           QString ss = QString("Euler Angles | Generated: %1 / %2").arg(QString::number(Dg), QString::number(Totp));
-          notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+          notifyStatusMessage(ss);
           Dc += Dn;
         }
       }

@@ -100,8 +100,8 @@ void NearestPointFuseRegularGrids::initialize()
 // -----------------------------------------------------------------------------
 void NearestPointFuseRegularGrids::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getReferenceCellAttributeMatrixPath().getDataContainerName());
@@ -109,7 +109,7 @@ void NearestPointFuseRegularGrids::dataCheck()
 
   AttributeMatrix::Pointer refAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getReferenceCellAttributeMatrixPath(), -301);
   AttributeMatrix::Pointer sampleAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getSamplingCellAttributeMatrixPath(), -301);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -121,13 +121,12 @@ void NearestPointFuseRegularGrids::dataCheck()
   {
     tempPath.update(getReferenceCellAttributeMatrixPath().getDataContainerName(), getReferenceCellAttributeMatrixPath().getAttributeMatrixName(), *iter);
     IDataArray::Pointer tmpDataArray = sampleAttrMat->getPrereqIDataArray<IDataArray, AbstractFilter>(this, *iter, -90001);
-    if(getErrorCondition() >= 0)
+    if(getErrorCode() >= 0)
     {
       if(refArrayNames.contains(*iter))
       {
         QString ss = QObject::tr("There is already an attribute array with the name %1 in the reference attribute matrix").arg(*iter);
-        setErrorCondition(-5559);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        setErrorCondition(-5559, ss);
       }
       else
       {
@@ -150,7 +149,7 @@ void NearestPointFuseRegularGrids::dataCheck()
   for(QList<QString>::Iterator it = m_AttrMatList.begin(); it != m_AttrMatList.end(); ++it)
   {
     AttributeMatrix::Pointer tmpAttrMat = mS->getPrereqAttributeMatrix(this, *it, -301);
-    if(getErrorCondition() >= 0)
+    if(getErrorCode() >= 0)
     {
       tempAttrMatType = tmpAttrMat->getType();
       if(tempAttrMatType > AttributeMatrix::Type::Cell)
@@ -158,8 +157,7 @@ void NearestPointFuseRegularGrids::dataCheck()
         if(refAttrMatNames.contains(tmpAttrMat->getName()))
         {
           QString ss = QObject::tr("There is already an attribute matrix with the name %1 in the reference data container").arg(tmpAttrMat->getName());
-          setErrorCondition(-5559);
-          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+          setErrorCondition(-5559, ss);
         }
         else
         {
@@ -189,10 +187,10 @@ void NearestPointFuseRegularGrids::preflight()
 // -----------------------------------------------------------------------------
 void NearestPointFuseRegularGrids::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -234,8 +232,7 @@ void NearestPointFuseRegularGrids::execute()
   {
     QString ss = QObject::tr("A component of the resolution for the Image Geometry associated with DataContainer '%1' is 0. This would result in a division by 0 operation")
                      .arg(m_SamplingCellAttributeMatrixPath.getDataContainerName());
-    setErrorCondition(-5555);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5555, ss);
     return;
   }
 

@@ -287,8 +287,8 @@ void InsertPrecipitatePhases::readFilterParameters(AbstractFilterParametersReade
 // -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::updateFeatureInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   if(nullptr != m_FeaturePhasesPtr.lock())
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
@@ -382,8 +382,8 @@ void InsertPrecipitatePhases::initialize()
 // -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
@@ -397,7 +397,7 @@ void InsertPrecipitatePhases::dataCheck()
   {
     m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
   }
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     ensembleDataArrayPaths.push_back(getInputPhaseTypesArrayPath());
   }
@@ -407,7 +407,7 @@ void InsertPrecipitatePhases::dataCheck()
   {
     m_ShapeTypes = m_ShapeTypesPtr.lock()->getPointer(0);
   }
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     ensembleDataArrayPaths.push_back(getInputShapeTypesArrayPath());
   }
@@ -418,17 +418,15 @@ void InsertPrecipitatePhases::dataCheck()
     if(m_StatsDataArray.lock() == nullptr)
     {
       QString ss = QObject::tr("Statistics array is not initialized correctly. The path is %1").arg(getInputStatsArrayPath().serialize());
-      setErrorCondition(-78000);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-78000, ss);
     }
   }
   if(getFeatureGeneration() > 1 || getFeatureGeneration() < 0)
   {
       QString ss = QObject::tr("The value for 'Precipitate Generation' can only be 0 or 1. The value being used is ").arg(getFeatureGeneration());
-      setErrorCondition(-78001);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-78001, ss);
   }
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     ensembleDataArrayPaths.push_back(getInputStatsArrayPath());
   }
@@ -440,7 +438,7 @@ void InsertPrecipitatePhases::dataCheck()
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   }
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     cellDataArrayPaths.push_back(getFeatureIdsArrayPath());
   }
@@ -451,7 +449,7 @@ void InsertPrecipitatePhases::dataCheck()
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   }
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     cellDataArrayPaths.push_back(getCellPhasesArrayPath());
   }
@@ -462,7 +460,7 @@ void InsertPrecipitatePhases::dataCheck()
   {
     m_BoundaryCells = m_BoundaryCellsPtr.lock()->getPointer(0);
   }
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     cellDataArrayPaths.push_back(getBoundaryCellsArrayPath());
   }
@@ -474,7 +472,7 @@ void InsertPrecipitatePhases::dataCheck()
     {
       m_Mask = m_MaskPtr.lock()->getPointer(0);
     }
-    if(getErrorCondition() >= 0)
+    if(getErrorCode() >= 0)
     {
       cellDataArrayPaths.push_back(getMaskArrayPath());
     }
@@ -482,7 +480,7 @@ void InsertPrecipitatePhases::dataCheck()
 
   QVector<size_t> tDims(1, 0);
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, getFeaturePhasesArrayPath().getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -577,14 +575,12 @@ void InsertPrecipitatePhases::dataCheck()
     if(getPrecipInputFile().isEmpty())
     {
       QString ss = QObject::tr("The input precipitate file must be set");
-      setErrorCondition(-78003);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-78003, ss);
     }
     else if(!fi.exists())
     {
       QString ss = QObject::tr("The input precipitate file does not exist");
-      setErrorCondition(-78004);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-78004, ss);
     }
   }
 
@@ -622,10 +618,10 @@ void InsertPrecipitatePhases::execute()
 {
   initialize();
 
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -643,13 +639,13 @@ void InsertPrecipitatePhases::execute()
 
   if(getFeatureGeneration() == 0)
   {
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Precipitates || Generating and Placing Precipitates");
+    notifyStatusMessage("Packing Precipitates || Generating and Placing Precipitates");
     // this initializes the arrays to hold the details of the locations of all
     // of the features during packing
     Int32ArrayType::Pointer exclusionZonesPtr = Int32ArrayType::CreateArray(m_TotalPoints, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::exclusion_zones");
     exclusionZonesPtr->initializeWithZeros();
     place_precipitates(exclusionZonesPtr);
-    if(getErrorCondition() < 0 || getWarningCondition() < 0)
+    if(getErrorCode() < 0 || getWarningCode() < 0)
     {
       return;
     }
@@ -668,14 +664,14 @@ void InsertPrecipitatePhases::execute()
     }
   }
 
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Precipitates || Assigning Voxels");
+  notifyStatusMessage("Packing Precipitates || Assigning Voxels");
   assign_voxels();
   if(getCancel())
   {
     return;
   }
 
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Packing Precipitates || Filling Gaps");
+  notifyStatusMessage("Packing Precipitates || Filling Gaps");
   assign_gaps();
   if(getCancel())
   {
@@ -717,15 +713,13 @@ void InsertPrecipitatePhases::load_precipitates()
   if(!inFile)
   {
     QString ss = QObject::tr("Failed to open: %1").arg(getPrecipInputFile());
-    setErrorCondition(-1000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1000, ss);
   }
   int32_t numPrecips = 0;
   inFile >> numPrecips;
   if(0 == numPrecips)
   {
-    setWarningCondition(-1001);
-    notifyWarningMessage(getHumanLabel(), "The number of precipitates is 0 and should be greater than 0", getWarningCondition());
+    setWarningCondition(-1001, "The number of precipitates is 0 and should be greater than 0");
     return;
   }
 
@@ -780,8 +774,8 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     writeErrorFile = true;
   }
 
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   m_Seed = QDateTime::currentMSecsSinceEpoch();
   SIMPL_RANDOMNG_NEW_SEEDED(m_Seed);
 
@@ -861,8 +855,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
                          .arg(i)
                          .arg(i)
                          .arg(m_PhaseTypes[i]);
-        setErrorCondition(-666);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        setErrorCondition(-666, ss);
         return;
       }
       m_NumFeatures[i] = 0;
@@ -958,7 +951,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
         if(currentnumfeatures % 100 == 0)
         {
           QString ss = QObject::tr("Packing Precipitates || Generating Feature #%1").arg(currentnumfeatures);
-          notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+          notifyStatusMessage(ss);
 
           if(getCancel())
           {
@@ -986,7 +979,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   }
 
   QString ss = QObject::tr("Packing Precipitates || Starting Feature Placement...");
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+  notifyStatusMessage(ss);
 
   // initializing the target RDF vector - this is the radial distribution
   // function we are trying to match to
@@ -1075,7 +1068,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   //    {
   //      QString ss = QObject::tr("Packing Precipitates || Placing Precipitate
   //      #%1").arg(i);
-  //      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+  //      notifyStatusMessage(ss);
   //      progFeature = i;
   //    }
 
@@ -1157,8 +1150,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   //          precipitates and the target statistics precipitate fraction is
   //          greater than 0. This Filter will run without trying to match
   //          the precipitate fraction");
-  //          setWarningCondition(-5010);
-  //          notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
+  //          setWarningCondition(-5010, msg);
   //        }
 
   //        if (availablePointsCount > 0)
@@ -1210,7 +1202,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
       return;
     }
     QString ss = QObject::tr("Packing Precipitates || Placing Precipitate #%1").arg(i);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(ss);
 
     PrecipitateStatsData::Pointer pp = std::dynamic_pointer_cast<PrecipitateStatsData>(statsDataArray[m_FeaturePhases[i]]);
     precipboundaryfraction = pp->getPrecipBoundaryFraction();
@@ -1273,8 +1265,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
                     "fraction is greater than 0. This Filter will run without "
                     "trying to match the "
                     "precipitate fraction");
-        setWarningCondition(-5010);
-        notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
+        setWarningCondition(-5010, msg);
       }
 
       if(m_AvailablePointsCount > 0)
@@ -1302,7 +1293,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     update_availablepoints(availablePoints, availablePointsInv);
   }
 
-  notifyStatusMessage(getHumanLabel(), "Packing Features - Initial Feature Placement Complete");
+  notifyStatusMessage("Packing Features - Initial Feature Placement Complete");
 
   if(m_MatchRDF)
   {
@@ -1392,7 +1383,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
                  .arg(totalAdjustments);
         if(iteration % 100 == 0)
         {
-          notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+          notifyStatusMessage(ss);
         }
 
         if(writeErrorFile && iteration % 25 == 0)
@@ -1477,8 +1468,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
                         "greater than 0. This Filter will run without trying "
                         "to match the "
                         "precipitate fraction");
-            setWarningCondition(-5010);
-            notifyWarningMessage(getHumanLabel(), msg, getWarningCondition());
+            setWarningCondition(-5010, msg);
           }
 
           if(m_AvailablePointsCount > 0)
@@ -2330,8 +2320,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   if(shapeclass >= ShapeType::Type::ShapeTypeEnd)
   {
     QString ss = QObject::tr("Undefined shape class in shape types array with path %1").arg(m_InputShapeTypesArrayPath.serialize());
-    setErrorCondition(-667);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-667, ss);
     return;
   }
 
@@ -2826,7 +2815,7 @@ void InsertPrecipitatePhases::assign_gaps()
                                "Unassigned Voxel Count: %2")
                        .arg(iterationCounter)
                        .arg(gapVoxelCount);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyStatusMessage(ss);
     }
     if(getCancel())
     {
@@ -2884,8 +2873,8 @@ float InsertPrecipitatePhases::find_zcoord(int64_t index)
 // -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::write_goal_attributes()
 {
-  int err = 0;
-  setErrorCondition(err);
+  clearErrorCode();
+  clearWarningCode();
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
   // Make sure any directory path is also available as the user may have just
@@ -2898,8 +2887,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   if(!dir.mkpath(parentPath))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
     return;
   }
 
@@ -2907,8 +2895,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   if(!outFile.open(QIODevice::WriteOnly))
   {
     QString msg = QObject::tr("CSV Output file could not be opened: %1").arg(getCsvOutputFile());
-    setErrorCondition(-200);
-    notifyErrorMessage(getHumanLabel(), "", getErrorCondition());
+    setErrorCondition(-200, "");
     return;
   }
 
@@ -2966,7 +2953,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
     if(((float)i / numTuples) * 100.0f > threshold)
     {
       QString ss = QObject::tr("Writing Feature Data - %1% Complete").arg(((float)i / numTuples) * 100);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyStatusMessage(ss);
       threshold = threshold + 5.0f;
       if(threshold < ((float)i / numTuples) * 100.0f)
       {

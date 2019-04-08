@@ -156,8 +156,8 @@ void ReadAngData::dataCheck()
   // Reset FileWasRead flag
   m_FileWasRead = false;
 
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   QFileInfo fi(m_InputFile);
@@ -165,31 +165,28 @@ void ReadAngData::dataCheck()
   if(m_InputFile.isEmpty() && m_Manufacturer == Ebsd::OEM::Unknown)
   {
     QString ss = QObject::tr("The input file must be set for property %1").arg("InputFile");
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
+    setErrorCondition(-1, ss);
     return;
   }
 
   QString ext = fi.suffix();
   if(ext != Ebsd::Ang::FileExt)
   {
-    setErrorCondition(-997);
     QString ss = QObject::tr("The file extension '%1' was not recognized. The reader only recognizes the .ang file extension").arg(ext);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-997, ss);
     return;
   }
 
   if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist: '%1'").arg(getInputFile());
-    setErrorCondition(-388);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-388, ss);
     return;
   }
 
   // Reading the header worked, now start setting up our DataContainer
   DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -201,13 +198,13 @@ void ReadAngData::dataCheck()
   // File is at least on the system with the proper extension, now try to read it.
   std::shared_ptr<AngReader> reader(new AngReader());
   readDataFile(reader.get(), m, tDims, ANG_HEADER_ONLY);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -218,7 +215,7 @@ void ReadAngData::dataCheck()
   tDims.resize(1);
   tDims[0] = 1;
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID22);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -321,9 +318,8 @@ void ReadAngData::readDataFile(AngReader* reader, const DataContainer::Pointer& 
       int32_t err = reader->readHeaderOnly();
       if(err < 0)
       {
-        setErrorCondition(err);
-        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
-        notifyErrorMessage(getHumanLabel(), "AngReader could not read the .ang file header.", getErrorCondition());
+        setErrorCondition(err, reader->getErrorMessage());
+        setErrorCondition(getErrorCode(), "AngReader could not read the .ang file header.");
         m_FileWasRead = false;
         return;
       }
@@ -332,11 +328,8 @@ void ReadAngData::readDataFile(AngReader* reader, const DataContainer::Pointer& 
 
       if(reader->getGrid().compare(Ebsd::Ang::HexGrid) == 0)
       {
-        setErrorCondition(-1000);
-        notifyErrorMessage(
-            getHumanLabel(),
-            "DREAM.3D does not directly read HEX grid .ang files. Please use the 'Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang)' filter first to batch convert the Hex grid files.",
-            getErrorCondition());
+        setErrorCondition(-1000, "DREAM.3D does not directly read HEX grid .ang files. Please use the 'Convert Hexagonal "
+                                  "Grid Data to Square Grid Data (TSL - .ang)' filter first to batch convert the Hex grid files.");
         m_FileWasRead = false;
         return;
       }
@@ -346,9 +339,8 @@ void ReadAngData::readDataFile(AngReader* reader, const DataContainer::Pointer& 
       int32_t err = reader->readFile();
       if(err < 0)
       {
-        setErrorCondition(err);
-        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
-        notifyErrorMessage(getHumanLabel(), "AngReader could not read the .ang file.", getErrorCondition());
+        setErrorCondition(err, reader->getErrorMessage());
+        setErrorCondition(getErrorCode(), "AngReader could not read the .ang file.");
         return;
       }
     }
@@ -423,9 +415,8 @@ int32_t ReadAngData::loadMaterialInfo(AngReader* reader)
   QVector<AngPhase::Pointer> phases = getData().phases;
   if(phases.empty())
   {
-    setErrorCondition(reader->getErrorCode());
-    notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(reader->getErrorCode(), reader->getErrorMessage());
+    return getErrorCode();
   }
 
   DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, Ebsd::AngFile::CrystalStructures);
@@ -600,10 +591,10 @@ void ReadAngData::copyRawEbsdData(AngReader* reader, QVector<size_t>& tDims, QVe
 // -----------------------------------------------------------------------------
 void ReadAngData::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -616,7 +607,7 @@ void ReadAngData::execute()
   ebsdAttrMat->setType(AttributeMatrix::Type::Cell);
 
   readDataFile(reader.get(), m, tDims, ANG_FULL_FILE);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

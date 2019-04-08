@@ -351,8 +351,8 @@ void FindDistsToCharactGBs::initialize()
 // -----------------------------------------------------------------------------
 void FindDistsToCharactGBs::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   // Crystal Structures
   QVector<size_t> cDims(1, 1);
@@ -407,7 +407,7 @@ void FindDistsToCharactGBs::dataCheck()
   {
     m_DistToTilt = m_DistToTiltPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_DistToTiltPtr.lock());
   }
@@ -418,7 +418,7 @@ void FindDistsToCharactGBs::dataCheck()
   {
     m_DistToTwist = m_DistToTwistPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_DistToTwistPtr.lock());
   }
@@ -429,7 +429,7 @@ void FindDistsToCharactGBs::dataCheck()
   {
     m_DistToSymmetric = m_DistToSymmetricPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_DistToSymmetricPtr.lock());
   }
@@ -440,7 +440,7 @@ void FindDistsToCharactGBs::dataCheck()
   {
     m_DistTo180Tilt = m_DistTo180TiltPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_DistTo180TiltPtr.lock());
   }
@@ -467,10 +467,10 @@ void FindDistsToCharactGBs::preflight()
 // -----------------------------------------------------------------------------
 void FindDistsToCharactGBs::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -504,7 +504,7 @@ void FindDistsToCharactGBs::execute()
       return;
     }
     QString ss = QObject::tr("--> %1% completed").arg(int(100.0 * float(i) / float(numMeshTris)));
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(ss);
     if(i + trisChunkSize >= numMeshTris)
     {
       trisChunkSize = numMeshTris - i;

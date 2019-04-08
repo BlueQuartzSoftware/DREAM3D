@@ -322,8 +322,8 @@ void FindTwinBoundarySchmidFactors::readFilterParameters(AbstractFilterParameter
 // -----------------------------------------------------------------------------
 void FindTwinBoundarySchmidFactors::dataCheckVoxel()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -336,7 +336,7 @@ void FindTwinBoundarySchmidFactors::dataCheckVoxel()
   {
     m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getAvgQuatsArrayPath());
   }
@@ -348,7 +348,7 @@ void FindTwinBoundarySchmidFactors::dataCheckVoxel()
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getFeaturePhasesArrayPath());
   }
@@ -368,8 +368,8 @@ void FindTwinBoundarySchmidFactors::dataCheckVoxel()
 // -----------------------------------------------------------------------------
 void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   if(m_WriteFile)
@@ -387,7 +387,7 @@ void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh()
   {
     m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getSurfaceMeshFaceLabelsArrayPath());
   }
@@ -399,7 +399,7 @@ void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh()
   {
     m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getSurfaceMeshFaceNormalsArrayPath());
   }
@@ -419,7 +419,7 @@ void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh()
   {
     m_SurfaceMeshTwinBoundary = m_SurfaceMeshTwinBoundaryPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getSurfaceMeshTwinBoundaryArrayPath());
   }
@@ -446,15 +446,15 @@ void FindTwinBoundarySchmidFactors::preflight()
 // -----------------------------------------------------------------------------
 void FindTwinBoundarySchmidFactors::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheckVoxel();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
   dataCheckSurfaceMesh();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

@@ -168,15 +168,14 @@ void CreateLambertSphere::initialize()
 // -----------------------------------------------------------------------------
 void CreateLambertSphere::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   if(getHemisphere() < 0 || getHemisphere() > 2)
   {
-    setErrorCondition(-99006);
     QString msg("Invalid selection of the Hemisphere value. Valid values are 0 (Northern), 1 (Southern)");
-    notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
+    setErrorCondition(-99006, msg);
     return;
   }
   QVector<size_t> cDims = {1};
@@ -205,31 +204,28 @@ void CreateLambertSphere::dataCheck()
   ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
   if(nullptr == imageGeom)
   {
-    setErrorCondition(-99003);
     QString msg("The geometry object was invalid for the image data. Please select a DataContainer that has an Image Geometry or use a filter to create an ImageGeom.");
-    notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
+    setErrorCondition(-99003, msg);
     return;
   }
   size_t imageDims[3] = {0, 0, 0};
   std::tie(imageDims[0], imageDims[1], imageDims[2]) = imageGeom->getDimensions();
   if(imageDims[0] != imageDims[1])
   {
-    setErrorCondition(-99004);
     QString msg;
     QTextStream ss(&msg);
     ss << "The input image must be square, i.e., the number of pixels in the X & Y direction must be equal. The current dimensions are";
     ss << " X=" << imageDims[0] << " Y=" << imageDims[1] << " Z=" << imageDims[2];
-    notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
+    setErrorCondition(-99004, msg);
     return;
   }
   if(imageDims[2] != 1)
   {
-    setErrorCondition(-99005);
     QString msg;
     QTextStream ss(&msg);
     ss << "The input image must be a single XY Plane image. The current dimensions are";
     ss << " X=" << imageDims[0] << " Y=" << imageDims[1] << " Z=" << imageDims[2];
-    notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
+    setErrorCondition(-99005, msg);
     return;
   }
 
@@ -251,7 +247,7 @@ void CreateLambertSphere::dataCheck()
   if(getCreateVertexGeometry())
   {
     DataContainer::Pointer vertDC = dca->createNonPrereqDataContainer<AbstractFilter>(this, getVertexDataContainerName(), DataContainerID);
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
@@ -276,7 +272,7 @@ void CreateLambertSphere::dataCheck()
   if(getCreateEdgeGeometry())
   {
     DataContainer::Pointer edgeDC = dca->createNonPrereqDataContainer<AbstractFilter>(this, getEdgeDataContainerName(), DataContainerID);
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
@@ -306,7 +302,7 @@ void CreateLambertSphere::dataCheck()
   if(getCreateTriangleGeometry())
   {
     DataContainer::Pointer triangleDC = dca->createNonPrereqDataContainer<AbstractFilter>(this, getTriangleDataContainerName(), DataContainerID);
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
@@ -335,7 +331,7 @@ void CreateLambertSphere::dataCheck()
   if(getCreateQuadGeometry())
   {
     DataContainer::Pointer quadDC = dca->createNonPrereqDataContainer<AbstractFilter>(this, getQuadDataContainerName(), DataContainerID);
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
@@ -378,10 +374,10 @@ void CreateLambertSphere::preflight()
 void CreateLambertSphere::execute()
 {
   // 1.253314137315501
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -665,12 +661,11 @@ void CreateLambertSphere::transformFromLambertSquareToSphere(SharedVertexList* v
     int32_t error = LambertUtilities::LambertSquareVertToSphereVert(vert, hemisphere);
     if(error < 0)
     {
-      setErrorCondition(-99000);
       QString msg;
       QTextStream ss(&msg);
       ss << "Error calculating sphere vertex from Lambert Square. Vertex ID=" << v;
       ss << " with value (" << vert[0] << ", " << vert[1] << ", " << vert[2] << ")";
-      notifyErrorMessage(getHumanLabel(), msg, getErrorCondition());
+      setErrorCondition(-99000, msg);
     }
   }
 }

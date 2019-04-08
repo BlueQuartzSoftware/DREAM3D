@@ -109,8 +109,8 @@ void ErodeDilateCoordinationNumber::initialize()
 // -----------------------------------------------------------------------------
 void ErodeDilateCoordinationNumber::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
@@ -118,8 +118,7 @@ void ErodeDilateCoordinationNumber::dataCheck()
   if(getCoordinationNumber() < 0 || getCoordinationNumber() > 6)
   {
     QString ss = QObject::tr("The coordination number (%1) must be on the interval [0,6]").arg(getCoordinationNumber());
-    setErrorCondition(-5555);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5555, ss);
   }
 
   QVector<size_t> cDims(1, 1);
@@ -149,10 +148,10 @@ void ErodeDilateCoordinationNumber::preflight()
 // -----------------------------------------------------------------------------
 void ErodeDilateCoordinationNumber::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

@@ -107,8 +107,8 @@ void GroupFeatures::initialize()
 // -----------------------------------------------------------------------------
 void GroupFeatures::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   QVector<size_t> cDims(1, 1);
@@ -170,10 +170,10 @@ bool GroupFeatures::growGrouping(int32_t referenceFeature, int32_t neighborFeatu
 // -----------------------------------------------------------------------------
 void GroupFeatures::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

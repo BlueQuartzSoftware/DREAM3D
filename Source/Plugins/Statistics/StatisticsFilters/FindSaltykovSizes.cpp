@@ -107,8 +107,8 @@ void FindSaltykovSizes::initialize()
 // -----------------------------------------------------------------------------
 void FindSaltykovSizes::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> dims(1, 1);
   m_EquivalentDiametersPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getEquivalentDiametersArrayPath(),
@@ -143,17 +143,17 @@ void FindSaltykovSizes::preflight()
 // -----------------------------------------------------------------------------
 void FindSaltykovSizes::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   find_saltykov_sizes();
 
-  notifyStatusMessage(getHumanLabel(), "Find Feature Saltykov Sizes Completed");
+  notifyStatusMessage("Find Feature Saltykov Sizes Completed");
 }
 
 // -----------------------------------------------------------------------------

@@ -162,8 +162,8 @@ void GroupMicroTextureRegions::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::updateFeatureInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_ActivePtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -187,19 +187,19 @@ void GroupMicroTextureRegions::initialize()
 // -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
   DataArrayPath tempPath;
 
   GroupFeatures::dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, m_FeatureIdsArrayPath.getDataContainerName(), false);
-  if(getErrorCondition() < 0 || nullptr == m)
+  if(getErrorCode() < 0 || nullptr == m)
   {
     return;
   }
@@ -233,7 +233,7 @@ void GroupMicroTextureRegions::dataCheck()
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getFeaturePhasesArrayPath());
   }
@@ -252,7 +252,7 @@ void GroupMicroTextureRegions::dataCheck()
   {
     m_Volumes = m_VolumesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getVolumesArrayPath());
   }
@@ -264,7 +264,7 @@ void GroupMicroTextureRegions::dataCheck()
   {
     m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getVolumesArrayPath());
   }
@@ -308,7 +308,7 @@ void GroupMicroTextureRegions::preflight()
 // -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, int64_t totalFeatures)
 {
-  notifyStatusMessage(getHumanLabel(), "Randomizing Parent Ids");
+  notifyStatusMessage("Randomizing Parent Ids");
   // Generate an even distribution of numbers between the min and max range
   const int32_t rangeMin = 0;
   const int32_t rangeMax = totalFeatures - 1;
@@ -352,8 +352,8 @@ void GroupMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, int64_t 
 // -----------------------------------------------------------------------------
 int32_t GroupMicroTextureRegions::getSeed(int32_t newFid)
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   int32_t numfeatures = static_cast<int32_t>(m_FeaturePhasesPtr.lock()->getNumberOfTuples());
 
@@ -506,10 +506,10 @@ void GroupMicroTextureRegions::initializeVoxelSeedGenerator(const int32_t rangeM
 // -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -526,8 +526,7 @@ void GroupMicroTextureRegions::execute()
   size_t totalFeatures = m_ActivePtr.lock()->getNumberOfTuples();
   if(totalFeatures < 2)
   {
-    setErrorCondition(-87000);
-    notifyErrorMessage(getHumanLabel(), "The number of grouped Features was 0 or 1 which means no grouped Features were detected. A grouping value may be set too high", getErrorCondition());
+    setErrorCondition(-87000, "The number of grouped Features was 0 or 1 which means no grouped Features were detected. A grouping value may be set too high");
     return;
   }
 

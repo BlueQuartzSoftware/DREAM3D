@@ -118,8 +118,8 @@ void EnsembleInfoReader::readFilterParameters(AbstractFilterParametersReader* re
 // -----------------------------------------------------------------------------
 void EnsembleInfoReader::updateEnsembleInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_CrystalStructuresPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -148,8 +148,8 @@ void EnsembleInfoReader::initialize()
 // -----------------------------------------------------------------------------
 void EnsembleInfoReader::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
   DataArrayPath tempPath;
 
@@ -157,33 +157,29 @@ void EnsembleInfoReader::dataCheck()
   if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-387, ss);
   }
   else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
-    setErrorCondition(-388);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-388, ss);
   }
 
   QString ext = fi.suffix();
   if(ext != "ini" && ext != "txt")
   {
     QString ss = QObject::tr("Incorrect file extension in '%1'. The file extension must be .ini or .txt").arg(getInputFile());
-    setErrorCondition(-10018);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-10018, ss);
   }
 
   if(m_CellEnsembleAttributeMatrixName.isEmpty())
   {
     QString ss = QObject::tr("Ensemble Attribute Matrix name must be set");
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -198,13 +194,12 @@ void EnsembleInfoReader::dataCheck()
   if(0 == numphases) // Either the group name "EnsembleInfo" is incorrect or 0 was entered as the Number_Phases
   {
     QString ss = QObject::tr("Check the group name EnsembleInfo and that Number_Phases > 0");
-    setErrorCondition(-10003);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-10003, ss);
   }
 
   QVector<size_t> tDims(1, numphases + 1);
   m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID21);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -253,12 +248,12 @@ int32_t EnsembleInfoReader::readHeader()
 // -----------------------------------------------------------------------------
 int32_t EnsembleInfoReader::readFile()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
-    return getErrorCondition();
+    return getErrorCode();
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
@@ -274,8 +269,7 @@ int32_t EnsembleInfoReader::readFile()
   if(0 == numphases) // Either the group name "EnsembleInfo" is incorrect or 0 was entered as the Number_Phases
   {
     QString ss = QObject::tr("Check the group name EnsembleInfo and that Number_Phases > 0");
-    setErrorCondition(-10003);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-10003, ss);
     return -1;
   }
 
@@ -297,16 +291,14 @@ int32_t EnsembleInfoReader::readFile()
     if(xtalString.compare("MissingCrystalStructure") == 0)
     {
       QString ss = QObject::tr("Missing crystal structure for phase '%1'").arg(group);
-      setErrorCondition(-10008);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-10008, ss);
       return -1;
     }
 
     if(phaseTypeString.compare("MissingPhaseType") == 0)
     {
       QString ss = QObject::tr("Missing phase type for phase '%1'").arg(group);
-      setErrorCondition(-10009);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-10009, ss);
       return -1;
     }
 
@@ -320,8 +312,7 @@ int32_t EnsembleInfoReader::readFile()
     if(m_crystruct == Ebsd::CrystalStructure::UnknownCrystalStructure) // The crystal structure name read from the file was not found in the lookup table
     {
       QString ss = QObject::tr("Incorrect crystal structure name '%1'").arg(xtalString);
-      setErrorCondition(-10006);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-10006, ss);
       return -1;
     }
 
@@ -331,8 +322,7 @@ int32_t EnsembleInfoReader::readFile()
     if(m_ptype == PhaseType::Type::Unknown)
     {
       QString ss = QObject::tr("Incorrect phase type name '%1'").arg(phaseTypeString); // The phase type name read from the file was not found in the lookup table
-      setErrorCondition(-10007);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-10007, ss);
       return -1;
     }
 
@@ -350,8 +340,7 @@ int32_t EnsembleInfoReader::readFile()
     {
       QString ss = QObject::tr("Phase '%1' did not have entries in the file. Phase numbering must start at 1 and no phases may be skipped")
                        .arg(i); // The phase type name read from the file was not found in the lookup table
-      setErrorCondition(-10005);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-10005, ss);
       return -1;
     }
   }

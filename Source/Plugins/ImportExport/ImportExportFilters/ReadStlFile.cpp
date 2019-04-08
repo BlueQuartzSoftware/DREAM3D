@@ -169,8 +169,8 @@ void ReadStlFile::readFilterParameters(AbstractFilterParametersReader* reader, i
 // -----------------------------------------------------------------------------
 void ReadStlFile::updateFaceInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_FaceNormalsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -197,20 +197,19 @@ void ReadStlFile::initialize()
 void ReadStlFile::dataCheck()
 {
   initialize();
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   DataArrayPath tempPath;
 
   if(m_StlFilePath.isEmpty())
   {
-    setErrorCondition(-1003);
-    notifyErrorMessage(getHumanLabel(), "The input file must be set", -1003);
+    setErrorCondition(-1003, "The input file must be set");
   }
 
   // Create a SufaceMesh Data Container with Faces, Vertices, Feature Labels and optionally Phase labels
   DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceMeshDataContainerName(), DataContainerID);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -250,10 +249,10 @@ void ReadStlFile::preflight()
 // -----------------------------------------------------------------------------
 void ReadStlFile::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -261,8 +260,8 @@ void ReadStlFile::execute()
   readFile();
   eliminate_duplicate_nodes();
 
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 }
 
 // -----------------------------------------------------------------------------
@@ -276,8 +275,7 @@ void ReadStlFile::readFile()
   FILE* f = fopen(m_StlFilePath.toLatin1().data(), "rb");
   if(nullptr == f)
   {
-    setErrorCondition(-1003);
-    notifyErrorMessage(getHumanLabel(), "Error opening STL file", -1003);
+    setErrorCondition(-1003, "Error opening STL file");
     return;
   }
 

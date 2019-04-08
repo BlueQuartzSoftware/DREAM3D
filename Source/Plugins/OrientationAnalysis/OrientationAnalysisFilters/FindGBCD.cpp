@@ -474,8 +474,8 @@ void FindGBCD::initialize()
 // -----------------------------------------------------------------------------
 void FindGBCD::dataCheckSurfaceMesh()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   DataArrayPath tempPath;
@@ -483,7 +483,7 @@ void FindGBCD::dataCheckSurfaceMesh()
   getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 
   DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
-  if(getErrorCondition() < 0 || nullptr == sm.get())
+  if(getErrorCode() < 0 || nullptr == sm.get())
   {
     return;
   }
@@ -538,8 +538,8 @@ void FindGBCD::dataCheckSurfaceMesh()
 // -----------------------------------------------------------------------------
 void FindGBCD::dataCheckVoxel()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureEulerAnglesArrayPath().getDataContainerName());
 
@@ -577,7 +577,7 @@ void FindGBCD::preflight()
   emit updateFilterParameters(this);
   dataCheckVoxel();
   // order here matters...because we are going to use the size of the crystal structures out of the dataCheckVoxel to size the faceAttrMat in dataCheckSurfaceMesh
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataCheckSurfaceMesh();
   }
@@ -590,16 +590,16 @@ void FindGBCD::preflight()
 // -----------------------------------------------------------------------------
 void FindGBCD::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheckVoxel();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
   // order here matters...because we are going to use the size of the crystal structures out of the dataCheckVoxel to size the faceAttrMat in dataCheckSurfaceMesh
   dataCheckSurfaceMesh();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -670,7 +670,7 @@ void FindGBCD::execute()
       estimatedTime = (float)(totalFaces - i) / timeDiff;
       ss = ss + QObject::tr(" || Est. Time Remain: %1").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime));
       millis = QDateTime::currentMSecsSinceEpoch();
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyStatusMessage(ss);
     }
 
     if(getCancel())
@@ -706,7 +706,7 @@ void FindGBCD::execute()
   }
 
   ss = QObject::tr("Starting GBCD Normalization");
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+  notifyStatusMessage(ss);
 
   for(int32_t i = 0; i < totalPhases; i++)
   {

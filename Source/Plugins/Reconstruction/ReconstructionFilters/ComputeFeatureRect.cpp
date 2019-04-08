@@ -40,8 +40,8 @@ ComputeFeatureRect::~ComputeFeatureRect() = default;
 // -----------------------------------------------------------------------------
 void ComputeFeatureRect::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -72,8 +72,8 @@ void ComputeFeatureRect::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ComputeFeatureRect::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   IGeometry::Pointer igeom = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
@@ -114,7 +114,7 @@ void ComputeFeatureRect::execute()
 {
   initialize();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -167,9 +167,8 @@ void ComputeFeatureRect::execute()
 
         if(featureId >= corners->getNumberOfTuples())
         {
-          setErrorCondition(-31000);
           QString ss = QObject::tr("The feature attribute matrix '%1' has a smaller tuple count than the maximum feature id in '%2'").arg(featureAM->getName()).arg(cellFeatureIds->getName());
-          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+          setErrorCondition(-31000, ss);
           return;
         }
 

@@ -100,8 +100,8 @@ void AlignSectionsFeature::initialize()
 // -----------------------------------------------------------------------------
 void AlignSectionsFeature::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
   // These are checked for validity in the Parent Class dataCheck
@@ -109,7 +109,7 @@ void AlignSectionsFeature::dataCheck()
   setCellAttributeMatrixName(m_GoodVoxelsArrayPath.getAttributeMatrixName());
 
   AlignSections::dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -175,7 +175,7 @@ void AlignSectionsFeature::find_shifts(std::vector<int64_t>& xshifts, std::vecto
   for(int64_t iter = 1; iter < dims[2]; iter++)
   {
     QString ss = QObject::tr("Aligning Sections || Determining Shifts || %1% Complete").arg(((float)iter / dims[2]) * 100);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(ss);
     mindisorientation = std::numeric_limits<float>::max();
     slice = (dims[2] - 1) - iter;
     oldxshift = -1;
@@ -250,10 +250,10 @@ void AlignSectionsFeature::find_shifts(std::vector<int64_t>& xshifts, std::vecto
 // -----------------------------------------------------------------------------
 void AlignSectionsFeature::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

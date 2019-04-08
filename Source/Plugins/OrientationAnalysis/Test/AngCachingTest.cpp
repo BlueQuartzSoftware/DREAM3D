@@ -137,7 +137,7 @@ public:
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
         angReader->setDataContainerArray(dca);
         angReader->preflight();
-        int err = angReader->getErrorCondition();
+        int err = angReader->getErrorCode();
         DREAM3D_REQUIRE_EQUAL(err, 0);
       }
       else
@@ -172,7 +172,7 @@ public:
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
         angReader->setDataContainerArray(dca);
         angReader->preflight();
-        int err = angReader->getErrorCondition();
+        int err = angReader->getErrorCode();
         DREAM3D_REQUIRE_EQUAL(err, 0);
       }
       else
@@ -207,7 +207,7 @@ public:
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
         angReader->setDataContainerArray(dca);
         angReader->preflight();
-        int err = angReader->getErrorCondition();
+        int err = angReader->getErrorCode();
         DREAM3D_REQUIRE_EQUAL(err, 0);
       }
       else
@@ -268,7 +268,7 @@ public:
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
         angReader->setDataContainerArray(dca);
         angReader->preflight();
-        int err = angReader->getErrorCondition();
+        int err = angReader->getErrorCode();
         DREAM3D_REQUIRE_EQUAL(err, 0);
       }
       else
@@ -307,7 +307,7 @@ public:
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
         angReader->setDataContainerArray(dca);
         angReader->preflight();
-        int err = angReader->getErrorCondition();
+        int err = angReader->getErrorCode();
         DREAM3D_REQUIRE_EQUAL(err, 0);
       }
       else

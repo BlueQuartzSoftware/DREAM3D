@@ -175,8 +175,8 @@ void FindSchmids::initialize()
 // -----------------------------------------------------------------------------
 void FindSchmids::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   QVector<size_t> cDims(1, 1);
@@ -196,7 +196,7 @@ void FindSchmids::dataCheck()
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getFeaturePhasesArrayPath());
   }
@@ -231,7 +231,7 @@ void FindSchmids::dataCheck()
   {
     m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getAvgQuatsArrayPath());
   }
@@ -261,8 +261,7 @@ void FindSchmids::dataCheck()
     if(0 != cosVec)
     {
       QString ss = QObject::tr("Slip Plane and Slip Direction must be normal");
-      setErrorCondition(-1001);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-1001, ss);
       return;
     }
   }
@@ -286,10 +285,10 @@ void FindSchmids::preflight()
 // -----------------------------------------------------------------------------
 void FindSchmids::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

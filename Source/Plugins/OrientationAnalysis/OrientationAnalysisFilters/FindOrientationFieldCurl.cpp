@@ -182,8 +182,8 @@ void FindOrientationFieldCurl::initialize()
 void FindOrientationFieldCurl::dataCheck()
 {
   DataArrayPath tempPath;
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> dims(1, 1);
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(),
@@ -192,13 +192,13 @@ void FindOrientationFieldCurl::dataCheck()
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getCellPhasesArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || nullptr == image.get())
+  if(getErrorCode() < 0 || nullptr == image.get())
   {
     return;
   }
@@ -248,10 +248,10 @@ void FindOrientationFieldCurl::preflight()
 // -----------------------------------------------------------------------------
 void FindOrientationFieldCurl::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -470,7 +470,7 @@ void FindOrientationFieldCurl::execute()
     }
   }
 
-  notifyStatusMessage(getHumanLabel(), "FindOrientationFieldCurl Completed");
+  notifyStatusMessage("FindOrientationFieldCurl Completed");
 }
 
 // -----------------------------------------------------------------------------

@@ -76,7 +76,7 @@
     qDebug() << "Unable to set property DifferenceMapArrayPath";                                                                                                                                       \
   }                                                                                                                                                                                                    \
   filter->execute();                                                                                                                                                                                   \
-  err = filter->getErrorCondition();                                                                                                                                                                   \
+  err = filter->getErrorCode();                                                                                                                                                                        \
   DREAM3D_REQUIRE_EQUAL(err, errVal);
 
 #define SET_PROPERTIES_AND_CHECK_EQ(filter, firstPath, secondPath, diffMapPath, type)                                                                                                                  \
@@ -99,7 +99,7 @@
     qDebug() << "Unable to set property DifferenceMapArrayPath";                                                                                                                                       \
   }                                                                                                                                                                                                    \
   filter->execute();                                                                                                                                                                                   \
-  err = filter->getErrorCondition();                                                                                                                                                                   \
+  err = filter->getErrorCode();                                                                                                                                                                        \
   DREAM3D_REQUIRE_EQUAL(err, 0);                                                                                                                                                                       \
   diffMap = dc->getAttributeMatrix(diffMapPath.getAttributeMatrixName())->getAttributeArray(diffMapPath.getDataArrayName());                                                                           \
   firstArray = dc->getAttributeMatrix(firstPath.getAttributeMatrixName())->getAttributeArray(firstPath.getDataArrayName());                                                                            \

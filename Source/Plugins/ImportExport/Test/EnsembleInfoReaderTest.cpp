@@ -151,7 +151,7 @@ public:
       filter->setProperty("DataContainerName", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
       filter->preflight();
-      err = filter->getErrorCondition();
+      err = filter->getErrorCode();
       DREAM3D_REQUIRE_EQUAL(err, -10018);
 
       // Reset The data container array with new instances for this sub test
@@ -166,7 +166,7 @@ public:
       filter->setProperty("DataContainerName", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
       filter->preflight();
-      DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
+      DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
 
       // Reset The data container array with new instances for this sub test
       dca = DataContainerArray::New();
@@ -178,7 +178,7 @@ public:
       propWasSet = filter->setProperty("InputFile", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
       filter->preflight();
-      err = filter->getErrorCondition();
+      err = filter->getErrorCode();
       DREAM3D_REQUIRE_EQUAL(err, 0);
     }
     else
@@ -219,7 +219,7 @@ public:
       filter->setProperty("DataContainerName", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
       filter->execute();
-      DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
+      DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
 
       // Reset The data container array with new instances for this sub test
       dca = DataContainerArray::New();
@@ -234,7 +234,7 @@ public:
       propWasSet = filter->setProperty("InputFile", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
       filter->execute();
-      err = filter->getErrorCondition();
+      err = filter->getErrorCode();
       DREAM3D_REQUIRE_EQUAL(err, -10003);
 
       // Reset The data container array with new instances for this sub test
@@ -248,7 +248,7 @@ public:
       propWasSet = filter->setProperty("InputFile", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
       filter->execute();
-      err = filter->getErrorCondition();
+      err = filter->getErrorCode();
       DREAM3D_REQUIRE_EQUAL(err, -10009);
 
       // Reset The data container array with new instances for this sub test
@@ -262,7 +262,7 @@ public:
       propWasSet = filter->setProperty("InputFile", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
       filter->execute();
-      err = filter->getErrorCondition();
+      err = filter->getErrorCode();
       DREAM3D_REQUIRE_EQUAL(err, -10008);
 
       // Reset The data container array with new instances for this sub test
@@ -276,7 +276,7 @@ public:
       propWasSet = filter->setProperty("InputFile", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
       filter->execute();
-      err = filter->getErrorCondition();
+      err = filter->getErrorCode();
       DREAM3D_REQUIRE_EQUAL(err, -10007);
 
 #if 0
@@ -291,7 +291,7 @@ public:
         propWasSet = filter->setProperty("InputFile", var);
         DREAM3D_REQUIRE_EQUAL(propWasSet, true)
             filter->execute();
-        err = filter->getErrorCondition();
+        err = filter->getErrorCode();
         DREAM3D_REQUIRE_EQUAL(err, -10005);
 #endif
 
@@ -306,7 +306,7 @@ public:
       propWasSet = filter->setProperty("InputFile", var);
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
       filter->execute();
-      err = filter->getErrorCondition();
+      err = filter->getErrorCode();
       DREAM3D_REQUIRE_EQUAL(err, -10006);
     }
     else

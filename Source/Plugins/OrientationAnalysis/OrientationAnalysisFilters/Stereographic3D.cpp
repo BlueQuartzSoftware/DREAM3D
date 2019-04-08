@@ -87,8 +87,7 @@ public:
       {
         m_Filter->setCancel(true);
         QString ss = QObject::tr("The scalar value of a quaterion was <= -1.0. The value was %1").arg(m_Quats[quatIndex + 3]);
-        m_Filter->setErrorCondition(-95000);
-        m_Filter->notifyErrorMessage(m_Filter->getHumanLabel(), ss, m_Filter->getErrorCondition());
+        m_Filter->setErrorCondition(-95000, ss);
         return;
       }
       if(m_Quats[quatIndex + 3] != 0.0f)
@@ -141,8 +140,8 @@ Stereographic3D::~Stereographic3D() = default;
 // -----------------------------------------------------------------------------
 void Stereographic3D::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -178,8 +177,8 @@ void Stereographic3D::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 void Stereographic3D::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   QVector<DataArrayPath> dataArrayPaths;
 
   QVector<size_t> cDims(1, 1);
@@ -227,7 +226,7 @@ void Stereographic3D::execute()
 {
   initialize();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

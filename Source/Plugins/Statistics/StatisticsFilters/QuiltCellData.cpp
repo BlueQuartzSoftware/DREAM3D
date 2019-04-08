@@ -128,40 +128,36 @@ void QuiltCellData::initialize()
 void QuiltCellData::dataCheck()
 {
   DataArrayPath tempPath;
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   // First sanity check the inputs and output names. All must be filled in
 
   if(m_SelectedCellArrayPath.isEmpty())
   {
     QString ss = QObject::tr("The input array name is empty. Please select a name for the input array");
-    setErrorCondition(-11000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11000, ss);
     return;
   }
 
   if(getOutputDataContainerName().isEmpty())
   {
     QString ss = QObject::tr("The output DataContainer name is empty. Please assign a name for the created DataContainer");
-    setErrorCondition(-11001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11001, ss);
     return;
   }
 
   if(getOutputAttributeMatrixName().isEmpty())
   {
     QString ss = QObject::tr("The output AttributeMatrix name is empty. Please assign a name for the created AttributeMatrix");
-    setErrorCondition(-11002);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11002, ss);
     return;
   }
 
   if(getOutputArrayName().isEmpty())
   {
     QString ss = QObject::tr("The output array name is empty. Please assign a name for the created array");
-    setErrorCondition(-11003);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11003, ss);
     return;
   }
 
@@ -169,28 +165,26 @@ void QuiltCellData::dataCheck()
   if(m_QuiltStep[0] < 1 || m_QuiltStep[1] < 1 || m_QuiltStep[2] < 1)
   {
     QString ss = QObject::tr("The QuiltStep parameter is invalid because one of the values is Negative or Zero. Value=(%1, %2, %3)").arg(m_QuiltStep[0]).arg(m_QuiltStep[1]).arg(m_QuiltStep[2]);
-    setErrorCondition(-11004);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11004, ss);
     return;
   }
   // Check to make sure the QuiltStep and Patch Size are non-zero
   if(m_PatchSize[0] < 1 || m_PatchSize[1] < 1 || m_PatchSize[2] < 1)
   {
     QString ss = QObject::tr("The Patch Size parameter is invalid because one of the values is Negative or Zero. Value=(%1, %2, %3)").arg(m_PatchSize[0]).arg(m_PatchSize[1]).arg(m_PatchSize[2]);
-    setErrorCondition(-11005);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11005, ss);
     return;
   }
 
   // Next check the existing DataContainer/AttributeMatrix
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, m_SelectedCellArrayPath.getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   ImageGeom::Pointer image = m->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || nullptr == image.get())
+  if(getErrorCode() < 0 || nullptr == image.get())
   {
     return;
   }
@@ -202,7 +196,7 @@ void QuiltCellData::dataCheck()
   std::tie(res[0], res[1], res[2]) = m->getGeometryAs<ImageGeom>()->getSpacing();
   // Create a new DataContainer
   DataContainer::Pointer m2 = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getOutputDataContainerName(), DataContainerID);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -235,8 +229,9 @@ void QuiltCellData::dataCheck()
   tDims[0] = m2->getGeometryAs<ImageGeom>()->getXPoints();
   tDims[1] = m2->getGeometryAs<ImageGeom>()->getYPoints();
   tDims[2] = m2->getGeometryAs<ImageGeom>()->getZPoints();
+
   AttributeMatrix::Pointer newCellAttrMat = m2->createNonPrereqAttributeMatrix(this, getOutputAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
-  if(getErrorCondition() < 0 || nullptr == newCellAttrMat.get())
+  if(getErrorCode() < 0 || nullptr == newCellAttrMat.get())
   {
     return;
   }
@@ -345,10 +340,10 @@ template <typename T> float quiltData(IDataArray::Pointer inputData, int64_t xc,
 void QuiltCellData::execute()
 {
   QString ss;
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -365,8 +360,7 @@ void QuiltCellData::execute()
   if(nullptr == inputData.get())
   {
     ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedCellArrayPath.getDataArrayName());
-    setErrorCondition(-11001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11001, ss);
     return;
   }
 

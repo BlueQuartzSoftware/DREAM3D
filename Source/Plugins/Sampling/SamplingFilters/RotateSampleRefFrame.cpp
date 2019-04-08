@@ -220,8 +220,8 @@ void RotateSampleRefFrame::initialize()
 // -----------------------------------------------------------------------------
 void RotateSampleRefFrame::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 }
 
 // -----------------------------------------------------------------------------
@@ -230,14 +230,14 @@ void RotateSampleRefFrame::dataCheck()
 void RotateSampleRefFrame::preflight()
 {
   setInPreflight(true);
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   emit preflightAboutToExecute();
   emit updateFilterParameters(this);
   dataCheck();
   emit preflightExecuted();
 
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     setInPreflight(false);
     return;
@@ -245,7 +245,7 @@ void RotateSampleRefFrame::preflight()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getCellAttributeMatrixPath().getDataContainerName());
   getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getCellAttributeMatrixPath(), -301);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     setInPreflight(false);
     return;
@@ -416,10 +416,10 @@ void RotateSampleRefFrame::preflight()
 // -----------------------------------------------------------------------------
 void RotateSampleRefFrame::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -644,14 +644,11 @@ void RotateSampleRefFrame::execute()
 
         if(!data->copyFromArray(i, p, newIndicies_I, 1))
         {
-
           QString ss = QObject::tr("copyFromArray Failed: ");
           QTextStream out(&ss);
           out << "Source Array Name: " << p->getName() << " Source Tuple Index: " << newIndicies_I << "\n";
           out << "Dest Array Name: " << data->getName() << "  Dest. Tuple Index: " << i << "\n";
-
-          setErrorCondition(-11004);
-          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+          setErrorCondition(-11004, ss);
           return;
         }
       }

@@ -111,16 +111,15 @@ void AddBadData::initialize()
 // -----------------------------------------------------------------------------
 void AddBadData::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getGBEuclideanDistancesArrayPath().getDataContainerName());
 
   if((!m_PoissonNoise) && (!m_BoundaryNoise))
   {
     QString ss = QObject::tr("At least one type of noise must be selected");
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
   }
 
   QVector<size_t> cDims(1, 1);
@@ -150,10 +149,10 @@ void AddBadData::preflight()
 // -----------------------------------------------------------------------------
 void AddBadData::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -168,7 +167,7 @@ void AddBadData::execute()
 // -----------------------------------------------------------------------------
 void AddBadData::add_noise()
 {
-  notifyStatusMessage(getHumanLabel(), "Adding Noise");
+  notifyStatusMessage("Adding Noise");
   SIMPL_RANDOMNG_NEW()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getGBEuclideanDistancesArrayPath().getDataContainerName());

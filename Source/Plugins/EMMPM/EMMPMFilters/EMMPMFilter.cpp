@@ -57,9 +57,59 @@
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Messages/AbstractMessageHandler.h"
+#include "SIMPLib/Messages/GenericProgressMessage.h"
+#include "SIMPLib/Messages/GenericStatusMessage.h"
+#include "SIMPLib/Messages/GenericErrorMessage.h"
+#include "SIMPLib/Messages/GenericWarningMessage.h"
 #include "SIMPLib/SIMPLibVersion.h"
 
 #include "EMMPM/EMMPMVersion.h"
+
+/**
+ * @brief This message handler is used by EMMPMFilter instances to re-emit incoming generic messages from the
+ * EMMPM observable object as its own filter messages
+ */
+class EMMPMFilterMessageHandler : public AbstractMessageHandler
+{
+  public:
+    explicit EMMPMFilterMessageHandler(EMMPMFilter* filter) : m_Filter(filter) {}
+
+    /**
+     * @brief Re-emits incoming GenericProgressMessages as FilterProgressMessages.
+     */
+    void processMessage(const GenericProgressMessage* msg) const override
+    {
+      emit m_Filter->notifyProgressMessage(msg->getProgressValue(), msg->getMessageText());
+    }
+
+    /**
+     * @brief Re-emits incoming GenericStatusMessages as FilterStatusMessages.
+     */
+    void processMessage(const GenericStatusMessage* msg) const override
+    {
+      emit m_Filter->notifyStatusMessage(msg->getMessageText());
+    }
+
+    /**
+     * @brief Re-emits incoming GenericErrorMessages as FilterErrorMessages.
+     */
+    void processMessage(const GenericErrorMessage* msg) const override
+    {
+      emit m_Filter->setErrorCondition(msg->getCode(), msg->getMessageText());
+    }
+
+    /**
+     * @brief Re-emits incoming GenericWarningMessages as FilterWarningMessages.
+     */
+    void processMessage(const GenericWarningMessage* msg) const override
+    {
+      emit m_Filter->setWarningCondition(msg->getCode(), msg->getMessageText());
+    }
+
+  private:
+    EMMPMFilter* m_Filter = nullptr;
+};
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -211,8 +261,8 @@ void EMMPMFilter::initialize()
 // -----------------------------------------------------------------------------
 void EMMPMFilter::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getInputDataArrayPath().getDataContainerName());
 
@@ -232,15 +282,13 @@ void EMMPMFilter::dataCheck()
 
   if(getNumClasses() > 15)
   {
-    setErrorCondition(-89100);
     QString ss = QObject::tr("The maximum number of classes is 15");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-89100, ss);
   }
   if(getNumClasses() < 2)
   {
-    setErrorCondition(-89101);
     QString ss = QObject::tr("The minimum number of classes is 2");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-89101, ss);
   }
 }
 
@@ -263,10 +311,10 @@ void EMMPMFilter::preflight()
 // -----------------------------------------------------------------------------
 void EMMPMFilter::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -379,10 +427,9 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   emmpm->setData(m_Data);
   emmpm->setStatsDelegate(statsDelegate.get());
   emmpm->setInitializationFunction(initFunction);
-  emmpm->setMessagePrefix(getMessagePrefix());
 
   // Connect up the Error/Warning/Progress object so the filter can report those things
-  connect(emmpm.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), this, SLOT(broadcastPipelineMessage(const PipelineMessage&)));
+  connect(emmpm.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), this, SLOT(handleEmmpmMessage(const AbstractMessage::Pointer&)));
 
   emmpm->execute();
 
@@ -394,6 +441,15 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
   // into the initialization of the next Image to be Segmented
   m_PreviousMu.resize(getNumClasses() * m_Data->dims);
   m_PreviousSigma.resize(getNumClasses() * m_Data->dims);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EMMPMFilter::handleEmmpmMessage(const AbstractMessage::Pointer &msg)
+{
+  EMMPMFilterMessageHandler msgHandler(this);
+  msg->visit(&msgHandler);
 }
 
 // -----------------------------------------------------------------------------

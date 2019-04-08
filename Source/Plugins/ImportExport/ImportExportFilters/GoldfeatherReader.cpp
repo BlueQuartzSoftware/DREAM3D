@@ -162,8 +162,8 @@ void GoldfeatherReader::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 void GoldfeatherReader::updateVertexInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_SurfaceMeshNodeNormalsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -192,8 +192,8 @@ void GoldfeatherReader::updateVertexInstancePointers()
 // -----------------------------------------------------------------------------
 void GoldfeatherReader::updateFaceInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_SurfaceMeshFaceLabelsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -220,18 +220,18 @@ void GoldfeatherReader::dataCheck()
   DataArrayPath tempPath;
 
   DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName(), DataContainerID);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer vertAttrMat = sm->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID21);
-  if(getErrorCondition() < 0 || nullptr == vertAttrMat.get())
+  if(getErrorCode() < 0 || nullptr == vertAttrMat.get())
   {
     return;
   }
   AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face, AttributeMatrixID22);
-  if(getErrorCondition() < 0 || nullptr == faceAttrMat.get())
+  if(getErrorCode() < 0 || nullptr == faceAttrMat.get())
   {
     return;
   }
@@ -240,14 +240,12 @@ void GoldfeatherReader::dataCheck()
   if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-387, ss);
   }
   else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
-    setErrorCondition(-388);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-388, ss);
   }
 
   SharedVertexList::Pointer sharedVertList = TriangleGeom::CreateSharedVertexList(0);
@@ -337,12 +335,11 @@ void GoldfeatherReader::preflight()
 // -----------------------------------------------------------------------------
 void GoldfeatherReader::execute()
 {
-  int err = 0;
-  QString ss;
-  setErrorCondition(err);
+  clearErrorCode();
+  clearWarningCode();
 
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -352,8 +349,7 @@ void GoldfeatherReader::execute()
   FILE* f = fopen(m_InputFile.toLatin1().data(), "r");
   if(nullptr == f)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage(getHumanLabel(), "Error opening Input file", getErrorCondition());
+    setErrorCondition(-999, "Error opening Input file");
     return;
   }
   ScopedFileMonitor fileMonitor(f);
@@ -396,11 +392,10 @@ void GoldfeatherReader::execute()
   }
 
   int nTriangles = 0;
-  err = fscanf(f, "%d\n", &nTriangles);
+  int err = fscanf(f, "%d\n", &nTriangles);
   if(err < 0)
   {
-    setErrorCondition(-876);
-    notifyErrorMessage(getHumanLabel(), "Error Reading the number of Triangles from the file.", getErrorCondition());
+    setErrorCondition(-876, "Error Reading the number of Triangles from the file.");
     return;
   }
 

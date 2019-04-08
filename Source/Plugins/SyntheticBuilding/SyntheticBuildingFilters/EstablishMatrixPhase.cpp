@@ -177,8 +177,8 @@ void EstablishMatrixPhase::readFilterParameters(AbstractFilterParametersReader* 
 // -----------------------------------------------------------------------------
 void EstablishMatrixPhase::updateFeatureInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_FeaturePhasesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -202,8 +202,8 @@ void EstablishMatrixPhase::initialize()
 // -----------------------------------------------------------------------------
 void EstablishMatrixPhase::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
   DataArrayPath tempPath;
 
@@ -220,8 +220,7 @@ void EstablishMatrixPhase::dataCheck()
   if(m_StatsDataArray.lock() == nullptr)
   {
     QString ss = QObject::tr("Statistics array is not initialized correctly. The path is %1").arg(getInputStatsArrayPath().serialize());
-    setErrorCondition(-308);
-    notifyErrorMessage(getHumanLabel(), ss, -308);
+    setErrorCondition(-308, ss);
   }
 
   cDims[0] = 1;
@@ -251,7 +250,7 @@ void EstablishMatrixPhase::dataCheck()
     } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -260,7 +259,7 @@ void EstablishMatrixPhase::dataCheck()
 
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix(this, getOutputCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID21);
-  if(getErrorCondition() < 0 || nullptr == cellFeatureAttrMat.get())
+  if(getErrorCode() < 0 || nullptr == cellFeatureAttrMat.get())
   {
     return;
   }
@@ -318,16 +317,16 @@ void EstablishMatrixPhase::preflight()
 // -----------------------------------------------------------------------------
 void EstablishMatrixPhase::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   establish_matrix();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -350,7 +349,7 @@ void EstablishMatrixPhase::execute()
 // -----------------------------------------------------------------------------
 void EstablishMatrixPhase::establish_matrix()
 {
-  notifyStatusMessage(getHumanLabel(), "Establishing Matrix");
+  notifyStatusMessage("Establishing Matrix");
   SIMPL_RANDOMNG_NEW()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
@@ -401,8 +400,7 @@ void EstablishMatrixPhase::establish_matrix()
                          .arg(i)
                          .arg(i)
                          .arg(m_PhaseTypes[i]);
-        setErrorCondition(-666);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        setErrorCondition(-666, ss);
         return;
       }
       matrixphases.push_back(i);

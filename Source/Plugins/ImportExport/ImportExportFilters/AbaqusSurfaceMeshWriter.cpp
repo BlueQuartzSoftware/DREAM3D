@@ -103,15 +103,15 @@ void AbaqusSurfaceMeshWriter::initialize()
 // -----------------------------------------------------------------------------
 void AbaqusSurfaceMeshWriter::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   FileSystemPathHelper::CheckOutputFile(this, "Output File Path", getOutputFile(), true);
 
   QVector<IDataArray::Pointer> dataArrays;
 
   TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(triangles->getTriangles());
   }
@@ -123,7 +123,7 @@ void AbaqusSurfaceMeshWriter::dataCheck()
   {
     m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock());
   }
@@ -149,10 +149,10 @@ void AbaqusSurfaceMeshWriter::preflight()
 // -----------------------------------------------------------------------------
 void AbaqusSurfaceMeshWriter::execute()
 {
-  int32_t err = 0;
-  setErrorCondition(err);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -166,8 +166,7 @@ void AbaqusSurfaceMeshWriter::execute()
   if(!parentPath.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    setErrorCondition(-8005);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-8005, ss);
     return;
   }
 
@@ -184,36 +183,32 @@ void AbaqusSurfaceMeshWriter::execute()
   FILE* f = fopen(m_OutputFile.toLatin1().data(), "wb");
   ScopedFileMonitor fileMonitor(f);
 
-  err = writeHeader(f, triangleGeom->getNumberOfVertices(), triangleGeom->getNumberOfTris(), uniqueSpins.size() - 1);
+  int32_t err = writeHeader(f, triangleGeom->getNumberOfVertices(), triangleGeom->getNumberOfTris(), uniqueSpins.size() - 1);
   if(err < 0)
   {
     QString ss = QObject::tr("Error writing header for file '%1'").arg(m_OutputFile);
-    setErrorCondition(-8001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-8001, ss);
     return;
   }
   err = writeNodes(f);
   if(err < 0)
   {
     QString ss = QObject::tr("Error writing nodes for file '%1'").arg(m_OutputFile);
-    setErrorCondition(-8002);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-8002, ss);
     return;
   }
   err = writeTriangles(f);
   if(err < 0)
   {
     QString ss = QObject::tr("Error writing triangles for file '%1'").arg(m_OutputFile);
-    setErrorCondition(-8003);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-8003, ss);
     return;
   }
   err = writeFeatures(f);
   if(err < 0)
   {
     QString ss = QObject::tr("Error writing Features for file '%1'").arg(m_OutputFile);
-    setErrorCondition(-8004);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-8004, ss);
     return;
   }
 
@@ -318,7 +313,7 @@ int32_t AbaqusSurfaceMeshWriter::writeFeatures(FILE* f)
 
     {
       QString ss = QObject::tr("Writing ELSET for Feature Id %1").arg(spin);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyStatusMessage(ss);
     }
 
     // Loop over all the triangles for this spin

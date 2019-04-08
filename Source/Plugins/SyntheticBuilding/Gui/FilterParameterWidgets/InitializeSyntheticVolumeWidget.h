@@ -76,7 +76,7 @@ class InitializeSyntheticVolumeWidget : public FilterParameterWidget, private Ui
     void beforePreflight();
     void afterPreflight();
     void filterNeedsInputParameters(AbstractFilter* filter);
-    void displayErrorMessage(const PipelineMessage& msg);
+    void displayErrorMessage(const AbstractMessage::Pointer& msg);
 
   protected slots:
     // Auto Hookup Slots
