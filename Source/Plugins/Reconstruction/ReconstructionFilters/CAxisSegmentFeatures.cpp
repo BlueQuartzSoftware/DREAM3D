@@ -43,6 +43,7 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -123,10 +124,10 @@ void CAxisSegmentFeatures::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, CAxisSegmentFeatures, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, CAxisSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Feature Ids", FeatureIdsArrayName, QuatsArrayPath, FilterParameter::CreatedArray, CAxisSegmentFeatures));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, CAxisSegmentFeatures));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Active", ActiveArrayName, FilterParameter::CreatedArray, CAxisSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_SUBPATH_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixName, QuatsArrayPath, FilterParameter::CreatedArray, CAxisSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_SUBPATH_FP("Active", ActiveArrayName, QuatsArrayPath, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, CAxisSegmentFeatures));
   setFilterParameters(parameters);
 }
 

@@ -43,6 +43,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
@@ -86,7 +87,7 @@ void GenerateVectorColors::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, GenerateVectorColors, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Vector Colors", CellVectorColorsArrayName, FilterParameter::CreatedArray, GenerateVectorColors));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Vector Colors", CellVectorColorsArrayName, VectorsArrayPath, FilterParameter::CreatedArray, GenerateVectorColors));
   setFilterParameters(parameters);
 }
 

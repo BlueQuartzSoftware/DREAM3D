@@ -157,7 +157,7 @@ void InitializeSyntheticVolume::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Synthetic Volume Data Container", DataContainerName, FilterParameter::CreatedArray, InitializeSyntheticVolume));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, InitializeSyntheticVolume));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_SUBPATH_FP("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, InitializeSyntheticVolume));
   //parameters.push_back(SIMPL_NEW_STRING_FP("Ensemble Attribute Matrix", EnsembleAttributeMatrixName, FilterParameter::CreatedArray, InitializeSyntheticVolume));
 
   parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Dimensions", Dimensions, FilterParameter::Parameter, InitializeSyntheticVolume));

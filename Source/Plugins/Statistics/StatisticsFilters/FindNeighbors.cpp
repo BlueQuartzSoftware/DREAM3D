@@ -106,12 +106,12 @@ void FindNeighbors::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixPath, FilterParameter::RequiredArray, FindNeighbors, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Boundary Cells", BoundaryCellsArrayName, FeatureIdsArrayPath, FilterParameter::CreatedArray, FindNeighbors));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Boundary Cells", BoundaryCellsArrayName, FeatureIdsArrayPath, FilterParameter::CreatedArray, FindNeighbors));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Number of Neighbors", NumNeighborsArrayName, CellFeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindNeighbors));
-  parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Neighbor List", NeighborListArrayName, CellFeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindNeighbors));
-  parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Shared Surface Area List", SharedSurfaceAreaListArrayName, CellFeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindNeighbors));
-  parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Surface Features", SurfaceFeaturesArrayName, CellFeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindNeighbors));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Number of Neighbors", NumNeighborsArrayName, CellFeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindNeighbors));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Neighbor List", NeighborListArrayName, CellFeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindNeighbors));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Shared Surface Area List", SharedSurfaceAreaListArrayName, CellFeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindNeighbors));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Surface Features", SurfaceFeaturesArrayName, CellFeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindNeighbors));
   setFilterParameters(parameters);
 }
 

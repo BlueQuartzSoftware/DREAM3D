@@ -428,8 +428,8 @@ void FindGBCD::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindGBCD, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_SUBPATH("Face Ensemble Attribute Matrix", FaceEnsembleAttributeMatrixName, SurfaceMeshFaceLabelsArrayPath, FilterParameter::CreatedArray, FindGBCD));
-  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_SUBPATH("GBCD", GBCDArrayName, SurfaceMeshFaceLabelsArrayPath, FaceEnsembleAttributeMatrixName, FilterParameter::CreatedArray, FindGBCD));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_SUBPATH_FP("Face Ensemble Attribute Matrix", FaceEnsembleAttributeMatrixName, SurfaceMeshFaceLabelsArrayPath, FilterParameter::CreatedArray, FindGBCD));
+  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_SUBPATH_FP("GBCD", GBCDArrayName, SurfaceMeshFaceLabelsArrayPath, FaceEnsembleAttributeMatrixName, FilterParameter::CreatedArray, FindGBCD));
   setFilterParameters(parameters);
 }
 

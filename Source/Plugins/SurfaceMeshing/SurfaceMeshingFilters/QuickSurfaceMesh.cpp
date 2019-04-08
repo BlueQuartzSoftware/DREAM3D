@@ -151,13 +151,13 @@ void QuickSurfaceMesh::setupFilterParameters()
   }
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", SurfaceDataContainerName, FilterParameter::CreatedArray, QuickSurfaceMesh));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Vertex Attribute Matrix", VertexAttributeMatrixName, SurfaceDataContainerName, FilterParameter::CreatedArray, QuickSurfaceMesh));
-  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_AM("Node Types", NodeTypesArrayName, SurfaceDataContainerName, VertexAttributeMatrixName, FilterParameter::CreatedArray, QuickSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_SUBPATH_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, SurfaceDataContainerName, FilterParameter::CreatedArray, QuickSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_SUBPATH_FP("Node Types", NodeTypesArrayName, SurfaceDataContainerName, VertexAttributeMatrixName, FilterParameter::CreatedArray, QuickSurfaceMesh));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Face Attribute Matrix", FaceAttributeMatrixName, SurfaceDataContainerName, FilterParameter::CreatedArray, QuickSurfaceMesh));
-  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_AM("Face Labels", FaceLabelsArrayName, SurfaceDataContainerName, VertexAttributeMatrixName, FilterParameter::CreatedArray, QuickSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Face Attribute Matrix", FaceAttributeMatrixName, SurfaceDataContainerName, FilterParameter::CreatedArray, QuickSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_SUBPATH_FP("Face Labels", FaceLabelsArrayName, SurfaceDataContainerName, VertexAttributeMatrixName, FilterParameter::CreatedArray, QuickSurfaceMesh));
   parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Face Feature Attribute Matrix", FeatureAttributeMatrixName, SurfaceDataContainerName, FilterParameter::CreatedArray, QuickSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Face Feature Attribute Matrix", FeatureAttributeMatrixName, SurfaceDataContainerName, FilterParameter::CreatedArray, QuickSurfaceMesh));
   setFilterParameters(parameters);
 }
 

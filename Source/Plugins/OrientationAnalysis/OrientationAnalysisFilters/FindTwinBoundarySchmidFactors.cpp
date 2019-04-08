@@ -49,6 +49,7 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
@@ -293,7 +294,7 @@ void FindTwinBoundarySchmidFactors::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Twin Boundary", SurfaceMeshTwinBoundaryArrayPath, FilterParameter::RequiredArray, FindTwinBoundarySchmidFactors, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Twin Boundary Schmid Factors", SurfaceMeshTwinBoundarySchmidFactorsArrayName, FilterParameter::CreatedArray, FindTwinBoundarySchmidFactors));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Twin Boundary Schmid Factors", SurfaceMeshTwinBoundarySchmidFactorsArrayName, SurfaceMeshFaceLabelsArrayPath, FilterParameter::CreatedArray, FindTwinBoundarySchmidFactors));
   setFilterParameters(parameters);
 }
 

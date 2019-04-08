@@ -133,11 +133,11 @@ void FindSchmids::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindSchmids, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Schmids", SchmidsArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindSchmids));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Slip Systems", SlipSystemsArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindSchmids));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Poles", PolesArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindSchmids));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Phis", PhisArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindSchmids));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Lambdas", LambdasArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindSchmids));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Schmids", SchmidsArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindSchmids));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Slip Systems", SlipSystemsArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindSchmids));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Poles", PolesArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindSchmids));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Phis", PhisArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindSchmids));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Lambdas", LambdasArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindSchmids));
   setFilterParameters(parameters);
 }
 

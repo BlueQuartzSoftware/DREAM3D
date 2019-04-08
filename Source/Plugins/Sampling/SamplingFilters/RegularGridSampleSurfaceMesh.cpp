@@ -99,8 +99,8 @@ void RegularGridSampleSurfaceMesh::setupFilterParameters()
 
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, RegularGridSampleSurfaceMesh));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, RegularGridSampleSurfaceMesh));
-  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_AM("Feature Ids", FeatureIdsArrayName, DataContainerName, CellAttributeMatrixName, FilterParameter::CreatedArray, RegularGridSampleSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_SUBPATH_FP("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, RegularGridSampleSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_SUBPATH_FP("Feature Ids", FeatureIdsArrayName, DataContainerName, CellAttributeMatrixName, FilterParameter::CreatedArray, RegularGridSampleSurfaceMesh));
   setFilterParameters(parameters);
 }
 

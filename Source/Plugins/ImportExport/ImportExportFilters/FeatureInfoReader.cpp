@@ -47,6 +47,7 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
@@ -115,12 +116,12 @@ void FeatureInfoReader::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FeatureInfoReader, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Phases", CellPhasesArrayName, FilterParameter::CreatedArray, FeatureInfoReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Euler Angles", CellEulerAnglesArrayName, FilterParameter::CreatedArray, FeatureInfoReader));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Phases", CellPhasesArrayName, FeatureIdsArrayPath, FilterParameter::CreatedArray, FeatureInfoReader));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Euler Angles", CellEulerAnglesArrayName, FeatureIdsArrayPath, FilterParameter::CreatedArray, FeatureInfoReader));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Attribute Matrix", CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FeatureInfoReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Phases", FeaturePhasesArrayName, FilterParameter::CreatedArray, FeatureInfoReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Euler Angles", FeatureEulerAnglesArrayName, FilterParameter::CreatedArray, FeatureInfoReader));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_SUBPATH_FP("Feature Attribute Matrix", CellFeatureAttributeMatrixName, FeatureIdsArrayPath, FilterParameter::CreatedArray, FeatureInfoReader));
+  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_SUBPATH_FP("Phases", FeaturePhasesArrayName, FeatureIdsArrayPath, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FeatureInfoReader));
+  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_SUBPATH_FP("Euler Angles", FeatureEulerAnglesArrayName, FeatureIdsArrayPath, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, FeatureInfoReader));
 
   {
     QVector<QString> choices;

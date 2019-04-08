@@ -43,6 +43,7 @@
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
@@ -100,8 +101,8 @@ void CalculateArrayHistogram::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Histogram", SelectedArrayPath, FilterParameter::RequiredArray, CalculateArrayHistogram, req));
   }
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container ", NewDataContainerName, FilterParameter::CreatedArray, CalculateArrayHistogram));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Attribute Matrix", NewAttributeMatrixName, FilterParameter::CreatedArray, CalculateArrayHistogram));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Histogram", NewDataArrayName, FilterParameter::CreatedArray, CalculateArrayHistogram));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_SUBPATH_FP("Attribute Matrix", NewAttributeMatrixName, NewDataContainerName, FilterParameter::CreatedArray, CalculateArrayHistogram));
+  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_SUBPATH_FP("Histogram", NewDataArrayName, NewDataContainerName, NewAttributeMatrixName, FilterParameter::CreatedArray, CalculateArrayHistogram));
   setFilterParameters(parameters);
 }
 

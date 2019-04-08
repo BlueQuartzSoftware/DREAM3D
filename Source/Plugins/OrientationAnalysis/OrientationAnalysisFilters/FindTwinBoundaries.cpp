@@ -47,6 +47,7 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -273,8 +274,8 @@ void FindTwinBoundaries::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Face Normals", SurfaceMeshFaceNormalsArrayPath, FilterParameter::RequiredArray, FindTwinBoundaries, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Twin Boundary", SurfaceMeshTwinBoundaryArrayName, FilterParameter::CreatedArray, FindTwinBoundaries));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Twin Boundary Incoherence", SurfaceMeshTwinBoundaryIncoherenceArrayName, FilterParameter::CreatedArray, FindTwinBoundaries));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Twin Boundary", SurfaceMeshTwinBoundaryArrayName, SurfaceMeshFaceLabelsArrayPath, FilterParameter::CreatedArray, FindTwinBoundaries));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Twin Boundary Incoherence", SurfaceMeshTwinBoundaryIncoherenceArrayName, SurfaceMeshFaceLabelsArrayPath, FilterParameter::CreatedArray, FindTwinBoundaries));
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------

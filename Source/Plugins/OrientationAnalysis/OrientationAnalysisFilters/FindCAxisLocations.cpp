@@ -38,6 +38,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
@@ -74,7 +75,7 @@ void FindCAxisLocations::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternions", QuatsArrayPath, FilterParameter::RequiredArray, FindCAxisLocations, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("C-Axis Locations", CAxisLocationsArrayName, FilterParameter::CreatedArray, FindCAxisLocations));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("C-Axis Locations", CAxisLocationsArrayName, QuatsArrayPath, FilterParameter::CreatedArray, FindCAxisLocations));
   setFilterParameters(parameters);
 }
 

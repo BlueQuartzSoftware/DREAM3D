@@ -58,6 +58,7 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
@@ -164,19 +165,19 @@ void DetectEllipsoids::setupFilterParameters()
   }
 
   {
-    parameters.push_back(SIMPL_NEW_STRING_FP("Ellipsoid Center Coordinates", CenterCoordinatesArrayName, FilterParameter::CreatedArray, DetectEllipsoids));
+    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Ellipsoid Center Coordinates", CenterCoordinatesArrayName, EllipseFeatureAttributeMatrixPath, FilterParameter::CreatedArray, DetectEllipsoids));
   }
 
   {
-    parameters.push_back(SIMPL_NEW_STRING_FP("Ellipsoid Major Axis Lengths", MajorAxisLengthArrayName, FilterParameter::CreatedArray, DetectEllipsoids));
+    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Ellipsoid Major Axis Lengths", MajorAxisLengthArrayName, EllipseFeatureAttributeMatrixPath, FilterParameter::CreatedArray, DetectEllipsoids));
   }
 
   {
-    parameters.push_back(SIMPL_NEW_STRING_FP("Ellipsoid Minor Axis Lengths", MinorAxisLengthArrayName, FilterParameter::CreatedArray, DetectEllipsoids));
+    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Ellipsoid Minor Axis Lengths", MinorAxisLengthArrayName, EllipseFeatureAttributeMatrixPath, FilterParameter::CreatedArray, DetectEllipsoids));
   }
 
   {
-    parameters.push_back(SIMPL_NEW_STRING_FP("Ellipsoid Rotational Angles", RotationalAnglesArrayName, FilterParameter::CreatedArray, DetectEllipsoids));
+    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Ellipsoid Rotational Angles", RotationalAnglesArrayName, EllipseFeatureAttributeMatrixPath, FilterParameter::CreatedArray, DetectEllipsoids));
   }
 
   {

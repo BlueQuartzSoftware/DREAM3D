@@ -43,6 +43,7 @@
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -102,8 +103,8 @@ void VtkStructuredPointsReader::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Point Data Data Container", VertexDataContainerName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Cell Data Data Container", VolumeDataContainerName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Point Data Attribute Matrix", VertexAttributeMatrixName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Data Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_SUBPATH_FP("Point Data Attribute Matrix", VertexAttributeMatrixName, VertexDataContainerName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_SUBPATH_FP("Cell Data Attribute Matrix", CellAttributeMatrixName, VolumeDataContainerName, FilterParameter::CreatedArray, VtkStructuredPointsReader));
   setFilterParameters(parameters);
 }
 

@@ -236,9 +236,9 @@ void GenerateEnsembleStatistics::setupFilterParameters()
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
   // The user types in an array name for the Phase Types
-  parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Phase Types", PhaseTypesArrayName, CellEnsembleAttributeMatrixPath, FilterParameter::CreatedArray, GenerateEnsembleStatistics));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Phase Types", PhaseTypesArrayName, CellEnsembleAttributeMatrixPath, FilterParameter::CreatedArray, GenerateEnsembleStatistics));
   // The user types in an array name for Statistics
-  parameters.push_back(SIMPL_NEW_PATH_WITH_LINKED_PARENT("Statistics", StatisticsArrayName, CellEnsembleAttributeMatrixPath, FilterParameter::CreatedArray, GenerateEnsembleStatistics));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Statistics", StatisticsArrayName, CellEnsembleAttributeMatrixPath, FilterParameter::CreatedArray, GenerateEnsembleStatistics));
 
   linkedProps.clear();
   linkedProps << "RDFArrayPath"

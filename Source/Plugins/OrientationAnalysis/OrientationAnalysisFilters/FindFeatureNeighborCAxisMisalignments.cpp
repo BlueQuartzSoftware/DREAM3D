@@ -41,6 +41,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/GeometryMath.h"
@@ -110,8 +111,8 @@ void FindFeatureNeighborCAxisMisalignments::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindFeatureNeighborCAxisMisalignments, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("C-Axis Misalignment List", CAxisMisalignmentListArrayName, FilterParameter::CreatedArray, FindFeatureNeighborCAxisMisalignments));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Avgerage C-Axis Misalignments", AvgCAxisMisalignmentsArrayName, FilterParameter::CreatedArray, FindFeatureNeighborCAxisMisalignments));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("C-Axis Misalignment List", CAxisMisalignmentListArrayName, NeighborListArrayPath, FilterParameter::CreatedArray, FindFeatureNeighborCAxisMisalignments));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Avgerage C-Axis Misalignments", AvgCAxisMisalignmentsArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindFeatureNeighborCAxisMisalignments));
   setFilterParameters(parameters);
 }
 

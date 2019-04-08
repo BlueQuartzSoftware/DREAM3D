@@ -196,8 +196,8 @@ void FindNeighborhoods::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Centroids", CentroidsArrayPath, FilterParameter::RequiredArray, FindNeighborhoods, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Neighborhoods", NeighborhoodsArrayName, EquivalentDiametersArrayPath, FilterParameter::CreatedArray, FindNeighborhoods));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Neighborhood List", NeighborhoodListArrayName, EquivalentDiametersArrayPath, FilterParameter::CreatedArray, FindNeighborhoods));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Neighborhoods", NeighborhoodsArrayName, EquivalentDiametersArrayPath, FilterParameter::CreatedArray, FindNeighborhoods));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Neighborhood List", NeighborhoodListArrayName, EquivalentDiametersArrayPath, FilterParameter::CreatedArray, FindNeighborhoods));
   setFilterParameters(parameters);
 }
 

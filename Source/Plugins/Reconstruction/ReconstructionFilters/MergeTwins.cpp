@@ -113,11 +113,11 @@ void MergeTwins::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, MergeTwins, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Parent Ids", CellParentIdsArrayName, FeatureIdsArrayPath, FilterParameter::CreatedArray, MergeTwins));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Parent Ids", CellParentIdsArrayName, FeatureIdsArrayPath, FilterParameter::CreatedArray, MergeTwins));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_SUBPATH("Feature Attribute Matrix", NewCellFeatureAttributeMatrixName, FeatureIdsArrayPath, FilterParameter::CreatedArray, MergeTwins));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Parent Ids", FeatureParentIdsArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, MergeTwins));
-  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_SUBPATH("Active", ActiveArrayName, FeatureIdsArrayPath, NewCellFeatureAttributeMatrixName, FilterParameter::CreatedArray, MergeTwins));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_SUBPATH_FP("Feature Attribute Matrix", NewCellFeatureAttributeMatrixName, FeatureIdsArrayPath, FilterParameter::CreatedArray, MergeTwins));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Parent Ids", FeatureParentIdsArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, MergeTwins));
+  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_SUBPATH_FP("Active", ActiveArrayName, FeatureIdsArrayPath, NewCellFeatureAttributeMatrixName, FilterParameter::CreatedArray, MergeTwins));
   setFilterParameters(parameters);
 }
 

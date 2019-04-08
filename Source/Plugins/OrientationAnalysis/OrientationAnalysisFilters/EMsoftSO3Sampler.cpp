@@ -37,6 +37,7 @@
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
@@ -137,7 +138,7 @@ void EMsoftSO3Sampler::setupFilterParameters()
 
   parameters.push_back(SeparatorFilterParameter::New("Output Data", FilterParameter::Parameter));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Euler Angles", EulerAnglesArrayName, FilterParameter::CreatedArray, EMsoftSO3Sampler));
+  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_SUBPATH_FP("Euler Angles", EulerAnglesArrayName, DataContainerName, EMsoftAttributeMatrixName, FilterParameter::CreatedArray, EMsoftSO3Sampler));
 
   setFilterParameters(parameters);
 }

@@ -39,6 +39,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
@@ -111,10 +112,10 @@ void FindTriangleGeomShapes::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Volumes", VolumesArrayPath, FilterParameter::RequiredArray, FindTriangleGeomShapes, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Omega3s", Omega3sArrayName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Axis Lengths", AxisLengthsArrayName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Axis Euler Angles", AxisEulerAnglesArrayName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Aspect Ratios", AspectRatiosArrayName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Omega3s", Omega3sArrayName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Axis Lengths", AxisLengthsArrayName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Axis Euler Angles", AxisEulerAnglesArrayName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Aspect Ratios", AspectRatiosArrayName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
   setFilterParameters(parameters);
 }
 

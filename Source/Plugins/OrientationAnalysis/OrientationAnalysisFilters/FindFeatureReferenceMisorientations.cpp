@@ -132,9 +132,9 @@ void FindFeatureReferenceMisorientations::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindFeatureReferenceMisorientations, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Feature Reference Misorientations", FeatureReferenceMisorientationsArrayName, FeatureIdsArrayPath, FilterParameter::CreatedArray, FindFeatureReferenceMisorientations));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Feature Reference Misorientations", FeatureReferenceMisorientationsArrayName, FeatureIdsArrayPath, FilterParameter::CreatedArray, FindFeatureReferenceMisorientations));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Average Misorientations", FeatureAvgMisorientationsArrayName, AvgQuatsArrayPath, FilterParameter::CreatedArray, FindFeatureReferenceMisorientations));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Average Misorientations", FeatureAvgMisorientationsArrayName, AvgQuatsArrayPath, FilterParameter::CreatedArray, FindFeatureReferenceMisorientations));
   setFilterParameters(parameters);
 }
 

@@ -157,7 +157,7 @@ void Stereographic3D::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternions", QuatsArrayPath, FilterParameter::RequiredArray, Stereographic3D, req));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH("Coordinates", CoordinatesArrayName, QuatsArrayPath, FilterParameter::CreatedArray, Stereographic3D));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Coordinates", CoordinatesArrayName, QuatsArrayPath, FilterParameter::CreatedArray, Stereographic3D));
 
   setFilterParameters(parameters);
 }

@@ -45,6 +45,7 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
@@ -140,12 +141,12 @@ void FeatureFaceCurvatureFilter::setupFilterParameters()
   }
 
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Principal Curvature 1", SurfaceMeshPrincipalCurvature1sArrayName, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Principal Curvature 2", SurfaceMeshPrincipalCurvature2sArrayName, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Principal Direction 1", SurfaceMeshPrincipalDirection1sArrayName, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Principal Direction 2", SurfaceMeshPrincipalDirection2sArrayName, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Gaussian Curvature", SurfaceMeshGaussianCurvaturesArrayName, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Mean Curvature", SurfaceMeshMeanCurvaturesArrayName, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Principal Curvature 1", SurfaceMeshPrincipalCurvature1sArrayName, FaceAttributeMatrixPath, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Principal Curvature 2", SurfaceMeshPrincipalCurvature2sArrayName, FaceAttributeMatrixPath, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Principal Direction 1", SurfaceMeshPrincipalDirection1sArrayName, FaceAttributeMatrixPath, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Principal Direction 2", SurfaceMeshPrincipalDirection2sArrayName, FaceAttributeMatrixPath, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Gaussian Curvature", SurfaceMeshGaussianCurvaturesArrayName, FaceAttributeMatrixPath, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Mean Curvature", SurfaceMeshMeanCurvaturesArrayName, FaceAttributeMatrixPath, FilterParameter::CreatedArray, FeatureFaceCurvatureFilter));
   setFilterParameters(parameters);
 }
 
