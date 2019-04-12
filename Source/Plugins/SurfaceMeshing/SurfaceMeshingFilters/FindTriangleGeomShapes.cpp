@@ -112,10 +112,10 @@ void FindTriangleGeomShapes::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Volumes", VolumesArrayPath, FilterParameter::RequiredArray, FindTriangleGeomShapes, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Omega3s", Omega3sArrayName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Axis Lengths", AxisLengthsArrayName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Axis Euler Angles", AxisEulerAnglesArrayName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Aspect Ratios", AspectRatiosArrayName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Omega3s", Omega3sArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Axis Lengths", AxisLengthsArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Axis Euler Angles", AxisEulerAnglesArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Aspect Ratios", AspectRatiosArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomShapes));
   setFilterParameters(parameters);
 }
 

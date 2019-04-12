@@ -212,10 +212,10 @@ void ScalarSegmentFeatures::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, ScalarSegmentFeatures, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Feature Ids", FeatureIdsArrayName, ScalarArrayPath, FilterParameter::CreatedArray, ScalarSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Feature Ids", FeatureIdsArrayName, ScalarArrayPath, ScalarArrayPath, FilterParameter::CreatedArray, ScalarSegmentFeatures));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_SUBPATH_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixName, ScalarArrayPath, FilterParameter::CreatedArray, ScalarSegmentFeatures));
-  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_SUBPATH_FP("Active", ActiveArrayName, ScalarArrayPath, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, ScalarSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixName, ScalarArrayPath, FilterParameter::CreatedArray, ScalarSegmentFeatures));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Active", ActiveArrayName, ScalarArrayPath, CellFeatureAttributeMatrixName, FilterParameter::CreatedArray, ScalarSegmentFeatures));
   setFilterParameters(parameters);
 }
 

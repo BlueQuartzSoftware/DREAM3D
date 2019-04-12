@@ -138,7 +138,7 @@ void EMsoftSO3Sampler::setupFilterParameters()
 
   parameters.push_back(SeparatorFilterParameter::New("Output Data", FilterParameter::Parameter));
 
-  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_SUBPATH_FP("Euler Angles", EulerAnglesArrayName, DataContainerName, EMsoftAttributeMatrixName, FilterParameter::CreatedArray, EMsoftSO3Sampler));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Euler Angles", EulerAnglesArrayName, DataContainerName, EMsoftAttributeMatrixName, FilterParameter::CreatedArray, EMsoftSO3Sampler));
 
   setFilterParameters(parameters);
 }

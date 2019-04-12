@@ -96,7 +96,7 @@ void FindTriangleGeomSizes::setupFilterParameters()
   AttributeMatrixSelectionFilterParameter::RequirementType amsReq = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::FaceFeature, IGeometry::Type::Triangle);
   parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Face Feature Attribute Matrix", FeatureAttributeMatrixName, FilterParameter::RequiredArray, FindTriangleGeomSizes, amsReq));
   parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_SUBPATH_FP("Volumes", VolumesArrayName, FaceLabelsArrayPath, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomSizes));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Volumes", VolumesArrayName, FaceLabelsArrayPath, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomSizes));
   setFilterParameters(parameters);
 }
 

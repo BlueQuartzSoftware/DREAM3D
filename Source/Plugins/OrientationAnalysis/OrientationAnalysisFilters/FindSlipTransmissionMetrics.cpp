@@ -108,10 +108,10 @@ void FindSlipTransmissionMetrics::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindSlipTransmissionMetrics, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("F1 List", F1ListArrayName, NeighborListArrayPath, FilterParameter::CreatedArray, FindSlipTransmissionMetrics));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("F1spt List", F1sptListArrayName, NeighborListArrayPath, FilterParameter::CreatedArray, FindSlipTransmissionMetrics));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("F7 List", F7ListArrayName, NeighborListArrayPath, FilterParameter::CreatedArray, FindSlipTransmissionMetrics));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("mPrime List", mPrimeListArrayName, NeighborListArrayPath, FilterParameter::CreatedArray, FindSlipTransmissionMetrics));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("F1 List", F1ListArrayName, NeighborListArrayPath, NeighborListArrayPath, FilterParameter::CreatedArray, FindSlipTransmissionMetrics));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("F1spt List", F1sptListArrayName, NeighborListArrayPath, NeighborListArrayPath, FilterParameter::CreatedArray, FindSlipTransmissionMetrics));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("F7 List", F7ListArrayName, NeighborListArrayPath, NeighborListArrayPath, FilterParameter::CreatedArray, FindSlipTransmissionMetrics));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("mPrime List", mPrimeListArrayName, NeighborListArrayPath, NeighborListArrayPath, FilterParameter::CreatedArray, FindSlipTransmissionMetrics));
   setFilterParameters(parameters);
 }
 

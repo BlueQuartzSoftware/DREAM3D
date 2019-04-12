@@ -101,7 +101,7 @@ void FindTriangleGeomCentroids::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Face Feature Attribute Matrix", FeatureAttributeMatrixName, FilterParameter::RequiredArray, FindTriangleGeomCentroids, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Centroids", CentroidsArrayName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomCentroids));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Centroids", CentroidsArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindTriangleGeomCentroids));
   setFilterParameters(parameters);
 }
 

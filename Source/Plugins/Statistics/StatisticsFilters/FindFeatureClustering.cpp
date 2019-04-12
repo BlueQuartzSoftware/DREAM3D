@@ -122,10 +122,10 @@ void FindFeatureClustering::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FilterParameter::RequiredArray, FindFeatureClustering, amReq));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Clustering List", ClusteringListArrayName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindFeatureClustering));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Clustering List", ClusteringListArrayName, FeaturePhasesArrayPath, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindFeatureClustering));
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Radial Distribution Function", NewEnsembleArrayArrayName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, FindFeatureClustering));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Max and Min Separation Distances", MaxMinArrayName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, FindFeatureClustering));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Radial Distribution Function", NewEnsembleArrayArrayName, CellEnsembleAttributeMatrixName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, FindFeatureClustering));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Max and Min Separation Distances", MaxMinArrayName, CellEnsembleAttributeMatrixName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, FindFeatureClustering));
   setFilterParameters(parameters);
 }
 

@@ -254,7 +254,7 @@ void GenerateFaceIPFColoring::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, GenerateFaceIPFColoring, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("IPF Colors", SurfaceMeshFaceIPFColorsArrayName, SurfaceMeshFaceLabelsArrayPath, FilterParameter::CreatedArray, GenerateFaceIPFColoring));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("IPF Colors", SurfaceMeshFaceIPFColorsArrayName, SurfaceMeshFaceLabelsArrayPath, SurfaceMeshFaceLabelsArrayPath, FilterParameter::CreatedArray, GenerateFaceIPFColoring));
   setFilterParameters(parameters);
 }
 

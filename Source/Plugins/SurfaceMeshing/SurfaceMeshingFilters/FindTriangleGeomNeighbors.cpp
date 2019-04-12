@@ -93,8 +93,8 @@ void FindTriangleGeomNeighbors::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Face Feature Attribute Matrix", FeatureAttributeMatrixPath, FilterParameter::RequiredArray, FindTriangleGeomNeighbors, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Number of Neighbors", NumNeighborsArrayName, FeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindTriangleGeomNeighbors));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Neighbor List", NeighborListArrayName, FeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindTriangleGeomNeighbors));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Number of Neighbors", NumNeighborsArrayName, FeatureAttributeMatrixPath, FeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindTriangleGeomNeighbors));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Neighbor List", NeighborListArrayName, FeatureAttributeMatrixPath, FeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindTriangleGeomNeighbors));
   setFilterParameters(parameters);
 }
 

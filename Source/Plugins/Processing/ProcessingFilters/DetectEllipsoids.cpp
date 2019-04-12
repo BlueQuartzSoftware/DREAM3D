@@ -165,19 +165,19 @@ void DetectEllipsoids::setupFilterParameters()
   }
 
   {
-    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Ellipsoid Center Coordinates", CenterCoordinatesArrayName, EllipseFeatureAttributeMatrixPath, FilterParameter::CreatedArray, DetectEllipsoids));
+    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Ellipsoid Center Coordinates", CenterCoordinatesArrayName, EllipseFeatureAttributeMatrixPath, EllipseFeatureAttributeMatrixPath, FilterParameter::CreatedArray, DetectEllipsoids));
   }
 
   {
-    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Ellipsoid Major Axis Lengths", MajorAxisLengthArrayName, EllipseFeatureAttributeMatrixPath, FilterParameter::CreatedArray, DetectEllipsoids));
+    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Ellipsoid Major Axis Lengths", MajorAxisLengthArrayName, EllipseFeatureAttributeMatrixPath, EllipseFeatureAttributeMatrixPath, FilterParameter::CreatedArray, DetectEllipsoids));
   }
 
   {
-    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Ellipsoid Minor Axis Lengths", MinorAxisLengthArrayName, EllipseFeatureAttributeMatrixPath, FilterParameter::CreatedArray, DetectEllipsoids));
+    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Ellipsoid Minor Axis Lengths", MinorAxisLengthArrayName, EllipseFeatureAttributeMatrixPath, EllipseFeatureAttributeMatrixPath, FilterParameter::CreatedArray, DetectEllipsoids));
   }
 
   {
-    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Ellipsoid Rotational Angles", RotationalAnglesArrayName, EllipseFeatureAttributeMatrixPath, FilterParameter::CreatedArray, DetectEllipsoids));
+    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Ellipsoid Rotational Angles", RotationalAnglesArrayName, EllipseFeatureAttributeMatrixPath, EllipseFeatureAttributeMatrixPath, FilterParameter::CreatedArray, DetectEllipsoids));
   }
 
   {

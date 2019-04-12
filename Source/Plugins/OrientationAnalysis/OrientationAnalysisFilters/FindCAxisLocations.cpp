@@ -75,7 +75,7 @@ void FindCAxisLocations::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternions", QuatsArrayPath, FilterParameter::RequiredArray, FindCAxisLocations, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("C-Axis Locations", CAxisLocationsArrayName, QuatsArrayPath, FilterParameter::CreatedArray, FindCAxisLocations));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("C-Axis Locations", CAxisLocationsArrayName, QuatsArrayPath, QuatsArrayPath, FilterParameter::CreatedArray, FindCAxisLocations));
   setFilterParameters(parameters);
 }
 

@@ -306,8 +306,8 @@ void InsertAtoms::setupFilterParameters()
   }
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", VertexDataContainerName, FilterParameter::CreatedArray, InsertAtoms));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_SUBPATH_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, VertexDataContainerName, FilterParameter::CreatedArray, InsertAtoms));
-  parameters.push_back(SIMPL_NEW_DA_WITH_MIXED_SUBPATH_FP("Atom Feature Labels", AtomFeatureLabelsArrayName, VertexDataContainerName, VertexAttributeMatrixName, FilterParameter::CreatedArray, InsertAtoms));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, VertexDataContainerName, FilterParameter::CreatedArray, InsertAtoms));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Atom Feature Labels", AtomFeatureLabelsArrayName, VertexDataContainerName, VertexAttributeMatrixName, FilterParameter::CreatedArray, InsertAtoms));
   setFilterParameters(parameters);
 }
 

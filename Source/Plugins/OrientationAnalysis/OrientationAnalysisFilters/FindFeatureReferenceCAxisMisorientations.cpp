@@ -96,11 +96,11 @@ void FindFeatureReferenceCAxisMisorientations::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Average C-Axes", AvgCAxesArrayPath, FilterParameter::RequiredArray, FindFeatureReferenceCAxisMisorientations, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Average C-Axis Misorientations", FeatureAvgCAxisMisorientationsArrayName, AvgCAxesArrayPath, FilterParameter::CreatedArray, FindFeatureReferenceCAxisMisorientations));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Average C-Axis Misorientations", FeatureAvgCAxisMisorientationsArrayName, AvgCAxesArrayPath, AvgCAxesArrayPath, FilterParameter::CreatedArray, FindFeatureReferenceCAxisMisorientations));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Feature Stdev C-Axis Misorientations", FeatureStdevCAxisMisorientationsArrayName, AvgCAxesArrayPath, FilterParameter::CreatedArray, FindFeatureReferenceCAxisMisorientations));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Feature Stdev C-Axis Misorientations", FeatureStdevCAxisMisorientationsArrayName, AvgCAxesArrayPath, AvgCAxesArrayPath, FilterParameter::CreatedArray, FindFeatureReferenceCAxisMisorientations));
   parameters.push_back(
-    SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Feature Reference C-Axis Misorientations", FeatureReferenceCAxisMisorientationsArrayName, FeatureIdsArrayPath, FilterParameter::CreatedArray, FindFeatureReferenceCAxisMisorientations));
+    SIMPL_NEW_DA_WITH_LINKED_AM_FP("Feature Reference C-Axis Misorientations", FeatureReferenceCAxisMisorientationsArrayName, FeatureIdsArrayPath, FeatureIdsArrayPath, FilterParameter::CreatedArray, FindFeatureReferenceCAxisMisorientations));
   setFilterParameters(parameters);
 }
 

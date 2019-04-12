@@ -95,9 +95,9 @@ void FindSizes::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Feature Attribute Matrix", FeatureAttributeMatrixName, FilterParameter::RequiredArray, FindSizes, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Equivalent Diameters", EquivalentDiametersArrayName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindSizes));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Number of Elements", NumElementsArrayName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindSizes));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Volumes", VolumesArrayName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindSizes));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Equivalent Diameters", EquivalentDiametersArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindSizes));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Number of Elements", NumElementsArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindSizes));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Volumes", VolumesArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindSizes));
   setFilterParameters(parameters);
 }
 

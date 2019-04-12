@@ -97,7 +97,7 @@ void FindFeaturePhasesBinary::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_CREATION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindFeaturePhasesBinary, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_SUBPATH_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindFeaturePhasesBinary));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FeaturePhasesArrayPath, FilterParameter::CreatedArray, FindFeaturePhasesBinary));
   setFilterParameters(parameters);
 }
 

@@ -92,11 +92,11 @@ void FindSurfaceAreaToVolume::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Number of Cells", NumCellsArrayPath, FilterParameter::RequiredArray, FindSurfaceAreaToVolume, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Surface Area to Volume Ratio", SurfaceAreaVolumeRatioArrayName, NumCellsArrayPath, FilterParameter::CreatedArray, FindSurfaceAreaToVolume));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Surface Area to Volume Ratio", SurfaceAreaVolumeRatioArrayName, NumCellsArrayPath, NumCellsArrayPath, FilterParameter::CreatedArray, FindSurfaceAreaToVolume));
 
   QStringList linkedProps("SphericityArrayName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Calculate Sphericity", CalculateSphericity, FilterParameter::Parameter, FindSurfaceAreaToVolume, linkedProps));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Sphericity Array Name", SphericityArrayName, NumCellsArrayPath, FilterParameter::CreatedArray, FindSurfaceAreaToVolume));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Sphericity Array Name", SphericityArrayName, NumCellsArrayPath, NumCellsArrayPath, FilterParameter::CreatedArray, FindSurfaceAreaToVolume));
 
   setFilterParameters(parameters);
 }

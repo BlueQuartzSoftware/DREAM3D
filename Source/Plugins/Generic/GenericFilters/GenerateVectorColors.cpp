@@ -87,7 +87,7 @@ void GenerateVectorColors::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", GoodVoxelsArrayPath, FilterParameter::RequiredArray, GenerateVectorColors, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_SUBPATH_FP("Vector Colors", CellVectorColorsArrayName, VectorsArrayPath, FilterParameter::CreatedArray, GenerateVectorColors));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Vector Colors", CellVectorColorsArrayName, VectorsArrayPath, VectorsArrayPath, FilterParameter::CreatedArray, GenerateVectorColors));
   setFilterParameters(parameters);
 }
 
