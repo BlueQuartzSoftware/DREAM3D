@@ -176,6 +176,7 @@ void ReadH5EbsdWidget::setupGui()
   }
 
   m_LineEdit->setText(inputPath);
+  setValidFilePath(m_LineEdit->text());
 
   // Update the widget when the data directory changes
   SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
@@ -209,6 +210,8 @@ void ReadH5EbsdWidget::keyPressEvent(QKeyEvent* event)
   if(event->key() == Qt::Key_Escape)
   {
     m_LineEdit->setText(m_CurrentText);
+    setValidFilePath(m_LineEdit->text());
+
     m_LineEdit->setStyleSheet("");
     m_LineEdit->setToolTip("");
   }
@@ -313,6 +316,7 @@ void ReadH5EbsdWidget::on_m_LineEditBtn_clicked()
   if(!inputFile.isNull())
   {
     m_LineEdit->setText(inputFile); // Should cause a signal to be emitted
+    setValidFilePath(m_LineEdit->text());
   }
 }
 
@@ -746,6 +750,7 @@ void ReadH5EbsdWidget::resetGuiFileInfoWidgets()
 void ReadH5EbsdWidget::setInputFilePath(QString val)
 {
   m_LineEdit->setText(val);
+  setValidFilePath(m_LineEdit->text());
 }
 
 // -----------------------------------------------------------------------------

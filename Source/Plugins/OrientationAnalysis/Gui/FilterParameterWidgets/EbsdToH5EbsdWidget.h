@@ -204,7 +204,6 @@ class EbsdToH5EbsdWidget : public FilterParameterWidget, private Ui::EbsdToH5Ebs
     AxisAngleInput_t m_SampleTransformation;
     AxisAngleInput_t m_EulerTransformation;
     QAction* m_ShowFileAction = nullptr;
-    QString  m_CurrentlyValidPath = "";
     QString  m_CurrentText = "";
     bool     m_DidCausePreflight = false;
 

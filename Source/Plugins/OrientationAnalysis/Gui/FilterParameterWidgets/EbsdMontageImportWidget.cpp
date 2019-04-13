@@ -220,6 +220,7 @@ void EbsdMontageImportWidget::keyPressEvent(QKeyEvent* event)
     m_Ui->inputDir->setText(m_CurrentText);
     m_Ui->inputDir->setStyleSheet("");
     m_Ui->inputDir->setToolTip("");
+    setValidFilePath(m_CurrentText);
   }
 }
 
@@ -277,6 +278,7 @@ void EbsdMontageImportWidget::getGuiParametersFromFilter()
   EbsdMontageListInfo_t data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<EbsdMontageListInfo_t>();
 
   m_Ui->inputDir->setText(data.InputPath);
+  setValidFilePath(data.InputPath);
 
   m_Ui->rowStart->setValue(data.RowStart);
   m_Ui->rowEnd->setValue(data.RowEnd);
@@ -304,6 +306,7 @@ void EbsdMontageImportWidget::inputDirBtn_clicked()
   {
     m_Ui->inputDir->blockSignals(true);
     m_Ui->inputDir->setText(QDir::toNativeSeparators(outputFile));
+    setValidFilePath(data.InputPath);
     inputDir_textChanged(m_Ui->inputDir->text());
     SetOpenDialogLastFilePath(outputFile);
     m_Ui->inputDir->blockSignals(false);
@@ -340,6 +343,8 @@ void EbsdMontageImportWidget::inputDir_textChanged(const QString& text)
     updateFileListView();
     m_Ui->inputDir->blockSignals(true);
     m_Ui->inputDir->setText(QDir::toNativeSeparators(m_Ui->inputDir->text()));
+    setValidFilePath(data.InputPath);
+
     m_Ui->inputDir->blockSignals(false);
   }
   else
@@ -474,6 +479,7 @@ void EbsdMontageImportWidget::afterPreflight()
 void EbsdMontageImportWidget::setInputDirectory(const QString& val)
 {
   m_Ui->inputDir->setText(val);
+  setValidFilePath(val);
 }
 
 // -----------------------------------------------------------------------------

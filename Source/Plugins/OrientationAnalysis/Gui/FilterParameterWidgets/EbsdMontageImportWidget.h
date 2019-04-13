@@ -144,7 +144,6 @@ private:
   static QString m_OpenDialogLastFilePath;
 
   QAction* m_ShowFileAction = nullptr;
-  QString m_CurrentlyValidPath = "";
   QString m_CurrentText = "";
   bool m_DidCausePreflight = false;
   QPixmap m_Icon = QPixmap(QLatin1String(":/SIMPL/icons/images/caret-bottom.png"));
