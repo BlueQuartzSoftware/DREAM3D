@@ -203,6 +203,7 @@ void EbsdToH5EbsdWidget::keyPressEvent(QKeyEvent* event)
   {
     m_LineEdit->setText(m_CurrentText);
     m_LineEdit->setToolTip("");
+    setValidFilePath(m_LineEdit->text());
   }
 }
 
@@ -265,6 +266,8 @@ void EbsdToH5EbsdWidget::getGuiParametersFromFilter()
     inputPath = QDir::homePath();
   }
   m_LineEdit->setText(inputPath);
+  setValidFilePath(m_LineEdit->text());
+
   m_OutputFile->setText(m_Filter->getOutputFile());
 
   QObjectList obs = children();
@@ -385,6 +388,7 @@ void EbsdToH5EbsdWidget::on_m_InputDirBtn_clicked()
   {
     m_LineEdit->blockSignals(true);
     m_LineEdit->setText(QDir::toNativeSeparators(outputFile));
+    setValidFilePath(m_LineEdit->text());
     on_m_LineEdit_textChanged(m_LineEdit->text());
     setInputDirectory(outputFile);
     m_LineEdit->blockSignals(false);
@@ -421,6 +425,7 @@ void EbsdToH5EbsdWidget::on_m_LineEdit_textChanged(const QString& text)
     generateExampleEbsdInputFile();
     m_LineEdit->blockSignals(true);
     m_LineEdit->setText(QDir::toNativeSeparators(m_LineEdit->text()));
+    setValidFilePath(m_LineEdit->text());
     m_LineEdit->blockSignals(false);
     referenceFrameCheck->setText("Have you set the Reference Frame?");
   }
@@ -896,6 +901,7 @@ QString EbsdToH5EbsdWidget::getOutputPath()
 void EbsdToH5EbsdWidget::setInputDirectory(const QString &val)
 {
   m_LineEdit->setText(val);
+  setValidFilePath(m_LineEdit->text());
 }
 
 // -----------------------------------------------------------------------------

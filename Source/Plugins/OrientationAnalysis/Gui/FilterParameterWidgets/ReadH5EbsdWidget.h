@@ -169,8 +169,7 @@ class ReadH5EbsdWidget : public FilterParameterWidget, private Ui::ReadH5EbsdWid
     AxisAngleInput_t m_EulerTransformation;
 
     QAction* m_ShowFileAction = nullptr;
-    QString  m_CurrentlyValidPath = "";
-    QString  m_CurrentText = "";
+    QString m_CurrentText = "";
     bool     m_DidCausePreflight = false;
     bool m_NewFileLoaded;
     bool m_Version4Warning;
