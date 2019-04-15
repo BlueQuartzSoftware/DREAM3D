@@ -137,7 +137,6 @@ class TrisSelector
   uint32_t cryst;
   int32_t nsym;
 
-  uint32_t* m_CrystalStructures;
   float* m_Eulers;
   int32_t* m_Phases;
   int32_t* m_FaceLabels;
@@ -162,7 +161,6 @@ public:
   , m_misorResol(__m_misorResol)
   , m_PhaseOfInterest(__m_PhaseOfInterest)
   , gFixedT(__gFixedT)
-  , m_CrystalStructures(__m_CrystalStructures)
   , m_Eulers(__m_Eulers)
   , m_Phases(__m_Phases)
   , m_FaceLabels(__m_FaceLabels)
@@ -317,8 +315,8 @@ public:
  */
 class ProbeDistrib
 {
-  QVector<double>* distribValues;
-  QVector<double>* errorValues;
+  QVector<double>* distribValues = nullptr;
+  QVector<double>* errorValues = nullptr;
   QVector<float> samplPtsX;
   QVector<float> samplPtsY;
   QVector<float> samplPtsZ;

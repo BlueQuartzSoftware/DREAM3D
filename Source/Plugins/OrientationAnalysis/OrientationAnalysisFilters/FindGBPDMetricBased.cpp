@@ -121,8 +121,8 @@ class TrisSelector
 {
   // corresponding to Phase of Interest
   bool m_ExcludeTripleLines;
-  int64_t* m_Triangles;
-  int8_t* m_NodeTypes;
+  int64_t* m_Triangles = nullptr;
+  int8_t* m_NodeTypes = nullptr;
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::concurrent_vector<TriAreaAndNormals>* selectedTris;
 #else
@@ -132,12 +132,11 @@ class TrisSelector
   QVector<LaueOps::Pointer> m_OrientationOps;
   uint32_t cryst;
   int32_t nsym;
-  uint32_t* m_CrystalStructures;
-  float* m_Eulers;
-  int32_t* m_Phases;
-  int32_t* m_FaceLabels;
-  double* m_FaceNormals;
-  double* m_FaceAreas;
+  float* m_Eulers = nullptr;
+  int32_t* m_Phases = nullptr;
+  int32_t* m_FaceLabels = nullptr;
+  double* m_FaceNormals = nullptr;
+  double* m_FaceAreas = nullptr;
 
 public:
   TrisSelector(bool __m_ExcludeTripleLines, int64_t* __m_Triangles, int8_t* __m_NodeTypes,
@@ -153,7 +152,6 @@ public:
   , m_NodeTypes(__m_NodeTypes)
   , selectedTris(__selectedTris)
   , m_PhaseOfInterest(__m_PhaseOfInterest)
-  , m_CrystalStructures(__m_CrystalStructures)
   , m_Eulers(__m_Eulers)
   , m_Phases(__m_Phases)
   , m_FaceLabels(__m_FaceLabels)
