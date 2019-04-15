@@ -306,7 +306,7 @@ void EbsdMontageImportWidget::inputDirBtn_clicked()
   {
     m_Ui->inputDir->blockSignals(true);
     m_Ui->inputDir->setText(QDir::toNativeSeparators(outputFile));
-    setValidFilePath(data.InputPath);
+    setValidFilePath(m_Ui->inputDir->text());
     inputDir_textChanged(m_Ui->inputDir->text());
     SetOpenDialogLastFilePath(outputFile);
     m_Ui->inputDir->blockSignals(false);
@@ -343,7 +343,7 @@ void EbsdMontageImportWidget::inputDir_textChanged(const QString& text)
     updateFileListView();
     m_Ui->inputDir->blockSignals(true);
     m_Ui->inputDir->setText(QDir::toNativeSeparators(m_Ui->inputDir->text()));
-    setValidFilePath(data.InputPath);
+    setValidFilePath(m_Ui->inputDir->text());
 
     m_Ui->inputDir->blockSignals(false);
   }
