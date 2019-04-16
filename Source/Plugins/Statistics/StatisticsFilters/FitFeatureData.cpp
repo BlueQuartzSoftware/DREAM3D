@@ -73,7 +73,7 @@ FitFeatureData::~FitFeatureData() = default;
 // -----------------------------------------------------------------------------
 void FitFeatureData::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Distribution Type");
@@ -139,8 +139,8 @@ void FitFeatureData::initialize()
 // -----------------------------------------------------------------------------
 void FitFeatureData::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> cDims(1, 1);
   m_FeaturePhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeaturePhasesArrayPath(),
@@ -273,10 +273,10 @@ template <typename T> void fitData(IDataArray::Pointer inDataPtr, float* ensembl
 // -----------------------------------------------------------------------------
 void FitFeatureData::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

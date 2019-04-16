@@ -176,7 +176,7 @@ AlignSections::~AlignSections() = default;
 // -----------------------------------------------------------------------------
 void AlignSections::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   QStringList linkedProps("AlignmentShiftFileName");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Write Alignment Shift File", WriteAlignmentShifts, FilterParameter::Parameter, AlignSections, linkedProps));
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Alignment File", AlignmentShiftFileName, FilterParameter::Parameter, AlignSections, "", "*.txt"));
@@ -206,12 +206,12 @@ void AlignSections::initialize()
 // -----------------------------------------------------------------------------
 void AlignSections::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -220,11 +220,10 @@ void AlignSections::dataCheck()
   {
     QString ss =
         QObject::tr("The Image Geometry is not 3D and cannot be run through this filter. The dimensions are (%1,%2,%3)").arg(image->getXPoints()).arg(image->getYPoints()).arg(image->getZPoints());
-    setErrorCondition(-3010);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-3010, ss);
   }
 
-  tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), "");
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), "");
   getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, tempPath, -301);
 
   if(m_WriteAlignmentShifts)
@@ -261,7 +260,7 @@ void AlignSections::updateProgress(size_t p)
   m_Progress += p;
   int32_t progressInt = static_cast<int>((static_cast<float>(m_Progress) / static_cast<float>(m_TotalProgress)) * 100.0f);
   QString ss = QObject::tr("Transferring Cell Data %1%").arg(progressInt);
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+  notifyStatusMessage(ss);
 }
 
 // -----------------------------------------------------------------------------
@@ -269,10 +268,10 @@ void AlignSections::updateProgress(size_t p)
 // -----------------------------------------------------------------------------
 void AlignSections::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -332,7 +331,7 @@ void AlignSections::execute()
       {
         progressInt = static_cast<int>((static_cast<float>(i) / static_cast<float>(dims[2])) * 100.0f);
         QString ss = QObject::tr("Transferring Cell Data %1%").arg(progressInt);
-        notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+        notifyStatusMessage(ss);
         prog = prog + progIncrement;
       }
       if(getCancel())

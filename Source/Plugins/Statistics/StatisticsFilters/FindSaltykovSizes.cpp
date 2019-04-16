@@ -46,6 +46,13 @@
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -64,7 +71,7 @@ FindSaltykovSizes::~FindSaltykovSizes() = default;
 // -----------------------------------------------------------------------------
 void FindSaltykovSizes::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     DataArraySelectionFilterParameter::RequirementType req;
@@ -100,8 +107,8 @@ void FindSaltykovSizes::initialize()
 // -----------------------------------------------------------------------------
 void FindSaltykovSizes::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> dims(1, 1);
   m_EquivalentDiametersPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getEquivalentDiametersArrayPath(),
@@ -110,8 +117,8 @@ void FindSaltykovSizes::dataCheck()
   {
     m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  m_SaltykovEquivalentDiametersPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-      this, getSaltykovEquivalentDiametersArrayPath(), 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SaltykovEquivalentDiametersPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getSaltykovEquivalentDiametersArrayPath(), 0, dims, "", DataArrayID31);
   if(nullptr != m_SaltykovEquivalentDiametersPtr.lock())         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_SaltykovEquivalentDiameters = m_SaltykovEquivalentDiametersPtr.lock()->getPointer(0);
@@ -136,17 +143,17 @@ void FindSaltykovSizes::preflight()
 // -----------------------------------------------------------------------------
 void FindSaltykovSizes::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   find_saltykov_sizes();
 
-  notifyStatusMessage(getHumanLabel(), "Find Feature Saltykov Sizes Completed");
+  notifyStatusMessage("Find Feature Saltykov Sizes Completed");
 }
 
 // -----------------------------------------------------------------------------

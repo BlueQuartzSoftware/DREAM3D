@@ -59,6 +59,13 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataContainerID = 1
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -82,11 +89,11 @@ StatsGeneratorFilter::~StatsGeneratorFilter() = default;
 // -----------------------------------------------------------------------------
 void StatsGeneratorFilter::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(StatsGeneratorFilterParameter::New("StatsGenerator", "StatsGenerator", "", FilterParameter::Parameter));
 
   parameters.push_back(SeparatorFilterParameter::New("Created Data Container", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Statistics Data Container Name", StatsGeneratorDataContainerName, FilterParameter::CreatedArray, StatsGeneratorFilter));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Statistics Data Container Name", StatsGeneratorDataContainerName, FilterParameter::CreatedArray, StatsGeneratorFilter));
 
   parameters.push_back(SeparatorFilterParameter::New("Created Ensemble AttributeMatrix", FilterParameter::CreatedArray));
 
@@ -134,7 +141,7 @@ void StatsGeneratorFilter::readFilterParameters(AbstractFilterParametersReader* 
     readArray(jsonRoot, numTuples);
   }
 
-  setStatsGeneratorDataContainerName(reader->readString("StatsGeneratorDataContainerName", getStatsGeneratorDataContainerName()));
+  setStatsGeneratorDataContainerName(reader->readDataArrayPath("StatsGeneratorDataContainerName", getStatsGeneratorDataContainerName()));
   setCellEnsembleAttributeMatrixName(reader->readString("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName()));
   setStatsDataArrayName(reader->readString("StatsDataArrayName", getStatsDataArrayName()));
   setCrystalStructuresArrayName(reader->readString("CrystalStructuresArrayName", getCrystalStructuresArrayName()));
@@ -162,7 +169,7 @@ void StatsGeneratorFilter::readFilterParameters(QJsonObject& obj)
   size_t numTuples = m_StatsDataArray->getNumberOfTuples();
   readArray(obj, numTuples);
 
-  QVector<FilterParameter::Pointer> filterParameters = getFilterParameters();
+  FilterParameterVectorType filterParameters = getFilterParameters();
   for(int i = 0; i < filterParameters.size(); i++)
   {
     FilterParameter::Pointer fp = filterParameters[i];
@@ -175,7 +182,7 @@ void StatsGeneratorFilter::readFilterParameters(QJsonObject& obj)
 // -----------------------------------------------------------------------------
 void StatsGeneratorFilter::writeFilterParameters(QJsonObject& obj) const
 {
-  QVector<FilterParameter::Pointer> filterParameters = getFilterParameters();
+  FilterParameterVectorType filterParameters = getFilterParameters();
   for(int i = 0; i < filterParameters.size(); i++)
   {
     FilterParameter::Pointer fp = filterParameters[i];
@@ -237,9 +244,9 @@ void StatsGeneratorFilter::dataCheck()
 {
   if(nullptr != m_StatsDataArray)
   {
-    getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getStatsGeneratorDataContainerName());
+    getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getStatsGeneratorDataContainerName(), DataContainerID);
 
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
@@ -247,34 +254,33 @@ void StatsGeneratorFilter::dataCheck()
     DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getStatsGeneratorDataContainerName());
 
     QVector<size_t> tDims(1, m_StatsDataArray->getNumberOfTuples());
-    AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
+    AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID21);
 
     m_StatsDataArray->setName(getStatsDataArrayName());
-    cellEnsembleAttrMat->addAttributeArray(getStatsDataArrayName(), m_StatsDataArray);
+    cellEnsembleAttrMat->insertOrAssign(m_StatsDataArray);
 
     if(nullptr != m_CrystalStructures)
     {
       m_CrystalStructures->setName(getCrystalStructuresArrayName());
-      cellEnsembleAttrMat->addAttributeArray(getCrystalStructuresArrayName(), m_CrystalStructures);
+      cellEnsembleAttrMat->insertOrAssign(m_CrystalStructures);
     }
 
     if(nullptr != m_PhaseTypes)
     {
       m_PhaseTypes->setName(getPhaseTypesArrayName());
-      cellEnsembleAttrMat->addAttributeArray(getPhaseTypesArrayName(), m_PhaseTypes);
+      cellEnsembleAttrMat->insertOrAssign(m_PhaseTypes);
     }
 
     if(nullptr != m_PhaseNames)
     {
       m_PhaseNames->setName(getPhaseNamesArrayName());
-      cellEnsembleAttrMat->addAttributeArray(getPhaseNamesArrayName(), m_PhaseNames);
+      cellEnsembleAttrMat->insertOrAssign(m_PhaseNames);
     }
   }
   else
   {
-    setErrorCondition(-1);
     QString ss = QObject::tr("Unable to retrieve a valid pointer for statistics data");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
     return;
   }
 }
@@ -298,10 +304,10 @@ void StatsGeneratorFilter::preflight()
 // -----------------------------------------------------------------------------
 void StatsGeneratorFilter::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

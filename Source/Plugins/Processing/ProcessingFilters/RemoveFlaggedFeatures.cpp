@@ -67,7 +67,7 @@ RemoveFlaggedFeatures::~RemoveFlaggedFeatures() = default;
 // -----------------------------------------------------------------------------
 void RemoveFlaggedFeatures::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_BOOL_FP("Fill-in Removed Features", FillRemovedFeatures, FilterParameter::Parameter, RemoveFlaggedFeatures));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
@@ -114,8 +114,8 @@ void RemoveFlaggedFeatures::initialize()
 // -----------------------------------------------------------------------------
 void RemoveFlaggedFeatures::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
@@ -153,10 +153,10 @@ void RemoveFlaggedFeatures::preflight()
 // -----------------------------------------------------------------------------
 void RemoveFlaggedFeatures::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -172,7 +172,7 @@ void RemoveFlaggedFeatures::execute()
   cellFeatureAttrMat->removeInactiveObjects(activeObjects, m_FeatureIdsPtr.lock().get());
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage(getHumanLabel(), "Remove Flagged Features Filter Complete");
+  notifyStatusMessage("Remove Flagged Features Filter Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -366,8 +366,7 @@ QVector<bool> RemoveFlaggedFeatures::remove_flaggedfeatures()
   }
   if(!good)
   {
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), "All Features were flagged and would all be removed.  The filter has quit.", -1);
+    setErrorCondition(-1, "All Features were flagged and would all be removed.  The filter has quit.");
     return activeObjects;
   }
   for(size_t i = 0; i < totalPoints; i++)

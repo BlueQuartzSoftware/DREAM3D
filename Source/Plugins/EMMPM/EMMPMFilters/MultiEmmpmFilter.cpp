@@ -50,8 +50,71 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Messages/AbstractMessageHandler.h"
+#include "SIMPLib/Messages/GenericProgressMessage.h"
+#include "SIMPLib/Messages/GenericStatusMessage.h"
+#include "SIMPLib/Messages/GenericErrorMessage.h"
+#include "SIMPLib/Messages/GenericWarningMessage.h"
 
 #include "EMMPM/EMMPMVersion.h"
+
+/**
+ * @brief This message handler is used by MultiEmmpmFilter instances to re-emit incoming generic messages from the
+ * EMMPM observable object as its own filter messages.  It also prepends the current Array number to the prefix of
+ * status messages received from MPMCalculation objects.
+ */
+class MultiEmmpmFilterMessageHandler : public AbstractMessageHandler
+{
+  public:
+    explicit MultiEmmpmFilterMessageHandler(MultiEmmpmFilter* filter) : m_Filter(filter) {}
+
+    /**
+     * @brief Re-emits incoming GenericProgressMessages as FilterProgressMessages.
+     */
+    void processMessage(const GenericProgressMessage* msg) const override
+    {
+      emit m_Filter->notifyProgressMessage(msg->getProgressValue(), msg->getMessageText());
+    }
+
+    /**
+     * @brief Re-emits incoming GenericStatusMessages as FilterStatusMessages.  Adds a prefix that
+     * shows what array the filter is on.
+     */
+    void processMessage(const GenericStatusMessage* msg) const override
+    {
+      QString prefix = QObject::tr("(Array %2 of %3)").arg(m_Filter->m_CurrentArrayIndex + 1).arg(m_Filter->m_ArrayCount);
+      emit m_Filter->notifyStatusMessageWithPrefix(prefix, msg->getMessageText());
+    }
+
+    /**
+     * @brief Re-emits incoming GenericErrorMessages as FilterErrorMessages.
+     */
+    void processMessage(const GenericErrorMessage* msg) const override
+    {
+      emit m_Filter->setErrorCondition(msg->getCode(), msg->getMessageText());
+    }
+
+    /**
+     * @brief Re-emits incoming GenericWarningMessages as FilterWarningMessages.
+     */
+    void processMessage(const GenericWarningMessage* msg) const override
+    {
+      emit m_Filter->setWarningCondition(msg->getCode(), msg->getMessageText());
+    }
+
+  private:
+    MultiEmmpmFilter* m_Filter = nullptr;
+};
+
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -74,7 +137,7 @@ MultiEmmpmFilter::~MultiEmmpmFilter() = default;
 void MultiEmmpmFilter::setupFilterParameters()
 {
   EMMPMFilter::setupFilterParameters();
-  FilterParameterVector parameters = getFilterParameters();
+  FilterParameterVectorType parameters = getFilterParameters();
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("Use Mu/Sigma from Previous Image as Initialization for Current Image", UsePreviousMuSigma, FilterParameter::Parameter, MultiEmmpmFilter));
   parameters.push_back(SIMPL_NEW_STRING_FP("Output Array Prefix", OutputArrayPrefix, FilterParameter::Parameter, MultiEmmpmFilter));
@@ -136,6 +199,9 @@ void MultiEmmpmFilter::readFilterParameters(AbstractFilterParametersReader* read
 void MultiEmmpmFilter::initialize()
 {
   EMMPMFilter::initialize();
+
+  m_ArrayCount = 0;
+  m_CurrentArrayIndex = 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -143,14 +209,13 @@ void MultiEmmpmFilter::initialize()
 // -----------------------------------------------------------------------------
 void MultiEmmpmFilter::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(!DataArrayPath::ValidateVector(getInputDataArrayVector()))
   {
-    setErrorCondition(-89004);
     QString ss = QObject::tr("All Attribute Arrays must belong to the same Data Container and Attribute Matrix");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-89004, ss);
   }
 
   QVector<size_t> cDims(1, 1); // We need a single component, gray scale image
@@ -161,12 +226,12 @@ void MultiEmmpmFilter::dataCheck()
   {
     m_InputImage = m_InputImagePtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to m_Data from the DataArray<T> object */
-  if (getErrorCondition() < 0) { return; }
+  if (getErrorCode() < 0) { return; }
 
   ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getInputDataArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if (getErrorCondition() < 0 || nullptr == image.get()) { return; }
+  if (getErrorCode() < 0 || nullptr == image.get()) { return; }
 
-  m_OutputImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, getOutputDataArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_OutputImagePtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, getOutputDataArrayPath(), 0, cDims, "", DataArrayID31);
   if (nullptr != m_OutputImagePtr.lock().get()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_OutputImage = m_OutputImagePtr.lock()->getPointer(0);
@@ -176,23 +241,21 @@ void MultiEmmpmFilter::dataCheck()
 
   if(getOutputArrayPrefix().isEmpty())
   {
-    setErrorCondition(-89002);
     QString message = QObject::tr("Using a prefix (even a single alphanumeric value) is required so that the output Xdmf files can be written correctly");
-    notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
+    setErrorCondition(-89002, message);
   }
 
   if(getInputDataArrayVector().isEmpty())
   {
-    setErrorCondition(-89003);
     QString message = QObject::tr("At least one Attribute Array must be selected");
-    notifyErrorMessage(getHumanLabel(), message, getErrorCondition());
+    setErrorCondition(-89003, message);
     return;
   }
 
   DataArrayPath inputAMPath = DataArrayPath::GetAttributeMatrixPath(getInputDataArrayVector());
 
   AttributeMatrix::Pointer inAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, inputAMPath, -301);
-  if(getErrorCondition() < 0 || nullptr == inAM.get())
+  if(getErrorCode() < 0 || nullptr == inAM.get())
   {
     return;
   }
@@ -201,8 +264,8 @@ void MultiEmmpmFilter::dataCheck()
   QVector<size_t> tDims = inAM->getTupleDimensions();
   AttributeMatrix::Pointer outAM = getDataContainerArray()
                                        ->getDataContainer(inputAMPath.getDataContainerName())
-                                       ->createNonPrereqAttributeMatrix(this, getOutputAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
-  if(getErrorCondition() < 0 || nullptr == outAM.get())
+                                       ->createNonPrereqAttributeMatrix(this, getOutputAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
+  if(getErrorCode() < 0 || nullptr == outAM.get())
   {
     return;
   }
@@ -217,27 +280,25 @@ void MultiEmmpmFilter::dataCheck()
     inputAMPath.setDataArrayName(daName);
 
     getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, inputAMPath, cDims);
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
 
-    outAM->createAndAddAttributeArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, newName, 0, cDims);
+    outAM->createAndAddAttributeArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, newName, 0, cDims, DataArrayID32);
   }
 
   // The EM/MPM Library has a hard coded MAX Classes of 16
   if(getNumClasses() > 15)
   {
-    setErrorCondition(-89000);
     QString ss = QObject::tr("The maximum number of classes is 15");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-89000, ss);
   }
   // It does not make any sense if we want anything less than 2 classes
   if(getNumClasses() < 2)
   {
-    setErrorCondition(-89001);
     QString ss = QObject::tr("The minimum number of classes is 2");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-89001, ss);
   }
 }
 
@@ -260,10 +321,10 @@ void MultiEmmpmFilter::preflight()
 // -----------------------------------------------------------------------------
 void MultiEmmpmFilter::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -274,8 +335,8 @@ void MultiEmmpmFilter::execute()
   QList<QString> arrayNames = DataArrayPath::GetDataArrayNames(getInputDataArrayVector());
   QListIterator<QString> iter(arrayNames);
 
-  QString msgPrefix = getMessagePrefix();
-  int32_t i = 1;
+  m_ArrayCount = arrayNames.size();
+
   // This is the routine that sets up the EM/MPM to segment the image
   while(iter.hasNext())
   {
@@ -293,9 +354,7 @@ void MultiEmmpmFilter::execute()
     getDataContainerArray()->getAttributeMatrix(arrayPath)->removeAttributeArray(outName);
     setOutputDataArrayPath(arrayPath);
 
-    QString prefix = QObject::tr("%1 (Array %2 of %3)").arg(msgPrefix).arg(i).arg(arrayNames.size());
-    setMessagePrefix(prefix);
-    if(i == 2 && getUsePreviousMuSigma())
+    if(m_CurrentArrayIndex == 2 && getUsePreviousMuSigma())
     {
       setEmmpmInitType(EMMPM_ManualInit);
     }
@@ -305,11 +364,11 @@ void MultiEmmpmFilter::execute()
     }
 
     EMMPMFilter::execute();
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       break;
     }
-    i++;
+    m_CurrentArrayIndex++;
 
     if(getCancel())
     {
@@ -317,15 +376,23 @@ void MultiEmmpmFilter::execute()
     }
   }
 
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     QString ss = QObject::tr("Error occurred running the EM/MPM algorithm");
-    setErrorCondition(-60009);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-60009, ss);
     return;
   }
 
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MultiEmmpmFilter::handleEmmpmMessage(const AbstractMessage::Pointer& msg)
+{
+  MultiEmmpmFilterMessageHandler msgHandler(this);
+  msg->visit(&msgHandler);
 }
 
 // -----------------------------------------------------------------------------

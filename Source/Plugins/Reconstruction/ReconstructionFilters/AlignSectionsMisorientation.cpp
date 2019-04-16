@@ -80,7 +80,7 @@ void AlignSectionsMisorientation::setupFilterParameters()
 {
   // getting the current parameters that were set by the parent and adding to it before resetting it
   AlignSections::setupFilterParameters();
-  FilterParameterVector parameters = getFilterParameters();
+  FilterParameterVectorType parameters = getFilterParameters();
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Misorientation Tolerance (Degrees)", MisorientationTolerance, FilterParameter::Parameter, AlignSectionsMisorientation));
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Parameter, AlignSectionsMisorientation, linkedProps));
@@ -139,16 +139,16 @@ void AlignSectionsMisorientation::initialize()
 // -----------------------------------------------------------------------------
 void AlignSectionsMisorientation::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
-  setDataContainerName(m_QuatsArrayPath.getDataContainerName());
+  setDataContainerName(DataArrayPath(m_QuatsArrayPath.getDataContainerName(), "", ""));
   setCellAttributeMatrixName(m_QuatsArrayPath.getAttributeMatrixName());
 
   AlignSections::dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -162,7 +162,7 @@ void AlignSectionsMisorientation::dataCheck()
   {
     m_Quats = m_QuatsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getQuatsArrayPath());
   }
@@ -174,7 +174,7 @@ void AlignSectionsMisorientation::dataCheck()
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getCellPhasesArrayPath());
   }
@@ -187,7 +187,7 @@ void AlignSectionsMisorientation::dataCheck()
     {
       m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() >= 0)
+    if(getErrorCode() >= 0)
     {
       dataArrayPaths.push_back(getGoodVoxelsArrayPath());
     }
@@ -272,7 +272,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
   {
     progInt = ((float)iter / dims[2]) * 100.0f;
     QString ss = QObject::tr("Aligning Sections || Determining Shifts || %1% Complete").arg(progInt);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(ss);
     if(getCancel())
     {
       return;
@@ -381,11 +381,11 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
 // -----------------------------------------------------------------------------
 void AlignSectionsMisorientation::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

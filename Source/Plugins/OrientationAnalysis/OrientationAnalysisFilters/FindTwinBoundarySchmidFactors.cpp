@@ -235,9 +235,9 @@ FindTwinBoundarySchmidFactors::FindTwinBoundarySchmidFactors()
 , m_SurfaceMeshTwinBoundaryArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshTwinBoundary)
 , m_SurfaceMeshTwinBoundarySchmidFactorsArrayName(SIMPL::FaceData::SurfaceMeshTwinBoundarySchmidFactors)
 {
-  m_LoadingDir.x = 1.0f;
-  m_LoadingDir.y = 1.0f;
-  m_LoadingDir.z = 1.0f;
+  m_LoadingDir[0] = 1.0f;
+  m_LoadingDir[1] = 1.0f;
+  m_LoadingDir[2] = 1.0f;
 
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
@@ -253,7 +253,7 @@ FindTwinBoundarySchmidFactors::~FindTwinBoundarySchmidFactors() = default;
 // -----------------------------------------------------------------------------
 void FindTwinBoundarySchmidFactors::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Loading Direction", LoadingDir, FilterParameter::Parameter, FindTwinBoundarySchmidFactors));
 
   QStringList linkedProps("TwinBoundarySchmidFactorsFile");
@@ -321,8 +321,8 @@ void FindTwinBoundarySchmidFactors::readFilterParameters(AbstractFilterParameter
 // -----------------------------------------------------------------------------
 void FindTwinBoundarySchmidFactors::dataCheckVoxel()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -335,7 +335,7 @@ void FindTwinBoundarySchmidFactors::dataCheckVoxel()
   {
     m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getAvgQuatsArrayPath());
   }
@@ -347,7 +347,7 @@ void FindTwinBoundarySchmidFactors::dataCheckVoxel()
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getFeaturePhasesArrayPath());
   }
@@ -367,8 +367,8 @@ void FindTwinBoundarySchmidFactors::dataCheckVoxel()
 // -----------------------------------------------------------------------------
 void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   if(m_WriteFile)
@@ -386,7 +386,7 @@ void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh()
   {
     m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getSurfaceMeshFaceLabelsArrayPath());
   }
@@ -398,7 +398,7 @@ void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh()
   {
     m_SurfaceMeshFaceNormals = m_SurfaceMeshFaceNormalsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getSurfaceMeshFaceNormalsArrayPath());
   }
@@ -418,7 +418,7 @@ void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh()
   {
     m_SurfaceMeshTwinBoundary = m_SurfaceMeshTwinBoundaryPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getSurfaceMeshTwinBoundaryArrayPath());
   }
@@ -445,15 +445,15 @@ void FindTwinBoundarySchmidFactors::preflight()
 // -----------------------------------------------------------------------------
 void FindTwinBoundarySchmidFactors::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheckVoxel();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
   dataCheckSurfaceMesh();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -466,9 +466,9 @@ void FindTwinBoundarySchmidFactors::execute()
   size_t numTriangles = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
 
   float LoadingDir[3] = {0.0f, 0.0f, 0.0f};
-  LoadingDir[0] = m_LoadingDir.x;
-  LoadingDir[1] = m_LoadingDir.y;
-  LoadingDir[2] = m_LoadingDir.z;
+  LoadingDir[0] = m_LoadingDir[0];
+  LoadingDir[1] = m_LoadingDir[1];
+  LoadingDir[2] = m_LoadingDir[2];
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel)

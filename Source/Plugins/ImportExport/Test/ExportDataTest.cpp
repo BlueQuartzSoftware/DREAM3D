@@ -110,13 +110,13 @@ public:
 
     // A DataContainer that mimics some real data
     DataContainer::Pointer m = DataContainer::New(SIMPL::Defaults::DataContainerName);
-    dca->addDataContainer(m);
+    dca->addOrReplaceDataContainer(m);
 
     AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New(QVector<size_t>(1, 20), SIMPL::Defaults::AttributeMatrixName, AttributeMatrix::Type::Generic);
-    m->addAttributeMatrix(SIMPL::Defaults::AttributeMatrixName, attrMatrix);
+    m->addOrReplaceAttributeMatrix(attrMatrix);
 
     AttributeMatrix::Pointer attrMatrix2 = AttributeMatrix::New(QVector<size_t>(1, 20), SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
-    m->addAttributeMatrix(SIMPL::Defaults::CellAttributeMatrixName, attrMatrix2);
+    m->addOrReplaceAttributeMatrix(attrMatrix2);
     int size = 20;
 
     {
@@ -125,7 +125,7 @@ public:
       {
         intArray->setValue(i, i + 20);
       }
-      attrMatrix->addAttributeArray(SIMPL::CellData::CellPhases, intArray);
+      attrMatrix->insertOrAssign(intArray);
     }
     {
       Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, SIMPL::CellData::ConfidenceIndexNoSpace);
@@ -133,7 +133,7 @@ public:
       {
         intArray->setValue(i, i + 20);
       }
-      attrMatrix->addAttributeArray(SIMPL::CellData::ConfidenceIndexNoSpace, intArray);
+      attrMatrix->insertOrAssign(intArray);
     }
     {
       BoolArrayType::Pointer boolArray = BoolArrayType::CreateArray(size, SIMPL::GeneralData::ThresholdArray);
@@ -148,7 +148,7 @@ public:
           boolArray->setValue(i, 1);
         }
       }
-      attrMatrix->addAttributeArray(SIMPL::GeneralData::ThresholdArray, boolArray);
+      attrMatrix->insertOrAssign(boolArray);
     }
     {
       Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, SIMPL::CellData::ConfidenceIndexNoSpace);
@@ -156,7 +156,7 @@ public:
       {
         intArray->setValue(i, i + 20);
       }
-      attrMatrix2->addAttributeArray(SIMPL::CellData::ConfidenceIndexNoSpace, intArray);
+      attrMatrix2->insertOrAssign(intArray);
     }
 
     Observer obs;
@@ -171,10 +171,10 @@ public:
     // manually. Normally the Pipeline Object would do this for us. We are NOT using a Pipeline Object because using the
     // Pipeline Object would over write the DataContainer Array that we have created with a blank one thus defeating the
     // entire purpose of the test.
-    QObject::connect(writer.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
+    QObject::connect(writer.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), &obs, SLOT(processPipelineMessage(const AbstractMessage::Pointer&)));
 
     writer->execute();
-    int err = writer->getErrorCondition();
+    int err = writer->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, NO_ERROR);
 
     // Now instantiate the EnsembleInfoReader Filter from the FilterManager
@@ -220,7 +220,7 @@ public:
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
       filter->execute();
-      err = filter->getErrorCondition();
+      err = filter->getErrorCode();
       DREAM3D_REQUIRE_EQUAL(err, NO_ERROR);
 
       DataArrayPath path3 = DataArrayPath(SIMPL::Defaults::DataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ConfidenceIndexNoSpace);
@@ -232,7 +232,7 @@ public:
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
       filter->execute();
-      err = filter->getErrorCondition();
+      err = filter->getErrorCode();
       DREAM3D_REQUIRE_EQUAL(err, DIFF_MATRICES);
     }
     else

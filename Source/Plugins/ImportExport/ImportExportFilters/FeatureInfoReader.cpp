@@ -53,6 +53,17 @@
 #include "ImportExport/ImportExportConstants.h"
 #include "ImportExport/ImportExportVersion.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataContainerID = 1,
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+  DataArrayID33 = 33
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -82,7 +93,7 @@ FeatureInfoReader::~FeatureInfoReader() = default;
 void FeatureInfoReader::setupFilterParameters()
 {
   FileReader::setupFilterParameters();
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input Feature Info File", InputFile, FilterParameter::Parameter, FeatureInfoReader, "*.txt"));
   QStringList linkedProps;
   linkedProps << "CellPhasesArrayName"
@@ -149,8 +160,8 @@ void FeatureInfoReader::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 void FeatureInfoReader::updateFeatureInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_FeaturePhasesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -174,43 +185,39 @@ void FeatureInfoReader::initialize()
 // -----------------------------------------------------------------------------
 void FeatureInfoReader::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, m_FeatureIdsArrayPath.getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   QVector<size_t> tDims(1, 0);
-  m->createNonPrereqAttributeMatrix(this, getCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature);
+  m->createNonPrereqAttributeMatrix(this, getCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID21);
 
   QFileInfo fi(getInputFile());
   if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("The input file must be set").arg(ClassName());
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-387, ss);
   }
   else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
-    setErrorCondition(-388);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-388, ss);
   }
 
   if(m_CellFeatureAttributeMatrixName.isEmpty())
   {
     QString ss = QObject::tr("Feature Attribute Matrix name must be set");
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
   }
 
   QVector<size_t> cDims(1, 1);
-  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
-                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims);
   if(nullptr != m_FeatureIdsPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
@@ -219,8 +226,7 @@ void FeatureInfoReader::dataCheck()
   if(m_CreateCellLevelArrays)
   {
     tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getCellPhasesArrayName());
-    m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
-        this, tempPath, 0, cDims);        /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID30);
     if(nullptr != m_CellPhasesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
@@ -228,8 +234,7 @@ void FeatureInfoReader::dataCheck()
 
     cDims[0] = 3;
     tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), m_FeatureIdsArrayPath.getAttributeMatrixName(), getCellEulerAnglesArrayName());
-    m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-        this, tempPath, 0, cDims);             /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID31);
     if(nullptr != m_CellEulerAnglesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
@@ -238,8 +243,7 @@ void FeatureInfoReader::dataCheck()
 
   cDims[0] = 1;
   tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), getCellFeatureAttributeMatrixName(), getFeaturePhasesArrayName());
-  m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
-      this, tempPath, 0, cDims);           /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeaturePhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID32);
   if(nullptr != m_FeaturePhasesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
@@ -247,8 +251,7 @@ void FeatureInfoReader::dataCheck()
 
   cDims[0] = 3;
   tempPath.update(m_FeatureIdsArrayPath.getDataContainerName(), getCellFeatureAttributeMatrixName(), getFeatureEulerAnglesArrayName());
-  m_FeatureEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-      this, tempPath, 0, cDims);                /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FeatureEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID33);
   if(nullptr != m_FeatureEulerAnglesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeatureEulerAngles = m_FeatureEulerAnglesPtr.lock()->getPointer(0);
@@ -256,8 +259,7 @@ void FeatureInfoReader::dataCheck()
 
   if(getDelimiter() < 0 || getDelimiter() > 4)
   {
-    setErrorCondition(-10001);
-    notifyErrorMessage(getHumanLabel(), "The dilimiter can only have values of 0,1,2,3,4", getErrorCondition());
+    setErrorCondition(-10001, "The dilimiter can only have values of 0,1,2,3,4");
   }
 }
 
@@ -287,12 +289,12 @@ int32_t FeatureInfoReader::readHeader()
 // -----------------------------------------------------------------------------
 int32_t FeatureInfoReader::readFile()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
-    return getErrorCondition();
+    return getErrorCode();
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
@@ -306,9 +308,8 @@ int32_t FeatureInfoReader::readFile()
   if(!inStream.isOpen())
   {
     QString ss = QObject::tr("Error opening input file: %1").arg(getInputFile());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(-1, ss);
+    return getErrorCode();
   }
   bool ok = false;
   int32_t numfeatures = 0;
@@ -327,9 +328,8 @@ int32_t FeatureInfoReader::readFile()
   if(0 == numfeatures)
   {
     QString ss = QObject::tr("The number of Features (%1) specified in the file must be greater than zero").arg(numfeatures);
-    setErrorCondition(-68000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(-68000, ss);
+    return getErrorCode();
   }
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
@@ -347,9 +347,8 @@ int32_t FeatureInfoReader::readFile()
   {
     QString ss =
         QObject::tr("The number of Features (%1) specified in the file does not correspond to the maximum Feature Id (%2) in the selected Feature Ids array").arg(numfeatures).arg(maxFeatureId);
-    setErrorCondition(-68000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(-68000, ss);
+    return getErrorCode();
   }
 
   QVector<size_t> tDims(1, static_cast<size_t>(numfeatures + 1));
@@ -398,60 +397,53 @@ int32_t FeatureInfoReader::readFile()
 
     if(tokens.size() != 5)
     {
-      setErrorCondition(-68001);
       ss.clear();
       errStream << "There are not enough values at line " << lineNum << ". 5 values are required";
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return getErrorCondition();
+      setErrorCondition(-68001, ss);
+      return getErrorCode();
     }
     ok = false;
     gnum = tokens[0].toInt(&ok);
     if(!ok)
     {
-      setErrorCondition(-68002);
       ss.clear();
       errStream << "Line " << lineNum << ": Error converting Feature Id with token '" << tokens[0] << "' into integer";
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-68002, ss);
     }
     phase = tokens[1].toInt(&ok);
     if(!ok)
     {
-      setErrorCondition(-68003);
       ss.clear();
       errStream << "Line " << lineNum << ": Error converting Ensemble Id with token '" << tokens[1] << "' into integer";
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-68003, ss);
     }
     ea1 = tokens[2].toFloat(&ok);
     if(!ok)
     {
-      setErrorCondition(-68004);
       ss.clear();
       errStream << "Line " << lineNum << ": Error converting Euler 1 with token '" << tokens[2] << "' into float";
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-68004, ss);
     }
     ea2 = tokens[3].toFloat(&ok);
     if(!ok)
     {
-      setErrorCondition(-68005);
       ss.clear();
       errStream << "Line " << lineNum << ": Error converting Euler 2 with token '" << tokens[3] << "' into float";
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-68005, ss);
     }
     ea3 = tokens[4].toFloat(&ok);
     if(!ok)
     {
-      setErrorCondition(-68006);
       ss.clear();
       errStream << "Line " << lineNum << ": Error converting Euler 3 with token '" << tokens[4] << "' into float";
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-68006, ss);
     }
 
     if(gnum > maxFeatureId)
     {
       QString ss = QObject::tr("A Feature Id (%1) specified in the file is larger than the maximum Feature Id (%2) in the selected Feature Ids array").arg(numfeatures).arg(maxFeatureId);
-      setErrorCondition(-68000);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-      return getErrorCondition();
+      setErrorCondition(-68000, ss);
+      return getErrorCode();
     }
 
     m_FeatureEulerAngles[3 * gnum] = ea1;

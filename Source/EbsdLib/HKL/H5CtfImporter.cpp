@@ -119,7 +119,7 @@ void H5CtfImporter::getDims(int64_t& x, int64_t& y)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5CtfImporter::getResolution(float& x, float& y)
+void H5CtfImporter::getSpacing(float& x, float& y)
 {
   x = xRes;
   y = yRes;
@@ -140,7 +140,7 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const QString& ctfFile)
 {
   herr_t err = -1;
   setCancel(false);
-  setErrorCondition(0);
+  setErrorCode(0);
   setPipelineMessage("");
 
   //  std::cout << "H5CtfImporter: Importing " << ctfFile << std::endl;
@@ -176,7 +176,7 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const QString& ctfFile)
       ss = reader.getErrorMessage();
     }
     setPipelineMessage(ss);
-    setErrorCondition(err);
+    setErrorCode(err);
     progressMessage(ss, 100);
 
 
@@ -240,7 +240,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader& reader, int z, int ac
   {
     QString ss = QObject::tr("H5CtfImporter Error: A Group for Z index %1 could not be created. Please check other error messages from the HDF5 library for possible reasons.").arg(z);
     setPipelineMessage(ss);
-    setErrorCondition(-500);
+    setErrorCode(-500);
     return -1;
   }
 
@@ -251,7 +251,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader& reader, int z, int ac
     progressMessage(ss, 100);
     err = H5Gclose(ctfGroup);
     setPipelineMessage(ss);
-    setErrorCondition(-600);
+    setErrorCode(-600);
     return -1;
   }
 
@@ -297,7 +297,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader& reader, int z, int ac
     err = H5Gclose(gid);
     err = H5Gclose(ctfGroup);
     setPipelineMessage(ss);
-    setErrorCondition(-600);
+    setErrorCode(-600);
     return -1;
   }
   err = writePhaseData(reader, phasesGid);
@@ -320,7 +320,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader& reader, int z, int ac
     progressMessage(ss, 100);
     err = H5Gclose(ctfGroup);
     setPipelineMessage(ss);
-    setErrorCondition(-700);
+    setErrorCode(-700);
     return -1;
   }
 

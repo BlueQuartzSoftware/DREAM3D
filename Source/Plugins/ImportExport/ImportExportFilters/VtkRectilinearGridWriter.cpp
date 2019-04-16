@@ -144,7 +144,7 @@ template <typename T> int WriteCoords(FILE* f, const char* axis, const char* typ
 template <typename T> void WriteDataArray(AbstractFilter* filter, FILE* f, IDataArray::Pointer iDataPtr, bool writeBinary)
 {
   QString ss = QObject::tr("Writing Cell Data %1").arg(iDataPtr->getName());
-  filter->notifyStatusMessage(filter->getMessagePrefix(), filter->getHumanLabel(), ss);
+  filter->notifyStatusMessage(ss);
   // qDebug() << "Writing DataArray " << iDataPtr->getName() << " To a VTK File";
 
   typedef DataArray<T> ArrayType;
@@ -228,7 +228,7 @@ VtkRectilinearGridWriter::~VtkRectilinearGridWriter() = default;
 // -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, VtkRectilinearGridWriter, "*.vtk", "VTK Rectilinear Grid"));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Write Binary File", WriteBinaryFile, FilterParameter::Parameter, VtkRectilinearGridWriter));
@@ -264,8 +264,8 @@ void VtkRectilinearGridWriter::initialize()
 // -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   FileSystemPathHelper::CheckOutputFile(this, "Output VTK File", getOutputFile(), true);
@@ -275,15 +275,13 @@ void VtkRectilinearGridWriter::dataCheck()
   if(fi.isDir())
   {
     QString ss = QObject::tr("The output file path is a path to an existing directory. Please change the path to point to a file");
-    setErrorCondition(-1012);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1012, ss);
   }
 
   if(m_SelectedDataArrayPaths.isEmpty())
   {
-    setErrorCondition(-11001);
     QString ss = QObject::tr("At least one Attribute Array must be selected");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11001, ss);
     return;
   }
 
@@ -291,9 +289,8 @@ void VtkRectilinearGridWriter::dataCheck()
 
   if(!DataArrayPath::ValidateVector(paths))
   {
-    setErrorCondition(-11004);
     QString ss = QObject::tr("There are Attribute Arrays selected that are not contained in the same Attribute Matrix. All selected Attribute Arrays must belong to the same Attribute Matrix");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11004, ss);
     return;
   }
 
@@ -307,7 +304,7 @@ void VtkRectilinearGridWriter::dataCheck()
   QString dcName = DataArrayPath::GetAttributeMatrixPath(getSelectedDataArrayPaths()).getDataContainerName();
 
   ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(dcName)->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || nullptr == image.get())
+  if(getErrorCode() < 0 || nullptr == image.get())
   {
     return;
   }
@@ -331,10 +328,10 @@ void VtkRectilinearGridWriter::preflight()
 // -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -347,8 +344,7 @@ void VtkRectilinearGridWriter::execute()
   if(!dir.mkpath(parentPath))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    setErrorCondition(-2031000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-2031000, ss);
     return;
   }
 
@@ -359,9 +355,9 @@ void VtkRectilinearGridWriter::execute()
   ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
   size_t dims[3] = {0, 0, 0};
   std::tie(dims[0], dims[1], dims[2]) = image->getDimensions();
-  float res[3] = {0.0f, 0.0f, 0.0f};
-  image->getResolution(res);
-  float origin[3] = {0.0f, 0.0f, 0.0f};
+  FloatVec3Type res = {0.0f, 0.0f, 0.0f};
+  image->getSpacing(res);
+  FloatVec3Type origin = {0.0f, 0.0f, 0.0f};
   image->getOrigin(origin);
 
   int err = 0;
@@ -371,8 +367,7 @@ void VtkRectilinearGridWriter::execute()
   if(nullptr == f)
   {
     QString ss = QObject::tr("Error opening output vtk file '%1'\n ").arg(m_OutputFile);
-    setErrorCondition(-2031001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-2031001, ss);
     return;
   }
 
@@ -384,24 +379,21 @@ void VtkRectilinearGridWriter::execute()
   if(err < 0)
   {
     QString ss = QObject::tr("Error writing X Coordinates in vtk file %s'\n ").arg(m_OutputFile);
-    setErrorCondition(-2031002);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-2031002, ss);
     return;
   }
   err = Detail::WriteCoords<float>(f, "Y_COORDINATES", "float", dims[1] + 1, origin[1] - res[1] * 0.5f, (float)(dims[1] + 1 * res[1]), res[1], m_WriteBinaryFile);
   if(err < 0)
   {
     QString ss = QObject::tr("Error writing Y Coordinates in vtk file %s'\n ").arg(m_OutputFile);
-    setErrorCondition(-2031002);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-2031002, ss);
     return;
   }
   err = Detail::WriteCoords<float>(f, "Z_COORDINATES", "float", dims[2] + 1, origin[0] - res[2] * 0.5f, (float)(dims[2] + 1 * res[2]), res[2], m_WriteBinaryFile);
   if(err < 0)
   {
     QString ss = QObject::tr("Error writing Z Coordinates in vtk file %s'\n ").arg(m_OutputFile);
-    setErrorCondition(-2031002);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-2031002, ss);
     return;
   }
 
@@ -420,7 +412,7 @@ void VtkRectilinearGridWriter::execute()
     if (className.startsWith("DataArray"))
     {
       QString ss = QObject::tr("Writing Cell Data %1").arg(iDataPtr->getName());
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyStatusMessage(ss);
       //qDebug() << "Writing DataArray " << iDataPtr->getName() << " To a VTK File";
       VTK_WRITE_RECTILINEAR_DATA(UInt8ArrayType, iDataPtr, "unsigned_char", quint8, "%d ");
       VTK_WRITE_RECTILINEAR_DATA(Int8ArrayType, iDataPtr, "char", int8_t, "%d ");

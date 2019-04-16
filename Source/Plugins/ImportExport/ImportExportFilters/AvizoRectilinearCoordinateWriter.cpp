@@ -75,7 +75,7 @@ AvizoRectilinearCoordinateWriter::~AvizoRectilinearCoordinateWriter() = default;
 // -----------------------------------------------------------------------------
 void AvizoRectilinearCoordinateWriter::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, AvizoRectilinearCoordinateWriter, "*.am", "Amira Mesh"));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Write Binary File", WriteBinaryFile, FilterParameter::Parameter, AvizoRectilinearCoordinateWriter));
@@ -111,17 +111,17 @@ void AvizoRectilinearCoordinateWriter::initialize()
 // -----------------------------------------------------------------------------
 void AvizoRectilinearCoordinateWriter::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer(this, getFeatureIdsArrayPath().getDataContainerName(), false);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   ImageGeom::Pointer image = dc->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || nullptr == image.get())
+  if(getErrorCode() < 0 || nullptr == image.get())
   {
     return;
   }
@@ -158,10 +158,10 @@ void AvizoRectilinearCoordinateWriter::preflight()
 // -----------------------------------------------------------------------------
 void AvizoRectilinearCoordinateWriter::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -174,23 +174,21 @@ void AvizoRectilinearCoordinateWriter::execute()
   if(!dir.mkpath(parentPath))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    setErrorCondition(-93000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-93000, ss);
     return;
   }
 
   FILE* avizoFile = fopen(getOutputFile().toLatin1().data(), "wb");
   if(nullptr == avizoFile)
   {
-    setErrorCondition(-93001);
     QString ss = QObject::tr("Error creating file '%1'").arg(getOutputFile());
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-93001, ss);
     return;
   }
 
   generateHeader(avizoFile);
 
-  err = writeData(avizoFile);
+  int err = writeData(avizoFile);
 
   fclose(avizoFile);
 
@@ -232,10 +230,10 @@ void AvizoRectilinearCoordinateWriter::generateHeader(FILE* f)
   fprintf(f, "     Units {\n");
   fprintf(f, "         Coordinates \"%s\"\n", getUnits().toLatin1().data());
   fprintf(f, "     }\n");
-  float origin[3];
-  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getOrigin(origin);
-  float res[3];
-  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getResolution(res);
+  //  FloatVec3Type origin;
+  //  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getOrigin(origin);
+  //  FloatVec3Type res;
+  //  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getSpacing(res);
 
   fprintf(f, "     CoordType \"rectilinear\"\n");
   fprintf(f, "}\n\n");
@@ -254,10 +252,10 @@ int AvizoRectilinearCoordinateWriter::writeData(FILE* f)
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   size_t dims[3];
   std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
-  float origin[3];
+  FloatVec3Type origin;
   m->getGeometryAs<ImageGeom>()->getOrigin(origin);
-  float res[3];
-  m->getGeometryAs<ImageGeom>()->getResolution(res);
+  FloatVec3Type res;
+  m->getGeometryAs<ImageGeom>()->getSpacing(res);
 
   QString start("@1 # FeatureIds in z, y, x with X moving fastest, then Y, then Z\n");
   fprintf(f, "%s", start.toLatin1().data());

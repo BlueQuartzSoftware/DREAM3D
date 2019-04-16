@@ -13,6 +13,13 @@
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -33,8 +40,8 @@ ComputeFeatureRect::~ComputeFeatureRect() = default;
 // -----------------------------------------------------------------------------
 void ComputeFeatureRect::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -43,7 +50,7 @@ void ComputeFeatureRect::initialize()
 // -----------------------------------------------------------------------------
 void ComputeFeatureRect::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Any, IGeometry::Type::Any);
@@ -65,8 +72,8 @@ void ComputeFeatureRect::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ComputeFeatureRect::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   IGeometry::Pointer igeom = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
@@ -78,7 +85,7 @@ void ComputeFeatureRect::dataCheck()
   }
 
   cDims[0] = 6;
-  m_FeatureRectPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, getFeatureRectArrayPath(), 0, cDims);
+  m_FeatureRectPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, getFeatureRectArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_FeatureRectPtr.lock())
   {
     m_FeatureRect = m_FeatureRectPtr.lock()->getPointer(0);
@@ -107,7 +114,7 @@ void ComputeFeatureRect::execute()
 {
   initialize();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -160,9 +167,8 @@ void ComputeFeatureRect::execute()
 
         if(featureId >= corners->getNumberOfTuples())
         {
-          setErrorCondition(-31000);
           QString ss = QObject::tr("The feature attribute matrix '%1' has a smaller tuple count than the maximum feature id in '%2'").arg(featureAM->getName()).arg(cellFeatureIds->getName());
-          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+          setErrorCondition(-31000, ss);
           return;
         }
 

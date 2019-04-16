@@ -32,17 +32,13 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-
-
-
-
 #pragma once
 
 #include <QtCore/QString>
 #include <QtCore/QVector>
 #include <QtCore/QTextStream>
+
+#include "SIMPLib/Common/SIMPLArray.hpp"
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLib.h"
@@ -203,9 +199,9 @@ class EbsdLib_EXPORT AngPhase
 
 struct Ang_Private_Data
 {
-  QVector<size_t> dims;
-  QVector<float> resolution;
-  QVector<float> origin;
+  SizeVec3Type dims;
+  FloatVec3Type resolution;
+  FloatVec3Type origin;
   QVector<AngPhase::Pointer> phases;
   int32_t units;
 };

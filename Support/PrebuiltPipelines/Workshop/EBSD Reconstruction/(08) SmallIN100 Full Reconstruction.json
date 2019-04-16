@@ -63,7 +63,7 @@
         "OutputType": 2
     },
     "03": {
-        "AlignmentShiftFileName": "/Users/mjackson",
+        "AlignmentShiftFileName": "",
         "CellPhasesArrayPath": {
             "Attribute Matrix Name": "EBSD Scan Data",
             "Data Array Name": "Phases",
@@ -107,7 +107,7 @@
         }
     },
     "05": {
-        "AlignmentShiftFileName": "/Users/mjackson",
+        "AlignmentShiftFileName": "",
         "FilterVersion": "6.5.77",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Align Sections (Feature Centroid)",

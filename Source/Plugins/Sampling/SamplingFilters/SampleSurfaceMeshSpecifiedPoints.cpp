@@ -47,6 +47,13 @@
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataContainerID = 1
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -68,7 +75,7 @@ SampleSurfaceMeshSpecifiedPoints::~SampleSurfaceMeshSpecifiedPoints() = default;
 void SampleSurfaceMeshSpecifiedPoints::setupFilterParameters()
 {
   SampleSurfaceMesh::setupFilterParameters();
-  FilterParameterVector parameters = getFilterParameters();
+  FilterParameterVectorType parameters = getFilterParameters();
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Specified Points File", InputFilePath, FilterParameter::Parameter, SampleSurfaceMeshSpecifiedPoints, "*.raw, *.bin"));
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Sampled Values File", OutputFilePath, FilterParameter::Parameter, SampleSurfaceMeshSpecifiedPoints, "*.txt"));
   setFilterParameters(parameters);
@@ -91,8 +98,8 @@ void SampleSurfaceMeshSpecifiedPoints::readFilterParameters(AbstractFilterParame
 // -----------------------------------------------------------------------------
 void SampleSurfaceMeshSpecifiedPoints::updateVertexInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   if(nullptr != m_FeatureIdsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
@@ -112,22 +119,21 @@ void SampleSurfaceMeshSpecifiedPoints::initialize()
 // -----------------------------------------------------------------------------
 void SampleSurfaceMeshSpecifiedPoints::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
   DataArrayPath tempPath;
 
   if(m_InputFilePath.isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
+    setErrorCondition(-1, ss);
   }
 
   FileSystemPathHelper::CheckOutputFile(this, "Output File Path", getOutputFilePath(), true);
 
-  DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "SpecifiedPoints");
-  if(getErrorCondition() < 0 || nullptr == v.get())
+  DataContainer::Pointer v = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, "SpecifiedPoints", DataContainerID);
+  if(getErrorCode() < 0 || nullptr == v.get())
   {
     return;
   }
@@ -136,7 +142,7 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
   v->setGeometry(vertices);
 
   QVector<size_t> tDims(1, 0);
-  v->createNonPrereqAttributeMatrix(this, "SpecifiedPointsData", tDims, AttributeMatrix::Type::Vertex);
+  v->createNonPrereqAttributeMatrix(this, "SpecifiedPointsData", tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID21);
 
   QVector<size_t> cDims(1, 1);
   tempPath.update("SpecifiedPoints", "SpecifiedPointsData", "FeatureIds");
@@ -179,8 +185,7 @@ VertexGeom::Pointer SampleSurfaceMeshSpecifiedPoints::generate_points()
   if(m_NumPoints <= 0)
   {
     QString ss = QObject::tr("Number of points to sample (%1) must be positive").arg(m_NumPoints);
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
     return VertexGeom::NullPointer();
   }
 
@@ -222,10 +227,10 @@ void SampleSurfaceMeshSpecifiedPoints::assign_points(Int32ArrayType::Pointer iAr
 // -----------------------------------------------------------------------------
 void SampleSurfaceMeshSpecifiedPoints::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

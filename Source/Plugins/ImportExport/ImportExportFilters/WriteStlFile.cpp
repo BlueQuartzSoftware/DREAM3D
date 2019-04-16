@@ -71,7 +71,7 @@ WriteStlFile::~WriteStlFile() = default;
 // -----------------------------------------------------------------------------
 void WriteStlFile::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_OUTPUT_PATH_FP("Output STL Directory", OutputStlDirectory, FilterParameter::Parameter, WriteStlFile));
   parameters.push_back(SIMPL_NEW_STRING_FP("STL File Prefix", OutputStlPrefix, FilterParameter::Parameter, WriteStlFile));
   // QStringList linkedProps("SurfaceMeshFacePhasesArrayPath");
@@ -139,22 +139,21 @@ void WriteStlFile::initialize()
 // -----------------------------------------------------------------------------
 void WriteStlFile::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 
   QVector<IDataArray::Pointer> dataArrays;
 
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(triangles->getTriangles());
   }
 
   if(m_OutputStlDirectory.isEmpty())
   {
-    setErrorCondition(-1003);
-    notifyErrorMessage(getHumanLabel(), "The output directory must be set", -1003);
+    setErrorCondition(-1003, "The output directory must be set");
   }
 
   QVector<size_t> cDims(1, 2);
@@ -164,7 +163,7 @@ void WriteStlFile::dataCheck()
   {
     m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock());
   }
@@ -177,7 +176,7 @@ void WriteStlFile::dataCheck()
     {
       m_SurfaceMeshFacePhases = m_SurfaceMeshFacePhasesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() >= 0)
+    if(getErrorCode() >= 0)
     {
       dataArrays.push_back(m_SurfaceMeshFacePhasesPtr.lock());
     }
@@ -205,10 +204,10 @@ void WriteStlFile::preflight()
 void WriteStlFile::execute()
 {
   int32_t err = 0;
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -219,8 +218,7 @@ void WriteStlFile::execute()
   if(!stlDir.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(getOutputStlDirectory());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
     return;
   }
 
@@ -232,8 +230,7 @@ void WriteStlFile::execute()
   if(nTriangles > std::numeric_limits<int32_t>::max())
   {
     QString ss = QObject::tr("The number of triangles is %1, but the STL specification only supports triangle counts up to %2").arg(nTriangles).arg(std::numeric_limits<int32_t>::max());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
     return;
   }
 
@@ -286,7 +283,7 @@ void WriteStlFile::execute()
     FILE* f = fopen(filename.toLatin1().data(), "wb");
     {
       QString ss = QObject::tr("Writing STL for Feature Id %1").arg(spin);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyStatusMessage(ss);
     }
 
     QString header = "DREAM3D Generated For Feature ID " + QString::number(spin);
@@ -359,7 +356,7 @@ void WriteStlFile::execute()
       if(totalWritten != 50)
       {
         QString ss = QObject::tr("Error Writing STL File. Not enough elements written for Feature Id %1. Wrote %2 of 50.").arg(spin).arg(totalWritten);
-        notifyErrorMessage(getHumanLabel(), ss, -1201);
+        setErrorCondition(-1201, ss);
       }
       triCount++;
     }
@@ -367,8 +364,8 @@ void WriteStlFile::execute()
     err = writeNumTrianglesToFile(filename, triCount);
   }
 
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 }
 
 // -----------------------------------------------------------------------------

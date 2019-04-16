@@ -69,7 +69,7 @@ FindBoundaryCells::~FindBoundaryCells() = default;
 // -----------------------------------------------------------------------------
 void FindBoundaryCells::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("Ignore Feature 0", IgnoreFeatureZero, FilterParameter::Parameter, FindBoundaryCells));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Include Volume Boundary", IncludeVolumeBoundary, FilterParameter::Parameter, FindBoundaryCells));
@@ -109,8 +109,8 @@ void FindBoundaryCells::initialize()
 // -----------------------------------------------------------------------------
 void FindBoundaryCells::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   DataArrayPath tempPath;
 
@@ -151,10 +151,10 @@ void FindBoundaryCells::preflight()
 // -----------------------------------------------------------------------------
 void FindBoundaryCells::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

@@ -182,7 +182,7 @@ GenerateFaceSchuhMisorientationColoring::~GenerateFaceSchuhMisorientationColorin
 // -----------------------------------------------------------------------------
 void GenerateFaceSchuhMisorientationColoring::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   {
     DataArraySelectionFilterParameter::RequirementType req;
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("SurfaceMeshFaceLabels", SurfaceMeshFaceLabelsArrayPath, FilterParameter::RequiredArray, GenerateFaceSchuhMisorientationColoring, req));
@@ -226,11 +226,11 @@ void GenerateFaceSchuhMisorientationColoring::readFilterParameters(AbstractFilte
 void GenerateFaceSchuhMisorientationColoring::dataCheckSurfaceMesh()
 {
   DataArrayPath tempPath;
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -258,8 +258,8 @@ void GenerateFaceSchuhMisorientationColoring::dataCheckSurfaceMesh()
 void GenerateFaceSchuhMisorientationColoring::dataCheckVoxel()
 {
   DataArrayPath tempPath;
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> dims(1, 4);
   m_AvgQuatsPtr =
@@ -303,21 +303,21 @@ void GenerateFaceSchuhMisorientationColoring::preflight()
 // -----------------------------------------------------------------------------
 void GenerateFaceSchuhMisorientationColoring::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
+  clearErrorCode();
+  clearWarningCode();
   dataCheckSurfaceMesh();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   dataCheckVoxel();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), "Starting");
+  notifyStatusMessage("Starting");
 
   // Run the data check to allocate the memory for the centroid array
   int64_t numTriangles = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();

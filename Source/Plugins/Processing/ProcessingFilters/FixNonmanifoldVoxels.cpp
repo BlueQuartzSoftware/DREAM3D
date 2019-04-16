@@ -30,8 +30,8 @@ FixNonmanifoldVoxels::~FixNonmanifoldVoxels() = default;
 // -----------------------------------------------------------------------------
 void FixNonmanifoldVoxels::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -40,7 +40,7 @@ void FixNonmanifoldVoxels::initialize()
 // -----------------------------------------------------------------------------
 void FixNonmanifoldVoxels::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Category::Element);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Feature Ids", FeatureIdsArrayPath, FilterParameter::RequiredArray, FixNonmanifoldVoxels, req));
@@ -53,16 +53,15 @@ void FixNonmanifoldVoxels::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void FixNonmanifoldVoxels::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   IGeometry::Pointer geom = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
   ImageGeom::Pointer imageGeom = std::dynamic_pointer_cast<ImageGeom>(geom);
   if(nullptr == imageGeom)
   {
-    setErrorCondition(-12001);
     QString ss = QObject::tr("This filter only works on ImageGeometry.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-12001, ss);
   }
 
   QVector<size_t> cDims(1, 1);

@@ -3,29 +3,42 @@
         "AngleRepresentation": 0,
         "CellAttributeMatrixName": "EBSD Scan Data",
         "CellEnsembleAttributeMatrixName": "Phase Data",
-        "DataContainerName": "Small IN100",
-        "FilterVersion": "6.4.440",
+        "DataContainerName": {
+            "Attribute Matrix Name": "",
+            "Data Array Name": "",
+            "Data Container Name": "Small IN100"
+        },
+        "FilterVersion": "6.5.115",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Import H5EBSD File",
         "Filter_Name": "ReadH5Ebsd",
+        "Filter_Uuid": "{4ef7f56b-616e-5a80-9e68-1da8f35ad235}",
         "InputFile": "Data/Output/Reconstruction/SmallIN100.h5ebsd",
         "RefFrameZDir": 1,
         "SelectedArrayNames": [
-            "Phases",
-            "Image Quality",
+            "Confidence Index",
+            "Phi2",
             "Fit",
-            "EulerAngles",
             "SEM Signal",
-            "Confidence Index"
+            "EulerAngles",
+            "Phases",
+            "Phi",
+            "Phi1",
+            "PhaseData",
+            "Image Quality"
         ],
         "UseTransformations": 1,
         "ZEndIndex": 117,
         "ZStartIndex": 1
     },
     "1": {
-        "FilterVersion": "1.0.858",
+        "FilterVersion": "1.2.802",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
+        "Filter_Uuid": "{3fcd4c43-9d75-5b86-aad4-4441bc914f37}",
         "OutputFile": "Data/Output/Reconstruction/SmallIN100.dream3d",
+        "WriteTimeSeries": 0,
         "WriteXdmfFile": 1
     },
     "PipelineBuilder": {

@@ -100,7 +100,7 @@ public:
     DataContainerArray::Pointer dca = DataContainerArray::New();
 
     DataContainer::Pointer tdc = DataContainer::New(SIMPL::Defaults::TriangleDataContainerName);
-    dca->addDataContainer(tdc);
+    dca->addOrReplaceDataContainer(tdc);
 
     // Basic idea is to create a surface mesh of a rectangular prism with edge lengths of 3x1x1; the
     // centroid should just be the average locations from its 8 vertices
@@ -193,13 +193,13 @@ public:
     QVector<size_t> tDims(1, 12);
 
     AttributeMatrix::Pointer faceAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::FaceAttributeMatrixName, AttributeMatrix::Type::Face);
-    tdc->addAttributeMatrix(SIMPL::Defaults::FaceAttributeMatrixName, faceAttrMat);
+    tdc->addOrReplaceAttributeMatrix(faceAttrMat);
     tDims[0] = 2;
     AttributeMatrix::Pointer featAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::FaceFeatureAttributeMatrixName, AttributeMatrix::Type::FaceFeature);
-    tdc->addAttributeMatrix(SIMPL::Defaults::FaceFeatureAttributeMatrixName, featAttrMat);
+    tdc->addOrReplaceAttributeMatrix(featAttrMat);
     QVector<size_t> cDims(1, 2);
     Int32ArrayType::Pointer faceLabels = Int32ArrayType::CreateArray(12, cDims, SIMPL::FaceData::SurfaceMeshFaceLabels);
-    faceAttrMat->addAttributeArray(SIMPL::FaceData::SurfaceMeshFaceLabels, faceLabels);
+    faceAttrMat->insertOrAssign(faceLabels);
     int32_t* faceLabelsPtr = faceLabels->getPointer(0);
 
     faceLabelsPtr[2 * 0 + 0] = -1;
@@ -268,7 +268,7 @@ public:
     }
 
     centroidsFilter->execute();
-    int32_t err = centroidsFilter->getErrorCondition();
+    int32_t err = centroidsFilter->getErrorCode();
     DREAM3D_REQUIRE_EQUAL(err, 0);
 
     AttributeMatrix::Pointer faceFeatAttrMat = tdc->getAttributeMatrix(SIMPL::Defaults::FaceFeatureAttributeMatrixName);

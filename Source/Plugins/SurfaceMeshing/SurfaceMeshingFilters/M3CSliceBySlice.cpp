@@ -322,13 +322,13 @@ M3CSliceBySlice::~M3CSliceBySlice() = default;
 // -----------------------------------------------------------------------------
 void M3CSliceBySlice::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_BOOL_FP("Delete Temp Files", DeleteTempFiles, FilterParameter::Uncategorized, M3CSliceBySlice));
   parameters.push_back(SeparatorFilterParameter::New("Required Information", FilterParameter::Uncategorized));
   parameters.push_back(DataArraySelectionFilterParameter::New("FeatureIds", "FeatureIdsArrayPath", getFeatureIdsArrayPath(), FilterParameter::Uncategorized,
                                                               SIMPL_BIND_SETTER(M3CSliceBySlice, this, FeatureIdsArrayPath), SIMPL_BIND_GETTER(M3CSliceBySlice, this, FeatureIdsArrayPath)));
   parameters.push_back(SeparatorFilterParameter::New("Created Information", FilterParameter::Uncategorized));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Surface Data Container", SurfaceDataContainerName, FilterParameter::Uncategorized, M3CSliceBySlice));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Surface Data Container", SurfaceDataContainerName, FilterParameter::Uncategorized, M3CSliceBySlice));
   parameters.push_back(SIMPL_NEW_STRING_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, FilterParameter::Uncategorized, M3CSliceBySlice));
   parameters.push_back(SIMPL_NEW_STRING_FP("Face Attribute Matrix", FaceAttributeMatrixName, FilterParameter::Uncategorized, M3CSliceBySlice));
   parameters.push_back(SIMPL_NEW_STRING_FP("Face Labels", FaceLabelsArrayName, FilterParameter::Uncategorized, M3CSliceBySlice));
@@ -342,7 +342,7 @@ void M3CSliceBySlice::setupFilterParameters()
 void M3CSliceBySlice::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSurfaceDataContainerName(reader->readString("SurfaceDataContainerName", getSurfaceDataContainerName()));
+  setSurfaceDataContainerName(reader->readDataArrayPath("SurfaceDataContainerName", getSurfaceDataContainerName()));
   setVertexAttributeMatrixName(reader->readString("VertexAttributeMatrixName", getVertexAttributeMatrixName()));
   setFaceAttributeMatrixName(reader->readString("FaceAttributeMatrixName", getFaceAttributeMatrixName()));
   setSurfaceMeshNodeTypesArrayName(reader->readString("SurfaceMeshNodeTypesArrayName", getSurfaceMeshNodeTypesArrayName()));
@@ -365,8 +365,8 @@ void M3CSliceBySlice::initialize()
 void M3CSliceBySlice::dataCheck()
 {
   DataArrayPath tempPath;
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> dims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
@@ -411,7 +411,7 @@ void M3CSliceBySlice::preflight()
   binaryReader->preflight();
   if(binaryReader->getErrorCondition() < 0)
   {
-    setErrorCondition(binaryReader->getErrorCondition());
+    setErrorCondition(binaryReader->getErrorCondition(), "Binary Reader failed its preflight.");
   }
   setInPreflight(false);
 }
@@ -422,8 +422,8 @@ void M3CSliceBySlice::preflight()
 void M3CSliceBySlice::execute()
 {
   int err = 0;
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
   if(getErrorCondition() < 0)
   {
@@ -536,14 +536,13 @@ void M3CSliceBySlice::execute()
   {
     QString ss = QObject::tr(" Layers %1 and %2 of %3").arg(i).arg(i + 1).arg(sliceCount);
     // notifyProgressValue((i * 90 / sliceCount));
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(ss);
 
     if(getCancel())
     {
 
       ss = QObject::tr("Cancelling filter");
-      setErrorCondition(-1);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-1, ss);
       break;
     }
 
@@ -610,8 +609,7 @@ void M3CSliceBySlice::execute()
     {
 
       ss = QObject::tr("Error writing Nodes file '%1'").arg(nodesFile);
-      setErrorCondition(-1);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-1, ss);
       return;
     }
 
@@ -620,8 +618,7 @@ void M3CSliceBySlice::execute()
     {
 
       ss = QObject::tr("Error writing triangles file '%1'").arg(trianglesFile);
-      setErrorCondition(-1);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-1, ss);
       return;
     }
     cNodeID = nNodes;
@@ -660,7 +657,7 @@ void M3CSliceBySlice::execute()
   binaryReader->execute();
   if(binaryReader->getErrorCondition() < 0)
   {
-    setErrorCondition(binaryReader->getErrorCondition());
+    setErrorCondition(binaryReader->getErrorCondition(), "Binary Reader failed during execution.");
   }
 
   // This will possibly delete the triangles and Nodes file depending on the
@@ -673,7 +670,7 @@ void M3CSliceBySlice::execute()
     renumberVoxelFeatureIds(renumberFeatureValue);
   }
 
-  notifyStatusMessage(getHumanLabel(), "Surface Meshing Complete");
+  notifyStatusMessage("Surface Meshing Complete");
 }
 
 // -----------------------------------------------------------------------------

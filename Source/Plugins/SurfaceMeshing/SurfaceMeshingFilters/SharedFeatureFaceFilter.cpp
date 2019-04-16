@@ -44,6 +44,13 @@
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID20 = 20,
+  AttributeMatrixID21 = 21,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -67,7 +74,7 @@ SharedFeatureFaceFilter::~SharedFeatureFaceFilter() = default;
 void SharedFeatureFaceFilter::setupFilterParameters()
 {
   SurfaceMeshFilter::setupFilterParameters();
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -109,21 +116,21 @@ void SharedFeatureFaceFilter::initialize()
 // -----------------------------------------------------------------------------
 void SharedFeatureFaceFilter::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 
   DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer(this, m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName(), false);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer facefeatureAttrMat = sm->createNonPrereqAttributeMatrix(this, getFaceFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::FaceFeature);
-  if(getErrorCondition() < 0 || nullptr == facefeatureAttrMat.get())
+  AttributeMatrix::Pointer facefeatureAttrMat = sm->createNonPrereqAttributeMatrix(this, getFaceFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::FaceFeature, AttributeMatrixID21);
+  if(getErrorCode() < 0 || nullptr == facefeatureAttrMat.get())
   {
     return;
   }
@@ -181,10 +188,10 @@ void SharedFeatureFaceFilter::preflight()
 // -----------------------------------------------------------------------------
 void SharedFeatureFaceFilter::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

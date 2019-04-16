@@ -127,11 +127,11 @@ void StatsGeneratorWidget::setupGui()
 
     QVector<size_t> tDims(1, ensembles);
     m_CellEnsembleAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellEnsembleAttributeMatrixName, AttributeMatrix::Type::CellEnsemble);
-    m_CellEnsembleAttrMat->addAttributeArray(sda->getName(), sda);
+    m_CellEnsembleAttrMat->insertOrAssign(sda);
     UInt32ArrayType::Pointer phaseTypes = m_Filter->getPhaseTypes();
-    m_CellEnsembleAttrMat->addAttributeArray(phaseTypes->getName(), phaseTypes);
+    m_CellEnsembleAttrMat->insertOrAssign(phaseTypes);
     UInt32ArrayType::Pointer crystalStructures = m_Filter->getCrystalStructures();
-    m_CellEnsembleAttrMat->addAttributeArray(crystalStructures->getName(), crystalStructures);
+    m_CellEnsembleAttrMat->insertOrAssign(crystalStructures);
 
     for(size_t phase = 1; phase < ensembles; ++phase)
     {
@@ -301,21 +301,19 @@ void StatsGeneratorWidget::beforePreflight()
     {
       if(!sgwidget->getDataHasBeenGenerated())
       {
-        m_Filter->setErrorCondition(-1);
         QString ss = QObject::tr("Statistics data needs to be generated for phase %1 (%2)\n"
                                  "Click the Create Data button to generate the statistics data")
                          .arg(sgwidget->getPhaseIndex())
                          .arg(sgwidget->getTabTitle());
-        m_Filter->notifyErrorMessage(m_Filter->getHumanLabel(), ss, m_Filter->getErrorCondition());
+        m_Filter->setErrorCondition(-1, ss);
       }
       if(sgwidget->getBulkLoadFailure())
       {
-        m_Filter->setErrorCondition(-1);
         QString ss = QObject::tr("A valid angles file is needed to bulk load orientaiton weights and spreads for phase %1 (%2)\n"
                                  "Select an angles file and click the Load Data button to load the orientations")
                          .arg(sgwidget->getPhaseIndex())
                          .arg(sgwidget->getTabTitle());
-        m_Filter->notifyErrorMessage(m_Filter->getHumanLabel(), ss, m_Filter->getErrorCondition());
+        m_Filter->setErrorCondition(-1, ss);
       }
     }
   }
@@ -645,28 +643,28 @@ DataContainerArray::Pointer StatsGeneratorWidget::generateDataContainerArray()
   int nPhases = phaseTabs->count() + 1;
   DataContainerArray::Pointer dca = DataContainerArray::New();
   DataContainer::Pointer m = DataContainer::New(SIMPL::Defaults::StatsGenerator);
-  dca->addDataContainer(m);
+  dca->addOrReplaceDataContainer(m);
 
   QVector<size_t> tDims(1, nPhases);
   AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellEnsembleAttributeMatrixName, AttributeMatrix::Type::CellEnsemble);
-  m->addAttributeMatrix(SIMPL::Defaults::CellEnsembleAttributeMatrixName, cellEnsembleAttrMat);
+  m->addOrReplaceAttributeMatrix(cellEnsembleAttrMat);
 
   StatsDataArray::Pointer statsDataArray = StatsDataArray::New();
-  statsDataArray->resize(nPhases);
-  cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::Statistics, statsDataArray);
+  statsDataArray->resizeTuples(nPhases);
+  cellEnsembleAttrMat->insertOrAssign(statsDataArray);
 
   QVector<size_t> cDims(1, 1);
   UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::CrystalStructures);
   crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
-  cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::CrystalStructures, crystalStructures);
+  cellEnsembleAttrMat->insertOrAssign(crystalStructures);
 
   UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::PhaseTypes);
   phaseTypes->setValue(0, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown));
-  cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseTypes, phaseTypes);
+  cellEnsembleAttrMat->insertOrAssign(phaseTypes);
 
   StringDataArray::Pointer phaseNames = StringDataArray::CreateArray(tDims[0], SIMPL::EnsembleData::PhaseName);
   phaseNames->setValue(0, PhaseType::UnknownStr());
-  cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::PhaseName, phaseNames);
+  cellEnsembleAttrMat->insertOrAssign(phaseNames);
 
   double phaseFractionTotal = 0.0;
   for(int p = 0; p < phaseTabs->count(); ++p)
@@ -839,10 +837,10 @@ void StatsGeneratorWidget::on_openStatsFile_clicked()
 
   DataContainerArray::Pointer dca = DataContainerArray::New();
   DataContainer::Pointer m = DataContainer::New(SIMPL::Defaults::StatsGenerator);
-  dca->addDataContainer(m);
+  dca->addOrReplaceDataContainer(m);
   QVector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellEnsembleAttributeMatrixName, AttributeMatrix::Type::CellEnsemble);
-  m->addAttributeMatrix(SIMPL::Defaults::CellEnsembleAttributeMatrixName, cellEnsembleAttrMat);
+  m->addOrReplaceAttributeMatrix(cellEnsembleAttrMat);
 
   hid_t fileId = QH5Utilities::openFile(h5file, true); // Open the file Read Only
   if(fileId < 0)

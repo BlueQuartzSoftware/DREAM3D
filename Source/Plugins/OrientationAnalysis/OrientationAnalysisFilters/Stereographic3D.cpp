@@ -48,6 +48,13 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 /**
  * @brief The GenerateCoordinatesImpl class implements a threaded algorithm that computes the IPF
  * colors for each element in a geometry
@@ -79,8 +86,7 @@ public:
       {
         m_Filter->setCancel(true);
         QString ss = QObject::tr("The scalar value of a quaterion was <= -1.0. The value was %1").arg(m_Quats[quatIndex + 3]);
-        m_Filter->setErrorCondition(-95000);
-        m_Filter->notifyErrorMessage(m_Filter->getHumanLabel(), ss, m_Filter->getErrorCondition());
+        m_Filter->setErrorCondition(-95000, ss);
         return;
       }
       if(m_Quats[quatIndex + 3] != 0.0f)
@@ -133,8 +139,8 @@ Stereographic3D::~Stereographic3D() = default;
 // -----------------------------------------------------------------------------
 void Stereographic3D::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -143,7 +149,7 @@ void Stereographic3D::initialize()
 // -----------------------------------------------------------------------------
 void Stereographic3D::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Float, 4, AttributeMatrix::Type::Any, IGeometry::Type::Any);
   parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternions", QuatsArrayPath, FilterParameter::RequiredArray, Stereographic3D, req));
@@ -170,8 +176,8 @@ void Stereographic3D::readFilterParameters(AbstractFilterParametersReader* reade
 // -----------------------------------------------------------------------------
 void Stereographic3D::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   QVector<DataArrayPath> dataArrayPaths;
 
   QVector<size_t> cDims(1, 1);
@@ -188,8 +194,7 @@ void Stereographic3D::dataCheck()
   cDims[0] = 3;
   DataArrayPath path = getQuatsArrayPath();
   path.setDataArrayName(getCoordinatesArrayName());
-  m_CellCoordinatesPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter, float>(this, path, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_CellCoordinatesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter, float>(this, path, 0, cDims, "", DataArrayID31);
   if(nullptr != m_CellCoordinatesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_CellCoordinates = m_CellCoordinatesPtr.lock()->getPointer(0);
@@ -220,7 +225,7 @@ void Stereographic3D::execute()
 {
   initialize();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

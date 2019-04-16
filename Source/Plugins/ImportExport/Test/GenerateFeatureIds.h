@@ -39,10 +39,10 @@ public:
   }
   virtual void execute() override
   {
-    setErrorCondition(0);
-    setWarningCondition(0);
+    clearErrorCode();
+    clearWarningCode();
     dataCheck();
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
@@ -91,15 +91,15 @@ private:
 
   void dataCheck()
   {
-    setErrorCondition(0);
-    setWarningCondition(0);
+    clearErrorCode();
+    clearWarningCode();
     DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, getDataContainerName());
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
     AttributeMatrix::Pointer cellAttrMat = m->getPrereqAttributeMatrix(this, getCellAttributeMatrixName(), -301);
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
@@ -213,13 +213,13 @@ protected:
     int64_t ny = m_YDim;
     int64_t nz = m_ZDim;
     m->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(nx, ny, nz));
-    getDataContainerArray()->addDataContainer(m);
+    getDataContainerArray()->addOrReplaceDataContainer(m);
     QVector<size_t> tDims(3, 0);
     tDims[0] = nx;
     tDims[1] = ny;
     tDims[2] = nz;
     AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
-    m->addAttributeMatrix(attrMat->getName(), attrMat);
+    m->addOrReplaceAttributeMatrix(attrMat);
   }
 
 private:

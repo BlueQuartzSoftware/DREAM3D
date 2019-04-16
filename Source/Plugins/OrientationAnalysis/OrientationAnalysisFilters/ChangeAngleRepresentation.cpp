@@ -106,7 +106,7 @@ ChangeAngleRepresentation::~ChangeAngleRepresentation() = default;
 // -----------------------------------------------------------------------------
 void ChangeAngleRepresentation::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
@@ -154,8 +154,8 @@ void ChangeAngleRepresentation::initialize()
 // -----------------------------------------------------------------------------
 void ChangeAngleRepresentation::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> cDims(1, 3);
   m_CellEulerAnglesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getCellEulerAnglesArrayPath(),
@@ -184,10 +184,10 @@ void ChangeAngleRepresentation::preflight()
 // -----------------------------------------------------------------------------
 void ChangeAngleRepresentation::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

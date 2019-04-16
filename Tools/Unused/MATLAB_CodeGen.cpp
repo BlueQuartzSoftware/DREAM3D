@@ -68,12 +68,12 @@ void GenerateCodeForFilter(const QString& outDir, AbstractFilter::Pointer filter
   f.open(QFile::WriteOnly);
   QTextStream out(&f);
 
-  QVector<FilterParameter::Pointer> options = filter->getFilterParameters();
+  FilterParameterVectorType options = filter->getFilterParameters();
 
   out << "function [ Filter_Parts ] = " << filterClassName << '\n';
 
   int i = 1;
-  for(QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter)
+  for(FilterParameterVectorType::iterator iter = options.begin(); iter != options.end(); ++iter)
   {
     SeparatorFilterParameter::Pointer sepFiltParam = SeparatorFilterParameter::New();
     FilterParameter* option = (*iter).get();

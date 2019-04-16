@@ -120,10 +120,9 @@ FindOrientationFieldCurl::FindOrientationFieldCurl()
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
-  m_CurlSize.x = 1;
-  m_CurlSize.y = 1;
-  m_CurlSize.z = 1;
-
+  m_CurlSize[0] = 1;
+  m_CurlSize[1] = 1;
+  m_CurlSize[2] = 1;
 }
 
 // -----------------------------------------------------------------------------
@@ -136,7 +135,7 @@ FindOrientationFieldCurl::~FindOrientationFieldCurl() = default;
 // -----------------------------------------------------------------------------
 void FindOrientationFieldCurl::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Curl Radius (Pixels)", CurlSize, FilterParameter::Parameter, FindOrientationFieldCurl));
 
@@ -183,8 +182,8 @@ void FindOrientationFieldCurl::initialize()
 void FindOrientationFieldCurl::dataCheck()
 {
   DataArrayPath tempPath;
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> dims(1, 1);
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(),
@@ -193,13 +192,13 @@ void FindOrientationFieldCurl::dataCheck()
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getCellPhasesArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || nullptr == image.get())
+  if(getErrorCode() < 0 || nullptr == image.get())
   {
     return;
   }
@@ -249,10 +248,10 @@ void FindOrientationFieldCurl::preflight()
 // -----------------------------------------------------------------------------
 void FindOrientationFieldCurl::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -372,7 +371,7 @@ void FindOrientationFieldCurl::execute()
           kappa13 = 0;
           kappa23 = 0;
           kappa33 = 0;
-          for(int j = -m_CurlSize.z; j < m_CurlSize.z; j++)
+          for(int j = -m_CurlSize[2]; j < m_CurlSize[2]; j++)
           {
             good = 1;
             if(plane + j < 0)
@@ -401,7 +400,7 @@ void FindOrientationFieldCurl::execute()
           }
 
           count = 0;
-          for(int k = -m_CurlSize.y; k < m_CurlSize.y; k++)
+          for(int k = -m_CurlSize[1]; k < m_CurlSize[1]; k++)
           {
             good = 1;
             if(row + k < 0)
@@ -429,7 +428,7 @@ void FindOrientationFieldCurl::execute()
             count = 0;
           }
 
-          for(int l = -m_CurlSize.x; l < m_CurlSize.z; l++)
+          for(int l = -m_CurlSize[0]; l < m_CurlSize[2]; l++)
           {
             good = 1;
             if(col + l < 0)
@@ -471,7 +470,7 @@ void FindOrientationFieldCurl::execute()
     }
   }
 
-  notifyStatusMessage(getHumanLabel(), "FindOrientationFieldCurl Completed");
+  notifyStatusMessage("FindOrientationFieldCurl Completed");
 }
 
 // -----------------------------------------------------------------------------

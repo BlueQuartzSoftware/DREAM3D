@@ -49,6 +49,15 @@
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+  DataArrayID33 = 33,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -78,7 +87,7 @@ FindTriangleGeomShapes::~FindTriangleGeomShapes() = default;
 // -----------------------------------------------------------------------------
 void FindTriangleGeomShapes::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
   {
 	  DataArraySelectionFilterParameter::RequirementType req =
@@ -122,8 +131,8 @@ void FindTriangleGeomShapes::initialize()
 // -----------------------------------------------------------------------------
 void FindTriangleGeomShapes::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
   DataArrayPath tempPath;
 
@@ -161,8 +170,7 @@ void FindTriangleGeomShapes::dataCheck()
 
   //CREATED FEATURE DATA
   tempPath.update(getFeatureAttributeMatrixName().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getOmega3sArrayName());
-  m_Omega3sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0,
-                                                                                                                cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_Omega3sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID31);
   if(nullptr != m_Omega3sPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_Omega3s = m_Omega3sPtr.lock()->getPointer(0);
@@ -170,8 +178,7 @@ void FindTriangleGeomShapes::dataCheck()
 
   cDims[0] = 3;
   tempPath.update(getFeatureAttributeMatrixName().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getAxisLengthsArrayName());
-  m_AxisLengthsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0,
-                                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_AxisLengthsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID32);
   if(nullptr != m_AxisLengthsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_AxisLengths = m_AxisLengthsPtr.lock()->getPointer(0);
@@ -187,8 +194,7 @@ void FindTriangleGeomShapes::dataCheck()
 
   cDims[0] = 2;
   tempPath.update(getFeatureAttributeMatrixName().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getAspectRatiosArrayName());
-  m_AspectRatiosPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0,
-                                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_AspectRatiosPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID33);
   if(nullptr != m_AspectRatiosPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_AspectRatios = m_AspectRatiosPtr.lock()->getPointer(0);
@@ -333,7 +339,7 @@ void FindTriangleGeomShapes::find_moments()
   float u101 = 0.0f;
   float xx = 0.0f, yy = 0.0f, zz = 0.0f, xy = 0.0f, xz = 0.0f, yz = 0.0f;
   size_t numfeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
-  m_FeatureMoments->resize(numfeatures * 6);
+  m_FeatureMoments->resizeTuples(numfeatures * 6);
   featuremoments = m_FeatureMoments->getPointer(0);
 
   for(size_t i = 0; i < numfeatures; i++)
@@ -434,10 +440,10 @@ void FindTriangleGeomShapes::find_axes()
 
   size_t numfeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
 
-  m_FeatureMoments->resize(numfeatures * 6);
+  m_FeatureMoments->resizeTuples(numfeatures * 6);
   featuremoments = m_FeatureMoments->getPointer(0);
 
-  m_FeatureEigenVals->resize(numfeatures * 3);
+  m_FeatureEigenVals->resizeTuples(numfeatures * 3);
   featureeigenvals = m_FeatureEigenVals->getPointer(0);
 
   for(size_t i = 1; i < numfeatures; i++)
@@ -682,10 +688,10 @@ void FindTriangleGeomShapes::find_axiseulers()
 // -----------------------------------------------------------------------------
 void FindTriangleGeomShapes::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

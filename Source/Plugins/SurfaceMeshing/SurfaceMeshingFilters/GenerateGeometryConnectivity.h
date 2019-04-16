@@ -50,7 +50,7 @@ class SurfaceMeshing_EXPORT GenerateGeometryConnectivity : public SurfaceMeshFil
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(GenerateGeometryConnectivity SUPERCLASS SurfaceMeshFilter)
-    PYB11_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+    PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
     PYB11_PROPERTY(bool GenerateVertexTriangleLists READ getGenerateVertexTriangleLists WRITE setGenerateVertexTriangleLists)
     PYB11_PROPERTY(bool GenerateTriangleNeighbors READ getGenerateTriangleNeighbors WRITE setGenerateTriangleNeighbors)
 public:
@@ -60,8 +60,8 @@ public:
 
    ~GenerateGeometryConnectivity() override;
 
-   SIMPL_FILTER_PARAMETER(QString, SurfaceDataContainerName)
-   Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+   SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceDataContainerName)
+   Q_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
    SIMPL_FILTER_PARAMETER(bool, GenerateVertexTriangleLists)
    Q_PROPERTY(bool GenerateVertexTriangleLists READ getGenerateVertexTriangleLists WRITE setGenerateVertexTriangleLists)

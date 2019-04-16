@@ -51,6 +51,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DynamicChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -60,6 +61,22 @@
 #include "OrientationAnalysis/FilterParameters/OEMEbsdScanSelectionFilterParameter.h"
 
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
+
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+  AttributeMatrixID22 = 22,
+
+  //  DataArrayID31 = 31,
+  //  DataArrayID32 = 32,
+  //  DataArrayID33 = 33,
+  //  DataArrayID34 = 34,
+  //  DataArrayID35 = 35,
+  //  DataArrayID36 = 36,
+  //  DataArrayID37 = 37,
+
+  DataContainerID = 1
+};
 
 /**
  * @brief The ImportH5OimDataPrivate class is a private implementation of the ImportH5OimData class
@@ -107,10 +124,10 @@ ImportH5OimData::ImportH5OimData()
 , m_Manufacturer(Ebsd::OEM::Unknown)
 , d_ptr(new ImportH5OimDataPrivate(this))
 {
-  FloatVec3_t value;
-  value.x = 0;
-  value.y = 0;
-  value.z = 0;
+  FloatVec3Type value;
+  value[0] = 0;
+  value[1] = 0;
+  value[2] = 0;
   m_Origin = value;
 
   setPatternDims(QVector<int32_t>(2, 0)); // initialize this with a 2 element vector
@@ -135,7 +152,7 @@ SIMPL_PIMPL_PROPERTY_DEF(ImportH5OimData, QDateTime, TimeStamp_Cache)
 // -----------------------------------------------------------------------------
 void ImportH5OimData::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, ImportH5OimData, "*.h5 *.hdf5"));
 
   // parameters.push_back(DynamicChoiceFilterParameter::New("Scan Name", "ScanName", getScanName(), "FileScanNames", FilterParameter::Parameter));
@@ -146,7 +163,7 @@ void ImportH5OimData::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin (XYZ)", Origin, FilterParameter::Parameter, ImportH5OimData));
 
   parameters.push_back(SIMPL_NEW_BOOL_FP("Import Pattern Data", ReadPatternData, FilterParameter::Parameter, ImportH5OimData));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ImportH5OimData));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ImportH5OimData));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, ImportH5OimData));
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
@@ -160,7 +177,7 @@ void ImportH5OimData::setupFilterParameters()
 void ImportH5OimData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
+  setDataContainerName(reader->readDataArrayPath("DataContainerName", getDataContainerName()));
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
   setCellEnsembleAttributeMatrixName(reader->readString("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName()));
   setInputFile(reader->readString("InputFile", getInputFile()));
@@ -189,14 +206,13 @@ void ImportH5OimData::dataCheck()
   // Reset FileWasRead flag
   m_FileWasRead = false;
 
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(m_InputFile.isEmpty())
   {
     QString ss = QObject::tr("The input file must be set for property %1").arg("InputFile");
-    setErrorCondition(-380);
-    notifyErrorMessage(getHumanLabel(), ss, -1);
+    setErrorCondition(-380, ss);
     return;
   }
 
@@ -205,16 +221,14 @@ void ImportH5OimData::dataCheck()
   if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist: '%1'").arg(getInputFile());
-    setErrorCondition(-381);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-381, ss);
     return;
   }
 
   if(fi.suffix() != Ebsd::H5OIM::H5FileExt)
   {
-    setErrorCondition(-997);
     QString ss = QObject::tr("The file extension '%1' was not recognized. The reader only recognizes the .h5 file extension").arg(fi.suffix());
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-997, ss);
     return;
   }
 
@@ -222,8 +236,7 @@ void ImportH5OimData::dataCheck()
   if(m_ZSpacing <= 0)
   {
     QString ss = QObject::tr("The Z Spacing field contains a value that is non-positive.  The Z Spacing field must be set to a positive value.");
-    setErrorCondition(-382);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-382, ss);
     return;
   }
 
@@ -269,7 +282,7 @@ void ImportH5OimData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, QVe
   // Drop into this if statement if we need to read from a file
   if(m_InputFile != getInputFile_Cache() || !getTimeStamp_Cache().isValid() || getTimeStamp_Cache() < timeStamp)
   {
-    float zStep = static_cast<float>(getZSpacing()), xOrigin = getOrigin().x, yOrigin = getOrigin().y, zOrigin = getOrigin().z;
+    float zStep = static_cast<float>(getZSpacing()), xOrigin = getOrigin()[0], yOrigin = getOrigin()[1], zOrigin = getOrigin()[2];
     reader->setReadPatternData(getReadPatternData());
 
     // If the user has already set a Scan Name to read then we are good to go.
@@ -280,8 +293,7 @@ void ImportH5OimData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, QVe
       int err = reader->readHeaderOnly();
       if(err < 0)
       {
-        setErrorCondition(err);
-        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+        setErrorCondition(err, reader->getErrorMessage());
         m_FileWasRead = false;
         return;
       }
@@ -293,9 +305,8 @@ void ImportH5OimData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, QVe
       int32_t err = reader->readFile();
       if(err < 0)
       {
-        setErrorCondition(err);
-        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
-        notifyErrorMessage(getHumanLabel(), "H5OIMReader could not read the .h5 file.", getErrorCondition());
+        setErrorCondition(err, reader->getErrorMessage());
+        setErrorCondition(getErrorCode(), "H5OIMReader could not read the .h5 file.");
         return;
       }
     }
@@ -306,13 +317,13 @@ void ImportH5OimData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, QVe
     // Set Cache with values from the file
     {
       Ang_Private_Data data;
-      data.dims = tDims;
-      data.resolution.push_back(reader->getXStep());
-      data.resolution.push_back(reader->getYStep());
-      data.resolution.push_back(zStep);
-      data.origin.push_back(xOrigin);
-      data.origin.push_back(yOrigin);
-      data.origin.push_back(zOrigin);
+      data.dims = SizeVec3Type(tDims[0], tDims[1], tDims[2]);
+      data.resolution[0] = (reader->getXStep());
+      data.resolution[1] = (reader->getYStep());
+      data.resolution[2] = (zStep);
+      data.origin[0] = (xOrigin);
+      data.origin[1] = (yOrigin);
+      data.origin[2] = (zOrigin);
       data.phases = reader->getPhaseVector();
       setData(data);
 
@@ -341,8 +352,8 @@ void ImportH5OimData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, QVe
     tDims[1] = getData().dims[1];
     tDims[2] = getData().dims[2];
     m->getGeometryAs<ImageGeom>()->setDimensions(tDims[0], tDims[1], tDims[2]);
-    m->getGeometryAs<ImageGeom>()->setResolution(getData().resolution[0], getData().resolution[1], getData().resolution[2]);
-    m->getGeometryAs<ImageGeom>()->setOrigin(getData().origin[0], getData().origin[1], getData().origin[2]);
+    m->getGeometryAs<ImageGeom>()->setSpacing(getData().resolution);
+    m->getGeometryAs<ImageGeom>()->setOrigin(getData().origin);
   }
 
   if(flag == ANG_FULL_FILE)
@@ -361,9 +372,8 @@ int32_t ImportH5OimData::loadMaterialInfo(EbsdReader* ebsdReader)
   QVector<AngPhase::Pointer> phases = getData().phases;
   if(phases.empty())
   {
-    setErrorCondition(reader->getErrorCode());
-    notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(reader->getErrorCode(), reader->getErrorMessage());
+    return getErrorCode();
   }
 
   DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, Ebsd::AngFile::CrystalStructures);
@@ -412,9 +422,9 @@ int32_t ImportH5OimData::loadMaterialInfo(EbsdReader* ebsdReader)
   QVector<size_t> tDims(1, crystalStructures->getNumberOfTuples());
   attrMatrix->resizeAttributeArrays(tDims);
   // Now add the attributeArray to the AttributeMatrix
-  attrMatrix->addAttributeArray(SIMPL::EnsembleData::CrystalStructures, crystalStructures);
-  attrMatrix->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
-  attrMatrix->addAttributeArray(SIMPL::EnsembleData::LatticeConstants, latticeConstants);
+  attrMatrix->insertOrAssign(crystalStructures);
+  attrMatrix->insertOrAssign(materialNames);
+  attrMatrix->insertOrAssign(latticeConstants);
 
   // Now reset the internal ensemble array references to these new arrays
   m_CrystalStructuresPtr = crystalStructures;
@@ -473,7 +483,7 @@ void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>& t
   }
   iArray = std::dynamic_pointer_cast<Int32ArrayType>(m_EbsdArrayMap.value(SIMPL::CellData::Phases));
   ::memcpy(iArray->getPointer(offset), phasePtr, sizeof(int32_t) * totalPoints);
-  ebsdAttrMat->addAttributeArray(SIMPL::CellData::Phases, iArray);
+  ebsdAttrMat->insertOrAssign(iArray);
 
   // Condense the Euler Angles from 3 separate arrays into a single 1x3 array
   {
@@ -490,7 +500,7 @@ void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>& t
       cellEulerAngles[3 * i + 1] = f2[i];
       cellEulerAngles[3 * i + 2] = f3[i];
     }
-    ebsdAttrMat->addAttributeArray(SIMPL::CellData::EulerAngles, fArray);
+    ebsdAttrMat->insertOrAssign(fArray);
   }
 
   cDims[0] = 1;
@@ -498,28 +508,28 @@ void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>& t
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ImageQuality));
     fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::ImageQuality));
     ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::ImageQuality, fArray);
+    ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ConfidenceIndex));
     fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::ConfidenceIndex));
     ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::ConfidenceIndex, fArray);
+    ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::SEMSignal));
     fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::SEMSignal));
     ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::SEMSignal, fArray);
+    ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Fit));
     fArray = std::dynamic_pointer_cast<FloatArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::Fit));
     ::memcpy(fArray->getPointer(offset), f1, sizeof(float) * totalPoints);
-    ebsdAttrMat->addAttributeArray(Ebsd::Ang::Fit, fArray);
+    ebsdAttrMat->insertOrAssign(fArray);
   }
 
   if(getReadPatternData()) // Get the pattern Data from the
@@ -536,13 +546,13 @@ void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>& t
 
       UInt8ArrayType::Pointer patternData = std::dynamic_pointer_cast<UInt8ArrayType>(m_EbsdArrayMap.value(Ebsd::Ang::PatternData));
       ::memcpy(patternData->getPointer(offset), ptr, sizeof(uint8_t) * totalPoints);
-      ebsdAttrMat->addAttributeArray(Ebsd::Ang::PatternData, patternData);
+      ebsdAttrMat->insertOrAssign(patternData);
 
       // Remove the current PatternData array
       ebsdAttrMat->removeAttributeArray(Ebsd::Ang::PatternData);
 
       // Push in our own PatternData array
-      ebsdAttrMat->addAttributeArray(patternData->getName(), patternData);
+      ebsdAttrMat->insertOrAssign(patternData);
       // Set the readers pattern data pointer to nullptr so that reader does not "free" the memory
       reader->setPatternData(nullptr);
     }
@@ -554,10 +564,10 @@ void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>& t
 // -----------------------------------------------------------------------------
 void ImportH5OimData::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -577,13 +587,13 @@ void ImportH5OimData::execute()
     QString currentScanName = scanNames[index];
 
     readDataFile(reader.get(), m.get(), tDims, currentScanName, ANG_FULL_FILE);
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
 
     copyRawEbsdData(reader.get(), tDims, cDims, index);
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
@@ -729,13 +739,12 @@ void ImportH5OimData::dataCheckOEM()
   if(manfacturer != Ebsd::OEM::EDAX)
   {
     QString ss = QObject::tr("The manufacturer is not recognized as a valid entry.");
-    setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-384, ss);
     return;
   }
 
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0)
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -745,15 +754,15 @@ void ImportH5OimData::dataCheckOEM()
   image->setUnits(IGeometry::LengthUnit::Micrometer);
 
   QVector<size_t> tDims(3, 0);
-  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
-  if(getErrorCondition() < 0)
+  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
+  if(getErrorCode() < 0)
   {
     return;
   }
   tDims.resize(1);
   tDims[0] = 0;
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
-  if(getErrorCondition() < 0)
+  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID22);
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -770,8 +779,7 @@ void ImportH5OimData::dataCheckOEM()
   int32_t err = reader->readScanNames(scanNames);
   if(err < 0)
   {
-    setErrorCondition(reader->getErrorCode());
-    notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+    setErrorCondition(err, reader->getErrorMessage());
     return;
   }
   setFileScanNames(scanNames);
@@ -803,15 +811,14 @@ void ImportH5OimData::dataCheckOEM()
   }
   else
   {
-    setErrorCondition(-996);
     QString ss = QObject::tr("At least one scan must be chosen.  Please select a scan from the list.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-996, ss);
     return;
   }
 
   cDims.resize(1);
   cDims[0] = 3;
-  tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), Ebsd::AngFile::EulerAngles);
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), Ebsd::AngFile::EulerAngles);
   m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims);
   if(nullptr != m_CellEulerAnglesPtr.lock())
   {
@@ -820,7 +827,7 @@ void ImportH5OimData::dataCheckOEM()
   m_EbsdArrayMap.insert(Ebsd::AngFile::EulerAngles, getDataContainerArray()->getPrereqIDataArrayFromPath<FloatArrayType, AbstractFilter>(this, tempPath));
 
   cDims[0] = 1;
-  tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), Ebsd::AngFile::Phases);
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), Ebsd::AngFile::Phases);
   m_CellPhasesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims);
   if(nullptr != m_CellPhasesPtr.lock())
   {
@@ -828,7 +835,7 @@ void ImportH5OimData::dataCheckOEM()
   }
   m_EbsdArrayMap.insert(Ebsd::AngFile::Phases, getDataContainerArray()->getPrereqIDataArrayFromPath<Int32ArrayType, AbstractFilter>(this, tempPath));
 
-  tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::AngFile::CrystalStructures);
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::AngFile::CrystalStructures);
   m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims);
   if(nullptr != m_CrystalStructuresPtr.lock())
   {
@@ -837,7 +844,7 @@ void ImportH5OimData::dataCheckOEM()
   m_EbsdArrayMap.insert(Ebsd::AngFile::CrystalStructures, getDataContainerArray()->getPrereqIDataArrayFromPath<UInt32ArrayType, AbstractFilter>(this, tempPath));
 
   cDims[0] = 6;
-  tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::AngFile::LatticeConstants);
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::AngFile::LatticeConstants);
   m_LatticeConstantsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0.0, cDims);
   if(nullptr != m_LatticeConstantsPtr.lock())
   {
@@ -852,7 +859,7 @@ void ImportH5OimData::dataCheckOEM()
     cDims[1] = getPatternDims().at(1);
     if(cDims[0] != 0 && cDims[1] != 0)
     {
-      tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), Ebsd::Ang::PatternData);
+      tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), Ebsd::Ang::PatternData);
       m_CellPatternDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, cDims);
       if(nullptr != m_CellPatternDataPtr.lock())
       {
@@ -863,13 +870,12 @@ void ImportH5OimData::dataCheckOEM()
     }
     else
     {
-      setErrorCondition(-998);
       QString ss = QObject::tr("The filter parameter 'Read Pattern Data' has been enabled but there does not seem to be any pattern data in the file for the scan name selected");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-998, ss);
     }
   }
 
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), SIMPL::EnsembleData::MaterialName);
-  cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
+  cellEnsembleAttrMat->insertOrAssign(materialNames);
   m_EbsdArrayMap.insert(SIMPL::EnsembleData::MaterialName, materialNames);
 }

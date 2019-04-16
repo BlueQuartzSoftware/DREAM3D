@@ -56,6 +56,14 @@
 #include <tbb/parallel_for.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
+
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 #endif
 
 class FindNeighborhoodsImpl
@@ -168,7 +176,7 @@ FindNeighborhoods::~FindNeighborhoods() = default;
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Multiples of Average Diameter", MultiplesOfAverage, FilterParameter::Parameter, FindNeighborhoods));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
   {
@@ -218,8 +226,8 @@ void FindNeighborhoods::initialize()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
   DataArrayPath tempPath;
 
@@ -233,8 +241,12 @@ void FindNeighborhoods::dataCheck()
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   QVector<size_t> cDims(1, 1);
   tempPath.update(m_EquivalentDiametersArrayPath.getDataContainerName(), m_EquivalentDiametersArrayPath.getAttributeMatrixName(), getNeighborhoodListArrayName());
-  m_NeighborhoodList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter, int32_t>(
-      this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_NeighborhoodList = getDataContainerArray()->createNonPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID31);
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
+  m_NeighborhoodList.lock()->setNumNeighborsArrayName(getNeighborhoodsArrayName());
 
   m_EquivalentDiametersPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getEquivalentDiametersArrayPath(),
                                                                                                                cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -242,7 +254,7 @@ void FindNeighborhoods::dataCheck()
   {
     m_EquivalentDiameters = m_EquivalentDiametersPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getEquivalentDiametersArrayPath());
   }
@@ -253,7 +265,7 @@ void FindNeighborhoods::dataCheck()
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getFeaturePhasesArrayPath());
   }
@@ -273,7 +285,7 @@ void FindNeighborhoods::dataCheck()
   {
     m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getCentroidsArrayPath());
   }
@@ -306,10 +318,10 @@ void FindNeighborhoods::find_neighborhoods()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -341,7 +353,7 @@ void FindNeighborhoods::execute()
   }
 
   float m_OriginX = 0.0f, m_OriginY = 0.0f, m_OriginZ = 0.0f;
-  m->getGeometryAs<ImageGeom>()->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
+  std::tie(m_OriginX, m_OriginY, m_OriginZ) = m->getGeometryAs<ImageGeom>()->getOrigin();
   size_t udims[3] = {0, 0, 0};
   std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
 
@@ -411,7 +423,7 @@ void FindNeighborhoods::updateProgress(size_t numCompleted, size_t totalFeatures
   {
     m_IncCount = 0;
     QString ss = QObject::tr("Working on Feature %1 of %2").arg(m_NumCompleted).arg(totalFeatures);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(ss);
   }
 }
 

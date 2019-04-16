@@ -50,6 +50,16 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+  DataArrayID33 = 33,
+  DataArrayID34 = 34,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -65,17 +75,17 @@ FindSchmids::FindSchmids()
 , m_StoreAngleComponents(false)
 , m_OverrideSystem(false)
 {
-  m_LoadingDirection.x = 1.0f;
-  m_LoadingDirection.y = 1.0f;
-  m_LoadingDirection.z = 1.0f;
+  m_LoadingDirection[0] = 1.0f;
+  m_LoadingDirection[1] = 1.0f;
+  m_LoadingDirection[2] = 1.0f;
 
-  m_SlipPlane.x = 0.0f;
-  m_SlipPlane.y = 0.0f;
-  m_SlipPlane.z = 1.0f;
+  m_SlipPlane[0] = 0.0f;
+  m_SlipPlane[1] = 0.0f;
+  m_SlipPlane[2] = 1.0f;
 
-  m_SlipDirection.x = 1.0f;
-  m_SlipDirection.y = 0.0f;
-  m_SlipDirection.z = 0.0f;
+  m_SlipDirection[0] = 1.0f;
+  m_SlipDirection[1] = 0.0f;
+  m_SlipDirection[2] = 0.0f;
 
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
@@ -91,7 +101,7 @@ FindSchmids::~FindSchmids() = default;
 // -----------------------------------------------------------------------------
 void FindSchmids::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Loading Direction", LoadingDirection, FilterParameter::Parameter, FindSchmids));
 
@@ -164,8 +174,8 @@ void FindSchmids::initialize()
 // -----------------------------------------------------------------------------
 void FindSchmids::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   QVector<size_t> cDims(1, 1);
@@ -173,8 +183,7 @@ void FindSchmids::dataCheck()
   QVector<DataArrayPath> dataArrayPaths;
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getSchmidsArrayName());
-  m_SchmidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0,
-                                                                                                                cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SchmidsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID31);
   if(nullptr != m_SchmidsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_Schmids = m_SchmidsPtr.lock()->getPointer(0);
@@ -186,7 +195,7 @@ void FindSchmids::dataCheck()
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getFeaturePhasesArrayPath());
   }
@@ -208,8 +217,7 @@ void FindSchmids::dataCheck()
 
   cDims[0] = 3;
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getPolesArrayName());
-  m_PolesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0,
-                                                                                                                  cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_PolesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID32);
   if(nullptr != m_PolesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_Poles = m_PolesPtr.lock()->getPointer(0);
@@ -222,7 +230,7 @@ void FindSchmids::dataCheck()
   {
     m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getAvgQuatsArrayPath());
   }
@@ -231,16 +239,14 @@ void FindSchmids::dataCheck()
   {
     cDims[0] = 1;
     tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getPhisArrayName());
-    m_PhisPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, -301,
-                                                                                                               cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_PhisPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, -301, cDims, "", DataArrayID33);
     if(nullptr != m_PhisPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_Phis = m_PhisPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
 
     tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getLambdasArrayName());
-    m_LambdasPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, -301,
-                                                                                                                  cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+    m_LambdasPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, -301, cDims, "", DataArrayID34);
     if(nullptr != m_LambdasPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
     {
       m_Lambdas = m_LambdasPtr.lock()->getPointer(0);
@@ -250,12 +256,11 @@ void FindSchmids::dataCheck()
   if(m_OverrideSystem)
   {
     // make sure direction lies in plane
-    float cosVec = m_SlipPlane.x * m_SlipDirection.x + m_SlipPlane.y * m_SlipDirection.y + m_SlipPlane.z * m_SlipDirection.z;
+    float cosVec = m_SlipPlane[0] * m_SlipDirection[0] + m_SlipPlane[1] * m_SlipDirection[1] + m_SlipPlane[2] * m_SlipDirection[2];
     if(0 != cosVec)
     {
       QString ss = QObject::tr("Slip Plane and Slip Direction must be normal");
-      setErrorCondition(-1001);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-1001, ss);
       return;
     }
   }
@@ -279,10 +284,10 @@ void FindSchmids::preflight()
 // -----------------------------------------------------------------------------
 void FindSchmids::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -299,23 +304,23 @@ void FindSchmids::execute()
   float angleComps[2] = {0.0f, 0.0f};
   float schmid = 0.0f;
 
-  sampleLoading[0] = m_LoadingDirection.x;
-  sampleLoading[1] = m_LoadingDirection.y;
-  sampleLoading[2] = m_LoadingDirection.z;
+  sampleLoading[0] = m_LoadingDirection[0];
+  sampleLoading[1] = m_LoadingDirection[1];
+  sampleLoading[2] = m_LoadingDirection[2];
   MatrixMath::Normalize3x1(sampleLoading);
   float plane[3] = {0.0f, 0.0f};
   float direction[3] = {0.0f, 0.0f};
 
   if(m_OverrideSystem)
   {
-    plane[0] = m_SlipPlane.x;
-    plane[1] = m_SlipPlane.y;
-    plane[2] = m_SlipPlane.z;
+    plane[0] = m_SlipPlane[0];
+    plane[1] = m_SlipPlane[1];
+    plane[2] = m_SlipPlane[2];
     MatrixMath::Normalize3x1(plane);
 
-    direction[0] = m_SlipDirection.x;
-    direction[1] = m_SlipDirection.y;
-    direction[2] = m_SlipDirection.z;
+    direction[0] = m_SlipDirection[0];
+    direction[1] = m_SlipDirection[1];
+    direction[2] = m_SlipDirection[2];
     MatrixMath::Normalize3x1(direction);
   }
 

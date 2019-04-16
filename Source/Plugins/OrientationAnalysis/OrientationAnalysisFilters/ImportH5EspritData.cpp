@@ -51,6 +51,13 @@
 
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+  AttributeMatrixID22 = 22,
+  DataContainerID = 1
+};
+
 /**
  * @brief The ReadH5EspritDataPrivate class is a private implementation of the ImportH5EspritData class
  */
@@ -108,10 +115,10 @@ Esprit_Private_Data ImportH5EspritData::getFileCacheData() const
 void ImportH5EspritData::setupFilterParameters()
 {
   ImportH5OimData::setupFilterParameters();
-  FilterParameterVector parameters = getFilterParameters();
+  FilterParameterVectorType parameters = getFilterParameters();
 
-  parameters.insert(4, SIMPL_NEW_BOOL_FP("Combine phi1, PHI, phi2 into Single Euler Angles Attribute Array", CombineEulerAngles, FilterParameter::Parameter, ImportH5EspritData));
-  parameters.insert(5, SIMPL_NEW_BOOL_FP("Convert Euler Angles to Radians", DegreesToRadians, FilterParameter::Parameter, ImportH5EspritData));
+  parameters.insert(parameters.begin() + 4, SIMPL_NEW_BOOL_FP("Combine phi1, PHI, phi2 into Single Euler Angles Attribute Array", CombineEulerAngles, FilterParameter::Parameter, ImportH5EspritData));
+  parameters.insert(parameters.begin() + 5, SIMPL_NEW_BOOL_FP("Convert Euler Angles to Radians", DegreesToRadians, FilterParameter::Parameter, ImportH5EspritData));
   setFilterParameters(parameters);
 }
 
@@ -129,10 +136,10 @@ void ImportH5EspritData::preflight()
 // -----------------------------------------------------------------------------
 void ImportH5EspritData::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -152,13 +159,13 @@ void ImportH5EspritData::execute()
     QString currentScanName = scanNames[index];
 
     readDataFile(reader.get(), m.get(), tDims, currentScanName, ANG_FULL_FILE);
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
 
     copyRawEbsdData(reader.get(), tDims, cDims, index);
-    if(getErrorCondition() < 0)
+    if(getErrorCode() < 0)
     {
       return;
     }
@@ -278,13 +285,12 @@ void ImportH5EspritData::dataCheckOEM()
   if(manufacturer != Ebsd::OEM::Bruker && manufacturer != Ebsd::OEM::DREAM3D)
   {
     QString ss = QObject::tr("The manufacturer is not recognized as a valid entry.");
-    setErrorCondition(-384);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-384, ss);
     return;
   }
 
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName());
-  if(getErrorCondition() < 0)
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getDataContainerName(), DataContainerID);
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -294,15 +300,16 @@ void ImportH5EspritData::dataCheckOEM()
   image->setUnits(IGeometry::LengthUnit::Micrometer);
 
   QVector<size_t> tDims(3, 0);
-  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
-  if(getErrorCondition() < 0)
+  AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
+  if(getErrorCode() < 0)
   {
     return;
   }
   tDims.resize(1);
   tDims[0] = 0;
-  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
-  if(getErrorCondition() < 0)
+
+  AttributeMatrix::Pointer cellEnsembleAttrMat = m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID22);
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -319,8 +326,7 @@ void ImportH5EspritData::dataCheckOEM()
   int32_t err = reader->readScanNames(scanNames);
   if(err < 0)
   {
-    setErrorCondition(reader->getErrorCode());
-    notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+    setErrorCondition(err, reader->getErrorMessage());
     return;
   }
   setFileScanNames(scanNames);
@@ -359,9 +365,8 @@ void ImportH5EspritData::dataCheckOEM()
   }
   else
   {
-    setErrorCondition(-996);
     QString ss = QObject::tr("At least one scan must be chosen.  Please select a scan from the list.");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-996, ss);
     return;
   }
 
@@ -375,7 +380,7 @@ void ImportH5EspritData::dataCheckOEM()
     cellAttrMat->removeAttributeArray(Ebsd::H5Esprit::PHI);
     cellAttrMat->removeAttributeArray(Ebsd::H5Esprit::phi2);
 
-    tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), Ebsd::Esprit::EulerAngles);
+    tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), Ebsd::Esprit::EulerAngles);
     m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims);
     if(nullptr != m_CellEulerAnglesPtr.lock())
     {
@@ -386,7 +391,7 @@ void ImportH5EspritData::dataCheckOEM()
 
 
   cDims[0] = 1;
-  tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::Esprit::CrystalStructures);
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::Esprit::CrystalStructures);
   m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims);
   if(nullptr != m_CrystalStructuresPtr.lock())
   {
@@ -395,7 +400,7 @@ void ImportH5EspritData::dataCheckOEM()
   ebsdArrayMap.insert(Ebsd::Esprit::CrystalStructures, getDataContainerArray()->getPrereqIDataArrayFromPath<UInt32ArrayType, AbstractFilter>(this, tempPath));
 
   cDims[0] = 6;
-  tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::Esprit::LatticeConstants);
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::Esprit::LatticeConstants);
   m_LatticeConstantsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0.0, cDims);
   if(nullptr != m_LatticeConstantsPtr.lock())
   {
@@ -404,7 +409,7 @@ void ImportH5EspritData::dataCheckOEM()
   ebsdArrayMap.insert(Ebsd::Esprit::LatticeConstants, getDataContainerArray()->getPrereqIDataArrayFromPath<FloatArrayType, AbstractFilter>(this, tempPath));
 
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), SIMPL::EnsembleData::MaterialName);
-  cellEnsembleAttrMat->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
+  cellEnsembleAttrMat->insertOrAssign(materialNames);
   ebsdArrayMap.insert(SIMPL::EnsembleData::MaterialName, materialNames);
 
   if(getReadPatternData())
@@ -418,7 +423,7 @@ void ImportH5EspritData::dataCheckOEM()
       // We will handle allocating the memory later on.
       bool areWeInPreflight = getInPreflight();
       setInPreflight(true);
-      tempPath.update(getDataContainerName(), getCellAttributeMatrixName(), Ebsd::H5Esprit::RawPatterns);
+      tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), Ebsd::H5Esprit::RawPatterns);
       m_CellPatternDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, tempPath, 0, cDims);
       if(nullptr != m_CellPatternDataPtr.lock())
       {
@@ -429,9 +434,8 @@ void ImportH5EspritData::dataCheckOEM()
     }
     else
     {
-      setErrorCondition(-998);
       QString ss = QObject::tr("The filter parameter 'Read Pattern Data' has been enabled but there does not seem to be any pattern data in the file for the scan name selected");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-998, ss);
     }
   }
 
@@ -451,7 +455,10 @@ void ImportH5EspritData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, 
   // Drop into this if statement if we need to read from a file
   if(getInputFile() != getInputFile_Cache() || !getTimeStamp_Cache().isValid() || getTimeStamp_Cache() < timeStamp)
   {
-    float zStep = static_cast<float>(getZSpacing()), xOrigin = getOrigin().x, yOrigin = getOrigin().y, zOrigin = getOrigin().z;
+    float zStep = static_cast<float>(getZSpacing());
+    float xOrigin = getOrigin()[0];
+    float yOrigin = getOrigin()[1];
+    float zOrigin = getOrigin()[2];
     reader->setReadPatternData(getReadPatternData());
 
     // If the user has already set a Scan Name to read then we are good to go.
@@ -462,8 +469,7 @@ void ImportH5EspritData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, 
       int err = reader->readHeaderOnly();
       if(err < 0)
       {
-        setErrorCondition(err);
-        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
+        setErrorCondition(err, reader->getErrorMessage());
         setFileWasRead(false);
         return;
       }
@@ -474,9 +480,8 @@ void ImportH5EspritData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, 
       int32_t err = reader->readFile();
       if(err < 0)
       {
-        setErrorCondition(err);
-        notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), err);
-        notifyErrorMessage(getHumanLabel(), "H5OIMReader could not read the .h5 file.", getErrorCondition());
+        setErrorCondition(err, reader->getErrorMessage());
+        setErrorCondition(getErrorCode(), "H5OIMReader could not read the .h5 file.");
         return;
       }
     }
@@ -487,13 +492,13 @@ void ImportH5EspritData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, 
     // Set Cache with values from the file
     {
       Esprit_Private_Data data;
-      data.dims = tDims;
-      data.resolution.push_back(reader->getXStep());
-      data.resolution.push_back(reader->getYStep());
-      data.resolution.push_back(zStep);
-      data.origin.push_back(xOrigin);
-      data.origin.push_back(yOrigin);
-      data.origin.push_back(zOrigin);
+      data.dims = SizeVec3Type(tDims[0], tDims[1], tDims[2]);
+      data.resolution[0] = reader->getXStep();
+      data.resolution[1] = reader->getYStep();
+      data.resolution[2] = zStep;
+      data.origin[0] = xOrigin;
+      data.origin[1] = yOrigin;
+      data.origin[2] = zOrigin;
       data.phases = reader->getPhaseVector();
       setFileCacheData(data);
 
@@ -524,8 +529,8 @@ void ImportH5EspritData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, 
   if(image != nullptr)
   {
     image->setDimensions(tDims[0], tDims[1], tDims[2]);
-    image->setResolution(getFileCacheData().resolution[0], getFileCacheData().resolution[1], getFileCacheData().resolution[2]);
-    image->setOrigin(getFileCacheData().origin[0], getFileCacheData().origin[1], getFileCacheData().origin[2]);
+    image->setSpacing(getFileCacheData().resolution);
+    image->setOrigin(getFileCacheData().origin);
   }
 
   if(flag == ANG_FULL_FILE)
@@ -542,9 +547,8 @@ int32_t ImportH5EspritData::loadMaterialInfo(EbsdReader* ebsdReader)
   QVector<EspritPhase::Pointer> phases = getFileCacheData().phases;
   if(phases.empty())
   {
-    setErrorCondition(reader->getErrorCode());
-    notifyErrorMessage(getHumanLabel(), reader->getErrorMessage(), getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(reader->getErrorCode(), reader->getErrorMessage());
+    return getErrorCode();
   }
 
   DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, Ebsd::AngFile::CrystalStructures);
@@ -593,9 +597,9 @@ int32_t ImportH5EspritData::loadMaterialInfo(EbsdReader* ebsdReader)
   QVector<size_t> tDims(1, crystalStructures->getNumberOfTuples());
   attrMatrix->resizeAttributeArrays(tDims);
   // Now add the attributeArray to the AttributeMatrix
-  attrMatrix->addAttributeArray(SIMPL::EnsembleData::CrystalStructures, crystalStructures);
-  attrMatrix->addAttributeArray(SIMPL::EnsembleData::MaterialName, materialNames);
-  attrMatrix->addAttributeArray(SIMPL::EnsembleData::LatticeConstants, latticeConstants);
+  attrMatrix->insertOrAssign(crystalStructures);
+  attrMatrix->insertOrAssign(materialNames);
+  attrMatrix->insertOrAssign(latticeConstants);
 
   // Now reset the internal ensemble array references to these new arrays
   m_CrystalStructuresPtr = crystalStructures;
@@ -622,7 +626,7 @@ void copyPointerData(Reader* reader, const QString& name, const IDataArray::Poin
   typename DataArrayType::Pointer fArray = std::dynamic_pointer_cast<DataArrayType>(dataArray);
   typename DataArrayType::Pointer freshArray = DataArrayType::WrapPointer(ptr, totalPoints, fArray->getComponentDimensions(), fArray->getName(), true);
   reader->releaseOwnership(name);
-  ebsdAttrMat->addAttributeArray(freshArray->getName(), freshArray);
+  ebsdAttrMat->insertOrAssign(freshArray);
 }
 
 // -----------------------------------------------------------------------------
@@ -684,7 +688,7 @@ void ImportH5EspritData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>
       cellEulerAngles[3 * i + 1] = f2[i] * degToRad;
       cellEulerAngles[3 * i + 2] = f3[i] * degToRad;
     }
-    ebsdAttrMat->addAttributeArray(SIMPL::CellData::EulerAngles, fArray);
+    ebsdAttrMat->insertOrAssign(fArray);
   }
   else
   {

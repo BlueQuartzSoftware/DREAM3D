@@ -71,7 +71,7 @@ FindFeatureReferenceCAxisMisorientations::~FindFeatureReferenceCAxisMisorientati
 // -----------------------------------------------------------------------------
 void FindFeatureReferenceCAxisMisorientations::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -129,8 +129,8 @@ void FindFeatureReferenceCAxisMisorientations::initialize()
 // -----------------------------------------------------------------------------
 void FindFeatureReferenceCAxisMisorientations::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
@@ -144,7 +144,7 @@ void FindFeatureReferenceCAxisMisorientations::dataCheck()
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getFeatureIdsArrayPath());
   }
@@ -155,7 +155,7 @@ void FindFeatureReferenceCAxisMisorientations::dataCheck()
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getCellPhasesArrayPath());
   }
@@ -199,7 +199,7 @@ void FindFeatureReferenceCAxisMisorientations::dataCheck()
   {
     m_Quats = m_QuatsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getQuatsArrayPath());
   }
@@ -225,10 +225,10 @@ void FindFeatureReferenceCAxisMisorientations::preflight()
 // -----------------------------------------------------------------------------
 void FindFeatureReferenceCAxisMisorientations::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -255,7 +255,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
   if(totalPoints > maxUInt32)
   {
     QString ss = QObject::tr("The volume is too large for a 32 bit machine. Try reducing the input volume size. Total Voxels: %1").arg(totalPoints);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(ss);
     return;
   }
 
@@ -323,7 +323,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
     if(i % 1000 == 0)
     {
       QString ss = QObject::tr("Working On Feature %1 of %2").arg(i).arg(totalFeatures);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyStatusMessage(ss);
     }
     index = i * avgMisoComps;
     m_FeatureAvgCAxisMisorientations[i] = avgmiso[index + 1] / avgmiso[index];

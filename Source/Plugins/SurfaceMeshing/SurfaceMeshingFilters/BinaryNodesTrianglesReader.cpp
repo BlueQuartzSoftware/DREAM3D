@@ -48,6 +48,17 @@
 
 #include "BinaryNodesTrianglesReader.h"
 
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+  AttributeMatrixID22 = 22,
+
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+
+  DataContainerID = 1
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -74,7 +85,7 @@ void BinaryNodesTrianglesReader::setupFilterParameters()
 {
   SurfaceMeshFilter::setupFilterParameters();
 
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Binary Nodes Input File", BinaryNodesFile, FilterParameter::Parameter, BinaryNodesTrianglesReader, "*.raw", "Raw Files"));
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Binary Triangles Input File", BinaryTrianglesFile, FilterParameter::Parameter, BinaryNodesTrianglesReader, "*.raw", "Raw Files"));
@@ -97,8 +108,8 @@ void BinaryNodesTrianglesReader::readFilterParameters(AbstractFilterParametersRe
 // -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::updateVertexInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_SurfaceMeshNodeTypesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -111,8 +122,8 @@ void BinaryNodesTrianglesReader::updateVertexInstancePointers()
 // -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::updateFaceInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(nullptr != m_FaceLabelsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -135,34 +146,33 @@ void BinaryNodesTrianglesReader::dataCheck()
   if(getBinaryNodesFile().isEmpty())
   {
     QString ss = QObject::tr("%1 needs the Binary Nodes File path set and it was not.").arg(ClassName());
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-387, ss);
   }
 
   if(getBinaryNodesFile().isEmpty())
   {
     QString ss = QObject::tr("%1 needs the Binary Nodes File path set and it was not.").arg(ClassName());
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-387, ss);
   }
 
   DataArrayPath tempPath;
 
   QVector<size_t> dims(1, 1);
 
-  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName());
-  if(getErrorCondition() < 0)
+  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName(), DataContainerID);
+  if(getErrorCode() < 0)
   {
     return;
   }
   QVector<size_t> tDims(1, 0);
-  AttributeMatrix::Pointer vertexAttrMat = sm->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
-  if(getErrorCondition() < 0)
+
+  AttributeMatrix::Pointer vertexAttrMat = sm->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID21);
+  if(getErrorCode() < 0)
   {
     return;
   }
-  AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face);
-  if(getErrorCondition() < 0)
+  AttributeMatrix::Pointer faceAttrMat = sm->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face, AttributeMatrixID22);
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -173,16 +183,14 @@ void BinaryNodesTrianglesReader::dataCheck()
 
   dims[0] = 2;
   tempPath.update(getSurfaceDataContainerName(), getFaceAttributeMatrixName(), getFaceLabelsArrayName());
-  m_FaceLabelsPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_FaceLabelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, tempPath, 0, dims, "", DataArrayID31);
   if(nullptr != m_FaceLabelsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
   dims[0] = 1;
   tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getSurfaceMeshNodeTypesArrayName());
-  m_SurfaceMeshNodeTypesPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, tempPath, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_SurfaceMeshNodeTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, tempPath, 0, dims, "", DataArrayID32);
   if(nullptr != m_SurfaceMeshNodeTypesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_SurfaceMeshNodeTypes = m_SurfaceMeshNodeTypesPtr.lock()->getPointer(0);
@@ -207,20 +215,20 @@ void BinaryNodesTrianglesReader::preflight()
 // -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::execute()
 {
-  int err = 0;
-  QString ss;
-  setErrorCondition(err);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   /* Place all your code to execute your filter here. */
-  err = read();
-  setErrorCondition(err);
-
-
+  int err = read();
+  if (err < 0)
+  {
+    return;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -228,8 +236,8 @@ void BinaryNodesTrianglesReader::execute()
 // -----------------------------------------------------------------------------
 int BinaryNodesTrianglesReader::read()
 {
-  int err = 0;
-  setErrorCondition(err);
+  clearErrorCode();
+  clearWarningCode();
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
@@ -241,8 +249,8 @@ int BinaryNodesTrianglesReader::read()
   if(nodesFile == nullptr)
   {
     QString ss = QObject::tr("Error opening nodes file '%1'").arg(m_BinaryNodesFile);
-    setErrorCondition(786);
-    return getErrorCondition();
+    setErrorCondition(-786, ss);
+    return getErrorCode();
   }
   ScopedFileMonitor nodesMonitor(nodesFile);
 
@@ -255,22 +263,20 @@ int BinaryNodesTrianglesReader::read()
   if(0 != fLength)
   {
     QString ss = QObject::tr("%1: Error Could not rewind to beginning of file after nodes count.'%2'").arg(getNameOfClass()).arg(m_BinaryNodesFile);
-    setErrorCondition(787);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(-787, ss);
+    return getErrorCode();
   }
   {
     QString ss = QObject::tr("Calc Node Count from Nodes.bin File: ").arg(nNodes);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(ss);
   }
   // Open the triangles file for reading
   FILE* triFile = fopen(m_BinaryTrianglesFile.toLatin1().data(), "rb+");
   if(triFile == nullptr)
   {
     QString ss = QObject::tr("%1: Error opening Triangles file '%2'").arg(getNameOfClass()).arg(m_BinaryTrianglesFile);
-    setErrorCondition(788);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(-788, ss);
+    return getErrorCode();
   }
 
   ScopedFileMonitor trianglesMonitor(triFile);
@@ -283,14 +289,13 @@ int BinaryNodesTrianglesReader::read()
   if(0 != fLength)
   {
     QString ss = QObject::tr("%1: Error Could not rewind to beginning of file after triangles count.'%2'").arg(getNameOfClass()).arg(m_BinaryTrianglesFile);
-    setErrorCondition(789);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(-789, ss);
+    return getErrorCode();
   }
 
   {
     QString ss = QObject::tr("Calc Triangle Count from Triangles.bin File: %1").arg(nTriangles);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(ss);
   }
 
   // Allocate all the nodes
@@ -302,7 +307,7 @@ int BinaryNodesTrianglesReader::read()
   updateVertexInstancePointers();
   {
     QString ss = QObject::tr("Reading Nodes file into Memory");
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(ss);
   }
   size_t nread = 0;
   SurfaceMesh::NodesFile::NodesFileRecord_t nRecord;
@@ -322,7 +327,7 @@ int BinaryNodesTrianglesReader::read()
 
   {
     QString ss = QObject::tr("Reading Triangles file into Memory");
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(ss);
   }
 
   // Allocate all the Triangle Objects
@@ -352,5 +357,5 @@ int BinaryNodesTrianglesReader::read()
 
   // The ScopedFileMonitor classes will take care of closing the files
 
-  return getErrorCondition();
+  return getErrorCode();
 }

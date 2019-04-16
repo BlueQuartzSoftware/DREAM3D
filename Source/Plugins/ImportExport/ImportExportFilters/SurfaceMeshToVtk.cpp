@@ -74,7 +74,7 @@ SurfaceMeshToVtk::~SurfaceMeshToVtk() = default;
 // -----------------------------------------------------------------------------
 void SurfaceMeshToVtk::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output Vtk File", OutputVtkFile, FilterParameter::Parameter, SurfaceMeshToVtk));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Write Binary Vtk File", WriteBinaryFile, FilterParameter::Parameter, SurfaceMeshToVtk));
@@ -132,8 +132,8 @@ void SurfaceMeshToVtk::initialize()
 // -----------------------------------------------------------------------------
 void SurfaceMeshToVtk::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   FileSystemPathHelper::CheckOutputFile(this, "Output VTK File", getOutputVtkFile(), true);
 
   QString dcName;
@@ -150,8 +150,7 @@ void SurfaceMeshToVtk::dataCheck()
   {
     if(dap.getDataContainerName().compare(dcName) != 0)
     {
-      setErrorCondition(-385);
-      notifyErrorMessage(getHumanLabel(), "The Face arrays and Vertex arrays must come from the same Data Container.", getErrorCondition());
+      setErrorCondition(-385, "The Face arrays and Vertex arrays must come from the same Data Container.");
       return;
     }
   }
@@ -159,20 +158,19 @@ void SurfaceMeshToVtk::dataCheck()
   {
     if(dap.getDataContainerName().compare(dcName) != 0)
     {
-      setErrorCondition(-386);
-      notifyErrorMessage(getHumanLabel(), "The Face arrays and Vertex arrays must come from the same Data Container.", getErrorCondition());
+      setErrorCondition(-386, "The Face arrays and Vertex arrays must come from the same Data Container.");
       return;
     }
   }
 
   DataContainer::Pointer sm = getDataContainerArray()->getPrereqDataContainer(this, dcName, false);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   TriangleGeom::Pointer triangles = sm->getPrereqGeometry<TriangleGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -180,14 +178,12 @@ void SurfaceMeshToVtk::dataCheck()
   // We MUST have Nodes
   if(nullptr == triangles->getVertices().get())
   {
-    setErrorCondition(-386);
-    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Vertices", getErrorCondition());
+    setErrorCondition(-386, "DataContainer Geometry missing Vertices");
   }
   // We MUST have Triangles defined also.
   if(nullptr == triangles->getTriangles().get())
   {
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), "DataContainer Geometry missing Triangles", getErrorCondition());
+    setErrorCondition(-387, "DataContainer Geometry missing Triangles");
   }
 
   QVector<size_t> dims(1, 2);
@@ -246,16 +242,16 @@ private:
 // -----------------------------------------------------------------------------
 void SurfaceMeshToVtk::execute()
 {
-  int err = 0;
-  setErrorCondition(err);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName()); /* Place all your code to execute your filter here. */
   TriangleGeom::Pointer triangleGeom = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getGeometryAs<TriangleGeom>();
   float* nodes = triangleGeom->getVertexPointer(0);
@@ -273,8 +269,7 @@ void SurfaceMeshToVtk::execute()
   {
 
     QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
     return;
   }
 
@@ -285,8 +280,7 @@ void SurfaceMeshToVtk::execute()
   {
 
     QString ss = QObject::tr("Error creating file '%1'").arg(getOutputVtkFile());
-    setErrorCondition(-18542);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-18542, ss);
     return;
   }
   ScopedFileMonitor vtkFileMonitor(vtkFile);
@@ -390,14 +384,14 @@ void SurfaceMeshToVtk::execute()
   }
 
   // Write the POINT_DATA section
-  err = writePointData(vtkFile);
+  int err = writePointData(vtkFile);
   // Write the CELL_DATA section
   err = writeCellData(vtkFile);
 
   fprintf(vtkFile, "\n");
 
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 }
 
 // -----------------------------------------------------------------------------

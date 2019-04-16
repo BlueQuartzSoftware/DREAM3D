@@ -46,6 +46,7 @@
 #include "SIMPLib/DataArrays/DynamicListArray.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -57,6 +58,18 @@
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
+
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+  AttributeMatrixID22 = 22,
+  AttributeMatrixID23 = 23,
+
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+
+  DataContainerID = 1
+};
 
 namespace
 {
@@ -120,7 +133,7 @@ QuickSurfaceMesh::~QuickSurfaceMesh() = default;
 // -----------------------------------------------------------------------------
 void QuickSurfaceMesh::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateRequirement(SIMPL::TypeNames::Int32, 1, AttributeMatrix::Type::Cell, IGeometry::Type::Any);
@@ -135,7 +148,7 @@ void QuickSurfaceMesh::setupFilterParameters()
     req.dcGeometryTypes = geomTypes;
     parameters.push_back(SIMPL_NEW_MDA_SELECTION_FP("Attribute Arrays to Transfer", SelectedDataArrayPaths, FilterParameter::RequiredArray, QuickSurfaceMesh, req));
   }
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", SurfaceDataContainerName, FilterParameter::CreatedArray, QuickSurfaceMesh));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", SurfaceDataContainerName, FilterParameter::CreatedArray, QuickSurfaceMesh));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, FilterParameter::CreatedArray, QuickSurfaceMesh));
   parameters.push_back(SIMPL_NEW_STRING_FP("Node Types", NodeTypesArrayName, FilterParameter::CreatedArray, QuickSurfaceMesh));
@@ -154,7 +167,7 @@ void QuickSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* read
 {
   reader->openFilterGroup(this, index);
   setSelectedDataArrayPaths(reader->readDataArrayPathVector("SelectedDataArrayPaths", getSelectedDataArrayPaths()));
-  setSurfaceDataContainerName(reader->readString("SurfaceDataContainerName", getSurfaceDataContainerName()));
+  setSurfaceDataContainerName(reader->readDataArrayPath("SurfaceDataContainerName", getSurfaceDataContainerName()));
   setVertexAttributeMatrixName(reader->readString("VertexAttributeMatrixName", getVertexAttributeMatrixName()));
   setFaceAttributeMatrixName(reader->readString("FaceAttributeMatrixName", getFaceAttributeMatrixName()));
   setNodeTypesArrayName(reader->readString("NodeTypesArrayName", getNodeTypesArrayName()));
@@ -169,8 +182,8 @@ void QuickSurfaceMesh::readFilterParameters(AbstractFilterParametersReader* read
 // -----------------------------------------------------------------------------
 void QuickSurfaceMesh::updateVertexInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   if(nullptr != m_NodeTypesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_NodeTypes = m_NodeTypesPtr.lock()->getPointer(0);
@@ -182,8 +195,8 @@ void QuickSurfaceMesh::updateVertexInstancePointers()
 // -----------------------------------------------------------------------------
 void QuickSurfaceMesh::updateFaceInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   if(nullptr != m_FaceLabelsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0);
@@ -226,8 +239,8 @@ void QuickSurfaceMesh::initialize()
 // -----------------------------------------------------------------------------
 void QuickSurfaceMesh::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   DataArrayPath tempPath;
@@ -243,7 +256,7 @@ void QuickSurfaceMesh::dataCheck()
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getFeatureIdsArrayPath());
   }
@@ -254,15 +267,14 @@ void QuickSurfaceMesh::dataCheck()
 
   if(!DataArrayPath::ValidateVector(paths))
   {
-    setErrorCondition(-11004);
     QString ss = QObject::tr("There are Attribute Arrays selected that are not contained in the same Attribute Matrix. All selected Attribute Arrays must belong to the same Attribute Matrix");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11004, ss);
   }
 
   for(const auto& path : paths)
   {
     IDataArray::WeakPointer ptr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, path);
-    if(getErrorCondition() >= 0)
+    if(getErrorCode() >= 0)
     {
       dataArrayPaths.push_back(path);
       m_SelectedWeakPtrVector.push_back(ptr);
@@ -272,15 +284,15 @@ void QuickSurfaceMesh::dataCheck()
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 
   // Create a SufaceMesh Data Container with Faces, Vertices, Feature Labels and optionally Phase labels
-  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName());
-  if(getErrorCondition() < 0)
+  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName(), DataContainerID);
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   QVector<size_t> tDims(1, 0);
-  sm->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex);
-  sm->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face);
+  sm->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID21);
+  sm->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face, AttributeMatrixID22);
 
   // Create a Triangle Geometry
   SharedVertexList::Pointer vertices = TriangleGeom::CreateSharedVertexList(0);
@@ -288,18 +300,16 @@ void QuickSurfaceMesh::dataCheck()
   sm->setGeometry(triangleGeom);
 
   cDims[0] = 2;
-  tempPath.update(getSurfaceDataContainerName(), getFaceAttributeMatrixName(), getFaceLabelsArrayName());
-  m_FaceLabelsPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getSurfaceDataContainerName().getDataContainerName(), getFaceAttributeMatrixName(), getFaceLabelsArrayName());
+  m_FaceLabelsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, tempPath, 0, cDims, "", DataArrayID31);
   if(nullptr != m_FaceLabelsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FaceLabels = m_FaceLabelsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   cDims[0] = 1;
-  tempPath.update(getSurfaceDataContainerName(), getVertexAttributeMatrixName(), getNodeTypesArrayName());
-  m_NodeTypesPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, tempPath, 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getSurfaceDataContainerName().getDataContainerName(), getVertexAttributeMatrixName(), getNodeTypesArrayName());
+  m_NodeTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, tempPath, 0, cDims, "", DataArrayID32);
   if(nullptr != m_NodeTypesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_NodeTypes = m_NodeTypesPtr.lock()->getPointer(0);
@@ -307,7 +317,7 @@ void QuickSurfaceMesh::dataCheck()
 
   for(int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
   {
-    tempPath.update(getSurfaceDataContainerName(), getFaceAttributeMatrixName(), m_SelectedDataArrayPaths[i].getDataArrayName());
+    tempPath.update(getSurfaceDataContainerName().getDataContainerName(), getFaceAttributeMatrixName(), m_SelectedDataArrayPaths[i].getDataArrayName());
     cDims = m_SelectedWeakPtrVector[i].lock()->getComponentDimensions();
     QVector<size_t> faceDims;
     // If the cell array is 1-dimensional, scale the face array accordingly
@@ -320,24 +330,22 @@ void QuickSurfaceMesh::dataCheck()
       // If the cell array is multi-dimensional, error out for now because the Xdmf hyperslab output
       // will crash ParaView every time. This requires re-engineering the Xdmdf writing to support
       // the correct "standard" for writing "owners" of an array
-      setErrorCondition(-11005);
       QString ss = QObject::tr("Selected Cell Attribute Arrays must have a single component dimension");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-11005, ss);
     }
     m_CreatedWeakPtrVector.push_back(TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath, faceDims, m_SelectedWeakPtrVector[i].lock()));
   }
 
   if(m_SelectedWeakPtrVector.size() != m_CreatedWeakPtrVector.size())
   {
-    setErrorCondition(-11006);
     QString ss = QObject::tr("The number of selected Cell Attribute Arrays available does not match the number of Face Attribute Arrays created");
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-11006, ss);
   }
 
-  sm->createNonPrereqAttributeMatrix(this, getFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::FaceFeature);
+  sm->createNonPrereqAttributeMatrix(this, getFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::FaceFeature, AttributeMatrixID23);
 
   // Create the TripleLines DataContainer
-  getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getTripleLineDataContainerName());
+  getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getTripleLineDataContainerName(), DataContainerID);
 }
 
 // -----------------------------------------------------------------------------
@@ -621,7 +629,7 @@ void QuickSurfaceMesh::correctProblemVoxels()
       }
     }
     QString ss = QObject::tr("Correcting Problem Voxels: Iteration - '%1'; Problem Voxels - '%2'").arg(iter).arg(count);
-    notifyStatusMessage(getHumanLabel(), ss);
+    notifyStatusMessage(ss);
   }
 }
 
@@ -1554,26 +1562,26 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
 // -----------------------------------------------------------------------------
 void QuickSurfaceMesh::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
   DataContainer::Pointer tripleLineDC = getDataContainerArray()->getDataContainer(getTripleLineDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -1720,10 +1728,10 @@ void QuickSurfaceMesh::generateTripleLines()
 
   std::set<int32_t> uFeatures;
 
-  float origin[3] = {0.0f, 0.0f, 0.0f};
+  FloatVec3Type origin = {0.0f, 0.0f, 0.0f};
   std::tie(origin[0], origin[1], origin[2]) = imageGeom->getOrigin();
-  float res[3] = {0.0f, 0.0f, 0.0f};
-  std::tie(res[0], res[1], res[2]) = imageGeom->getResolution();
+  FloatVec3Type res = {0.0f, 0.0f, 0.0f};
+  std::tie(res[0], res[1], res[2]) = imageGeom->getSpacing();
 
   VertexMap vertexMap;
   EdgeMap edgeMap;
@@ -1882,7 +1890,7 @@ void QuickSurfaceMesh::generateTripleLines()
 
   DataContainerArray::Pointer dca = getDataContainerArray();
   DataContainer::Pointer dc = DataContainer::New("Edges");
-  dca->addDataContainer(dc);
+  dca->addOrReplaceDataContainer(dc);
   dc->setGeometry(tripleLineEdge);
 }
 

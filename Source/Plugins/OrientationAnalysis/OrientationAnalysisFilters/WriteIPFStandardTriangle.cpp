@@ -80,7 +80,7 @@ WriteIPFStandardTriangle::~WriteIPFStandardTriangle() = default;
 // -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   QVector<QString> choices = QVector<QString>::fromStdVector(LaueOps::GetLaueNames());
   choices.pop_back(); // Remove the last name because we don't need it.
@@ -115,8 +115,8 @@ void WriteIPFStandardTriangle::initialize()
 // -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QString ss;
 
@@ -127,22 +127,19 @@ void WriteIPFStandardTriangle::dataCheck()
   if(ext != "tif" && ext != "bmp" && ext != "png")
   {
     ss = QObject::tr("The output file has an unsupported extension.  Please select a TIF, BMP, or PNG file");
-    setErrorCondition(-1004);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1004, ss);
     return;
   }
 
   if(m_ImageSize <= 0)
   {
-    setErrorCondition(-1005);
-    notifyErrorMessage(getHumanLabel(), "The size of the image must be positive", getErrorCondition());
+    setErrorCondition(-1005, "The size of the image must be positive");
     return;
   }
 
   if(m_LaueClass < 0 || m_LaueClass > 10)
   {
-    setErrorCondition(-1006);
-    notifyErrorMessage(getHumanLabel(), "The Laue Class value must be in the range [0-10]. See documentation for the complete list of values.", getErrorCondition());
+    setErrorCondition(-1006, "The Laue Class value must be in the range [0-10]. See documentation for the complete list of values.");
     return;
   }
 }
@@ -165,10 +162,10 @@ void WriteIPFStandardTriangle::preflight()
 // -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -246,7 +243,7 @@ void WriteIPFStandardTriangle::writeImage(QImage& image)
 {
 
   QString ss = QObject::tr("Writing Image %1").arg(getOutputFile());
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+  notifyStatusMessage(ss);
 
   QFileInfo fi((m_OutputFile));
   QDir parent(fi.absolutePath());
@@ -259,8 +256,7 @@ void WriteIPFStandardTriangle::writeImage(QImage& image)
   if(!saved)
   {
     QString ss = QObject::tr("The Triangle image file '%1' was not saved").arg(getOutputFile());
-    setErrorCondition(-90011);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-90011, ss);
   }
 }
 

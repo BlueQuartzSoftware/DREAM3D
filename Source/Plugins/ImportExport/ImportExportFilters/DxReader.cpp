@@ -40,6 +40,7 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -48,6 +49,15 @@
 
 #include "ImportExport/ImportExportConstants.h"
 #include "ImportExport/ImportExportVersion.h"
+
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataArrayID31 = 31,
+
+  DataContainerID = 1
+};
 
 /* ############## Start Private Implementation ############################### */
 // -----------------------------------------------------------------------------
@@ -84,13 +94,13 @@ DxReader::DxReader()
 , m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
 , d_ptr(new DxReaderPrivate(this))
 {
-  m_Origin.x = 0.0f;
-  m_Origin.y = 0.0f;
-  m_Origin.z = 0.0f;
+  m_Origin[0] = 0.0f;
+  m_Origin[1] = 0.0f;
+  m_Origin[2] = 0.0f;
 
-  m_Resolution.x = 1.0f;
-  m_Resolution.y = 1.0f;
-  m_Resolution.z = 1.0f;
+  m_Spacing[0] = 1.0f;
+  m_Spacing[1] = 1.0f;
+  m_Spacing[2] = 1.0f;
 
   m_Dims[0] = 0;
   m_Dims[1] = 0;
@@ -116,13 +126,13 @@ void DxReader::setupFilterParameters()
 {
   FileReader::setupFilterParameters();
 
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, DxReader, "*.dx"));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, DxReader));
 
-  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Resolution", Resolution, FilterParameter::Parameter, DxReader));
+  parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, DxReader));
 
-  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", VolumeDataContainerName, FilterParameter::CreatedArray, DxReader));
+  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", VolumeDataContainerName, FilterParameter::CreatedArray, DxReader));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, DxReader));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, DxReader));
@@ -133,12 +143,12 @@ void DxReader::setupFilterParameters()
 void DxReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setVolumeDataContainerName(reader->readString("VolumeDataContainerName", getVolumeDataContainerName()));
+  setVolumeDataContainerName(reader->readDataArrayPath("VolumeDataContainerName", getVolumeDataContainerName()));
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
   setFeatureIdsArrayName(reader->readString("FeatureIdsArrayName", getFeatureIdsArrayName()));
   setInputFile(reader->readString("InputFile", getInputFile()));
   setOrigin(reader->readFloatVec3("Origin", getOrigin()));
-  setResolution(reader->readFloatVec3("Resolution", getResolution()));
+  setSpacing(reader->readFloatVec3("Spacing", getSpacing()));
   reader->closeFilterGroup();
 }
 
@@ -147,8 +157,8 @@ void DxReader::readFilterParameters(AbstractFilterParametersReader* reader, int 
 // -----------------------------------------------------------------------------
 void DxReader::updateCellInstancePointers()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   if(nullptr != m_FeatureIdsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
@@ -185,12 +195,12 @@ void DxReader::initialize()
 // -----------------------------------------------------------------------------
 void DxReader::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
-  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName());
-  if(getErrorCondition() < 0)
+  DataContainer::Pointer m = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getVolumeDataContainerName(), DataContainerID);
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -203,14 +213,12 @@ void DxReader::dataCheck()
   if(getInputFile().isEmpty())
   {
     QString ss = QObject::tr("The input file must be set");
-    setErrorCondition(-387);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-387, ss);
   }
   else if(!fi.exists())
   {
     QString ss = QObject::tr("The input file does not exist");
-    setErrorCondition(-388);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-388, ss);
   }
 
   if(m_InStream.isOpen())
@@ -243,8 +251,7 @@ void DxReader::dataCheck()
       if(!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
       {
         QString ss = QObject::tr("Error opening input file: %1").arg(getInputFile());
-        setErrorCondition(-100);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        setErrorCondition(-100, ss);
         return;
       }
 
@@ -252,9 +259,8 @@ void DxReader::dataCheck()
       m_InStream.close();
       if(error < 0)
       {
-        setErrorCondition(error);
         QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Dx file?");
-        notifyErrorMessage(getHumanLabel(), ss, -11000);
+        setErrorCondition(error, ss);
       }
 
       // Set the file path and time stamp into the cache
@@ -264,22 +270,22 @@ void DxReader::dataCheck()
   }
 
   QVector<size_t> tDims = getDims();
-  m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
-  if(getErrorCondition() < 0)
+  m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   QVector<size_t> cDims(1, 1);
-  tempPath.update(getVolumeDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
-  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims);
+  tempPath.update(getVolumeDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
+  m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID31);
   if(nullptr != m_FeatureIdsPtr.lock())
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   }
 
-  m->getGeometryAs<ImageGeom>()->setResolution(std::make_tuple(m_Resolution.x, m_Resolution.y, m_Resolution.z));
-  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin.x, m_Origin.y, m_Origin.z));
+  m->getGeometryAs<ImageGeom>()->setSpacing(std::make_tuple(m_Spacing[0], m_Spacing[1], m_Spacing[2]));
+  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin[0], m_Origin[1], m_Origin[2]));
 }
 
 // -----------------------------------------------------------------------------
@@ -300,10 +306,10 @@ void DxReader::preflight()
 // -----------------------------------------------------------------------------
 void DxReader::execute()
 {
-  int32_t err = 0;
-  setErrorCondition(err);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -312,12 +318,11 @@ void DxReader::execute()
   if(!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
   {
     QString ss = QObject::tr("Error opening input file '%1'").arg(getInputFile());
-    setErrorCondition(-100);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-100, ss);
     return;
   }
 
-  err = readHeader();
+  int32_t err = readHeader();
   if(err < 0)
   {
     m_InStream.close();
@@ -406,10 +411,9 @@ int32_t DxReader::readHeader()
       if(tokens.size() == 20)
       {
         ss = QObject::tr("Unable to locate the last header line");
-        setErrorCondition(-8);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        setErrorCondition(-8, ss);
         m_InStream.close();
-        return getErrorCondition();
+        return getErrorCode();
       }
     }
   } // when we get here, we are looking at data
@@ -457,7 +461,7 @@ int32_t DxReader::readFile()
   m->getAttributeMatrix(getCellAttributeMatrixName())->resizeAttributeArrays(tDims);
   updateCellInstancePointers();
 
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     m_InStream.close();
     return -1;
@@ -519,10 +523,9 @@ int32_t DxReader::readFile()
   if(count != static_cast<size_t>(m->getGeometryAs<ImageGeom>()->getNumberOfElements()))
   {
     QString ss = QObject::tr("Data size does not match header dimensions\t%1\t%2").arg(index).arg(m->getGeometryAs<ImageGeom>()->getNumberOfElements());
-    setErrorCondition(-495);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-495, ss);
     m_InStream.close();
-    return getErrorCondition();
+    return getErrorCode();
   }
 
   m_InStream.close();

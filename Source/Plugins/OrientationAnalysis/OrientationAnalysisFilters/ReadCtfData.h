@@ -48,9 +48,9 @@
 
 struct Ctf_Private_Data
 {
-  QVector<size_t> dims;
-  QVector<float> resolution;
-  QVector<float> origin;
+  SizeVec3Type dims;
+  FloatVec3Type resolution;
+  FloatVec3Type origin;
   QVector<CtfPhase::Pointer> phases;
 };
 
@@ -69,12 +69,14 @@ class ReadCtfDataPrivate;
 class OrientationAnalysis_EXPORT ReadCtfData : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(ReadCtfData SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
-    PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
-    PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-    PYB11_PROPERTY(bool FileWasRead READ getFileWasRead WRITE setFileWasRead)
-    PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+  PYB11_CREATE_BINDINGS(ReadCtfData SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(bool DegreesToRadians READ getDegreesToRadians WRITE setDegreesToRadians)
+  PYB11_PROPERTY(bool EdaxHexagonalAlignment READ getEdaxHexagonalAlignment WRITE setEdaxHexagonalAlignment)
+  PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+  PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  PYB11_PROPERTY(bool FileWasRead READ getFileWasRead WRITE setFileWasRead)
+  PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   Q_DECLARE_PRIVATE(ReadCtfData)
 
 public:
@@ -84,8 +86,14 @@ public:
 
   ~ReadCtfData() override;
 
-  SIMPL_FILTER_PARAMETER(QString, DataContainerName)
-  Q_PROPERTY(QString DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  SIMPL_FILTER_PARAMETER(bool, DegreesToRadians)
+  Q_PROPERTY(bool DegreesToRadians READ getDegreesToRadians WRITE setDegreesToRadians)
+
+  SIMPL_FILTER_PARAMETER(bool, EdaxHexagonalAlignment)
+  Q_PROPERTY(bool EdaxHexagonalAlignment READ getEdaxHexagonalAlignment WRITE setEdaxHexagonalAlignment)
+
+  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
   SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
   Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
@@ -112,7 +120,7 @@ public:
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
-  */
+   */
   const QString getBrandingString() const override;
 
   /**
@@ -164,8 +172,8 @@ public:
   void execute() override;
 
   /**
-  * @brief preflight Reimplemented from @see AbstractFilter class
-  */
+   * @brief preflight Reimplemented from @see AbstractFilter class
+   */
   void preflight() override;
 
   /* These are non-exposed to the user through the GUI. Manual Pipelines are OK to set them */
@@ -183,8 +191,8 @@ public:
 
 public slots:
   /**
-  * @brief flushCache Resets the cache file state
-  */
+   * @brief flushCache Resets the cache file state
+   */
   void flushCache();
 
 signals:
@@ -224,28 +232,28 @@ protected:
   void initialize();
 
   /**
-  * @brief copyRawEbsdData Reads the Ang file and puts the data into the data container
-  * @param reader CtfReader instance pointer
-  * @param tDims Tuple dimensions
-  * @param cDims Component dimensions
-  */
+   * @brief copyRawEbsdData Reads the Ang file and puts the data into the data container
+   * @param reader CtfReader instance pointer
+   * @param tDims Tuple dimensions
+   * @param cDims Component dimensions
+   */
   void copyRawEbsdData(CtfReader* reader, QVector<size_t>& tDims, QVector<size_t>& cDims);
 
   /**
-  * @brief loadMaterialInfo Reads the values for the phase type, crystal structure
-  * and precipitate fractions from the EBSD file.
-  * @param reader CtfReader instance pointer
-  * @return Integer error value
-  */
+   * @brief loadMaterialInfo Reads the values for the phase type, crystal structure
+   * and precipitate fractions from the EBSD file.
+   * @param reader CtfReader instance pointer
+   * @return Integer error value
+   */
   int32_t loadMaterialInfo(CtfReader* reader);
 
   /**
-  * @brief readDataFile Reads the Ctf file
-  * @param reader CtfReader instance pointer
-  * @param m DataContainer instance pointer
-  * @param tDims Tuple dimensions
-  */
-  void readDataFile(CtfReader* reader, DataContainer::Pointer m, QVector<size_t>& tDims, CTF_READ_FLAG flag);
+   * @brief readDataFile Reads the Ctf file
+   * @param reader CtfReader instance pointer
+   * @param m DataContainer instance pointer
+   * @param tDims Tuple dimensions
+   */
+  void readDataFile(CtfReader* reader, const DataContainer::Pointer& m, QVector<size_t>& tDims, CTF_READ_FLAG flag);
 
 private:
   QScopedPointer<ReadCtfDataPrivate> const d_ptr;

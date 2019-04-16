@@ -2,7 +2,7 @@
     "0": {
         "CellAttributeMatrixName": "CellData",
         "DataContainerName": "ImageDataContainer",
-        "FileName": "C:/Users/mjackson/Workspace/DREAM3D/Source/Plugins/OrientationAnalysis/Test/Data/MasterPattern.png",
+        "FileName": "Data/MasterPattern.png",
         "FilterVersion": "1.0.366",
         "Filter_Enabled": true,
         "Filter_Human_Label": "ITK::Image Reader",

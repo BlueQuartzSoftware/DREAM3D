@@ -123,7 +123,7 @@ void H5AngImporter::getDims(int64_t& x, int64_t& y)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5AngImporter::getResolution(float& x, float& y)
+void H5AngImporter::getSpacing(float& x, float& y)
 {
   x = xRes;
   y = yRes;
@@ -145,7 +145,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString& angFile)
 {
   herr_t err = -1;
   setCancel(false);
-  setErrorCondition(0);
+  setErrorCode(0);
   setPipelineMessage("");
   QString streamBuf;
   QTextStream ss(&streamBuf);
@@ -190,7 +190,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString& angFile)
     }
     setPipelineMessage( *(ss.string()));
 
-    setErrorCondition(err);
+    setErrorCode(err);
     progressMessage(*(ss.string()), 100);
     return -1;
   }
@@ -234,7 +234,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString& angFile)
     ss << "H5AngImporter Error: A Group for Z index " << z << " could not be created."
        << " Please check other error messages from the HDF5 library for possible reasons.";
     setPipelineMessage( *(ss.string() ));
-    setErrorCondition(-500);
+    setErrorCode(-500);
     return -1;
   }
 
@@ -247,7 +247,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString& angFile)
     progressMessage(ss.string(), 100);
     err = H5Gclose(angGroup);
     setPipelineMessage( *(ss.string()) );
-    setErrorCondition(-600);
+    setErrorCode(-600);
     return -1;
   }
   WRITE_ANG_HEADER_DATA(reader, float, TEMpixPerum, Ebsd::Ang::TEMPIXPerUM)
@@ -292,7 +292,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString& angFile)
     progressMessage(ss.string(), 100);
     err = H5Gclose(angGroup);
     setPipelineMessage(*(ss.string()));
-    setErrorCondition(-700);
+    setErrorCode(-700);
     return -1;
   }
 

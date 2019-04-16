@@ -47,6 +47,13 @@
 #include "Generic/GenericConstants.h"
 #include "Generic/GenericVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -69,7 +76,7 @@ FindBoundingBoxFeatures::~FindBoundingBoxFeatures() = default;
 // -----------------------------------------------------------------------------
 void FindBoundingBoxFeatures::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   QStringList linkedProps("PhasesArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply Phase by Phase", CalcByPhase, FilterParameter::Parameter, FindBoundingBoxFeatures, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::RequiredArray));
@@ -119,8 +126,8 @@ void FindBoundingBoxFeatures::initialize()
 // -----------------------------------------------------------------------------
 void FindBoundingBoxFeatures::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   DataArrayPath tempPath;
 
@@ -135,7 +142,7 @@ void FindBoundingBoxFeatures::dataCheck()
   {
     m_Centroids = m_CentroidsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getCentroidsArrayPath());
   }
@@ -147,14 +154,13 @@ void FindBoundingBoxFeatures::dataCheck()
   {
     m_SurfaceFeatures = m_SurfaceFeaturesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getSurfaceFeaturesArrayPath());
   }
 
   tempPath.update(getCentroidsArrayPath().getDataContainerName(), getCentroidsArrayPath().getAttributeMatrixName(), getBiasedFeaturesArrayName());
-  m_BiasedFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, false,
-                                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_BiasedFeaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, false, cDims, "", DataArrayID31);
   if(nullptr != m_BiasedFeaturesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_BiasedFeatures = m_BiasedFeaturesPtr.lock()->getPointer(0);
@@ -168,7 +174,7 @@ void FindBoundingBoxFeatures::dataCheck()
     {
       m_Phases = m_PhasesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() >= 0)
+    if(getErrorCode() >= 0)
     {
       dataArrayPaths.push_back(getPhasesArrayPath());
     }
@@ -228,7 +234,7 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures()
     if(m_CalcByPhase)
     {
       QString ss = QObject::tr("Working on Phase %1 of %2").arg(iter).arg(numPhases);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyStatusMessage(ss);
     }
     // reset boundbox for each phase
     imageGeom->getBoundingBox(boundbox);
@@ -348,19 +354,19 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
   {
     xPoints = imageGeom->getYPoints();
     yPoints = imageGeom->getZPoints();
-    std::tie(zRes, xRes, yRes) = imageGeom->getResolution();
+    std::tie(zRes, xRes, yRes) = imageGeom->getSpacing();
   }
   if(imageGeom->getYPoints() == 1)
   {
     xPoints = imageGeom->getXPoints();
     yPoints = imageGeom->getZPoints();
-    std::tie(xRes, zRes, yRes) = imageGeom->getResolution();
+    std::tie(xRes, zRes, yRes) = imageGeom->getSpacing();
   }
   if(imageGeom->getZPoints() == 1)
   {
     xPoints = imageGeom->getXPoints();
     yPoints = imageGeom->getYPoints();
-    std::tie(xRes, yRes, zRes) = imageGeom->getResolution();
+    std::tie(xRes, yRes, zRes) = imageGeom->getSpacing();
   }
 
   boundbox[0] = xOrigin;
@@ -445,10 +451,10 @@ void FindBoundingBoxFeatures::find_boundingboxfeatures2D()
 // -----------------------------------------------------------------------------
 void FindBoundingBoxFeatures::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

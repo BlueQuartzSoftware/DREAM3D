@@ -217,8 +217,8 @@ template <typename T> void ExecuteTemplate(ReplaceElementAttributesWithNeighborV
       if(int64_t(i) > prog)
       {
         progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
-        QString ss = QObject::tr("|| Processing Data Current Loop (%1) Progress: %2% Complete").arg(count).arg(progressInt);
-        filter->notifyStatusMessage(filter->getMessagePrefix(), filter->getHumanLabel(), ss);
+        QString ss = QObject::tr("Processing Data Current Loop (%1) Progress: %2% Complete").arg(count).arg(progressInt);
+        filter->notifyStatusMessage(ss);
         prog = prog + progIncrement;
       }
     }
@@ -236,8 +236,8 @@ template <typename T> void ExecuteTemplate(ReplaceElementAttributesWithNeighborV
       if(int64_t(i) > prog)
       {
         progressInt = static_cast<int64_t>(((float)i / totalPoints) * 100.0f);
-        QString ss = QObject::tr("|| Processing Data Current Loop (%1) || Transferring Cell Data: %2% Complete").arg(count).arg(progressInt);
-        filter->notifyStatusMessage(filter->getMessagePrefix(), filter->getHumanLabel(), ss);
+        QString ss = QObject::tr("Processing Data Current Loop (%1) || Transferring Cell Data: %2% Complete").arg(count).arg(progressInt);
+        filter->notifyStatusMessage(ss);
         prog = prog + progIncrement;
       }
 
@@ -280,7 +280,7 @@ ReplaceElementAttributesWithNeighborValues::~ReplaceElementAttributesWithNeighbo
 // -----------------------------------------------------------------------------
 void ReplaceElementAttributesWithNeighborValues::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Threshold Value", MinConfidence, FilterParameter::Parameter, ReplaceElementAttributesWithNeighborValues));
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
@@ -332,13 +332,13 @@ void ReplaceElementAttributesWithNeighborValues::initialize()
 // -----------------------------------------------------------------------------
 void ReplaceElementAttributesWithNeighborValues::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getConfidenceIndexArrayPath().getDataContainerName());
 
   m_InArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getConfidenceIndexArrayPath());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -347,8 +347,7 @@ void ReplaceElementAttributesWithNeighborValues::dataCheck()
   if(cDims.size() != 1 && cDims.at(0) != 1)
   {
     QString ss = QObject::tr("The number of components must be 1.");
-    setErrorCondition(-5655);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5655, ss);
   }
 }
 
@@ -370,10 +369,10 @@ void ReplaceElementAttributesWithNeighborValues::preflight()
 // -----------------------------------------------------------------------------
 void ReplaceElementAttributesWithNeighborValues::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

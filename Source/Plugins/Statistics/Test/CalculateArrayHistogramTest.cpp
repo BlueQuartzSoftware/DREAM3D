@@ -151,11 +151,11 @@ public:
       wait->setComponent(i, 0, faithful[i][2]);     // Duration first
     }
 
-    am->addAttributeArray(duration->getName(), duration); // int array
-    am->addAttributeArray(wait->getName(), wait);         // int array
+    am->insertOrAssign(duration); // int array
+    am->insertOrAssign(wait);     // int array
 
-    dc->addAttributeMatrix(am->getName(), am);
-    dca->addDataContainer(dc);
+    dc->addOrReplaceAttributeMatrix(am);
+    dca->addOrReplaceDataContainer(dc);
 
     // Now instantiate the CalculateArrayHistogram Filter from the FilterManager
     QString filtName = "CalculateArrayHistogram";
@@ -167,7 +167,7 @@ public:
       // horribly gone wrong in which case the system is going to come down quickly after this.
       AbstractFilter::Pointer filter = filterFactory->create();
       filter->setDataContainerArray(dca);
-      filter->connect(filter.get(), SIGNAL(filterGeneratedMessage(const PipelineMessage&)), &obs, SLOT(processPipelineMessage(const PipelineMessage&)));
+      filter->connect(filter.get(), SIGNAL(messageGenerated(const AbstractMessage::Pointer&)), &obs, SLOT(processPipelineMessage(const AbstractMessage::Pointer&)));
 
       QVariant var;
       QString str;
@@ -210,13 +210,13 @@ public:
       DREAM3D_REQUIRE_EQUAL(propWasSet, true)
 
       filter->execute();
-      DREAM3D_REQUIRED(filter->getErrorCondition(), >=, 0);
+      DREAM3D_REQUIRED(filter->getErrorCode(), >=, 0);
 
       DataContainerWriter::Pointer writer = DataContainerWriter::New();
       writer->setDataContainerArray(dca);
       writer->setOutputFile(UnitTest::CalculateArrayHistogramTest::OldFaithfulFile);
       writer->execute();
-      DREAM3D_REQUIRED(writer->getErrorCondition(), >=, 0);
+      DREAM3D_REQUIRED(writer->getErrorCode(), >=, 0);
 
       // Now lets get the output data
       path = DataArrayPath(DCName, Hist_AMName, DurationHistogram_Name);

@@ -289,7 +289,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     reader->setInputFile(m_EbsdFileName);
     reader->setDataContainerArray(dca);
     reader->execute();
-    int err = reader->getErrorCondition();
+    int err = reader->getErrorCode();
     if(err < 0)
     {
       QMessageBox msgBox;
@@ -305,7 +305,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
       m_DisplayedImage = QImage();
       return;
     }
-    dcName = reader->getDataContainerName();
+    dcName = reader->getDataContainerName().getDataContainerName();
     cellAttrMatName = reader->getCellAttributeMatrixName();
     cellEnsembleName = reader->getCellEnsembleAttributeMatrixName();
     cellPhasesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::AngFile::Phases);
@@ -318,7 +318,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     reader->setInputFile(m_EbsdFileName);
     reader->setDataContainerArray(dca);
     reader->execute();
-    int err = reader->getErrorCondition();
+    int err = reader->getErrorCode();
 
     if(err < 0)
     {
@@ -335,7 +335,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
       m_DisplayedImage = QImage();
       return;
     }
-    dcName = reader->getDataContainerName();
+    dcName = reader->getDataContainerName().getDataContainerName();
     cellAttrMatName = reader->getCellAttributeMatrixName();
     cellEnsembleName = reader->getCellEnsembleAttributeMatrixName();
     cellPhasesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::CtfFile::Phases);
@@ -363,7 +363,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
 
       convert->setDataContainerArray(dca);
       convert->execute();
-      int err = convert->getErrorCondition();
+      int err = convert->getErrorCode();
       if(err < 0)
       {
         m_BaseImage = QImage();
@@ -419,8 +419,8 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   DataContainer::Pointer m = dca->getDataContainer(dcName);
   size_t dims[3] = {0, 0, 0};
   std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
-  float res[3] = {0.0f, 0.0f, 0.0f};
-  m->getGeometryAs<ImageGeom>()->getResolution(res);
+  FloatVec3Type res = {0.0f, 0.0f, 0.0f};
+  m->getGeometryAs<ImageGeom>()->getSpacing(res);
 
   m_XDim->setText(QString::number(dims[0]));
   m_YDim->setText(QString::number(dims[1]));
@@ -441,21 +441,21 @@ int QEbsdReferenceFrameDialog::createIpfColors(DataContainerArray::Pointer dca, 
 {
   // We can use this filter directly because it is in the current plugin
   GenerateIPFColors::Pointer ipfColorFilter = GenerateIPFColors::New();
-  FloatVec3_t ref;
-  ref.x = 0;
-  ref.y = 0;
-  ref.z = 0;
+  FloatVec3Type ref;
+  ref[0] = 0;
+  ref[1] = 0;
+  ref[2] = 0;
   if(refDir->currentIndex() == 0)
   {
-    ref.x = 1;
+    ref[0] = 1;
   }
   else if(refDir->currentIndex() == 1)
   {
-    ref.y = 1;
+    ref[1] = 1;
   }
   else if(refDir->currentIndex() == 2)
   {
-    ref.z = 1;
+    ref[2] = 1;
   }
   ipfColorFilter->setReferenceDir(ref);
   ipfColorFilter->setDataContainerArray(dca);
@@ -463,7 +463,7 @@ int QEbsdReferenceFrameDialog::createIpfColors(DataContainerArray::Pointer dca, 
   ipfColorFilter->setCellEulerAnglesArrayPath(cellEulerAnglesArrayPath);
   ipfColorFilter->setCrystalStructuresArrayPath(crystalStructuresArrayPath);
   ipfColorFilter->execute();
-  int err = ipfColorFilter->getErrorCondition();
+  int err = ipfColorFilter->getErrorCode();
   if(err < 0)
   {
     m_BaseImage = QImage();
@@ -506,21 +506,21 @@ int QEbsdReferenceFrameDialog::createIpfColors(DataContainerArray::Pointer dca, 
 int QEbsdReferenceFrameDialog::createArrayColors(DataContainerArray::Pointer dca, DataArrayPath dataArrayPath, QString outputArrayName)
 {
   GenerateColorTable::Pointer colorTableFilter = GenerateColorTable::New();
-  FloatVec3_t ref;
-  ref.x = 0;
-  ref.y = 0;
-  ref.z = 0;
+  FloatVec3Type ref;
+  ref[0] = 0;
+  ref[1] = 0;
+  ref[2] = 0;
   if(refDir->currentIndex() == 0)
   {
-    ref.x = 1;
+    ref[0] = 1;
   }
   else if(refDir->currentIndex() == 1)
   {
-    ref.y = 1;
+    ref[1] = 1;
   }
   else if(refDir->currentIndex() == 2)
   {
-    ref.z = 1;
+    ref[2] = 1;
   }
 
   QJsonArray controlPointsArray;
@@ -539,7 +539,7 @@ int QEbsdReferenceFrameDialog::createArrayColors(DataContainerArray::Pointer dca
   colorTableFilter->setSelectedPresetControlPoints(controlPointsArray);
   colorTableFilter->setSelectedPresetName("Grayscale");
   colorTableFilter->execute();
-  int err = colorTableFilter->getErrorCondition();
+  int err = colorTableFilter->getErrorCode();
   if(err < 0)
   {
     m_BaseImage = QImage();

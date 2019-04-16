@@ -38,6 +38,7 @@
 #define NOMINMAX
 
 #include <QtCore/QDateTime>
+#include <QtCore/QMutexLocker>
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/atomic.h>
@@ -68,6 +69,17 @@
 #include <cmath>
 #include <limits>
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+  DataArrayID33 = 33,
+  DataArrayID34 = 34,
+  DataArrayID35 = 35,
+};
+
 #define STORE_PIXEL_VALUES(array, count)                                                                                                                                                               \
   array->setComponent(count, 0, xc + x);                                                                                                                                                               \
   array->setComponent(count, 1, yc + y);                                                                                                                                                               \
@@ -92,14 +104,6 @@ DetectEllipsoids::DetectEllipsoids()
 , m_HoughTransformThreshold(0.5f)
 , m_MinAspectRatio(0.4f)
 , m_ImageScaleBarLength(100)
-, m_Ellipse_Count(0)
-, m_MaxFeatureId(0)
-, m_NextExecutedFeatureId(1)
-, m_TotalNumberOfFeatures(0)
-, m_FeaturesCompleted(0)
-, m_MaxFeatureIdSem(1)
-, m_NextExecutedFeatureIdSem(1)
-, m_FeaturesCompletedSem(1)
 {
   initialize();
 }
@@ -114,8 +118,8 @@ DetectEllipsoids::~DetectEllipsoids() = default;
 // -----------------------------------------------------------------------------
 void DetectEllipsoids::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 
   m_TotalNumberOfFeatures = 0;
@@ -135,7 +139,7 @@ void DetectEllipsoids::initialize()
 // -----------------------------------------------------------------------------
 void DetectEllipsoids::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Min Fiber Axis Length", MinFiberAxisLength, FilterParameter::Parameter, DetectEllipsoids));
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Max Fiber Axis Length", MaxFiberAxisLength, FilterParameter::Parameter, DetectEllipsoids));
@@ -188,23 +192,22 @@ void DetectEllipsoids::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void DetectEllipsoids::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, m_FeatureIdsArrayPath, QVector<size_t>(1, 1));
 
   m_DetectedEllipsoidsFeatureIdsPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<Int32ArrayType, AbstractFilter, int32_t>(this, m_DetectedEllipsoidsFeatureIdsArrayPath, 0, QVector<size_t>(1, 1));
-
+      getDataContainerArray()->createNonPrereqArrayFromPath<Int32ArrayType, AbstractFilter, int32_t>(this, m_DetectedEllipsoidsFeatureIdsArrayPath, 0, QVector<size_t>(1, 1), "", DataArrayID31);
   DataContainer::Pointer ellipseDC = getDataContainerArray()->getPrereqDataContainer(this, m_EllipseFeatureAttributeMatrixPath.getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   int err = 0;
   AttributeMatrix::Pointer featureAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, m_FeatureAttributeMatrixPath, err);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -216,19 +219,17 @@ void DetectEllipsoids::dataCheck()
 
   DataArrayPath tmp = m_EllipseFeatureAttributeMatrixPath;
   tmp.setDataArrayName(m_CenterCoordinatesArrayName);
-  m_CenterCoordinatesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), QVector<size_t>(1, 2));
-
+  m_CenterCoordinatesPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), QVector<size_t>(1, 2), "", DataArrayID32);
   tmp.setDataArrayName(m_MajorAxisLengthArrayName);
   m_MajorAxisLengthArrayPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), QVector<size_t>(1, 1));
-
+      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), QVector<size_t>(1, 1), "", DataArrayID33);
   tmp.setDataArrayName(m_MinorAxisLengthArrayName);
   m_MinorAxisLengthArrayPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), QVector<size_t>(1, 1));
-
+      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), QVector<size_t>(1, 1), "", DataArrayID34);
   tmp.setDataArrayName(m_RotationalAnglesArrayName);
   m_RotationalAnglesArrayPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), QVector<size_t>(1, 1));
+      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), QVector<size_t>(1, 1), "", DataArrayID35);
 }
 
 // -----------------------------------------------------------------------------
@@ -252,14 +253,14 @@ void DetectEllipsoids::execute()
 {
   initialize();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   /* Finding the top-left and bottom-right corners of each featureId  */
   Int32ArrayType::Pointer cellFeatureIds = getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, m_FeatureIdsArrayPath, QVector<size_t>(1, 1));
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -308,9 +309,8 @@ void DetectEllipsoids::execute()
 
           if(featureId >= corners->getNumberOfTuples())
           {
-            setErrorCondition(-31000);
             QString ss = QObject::tr("The feature attribute matrix '%1' has a smaller tuple count than the maximum feature id in '%2'").arg(featureAM->getName()).arg(cellFeatureIds->getName());
-            notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+            setErrorCondition(-31000, ss);
             return;
           }
 
@@ -362,9 +362,8 @@ void DetectEllipsoids::execute()
 
     if(orientArray->getNumberOfTuples() != houghCircleVector.size())
     {
-      setErrorCondition(-31001);
       QString ss = QObject::tr("There was an internal error.  Please ask the DREAM.3D developers for more information.");
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-31001, ss);
     }
 
     // This convolution function fills the convCoords_X, convCoords_Y, and convCoords_Z arrays with values
@@ -393,7 +392,7 @@ void DetectEllipsoids::execute()
     Int32ArrayType::Pointer smoothOffsetArray = createOffsetArray(smooth_tDims);
 
     QString ss = QObject::tr("0/%2").arg(m_TotalNumberOfFeatures);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(ss);
 
     m_MaxFeatureId = m_TotalNumberOfFeatures;
 
@@ -1266,10 +1265,10 @@ Int32ArrayType::Pointer DetectEllipsoids::fillEllipse(Int32ArrayType::Pointer I,
       if(stackSize > maxStack - 5)
       {
         // Increase stack size
-        stackX->resize(maxStack + 1000);
+        stackX->resizeTuples(maxStack + 1000);
         stackX->initializeWithValue(0, maxStack);
 
-        stackY->resize(maxStack + 1000);
+        stackY->resizeTuples(maxStack + 1000);
         stackY->initializeWithValue(0, maxStack);
         maxStack = maxStack + 1000;
       }
@@ -1339,10 +1338,9 @@ void DetectEllipsoids::ind2sub(QVector<size_t> tDims, size_t index, size_t& x, s
 // -----------------------------------------------------------------------------
 int32_t DetectEllipsoids::getUniqueFeatureId()
 {
-  m_MaxFeatureIdSem.acquire();
+  QMutexLocker locker(&m_MaxFeatureIdMutex);
   m_MaxFeatureId++;
   int32_t id = m_MaxFeatureId;
-  m_MaxFeatureIdSem.release();
   return id;
 }
 
@@ -1351,18 +1349,20 @@ int32_t DetectEllipsoids::getUniqueFeatureId()
 // -----------------------------------------------------------------------------
 size_t DetectEllipsoids::getNextFeatureId()
 {
-  m_NextExecutedFeatureIdSem.acquire();
-  int32_t featureId = m_NextExecutedFeatureId;
-  if(m_NextExecutedFeatureId >= m_TotalNumberOfFeatures)
+  QMutexLocker locker(&m_NextExecutedFeatureIdMutex);
+  int32_t featureId = m_NextExecutedFeatureId++;
+  if(m_NextExecutedFeatureId > m_TotalNumberOfFeatures)
   {
     featureId = -1;
   }
-  else
-  {
-    m_NextExecutedFeatureId++;
-  }
-  m_NextExecutedFeatureIdSem.release();
   return featureId;
+}
+
+// -----------------------------------------------------------------------------
+void DetectEllipsoids::incrementEllipseCount()
+{
+  QMutexLocker locker(&m_IncrementCountMutex);
+  ++m_Ellipse_Count;
 }
 
 // -----------------------------------------------------------------------------
@@ -1370,13 +1370,11 @@ size_t DetectEllipsoids::getNextFeatureId()
 // -----------------------------------------------------------------------------
 void DetectEllipsoids::notifyFeatureCompleted(int featureId, int threadIndex)
 {
-
-  m_FeaturesCompletedSem.acquire();
+  QMutexLocker locker(&m_FeaturesCompletedMutex);
   m_ThreadWork[threadIndex]++;
   m_FeaturesCompleted++;
   QString ss = QObject::tr("[%1/%2] Completed:").arg(m_FeaturesCompleted).arg(m_TotalNumberOfFeatures);
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
-  m_FeaturesCompletedSem.release();
+  notifyStatusMessage(ss);
 }
 
 // -----------------------------------------------------------------------------

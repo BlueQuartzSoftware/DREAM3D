@@ -13,6 +13,15 @@
 #include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -31,8 +40,8 @@ ImportAvxmMDSim::~ImportAvxmMDSim() = default;
 // -----------------------------------------------------------------------------
 void ImportAvxmMDSim::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -41,7 +50,7 @@ void ImportAvxmMDSim::initialize()
 // -----------------------------------------------------------------------------
 void ImportAvxmMDSim::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_FILELISTINFO_FP("Input File List", InputFileListInfo, FilterParameter::Parameter, ImportAvxmMDSim));
 
@@ -58,24 +67,22 @@ void ImportAvxmMDSim::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ImportAvxmMDSim::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QString ss;
 
   if(m_SeparatorChoice < 0 || m_SeparatorChoice > 1)
   {
     ss = QObject::tr("The separator is set to an unknown type.");
-    setErrorCondition(-13000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-13000, ss);
     return;
   }
 
   if(m_InputFileListInfo.InputPath.isEmpty())
   {
     ss = QObject::tr("The input directory must be set.");
-    setErrorCondition(-13001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-13001, ss);
     return;
   }
 
@@ -97,16 +104,14 @@ void ImportAvxmMDSim::dataCheck()
   if(m_FilePathList.empty())
   {
     QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
-    setErrorCondition(-13002);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-13002, ss);
     return;
   }
 
   if(hasMissingFiles)
   {
     QString ss = QObject::tr("Red Dot File(s) on the list do NOT exist on the filesystem. Please make sure all files exist.");
-    setErrorCondition(-13003);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-13003, ss);
     return;
   }
 
@@ -120,8 +125,8 @@ void ImportAvxmMDSim::dataCheck()
     QVector<size_t> cDims(1, 1);
 
     DataContainerShPtr dc = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, typeDAPath.getDataContainerName());
-    AttributeMatrixShPtr am = dc->createNonPrereqAttributeMatrix(this, typeDAPath, tDims, AttributeMatrix::Type::Cell);
-    UInt8ArrayType::Pointer da = am->createNonPrereqArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, typeDAPath.getDataArrayName(), 0, cDims);
+    AttributeMatrixShPtr am = dc->createNonPrereqAttributeMatrix(this, typeDAPath, tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
+    UInt8ArrayType::Pointer da = am->createNonPrereqArray<UInt8ArrayType, AbstractFilter, uint8_t>(this, typeDAPath.getDataArrayName(), 0, cDims, DataArrayID31);
   }
 }
 
@@ -146,7 +151,7 @@ void ImportAvxmMDSim::execute()
 {
   initialize();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -160,7 +165,7 @@ void ImportAvxmMDSim::execute()
 
     QString filePath = m_FilePathList[i];
 
-    notifyStatusMessage(getHumanLabel(), tr("Importing file %1 of %2").arg(i + 1).arg(m_FilePathList.size()));
+    notifyStatusMessage(tr("Importing file %1 of %2").arg(i + 1).arg(m_FilePathList.size()));
 
     QFileInfo fi(filePath);
     DataArrayPath typeDAPath(fi.baseName(), "CellData", "Type");
@@ -199,8 +204,7 @@ void ImportAvxmMDSim::execute()
       if(tokens.size() != 4)
       {
         QString ss = QObject::tr("Unexpected column size in file '%1'.  Expected 4 columns, but found %2 at line %3.").arg(filePath).arg(tokens.size()).arg(j + 1);
-        setErrorCondition(-13004);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        setErrorCondition(-13004, ss);
         return;
       }
 
@@ -208,8 +212,7 @@ void ImportAvxmMDSim::execute()
       if(typeStr.size() != 1)
       {
         QString ss = QObject::tr("Unexpected type specifier in file '%1'.  Found '%2' at line %3, column %4.  Expected 'l' or 's'.").arg(filePath).arg(typeStr.c_str()).arg(i + 1).arg(j + 1);
-        setErrorCondition(-13004);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        setErrorCondition(-13004, ss);
         return;
       }
 

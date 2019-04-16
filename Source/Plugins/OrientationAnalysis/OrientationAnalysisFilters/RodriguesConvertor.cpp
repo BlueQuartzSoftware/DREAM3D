@@ -116,8 +116,8 @@ RodriguesConvertor::~RodriguesConvertor() = default;
 // -----------------------------------------------------------------------------
 void RodriguesConvertor::initialize()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   setCancel(false);
 }
 
@@ -126,7 +126,7 @@ void RodriguesConvertor::initialize()
 // -----------------------------------------------------------------------------
 void RodriguesConvertor::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   DataArraySelectionFilterParameter::RequirementType dasReq;
   QVector<QVector<size_t>> comp;
   comp.push_back(QVector<size_t>(1, 3));
@@ -144,8 +144,8 @@ void RodriguesConvertor::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void RodriguesConvertor::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> cDims(1, 1);
   cDims[0] = 3;
@@ -194,7 +194,10 @@ void RodriguesConvertor::execute()
 {
   initialize();
   dataCheck();
-  if(getErrorCondition() < 0) { return; }
+  if(getErrorCode() < 0)
+  {
+    return;
+  }
 
   if (getCancel()) { return; }
 

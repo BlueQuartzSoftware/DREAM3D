@@ -64,7 +64,7 @@ EstablishShapeTypes::~EstablishShapeTypes() = default;
 // -----------------------------------------------------------------------------
 void EstablishShapeTypes::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -114,8 +114,8 @@ void EstablishShapeTypes::initialize()
 // -----------------------------------------------------------------------------
 void EstablishShapeTypes::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   DataContainerArray::Pointer dca = getDataContainerArray();
@@ -129,14 +129,14 @@ void EstablishShapeTypes::dataCheck()
 
   // Get the DataContainer first - same as phase types
   DataContainer::Pointer m = dca->getPrereqDataContainer(this, getInputPhaseTypesArrayPath().getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   // Now get the AttributeMatrix that the user wants to use to store the ShapeTypes array - same as phase types
   AttributeMatrix::Pointer cellEnsembleAttrMat = m->getPrereqAttributeMatrix(this, getInputPhaseTypesArrayPath().getAttributeMatrixName(), -990);
-  if(getErrorCondition() < 0 || nullptr == cellEnsembleAttrMat.get())
+  if(getErrorCode() < 0 || nullptr == cellEnsembleAttrMat.get())
   {
     return;
   }
@@ -167,10 +167,10 @@ void EstablishShapeTypes::preflight()
 // -----------------------------------------------------------------------------
 void EstablishShapeTypes::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

@@ -76,7 +76,7 @@ INLWriter::~INLWriter() = default;
 void INLWriter::setupFilterParameters()
 {
   FileWriter::setupFilterParameters();
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, INLWriter, "*.txt", "INL Format"));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
@@ -142,8 +142,8 @@ void INLWriter::initialize()
 // -----------------------------------------------------------------------------
 void INLWriter::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
@@ -159,7 +159,7 @@ void INLWriter::dataCheck()
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     cellDataArrayPaths.push_back(getFeatureIdsArrayPath());
   }
@@ -170,7 +170,7 @@ void INLWriter::dataCheck()
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     cellDataArrayPaths.push_back(getCellPhasesArrayPath());
   }
@@ -181,7 +181,7 @@ void INLWriter::dataCheck()
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     ensembleDataArrayPaths.push_back(getCrystalStructuresArrayPath());
   }
@@ -192,14 +192,14 @@ void INLWriter::dataCheck()
   {
     m_NumFeatures = m_NumFeaturesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     ensembleDataArrayPaths.push_back(getNumFeaturesArrayPath());
   }
 
   m_MaterialNamePtr = getDataContainerArray()->getPrereqArrayFromPath<StringDataArray, AbstractFilter>(this, getMaterialNameArrayPath(),
                                                                                                        cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     ensembleDataArrayPaths.push_back(getMaterialNameArrayPath());
   }
@@ -211,7 +211,7 @@ void INLWriter::dataCheck()
   {
     m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     cellDataArrayPaths.push_back(getCellEulerAnglesArrayPath());
   }
@@ -282,12 +282,12 @@ uint32_t mapCrystalSymmetryToTslSymmetry(uint32_t symmetry)
 // -----------------------------------------------------------------------------
 int32_t INLWriter::writeFile()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
-    return getErrorCondition();
+    return getErrorCode();
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
@@ -297,9 +297,9 @@ int32_t INLWriter::writeFile()
   int32_t err = 0;
   size_t dims[3] = {0, 0, 0};
   std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
-  float res[3] = {0.0f, 0.0f, 0.0f};
-  m->getGeometryAs<ImageGeom>()->getResolution(res);
-  float origin[3] = {0.0f, 0.0f, 0.0f};
+  FloatVec3Type res = {0.0f, 0.0f, 0.0f};
+  m->getGeometryAs<ImageGeom>()->getSpacing(res);
+  FloatVec3Type origin = {0.0f, 0.0f, 0.0f};
   m->getGeometryAs<ImageGeom>()->getOrigin(origin);
 
   // Make sure any directory path is also available as the user may have just typed
@@ -309,8 +309,7 @@ int32_t INLWriter::writeFile()
   if(!dir.mkpath("."))
   {
     QString ss = QObject::tr("Error creating parent path '%1'").arg(fi.path());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
     return -1;
   }
 
@@ -318,8 +317,7 @@ int32_t INLWriter::writeFile()
   if(nullptr == f)
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
-    setErrorCondition(-1);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1, ss);
     return -1;
   }
 

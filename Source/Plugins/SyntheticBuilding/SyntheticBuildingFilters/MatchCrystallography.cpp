@@ -58,6 +58,15 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+  DataArrayID33 = 33,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -102,7 +111,7 @@ MatchCrystallography::~MatchCrystallography() = default;
 // -----------------------------------------------------------------------------
 void MatchCrystallography::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Maximum Number of Iterations (Swaps)", MaxIterations, FilterParameter::Parameter, MatchCrystallography));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
@@ -223,8 +232,8 @@ void MatchCrystallography::initialize()
 // -----------------------------------------------------------------------------
 void MatchCrystallography::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
   DataArrayPath tempPath;
 
@@ -241,7 +250,7 @@ void MatchCrystallography::dataCheck()
 
   cDims[0] = 3;
   tempPath.update(getFeatureIdsArrayPath().getDataContainerName(), getFeatureIdsArrayPath().getAttributeMatrixName(), getCellEulerAnglesArrayName());
-  m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter>(this, tempPath, 0, cDims);
+  m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<FloatArrayType, AbstractFilter>(this, tempPath, 0, cDims, "", DataArrayID31);
   if(nullptr != m_CellEulerAnglesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_CellEulerAngles = m_CellEulerAnglesPtr.lock()->getPointer(0);
@@ -264,8 +273,7 @@ void MatchCrystallography::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getVolumesArrayName());
-  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0,
-                                                                                                                cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID32);
   if(nullptr != m_VolumesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_Volumes = m_VolumesPtr.lock()->getPointer(0);
@@ -282,8 +290,7 @@ void MatchCrystallography::dataCheck()
 
   cDims[0] = 4;
   tempPath.update(getFeaturePhasesArrayPath().getDataContainerName(), getFeaturePhasesArrayPath().getAttributeMatrixName(), getAvgQuatsArrayName());
-  m_AvgQuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0,
-                                                                                                                 cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_AvgQuatsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID33);
   if(nullptr != m_AvgQuatsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);
@@ -306,8 +313,7 @@ void MatchCrystallography::dataCheck()
   if(m_StatsDataArray.lock() == nullptr)
   {
     QString ss = QObject::tr("Statistics array is not initialized correctly. The path is %1").arg(getInputStatsArrayPath().serialize());
-    setErrorCondition(-308);
-    notifyErrorMessage(getHumanLabel(), ss, -308);
+    setErrorCondition(-308, ss);
   }
 
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(), cDims);
@@ -351,10 +357,10 @@ void MatchCrystallography::preflight()
 // -----------------------------------------------------------------------------
 void MatchCrystallography::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -363,7 +369,7 @@ void MatchCrystallography::execute()
 
   QString ss;
   ss = QObject::tr("Determining Volumes");
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+  notifyStatusMessage(ss);
   determine_volumes();
   if(getCancel())
   {
@@ -371,7 +377,7 @@ void MatchCrystallography::execute()
   }
 
   ss = QObject::tr("Determining Boundary Areas");
-  notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+  notifyStatusMessage(ss);
   determine_boundary_areas();
   if(getCancel())
   {
@@ -384,9 +390,9 @@ void MatchCrystallography::execute()
     if(m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Primary) || m_PhaseTypes[i] == static_cast<PhaseType::EnumType>(PhaseType::Type::Precipitate))
     {
       ss = QObject::tr("Initializing Arrays of Phase %1").arg(i);
-      notifyStatusMessage(getHumanLabel(), "Initializing Arrays");
+      notifyStatusMessage("Initializing Arrays");
       initializeArrays(i);
-      if(getErrorCondition() < 0)
+      if(getErrorCode() < 0)
       {
         return;
       }
@@ -396,9 +402,9 @@ void MatchCrystallography::execute()
       }
 
       ss = QObject::tr("Assigning Eulers to Phase %1").arg(i);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyStatusMessage(ss);
       assign_eulers(i);
-      if(getErrorCondition() < 0)
+      if(getErrorCode() < 0)
       {
         return;
       }
@@ -408,7 +414,7 @@ void MatchCrystallography::execute()
       }
 
       ss = QObject::tr("Measuring Misorientations of Phase %1").arg(i);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyStatusMessage(ss);
       measure_misorientations(i);
       if(getCancel())
       {
@@ -416,7 +422,7 @@ void MatchCrystallography::execute()
       }
 
       ss = QObject::tr("Matching Crystallography of Phase %1").arg(i);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyStatusMessage(ss);
       matchCrystallography(i);
       if(getCancel())
       {
@@ -448,8 +454,7 @@ void MatchCrystallography::initializeArrays(size_t ensem)
                        .arg(ensem)
                        .arg(ensem)
                        .arg(static_cast<PhaseType::EnumType>(m_PhaseTypes[ensem]));
-      setErrorCondition(-666);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-666, ss);
       return;
     }
     m_ActualOdf = pp->getODF();
@@ -466,8 +471,7 @@ void MatchCrystallography::initializeArrays(size_t ensem)
                        .arg(ensem)
                        .arg(ensem)
                        .arg(static_cast<PhaseType::EnumType>(m_PhaseTypes[ensem]));
-      setErrorCondition(-666);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-666, ss);
       return;
     }
     m_ActualOdf = pp->getODF();
@@ -475,10 +479,9 @@ void MatchCrystallography::initializeArrays(size_t ensem)
   }
   else
   {
-    setErrorCondition(-55000);
     QString ss;
     ss = QObject::tr("Improper phase type (%1) for matching crystallography").arg(static_cast<PhaseType::EnumType>(m_PhaseTypes[ensem]));
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-55000, ss);
     return;
   }
 
@@ -518,7 +521,7 @@ void MatchCrystallography::determine_volumes()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
   float res_scalar = xRes * yRes * zRes;
   for(size_t i = 1; i < totalFeatures; i++)
   {
@@ -606,8 +609,7 @@ void MatchCrystallography::assign_eulers(size_t ensem)
       if(numbins == 0)
       {
         QString ss = QObject::tr("Unkown crystal structure (%1) for phase %2").arg(m_CrystalStructures[phase]).arg(phase);
-        setErrorCondition(-666);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        setErrorCondition(-666, ss);
         return;
       }
 
@@ -790,7 +792,7 @@ void MatchCrystallography::matchCrystallography(size_t ensem)
       float estimatedTime = (float)(m_MaxIterations - iterations) / timeDiff;
 
       ss += QObject::tr(" || Est. Time Remain: %1 || Iterations/Sec: %2").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime)).arg(timeDiff * 1000);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyStatusMessage(ss);
 
       millis = QDateTime::currentMSecsSinceEpoch();
       lastIteration = iterations;

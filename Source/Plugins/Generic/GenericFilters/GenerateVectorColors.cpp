@@ -72,7 +72,7 @@ GenerateVectorColors::~GenerateVectorColors() = default;
 // -----------------------------------------------------------------------------
 void GenerateVectorColors::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Apply to Good Voxels Only (Bad Voxels Will Be Black)", UseGoodVoxels, FilterParameter::Parameter, GenerateVectorColors, linkedProps));
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
@@ -115,8 +115,8 @@ void GenerateVectorColors::initialize()
 // -----------------------------------------------------------------------------
 void GenerateVectorColors::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   DataArrayPath tempPath;
 
@@ -129,7 +129,7 @@ void GenerateVectorColors::dataCheck()
   {
     m_Vectors = m_VectorsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getVectorsArrayPath());
   };
@@ -153,7 +153,7 @@ void GenerateVectorColors::dataCheck()
     {
       m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() >= 0)
+    if(getErrorCode() >= 0)
     {
       dataArrayPaths.push_back(getGoodVoxelsArrayPath());
     };
@@ -184,10 +184,10 @@ void GenerateVectorColors::preflight()
 // -----------------------------------------------------------------------------
 void GenerateVectorColors::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

@@ -50,7 +50,7 @@ class Sampling_EXPORT RotateSampleRefFrame : public AbstractFilter
   Q_OBJECT
     PYB11_CREATE_BINDINGS(RotateSampleRefFrame SUPERCLASS AbstractFilter)
     PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
-    PYB11_PROPERTY(FloatVec3_t RotationAxis READ getRotationAxis WRITE setRotationAxis)
+    PYB11_PROPERTY(FloatVec3Type RotationAxis READ getRotationAxis WRITE setRotationAxis)
     PYB11_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle)
     PYB11_PROPERTY(bool SliceBySlice READ getSliceBySlice WRITE setSliceBySlice)
 public:
@@ -63,8 +63,8 @@ public:
   SIMPL_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
   Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, RotationAxis)
-  Q_PROPERTY(FloatVec3_t RotationAxis READ getRotationAxis WRITE setRotationAxis)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, RotationAxis)
+  Q_PROPERTY(FloatVec3Type RotationAxis READ getRotationAxis WRITE setRotationAxis)
 
   SIMPL_FILTER_PARAMETER(float, RotationAngle)
   Q_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle)

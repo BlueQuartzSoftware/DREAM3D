@@ -71,7 +71,7 @@ FindEllipsoidError::~FindEllipsoidError() = default;
 // -----------------------------------------------------------------------------
 void FindEllipsoidError::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   QStringList linkedProps("IdealFeatureIdsArrayName");
   parameters.push_back(
@@ -141,8 +141,8 @@ void FindEllipsoidError::initialize()
 // -----------------------------------------------------------------------------
 void FindEllipsoidError::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
   DataArrayPath tempPath;
 
@@ -153,13 +153,13 @@ void FindEllipsoidError::dataCheck()
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   ImageGeom::Pointer image = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName())->getPrereqGeometry<ImageGeom, AbstractFilter>(this);
-  if(getErrorCondition() < 0 || nullptr == image.get())
+  if(getErrorCode() < 0 || nullptr == image.get())
   {
     return;
   }
@@ -233,10 +233,10 @@ void FindEllipsoidError::preflight()
 // -----------------------------------------------------------------------------
 void FindEllipsoidError::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -245,7 +245,7 @@ void FindEllipsoidError::execute()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   m_ScaleFator = 1.0 / xRes;
   if(yRes > xRes && yRes > zRes)
@@ -265,7 +265,7 @@ void FindEllipsoidError::execute()
     find_error2D();
   }
 
-  notifyStatusMessage(getHumanLabel(), "FindEllipsoidError Completed");
+  notifyStatusMessage("FindEllipsoidError Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -286,7 +286,7 @@ void FindEllipsoidError::find_error2D()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   float xsquared, ysquared, asquared, bsquared, xc, yc, theta;
   int32_t xcoord, ycoord;

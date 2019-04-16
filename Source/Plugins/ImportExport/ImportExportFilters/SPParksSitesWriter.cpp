@@ -70,7 +70,7 @@ SPParksSitesWriter::~SPParksSitesWriter() = default;
 void SPParksSitesWriter::setupFilterParameters()
 {
   FileWriter::setupFilterParameters();
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_OUTPUT_FILE_FP("Output File", OutputFile, FilterParameter::Parameter, SPParksSitesWriter, "*.spparks", "SPParks Sites File"));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
@@ -103,8 +103,8 @@ void SPParksSitesWriter::initialize()
 // -----------------------------------------------------------------------------
 void SPParksSitesWriter::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   FileSystemPathHelper::CheckOutputFile(this, "Output SPPARKS File", getOutputFile(), true);
 
@@ -137,12 +137,12 @@ void SPParksSitesWriter::preflight()
 // -----------------------------------------------------------------------------
 int32_t SPParksSitesWriter::writeHeader()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
-    return getErrorCondition();
+    return getErrorCode();
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
@@ -157,9 +157,8 @@ int32_t SPParksSitesWriter::writeHeader()
   if(!outfile)
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
-    setErrorCondition(-100);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(-100, ss);
+    return getErrorCode();
   }
 
   outfile << "-"
@@ -189,12 +188,12 @@ int32_t SPParksSitesWriter::writeHeader()
 // -----------------------------------------------------------------------------
 int32_t SPParksSitesWriter::writeFile()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
-    return getErrorCondition();
+    return getErrorCode();
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
@@ -209,9 +208,8 @@ int32_t SPParksSitesWriter::writeFile()
   if(!outfile)
   {
     QString ss = QObject::tr("Error opening output file '%1'").arg(getOutputFile());
-    setErrorCondition(-100);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(-100, ss);
+    return getErrorCode();
   }
 
   qint64 millis = QDateTime::currentMSecsSinceEpoch();
@@ -236,11 +234,11 @@ int32_t SPParksSitesWriter::writeFile()
       if(currentMillis - millis > 1000)
       {
         buf.clear();
-        ss << getMessagePrefix() << " " << static_cast<int>((float)(k) / (float)(totalpoints)*100) << " % Completed ";
+        ss << static_cast<int>((float)(k) / (float)(totalpoints)*100) << " % Completed ";
         timeDiff = ((float)k / (float)(currentMillis - startMillis));
         estimatedTime = (float)(totalpoints - k) / timeDiff;
         ss << " || Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);
-        notifyStatusMessage(getHumanLabel(), buf);
+        notifyStatusMessage(buf);
         millis = QDateTime::currentMSecsSinceEpoch();
       }
     }

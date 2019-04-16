@@ -46,6 +46,14 @@
 #include "OrientationLib/OrientationMath/OrientationConverter.hpp"
 #include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -65,7 +73,7 @@ ConvertOrientations::~ConvertOrientations() = default;
 // -----------------------------------------------------------------------------
 void ConvertOrientations::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
@@ -130,33 +138,30 @@ void ConvertOrientations::initialize()
 // -----------------------------------------------------------------------------
 void ConvertOrientations::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(getInputType() == getOutputType())
   {
     QString ss = QObject::tr("Input and output orientation representation types must be different");
-    setErrorCondition(-1000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1000, ss);
   }
 
   if(getInputType() < OrientationConverter<float>::GetMinIndex() || getInputType() > OrientationConverter<float>::GetMaxIndex())
   {
     QString ss = QObject::tr("There was an error with the selection of the input orientation type. The valid values range from 0 to %1").arg(OrientationConverter<float>::GetMaxIndex());
-    setErrorCondition(-1001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1001, ss);
   }
 
   if(getOutputType() < OrientationConverter<float>::GetMinIndex() || getOutputType() > OrientationConverter<float>::GetMaxIndex())
   {
     QString ss = QObject::tr("There was an error with the selection of the output orientation type. The valid values range from 0 to %1").arg(OrientationConverter<float>::GetMaxIndex());
-    setErrorCondition(-1002);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1002, ss);
   }
 
   // We need to return NOW because the next lines assume we have and index that is within
   // the valid bounds
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -164,7 +169,7 @@ void ConvertOrientations::dataCheck()
   // Figure out what kind of Array the user selected
   // Get the input data and create the output Data appropriately
   IDataArray::Pointer iDataArrayPtr = getDataContainerArray()->getPrereqIDataArrayFromPath<IDataArray, AbstractFilter>(this, getInputOrientationArrayPath());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -184,8 +189,7 @@ void ConvertOrientations::dataCheck()
                      .arg(numComps)
                      .arg(componentCounts[getInputType()])
                      .arg(sizeNameMappingString);
-    setErrorCondition(-1006);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-1006, ss);
   }
 
   DataArrayPath outputArrayPath = getInputOrientationArrayPath();
@@ -195,14 +199,14 @@ void ConvertOrientations::dataCheck()
   if(nullptr != fArray.get())
   {
     QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);
-    getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, outputArrayPath, 0, outputCDims);
+    getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, outputArrayPath, 0, outputCDims, "", DataArrayID31);
   }
 
   DoubleArrayType::Pointer dArray = std::dynamic_pointer_cast<DoubleArrayType>(iDataArrayPtr);
   if(nullptr != dArray.get())
   {
     QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);
-    getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, outputArrayPath, 0, outputCDims);
+    getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, outputArrayPath, 0, outputCDims, "", DataArrayID32);
   }
 }
 
@@ -245,16 +249,14 @@ template <typename T> void generateRepresentation(ConvertOrientations* filter, t
   if(nullptr == output.get())
   {
     QString ss = QObject::tr("There was an error converting the input data using convertor %1").arg(converters[filter->getInputType()]->getNameOfClass());
-    filter->setErrorCondition(-1004);
-    filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+    filter->setErrorCondition(-1004, ss);
     return;
   }
 
   if(!output->copyIntoArray(outputOrientations))
   {
     QString ss = QObject::tr("There was an error copying the final results into the output array.");
-    filter->setErrorCondition(-1003);
-    filter->notifyErrorMessage(filter->getHumanLabel(), ss, filter->getErrorCondition());
+    filter->setErrorCondition(-1003, ss);
   }
 }
 
@@ -263,10 +265,10 @@ template <typename T> void generateRepresentation(ConvertOrientations* filter, t
 // -----------------------------------------------------------------------------
 void ConvertOrientations::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

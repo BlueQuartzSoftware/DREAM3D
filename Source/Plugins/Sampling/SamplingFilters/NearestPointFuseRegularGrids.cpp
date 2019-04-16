@@ -64,7 +64,7 @@ NearestPointFuseRegularGrids::~NearestPointFuseRegularGrids() = default;
 // -----------------------------------------------------------------------------
 void NearestPointFuseRegularGrids::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     AttributeMatrixSelectionFilterParameter::RequirementType req = AttributeMatrixSelectionFilterParameter::CreateRequirement(AttributeMatrix::Type::Cell, IGeometry::Type::Image);
@@ -100,8 +100,8 @@ void NearestPointFuseRegularGrids::initialize()
 // -----------------------------------------------------------------------------
 void NearestPointFuseRegularGrids::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getReferenceCellAttributeMatrixPath().getDataContainerName());
@@ -109,7 +109,7 @@ void NearestPointFuseRegularGrids::dataCheck()
 
   AttributeMatrix::Pointer refAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getReferenceCellAttributeMatrixPath(), -301);
   AttributeMatrix::Pointer sampleAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getSamplingCellAttributeMatrixPath(), -301);
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -121,13 +121,12 @@ void NearestPointFuseRegularGrids::dataCheck()
   {
     tempPath.update(getReferenceCellAttributeMatrixPath().getDataContainerName(), getReferenceCellAttributeMatrixPath().getAttributeMatrixName(), *iter);
     IDataArray::Pointer tmpDataArray = sampleAttrMat->getPrereqIDataArray<IDataArray, AbstractFilter>(this, *iter, -90001);
-    if(getErrorCondition() >= 0)
+    if(getErrorCode() >= 0)
     {
       if(refArrayNames.contains(*iter))
       {
         QString ss = QObject::tr("There is already an attribute array with the name %1 in the reference attribute matrix").arg(*iter);
-        setErrorCondition(-5559);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        setErrorCondition(-5559, ss);
       }
       else
       {
@@ -150,7 +149,7 @@ void NearestPointFuseRegularGrids::dataCheck()
   for(QList<QString>::Iterator it = m_AttrMatList.begin(); it != m_AttrMatList.end(); ++it)
   {
     AttributeMatrix::Pointer tmpAttrMat = mS->getPrereqAttributeMatrix(this, *it, -301);
-    if(getErrorCondition() >= 0)
+    if(getErrorCode() >= 0)
     {
       tempAttrMatType = tmpAttrMat->getType();
       if(tempAttrMatType > AttributeMatrix::Type::Cell)
@@ -158,13 +157,12 @@ void NearestPointFuseRegularGrids::dataCheck()
         if(refAttrMatNames.contains(tmpAttrMat->getName()))
         {
           QString ss = QObject::tr("There is already an attribute matrix with the name %1 in the reference data container").arg(tmpAttrMat->getName());
-          setErrorCondition(-5559);
-          notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+          setErrorCondition(-5559, ss);
         }
         else
         {
           AttributeMatrix::Pointer attrMat = tmpAttrMat->deepCopy(getInPreflight());
-          mR->addAttributeMatrix(*it, attrMat);
+          mR->addOrReplaceAttributeMatrix(attrMat);
         }
       }
     }
@@ -189,10 +187,10 @@ void NearestPointFuseRegularGrids::preflight()
 // -----------------------------------------------------------------------------
 void NearestPointFuseRegularGrids::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -204,16 +202,16 @@ void NearestPointFuseRegularGrids::execute()
   AttributeMatrix::Pointer sampleAttrMat = sampleDC->getAttributeMatrix(m_SamplingCellAttributeMatrixPath.getAttributeMatrixName());
 
   // Get dimensions and resolutions of two grids
-  size_t _refDims[3] = {0, 0, 0};
-  size_t _sampleDims[3] = {0, 0, 0};
-  float refRes[3] = {0.0f, 0.0f, 0.0f};
-  float sampleRes[3] = {0.0f, 0.0f, 0.0f};
-  float refOrigin[3] = {0.0f, 0.0f, 0.0f};
-  float sampleOrigin[3] = {0.0f, 0.0f, 0.0f};
-  std::tie(_refDims[0], _refDims[1], _refDims[2]) = refDC->getGeometryAs<ImageGeom>()->getDimensions();
-  std::tie(_sampleDims[0], _sampleDims[1], _sampleDims[2]) = sampleDC->getGeometryAs<ImageGeom>()->getDimensions();
-  refDC->getGeometryAs<ImageGeom>()->getResolution(refRes);
-  sampleDC->getGeometryAs<ImageGeom>()->getResolution(sampleRes);
+  SizeVec3Type _refDims;
+  SizeVec3Type _sampleDims;
+  FloatVec3Type refRes = {0.0f, 0.0f, 0.0f};
+  FloatVec3Type sampleRes = {0.0f, 0.0f, 0.0f};
+  FloatVec3Type refOrigin = {0.0f, 0.0f, 0.0f};
+  FloatVec3Type sampleOrigin = {0.0f, 0.0f, 0.0f};
+  refDC->getGeometryAs<ImageGeom>()->getDimensions(_refDims);
+  sampleDC->getGeometryAs<ImageGeom>()->getDimensions(_sampleDims);
+  refDC->getGeometryAs<ImageGeom>()->getSpacing(refRes);
+  sampleDC->getGeometryAs<ImageGeom>()->getSpacing(sampleRes);
   refDC->getGeometryAs<ImageGeom>()->getOrigin(refOrigin);
   sampleDC->getGeometryAs<ImageGeom>()->getOrigin(sampleOrigin);
 
@@ -234,8 +232,7 @@ void NearestPointFuseRegularGrids::execute()
   {
     QString ss = QObject::tr("A component of the resolution for the Image Geometry associated with DataContainer '%1' is 0. This would result in a division by 0 operation")
                      .arg(m_SamplingCellAttributeMatrixPath.getDataContainerName());
-    setErrorCondition(-5555);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5555, ss);
     return;
   }
 
@@ -264,7 +261,7 @@ void NearestPointFuseRegularGrids::execute()
     // the data container this will over write the current array with
     // the same name. At least in theory
     IDataArray::Pointer data = p->createNewArray(numRefTuples, p->getComponentDimensions(), p->getName());
-    refAttrMat->addAttributeArray(p->getName(), data);
+    refAttrMat->insertOrAssign(data);
   }
 
   bool outside = false;

@@ -106,20 +106,20 @@ public:
     ImageGeom::Pointer geom = ImageGeom::CreateGeometry("ImageGeometry");
     m->setGeometry(geom);
     geom->setDimensions(tDims.data());
-    float res[3] = {1.0f, 2.0f, 1.0f};
-    geom->setResolution(res);
+    FloatVec3Type res = {1.0f, 2.0f, 1.0f};
+    geom->setSpacing(res);
 
     // Create Attribute Matrices with different tDims to test validation of tuple compatibility
 
     AttributeMatrix::Pointer attrMat1 = AttributeMatrix::New(tDims, k_FeatureIdsArrayPath.getAttributeMatrixName(), AttributeMatrix::Type::Cell);
 
-    m->addAttributeMatrix(k_FeatureIdsArrayPath.getAttributeMatrixName(), attrMat1);
-    dca->addDataContainer(m);
+    m->addOrReplaceAttributeMatrix(attrMat1);
+    dca->addOrReplaceDataContainer(m);
 
     QVector<size_t> cDims(1, 1);
 
     Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(tDims, cDims, k_FeatureIdsArrayPath.getDataArrayName());
-    int err = attrMat1->addAttributeArray(k_FeatureIdsArrayPath.getDataArrayName(), featureIds);
+    int err = attrMat1->insertOrAssign(featureIds);
     DREAM3D_REQUIRE(err >= 0);
     featureIds->initializeWithValue(1);
 
@@ -264,7 +264,7 @@ public:
     DREAM3D_REQUIRE(err >= 0);
 
     filter->execute();
-    DREAM3D_REQUIRE(filter->getErrorCondition() >= 0);
+    DREAM3D_REQUIRE(filter->getErrorCode() >= 0);
 
     //-------------------------------------------
     boundaryArrayName = "GBManhattanDistance";
@@ -291,14 +291,14 @@ public:
     DREAM3D_REQUIRE(err >= 0);
 
     filter->execute();
-    DREAM3D_REQUIRE(filter->getErrorCondition() >= 0);
+    DREAM3D_REQUIRE(filter->getErrorCode() >= 0);
 
     DataContainerWriter::Pointer writer = DataContainerWriter::New();
     writer->setOutputFile(UnitTest::StatisticsTempDir + QDir::separator() + "FindEuclideanDistMap.dream3d");
     writer->setDataContainerArray(dca);
 
     writer->execute();
-    DREAM3D_REQUIRE(writer->getErrorCondition() >= 0);
+    DREAM3D_REQUIRE(writer->getErrorCode() >= 0);
 
     err = validateResults(dca);
 

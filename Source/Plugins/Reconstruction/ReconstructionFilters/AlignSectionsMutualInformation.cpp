@@ -80,7 +80,7 @@ void AlignSectionsMutualInformation::setupFilterParameters()
 {
   // getting the current parameters that were set by the parent and adding to it before resetting it
   AlignSections::setupFilterParameters();
-  FilterParameterVector parameters = getFilterParameters();
+  FilterParameterVectorType parameters = getFilterParameters();
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Misorientation Tolerance", MisorientationTolerance, FilterParameter::Parameter, AlignSectionsMutualInformation));
   QStringList linkedProps("GoodVoxelsArrayPath");
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Use Mask Array", UseGoodVoxels, FilterParameter::Parameter, AlignSectionsMutualInformation, linkedProps));
@@ -137,15 +137,15 @@ void AlignSectionsMutualInformation::initialize()
 // -----------------------------------------------------------------------------
 void AlignSectionsMutualInformation::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   // Set the DataContainerName and AttributematrixName for the Parent Class (AlignSections) to Use.
-  setDataContainerName(m_QuatsArrayPath.getDataContainerName());
+  setDataContainerName(DataArrayPath(m_QuatsArrayPath.getDataContainerName(), "", ""));
   setCellAttributeMatrixName(m_QuatsArrayPath.getAttributeMatrixName());
 
   AlignSections::dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -161,7 +161,7 @@ void AlignSectionsMutualInformation::dataCheck()
   {
     m_Quats = m_QuatsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getQuatsArrayPath());
   }
@@ -173,7 +173,7 @@ void AlignSectionsMutualInformation::dataCheck()
   {
     m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getCellPhasesArrayPath());
   }
@@ -185,7 +185,7 @@ void AlignSectionsMutualInformation::dataCheck()
     {
       m_GoodVoxels = m_GoodVoxelsPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() >= 0)
+    if(getErrorCode() >= 0)
     {
       dataArrayPaths.push_back(getGoodVoxelsArrayPath());
     }
@@ -269,7 +269,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int64_t>& xshifts, 
   {
     float prog = ((float)iter / dims[2]) * 100;
     QString ss = QObject::tr("Aligning Sections || Determining Shifts || %1% Complete").arg(QString::number(prog, 'f', 0));
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(ss);
     mindisorientation = std::numeric_limits<float>::max();
     slice = (dims[2] - 1) - iter;
     featurecount1 = featurecounts[slice];
@@ -460,7 +460,7 @@ void AlignSectionsMutualInformation::form_features_sections()
 
   float misorientationTolerance = m_MisorientationTolerance * SIMPLib::Constants::k_Pif / 180.0f;
 
-  m_FeatureCounts->resize(dims[2]);
+  m_FeatureCounts->resizeTuples(dims[2]);
   featurecounts = m_FeatureCounts->getPointer(0);
 
   int32_t* miFeatureIds = m_MIFeaturesPtr->getPointer(0);
@@ -478,7 +478,7 @@ void AlignSectionsMutualInformation::form_features_sections()
   {
     float prog = ((float)slice / dims[2]) * 100;
     QString ss = QObject::tr("Aligning Sections || Identifying Features on Sections || %1% Complete").arg(QString::number(prog, 'f', 0));
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(ss);
     featurecount = 1;
     noseeds = false;
     while(!noseeds)
@@ -594,10 +594,10 @@ void AlignSectionsMutualInformation::form_features_sections()
 // -----------------------------------------------------------------------------
 void AlignSectionsMutualInformation::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

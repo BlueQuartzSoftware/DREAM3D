@@ -53,7 +53,7 @@ class OrientationAnalysis_EXPORT FindTwinBoundarySchmidFactors : public Abstract
     PYB11_CREATE_BINDINGS(FindTwinBoundarySchmidFactors SUPERCLASS AbstractFilter)
     PYB11_PROPERTY(bool WriteFile READ getWriteFile WRITE setWriteFile)
     PYB11_PROPERTY(QString TwinBoundarySchmidFactorsFile READ getTwinBoundarySchmidFactorsFile WRITE setTwinBoundarySchmidFactorsFile)
-    PYB11_PROPERTY(FloatVec3_t LoadingDir READ getLoadingDir WRITE setLoadingDir)
+    PYB11_PROPERTY(FloatVec3Type LoadingDir READ getLoadingDir WRITE setLoadingDir)
     PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
     PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
     PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
@@ -74,8 +74,8 @@ public:
   SIMPL_FILTER_PARAMETER(QString, TwinBoundarySchmidFactorsFile)
   Q_PROPERTY(QString TwinBoundarySchmidFactorsFile READ getTwinBoundarySchmidFactorsFile WRITE setTwinBoundarySchmidFactorsFile)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3_t, LoadingDir)
-  Q_PROPERTY(FloatVec3_t LoadingDir READ getLoadingDir WRITE setLoadingDir)
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, LoadingDir)
+  Q_PROPERTY(FloatVec3Type LoadingDir READ getLoadingDir WRITE setLoadingDir)
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)

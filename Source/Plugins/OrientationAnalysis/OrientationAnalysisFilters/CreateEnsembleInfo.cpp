@@ -49,6 +49,17 @@
 
 #include "EbsdLib/EbsdConstants.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  AttributeMatrixID21 = 21,
+
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+  DataArrayID33 = 33,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -71,7 +82,7 @@ CreateEnsembleInfo::~CreateEnsembleInfo() = default;
 // -----------------------------------------------------------------------------
 void CreateEnsembleInfo::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   {
     DataContainerSelectionFilterParameter::RequirementType req;
     parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Data Container", DataContainerName, FilterParameter::RequiredArray, CreateEnsembleInfo, req));
@@ -100,7 +111,7 @@ void CreateEnsembleInfo::setupFilterParameters()
 void CreateEnsembleInfo::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
+  setDataContainerName(reader->readDataArrayPath("DataContainerName", getDataContainerName()));
   setPhaseTypesArrayName(reader->readString("PhaseTypesArrayName", getPhaseTypesArrayName()));
   setPhaseNamesArrayName(reader->readString("PhaseNamesArrayName", getPhaseTypesArrayName()));
   setCrystalStructuresArrayName(reader->readString("CrystalStructuresArrayName", getCrystalStructuresArrayName()));
@@ -119,51 +130,49 @@ void CreateEnsembleInfo::initialize()
 // -----------------------------------------------------------------------------
 void CreateEnsembleInfo::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   if(m_Ensemble.size() == 0)
   {
-    setErrorCondition(-15000);
-    notifyErrorMessage(getHumanLabel(), "You must add at least 1 ensemble phase.", getErrorCondition());
+    setErrorCondition(-15000, "You must add at least 1 ensemble phase.");
   }
 
   int numPhases = m_Ensemble.size();
 
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   QVector<size_t> tDims(1, numPhases + 1);
-  m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble);
-  if(getErrorCondition() < 0)
+  m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID21);
+  if(getErrorCode() < 0)
   {
     return;
   }
 
   QVector<size_t> cDims(1, 1);
   DataArrayPath tempPath;
-  tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName());
-  m_CrystalStructuresPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(
-      this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName());
+  m_CrystalStructuresPtr =
+      getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims, "", DataArrayID31);
   if(nullptr != m_CrystalStructuresPtr.lock())                                 /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_CrystalStructures = m_CrystalStructuresPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getPhaseTypesArrayName());
-  m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt32ArrayType, AbstractFilter, uint32_t>(
-      this, tempPath, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), getPhaseTypesArrayName());
+  m_PhaseTypesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<UInt32ArrayType, AbstractFilter, uint32_t>(this, tempPath, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown), cDims,
+                                                                                                                     "", DataArrayID32);
   if(nullptr != m_PhaseTypesPtr.lock())                                                   /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_PhaseTypes = m_PhaseTypesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), getPhaseNamesArrayName());
-  m_PhaseNamesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<StringDataArray, AbstractFilter, QString>(this, tempPath, "_PHASE_NAME_",
-                                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), getPhaseNamesArrayName());
+  m_PhaseNamesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<StringDataArray, AbstractFilter, QString>(this, tempPath, "_PHASE_NAME_", cDims, "", DataArrayID33);
 }
 
 // -----------------------------------------------------------------------------
@@ -184,10 +193,10 @@ void CreateEnsembleInfo::preflight()
 // -----------------------------------------------------------------------------
 void CreateEnsembleInfo::execute()
 {
-  int32_t err = 0;
-  setErrorCondition(err);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -200,8 +209,7 @@ void CreateEnsembleInfo::execute()
   if(0 == numPhases) // Either the group name "EnsembleInfo" is incorrect or 0 was entered as the Number_Phases
   {
     QString ss = QObject::tr("Check the group name EnsembleInfo and that the number of phases > 0");
-    setErrorCondition(-10003);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-10003, ss);
     return;
   }
 
@@ -216,8 +224,7 @@ void CreateEnsembleInfo::execute()
     if(crystalStructure == Ebsd::CrystalStructure::UnknownCrystalStructure)
     {
       QString ss = QObject::tr("Incorrect crystal structure name '%1'").arg(crystalStructure);
-      setErrorCondition(-10006);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-10006, ss);
       return;
     }
 
@@ -228,8 +235,7 @@ void CreateEnsembleInfo::execute()
     if(static_cast<PhaseType::Type>(phaseType) == PhaseType::Type::Unknown)
     {
       QString ss = QObject::tr("Incorrect phase type '%1'").arg(phaseType); // The phase type name was not found in the lookup table
-      setErrorCondition(-10007);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-10007, ss);
       return;
     }
 
@@ -240,8 +246,7 @@ void CreateEnsembleInfo::execute()
     if(phaseName.isEmpty())
     {
       QString ss = QObject::tr("Phase name cannot be empty'"); // The phase name was not found
-      setErrorCondition(-10008);
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(-10008, ss);
       return;
     }
 

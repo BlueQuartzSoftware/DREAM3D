@@ -47,6 +47,13 @@
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -69,7 +76,7 @@ FindSurfaceAreaToVolume::~FindSurfaceAreaToVolume() = default;
 // -----------------------------------------------------------------------------
 void FindSurfaceAreaToVolume::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -117,8 +124,8 @@ void FindSurfaceAreaToVolume::initialize()
 // -----------------------------------------------------------------------------
 void FindSurfaceAreaToVolume::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
@@ -150,7 +157,7 @@ void FindSurfaceAreaToVolume::dataCheck()
   if(getCalculateSphericity())
   {
     tempPath.setDataArrayName(getSphericityArrayName());
-    m_SphericityPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims);
+    m_SphericityPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID31);
     if(nullptr != m_SphericityPtr.lock())
     {
       m_Sphericity = m_SphericityPtr.lock()->getPointer(0);
@@ -176,10 +183,10 @@ void FindSurfaceAreaToVolume::preflight()
 // -----------------------------------------------------------------------------
 void FindSurfaceAreaToVolume::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -208,16 +215,14 @@ void FindSurfaceAreaToVolume::execute()
   if(mismatchedFeatures)
   {
     QString ss = QObject::tr("The number of Features in the NumCells array (%1) is larger than the largest Feature Id in the FeatureIds array").arg(numFeatures);
-    setErrorCondition(-5555);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5555, ss);
     return;
   }
 
   if(largestFeature != (numFeatures - 1))
   {
     QString ss = QObject::tr("The number of Features in the NumCells array (%1) does not match the largest Feature Id in the FeatureIds array").arg(numFeatures);
-    setErrorCondition(-5555);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5555, ss);
     return;
   }
 
@@ -226,7 +231,7 @@ void FindSurfaceAreaToVolume::execute()
   float yRes = 0.0f;
   float zRes = 0.0f;
   ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
-  std::tie(xRes, yRes, zRes) = imageGeom->getResolution();
+  std::tie(xRes, yRes, zRes) = imageGeom->getSpacing();
 
   int64_t xPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
   int64_t yPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());

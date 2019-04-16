@@ -47,6 +47,13 @@
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -70,7 +77,7 @@ FindSizes::~FindSizes() = default;
 // -----------------------------------------------------------------------------
 void FindSizes::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_BOOL_FP("Save Element Sizes", SaveElementSizes, FilterParameter::Parameter, FindSizes));
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
@@ -122,8 +129,8 @@ void FindSizes::initialize()
 // -----------------------------------------------------------------------------
 void FindSizes::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   QVector<IDataArray::Pointer> dataArrays;
@@ -138,8 +145,7 @@ void FindSizes::dataCheck()
   }
 
   tempPath.update(getFeatureAttributeMatrixName().getDataContainerName(), getFeatureAttributeMatrixName().getAttributeMatrixName(), getVolumesArrayName());
-  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0,
-                                                                                                                cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_VolumesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "", DataArrayID31);
   if(nullptr != m_VolumesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_Volumes = m_VolumesPtr.lock()->getPointer(0);
@@ -161,7 +167,7 @@ void FindSizes::dataCheck()
     m_NumElements = m_NumElementsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -170,13 +176,12 @@ void FindSizes::dataCheck()
 
   if(m_FeatureIdsPtr.lock()->getNumberOfTuples() != numElements)
   {
-    setErrorCondition(-10200);
     QString ss = QObject::tr("The number of tuples for the DataArray %1 is %2 and for Geometry %3 is %4. The number of tuples must match.")
                      .arg(m_FeatureIdsPtr.lock()->getName())
                      .arg(m_FeatureIdsPtr.lock()->getNumberOfTuples())
                      .arg(igeom->getGeometryTypeAsString())
                      .arg(numElements);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-10200, ss);
   }
 }
 
@@ -217,7 +222,7 @@ void FindSizes::findSizesImage(ImageGeom::Pointer image)
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = image->getResolution();
+  std::tie(xRes, yRes, zRes) = image->getSpacing();
 
   if(image->getXPoints() == 1 || image->getYPoints() == 1 || image->getZPoints() == 1)
   {
@@ -239,9 +244,8 @@ void FindSizes::findSizesImage(ImageGeom::Pointer image)
       m_NumElements[i] = static_cast<int32_t>(featurecounts[i]);
       if(featurecounts[i] > 9007199254740992ULL)
       {
-        setErrorCondition(-78231);
         QString ss = QObject::tr("Number of voxels belonging to feature %1 (%2) is greater than 9007199254740992").arg(i).arg(featurecounts[i]);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        setErrorCondition(-78231, ss);
         return;
       }
       m_Volumes[i] = (static_cast<double>(featurecounts[i]) * static_cast<double>(res_scalar));
@@ -260,9 +264,8 @@ void FindSizes::findSizesImage(ImageGeom::Pointer image)
       m_NumElements[i] = static_cast<int32_t>(featurecounts[i]);
       if(featurecounts[i] > 9007199254740992ULL)
       {
-        setErrorCondition(-78231);
         QString ss = QObject::tr("Number of voxels belonging to feature %1 (%2) is greater than 9007199254740992").arg(i).arg(featurecounts[i]);
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        setErrorCondition(-78231, ss);
         return;
       }
 
@@ -281,9 +284,8 @@ void FindSizes::findSizesImage(ImageGeom::Pointer image)
       int32_t err = image->findElementSizes();
       if(err < 0)
       {
-        setErrorCondition(err);
         QString ss = QObject::tr("Error computing Element sizes for Geometry type %1").arg(image->getGeometryTypeAsString());
-        notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+        setErrorCondition(err, ss);
         return;
       }
     }
@@ -300,9 +302,8 @@ void FindSizes::findSizesUnstructured(IGeometry::Pointer igeom)
     int32_t err = igeom->findElementSizes();
     if(err < 0)
     {
-      setErrorCondition(err);
       QString ss = QObject::tr("Error computing Element sizes for Geometry type %1").arg(igeom->getGeometryTypeAsString());
-      notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      setErrorCondition(err, ss);
       return;
     }
   }
@@ -365,10 +366,10 @@ void FindSizes::findSizes(IGeometry::Pointer igeom)
 // -----------------------------------------------------------------------------
 void FindSizes::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

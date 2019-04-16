@@ -7,7 +7,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QTextStream>
 
-#define OVERWRITE_SOURCE_FILE 1
+#define OVERWRITE_SOURCE_FILE 0
 
 class Sandbox
 {
@@ -34,7 +34,7 @@ public:
 #if OVERWRITE_SOURCE_FILE
       QFile hOut(filename);
 #else
-      QString tmpPath = "C:/temp/" + fi2.fileName();
+      QString tmpPath = "/tmp/" + fi2.fileName();
       QFile hOut(tmpPath);
 #endif
       hOut.open(QFile::WriteOnly);

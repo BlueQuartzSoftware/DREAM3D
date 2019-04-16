@@ -69,7 +69,7 @@ FillBadData::~FillBadData() = default;
 // -----------------------------------------------------------------------------
 void FillBadData::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Minimum Allowed Defect Size", MinAllowedDefectSize, FilterParameter::Parameter, FillBadData));
   QStringList linkedProps;
   linkedProps << "CellPhasesArrayPath";
@@ -119,8 +119,8 @@ void FillBadData::initialize()
 // -----------------------------------------------------------------------------
 void FillBadData::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
 
   QVector<DataArrayPath> dataArrayPaths;
@@ -134,7 +134,7 @@ void FillBadData::dataCheck()
   {
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getFeatureIdsArrayPath());
   }
@@ -147,7 +147,7 @@ void FillBadData::dataCheck()
     {
       m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
-    if(getErrorCondition() >= 0)
+    if(getErrorCode() >= 0)
     {
       dataArrayPaths.push_back(getCellPhasesArrayPath());
     }
@@ -174,10 +174,10 @@ void FillBadData::preflight()
 // -----------------------------------------------------------------------------
 void FillBadData::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

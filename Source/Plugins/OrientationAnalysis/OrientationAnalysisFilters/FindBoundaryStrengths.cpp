@@ -62,10 +62,9 @@ FindBoundaryStrengths::FindBoundaryStrengths()
 {
   m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
-  m_Loading.x = 1.0f;
-  m_Loading.y = 1.0f;
-  m_Loading.z = 1.0f;
-
+  m_Loading[0] = 1.0f;
+  m_Loading[1] = 1.0f;
+  m_Loading[2] = 1.0f;
 }
 
 // -----------------------------------------------------------------------------
@@ -78,7 +77,7 @@ FindBoundaryStrengths::~FindBoundaryStrengths() = default;
 // -----------------------------------------------------------------------------
 void FindBoundaryStrengths::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Loading Direction (XYZ)", Loading, FilterParameter::Parameter, FindBoundaryStrengths));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::RequiredArray));
 
@@ -136,15 +135,15 @@ void FindBoundaryStrengths::readFilterParameters(AbstractFilterParametersReader*
 // -----------------------------------------------------------------------------
 void FindBoundaryStrengths::dataCheckSurfaceMesh()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   TriangleGeom::Pointer triangles = getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
 
   QVector<IDataArray::Pointer> dataArrays;
 
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(triangles->getTriangles());
   }
@@ -156,7 +155,7 @@ void FindBoundaryStrengths::dataCheckSurfaceMesh()
   {
     m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock());
   }
@@ -201,8 +200,8 @@ void FindBoundaryStrengths::dataCheckSurfaceMesh()
 // -----------------------------------------------------------------------------
 void FindBoundaryStrengths::dataCheckVoxel()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getAvgQuatsArrayPath().getDataContainerName());
 
@@ -215,7 +214,7 @@ void FindBoundaryStrengths::dataCheckVoxel()
   {
     m_AvgQuats = m_AvgQuatsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getAvgQuatsArrayPath());
   }
@@ -227,7 +226,7 @@ void FindBoundaryStrengths::dataCheckVoxel()
   {
     m_FeaturePhases = m_FeaturePhasesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     dataArrayPaths.push_back(getFeaturePhasesArrayPath());
   }
@@ -261,15 +260,15 @@ void FindBoundaryStrengths::preflight()
 // -----------------------------------------------------------------------------
 void FindBoundaryStrengths::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheckVoxel();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
   dataCheckSurfaceMesh();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -284,9 +283,9 @@ void FindBoundaryStrengths::execute()
 
   float LD[3] = {0.0f, 0.0f, 0.0f};
 
-  LD[0] = m_Loading.x;
-  LD[1] = m_Loading.y;
-  LD[2] = m_Loading.z;
+  LD[0] = m_Loading[0];
+  LD[1] = m_Loading[1];
+  LD[2] = m_Loading[2];
   MatrixMath::Normalize3x1(LD);
 
   for(size_t i = 0; i < numTriangles; i++)

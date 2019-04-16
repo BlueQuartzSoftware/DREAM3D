@@ -71,7 +71,7 @@ void AlignSectionsList::setupFilterParameters()
 {
   // getting the current parameters that were set by the parent and adding to it before resetting it
   AlignSections::setupFilterParameters();
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, AlignSectionsList, "*.txt"));
   parameters.push_back(SIMPL_NEW_BOOL_FP("DREAM3D Alignment File Format", DREAM3DAlignmentFile, FilterParameter::Parameter, AlignSectionsList));
 
@@ -105,12 +105,12 @@ void AlignSectionsList::initialize()
 // -----------------------------------------------------------------------------
 void AlignSectionsList::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   QString ss;
 
   AlignSections::dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -119,23 +119,20 @@ void AlignSectionsList::dataCheck()
   if(m_InputFile.isEmpty())
   {
     ss = QObject::tr("The input file must be set for property %1").arg("InputFile");
-    setErrorCondition(-15000);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-15000, ss);
   }
   if(!fi.exists())
   {
     ss = QObject::tr("The input file does not exist: '%1'").arg(getInputFile());
-    setErrorCondition(-15001);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-15001, ss);
   }
 
   DataContainer::Pointer dc = getDataContainerArray()->getPrereqDataContainer(this, getDataContainerName(), false);
   ImageGeom::Pointer geom = dc->getGeometryAs<ImageGeom>();
   if(nullptr == geom.get())
   {
-    QString ss = QObject::tr("DataContainer '%1' does not have an ImageGeometry").arg(getDataContainerName());
-    setErrorCondition(-15002);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    QString ss = QObject::tr("DataContainer '%1' does not have an ImageGeometry").arg(getDataContainerName().getDataContainerName());
+    setErrorCondition(-15002, ss);
     return;
   }
   Q_UNUSED(dc)
@@ -207,10 +204,10 @@ void AlignSectionsList::find_shifts(std::vector<int64_t>& xshifts, std::vector<i
 // -----------------------------------------------------------------------------
 void AlignSectionsList::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

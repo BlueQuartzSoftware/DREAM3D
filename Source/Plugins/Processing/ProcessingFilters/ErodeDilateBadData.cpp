@@ -72,7 +72,7 @@ ErodeDilateBadData::~ErodeDilateBadData() = default;
 // -----------------------------------------------------------------------------
 void ErodeDilateBadData::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Operation");
@@ -132,16 +132,15 @@ void ErodeDilateBadData::initialize()
 // -----------------------------------------------------------------------------
 void ErodeDilateBadData::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   initialize();
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
   if(getNumIterations() <= 0)
   {
     QString ss = QObject::tr("The number of iterations (%1) must be positive").arg(getNumIterations());
-    setErrorCondition(-5555);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-5555, ss);
   }
 
   QVector<size_t> cDims(1, 1);
@@ -171,10 +170,10 @@ void ErodeDilateBadData::preflight()
 // -----------------------------------------------------------------------------
 void ErodeDilateBadData::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

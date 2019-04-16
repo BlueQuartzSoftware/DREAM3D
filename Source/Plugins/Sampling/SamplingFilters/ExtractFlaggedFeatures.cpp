@@ -65,7 +65,7 @@ ExtractFlaggedFeatures::~ExtractFlaggedFeatures() = default;
 // -----------------------------------------------------------------------------
 void ExtractFlaggedFeatures::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req =
@@ -107,8 +107,8 @@ void ExtractFlaggedFeatures::initialize()
 // -----------------------------------------------------------------------------
 void ExtractFlaggedFeatures::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
@@ -210,10 +210,10 @@ void ExtractFlaggedFeatures::find_feature_bounds()
 // -----------------------------------------------------------------------------
 void ExtractFlaggedFeatures::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -231,7 +231,7 @@ void ExtractFlaggedFeatures::execute()
       newDCName.clear();
       newDCName = "Feature_" + QString::number(i);
       cropVol->setDataContainerArray(getDataContainerArray());
-      cropVol->setNewDataContainerName(newDCName);
+      cropVol->setNewDataContainerName(DataArrayPath(newDCName, "", ""));
       cropVol->setCellAttributeMatrixPath(m_FeatureIdsArrayPath);
       cropVol->setXMin(m_FeatureBounds[6 * i]);
       cropVol->setXMax(m_FeatureBounds[6 * i + 1]);

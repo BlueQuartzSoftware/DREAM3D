@@ -67,7 +67,7 @@ FindCAxisLocations::~FindCAxisLocations() = default;
 // -----------------------------------------------------------------------------
 void FindCAxisLocations::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::RequiredArray));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Float, 4, AttributeMatrix::Category::Element);
@@ -101,8 +101,8 @@ void FindCAxisLocations::initialize()
 // -----------------------------------------------------------------------------
 void FindCAxisLocations::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   DataArrayPath tempPath;
 
   QVector<size_t> cDims(1, 4);
@@ -141,10 +141,10 @@ void FindCAxisLocations::preflight()
 // -----------------------------------------------------------------------------
 void FindCAxisLocations::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

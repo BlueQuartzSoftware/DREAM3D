@@ -46,6 +46,13 @@
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
+/* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -66,7 +73,7 @@ FindLargestCrossSections::~FindLargestCrossSections() = default;
 // -----------------------------------------------------------------------------
 void FindLargestCrossSections::setupFilterParameters()
 {
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Plane of Interest");
@@ -118,8 +125,8 @@ void FindLargestCrossSections::initialize()
 // -----------------------------------------------------------------------------
 void FindLargestCrossSections::dataCheck()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
 
   QVector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
@@ -129,15 +136,14 @@ void FindLargestCrossSections::dataCheck()
     m_FeatureIds = m_FeatureIdsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  m_LargestCrossSectionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-      this, getLargestCrossSectionsArrayPath(), 0, cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  m_LargestCrossSectionsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, getLargestCrossSectionsArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_LargestCrossSectionsPtr.lock())          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_LargestCrossSections = m_LargestCrossSectionsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   ImageGeom::Pointer image = getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
@@ -148,8 +154,7 @@ void FindLargestCrossSections::dataCheck()
   if(dims[0] <= 1 || dims[1] <= 1 || dims[2] <= 1)
   {
     QString ss = QObject::tr("Image Geometry is not 3D.  The dimensions are (%1, %2, %3)").arg(dims[0]).arg(dims[1]).arg(dims[2]);
-    setErrorCondition(-3012);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-3012, ss);
     return;
   }
 }
@@ -188,7 +193,7 @@ void FindLargestCrossSections::find_crosssections()
   float xRes = 0.0f;
   float yRes = 0.0f;
   float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getResolution();
+  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   if(m_Plane == 0)
   {
@@ -255,10 +260,10 @@ void FindLargestCrossSections::find_crosssections()
 // -----------------------------------------------------------------------------
 void FindLargestCrossSections::execute()
 {
-  setErrorCondition(0);
-  setWarningCondition(0);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }

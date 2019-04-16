@@ -52,7 +52,7 @@ class SurfaceMeshing_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
 {
   Q_OBJECT
     PYB11_CREATE_BINDINGS(LaplacianSmoothing SUPERCLASS SurfaceMeshFilter)
-    PYB11_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+    PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
     PYB11_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
     PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
     PYB11_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps)
@@ -71,8 +71,8 @@ public:
 
    ~LaplacianSmoothing() override;
 
-   SIMPL_FILTER_PARAMETER(QString, SurfaceDataContainerName)
-   Q_PROPERTY(QString SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+   SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceDataContainerName)
+   Q_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshNodeTypeArrayPath)
    Q_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)

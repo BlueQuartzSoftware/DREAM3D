@@ -80,7 +80,7 @@ LaplacianSmoothing::~LaplacianSmoothing() = default;
 void LaplacianSmoothing::setupFilterParameters()
 {
   SurfaceMeshFilter::setupFilterParameters();
-  FilterParameterVector parameters;
+  FilterParameterVectorType parameters;
 
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Iteration Steps", IterationSteps, FilterParameter::Parameter, LaplacianSmoothing));
   parameters.push_back(SIMPL_NEW_FLOAT_FP("Default Lambda", Lambda, FilterParameter::Parameter, LaplacianSmoothing));
@@ -146,7 +146,7 @@ void LaplacianSmoothing::dataCheck()
   QVector<IDataArray::Pointer> faceDataArrays;
   QVector<IDataArray::Pointer> nodeDataArrays;
 
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     faceDataArrays.push_back(triangles->getTriangles());
     nodeDataArrays.push_back(triangles->getVertices());
@@ -159,7 +159,7 @@ void LaplacianSmoothing::dataCheck()
   {
     m_SurfaceMeshNodeType = m_SurfaceMeshNodeTypePtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     nodeDataArrays.push_back(m_SurfaceMeshNodeTypePtr.lock());
   }
@@ -171,7 +171,7 @@ void LaplacianSmoothing::dataCheck()
   {
     m_SurfaceMeshFaceLabels = m_SurfaceMeshFaceLabelsPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
-  if(getErrorCondition() >= 0)
+  if(getErrorCode() >= 0)
   {
     faceDataArrays.push_back(m_SurfaceMeshFaceLabelsPtr.lock());
   }
@@ -179,7 +179,7 @@ void LaplacianSmoothing::dataCheck()
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, faceDataArrays);
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, nodeDataArrays);
 
-  setSurfaceDataContainerName(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
+  setSurfaceDataContainerName(DataArrayPath(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName(), "", ""));
 }
 
 // -----------------------------------------------------------------------------
@@ -200,19 +200,19 @@ void LaplacianSmoothing::preflight()
 // -----------------------------------------------------------------------------
 void LaplacianSmoothing::execute()
 {
-  int32_t err = 0;
-  setErrorCondition(err);
+  clearErrorCode();
+  clearWarningCode();
   dataCheck();
-  if(getErrorCondition() < 0)
+  if(getErrorCode() < 0)
   {
     return;
   }
 
-  err = edgeBasedSmoothing();
+  int err = edgeBasedSmoothing();
 
   if(err < 0)
   {
-    notifyErrorMessage(getHumanLabel(), "Error smoothing the surface mesh", getErrorCondition());
+    setErrorCondition(getErrorCode(), "Error smoothing the surface mesh");
     return;
   }
 
@@ -276,8 +276,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
   err = generateLambdaArray();
   if(err < 0)
   {
-    setErrorCondition(-557);
-    notifyErrorMessage(getHumanLabel(), "Error generating the lambda array", getErrorCondition());
+    setErrorCondition(-557, "Error generating the lambda array");
     return err;
   }
 
@@ -292,9 +291,8 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
   }
   if(err < 0)
   {
-    setErrorCondition(-560);
-    notifyErrorMessage(getHumanLabel(), "Error retrieving the shared edge list", getErrorCondition());
-    return getErrorCondition();
+    setErrorCondition(-560, "Error retrieving the shared edge list");
+    return getErrorCode();
   }
 
   int64_t* uedges = surfaceMesh->getEdgePointer(0);
@@ -317,7 +315,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
       return -1;
     }
     QString ss = QObject::tr("Iteration %1 of %2").arg(q).arg(m_IterationSteps);
-    notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+    notifyStatusMessage(ss);
     // Compute the Deltas for each point
     for(int64_t i = 0; i < nedges; i++)
     {
@@ -363,7 +361,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
         return -1;
       }
       QString ss = QObject::tr("Iteration %1 of %2").arg(q).arg(m_IterationSteps);
-      notifyStatusMessage(getMessagePrefix(), getHumanLabel(), ss);
+      notifyStatusMessage(ss);
       // Compute the Delta's
       for(int64_t i = 0; i < nedges; i++)
       {
@@ -419,9 +417,8 @@ void LaplacianSmoothing::writeVTKFile(const QString& outputVtkFile)
   vtkFile = fopen(outputVtkFile.toLatin1().data(), "wb");
   if (nullptr == vtkFile)
   {
-    setErrorCondition(-90123);
     QString ss = QObject::tr("Error creating file '%1'").arg(outputVtkFile);
-    notifyErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    setErrorCondition(-90123, ss);
     return;
   }
   Detail::ScopedFileMonitor vtkFileMonitor(vtkFile);
