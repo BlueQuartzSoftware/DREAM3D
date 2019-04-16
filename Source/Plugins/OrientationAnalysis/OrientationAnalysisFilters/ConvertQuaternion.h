@@ -8,13 +8,12 @@
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
-
-#include "Processing/ProcessingPlugin.h"
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
 /**
  * @brief The ConvertQuaternion class. See [Filter documentation](@ref convertquaternion) for details.
  */
-class Processing_EXPORT ConvertQuaternion : public AbstractFilter
+class OrientationAnalysis_EXPORT ConvertQuaternion : public AbstractFilter
 {
   Q_OBJECT
     // clang-format off

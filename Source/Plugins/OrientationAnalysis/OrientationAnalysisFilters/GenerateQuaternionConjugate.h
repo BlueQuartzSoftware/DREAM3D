@@ -8,10 +8,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The GenerateQuaternionConjugate class. See [Filter documentation](@ref generatequaternionconjugate) for details.
  */
-class GenerateQuaternionConjugate : public AbstractFilter
+class OrientationAnalysis_EXPORT GenerateQuaternionConjugate : public AbstractFilter
 {
   Q_OBJECT
   // clang-format off
