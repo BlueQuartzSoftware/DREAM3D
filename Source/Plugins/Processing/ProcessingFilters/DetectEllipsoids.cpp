@@ -1430,7 +1430,7 @@ const QString DetectEllipsoids::getFilterVersion() const
 // -----------------------------------------------------------------------------
 const QString DetectEllipsoids::getGroupName() const
 {
-  return SIMPL::FilterGroups::StatisticsFilters;
+  return SIMPL::FilterGroups::ProcessingFilters;
 }
 
 // -----------------------------------------------------------------------------
@@ -1446,7 +1446,7 @@ const QUuid DetectEllipsoids::getUuid()
 // -----------------------------------------------------------------------------
 const QString DetectEllipsoids::getSubGroupName() const
 {
-  return "FiberToolbox";
+  return SIMPL::FilterSubGroups::GenerationFilters;
 }
 
 // -----------------------------------------------------------------------------

@@ -1,21 +1,21 @@
-# Generate Quaternion Conjugate #
+# Convert Quaternion Order #
 
 ## Group (Subgroup) ##
 
-Processing (OrientationAnalysis)
+OrientationAnalysis (Conversions)
 
 ## Description ##
 
-This filter will generate the transpose of a [1x4] _Quaternion_ laid out in memory such that < x, y, z >, w. This can be handy when the user wants to convert the orientation transformation to an opposite effect. The algorihtm will calculate the conjugate of each quaternion in the array of input quaternions
+Internally DREAM.3D assumes that a quaternion is laid out in the order such that < x, y, z >, w or Vector-Scalar ordering. Codes and algorithms external to DREAM.3D may store quaternions in the opposite or Scalar-Vector order (w < x,y,z >). This filter will allow the user to easily convert imported Quaternions into the representation that DREAM.3D expects.
 
-**NOTES**: Internally DREAM.3D assumes that the internal reference transformation is a **Sample to Crystal** transformation. If the incoming data was collected in such a way that the orientation representation that is stored (Quats, Eulers, Orientation Matrix, Rodrigues) was assumed to be a **Crystal to Sample** transformation then this filter can be applied to an orientation matrix to convert into a reference frame that DREAM.3D assumes.
-
+For Example if the user has imported quaternion data in the form of Scalar-Vector then they would run this filter using a conversion type of **ToVectorScalar** and using the generated quaternions in subsequent filters. If the user wanted to then write out the Quaternions in the Scalar-Vector form then could add this filter again to the end of the pipeline (but before writing out data) to convert the Vector-Scalar quaternions array (assuming something modified the array).
 
 ## Parameters ##
 
 | Name | Type | Description |
 |------|------|------|
 | Delete Original Array | Boolean | Set this to TRUE/ON to have the original 3 component data array deleted at the end of the filter. |
+| Conversion Type | Integer | 0=ToScalarVector, 1=ToVectorScalar |
 
 ## Required Geometry ##
 
