@@ -36,11 +36,12 @@
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
 /**
  * @brief The RodriguesConvertor class. See [Filter documentation](@ref rodriguesconvertor) for details.
  */
-class RodriguesConvertor : public AbstractFilter
+class OrientationAnalysis_EXPORT RodriguesConvertor : public AbstractFilter
 {
   Q_OBJECT
 

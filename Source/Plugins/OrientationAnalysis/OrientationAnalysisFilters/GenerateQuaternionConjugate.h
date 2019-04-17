@@ -17,7 +17,7 @@ class OrientationAnalysis_EXPORT GenerateQuaternionConjugate : public AbstractFi
 {
   Q_OBJECT
   // clang-format off
-    PYB11_CREATE_BINDINGS(ConvertQuaternion SUPERCLASS AbstractFilter)
+    PYB11_CREATE_BINDINGS(GenerateQuaternionConjugate SUPERCLASS AbstractFilter)
     PYB11_PROPERTY(DataArrayPath QuaternionDataArrayPath READ getQuaternionDataArrayPath WRITE setQuaternionDataArrayPath)
     PYB11_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)
     PYB11_PROPERTY(bool DeleteOriginalData READ getDeleteOriginalData WRITE setDeleteOriginalData)
