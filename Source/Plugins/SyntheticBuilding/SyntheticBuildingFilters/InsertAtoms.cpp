@@ -208,9 +208,9 @@ public:
           count++;
           if(basis == 1)
           {
-            coords[0] = coords[0] + (0.5 * latticeConstants.x);
-            coords[1] = coords[1] + (0.5 * latticeConstants.y);
-            coords[2] = coords[2] + (0.5 * latticeConstants.z);
+            coords[0] = coords[0] + (0.5f * latticeConstants.x);
+            coords[1] = coords[1] + (0.5f * latticeConstants.y);
+            coords[2] = coords[2] + (0.5f * latticeConstants.z);
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
             count++;
@@ -218,22 +218,22 @@ public:
           if(basis == 2||3)
           {
             // makes the (0.5,0.5,0) atom
-            coords[0] = coords[0] + (0.5 * latticeConstants.x);
-            coords[1] = coords[1] + (0.5 * latticeConstants.y);
+            coords[0] = coords[0] + (0.5f * latticeConstants.x);
+            coords[1] = coords[1] + (0.5f * latticeConstants.y);
             coords[2] = coords[2];
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
             count++;
             // makes the (0.5,0,0.5) atom
             coords[0] = coords[0];
-            coords[1] = coords[1] - (0.5 * latticeConstants.y);
-            coords[2] = coords[2] + (0.5 * latticeConstants.z);
+            coords[1] = coords[1] - (0.5f * latticeConstants.y);
+            coords[2] = coords[2] + (0.5f * latticeConstants.z);
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
             count++;
             // makes the (0,0.5,0.5) atom
-            coords[0] = coords[0] - (0.5 * latticeConstants.x);
-            coords[1] = coords[1] + (0.5 * latticeConstants.y);
+            coords[0] = coords[0] - (0.5f * latticeConstants.x);
+            coords[1] = coords[1] + (0.5f * latticeConstants.y);
             coords[2] = coords[2];
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
@@ -242,29 +242,29 @@ public:
           if(basis == 3)
           {
             // (+0.25,+0.25,+0.25) for (0,0,0)
-            coords[0] = coords[0] + (0.25 * latticeConstants.x);
-            coords[1] = coords[1] - (0.25 * latticeConstants.y);
-            coords[2] = coords[2] - (0.25 * latticeConstants.z);
+            coords[0] = coords[0] + (0.25f * latticeConstants.x);
+            coords[1] = coords[1] - (0.25f * latticeConstants.y);
+            coords[2] = coords[2] - (0.25f * latticeConstants.z);
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
             count++;
             // (+0.25,+0.25,+0.25) for (0.5,0.5,0)
-            coords[0] = coords[0] + (0.5 * latticeConstants.x);
-            coords[1] = coords[1] + (0.5 * latticeConstants.y);
+            coords[0] = coords[0] + (0.5f * latticeConstants.x);
+            coords[1] = coords[1] + (0.5f * latticeConstants.y);
             coords[2] = coords[2];
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
             count++;
             // (+0.25,+0.25,+0.25) for (0.5,0,0.5)
             coords[0] = coords[0];
-            coords[1] = coords[1] - (0.5 * latticeConstants.y);
-            coords[2] = coords[2] + (0.5 * latticeConstants.z);
+            coords[1] = coords[1] - (0.5f * latticeConstants.y);
+            coords[2] = coords[2] + (0.5f * latticeConstants.z);
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
             count++;
             // (+0.25,+0.25,+0.25) for (0,0.5,0.5)
-            coords[0] = coords[0] - (0.5 * latticeConstants.x);
-            coords[1] = coords[1] + (0.5 * latticeConstants.y);
+            coords[0] = coords[0] - (0.5f * latticeConstants.x);
+            coords[1] = coords[1] + (0.5f * latticeConstants.y);
             coords[2] = coords[2];
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
@@ -565,9 +565,9 @@ void InsertAtoms::execute()
   }
 
   FloatVec3_t latticeConstants;
-  latticeConstants.x = m_LatticeConstants.x / 10000.0;
-  latticeConstants.y = m_LatticeConstants.y / 10000.0;
-  latticeConstants.z = m_LatticeConstants.z / 10000.0;
+  latticeConstants.x = m_LatticeConstants.x / 10000.0f;
+  latticeConstants.y = m_LatticeConstants.y / 10000.0f;
+  latticeConstants.z = m_LatticeConstants.z / 10000.0f;
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
   SIMPL_RANDOMNG_NEW()
