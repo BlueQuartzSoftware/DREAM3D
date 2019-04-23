@@ -132,7 +132,7 @@ public:
           code = GeometryMath::PointInPolyhedron(m_Faces.get(), faceIds, m_FaceBBs.get(), point, ll, ur, radius);
           if(code == 'i' || code == 'V' || code == 'E' || code == 'F')
           {
-            m_InFeature[start]->setValue(i, true);
+            m_InFeature[iter]->setValue(i, true);
           }
         }
       }
