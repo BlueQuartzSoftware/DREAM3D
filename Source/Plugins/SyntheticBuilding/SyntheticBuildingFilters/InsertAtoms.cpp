@@ -179,6 +179,10 @@ public:
     {
       atomMult = 4;
     }
+    if(basis == 3)
+    {
+      atomMult = 8;
+    }
     int64_t xPoints = (int64_t(deltaX / latticeConstants.x) + 1);
     int64_t yPoints = (int64_t(deltaY / latticeConstants.y) + 1);
     int64_t zPoints = (int64_t(deltaZ / latticeConstants.z) + 1);
@@ -211,7 +215,7 @@ public:
             points[iter]->setCoords(count, coordsT);
             count++;
           }
-          if(basis == 2)
+          if(basis == 2||3)
           {
             // makes the (0.5,0.5,0) atom
             coords[0] = coords[0] + (0.5 * latticeConstants.x);
@@ -228,6 +232,37 @@ public:
             points[iter]->setCoords(count, coordsT);
             count++;
             // makes the (0,0.5,0.5) atom
+            coords[0] = coords[0] - (0.5 * latticeConstants.x);
+            coords[1] = coords[1] + (0.5 * latticeConstants.y);
+            coords[2] = coords[2];
+            MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
+            points[iter]->setCoords(count, coordsT);
+            count++;
+          }
+          if(basis == 3)
+          {
+            // (+0.25,+0.25,+0.25) for (0,0,0)
+            coords[0] = coords[0] + (0.25 * latticeConstants.x);
+            coords[1] = coords[1] - (0.25 * latticeConstants.y);
+            coords[2] = coords[2] - (0.25 * latticeConstants.z);
+            MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
+            points[iter]->setCoords(count, coordsT);
+            count++;
+            // (+0.25,+0.25,+0.25) for (0.5,0.5,0)
+            coords[0] = coords[0] + (0.5 * latticeConstants.x);
+            coords[1] = coords[1] + (0.5 * latticeConstants.y);
+            coords[2] = coords[2];
+            MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
+            points[iter]->setCoords(count, coordsT);
+            count++;
+            // (+0.25,+0.25,+0.25) for (0.5,0,0.5)
+            coords[0] = coords[0];
+            coords[1] = coords[1] - (0.5 * latticeConstants.y);
+            coords[2] = coords[2] + (0.5 * latticeConstants.z);
+            MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
+            points[iter]->setCoords(count, coordsT);
+            count++;
+            // (+0.25,+0.25,+0.25) for (0,0.5,0.5)
             coords[0] = coords[0] - (0.5 * latticeConstants.x);
             coords[1] = coords[1] + (0.5 * latticeConstants.y);
             coords[2] = coords[2];
@@ -281,6 +316,7 @@ void InsertAtoms::setupFilterParameters()
     choices.push_back("Simple Cubic");
     choices.push_back("Body Centered Cubic");
     choices.push_back("Face Centered Cubic");
+    choices.push_back("Cubic Diamond");
     parameter->setChoices(choices);
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
