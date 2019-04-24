@@ -190,9 +190,8 @@ if(SIMPL_ENABLE_PYTHON)
         configure_file(${SIMPL_PYTHON_TEST_SCRIPT} "${SIMPL_PYTHON_TEST_DRIVER}" @ONLY)
 
         string(REPLACE "/" "_" test "${test}")
-        add_test(NAME ${PLUGIN_NAME}_${test} COMMAND "${SIMPL_PYTHON_TEST_DRIVER}" )
+        add_test(NAME PY_${PLUGIN_NAME}_${test} COMMAND "${SIMPL_PYTHON_TEST_DRIVER}" )
     endforeach(test ${PLUGIN_PYTHON_TESTS})
-
 
 endif()
 
