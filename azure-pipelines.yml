@@ -24,7 +24,7 @@ stages:
         cd CMP
         git fetch --all
         remote=`git branch -a | grep "${branch}" | wc -l`
-        if [ ${remote} != 1 ]; then
+        if [ ${remote} == 1 ]; then
           git checkout -b ${branch} --track origin/${branch}
         fi
         cd ../
