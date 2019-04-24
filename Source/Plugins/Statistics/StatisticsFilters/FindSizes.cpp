@@ -40,6 +40,7 @@
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
@@ -94,9 +95,9 @@ void FindSizes::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Feature Attribute Matrix", FeatureAttributeMatrixName, FilterParameter::RequiredArray, FindSizes, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Equivalent Diameters", EquivalentDiametersArrayName, FilterParameter::CreatedArray, FindSizes));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Number of Elements", NumElementsArrayName, FilterParameter::CreatedArray, FindSizes));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Volumes", VolumesArrayName, FilterParameter::CreatedArray, FindSizes));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Equivalent Diameters", EquivalentDiametersArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindSizes));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Number of Elements", NumElementsArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindSizes));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Volumes", VolumesArrayName, FeatureAttributeMatrixName, FeatureAttributeMatrixName, FilterParameter::CreatedArray, FindSizes));
   setFilterParameters(parameters);
 }
 
