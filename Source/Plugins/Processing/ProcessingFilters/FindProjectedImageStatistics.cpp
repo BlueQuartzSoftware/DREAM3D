@@ -47,6 +47,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -200,11 +201,11 @@ void FindProjectedImageStatistics::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Quantify", SelectedArrayPath, FilterParameter::RequiredArray, FindProjectedImageStatistics, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Projected Image Min", ProjectedImageMinArrayName, FilterParameter::CreatedArray, FindProjectedImageStatistics));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Projected Image Max", ProjectedImageMaxArrayName, FilterParameter::CreatedArray, FindProjectedImageStatistics));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Projected Image Avg", ProjectedImageAvgArrayName, FilterParameter::CreatedArray, FindProjectedImageStatistics));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Projected Image Std", ProjectedImageStdArrayName, FilterParameter::CreatedArray, FindProjectedImageStatistics));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Projected Image Var", ProjectedImageVarArrayName, FilterParameter::CreatedArray, FindProjectedImageStatistics));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Min", ProjectedImageMinArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindProjectedImageStatistics));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Max", ProjectedImageMaxArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindProjectedImageStatistics));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Avg", ProjectedImageAvgArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindProjectedImageStatistics));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Std", ProjectedImageStdArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindProjectedImageStatistics));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Projected Image Var", ProjectedImageVarArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindProjectedImageStatistics));
   setFilterParameters(parameters);
 }
 

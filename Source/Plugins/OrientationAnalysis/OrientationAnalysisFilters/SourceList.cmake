@@ -22,6 +22,7 @@ set(_PublicFilters
   ChangeAngleRepresentation
   ConvertHexGridToSquareGrid
   ConvertOrientations
+  ConvertQuaternion
   CreateEnsembleInfo
   CreateLambertSphere
   EbsdToH5Ebsd

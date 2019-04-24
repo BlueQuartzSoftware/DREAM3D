@@ -42,6 +42,7 @@
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -105,12 +106,12 @@ void FindNeighbors::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Feature Attribute Matrix", CellFeatureAttributeMatrixPath, FilterParameter::RequiredArray, FindNeighbors, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Boundary Cells", BoundaryCellsArrayName, FilterParameter::CreatedArray, FindNeighbors));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Boundary Cells", BoundaryCellsArrayName, FeatureIdsArrayPath, FeatureIdsArrayPath, FilterParameter::CreatedArray, FindNeighbors));
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Number of Neighbors", NumNeighborsArrayName, FilterParameter::CreatedArray, FindNeighbors));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Neighbor List", NeighborListArrayName, FilterParameter::CreatedArray, FindNeighbors));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Shared Surface Area List", SharedSurfaceAreaListArrayName, FilterParameter::CreatedArray, FindNeighbors));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Surface Features", SurfaceFeaturesArrayName, FilterParameter::CreatedArray, FindNeighbors));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Number of Neighbors", NumNeighborsArrayName, CellFeatureAttributeMatrixPath, CellFeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindNeighbors));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Neighbor List", NeighborListArrayName, CellFeatureAttributeMatrixPath, CellFeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindNeighbors));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Shared Surface Area List", SharedSurfaceAreaListArrayName, CellFeatureAttributeMatrixPath, CellFeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindNeighbors));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Surface Features", SurfaceFeaturesArrayName, CellFeatureAttributeMatrixPath, CellFeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindNeighbors));
   setFilterParameters(parameters);
 }
 

@@ -8,10 +8,12 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The GenerateOrientationMatrixTranspose class. See [Filter documentation](@ref generateorientationmatrixtranspose) for details.
  */
-class GenerateOrientationMatrixTranspose : public AbstractFilter
+class OrientationAnalysis_EXPORT GenerateOrientationMatrixTranspose : public AbstractFilter
 {
   Q_OBJECT
 

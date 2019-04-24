@@ -8,12 +8,20 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
 /**
  * @brief The GenerateQuaternionConjugate class. See [Filter documentation](@ref generatequaternionconjugate) for details.
  */
-class GenerateQuaternionConjugate : public AbstractFilter
+class OrientationAnalysis_EXPORT GenerateQuaternionConjugate : public AbstractFilter
 {
   Q_OBJECT
+  // clang-format off
+    PYB11_CREATE_BINDINGS(GenerateQuaternionConjugate SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath QuaternionDataArrayPath READ getQuaternionDataArrayPath WRITE setQuaternionDataArrayPath)
+    PYB11_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)
+    PYB11_PROPERTY(bool DeleteOriginalData READ getDeleteOriginalData WRITE setDeleteOriginalData)
+  // clang-format on
 
 public:
   SIMPL_SHARED_POINTERS(GenerateQuaternionConjugate)

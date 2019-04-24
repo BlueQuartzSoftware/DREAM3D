@@ -42,8 +42,6 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/DynamicListArray.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -51,13 +49,16 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/GeometryMath.h"
-
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+
+#include "OrientationLib/OrientationMath/OrientationArray.hpp"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
@@ -140,7 +141,7 @@ public:
           code = GeometryMath::PointInPolyhedron(m_Faces.get(), faceIds, m_FaceBBs.get(), point, ll, ur, radius);
           if(code == 'i' || code == 'V' || code == 'E' || code == 'F')
           {
-            m_InFeature[start]->setValue(i, true);
+            m_InFeature[iter]->setValue(i, true);
           }
         }
       }
@@ -187,6 +188,10 @@ public:
     {
       atomMult = 4;
     }
+    if(basis == 3)
+    {
+      atomMult = 8;
+    }
     int64_t xPoints = (int64_t(deltaX / latticeConstants[0]) + 1);
     int64_t yPoints = (int64_t(deltaY / latticeConstants[1]) + 1);
     int64_t zPoints = (int64_t(deltaZ / latticeConstants[2]) + 1);
@@ -212,32 +217,63 @@ public:
           count++;
           if(basis == 1)
           {
-            coords[0] = coords[0] + (0.5 * latticeConstants[0]);
-            coords[1] = coords[1] + (0.5 * latticeConstants[1]);
-            coords[2] = coords[2] + (0.5 * latticeConstants[2]);
+            coords[0] = coords[0] + (0.5f * latticeConstants[0]);
+            coords[1] = coords[1] + (0.5f * latticeConstants[1]);
+            coords[2] = coords[2] + (0.5f * latticeConstants[2]);
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
             count++;
           }
-          if(basis == 2)
+          if(basis == 2||3)
           {
             // makes the (0.5,0.5,0) atom
-            coords[0] = coords[0] + (0.5 * latticeConstants[0]);
-            coords[1] = coords[1] + (0.5 * latticeConstants[1]);
+            coords[0] = coords[0] + (0.5f * latticeConstants[0]);
+            coords[1] = coords[1] + (0.5f * latticeConstants[1]);
             coords[2] = coords[2];
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
             count++;
             // makes the (0.5,0,0.5) atom
             coords[0] = coords[0];
-            coords[1] = coords[1] - (0.5 * latticeConstants[1]);
-            coords[2] = coords[2] + (0.5 * latticeConstants[2]);
+            coords[1] = coords[1] - (0.5f * latticeConstants[1]);
+            coords[2] = coords[2] + (0.5f * latticeConstants[2]);
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
             count++;
             // makes the (0,0.5,0.5) atom
-            coords[0] = coords[0] - (0.5 * latticeConstants[0]);
-            coords[1] = coords[1] + (0.5 * latticeConstants[1]);
+            coords[0] = coords[0] - (0.5f * latticeConstants[0]);
+            coords[1] = coords[1] + (0.5f * latticeConstants[1]);
+            coords[2] = coords[2];
+            MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
+            points[iter]->setCoords(count, coordsT);
+            count++;
+          }
+          if(basis == 3)
+          {
+            // (+0.25,+0.25,+0.25) for (0,0,0)
+            coords[0] = coords[0] + (0.25f * latticeConstants[0]);
+            coords[1] = coords[1] - (0.25f * latticeConstants[1]);
+            coords[2] = coords[2] - (0.25f * latticeConstants[2]);
+            MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
+            points[iter]->setCoords(count, coordsT);
+            count++;
+            // (+0.25,+0.25,+0.25) for (0.5,0.5,0)
+            coords[0] = coords[0] + (0.5f * latticeConstants[0]);
+            coords[1] = coords[1] + (0.5f * latticeConstants[1]);
+            coords[2] = coords[2];
+            MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
+            points[iter]->setCoords(count, coordsT);
+            count++;
+            // (+0.25,+0.25,+0.25) for (0.5,0,0.5)
+            coords[0] = coords[0];
+            coords[1] = coords[1] - (0.5f * latticeConstants[1]);
+            coords[2] = coords[2] + (0.5f * latticeConstants[2]);
+            MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
+            points[iter]->setCoords(count, coordsT);
+            count++;
+            // (+0.25,+0.25,+0.25) for (0,0.5,0.5)
+            coords[0] = coords[0] - (0.5f * latticeConstants[0]);
+            coords[1] = coords[1] + (0.5f * latticeConstants[1]);
             coords[2] = coords[2];
             MatrixMath::Multiply3x3with3x1(gT, coords, coordsT);
             points[iter]->setCoords(count, coordsT);
@@ -288,6 +324,7 @@ void InsertAtoms::setupFilterParameters()
     choices.push_back("Simple Cubic");
     choices.push_back("Body Centered Cubic");
     choices.push_back("Face Centered Cubic");
+    choices.push_back("Cubic Diamond");
     parameter->setChoices(choices);
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
@@ -305,8 +342,8 @@ void InsertAtoms::setupFilterParameters()
   }
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", VertexDataContainerName, FilterParameter::CreatedArray, InsertAtoms));
   parameters.push_back(SeparatorFilterParameter::New("Vertex Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, FilterParameter::CreatedArray, InsertAtoms));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Atom Feature Labels", AtomFeatureLabelsArrayName, FilterParameter::CreatedArray, InsertAtoms));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Vertex Attribute Matrix", VertexAttributeMatrixName, VertexDataContainerName, FilterParameter::CreatedArray, InsertAtoms));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Atom Feature Labels", AtomFeatureLabelsArrayName, VertexDataContainerName, VertexAttributeMatrixName, FilterParameter::CreatedArray, InsertAtoms));
   setFilterParameters(parameters);
 }
 
@@ -410,6 +447,11 @@ void InsertAtoms::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrays);
+
+  if(m_Basis < 0 || m_Basis > 3)
+  {
+    setErrorCondition(-302, "Basis value out of range. Valid values are: 0=Simpl Cubic, 1=Body Centered Cubic, 2=Face Centered Cubic, 3=Cubic Diamond");
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -534,9 +576,9 @@ void InsertAtoms::execute()
   }
 
   FloatVec3Type latticeConstants;
-  latticeConstants[0] = m_LatticeConstants[0] / 10000.0;
-  latticeConstants[1] = m_LatticeConstants[1] / 10000.0;
-  latticeConstants[2] = m_LatticeConstants[2] / 10000.0;
+  latticeConstants[0] = m_LatticeConstants[0] / 10000.0f;
+  latticeConstants[1] = m_LatticeConstants[1] / 10000.0f;
+  latticeConstants[2] = m_LatticeConstants[2] / 10000.0f;
 
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName());
   SIMPL_RANDOMNG_NEW()

@@ -46,6 +46,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
@@ -145,8 +146,8 @@ void ReadStlFile::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("STL File", StlFilePath, FilterParameter::Parameter, ReadStlFile, "*.stl", "STL File"));
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", SurfaceMeshDataContainerName, FilterParameter::CreatedArray, ReadStlFile));
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Face Attribute Matrix", FaceAttributeMatrixName, FilterParameter::CreatedArray, ReadStlFile));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Face Normals", FaceNormalsArrayName, FilterParameter::CreatedArray, ReadStlFile));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Face Attribute Matrix", FaceAttributeMatrixName, SurfaceMeshDataContainerName, FilterParameter::CreatedArray, ReadStlFile));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Face Normals", FaceNormalsArrayName, SurfaceMeshDataContainerName, FaceAttributeMatrixName, FilterParameter::CreatedArray, ReadStlFile));
   setFilterParameters(parameters);
 }
 

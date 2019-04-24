@@ -40,6 +40,7 @@
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -107,15 +108,15 @@ void EstablishMatrixPhase::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Cell Attribute Matrix", OutputCellAttributeMatrixPath, FilterParameter::RequiredArray, EstablishMatrixPhase, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Feature Ids", FeatureIdsArrayName, FilterParameter::CreatedArray, EstablishMatrixPhase));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Phases", CellPhasesArrayName, FilterParameter::CreatedArray, EstablishMatrixPhase));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Feature Ids", FeatureIdsArrayName, OutputCellAttributeMatrixPath, OutputCellAttributeMatrixPath, FilterParameter::CreatedArray, EstablishMatrixPhase));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phases", CellPhasesArrayName, OutputCellAttributeMatrixPath, OutputCellAttributeMatrixPath, FilterParameter::CreatedArray, EstablishMatrixPhase));
   {
     DataArraySelectionFilterParameter::RequirementType req = DataArraySelectionFilterParameter::CreateCategoryRequirement(SIMPL::TypeNames::Bool, 1, AttributeMatrix::Category::Element);
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Mask", MaskArrayPath, FilterParameter::RequiredArray, EstablishMatrixPhase, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Feature Attribute Matrix", OutputCellFeatureAttributeMatrixName, FilterParameter::CreatedArray, EstablishMatrixPhase));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Phases", FeaturePhasesArrayName, FilterParameter::CreatedArray, EstablishMatrixPhase));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Feature Attribute Matrix", OutputCellFeatureAttributeMatrixName, OutputCellAttributeMatrixPath, FilterParameter::CreatedArray, EstablishMatrixPhase));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phases", FeaturePhasesArrayName, OutputCellAttributeMatrixPath, OutputCellFeatureAttributeMatrixName, FilterParameter::CreatedArray, EstablishMatrixPhase));
 
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::RequiredArray));
   {
@@ -146,8 +147,8 @@ void EstablishMatrixPhase::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phase Names", InputPhaseNamesArrayPath, FilterParameter::RequiredArray, EstablishMatrixPhase, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix", OutputCellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, EstablishMatrixPhase));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Number of Features", NumFeaturesArrayName, FilterParameter::CreatedArray, EstablishMatrixPhase));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Ensemble Attribute Matrix", OutputCellEnsembleAttributeMatrixName, OutputCellAttributeMatrixPath, FilterParameter::CreatedArray, EstablishMatrixPhase));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Number of Features", NumFeaturesArrayName, OutputCellAttributeMatrixPath, OutputCellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, EstablishMatrixPhase));
   setFilterParameters(parameters);
 }
 

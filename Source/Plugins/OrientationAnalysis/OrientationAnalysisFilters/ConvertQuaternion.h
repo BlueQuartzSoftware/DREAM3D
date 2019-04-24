@@ -1,34 +1,6 @@
-/* ============================================================================
- * Copyright (c) 2018 BlueQuartz Software, LLC
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *
- * Redistributions of source code must retain the above copyright notice, this
- * list of conditions and the following disclaimer.
- *
- * Redistributions in binary form must reproduce the above copyright notice, this
- * list of conditions and the following disclaimer in the documentation and/or
- * other materials provided with the distribution.
- *
- * Neither the names of any of the BlueQuartz Software contributors
- * may be used to endorse or promote products derived from this software without
- * specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- *
- *
- * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+/*
+ * Your License or Copyright can go here
+ */
 
 #pragma once
 
@@ -39,21 +11,28 @@
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
 /**
- * @brief The RodriguesConvertor class. See [Filter documentation](@ref rodriguesconvertor) for details.
+ * @brief The ConvertQuaternion class. See [Filter documentation](@ref convertquaternion) for details.
  */
-class OrientationAnalysis_EXPORT RodriguesConvertor : public AbstractFilter
+class OrientationAnalysis_EXPORT ConvertQuaternion : public AbstractFilter
 {
   Q_OBJECT
+    // clang-format off
+    PYB11_CREATE_BINDINGS(ConvertQuaternion SUPERCLASS AbstractFilter)
+    PYB11_PROPERTY(DataArrayPath QuaternionDataArrayPath READ getQuaternionDataArrayPath WRITE setQuaternionDataArrayPath)
+    PYB11_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)
+    PYB11_PROPERTY(bool DeleteOriginalData READ getDeleteOriginalData WRITE setDeleteOriginalData)
+    PYB11_PROPERTY(int32_t ConversionType READ getConversionType WRITE setConversionType)
+    // clang-format on
 
   public:
-    SIMPL_SHARED_POINTERS(RodriguesConvertor)
-    SIMPL_FILTER_NEW_MACRO(RodriguesConvertor)
-    SIMPL_TYPE_MACRO_SUPER(RodriguesConvertor, AbstractFilter)
+    SIMPL_SHARED_POINTERS(ConvertQuaternion)
+    SIMPL_FILTER_NEW_MACRO(ConvertQuaternion)
+    SIMPL_TYPE_MACRO_SUPER(ConvertQuaternion, AbstractFilter)
 
-    ~RodriguesConvertor() override;
+    ~ConvertQuaternion() override;
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, RodriguesDataArrayPath)
-    Q_PROPERTY(DataArrayPath RodriguesDataArrayPath READ getRodriguesDataArrayPath WRITE setRodriguesDataArrayPath)
+    SIMPL_FILTER_PARAMETER(DataArrayPath, QuaternionDataArrayPath)
+    Q_PROPERTY(DataArrayPath QuaternionDataArrayPath READ getQuaternionDataArrayPath WRITE setQuaternionDataArrayPath)
 
     SIMPL_FILTER_PARAMETER(DataArrayPath, OutputDataArrayPath)
     Q_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)
@@ -61,7 +40,11 @@ class OrientationAnalysis_EXPORT RodriguesConvertor : public AbstractFilter
     SIMPL_FILTER_PARAMETER(bool, DeleteOriginalData)
     Q_PROPERTY(bool DeleteOriginalData READ getDeleteOriginalData WRITE setDeleteOriginalData)
 
+    SIMPL_FILTER_PARAMETER(int32_t, ConversionType)
+    Q_PROPERTY(int32_t ConversionType READ getConversionType WRITE setConversionType)
 
+    static const int32_t k_ToScalarVector = 0;
+    static const int32_t k_ToVectorScalar = 1;
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
@@ -146,7 +129,7 @@ class OrientationAnalysis_EXPORT RodriguesConvertor : public AbstractFilter
     void preflightExecuted();
 
   protected:
-    RodriguesConvertor();
+    ConvertQuaternion();
 
     /**
     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
@@ -157,20 +140,19 @@ class OrientationAnalysis_EXPORT RodriguesConvertor : public AbstractFilter
     * @brief Initializes all the private instance variables.
     */
     void initialize();
-  private:
-  DEFINE_DATAARRAY_VARIABLE(float, RodriguesVectors)
-  DEFINE_DATAARRAY_VARIABLE(float, OutputRodriguesVectors)
 
-  
+  private:
+    DEFINE_DATAARRAY_VARIABLE(float, Quaternions)
+    DEFINE_DATAARRAY_VARIABLE(float, OutputQuaternions)
+
   public:
     /* Rule of 5: All special member functions should be defined if any are defined.
     * https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#c21-if-you-define-or-delete-any-default-operation-define-or-delete-them-all
     */
-  public:
-    RodriguesConvertor(const RodriguesConvertor&) = delete;             // Copy Constructor Not Implemented
-    RodriguesConvertor& operator=(const RodriguesConvertor&) = delete;  // Copy Assignment Not Implemented
-    RodriguesConvertor(RodriguesConvertor&&) = delete;                  // Move Constructor Not Implemented
-    RodriguesConvertor& operator=(RodriguesConvertor&&) = delete;       // Move Assignment Not Implemented
+    ConvertQuaternion(const ConvertQuaternion&) = delete;             // Copy Constructor Not Implemented
+    ConvertQuaternion& operator=(const ConvertQuaternion&) = delete;  // Copy Assignment Not Implemented
+    ConvertQuaternion(ConvertQuaternion&&) = delete;                  // Move Constructor Not Implemented
+    ConvertQuaternion& operator=(ConvertQuaternion&&) = delete;       // Move Assignment Not Implemented
 
 };
 

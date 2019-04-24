@@ -58,6 +58,7 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
@@ -164,19 +165,19 @@ void DetectEllipsoids::setupFilterParameters()
   }
 
   {
-    parameters.push_back(SIMPL_NEW_STRING_FP("Ellipsoid Center Coordinates", CenterCoordinatesArrayName, FilterParameter::CreatedArray, DetectEllipsoids));
+    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Ellipsoid Center Coordinates", CenterCoordinatesArrayName, EllipseFeatureAttributeMatrixPath, EllipseFeatureAttributeMatrixPath, FilterParameter::CreatedArray, DetectEllipsoids));
   }
 
   {
-    parameters.push_back(SIMPL_NEW_STRING_FP("Ellipsoid Major Axis Lengths", MajorAxisLengthArrayName, FilterParameter::CreatedArray, DetectEllipsoids));
+    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Ellipsoid Major Axis Lengths", MajorAxisLengthArrayName, EllipseFeatureAttributeMatrixPath, EllipseFeatureAttributeMatrixPath, FilterParameter::CreatedArray, DetectEllipsoids));
   }
 
   {
-    parameters.push_back(SIMPL_NEW_STRING_FP("Ellipsoid Minor Axis Lengths", MinorAxisLengthArrayName, FilterParameter::CreatedArray, DetectEllipsoids));
+    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Ellipsoid Minor Axis Lengths", MinorAxisLengthArrayName, EllipseFeatureAttributeMatrixPath, EllipseFeatureAttributeMatrixPath, FilterParameter::CreatedArray, DetectEllipsoids));
   }
 
   {
-    parameters.push_back(SIMPL_NEW_STRING_FP("Ellipsoid Rotational Angles", RotationalAnglesArrayName, FilterParameter::CreatedArray, DetectEllipsoids));
+    parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Ellipsoid Rotational Angles", RotationalAnglesArrayName, EllipseFeatureAttributeMatrixPath, EllipseFeatureAttributeMatrixPath, FilterParameter::CreatedArray, DetectEllipsoids));
   }
 
   {
@@ -1430,7 +1431,7 @@ const QString DetectEllipsoids::getFilterVersion() const
 // -----------------------------------------------------------------------------
 const QString DetectEllipsoids::getGroupName() const
 {
-  return SIMPL::FilterGroups::StatisticsFilters;
+  return SIMPL::FilterGroups::ProcessingFilters;
 }
 
 // -----------------------------------------------------------------------------
@@ -1446,7 +1447,7 @@ const QUuid DetectEllipsoids::getUuid()
 // -----------------------------------------------------------------------------
 const QString DetectEllipsoids::getSubGroupName() const
 {
-  return "FiberToolbox";
+  return SIMPL::FilterSubGroups::GenerationFilters;
 }
 
 // -----------------------------------------------------------------------------

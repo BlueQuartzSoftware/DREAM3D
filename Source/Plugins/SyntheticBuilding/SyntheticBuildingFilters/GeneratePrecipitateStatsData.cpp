@@ -21,6 +21,7 @@
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/RadialDistributionFunction.h"
@@ -210,7 +211,7 @@ void GeneratePrecipitateStatsData::setupFilterParameters()
       SIMPL_NEW_LINKED_BOOL_FP("Create Data Container & Ensemble AttributeMatrix", CreateEnsembleAttributeMatrix, FilterParameter::Parameter, GeneratePrecipitateStatsData, linkedProps));
 
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, GeneratePrecipitateStatsData));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, GeneratePrecipitateStatsData));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, GeneratePrecipitateStatsData));
 
   linkedProps.clear();
   linkedProps << "SelectedEnsembleAttributeMatrix";

@@ -7,16 +7,17 @@ set(${PLUGIN_NAME}Test_BINARY_DIR ${${PLUGIN_NAME}_BINARY_DIR}/Test)
 # be directly included in the main test source file. We list them here so that
 # they will show up in IDEs
 set(TEST_NAMES
-  ImportH5EspritDataTest
+  AngCachingTest
+  AngleFileIOTest
+  ConvertQuaternionTest
+  CtfCachingTest
+  GenerateFZQuaternionsTest
   GenerateOrientationMatrixTransposeTest
   GenerateQuaternionConjugateTest
-  RodriguesConvertorTest
-  GenerateFZQuaternionsTest
-  Stereographic3DTest
-  AngCachingTest
-  CtfCachingTest
-  AngleFileIOTest
+  ImportH5EspritDataTest
   OrientationUtilityTest
+  RodriguesConvertorTest
+  Stereographic3DTest
 )
 
 if(SIMPL_USE_ITK)
@@ -38,7 +39,7 @@ get_filename_component(${PLUGIN_NAME}_PARENT_BINARY_DIR "${${PLUGIN_NAME}_BINARY
 SIMPL_GenerateUnitTestFile(PLUGIN_NAME ${PLUGIN_NAME}
                            TEST_DATA_DIR ${${PLUGIN_NAME}_SOURCE_DIR}/Test/Data
                            SOURCES ${TEST_NAMES}
-                           LINK_LIBRARIES Qt5::Core H5Support SIMPLib OrientationLib
+                           LINK_LIBRARIES Qt5::Core H5Support SIMPLib OrientationLib  ${plug_target_name}
                            INCLUDE_DIRS ${${PLUGIN_NAME}_PARENT_SOURCE_DIR}
                                         ${${PLUGIN_NAME}Test_SOURCE_DIR}
                                         ${${PLUGIN_NAME}Test_BINARY_DIR}

@@ -39,6 +39,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -104,10 +105,10 @@ void FindBoundaryStrengths::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Crystal Structures", CrystalStructuresArrayPath, FilterParameter::RequiredArray, FindBoundaryStrengths, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("F1s", SurfaceMeshF1sArrayName, FilterParameter::CreatedArray, FindBoundaryStrengths));
-  parameters.push_back(SIMPL_NEW_STRING_FP("F1spts", SurfaceMeshF1sptsArrayName, FilterParameter::CreatedArray, FindBoundaryStrengths));
-  parameters.push_back(SIMPL_NEW_STRING_FP("F7s", SurfaceMeshF7sArrayName, FilterParameter::CreatedArray, FindBoundaryStrengths));
-  parameters.push_back(SIMPL_NEW_STRING_FP("mPrimes", SurfaceMeshmPrimesArrayName, FilterParameter::CreatedArray, FindBoundaryStrengths));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("F1s", SurfaceMeshF1sArrayName, SurfaceMeshFaceLabelsArrayPath, SurfaceMeshFaceLabelsArrayPath, FilterParameter::CreatedArray, FindBoundaryStrengths));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("F1spts", SurfaceMeshF1sptsArrayName, SurfaceMeshFaceLabelsArrayPath, SurfaceMeshFaceLabelsArrayPath, FilterParameter::CreatedArray, FindBoundaryStrengths));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("F7s", SurfaceMeshF7sArrayName, SurfaceMeshFaceLabelsArrayPath, SurfaceMeshFaceLabelsArrayPath, FilterParameter::CreatedArray, FindBoundaryStrengths));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("mPrimes", SurfaceMeshmPrimesArrayName, SurfaceMeshFaceLabelsArrayPath, SurfaceMeshFaceLabelsArrayPath, FilterParameter::CreatedArray, FindBoundaryStrengths));
 
   setFilterParameters(parameters);
 }

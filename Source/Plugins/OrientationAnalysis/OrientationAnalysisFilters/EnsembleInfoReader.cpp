@@ -42,6 +42,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
@@ -92,9 +93,9 @@ void EnsembleInfoReader::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DC_SELECTION_FP("Data Container", DataContainerName, FilterParameter::RequiredArray, EnsembleInfoReader, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Ensemble Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, EnsembleInfoReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Crystal Structures", CrystalStructuresArrayName, FilterParameter::CreatedArray, EnsembleInfoReader));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Phase Types", PhaseTypesArrayName, FilterParameter::CreatedArray, EnsembleInfoReader));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, EnsembleInfoReader));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Crystal Structures", CrystalStructuresArrayName, DataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, EnsembleInfoReader));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Phase Types", PhaseTypesArrayName, DataContainerName, CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, EnsembleInfoReader));
   setFilterParameters(parameters);
 }
 

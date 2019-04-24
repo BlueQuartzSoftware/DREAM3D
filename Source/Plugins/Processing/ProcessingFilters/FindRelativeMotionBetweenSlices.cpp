@@ -48,6 +48,7 @@
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -187,7 +188,7 @@ void FindRelativeMotionBetweenSlices::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Attribute Array to Track Motion", SelectedArrayPath, FilterParameter::RequiredArray, FindRelativeMotionBetweenSlices, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Motion Direction", MotionDirectionArrayName, FilterParameter::CreatedArray, FindRelativeMotionBetweenSlices));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Motion Direction", MotionDirectionArrayName, SelectedArrayPath, SelectedArrayPath, FilterParameter::CreatedArray, FindRelativeMotionBetweenSlices));
   setFilterParameters(parameters);
 }
 

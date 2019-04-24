@@ -43,6 +43,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
@@ -98,9 +99,9 @@ void JumbleOrientations::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Phases", FeaturePhasesArrayPath, FilterParameter::RequiredArray, JumbleOrientations, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Element Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Euler Angles", CellEulerAnglesArrayName, FilterParameter::CreatedArray, JumbleOrientations));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Euler Angles", CellEulerAnglesArrayName, FeatureIdsArrayPath, FeatureIdsArrayPath, FilterParameter::CreatedArray, JumbleOrientations));
   parameters.push_back(SeparatorFilterParameter::New("Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Average Quaternions", AvgQuatsArrayName, FilterParameter::CreatedArray, JumbleOrientations));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Average Quaternions", AvgQuatsArrayName, FeaturePhasesArrayPath, FeaturePhasesArrayPath, FilterParameter::CreatedArray, JumbleOrientations));
   setFilterParameters(parameters);
 }
 

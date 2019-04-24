@@ -19,6 +19,7 @@
 #include "SIMPLib/FilterParameters/DynamicTableFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/PreflightUpdatedValueFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
@@ -196,7 +197,7 @@ void GeneratePrimaryStatsData::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Create Data Container & Ensemble AttributeMatrix", CreateEnsembleAttributeMatrix, FilterParameter::Parameter, GeneratePrimaryStatsData, linkedProps));
 
   parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, GeneratePrimaryStatsData));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, GeneratePrimaryStatsData));
+  parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, GeneratePrimaryStatsData));
 
   linkedProps.clear();
   linkedProps << "SelectedEnsembleAttributeMatrix";

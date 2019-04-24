@@ -52,7 +52,6 @@ class SyntheticBuilding_EXPORT InitializeSyntheticVolume : public AbstractFilter
     PYB11_CREATE_BINDINGS(InitializeSyntheticVolume SUPERCLASS AbstractFilter)
     PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
     PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-    PYB11_PROPERTY(QString EnsembleAttributeMatrixName READ getEnsembleAttributeMatrixName WRITE setEnsembleAttributeMatrixName)
     PYB11_PROPERTY(IntVec3Type Dimensions READ getDimensions WRITE setDimensions)
     PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
     PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
@@ -72,9 +71,6 @@ public:
 
   SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-
-  SIMPL_FILTER_PARAMETER(QString, EnsembleAttributeMatrixName)
-  Q_PROPERTY(QString EnsembleAttributeMatrixName READ getEnsembleAttributeMatrixName WRITE setEnsembleAttributeMatrixName)
 
   SIMPL_FILTER_PARAMETER(IntVec3Type, Dimensions)
   Q_PROPERTY(IntVec3Type Dimensions READ getDimensions WRITE setDimensions)

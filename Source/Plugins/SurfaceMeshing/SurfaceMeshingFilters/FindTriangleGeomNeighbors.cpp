@@ -41,6 +41,7 @@
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
@@ -92,8 +93,8 @@ void FindTriangleGeomNeighbors::setupFilterParameters()
     parameters.push_back(SIMPL_NEW_AM_SELECTION_FP("Face Feature Attribute Matrix", FeatureAttributeMatrixPath, FilterParameter::RequiredArray, FindTriangleGeomNeighbors, req));
   }
   parameters.push_back(SeparatorFilterParameter::New("Face Feature Data", FilterParameter::CreatedArray));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Number of Neighbors", NumNeighborsArrayName, FilterParameter::CreatedArray, FindTriangleGeomNeighbors));
-  parameters.push_back(SIMPL_NEW_STRING_FP("Neighbor List", NeighborListArrayName, FilterParameter::CreatedArray, FindTriangleGeomNeighbors));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Number of Neighbors", NumNeighborsArrayName, FeatureAttributeMatrixPath, FeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindTriangleGeomNeighbors));
+  parameters.push_back(SIMPL_NEW_DA_WITH_LINKED_AM_FP("Neighbor List", NeighborListArrayName, FeatureAttributeMatrixPath, FeatureAttributeMatrixPath, FilterParameter::CreatedArray, FindTriangleGeomNeighbors));
   setFilterParameters(parameters);
 }
 
