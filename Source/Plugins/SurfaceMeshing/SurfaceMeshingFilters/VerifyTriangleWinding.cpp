@@ -805,7 +805,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
 AbstractFilter::Pointer VerifyTriangleWinding::newFilterInstance(bool copyFilterParameters) const
 {
   VerifyTriangleWinding::Pointer filter = VerifyTriangleWinding::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

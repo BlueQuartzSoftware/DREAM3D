@@ -219,24 +219,22 @@ void FindSizes::findSizesImage(ImageGeom::Pointer image)
     int32_t gnum = m_FeatureIds[j];
     featurecounts[gnum]++;
   }
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = image->getSpacing();
+
+  FloatVec3Type spacing = image->getSpacing();
 
   if(image->getXPoints() == 1 || image->getYPoints() == 1 || image->getZPoints() == 1)
   {
     if(image->getXPoints() == 1)
     {
-      res_scalar = yRes * zRes;
+      res_scalar = spacing[1] * spacing[2];
     }
     else if(image->getYPoints() == 1)
     {
-      res_scalar = xRes * zRes;
+      res_scalar = spacing[0] * spacing[2];
     }
     else if(image->getZPoints() == 1)
     {
-      res_scalar = xRes * yRes;
+      res_scalar = spacing[0] * spacing[1];
     }
 
     for(size_t i = 1; i < numfeatures; i++)
@@ -257,7 +255,7 @@ void FindSizes::findSizesImage(ImageGeom::Pointer image)
   }
   else
   {
-    res_scalar = xRes * yRes * zRes;
+    res_scalar = spacing[0] * spacing[1] * spacing[2];
     float vol_term = (4.0f / 3.0f) * SIMPLib::Constants::k_Pi;
     for(size_t i = 1; i < numfeatures; i++)
     {

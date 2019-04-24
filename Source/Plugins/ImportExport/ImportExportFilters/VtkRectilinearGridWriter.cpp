@@ -353,12 +353,9 @@ void VtkRectilinearGridWriter::execute()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(dcName);
 
   ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
-  size_t dims[3] = {0, 0, 0};
-  std::tie(dims[0], dims[1], dims[2]) = image->getDimensions();
-  FloatVec3Type res = {0.0f, 0.0f, 0.0f};
-  image->getSpacing(res);
-  FloatVec3Type origin = {0.0f, 0.0f, 0.0f};
-  image->getOrigin(origin);
+  SizeVec3Type dims = image->getDimensions();
+  FloatVec3Type res = image->getSpacing();
+  FloatVec3Type origin = image->getOrigin();
 
   int err = 0;
   FILE* f = nullptr;

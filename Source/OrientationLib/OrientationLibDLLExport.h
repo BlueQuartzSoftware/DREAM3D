@@ -56,12 +56,12 @@
 configures to build a shared library. If you are going to use
 another build system on windows or create the visual studio
 projects by hand you need to define OrientationLib_EXPORTS when
-building the MXADatModel DLL on windows.
+building on Windows.
 */
 
 #if defined (OrientationLib_BUILT_AS_DYNAMIC_LIB)
 
-#if defined (OrientationLib_EXPORTS)  /* Compiling the MXA DLL/Dylib */
+#if defined(OrientationLib_EXPORTS) /* Compiling the OrientationLib DLL/Dylib */
 #if defined (_MSC_VER)  /* MSVC Compiler Case */
 #define  OrientationLib_EXPORT __declspec(dllexport)
 #elif (__GNUC__ >= 4)  /* GCC 4.x has support for visibility options */

@@ -41,14 +41,6 @@
 
 #include "M3CEntireVolume.h"
 
-#include "MXA/Common/MXAMath.h"
-#include "MXA/Utilities/MXADir.h"
-#include "MXA/Utilities/MXAFileInfo.h"
-
-#ifndef M_PI
-#define M_PI 3.14159265
-#endif
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

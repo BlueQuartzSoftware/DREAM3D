@@ -202,18 +202,12 @@ void NearestPointFuseRegularGrids::execute()
   AttributeMatrix::Pointer sampleAttrMat = sampleDC->getAttributeMatrix(m_SamplingCellAttributeMatrixPath.getAttributeMatrixName());
 
   // Get dimensions and resolutions of two grids
-  SizeVec3Type _refDims;
-  SizeVec3Type _sampleDims;
-  FloatVec3Type refRes = {0.0f, 0.0f, 0.0f};
-  FloatVec3Type sampleRes = {0.0f, 0.0f, 0.0f};
-  FloatVec3Type refOrigin = {0.0f, 0.0f, 0.0f};
-  FloatVec3Type sampleOrigin = {0.0f, 0.0f, 0.0f};
-  refDC->getGeometryAs<ImageGeom>()->getDimensions(_refDims);
-  sampleDC->getGeometryAs<ImageGeom>()->getDimensions(_sampleDims);
-  refDC->getGeometryAs<ImageGeom>()->getSpacing(refRes);
-  sampleDC->getGeometryAs<ImageGeom>()->getSpacing(sampleRes);
-  refDC->getGeometryAs<ImageGeom>()->getOrigin(refOrigin);
-  sampleDC->getGeometryAs<ImageGeom>()->getOrigin(sampleOrigin);
+  SizeVec3Type _refDims = refDC->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type _sampleDims = sampleDC->getGeometryAs<ImageGeom>()->getDimensions();
+  FloatVec3Type refRes = refDC->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type sampleRes = sampleDC->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type refOrigin = refDC->getGeometryAs<ImageGeom>()->getOrigin();
+  FloatVec3Type sampleOrigin = sampleDC->getGeometryAs<ImageGeom>()->getOrigin();
 
   // Further down we divide by sampleRes, so here check to make sure that no components of the resolution are 0
   // This would be incredible unusual behavior if it were to occur, hence why we don't spend the time

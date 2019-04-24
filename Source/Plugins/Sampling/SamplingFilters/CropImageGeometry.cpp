@@ -196,9 +196,9 @@ void CropImageGeometry::dataCheck()
   m_OldResolution = getCurrentVolumeDataContainerResolutions();
   if(image)
   {
-    image->getOrigin(m_OldOrigin);
-  } 
-  
+    m_OldOrigin = image->getOrigin();
+  }
+
   DataContainer::Pointer destCellDataContainer = srcCellDataContainer;
   AttributeMatrix::Pointer destCellAttrMat;
 
@@ -405,10 +405,8 @@ void CropImageGeometry::execute()
 
   if(m_SaveAsNewDataContainer)
   {
-    FloatVec3Type o;
-    FloatVec3Type r;
-    srcCellDataContainer->getGeometryAs<ImageGeom>()->getOrigin(o);
-    srcCellDataContainer->getGeometryAs<ImageGeom>()->getSpacing(r);
+    FloatVec3Type o = srcCellDataContainer->getGeometryAs<ImageGeom>()->getOrigin();
+    FloatVec3Type r = srcCellDataContainer->getGeometryAs<ImageGeom>()->getSpacing();
 
     destCellDataContainer = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getNewDataContainerName(), DataContainerID);
     ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
@@ -430,8 +428,7 @@ void CropImageGeometry::execute()
   // No matter where the AM is (same DC or new DC), we have the correct DC and AM pointers...now it's time to crop
   int64_t totalPoints = cellAttrMat->getNumberOfTuples();
 
-  size_t udims[3] = {0, 0, 0};
-  std::tie(udims[0], udims[1], udims[2]) = srcCellDataContainer->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type udims = srcCellDataContainer->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
@@ -444,8 +441,7 @@ void CropImageGeometry::execute()
   }
 
   // Get current origin
-  FloatVec3Type oldOrigin = {0.0f, 0.0f, 0.0f};
-  destCellDataContainer->getGeometryAs<ImageGeom>()->getOrigin(oldOrigin);
+  FloatVec3Type oldOrigin = destCellDataContainer->getGeometryAs<ImageGeom>()->getOrigin();
 
   // Check to make sure the new dimensions are not "out of bounds" and warn the user if they are
   if(dims[0] <= m_XMax)
@@ -589,11 +585,8 @@ void CropImageGeometry::execute()
 
   if(m_UpdateOrigin)
   {
-    FloatVec3Type resolution = {0.0f, 0.0f, 0.0f};
-    destCellDataContainer->getGeometryAs<ImageGeom>()->getSpacing(resolution);
-
-    FloatVec3Type origin = {0.0f, 0.0f, 0.0f};
-    destCellDataContainer->getGeometryAs<ImageGeom>()->getOrigin(origin);
+    FloatVec3Type resolution = destCellDataContainer->getGeometryAs<ImageGeom>()->getSpacing();
+    FloatVec3Type origin = destCellDataContainer->getGeometryAs<ImageGeom>()->getOrigin();
 
     origin[0] = m_XMin * resolution[0] + oldOrigin[0];
     origin[1] = m_YMin * resolution[1] + oldOrigin[1];
@@ -649,7 +642,7 @@ FloatVec3Type CropImageGeometry::getCurrentVolumeDataContainerResolutions()
     ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
     if(image.get() != nullptr)
     {
-      std::tie(data[0], data[1], data[2]) = image->getSpacing();
+      data = image->getSpacing();
     }
     else
     {

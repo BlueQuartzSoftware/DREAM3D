@@ -219,7 +219,7 @@ public:
             points[iter]->setCoords(count, coordsT);
             count++;
           }
-          if(basis == 2)
+          else if(basis == 2)
           {
             // makes the (0.5,0.5,0) atom
             coords[0] = coords[0] + (0.5 * latticeConstants[0]);

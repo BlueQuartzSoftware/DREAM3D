@@ -1,37 +1,37 @@
 /* ============================================================================
-* Copyright (c) 2009-2017 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2017 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #pragma once
 
@@ -57,6 +57,21 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+namespace OrientationRepresentation
+{
+enum class Type : int
+{
+  Euler = 0,
+  OrientationMatrix,
+  Quaternion,
+  AxisAngle,
+  Rodrigues,
+  Homochoric,
+  Cubochoric,
+  Unknown
+};
+}
+
 /**
  * @brief This is the top level superclass for doing the conversions between orientation
  * representations
@@ -68,41 +83,53 @@ class OrientationConverter
     SIMPL_SHARED_POINTERS(OrientationConverter<T> )
     SIMPL_TYPE_MACRO(OrientationConverter<T>)
     SIMPL_CLASS_VERSION(1)
-    
-    enum OrientationType
-    {
-      Euler,
-          OrientationMatrix,
-          Quaternion,
-          AxisAngle,
-          Rodrigues,
-          Homochoric,
-          Cubochoric,
-          UnknownOrientationType
-    };
-    
+
     virtual ~OrientationConverter() = default;
     
     /**
     * @brief getOrientationRepresentation
     * @return
     */
-    virtual OrientationType getOrientationRepresentation() { return UnknownOrientationType; }
-    
-    /**
-    * @brief convertRepresentationTo Converts the data to the desired type
-    * @param repType The type of representation to convert to.
-    * @return
-    */
-    void convertRepresentationTo(OrientationType repType)
+    virtual OrientationRepresentation::Type getOrientationRepresentation()
     {
-      if(repType == Euler) { toEulers(); }
-      else if(repType == OrientationMatrix) { toOrientationMatrix(); }
-      else if(repType == Quaternion) { toQuaternion(); }
-      else if(repType == AxisAngle) { toAxisAngle(); }
-      else if(repType == Rodrigues) { toRodrigues(); }
-      else if(repType == Homochoric) { toHomochoric(); }
-      else if(repType == Cubochoric) { toCubochoric(); }
+      return OrientationRepresentation::Type::Unknown;
+    }
+
+    /**
+     * @brief convertRepresentationTo Converts the data to the desired type
+     * @param repType The type of representation to convert to.
+     * @return
+     */
+    void convertRepresentationTo(OrientationRepresentation::Type repType)
+    {
+      if(repType == OrientationRepresentation::Type::Euler)
+      {
+        toEulers();
+      }
+      else if(repType == OrientationRepresentation::Type::OrientationMatrix)
+      {
+        toOrientationMatrix();
+      }
+      else if(repType == OrientationRepresentation::Type::Quaternion)
+      {
+        toQuaternion();
+      }
+      else if(repType == OrientationRepresentation::Type::AxisAngle)
+      {
+        toAxisAngle();
+      }
+      else if(repType == OrientationRepresentation::Type::Rodrigues)
+      {
+        toRodrigues();
+      }
+      else if(repType == OrientationRepresentation::Type::Homochoric)
+      {
+        toHomochoric();
+      }
+      else if(repType == OrientationRepresentation::Type::Cubochoric)
+      {
+        toCubochoric();
+      }
     }
     
     /**
@@ -214,19 +241,19 @@ class OrientationConverter
      * @brief GetOrientationTypes
      * @return
      */
-    static QVector<OrientationType> GetOrientationTypes()
+    static QVector<OrientationRepresentation::Type> GetOrientationTypes()
     {
-      QVector<OrientationType> ocTypes(7);
-      ocTypes[0] = Euler;
-      ocTypes[1] = OrientationMatrix;
-      ocTypes[2] = Quaternion;
-      ocTypes[3] = AxisAngle;
-      ocTypes[4] = Rodrigues;
-      ocTypes[5] = Homochoric;
-      ocTypes[6] = Cubochoric;
+      QVector<OrientationRepresentation::Type> ocTypes(7);
+      ocTypes[0] = OrientationRepresentation::Type::Euler;
+      ocTypes[1] = OrientationRepresentation::Type::OrientationMatrix;
+      ocTypes[2] = OrientationRepresentation::Type::Quaternion;
+      ocTypes[3] = OrientationRepresentation::Type::AxisAngle;
+      ocTypes[4] = OrientationRepresentation::Type::Rodrigues;
+      ocTypes[5] = OrientationRepresentation::Type::Homochoric;
+      ocTypes[6] = OrientationRepresentation::Type::Cubochoric;
       return ocTypes;
     }
-    
+
     /**
      * @brief GetMinIndex
      * @return
@@ -473,14 +500,18 @@ class EulerConverter : public OrientationConverter<T>
     SIMPL_SHARED_POINTERS(EulerConverter<T> )
     SIMPL_TYPE_MACRO_SUPER(EulerConverter<T>, OrientationConverter<T>)
     SIMPL_CLASS_VERSION(1)
-    
-    SIMPL_STATIC_NEW_MACRO(EulerConverter<T> )
-    
-    virtual ~EulerConverter() {}
-    
-    virtual typename OrientationConverter<T>::OrientationType getOrientationRepresentation()
-    { return OrientationConverter<T>::Euler; }
-    
+
+    SIMPL_STATIC_NEW_MACRO(EulerConverter<T>)
+
+    virtual ~EulerConverter()
+    {
+    }
+
+    virtual OrientationRepresentation::Type getOrientationRepresentation()
+    {
+      return OrientationRepresentation::Type::Euler;
+    }
+
     virtual void toEulers()
     {
       typedef typename DataArray<T>::Pointer PointerType;
@@ -658,13 +689,17 @@ class OrientationMatrixConverter : public OrientationConverter<T>
     SIMPL_SHARED_POINTERS(OrientationMatrixConverter<T> )
     SIMPL_TYPE_MACRO_SUPER(OrientationMatrixConverter<T>, OrientationConverter<T>)
     SIMPL_CLASS_VERSION(1)
-    SIMPL_STATIC_NEW_MACRO(OrientationMatrixConverter<T> )
-    
-    virtual ~OrientationMatrixConverter() {}
-    
-    virtual typename OrientationConverter<T>::OrientationType getOrientationRepresentation()
-    { return OrientationConverter<T>::OrientationMatrix; }
-    
+    SIMPL_STATIC_NEW_MACRO(OrientationMatrixConverter<T>)
+
+    virtual ~OrientationMatrixConverter()
+    {
+    }
+
+    virtual OrientationRepresentation::Type getOrientationRepresentation()
+    {
+      return OrientationRepresentation::Type::OrientationMatrix;
+    }
+
     virtual void toEulers()
     {
       sanityCheckInputData();
@@ -825,13 +860,17 @@ class QuaternionConverter : public OrientationConverter<T>
     SIMPL_SHARED_POINTERS(QuaternionConverter<T> )
     SIMPL_TYPE_MACRO_SUPER(QuaternionConverter<T>, OrientationConverter<T>)
     SIMPL_CLASS_VERSION(1)
-    SIMPL_STATIC_NEW_MACRO(QuaternionConverter<T> )
-    
-    virtual ~QuaternionConverter() {}
-    
-    virtual typename OrientationConverter<T>::OrientationType getOrientationRepresentation()
-    { return OrientationConverter<T>::Quaternion; }
-    
+    SIMPL_STATIC_NEW_MACRO(QuaternionConverter<T>)
+
+    virtual ~QuaternionConverter()
+    {
+    }
+
+    virtual OrientationRepresentation::Type getOrientationRepresentation()
+    {
+      return OrientationRepresentation::Type::Quaternion;
+    }
+
     virtual void toEulers()
     {
       OC_CONVERT_BODY(3, Eulers, qu2eu, Qu2Eu)
@@ -987,13 +1026,17 @@ class AxisAngleConverter : public OrientationConverter<T>
     SIMPL_SHARED_POINTERS(AxisAngleConverter<T> )
     SIMPL_TYPE_MACRO_SUPER(AxisAngleConverter<T>, OrientationConverter<T>)
     SIMPL_CLASS_VERSION(1)
-    SIMPL_STATIC_NEW_MACRO(AxisAngleConverter<T> )
-    
-    virtual ~AxisAngleConverter() {}
-    
-    virtual typename OrientationConverter<T>::OrientationType getOrientationRepresentation()
-    { return OrientationConverter<T>::AxisAngle; }
-    
+    SIMPL_STATIC_NEW_MACRO(AxisAngleConverter<T>)
+
+    virtual ~AxisAngleConverter()
+    {
+    }
+
+    virtual OrientationRepresentation::Type getOrientationRepresentation()
+    {
+      return OrientationRepresentation::Type::AxisAngle;
+    }
+
     virtual void toEulers()
     {
       OC_CONVERT_BODY(3, Eulers, ax2eu, Ax2Eu)
@@ -1150,14 +1193,17 @@ class RodriguesConverter : public OrientationConverter<T>
     SIMPL_SHARED_POINTERS(RodriguesConverter<T> )
     SIMPL_TYPE_MACRO_SUPER(RodriguesConverter<T>, OrientationConverter<T>)
     SIMPL_CLASS_VERSION(1)
-    SIMPL_STATIC_NEW_MACRO(RodriguesConverter<T> )
-    
-    
-    virtual ~RodriguesConverter() {}
-    
-    virtual typename OrientationConverter<T>::OrientationType getOrientationRepresentation()
-    { return OrientationConverter<T>::Rodrigues; }
-    
+    SIMPL_STATIC_NEW_MACRO(RodriguesConverter<T>)
+
+    virtual ~RodriguesConverter()
+    {
+    }
+
+    virtual OrientationRepresentation::Type getOrientationRepresentation()
+    {
+      return OrientationRepresentation::Type::Rodrigues;
+    }
+
     virtual void toEulers()
     {
       OC_CONVERT_BODY(3, Eulers, ro2eu, Ro2Eu)
@@ -1316,14 +1362,17 @@ class HomochoricConverter : public OrientationConverter<T>
     SIMPL_SHARED_POINTERS(HomochoricConverter<T> )
     SIMPL_TYPE_MACRO_SUPER(HomochoricConverter<T>, OrientationConverter<T>)
     SIMPL_CLASS_VERSION(1)
-    SIMPL_STATIC_NEW_MACRO(HomochoricConverter<T> )
-    
-    
-    virtual ~HomochoricConverter() {}
-    
-    virtual typename OrientationConverter<T>::OrientationType getOrientationRepresentation()
-    { return OrientationConverter<T>::Homochoric; }
-    
+    SIMPL_STATIC_NEW_MACRO(HomochoricConverter<T>)
+
+    virtual ~HomochoricConverter()
+    {
+    }
+
+    virtual OrientationRepresentation::Type getOrientationRepresentation()
+    {
+      return OrientationRepresentation::Type::Homochoric;
+    }
+
     virtual void toEulers()
     {
       OC_CONVERT_BODY(3, Eulers, ho2eu, Ho2Eu)
@@ -1483,14 +1532,17 @@ class CubochoricConverter : public OrientationConverter<T>
     SIMPL_SHARED_POINTERS(CubochoricConverter<T> )
     SIMPL_TYPE_MACRO_SUPER(CubochoricConverter<T>, OrientationConverter<T>)
     SIMPL_CLASS_VERSION(1)
-    SIMPL_STATIC_NEW_MACRO(CubochoricConverter<T> )
-    
-    
-    virtual ~CubochoricConverter() {}
-    
-    virtual typename OrientationConverter<T>::OrientationType getOrientationRepresentation()
-    { return OrientationConverter<T>::Cubochoric; }
-    
+    SIMPL_STATIC_NEW_MACRO(CubochoricConverter<T>)
+
+    virtual ~CubochoricConverter()
+    {
+    }
+
+    virtual OrientationRepresentation::Type getOrientationRepresentation()
+    {
+      return OrientationRepresentation::Type::Cubochoric;
+    }
+
     virtual void toEulers()
     {
       OC_CONVERT_BODY(3, Eulers, cu2eu, Cu2Eu)

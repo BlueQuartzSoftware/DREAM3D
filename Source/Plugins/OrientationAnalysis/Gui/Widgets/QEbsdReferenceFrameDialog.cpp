@@ -417,10 +417,8 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   }
 
   DataContainer::Pointer m = dca->getDataContainer(dcName);
-  size_t dims[3] = {0, 0, 0};
-  std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
-  FloatVec3Type res = {0.0f, 0.0f, 0.0f};
-  m->getGeometryAs<ImageGeom>()->getSpacing(res);
+  SizeVec3Type dims = m->getGeometryAs<ImageGeom>()->getDimensions();
+  FloatVec3Type res = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   m_XDim->setText(QString::number(dims[0]));
   m_YDim->setText(QString::number(dims[1]));
@@ -430,7 +428,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   AttributeMatrix::Pointer attrMat = m->getAttributeMatrix(cellAttrMatName);
   IDataArray::Pointer arrayPtr = attrMat->getAttributeArray(outputArrayName);
 
-  generateImageRGB(arrayPtr, dims);
+  generateImageRGB(arrayPtr, dims.data());
 }
 
 // -----------------------------------------------------------------------------

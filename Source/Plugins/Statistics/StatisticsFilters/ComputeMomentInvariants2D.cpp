@@ -111,8 +111,7 @@ void ComputeMomentInvariants2D::dataCheck()
     return;
   }
   ImageGeom::Pointer imageGeom = std::dynamic_pointer_cast<ImageGeom>(igeom);
-  size_t imageDims[3] = { 0,0,0};
-  std::tie(imageDims[0], imageDims[1], imageDims[2]) = imageGeom->getDimensions();
+  SizeVec3Type imageDims = imageGeom->getDimensions();
   if (imageDims[2] != 1)
   {
     QString ss = QObject::tr("This filter currently only works on XY Planes in 2D data. Either crop the 3D data down to 2D in the Z Direction or use other data.");
@@ -192,8 +191,7 @@ void ComputeMomentInvariants2D::execute()
   IGeometry::Pointer igeom = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
   ImageGeom::Pointer imageGeom = std::dynamic_pointer_cast<ImageGeom>(igeom);
-  size_t volDims[3] = { 0, 0, 0 };
-  std::tie(volDims[0], volDims[1], volDims[2]) = imageGeom->getDimensions();
+  SizeVec3Type volDims = imageGeom->getDimensions();
 
   Int32ArrayType::Pointer featureIdArray = m_FeatureIdsPtr.lock();
   int32_t numFeatures = static_cast<int32_t>(m_FeatureRectPtr.lock()->getNumberOfTuples());

@@ -518,11 +518,8 @@ void MatchCrystallography::determine_volumes()
     m_Volumes[m_FeatureIds[i]]++;
   }
 
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
-  float res_scalar = xRes * yRes * zRes;
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
+  float res_scalar = spacing[0] * spacing[1] * spacing[2];
   for(size_t i = 1; i < totalFeatures; i++)
   {
     m_Volumes[i] = m_Volumes[i] * res_scalar;

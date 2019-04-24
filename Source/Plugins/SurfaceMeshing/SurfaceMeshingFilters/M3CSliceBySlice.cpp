@@ -3090,7 +3090,7 @@ QVector<int> M3CSliceBySlice::findAdjacentTriangles(SurfaceMesh::M3C::Triangle* 
 AbstractFilter::Pointer M3CSliceBySlice::newFilterInstance(bool copyFilterParameters) const
 {
   M3CSliceBySlice::Pointer filter = M3CSliceBySlice::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

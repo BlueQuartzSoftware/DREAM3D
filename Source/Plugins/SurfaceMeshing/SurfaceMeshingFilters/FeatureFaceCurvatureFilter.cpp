@@ -470,7 +470,7 @@ void FeatureFaceCurvatureFilter::tbbTaskProgress()
 AbstractFilter::Pointer FeatureFaceCurvatureFilter::newFilterInstance(bool copyFilterParameters) const
 {
   FeatureFaceCurvatureFilter::Pointer filter = FeatureFaceCurvatureFilter::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

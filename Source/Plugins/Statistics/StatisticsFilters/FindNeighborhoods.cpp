@@ -352,10 +352,8 @@ void FindNeighborhoods::execute()
     criticalDistance[i] /= aveDiam;
   }
 
-  float m_OriginX = 0.0f, m_OriginY = 0.0f, m_OriginZ = 0.0f;
-  std::tie(m_OriginX, m_OriginY, m_OriginZ) = m->getGeometryAs<ImageGeom>()->getOrigin();
-  size_t udims[3] = {0, 0, 0};
-  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
+  FloatVec3Type origin = m->getGeometryAs<ImageGeom>()->getOrigin();
+  // SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   size_t xbin = 0, ybin = 0, zbin = 0;
   std::vector<int64_t> bins(3 * totalFeatures, 0);
@@ -364,9 +362,9 @@ void FindNeighborhoods::execute()
     x = m_Centroids[3 * i];
     y = m_Centroids[3 * i + 1];
     z = m_Centroids[3 * i + 2];
-    xbin = static_cast<size_t>((x - m_OriginX) / aveDiam);
-    ybin = static_cast<size_t>((y - m_OriginY) / aveDiam);
-    zbin = static_cast<size_t>((z - m_OriginZ) / aveDiam);
+    xbin = static_cast<size_t>((x - origin[0]) / aveDiam);
+    ybin = static_cast<size_t>((y - origin[1]) / aveDiam);
+    zbin = static_cast<size_t>((z - origin[2]) / aveDiam);
     bins[3 * i] = static_cast<int64_t>(xbin);
     bins[3 * i + 1] = static_cast<int64_t>(ybin);
     bins[3 * i + 2] = static_cast<int64_t>(zbin);

@@ -189,6 +189,11 @@ void AvizoRectilinearCoordinateWriter::execute()
   generateHeader(avizoFile);
 
   int err = writeData(avizoFile);
+  if(err < 0)
+  {
+    QString ss = QObject::tr("Error writing file '%1'").arg(getOutputFile());
+    setErrorCondition(-93002, ss);
+  }
 
   fclose(avizoFile);
 
@@ -214,11 +219,10 @@ void AvizoRectilinearCoordinateWriter::generateHeader(FILE* f)
   }
   fprintf(f, "\n");
   fprintf(f, "# Dimensions in x-, y-, and z-direction\n");
-  size_t x = 0, y = 0, z = 0;
-  std::tie(x, y, z) = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type geoDim = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getDimensions();
 
-  fprintf(f, "define Lattice %llu %llu %llu\n", static_cast<unsigned long long>(x), static_cast<unsigned long long>(y), static_cast<unsigned long long>(z));
-  fprintf(f, "define Coordinates %llu\n\n", static_cast<unsigned long long>(x + y + z));
+  fprintf(f, "define Lattice %llu %llu %llu\n", static_cast<unsigned long long>(geoDim[0]), static_cast<unsigned long long>(geoDim[1]), static_cast<unsigned long long>(geoDim[2]));
+  fprintf(f, "define Coordinates %llu\n\n", static_cast<unsigned long long>(geoDim[0] + geoDim[1] + geoDim[2]));
 
   fprintf(f, "Parameters {\n");
   fprintf(f, "     DREAM3DParams {\n");
@@ -250,12 +254,9 @@ void AvizoRectilinearCoordinateWriter::generateHeader(FILE* f)
 int AvizoRectilinearCoordinateWriter::writeData(FILE* f)
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
-  size_t dims[3];
-  std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
-  FloatVec3Type origin;
-  m->getGeometryAs<ImageGeom>()->getOrigin(origin);
-  FloatVec3Type res;
-  m->getGeometryAs<ImageGeom>()->getSpacing(res);
+  SizeVec3Type dims = m->getGeometryAs<ImageGeom>()->getDimensions();
+  FloatVec3Type origin = m->getGeometryAs<ImageGeom>()->getOrigin();
+  FloatVec3Type res = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   QString start("@1 # FeatureIds in z, y, x with X moving fastest, then Y, then Z\n");
   fprintf(f, "%s", start.toLatin1().data());

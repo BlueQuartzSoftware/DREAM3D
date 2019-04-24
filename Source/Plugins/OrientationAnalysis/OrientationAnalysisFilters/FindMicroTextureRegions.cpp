@@ -207,20 +207,17 @@ void FindMicroTextureRegions::find_microtextureregions()
   float xPoints = m->getGeometryAs<ImageGeom>()->getXPoints();
   float yPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
   float zPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   // Initialize every element to 0.0 or max Dimension
   for(size_t i = 0; i < nummicrotextureregions * 1; i++)
   {
     microtextureregioncounts[i] = 0.0f;
-    microtextureregionxmins[i] = xRes * (float)xPoints;
+    microtextureregionxmins[i] = spacing[0] * static_cast<float>(xPoints);
     microtextureregionxmaxs[i] = 0.0f;
-    microtextureregionymins[i] = yRes * (float)yPoints;
+    microtextureregionymins[i] = spacing[1] * static_cast<float>(yPoints);
     microtextureregionymaxs[i] = 0.0f;
-    microtextureregionzmins[i] = zRes * (float)zPoints;
+    microtextureregionzmins[i] = spacing[2] * static_cast<float>(zPoints);
     microtextureregionzmaxs[i] = 0.0f;
   }
 
@@ -246,9 +243,9 @@ void FindMicroTextureRegions::find_microtextureregions()
       for(size_t k = 0; k < xPoints; k++)
       {
         int mtnum = m_FeatureIds[zStride + yStride + k];
-        x = float(k) * xRes;
-        y = float(j) * yRes;
-        z = float(i) * zRes;
+        x = float(k) * spacing[0];
+        y = float(j) * spacing[1];
+        z = float(i) * spacing[2];
         if(x > microtextureregionxmaxs[mtnum])
         {
           microtextureregionxmaxs[mtnum] = x;
@@ -279,18 +276,18 @@ void FindMicroTextureRegions::find_microtextureregions()
 
   for(size_t i = 1; i < nummicrotextureregions; i++)
   {
-    float xlength = (microtextureregionxmaxs[i] - microtextureregionxmins[i]) + xRes;
-    float ylength = (microtextureregionymaxs[i] - microtextureregionymins[i]) + yRes;
+    float xlength = (microtextureregionxmaxs[i] - microtextureregionxmins[i]) + spacing[0];
+    float ylength = (microtextureregionymaxs[i] - microtextureregionymins[i]) + spacing[1];
     if(zPoints == 1)
     {
-      float zlength = (microtextureregionzmaxs[i] - microtextureregionzmins[i]) + zRes;
+      float zlength = (microtextureregionzmaxs[i] - microtextureregionzmins[i]) + spacing[2];
       float prismvolume = xlength * ylength * zlength;
-      m_MicroTextureRegionFractionOccupied[i] = ((float)m_MicroTextureRegionNumCells[i] * xRes * yRes * zRes) / prismvolume;
+      m_MicroTextureRegionFractionOccupied[i] = ((float)m_MicroTextureRegionNumCells[i] * spacing[0] * spacing[1] * spacing[2]) / prismvolume;
     }
     else
     {
       float rectanglevolume = xlength * ylength;
-      m_MicroTextureRegionFractionOccupied[i] = ((float)m_MicroTextureRegionNumCells[i] * xRes * yRes) / rectanglevolume;
+      m_MicroTextureRegionFractionOccupied[i] = ((float)m_MicroTextureRegionNumCells[i] * spacing[0] * spacing[1]) / rectanglevolume;
     }
   }
 }

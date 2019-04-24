@@ -256,7 +256,7 @@ void RotateSampleRefFrame::preflight()
   float rotAngle = m_RotationAngle * SIMPLib::Constants::k_Pi / 180.0;
 
   int64_t xp = 0, yp = 0, zp = 0;
-  float xRes = 0.0f, yRes = 0.0f, zRes = 0.0f;
+
   int64_t xpNew = 0, ypNew = 0, zpNew = 0;
   float xResNew = 0.0f, yResNew = 0.0f, zResNew = 0.0f;
   RotateSampleRefFrameImplArg_t params;
@@ -265,14 +265,14 @@ void RotateSampleRefFrame::preflight()
   yp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
   zp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
 
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   params.xp = xp;
-  params.xRes = xRes;
+  params.xRes = spacing[0];
   params.yp = yp;
-  params.yRes = yRes;
+  params.yRes = spacing[1];
   params.zp = zp;
-  params.zRes = zRes;
+  params.zRes = spacing[2];
 
   size_t col = 0, row = 0, plane = 0;
   float rotMat[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
@@ -322,9 +322,9 @@ void RotateSampleRefFrame::preflight()
     {
       col = xp - 1, row = yp - 1, plane = zp - 1;
     }
-    coords[0] = static_cast<float>(col * xRes);
-    coords[1] = static_cast<float>(row * yRes);
-    coords[2] = static_cast<float>(plane * zRes);
+    coords[0] = static_cast<float>(col * spacing[0]);
+    coords[1] = static_cast<float>(row * spacing[1]);
+    coords[2] = static_cast<float>(plane * spacing[2]);
     MatrixMath::Multiply3x3with3x1(rotMat, coords, newcoords);
     if(newcoords[0] < xMin)
     {
@@ -361,35 +361,35 @@ void RotateSampleRefFrame::preflight()
   MatrixMath::Multiply3x3with3x1(rotMat, yAxis, yAxisNew);
   MatrixMath::Multiply3x3with3x1(rotMat, zAxis, zAxisNew);
   float closestAxis = 0.0f;
-  xResNew = xRes;
+  xResNew = spacing[0];
   closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, xAxisNew));
   if(fabs(GeometryMath::CosThetaBetweenVectors(yAxis, xAxisNew)) > closestAxis)
   {
-    xResNew = yRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, xAxisNew));
+    xResNew = spacing[1], closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, xAxisNew));
   }
   if(fabs(GeometryMath::CosThetaBetweenVectors(zAxis, xAxisNew)) > closestAxis)
   {
-    xResNew = zRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, xAxisNew));
+    xResNew = spacing[2], closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, xAxisNew));
   }
-  yResNew = yRes;
+  yResNew = spacing[1];
   closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, yAxisNew));
   if(fabs(GeometryMath::CosThetaBetweenVectors(xAxis, yAxisNew)) > closestAxis)
   {
-    yResNew = xRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, yAxisNew));
+    yResNew = spacing[0], closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, yAxisNew));
   }
   if(fabs(GeometryMath::CosThetaBetweenVectors(zAxis, yAxisNew)) > closestAxis)
   {
-    yResNew = zRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, yAxisNew));
+    yResNew = spacing[2], closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, yAxisNew));
   }
-  zResNew = zRes;
+  zResNew = spacing[2];
   closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, zAxisNew));
   if(fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew)) > closestAxis)
   {
-    zResNew = xRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew));
+    zResNew = spacing[0], closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew));
   }
   if(fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew)) > closestAxis)
   {
-    zResNew = yRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew));
+    zResNew = spacing[1], closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew));
   }
 
   xpNew = static_cast<int64_t>(nearbyint((xMax - xMin) / xResNew) + 1);
@@ -429,7 +429,6 @@ void RotateSampleRefFrame::execute()
   float rotAngle = m_RotationAngle * SIMPLib::Constants::k_Pi / 180.0;
 
   int64_t xp = 0, yp = 0, zp = 0;
-  float xRes = 0.0f, yRes = 0.0f, zRes = 0.0f;
   int64_t xpNew = 0, ypNew = 0, zpNew = 0;
   float xResNew = 0.0f, yResNew = 0.0f, zResNew = 0.0f;
   RotateSampleRefFrameImplArg_t params;
@@ -438,14 +437,14 @@ void RotateSampleRefFrame::execute()
   yp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
   zp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
 
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   params.xp = xp;
-  params.xRes = xRes;
+  params.xRes = spacing[0];
   params.yp = yp;
-  params.yRes = yRes;
+  params.yRes = spacing[1];
   params.zp = zp;
-  params.zRes = zRes;
+  params.zRes = spacing[2];
 
   size_t col = 0, row = 0, plane = 0;
   float rotMat[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
@@ -495,9 +494,9 @@ void RotateSampleRefFrame::execute()
     {
       col = xp - 1, row = yp - 1, plane = zp - 1;
     }
-    coords[0] = static_cast<float>(col * xRes);
-    coords[1] = static_cast<float>(row * yRes);
-    coords[2] = static_cast<float>(plane * zRes);
+    coords[0] = static_cast<float>(col * spacing[0]);
+    coords[1] = static_cast<float>(row * spacing[1]);
+    coords[2] = static_cast<float>(plane * spacing[2]);
     MatrixMath::Multiply3x3with3x1(rotMat, coords, newcoords);
     if(newcoords[0] < xMin)
     {
@@ -534,35 +533,35 @@ void RotateSampleRefFrame::execute()
   MatrixMath::Multiply3x3with3x1(rotMat, yAxis, yAxisNew);
   MatrixMath::Multiply3x3with3x1(rotMat, zAxis, zAxisNew);
   float closestAxis = 0.0f;
-  xResNew = xRes;
+  xResNew = spacing[0];
   closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, xAxisNew));
   if(fabs(GeometryMath::CosThetaBetweenVectors(yAxis, xAxisNew)) > closestAxis)
   {
-    xResNew = yRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, xAxisNew));
+    xResNew = spacing[1], closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, xAxisNew));
   }
   if(fabs(GeometryMath::CosThetaBetweenVectors(zAxis, xAxisNew)) > closestAxis)
   {
-    xResNew = zRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, xAxisNew));
+    xResNew = spacing[2], closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, xAxisNew));
   }
-  yResNew = yRes;
+  yResNew = spacing[1];
   closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, yAxisNew));
   if(fabs(GeometryMath::CosThetaBetweenVectors(xAxis, yAxisNew)) > closestAxis)
   {
-    yResNew = xRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, yAxisNew));
+    yResNew = spacing[0], closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, yAxisNew));
   }
   if(fabs(GeometryMath::CosThetaBetweenVectors(zAxis, yAxisNew)) > closestAxis)
   {
-    yResNew = zRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, yAxisNew));
+    yResNew = spacing[2], closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, yAxisNew));
   }
-  zResNew = zRes;
+  zResNew = spacing[2];
   closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(zAxis, zAxisNew));
   if(fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew)) > closestAxis)
   {
-    zResNew = xRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew));
+    zResNew = spacing[0], closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew));
   }
   if(fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew)) > closestAxis)
   {
-    zResNew = yRes, closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew));
+    zResNew = spacing[1], closestAxis = fabs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew));
   }
 
   xpNew = static_cast<int64_t>(nearbyint((xMax - xMin) / xResNew) + 1);

@@ -190,10 +190,8 @@ void QuiltCellData::dataCheck()
   }
 
   // Establish the dimensions, resolutions and origin of the new data container
-  size_t dcDims[3] = {0, 0, 0};
-  std::tie(dcDims[0], dcDims[1], dcDims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
-  FloatVec3Type res = {0.0f, 0.0f, 0.0f};
-  std::tie(res[0], res[1], res[2]) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  SizeVec3Type dcDims = m->getGeometryAs<ImageGeom>()->getDimensions();
+  FloatVec3Type res = m->getGeometryAs<ImageGeom>()->getSpacing();
   // Create a new DataContainer
   DataContainer::Pointer m2 = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getOutputDataContainerName(), DataContainerID);
   if(getErrorCode() < 0)
@@ -351,10 +349,8 @@ void QuiltCellData::execute()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_SelectedCellArrayPath.getDataContainerName());
   DataContainer::Pointer m2 = getDataContainerArray()->getDataContainer(getOutputDataContainerName());
 
-  size_t dcDims[3];
-  std::tie(dcDims[0], dcDims[1], dcDims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
-  size_t dc2Dims[3];
-  std::tie(dc2Dims[0], dc2Dims[1], dc2Dims[2]) = m2->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type dcDims = m->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type dc2Dims = m2->getGeometryAs<ImageGeom>()->getDimensions();
 
   IDataArray::Pointer inputData = m->getAttributeMatrix(m_SelectedCellArrayPath.getAttributeMatrixName())->getAttributeArray(m_SelectedCellArrayPath.getDataArrayName());
   if(nullptr == inputData.get())

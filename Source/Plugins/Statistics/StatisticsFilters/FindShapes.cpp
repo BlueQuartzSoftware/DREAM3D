@@ -240,21 +240,14 @@ void FindShapes::find_moments()
   size_t xPoints = imageGeom->getXPoints();
   size_t yPoints = imageGeom->getYPoints();
   size_t zPoints = imageGeom->getZPoints();
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = imageGeom->getSpacing();
-
-  float xOrigin = 0.0f;
-  float yOrigin = 0.0f;
-  float zOrigin = 0.0f;
-  std::tie(xOrigin, yOrigin, zOrigin) = imageGeom->getOrigin();
+  FloatVec3Type spacing = imageGeom->getSpacing();
+  FloatVec3Type origin = imageGeom->getOrigin();
 
   // using a modified resolution to keep the moment calculations "small" and prevent exceeding numerical bounds.
   // scaleFactor is applied later to rescale the calculated axis lengths
-  float modXRes = xRes * static_cast<float>(m_ScaleFactor);
-  float modYRes = yRes * static_cast<float>(m_ScaleFactor);
-  float modZRes = zRes * static_cast<float>(m_ScaleFactor);
+  float modXRes = spacing[0] * static_cast<float>(m_ScaleFactor);
+  float modYRes = spacing[1] * static_cast<float>(m_ScaleFactor);
+  float modZRes = spacing[2] * static_cast<float>(m_ScaleFactor);
 
   size_t numfeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
 
@@ -282,9 +275,9 @@ void FindShapes::find_moments()
       for(size_t k = 0; k < xPoints; k++)
       {
         int32_t gnum = m_FeatureIds[zStride + yStride + k];
-        x = float(k * modXRes) + (xOrigin * static_cast<float>(m_ScaleFactor));
-        y = float(j * modYRes) + (yOrigin * static_cast<float>(m_ScaleFactor));
-        z = float(i * modZRes) + (zOrigin * static_cast<float>(m_ScaleFactor));
+        x = float(k * modXRes) + (origin[0] * static_cast<float>(m_ScaleFactor));
+        y = float(j * modYRes) + (origin[1] * static_cast<float>(m_ScaleFactor));
+        z = float(i * modZRes) + (origin[2] * static_cast<float>(m_ScaleFactor));
         x1 = x + (modXRes / 4.0f);
         x2 = x - (modXRes / 4.0f);
         y1 = y + (modYRes / 4.0f);
@@ -346,7 +339,7 @@ void FindShapes::find_moments()
   // constant for moments because voxels are broken into smaller voxels
   double konst1 = static_cast<double>((modXRes / 2.0) * (modYRes / 2.0) * (modZRes / 2.0));
   // constant for volumes because voxels are counted as one
-  double konst2 = static_cast<double>((xRes) * (yRes) * (zRes));
+  double konst2 = static_cast<double>((spacing[0]) * (spacing[1]) * (spacing[2]));
   double konst3 = static_cast<double>((modXRes) * (modYRes) * (modZRes));
   double o3 = 0.0, vol5 = 0.0, omega3 = 0.0;
   for(size_t i = 1; i < numfeatures; i++)
@@ -394,37 +387,31 @@ void FindShapes::find_moments2D()
   size_t numfeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
 
   size_t xPoints = 0, yPoints = 0;
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   if(imageGeom->getXPoints() == 1)
   {
     xPoints = imageGeom->getYPoints();
     yPoints = imageGeom->getZPoints();
-    std::tie(zRes, xRes, yRes) = imageGeom->getSpacing();
+    spacing = imageGeom->getSpacing();
   }
   if(imageGeom->getYPoints() == 1)
   {
     xPoints = imageGeom->getXPoints();
     yPoints = imageGeom->getZPoints();
-    std::tie(xRes, zRes, yRes) = imageGeom->getSpacing();
+    spacing = imageGeom->getSpacing();
   }
   if(imageGeom->getZPoints() == 1)
   {
     xPoints = imageGeom->getXPoints();
     yPoints = imageGeom->getYPoints();
-    std::tie(xRes, yRes, zRes) = imageGeom->getSpacing();
+    spacing = imageGeom->getSpacing();
   }
 
-  float modXRes = xRes * m_ScaleFactor;
-  float modYRes = yRes * m_ScaleFactor;
+  float modXRes = spacing[0] * m_ScaleFactor;
+  float modYRes = spacing[1] * m_ScaleFactor;
 
-  float xOrigin = 0.0f;
-  float yOrigin = 0.0f;
-  float zOrigin = 0.0f;
-  std::tie(xOrigin, yOrigin, zOrigin) = imageGeom->getOrigin();
+  FloatVec3Type origin = imageGeom->getOrigin();
 
   for(size_t i = 0; i < 6 * numfeatures; i++)
   {
@@ -441,8 +428,8 @@ void FindShapes::find_moments2D()
     for(size_t k = 0; k < xPoints; k++)
     {
       int32_t gnum = m_FeatureIds[yStride + k];
-      x = float(k * modXRes) + (xOrigin * static_cast<float>(m_ScaleFactor));
-      y = float(j * modYRes) + (yOrigin * static_cast<float>(m_ScaleFactor));
+      x = float(k * modXRes) + (origin[0] * static_cast<float>(m_ScaleFactor));
+      y = float(j * modYRes) + (origin[1] * static_cast<float>(m_ScaleFactor));
       x1 = x + (modXRes / 4.0f);
       x2 = x - (modXRes / 4.0f);
       y1 = y + (modYRes / 4.0f);
@@ -465,7 +452,7 @@ void FindShapes::find_moments2D()
     }
   }
   double konst1 = static_cast<double>( (modXRes / 2.0f) * (modYRes / 2.0f));
-  double konst2 = static_cast<double>(xRes * yRes);
+  double konst2 = static_cast<double>(spacing[0] * spacing[1]);
   for(size_t i = 1; i < numfeatures; i++)
   {
    // Eq. 12 Moment matrix. Omega 2
@@ -592,27 +579,25 @@ void FindShapes::find_axes2D()
 
   size_t xPoints = 0;
   size_t yPoints = 0;
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
+  FloatVec3Type spacing;
 
   if(imageGeom->getXPoints() == 1)
   {
     xPoints = imageGeom->getYPoints();
     yPoints = imageGeom->getZPoints();
-    std::tie(zRes, xRes, yRes) = imageGeom->getSpacing();
+    spacing = imageGeom->getSpacing();
   }
   if(imageGeom->getYPoints() == 1)
   {
     xPoints = imageGeom->getXPoints();
     yPoints = imageGeom->getZPoints();
-    std::tie(xRes, zRes, yRes) = imageGeom->getSpacing();
+    spacing = imageGeom->getSpacing();
   }
   if(imageGeom->getZPoints() == 1)
   {
     xPoints = imageGeom->getXPoints();
     yPoints = imageGeom->getYPoints();
-    std::tie(xRes, yRes, zRes) = imageGeom->getSpacing();
+    spacing = imageGeom->getSpacing();
   }
 
 
@@ -629,13 +614,13 @@ void FindShapes::find_axes2D()
       float tempScale2 = 1.0f;
       if(Ixx >= Iyy)
       {
-        tempScale1 = xRes;
-        tempScale2 = yRes;
+        tempScale1 = spacing[0];
+        tempScale2 = spacing[1];
       }
       if(Ixx < Iyy)
       {
-        tempScale1 = yRes;
-        tempScale2 = xRes;
+        tempScale1 = spacing[1];
+        tempScale2 = spacing[0];
       }
       m_AxisLengths[3 * i] = m_Volumes[i] / tempScale1;
       m_AxisLengths[3 * i + 1] = m_Volumes[i] / tempScale2;
@@ -883,19 +868,16 @@ void FindShapes::execute()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
 
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = imageGeom->getSpacing();
+  FloatVec3Type spacing = imageGeom->getSpacing();
 
-  m_ScaleFactor = static_cast<double>(1.0f / xRes);
-  if(yRes > xRes && yRes > zRes)
+  m_ScaleFactor = static_cast<double>(1.0f / spacing[0]);
+  if(spacing[1] > spacing[0] && spacing[1] > spacing[2])
   {
-    m_ScaleFactor = static_cast<double>(1.0f / yRes);
+    m_ScaleFactor = static_cast<double>(1.0f / spacing[1]);
   }
-  if(zRes > xRes && zRes > yRes)
+  if(spacing[2] > spacing[0] && spacing[2] > spacing[1])
   {
-    m_ScaleFactor = static_cast<double>(1.0f / zRes);
+    m_ScaleFactor = static_cast<double>(1.0f / spacing[2]);
   }
 
   size_t numfeatures = m_CentroidsPtr.lock()->getNumberOfTuples();

@@ -274,22 +274,22 @@ PREDEFINED  = "EBSD_INSTANCE_PROPERTY(type, prpty)= \
               "DREAM3D_TYPE_MACRO(class)=\
                 virtual const char* getNameOfClass() const \
                 {return "CrossCorrelationData";}" \
-               "MXA_INSTANCE_PROPERTY(type, prpty)= \
+               "SIMPL_INSTANCE_PROPERTY(type, prpty)= \
                 /** Sets the prpty instance variable */ \
                  void set##prpty (type); \
                  /** Gets the prpty instance variable */ \
                  type get##prpty (type);" \
-              "MXA_INSTANCE_PROPERTY(type, prpty, name)= \
+              "SIMPL_INSTANCE_PROPERTY(type, prpty, name)= \
                 /** Sets the prpty instance variable */ \
                  void set##prpty (type); \
                  /** Gets the prpty instance variable */ \
                  type get##prpty (type);" \
-              "MXA_INSTANCE_STRING_PROPERTY(prpty)=\
+              "SIMPL_INSTANCE_STRING_PROPERTY(prpty)=\
                 /** Sets the prpty instance variable */ \
                  void set##prpty (std::string); \
                  /** Gets the prpty instance variable */ \
                  std::string get##prpty (std::string);" \
-              "MXA_SHARED_POINTERS(class)=\
+              "SIMPL_SHARED_POINTERS(class)=\
                 typedef CrossCorrelation             Self;\
                 typedef boost::shared_ptr< Self >       Pointer;\
                 typedef boost::shared_ptr<const Self >  ConstPointer;\
@@ -297,13 +297,13 @@ PREDEFINED  = "EBSD_INSTANCE_PROPERTY(type, prpty)= \
                 { \
                   return Pointer(static_cast<CrossCorrelation*>(0));\
                 }"\
-              "MXA_STATIC_NEW_MACRO(class)=\
+              "SIMPL_STATIC_NEW_MACRO(class)=\
                 static Pointer New(void) \
                 { \
                   Pointer sharedPtr (new CrossCorrelationData); \
                   return sharedPtr; \
                 }"\
-              "MXA_TYPE_MACRO(class)=\
+              "SIMPL_TYPE_MACRO(class)=\
                 virtual const char* getNameOfClass() const \
                 {return "CrossCorrelationData";}"
 #---------------------------------------------------------------------------

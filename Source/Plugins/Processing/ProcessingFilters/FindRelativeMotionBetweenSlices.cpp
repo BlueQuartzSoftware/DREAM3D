@@ -654,16 +654,13 @@ void FindRelativeMotionBetweenSlices::execute()
   }
 
   float v[3];
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   for(size_t i = 0; i < totalPoints; i++)
   {
-    v[0] = m_MotionDirection[3 * i + 0] * xRes;
-    v[1] = m_MotionDirection[3 * i + 1] * yRes;
-    v[2] = m_MotionDirection[3 * i + 2] * zRes;
+    v[0] = m_MotionDirection[3 * i + 0] * spacing[0];
+    v[1] = m_MotionDirection[3 * i + 1] * spacing[1];
+    v[2] = m_MotionDirection[3 * i + 2] * spacing[2];
     MatrixMath::Normalize3x1(v);
     m_MotionDirection[3 * i + 0] = v[0];
     m_MotionDirection[3 * i + 1] = v[1];
