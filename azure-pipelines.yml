@@ -13,6 +13,7 @@ stages:
         echo System.PullRequest.SourceBranch=$(System.PullRequest.SourceBranch)
         echo System.PullRequest.PullRequestNumber=$(System.PullRequest.PullRequestNumber)
         echo Build.SourceBranchName=$(Build.SourceBranchName)
+      displayName: 'Dump Azure Variables'
     - script: |
         mkdir ExternalProjects
         cd ExternalProjects 
@@ -35,7 +36,11 @@ stages:
       displayName: 'clone the Source codes'
     - script: |
         cd $(Build.BinariesDirectory)
+        rm CMakeCache.txt
         /Users/Shared/DREAM3D_SDK/cmake-3.14.2-Darwin-x86_64/CMake.app/Contents/bin/cmake -G Ninja -DDREAM3D_SDK=$(Agent.BuildDirectory) -DCMAKE_BUILD_TYPE=Release $(Build.Repository.LocalPath)
+      displayName: 'Configure DREAM3D....'
+    - script: |
+        cd $(Build.BinariesDirectory)
         cmake --build .
-
+      displayName: 'Build DREAM3D....'
 
