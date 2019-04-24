@@ -50,12 +50,12 @@ stages:
         /Users/Shared/DREAM3D_SDK/cmake-3.14.2-Darwin-x86_64/CMake.app/Contents/bin/cmake -G Ninja -DDREAM3D_SDK=$(Agent.BuildDirectory) -DCMAKE_BUILD_TYPE=Release $(Build.Repository.LocalPath)
       displayName: 'Configure DREAM3D....'
     - script: |
-      #  cd $(Build.BinariesDirectory)
-      #  /Users/Shared/DREAM3D_SDK/cmake-3.14.2-Darwin-x86_64/CMake.app/Contents/bin/cmake --build .
+        cd $(Build.BinariesDirectory)
+        /Users/Shared/DREAM3D_SDK/cmake-3.14.2-Darwin-x86_64/CMake.app/Contents/bin/cmake --build .
       displayName: 'Build DREAM3D....'
     - script: |
-      #  cd $(Build.BinariesDirectory)
-      #  /Users/Shared/DREAM3D_SDK/cmake-3.14.2-Darwin-x86_64/CMake.app/Contents/bin/ctest --build-and-test --test-model Continuous
+        cd $(Build.BinariesDirectory)
+        /Users/Shared/DREAM3D_SDK/cmake-3.14.2-Darwin-x86_64/CMake.app/Contents/bin/ctest --build-and-test --test-model Continuous
       displayName: 'ctest --build-and-test  --test-model Continuous'
 
 
