@@ -701,7 +701,7 @@ void ReadH5Ebsd::execute()
       else
       {
         QString ss = QObject::tr("ReadH5Ebsd Error creating filter '%1' which is a subfilter called by ReadH5Ebsd. Filter was not created/executed. Please notify the developers").arg(filtName);
-        setErrorCondition(-109870, ss);
+        setErrorCondition(-109871, ss);
       }
     }
   }
