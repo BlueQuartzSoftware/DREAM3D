@@ -50,7 +50,7 @@
 OrientationUtilityCalculator::OrientationUtilityCalculator(QWidget* parent)
 : QWidget(parent)
 , m_InputData(QVector<double>())
-, m_InputType(OrientationConverter<double>::UnknownOrientationType)
+, m_InputType(OrientationRepresentation::Type::Unknown)
 , m_HasErrors(false)
 {
 }
@@ -63,7 +63,7 @@ OrientationUtilityCalculator::~OrientationUtilityCalculator() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OrientationUtilityCalculator::setDataAndInputType(QVector<double> values, OrientationConverter<double>::OrientationType inputType, bool hasErrors)
+void OrientationUtilityCalculator::setDataAndInputType(QVector<double> values, OrientationRepresentation::Type inputType, bool hasErrors)
 {
   m_InputData = values;
   m_InputType = inputType;
@@ -74,7 +74,7 @@ void OrientationUtilityCalculator::setDataAndInputType(QVector<double> values, O
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientationConverter<double>::OrientationType OrientationUtilityCalculator::getInputType()
+OrientationRepresentation::Type OrientationUtilityCalculator::getInputType()
 {
   return m_InputType;
 }
@@ -90,7 +90,7 @@ bool OrientationUtilityCalculator::getHasErrors()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<double> OrientationUtilityCalculator::getValues(OrientationConverter<double>::OrientationType outputType)
+QVector<double> OrientationUtilityCalculator::getValues(OrientationRepresentation::Type outputType)
 {
   typedef OrientationConverter<double> OCType;
   QVector<OCType::Pointer> converters(7);
@@ -103,7 +103,7 @@ QVector<double> OrientationUtilityCalculator::getValues(OrientationConverter<dou
   converters[5] = HomochoricConverter<double>::New();
   converters[6] = CubochoricConverter<double>::New();
 
-  QVector<OCType::OrientationType> ocTypes = OCType::GetOrientationTypes();
+  QVector<OrientationRepresentation::Type> ocTypes = OCType::GetOrientationTypes();
 
   QVector<size_t> cDims(1, m_InputData.size());
   DataArray<double>::Pointer inputDataArray = DataArray<double>::CreateArray(1, cDims, "Input Data");
@@ -112,10 +112,10 @@ QVector<double> OrientationUtilityCalculator::getValues(OrientationConverter<dou
     inputDataArray->setComponent(0, i, m_InputData[i]);
   }
 
-  converters[m_InputType]->setInputData(inputDataArray);
-  converters[m_InputType]->convertRepresentationTo(ocTypes[outputType]);
+  converters[static_cast<int32_t>(m_InputType)]->setInputData(inputDataArray);
+  converters[static_cast<int32_t>(m_InputType)]->convertRepresentationTo(ocTypes[static_cast<int32_t>(outputType)]);
 
-  DataArray<double>::Pointer output = converters[m_InputType]->getOutputData();
+  DataArray<double>::Pointer output = converters[static_cast<int32_t>(m_InputType)]->getOutputData();
 
   QVector<double> outputData;
   for(int i = 0; i < output->getNumberOfComponents(); i++)

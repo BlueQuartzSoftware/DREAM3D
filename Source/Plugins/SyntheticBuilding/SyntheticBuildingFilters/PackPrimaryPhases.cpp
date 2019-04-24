@@ -1093,17 +1093,16 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock().get());
 
-  size_t udims[3] = {0, 0, 0};
-  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
-  std::tie(m_SizeX, m_SizeY, m_SizeZ) = m->getGeometryAs<ImageGeom>()->getSpacing();
-  m_SizeX *= static_cast<float>(dims[0]);
-  m_SizeY *= static_cast<float>(dims[1]);
-  m_SizeZ *= static_cast<float>(dims[2]);
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
+  m_SizeX = spacing[0] * static_cast<float>(dims[0]);
+  m_SizeY = spacing[1] * static_cast<float>(dims[1]);
+  m_SizeZ = spacing[2] * static_cast<float>(dims[2]);
   m_TotalVol = m_SizeX * m_SizeY * m_SizeZ;
 
   // Making a double to prevent float overflow on incrementing
@@ -1118,12 +1117,9 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
   }
   float totalprimaryvol = static_cast<float>(totalprimaryvolTEMP);
 
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
 
-  totalprimaryvol = totalprimaryvol * xRes * yRes * zRes;
+  totalprimaryvol = totalprimaryvol * spacing[0] * spacing[1] * spacing[2];
 
   float change = 0.0f;
   int32_t phase = 0;
@@ -1238,7 +1234,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
   Feature_t feature = Feature_t();
 
   // Estimate the total Number of features here
-  int32_t estNumFeatures = estimateNumFeatures(udims[0], udims[1], udims[2], xRes, yRes, zRes);
+  int32_t estNumFeatures = estimateNumFeatures(udims[0], udims[1], udims[2], spacing[0], spacing[1], spacing[2]);
   QVector<size_t> tDims(1, estNumFeatures);
   m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
   // need to update pointers after resize, buut do not need to run full data check because pointers are still valid
@@ -1726,12 +1722,9 @@ Int32ArrayType::Pointer PackPrimaryPhases::initializePackingGrid()
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  // FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
 
-  std::tie(m_PackingRes[0], m_PackingRes[1], m_PackingRes[2]) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  m_PackingRes = m->getGeometryAs<ImageGeom>()->getSpacing();
   m_PackingRes[0] *= 2.0f;
   m_PackingRes[1] *= 2.0f;
   m_PackingRes[2] *= 2.0f;
@@ -2629,8 +2622,7 @@ void PackPrimaryPhases::assignVoxels()
 
   size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixPath.getAttributeMatrixName())->getNumberOfTuples();
 
-  size_t udims[3] = {0, 0, 0};
-  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
@@ -2647,11 +2639,7 @@ void PackPrimaryPhases::assignVoxels()
 
   int64_t xmin = 0, xmax = 0, ymin = 0, ymax = 0, zmin = 0, zmax = 0;
 
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
-  FloatVec3Type res = {xRes, yRes, zRes};
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totalPoints, "_INTERNAL_USE_ONLY_newowners");
   newownersPtr->initializeWithValue(-1);
@@ -2721,15 +2709,15 @@ void PackPrimaryPhases::assignVoxels()
     FOrientArrayType om(9, 0.0);
     FOrientTransformsType::eu2om(FOrientArrayType(phi1, PHI, phi2), om);
     om.toGMatrix(ga);
-    column = static_cast<int64_t>(xc / xRes);
-    row = static_cast<int64_t>(yc / yRes);
-    plane = static_cast<int64_t>(zc / zRes);
-    xmin = static_cast<int64_t>(column - ((radcur1 / xRes) + 1));
-    xmax = static_cast<int64_t>(column + ((radcur1 / xRes) + 1));
-    ymin = static_cast<int64_t>(row - ((radcur1 / yRes) + 1));
-    ymax = static_cast<int64_t>(row + ((radcur1 / yRes) + 1));
-    zmin = static_cast<int64_t>(plane - ((radcur1 / zRes) + 1));
-    zmax = static_cast<int64_t>(plane + ((radcur1 / zRes) + 1));
+    column = static_cast<int64_t>(xc / spacing[0]);
+    row = static_cast<int64_t>(yc / spacing[1]);
+    plane = static_cast<int64_t>(zc / spacing[2]);
+    xmin = static_cast<int64_t>(column - ((radcur1 / spacing[0]) + 1));
+    xmax = static_cast<int64_t>(column + ((radcur1 / spacing[0]) + 1));
+    ymin = static_cast<int64_t>(row - ((radcur1 / spacing[1]) + 1));
+    ymax = static_cast<int64_t>(row + ((radcur1 / spacing[1]) + 1));
+    zmin = static_cast<int64_t>(plane - ((radcur1 / spacing[2]) + 1));
+    zmax = static_cast<int64_t>(plane + ((radcur1 / spacing[2]) + 1));
 
     if(m_PeriodicBoundaries)
     {
@@ -2794,12 +2782,12 @@ void PackPrimaryPhases::assignVoxels()
     if(doParallel)
     {
       tbb::parallel_for(tbb::blocked_range3d<int64_t, int64_t, int64_t>(zmin, zmax + 1, ymin, ymax + 1, xmin, xmax + 1),
-                        AssignVoxelsGapsImpl(dims, res.data(), radCur, xx, shapeOps, ga, size, i, newownersPtr, ellipfuncsPtr), tbb::auto_partitioner());
+                        AssignVoxelsGapsImpl(dims, spacing.data(), radCur, xx, shapeOps, ga, size, i, newownersPtr, ellipfuncsPtr), tbb::auto_partitioner());
     }
     else
 #endif
     {
-      AssignVoxelsGapsImpl serial(dims, res.data(), radCur, xx, shapeOps, ga, size, i, newownersPtr, ellipfuncsPtr);
+      AssignVoxelsGapsImpl serial(dims, spacing.data(), radCur, xx, shapeOps, ga, size, i, newownersPtr, ellipfuncsPtr);
       serial.convert(zmin, zmax + 1, ymin, ymax + 1, xmin, xmax + 1);
     }
   }
@@ -3044,8 +3032,7 @@ void PackPrimaryPhases::cleanupFeatures()
 
   size_t totalPoints = m->getAttributeMatrix(m_OutputCellAttributeMatrixPath.getAttributeMatrixName())->getNumberOfTuples();
   size_t totalFeatures = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->getNumberOfTuples();
-  size_t udims[3] = {0, 0, 0};
-  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
@@ -3080,12 +3067,9 @@ void PackPrimaryPhases::cleanupFeatures()
     m_GSizes[i] = 0;
   }
 
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
+  float resConst = std::accumulate(spacing.begin(), spacing.end(), 1, std::multiplies<float>());
 
-  float resConst = xRes * yRes * zRes;
   const double k_PiOver6 = M_PI / 6.0;
   for(size_t i = 0; i < totalPoints; i++)
   {

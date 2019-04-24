@@ -78,7 +78,7 @@ void QuatWidget::updateData(OrientationUtilityCalculator* calculator)
 {
   setStyleSheet("");
 
-  if(calculator->getInputType() == OrientationConverter<double>::Quaternion)
+  if(calculator->getInputType() == OrientationRepresentation::Type::Quaternion)
   {
     // The input type is the same as this widget, so don't update
     return;
@@ -93,7 +93,7 @@ void QuatWidget::updateData(OrientationUtilityCalculator* calculator)
     return;
   }
 
-  QVector<double> qValues = calculator->getValues(OrientationConverter<double>::Quaternion);
+  QVector<double> qValues = calculator->getValues(OrientationRepresentation::Type::Quaternion);
 
   if(qValues.size() == 4)
   {
@@ -126,11 +126,11 @@ void QuatWidget::valuesUpdated(const QString& text)
 
   if(errorCode >= 0)
   {
-    emit valuesChanged(values, OrientationConverter<double>::Quaternion, false);
+    emit valuesChanged(values, OrientationRepresentation::Type::Quaternion, false);
   }
   else
   {
-    emit valuesChanged(QVector<double>(), OrientationConverter<double>::Quaternion, true);
+    emit valuesChanged(QVector<double>(), OrientationRepresentation::Type::Quaternion, true);
     emit invalidValues(errorCode, errorMsg);
   }
 }

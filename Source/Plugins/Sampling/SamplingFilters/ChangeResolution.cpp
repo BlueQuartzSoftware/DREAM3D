@@ -205,22 +205,17 @@ void ChangeResolution::preflight()
     m = getDataContainerArray()->getDataContainer(getNewDataContainerName());
   }
 
-  size_t dims[3] = {0, 0, 0};
-
   ImageGeom::Pointer image = m->getGeometryAs<ImageGeom>();
-  std::tie(dims[0], dims[1], dims[2]) = image->getDimensions();
+  SizeVec3Type dims = image->getDimensions();
 
-  float sizex = 0.0f;
-  float sizey = 0.0f;
-  float sizez = 0.0f;
-  std::tie(sizex, sizey, sizez) = m->getGeometryAs<ImageGeom>()->getSpacing();
-  sizex *= static_cast<float>(dims[0]);
-  sizey *= static_cast<float>(dims[1]);
-  sizez *= static_cast<float>(dims[2]);
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
+  spacing[0] *= static_cast<float>(dims[0]);
+  spacing[1] *= static_cast<float>(dims[1]);
+  spacing[2] *= static_cast<float>(dims[2]);
 
-  size_t m_XP = size_t(sizex / m_Spacing[0]);
-  size_t m_YP = size_t(sizey / m_Spacing[1]);
-  size_t m_ZP = size_t(sizez / m_Spacing[2]);
+  size_t m_XP = size_t(spacing[0] / m_Spacing[0]);
+  size_t m_YP = size_t(spacing[1] / m_Spacing[1]);
+  size_t m_ZP = size_t(spacing[2] / m_Spacing[2]);
   if(m_XP == 0)
   {
     m_XP = 1;
@@ -303,32 +298,24 @@ void ChangeResolution::execute()
   {
     m = getDataContainerArray()->getDataContainer(getNewDataContainerName());
   }
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
 
-  if(xRes == m_Spacing[0] && yRes == m_Spacing[1] && zRes == m_Spacing[2])
+  if(spacing[0] == m_Spacing[0] && spacing[1] == m_Spacing[1] && spacing[2] == m_Spacing[2])
   {
     return;
   }
 
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
 
-  size_t dims[3] = {0, 0, 0};
-  std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type dims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
-  float sizex = 0.0f;
-  float sizey = 0.0f;
-  float sizez = 0.0f;
-  std::tie(sizex, sizey, sizez) = m->getGeometryAs<ImageGeom>()->getSpacing();
-  sizex *= static_cast<float>(dims[0]);
-  sizey *= static_cast<float>(dims[1]);
-  sizez *= static_cast<float>(dims[2]);
+  spacing[0] *= static_cast<float>(dims[0]);
+  spacing[1] *= static_cast<float>(dims[1]);
+  spacing[2] *= static_cast<float>(dims[2]);
 
-  size_t m_XP = size_t(sizex / m_Spacing[0]);
-  size_t m_YP = size_t(sizey / m_Spacing[1]);
-  size_t m_ZP = size_t(sizez / m_Spacing[2]);
+  size_t m_XP = size_t(spacing[0] / m_Spacing[0]);
+  size_t m_YP = size_t(spacing[1] / m_Spacing[1]);
+  size_t m_ZP = size_t(spacing[2] / m_Spacing[2]);
   if(m_XP == 0)
   {
     m_XP = 1;
@@ -349,8 +336,7 @@ void ChangeResolution::execute()
   size_t index_old = 0;
   size_t progressInt = 0;
   std::vector<size_t> newindicies(totalPoints);
-  FloatVec3Type res = {0.0f, 0.0f, 0.0f};
-  m->getGeometryAs<ImageGeom>()->getSpacing(res);
+  FloatVec3Type res = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   for(size_t i = 0; i < m_ZP; i++)
   {

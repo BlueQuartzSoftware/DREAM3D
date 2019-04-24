@@ -628,8 +628,7 @@ void InsertPrecipitatePhases::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  size_t udims[3] = {0, 0, 0};
-  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
@@ -783,8 +782,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 
   StatsDataArray& statsDataArray = *(m_StatsDataArray.lock());
 
-  size_t udims[3] = {0, 0, 0};
-  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
@@ -795,7 +793,10 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
   m_ZPoints = static_cast<int64_t>(dims[2]);
   m_TotalPoints = dims[0] * dims[1] * dims[2];
 
-  std::tie(m_XRes, m_YRes, m_ZRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
+  m_XRes = spacing[0];
+  m_YRes = spacing[1];
+  m_ZRes = spacing[2];
 
   m_SizeX = dims[0] * m_XRes;
   m_SizeY = dims[1] * m_YRes;
@@ -1312,9 +1313,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     boxdims[1] = m_SizeY;
     boxdims[2] = m_SizeZ;
 
-    std::vector<float> boxres = {0.0f, 0.0f, 0.0f};
-
-    std::tie(boxres.at(1), boxres.at(1), boxres.at(2)) = m->getGeometryAs<ImageGeom>()->getSpacing();
+    std::vector<float> boxres = m->getGeometryAs<ImageGeom>()->getSpacing().toContainer<std::vector<float>>();
 
     float max_box_distance = sqrtf((m_SizeX * m_SizeX) + (m_SizeY * m_SizeY) + (m_SizeZ * m_SizeZ));
 
@@ -2424,20 +2423,16 @@ void InsertPrecipitatePhases::assign_voxels()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  size_t udims[3] = {0, 0, 0};
-  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
-  int64_t index;
+  int64_t index = 0;
 
   float totalPoints = dims[0] * dims[1] * dims[2];
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   int64_t column = 0, row = 0, plane = 0;
   float inside = 0.0f;
@@ -2467,9 +2462,9 @@ void InsertPrecipitatePhases::assign_voxels()
     ShapeType::Type shapeclass = static_cast<ShapeType::Type>(m_ShapeTypes[m_FeaturePhases[i]]);
 
     // init any values for each of the Shape Ops
-    for(size_t iter = 0; iter < m_ShapeOps.size(); iter++)
+    for(auto& shape : m_ShapeOps)
     {
-      m_ShapeOps[iter]->init();
+      shape->init();
     }
     // Create our Argument Map
     QMap<ShapeOps::ArgName, float> shapeArgMap;
@@ -2487,15 +2482,15 @@ void InsertPrecipitatePhases::assign_voxels()
     FOrientTransformsType::eu2om(FOrientArrayType(&(m_AxisEulerAngles[3 * i]), 3), om);
     om.toGMatrix(ga);
 
-    column = static_cast<int64_t>((xc - (xRes / 2.0f)) / xRes);
-    row = static_cast<int64_t>((yc - (yRes / 2.0f)) / yRes);
-    plane = static_cast<int64_t>((zc - (zRes / 2.0f)) / zRes);
-    xmin = static_cast<int64_t>(column - ((radcur1 / xRes) + 1));
-    xmax = static_cast<int64_t>(column + ((radcur1 / xRes) + 1));
-    ymin = static_cast<int64_t>(row - ((radcur1 / yRes) + 1));
-    ymax = static_cast<int64_t>(row + ((radcur1 / yRes) + 1));
-    zmin = static_cast<int64_t>(plane - ((radcur1 / zRes) + 1));
-    zmax = static_cast<int64_t>(plane + ((radcur1 / zRes) + 1));
+    column = static_cast<int64_t>((xc - (spacing[0] / 2.0f)) / spacing[0]);
+    row = static_cast<int64_t>((yc - (spacing[1] / 2.0f)) / spacing[1]);
+    plane = static_cast<int64_t>((zc - (spacing[2] / 2.0f)) / spacing[2]);
+    xmin = static_cast<int64_t>(column - ((radcur1 / spacing[0]) + 1));
+    xmax = static_cast<int64_t>(column + ((radcur1 / spacing[0]) + 1));
+    ymin = static_cast<int64_t>(row - ((radcur1 / spacing[1]) + 1));
+    ymax = static_cast<int64_t>(row + ((radcur1 / spacing[1]) + 1));
+    zmin = static_cast<int64_t>(plane - ((radcur1 / spacing[2]) + 1));
+    zmax = static_cast<int64_t>(plane + ((radcur1 / spacing[2]) + 1));
     if(m_PeriodicBoundaries)
     {
       if(xmin < -dims[0])
@@ -2585,9 +2580,9 @@ void InsertPrecipitatePhases::assign_voxels()
           }
           index = (plane * dims[0] * dims[1]) + (row * dims[0]) + column;
           inside = -1.0f;
-          coords[0] = float(column) * xRes;
-          coords[1] = float(row) * yRes;
-          coords[2] = float(plane) * zRes;
+          coords[0] = float(column) * spacing[0];
+          coords[1] = float(row) * spacing[1];
+          coords[2] = float(plane) * spacing[2];
           if(iter1 < 0)
           {
             coords[0] = coords[0] - m_SizeX;
@@ -2830,12 +2825,9 @@ void InsertPrecipitatePhases::assign_gaps()
 float InsertPrecipitatePhases::find_xcoord(int64_t index)
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
 
-  float x = xRes * static_cast<float>(index % m->getGeometryAs<ImageGeom>()->getXPoints());
+  float x = spacing[0] * static_cast<float>(index % m->getGeometryAs<ImageGeom>()->getXPoints());
   return x;
 }
 
@@ -2845,11 +2837,8 @@ float InsertPrecipitatePhases::find_xcoord(int64_t index)
 float InsertPrecipitatePhases::find_ycoord(int64_t index)
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
-  float y = yRes * static_cast<float>((index / m->getGeometryAs<ImageGeom>()->getXPoints()) % m->getGeometryAs<ImageGeom>()->getYPoints());
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
+  float y = spacing[1] * static_cast<float>((index / m->getGeometryAs<ImageGeom>()->getXPoints()) % m->getGeometryAs<ImageGeom>()->getYPoints());
   return y;
 }
 
@@ -2859,12 +2848,9 @@ float InsertPrecipitatePhases::find_ycoord(int64_t index)
 float InsertPrecipitatePhases::find_zcoord(int64_t index)
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
 
-  float z = zRes * static_cast<float>(index / (m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getYPoints()));
+  float z = spacing[2] * static_cast<float>(index / (m->getGeometryAs<ImageGeom>()->getXPoints() * m->getGeometryAs<ImageGeom>()->getYPoints()));
   return z;
 }
 

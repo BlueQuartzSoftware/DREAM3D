@@ -174,8 +174,7 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
     outFile << "#"
             << "Slice_A,Slice_B,New X Shift,New Y Shift,X Shift, Y Shift, X Centroid, Y Centroid" << std::endl;
   }
-  size_t dims[3] = {0, 0, 0};
-  std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type dims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t sdims[3] = {
       static_cast<int64_t>(dims[0]),
@@ -188,10 +187,7 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
   size_t count = 0;
   size_t slice = 0;
   size_t point = 0;
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
   std::vector<float> xCentroid(dims[2], 0.0f);
   std::vector<float> yCentroid(dims[2], 0.0f);
 
@@ -211,8 +207,8 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
         point = ((slice)*dims[0] * dims[1]) + (l * dims[0]) + n;
         if(m_GoodVoxels[point])
         {
-          xCentroid[iter] = xCentroid[iter] + (static_cast<float>(n) * xRes);
-          yCentroid[iter] = yCentroid[iter] + (static_cast<float>(l) * yRes);
+          xCentroid[iter] = xCentroid[iter] + (static_cast<float>(n) * spacing[0]);
+          yCentroid[iter] = yCentroid[iter] + (static_cast<float>(l) * spacing[1]);
           count++;
         }
       }
@@ -229,13 +225,13 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int64_t>& xshifts, st
     slice = (dims[2] - 1) - iter;
     if(m_UseReferenceSlice)
     {
-      xshifts[iter] = static_cast<int64_t>((xCentroid[iter] - xCentroid[static_cast<size_t>(m_ReferenceSlice)]) / xRes);
-      yshifts[iter] = static_cast<int64_t>((yCentroid[iter] - yCentroid[static_cast<size_t>(m_ReferenceSlice)]) / yRes);
+      xshifts[iter] = static_cast<int64_t>((xCentroid[iter] - xCentroid[static_cast<size_t>(m_ReferenceSlice)]) / spacing[0]);
+      yshifts[iter] = static_cast<int64_t>((yCentroid[iter] - yCentroid[static_cast<size_t>(m_ReferenceSlice)]) / spacing[1]);
     }
     else
     {
-      xshifts[iter] = xshifts[iter - 1] + static_cast<int64_t>((xCentroid[iter] - xCentroid[iter - 1]) / xRes);
-      yshifts[iter] = yshifts[iter - 1] + static_cast<int64_t>((yCentroid[iter] - yCentroid[iter - 1]) / yRes);
+      xshifts[iter] = xshifts[iter - 1] + static_cast<int64_t>((xCentroid[iter] - xCentroid[iter - 1]) / spacing[0]);
+      yshifts[iter] = yshifts[iter - 1] + static_cast<int64_t>((yCentroid[iter] - yCentroid[iter - 1]) / spacing[1]);
     }
 
     if((xshifts[iter] < -sdims[0] || xshifts[iter] > sdims[0]) && !xWarning)

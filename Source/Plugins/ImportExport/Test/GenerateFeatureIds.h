@@ -136,20 +136,18 @@ public:
   SIMPL_FILTER_NEW_MACRO(CreateImageGeomDataContainer)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CreateImageGeomDataContainer, AbstractFilter)
 
-  SIMPL_FILTER_PARAMETER(int64_t, XDim)
-  SIMPL_FILTER_PARAMETER(int64_t, YDim)
-  SIMPL_FILTER_PARAMETER(int64_t, ZDim)
+  SIMPL_FILTER_PARAMETER(size_t, XDim)
+  SIMPL_FILTER_PARAMETER(size_t, YDim)
+  SIMPL_FILTER_PARAMETER(size_t, ZDim)
 
-  ~CreateImageGeomDataContainer()
-  {
-  }
+  ~CreateImageGeomDataContainer() = default;
 
   /**
    * @brief This returns the group that the filter belonds to. You can select
    * a different group if you want. The string returned here will be displayed
    * in the GUI for the filter
    */
-  virtual const QString getGroupName() const override
+  const QString getGroupName() const override
   {
     return "UnitTest";
   }
@@ -158,7 +156,7 @@ public:
    * @brief This returns a string that is displayed in the GUI. It should be readable
    * and understandable by humans.
    */
-  virtual const QString getHumanLabel() const override
+  const QString getHumanLabel() const override
   {
     return "CreateImageGeomDataContainer Filter";
   }
@@ -166,7 +164,7 @@ public:
   /**
    * @brief Reimplemented from @see AbstractFilter class
    */
-  virtual void execute() override
+  void execute() override
   {
     dataCheck();
   }
@@ -175,7 +173,7 @@ public:
    * @brief This function runs some sanity checks on the DataContainer and inputs
    * in an attempt to ensure the filter can process the inputs.
    */
-  virtual void preflight() override
+  void preflight() override
   {
     dataCheck();
   }
@@ -209,20 +207,19 @@ protected:
     m->setGeometry(image);
 
     m->setName(SIMPL::Defaults::DataContainerName);
-    int64_t nx = m_XDim;
-    int64_t ny = m_YDim;
-    int64_t nz = m_ZDim;
-    m->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(nx, ny, nz));
+    m->getGeometryAs<ImageGeom>()->setDimensions(m_XDim, m_YDim, m_ZDim);
     getDataContainerArray()->addOrReplaceDataContainer(m);
     QVector<size_t> tDims(3, 0);
-    tDims[0] = nx;
-    tDims[1] = ny;
-    tDims[2] = nz;
+    tDims[0] = m_XDim;
+    tDims[1] = m_YDim;
+    tDims[2] = m_ZDim;
     AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
     m->addOrReplaceAttributeMatrix(attrMat);
   }
 
-private:
-  CreateImageGeomDataContainer(const CreateImageGeomDataContainer&) = delete; // Copy Constructor Not Implemented
-  void operator=(const CreateImageGeomDataContainer&) = delete;               // Move assignment Not Implemented
+public:
+  CreateImageGeomDataContainer(const CreateImageGeomDataContainer&) = delete;            // Copy Constructor Not Implemented
+  CreateImageGeomDataContainer(CreateImageGeomDataContainer&&) = delete;                 // Move Constructor Not Implemented
+  CreateImageGeomDataContainer& operator=(const CreateImageGeomDataContainer&) = delete; // Copy Assignment Not Implemented
+  CreateImageGeomDataContainer& operator=(CreateImageGeomDataContainer&&) = delete;      // Move Assignment Not Implemented
 };

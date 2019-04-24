@@ -126,3 +126,76 @@ foreach(f ${PREBUILT_PIPELINE_NAMES} )
   FILE(APPEND ${TEST_PIPELINE_LIST_FILE} "${DREAM3D_PIPELINE_FILE}\n")
 endforeach()
 
+
+#------------------------------------------------------------------------------
+# If Python is enabled, then enable the Python unit tests for this plugin
+if(SIMPL_ENABLE_PYTHON)
+    get_property(SIMPL_ANACONDA_OUTPUT_DIR GLOBAL PROPERTY SIMPL_ANACONDA_OUTPUT_DIR)
+    get_property(SIMPL_PYTHON_TEST_SCRIPT GLOBAL PROPERTY SIMPL_PYTHON_TEST_SCRIPT)
+    get_property(PYTHON_SITE_PACKAGES_NAME GLOBAL PROPERTY PYTHON_SITE_PACKAGES_NAME)
+    set(PLUGIN_NAME "DREAM3D")
+
+    #------------------------------
+    # Initialize the PYTHON_TEST_INPUT_DIR variable to point to the "Testing Directory"
+    file(TO_CMAKE_PATH "${DREAM3DTest_SOURCE_DIR}/Python" PYTHON_TEST_INPUT_DIR)
+    #------------------------------
+    # These names should match the names "EXACTLY" (including capitalization).
+    # NO Spaces in the names (which means no spaces in the variable names)
+    set(PLUGIN_PYTHON_TESTS
+      Import_ASCII
+      ColorData_Change_Test
+      Confidence_Index_Histogram
+      Create_Lambert_Sphere_Surface
+      Edax_IPF_Colors
+      Export_Small_IN100_ODF_Data
+      Image_Histogram
+      INL_Export
+      Link_Feature_Attribute_Matrix_To_Element_Array
+      Misc_Filters
+      Threshold2_MoveData
+      TxCopper_Exposed
+      TxCopper_Unexposed
+
+      EBSD/Reconstruction/01_SmallIN100_Archive
+      EBSD/Reconstruction/02_SmallIN100_Initial_Visualization
+      EBSD/Reconstruction/03_SmallIN100_Alignment
+      EBSD/Reconstruction/04_SmallIN100_Presegmentation_Processing
+      EBSD/Reconstruction/05_SmallIN100_Segmentation
+      EBSD/Reconstruction/06_SmallIN100_Postsegmentation_Processing
+      EBSD/Reconstruction/07_SmallIN100_Final_Processing
+      EBSD/Reconstruction/08_SmallIN100_Full_Reconstruction
+      EBSD/Statistics/01_SmallIN100_Morphological_Statistics
+      EBSD/Statistics/02_SmallIN100_Export_Statistics
+      EBSD/Statistics/03_SmallIN100_Transfer_Field_Data
+      EBSD/Statistics/04_SmallIN100_Field_Threshold
+      EBSD/Statistics/05_SmallIN100_Crystallographic_Statistics
+      EBSD/SurfaceMesh/01_SmallIN100_Quick_Mesh
+      EBSD/SurfaceMesh/02_SmallIN100_Smooth_Mesh
+      EBSD/SurfaceMesh/03_SmallIN100_Mesh_Statistics
+      EBSD/SurfaceMesh/04_SmallIN100_GBCD
+
+      Image_Reconstruction/01_Image_Initial_Visualization
+      Image_Reconstruction/02_Image_Segmentation
+
+      Synthetic/01_Single_Cubic_Phase_Equiaxed
+      Synthetic/02_Single_Hexagonal_Phase_Equiaxed
+      Synthetic/03_Single_Cubic_Phase_Rolled
+      Synthetic/04_Two_Phase_Cubic_Hexagonal_Particles_Equiaxed
+      Synthetic/06_SmallN100_Synthetic
+
+    )
+
+    foreach(test ${PLUGIN_PYTHON_TESTS})
+        set(SIMPL_PYTHON_TEST_DRIVER "${SIMPL_ANACONDA_OUTPUT_DIR}/UnitTest/${PLUGIN_NAME}/${test}.sh")
+        configure_file(${SIMPL_PYTHON_TEST_SCRIPT} "${SIMPL_PYTHON_TEST_DRIVER}" @ONLY)
+
+        string(REPLACE "/" "_" test "${test}")
+        add_test(NAME ${PLUGIN_NAME}_${test} COMMAND "${SIMPL_PYTHON_TEST_DRIVER}" )
+    endforeach(test ${PLUGIN_PYTHON_TESTS})
+
+
+endif()
+
+
+
+

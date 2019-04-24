@@ -491,10 +491,10 @@ private:
   float m_SizeY;
   float m_SizeZ;
   float m_TotalVol;
-  float m_HalfPackingRes[3];
-  float m_OneOverPackingRes[3];
-  float m_OneOverHalfPackingRes[3];
-  float m_PackingRes[3];
+  FloatVec3Type m_HalfPackingRes;
+  FloatVec3Type m_OneOverPackingRes;
+  FloatVec3Type m_OneOverHalfPackingRes;
+  FloatVec3Type m_PackingRes;
 
   int64_t m_PackingPoints[3];
   int64_t m_TotalPackingPoints;

@@ -147,8 +147,7 @@ int32_t SPParksSitesWriter::writeHeader()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  size_t udims[3] = {0, 0, 0};
-  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   size_t totalpoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
 
@@ -198,8 +197,7 @@ int32_t SPParksSitesWriter::writeFile()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  size_t udims[3] = {0, 0, 0};
-  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
+  // SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   size_t totalpoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
 

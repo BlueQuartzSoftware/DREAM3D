@@ -181,8 +181,7 @@ void RegularizeZSpacing::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellAttributeMatrixPath().getDataContainerName());
 
-  size_t dims[3];
-  std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type dims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   std::ifstream inFile;
   inFile.open(m_InputFile.toLatin1().data());
@@ -196,10 +195,7 @@ void RegularizeZSpacing::execute()
   }
   inFile.close();
 
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   float sizez = zboundvalues[dims[2]];
   size_t m_XP = dims[0];
@@ -266,8 +262,8 @@ void RegularizeZSpacing::execute()
     cellAttrMat->removeAttributeArray(*iter);
     newCellAttrMat->insertOrAssign(data);
   }
-  m->getGeometryAs<ImageGeom>()->setSpacing(std::make_tuple(xRes, yRes, m_NewZRes));
-  m->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(m_XP, m_YP, m_ZP));
+  m->getGeometryAs<ImageGeom>()->setSpacing(spacing[0], spacing[1], m_NewZRes);
+  m->getGeometryAs<ImageGeom>()->setDimensions(m_XP, m_YP, m_ZP);
   m->removeAttributeMatrix(getCellAttributeMatrixPath().getAttributeMatrixName());
   m->addOrReplaceAttributeMatrix(newCellAttrMat);
 }

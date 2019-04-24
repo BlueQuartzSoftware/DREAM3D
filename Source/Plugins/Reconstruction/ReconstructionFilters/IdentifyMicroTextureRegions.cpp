@@ -499,12 +499,9 @@ void IdentifyMicroTextureRegions::execute()
   int64_t totalPoints = static_cast<int64_t>(m_MTRIdsPtr.lock()->getNumberOfTuples());
 
   // calculate dimensions of DIC-like grid
-  SizeVec3Type dcDims = {0, 0, 0};
-  FloatVec3Type spacing;
-  FloatVec3Type origin = {0.0f, 0.0f, 0.0f};
-  m->getGeometryAs<ImageGeom>()->getDimensions(dcDims);
-  m->getGeometryAs<ImageGeom>()->getSpacing(spacing);
-  m->getGeometryAs<ImageGeom>()->getOrigin(origin);
+  SizeVec3Type dcDims = m->getGeometryAs<ImageGeom>()->getDimensions();
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type origin = m->getGeometryAs<ImageGeom>()->getOrigin();
 
   // Find number of original cells in radius of patch
   int64_t critDim[3] = {0, 0, 0};

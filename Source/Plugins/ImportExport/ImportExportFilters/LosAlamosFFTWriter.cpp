@@ -199,12 +199,9 @@ int32_t LosAlamosFFTWriter::writeFile()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getFeatureIdsArrayPath().getDataContainerName());
 
   int32_t err = 0;
-  size_t dims[3] = {0, 0, 0};
-  std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
-  FloatVec3Type res = {0.0f, 0.0f, 0.0f};
-  m->getGeometryAs<ImageGeom>()->getSpacing(res);
-  FloatVec3Type origin = {0.0f, 0.0f, 0.0f};
-  m->getGeometryAs<ImageGeom>()->getOrigin(origin);
+  SizeVec3Type dims = m->getGeometryAs<ImageGeom>()->getDimensions();
+  //  FloatVec3Type res = m->getGeometryAs<ImageGeom>()->getSpacing();
+  //  FloatVec3Type origin = m->getGeometryAs<ImageGeom>()->getOrigin();
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path

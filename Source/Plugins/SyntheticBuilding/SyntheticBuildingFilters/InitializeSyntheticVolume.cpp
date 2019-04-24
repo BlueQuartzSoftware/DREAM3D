@@ -45,6 +45,7 @@
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -87,9 +88,8 @@ enum createdPathID : RenameDataPath::DataID_t
 InitializeSyntheticVolume::InitializeSyntheticVolume()
 : m_DataContainerName(SIMPL::Defaults::SyntheticVolumeDataContainerName)
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
-, m_Dimensions()
-, m_Spacing()
-, m_Origin()
+, m_EnsembleAttributeMatrixName(SIMPL::Defaults::CellEnsembleAttributeMatrixName)
+, m_LengthUnit(static_cast<int32_t>(IGeometry::LengthUnit::Micrometer))
 , m_InputStatsArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::Statistics)
 , m_InputPhaseTypesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseTypes)
 , m_InputPhaseNamesArrayPath(SIMPL::Defaults::StatsGenerator, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::PhaseName)
@@ -160,9 +160,11 @@ void InitializeSyntheticVolume::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_AM_WITH_LINKED_DC_FP("Cell Attribute Matrix", CellAttributeMatrixName, DataContainerName, FilterParameter::CreatedArray, InitializeSyntheticVolume));
   //parameters.push_back(SIMPL_NEW_STRING_FP("Ensemble Attribute Matrix", EnsembleAttributeMatrixName, FilterParameter::CreatedArray, InitializeSyntheticVolume));
 
-  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Dimensions", Dimensions, FilterParameter::Parameter, InitializeSyntheticVolume));
+  parameters.push_back(SIMPL_NEW_INT_VEC3_FP("Dimensions (Voxels)", Dimensions, FilterParameter::Parameter, InitializeSyntheticVolume));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Spacing", Spacing, FilterParameter::Parameter, InitializeSyntheticVolume));
   parameters.push_back(SIMPL_NEW_FLOAT_VEC3_FP("Origin", Origin, FilterParameter::Parameter, InitializeSyntheticVolume));
+  QVector<QString> choices = IGeometry::GetAllLengthUnitStrings();
+  parameters.push_back(SIMPL_NEW_CHOICE_FP("Length Units (For Description Only)", LengthUnit, FilterParameter::Parameter, InitializeSyntheticVolume, choices, false));
 
   param = SIMPL_NEW_PREFLIGHTUPDATEDVALUE_FP("Box Size in Length Units", BoxDimensions, FilterParameter::Parameter, InitializeSyntheticVolume);
   param->setReadOnly(true);
@@ -225,6 +227,7 @@ void InitializeSyntheticVolume::dataCheck()
   image->setDimensions(static_cast<size_t>(m_Dimensions[0]), static_cast<size_t>(m_Dimensions[1]), static_cast<size_t>(m_Dimensions[2]));
   image->setSpacing(m_Spacing);
   image->setOrigin(m_Origin);
+  image->setUnits(static_cast<IGeometry::LengthUnit>(m_LengthUnit));
 
   // Create our output Cell and Ensemble Attribute Matrix objects
   QVector<size_t> tDims(3, 0);
@@ -421,13 +424,19 @@ QString InitializeSyntheticVolume::getEstimatedPrimaryFeatures()
 // -----------------------------------------------------------------------------
 QString InitializeSyntheticVolume::getBoxDimensions()
 {
+  QString lengthUnit = IGeometry::LengthUnitToString(static_cast<IGeometry::LengthUnit>(m_LengthUnit));
   QString desc;
   QTextStream ss(&desc);
 
-  ss << "X Range: " << m_Origin[0] << " to " << (m_Origin[0] + (m_Dimensions[0] * m_Spacing[0])) << " (Delta: " << (m_Dimensions[0] * m_Spacing[0]) << ")\n";
-  ss << "Y Range: " << m_Origin[1] << " to " << (m_Origin[1] + (m_Dimensions[1] * m_Spacing[1])) << " (Delta: " << (m_Dimensions[1] * m_Spacing[1]) << ")\n";
-  ss << "Z Range: " << m_Origin[2] << " to " << (m_Origin[2] + (m_Dimensions[2] * m_Spacing[2])) << " (Delta: " << (m_Dimensions[2] * m_Spacing[2]) << ")";
+  ss << "X Range: " << m_Origin[0] << " to " << (m_Origin[0] + (m_Dimensions[0] * m_Spacing[0])) << " (Delta: " << (m_Dimensions[0] * m_Spacing[0]) << ") " << lengthUnit << "\n";
+  ss << "Y Range: " << m_Origin[1] << " to " << (m_Origin[1] + (m_Dimensions[1] * m_Spacing[1])) << " (Delta: " << (m_Dimensions[1] * m_Spacing[1]) << ") " << lengthUnit << "\n";
+  ss << "Z Range: " << m_Origin[2] << " to " << (m_Origin[2] + (m_Dimensions[2] * m_Spacing[2])) << " (Delta: " << (m_Dimensions[2] * m_Spacing[2]) << ") " << lengthUnit << "\n";
 
+  float vol = (m_Dimensions[0] * m_Spacing[0]) * (m_Dimensions[1] * m_Spacing[1]) * (m_Dimensions[2] * m_Spacing[2]);
+  QLocale usa(QLocale::English, QLocale::UnitedStates);
+
+  ss << "Volume: " << usa.toString(vol) << " " << lengthUnit << "s ^3"
+     << "\n";
   return desc;
 }
 

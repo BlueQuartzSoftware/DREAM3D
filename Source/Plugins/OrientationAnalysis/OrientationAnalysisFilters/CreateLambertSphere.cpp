@@ -208,8 +208,7 @@ void CreateLambertSphere::dataCheck()
     setErrorCondition(-99003, msg);
     return;
   }
-  size_t imageDims[3] = {0, 0, 0};
-  std::tie(imageDims[0], imageDims[1], imageDims[2]) = imageGeom->getDimensions();
+  SizeVec3Type imageDims = imageGeom->getDimensions();
   if(imageDims[0] != imageDims[1])
   {
     QString msg;
@@ -399,8 +398,7 @@ void CreateLambertSphere::createVertices()
 
   // Get the dimensions of the lambert image we are going to map to a sphere.
   ImageGeom::Pointer imageGeom = getDataContainerArray()->getDataContainer(getImageDataArrayPath())->getGeometryAs<ImageGeom>();
-  size_t imageDims[3] = {0, 0, 0};
-  std::tie(imageDims[0], imageDims[1], imageDims[2]) = imageGeom->getDimensions();
+  SizeVec3Type imageDims = imageGeom->getDimensions();
 
   UInt8ArrayType::Pointer masterPattern =
       getDataContainerArray()->getAttributeMatrix(getImageDataArrayPath())->getAttributeArrayAs<UInt8ArrayType>(getImageDataArrayPath().getDataArrayName());
@@ -465,8 +463,7 @@ void CreateLambertSphere::createEdgeGeometry()
 
   // Get the dimensions of the lambert image we are going to map to a sphere.
   ImageGeom::Pointer imageGeom = getDataContainerArray()->getDataContainer(getImageDataArrayPath())->getGeometryAs<ImageGeom>();
-  size_t imageDims[3] = {0, 0, 0};
-  std::tie(imageDims[0], imageDims[1], imageDims[2]) = imageGeom->getDimensions();
+  SizeVec3Type imageDims = imageGeom->getDimensions();
 
   // now create node and quad arrays knowing the number that will be needed
   DataContainer::Pointer edgeDC = getDataContainerArray()->getDataContainer(getEdgeDataContainerName());
@@ -523,8 +520,7 @@ void CreateLambertSphere::createTriangleGeometry()
   }
   // Get the dimensions of the lambert image we are going to map to a sphere.
   ImageGeom::Pointer imageGeom = getDataContainerArray()->getDataContainer(getImageDataArrayPath())->getGeometryAs<ImageGeom>();
-  size_t imageDims[3] = {0, 0, 0};
-  std::tie(imageDims[0], imageDims[1], imageDims[2]) = imageGeom->getDimensions();
+  SizeVec3Type imageDims = imageGeom->getDimensions();
 
   UInt8ArrayType::Pointer masterPattern =
       getDataContainerArray()->getAttributeMatrix(getImageDataArrayPath())->getAttributeArrayAs<UInt8ArrayType>(getImageDataArrayPath().getDataArrayName());
@@ -578,8 +574,7 @@ void CreateLambertSphere::createQuadGeometry()
 
   // Get the dimensions of the lambert image we are going to map to a sphere.
   ImageGeom::Pointer imageGeom = getDataContainerArray()->getDataContainer(getImageDataArrayPath())->getGeometryAs<ImageGeom>();
-  size_t imageDims[3] = {0, 0, 0};
-  std::tie(imageDims[0], imageDims[1], imageDims[2]) = imageGeom->getDimensions();
+  SizeVec3Type imageDims = imageGeom->getDimensions();
 
   UInt8ArrayType::Pointer masterPattern =
       getDataContainerArray()->getAttributeMatrix(getImageDataArrayPath())->getAttributeArrayAs<UInt8ArrayType>(getImageDataArrayPath().getDataArrayName());

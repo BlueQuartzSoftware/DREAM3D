@@ -187,10 +187,12 @@ void AvizoUniformCoordinateWriter::execute()
   generateHeader(avizoFile);
 
   int err = writeData(avizoFile);
-
+  if(err < 0)
+  {
+    QString ss = QObject::tr("Error writing file '%1'").arg(getOutputFile());
+    setErrorCondition(-93002, ss);
+  }
   fclose(avizoFile);
-
-
 }
 
 // -----------------------------------------------------------------------------
@@ -212,10 +214,9 @@ void AvizoUniformCoordinateWriter::generateHeader(FILE* f)
   }
   fprintf(f, "\n");
   fprintf(f, "# Dimensions in x-, y-, and z-direction\n");
-  size_t x = 0, y = 0, z = 0;
-  std::tie(x, y, z) = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type dims = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getDimensions();
 
-  fprintf(f, "define Lattice %llu %llu %llu\n", static_cast<unsigned long long>(x), static_cast<unsigned long long>(y), static_cast<unsigned long long>(z));
+  fprintf(f, "define Lattice %llu %llu %llu\n", static_cast<unsigned long long>(dims[0]), static_cast<unsigned long long>(dims[1]), static_cast<unsigned long long>(dims[2]));
 
   fprintf(f, "Parameters {\n");
   fprintf(f, "     DREAM3DParams {\n");
@@ -228,14 +229,13 @@ void AvizoUniformCoordinateWriter::generateHeader(FILE* f)
   fprintf(f, "         Coordinates \"%s\"\n", getUnits().toLatin1().data());
   fprintf(f, "     }\n");
 
-  fprintf(f, "     Content \"%llux%llux%llu int, uniform coordinates\",\n", static_cast<unsigned long long int>(x), static_cast<unsigned long long int>(y), static_cast<unsigned long long int>(z));
+  fprintf(f, "     Content \"%llux%llux%llu int, uniform coordinates\",\n", static_cast<unsigned long long int>(dims[0]), static_cast<unsigned long long int>(dims[1]),
+          static_cast<unsigned long long int>(dims[2]));
 
-  FloatVec3Type origin;
-  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getOrigin(origin);
-  FloatVec3Type res;
-  getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getSpacing(res);
+  FloatVec3Type origin = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getOrigin();
+  FloatVec3Type res = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getGeometryAs<ImageGeom>()->getSpacing();
   fprintf(f, "     # Bounding Box is xmin xmax ymin ymax zmin zmax\n");
-  fprintf(f, "     BoundingBox %f %f %f %f %f %f\n", origin[0], origin[0] + (res[0] * x), origin[1], origin[1] + (res[1] * y), origin[2], origin[2] + (res[2] * z));
+  fprintf(f, "     BoundingBox %f %f %f %f %f %f\n", origin[0], origin[0] + (res[0] * dims[0]), origin[1], origin[1] + (res[1] * dims[1]), origin[2], origin[2] + (res[2] * dims[2]));
 
   fprintf(f, "     CoordType \"uniform\"\n");
   fprintf(f, "}\n\n");

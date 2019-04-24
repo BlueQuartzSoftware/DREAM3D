@@ -114,10 +114,7 @@ class ComputeDistanceMapImpl
       int64_t xpoints = static_cast<int64_t>(imageGeom->getXPoints());
       int64_t ypoints = static_cast<int64_t>(imageGeom->getYPoints());
       int64_t zpoints = static_cast<int64_t>(imageGeom->getZPoints());
-      double resx = 0.0;
-      double resy = 0.0;
-      double resz = 0.0;
-      std::tie(resx, resy, resz) = imageGeom->getSpacing();
+      FloatVec3Type spacing = imageGeom->getSpacing();
 
       neighbors[0] = -xpoints * ypoints;
       neighbors[1] = -xpoints;
@@ -253,15 +250,15 @@ class ComputeDistanceMapImpl
             yStride = n * xpoints;
             for(int64_t p = 0; p < xpoints; p++)
             {
-              x1 = double(p) * resx;
-              y1 = double(n) * resy;
-              z1 = double(m) * resz;
+              x1 = static_cast<double>(p) * spacing[0];
+              y1 = static_cast<double>(n) * spacing[1];
+              z1 = static_cast<double>(m) * spacing[2];
               nearestneighbor = voxel_NearestNeighbor[zStride + yStride + p];
               if(nearestneighbor >= 0)
               {
-                x2 = resx * double(nearestneighbor % xpoints);                           // find_xcoord(nearestneighbor);
-                y2 = resy * double(int64_t(nearestneighbor * oneOverxpoints) % ypoints); // find_ycoord(nearestneighbor);
-                z2 = resz * floor(nearestneighbor * oneOverzBlock);                      // find_zcoord(nearestneighbor);
+                x2 = spacing[0] * double(nearestneighbor % xpoints);                           // find_xcoord(nearestneighbor);
+                y2 = spacing[1] * double(int64_t(nearestneighbor * oneOverxpoints) % ypoints); // find_ycoord(nearestneighbor);
+                z2 = spacing[2] * floor(nearestneighbor * oneOverzBlock);                      // find_zcoord(nearestneighbor);
                 dist = ((x1 - x2) * (x1 - x2)) + ((y1 - y2) * (y1 - y2)) + ((z1 - z2) * (z1 - z2));
                 dist = sqrt(dist);
                 voxel_Distance[zStride + yStride + p] = dist;
@@ -541,8 +538,7 @@ void FindEuclideanDistMap::findDistanceMap()
   int32_t feature = 0;
   std::vector<int32_t> coordination;
 
-  size_t udims[3] = {0, 0, 0};
-  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
     static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),

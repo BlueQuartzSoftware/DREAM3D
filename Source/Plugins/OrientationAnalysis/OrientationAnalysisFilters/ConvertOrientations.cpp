@@ -227,7 +227,8 @@ void ConvertOrientations::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T> void generateRepresentation(ConvertOrientations* filter, typename DataArray<T>::Pointer inputOrientations, typename DataArray<T>::Pointer outputOrientations)
+template <typename T>
+void generateRepresentation(ConvertOrientations* filter, typename DataArray<T>::Pointer inputOrientations, typename DataArray<T>::Pointer outputOrientations)
 {
   typedef typename DataArray<T>::Pointer ArrayType;
   typedef OrientationConverter<T> OCType;
@@ -241,7 +242,7 @@ template <typename T> void generateRepresentation(ConvertOrientations* filter, t
   converters[5] = HomochoricConverter<T>::New();
   converters[6] = CubochoricConverter<T>::New();
 
-  QVector<typename OCType::OrientationType> ocTypes = OCType::GetOrientationTypes();
+  QVector<OrientationRepresentation::Type> ocTypes = OCType::GetOrientationTypes();
 
   converters[filter->getInputType()]->setInputData(inputOrientations);
   converters[filter->getInputType()]->convertRepresentationTo(ocTypes[filter->getOutputType()]);

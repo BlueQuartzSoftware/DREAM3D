@@ -65,7 +65,7 @@ public:
   SIMPL_FILTER_NEW_MACRO(RegularGridSampleSurfaceMesh)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(RegularGridSampleSurfaceMesh, AbstractFilter)
 
-  virtual ~RegularGridSampleSurfaceMesh();
+  ~RegularGridSampleSurfaceMesh() override;
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
@@ -167,13 +167,13 @@ protected:
    * @brief generate_points Reimplemented from @see SampleSurfaceMesh class
    * @return VertexGeom object
    */
-  virtual VertexGeom::Pointer generate_points();
+  VertexGeom::Pointer generate_points() override;
 
   /**
    * @brief assign_points Reimplemented from @see SampleSurfaceMesh class
    * @param iArray Sampled Feature Ids from superclass
    */
-  virtual void assign_points(Int32ArrayType::Pointer iArray);
+  void assign_points(Int32ArrayType::Pointer iArray) override;
 
 private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)

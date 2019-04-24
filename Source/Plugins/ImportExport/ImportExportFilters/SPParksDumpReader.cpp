@@ -377,7 +377,7 @@ int32_t SPParksDumpReader::readHeader()
   }
 
   m_CachedGeometry = m->getGeometryAs<ImageGeom>().get();
-  m_CachedGeometry->setDimensions(std::make_tuple(nx, ny, nz));
+  m_CachedGeometry->setDimensions(nx, ny, nz);
   FloatVec3Type res = getSpacing();
   m_CachedGeometry->setSpacing(res);
   FloatVec3Type origin = getOrigin();

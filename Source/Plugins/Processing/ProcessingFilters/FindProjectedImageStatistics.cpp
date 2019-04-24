@@ -1,37 +1,37 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "FindProjectedImageStatistics.h"
 
@@ -60,7 +60,8 @@
  * @brief The CalcProjectedStatsImpl class implements a templated threaded algorithm for
  * determining the projected image statistics of a given volume.
  */
-template <typename T> class CalcProjectedStatsImpl
+template <typename T>
+class CalcProjectedStatsImpl
 {
 
 public:
@@ -261,8 +262,8 @@ void FindProjectedImageStatistics::dataCheck()
 
   tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageMaxArrayName());
   m_ProjectedImageMaxPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
-      this, tempPath, 0, cDims);                     /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
-  if(nullptr != m_ProjectedImageMaxPtr.lock())       /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
+      this, tempPath, 0, cDims);               /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
+  if(nullptr != m_ProjectedImageMaxPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
     m_ProjectedImageMax = m_ProjectedImageMaxPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
@@ -336,8 +337,7 @@ void FindProjectedImageStatistics::execute()
   bool doParallel = true;
 #endif
 
-  size_t xP = 0, yP = 0, zP = 0;
-  std::tie(xP, yP, zP) = m->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type geoDims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   Int32ArrayType::Pointer startingPoints = Int32ArrayType::CreateArray(0, "_INTERNAL_USE_ONLY_startingPoints");
   int32_t* startPoints = nullptr;
@@ -346,14 +346,14 @@ void FindProjectedImageStatistics::execute()
   size_t depth = 0;
   if(m_Plane == 0)
   {
-    startingPoints->resizeTuples(xP * yP);
+    startingPoints->resizeTuples(geoDims[0] * geoDims[1]);
     startPoints = startingPoints->getPointer(0);
-    stride = xP * yP;
-    depth = zP;
-    for(size_t i = 0; i < yP; i++)
+    stride = geoDims[0] * geoDims[1];
+    depth = geoDims[2];
+    for(size_t i = 0; i < geoDims[1]; i++)
     {
-      yStride = i * xP;
-      for(size_t j = 0; j < xP; j++)
+      yStride = i * geoDims[0];
+      for(size_t j = 0; j < geoDims[0]; j++)
       {
         startPoints[count] = yStride + j;
         count++;
@@ -362,14 +362,14 @@ void FindProjectedImageStatistics::execute()
   }
   if(m_Plane == 1)
   {
-    startingPoints->resizeTuples(xP * zP);
+    startingPoints->resizeTuples(geoDims[0] * geoDims[2]);
     startPoints = startingPoints->getPointer(0);
-    stride = xP;
-    depth = yP;
-    for(size_t i = 0; i < zP; i++)
+    stride = geoDims[0];
+    depth = geoDims[1];
+    for(size_t i = 0; i < geoDims[2]; i++)
     {
-      yStride = i * xP * yP;
-      for(size_t j = 0; j < xP; j++)
+      yStride = i * geoDims[0] * geoDims[1];
+      for(size_t j = 0; j < geoDims[0]; j++)
       {
         startPoints[count] = yStride + j;
         count++;
@@ -378,16 +378,16 @@ void FindProjectedImageStatistics::execute()
   }
   if(m_Plane == 2)
   {
-    startingPoints->resizeTuples(yP * zP);
+    startingPoints->resizeTuples(geoDims[1] * geoDims[2]);
     startPoints = startingPoints->getPointer(0);
     stride = 1;
-    depth = xP;
-    for(size_t i = 0; i < zP; i++)
+    depth = geoDims[0];
+    for(size_t i = 0; i < geoDims[2]; i++)
     {
-      yStride = i * xP * yP;
-      for(size_t j = 0; j < yP; j++)
+      yStride = i * geoDims[0] * geoDims[1];
+      for(size_t j = 0; j < geoDims[1]; j++)
       {
-        startPoints[count] = yStride + (j * xP);
+        startPoints[count] = yStride + (j * geoDims[0]);
         count++;
       }
     }

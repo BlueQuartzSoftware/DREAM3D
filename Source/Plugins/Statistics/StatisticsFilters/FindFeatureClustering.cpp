@@ -274,17 +274,13 @@ void FindFeatureClustering::find_clustering()
   size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_EquivalentDiametersArrayPath.getDataContainerName());
 
-  size_t dims[3] = {0, 0, 0};
-  std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type dims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
 
-  sizex = dims[0] * xRes;
-  sizey = dims[1] * yRes;
-  sizez = dims[2] * zRes;
+  sizex = dims[0] * spacing[0];
+  sizey = dims[1] * spacing[1];
+  sizez = dims[2] * spacing[2];
 
   totalvol = sizex * sizey * sizez;
   totalpoints = static_cast<float>(dims[0] * dims[1] * dims[2]);
@@ -295,8 +291,7 @@ void FindFeatureClustering::find_clustering()
   boxdims[1] = sizey;
   boxdims[2] = sizez;
 
-  std::vector<float> boxres = {0.0f, 0.0f, 0.0f};
-  std::tie(boxres.at(0), boxres.at(1), boxres.at(2)) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  std::vector<float> boxres = m->getGeometryAs<ImageGeom>()->getSpacing().toContainer<std::vector<float>>();
 
   for(size_t i = 1; i < totalFeatures; i++)
   {

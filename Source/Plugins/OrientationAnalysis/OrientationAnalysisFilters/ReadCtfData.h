@@ -69,14 +69,15 @@ class ReadCtfDataPrivate;
 class OrientationAnalysis_EXPORT ReadCtfData : public AbstractFilter
 {
   Q_OBJECT
+
   PYB11_CREATE_BINDINGS(ReadCtfData SUPERCLASS AbstractFilter)
-  PYB11_PROPERTY(bool DegreesToRadians READ getDegreesToRadians WRITE setDegreesToRadians)
-  PYB11_PROPERTY(bool EdaxHexagonalAlignment READ getEdaxHexagonalAlignment WRITE setEdaxHexagonalAlignment)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-  PYB11_PROPERTY(bool FileWasRead READ getFileWasRead WRITE setFileWasRead)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+  PYB11_PROPERTY(bool DegreesToRadians READ getDegreesToRadians WRITE setDegreesToRadians)
+  PYB11_PROPERTY(bool EdaxHexagonalAlignment READ getEdaxHexagonalAlignment WRITE setEdaxHexagonalAlignment)
+
   Q_DECLARE_PRIVATE(ReadCtfData)
 
 public:

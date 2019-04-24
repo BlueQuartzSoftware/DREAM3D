@@ -86,7 +86,7 @@ void OmWidget::updateData(OrientationUtilityCalculator* calculator)
 {
   setStyleSheet("");
 
-  if(calculator->getInputType() == OrientationConverter<double>::OrientationMatrix)
+  if(calculator->getInputType() == OrientationRepresentation::Type::OrientationMatrix)
   {
     // The input type is the same as this widget, so don't update
     return;
@@ -106,7 +106,7 @@ void OmWidget::updateData(OrientationUtilityCalculator* calculator)
     return;
   }
 
-  QVector<double> omValues = calculator->getValues(OrientationConverter<double>::OrientationMatrix);
+  QVector<double> omValues = calculator->getValues(OrientationRepresentation::Type::OrientationMatrix);
 
   if(omValues.size() == 9)
   {
@@ -136,11 +136,11 @@ void OmWidget::valuesUpdated(const QString& text)
 
   if(errorCode >= 0)
   {
-    emit valuesChanged(values, OrientationConverter<double>::OrientationMatrix, false);
+    emit valuesChanged(values, OrientationRepresentation::Type::OrientationMatrix, false);
   }
   else
   {
-    emit valuesChanged(QVector<double>(), OrientationConverter<double>::OrientationMatrix, true);
+    emit valuesChanged(QVector<double>(), OrientationRepresentation::Type::OrientationMatrix, true);
     emit invalidValues(errorCode, errorMsg);
   }
 }
