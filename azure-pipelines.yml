@@ -2,48 +2,40 @@
 # Start with a minimal pipeline that you can customize to build and deploy your code.
 # Add steps that build, run tests, deploy, and more:
 # https://aka.ms/yaml
+stages:
+- stage: Build
+  jobs:
+  - job: macOS
+    pool:
+      name: BlueQuartz Self Hosted
+    steps:
+    - script: |
+        echo System.PullRequest.SourceBranch=$(System.PullRequest.SourceBranch)
+        echo System.PullRequest.PullRequestNumber=$(System.PullRequest.PullRequestNumber)
+        echo Build.SourceBranchName=$(Build.SourceBranchName)
+    - script: |
+        mkdir ExternalProjects
+        cd ExternalProjects 
+        /usr/bin/git clone -b develop https://www.github.com/bluequartzsoftware/CMP
+        /usr/bin/git clone -b develop https://www.github.com/bluequartzsoftware/SIMPL
+        /usr/bin/git clone -b develop https://www.github.com/bluequartzsoftware/SIMPLView
+        mkdir Plugins
+        cd Plugins
+        /usr/bin/git clone -b develop https://www.github.com/bluequartzsoftware/ITKImageProcessing
+        /usr/bin/git clone -b develop https://www.github.com/bluequartzsoftware/SimulationIO
+        /usr/bin/git clone -b develop https://www.github.com/bluequartzsoftware/ZeissImport
+        /usr/bin/git clone -b develop https://www.github.com/DREAM3D/Anisotropy
+        /usr/bin/git clone -b develop https://www.github.com/DREAM3D/DDDAnalysisToolbox
+        /usr/bin/git clone -b develop https://www.github.com/DREAM3D/DREAM3DReview
+        /usr/bin/git clone -b develop https://www.github.com/DREAM3D/HEDMAnalysis
+        /usr/bin/git clone -b develop https://www.github.com/DREAM3D/ImageProcessing
+        /usr/bin/git clone -b develop https://www.github.com/DREAM3D/MASSIFUtilities
+        /usr/bin/git clone -b develop https://www.github.com/DREAM3D/TransformationPhase
+        /usr/bin/git clone -b develop https://www.github.com/DREAM3D/UCSBUtilities
+      displayName: 'clone the Source codes'
+    - script: |
+        cd $(Build.BinariesDirectory)
+        /Users/Shared/DREAM3D_SDK/cmake-3.14.2-Darwin-x86_64/CMake.app/Contents/bin/cmake -G Ninja -DDREAM3D_SDK=$(Agent.BuildDirectory) -DCMAKE_BUILD_TYPE=Release $(Build.Repository.LocalPath)
+        cmake --build .
 
-jobs:
-- job: Windows
-  pool:
-    vmImage: 'vs2017-win2016'
-  steps:
-  - script: echo hello from Windows
-- job: macOS
-  pool:
-    name: BlueQuartz Self Hosted
-  steps:
-  - script: |
-      echo System.PullRequest.SourceBranch=$(System.PullRequest.SourceBranch)
-      echo System.PullRequest.PullRequestNumber=$(System.PullRequest.PullRequestNumber)
-      echo Build.SourceBranchName=$(Build.SourceBranchName)
-  - script: |
-      mkdir ExternalProjects
-      cd ExternalProjects 
-      /usr/bin/git clone -b develop https://www.github.com/bluequartzsoftware/CMP
-      /usr/bin/git clone -b develop https://www.github.com/bluequartzsoftware/SIMPL
-      /usr/bin/git clone -b develop https://www.github.com/bluequartzsoftware/SIMPLView
-      mkdir Plugins
-      cd Plugins
-      /usr/bin/git clone -b develop https://www.github.com/bluequartzsoftware/ITKImageProcessing
-      /usr/bin/git clone -b develop https://www.github.com/bluequartzsoftware/SimulationIO
-      /usr/bin/git clone -b develop https://www.github.com/bluequartzsoftware/ZeissImport
-      /usr/bin/git clone -b develop https://www.github.com/DREAM3D/Anisotropy
-      /usr/bin/git clone -b develop https://www.github.com/DREAM3D/DDDAnalysisToolbox
-      /usr/bin/git clone -b develop https://www.github.com/DREAM3D/DREAM3DReview
-      /usr/bin/git clone -b develop https://www.github.com/DREAM3D/HEDMAnalysis
-      /usr/bin/git clone -b develop https://www.github.com/DREAM3D/ImageProcessing
-      /usr/bin/git clone -b develop https://www.github.com/DREAM3D/MASSIFUtilities
-      /usr/bin/git clone -b develop https://www.github.com/DREAM3D/TransformationPhase
-      /usr/bin/git clone -b develop https://www.github.com/DREAM3D/UCSBUtilities
-    displayName: 'clone the Source codes'
-  - script: |
-      cd $(Build.BinariesDirectory)
-      /Users/Shared/DREAM3D_SDK/cmake-3.14.2-Darwin-x86_64/CMake.app/Contents/bin/cmake -G Ninja -DDREAM3D_SDK=$(Agent.BuildDirectory) -DCMAKE_BUILD_TYPE=Release $(Build.Repository.LocalPath)
-      cmake --build .
-- job: Linux
-  pool:
-    vmImage: 'ubuntu-16.04'
-  steps:
-  - script: echo hello from Linu
 
