@@ -20,7 +20,7 @@ stages:
         branch=$(System.PullRequest.SourceBranch)
         mkdir ExternalProjects
         cd ExternalProjects 
-        /usr/bin/git clone https://www.github.com/bluequartzsoftware/CMP.git
+        /usr/bin/git clone https://github.com/bluequartzsoftware/CMP.git
         cd CMP
         git fetch --all
         remote=`git branch -a | grep "${branch}" | wc -l`
@@ -28,21 +28,21 @@ stages:
           git checkout -b ${branch} --track origin/${branch}
         fi
         cd ../
-        /usr/bin/git clone https://www.github.com/bluequartzsoftware/SIMPL.git
-        /usr/bin/git clone https://www.github.com/bluequartzsoftware/SIMPLView.git
+        /usr/bin/git clone https://github.com/bluequartzsoftware/SIMPL.git
+        /usr/bin/git clone https://github.com/bluequartzsoftware/SIMPLView.git
         mkdir Plugins
         cd Plugins
-        /usr/bin/git clone https://www.github.com/bluequartzsoftware/ITKImageProcessing.git
-        /usr/bin/git clone https://www.github.com/bluequartzsoftware/SimulationIO.git
-        /usr/bin/git clone https://www.github.com/bluequartzsoftware/ZeissImport.git
-        /usr/bin/git clone https://www.github.com/DREAM3D/Anisotropy.git
-        /usr/bin/git clone https://www.github.com/DREAM3D/DDDAnalysisToolbox.git
-        /usr/bin/git clone https://www.github.com/DREAM3D/DREAM3DReview.git
-        /usr/bin/git clone https://www.github.com/DREAM3D/HEDMAnalysis.git
-        /usr/bin/git clone https://www.github.com/DREAM3D/ImageProcessing.git
-        /usr/bin/git clone https://www.github.com/DREAM3D/MASSIFUtilities.git
-        /usr/bin/git clone https://www.github.com/DREAM3D/TransformationPhase.git
-        /usr/bin/git clone https://www.github.com/DREAM3D/UCSBUtilities.git
+        /usr/bin/git clone https://github.com/bluequartzsoftware/ITKImageProcessing.git
+        /usr/bin/git clone https://github.com/bluequartzsoftware/SimulationIO.git
+        /usr/bin/git clone https://github.com/bluequartzsoftware/ZeissImport.git
+        /usr/bin/git clone https://github.com/DREAM3D/Anisotropy.git
+        /usr/bin/git clone https://github.com/DREAM3D/DDDAnalysisToolbox.git
+        /usr/bin/git clone https://github.com/DREAM3D/DREAM3DReview.git
+        /usr/bin/git clone https://github.com/DREAM3D/HEDMAnalysis.git
+        /usr/bin/git clone https://github.com/DREAM3D/ImageProcessing.git
+        /usr/bin/git clone https://github.com/DREAM3D/MASSIFUtilities.git
+        /usr/bin/git clone https://github.com/DREAM3D/TransformationPhase.git
+        /usr/bin/git clone https://github.com/DREAM3D/UCSBUtilities.git
       displayName: 'clone the Source codes'
     - script: |
         cd $(Build.BinariesDirectory)
