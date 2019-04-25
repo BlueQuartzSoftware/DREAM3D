@@ -19,15 +19,28 @@ stages:
     - script: |
         branch=$(System.PullRequest.SourceBranch)
         mkdir ExternalProjects
-        cd ExternalProjects 
-        /usr/bin/git clone https://github.com/bluequartzsoftware/CMP.git
-        cd CMP
-        git fetch --all
-        remote=`git branch -a | grep "${branch}" | wc -l`
-        if [ ${remote} == 1 ]; then
-          git checkout -b ${branch} --track origin/${branch}
-        fi
-        cd ../
+        cd ExternalProjects
+        function gitClone()
+        {
+          /usr/bin/git clone $1/$2.git
+          cd $2
+          git fetch --all
+          remote=`git branch -a | grep "${branch}" | wc -l`
+          if [ ${remote} == 1 ]; then
+            git checkout -b ${branch} --track origin/${branch}
+          fi
+          cd ../
+        }
+        gitClone https://github.com/bluequartzsoftware CMP
+         
+        # /usr/bin/git clone https://github.com/bluequartzsoftware/CMP.git
+        # cd CMP
+        # git fetch --all
+        # remote=`git branch -a | grep "${branch}" | wc -l`
+        # if [ ${remote} == 1 ]; then
+        #   git checkout -b ${branch} --track origin/${branch}
+        # fi
+        # cd ../
         /usr/bin/git clone https://github.com/bluequartzsoftware/SIMPL.git
         /usr/bin/git clone https://github.com/bluequartzsoftware/SIMPLView.git
         mkdir Plugins
