@@ -22,11 +22,14 @@ stages:
         cd ExternalProjects
         function gitClone()
         {
+          echo Cloning: $1/$2
           /usr/bin/git clone $1/$2.git
           cd $2
           git fetch --all
+          echo "Looking for ${branch} in repo..."
           remote=`git branch -a | grep "${branch}" | wc -l`
           if [ ${remote} == 1 ]; then
+            echo "Checking out branch ${branch}"
             git checkout -b ${branch} --track origin/${branch}
           fi
           cd ../
@@ -46,7 +49,7 @@ stages:
         gitClone https://github.com/DREAM3D ImageProcessing
         gitClone https://github.com/DREAM3D MASSIFUtilities
         gitClone https://github.com/DREAM3D TransformationPhase
-        gitClone https://github.com DREAM3D UCSBUtilities
+        gitClone https://github.com/DREAM3D UCSBUtilities
       displayName: 'Clone the Source codes'
     - script: |
         cd $(Build.BinariesDirectory)
@@ -57,3 +60,4 @@ stages:
         cd $(Build.BinariesDirectory)
         /Users/Shared/DREAM3D_SDK/cmake-3.14.2-Darwin-x86_64/CMake.app/Contents/bin/ctest -D Experimental
       displayName: 'Build DREAM3D and Test DREAM3D with CTest'
+      
