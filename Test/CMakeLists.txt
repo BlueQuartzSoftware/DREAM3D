@@ -137,7 +137,7 @@ if(SIMPL_ENABLE_PYTHON)
 
     #------------------------------
     # Initialize the PYTHON_TEST_INPUT_DIR variable to point to the "Testing Directory"
-    file(TO_CMAKE_PATH "${DREAM3DTest_SOURCE_DIR}/Python" PYTHON_TEST_INPUT_DIR)
+    file(TO_NATIVE_PATH "${DREAM3DTest_SOURCE_DIR}/Python" PYTHON_TEST_INPUT_DIR)
     #------------------------------
     # These names should match the names "EXACTLY" (including capitalization).
     # NO Spaces in the names (which means no spaces in the variable names)
