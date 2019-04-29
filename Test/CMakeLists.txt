@@ -185,8 +185,12 @@ if(SIMPL_ENABLE_PYTHON)
 
     )
 
+    set(TEST_SCRIPT_FILE_EXT "sh")
+    if(WIN32)
+      set(TEST_SCRIPT_FILE_EXT "bat")
+    endif()
     foreach(test ${PLUGIN_PYTHON_TESTS})
-        set(SIMPL_PYTHON_TEST_DRIVER "${SIMPL_ANACONDA_OUTPUT_DIR}/UnitTest/${PLUGIN_NAME}/${test}.sh")
+        set(SIMPL_PYTHON_TEST_DRIVER "${SIMPL_ANACONDA_OUTPUT_DIR}/UnitTest/${PLUGIN_NAME}/${test}.${TEST_SCRIPT_FILE_EXT}")
         configure_file(${SIMPL_PYTHON_TEST_SCRIPT} "${SIMPL_PYTHON_TEST_DRIVER}" @ONLY)
 
         string(REPLACE "/" "_" test "${test}")
