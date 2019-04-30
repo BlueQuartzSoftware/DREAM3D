@@ -1,0 +1,21 @@
+# Subject line - 50 chars (for log --oneline)
+# ============================================== #
+
+# Multi line description - 72 chars per line
+# ==================================================================== #
+
+# Sign-off
+Signed-off-by: Your Name <your.email@example.com>
+
+# Issue Tracking
+# Tag issues here using git smart commits
+# Syntax would look like:
+#   Close an issue: "Fixes #231"
+#   Close issues in other projects: "Closes #421, closes other-user/other-repo#42"
+#   Reference Pull Requests: "GH-25"
+#   Tag commits: "oth3rc0mm1thash"
+
+# Make this your commit template by running:
+#   `cp .git-commit-template .commit-template`
+#   `git config commit.template .commit-template`
+
