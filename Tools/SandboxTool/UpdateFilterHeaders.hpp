@@ -32,7 +32,7 @@ public:
 
     bool didReplace = false;
     bool isFilter = false;
-    QString searchString = "virtual const QString getSubGroupName() override;";
+    // QString searchString = "virtual const QString getSubGroupName() override;";
 
     QVector<QString> outLines;
     QStringList list = contents.split(QRegExp("\\n"));
@@ -57,7 +57,7 @@ public:
     QString cpyAssignRepl = QString("    %1& operator=(const %1&) = delete; // Copy Assignment Not Implemented").arg(baseName);
     QString mvAssign1 = QString("void operator=(const %1&);").arg(baseName);
 
-    size_t lineIndex = 0;
+    int32_t lineIndex = 0;
 
     // First Pass is to analyze the header file
     while(sourceLines.hasNext())
@@ -153,23 +153,23 @@ public:
     if(didReplace)
     {
       // std::cout << hFile.toStdString() << std::endl;
-      if(cpyCtrLine)
+      if(cpyCtrLine != 0)
       {
         std::cout << "  cpyCtrLine: " << cpyCtrLine << std::endl;
       }
-      if(mvCtrLine)
+      if(mvCtrLine != 0)
       {
         std::cout << "  mvCtrLine: " << mvCtrLine << std::endl;
       }
-      if(cpyAssignLine)
+      if(cpyAssignLine != 0)
       {
         std::cout << "  cpyAssignLine: " << cpyAssignLine << std::endl;
       }
-      if(mvAssignLine)
+      if(mvAssignLine != 0)
       {
         std::cout << "  mvAssignLine: " << mvAssignLine << std::endl;
       }
-      if(cpyAssignOldLine)
+      if(cpyAssignOldLine != 0)
       {
         std::cout << "  cpyAssignOldLine: " << cpyAssignOldLine << std::endl;
       }
