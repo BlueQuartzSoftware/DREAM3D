@@ -148,9 +148,9 @@ void RegularGridSampleSurfaceMesh::dataCheck()
   m->setGeometry(image);
 
   // Set the Dimensions, Spacing and Origin of the output data container
-  m->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(m_XPoints, m_YPoints, m_ZPoints));
-  m->getGeometryAs<ImageGeom>()->setSpacing(std::make_tuple(m_Spacing[0], m_Spacing[1], m_Spacing[2]));
-  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin[0], m_Origin[1], m_Origin[2]));
+  m->getGeometryAs<ImageGeom>()->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
+  m->getGeometryAs<ImageGeom>()->setSpacing(m_Spacing);
+  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin);
 
   QVector<size_t> tDims(3, 0);
   tDims[0] = m_XPoints;
@@ -244,9 +244,9 @@ void RegularGridSampleSurfaceMesh::execute()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   // Set the Dimensions, Spacing and Origin of the output data container
-  m->getGeometryAs<ImageGeom>()->setDimensions(std::make_tuple(m_XPoints, m_YPoints, m_ZPoints));
-  m->getGeometryAs<ImageGeom>()->setSpacing(std::make_tuple(m_Spacing[0], m_Spacing[1], m_Spacing[2]));
-  m->getGeometryAs<ImageGeom>()->setOrigin(std::make_tuple(m_Origin[0], m_Origin[1], m_Origin[2]));
+  m->getGeometryAs<ImageGeom>()->setDimensions(m_XPoints, m_YPoints, m_ZPoints);
+  m->getGeometryAs<ImageGeom>()->setSpacing(m_Spacing);
+  m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin);
 
   SampleSurfaceMesh::execute();
 

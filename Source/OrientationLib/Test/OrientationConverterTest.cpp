@@ -85,7 +85,7 @@ public:
 
     OrientationConverter<float>::Pointer ocEulers = EulerConverter<float>::New();
     ocEulers->setInputData(eulers);
-    ocEulers->convertRepresentationTo(OrientationConverter<float>::Quaternion);
+    ocEulers->convertRepresentationTo(OrientationRepresentation::Type::Quaternion);
 
     FloatArrayType::Pointer output = ocEulers->getOutputData();
 
@@ -113,7 +113,7 @@ public:
     eulers->setComponent(0, 2, phi2);
 
     typedef OrientationConverter<float> OCType;
-    QVector<OCType::OrientationType> ocTypes = OCType::GetOrientationTypes();
+    QVector<OrientationRepresentation::Type> ocTypes = OCType::GetOrientationTypes();
     QVector<QString> tStrings = OCType::GetOrientationTypeStrings();
     QVector<OCType::Pointer> converters(6);
     converters[0] = EulerConverter<float>::New();

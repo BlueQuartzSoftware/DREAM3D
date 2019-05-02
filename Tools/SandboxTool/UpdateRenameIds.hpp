@@ -49,7 +49,7 @@ public:
     QStringList list = contents.split(QRegExp("\\n"));
     QStringListIterator sourceLines(list);
 
-    size_t lineIndex = 0;
+    int32_t lineIndex = 0;
 
     // First Pass is to analyze the header file
     while(sourceLines.hasNext())

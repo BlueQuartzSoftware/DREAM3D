@@ -281,8 +281,7 @@ void AlignSections::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
-  size_t dims[3] = {0, 0, 0};
-  std::tie(dims[0], dims[1], dims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type dims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   std::vector<int64_t> xshifts(dims[2], 0);
   std::vector<int64_t> yshifts(dims[2], 0);
@@ -311,7 +310,7 @@ void AlignSections::execute()
     for(const auto& arrayName : voxelArrayNames)
     {
       IDataArray::Pointer dataArrayPtr = m->getAttributeMatrix(getCellAttributeMatrixName())->getAttributeArray(arrayName);
-      taskGroup->run(AlignSectionsTransferDataImpl(this, dims, xshifts, yshifts, dataArrayPtr));
+      taskGroup->run(AlignSectionsTransferDataImpl(this, dims.data(), xshifts, yshifts, dataArrayPtr));
     }
     // Wait for them to complete.
     taskGroup->wait();

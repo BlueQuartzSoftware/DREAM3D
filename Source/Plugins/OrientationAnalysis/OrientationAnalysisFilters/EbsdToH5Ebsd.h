@@ -60,6 +60,7 @@ class OrientationAnalysis_EXPORT EbsdToH5Ebsd : public AbstractFilter
   PYB11_PROPERTY(int PaddingDigits READ getPaddingDigits WRITE setPaddingDigits)
   PYB11_PROPERTY(int64_t ZStartIndex READ getZStartIndex WRITE setZStartIndex)
   PYB11_PROPERTY(int64_t ZEndIndex READ getZEndIndex WRITE setZEndIndex)
+  PYB11_PROPERTY(float ZResolution READ getZResolution WRITE setZResolution)
   PYB11_PROPERTY(AxisAngleInput_t SampleTransformation READ getSampleTransformation WRITE setSampleTransformation)
   PYB11_PROPERTY(AxisAngleInput_t EulerTransformation READ getEulerTransformation WRITE setEulerTransformation)
 public:

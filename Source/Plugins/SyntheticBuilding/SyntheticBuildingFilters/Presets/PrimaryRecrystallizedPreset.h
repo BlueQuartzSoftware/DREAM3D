@@ -38,7 +38,7 @@
 //-- C++ includes
 #include <string>
 
-//-- MXA Includes
+//-- SIMPLib Includes
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 //-- StatsGen Includes

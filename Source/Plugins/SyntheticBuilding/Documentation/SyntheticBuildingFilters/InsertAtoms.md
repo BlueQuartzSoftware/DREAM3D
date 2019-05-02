@@ -24,7 +24,7 @@ After all **Features** have had atoms inserted, combine the point lists for all 
 | Name | Type | Description |
 |------|------| ----------- |
 | Lattice Constants (Angstroms) | float (x3) | Lattice parameters (a, b, c) for the unit cell in Angstroms |
-| Crystal Basis | Enumeration | Basis to be used when inserting atoms on lattice (currently Siple Cubic, Body-Centered Cubic and Face-Centered Cubic are available) |
+| Crystal Basis | Enumeration | Basis to be used when inserting atoms on lattice (currently Simple Cubic, Body-Centered Cubic and Face-Centered Cubic are available) |
 
 ## Required Geometry ##
 

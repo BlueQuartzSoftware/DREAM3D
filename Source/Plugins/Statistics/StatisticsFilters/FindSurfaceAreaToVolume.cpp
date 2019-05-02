@@ -228,17 +228,15 @@ void FindSurfaceAreaToVolume::execute()
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_NumCellsArrayPath.getDataContainerName());
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
+
   ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
-  std::tie(xRes, yRes, zRes) = imageGeom->getSpacing();
+  FloatVec3Type spacing = imageGeom->getSpacing();
 
   int64_t xPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
   int64_t yPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
   int64_t zPoints = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
 
-  float voxelVol = xRes * yRes * zRes;
+  float voxelVol = spacing[0] * spacing[1] * spacing[2];
 
   std::vector<float> featureSurfaceArea(static_cast<size_t>(numFeatures), 0.0f);
 
@@ -300,15 +298,15 @@ void FindSurfaceAreaToVolume::execute()
             {
               if(l == 0 || l == 5) // XY face shared
               {
-                onsurf = onsurf + xRes * yRes;
+                onsurf = onsurf + spacing[0] * spacing[1];
               }
               if(l == 1 || l == 4) // YZ face shared
               {
-                onsurf = onsurf + yRes * zRes;
+                onsurf = onsurf + spacing[1] * spacing[2];
               }
               if(l == 2 || l == 3) // XZ face shared
               {
-                onsurf = onsurf + zRes * xRes;
+                onsurf = onsurf + spacing[2] * spacing[0];
               }
             }
           }

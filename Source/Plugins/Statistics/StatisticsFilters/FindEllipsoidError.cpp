@@ -242,19 +242,17 @@ void FindEllipsoidError::execute()
   }
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
 
-  m_ScaleFator = 1.0 / xRes;
-  if(yRes > xRes && yRes > zRes)
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
+
+  m_ScaleFator = 1.0 / spacing[0];
+  if(spacing[1] > spacing[0] && spacing[1] > spacing[2])
   {
-    m_ScaleFator = 1.0 / yRes;
+    m_ScaleFator = 1.0 / spacing[1];
   }
-  if(zRes > xRes && zRes > yRes)
+  if(spacing[2] > spacing[0] && spacing[2] > spacing[1])
   {
-    m_ScaleFator = 1.0 / zRes;
+    m_ScaleFator = 1.0 / spacing[2];
   }
 
   if(m->getGeometryAs<ImageGeom>()->getXPoints() > 1 && m->getGeometryAs<ImageGeom>()->getYPoints() > 1 && m->getGeometryAs<ImageGeom>()->getZPoints() > 1)
@@ -283,10 +281,7 @@ void FindEllipsoidError::find_error2D()
   size_t yPoints = m->getGeometryAs<ImageGeom>()->getYPoints();
   size_t zPoints = m->getGeometryAs<ImageGeom>()->getZPoints();
 
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   float xsquared, ysquared, asquared, bsquared, xc, yc, theta;
   int32_t xcoord, ycoord;
@@ -305,12 +300,12 @@ void FindEllipsoidError::find_error2D()
     //            theta = -m_AxisEulerAngles[3*i]; //only need the first angle in 2D
 
     //            //Get the centroids (in pixels) for the ideal ellipse
-    //            xc = m_Centroids[3*i]/xRes;
-    //            yc = m_Centroids[3*i + 1]/yRes;
+    //            xc = m_Centroids[3*i]/spacing[0];
+    //            yc = m_Centroids[3*i + 1]/spacing[1];
 
     //            //Get the axis lengths for the ideal ellipse
-    //            asquared = (m_AxisLengths[3*i]*m_AxisLengths[3*i])/(xRes*xRes);
-    //            bsquared = m_AxisLengths[3*i+1]*m_AxisLengths[3*i+1]/(yRes*yRes);
+    //            asquared = (m_AxisLengths[3*i]*m_AxisLengths[3*i])/(spacing[0]*spacing[0]);
+    //            bsquared = m_AxisLengths[3*i+1]*m_AxisLengths[3*i+1]/(spacing[1]*spacing[1]);
 
     //            //rotate and translate the current x, y pair into where the ideal ellipse is
     //            xsquared = ((xcoord-xc)*cosf(theta)-(ycoord-yc)*sinf(theta))*((xcoord-xc)*cosf(theta)-(ycoord-yc)*sinf(theta));
@@ -329,12 +324,12 @@ void FindEllipsoidError::find_error2D()
     theta = -m_AxisEulerAngles[3 * i]; // only need the first angle in 2D
 
     // Get the centroids (in pixels) for the ideal ellipse
-    xc = m_Centroids[3 * i] / xRes;
-    yc = m_Centroids[3 * i + 1] / yRes;
+    xc = m_Centroids[3 * i] / spacing[0];
+    yc = m_Centroids[3 * i + 1] / spacing[1];
 
     // Get the axis lengths for the ideal ellipse
-    asquared = (m_AxisLengths[3 * i] * m_AxisLengths[3 * i]) / (xRes * xRes);
-    bsquared = m_AxisLengths[3 * i + 1] * m_AxisLengths[3 * i + 1] / (yRes * yRes);
+    asquared = (m_AxisLengths[3 * i] * m_AxisLengths[3 * i]) / (spacing[0] * spacing[0]);
+    bsquared = m_AxisLengths[3 * i + 1] * m_AxisLengths[3 * i + 1] / (spacing[1] * spacing[1]);
 
     // iterate over all the cells in each feature
     for(size_t j = 0; j < featureCellList[i].size(); j++)

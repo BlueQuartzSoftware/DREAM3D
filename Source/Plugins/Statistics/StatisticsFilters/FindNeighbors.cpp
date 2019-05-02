@@ -242,8 +242,7 @@ void FindNeighbors::execute()
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t totalFeatures = m_NumNeighborsPtr.lock()->getNumberOfTuples();
 
-  size_t udims[3] = {0, 0, 0};
-  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
@@ -379,10 +378,7 @@ void FindNeighbors::execute()
     }
   }
 
-  float xRes = 0.0f;
-  float yRes = 0.0f;
-  float zRes = 0.0f;
-  std::tie(xRes, yRes, zRes) = m->getGeometryAs<ImageGeom>()->getSpacing();
+  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
 
   // We do this to create new set of NeighborList objects
   for(size_t i = 1; i < totalFeatures; i++)
@@ -421,7 +417,7 @@ void FindNeighbors::execute()
     {
       int32_t neigh = iter.key();    // get the neighbor feature
       int32_t number = iter.value(); // get the number of voxels
-      float area = float(number) * xRes * yRes;
+      float area = float(number) * spacing[0] * spacing[1];
 
       // Push the neighbor feature id back onto the list so we stay synced up
       neighborlist[i].push_back(neigh);

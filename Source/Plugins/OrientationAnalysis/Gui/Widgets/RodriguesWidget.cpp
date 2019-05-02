@@ -77,7 +77,7 @@ void RodriguesWidget::updateData(OrientationUtilityCalculator* calculator)
 {
   setStyleSheet("");
 
-  if(calculator->getInputType() == OrientationConverter<double>::Rodrigues)
+  if(calculator->getInputType() == OrientationRepresentation::Type::Rodrigues)
   {
     // The input type is the same as this widget, so don't update
     return;
@@ -92,7 +92,7 @@ void RodriguesWidget::updateData(OrientationUtilityCalculator* calculator)
     return;
   }
 
-  QVector<double> rValues = calculator->getValues(OrientationConverter<double>::Rodrigues);
+  QVector<double> rValues = calculator->getValues(OrientationRepresentation::Type::Rodrigues);
 
   if(rValues.size() == 4)
   {
@@ -138,11 +138,11 @@ void RodriguesWidget::valuesUpdated(const QString& text)
 
   if(errorCode >= 0)
   {
-    emit valuesChanged(values, OrientationConverter<double>::Rodrigues, false);
+    emit valuesChanged(values, OrientationRepresentation::Type::Rodrigues, false);
   }
   else
   {
-    emit valuesChanged(QVector<double>(), OrientationConverter<double>::Rodrigues, true);
+    emit valuesChanged(QVector<double>(), OrientationRepresentation::Type::Rodrigues, true);
     emit invalidValues(errorCode, errorMsg);
   }
 }

@@ -180,7 +180,7 @@ void GenerateCopyCode()
     std::cout << "*/" << std::endl;
 
     std::cout << "  " << cn << "::Pointer filter = " << cn << "::New();" << std::endl;
-    std::cout << "  if(true == copyFilterParameters)\n  {" << std::endl;
+    std::cout << "  if(copyFilterParameters)\n  {" << std::endl;
 
     FilterParameterVectorType options = filter->getFilterParameters();
     for(FilterParameterVectorType::iterator iter = options.begin(); iter != options.end(); ++iter)

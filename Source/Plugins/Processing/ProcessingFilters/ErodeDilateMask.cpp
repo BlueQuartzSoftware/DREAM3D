@@ -182,8 +182,7 @@ void ErodeDilateMask::execute()
   m_MaskCopy = maskCopyPtr->getPointer(0);
   maskCopyPtr->initializeWithValue(false);
 
-  size_t udims[3] = {0, 0, 0};
-  std::tie(udims[0], udims[1], udims[2]) = m->getGeometryAs<ImageGeom>()->getDimensions();
+  SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),

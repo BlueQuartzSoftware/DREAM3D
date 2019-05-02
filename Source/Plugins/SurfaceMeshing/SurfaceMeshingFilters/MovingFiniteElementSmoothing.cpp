@@ -1080,7 +1080,7 @@ void MovingFiniteElementSmoothing::execute()
 AbstractFilter::Pointer MovingFiniteElementSmoothing::newFilterInstance(bool copyFilterParameters) const
 {
   MovingFiniteElementSmoothing::Pointer filter = MovingFiniteElementSmoothing::New();
-  if(true == copyFilterParameters)
+  if(copyFilterParameters)
   {
     copyFilterParameterInstanceVariables(filter.get());
   }

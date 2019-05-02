@@ -469,8 +469,7 @@ void QuickSurfaceMesh::correctProblemVoxels()
 
   IGeometryGrid::Pointer grid = m->getGeometryAs<IGeometryGrid>();
 
-  size_t udims[3] = {0, 0, 0};
-  std::tie(udims[0], udims[1], udims[2]) = grid->getDimensions();
+  SizeVec3Type udims = grid->getDimensions();
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]),
@@ -643,8 +642,7 @@ void QuickSurfaceMesh::determineActiveNodes(std::vector<int64_t>& m_NodeIds, int
 
   IGeometryGrid::Pointer grid = m->getGeometryAs<IGeometryGrid>();
 
-  size_t udims[3] = {0, 0, 0};
-  std::tie(udims[0], udims[1], udims[2]) = grid->getDimensions();
+  SizeVec3Type udims = grid->getDimensions();
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]),
@@ -965,8 +963,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
 
   IGeometryGrid::Pointer grid = m->getGeometryAs<IGeometryGrid>();
 
-  size_t udims[3] = {0, 0, 0};
-  std::tie(udims[0], udims[1], udims[2]) = grid->getDimensions();
+  SizeVec3Type udims = grid->getDimensions();
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]),
@@ -1588,8 +1585,7 @@ void QuickSurfaceMesh::execute()
   }
   IGeometryGrid::Pointer grid = m->getGeometryAs<IGeometryGrid>();
 
-  size_t udims[3] = {0, 0, 0};
-  std::tie(udims[0], udims[1], udims[2]) = grid->getDimensions();
+  SizeVec3Type udims = grid->getDimensions();
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]),
@@ -1713,8 +1709,7 @@ void QuickSurfaceMesh::generateTripleLines()
   IGeometryGrid::Pointer grid = m->getGeometryAs<IGeometryGrid>();
   ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
 
-  size_t udims[3] = {0, 0, 0};
-  std::tie(udims[0], udims[1], udims[2]) = grid->getDimensions();
+  SizeVec3Type udims = grid->getDimensions();
 
   int64_t dims[3] = {
       static_cast<int64_t>(udims[0]),
@@ -1729,10 +1724,8 @@ void QuickSurfaceMesh::generateTripleLines()
 
   std::set<int32_t> uFeatures;
 
-  FloatVec3Type origin = {0.0f, 0.0f, 0.0f};
-  std::tie(origin[0], origin[1], origin[2]) = imageGeom->getOrigin();
-  FloatVec3Type res = {0.0f, 0.0f, 0.0f};
-  std::tie(res[0], res[1], res[2]) = imageGeom->getSpacing();
+  FloatVec3Type origin = imageGeom->getOrigin();
+  FloatVec3Type res = imageGeom->getSpacing();
 
   VertexMap vertexMap;
   EdgeMap edgeMap;

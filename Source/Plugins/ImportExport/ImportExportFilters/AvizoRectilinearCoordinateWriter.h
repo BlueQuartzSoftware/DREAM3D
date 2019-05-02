@@ -197,7 +197,7 @@ protected:
 
   /**
    * @brief Writes the data to the Avizo file
-   * @param writer The MXAFileWriter object
+   * @param f
    * @return Error code
    */
   int writeData(FILE* f);

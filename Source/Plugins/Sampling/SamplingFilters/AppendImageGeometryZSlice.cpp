@@ -132,19 +132,15 @@ void AppendImageGeometryZSlice::dataCheck()
 
   // Get the Dimensions of the ImageGeometries
 
-  size_t inputGeomDims[3] = {0, 0, 0};
-  std::tie(inputGeomDims[0], inputGeomDims[1], inputGeomDims[2]) = inputGeometry->getDimensions();
+  SizeVec3Type inputGeomDims = inputGeometry->getDimensions();
 
-  size_t destGeomDims[3] = {0, 0, 0};
-  std::tie(destGeomDims[0], destGeomDims[1], destGeomDims[2]) = destGeometry->getDimensions();
+  SizeVec3Type destGeomDims = destGeometry->getDimensions();
 
   if(getCheckResolution())
   {
-    FloatVec3Type inputRes = {0.0f, 0.0f, 0.0f};
-    inputGeometry->getSpacing(inputRes);
+    FloatVec3Type inputRes = inputGeometry->getSpacing();
 
-    FloatVec3Type destRes = {0.0f, 0.0f, 0.0f};
-    destGeometry->getSpacing(destRes);
+    FloatVec3Type destRes = destGeometry->getSpacing();
 
     if(inputRes[0] != destRes[0])
     {
@@ -247,11 +243,9 @@ void AppendImageGeometryZSlice::execute()
 
   AttributeMatrix::Pointer destCellAttrMat = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, getDestinationAttributeMatrix(), -8200);
 
-  size_t inputGeomDims[3] = {0, 0, 0};
-  std::tie(inputGeomDims[0], inputGeomDims[1], inputGeomDims[2]) = inputGeometry->getDimensions();
+  SizeVec3Type inputGeomDims = inputGeometry->getDimensions();
 
-  size_t destGeomDims[3] = {0, 0, 0};
-  std::tie(destGeomDims[0], destGeomDims[1], destGeomDims[2]) = destGeometry->getDimensions();
+  SizeVec3Type destGeomDims = destGeometry->getDimensions();
 
   size_t tupleOffset = 1;
   for(int i = 0; i < 3; i++)

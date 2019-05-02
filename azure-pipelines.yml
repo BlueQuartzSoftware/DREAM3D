@@ -1,0 +1,63 @@
+# Starter pipeline
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+stages:
+- stage: Build
+  jobs:
+  - job: macOS
+    pool:
+      name: BlueQuartz Self Hosted
+    steps:
+    - script: |
+        echo System.PullRequest.SourceBranch=$(System.PullRequest.SourceBranch)
+        echo System.PullRequest.PullRequestNumber=$(System.PullRequest.PullRequestNumber)
+        echo Build.SourceBranchName=$(Build.SourceBranchName)
+        echo Build.Repository.Name=$(Build.Repository.Name)
+        echo Build.Repository.Uri=$(Build.Repository.Uri)
+      displayName: 'Dump Azure Variables'
+    - script: |
+        branch=$(System.PullRequest.SourceBranch)
+        mkdir ExternalProjects
+        cd ExternalProjects
+        function gitClone()
+        {
+          echo Cloning: $1/$2
+          /usr/bin/git clone $1/$2.git
+          cd $2
+          git fetch --all
+          echo "Looking for ${branch} in repo..."
+          remote=`git branch -a | grep "${branch}" | wc -l`
+          if [ ${remote} == 1 ]; then
+            echo "Checking out branch ${branch}"
+            git checkout -b ${branch} --track origin/${branch}
+          fi
+          cd ../
+        }
+        gitClone https://github.com/bluequartzsoftware CMP
+        gitClone https://github.com/bluequartzsoftware SIMPL
+        gitClone https://github.com/bluequartzsoftware SIMPLView
+        mkdir Plugins
+        cd Plugins
+        gitClone https://github.com/bluequartzsoftware ITKImageProcessing
+        gitClone https://github.com/bluequartzsoftware SimulationIO
+        gitClone https://github.com/bluequartzsoftware ZeissImport
+        gitClone https://github.com/DREAM3D Anisotropy
+        gitClone https://github.com/DREAM3D DDDAnalysisToolbox
+        gitClone https://github.com/DREAM3D DREAM3DReview
+        gitClone https://github.com/DREAM3D HEDMAnalysis
+        gitClone https://github.com/DREAM3D ImageProcessing
+        gitClone https://github.com/DREAM3D MASSIFUtilities
+        gitClone https://github.com/DREAM3D TransformationPhase
+        gitClone https://github.com/DREAM3D UCSBUtilities
+      displayName: 'Clone the Source codes'
+    - script: |
+        cd $(Build.BinariesDirectory)
+        rm CMakeCache.txt
+        /Users/Shared/DREAM3D_SDK/cmake-3.14.2-Darwin-x86_64/CMake.app/Contents/bin/cmake -G Ninja -DDREAM3D_SDK=$(Agent.BuildDirectory) -DCMAKE_BUILD_TYPE=Release $(Build.Repository.LocalPath)
+      displayName: 'Configure DREAM3D....'
+    - script: |
+        cd $(Build.BinariesDirectory)
+        /Users/Shared/DREAM3D_SDK/cmake-3.14.2-Darwin-x86_64/CMake.app/Contents/bin/ctest -D Experimental
+      displayName: 'Build DREAM3D and Test DREAM3D with CTest'
+      

@@ -47,21 +47,21 @@ public:
   OrientationUtilityCalculator(QWidget* parent = nullptr);
   virtual ~OrientationUtilityCalculator();
 
-  OrientationConverter<double>::OrientationType getInputType();
+  OrientationRepresentation::Type getInputType();
 
   bool getHasErrors();
 
-  QVector<double> getValues(OrientationConverter<double>::OrientationType outputType);
+  QVector<double> getValues(OrientationRepresentation::Type outputType);
 
 protected slots:
-  void setDataAndInputType(QVector<double> values, OrientationConverter<double>::OrientationType inputType, bool hasErrors);
+  void setDataAndInputType(QVector<double> values, OrientationRepresentation::Type inputType, bool hasErrors);
 
 signals:
   void calculatorReady(OrientationUtilityCalculator* calculator);
 
 private:
   QVector<double> m_InputData;
-  OrientationConverter<double>::OrientationType m_InputType;
+  OrientationRepresentation::Type m_InputType;
   bool m_HasErrors;
 
 public:

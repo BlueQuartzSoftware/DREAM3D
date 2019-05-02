@@ -36,7 +36,7 @@
 
 #pragma once
 
-//-- MXA Includes
+//-- SIMPLib Includes
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 

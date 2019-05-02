@@ -75,7 +75,7 @@ void CubochoricWidget::updateData(OrientationUtilityCalculator* calculator)
 {
   setStyleSheet("");
 
-  if(calculator->getInputType() == OrientationConverter<double>::Cubochoric)
+  if(calculator->getInputType() == OrientationRepresentation::Type::Cubochoric)
   {
     // The input type is the same as this widget, so don't update
     return;
@@ -89,7 +89,7 @@ void CubochoricWidget::updateData(OrientationUtilityCalculator* calculator)
     return;
   }
 
-  QVector<double> cValues = calculator->getValues(OrientationConverter<double>::Cubochoric);
+  QVector<double> cValues = calculator->getValues(OrientationRepresentation::Type::Cubochoric);
 
   if(cValues.size() == 3)
   {
@@ -113,11 +113,11 @@ void CubochoricWidget::valuesUpdated(const QString& text)
 
   if(errorCode >= 0)
   {
-    emit valuesChanged(values, OrientationConverter<double>::Cubochoric, false);
+    emit valuesChanged(values, OrientationRepresentation::Type::Cubochoric, false);
   }
   else
   {
-    emit valuesChanged(QVector<double>(), OrientationConverter<double>::Cubochoric, true);
+    emit valuesChanged(QVector<double>(), OrientationRepresentation::Type::Cubochoric, true);
     emit invalidValues(errorCode, errorMsg);
   }
 }

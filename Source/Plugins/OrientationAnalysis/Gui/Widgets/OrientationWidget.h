@@ -50,7 +50,7 @@ public:
   virtual ~OrientationWidget();
 
 signals:
-  void valuesChanged(QVector<double> values, OrientationConverter<double>::OrientationType type, bool hasErrors);
+  void valuesChanged(QVector<double> values, OrientationRepresentation::Type type, bool hasErrors);
   void invalidValues(int errorCode, QString errorMsg);
   void clearErrorTable();
 
