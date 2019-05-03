@@ -194,7 +194,7 @@ protected:
    * @param centroid Fourth vertex (centroid of feature)
    * @param tetInfo Array to store information about subdivided tetrahedra
    */
-  void findTetrahedronInfo(int64_t vertIds[3], float* vertPtr, float centroid[3], float tetInfo[32]);
+  void findTetrahedronInfo(MeshIndexType vertIds[], float* vertPtr, float centroid[3], float tetInfo[32]);
 
   /**
    * @brief find_moments Determines the second order moments for each Feature

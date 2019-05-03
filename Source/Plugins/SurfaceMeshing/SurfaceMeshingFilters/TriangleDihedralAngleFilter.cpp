@@ -80,7 +80,7 @@ public:
   void generate(size_t start, size_t end) const
   {
     float* nodes = m_Nodes->getPointer(0);
-    int64_t* triangles = m_Triangles->getPointer(0);
+    MeshIndexType* triangles = m_Triangles->getPointer(0);
 
     float radToDeg = 180.0f / SIMPLib::Constants::k_Pi;
 

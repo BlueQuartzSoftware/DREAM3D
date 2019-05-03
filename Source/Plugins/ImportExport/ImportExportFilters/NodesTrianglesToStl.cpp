@@ -257,7 +257,7 @@ void NodesTrianglesToStl::execute()
   int tData[9];
 
   SharedTriList::Pointer trianglePtr = SharedTriList::CreateArray(nTriangles, cDims, SIMPL::Geometry::TriangleGeometry);
-  int64_t* triangles = trianglePtr->getPointer(0);
+  MeshIndexType* triangles = trianglePtr->getPointer(0);
 
   DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, SIMPL::FaceData::SurfaceMeshFaceLabels);
   int32_t* faceLabels = faceLabelPtr->getPointer(0);

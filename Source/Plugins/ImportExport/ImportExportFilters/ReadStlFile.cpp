@@ -306,7 +306,7 @@ void ReadStlFile::readFile()
   triangleGeom->resizeTriList(triCount);
   triangleGeom->resizeVertexList(triCount * 3);
   float* nodes = triangleGeom->getVertexPointer(0);
-  int64_t* triangles = triangleGeom->getTriPointer(0);
+  MeshIndexType* triangles = triangleGeom->getTriPointer(0);
 
   // Resize the triangle attribute matrix to hold the normals and update the normals pointer
   QVector<size_t> tDims(1, static_cast<size_t>(triCount));
@@ -426,9 +426,9 @@ void ReadStlFile::eliminate_duplicate_nodes()
 
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
   float* vertex = triangleGeom->getVertexPointer(0);
-  int64_t nNodes_ = triangleGeom->getNumberOfVertices();
-  int64_t* triangles = triangleGeom->getTriPointer(0);
-  int64_t nTriangles = triangleGeom->getNumberOfTris();
+  MeshIndexType nNodes_ = triangleGeom->getNumberOfVertices();
+  MeshIndexType* triangles = triangleGeom->getTriPointer(0);
+  MeshIndexType nTriangles = triangleGeom->getNumberOfTris();
   size_t nNodes = 0;
   if(nNodes_ > 0)
   {

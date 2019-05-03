@@ -57,26 +57,19 @@ class TriangleOps
 
     static int getLabelIndex(int32_t* triLabels, int label);
 
-    QVector<int64_t> getNodeIndices(int64_t t[3], int32_t* faceLabel, int32_t label);
+    QVector<MeshIndexType> getNodeIndices(MeshIndexType t[], int32_t* faceLabel, int32_t label);
 
-    static void flipWinding(int64_t triangle[3]);
+    static void flipWinding(MeshIndexType triangle[3]);
 
     static VectorType computeNormal(float n0[3], float n1[3], float n2[3]);
 
     static QSet<int32_t> generateUniqueLabels(DataArray<int32_t>::Pointer faceLabelsPtr);
 
-    static QVector<int64_t> findAdjacentTriangles(TriangleGeom::Pointer triangles,
-                                                  int64_t triangleIndex,
-                                                  DataArray<int32_t>::Pointer faceLabelsPtr,
-                                                  int32_t label);
+    static QVector<MeshIndexType> findAdjacentTriangles(TriangleGeom::Pointer triangles, MeshIndexType triangleIndex, DataArray<int32_t>::Pointer faceLabelsPtr, int32_t label);
 
-    static bool verifyWinding(int64_t source[3], int64_t tri[3],
-                              int32_t* faceLabelSource, int32_t* faceLabelTri, int32_t label);
+    static bool verifyWinding(MeshIndexType source[], MeshIndexType tri[], int32_t* faceLabelSource, int32_t* faceLabelTri, int32_t label);
 
-
-    static void getWindingIndices4(int64_t triangle[3],
-                                   int32_t* faceLabel,
-                                   int ids[4], int32_t label);
+    static void getWindingIndices4(MeshIndexType triangle[], int32_t* faceLabel, int ids[4], int32_t label);
 
   protected:
     TriangleOps();

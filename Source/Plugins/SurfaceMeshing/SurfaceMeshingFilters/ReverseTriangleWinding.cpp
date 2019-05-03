@@ -66,7 +66,7 @@ public:
 
   void generate(size_t start, size_t end) const
   {
-    int64_t* triangles = m_Triangles->getPointer(0);
+    MeshIndexType* triangles = m_Triangles->getPointer(0);
 
     for(size_t i = start; i < end; i++)
     {

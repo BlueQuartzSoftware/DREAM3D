@@ -81,8 +81,8 @@ public:
 
   void generate(size_t start, size_t end) const
   {
-    int64_t* triangles = m_Triangles->getPointer(0);
-    int64_t nIdx0 = 0, nIdx1 = 0, nIdx2 = 0;
+    MeshIndexType* triangles = m_Triangles->getPointer(0);
+    MeshIndexType nIdx0 = 0, nIdx1 = 0, nIdx2 = 0;
     float vecA[3] = {0.0f, 0.0f, 0.0f};
     float vecB[3] = {0.0f, 0.0f, 0.0f};
     float cross[3] = {0.0f, 0.0f, 0.0f};

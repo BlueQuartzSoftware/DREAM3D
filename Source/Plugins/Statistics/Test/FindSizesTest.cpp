@@ -181,7 +181,7 @@ public:
     SharedVertexList::Pointer edgeVerts = EdgeGeom::CreateSharedVertexList(3);
     EdgeGeom::Pointer edge = EdgeGeom::CreateGeometry(2, edgeVerts, SIMPL::Geometry::EdgeGeometry);
     float coords[3] = {0.0f, 0.0f, 0.0f};
-    int64_t vertsAtEdge[2] = {0, 1};
+    size_t vertsAtEdge[2] = {0, 1};
     edge->setVertsAtEdge(0, vertsAtEdge);
     vertsAtEdge[1] = 2;
     edge->setVertsAtEdge(1, vertsAtEdge);
@@ -194,7 +194,7 @@ public:
 
     SharedVertexList::Pointer triVerts = TriangleGeom::CreateSharedVertexList(4);
     TriangleGeom::Pointer tris = TriangleGeom::CreateGeometry(2, triVerts, SIMPL::Geometry::TriangleGeometry);
-    int64_t vertsAtTri[3] = {0, 1, 2};
+    size_t vertsAtTri[3] = {0, 1, 2};
     tris->setVertsAtTri(0, vertsAtTri);
     vertsAtTri[0] = 1;
     vertsAtTri[1] = 3;
@@ -213,7 +213,7 @@ public:
 
     SharedVertexList::Pointer quadVerts = TriangleGeom::CreateSharedVertexList(6);
     QuadGeom::Pointer quads = QuadGeom::CreateGeometry(2, quadVerts, SIMPL::Geometry::QuadGeometry);
-    int64_t vertsAtQuad[4] = {0, 1, 2, 3};
+    size_t vertsAtQuad[4] = {0, 1, 2, 3};
     quads->setVertsAtQuad(0, vertsAtQuad);
     vertsAtQuad[0] = 1;
     vertsAtQuad[1] = 4;
@@ -239,7 +239,7 @@ public:
 
     SharedVertexList::Pointer tetVerts = TetrahedralGeom::CreateSharedVertexList(5);
     TetrahedralGeom::Pointer tets = TetrahedralGeom::CreateGeometry(2, tetVerts, SIMPL::Geometry::TetrahedralGeometry);
-    int64_t vertsAtTet[4] = {0, 1, 2, 3};
+    size_t vertsAtTet[4] = {0, 1, 2, 3};
     tets->setVertsAtTet(0, vertsAtTet);
     vertsAtTet[0] = 0;
     vertsAtTet[1] = 2;

@@ -400,7 +400,7 @@ void GoldfeatherReader::execute()
   }
 
   triangleGeom->resizeTriList(nTriangles);
-  int64_t* triangles = triangleGeom->getTriPointer(0);
+  MeshIndexType* triangles = triangleGeom->getTriPointer(0);
 
   tDims[0] = nTriangles;
   sm->getAttributeMatrix(getFaceAttributeMatrixName())->resizeAttributeArrays(tDims);

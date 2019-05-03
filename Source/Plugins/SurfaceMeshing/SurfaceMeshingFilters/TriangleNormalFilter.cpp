@@ -80,8 +80,8 @@ public:
   void generate(size_t start, size_t end) const
   {
     float* nodes = m_Nodes->getPointer(0);
-    int64_t* triangles = m_Triangles->getPointer(0);
-    int64_t nIdx0 = 0, nIdx1 = 0, nIdx2 = 0;
+    MeshIndexType* triangles = m_Triangles->getPointer(0);
+    MeshIndexType nIdx0 = 0, nIdx1 = 0, nIdx2 = 0;
     for(size_t i = start; i < end; i++)
     {
       nIdx0 = triangles[i * 3] * 3;

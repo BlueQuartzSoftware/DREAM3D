@@ -295,8 +295,8 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
     return getErrorCode();
   }
 
-  int64_t* uedges = surfaceMesh->getEdgePointer(0);
-  int64_t nedges = surfaceMesh->getNumberOfEdges();
+  MeshIndexType* uedges = surfaceMesh->getEdgePointer(0);
+  MeshIndexType nedges = surfaceMesh->getNumberOfEdges();
 
   DataArray<int32_t>::Pointer numConnections = DataArray<int32_t>::CreateArray(nvert, "_INTERNAL_USE_ONLY_Laplacian_Smoothing_NumberConnections_Array");
   numConnections->initializeWithZeros();

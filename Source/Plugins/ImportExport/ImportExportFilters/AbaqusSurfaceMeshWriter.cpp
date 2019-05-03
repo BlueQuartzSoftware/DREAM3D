@@ -262,8 +262,8 @@ int32_t AbaqusSurfaceMeshWriter::writeTriangles(FILE* f)
 {
   int32_t err = 0;
   TriangleGeom::Pointer triangleGeom = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getGeometryAs<TriangleGeom>();
-  int64_t numTri = triangleGeom->getNumberOfTris();
-  int64_t* triangles = triangleGeom->getTriPointer(0);
+  MeshIndexType numTri = triangleGeom->getNumberOfTris();
+  MeshIndexType* triangles = triangleGeom->getTriPointer(0);
 
   fprintf(f, "*ELEMENT, TYPE=%s\n", TRI_ELEMENT_TYPE);
   for(int64_t i = 1; i <= numTri; ++i)

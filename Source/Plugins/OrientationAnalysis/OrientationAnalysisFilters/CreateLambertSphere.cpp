@@ -479,7 +479,7 @@ void CreateLambertSphere::createEdgeGeometry()
     {
       vIndex = ((imageDims[0] + 1) * y) + x;
 
-      int64_t* edge = edges->getTuplePointer(eIndex++);
+      MeshIndexType* edge = edges->getTuplePointer(eIndex++);
       edge[0] = static_cast<int64_t>(vIndex + imageDims[0] + 1);
       edge[1] = static_cast<int64_t>(vIndex);
       edge = edges->getTuplePointer(eIndex++);
@@ -542,7 +542,7 @@ void CreateLambertSphere::createTriangleGeometry()
     {
       vIndex = ((imageDims[0] + 1) * y) + x;
 
-      int64_t* tri = triangles->getTuplePointer(tIndex);
+      MeshIndexType* tri = triangles->getTuplePointer(tIndex);
       tri[0] = static_cast<int64_t>(vIndex);
       tri[1] = static_cast<int64_t>(vIndex + 1);
       tri[2] = static_cast<int64_t>(vIndex + imageDims[0] + 1 + 1);
@@ -611,7 +611,7 @@ void CreateLambertSphere::createQuadGeometry()
     {
       vIndex = ((imageDims[0] + 1) * y) + x;
 
-      int64_t* quad = quads->getTuplePointer(qIndex);
+      MeshIndexType* quad = quads->getTuplePointer(qIndex);
       quad[0] = static_cast<int64_t>(vIndex);
       quad[1] = static_cast<int64_t>(vIndex + 1);
       quad[2] = static_cast<int64_t>(vIndex + imageDims[0] + 1 + 1);

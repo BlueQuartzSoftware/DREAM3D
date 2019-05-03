@@ -162,7 +162,7 @@ void FindTriangleGeomSizes::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float FindTriangleGeomSizes::findTetrahedronVolume(int64_t vertIds[3], float* vertPtr)
+float FindTriangleGeomSizes::findTetrahedronVolume(MeshIndexType vertIds[3], float* vertPtr)
 {
   float vertMatrix[3][3] = { { vertPtr[3 * vertIds[1] + 0] - vertPtr[3 * vertIds[0] + 0],
                                vertPtr[3 * vertIds[2] + 0] - vertPtr[3 * vertIds[0] + 0],
@@ -194,9 +194,9 @@ void FindTriangleGeomSizes::execute()
   float* vertPtr = triangles->getVertexPointer(0);
 
   std::set<int32_t> featureSet;
-  int64_t numTriangles = triangles->getNumberOfTris();
+  MeshIndexType numTriangles = triangles->getNumberOfTris();
 
-  for(int64_t i = 0; i < numTriangles; i++)
+  for(MeshIndexType i = 0; i < numTriangles; i++)
   {
     if(m_FaceLabels[2 * i + 0] > 0) { featureSet.insert(m_FaceLabels[2 * i + 0]); }
     if(m_FaceLabels[2 * i + 1] > 0) { featureSet.insert(m_FaceLabels[2 * i + 1]); }
@@ -207,9 +207,9 @@ void FindTriangleGeomSizes::execute()
   featAttrMat->resizeAttributeArrays(tDims);
   m_Volumes = m_VolumesPtr.lock()->getPointer(0);
 
-  int64_t vertsAtTri[3] = {0, 0, 0};
+  MeshIndexType vertsAtTri[3] = {0, 0, 0};
 
-  for(int64_t i = 0; i < numTriangles; i++)
+  for(MeshIndexType i = 0; i < numTriangles; i++)
   {
     triangles->getVertsAtTri(i, vertsAtTri);
     if(m_FaceLabels[2 * i + 0] == -1)
