@@ -255,10 +255,10 @@ void SurfaceMeshToVtk::execute()
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(m_SurfaceMeshFaceLabelsArrayPath.getDataContainerName()); /* Place all your code to execute your filter here. */
   TriangleGeom::Pointer triangleGeom = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getGeometryAs<TriangleGeom>();
   float* nodes = triangleGeom->getVertexPointer(0);
-  int64_t* triangles = triangleGeom->getTriPointer(0);
+  MeshIndexType* triangles = triangleGeom->getTriPointer(0);
 
-  qint64 numNodes = triangleGeom->getNumberOfVertices();
-  int64_t numTriangles = triangleGeom->getNumberOfTris();
+  MeshIndexType numNodes = triangleGeom->getNumberOfVertices();
+  MeshIndexType numTriangles = triangleGeom->getNumberOfTris();
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path

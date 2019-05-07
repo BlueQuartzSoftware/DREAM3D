@@ -224,8 +224,8 @@ void WriteStlFile::execute()
 
   TriangleGeom::Pointer triangleGeom = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getGeometryAs<TriangleGeom>();
   float* nodes = triangleGeom->getVertexPointer(0);
-  int64_t* triangles = triangleGeom->getTriPointer(0);
-  int64_t nTriangles = triangleGeom->getNumberOfTris();
+  MeshIndexType* triangles = triangleGeom->getTriPointer(0);
+  MeshIndexType nTriangles = triangleGeom->getNumberOfTris();
 
   if(nTriangles > std::numeric_limits<int32_t>::max())
   {

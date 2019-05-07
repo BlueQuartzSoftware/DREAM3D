@@ -218,7 +218,7 @@ void FindTriangleGeomShapes::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindTriangleGeomShapes::findTetrahedronInfo(int64_t vertIds[3], float* vertPtr, float centroid[3], float tetInfo[32])
+void FindTriangleGeomShapes::findTetrahedronInfo(MeshIndexType vertIds[3], float* vertPtr, float centroid[3], float tetInfo[32])
 {
 	double coords[30];
 	coords[0] = vertPtr[3 * vertIds[0] + 0];
@@ -355,7 +355,7 @@ void FindTriangleGeomShapes::find_moments()
 
   float centroid[3];
   float tetInfo[32];
-  int64_t vertIds[3];
+  MeshIndexType vertIds[3];
   double xdist = 0.0f;
   double ydist = 0.0f;
   double zdist = 0.0f;

@@ -236,12 +236,12 @@ public:
 
     SharedTriList::Pointer imageMeshTris = imageSurfMeshGeom->getTriangles();
     SharedTriList::Pointer rectGridMeshTris = rectGridSurfMeshGeom->getTriangles();
-    int64_t* imageTriPtr = imageMeshTris->getPointer(0);
-    int64_t* rectGridTriPtr = rectGridMeshTris->getPointer(0);
+    size_t* imageTriPtr = imageMeshTris->getPointer(0);
+    size_t* rectGridTriPtr = rectGridMeshTris->getPointer(0);
 
     DREAM3D_REQUIRE_EQUAL(imageMeshTris->getNumberOfTuples(), rectGridMeshTris->getNumberOfTuples());
 
-    int64_t tri[3] = {0, 0, 0};
+    size_t tri[3] = {0, 0, 0};
 
     /**
      * This next bit of code uses a fixed array based that was manually verified by using ParaView to look at the mesh

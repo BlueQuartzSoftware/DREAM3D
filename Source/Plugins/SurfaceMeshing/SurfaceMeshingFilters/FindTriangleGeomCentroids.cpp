@@ -181,13 +181,13 @@ void FindTriangleGeomCentroids::execute()
   TriangleGeom::Pointer triangles = getDataContainerArray()->getDataContainer(m_FaceLabelsArrayPath.getDataContainerName())->getGeometryAs<TriangleGeom>();
   float* vertPtr = triangles->getVertexPointer(0);
 
-  int64_t numTriangles = triangles->getNumberOfTris();
-  int64_t* tris = triangles->getTriPointer(0);
+  MeshIndexType numTriangles = triangles->getNumberOfTris();
+  MeshIndexType* tris = triangles->getTriPointer(0);
 
-  int64_t numFeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
-  std::vector<std::set<int64_t>> vertexSets(numFeatures);
+  MeshIndexType numFeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
+  std::vector<std::set<MeshIndexType>> vertexSets(numFeatures);
 
-  for(int64_t i = 0; i < numTriangles; i++)
+  for(MeshIndexType i = 0; i < numTriangles; i++)
   {
     if(m_FaceLabels[2 * i + 0] > 0)
     {
@@ -203,8 +203,8 @@ void FindTriangleGeomCentroids::execute()
     }
   }
 
-  std::set<int64_t>::iterator it;
-  for(int64_t i = 0; i < numFeatures; i++)
+  std::set<MeshIndexType>::iterator it;
+  for(MeshIndexType i = 0; i < numFeatures; i++)
   {
     for(it = vertexSets[i].begin(); it != vertexSets[i].end(); ++it)
     {

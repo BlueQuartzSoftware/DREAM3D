@@ -111,7 +111,7 @@ public:
     TriangleGeom::Pointer triangle = TriangleGeom::CreateGeometry(12, vertex, SIMPL::Geometry::TriangleGeometry);
     tdc->setGeometry(triangle);
     float* vertices = triangle->getVertexPointer(0);
-    int64_t* tris = triangle->getTriPointer(0);
+    size_t* tris = triangle->getTriPointer(0);
 
     vertices[3 * 0 + 0] = -1.0f;
     vertices[3 * 0 + 1] = 0.0f;

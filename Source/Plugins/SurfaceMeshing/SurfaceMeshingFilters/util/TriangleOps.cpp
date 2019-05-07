@@ -53,9 +53,9 @@ TriangleOps::~TriangleOps() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<int64_t> TriangleOps::findAdjacentTriangles(TriangleGeom::Pointer triangles, int64_t triangleIndex, DataArray<int32_t>::Pointer faceLabelsPtr, int32_t label)
+QVector<MeshIndexType> TriangleOps::findAdjacentTriangles(TriangleGeom::Pointer triangles, MeshIndexType triangleIndex, DataArray<int32_t>::Pointer faceLabelsPtr, int32_t label)
 {
-  QVector<int64_t> adjacentTris;
+  QVector<MeshIndexType> adjacentTris;
 
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
@@ -68,7 +68,7 @@ QVector<int64_t> TriangleOps::findAdjacentTriangles(TriangleGeom::Pointer triang
 
   // For the specific triangle that was passed, get its neighbor list
   uint16_t count = triNeighbors->getNumberOfElements(triangleIndex);
-  int64_t* nList = triNeighbors->getElementListPointer(triangleIndex);
+  MeshIndexType* nList = triNeighbors->getElementListPointer(triangleIndex);
 
   if(count < 3)
   {
@@ -104,9 +104,9 @@ QVector<int64_t> TriangleOps::findAdjacentTriangles(TriangleGeom::Pointer triang
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleOps::getWindingIndices4(int64_t triangle[3], int32_t* faceLabel, int ids[4], int32_t label)
+void TriangleOps::getWindingIndices4(MeshIndexType triangle[3], int32_t* faceLabel, int ids[4], int32_t label)
 {
-  int64_t idx = TriangleOps::getLabelIndex(faceLabel, label);
+  MeshIndexType idx = TriangleOps::getLabelIndex(faceLabel, label);
 
   if(idx == 1)
   {
@@ -127,7 +127,7 @@ void TriangleOps::getWindingIndices4(int64_t triangle[3], int32_t* faceLabel, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool TriangleOps::verifyWinding(int64_t source[3], int64_t tri[3], int32_t* faceLabelSource, int32_t* faceLabelTri, int32_t label)
+bool TriangleOps::verifyWinding(MeshIndexType source[3], MeshIndexType tri[3], int32_t* faceLabelSource, int32_t* faceLabelTri, int32_t label)
 {
   int ids[4];
   int nids[4];
@@ -188,10 +188,10 @@ int TriangleOps::getLabelIndex(int32_t* triLabels, int label)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<int64_t> TriangleOps::getNodeIndices(int64_t t[3], int32_t* faceLabel, int32_t label)
+QVector<MeshIndexType> TriangleOps::getNodeIndices(MeshIndexType t[3], int32_t* faceLabel, int32_t label)
 {
-  QVector<int64_t> tNodes(3);
-  int64_t idx = TriangleOps::getLabelIndex(faceLabel, label);
+  QVector<MeshIndexType> tNodes(3);
+  MeshIndexType idx = TriangleOps::getLabelIndex(faceLabel, label);
   if(idx == 1)
   {
     tNodes[0] = t[2];
@@ -210,7 +210,7 @@ QVector<int64_t> TriangleOps::getNodeIndices(int64_t t[3], int32_t* faceLabel, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleOps::flipWinding(int64_t t[3])
+void TriangleOps::flipWinding(MeshIndexType t[])
 {
   int tmp = t[0];
   t[0] = t[2];

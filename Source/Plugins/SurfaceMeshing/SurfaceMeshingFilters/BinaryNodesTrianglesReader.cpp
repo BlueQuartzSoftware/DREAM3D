@@ -333,7 +333,7 @@ int BinaryNodesTrianglesReader::read()
   // Allocate all the Triangle Objects
   triangleGeom->resizeTriList(nTriangles);
   triangleGeom->getTriangles()->initializeWithValue(0xABABABABABABABAB);
-  int64_t* m_TriangleList = triangleGeom->getTriPointer(0);
+  MeshIndexType* m_TriangleList = triangleGeom->getTriPointer(0);
 
   tDims[0] = nTriangles;
   faceAttrMat->resizeAttributeArrays(tDims);

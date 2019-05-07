@@ -79,9 +79,9 @@ public:
   void generate(size_t start, size_t end) const
   {
     float* nodes = m_Nodes->getPointer(0);
-    int64_t* triangles = m_Triangles->getPointer(0);
+    MeshIndexType* triangles = m_Triangles->getPointer(0);
 
-    for(size_t i = start; i < end; i++)
+    for(MeshIndexType i = start; i < end; i++)
     {
       m_Centroids[i * 3] = (nodes[triangles[i * 3] * 3 + 0] + nodes[triangles[i * 3 + 1] * 3 + 0] + nodes[triangles[i * 3 + 2] * 3 + 0]) / 3.0;
       m_Centroids[i * 3 + 1] = (nodes[triangles[i * 3] * 3 + 1] + nodes[triangles[i * 3 + 1] * 3 + 1] + nodes[triangles[i * 3 + 2] * 3 + 1]) / 3.0;

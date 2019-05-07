@@ -162,7 +162,7 @@ protected:
    * @param vertPtr Vertex coordinates for triangle base
    * @return float Signed volume of tetrahedron
    */
-  float findTetrahedronVolume(int64_t vertIds[3], float* vertPtr);
+  float findTetrahedronVolume(MeshIndexType vertIds[3], float* vertPtr);
 
   /**
   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays

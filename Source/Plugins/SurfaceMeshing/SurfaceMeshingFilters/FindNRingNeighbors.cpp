@@ -76,7 +76,7 @@ FindNRingNeighbors::UniqueFaceIds_t& FindNRingNeighbors::getNRingTriangles()
 // -----------------------------------------------------------------------------
 int32_t FindNRingNeighbors::generate(TriangleGeom::Pointer triangleGeom, int32_t* faceLabels)
 {
-  int64_t* triangles = triangleGeom->getTriPointer(0);
+  MeshIndexType* triangles = triangleGeom->getTriPointer(0);
   int32_t err = 0;
 
   // Clear out all the previous triangles.
@@ -125,7 +125,7 @@ int32_t FindNRingNeighbors::generate(TriangleGeom::Pointer triangleGeom, int32_t
       {
         // Get all the triangles for this Node id
         uint16_t tCount = node2TrianglePtr->getNumberOfElements(triangles[triangleIdx * 3 + i]);
-        int64_t* data = node2TrianglePtr->getElementListPointer(triangles[triangleIdx * 3 + i]);
+        MeshIndexType* data = node2TrianglePtr->getElementListPointer(triangles[triangleIdx * 3 + i]);
 
         // Copy all the triangles into our "2Ring" set which will be the unique set of triangle ids
         for(uint16_t t = 0; t < tCount; ++t)

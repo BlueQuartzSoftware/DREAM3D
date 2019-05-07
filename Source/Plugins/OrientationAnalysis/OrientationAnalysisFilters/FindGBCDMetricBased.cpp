@@ -120,7 +120,7 @@ public:
 class TrisSelector
 {
   bool m_ExcludeTripleLines;
-  int64_t* m_Triangles;
+  MeshIndexType* m_Triangles;
   int8_t* m_NodeTypes;
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -144,7 +144,7 @@ class TrisSelector
   double* m_FaceAreas;
 
 public:
-  TrisSelector(bool __m_ExcludeTripleLines, int64_t* __m_Triangles, int8_t* __m_NodeTypes,
+  TrisSelector(bool __m_ExcludeTripleLines, MeshIndexType* __m_Triangles, int8_t* __m_NodeTypes,
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
                tbb::concurrent_vector<TriAreaAndNormals>* __selectedTris,
@@ -756,7 +756,7 @@ void FindGBCDMetricBased::execute()
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceAreasArrayPath().getDataContainerName());
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
   SharedTriList::Pointer m_TrianglesPtr = triangleGeom->getTriangles();
-  int64_t* m_Triangles = m_TrianglesPtr->getPointer(0);
+  MeshIndexType* m_Triangles = m_TrianglesPtr->getPointer(0);
 
   // -------------------- check if directiories are ok and if output files can be opened -----------
 

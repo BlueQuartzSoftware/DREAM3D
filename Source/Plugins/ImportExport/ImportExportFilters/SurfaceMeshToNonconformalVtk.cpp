@@ -211,7 +211,7 @@ void SurfaceMeshToNonconformalVtk::execute()
 
   TriangleGeom::Pointer triangleGeom = getDataContainerArray()->getDataContainer(getSurfaceMeshFaceLabelsArrayPath().getDataContainerName())->getGeometryAs<TriangleGeom>();
   float* nodes = triangleGeom->getVertexPointer(0);
-  int64_t* triangles = triangleGeom->getTriPointer(0);
+  MeshIndexType* triangles = triangleGeom->getTriPointer(0);
 
   qint64 numNodes = triangleGeom->getNumberOfVertices();
   int64_t numTriangles = triangleGeom->getNumberOfTris();

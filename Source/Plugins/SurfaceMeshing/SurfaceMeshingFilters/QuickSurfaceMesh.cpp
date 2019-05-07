@@ -986,7 +986,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
 
   float* vertex = triangleGeom->getVertexPointer(0);
-  int64_t* triangle = triangleGeom->getTriPointer(0);
+  MeshIndexType* triangle = triangleGeom->getTriPointer(0);
 
   QVector<size_t> tDims(1, nodeCount);
   sm->getAttributeMatrix(getVertexAttributeMatrixName())->resizeAttributeArrays(tDims);
@@ -999,12 +999,12 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
   ownerLists.resize(nodeCount);
 
   // Cycle through again assigning coordinates to each node and assigning node numbers and feature labels to each triangle
-  int64_t triangleIndex = 0;
-  for(int64_t k = 0; k < zP; k++)
+  MeshIndexType triangleIndex = 0;
+  for(MeshIndexType k = 0; k < zP; k++)
   {
-    for(int64_t j = 0; j < yP; j++)
+    for(MeshIndexType j = 0; j < yP; j++)
     {
-      for(int64_t i = 0; i < xP; i++)
+      for(MeshIndexType i = 0; i < xP; i++)
       {
         point = (k * xP * yP) + (j * xP) + i;
         neigh1 = point + 1; // <== What happens if we are at the end of a row?
@@ -1616,19 +1616,19 @@ void QuickSurfaceMesh::execute()
 
   createNodesAndTriangles(m_NodeIds, nodeCount, triangleCount);
 
-  int64_t* triangle = triangleGeom->getTriPointer(0);
+  MeshIndexType* triangle = triangleGeom->getTriPointer(0);
 
   FloatArrayType::Pointer vertices = triangleGeom->getVertices();
   SharedEdgeList::Pointer edges = EdgeGeom::CreateSharedEdgeList(0);
   EdgeGeom::Pointer edgeGeom = EdgeGeom::CreateGeometry(edges, vertices, SIMPL::Geometry::EdgeGeometry);
   tripleLineDC->setGeometry(edgeGeom);
 
-  int64_t edgeCount = 0;
-  for(int64_t i = 0; i < triangleCount; i++)
+  MeshIndexType edgeCount = 0;
+  for(MeshIndexType i = 0; i < triangleCount; i++)
   {
-    int64_t n1 = triangle[3 * i + 0];
-    int64_t n2 = triangle[3 * i + 1];
-    int64_t n3 = triangle[3 * i + 2];
+    MeshIndexType n1 = triangle[3 * i + 0];
+    MeshIndexType n2 = triangle[3 * i + 1];
+    MeshIndexType n3 = triangle[3 * i + 2];
     if(m_NodeTypes[n1] >= 3 && m_NodeTypes[n2] >= 3)
     {
       edgeCount++;
@@ -1644,13 +1644,13 @@ void QuickSurfaceMesh::execute()
   }
 
   edgeGeom->resizeEdgeList(edgeCount);
-  int64_t* edge = edgeGeom->getEdgePointer(0);
+  MeshIndexType* edge = edgeGeom->getEdgePointer(0);
   edgeCount = 0;
-  for(int64_t i = 0; i < triangleCount; i++)
+  for(MeshIndexType i = 0; i < triangleCount; i++)
   {
-    int64_t n1 = triangle[3 * i + 0];
-    int64_t n2 = triangle[3 * i + 1];
-    int64_t n3 = triangle[3 * i + 2];
+    MeshIndexType n1 = triangle[3 * i + 0];
+    MeshIndexType n2 = triangle[3 * i + 1];
+    MeshIndexType n3 = triangle[3 * i + 2];
     if(m_NodeTypes[n1] >= 3 && m_NodeTypes[n2] >= 3)
     {
       edge[2 * edgeCount] = n1;
