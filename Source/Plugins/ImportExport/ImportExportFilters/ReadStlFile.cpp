@@ -35,6 +35,8 @@
 
 #include "ReadStlFile.h"
 
+#include <QtCore/QFileInfo>
+
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range.h>
 #include <tbb/parallel_for.h>
@@ -202,9 +204,17 @@ void ReadStlFile::dataCheck()
 
   DataArrayPath tempPath;
 
-  if(m_StlFilePath.isEmpty())
+  QFileInfo fi(getStlFilePath());
+
+  if(getStlFilePath().isEmpty())
   {
-    setErrorCondition(-1003, "The input file must be set");
+    QString ss = QObject::tr("The input file must be set");
+    setErrorCondition(-387, ss);
+  }
+  else if(!fi.exists())
+  {
+    QString ss = QObject::tr("The input file does not exist");
+    setErrorCondition(-388, ss);
   }
 
   // Create a SufaceMesh Data Container with Faces, Vertices, Feature Labels and optionally Phase labels

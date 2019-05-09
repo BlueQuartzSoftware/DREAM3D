@@ -169,8 +169,8 @@ void ReadAngData::dataCheck()
     return;
   }
 
-  QString ext = fi.suffix();
-  if(ext != Ebsd::Ang::FileExt)
+  QString ext = fi.suffix().toLower();
+  if(ext != Ebsd::Ang::FileExtLower)
   {
     QString ss = QObject::tr("The file extension '%1' was not recognized. The reader only recognizes the .ang file extension").arg(ext);
     setErrorCondition(-997, ss);
