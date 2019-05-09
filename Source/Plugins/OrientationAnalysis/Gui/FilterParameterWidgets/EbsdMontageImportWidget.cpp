@@ -281,9 +281,9 @@ void EbsdMontageImportWidget::getGuiParametersFromFilter()
   setValidFilePath(data.InputPath);
 
   m_Ui->rowStart->setValue(data.RowStart);
-  m_Ui->rowEnd->setValue(data.RowEnd);
+  m_Ui->rowEnd->setValue(data.RowEnd - 1);
   m_Ui->colStart->setValue(data.ColStart);
-  m_Ui->colEnd->setValue(data.ColEnd);
+  m_Ui->colEnd->setValue(data.ColEnd - 1);
   m_Ui->increment->setValue(data.IncrementIndex);
 
   m_Ui->filePrefix->setText(data.FilePrefix);

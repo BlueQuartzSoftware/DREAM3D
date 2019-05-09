@@ -122,7 +122,7 @@ void readEbsdFile(ImportEbsdMontage* filter, const QString& fileName, std::map<Q
   {
     reader = EbsdReaderClass::New();
     reader->setInputFile(fileName);
-    reader->setDataContainerName(fname);
+    reader->setDataContainerName(DataArrayPath(fname));
   }
   newFilterCache[fileName] = reader;
   reader->setDataContainerArray(dca);
@@ -136,15 +136,15 @@ void readEbsdFile(ImportEbsdMontage* filter, const QString& fileName, std::map<Q
   {
     reader->execute();
   }
-  if(reader->getErrorCondition() < 0)
+  if(reader->getErrorCode() < 0)
   {
     QString msg = QString("Sub filter (%1) caused an error during preflight.").arg(reader->getHumanLabel());
-    filter->setErrorCondition(reader->getErrorCondition(), msg);
+    filter->setErrorCondition(reader->getErrorCode(), msg);
     return;
   }
 
   DataContainer::Pointer dc = dca->getDataContainer(fname);
-  filter->getDataContainerArray()->addDataContainer(dc);
+  filter->getDataContainerArray()->addOrReplaceDataContainer(dc);
 }
 
 // -----------------------------------------------------------------------------
@@ -153,7 +153,6 @@ void readEbsdFile(ImportEbsdMontage* filter, const QString& fileName, std::map<Q
 void ImportEbsdMontage::dataCheck()
 {
   clearErrorCode();
-  clearWarningCode();
   clearWarningCode();
 
   DataArrayPath tempPath;
@@ -219,26 +218,28 @@ void ImportEbsdMontage::dataCheck()
       {
         readEbsdFile<ReadCtfData>(this, tile2D.FileName, m_FilterCache, newFilterCache);
       }
-      if(getErrorCondition() >= 0)
+      if(!fi.exists())
+      {
+        QString msg = QString("Input EBSD file '%1' does not exist").arg(tile2D.FileName);
+        setErrorCondition(-56500, msg);
+      }
+      if(getErrorCode() >= 0)
       {
         DataContainer::Pointer dc = getDataContainerArray()->getDataContainer(fname);
         ImageGeom::Pointer imageGeom = dc->getGeometryAs<ImageGeom>();
 
-        std::array<size_t, 3> dims = {{0, 0, 0}};
-        std::tie(dims[0], dims[1], dims[2]) = imageGeom->getDimensions();
-        std::array<float, 3> res = {{0.0f, 0.0f, 0.0f}};
-        std::tie(res[0], res[1], res[2]) = imageGeom->getResolution();
-        std::array<float, 3> origin = {{0.0f, 0.0f, 0.0f}};
-        std::tie(origin[0], origin[1], origin[2]) = imageGeom->getOrigin();
+        SizeVec3Type dims = imageGeom->getDimensions();
+        FloatVec3Type spacing = imageGeom->getSpacing();
+        FloatVec3Type origin = imageGeom->getOrigin();
 
         //
         origin[0] = globalTileOrigin[0];
         origin[1] = globalTileOrigin[1];
-        imageGeom->setOrigin(origin.data());
+        imageGeom->setOrigin(origin);
 
         // Now update the globalTileOrigin values
-        globalTileOrigin[0] += origin[0] + (dims[0] * res[0]);
-        tileHeight = (dims[1] * res[1]);
+        globalTileOrigin[0] += origin[0] + (dims[0] * spacing[0]);
+        tileHeight = (dims[1] * spacing[1]);
 
         if(getCancel())
         {
