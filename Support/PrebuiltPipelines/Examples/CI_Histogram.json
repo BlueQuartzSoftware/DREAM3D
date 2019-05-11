@@ -92,12 +92,16 @@
     },
     "6": {
         "Delimiter": 0,
-        "FileExtension": ".csv",
-        "FilterVersion": "1.0.953",
+        "FileExtension": ".txt",
+        "FilterVersion": "1.2.758",
+        "Filter_Enabled": true,
         "Filter_Human_Label": "Export ASCII Data",
         "Filter_Name": "WriteASCIIData",
+        "Filter_Uuid": "{5fbf9204-2c6c-597b-856a-f4612adbac38}",
         "MaxValPerLine": 1,
-        "OutputPath": "Data/Output/Histograms",
+        "OutputFilePath": "Data/Output/Histograms/Data.csv",
+        "OutputPath": "",
+        "OutputStyle": 1,
         "SelectedDataArrayPaths": [
             {
                 "Attribute Matrix Name": "Histograms",

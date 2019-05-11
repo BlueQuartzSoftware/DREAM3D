@@ -138,7 +138,7 @@ foreach(test ${PREBUILT_PIPELINE_NAMES} )
 
   #----------------
   set(SIMPL_CTEST_TEST_DRIVER "${DREAM3DTest_BINARY_DIR}/PrebuiltPipelineTests/${test}.${TEST_SCRIPT_FILE_EXT}")
-  configure_file(${DREAM3DTest_SOURCE_DIR}/ctest_pipeline_driver.sh "${SIMPL_CTEST_TEST_DRIVER}" @ONLY)
+  configure_file(${DREAM3DTest_SOURCE_DIR}/ctest_pipeline_driver.${TEST_SCRIPT_FILE_EXT} "${SIMPL_CTEST_TEST_DRIVER}" @ONLY)
 
   string(REPLACE "/" "_" test "${test}")
   math(EXPR test_index "${test_index} + 1")
