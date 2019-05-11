@@ -56,61 +56,93 @@ set(TEST_PIPELINE_LIST_FILE ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.txt)
 set(TEST_DATA_DIR ${DREAM3D_DATA_DIR})
 
 set(PREBUILT_PIPELINE_NAMES
-"EBSD Reconstruction/(01) SmallIN100 Archive"
-"EBSD Reconstruction/(02) SmallIN100 Initial Visualization"
-"EBSD Reconstruction/(03) SmallIN100 Alignment"
-"EBSD Reconstruction/(04) SmallIN100 Presegmentation Processing"
-"EBSD Reconstruction/(05) SmallIN100 Segmentation"
-"EBSD Reconstruction/(06) SmallIN100 Postsegmentation Processing"
-"EBSD Reconstruction/(07) SmallIN100 Final Processing"
-"EBSD Reconstruction/(08) SmallIN100 Full Reconstruction"
-"EBSD Statistics/(01) SmallIN100 Morphological Statistics"
-"EBSD Statistics/(02) SmallIN100 Export Statistics"
-"EBSD Statistics/(03) SmallIN100 Transfer Field Data"
-"EBSD Statistics/(04) SmallIN100 Field Threshold"
-"EBSD Statistics/(05) SmallIN100 Crystallographic Statistics"
-"EBSD SurfaceMeshing/(01) SmallIN100 Quick Mesh"
-"EBSD SurfaceMeshing/(02) SmallIN100 Smooth Mesh"
-"EBSD SurfaceMeshing/(03) SmallIN100 Mesh Statistics"
-"EBSD SurfaceMeshing/(04) SmallIN100 GBCD"
-"Synthetic/(01) Single Cubic Phase Equiaxed"
-"Synthetic/(02) Single Hexagonal Phase Equiaxed"
-"Synthetic/(03) Single Cubic Phase Rolled"
-"Synthetic/(04) Two Phase Cubic Hexagonal Particles Equiaxed"
-"Synthetic/(05) Composite"
-"Synthetic/(06) SmallIN100 Synthetic"
+"PrebuiltPipelines/Workshop/EBSD Reconstruction/(01) SmallIN100 Archive"
+"PrebuiltPipelines/Workshop/EBSD Reconstruction/(02) SmallIN100 Initial Visualization"
+"PrebuiltPipelines/Workshop/EBSD Reconstruction/(03) SmallIN100 Alignment"
+"PrebuiltPipelines/Workshop/EBSD Reconstruction/(04) SmallIN100 Presegmentation Processing"
+"PrebuiltPipelines/Workshop/EBSD Reconstruction/(05) SmallIN100 Segmentation"
+"PrebuiltPipelines/Workshop/EBSD Reconstruction/(06) SmallIN100 Postsegmentation Processing"
+"PrebuiltPipelines/Workshop/EBSD Reconstruction/(07) SmallIN100 Final Processing"
+"PrebuiltPipelines/Workshop/EBSD Reconstruction/(08) SmallIN100 Full Reconstruction"
+"PrebuiltPipelines/Workshop/EBSD Statistics/(01) SmallIN100 Morphological Statistics"
+"PrebuiltPipelines/Workshop/EBSD Statistics/(02) SmallIN100 Export Statistics"
+"PrebuiltPipelines/Workshop/EBSD Statistics/(03) SmallIN100 Transfer Field Data"
+"PrebuiltPipelines/Workshop/EBSD Statistics/(04) SmallIN100 Field Threshold"
+"PrebuiltPipelines/Workshop/EBSD Statistics/(05) SmallIN100 Crystallographic Statistics"
+"PrebuiltPipelines/Workshop/EBSD SurfaceMeshing/(01) SmallIN100 Quick Mesh"
+"PrebuiltPipelines/Workshop/EBSD SurfaceMeshing/(02) SmallIN100 Smooth Mesh"
+"PrebuiltPipelines/Workshop/EBSD SurfaceMeshing/(03) SmallIN100 Mesh Statistics"
+"PrebuiltPipelines/Workshop/EBSD SurfaceMeshing/(04) SmallIN100 GBCD"
+"PrebuiltPipelines/Workshop/Synthetic/(01) Single Cubic Phase Equiaxed"
+"PrebuiltPipelines/Workshop/Synthetic/(02) Single Hexagonal Phase Equiaxed"
+"PrebuiltPipelines/Workshop/Synthetic/(03) Single Cubic Phase Rolled"
+"PrebuiltPipelines/Workshop/Synthetic/(04) Two Phase Cubic Hexagonal Particles Equiaxed"
+"PrebuiltPipelines/Workshop/Synthetic/(05) Composite"
+"PrebuiltPipelines/Workshop/Synthetic/(06) SmallIN100 Synthetic"
+
+"PrebuiltPipelines/Examples/ASTMD638_specimen" 
+"PrebuiltPipelines/Examples/CreateLambertSphereSurface" 
+"PrebuiltPipelines/Examples/Edax_IPF_Colors"
+"PrebuiltPipelines/Examples/INL_Export"     
+"PrebuiltPipelines/Examples/Import_ASCI"       
+"PrebuiltPipelines/Examples/StatsGenOdfData"       
+"PrebuiltPipelines/Examples/TxCopper_Exposed"
+"PrebuiltPipelines/Examples/CI_Histogram"      
+"PrebuiltPipelines/Examples/Cylinder_Synthetic"   
+"PrebuiltPipelines/Examples/ExtractVertexGeometry"     
+"PrebuiltPipelines/Examples/Image_Histogram"       
+"PrebuiltPipelines/Examples/Misc_Filters"    
+"PrebuiltPipelines/Examples/Threshold2_MoveData"    
+"PrebuiltPipelines/Examples/TxCopper_Unexposed"
 )
 
 if(SIMPL_USE_ITK)
   set(PREBUILT_PIPELINE_NAMES
     ${PREBUILT_PIPELINE_NAMES}
-    "Image Reconstruction/(01) Image Initial Visualization"
-    "Image Reconstruction/(02) Image Segmentation"
+    "PrebuiltPipelines/Workshop/Image Reconstruction/(01) Image Initial Visualization"
+    "PrebuiltPipelines/Workshop/Image Reconstruction/(02) Image Segmentation"
     )
 endif()
 
 
-configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.h.in
-               ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
+# configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.h.in
+#                ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
 
-add_executable(PipelineRunnerTest
-                ${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.cpp ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
-target_include_directories(PipelineRunnerTest 
-                            PUBLIC
-                              ${DREAM3DTest_BINARY_DIR}
-                              ${SIMPLProj_SOURCE_DIR}/Source
-                              ${SIMPLProj_BINARY_DIR})
-target_link_libraries(PipelineRunnerTest Qt5::Core EbsdLib SIMPLib)
-set_target_properties(PipelineRunnerTest PROPERTIES FOLDER "DREAM3D UnitTests")
-add_test(NAME PipelineRunnerTest
-          COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PipelineRunnerTest
-          WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+# add_executable(PipelineRunnerTest
+#                 ${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.cpp ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
+# target_include_directories(PipelineRunnerTest 
+#                             PUBLIC
+#                               ${DREAM3DTest_BINARY_DIR}
+#                               ${SIMPLProj_SOURCE_DIR}/Source
+#                               ${SIMPLProj_BINARY_DIR})
+# target_link_libraries(PipelineRunnerTest Qt5::Core EbsdLib SIMPLib)
+# set_target_properties(PipelineRunnerTest PROPERTIES FOLDER "DREAM3D UnitTests")
+# add_test(NAME PipelineRunnerTest
+#           COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PipelineRunnerTest
+#           WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 
 FILE(WRITE ${TEST_PIPELINE_LIST_FILE} )
 
-foreach(f ${PREBUILT_PIPELINE_NAMES} )
-  set(DREAM3D_PIPELINE_FILE "${DREAM3D_SUPPORT_DIR}/${PREBUILT_PIPELINES_DIR}/${f}.json")
+
+set(TEST_SCRIPT_FILE_EXT "sh")
+set(EXE_EXT "")
+if(WIN32)
+  set(TEST_SCRIPT_FILE_EXT "bat")
+  set(EXE_EXT ".exe")
+endif()
+
+set(test_index  "0")
+foreach(test ${PREBUILT_PIPELINE_NAMES} )
+  set(DREAM3D_PIPELINE_FILE "${DREAM3D_SUPPORT_DIR}/${PREBUILT_PIPELINES_DIR}/${test}.json")
   FILE(APPEND ${TEST_PIPELINE_LIST_FILE} "${DREAM3D_PIPELINE_FILE}\n")
+
+  #----------------
+  set(SIMPL_CTEST_TEST_DRIVER "${DREAM3DTest_BINARY_DIR}/PrebuiltPipelineTests/${test}.${TEST_SCRIPT_FILE_EXT}")
+  configure_file(${DREAM3DTest_SOURCE_DIR}/ctest_pipeline_driver.sh "${SIMPL_CTEST_TEST_DRIVER}" @ONLY)
+
+  string(REPLACE "/" "_" test "${test}")
+  math(EXPR test_index "${test_index} + 1")
+  add_test(NAME D3D_Prebuilt_${test_index} COMMAND "${SIMPL_CTEST_TEST_DRIVER}" )
 endforeach()
 
 # Some more Testing Only pipelines that can be put here
