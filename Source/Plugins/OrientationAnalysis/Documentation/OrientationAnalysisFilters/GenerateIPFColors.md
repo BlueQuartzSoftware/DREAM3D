@@ -1,5 +1,5 @@
-Generate IPF Colors 
-=============
+# Generate IPF Colors  #
+
 
 ## Group (Subgroup) ##
 

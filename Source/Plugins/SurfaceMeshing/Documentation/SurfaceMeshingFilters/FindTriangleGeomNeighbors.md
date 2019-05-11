@@ -1,5 +1,5 @@
-Find Feature Neighbors from Triangle Geometry 
-=============
+# Find Feature Neighbors from Triangle Geometry  #
+
 
 ## Group (Subgroup) ##
 

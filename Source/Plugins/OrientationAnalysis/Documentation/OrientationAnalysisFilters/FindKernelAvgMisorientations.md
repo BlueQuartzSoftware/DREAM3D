@@ -1,5 +1,5 @@
-Find Kernel Average Misorientations 
-======
+# Find Kernel Average Misorientations  #
+
 
 ## Group (Subgroup) ##
 

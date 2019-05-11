@@ -1,5 +1,5 @@
-Writing A Filter 
-========
+# Writing A Filter  #
+
 
 Developers can write new filters for DREAM.3D to accomplish their own objectives.  There are several major functions that every new filter must implement to work with DREAM.3D's filter interface.
 
@@ -155,4 +155,3 @@ The **getter functions** allow the filter to procure various values for other ar
 **getCompiledLibraryName()**: The *Compiled Library Name* (or the *Compiled Plugin Name* in the image above) is the name of the plugin group that this filter is categorized in.
 
 ---
-**Previous Page**: [Creating a Filter](http://dream3d.bluequartz.net/binaries/Help/DREAM3D/creating_a_filter.html)

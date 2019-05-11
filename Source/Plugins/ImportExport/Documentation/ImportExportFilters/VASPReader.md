@@ -1,5 +1,5 @@
-VASP Reader
-=====
+# VASP Reader #
+
 
 ## Group (Subgroup) ##
 

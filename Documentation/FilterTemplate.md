@@ -1,5 +1,5 @@
-Name of Filter 
-=============
+# Name of Filter  #
+
 
 ## Group (Subgroup) ##
 

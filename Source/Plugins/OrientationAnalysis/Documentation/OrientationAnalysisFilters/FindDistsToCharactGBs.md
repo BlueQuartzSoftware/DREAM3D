@@ -1,5 +1,5 @@
-Find Distances to Characteristic Grain Boundaries 
-=============
+# Find Distances to Characteristic Grain Boundaries  #
+
 
 ## Group (Subgroup) ##
 

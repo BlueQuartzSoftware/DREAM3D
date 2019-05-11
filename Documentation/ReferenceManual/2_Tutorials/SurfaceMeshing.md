@@ -1,5 +1,5 @@
-Surface Meshing 
-========
+# Surface Meshing  #
+
 
 Creating a surface mesh in DREAM.3D can currently be accomplished by using the [Quick Surface Mesh](@ref quicksurfacemesh) **Filter**. This **Filter** will surface mesh a set of **Features** that exists on an **Image Geometry**. For example, you could mesh a structure [created synthetically](@ref tutorialsyntheticsingle), or mesh a structure [reconstructed from a serial sectioning experiment](@ref tutorialebsdreconstruction). The [Quick Surface Mesh](@ref quicksurfacemesh) **Filter** is "quick" because it simply draws triangles across the voxel faces of an **Image Geometry**.  Thus, the result of the **Filter** is a **Triangle Geometry** where the boundaries between **Features** are defined by connected triangles. Note that this means that any given triangle is shared by _two_ **Features**.
 

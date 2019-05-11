@@ -1,5 +1,5 @@
-Generate Face Schuh Misorientation Coloring 
-======================
+# Generate Face Schuh Misorientation Coloring  #
+
 
 ## Group (Subgroup) ##
 

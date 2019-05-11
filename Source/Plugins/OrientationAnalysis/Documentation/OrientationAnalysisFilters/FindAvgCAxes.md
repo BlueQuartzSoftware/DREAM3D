@@ -1,5 +1,5 @@
-Find Average C-Axis Orientations 
-======
+# Find Average C-Axis Orientations  #
+
 
 ## Group (Subgroup) ##
 

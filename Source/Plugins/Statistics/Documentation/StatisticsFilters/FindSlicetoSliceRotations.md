@@ -1,5 +1,5 @@
-Find Slice to Slice Crystallographic Misalignments 
-======
+# Find Slice to Slice Crystallographic Misalignments  #
+
 
 ## Group (Subgroup) ##
 

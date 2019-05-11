@@ -1,5 +1,5 @@
-Group MicroTexture Regions (C-Axis Misorientation) 
-======
+# Group MicroTexture Regions (C-Axis Misorientation)  #
+
 
 ## Group (Subgroup) ##
 

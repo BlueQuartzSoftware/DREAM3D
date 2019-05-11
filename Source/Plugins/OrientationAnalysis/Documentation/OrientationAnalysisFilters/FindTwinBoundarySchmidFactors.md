@@ -1,5 +1,5 @@
-Find Twin Boundary Schmid Factors 
-=============
+# Find Twin Boundary Schmid Factors  #
+
 
 ## Group (Subgroup) ##
 

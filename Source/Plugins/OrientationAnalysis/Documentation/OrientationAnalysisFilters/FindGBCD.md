@@ -1,5 +1,5 @@
-Find GBCD 
-=============
+# Find GBCD  #
+
 
 ## Group (Subgroup) ##
 

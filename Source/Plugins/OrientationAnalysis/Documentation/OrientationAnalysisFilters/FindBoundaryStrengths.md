@@ -1,5 +1,5 @@
-Find Feature Boundary Strength Metrics 
-=============
+# Find Feature Boundary Strength Metrics  #
+
 
 ## Group (Subgroup) ##
 

@@ -1,5 +1,5 @@
-Synthetic Microstructure Generation 
-=========
+# Synthetic Microstructure Generation  #
+
 
 This tutorial uses a **Prebuilt Pipeline** to explain the concepts behind _sythentic microstructure_ generation in DREAM.3D. Begin by finding the **Prebuilt Pipeline** <i>(01) Single Cubic Phase Equiaxed</i> in the **Prebuilt Pipelines View** and double click on it. This will open that **Pipeline** in a new DREAM.3D window. In order to generate a synthetic microstructure, DREAM.3D needs a set of statistics that define the stochastic properties of the structure. In this case, the statistics have been generated _synthetically_ using the [StatsGenerator](@ref statsgeneratorfilter) **Filter**. To learn how to generate your own microstructure statistics, visit the [StatsGenerator documentation](@ref statsgeneratorfilter).
 

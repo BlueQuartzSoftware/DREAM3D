@@ -1,5 +1,5 @@
-DevHelper 
-========
+# DevHelper  #
+
 
 **DevHelper** is a developer tool that allows the user to generate the _skeleton_ code necessary to create a new **Plugin** or **Filter**.  **DevHelper** _does not_ create a functioning **Filter** automatically, and _is not_ a development environment. Instead, it streamlines the development process by auto-generating most of the "boiler plate" code that is necessary for a working **Plugin** or **Filter**.
 
@@ -74,4 +74,3 @@ The **FilterMaker** tab contains all the elements needed to create a new **Filte
 8. Use the combo box in the right pane to look at each file's contents for accuracy.  The **Filter** parameters in the table in the left pane should be created and initialized in the code in the right pane.
 9. When everything is correct, press the _Generate_ button.
 
-The **Filter** now exists in the top level plugin folder that was specified in the _Plugin Directory_ field. Additionally, the _SourceList.cmake_ file for that **Plugin** is automatically updated with the new **Filter**.

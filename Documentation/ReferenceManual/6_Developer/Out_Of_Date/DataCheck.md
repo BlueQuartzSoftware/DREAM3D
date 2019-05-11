@@ -1,5 +1,5 @@
-The DataCheck Function 
-========
+# The DataCheck Function  #
+
 
 Intro goes here...
 
@@ -15,4 +15,3 @@ Some examples of common sanity checks:
 - Arrays needed by the filter currently exist when this filter is running.
 - Created arrays' tuple dimensions match their attribute matrix's tuple dimensions.
 - Values that cannot be negative should be positive, and vice versa.
-- The value that was input into the filter is in range. (i.e. An unsigned 8-bit integer array should be initialized only with values between 0-255).

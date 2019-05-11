@@ -1,5 +1,5 @@
-Calculate Frequency Histogram 
-=============
+# Calculate Frequency Histogram  #
+
 
 ## Group (Subgroup) ##
 

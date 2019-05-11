@@ -1,5 +1,5 @@
-Find Feature Histogram 
-==========
+# Find Feature Histogram  #
+
 
 ## Group (Subgroup) ##
 

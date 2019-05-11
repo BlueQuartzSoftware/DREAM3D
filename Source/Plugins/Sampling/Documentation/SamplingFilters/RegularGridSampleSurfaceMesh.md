@@ -1,5 +1,5 @@
-Sample Triangle Geometry on Regular Grid 
-=============
+# Sample Triangle Geometry on Regular Grid  #
+
 
 ## Group (Subgroup) ##
 
