@@ -1,5 +1,5 @@
-Color to GrayScale 
-=============
+# Color to GrayScale  #
+
 
 ## Group (Subgroup) ##
 

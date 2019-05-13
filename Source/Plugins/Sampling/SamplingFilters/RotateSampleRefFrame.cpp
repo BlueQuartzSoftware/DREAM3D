@@ -255,23 +255,19 @@ void RotateSampleRefFrame::preflight()
 
   float rotAngle = m_RotationAngle * SIMPLib::Constants::k_Pi / 180.0;
 
-  int64_t xp = 0, yp = 0, zp = 0;
-
-  int64_t xpNew = 0, ypNew = 0, zpNew = 0;
+  MeshIndexType xpNew = 0, ypNew = 0, zpNew = 0;
   float xResNew = 0.0f, yResNew = 0.0f, zResNew = 0.0f;
   RotateSampleRefFrameImplArg_t params;
+  ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
+  SizeVec3Type origDims = imageGeom->getDimensions();
+  FloatVec3Type spacing = imageGeom->getSpacing();
+  FloatVec3Type origin = imageGeom->getOrigin();
 
-  xp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
-  yp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
-  zp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
-
-  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
-
-  params.xp = xp;
+  params.xp = origDims[0];
   params.xRes = spacing[0];
-  params.yp = yp;
+  params.yp = origDims[1];
   params.yRes = spacing[1];
-  params.zp = zp;
+  params.zp = origDims[2];
   params.zRes = spacing[2];
 
   size_t col = 0, row = 0, plane = 0;
@@ -279,11 +275,11 @@ void RotateSampleRefFrame::preflight()
   float coords[3] = {0.0f, 0.0f, 0.0f};
   float newcoords[3] = {0.0f, 0.0f, 0.0f};
   float xMin = std::numeric_limits<float>::max();
-  float xMax = -xMin;
+  float xMax = std::numeric_limits<float>::min();
   float yMin = std::numeric_limits<float>::max();
-  float yMax = -yMin;
+  float yMax = std::numeric_limits<float>::min();
   float zMin = std::numeric_limits<float>::max();
-  float zMax = -zMin;
+  float zMax = std::numeric_limits<float>::min();
 
   FOrientArrayType om(9);
   FOrientTransformsType::ax2om(FOrientArrayType(m_RotationAxis[0], m_RotationAxis[1], m_RotationAxis[2], rotAngle), om);
@@ -296,31 +292,31 @@ void RotateSampleRefFrame::preflight()
     }
     if(i == 1)
     {
-      col = xp - 1, row = 0, plane = 0;
+      col = origDims[0] - 1, row = 0, plane = 0;
     }
     if(i == 2)
     {
-      col = 0, row = yp - 1, plane = 0;
+      col = 0, row = origDims[1] - 1, plane = 0;
     }
     if(i == 3)
     {
-      col = xp - 1, row = yp - 1, plane = 0;
+      col = origDims[0] - 1, row = origDims[1] - 1, plane = 0;
     }
     if(i == 4)
     {
-      col = 0, row = 0, plane = zp - 1;
+      col = 0, row = 0, plane = origDims[2] - 1;
     }
     if(i == 5)
     {
-      col = xp - 1, row = 0, plane = zp - 1;
+      col = origDims[0] - 1, row = 0, plane = origDims[2] - 1;
     }
     if(i == 6)
     {
-      col = 0, row = yp - 1, plane = zp - 1;
+      col = 0, row = origDims[1] - 1, plane = origDims[2] - 1;
     }
     if(i == 7)
     {
-      col = xp - 1, row = yp - 1, plane = zp - 1;
+      col = origDims[0] - 1, row = origDims[1] - 1, plane = origDims[2] - 1;
     }
     coords[0] = static_cast<float>(col * spacing[0]);
     coords[1] = static_cast<float>(row * spacing[1]);
@@ -406,8 +402,15 @@ void RotateSampleRefFrame::preflight()
   params.zResNew = zResNew;
   params.zMinNew = zMin;
 
+  // int64_t newNumCellTuples = params.xpNew * params.ypNew * params.zpNew;
+
   m->getGeometryAs<ImageGeom>()->setSpacing(FloatVec3Type(params.xResNew, params.yResNew, params.zResNew));
   m->getGeometryAs<ImageGeom>()->setDimensions(params.xpNew, params.ypNew, params.zpNew);
+  origin[0] += xMin;
+  origin[1] += yMin;
+  origin[2] += zMin;
+  m->getGeometryAs<ImageGeom>()->setOrigin(origin);
+
   setInPreflight(false);
 }
 
@@ -428,22 +431,19 @@ void RotateSampleRefFrame::execute()
 
   float rotAngle = m_RotationAngle * SIMPLib::Constants::k_Pi / 180.0;
 
-  int64_t xp = 0, yp = 0, zp = 0;
-  int64_t xpNew = 0, ypNew = 0, zpNew = 0;
+  MeshIndexType xpNew = 0, ypNew = 0, zpNew = 0;
   float xResNew = 0.0f, yResNew = 0.0f, zResNew = 0.0f;
   RotateSampleRefFrameImplArg_t params;
+  ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
+  SizeVec3Type origDims = imageGeom->getDimensions();
+  FloatVec3Type spacing = imageGeom->getSpacing();
+  FloatVec3Type origin = imageGeom->getOrigin();
 
-  xp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getXPoints());
-  yp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getYPoints());
-  zp = static_cast<int64_t>(m->getGeometryAs<ImageGeom>()->getZPoints());
-
-  FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
-
-  params.xp = xp;
+  params.xp = origDims[0];
   params.xRes = spacing[0];
-  params.yp = yp;
+  params.yp = origDims[1];
   params.yRes = spacing[1];
-  params.zp = zp;
+  params.zp = origDims[2];
   params.zRes = spacing[2];
 
   size_t col = 0, row = 0, plane = 0;
@@ -468,31 +468,31 @@ void RotateSampleRefFrame::execute()
     }
     if(i == 1)
     {
-      col = xp - 1, row = 0, plane = 0;
+      col = origDims[0] - 1, row = 0, plane = 0;
     }
     if(i == 2)
     {
-      col = 0, row = yp - 1, plane = 0;
+      col = 0, row = origDims[1] - 1, plane = 0;
     }
     if(i == 3)
     {
-      col = xp - 1, row = yp - 1, plane = 0;
+      col = origDims[0] - 1, row = origDims[1] - 1, plane = 0;
     }
     if(i == 4)
     {
-      col = 0, row = 0, plane = zp - 1;
+      col = 0, row = 0, plane = origDims[2] - 1;
     }
     if(i == 5)
     {
-      col = xp - 1, row = 0, plane = zp - 1;
+      col = origDims[0] - 1, row = 0, plane = origDims[2] - 1;
     }
     if(i == 6)
     {
-      col = 0, row = yp - 1, plane = zp - 1;
+      col = 0, row = origDims[1] - 1, plane = origDims[2] - 1;
     }
     if(i == 7)
     {
-      col = xp - 1, row = yp - 1, plane = zp - 1;
+      col = origDims[0] - 1, row = origDims[1] - 1, plane = origDims[2] - 1;
     }
     coords[0] = static_cast<float>(col * spacing[0]);
     coords[1] = static_cast<float>(row * spacing[1]);
@@ -661,7 +661,10 @@ void RotateSampleRefFrame::execute()
   }
   m->getGeometryAs<ImageGeom>()->setSpacing(FloatVec3Type(params.xResNew, params.yResNew, params.zResNew));
   m->getGeometryAs<ImageGeom>()->setDimensions(params.xpNew, params.ypNew, params.zpNew);
-  m->getGeometryAs<ImageGeom>()->setOrigin(FloatVec3Type(xMin, yMin, zMin));
+  origin[0] += xMin;
+  origin[1] += yMin;
+  origin[2] += zMin;
+  m->getGeometryAs<ImageGeom>()->setOrigin(origin);
 }
 
 // -----------------------------------------------------------------------------

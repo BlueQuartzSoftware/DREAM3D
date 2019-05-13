@@ -1,5 +1,5 @@
-Generate Rodrigues Colors 
-=============
+# Generate Rodrigues Colors  #
+
 
 ## Group (Subgroup) ##
 

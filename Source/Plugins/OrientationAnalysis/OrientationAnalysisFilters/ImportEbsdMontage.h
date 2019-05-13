@@ -52,6 +52,10 @@
 class OrientationAnalysis_EXPORT ImportEbsdMontage : public AbstractFilter
 {
   Q_OBJECT
+  PYB11_CREATE_BINDINGS(ImportEbsdMontage SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+  PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
 public:
   SIMPL_SHARED_POINTERS(ImportEbsdMontage)

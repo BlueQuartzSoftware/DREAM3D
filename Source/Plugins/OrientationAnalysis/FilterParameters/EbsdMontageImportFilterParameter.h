@@ -59,13 +59,13 @@ typedef struct
 
   void writeJson(QJsonObject& json)
   {
-    json["PaddingDigits"] = static_cast<double>(PaddingDigits);
-    json["Ordering"] = static_cast<double>(Ordering);
-    json["RowStart"] = static_cast<double>(RowStart);
-    json["ColStart"] = static_cast<double>(ColStart);
-    json["RowEnd"] = static_cast<double>(RowEnd);
-    json["ColEnd"] = static_cast<double>(ColEnd);
-    json["IncrementIndex"] = static_cast<double>(IncrementIndex);
+    json["PaddingDigits"] = static_cast<qint32>(PaddingDigits);
+    json["Ordering"] = static_cast<qint32>(Ordering);
+    json["RowStart"] = static_cast<qint32>(RowStart);
+    json["ColStart"] = static_cast<qint32>(ColStart);
+    json["RowEnd"] = static_cast<qint32>(RowEnd);
+    json["ColEnd"] = static_cast<qint32>(ColEnd);
+    json["IncrementIndex"] = static_cast<qint32>(IncrementIndex);
     json["InputPath"] = InputPath;
     json["FilePrefix"] = FilePrefix;
     json["FileSuffix"] = FileSuffix;
@@ -77,13 +77,13 @@ typedef struct
     if(json["PaddingDigits"].isDouble() && json["Ordering"].isDouble() && json["RowStart"].isDouble() && json["ColStart"].isDouble() && json["IncrementIndex"].isDouble() &&
        json["InputPath"].isString() && json["FilePrefix"].isString() && json["FileSuffix"].isString() && json["FileExtension"].isString())
     {
-      PaddingDigits = static_cast<qint32>(json["PaddingDigits"].toDouble());
-      Ordering = static_cast<quint32>(json["Ordering"].toDouble());
-      RowStart = static_cast<qint32>(json["RowStart"].toDouble());
-      ColStart = static_cast<qint32>(json["ColStart"].toDouble());
-      RowEnd = static_cast<qint32>(json["RowEnd"].toDouble());
-      ColEnd = static_cast<qint32>(json["ColEnd"].toDouble());
-      IncrementIndex = static_cast<qint32>(json["IncrementIndex"].toDouble());
+      PaddingDigits = static_cast<qint32>(json["PaddingDigits"].toInt());
+      Ordering = static_cast<quint32>(json["Ordering"].toInt());
+      RowStart = static_cast<qint32>(json["RowStart"].toInt());
+      ColStart = static_cast<qint32>(json["ColStart"].toInt());
+      RowEnd = static_cast<qint32>(json["RowEnd"].toInt());
+      ColEnd = static_cast<qint32>(json["ColEnd"].toInt());
+      IncrementIndex = static_cast<qint32>(json["IncrementIndex"].toInt());
       InputPath = json["InputPath"].toString();
       FilePrefix = json["FilePrefix"].toString();
       FileSuffix = json["FileSuffix"].toString();
@@ -121,8 +121,8 @@ public:
   SIMPL_STATIC_NEW_MACRO(EbsdMontageImportFilterParameter)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(EbsdMontageImportFilterParameter, FilterParameter)
 
-  typedef std::function<void(EbsdMontageListInfo_t)> SetterCallbackType;
-  typedef std::function<EbsdMontageListInfo_t(void)> GetterCallbackType;
+  using SetterCallbackType = std::function<void(EbsdMontageListInfo_t)>;
+  using GetterCallbackType = std::function<EbsdMontageListInfo_t(void)>;
 
   /**
    * @brief New This function instantiates an instance of the EbsdMontageImportFilterParameter. Although this

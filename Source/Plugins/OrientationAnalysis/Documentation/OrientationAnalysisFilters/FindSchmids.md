@@ -1,5 +1,5 @@
-Find Schmid Factors 
-=============
+# Find Schmid Factors  #
+
 
 ## Group (Subgroup) ##
 

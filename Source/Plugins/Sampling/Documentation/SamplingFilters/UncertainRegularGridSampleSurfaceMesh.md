@@ -1,5 +1,5 @@
-Sample Triangle Geometry on Uncertain Regular Grid 
-=============
+# Sample Triangle Geometry on Uncertain Regular Grid  #
+
 
 ## Group (Subgroup) ##
 

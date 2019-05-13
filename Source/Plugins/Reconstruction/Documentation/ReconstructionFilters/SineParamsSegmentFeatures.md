@@ -1,5 +1,5 @@
-Segment Features (Sine Parameters) 
-======
+# Segment Features (Sine Parameters)  #
+
 
 ## Group (Subgroup) ##
 

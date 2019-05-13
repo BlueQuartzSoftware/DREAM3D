@@ -1,5 +1,5 @@
-Align Sections (Mutual Information) 
-======
+# Align Sections (Mutual Information)  #
+
 
 ## Group (Subgroup) ##
 

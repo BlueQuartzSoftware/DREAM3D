@@ -1,5 +1,5 @@
-Version 6.1.0 Release Notes 
-===========
+# Version 6.1.0 Release Notes  #
+
 
 These release notes summarize the major changes for each officially released version of DREAM.3D. The official bug report is located at the [DREAM.3D GitHub issues page](https://github.com/DREAM3D/DREAM3D/issues).
 

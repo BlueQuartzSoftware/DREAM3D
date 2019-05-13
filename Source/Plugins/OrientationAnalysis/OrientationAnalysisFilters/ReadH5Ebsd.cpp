@@ -232,11 +232,8 @@ void ReadH5Ebsd::readVolumeInfo()
  * Note that this does not guarantee the user has enough left, just that the
  * size of the volume can fit in the address space of the program
  */
-#if(CMP_SIZEOF_SSIZE_T == 4)
-    int64_t max = std::numeric_limits<size_t>::max();
-#else
     int64_t max = std::numeric_limits<int64_t>::max();
-#endif
+
     if(dims[0] * dims[1] * dims[2] > max)
     {
       err = -1;
@@ -482,7 +479,11 @@ void ReadH5Ebsd::execute()
     H5EbsdVolumeInfo::Pointer volumeInfoReader = H5EbsdVolumeInfo::New();
     volumeInfoReader->setFileName(m_InputFile);
     int err = volumeInfoReader->readVolumeInfo();
-    setErrorCondition(err, tr("Unable to read volume information for file '%1'").arg(m_InputFile));
+    if(err < 0)
+    {
+      setErrorCondition(err, tr("Unable to read volume information for file '%1'").arg(m_InputFile));
+      return;
+    }
     int64_t dims[3] = {0, 0, 0};
     FloatVec3Type res = {0.0f, 0.0f, 0.0f};
     volumeInfoReader->getDimsAndResolution(dims[0], dims[1], dims[2], res[0], res[1], res[2]);

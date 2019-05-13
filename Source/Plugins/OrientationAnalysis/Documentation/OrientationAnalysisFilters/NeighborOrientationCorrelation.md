@@ -1,5 +1,5 @@
-Neighbor Orientation Correlation 
-======
+# Neighbor Orientation Correlation  #
+
 
 ## Group (Subgroup) ##
 

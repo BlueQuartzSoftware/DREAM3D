@@ -1,5 +1,5 @@
-Smooth Bad Data (Coordination Number) 
-=============
+# Smooth Bad Data (Coordination Number)  #
+
 
 ## Group (Subgroup) ##
 

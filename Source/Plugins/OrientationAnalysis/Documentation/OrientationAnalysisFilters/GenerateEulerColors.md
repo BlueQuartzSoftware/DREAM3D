@@ -1,5 +1,5 @@
-Generate Euler Colors 
-========
+# Generate Euler Colors  #
+
 
 ## Group (Subgroup) ##
 

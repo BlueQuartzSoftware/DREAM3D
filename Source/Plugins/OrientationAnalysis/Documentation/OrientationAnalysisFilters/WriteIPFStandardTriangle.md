@@ -1,5 +1,5 @@
-Export IPF Triangle Legend (Cubic m-3m) 
-=============
+# Export IPF Triangle Legend (Cubic m-3m)  #
+
 
 ## Group (Subgroup) ##
 

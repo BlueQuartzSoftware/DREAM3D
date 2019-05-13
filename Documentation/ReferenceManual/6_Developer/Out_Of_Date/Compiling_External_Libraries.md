@@ -1,5 +1,5 @@
-Compiling External Libraries 
-========
+# Compiling External Libraries  #
+
 
 # Online SDK Installation Tutorial #
 

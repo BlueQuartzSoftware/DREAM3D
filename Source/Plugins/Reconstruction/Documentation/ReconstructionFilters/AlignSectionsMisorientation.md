@@ -1,5 +1,5 @@
-Align Sections (Misorientation) 
-======
+# Align Sections (Misorientation)  #
+
 
 ## Group (Subgroup) ##
 

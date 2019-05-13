@@ -1,5 +1,5 @@
-Write GBCD Triangles File 
-=============
+# Write GBCD Triangles File  #
+
 
 ## Group (Subgroup) ##
 

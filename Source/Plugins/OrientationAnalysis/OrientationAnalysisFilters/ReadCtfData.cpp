@@ -212,9 +212,9 @@ void ReadCtfData::dataCheck()
   {
     QVector<size_t> tDims(3, 0);
 
-    QString ext = fi.suffix();
+    QString ext = fi.suffix().toLower();
     QVector<QString> names;
-    if(ext.compare(Ebsd::Ctf::FileExt) == 0)
+    if(ext == Ebsd::Ctf::FileExt)
     {
       std::shared_ptr<CtfReader> reader(new CtfReader());
       readDataFile(reader.get(), m, tDims, CTF_HEADER_ONLY);

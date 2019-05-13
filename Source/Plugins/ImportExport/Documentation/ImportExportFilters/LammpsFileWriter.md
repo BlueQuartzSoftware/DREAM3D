@@ -1,5 +1,5 @@
-Lammps File Writer
-======
+# Lammps File Writer #
+
 
 ## Group (Subgroup) ##
 

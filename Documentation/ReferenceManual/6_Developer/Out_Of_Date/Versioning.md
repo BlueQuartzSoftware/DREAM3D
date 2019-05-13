@@ -1,5 +1,5 @@
-Versioning 
-========
+# Versioning  #
+
 
 The DREAM.3D version scheme is a set of 4 values. The first 3 values are integers while the last value is the first part of a SHA1 hash. An example is the following:
 

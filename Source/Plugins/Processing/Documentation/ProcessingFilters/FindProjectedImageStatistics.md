@@ -1,5 +1,5 @@
-Find Projected Image Statistics 
-=============
+# Find Projected Image Statistics  #
+
 
 ## Group (Subgroup) ##
 

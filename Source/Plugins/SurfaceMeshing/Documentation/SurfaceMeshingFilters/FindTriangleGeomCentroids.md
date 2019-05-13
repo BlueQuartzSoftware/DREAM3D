@@ -1,5 +1,5 @@
-Find Feature Centroids from Triangle Geometry 
-=============
+# Find Feature Centroids from Triangle Geometry  #
+
 
 ## Group (Subgroup) ##
 

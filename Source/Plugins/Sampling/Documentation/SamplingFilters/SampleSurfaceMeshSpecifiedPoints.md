@@ -1,5 +1,5 @@
-Sample Triangle Geometry at Specified Points 
-=============
+# Sample Triangle Geometry at Specified Points  #
+
 
 ## Group (Subgroup) ##
 

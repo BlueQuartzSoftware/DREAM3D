@@ -1,5 +1,5 @@
-Find GBCD (Metric-Based Approach) 
-=============
+# Find GBCD (Metric-Based Approach)  #
+
 
 ## Group (Subgroup) ##
 

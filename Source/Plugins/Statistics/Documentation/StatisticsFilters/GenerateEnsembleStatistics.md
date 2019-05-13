@@ -1,5 +1,5 @@
-Generate Ensemble Statistics 
-==========
+# Generate Ensemble Statistics  #
+
 
 ## Group (Subgroup) ##
 

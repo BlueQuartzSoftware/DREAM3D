@@ -1,5 +1,5 @@
-VTK STRUCTURED_POINTS Importer  
-============
+# VTK STRUCTURED_POINTS Importer   #
+
 
 ## Group (Subgroup) ##
 

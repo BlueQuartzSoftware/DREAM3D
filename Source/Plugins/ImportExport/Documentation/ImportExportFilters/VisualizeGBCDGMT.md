@@ -1,5 +1,5 @@
-Write GBCD Pole Figure (GMT 5) 
-============
+# Write GBCD Pole Figure (GMT 5)  #
+
 
 ## Group (Subgroup) ##
 
