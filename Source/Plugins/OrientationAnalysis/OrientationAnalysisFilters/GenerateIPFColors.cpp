@@ -35,14 +35,8 @@
 
 #include "GenerateIPFColors.h"
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-#include <tbb/blocked_range.h>
-#include <tbb/parallel_for.h>
-#include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
-#endif
-
 #include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Common/SIMPLRange.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -51,6 +45,7 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Utilities/ColorTable.h"
+#include "SIMPLib/Utilities/ParallelDataAlgorithm.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
@@ -122,12 +117,11 @@ public:
     }
   }
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  void operator()(const tbb::blocked_range<size_t>& r) const
+  void operator()(const SIMPLRange& range) const
   {
-    convert(r.begin(), r.end());
+    convert(range.min(), range.max());
   }
-#endif
+
 private:
   GenerateIPFColors* m_Filter = nullptr;
   FloatVec3Type m_ReferenceDir;
@@ -323,23 +317,10 @@ void GenerateIPFColors::execute()
   FloatVec3Type normRefDir = m_ReferenceDir; // Make a copy of the reference Direction
   MatrixMath::Normalize3x1(normRefDir[0], normRefDir[1], normRefDir[2]);
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  tbb::task_scheduler_init init;
-  bool doParallel = true;
-#endif
-
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-  if(doParallel)
-  {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, totalPoints),
-                      GenerateIPFColorsImpl(this, normRefDir, m_CellEulerAngles, m_CellPhases, m_CrystalStructures, numPhases, m_GoodVoxels, m_CellIPFColors), tbb::auto_partitioner());
-  }
-  else
-#endif
-  {
-    GenerateIPFColorsImpl serial(this, normRefDir, m_CellEulerAngles, m_CellPhases, m_CrystalStructures, numPhases, m_GoodVoxels, m_CellIPFColors);
-    serial.convert(0, totalPoints);
-  }
+  // Allow data-based parallelization
+  ParallelDataAlgorithm dataAlg;
+  dataAlg.setRange(0, totalPoints);
+  dataAlg.execute(GenerateIPFColorsImpl(this, normRefDir, m_CellEulerAngles, m_CellPhases, m_CrystalStructures, numPhases, m_GoodVoxels, m_CellIPFColors));
 
   if(m_PhaseWarningCount > 0)
   {
