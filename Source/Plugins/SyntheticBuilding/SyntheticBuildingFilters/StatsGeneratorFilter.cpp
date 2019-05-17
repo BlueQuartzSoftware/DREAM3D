@@ -64,7 +64,12 @@ enum createdPathID : RenameDataPath::DataID_t
 {
   AttributeMatrixID21 = 21,
 
-  DataContainerID = 1
+  DataContainerID = 1,
+
+  DataArrayID30 = 30,
+  DataArrayID31 = 31,
+  DataArrayID32 = 32,
+  DataArrayID33 = 33,
 };
 
 // -----------------------------------------------------------------------------
