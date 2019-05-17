@@ -138,10 +138,16 @@ void EbsdToH5Ebsd::dataCheck()
     setErrorCondition(-12, ss);
   }
 
+  QFileInfo fi(m_InputPath);
   if(m_InputPath.isEmpty())
   {
     ss = QObject::tr("The Input Directory must be set");
     setErrorCondition(-13, ss);
+  }
+  else if(!fi.exists())
+  {
+    QString ss = QObject::tr("The input directory does not exist: %1").arg(getInputPath());
+    setErrorCondition(-388, ss);
   }
 
   bool hasMissingFiles = false;

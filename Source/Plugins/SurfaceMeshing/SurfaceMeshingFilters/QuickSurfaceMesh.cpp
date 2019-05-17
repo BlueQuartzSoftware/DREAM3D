@@ -69,7 +69,8 @@ enum createdPathID : RenameDataPath::DataID_t
   DataArrayID31 = 31,
   DataArrayID32 = 32,
 
-  DataContainerID = 1
+  DataContainerID01 = 1,
+  DataContainerID02 = 2
 };
 
 namespace
@@ -285,7 +286,7 @@ void QuickSurfaceMesh::dataCheck()
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrayPaths);
 
   // Create a SufaceMesh Data Container with Faces, Vertices, Feature Labels and optionally Phase labels
-  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName(), DataContainerID);
+  DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName(), DataContainerID01);
   if(getErrorCode() < 0)
   {
     return;
@@ -346,7 +347,7 @@ void QuickSurfaceMesh::dataCheck()
   sm->createNonPrereqAttributeMatrix(this, getFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::FaceFeature, AttributeMatrixID23);
 
   // Create the TripleLines DataContainer
-  getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getTripleLineDataContainerName(), DataContainerID);
+  getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getTripleLineDataContainerName(), DataContainerID02);
 }
 
 // -----------------------------------------------------------------------------
