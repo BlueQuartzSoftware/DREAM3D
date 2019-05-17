@@ -4,8 +4,13 @@
 
 echo "[@test@.json] Prebuilt Pipeline Test Starting"
 
+DEBUG_EXT=""
+if [ "@BUILD_TYPE@" = "Debug" ]; then
+    DEBUG_EXT="@EXE_DEBUG_EXTENSION@"
+fi
+
 cd "@CMAKE_RUNTIME_OUTPUT_DIRECTORY@"
-"./PipelineRunner@EXE_DEBUG_EXTENSION@@EXE_EXT@" --pipeline "@DREAM3D_SUPPORT_DIR@/@test@.json"
+"./PipelineRunner${DEBUG_EXT}" --pipeline "@DREAM3D_SUPPORT_DIR@/@test@.json"
 
 if [ $? -eq 0 ]
 then
