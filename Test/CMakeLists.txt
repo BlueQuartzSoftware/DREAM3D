@@ -104,23 +104,6 @@ if(SIMPL_USE_ITK)
     )
 endif()
 
-
-# configure_file(${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.h.in
-#                ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
-
-# add_executable(PipelineRunnerTest
-#                 ${DREAM3DTest_SOURCE_DIR}/PipelineRunnerTest.cpp ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.h)
-# target_include_directories(PipelineRunnerTest 
-#                             PUBLIC
-#                               ${DREAM3DTest_BINARY_DIR}
-#                               ${SIMPLProj_SOURCE_DIR}/Source
-#                               ${SIMPLProj_BINARY_DIR})
-# target_link_libraries(PipelineRunnerTest Qt5::Core EbsdLib SIMPLib)
-# set_target_properties(PipelineRunnerTest PROPERTIES FOLDER "DREAM3D UnitTests")
-# add_test(NAME PipelineRunnerTest
-#           COMMAND ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PipelineRunnerTest
-#           WORKING_DIRECTORY ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
-
 FILE(WRITE ${TEST_PIPELINE_LIST_FILE} )
 
 
@@ -130,11 +113,11 @@ if(WIN32)
   set(TEST_SCRIPT_FILE_EXT "bat")
   set(EXE_EXT ".exe")
 endif()
-
+set(PREBUILT_SUPPORT_DIR "${DREAM3D_SUPPORT_DIR}")
 set(test_index  "0")
 foreach(test ${PREBUILT_PIPELINE_NAMES} )
-  set(DREAM3D_PIPELINE_FILE "${DREAM3D_SUPPORT_DIR}/${PREBUILT_PIPELINES_DIR}/${test}.json")
-  FILE(APPEND ${TEST_PIPELINE_LIST_FILE} "${DREAM3D_PIPELINE_FILE}\n")
+  set(Example_PIPELINE_FILE "${DREAM3D_SUPPORT_DIR}/${test}.json")
+  FILE(APPEND ${TEST_PIPELINE_LIST_FILE} "${Example_PIPELINE_FILE}\n")
 
   #----------------
   set(SIMPL_CTEST_TEST_DRIVER "${DREAM3DTest_BINARY_DIR}/PrebuiltPipelineTests/${test}.${TEST_SCRIPT_FILE_EXT}")
@@ -150,7 +133,6 @@ set(PREBUILT_PIPELINES_DIR "TestPipelines")
 set(TEST_PIPELINE_LIST_FILE ${DREAM3DTest_BINARY_DIR}/PipelineRunnerTest.txt)
 set(TEST_DATA_DIR ${DREAM3D_DATA_DIR})
 set(PREBUILT_PIPELINE_NAMES
-
 )
 
 foreach(f ${PREBUILT_PIPELINE_NAMES} )

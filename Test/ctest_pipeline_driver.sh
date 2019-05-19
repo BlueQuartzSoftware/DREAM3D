@@ -2,7 +2,8 @@
 
 #set -e
 
-echo "[@test@.json] Prebuilt Pipeline Test Starting"
+echo "Prebuilt Pipeline Test Starting"
+echo "    @test@.json"
 
 DEBUG_EXT=""
 if [ "@BUILD_TYPE@" = "Debug" ]; then
@@ -10,7 +11,7 @@ if [ "@BUILD_TYPE@" = "Debug" ]; then
 fi
 
 cd "@CMAKE_RUNTIME_OUTPUT_DIRECTORY@"
-"./PipelineRunner${DEBUG_EXT}" --pipeline "@DREAM3D_SUPPORT_DIR@/@test@.json"
+"./PipelineRunner${DEBUG_EXT}" --pipeline "@Example_PIPELINE_FILE@"
 
 if [ $? -eq 0 ]
 then
