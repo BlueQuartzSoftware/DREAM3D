@@ -33,10 +33,11 @@ IF "@CMAKE_BUILD_TYPE@" == "Release" (
 )
 
 echo on
-@echo "[@test@.json] Prebuilt Pipeline Test Starting"
+@echo "Prebuilt Pipeline Test Starting"
+@echo "    @test@.json"
 
 @echo "Running Executable at @CMAKE_RUNTIME_OUTPUT_DIRECTORY@\%CONFIG_DIR%\PipelineRunner%EXE_SFX%@EXE_EXT@"
 
 cd @CMAKE_RUNTIME_OUTPUT_DIRECTORY@\%CONFIG_DIR%
 
-PipelineRunner%EXE_SFX%@EXE_EXT@ --pipeline "@DREAM3D_SUPPORT_DIR@/@test@.json"
+PipelineRunner%EXE_SFX%@EXE_EXT@ --pipeline "@Example_PIPELINE_FILE@"
