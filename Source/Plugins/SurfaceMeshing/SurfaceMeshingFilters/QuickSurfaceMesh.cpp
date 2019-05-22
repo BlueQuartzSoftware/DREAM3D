@@ -82,7 +82,7 @@ template <class T> inline void hashCombine(size_t& seed, const T& obj)
 }
 
 using Vertex = std::array<float, 3>;
-using Edge = std::array<int64_t, 2>;
+using Edge = std::array<MeshIndexType, 2>;
 
 struct VertexHasher
 {
@@ -99,14 +99,14 @@ struct EdgeHasher
 {
   size_t operator()(const Edge& edge) const
   {
-    size_t hash = std::hash<int64_t>()(edge[0]);
+    size_t hash = std::hash<MeshIndexType>()(edge[0]);
     hashCombine(hash, edge[1]);
     return hash;
   }
 };
 
-using VertexMap = std::unordered_map<Vertex, int64_t, VertexHasher>;
-using EdgeMap = std::unordered_map<Edge, int64_t, EdgeHasher>;
+using VertexMap = std::unordered_map<Vertex, MeshIndexType, VertexHasher>;
+using EdgeMap = std::unordered_map<Edge, MeshIndexType, EdgeHasher>;
 } // namespace
 
 // -----------------------------------------------------------------------------
@@ -220,10 +220,10 @@ void copyCellArraysToFaceArrays(size_t faceIndex, size_t firstcIndex, size_t sec
   T* firstCellTuplePtr = cellPtr->getTuplePointer(firstcIndex);
   T* secondCellTuplePtr = cellPtr->getTuplePointer(secondcIndex);
 
-  ::memcpy(faceTuplePtr, firstCellTuplePtr, sizeof(T) * numComps);
+  ::memcpy(faceTuplePtr, firstCellTuplePtr, sizeof(T) * static_cast<size_t>(numComps));
   if(!forceSecondToZero)
   {
-    ::memcpy(faceTuplePtr + numComps, secondCellTuplePtr, sizeof(T) * numComps);
+    ::memcpy(faceTuplePtr + numComps, secondCellTuplePtr, sizeof(T) * static_cast<size_t>(numComps));
   }
 }
 
@@ -317,9 +317,9 @@ void QuickSurfaceMesh::dataCheck()
     m_NodeTypes = m_NodeTypesPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  for(int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+  for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
   {
-    tempPath.update(getSurfaceDataContainerName().getDataContainerName(), getFaceAttributeMatrixName(), m_SelectedDataArrayPaths[i].getDataArrayName());
+    tempPath.update(getSurfaceDataContainerName().getDataContainerName(), getFaceAttributeMatrixName(), m_SelectedDataArrayPaths[static_cast<int32_t>(i)].getDataArrayName());
     cDims = m_SelectedWeakPtrVector[i].lock()->getComponentDimensions();
     QVector<size_t> faceDims;
     // If the cell array is 1-dimensional, scale the face array accordingly
@@ -378,20 +378,20 @@ void QuickSurfaceMesh::getGridCoordinates(const IGeometryGrid::Pointer& grid, si
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuickSurfaceMesh::flipProblemVoxelCase1(int64_t v1, int64_t v2, int64_t v3, int64_t v4, int64_t v5, int64_t v6)
+void QuickSurfaceMesh::flipProblemVoxelCase1(MeshIndexType v1, MeshIndexType v2, MeshIndexType v3, MeshIndexType v4, MeshIndexType v5, MeshIndexType v6)
 {
   SIMPL_RANDOMNG_NEW();
 
   float val = static_cast<float>(rg.genrand_res53());
-  if(val < 0.25)
+  if(val < 0.25f)
   {
     m_FeatureIds[v6] = m_FeatureIds[v4];
   }
-  else if(val < 0.5)
+  else if(val < 0.5f)
   {
     m_FeatureIds[v6] = m_FeatureIds[v5];
   }
-  else if(val < 0.75)
+  else if(val < 0.75f)
   {
     m_FeatureIds[v1] = m_FeatureIds[v2];
   }
@@ -404,36 +404,36 @@ void QuickSurfaceMesh::flipProblemVoxelCase1(int64_t v1, int64_t v2, int64_t v3,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuickSurfaceMesh::flipProblemVoxelCase2(int64_t v1, int64_t v2, int64_t v3, int64_t v4)
+void QuickSurfaceMesh::flipProblemVoxelCase2(MeshIndexType v1, MeshIndexType v2, MeshIndexType v3, MeshIndexType v4)
 {
   SIMPL_RANDOMNG_NEW();
 
   float val = static_cast<float>(rg.genrand_res53());
-  if(val < 0.125)
+  if(val < 0.125f)
   {
     m_FeatureIds[v1] = m_FeatureIds[v2];
   }
-  else if(val < 0.25)
+  else if(val < 0.25f)
   {
     m_FeatureIds[v1] = m_FeatureIds[v3];
   }
-  else if(val < 0.375)
+  else if(val < 0.375f)
   {
     m_FeatureIds[v2] = m_FeatureIds[v1];
   }
-  if(val < 0.5)
+  if(val < 0.5f)
   {
     m_FeatureIds[v2] = m_FeatureIds[v4];
   }
-  else if(val < 0.625)
+  else if(val < 0.625f)
   {
     m_FeatureIds[v3] = m_FeatureIds[v1];
   }
-  else if(val < 0.75)
+  else if(val < 0.75f)
   {
     m_FeatureIds[v3] = m_FeatureIds[v4];
   }
-  else if(val < 0.875)
+  else if(val < 0.875f)
   {
     m_FeatureIds[v4] = m_FeatureIds[v2];
   }
@@ -446,12 +446,12 @@ void QuickSurfaceMesh::flipProblemVoxelCase2(int64_t v1, int64_t v2, int64_t v3,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuickSurfaceMesh::flipProblemVoxelCase3(int64_t v1, int64_t v2, int64_t v3)
+void QuickSurfaceMesh::flipProblemVoxelCase3(MeshIndexType v1, MeshIndexType v2, MeshIndexType v3)
 {
   SIMPL_RANDOMNG_NEW();
 
   float val = static_cast<float>(rg.genrand_res53());
-  if(val < 0.5)
+  if(val < 0.5f)
   {
     m_FeatureIds[v2] = m_FeatureIds[v1];
   }
@@ -472,41 +472,35 @@ void QuickSurfaceMesh::correctProblemVoxels()
 
   SizeVec3Type udims = grid->getDimensions();
 
-  int64_t dims[3] = {
-      static_cast<int64_t>(udims[0]),
-      static_cast<int64_t>(udims[1]),
-      static_cast<int64_t>(udims[2])
-  };
+  MeshIndexType xP = udims[0];
+  MeshIndexType yP = udims[1];
+  MeshIndexType zP = udims[2];
 
-  int64_t xP = dims[0];
-  int64_t yP = dims[1];
-  int64_t zP = dims[2];
+  MeshIndexType v1 = 0, v2 = 0, v3 = 0, v4 = 0;
+  MeshIndexType v5 = 0, v6 = 0, v7 = 0, v8 = 0;
 
-  int64_t v1 = 0, v2 = 0, v3 = 0, v4 = 0;
-  int64_t v5 = 0, v6 = 0, v7 = 0, v8 = 0;
+  int32_t f1 = 0, f2 = 0, f3 = 0, f4 = 0;
+  int32_t f5 = 0, f6 = 0, f7 = 0, f8 = 0;
 
-  int64_t f1 = 0, f2 = 0, f3 = 0, f4 = 0;
-  int64_t f5 = 0, f6 = 0, f7 = 0, f8 = 0;
+  MeshIndexType row1, row2;
+  MeshIndexType plane1, plane2;
 
-  int64_t row1, row2;
-  int64_t plane1, plane2;
-
-  int64_t count = 1;
-  int64_t iter = 0;
+  MeshIndexType count = 1;
+  MeshIndexType iter = 0;
   while(count > 0 && iter < 20)
   {
     iter++;
     count = 0;
 
-    for(int64_t k = 1; k < zP; k++)
+    for(MeshIndexType k = 1; k < zP; k++)
     {
       plane1 = (k - 1) * xP * yP;
       plane2 = k * xP * yP;
-      for(int64_t j = 1; j < yP; j++)
+      for(MeshIndexType j = 1; j < yP; j++)
       {
         row1 = (j - 1) * xP;
         row2 = j * xP;
-        for(int64_t i = 1; i < xP; i++)
+        for(MeshIndexType i = 1; i < xP; i++)
         {
           v1 = plane1 + row1 + i - 1;
           v2 = plane1 + row1 + i;
@@ -637,7 +631,7 @@ void QuickSurfaceMesh::correctProblemVoxels()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuickSurfaceMesh::determineActiveNodes(std::vector<int64_t>& m_NodeIds, int64_t& nodeCount, int64_t& triangleCount)
+void QuickSurfaceMesh::determineActiveNodes(std::vector<MeshIndexType>& nodeIds, MeshIndexType& nodeCount, MeshIndexType& triangleCount)
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
@@ -645,29 +639,23 @@ void QuickSurfaceMesh::determineActiveNodes(std::vector<int64_t>& m_NodeIds, int
 
   SizeVec3Type udims = grid->getDimensions();
 
-  int64_t dims[3] = {
-      static_cast<int64_t>(udims[0]),
-      static_cast<int64_t>(udims[1]),
-      static_cast<int64_t>(udims[2]),
-  };
-
-  int64_t xP = dims[0];
-  int64_t yP = dims[1];
-  int64_t zP = dims[2];
+  MeshIndexType xP = udims[0];
+  MeshIndexType yP = udims[1];
+  MeshIndexType zP = udims[2];
 
   std::vector<std::set<int32_t>> ownerLists;
 
-  int64_t point = 0, neigh1 = 0, neigh2 = 0, neigh3 = 0;
+  MeshIndexType point = 0, neigh1 = 0, neigh2 = 0, neigh3 = 0;
 
-  int64_t nodeId1 = 0, nodeId2 = 0, nodeId3 = 0, nodeId4 = 0;
+  MeshIndexType nodeId1 = 0, nodeId2 = 0, nodeId3 = 0, nodeId4 = 0;
 
   // first determining which nodes are actually boundary nodes and
   // count number of nodes and triangles that will be created
-  for(int64_t k = 0; k < zP; k++)
+  for(MeshIndexType k = 0; k < zP; k++)
   {
-    for(int64_t j = 0; j < yP; j++)
+    for(MeshIndexType j = 0; j < yP; j++)
     {
-      for(int64_t i = 0; i < xP; i++)
+      for(MeshIndexType i = 0; i < xP; i++)
       {
         point = (k * xP * yP) + (j * xP) + i;
         neigh1 = point + 1;
@@ -677,27 +665,27 @@ void QuickSurfaceMesh::determineActiveNodes(std::vector<int64_t>& m_NodeIds, int
         if(i == 0)
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
-          if(m_NodeIds[nodeId1] == -1)
+          if(nodeIds[nodeId1] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId1] = nodeCount;
+            nodeIds[nodeId1] = nodeCount;
             nodeCount++;
           }
           nodeId2 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          if(m_NodeIds[nodeId2] == -1)
+          if(nodeIds[nodeId2] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId2] = nodeCount;
+            nodeIds[nodeId2] = nodeCount;
             nodeCount++;
           }
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
-          if(m_NodeIds[nodeId3] == -1)
+          if(nodeIds[nodeId3] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId3] = nodeCount;
+            nodeIds[nodeId3] = nodeCount;
             nodeCount++;
           }
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          if(m_NodeIds[nodeId4] == -1)
+          if(nodeIds[nodeId4] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId4] = nodeCount;
+            nodeIds[nodeId4] = nodeCount;
             nodeCount++;
           }
           triangleCount++;
@@ -706,27 +694,27 @@ void QuickSurfaceMesh::determineActiveNodes(std::vector<int64_t>& m_NodeIds, int
         if(j == 0)
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
-          if(m_NodeIds[nodeId1] == -1)
+          if(nodeIds[nodeId1] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId1] = nodeCount;
+            nodeIds[nodeId1] = nodeCount;
             nodeCount++;
           }
           nodeId2 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          if(m_NodeIds[nodeId2] == -1)
+          if(nodeIds[nodeId2] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId2] = nodeCount;
+            nodeIds[nodeId2] = nodeCount;
             nodeCount++;
           }
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
-          if(m_NodeIds[nodeId3] == -1)
+          if(nodeIds[nodeId3] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId3] = nodeCount;
+            nodeIds[nodeId3] = nodeCount;
             nodeCount++;
           }
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          if(m_NodeIds[nodeId4] == -1)
+          if(nodeIds[nodeId4] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId4] = nodeCount;
+            nodeIds[nodeId4] = nodeCount;
             nodeCount++;
           }
           triangleCount++;
@@ -735,27 +723,27 @@ void QuickSurfaceMesh::determineActiveNodes(std::vector<int64_t>& m_NodeIds, int
         if(k == 0)
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
-          if(m_NodeIds[nodeId1] == -1)
+          if(nodeIds[nodeId1] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId1] = nodeCount;
+            nodeIds[nodeId1] = nodeCount;
             nodeCount++;
           }
           nodeId2 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          if(m_NodeIds[nodeId2] == -1)
+          if(nodeIds[nodeId2] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId2] = nodeCount;
+            nodeIds[nodeId2] = nodeCount;
             nodeCount++;
           }
           nodeId3 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          if(m_NodeIds[nodeId3] == -1)
+          if(nodeIds[nodeId3] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId3] = nodeCount;
+            nodeIds[nodeId3] = nodeCount;
             nodeCount++;
           }
           nodeId4 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          if(m_NodeIds[nodeId4] == -1)
+          if(nodeIds[nodeId4] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId4] = nodeCount;
+            nodeIds[nodeId4] = nodeCount;
             nodeCount++;
           }
           triangleCount++;
@@ -764,27 +752,27 @@ void QuickSurfaceMesh::determineActiveNodes(std::vector<int64_t>& m_NodeIds, int
         if(i == (xP - 1))
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          if(m_NodeIds[nodeId1] == -1)
+          if(nodeIds[nodeId1] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId1] = nodeCount;
+            nodeIds[nodeId1] = nodeCount;
             nodeCount++;
           }
           nodeId2 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          if(m_NodeIds[nodeId2] == -1)
+          if(nodeIds[nodeId2] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId2] = nodeCount;
+            nodeIds[nodeId2] = nodeCount;
             nodeCount++;
           }
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          if(m_NodeIds[nodeId3] == -1)
+          if(nodeIds[nodeId3] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId3] = nodeCount;
+            nodeIds[nodeId3] = nodeCount;
             nodeCount++;
           }
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          if(m_NodeIds[nodeId4] == -1)
+          if(nodeIds[nodeId4] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId4] = nodeCount;
+            nodeIds[nodeId4] = nodeCount;
             nodeCount++;
           }
           triangleCount++;
@@ -793,27 +781,27 @@ void QuickSurfaceMesh::determineActiveNodes(std::vector<int64_t>& m_NodeIds, int
         else if(m_FeatureIds[point] != m_FeatureIds[neigh1])
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          if(m_NodeIds[nodeId1] == -1)
+          if(nodeIds[nodeId1] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId1] = nodeCount;
+            nodeIds[nodeId1] = nodeCount;
             nodeCount++;
           }
           nodeId2 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          if(m_NodeIds[nodeId2] == -1)
+          if(nodeIds[nodeId2] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId2] = nodeCount;
+            nodeIds[nodeId2] = nodeCount;
             nodeCount++;
           }
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          if(m_NodeIds[nodeId3] == -1)
+          if(nodeIds[nodeId3] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId3] = nodeCount;
+            nodeIds[nodeId3] = nodeCount;
             nodeCount++;
           }
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          if(m_NodeIds[nodeId4] == -1)
+          if(nodeIds[nodeId4] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId4] = nodeCount;
+            nodeIds[nodeId4] = nodeCount;
             nodeCount++;
           }
           triangleCount++;
@@ -822,27 +810,27 @@ void QuickSurfaceMesh::determineActiveNodes(std::vector<int64_t>& m_NodeIds, int
         if(j == (yP - 1))
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          if(m_NodeIds[nodeId1] == -1)
+          if(nodeIds[nodeId1] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId1] = nodeCount;
+            nodeIds[nodeId1] = nodeCount;
             nodeCount++;
           }
           nodeId2 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          if(m_NodeIds[nodeId2] == -1)
+          if(nodeIds[nodeId2] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId2] = nodeCount;
+            nodeIds[nodeId2] = nodeCount;
             nodeCount++;
           }
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          if(m_NodeIds[nodeId3] == -1)
+          if(nodeIds[nodeId3] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId3] = nodeCount;
+            nodeIds[nodeId3] = nodeCount;
             nodeCount++;
           }
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          if(m_NodeIds[nodeId4] == -1)
+          if(nodeIds[nodeId4] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId4] = nodeCount;
+            nodeIds[nodeId4] = nodeCount;
             nodeCount++;
           }
           triangleCount++;
@@ -851,27 +839,27 @@ void QuickSurfaceMesh::determineActiveNodes(std::vector<int64_t>& m_NodeIds, int
         else if(m_FeatureIds[point] != m_FeatureIds[neigh2])
         {
           nodeId1 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          if(m_NodeIds[nodeId1] == -1)
+          if(nodeIds[nodeId1] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId1] = nodeCount;
+            nodeIds[nodeId1] = nodeCount;
             nodeCount++;
           }
           nodeId2 = (k * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          if(m_NodeIds[nodeId2] == -1)
+          if(nodeIds[nodeId2] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId2] = nodeCount;
+            nodeIds[nodeId2] = nodeCount;
             nodeCount++;
           }
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          if(m_NodeIds[nodeId3] == -1)
+          if(nodeIds[nodeId3] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId3] = nodeCount;
+            nodeIds[nodeId3] = nodeCount;
             nodeCount++;
           }
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          if(m_NodeIds[nodeId4] == -1)
+          if(nodeIds[nodeId4] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId4] = nodeCount;
+            nodeIds[nodeId4] = nodeCount;
             nodeCount++;
           }
           triangleCount++;
@@ -880,27 +868,27 @@ void QuickSurfaceMesh::determineActiveNodes(std::vector<int64_t>& m_NodeIds, int
         if(k == (zP - 1))
         {
           nodeId1 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          if(m_NodeIds[nodeId1] == -1)
+          if(nodeIds[nodeId1] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId1] = nodeCount;
+            nodeIds[nodeId1] = nodeCount;
             nodeCount++;
           }
           nodeId2 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
-          if(m_NodeIds[nodeId2] == -1)
+          if(nodeIds[nodeId2] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId2] = nodeCount;
+            nodeIds[nodeId2] = nodeCount;
             nodeCount++;
           }
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          if(m_NodeIds[nodeId3] == -1)
+          if(nodeIds[nodeId3] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId3] = nodeCount;
+            nodeIds[nodeId3] = nodeCount;
             nodeCount++;
           }
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          if(m_NodeIds[nodeId4] == -1)
+          if(nodeIds[nodeId4] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId4] = nodeCount;
+            nodeIds[nodeId4] = nodeCount;
             nodeCount++;
           }
           triangleCount++;
@@ -909,27 +897,27 @@ void QuickSurfaceMesh::determineActiveNodes(std::vector<int64_t>& m_NodeIds, int
         else if(k < zP - 1 && m_FeatureIds[point] != m_FeatureIds[neigh3])
         {
           nodeId1 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + (i + 1);
-          if(m_NodeIds[nodeId1] == -1)
+          if(nodeIds[nodeId1] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId1] = nodeCount;
+            nodeIds[nodeId1] = nodeCount;
             nodeCount++;
           }
           nodeId2 = ((k + 1) * (xP + 1) * (yP + 1)) + (j * (xP + 1)) + i;
-          if(m_NodeIds[nodeId2] == -1)
+          if(nodeIds[nodeId2] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId2] = nodeCount;
+            nodeIds[nodeId2] = nodeCount;
             nodeCount++;
           }
           nodeId3 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + (i + 1);
-          if(m_NodeIds[nodeId3] == -1)
+          if(nodeIds[nodeId3] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId3] = nodeCount;
+            nodeIds[nodeId3] = nodeCount;
             nodeCount++;
           }
           nodeId4 = ((k + 1) * (xP + 1) * (yP + 1)) + ((j + 1) * (xP + 1)) + i;
-          if(m_NodeIds[nodeId4] == -1)
+          if(nodeIds[nodeId4] == std::numeric_limits<size_t>::max())
           {
-            m_NodeIds[nodeId4] = nodeCount;
+            nodeIds[nodeId4] = nodeCount;
             nodeCount++;
           }
           triangleCount++;
@@ -943,7 +931,7 @@ void QuickSurfaceMesh::determineActiveNodes(std::vector<int64_t>& m_NodeIds, int
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, int64_t nodeCount, int64_t triangleCount)
+void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_NodeIds, MeshIndexType nodeCount, MeshIndexType triangleCount)
 {
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
@@ -953,9 +941,9 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
   size_t numTuples = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   for(size_t i = 0; i < numTuples; i++)
   {
-    if(m_FeatureIds[i] > numFeatures)
+    if(static_cast<size_t>(m_FeatureIds[i]) > numFeatures)
     {
-      numFeatures = m_FeatureIds[i];
+      numFeatures = static_cast<size_t>(m_FeatureIds[i]);
     }
   }
 
@@ -966,23 +954,18 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
 
   SizeVec3Type udims = grid->getDimensions();
 
-  int64_t dims[3] = {
-      static_cast<int64_t>(udims[0]),
-      static_cast<int64_t>(udims[1]),
-      static_cast<int64_t>(udims[2]),
-  };
 
-  int64_t xP = dims[0];
-  int64_t yP = dims[1];
-  int64_t zP = dims[2];
+  MeshIndexType xP = udims[0];
+  MeshIndexType yP = udims[1];
+  MeshIndexType zP = udims[2];
 
   std::vector<std::set<int32_t>> ownerLists;
 
-  int64_t point = 0, neigh1 = 0, neigh2 = 0, neigh3 = 0;
+  MeshIndexType point = 0, neigh1 = 0, neigh2 = 0, neigh3 = 0;
 
-  int64_t nodeId1 = 0, nodeId2 = 0, nodeId3 = 0, nodeId4 = 0;
+  MeshIndexType nodeId1 = 0, nodeId2 = 0, nodeId3 = 0, nodeId4 = 0;
 
-  int64_t cIndex1 = 0, cIndex2 = 0;
+  MeshIndexType cIndex1 = 0, cIndex2 = 0;
 
   TriangleGeom::Pointer triangleGeom = sm->getGeometryAs<TriangleGeom>();
 
@@ -1032,7 +1015,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
                                       m_CreatedWeakPtrVector[i].lock(), true)
@@ -1046,7 +1029,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
                                       m_CreatedWeakPtrVector[i].lock(), true)
@@ -1083,7 +1066,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
                                       m_CreatedWeakPtrVector[i].lock(), true)
@@ -1097,7 +1080,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
                                       m_CreatedWeakPtrVector[i].lock(), true)
@@ -1134,7 +1117,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
                                       m_CreatedWeakPtrVector[i].lock(), true)
@@ -1148,7 +1131,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
                                       m_CreatedWeakPtrVector[i].lock(), true)
@@ -1185,7 +1168,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
                                       m_CreatedWeakPtrVector[i].lock(), true)
@@ -1199,7 +1182,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
                                       m_CreatedWeakPtrVector[i].lock(), true)
@@ -1247,7 +1230,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
             cIndex2 = neigh1;
           }
 
-          for(int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, neigh1, point, m_SelectedWeakPtrVector[i].lock(),
                                       m_CreatedWeakPtrVector[i].lock())
@@ -1272,7 +1255,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
             cIndex2 = neigh1;
           }
 
-          for(int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, neigh1, point, m_SelectedWeakPtrVector[i].lock(),
                                       m_CreatedWeakPtrVector[i].lock())
@@ -1309,7 +1292,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
                                       m_CreatedWeakPtrVector[i].lock(), true)
@@ -1323,7 +1306,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
                                       m_CreatedWeakPtrVector[i].lock(), true)
@@ -1371,7 +1354,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
             cIndex2 = neigh2;
           }
 
-          for(int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, neigh2, point, m_SelectedWeakPtrVector[i].lock(),
                                       m_CreatedWeakPtrVector[i].lock())
@@ -1396,7 +1379,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
             cIndex2 = neigh2;
           }
 
-          for(int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, neigh2, point, m_SelectedWeakPtrVector[i].lock(),
                                       m_CreatedWeakPtrVector[i].lock())
@@ -1433,7 +1416,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
                                       m_CreatedWeakPtrVector[i].lock(), true)
@@ -1447,7 +1430,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
           m_FaceLabels[triangleIndex * 2] = -1;
           m_FaceLabels[triangleIndex * 2 + 1] = m_FeatureIds[point];
 
-          for(int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, point, point, m_SelectedWeakPtrVector[i].lock(),
                                       m_CreatedWeakPtrVector[i].lock(), true)
@@ -1495,7 +1478,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
             cIndex2 = neigh3;
           }
 
-          for(int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, neigh3, point, m_SelectedWeakPtrVector[i].lock(),
                                       m_CreatedWeakPtrVector[i].lock())
@@ -1520,7 +1503,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
             cIndex2 = neigh3;
           }
 
-          for(int32_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
+          for(size_t i = 0; i < m_SelectedWeakPtrVector.size(); i++)
           {
             EXECUTE_FUNCTION_TEMPLATE(this, copyCellArraysToFaceArrays, m_SelectedWeakPtrVector[i].lock(), triangleIndex, neigh3, point, m_SelectedWeakPtrVector[i].lock(),
                                       m_CreatedWeakPtrVector[i].lock())
@@ -1541,9 +1524,9 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<int64_t> m_NodeIds, i
     }
   }
 
-  for(int64_t i = 0; i < nodeCount; i++)
+  for(size_t i = 0; i < nodeCount; i++)
   {
-    m_NodeTypes[i] = ownerLists[i].size();
+    m_NodeTypes[i] = static_cast<int8_t>(ownerLists[i].size());
     if(m_NodeTypes[i] > 4)
     {
       m_NodeTypes[i] = 4;
@@ -1588,23 +1571,17 @@ void QuickSurfaceMesh::execute()
 
   SizeVec3Type udims = grid->getDimensions();
 
-  int64_t dims[3] = {
-      static_cast<int64_t>(udims[0]),
-      static_cast<int64_t>(udims[1]),
-      static_cast<int64_t>(udims[2]),
-  };
-
-  int64_t xP = dims[0];
-  int64_t yP = dims[1];
-  int64_t zP = dims[2];
+  size_t xP = udims[0];
+  size_t yP = udims[1];
+  size_t zP = udims[2];
 
   std::vector<std::set<int32_t>> ownerLists;
 
-  int64_t possibleNumNodes = (xP + 1) * (yP + 1) * (zP + 1);
-  std::vector<int64_t> m_NodeIds(possibleNumNodes, -1);
+  size_t possibleNumNodes = (xP + 1) * (yP + 1) * (zP + 1);
+  std::vector<size_t> m_NodeIds(possibleNumNodes, std::numeric_limits<size_t>::max());
 
-  int64_t nodeCount = 0;
-  int64_t triangleCount = 0;
+  size_t nodeCount = 0;
+  size_t triangleCount = 0;
 
   correctProblemVoxels();
 
@@ -1694,7 +1671,7 @@ void QuickSurfaceMesh::generateTripleLines()
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
 
   AttributeMatrix::Pointer featAttrMat = sm->getAttributeMatrix(m_FeatureAttributeMatrixName);
-  size_t numFeatures = 0;
+  int32_t numFeatures = 0;
   size_t numTuples = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   for(size_t i = 0; i < numTuples; i++)
   {
@@ -1704,7 +1681,7 @@ void QuickSurfaceMesh::generateTripleLines()
     }
   }
 
-  QVector<size_t> featDims(1, numFeatures + 1);
+  QVector<size_t> featDims(1, static_cast<size_t>(numFeatures) + 1);
   featAttrMat->setTupleDimensions(featDims);
 
   IGeometryGrid::Pointer grid = m->getGeometryAs<IGeometryGrid>();
@@ -1712,16 +1689,11 @@ void QuickSurfaceMesh::generateTripleLines()
 
   SizeVec3Type udims = grid->getDimensions();
 
-  int64_t dims[3] = {
-      static_cast<int64_t>(udims[0]),
-      static_cast<int64_t>(udims[1]),
-      static_cast<int64_t>(udims[2]),
-  };
 
-  int64_t xP = dims[0];
-  int64_t yP = dims[1];
-  int64_t zP = dims[2];
-  int64_t point = 0, neigh1 = 0, neigh2 = 0, neigh3 = 0;
+  MeshIndexType xP = udims[0];
+  MeshIndexType yP = udims[1];
+  MeshIndexType zP = udims[2];
+  MeshIndexType point = 0, neigh1 = 0, neigh2 = 0, neigh3 = 0;
 
   std::set<int32_t> uFeatures;
 
@@ -1730,16 +1702,16 @@ void QuickSurfaceMesh::generateTripleLines()
 
   VertexMap vertexMap;
   EdgeMap edgeMap;
-  int64_t vertCounter = 0;
-  int64_t edgeCounter = 0;
+  MeshIndexType vertCounter = 0;
+  MeshIndexType edgeCounter = 0;
 
   // Cycle through again assigning coordinates to each node and assigning node numbers and feature labels to each triangle
   // int64_t triangleIndex = 0;
-  for(int64_t k = 0; k < zP - 1; k++)
+  for(size_t k = 0; k < zP - 1; k++)
   {
-    for(int64_t j = 0; j < yP - 1; j++)
+    for(size_t j = 0; j < yP - 1; j++)
     {
-      for(int64_t i = 0; i < xP - 1; i++)
+      for(size_t i = 0; i < xP - 1; i++)
       {
 
         point = (k * xP * yP) + (j * xP) + i;
@@ -1774,8 +1746,8 @@ void QuickSurfaceMesh::generateTripleLines()
           {
             vertexMap[p1] = vertCounter++;
           }
-          int64_t i0 = vertexMap[p0];
-          int64_t i1 = vertexMap[p1];
+          MeshIndexType i0 = vertexMap[p0];
+          MeshIndexType i1 = vertexMap[p1];
 
           Edge tmpEdge = {{i0, i1}};
           auto eiter = edgeMap.find(tmpEdge);
@@ -1808,8 +1780,8 @@ void QuickSurfaceMesh::generateTripleLines()
             vertexMap[p2] = vertCounter++;
           }
 
-          int64_t i0 = vertexMap[p0];
-          int64_t i2 = vertexMap[p2];
+          MeshIndexType i0 = vertexMap[p0];
+          MeshIndexType i2 = vertexMap[p2];
 
           Edge tmpEdge = {{i0, i2}};
           auto eiter = edgeMap.find(tmpEdge);
@@ -1842,8 +1814,8 @@ void QuickSurfaceMesh::generateTripleLines()
             vertexMap[p3] = vertCounter++;
           }
 
-          int64_t i0 = vertexMap[p0];
-          int64_t i3 = vertexMap[p3];
+          MeshIndexType i0 = vertexMap[p0];
+          MeshIndexType i3 = vertexMap[p3];
 
           Edge tmpEdge = {{i0, i3}};
           auto eiter = edgeMap.find(tmpEdge);
@@ -1864,7 +1836,7 @@ void QuickSurfaceMesh::generateTripleLines()
     float v0 = vert.first[0];
     float v1 = vert.first[1];
     float v2 = vert.first[2];
-    int64_t idx = vert.second;
+    MeshIndexType idx = vert.second;
     vertices->setComponent(idx, 0, v0);
     vertices->setComponent(idx, 1, v1);
     vertices->setComponent(idx, 2, v2);
@@ -1875,9 +1847,9 @@ void QuickSurfaceMesh::generateTripleLines()
   SharedEdgeList::Pointer edges = tripleLineEdge->CreateSharedEdgeList(edgeMap.size() * 2);
   for(auto edge : edgeMap)
   {
-    int64_t i0 = edge.first[0];
-    int64_t i1 = edge.first[1];
-    int64_t idx = edge.second;
+    MeshIndexType i0 = edge.first[0];
+    MeshIndexType i1 = edge.first[1];
+    MeshIndexType idx = edge.second;
     edges->setComponent(idx, 0, i0);
     edges->setComponent(idx, 1, i1);
   }
