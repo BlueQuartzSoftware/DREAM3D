@@ -270,7 +270,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
   DataContainer::Pointer sm = getDataContainerArray()->getDataContainer(getSurfaceDataContainerName());
   IGeometry2D::Pointer surfaceMesh = sm->getGeometryAs<IGeometry2D>();
   float* verts = surfaceMesh->getVertexPointer(0);
-  int64_t nvert = surfaceMesh->getNumberOfVertices();
+  MeshIndexType nvert = surfaceMesh->getNumberOfVertices();
 
   // Generate the Lambda Array
   err = generateLambdaArray();
@@ -317,16 +317,16 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
     QString ss = QObject::tr("Iteration %1 of %2").arg(q).arg(m_IterationSteps);
     notifyStatusMessage(ss);
     // Compute the Deltas for each point
-    for(int64_t i = 0; i < nedges; i++)
+    for(MeshIndexType i = 0; i < nedges; i++)
     {
-      int64_t in1 = uedges[2 * i];     // row of the first vertex
-      int64_t in2 = uedges[2 * i + 1]; // row the second vertex
+      MeshIndexType in1 = uedges[2 * i];     // row of the first vertex
+      MeshIndexType in2 = uedges[2 * i + 1]; // row the second vertex
 
-      for(int32_t j = 0; j < 3; j++)
+      for(MeshIndexType j = 0; j < 3; j++)
       {
         Q_ASSERT(static_cast<size_t>(3 * in1 + j) < static_cast<size_t>(nvert * 3));
         Q_ASSERT(static_cast<size_t>(3 * in2 + j) < static_cast<size_t>(nvert * 3));
-        dlta = verts[3 * in2 + j] - verts[3 * in1 + j];
+        dlta = static_cast<double>(verts[3 * in2 + j] - verts[3 * in1 + j]);
         delta[3 * in1 + j] += dlta;
         delta[3 * in2 + j] += -1.0 * dlta;
       }
@@ -336,11 +336,11 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
 
     // Move each point
     float ll = 0.0f;
-    for(int64_t i = 0; i < nvert; i++)
+    for(MeshIndexType i = 0; i < nvert; i++)
     {
-      for(int32_t j = 0; j < 3; j++)
+      for(MeshIndexType j = 0; j < 3; j++)
       {
-        int64_t in0 = 3 * i + j;
+        MeshIndexType in0 = 3 * i + j;
         dlta = delta[in0] / ncon[i];
 
         ll = lambda[i];
@@ -363,10 +363,10 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
       QString ss = QObject::tr("Iteration %1 of %2").arg(q).arg(m_IterationSteps);
       notifyStatusMessage(ss);
       // Compute the Delta's
-      for(int64_t i = 0; i < nedges; i++)
+      for(MeshIndexType i = 0; i < nedges; i++)
       {
-        int64_t in1 = uedges[2 * i];     // row of the first vertex
-        int64_t in2 = uedges[2 * i + 1]; // row the second vertex
+        MeshIndexType in1 = uedges[2 * i];     // row of the first vertex
+        MeshIndexType in2 = uedges[2 * i + 1]; // row the second vertex
 
         for(int32_t j = 0; j < 3; j++)
         {
@@ -382,11 +382,11 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
 
       // MOve the points
       float ll = 0.0f;
-      for(int64_t i = 0; i < nvert; i++)
+      for(MeshIndexType i = 0; i < nvert; i++)
       {
-        for(int32_t j = 0; j < 3; j++)
+        for(MeshIndexType j = 0; j < 3; j++)
         {
-          int64_t in0 = 3 * i + j;
+          MeshIndexType in0 = 3 * i + j;
           dlta = delta[in0] / ncon[i];
 
           ll = lambda[i] * m_MuFactor;

@@ -238,7 +238,7 @@ void WriteStlFile::execute()
   QMap<int32_t, int32_t> uniqueGrainIdtoPhase;
   if(m_GroupByPhase)
   {
-    for(int64_t i = 0; i < nTriangles; i++)
+    for(MeshIndexType i = 0; i < nTriangles; i++)
     {
       uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i * 2], m_SurfaceMeshFacePhases[i * 2]);
       uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i * 2 + 1], m_SurfaceMeshFacePhases[i * 2 + 1]);
@@ -246,7 +246,7 @@ void WriteStlFile::execute()
   }
   else
   {
-    for(int64_t i = 0; i < nTriangles; i++)
+    for(MeshIndexType i = 0; i < nTriangles; i++)
     {
       uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i * 2], 0);
       uniqueGrainIdtoPhase.insert(m_SurfaceMeshFaceLabels[i * 2 + 1], 0);
@@ -298,12 +298,12 @@ void WriteStlFile::execute()
     triCount = 0; // Reset this to Zero. Increment for every triangle written
 
     // Loop over all the triangles for this spin
-    for(int64_t t = 0; t < nTriangles; ++t)
+    for(MeshIndexType t = 0; t < nTriangles; ++t)
     {
       // Get the true indices of the 3 nodes
-      int64_t nId0 = triangles[t * 3];
-      int64_t nId1 = triangles[t * 3 + 1];
-      int64_t nId2 = triangles[t * 3 + 2];
+      MeshIndexType nId0 = triangles[t * 3];
+      MeshIndexType nId1 = triangles[t * 3 + 1];
+      MeshIndexType nId2 = triangles[t * 3 + 2];
 
       vert1[0] = static_cast<float>(nodes[nId0 * 3]);
       vert1[1] = static_cast<float>(nodes[nId0 * 3 + 1]);
@@ -317,7 +317,7 @@ void WriteStlFile::execute()
       {
         // winding = 1; // Write it using backward spin
         // Switch the 2 node indices
-        int64_t temp = nId1;
+        MeshIndexType temp = nId1;
         nId1 = nId2;
         nId2 = temp;
       }
@@ -381,7 +381,7 @@ int32_t WriteStlFile::writeHeader(FILE* f, const QString& header, int32_t triCou
   size_t headlength = 80;
   if(header.length() < 80)
   {
-    headlength = header.length();
+    headlength = static_cast<size_t>(header.length());
   }
 
   std::string c_str = header.toStdString();

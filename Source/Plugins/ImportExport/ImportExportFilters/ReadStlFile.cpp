@@ -476,9 +476,9 @@ void ReadStlFile::eliminate_duplicate_nodes()
   // Create array to hold unique node numbers
   Int64ArrayType::Pointer uniqueIdsPtr = Int64ArrayType::CreateArray(nNodes, "uniqueIds");
   int64_t* uniqueIds = uniqueIdsPtr->getPointer(0);
-  for(int64_t i = 0; i < nNodes_; i++)
+  for(MeshIndexType i = 0; i < nNodes_; i++)
   {
-    uniqueIds[i] = i;
+    uniqueIds[i] = static_cast<int64_t>(i);
   }
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
