@@ -20,7 +20,8 @@ public:
     QString msg;
     QTextStream out(&msg);
 
-    out << hFile << '\n';
+    out << hFile;
+    qDebug() << msg;
 
     QString contents;
     QFileInfo fi(hFile);
@@ -38,9 +39,13 @@ public:
       source.close();
     }
 
-    bool didReplace = false;
-    bool isIOFilter = false;
-    QString searchString = "=============";
+    bool hasInclude = false;
+    bool hasSearchString = false;
+
+    QString searchString = "DEFINE_IDATAARRAY_VARIABLE";
+    QString includString = "#include \"SIMPLib";
+
+    int includeIndex = 0;
 
     QVector<QString> outLines;
     QStringList list = contents.split(QRegExp("\\n"));
@@ -48,39 +53,39 @@ public:
 
     int32_t lineIndex = 0;
 
-    // Get the first line
-    QString zeroLine = sourceLines.next();
-    if(zeroLine.startsWith("#"))
-    {
-      // The file is correctly formatted. Skip it and go on.
-      return;
-    }
-
-    // Get the second line
-    QString oneLine = sourceLines.next();
-    if(oneLine.startsWith("===="))
-    {
-      // This doc needs updating
-      zeroLine = "# " + zeroLine + " #";
-      oneLine = "";
-      outLines.push_back(zeroLine);
-      outLines.push_back(oneLine);
-      didReplace = true;
-    }
-
     // First Pass is to analyze the header file
     while(sourceLines.hasNext())
     {
       QString line = sourceLines.next();
 
-      outLines.push_back(line);
+      if(line.startsWith(includString))
+      {
+        includeIndex = lineIndex;
+      }
+      if(line.contains(searchString))
+      {
+        hasSearchString = true;
+      }
+      if(line.contains("#include \"SIMPLib/DataArrays/IDataArray.h\""))
+      {
+        hasInclude = true;
+      }
       lineIndex++;
+      outLines.push_back(line);
     }
 
-    if(didReplace && !isIOFilter)
+    if(!hasInclude && hasSearchString)
     {
-      std::cout << msg.toStdString() << std::endl;
-      writeOutput(didReplace, outLines, hFile);
+      QString line = outLines[includeIndex];
+      line = line + "\n#include \"SIMPLib/DataArrays/IDataArray.h\"";
+      outLines[includeIndex] = line;
+    }
+    qDebug() << "Last SIMPLib Include Directive is line " << includeIndex;
+
+    if(!hasInclude && hasSearchString)
+    {
+
+      writeOutput(hasSearchString, outLines, hFile);
     }
   }
 };

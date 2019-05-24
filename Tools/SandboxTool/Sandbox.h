@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QtCore/QDebug>
+#include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QString>
@@ -28,15 +29,19 @@ public:
    */
   void writeOutput(bool didReplace, const QStringList& outLines, const QString& filename)
   {
+    QString finalOutPath = filename;
+    QFileInfo fi(filename);
     if(didReplace)
     {
-      QFileInfo fi2(filename);
 #if OVERWRITE_SOURCE_FILE
-      QFile hOut(filename);
+
 #else
-      QString tmpPath = "/tmp/" + fi2.fileName();
-      QFile hOut(tmpPath);
+      finalOutPath = QDir::homePath() + "/tmp/" + fi.fileName();
 #endif
+      QFile hOut(finalOutPath);
+
+      QFileInfo fi2(finalOutPath);
+
       hOut.open(QFile::WriteOnly);
       QTextStream stream(&hOut);
       stream << outLines.join("\n");
@@ -54,15 +59,18 @@ public:
    */
   void writeOutput(bool didReplace, QVector<QString>& outLines, const QString& filename)
   {
+    QString finalOutPath = filename;
+    QFileInfo fi(filename);
     if(didReplace)
     {
-      QFileInfo fi2(filename);
 #if OVERWRITE_SOURCE_FILE
-      QFile hOut(filename);
+
 #else
-      QString tmpPath = "/tmp/" + fi2.fileName();
-      QFile hOut(tmpPath);
+      finalOutPath = QDir::homePath() + "/tmp/" + fi.fileName();
 #endif
+      QFile hOut(finalOutPath);
+
+      QFileInfo fi2(finalOutPath);
       hOut.open(QFile::WriteOnly);
       QTextStream stream(&hOut);
       for(qint32 i = 0; i < outLines.size() - 1; i++)
