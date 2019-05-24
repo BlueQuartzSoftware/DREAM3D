@@ -211,17 +211,39 @@ private:
    */
   void getGridCoordinates(const IGeometryGrid::Pointer &grid, size_t x, size_t y, size_t z, float* coords);
 
-  void flipProblemVoxelCase1(int64_t v1, int64_t v2, int64_t v3, int64_t v4, int64_t v5, int64_t v6);
+  /**
+   * @brief flipProblemVoxelCase1
+   * @param v1
+   * @param v2
+   * @param v3
+   * @param v4
+   * @param v5
+   * @param v6
+   */
+  void flipProblemVoxelCase1(MeshIndexType v1, MeshIndexType v2, MeshIndexType v3, MeshIndexType v4, MeshIndexType v5, MeshIndexType v6);
 
-  void flipProblemVoxelCase2(int64_t v1, int64_t v2, int64_t v3, int64_t v4);
+  /**
+   * @brief flipProblemVoxelCase2
+   * @param v1
+   * @param v2
+   * @param v3
+   * @param v4
+   */
+  void flipProblemVoxelCase2(MeshIndexType v1, MeshIndexType v2, MeshIndexType v3, MeshIndexType v4);
 
-  void flipProblemVoxelCase3(int64_t v1, int64_t v2, int64_t v3);
+  /**
+   * @brief flipProblemVoxelCase3
+   * @param v1
+   * @param v2
+   * @param v3
+   */
+  void flipProblemVoxelCase3(MeshIndexType v1, MeshIndexType v2, MeshIndexType v3);
 
   void correctProblemVoxels();
 
-  void determineActiveNodes(std::vector<int64_t>& m_NodeIds, int64_t& nodeCount, int64_t& triangleCount);
+  void determineActiveNodes(std::vector<MeshIndexType>& m_NodeIds, MeshIndexType& nodeCount, MeshIndexType& triangleCount);
 
-  void createNodesAndTriangles(std::vector<int64_t> m_NodeIds, int64_t nodeCount, int64_t triangleCount);
+  void createNodesAndTriangles(std::vector<MeshIndexType> m_NodeIds, MeshIndexType nodeCount, MeshIndexType triangleCount);
 
   /**
    * @brief updateFaceInstancePointers Updates raw Face pointers

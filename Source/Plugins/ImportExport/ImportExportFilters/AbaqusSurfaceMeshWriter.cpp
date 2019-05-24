@@ -174,7 +174,7 @@ void AbaqusSurfaceMeshWriter::execute()
 
   // Store all the unique Spins
   std::set<int32_t> uniqueSpins;
-  for(int64_t i = 0; i < triangleGeom->getNumberOfTris(); i++)
+  for(MeshIndexType i = 0; i < triangleGeom->getNumberOfTris(); i++)
   {
     uniqueSpins.insert(m_SurfaceMeshFaceLabels[i * 2]);
     uniqueSpins.insert(m_SurfaceMeshFaceLabels[i * 2 + 1]);
@@ -266,7 +266,7 @@ int32_t AbaqusSurfaceMeshWriter::writeTriangles(FILE* f)
   MeshIndexType* triangles = triangleGeom->getTriPointer(0);
 
   fprintf(f, "*ELEMENT, TYPE=%s\n", TRI_ELEMENT_TYPE);
-  for(int64_t i = 1; i <= numTri; ++i)
+  for(MeshIndexType i = 1; i <= numTri; ++i)
   {
     // When we get the node index, add 1 to it because Abaqus number is 1 based.
     int64_t nId0 = triangles[(i - 1) * 3] + 1;
