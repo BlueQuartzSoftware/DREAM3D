@@ -35,6 +35,8 @@
 
 #include "EMMPMFilter.h"
 
+#include <QtGui/QColor>
+
 #include "EMMPM/EMMPMConstants.h"
 #include "EMMPM/EMMPMLib/Common/EMMPM_Math.h"
 #include "EMMPM/EMMPMLib/Common/EMTime.h"

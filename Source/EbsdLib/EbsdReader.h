@@ -36,7 +36,6 @@
 #pragma once
 
 #include <QtCore/QString>
-#include <QtCore/QVector>
 #include <QtCore/QMap>
 
 #include "EbsdLib/EbsdSetGetMacros.h"

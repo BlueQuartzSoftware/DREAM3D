@@ -38,7 +38,6 @@
 #include <complex>
 
 #include <QtCore/QMutex>
-#include <QtCore/QSemaphore>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"

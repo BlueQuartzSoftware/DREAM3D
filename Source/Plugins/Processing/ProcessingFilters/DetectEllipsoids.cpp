@@ -37,7 +37,6 @@
 
 #define NOMINMAX
 
-#include <QtCore/QDateTime>
 #include <QtCore/QMutexLocker>
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS

@@ -35,7 +35,6 @@
 
 #include "CalculateTriangleGroupCurvatures.h"
 
-#include <QtCore/QtGlobal>
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/task.h>

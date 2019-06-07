@@ -36,7 +36,6 @@
 
 #include "ModifiedLambertProjection.h"
 
-#include <QtCore/QSet>
 
 
 #include "SIMPLib/Math/SIMPLibMath.h"

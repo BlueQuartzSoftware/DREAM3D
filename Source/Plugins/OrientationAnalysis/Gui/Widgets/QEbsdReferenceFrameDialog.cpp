@@ -38,20 +38,13 @@
 #include <iostream>
 
 #include <QtCore/QFileInfo>
-#include <QtCore/QJsonDocument>
-#include <QtCore/QPropertyAnimation>
-#include <QtCore/QStateMachine>
-#include <QtCore/QtEndian>
 
 #include <QtGui/QColor>
 #include <QtGui/QFont>
 #include <QtGui/QPainter>
-#include <QtGui/QPixmap>
 #include <QtWidgets/QButtonGroup>
-#include <QtWidgets/QGraphicsPixmapItem>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMessageBox>
-#include <QtWidgets/QPushButton>
 
 #include "EbsdLib/HKL/CtfConstants.h"
 #include "EbsdLib/TSL/AngConstants.h"

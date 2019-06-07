@@ -37,7 +37,6 @@
 
 #define PFIU_USE_PDF 1
 
-#include <QtCore/QObject>
 #include <QtCore/QVector>
 
 #include <QtGui/QImage>

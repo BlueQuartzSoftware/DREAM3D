@@ -37,7 +37,6 @@
 
 #include <chrono>
 
-#include <QtCore/QDateTime>
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/atomic.h>

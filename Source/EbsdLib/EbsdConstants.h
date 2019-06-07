@@ -37,8 +37,6 @@
 #pragma once
 
 #include <QtCore/QString>
-#include <QtCore/QJsonObject>
-#include <QtCore/QMetaType>
 
 #include "SIMPLib/Common/Constants.h"
 

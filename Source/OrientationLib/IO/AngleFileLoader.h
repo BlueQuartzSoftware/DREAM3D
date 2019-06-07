@@ -37,7 +37,6 @@
 
 
 
-#include <QtCore/QString>
 #include <vector>
 
 

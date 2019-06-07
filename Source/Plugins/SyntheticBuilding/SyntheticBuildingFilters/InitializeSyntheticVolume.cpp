@@ -35,7 +35,6 @@
 
 #include "InitializeSyntheticVolume.h"
 
-#include <QtCore/QFileInfo>
 
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5ScopedSentinel.h"

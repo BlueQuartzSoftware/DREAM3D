@@ -41,7 +41,6 @@
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-#include <QtCore/QMetaProperty>
 #include <QtCore/QString>
 
 // DREAM3DLib includes

@@ -36,7 +36,6 @@
 #pragma once
 
 #include <QtCore/QList>
-#include <QtCore/QVector>
 
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
 #include "SIMPLib/SIMPLib.h"

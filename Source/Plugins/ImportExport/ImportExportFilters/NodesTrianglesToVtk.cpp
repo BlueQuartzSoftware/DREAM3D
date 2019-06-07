@@ -35,9 +35,8 @@
 
 #include "NodesTrianglesToVtk.h"
 
-#include <QtCore/QDir>
 #include <QtCore/QFile>
-#include <QtCore/QtEndian>
+#include <QtCore/QFileInfo>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"

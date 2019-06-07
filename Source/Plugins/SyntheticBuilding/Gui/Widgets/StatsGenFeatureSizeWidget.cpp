@@ -37,15 +37,9 @@
 #include <iostream>
 #include <limits>
 
-#include <QtCore/QSettings>
 #include <QtGui/QDoubleValidator>
-#include <QtGui/QIntValidator>
 #include <QtGui/QMouseEvent>
 #include <QtWidgets/QLineEdit>
-#include <QtWidgets/QMessageBox>
-#include <QtWidgets/QProgressDialog>
-#include <QtWidgets/QTreeWidget>
-#include <QtWidgets/QTreeWidgetItem>
 
 // Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/EbsdConstants.h"

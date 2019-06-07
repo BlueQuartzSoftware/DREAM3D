@@ -46,10 +46,6 @@
 #include <QtCore/QString>
 #include <QtCore/QString>
 
-#include <QtGui/QColor>
-#include <QtGui/QFont>
-#include <QtGui/QImage>
-#include <QtGui/QPainter>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"

@@ -37,7 +37,6 @@
 
 #include <vector>
 
-#include <QtWidgets/QDialog>
 
 #include "ui_TextureDialog.h"
 

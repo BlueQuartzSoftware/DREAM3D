@@ -35,9 +35,8 @@
 
 #include <string.h>
 
-#include <QtCore/QDir>
+#include <QtCore/QDebug>
 #include <QtCore/QFile>
-#include <QtCore/QtDebug>
 
 #include "EbsdLib/EbsdLib.h"
 

@@ -39,11 +39,9 @@
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QDebug>
-#include <QtGui/QDoubleValidator>
 #include <QtGui/QPainter>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QLineEdit>
-#include <QtWidgets/QStyleOptionViewItemV4>
 
 #include "EnsembleInfoTableModel.h"
 

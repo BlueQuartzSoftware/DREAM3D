@@ -41,11 +41,10 @@
 // C++ Includes
 #include <iomanip>
 
+#include <QtCore/QDebug>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
-#include <QtCore/QMap>
 #include <QtCore/QString>
-#include <QtCore/QtDebug>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"

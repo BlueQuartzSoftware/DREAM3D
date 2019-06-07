@@ -38,10 +38,6 @@
 
 
 #include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QSettings>
-#include <QtCore/QVector>
-#include <QtCore/QUrl>
 
 #include "EbsdLib/EbsdConstants.h"
 

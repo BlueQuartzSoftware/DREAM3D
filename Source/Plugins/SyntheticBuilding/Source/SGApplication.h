@@ -37,7 +37,6 @@
 
 //-- Qt Headers
 #include <QtCore/QList>
-#include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtWidgets/QApplication>
 
