@@ -38,10 +38,6 @@
 #include <iostream>
 #include <limits>
 
-#include <QtCore/QSettings>
-#include <QtGui/QDoubleValidator>
-#include <QtGui/QIntValidator>
-#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 

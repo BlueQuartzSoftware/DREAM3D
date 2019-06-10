@@ -38,7 +38,6 @@
 #include <QtCore/QAbstractTableModel>
 #include <QtCore/QVariant>
 #include <QtCore/QVector>
-#include <QtGui/QColor>
 
 #include "SIMPLib/Common/Constants.h"
 

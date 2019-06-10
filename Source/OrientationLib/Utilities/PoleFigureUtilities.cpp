@@ -36,7 +36,6 @@
 #include "PoleFigureUtilities.h"
 
 #include <QtCore/QFile>
-#include <QtCore/QByteArray>
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Utilities/ColorTable.h"

@@ -36,7 +36,6 @@
 #include <iostream>
 #include <limits>
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QString>
 #include <QtCore/QVector>
 

@@ -41,7 +41,6 @@
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
-#include <QtCore/QTextStream>
 #include <QtCore/QByteArray>
 
 #include "SIMPLib/Math/QuaternionMath.hpp"

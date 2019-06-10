@@ -2,12 +2,10 @@
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDate>
-#include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
-#include <QtCore/QSet>
 
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/QMetaObjectUtilities.h"

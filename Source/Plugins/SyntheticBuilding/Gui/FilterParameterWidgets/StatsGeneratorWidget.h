@@ -37,9 +37,7 @@
 
 #include <vector>
 
-#include <QtCore/QObject>
 
-#include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMessageBox>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"

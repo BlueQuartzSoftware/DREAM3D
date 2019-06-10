@@ -35,7 +35,6 @@
 
 #pragma once
 
-#include <QtCore/QObject>
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"

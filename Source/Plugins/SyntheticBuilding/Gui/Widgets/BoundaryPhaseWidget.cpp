@@ -38,7 +38,6 @@
 #include <iostream>
 #include <limits>
 
-#include <QtCore/QSettings>
 #include <QtCore/QString>
 #include <QtWidgets/QMessageBox>
 

@@ -35,9 +35,7 @@
 
 #include "EnsembleInfoCreationWidget.h"
 
-#include <QtCore/QSignalMapper>
 
-#include <QtWidgets/QMenu>
 
 #include "SVWidgetsLib/Core/SVWidgetsLibConstants.h"
 #include "SVWidgetsLib/Widgets/SVStyle.h"

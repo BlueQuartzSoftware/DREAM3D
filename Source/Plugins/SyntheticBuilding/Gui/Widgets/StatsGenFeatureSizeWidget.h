@@ -3,8 +3,6 @@
 #include <cmath>
 #include <limits>
 
-#include <QtCore/QEvent>
-#include <QtCore/QObject>
 #include <QtCore/QString>
 #include <QtCore/QVector>
 

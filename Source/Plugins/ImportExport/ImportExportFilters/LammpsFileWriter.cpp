@@ -35,9 +35,6 @@
 
 #include "LammpsFileWriter.h"
 
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QtEndian>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"

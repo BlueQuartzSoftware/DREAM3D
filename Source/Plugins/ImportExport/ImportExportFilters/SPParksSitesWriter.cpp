@@ -37,7 +37,6 @@
 #include <fstream>
 
 #include <QtCore/QDateTime>
-#include <QtCore/QDir>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"

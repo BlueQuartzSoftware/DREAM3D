@@ -51,7 +51,6 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-#include <QtCore/QFileInfo>
 #include <QtCore/QMap>
 
 #include "SIMPLib/Common/PipelineMessage.h"

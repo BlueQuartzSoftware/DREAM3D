@@ -36,10 +36,7 @@
 
 #pragma once
 
-#include <QtCore/QObject>
-#include <QtCore/QUrl>
 
-#include <QtWidgets/QFileDialog>
 
 // Needed for AxisAngle_t
 #include "EbsdLib/EbsdConstants.h"

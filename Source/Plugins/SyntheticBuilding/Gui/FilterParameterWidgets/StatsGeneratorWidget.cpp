@@ -39,11 +39,8 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QJsonDocument>
-#include <QtCore/QSettings>
 #include <QtCore/QString>
 #include <QtCore/QVector>
-#include <QtGui/QCloseEvent>
-#include <QtGui/QDesktopServices>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>

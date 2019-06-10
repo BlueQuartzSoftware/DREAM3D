@@ -41,15 +41,12 @@
 #include <iostream>
 
 //-- Qt Includes
-#include <QtConcurrent/QtConcurrentMap>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
-#include <QtCore/QSettings>
 #include <QtCore/QString>
 #include <QtCore/QVector>
 
-#include <QtGui/QCloseEvent>
 #include <QtWidgets/QAbstractItemDelegate>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>

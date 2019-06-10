@@ -32,7 +32,6 @@
 
 #include "ImportEbsdMontage.h"
 
-#include <QtCore/QDateTime>
 #include <QtCore/QFileInfo>
 
 #include "EbsdLib/HKL/CtfFields.h"

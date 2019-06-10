@@ -48,13 +48,12 @@
 
 // Qt Includes
 #include <QtCore/QCoreApplication>
+#include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-#include <QtCore/QSettings>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtCore/QStringListIterator>
-#include <QtCore/QtDebug>
 
 // DREAM3DLib includes
 #include "SIMPLib/Common/Constants.h"

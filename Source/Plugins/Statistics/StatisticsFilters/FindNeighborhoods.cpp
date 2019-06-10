@@ -37,7 +37,6 @@
 
 #include <mutex>
 
-#include <QtCore/QDateTime>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"

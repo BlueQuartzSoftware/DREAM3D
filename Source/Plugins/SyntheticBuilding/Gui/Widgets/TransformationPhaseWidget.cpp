@@ -38,11 +38,7 @@
 #include <iostream>
 #include <limits>
 
-#include <QtConcurrent/QtConcurrentRun>
-#include <QtCore/QRunnable>
-#include <QtCore/QSettings>
 #include <QtCore/QString>
-#include <QtCore/QThreadPool>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
 

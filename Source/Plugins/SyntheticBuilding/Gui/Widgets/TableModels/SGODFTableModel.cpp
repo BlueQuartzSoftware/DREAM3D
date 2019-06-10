@@ -36,11 +36,11 @@
 #include "SGODFTableModel.h"
 #include <iostream>
 
+#include "SyntheticBuilding/Gui/Widgets/Delegates/SGODFItemDelegate.h"
+
 #include <QtWidgets/QAbstractItemDelegate>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QStyleOptionComboBox>
-
-#include "SyntheticBuilding/Gui/Widgets/Delegates/SGODFItemDelegate.h"
 
 // -----------------------------------------------------------------------------
 //

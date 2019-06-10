@@ -37,16 +37,7 @@
 
 #include <cassert>
 
-#include <QtCore/QDateTime>
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QMetaProperty>
 
-#include <QtCore/QItemSelectionModel>
-#include <QtGui/QStandardItemModel>
-#include <QtWidgets/QFileDialog>
-#include <QtWidgets/QLabel>
-#include <QtWidgets/QListWidget>
 
 #include "EMMPM/EMMPMFilters/EMMPMFilter.h"
 #include "EMMPM/FilterParameters/EMMPMFilterParameter.h"

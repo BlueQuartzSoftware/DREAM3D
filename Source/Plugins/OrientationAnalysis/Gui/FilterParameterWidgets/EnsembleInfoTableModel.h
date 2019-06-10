@@ -36,7 +36,6 @@
 #pragma once
 
 #include <QtCore/QAbstractTableModel>
-#include <QtCore/QStringList>
 #include <QtCore/QVariant>
 #include <QtCore/QVector>
 

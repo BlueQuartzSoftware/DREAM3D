@@ -35,7 +35,6 @@
 
 #pragma once
 
-#include <QtCore/QObject>
 #include <QtCore/QString>
 
 #include "SIMPLib/SIMPLib.h"

@@ -38,17 +38,12 @@
 #include <iostream>
 
 //-- Qt Includes
-#include <QtConcurrent/QtConcurrentMap>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-#include <QtCore/QFileInfo>
 #include <QtCore/QModelIndex>
-#include <QtCore/QSettings>
 #include <QtCore/QString>
-#include <QtGui/QCloseEvent>
 #include <QtWidgets/QAbstractItemDelegate>
 #include <QtWidgets/QFileDialog>
-#include <QtWidgets/QMessageBox>
 
 #include "EbsdLib/EbsdConstants.h"
 
