@@ -29,11 +29,11 @@
  *
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include "ImportEbsdMontage.h"
 
 #include <memory>
 
-#include "ImportEbsdMontage.h"
-
+#include <QtCore/QTextStream>
 #include <QtCore/QFileInfo>
 
 #include "EbsdLib/HKL/CtfFields.h"
@@ -41,12 +41,10 @@
 #include "EbsdLib/TSL/AngFields.h"
 #include "EbsdLib/TSL/AngReader.h"
 
-#include <QtCore/QTextStream>
-
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
+#include "SIMPLib/DataContainers/GridMontage.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -70,7 +68,8 @@ enum createdPathID : RenameDataPath::DataID_t
 //
 // -----------------------------------------------------------------------------
 ImportEbsdMontage::ImportEbsdMontage()
-: m_DataContainerName("OIM Data Container")
+: m_MontageName("Montage")
+, m_DataContainerName("OIM Data Container")
 , m_CellEnsembleAttributeMatrixName("Phase Data")
 , m_CellAttributeMatrixName("Scan Data")
 {
@@ -102,6 +101,7 @@ void ImportEbsdMontage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_EbsdMontageListInfo_FP("Input File List", InputFileListInfo, FilterParameter::Parameter, ImportEbsdMontage));
   // parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ImportEbsdMontage));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Montage", MontageName, FilterParameter::CreatedArray, ImportEbsdMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, ImportEbsdMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, ImportEbsdMontage));
 
@@ -217,6 +217,10 @@ void ImportEbsdMontage::dataCheck()
 
   std::map<QString, AbstractFilter::Pointer> newFilterCache;
 
+  size_t rows = m_InputFileListInfo.RowEnd - m_InputFileListInfo.RowStart;
+  size_t cols = m_InputFileListInfo.ColEnd - m_InputFileListInfo.ColStart;
+  GridMontage::Pointer gridMontage = GridMontage::New(getMontageName(), rows, cols);
+
   for(const FilePathGenerator::TileRCIndexRow2D& tileRow2D : tileLayout2d)
   {
     globalTileOrigin[0] = 0.0; // Reset the X Coord back to Zero for each row.
@@ -228,6 +232,7 @@ void ImportEbsdMontage::dataCheck()
       QString phasesName;
       QString eulersName;
       QString xtalName;
+      GridTileIndex gridIndex = gridMontage->getTileIndex(tile2D.data[0], tile2D.data[1]);
 
       if(m_InputFileListInfo.FileExtension == Ebsd::Ang::FileExt)
       {
@@ -265,6 +270,9 @@ void ImportEbsdMontage::dataCheck()
         // Now update the globalTileOrigin values
         globalTileOrigin[0] += origin[0] + (dims[0] * spacing[0]);
         tileHeight = (dims[1] * spacing[1]);
+
+        // Set the montage's DataContainer for the current index
+        gridMontage->setDataContainer(gridIndex, dc);
 
         if(getCancel())
         {
@@ -329,6 +337,7 @@ void ImportEbsdMontage::dataCheck()
     }
     globalTileOrigin[1] += tileHeight;
   }
+  getDataContainerArray()->addOrReplaceMontage(gridMontage);
 
   m_FilterCache = newFilterCache; // Swap our maps. This dumps any previous instantiations of the reader filter that are not used any more.
   clearWarningCode();

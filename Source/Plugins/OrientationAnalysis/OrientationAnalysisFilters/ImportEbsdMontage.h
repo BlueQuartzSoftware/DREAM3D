@@ -33,7 +33,6 @@
 #pragma once
 
 #include <memory>
-
 #include <map>
 
 #include <QtCore/QString>
@@ -114,6 +113,10 @@ public:
    */
   DataArrayPath getDataContainerName() const;
 
+  SIMPL_FILTER_PARAMETER(QString, MontageName)
+  Q_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
+
+  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
   /**
