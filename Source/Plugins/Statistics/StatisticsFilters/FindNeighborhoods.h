@@ -35,10 +35,10 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -48,6 +48,8 @@
 class Statistics_EXPORT FindNeighborhoods : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindNeighborhoods SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(QString NeighborhoodListArrayName READ getNeighborhoodListArrayName WRITE setNeighborhoodListArrayName)
   PYB11_PROPERTY(float MultiplesOfAverage READ getMultiplesOfAverage WRITE setMultiplesOfAverage)
@@ -55,6 +57,8 @@ class Statistics_EXPORT FindNeighborhoods : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
   PYB11_PROPERTY(QString NeighborhoodsArrayName READ getNeighborhoodsArrayName WRITE setNeighborhoodsArrayName)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(FindNeighborhoods)
   SIMPL_FILTER_NEW_MACRO(FindNeighborhoods)

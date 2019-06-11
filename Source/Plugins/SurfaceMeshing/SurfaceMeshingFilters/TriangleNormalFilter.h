@@ -35,9 +35,9 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -49,8 +49,12 @@
 class SurfaceMeshing_EXPORT TriangleNormalFilter : public SurfaceMeshFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(TriangleNormalFilter SUPERCLASS SurfaceMeshFilter)
-    PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleNormalsArrayPath READ getSurfaceMeshTriangleNormalsArrayPath WRITE setSurfaceMeshTriangleNormalsArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(TriangleNormalFilter SUPERCLASS SurfaceMeshFilter)
+  PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleNormalsArrayPath READ getSurfaceMeshTriangleNormalsArrayPath WRITE setSurfaceMeshTriangleNormalsArrayPath)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(TriangleNormalFilter)
   SIMPL_FILTER_NEW_MACRO(TriangleNormalFilter)

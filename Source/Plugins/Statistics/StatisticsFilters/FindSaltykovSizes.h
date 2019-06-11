@@ -37,11 +37,11 @@
 
 #include <QtCore/QString>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -55,9 +55,13 @@
 class Statistics_EXPORT FindSaltykovSizes : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(FindSaltykovSizes SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
-    PYB11_PROPERTY(DataArrayPath SaltykovEquivalentDiametersArrayPath READ getSaltykovEquivalentDiametersArrayPath WRITE setSaltykovEquivalentDiametersArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(FindSaltykovSizes SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
+  PYB11_PROPERTY(DataArrayPath SaltykovEquivalentDiametersArrayPath READ getSaltykovEquivalentDiametersArrayPath WRITE setSaltykovEquivalentDiametersArrayPath)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(FindSaltykovSizes)
   SIMPL_FILTER_NEW_MACRO(FindSaltykovSizes)

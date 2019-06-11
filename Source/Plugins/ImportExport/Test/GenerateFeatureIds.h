@@ -14,7 +14,11 @@
 class GenerateFeatureIds : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(GenerateFeatureIds SUPERCLASS AbstractFilter)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(GenerateFeatureIds)
   SIMPL_FILTER_NEW_MACRO(GenerateFeatureIds)

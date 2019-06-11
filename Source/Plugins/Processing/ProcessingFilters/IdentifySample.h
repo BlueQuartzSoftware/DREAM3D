@@ -35,9 +35,9 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
@@ -50,9 +50,13 @@
 class Processing_EXPORT IdentifySample : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(IdentifySample SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(bool FillHoles READ getFillHoles WRITE setFillHoles)
-    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(IdentifySample SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(bool FillHoles READ getFillHoles WRITE setFillHoles)
+  PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(IdentifySample)
   SIMPL_FILTER_NEW_MACRO(IdentifySample)

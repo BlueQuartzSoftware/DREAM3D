@@ -57,9 +57,13 @@
 class ImportExport_EXPORT LammpsFileWriter : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(LammpsFileWriter SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
   PYB11_PROPERTY(QString LammpsFile READ getLammpsFile WRITE setLammpsFile)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(LammpsFileWriter)
   SIMPL_FILTER_NEW_MACRO(LammpsFileWriter)

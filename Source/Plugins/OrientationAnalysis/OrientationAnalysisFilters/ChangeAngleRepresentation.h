@@ -35,9 +35,9 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -47,9 +47,13 @@
 class OrientationAnalysis_EXPORT ChangeAngleRepresentation : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(ChangeAngleRepresentation SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(int ConversionType READ getConversionType WRITE setConversionType)
-    PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(ChangeAngleRepresentation SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(int ConversionType READ getConversionType WRITE setConversionType)
+  PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(ChangeAngleRepresentation)
   SIMPL_FILTER_NEW_MACRO(ChangeAngleRepresentation)

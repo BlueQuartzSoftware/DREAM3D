@@ -45,9 +45,9 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -57,6 +57,8 @@
 class OrientationAnalysis_EXPORT FindGBPDMetricBased : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindGBPDMetricBased SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
   PYB11_PROPERTY(float LimitDist READ getLimitDist WRITE setLimitDist)
@@ -73,6 +75,7 @@ class OrientationAnalysis_EXPORT FindGBPDMetricBased : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceAreasArrayPath READ getSurfaceMeshFaceAreasArrayPath WRITE setSurfaceMeshFaceAreasArrayPath)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFeatureFaceLabelsArrayPath READ getSurfaceMeshFeatureFaceLabelsArrayPath WRITE setSurfaceMeshFeatureFaceLabelsArrayPath)
   PYB11_PROPERTY(DataArrayPath NodeTypesArrayPath READ getNodeTypesArrayPath WRITE setNodeTypesArrayPath)
+#endif
 
 public:
   SIMPL_SHARED_POINTERS(FindGBPDMetricBased)

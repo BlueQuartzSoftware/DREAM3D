@@ -47,11 +47,15 @@
 class ImportExport_EXPORT ReadStlFile : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ReadStlFile SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshDataContainerName READ getSurfaceMeshDataContainerName WRITE setSurfaceMeshDataContainerName)
   PYB11_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
   PYB11_PROPERTY(QString StlFilePath READ getStlFilePath WRITE setStlFilePath)
   PYB11_PROPERTY(QString FaceNormalsArrayName READ getFaceNormalsArrayName WRITE setFaceNormalsArrayName)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(ReadStlFile)
   SIMPL_FILTER_NEW_MACRO(ReadStlFile)

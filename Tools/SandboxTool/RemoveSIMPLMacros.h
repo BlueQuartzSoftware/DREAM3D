@@ -344,6 +344,52 @@ public:
   }
 
   // -----------------------------------------------------------------------------
+  QString check_SIMPL_TYPE_MACRO(const QString& inLine, QTextStream& privCodeOut, QTextStream& definitionCodeOut, bool& hasSearchString, const QFileInfo& fi)
+  {
+    QString searchString = "SIMPL_TYPE_MACRO";
+    QString pubCode;
+    QTextStream pubCodeOut(&pubCode);
+    QString line = inLine;
+    if(line.trimmed().startsWith("//"))
+    {
+      return inLine;
+    }
+    if(inLine.contains(searchString))
+    {
+      hasSearchString = true;
+
+      line = line.replace(searchString, "");
+      line = line.replace("(", "");
+      line = line.replace(")", "");
+      QStringList tokens = line.split(",");
+
+      QString className = tokens[0].trimmed();
+
+      pubCodeOut << "    /**\n    * @brief Returns the name of the class for " << className << "\n    */\n";
+      pubCodeOut << "    const QString getNameOfClass() const;\n";
+      pubCodeOut << "    /**\n    * @brief Returns the name of the class for " << className << "\n    */\n";
+      pubCodeOut << "    static QString ClassName();\n";
+
+      // pubCodeOut << "    /**\n    * @brief Getter property for " << varName << "\n    * @return Value of " << varName << "\n    */\n";
+
+      definitionCodeOut << "// -----------------------------------------------------------------------------\n";
+      definitionCodeOut << "const QString " << fi.baseName() << "::getNameOfClass() const\n";
+      definitionCodeOut << "{\n";
+      definitionCodeOut << "  return QString(\"" << className << "\");\n";
+      definitionCodeOut << "}\n\n";
+
+      definitionCodeOut << "// -----------------------------------------------------------------------------\n";
+      definitionCodeOut << "QString " << fi.baseName() << "::ClassName()\n";
+      definitionCodeOut << "{\n";
+      definitionCodeOut << "  return QString(\"" << className << "\");\n";
+      definitionCodeOut << "}\n\n";
+
+      line = pubCode;
+    }
+
+    return line;
+  }
+  // -----------------------------------------------------------------------------
   void operator()(const QString& hFile)
   {
     QString msg;
@@ -405,6 +451,7 @@ public:
       line = check_SIMPL_STATIC_NEW_MACRO(line, privCodeOut, definitionCodeOut, hasSearchString, fi);
       line = check_SIMPL_STATIC_NEW_MACRO(line, privCodeOut, definitionCodeOut, hasSearchString, fi);
       line = check_SIMPL_TYPE_MACRO_SUPER_OVERRIDE(line, privCodeOut, definitionCodeOut, hasSearchString, fi);
+      line = check_SIMPL_TYPE_MACRO(line, privCodeOut, definitionCodeOut, hasSearchString, fi);
       line = check_SIMPL_FILTER_PARAMETER(line, privCodeOut, definitionCodeOut, hasSearchString, fi);
       line = check_SIMPL_INSTANCE_PROPERTY(line, privCodeOut, definitionCodeOut, hasSearchString, fi);
       line = check_SIMPL_INSTANCE_STRING_PROPERTY(line, privCodeOut, definitionCodeOut, hasSearchString, fi);

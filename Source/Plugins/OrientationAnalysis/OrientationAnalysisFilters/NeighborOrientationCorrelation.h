@@ -35,9 +35,9 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
@@ -49,14 +49,18 @@
 class OrientationAnalysis_EXPORT NeighborOrientationCorrelation : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(NeighborOrientationCorrelation SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
-    PYB11_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence)
-    PYB11_PROPERTY(int Level READ getLevel WRITE setLevel)
-    PYB11_PROPERTY(DataArrayPath ConfidenceIndexArrayPath READ getConfidenceIndexArrayPath WRITE setConfidenceIndexArrayPath)
-    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
-    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
-    PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(NeighborOrientationCorrelation SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
+  PYB11_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence)
+  PYB11_PROPERTY(int Level READ getLevel WRITE setLevel)
+  PYB11_PROPERTY(DataArrayPath ConfidenceIndexArrayPath READ getConfidenceIndexArrayPath WRITE setConfidenceIndexArrayPath)
+  PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+  PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(NeighborOrientationCorrelation)
   SIMPL_FILTER_NEW_MACRO(NeighborOrientationCorrelation)

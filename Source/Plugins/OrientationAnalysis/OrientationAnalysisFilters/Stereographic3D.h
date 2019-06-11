@@ -32,9 +32,9 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -44,9 +44,12 @@
 class OrientationAnalysis_EXPORT Stereographic3D : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(Stereographic3D SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
-    PYB11_PROPERTY(QString CoordinatesArrayName READ getCoordinatesArrayName WRITE setCoordinatesArrayName)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(Stereographic3D SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
+  PYB11_PROPERTY(QString CoordinatesArrayName READ getCoordinatesArrayName WRITE setCoordinatesArrayName)
+#endif
 
 public:
   SIMPL_SHARED_POINTERS(Stereographic3D)

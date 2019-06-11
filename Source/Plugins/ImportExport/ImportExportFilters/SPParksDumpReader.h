@@ -58,6 +58,8 @@ class ImageGeom;
 class ImportExport_EXPORT SPParksDumpReader : public FileReader
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(SPParksDumpReader SUPERCLASS FileReader)
   PYB11_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -66,6 +68,7 @@ class ImportExport_EXPORT SPParksDumpReader : public FileReader
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(bool OneBasedArrays READ getOneBasedArrays WRITE setOneBasedArrays)
   PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+#endif
 
 public:
   SIMPL_SHARED_POINTERS(SPParksDumpReader)

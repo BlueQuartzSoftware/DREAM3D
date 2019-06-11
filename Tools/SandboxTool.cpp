@@ -175,7 +175,6 @@ int main(int argc, char* argv[])
   //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Source/EbsdLib"));
   //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Source/OrientationLib"));
 
-  //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/Anisotropy/AnisotropyFilters"));
   //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/AskNDEToolbox/AskNDEToolboxFilters"));
   //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/BrukerIntegration/BrukerIntegrationFilters"));
   //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/CAxisByPolarizedLight/CAxisByPolarizedLightFilters"));
@@ -196,16 +195,3 @@ int main(int argc, char* argv[])
   //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/UCSBUtilities/UCSBUtilitiesFilters"));
   //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins/VolumeMeshing/VolumeMeshingFilters"));
 
-  QStringList filters;
-  // filters.append("*.cpp");
-  filters.append("*.h");
-  // filters.append("*.md");
-
-  for(auto const& dir : dirs)
-  {
-    qDebug() << "====> Search Directory " << dir.absolutePath();
-    RecursiveFileSearch<UpdateMDHeader>(dir, filters);
-  }
-
-  return 0;
-}

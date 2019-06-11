@@ -35,10 +35,10 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -48,6 +48,8 @@
 class Statistics_EXPORT FindSizes : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindSizes SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
@@ -55,6 +57,8 @@ class Statistics_EXPORT FindSizes : public AbstractFilter
   PYB11_PROPERTY(QString EquivalentDiametersArrayName READ getEquivalentDiametersArrayName WRITE setEquivalentDiametersArrayName)
   PYB11_PROPERTY(QString NumElementsArrayName READ getNumElementsArrayName WRITE setNumElementsArrayName)
   PYB11_PROPERTY(bool SaveElementSizes READ getSaveElementSizes WRITE setSaveElementSizes)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(FindSizes)
   SIMPL_FILTER_NEW_MACRO(FindSizes)

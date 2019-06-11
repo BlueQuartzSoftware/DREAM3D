@@ -4,9 +4,9 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "Reconstruction/ReconstructionDLLExport.h"
 
@@ -16,9 +16,12 @@
 class Reconstruction_EXPORT ComputeFeatureRect : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(ComputeFeatureRect SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-    PYB11_PROPERTY(DataArrayPath FeatureRectArrayPath READ getFeatureRectArrayPath WRITE setFeatureRectArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(ComputeFeatureRect SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+  PYB11_PROPERTY(DataArrayPath FeatureRectArrayPath READ getFeatureRectArrayPath WRITE setFeatureRectArrayPath)
+#endif
 
 public:
   SIMPL_SHARED_POINTERS(ComputeFeatureRect)

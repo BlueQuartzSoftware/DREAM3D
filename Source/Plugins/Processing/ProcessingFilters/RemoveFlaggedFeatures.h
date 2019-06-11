@@ -35,9 +35,9 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "Processing/ProcessingDLLExport.h"
 
@@ -47,10 +47,14 @@
 class Processing_EXPORT RemoveFlaggedFeatures : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(RemoveFlaggedFeatures SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(bool FillRemovedFeatures READ getFillRemovedFeatures WRITE setFillRemovedFeatures)
-    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-    PYB11_PROPERTY(DataArrayPath FlaggedFeaturesArrayPath READ getFlaggedFeaturesArrayPath WRITE setFlaggedFeaturesArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(RemoveFlaggedFeatures SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(bool FillRemovedFeatures READ getFillRemovedFeatures WRITE setFillRemovedFeatures)
+  PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+  PYB11_PROPERTY(DataArrayPath FlaggedFeaturesArrayPath READ getFlaggedFeaturesArrayPath WRITE setFlaggedFeaturesArrayPath)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(RemoveFlaggedFeatures)
   SIMPL_FILTER_NEW_MACRO(RemoveFlaggedFeatures)

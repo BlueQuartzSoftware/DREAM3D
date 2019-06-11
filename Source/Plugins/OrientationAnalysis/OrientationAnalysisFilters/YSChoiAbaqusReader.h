@@ -38,9 +38,6 @@
 
 #include <cstring> // needed for the ::memcpy function below
 
-#include <QtCore/QString>
-
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/FileReader.h"
@@ -52,6 +49,8 @@
 class OrientationAnalysis_EXPORT YSChoiAbaqusReader : public FileReader
 {
     Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
     PYB11_CREATE_BINDINGS(YSChoiAbaqusReader SUPERCLASS FileReader)
     PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
     PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
@@ -66,6 +65,8 @@ class OrientationAnalysis_EXPORT YSChoiAbaqusReader : public FileReader
     PYB11_PROPERTY(QString SurfaceFeaturesArrayName READ getSurfaceFeaturesArrayName WRITE setSurfaceFeaturesArrayName)
     PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
     PYB11_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
+#endif
+
   public:
     SIMPL_SHARED_POINTERS(YSChoiAbaqusReader)
     SIMPL_FILTER_NEW_MACRO(YSChoiAbaqusReader)

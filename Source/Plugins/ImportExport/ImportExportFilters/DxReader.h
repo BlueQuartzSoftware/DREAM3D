@@ -54,6 +54,8 @@ class DxReaderPrivate;
 class ImportExport_EXPORT DxReader : public FileReader
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(DxReader SUPERCLASS FileReader)
   PYB11_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -62,6 +64,8 @@ class ImportExport_EXPORT DxReader : public FileReader
   PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
   PYB11_PROPERTY(bool FileWasRead READ getFileWasRead WRITE setFileWasRead)
   PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+#endif
+
   Q_DECLARE_PRIVATE(DxReader)
 public:
   SIMPL_SHARED_POINTERS(DxReader)

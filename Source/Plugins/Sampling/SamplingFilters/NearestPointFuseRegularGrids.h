@@ -35,9 +35,9 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "Sampling/SamplingDLLExport.h"
 
@@ -47,9 +47,13 @@
 class Sampling_EXPORT NearestPointFuseRegularGrids : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(NearestPointFuseRegularGrids SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath ReferenceCellAttributeMatrixPath READ getReferenceCellAttributeMatrixPath WRITE setReferenceCellAttributeMatrixPath)
-    PYB11_PROPERTY(DataArrayPath SamplingCellAttributeMatrixPath READ getSamplingCellAttributeMatrixPath WRITE setSamplingCellAttributeMatrixPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(NearestPointFuseRegularGrids SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(DataArrayPath ReferenceCellAttributeMatrixPath READ getReferenceCellAttributeMatrixPath WRITE setReferenceCellAttributeMatrixPath)
+  PYB11_PROPERTY(DataArrayPath SamplingCellAttributeMatrixPath READ getSamplingCellAttributeMatrixPath WRITE setSamplingCellAttributeMatrixPath)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(NearestPointFuseRegularGrids)
   SIMPL_FILTER_NEW_MACRO(NearestPointFuseRegularGrids)

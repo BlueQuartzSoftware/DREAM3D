@@ -35,10 +35,10 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/ShapeType.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
 
@@ -48,10 +48,14 @@
 class SyntheticBuilding_EXPORT EstablishShapeTypes : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(EstablishShapeTypes SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
-    PYB11_PROPERTY(QString ShapeTypesArrayName READ getShapeTypesArrayName WRITE setShapeTypesArrayName)
-    PYB11_PROPERTY(ShapeType::Types ShapeTypeData READ getShapeTypeData WRITE setShapeTypeData)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(EstablishShapeTypes SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
+  PYB11_PROPERTY(QString ShapeTypesArrayName READ getShapeTypesArrayName WRITE setShapeTypesArrayName)
+  PYB11_PROPERTY(ShapeType::Types ShapeTypeData READ getShapeTypeData WRITE setShapeTypeData)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(EstablishShapeTypes)
   SIMPL_FILTER_NEW_MACRO(EstablishShapeTypes)

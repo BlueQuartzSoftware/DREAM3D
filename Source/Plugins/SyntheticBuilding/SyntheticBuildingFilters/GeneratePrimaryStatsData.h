@@ -4,10 +4,10 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/DynamicTableData.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 class StatsDataArray;
 class StringDataArray;
@@ -21,6 +21,8 @@ class PrimaryStatsData;
 class SyntheticBuilding_EXPORT GeneratePrimaryStatsData : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(GeneratePrimaryStatsData SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(QString PhaseName READ getPhaseName WRITE setPhaseName)
   PYB11_PROPERTY(int PhaseIndex READ getPhaseIndex WRITE setPhaseIndex)
@@ -40,6 +42,7 @@ class SyntheticBuilding_EXPORT GeneratePrimaryStatsData : public AbstractFilter
   PYB11_PROPERTY(DynamicTableData OdfData READ getOdfData WRITE setOdfData)
   PYB11_PROPERTY(DynamicTableData MdfData READ getMdfData WRITE setMdfData)
   PYB11_PROPERTY(DynamicTableData AxisOdfData READ getAxisOdfData WRITE setAxisOdfData)
+#endif
 
 public:
   SIMPL_SHARED_POINTERS(GeneratePrimaryStatsData)

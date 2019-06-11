@@ -39,9 +39,9 @@
 
 #include <QtCore/QMutex>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 using DE_ComplexDoubleVector = std::vector<std::complex<double>>;
 
@@ -55,6 +55,8 @@ class DetectEllipsoidsImpl;
 class Processing_EXPORT DetectEllipsoids : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(DetectEllipsoids SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath DetectedEllipsoidsFeatureIdsArrayPath READ getDetectedEllipsoidsFeatureIdsArrayPath WRITE setDetectedEllipsoidsFeatureIdsArrayPath)
@@ -69,6 +71,7 @@ class Processing_EXPORT DetectEllipsoids : public AbstractFilter
   PYB11_PROPERTY(float HoughTransformThreshold READ getHoughTransformThreshold WRITE setHoughTransformThreshold)
   PYB11_PROPERTY(float MinAspectRatio READ getMinAspectRatio WRITE setMinAspectRatio)
   PYB11_PROPERTY(int ImageScaleBarLength READ getImageScaleBarLength WRITE setImageScaleBarLength)
+#endif
 
 public:
   SIMPL_SHARED_POINTERS(DetectEllipsoids)

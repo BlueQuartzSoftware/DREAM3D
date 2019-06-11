@@ -35,10 +35,10 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 
@@ -50,9 +50,13 @@
 class Sampling_EXPORT SampleSurfaceMeshSpecifiedPoints : public SampleSurfaceMesh
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(SampleSurfaceMeshSpecifiedPoints SUPERCLASS SampleSurfaceMesh)
-    PYB11_PROPERTY(QString InputFilePath READ getInputFilePath WRITE setInputFilePath)
-    PYB11_PROPERTY(QString OutputFilePath READ getOutputFilePath WRITE setOutputFilePath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(SampleSurfaceMeshSpecifiedPoints SUPERCLASS SampleSurfaceMesh)
+  PYB11_PROPERTY(QString InputFilePath READ getInputFilePath WRITE setInputFilePath)
+  PYB11_PROPERTY(QString OutputFilePath READ getOutputFilePath WRITE setOutputFilePath)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(SampleSurfaceMeshSpecifiedPoints)
   SIMPL_FILTER_NEW_MACRO(SampleSurfaceMeshSpecifiedPoints)

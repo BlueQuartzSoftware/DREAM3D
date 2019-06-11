@@ -4,12 +4,12 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/DynamicTableData.h"
 #include "SIMPLib/FilterParameters/FloatVec2FilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 class StatsDataArray;
 class StringDataArray;
@@ -23,6 +23,8 @@ class PrecipitateStatsData;
 class SyntheticBuilding_EXPORT GeneratePrecipitateStatsData : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(GeneratePrecipitateStatsData SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(QString PhaseName READ getPhaseName WRITE setPhaseName)
   PYB11_PROPERTY(int PhaseIndex READ getPhaseIndex WRITE setPhaseIndex)
@@ -45,6 +47,7 @@ class SyntheticBuilding_EXPORT GeneratePrecipitateStatsData : public AbstractFil
   PYB11_PROPERTY(FloatVec2Type RdfMinMaxDistance READ getRdfMinMaxDistance WRITE setRdfMinMaxDistance)
   PYB11_PROPERTY(int RdfNumBins READ getRdfNumBins WRITE setRdfNumBins)
   PYB11_PROPERTY(FloatVec3Type RdfBoxSize READ getRdfBoxSize WRITE setRdfBoxSize)
+#endif
 
 public:
   SIMPL_SHARED_POINTERS(GeneratePrecipitateStatsData)

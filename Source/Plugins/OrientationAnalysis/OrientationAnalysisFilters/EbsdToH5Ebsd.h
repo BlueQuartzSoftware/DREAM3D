@@ -38,10 +38,10 @@
 // Needed for AxisAngle_t
 #include "EbsdLib/EbsdConstants.h"
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -51,6 +51,8 @@
 class OrientationAnalysis_EXPORT EbsdToH5Ebsd : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(EbsdToH5Ebsd SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(QString InputPath READ getInputPath WRITE setInputPath)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
@@ -63,6 +65,8 @@ class OrientationAnalysis_EXPORT EbsdToH5Ebsd : public AbstractFilter
   PYB11_PROPERTY(float ZResolution READ getZResolution WRITE setZResolution)
   PYB11_PROPERTY(AxisAngleInput_t SampleTransformation READ getSampleTransformation WRITE setSampleTransformation)
   PYB11_PROPERTY(AxisAngleInput_t EulerTransformation READ getEulerTransformation WRITE setEulerTransformation)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(EbsdToH5Ebsd)
   SIMPL_FILTER_NEW_MACRO(EbsdToH5Ebsd)

@@ -35,9 +35,9 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "Processing/ProcessingDLLExport.h"
 
@@ -47,15 +47,19 @@
 class Processing_EXPORT FindRelativeMotionBetweenSlices : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(FindRelativeMotionBetweenSlices SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
-    PYB11_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
-    PYB11_PROPERTY(int PSize1 READ getPSize1 WRITE setPSize1)
-    PYB11_PROPERTY(int PSize2 READ getPSize2 WRITE setPSize2)
-    PYB11_PROPERTY(int SSize1 READ getSSize1 WRITE setSSize1)
-    PYB11_PROPERTY(int SSize2 READ getSSize2 WRITE setSSize2)
-    PYB11_PROPERTY(int SliceStep READ getSliceStep WRITE setSliceStep)
-    PYB11_PROPERTY(QString MotionDirectionArrayName READ getMotionDirectionArrayName WRITE setMotionDirectionArrayName)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(FindRelativeMotionBetweenSlices SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
+  PYB11_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
+  PYB11_PROPERTY(int PSize1 READ getPSize1 WRITE setPSize1)
+  PYB11_PROPERTY(int PSize2 READ getPSize2 WRITE setPSize2)
+  PYB11_PROPERTY(int SSize1 READ getSSize1 WRITE setSSize1)
+  PYB11_PROPERTY(int SSize2 READ getSSize2 WRITE setSSize2)
+  PYB11_PROPERTY(int SliceStep READ getSliceStep WRITE setSliceStep)
+  PYB11_PROPERTY(QString MotionDirectionArrayName READ getMotionDirectionArrayName WRITE setMotionDirectionArrayName)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(FindRelativeMotionBetweenSlices)
   SIMPL_FILTER_NEW_MACRO(FindRelativeMotionBetweenSlices)

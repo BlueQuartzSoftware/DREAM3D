@@ -48,12 +48,15 @@
 class ImportExport_EXPORT AbaqusHexahedronWriter : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(AbaqusHexahedronWriter SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
   PYB11_PROPERTY(QString FilePrefix READ getFilePrefix WRITE setFilePrefix)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(int HourglassStiffness READ getHourglassStiffness WRITE setHourglassStiffness)
   PYB11_PROPERTY(QString JobName READ getJobName WRITE setJobName)
+#endif
 
 public:
   SIMPL_SHARED_POINTERS(AbaqusHexahedronWriter)

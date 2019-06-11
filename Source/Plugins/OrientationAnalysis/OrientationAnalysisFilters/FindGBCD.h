@@ -35,10 +35,10 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -48,6 +48,8 @@
 class OrientationAnalysis_EXPORT FindGBCD : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindGBCD SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(QString FaceEnsembleAttributeMatrixName READ getFaceEnsembleAttributeMatrixName WRITE setFaceEnsembleAttributeMatrixName)
   PYB11_PROPERTY(float GBCDRes READ getGBCDRes WRITE setGBCDRes)
@@ -58,6 +60,8 @@ class OrientationAnalysis_EXPORT FindGBCD : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
   PYB11_PROPERTY(QString GBCDArrayName READ getGBCDArrayName WRITE setGBCDArrayName)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(FindGBCD)
   SIMPL_FILTER_NEW_MACRO(FindGBCD)

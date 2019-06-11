@@ -38,10 +38,10 @@
 #include <QtCore/QString>
 #include <set>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -58,13 +58,17 @@
 class Statistics_EXPORT QuiltCellData : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(QuiltCellData SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
-    PYB11_PROPERTY(IntVec3Type QuiltStep READ getQuiltStep WRITE setQuiltStep)
-    PYB11_PROPERTY(IntVec3Type PatchSize READ getPatchSize WRITE setPatchSize)
-    PYB11_PROPERTY(DataArrayPath OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName)
-    PYB11_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
-    PYB11_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(QuiltCellData SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
+  PYB11_PROPERTY(IntVec3Type QuiltStep READ getQuiltStep WRITE setQuiltStep)
+  PYB11_PROPERTY(IntVec3Type PatchSize READ getPatchSize WRITE setPatchSize)
+  PYB11_PROPERTY(DataArrayPath OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName)
+  PYB11_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
+  PYB11_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(QuiltCellData)
   SIMPL_FILTER_NEW_MACRO(QuiltCellData)

@@ -35,9 +35,9 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "Sampling/SamplingDLLExport.h"
 
@@ -47,10 +47,14 @@
 class Sampling_EXPORT AppendImageGeometryZSlice : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(AppendImageGeometryZSlice SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath InputAttributeMatrix READ getInputAttributeMatrix WRITE setInputAttributeMatrix)
-    PYB11_PROPERTY(DataArrayPath DestinationAttributeMatrix READ getDestinationAttributeMatrix WRITE setDestinationAttributeMatrix)
-    PYB11_PROPERTY(bool CheckResolution READ getCheckResolution WRITE setCheckResolution)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(AppendImageGeometryZSlice SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(DataArrayPath InputAttributeMatrix READ getInputAttributeMatrix WRITE setInputAttributeMatrix)
+  PYB11_PROPERTY(DataArrayPath DestinationAttributeMatrix READ getDestinationAttributeMatrix WRITE setDestinationAttributeMatrix)
+  PYB11_PROPERTY(bool CheckResolution READ getCheckResolution WRITE setCheckResolution)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(AppendImageGeometryZSlice)
   SIMPL_FILTER_NEW_MACRO(AppendImageGeometryZSlice)

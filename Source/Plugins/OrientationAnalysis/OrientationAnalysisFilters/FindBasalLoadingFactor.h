@@ -38,12 +38,12 @@
 #include <string>
 #include <vector>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -57,134 +57,138 @@
 class OrientationAnalysis_EXPORT FindBasalLoadingFactor : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(FindBasalLoadingFactor SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
-    PYB11_PROPERTY(DataArrayPath BasalLoadingFactorArrayPath READ getBasalLoadingFactorArrayPath WRITE setBasalLoadingFactorArrayPath)
-    PYB11_PROPERTY(FloatVec3Type LoadingDirection READ getLoadingDirection WRITE setLoadingDirection)
-  public:
-    SIMPL_SHARED_POINTERS(FindBasalLoadingFactor)
-    SIMPL_FILTER_NEW_MACRO(FindBasalLoadingFactor)
-    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindBasalLoadingFactor, AbstractFilter)
 
-    ~FindBasalLoadingFactor() override;
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(FindBasalLoadingFactor SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+  PYB11_PROPERTY(DataArrayPath BasalLoadingFactorArrayPath READ getBasalLoadingFactorArrayPath WRITE setBasalLoadingFactorArrayPath)
+  PYB11_PROPERTY(FloatVec3Type LoadingDirection READ getLoadingDirection WRITE setLoadingDirection)
+#endif
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
-    Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+public:
+  SIMPL_SHARED_POINTERS(FindBasalLoadingFactor)
+  SIMPL_FILTER_NEW_MACRO(FindBasalLoadingFactor)
+  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindBasalLoadingFactor, AbstractFilter)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, BasalLoadingFactorArrayPath)
-    Q_PROPERTY(DataArrayPath BasalLoadingFactorArrayPath READ getBasalLoadingFactorArrayPath WRITE setBasalLoadingFactorArrayPath)
+  ~FindBasalLoadingFactor() override;
 
-    SIMPL_FILTER_PARAMETER(FloatVec3Type, LoadingDirection)
-    Q_PROPERTY(FloatVec3Type LoadingDirection READ getLoadingDirection WRITE setLoadingDirection)
+  SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    const QString getCompiledLibraryName() const override;
+  SIMPL_FILTER_PARAMETER(DataArrayPath, BasalLoadingFactorArrayPath)
+  Q_PROPERTY(DataArrayPath BasalLoadingFactorArrayPath READ getBasalLoadingFactorArrayPath WRITE setBasalLoadingFactorArrayPath)
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-     */
-    const QString getBrandingString() const override;
+  SIMPL_FILTER_PARAMETER(FloatVec3Type, LoadingDirection)
+  Q_PROPERTY(FloatVec3Type LoadingDirection READ getLoadingDirection WRITE setLoadingDirection)
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    const QString getFilterVersion() const override;
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  const QString getCompiledLibraryName() const override;
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+   */
+  const QString getBrandingString() const override;
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    const QString getGroupName() const override;
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  const QString getFilterVersion() const override;
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    const QString getSubGroupName() const override;
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
-    /**
-     * @brief getUuid Return the unique identifier for this filter.
-     * @return A QUuid object.
-     */
-    const QUuid getUuid() override;
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  const QString getGroupName() const override;
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    const QString getHumanLabel() const override;
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  const QString getSubGroupName() const override;
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    void setupFilterParameters() override;
+  /**
+   * @brief getUuid Return the unique identifier for this filter.
+   * @return A QUuid object.
+   */
+  const QUuid getUuid() override;
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  const QString getHumanLabel() const override;
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    void execute() override;
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  void setupFilterParameters() override;
 
-    /**
-     * @brief preflight Reimplemented from @see AbstractFilter class
-     */
-    void preflight() override;
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  void execute() override;
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief preflight Reimplemented from @see AbstractFilter class
+   */
+  void preflight() override;
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
 
-  protected:
-    FindBasalLoadingFactor();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
 
-  private:
-    DEFINE_DATAARRAY_VARIABLE(float, BasalLoadingFactor)
-    DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
+protected:
+  FindBasalLoadingFactor();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
 
-  public:
-    FindBasalLoadingFactor(const FindBasalLoadingFactor&) = delete;            // Copy Constructor Not Implemented
-    FindBasalLoadingFactor(FindBasalLoadingFactor&&) = delete;                 // Move Constructor Not Implemented
-    FindBasalLoadingFactor& operator=(const FindBasalLoadingFactor&) = delete; // Copy Assignment Not Implemented
-    FindBasalLoadingFactor& operator=(FindBasalLoadingFactor&&) = delete;      // Move Assignment Not Implemented
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
+
+private:
+  DEFINE_DATAARRAY_VARIABLE(float, BasalLoadingFactor)
+  DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
+
+public:
+  FindBasalLoadingFactor(const FindBasalLoadingFactor&) = delete;            // Copy Constructor Not Implemented
+  FindBasalLoadingFactor(FindBasalLoadingFactor&&) = delete;                 // Move Constructor Not Implemented
+  FindBasalLoadingFactor& operator=(const FindBasalLoadingFactor&) = delete; // Copy Assignment Not Implemented
+  FindBasalLoadingFactor& operator=(FindBasalLoadingFactor&&) = delete;      // Move Assignment Not Implemented
 };
 

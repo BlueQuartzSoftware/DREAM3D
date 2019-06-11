@@ -49,8 +49,12 @@ class ImportExport_EXPORT SPParksSitesWriter : public FileWriter
 {
 
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(SPParksSitesWriter SUPERCLASS FileWriter)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(SPParksSitesWriter)
   SIMPL_FILTER_NEW_MACRO(SPParksSitesWriter)

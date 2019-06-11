@@ -47,6 +47,8 @@
 class ImportExport_EXPORT VtkStructuredPointsReader : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(VtkStructuredPointsReader SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(bool ReadCellData READ getReadCellData WRITE setReadCellData)
   PYB11_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
@@ -55,6 +57,8 @@ class ImportExport_EXPORT VtkStructuredPointsReader : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
   PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(VtkStructuredPointsReader)
   SIMPL_FILTER_NEW_MACRO(VtkStructuredPointsReader)

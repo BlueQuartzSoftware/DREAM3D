@@ -39,11 +39,11 @@
 #include <vector>
 
 #include "OrientationLib/LaueOps/LaueOps.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
 
 #include "Statistics/StatisticsDLLExport.h"
@@ -60,9 +60,13 @@
 class Statistics_EXPORT CorrelateValuesWithVectorDirection : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(CorrelateValuesWithVectorDirection SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath CorrelatedDataArrayPath READ getCorrelatedDataArrayPath WRITE setCorrelatedDataArrayPath)
-    PYB11_PROPERTY(DataArrayPath VectorDataArrayPath READ getVectorDataArrayPath WRITE setVectorDataArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(CorrelateValuesWithVectorDirection SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(DataArrayPath CorrelatedDataArrayPath READ getCorrelatedDataArrayPath WRITE setCorrelatedDataArrayPath)
+  PYB11_PROPERTY(DataArrayPath VectorDataArrayPath READ getVectorDataArrayPath WRITE setVectorDataArrayPath)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(CorrelateValuesWithVectorDirection)
   SIMPL_FILTER_NEW_MACRO(CorrelateValuesWithVectorDirection)

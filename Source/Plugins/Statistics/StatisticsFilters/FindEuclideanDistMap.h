@@ -35,9 +35,9 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -47,17 +47,21 @@
 class Statistics_EXPORT FindEuclideanDistMap : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(FindEuclideanDistMap SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-    PYB11_PROPERTY(QString GBDistancesArrayName READ getGBDistancesArrayName WRITE setGBDistancesArrayName)
-    PYB11_PROPERTY(QString TJDistancesArrayName READ getTJDistancesArrayName WRITE setTJDistancesArrayName)
-    PYB11_PROPERTY(QString QPDistancesArrayName READ getQPDistancesArrayName WRITE setQPDistancesArrayName)
-    PYB11_PROPERTY(QString NearestNeighborsArrayName READ getNearestNeighborsArrayName WRITE setNearestNeighborsArrayName)
-    PYB11_PROPERTY(bool DoBoundaries READ getDoBoundaries WRITE setDoBoundaries)
-    PYB11_PROPERTY(bool DoTripleLines READ getDoTripleLines WRITE setDoTripleLines)
-    PYB11_PROPERTY(bool DoQuadPoints READ getDoQuadPoints WRITE setDoQuadPoints)
-    PYB11_PROPERTY(bool SaveNearestNeighbors READ getSaveNearestNeighbors WRITE setSaveNearestNeighbors)
-    PYB11_PROPERTY(bool CalcManhattanDist READ getCalcManhattanDist WRITE setCalcManhattanDist)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(FindEuclideanDistMap SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+  PYB11_PROPERTY(QString GBDistancesArrayName READ getGBDistancesArrayName WRITE setGBDistancesArrayName)
+  PYB11_PROPERTY(QString TJDistancesArrayName READ getTJDistancesArrayName WRITE setTJDistancesArrayName)
+  PYB11_PROPERTY(QString QPDistancesArrayName READ getQPDistancesArrayName WRITE setQPDistancesArrayName)
+  PYB11_PROPERTY(QString NearestNeighborsArrayName READ getNearestNeighborsArrayName WRITE setNearestNeighborsArrayName)
+  PYB11_PROPERTY(bool DoBoundaries READ getDoBoundaries WRITE setDoBoundaries)
+  PYB11_PROPERTY(bool DoTripleLines READ getDoTripleLines WRITE setDoTripleLines)
+  PYB11_PROPERTY(bool DoQuadPoints READ getDoQuadPoints WRITE setDoQuadPoints)
+  PYB11_PROPERTY(bool SaveNearestNeighbors READ getSaveNearestNeighbors WRITE setSaveNearestNeighbors)
+  PYB11_PROPERTY(bool CalcManhattanDist READ getCalcManhattanDist WRITE setCalcManhattanDist)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(FindEuclideanDistMap)
   SIMPL_FILTER_NEW_MACRO(FindEuclideanDistMap)

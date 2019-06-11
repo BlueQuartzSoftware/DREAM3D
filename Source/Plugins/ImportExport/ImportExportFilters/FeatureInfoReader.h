@@ -48,6 +48,8 @@
 class ImportExport_EXPORT FeatureInfoReader : public FileReader
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FeatureInfoReader SUPERCLASS FileReader)
   PYB11_PROPERTY(DataArrayPath CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
@@ -59,6 +61,8 @@ class ImportExport_EXPORT FeatureInfoReader : public FileReader
   PYB11_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
   PYB11_PROPERTY(QString FeaturePhasesArrayName READ getFeaturePhasesArrayName WRITE setFeaturePhasesArrayName)
   PYB11_PROPERTY(QString FeatureEulerAnglesArrayName READ getFeatureEulerAnglesArrayName WRITE setFeatureEulerAnglesArrayName)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(FeatureInfoReader)
   SIMPL_FILTER_NEW_MACRO(FeatureInfoReader)

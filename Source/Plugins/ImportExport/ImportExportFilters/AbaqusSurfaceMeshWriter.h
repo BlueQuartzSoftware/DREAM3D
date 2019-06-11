@@ -47,9 +47,13 @@
 class ImportExport_EXPORT AbaqusSurfaceMeshWriter : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(AbaqusSurfaceMeshWriter SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(AbaqusSurfaceMeshWriter)
   SIMPL_FILTER_NEW_MACRO(AbaqusSurfaceMeshWriter)

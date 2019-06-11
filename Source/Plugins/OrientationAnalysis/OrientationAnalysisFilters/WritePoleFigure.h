@@ -35,10 +35,10 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -48,22 +48,26 @@
 class OrientationAnalysis_EXPORT WritePoleFigure : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(WritePoleFigure SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
-    PYB11_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
-    PYB11_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
-    PYB11_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
-    PYB11_PROPERTY(int LambertSize READ getLambertSize WRITE setLambertSize)
-    PYB11_PROPERTY(int NumColors READ getNumColors WRITE setNumColors)
-    PYB11_PROPERTY(int ImageLayout READ getImageLayout WRITE setImageLayout)
-    PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
-    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
-    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
-    PYB11_PROPERTY(DataArrayPath MaterialNameArrayPath READ getMaterialNameArrayPath WRITE setMaterialNameArrayPath)
-    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
-    PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
-    PYB11_PROPERTY(int GenerationAlgorithm READ getGenerationAlgorithm WRITE setGenerationAlgorithm)
-    //  PYB11_PROPERTY(bool UseDiscreteHeatMap READ getUseDiscreteHeatMap WRITE setUseDiscreteHeatMap)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(WritePoleFigure SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
+  PYB11_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
+  PYB11_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
+  PYB11_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
+  PYB11_PROPERTY(int LambertSize READ getLambertSize WRITE setLambertSize)
+  PYB11_PROPERTY(int NumColors READ getNumColors WRITE setNumColors)
+  PYB11_PROPERTY(int ImageLayout READ getImageLayout WRITE setImageLayout)
+  PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+  PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+  PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  PYB11_PROPERTY(DataArrayPath MaterialNameArrayPath READ getMaterialNameArrayPath WRITE setMaterialNameArrayPath)
+  PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+  PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
+  PYB11_PROPERTY(int GenerationAlgorithm READ getGenerationAlgorithm WRITE setGenerationAlgorithm)
+#endif
+
+  //  PYB11_PROPERTY(bool UseDiscreteHeatMap READ getUseDiscreteHeatMap WRITE setUseDiscreteHeatMap)
 public:
   SIMPL_SHARED_POINTERS(WritePoleFigure)
   SIMPL_FILTER_NEW_MACRO(WritePoleFigure)

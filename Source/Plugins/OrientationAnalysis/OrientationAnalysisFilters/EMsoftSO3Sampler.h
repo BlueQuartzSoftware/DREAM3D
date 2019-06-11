@@ -30,11 +30,11 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/OrientationLib.h"
@@ -47,18 +47,21 @@
 class OrientationAnalysis_EXPORT EMsoftSO3Sampler : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(EMsoftSO3Sampler SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(int sampleModeSelector READ getsampleModeSelector WRITE setsampleModeSelector)
-    PYB11_PROPERTY(int PointGroup READ getPointGroup WRITE setPointGroup)
-    PYB11_PROPERTY(int Numsp READ getNumsp WRITE setNumsp)
-    PYB11_PROPERTY(double MisOr READ getMisOr WRITE setMisOr)
-    PYB11_PROPERTY(FloatVec3Type RefOr READ getRefOr WRITE setRefOr)
-    PYB11_PROPERTY(double MisOrFull READ getMisOrFull WRITE setMisOrFull)
-    PYB11_PROPERTY(FloatVec3Type RefOrFull READ getRefOrFull WRITE setRefOrFull)
-    PYB11_PROPERTY(bool OffsetGrid READ getOffsetGrid WRITE setOffsetGrid)
-    PYB11_PROPERTY(QString EulerAnglesArrayName READ getEulerAnglesArrayName WRITE setEulerAnglesArrayName)
-    PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
-    PYB11_PROPERTY(QString EMsoftAttributeMatrixName READ getEMsoftAttributeMatrixName WRITE setEMsoftAttributeMatrixName)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(EMsoftSO3Sampler SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(int sampleModeSelector READ getsampleModeSelector WRITE setsampleModeSelector)
+  PYB11_PROPERTY(int PointGroup READ getPointGroup WRITE setPointGroup)
+  PYB11_PROPERTY(int Numsp READ getNumsp WRITE setNumsp)
+  PYB11_PROPERTY(double MisOr READ getMisOr WRITE setMisOr)
+  PYB11_PROPERTY(FloatVec3Type RefOr READ getRefOr WRITE setRefOr)
+  PYB11_PROPERTY(double MisOrFull READ getMisOrFull WRITE setMisOrFull)
+  PYB11_PROPERTY(FloatVec3Type RefOrFull READ getRefOrFull WRITE setRefOrFull)
+  PYB11_PROPERTY(bool OffsetGrid READ getOffsetGrid WRITE setOffsetGrid)
+  PYB11_PROPERTY(QString EulerAnglesArrayName READ getEulerAnglesArrayName WRITE setEulerAnglesArrayName)
+  PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  PYB11_PROPERTY(QString EMsoftAttributeMatrixName READ getEMsoftAttributeMatrixName WRITE setEMsoftAttributeMatrixName)
+#endif
 
 public:
   SIMPL_SHARED_POINTERS(EMsoftSO3Sampler)

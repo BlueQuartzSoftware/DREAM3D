@@ -35,9 +35,9 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
 
@@ -47,9 +47,13 @@
 class SyntheticBuilding_EXPORT AddOrientationNoise : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(AddOrientationNoise SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(float Magnitude READ getMagnitude WRITE setMagnitude)
-    PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(AddOrientationNoise SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(float Magnitude READ getMagnitude WRITE setMagnitude)
+  PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(AddOrientationNoise)
   SIMPL_FILTER_NEW_MACRO(AddOrientationNoise)

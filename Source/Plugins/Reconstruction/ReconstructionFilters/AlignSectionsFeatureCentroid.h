@@ -35,9 +35,9 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 
@@ -49,10 +49,14 @@
 class Reconstruction_EXPORT AlignSectionsFeatureCentroid : public AlignSections
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(AlignSectionsFeatureCentroid SUPERCLASS AlignSections)
-    PYB11_PROPERTY(int ReferenceSlice READ getReferenceSlice WRITE setReferenceSlice)
-    PYB11_PROPERTY(bool UseReferenceSlice READ getUseReferenceSlice WRITE setUseReferenceSlice)
-    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(AlignSectionsFeatureCentroid SUPERCLASS AlignSections)
+  PYB11_PROPERTY(int ReferenceSlice READ getReferenceSlice WRITE setReferenceSlice)
+  PYB11_PROPERTY(bool UseReferenceSlice READ getUseReferenceSlice WRITE setUseReferenceSlice)
+  PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(AlignSectionsFeatureCentroid)
   SIMPL_FILTER_NEW_MACRO(AlignSectionsFeatureCentroid)

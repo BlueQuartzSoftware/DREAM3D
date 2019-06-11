@@ -35,10 +35,10 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/DynamicTableData.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "EMMPM/EMMPMLib/Core/EMMPM_Data.h"
 #include "EMMPMLib/Core/EMMPM_Constants.h"
@@ -53,22 +53,25 @@ class EMMPMFilterMessageHandler;
 class EMMPM_EXPORT EMMPMFilter : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(EMMPMFilter SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath InputDataArrayPath READ getInputDataArrayPath WRITE setInputDataArrayPath)
-    PYB11_PROPERTY(bool UseOneBasedValues READ getUseOneBasedValues WRITE setUseOneBasedValues)
-    PYB11_PROPERTY(int NumClasses READ getNumClasses WRITE setNumClasses)
-    PYB11_PROPERTY(float ExchangeEnergy READ getExchangeEnergy WRITE setExchangeEnergy)
-    PYB11_PROPERTY(int HistogramLoops READ getHistogramLoops WRITE setHistogramLoops)
-    PYB11_PROPERTY(int SegmentationLoops READ getSegmentationLoops WRITE setSegmentationLoops)
-    PYB11_PROPERTY(DynamicTableData EMMPMTableData READ getEMMPMTableData WRITE setEMMPMTableData)
-    PYB11_PROPERTY(bool UseSimulatedAnnealing READ getUseSimulatedAnnealing WRITE setUseSimulatedAnnealing)
-    PYB11_PROPERTY(bool UseGradientPenalty READ getUseGradientPenalty WRITE setUseGradientPenalty)
-    PYB11_PROPERTY(double GradientBetaE READ getGradientBetaE WRITE setGradientBetaE)
-    PYB11_PROPERTY(bool UseCurvaturePenalty READ getUseCurvaturePenalty WRITE setUseCurvaturePenalty)
-    PYB11_PROPERTY(double CurvatureBetaC READ getCurvatureBetaC WRITE setCurvatureBetaC)
-    PYB11_PROPERTY(double CurvatureRMax READ getCurvatureRMax WRITE setCurvatureRMax)
-    PYB11_PROPERTY(int CurvatureEMLoopDelay READ getCurvatureEMLoopDelay WRITE setCurvatureEMLoopDelay)
-    PYB11_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(EMMPMFilter SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(DataArrayPath InputDataArrayPath READ getInputDataArrayPath WRITE setInputDataArrayPath)
+  PYB11_PROPERTY(bool UseOneBasedValues READ getUseOneBasedValues WRITE setUseOneBasedValues)
+  PYB11_PROPERTY(int NumClasses READ getNumClasses WRITE setNumClasses)
+  PYB11_PROPERTY(float ExchangeEnergy READ getExchangeEnergy WRITE setExchangeEnergy)
+  PYB11_PROPERTY(int HistogramLoops READ getHistogramLoops WRITE setHistogramLoops)
+  PYB11_PROPERTY(int SegmentationLoops READ getSegmentationLoops WRITE setSegmentationLoops)
+  PYB11_PROPERTY(DynamicTableData EMMPMTableData READ getEMMPMTableData WRITE setEMMPMTableData)
+  PYB11_PROPERTY(bool UseSimulatedAnnealing READ getUseSimulatedAnnealing WRITE setUseSimulatedAnnealing)
+  PYB11_PROPERTY(bool UseGradientPenalty READ getUseGradientPenalty WRITE setUseGradientPenalty)
+  PYB11_PROPERTY(double GradientBetaE READ getGradientBetaE WRITE setGradientBetaE)
+  PYB11_PROPERTY(bool UseCurvaturePenalty READ getUseCurvaturePenalty WRITE setUseCurvaturePenalty)
+  PYB11_PROPERTY(double CurvatureBetaC READ getCurvatureBetaC WRITE setCurvatureBetaC)
+  PYB11_PROPERTY(double CurvatureRMax READ getCurvatureRMax WRITE setCurvatureRMax)
+  PYB11_PROPERTY(int CurvatureEMLoopDelay READ getCurvatureEMLoopDelay WRITE setCurvatureEMLoopDelay)
+  PYB11_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)
+#endif
 
 public:
   SIMPL_SHARED_POINTERS(EMMPMFilter)

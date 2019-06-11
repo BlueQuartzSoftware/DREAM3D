@@ -35,12 +35,15 @@
 
 #pragma once
 
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/ShapeOps/ShapeOps.h"
-#include "SIMPLib/SIMPLib.h"
+
+#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
 
 typedef struct
 {
@@ -61,6 +64,8 @@ typedef struct
 class SyntheticBuilding_EXPORT PackPrimaryPhases : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(PackPrimaryPhases SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(DataArrayPath OutputCellAttributeMatrixPath READ getOutputCellAttributeMatrixPath WRITE setOutputCellAttributeMatrixPath)
   PYB11_PROPERTY(QString OutputCellFeatureAttributeMatrixName READ getOutputCellFeatureAttributeMatrixName WRITE setOutputCellFeatureAttributeMatrixName)
@@ -83,6 +88,8 @@ class SyntheticBuilding_EXPORT PackPrimaryPhases : public AbstractFilter
   PYB11_PROPERTY(int SaveGeometricDescriptions READ getSaveGeometricDescriptions WRITE setSaveGeometricDescriptions)
   PYB11_PROPERTY(DataArrayPath NewAttributeMatrixPath READ getNewAttributeMatrixPath WRITE setNewAttributeMatrixPath)
   PYB11_PROPERTY(DataArrayPath SelectedAttributeMatrixPath READ getSelectedAttributeMatrixPath WRITE setSelectedAttributeMatrixPath)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(PackPrimaryPhases)
   SIMPL_FILTER_NEW_MACRO(PackPrimaryPhases)

@@ -62,10 +62,14 @@
 class ImportExport_EXPORT VtkRectilinearGridWriter : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(VtkRectilinearGridWriter SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
   PYB11_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
   PYB11_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(VtkRectilinearGridWriter)
   SIMPL_FILTER_NEW_MACRO(VtkRectilinearGridWriter)

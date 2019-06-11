@@ -35,10 +35,10 @@
 
 #pragma once
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "Sampling/SamplingDLLExport.h"
 
@@ -48,8 +48,12 @@
 class Sampling_EXPORT SampleSurfaceMesh : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(SampleSurfaceMesh SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(SampleSurfaceMesh SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(SampleSurfaceMesh)
   SIMPL_FILTER_NEW_MACRO(SampleSurfaceMesh)

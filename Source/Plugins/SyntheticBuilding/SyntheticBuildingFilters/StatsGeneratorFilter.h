@@ -33,12 +33,11 @@
 
 #pragma once
 
-
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
 
@@ -48,6 +47,8 @@
 class SyntheticBuilding_EXPORT StatsGeneratorFilter : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(StatsGeneratorFilter SUPERCLASS AbstractFilter)
   PYB11_PROPERTY(DataArrayPath StatsGeneratorDataContainerName READ getStatsGeneratorDataContainerName WRITE setStatsGeneratorDataContainerName)
   PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
@@ -60,6 +61,7 @@ class SyntheticBuilding_EXPORT StatsGeneratorFilter : public AbstractFilter
   PYB11_PROPERTY(UInt32ArrayType::Pointer PhaseTypes READ getPhaseTypes WRITE setPhaseTypes)
   PYB11_PROPERTY(StringDataArray::Pointer PhaseNames READ getPhaseNames WRITE setPhaseNames)
   PYB11_PROPERTY(DataArrayPath Path READ getPath WRITE setPath)
+#endif
 
 public:
   SIMPL_SHARED_POINTERS(StatsGeneratorFilter)

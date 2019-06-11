@@ -49,10 +49,14 @@
 class ImportExport_EXPORT LosAlamosFFTWriter : public FileWriter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(LosAlamosFFTWriter SUPERCLASS FileWriter)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+#endif
+
 public:
   SIMPL_SHARED_POINTERS(LosAlamosFFTWriter)
   SIMPL_FILTER_NEW_MACRO(LosAlamosFFTWriter)
