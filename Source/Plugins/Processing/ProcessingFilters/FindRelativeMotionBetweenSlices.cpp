@@ -42,7 +42,10 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
@@ -53,6 +56,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
@@ -740,4 +745,129 @@ const QString FindRelativeMotionBetweenSlices::getSubGroupName() const
 const QString FindRelativeMotionBetweenSlices::getHumanLabel() const
 {
   return "Find Relative Motion Between Slices";
+}
+
+// -----------------------------------------------------------------------------
+FindRelativeMotionBetweenSlices::Pointer FindRelativeMotionBetweenSlices::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindRelativeMotionBetweenSlices> FindRelativeMotionBetweenSlices::New()
+{
+  struct make_shared_enabler : public FindRelativeMotionBetweenSlices
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindRelativeMotionBetweenSlices::getNameOfClass() const
+{
+  return QString("FindRelativeMotionBetweenSlices");
+}
+
+// -----------------------------------------------------------------------------
+QString FindRelativeMotionBetweenSlices::ClassName()
+{
+  return QString("FindRelativeMotionBetweenSlices");
+}
+
+// -----------------------------------------------------------------------------
+void FindRelativeMotionBetweenSlices::setSelectedArrayPath(const DataArrayPath& value)
+{
+  m_SelectedArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindRelativeMotionBetweenSlices::getSelectedArrayPath() const
+{
+  return m_SelectedArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindRelativeMotionBetweenSlices::setPlane(const unsigned int& value)
+{
+  m_Plane = value;
+}
+
+// -----------------------------------------------------------------------------
+unsigned int FindRelativeMotionBetweenSlices::getPlane() const
+{
+  return m_Plane;
+}
+
+// -----------------------------------------------------------------------------
+void FindRelativeMotionBetweenSlices::setPSize1(const int& value)
+{
+  m_PSize1 = value;
+}
+
+// -----------------------------------------------------------------------------
+int FindRelativeMotionBetweenSlices::getPSize1() const
+{
+  return m_PSize1;
+}
+
+// -----------------------------------------------------------------------------
+void FindRelativeMotionBetweenSlices::setPSize2(const int& value)
+{
+  m_PSize2 = value;
+}
+
+// -----------------------------------------------------------------------------
+int FindRelativeMotionBetweenSlices::getPSize2() const
+{
+  return m_PSize2;
+}
+
+// -----------------------------------------------------------------------------
+void FindRelativeMotionBetweenSlices::setSSize1(const int& value)
+{
+  m_SSize1 = value;
+}
+
+// -----------------------------------------------------------------------------
+int FindRelativeMotionBetweenSlices::getSSize1() const
+{
+  return m_SSize1;
+}
+
+// -----------------------------------------------------------------------------
+void FindRelativeMotionBetweenSlices::setSSize2(const int& value)
+{
+  m_SSize2 = value;
+}
+
+// -----------------------------------------------------------------------------
+int FindRelativeMotionBetweenSlices::getSSize2() const
+{
+  return m_SSize2;
+}
+
+// -----------------------------------------------------------------------------
+void FindRelativeMotionBetweenSlices::setSliceStep(const int& value)
+{
+  m_SliceStep = value;
+}
+
+// -----------------------------------------------------------------------------
+int FindRelativeMotionBetweenSlices::getSliceStep() const
+{
+  return m_SliceStep;
+}
+
+// -----------------------------------------------------------------------------
+void FindRelativeMotionBetweenSlices::setMotionDirectionArrayName(const QString& value)
+{
+  m_MotionDirectionArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindRelativeMotionBetweenSlices::getMotionDirectionArrayName() const
+{
+  return m_MotionDirectionArrayName;
 }

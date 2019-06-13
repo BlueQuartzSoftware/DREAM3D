@@ -36,9 +36,10 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -68,28 +69,96 @@ class OrientationAnalysis_EXPORT FindAvgOrientations : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindAvgOrientations)
-  SIMPL_FILTER_NEW_MACRO(FindAvgOrientations)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindAvgOrientations, AbstractFilter)
+  using Self = FindAvgOrientations;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindAvgOrientations> New();
+
+  /**
+   * @brief Returns the name of the class for FindAvgOrientations
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindAvgOrientations
+   */
+  static QString ClassName();
 
   ~FindAvgOrientations() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  /**
+   * @brief Setter property for CellPhasesArrayPath
+   */
+  void setCellPhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellPhasesArrayPath
+   * @return Value of CellPhasesArrayPath
+   */
+  DataArrayPath getCellPhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+  /**
+   * @brief Setter property for QuatsArrayPath
+   */
+  void setQuatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for QuatsArrayPath
+   * @return Value of QuatsArrayPath
+   */
+  DataArrayPath getQuatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  /**
+   * @brief Setter property for AvgQuatsArrayPath
+   */
+  void setAvgQuatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for AvgQuatsArrayPath
+   * @return Value of AvgQuatsArrayPath
+   */
+  DataArrayPath getAvgQuatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, AvgEulerAnglesArrayPath)
+  /**
+   * @brief Setter property for AvgEulerAnglesArrayPath
+   */
+  void setAvgEulerAnglesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for AvgEulerAnglesArrayPath
+   * @return Value of AvgEulerAnglesArrayPath
+   */
+  DataArrayPath getAvgEulerAnglesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath AvgEulerAnglesArrayPath READ getAvgEulerAnglesArrayPath WRITE setAvgEulerAnglesArrayPath)
 
   /**
@@ -193,14 +262,27 @@ protected:
   void initialize();
 
 private:
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+  int32_t* m_CellPhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_QuatsPtr;
+  float* m_Quats = nullptr;
+  std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
+  uint32_t* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<float>> m_FeatureEulerAnglesPtr;
+  float* m_FeatureEulerAngles = nullptr;
+  std::weak_ptr<DataArray<float>> m_AvgQuatsPtr;
+  float* m_AvgQuats = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-  DEFINE_DATAARRAY_VARIABLE(float, Quats)
-  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_CellPhasesArrayPath = {};
+  DataArrayPath m_QuatsArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+  DataArrayPath m_AvgQuatsArrayPath = {};
+  DataArrayPath m_AvgEulerAnglesArrayPath = {};
 
-  DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
-  DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
+  QVector<LaueOps::Pointer> m_OrientationOps;
 
 public:
   FindAvgOrientations(const FindAvgOrientations&) = delete; // Copy Constructor Not Implemented

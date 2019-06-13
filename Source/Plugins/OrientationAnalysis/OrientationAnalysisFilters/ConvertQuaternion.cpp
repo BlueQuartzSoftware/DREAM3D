@@ -11,11 +11,15 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -298,3 +302,79 @@ const QUuid ConvertQuaternion::getUuid()
   return QUuid("{439e31b7-3198-5d0d-aef6-65a9e9c1a016}");
 }
 
+// -----------------------------------------------------------------------------
+ConvertQuaternion::Pointer ConvertQuaternion::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ConvertQuaternion> ConvertQuaternion::New()
+{
+  struct make_shared_enabler : public ConvertQuaternion
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString ConvertQuaternion::getNameOfClass() const
+{
+  return QString("_SUPERConvertQuaternion");
+}
+
+// -----------------------------------------------------------------------------
+QString ConvertQuaternion::ClassName()
+{
+  return QString("_SUPERConvertQuaternion");
+}
+
+// -----------------------------------------------------------------------------
+void ConvertQuaternion::setQuaternionDataArrayPath(const DataArrayPath& value)
+{
+  m_QuaternionDataArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ConvertQuaternion::getQuaternionDataArrayPath() const
+{
+  return m_QuaternionDataArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertQuaternion::setOutputDataArrayPath(const DataArrayPath& value)
+{
+  m_OutputDataArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ConvertQuaternion::getOutputDataArrayPath() const
+{
+  return m_OutputDataArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertQuaternion::setDeleteOriginalData(const bool& value)
+{
+  m_DeleteOriginalData = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ConvertQuaternion::getDeleteOriginalData() const
+{
+  return m_DeleteOriginalData;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertQuaternion::setConversionType(const int32_t& value)
+{
+  m_ConversionType = value;
+}
+
+// -----------------------------------------------------------------------------
+int32_t ConvertQuaternion::getConversionType() const
+{
+  return m_ConversionType;
+}

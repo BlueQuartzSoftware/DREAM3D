@@ -43,7 +43,12 @@
 #include "ImportExport/ImportExportConstants.h"
 #include "ImportExport/ImportExportVersion.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
@@ -388,4 +393,93 @@ const QString AvizoRectilinearCoordinateWriter::getSubGroupName() const
 const QString AvizoRectilinearCoordinateWriter::getHumanLabel() const
 {
   return "Avizo Rectilinear Coordinate Exporter";
+}
+
+// -----------------------------------------------------------------------------
+AvizoRectilinearCoordinateWriter::Pointer AvizoRectilinearCoordinateWriter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<AvizoRectilinearCoordinateWriter> AvizoRectilinearCoordinateWriter::New()
+{
+  struct make_shared_enabler : public AvizoRectilinearCoordinateWriter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString AvizoRectilinearCoordinateWriter::getNameOfClass() const
+{
+  return QString("AvizoRectilinearCoordinateWriter");
+}
+
+// -----------------------------------------------------------------------------
+QString AvizoRectilinearCoordinateWriter::ClassName()
+{
+  return QString("AvizoRectilinearCoordinateWriter");
+}
+
+// -----------------------------------------------------------------------------
+void AvizoRectilinearCoordinateWriter::setOutputFile(const QString& value)
+{
+  m_OutputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString AvizoRectilinearCoordinateWriter::getOutputFile() const
+{
+  return m_OutputFile;
+}
+
+// -----------------------------------------------------------------------------
+void AvizoRectilinearCoordinateWriter::setWriteBinaryFile(const bool& value)
+{
+  m_WriteBinaryFile = value;
+}
+
+// -----------------------------------------------------------------------------
+bool AvizoRectilinearCoordinateWriter::getWriteBinaryFile() const
+{
+  return m_WriteBinaryFile;
+}
+
+// -----------------------------------------------------------------------------
+void AvizoRectilinearCoordinateWriter::setUnits(const QString& value)
+{
+  m_Units = value;
+}
+
+// -----------------------------------------------------------------------------
+QString AvizoRectilinearCoordinateWriter::getUnits() const
+{
+  return m_Units;
+}
+
+// -----------------------------------------------------------------------------
+void AvizoRectilinearCoordinateWriter::setWriteFeatureIds(const bool& value)
+{
+  m_WriteFeatureIds = value;
+}
+
+// -----------------------------------------------------------------------------
+bool AvizoRectilinearCoordinateWriter::getWriteFeatureIds() const
+{
+  return m_WriteFeatureIds;
+}
+
+// -----------------------------------------------------------------------------
+void AvizoRectilinearCoordinateWriter::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AvizoRectilinearCoordinateWriter::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
 }

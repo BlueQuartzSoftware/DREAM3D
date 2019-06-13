@@ -40,7 +40,6 @@
 #include <vector>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/StatsData/StatsData.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
@@ -52,9 +51,24 @@
 class PowerLawOps : public DistributionAnalysisOps
 {
   public:
-    SIMPL_SHARED_POINTERS(PowerLawOps)
-    SIMPL_TYPE_MACRO(PowerLawOps)
-    SIMPL_STATIC_NEW_MACRO(PowerLawOps)
+    using Self = PowerLawOps;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    /**
+     * @brief Returns the name of the class for PowerLawOps
+     */
+    const QString getNameOfClass() const;
+    /**
+     * @brief Returns the name of the class for PowerLawOps
+     */
+    static QString ClassName();
+
+    static Pointer New();
+
     virtual ~PowerLawOps();
 
 
@@ -69,6 +83,8 @@ class PowerLawOps : public DistributionAnalysisOps
     PowerLawOps(PowerLawOps&&) = delete;         // Move Constructor Not Implemented
     PowerLawOps& operator=(const PowerLawOps&) = delete; // Copy Assignment Not Implemented
     PowerLawOps& operator=(PowerLawOps&&) = delete;      // Move Assignment Not Implemented
+
+  private:
 };
 
 

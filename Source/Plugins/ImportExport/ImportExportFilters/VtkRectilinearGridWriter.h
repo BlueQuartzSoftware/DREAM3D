@@ -38,7 +38,6 @@
 #include <QtCore/QVector>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataContainers/DataArrayPath.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -76,19 +75,60 @@ class ImportExport_EXPORT VtkRectilinearGridWriter : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(VtkRectilinearGridWriter)
-  SIMPL_FILTER_NEW_MACRO(VtkRectilinearGridWriter)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(VtkRectilinearGridWriter, AbstractFilter)
+  using Self = VtkRectilinearGridWriter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<VtkRectilinearGridWriter> New();
+
+  /**
+   * @brief Returns the name of the class for VtkRectilinearGridWriter
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for VtkRectilinearGridWriter
+   */
+  static QString ClassName();
 
   ~VtkRectilinearGridWriter() override;
 
-  SIMPL_FILTER_PARAMETER(QString, OutputFile)
+  /**
+   * @brief Setter property for OutputFile
+   */
+  void setOutputFile(const QString& value);
+  /**
+   * @brief Getter property for OutputFile
+   * @return Value of OutputFile
+   */
+  QString getOutputFile() const;
+
   Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-  SIMPL_FILTER_PARAMETER(bool, WriteBinaryFile)
+  /**
+   * @brief Setter property for WriteBinaryFile
+   */
+  void setWriteBinaryFile(const bool& value);
+  /**
+   * @brief Getter property for WriteBinaryFile
+   * @return Value of WriteBinaryFile
+   */
+  bool getWriteBinaryFile() const;
+
   Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
 
-  SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedDataArrayPaths)
+  /**
+   * @brief Setter property for SelectedDataArrayPaths
+   */
+  void setSelectedDataArrayPaths(const QVector<DataArrayPath>& value);
+  /**
+   * @brief Getter property for SelectedDataArrayPaths
+   * @return Value of SelectedDataArrayPaths
+   */
+  QVector<DataArrayPath> getSelectedDataArrayPaths() const;
+
   Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
 
   /**
@@ -257,6 +297,10 @@ protected:
   void initialize();
 
 private:
+  QString m_OutputFile = {};
+  bool m_WriteBinaryFile = {};
+  QVector<DataArrayPath> m_SelectedDataArrayPaths = {};
+
   QVector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
 
 public:

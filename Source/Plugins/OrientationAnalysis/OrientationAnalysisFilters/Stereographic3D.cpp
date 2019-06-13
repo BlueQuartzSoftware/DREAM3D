@@ -39,12 +39,16 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -327,4 +331,57 @@ const QString Stereographic3D::getSubGroupName() const
 const QString Stereographic3D::getHumanLabel() const
 {
   return "Stereographic 3D Coordinates";
+}
+
+// -----------------------------------------------------------------------------
+Stereographic3D::Pointer Stereographic3D::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<Stereographic3D> Stereographic3D::New()
+{
+  struct make_shared_enabler : public Stereographic3D
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString Stereographic3D::getNameOfClass() const
+{
+  return QString("Stereographic3D");
+}
+
+// -----------------------------------------------------------------------------
+QString Stereographic3D::ClassName()
+{
+  return QString("Stereographic3D");
+}
+
+// -----------------------------------------------------------------------------
+void Stereographic3D::setQuatsArrayPath(const DataArrayPath& value)
+{
+  m_QuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath Stereographic3D::getQuatsArrayPath() const
+{
+  return m_QuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void Stereographic3D::setCoordinatesArrayName(const QString& value)
+{
+  m_CoordinatesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString Stereographic3D::getCoordinatesArrayName() const
+{
+  return m_CoordinatesArrayName;
 }

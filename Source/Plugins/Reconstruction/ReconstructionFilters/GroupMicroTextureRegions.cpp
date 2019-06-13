@@ -37,7 +37,10 @@
 
 #include <chrono>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -48,6 +51,8 @@
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "EbsdLib/EbsdConstants.h"
 
@@ -614,4 +619,177 @@ const QString GroupMicroTextureRegions::getSubGroupName() const
 const QString GroupMicroTextureRegions::getHumanLabel() const
 {
   return "Group MicroTexture Regions";
+}
+
+// -----------------------------------------------------------------------------
+GroupMicroTextureRegions::Pointer GroupMicroTextureRegions::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<GroupMicroTextureRegions> GroupMicroTextureRegions::New()
+{
+  struct make_shared_enabler : public GroupMicroTextureRegions
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString GroupMicroTextureRegions::getNameOfClass() const
+{
+  return QString("GroupMicroTextureRegions");
+}
+
+// -----------------------------------------------------------------------------
+QString GroupMicroTextureRegions::ClassName()
+{
+  return QString("GroupMicroTextureRegions");
+}
+
+// -----------------------------------------------------------------------------
+void GroupMicroTextureRegions::setNewCellFeatureAttributeMatrixName(const QString& value)
+{
+  m_NewCellFeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GroupMicroTextureRegions::getNewCellFeatureAttributeMatrixName() const
+{
+  return m_NewCellFeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void GroupMicroTextureRegions::setCAxisTolerance(const float& value)
+{
+  m_CAxisTolerance = value;
+}
+
+// -----------------------------------------------------------------------------
+float GroupMicroTextureRegions::getCAxisTolerance() const
+{
+  return m_CAxisTolerance;
+}
+
+// -----------------------------------------------------------------------------
+void GroupMicroTextureRegions::setUseRunningAverage(const bool& value)
+{
+  m_UseRunningAverage = value;
+}
+
+// -----------------------------------------------------------------------------
+bool GroupMicroTextureRegions::getUseRunningAverage() const
+{
+  return m_UseRunningAverage;
+}
+
+// -----------------------------------------------------------------------------
+void GroupMicroTextureRegions::setRandomizeParentIds(const bool& value)
+{
+  m_RandomizeParentIds = value;
+}
+
+// -----------------------------------------------------------------------------
+bool GroupMicroTextureRegions::getRandomizeParentIds() const
+{
+  return m_RandomizeParentIds;
+}
+
+// -----------------------------------------------------------------------------
+void GroupMicroTextureRegions::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GroupMicroTextureRegions::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GroupMicroTextureRegions::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GroupMicroTextureRegions::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GroupMicroTextureRegions::setVolumesArrayPath(const DataArrayPath& value)
+{
+  m_VolumesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GroupMicroTextureRegions::getVolumesArrayPath() const
+{
+  return m_VolumesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GroupMicroTextureRegions::setAvgQuatsArrayPath(const DataArrayPath& value)
+{
+  m_AvgQuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GroupMicroTextureRegions::getAvgQuatsArrayPath() const
+{
+  return m_AvgQuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GroupMicroTextureRegions::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GroupMicroTextureRegions::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GroupMicroTextureRegions::setCellParentIdsArrayName(const QString& value)
+{
+  m_CellParentIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GroupMicroTextureRegions::getCellParentIdsArrayName() const
+{
+  return m_CellParentIdsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void GroupMicroTextureRegions::setFeatureParentIdsArrayName(const QString& value)
+{
+  m_FeatureParentIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GroupMicroTextureRegions::getFeatureParentIdsArrayName() const
+{
+  return m_FeatureParentIdsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void GroupMicroTextureRegions::setActiveArrayName(const QString& value)
+{
+  m_ActiveArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GroupMicroTextureRegions::getActiveArrayName() const
+{
+  return m_ActiveArrayName;
 }

@@ -5,11 +5,11 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/DynamicTableData.h"
 #include "SIMPLib/FilterParameters/FloatVec2FilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 class StatsDataArray;
 class StringDataArray;
@@ -73,55 +73,204 @@ class SyntheticBuilding_EXPORT GeneratePrecipitateStatsData : public AbstractFil
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(GeneratePrecipitateStatsData)
-  SIMPL_FILTER_NEW_MACRO(GeneratePrecipitateStatsData)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GeneratePrecipitateStatsData, AbstractFilter)
+  using Self = GeneratePrecipitateStatsData;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<GeneratePrecipitateStatsData> New();
+
+  /**
+   * @brief Returns the name of the class for GeneratePrecipitateStatsData
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for GeneratePrecipitateStatsData
+   */
+  static QString ClassName();
 
   ~GeneratePrecipitateStatsData() override;
 
-  SIMPL_FILTER_PARAMETER(QString, PhaseName)
+  /**
+   * @brief Setter property for PhaseName
+   */
+  void setPhaseName(const QString& value);
+  /**
+   * @brief Getter property for PhaseName
+   * @return Value of PhaseName
+   */
+  QString getPhaseName() const;
+
   Q_PROPERTY(QString PhaseName READ getPhaseName WRITE setPhaseName)
 
-  SIMPL_FILTER_PARAMETER(int, PhaseIndex)
+  /**
+   * @brief Setter property for PhaseIndex
+   */
+  void setPhaseIndex(const int& value);
+  /**
+   * @brief Getter property for PhaseIndex
+   * @return Value of PhaseIndex
+   */
+  int getPhaseIndex() const;
+
   Q_PROPERTY(int PhaseIndex READ getPhaseIndex WRITE setPhaseIndex)
 
-  SIMPL_FILTER_PARAMETER(int, CrystalSymmetry)
+  /**
+   * @brief Setter property for CrystalSymmetry
+   */
+  void setCrystalSymmetry(const int& value);
+  /**
+   * @brief Getter property for CrystalSymmetry
+   * @return Value of CrystalSymmetry
+   */
+  int getCrystalSymmetry() const;
+
   Q_PROPERTY(int CrystalSymmetry READ getCrystalSymmetry WRITE setCrystalSymmetry)
 
-  SIMPL_FILTER_PARAMETER(int, MicroPresetModel)
+  /**
+   * @brief Setter property for MicroPresetModel
+   */
+  void setMicroPresetModel(const int& value);
+  /**
+   * @brief Getter property for MicroPresetModel
+   * @return Value of MicroPresetModel
+   */
+  int getMicroPresetModel() const;
+
   Q_PROPERTY(int MicroPresetModel READ getMicroPresetModel WRITE setMicroPresetModel)
 
-  SIMPL_FILTER_PARAMETER(double, PhaseFraction)
+  /**
+   * @brief Setter property for PhaseFraction
+   */
+  void setPhaseFraction(const double& value);
+  /**
+   * @brief Getter property for PhaseFraction
+   * @return Value of PhaseFraction
+   */
+  double getPhaseFraction() const;
+
   Q_PROPERTY(double PhaseFraction READ getPhaseFraction WRITE setPhaseFraction)
 
-  SIMPL_FILTER_PARAMETER(double, Mu)
+  /**
+   * @brief Setter property for Mu
+   */
+  void setMu(const double& value);
+  /**
+   * @brief Getter property for Mu
+   * @return Value of Mu
+   */
+  double getMu() const;
+
   Q_PROPERTY(double Mu READ getMu WRITE setMu)
 
-  SIMPL_FILTER_PARAMETER(double, Sigma)
+  /**
+   * @brief Setter property for Sigma
+   */
+  void setSigma(const double& value);
+  /**
+   * @brief Getter property for Sigma
+   * @return Value of Sigma
+   */
+  double getSigma() const;
+
   Q_PROPERTY(double Sigma READ getSigma WRITE setSigma)
 
-  SIMPL_FILTER_PARAMETER(double, MinCutOff)
+  /**
+   * @brief Setter property for MinCutOff
+   */
+  void setMinCutOff(const double& value);
+  /**
+   * @brief Getter property for MinCutOff
+   * @return Value of MinCutOff
+   */
+  double getMinCutOff() const;
+
   Q_PROPERTY(double MinCutOff READ getMinCutOff WRITE setMinCutOff)
 
-  SIMPL_FILTER_PARAMETER(double, MaxCutOff)
+  /**
+   * @brief Setter property for MaxCutOff
+   */
+  void setMaxCutOff(const double& value);
+  /**
+   * @brief Getter property for MaxCutOff
+   * @return Value of MaxCutOff
+   */
+  double getMaxCutOff() const;
+
   Q_PROPERTY(double MaxCutOff READ getMaxCutOff WRITE setMaxCutOff)
 
-  SIMPL_FILTER_PARAMETER(double, BinStepSize)
+  /**
+   * @brief Setter property for BinStepSize
+   */
+  void setBinStepSize(const double& value);
+  /**
+   * @brief Getter property for BinStepSize
+   * @return Value of BinStepSize
+   */
+  double getBinStepSize() const;
+
   Q_PROPERTY(double BinStepSize READ getBinStepSize WRITE setBinStepSize)
 
-  SIMPL_FILTER_PARAMETER(bool, CreateEnsembleAttributeMatrix)
+  /**
+   * @brief Setter property for CreateEnsembleAttributeMatrix
+   */
+  void setCreateEnsembleAttributeMatrix(const bool& value);
+  /**
+   * @brief Getter property for CreateEnsembleAttributeMatrix
+   * @return Value of CreateEnsembleAttributeMatrix
+   */
+  bool getCreateEnsembleAttributeMatrix() const;
+
   Q_PROPERTY(bool CreateEnsembleAttributeMatrix READ getCreateEnsembleAttributeMatrix WRITE setCreateEnsembleAttributeMatrix)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  DataArrayPath getDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+  /**
+   * @brief Setter property for CellEnsembleAttributeMatrixName
+   */
+  void setCellEnsembleAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellEnsembleAttributeMatrixName
+   * @return Value of CellEnsembleAttributeMatrixName
+   */
+  QString getCellEnsembleAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(bool, AppendToExistingAttributeMatrix)
+  /**
+   * @brief Setter property for AppendToExistingAttributeMatrix
+   */
+  void setAppendToExistingAttributeMatrix(const bool& value);
+  /**
+   * @brief Getter property for AppendToExistingAttributeMatrix
+   * @return Value of AppendToExistingAttributeMatrix
+   */
+  bool getAppendToExistingAttributeMatrix() const;
+
   Q_PROPERTY(bool AppendToExistingAttributeMatrix READ getAppendToExistingAttributeMatrix WRITE setAppendToExistingAttributeMatrix)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedEnsembleAttributeMatrix)
+  /**
+   * @brief Setter property for SelectedEnsembleAttributeMatrix
+   */
+  void setSelectedEnsembleAttributeMatrix(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SelectedEnsembleAttributeMatrix
+   * @return Value of SelectedEnsembleAttributeMatrix
+   */
+  DataArrayPath getSelectedEnsembleAttributeMatrix() const;
+
   Q_PROPERTY(DataArrayPath SelectedEnsembleAttributeMatrix READ getSelectedEnsembleAttributeMatrix WRITE setSelectedEnsembleAttributeMatrix)
 
   QString getNumberOfBins();
@@ -130,22 +279,76 @@ public:
   QString getFeatureESD();
   Q_PROPERTY(QString FeatureESD READ getFeatureESD)
 
-  SIMPL_FILTER_PARAMETER(DynamicTableData, OdfData)
+  /**
+   * @brief Setter property for OdfData
+   */
+  void setOdfData(const DynamicTableData& value);
+  /**
+   * @brief Getter property for OdfData
+   * @return Value of OdfData
+   */
+  DynamicTableData getOdfData() const;
+
   Q_PROPERTY(DynamicTableData OdfData READ getOdfData WRITE setOdfData)
 
-  SIMPL_FILTER_PARAMETER(DynamicTableData, MdfData)
+  /**
+   * @brief Setter property for MdfData
+   */
+  void setMdfData(const DynamicTableData& value);
+  /**
+   * @brief Getter property for MdfData
+   * @return Value of MdfData
+   */
+  DynamicTableData getMdfData() const;
+
   Q_PROPERTY(DynamicTableData MdfData READ getMdfData WRITE setMdfData)
 
-  SIMPL_FILTER_PARAMETER(DynamicTableData, AxisOdfData)
+  /**
+   * @brief Setter property for AxisOdfData
+   */
+  void setAxisOdfData(const DynamicTableData& value);
+  /**
+   * @brief Getter property for AxisOdfData
+   * @return Value of AxisOdfData
+   */
+  DynamicTableData getAxisOdfData() const;
+
   Q_PROPERTY(DynamicTableData AxisOdfData READ getAxisOdfData WRITE setAxisOdfData)
 
-  SIMPL_FILTER_PARAMETER(FloatVec2Type, RdfMinMaxDistance)
+  /**
+   * @brief Setter property for RdfMinMaxDistance
+   */
+  void setRdfMinMaxDistance(const FloatVec2Type& value);
+  /**
+   * @brief Getter property for RdfMinMaxDistance
+   * @return Value of RdfMinMaxDistance
+   */
+  FloatVec2Type getRdfMinMaxDistance() const;
+
   Q_PROPERTY(FloatVec2Type RdfMinMaxDistance READ getRdfMinMaxDistance WRITE setRdfMinMaxDistance)
 
-  SIMPL_FILTER_PARAMETER(int, RdfNumBins)
+  /**
+   * @brief Setter property for RdfNumBins
+   */
+  void setRdfNumBins(const int& value);
+  /**
+   * @brief Getter property for RdfNumBins
+   * @return Value of RdfNumBins
+   */
+  int getRdfNumBins() const;
+
   Q_PROPERTY(int RdfNumBins READ getRdfNumBins WRITE setRdfNumBins)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, RdfBoxSize)
+  /**
+   * @brief Setter property for RdfBoxSize
+   */
+  void setRdfBoxSize(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for RdfBoxSize
+   * @return Value of RdfBoxSize
+   */
+  FloatVec3Type getRdfBoxSize() const;
+
   Q_PROPERTY(FloatVec3Type RdfBoxSize READ getRdfBoxSize WRITE setRdfBoxSize)
 
   /**
@@ -247,6 +450,28 @@ protected:
   void normalizePhaseFractions(StatsDataArray* statsDataArray);
 
 private:
+  QString m_PhaseName = {};
+  int m_PhaseIndex = {};
+  int m_CrystalSymmetry = {};
+  int m_MicroPresetModel = {};
+  double m_PhaseFraction = {};
+  double m_Mu = {};
+  double m_Sigma = {};
+  double m_MinCutOff = {};
+  double m_MaxCutOff = {};
+  double m_BinStepSize = {};
+  bool m_CreateEnsembleAttributeMatrix = {};
+  DataArrayPath m_DataContainerName = {};
+  QString m_CellEnsembleAttributeMatrixName = {};
+  bool m_AppendToExistingAttributeMatrix = {};
+  DataArrayPath m_SelectedEnsembleAttributeMatrix = {};
+  DynamicTableData m_OdfData = {};
+  DynamicTableData m_MdfData = {};
+  DynamicTableData m_AxisOdfData = {};
+  FloatVec2Type m_RdfMinMaxDistance = {};
+  int m_RdfNumBins = {};
+  FloatVec3Type m_RdfBoxSize = {};
+
   StatsDataArray* m_StatsDataArray;
   PrecipitateStatsData* m_PrecipitateStatsData;
   UInt32ArrayType* m_CrystalStructures;

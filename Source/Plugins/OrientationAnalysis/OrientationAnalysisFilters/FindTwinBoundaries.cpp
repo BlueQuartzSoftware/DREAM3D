@@ -39,7 +39,10 @@
 #include <cmath>
 
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -50,6 +53,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Math/GeometryMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
@@ -534,4 +538,153 @@ const QString FindTwinBoundaries::getSubGroupName() const
 const QString FindTwinBoundaries::getHumanLabel() const
 {
   return "Find Twin Boundaries";
+}
+
+// -----------------------------------------------------------------------------
+FindTwinBoundaries::Pointer FindTwinBoundaries::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindTwinBoundaries> FindTwinBoundaries::New()
+{
+  struct make_shared_enabler : public FindTwinBoundaries
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindTwinBoundaries::getNameOfClass() const
+{
+  return QString("FindTwinBoundaries");
+}
+
+// -----------------------------------------------------------------------------
+QString FindTwinBoundaries::ClassName()
+{
+  return QString("FindTwinBoundaries");
+}
+
+// -----------------------------------------------------------------------------
+void FindTwinBoundaries::setAxisTolerance(const float& value)
+{
+  m_AxisTolerance = value;
+}
+
+// -----------------------------------------------------------------------------
+float FindTwinBoundaries::getAxisTolerance() const
+{
+  return m_AxisTolerance;
+}
+
+// -----------------------------------------------------------------------------
+void FindTwinBoundaries::setAngleTolerance(const float& value)
+{
+  m_AngleTolerance = value;
+}
+
+// -----------------------------------------------------------------------------
+float FindTwinBoundaries::getAngleTolerance() const
+{
+  return m_AngleTolerance;
+}
+
+// -----------------------------------------------------------------------------
+void FindTwinBoundaries::setFindCoherence(const bool& value)
+{
+  m_FindCoherence = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindTwinBoundaries::getFindCoherence() const
+{
+  return m_FindCoherence;
+}
+
+// -----------------------------------------------------------------------------
+void FindTwinBoundaries::setAvgQuatsArrayPath(const DataArrayPath& value)
+{
+  m_AvgQuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindTwinBoundaries::getAvgQuatsArrayPath() const
+{
+  return m_AvgQuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindTwinBoundaries::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindTwinBoundaries::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindTwinBoundaries::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindTwinBoundaries::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindTwinBoundaries::setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindTwinBoundaries::getSurfaceMeshFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFaceLabelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindTwinBoundaries::setSurfaceMeshFaceNormalsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceNormalsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindTwinBoundaries::getSurfaceMeshFaceNormalsArrayPath() const
+{
+  return m_SurfaceMeshFaceNormalsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindTwinBoundaries::setSurfaceMeshTwinBoundaryArrayName(const QString& value)
+{
+  m_SurfaceMeshTwinBoundaryArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindTwinBoundaries::getSurfaceMeshTwinBoundaryArrayName() const
+{
+  return m_SurfaceMeshTwinBoundaryArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindTwinBoundaries::setSurfaceMeshTwinBoundaryIncoherenceArrayName(const QString& value)
+{
+  m_SurfaceMeshTwinBoundaryIncoherenceArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindTwinBoundaries::getSurfaceMeshTwinBoundaryIncoherenceArrayName() const
+{
+  return m_SurfaceMeshTwinBoundaryIncoherenceArrayName;
 }

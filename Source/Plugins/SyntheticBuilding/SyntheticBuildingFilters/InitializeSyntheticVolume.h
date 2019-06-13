@@ -36,7 +36,6 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -79,45 +78,158 @@ class SyntheticBuilding_EXPORT InitializeSyntheticVolume : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(InitializeSyntheticVolume)
-  SIMPL_FILTER_NEW_MACRO(InitializeSyntheticVolume)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(InitializeSyntheticVolume, AbstractFilter)
+  using Self = InitializeSyntheticVolume;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<InitializeSyntheticVolume> New();
+
+  /**
+   * @brief Returns the name of the class for InitializeSyntheticVolume
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for InitializeSyntheticVolume
+   */
+  static QString ClassName();
 
   ~InitializeSyntheticVolume() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  DataArrayPath getDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  QString getCellAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, EnsembleAttributeMatrixName)
+  /**
+   * @brief Setter property for EnsembleAttributeMatrixName
+   */
+  void setEnsembleAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for EnsembleAttributeMatrixName
+   * @return Value of EnsembleAttributeMatrixName
+   */
+  QString getEnsembleAttributeMatrixName() const;
+
   Q_PROPERTY(QString EnsembleAttributeMatrixName READ getEnsembleAttributeMatrixName WRITE setEnsembleAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(int32_t, LengthUnit)
+  /**
+   * @brief Setter property for LengthUnit
+   */
+  void setLengthUnit(const int32_t& value);
+  /**
+   * @brief Getter property for LengthUnit
+   * @return Value of LengthUnit
+   */
+  int32_t getLengthUnit() const;
+
   Q_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
 
-  SIMPL_FILTER_PARAMETER(IntVec3Type, Dimensions)
+  /**
+   * @brief Setter property for Dimensions
+   */
+  void setDimensions(const IntVec3Type& value);
+  /**
+   * @brief Getter property for Dimensions
+   * @return Value of Dimensions
+   */
+  IntVec3Type getDimensions() const;
+
   Q_PROPERTY(IntVec3Type Dimensions READ getDimensions WRITE setDimensions)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  /**
+   * @brief Setter property for Spacing
+   */
+  void setSpacing(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Spacing
+   * @return Value of Spacing
+   */
+  FloatVec3Type getSpacing() const;
+
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Origin)
+  /**
+   * @brief Setter property for Origin
+   */
+  void setOrigin(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Origin
+   * @return Value of Origin
+   */
+  FloatVec3Type getOrigin() const;
+
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
   // These are for estimating the number of features that will be generated farther down the line.
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
+  /**
+   * @brief Setter property for InputStatsArrayPath
+   */
+  void setInputStatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for InputStatsArrayPath
+   * @return Value of InputStatsArrayPath
+   */
+  DataArrayPath getInputStatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
+  /**
+   * @brief Setter property for InputPhaseTypesArrayPath
+   */
+  void setInputPhaseTypesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for InputPhaseTypesArrayPath
+   * @return Value of InputPhaseTypesArrayPath
+   */
+  DataArrayPath getInputPhaseTypesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, InputPhaseNamesArrayPath)
+  /**
+   * @brief Setter property for InputPhaseNamesArrayPath
+   */
+  void setInputPhaseNamesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for InputPhaseNamesArrayPath
+   * @return Value of InputPhaseNamesArrayPath
+   */
+  DataArrayPath getInputPhaseNamesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath InputPhaseNamesArrayPath READ getInputPhaseNamesArrayPath WRITE setInputPhaseNamesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(bool, EstimateNumberOfFeatures)
+  /**
+   * @brief Setter property for EstimateNumberOfFeatures
+   */
+  void setEstimateNumberOfFeatures(const bool& value);
+  /**
+   * @brief Getter property for EstimateNumberOfFeatures
+   * @return Value of EstimateNumberOfFeatures
+   */
+  bool getEstimateNumberOfFeatures() const;
+
   Q_PROPERTY(bool EstimateNumberOfFeatures READ getEstimateNumberOfFeatures WRITE setEstimateNumberOfFeatures)
 
   QString getEstimatedPrimaryFeatures();
@@ -236,6 +348,18 @@ protected:
   QString estimateNumFeatures(IntVec3Type dimensions, FloatVec3Type res);
 
 private:
+  DataArrayPath m_DataContainerName = {};
+  QString m_CellAttributeMatrixName = {};
+  QString m_EnsembleAttributeMatrixName = {};
+  int32_t m_LengthUnit = {};
+  IntVec3Type m_Dimensions = {};
+  FloatVec3Type m_Spacing = {};
+  FloatVec3Type m_Origin = {};
+  DataArrayPath m_InputStatsArrayPath = {};
+  DataArrayPath m_InputPhaseTypesArrayPath = {};
+  DataArrayPath m_InputPhaseNamesArrayPath = {};
+  bool m_EstimateNumberOfFeatures = {};
+
   QString m_EstimatedPrimaryFeatures;
 
 public:

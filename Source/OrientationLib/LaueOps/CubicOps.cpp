@@ -2841,3 +2841,27 @@ std::vector< std::pair<double, double> > CubicOps::rodri2pair(std::vector<double
   return result;
 }
 
+// -----------------------------------------------------------------------------
+CubicOps::Pointer CubicOps::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+const QString CubicOps::getNameOfClass() const
+{
+  return QString("CubicOps");
+}
+
+// -----------------------------------------------------------------------------
+QString CubicOps::ClassName()
+{
+  return QString("CubicOps");
+}
+
+// -----------------------------------------------------------------------------
+CubicOps::Pointer CubicOps::New()
+{
+  Pointer sharedPtr(new(CubicOps));
+  return sharedPtr;
+}

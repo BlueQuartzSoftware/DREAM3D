@@ -36,9 +36,10 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Common/SIMPLArray.hpp"
 
 #include "EbsdLib/HKL/CtfReader.h"
 
@@ -59,6 +60,9 @@ enum CTF_READ_FLAG
   CTF_FULL_FILE,
   CTF_HEADER_ONLY
 };
+
+class DataContainer;
+using DataContainerShPtrType = std::shared_ptr<DataContainer>;
 
 // our PIMPL private class
 class ReadCtfDataPrivate;
@@ -92,35 +96,128 @@ class OrientationAnalysis_EXPORT ReadCtfData : public AbstractFilter
   Q_DECLARE_PRIVATE(ReadCtfData)
 
 public:
-  SIMPL_SHARED_POINTERS(ReadCtfData)
-  SIMPL_FILTER_NEW_MACRO(ReadCtfData)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ReadCtfData, AbstractFilter)
+  using Self = ReadCtfData;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<ReadCtfData> New();
+
+  /**
+   * @brief Returns the name of the class for ReadCtfData
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ReadCtfData
+   */
+  static QString ClassName();
 
   ~ReadCtfData() override;
 
-  SIMPL_FILTER_PARAMETER(bool, DegreesToRadians)
+  /**
+   * @brief Setter property for DegreesToRadians
+   */
+  void setDegreesToRadians(const bool& value);
+  /**
+   * @brief Getter property for DegreesToRadians
+   * @return Value of DegreesToRadians
+   */
+  bool getDegreesToRadians() const;
+
   Q_PROPERTY(bool DegreesToRadians READ getDegreesToRadians WRITE setDegreesToRadians)
 
-  SIMPL_FILTER_PARAMETER(bool, EdaxHexagonalAlignment)
+  /**
+   * @brief Setter property for EdaxHexagonalAlignment
+   */
+  void setEdaxHexagonalAlignment(const bool& value);
+  /**
+   * @brief Getter property for EdaxHexagonalAlignment
+   * @return Value of EdaxHexagonalAlignment
+   */
+  bool getEdaxHexagonalAlignment() const;
+
   Q_PROPERTY(bool EdaxHexagonalAlignment READ getEdaxHexagonalAlignment WRITE setEdaxHexagonalAlignment)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  DataArrayPath getDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+  /**
+   * @brief Setter property for CellEnsembleAttributeMatrixName
+   */
+  void setCellEnsembleAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellEnsembleAttributeMatrixName
+   * @return Value of CellEnsembleAttributeMatrixName
+   */
+  QString getCellEnsembleAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  QString getCellAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(bool, FileWasRead)
+  /**
+   * @brief Setter property for FileWasRead
+   */
+  void setFileWasRead(const bool& value);
+  /**
+   * @brief Getter property for FileWasRead
+   * @return Value of FileWasRead
+   */
+  bool getFileWasRead() const;
+
   Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
-  SIMPL_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
+  /**
+   * @brief Setter property for PhaseNameArrayName
+   */
+  void setPhaseNameArrayName(const QString& value);
+  /**
+   * @brief Getter property for PhaseNameArrayName
+   * @return Value of PhaseNameArrayName
+   */
+  QString getPhaseNameArrayName() const;
 
-  SIMPL_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
+  /**
+   * @brief Setter property for MaterialNameArrayName
+   */
+  void setMaterialNameArrayName(const QString& value);
+  /**
+   * @brief Getter property for MaterialNameArrayName
+   * @return Value of MaterialNameArrayName
+   */
+  QString getMaterialNameArrayName() const;
 
-  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  /**
+   * @brief Setter property for InputFile
+   */
+  void setInputFile(const QString& value);
+  /**
+   * @brief Getter property for InputFile
+   * @return Value of InputFile
+   */
+  QString getInputFile() const;
+
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
   /**
@@ -189,15 +286,55 @@ public:
   void preflight() override;
 
   /* These are non-exposed to the user through the GUI. Manual Pipelines are OK to set them */
-  SIMPL_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
+  /**
+   * @brief Setter property for RefFrameZDir
+   */
+  void setRefFrameZDir(const uint32_t& value);
+  /**
+   * @brief Getter property for RefFrameZDir
+   * @return Value of RefFrameZDir
+   */
+  uint32_t getRefFrameZDir() const;
 
-  SIMPL_INSTANCE_PROPERTY(Ebsd::OEM, Manufacturer)
+  /**
+   * @brief Setter property for Manufacturer
+   */
+  void setManufacturer(const Ebsd::OEM& value);
+  /**
+   * @brief Getter property for Manufacturer
+   * @return Value of Manufacturer
+   */
+  Ebsd::OEM getManufacturer() const;
 
-  SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
+  /**
+   * @brief Setter property for InputFile_Cache
+   */
+  void setInputFile_Cache(const QString& value);
+  /**
+   * @brief Getter property for InputFile_Cache
+   * @return Value of InputFile_Cache
+   */
+  QString getInputFile_Cache() const;
 
-  SIMPL_PIMPL_PROPERTY_DECL(QDateTime, TimeStamp_Cache)
+  /**
+   * @brief Setter property for TimeStamp_Cache
+   */
+  void setTimeStamp_Cache(const QDateTime& value);
+  /**
+   * @brief Getter property for TimeStamp_Cache
+   * @return Value of TimeStamp_Cache
+   */
+  QDateTime getTimeStamp_Cache() const;
 
-  SIMPL_PIMPL_PROPERTY_DECL(Ctf_Private_Data, Data)
+  /**
+   * @brief Setter property for Data
+   */
+  void setData(const Ctf_Private_Data& value);
+  /**
+   * @brief Getter property for Data
+   * @return Value of Data
+   */
+  Ctf_Private_Data getData() const;
 
   Q_PROPERTY(Ctf_Private_Data Data READ getData WRITE setData)
 
@@ -268,12 +405,28 @@ protected:
   void readDataFile(CtfReader* reader, const DataContainer::Pointer& m, std::vector<size_t>& tDims, CTF_READ_FLAG flag);
 
 private:
-  QScopedPointer<ReadCtfDataPrivate> const d_ptr;
+  std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+  int32_t* m_CellPhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_CellEulerAnglesPtr;
+  float* m_CellEulerAngles = nullptr;
+  std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
+  uint32_t* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<float>> m_LatticeConstantsPtr;
+  float* m_LatticeConstants = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-  DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
-  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-  DEFINE_DATAARRAY_VARIABLE(float, LatticeConstants)
+  bool m_DegreesToRadians = {};
+  bool m_EdaxHexagonalAlignment = {};
+  DataArrayPath m_DataContainerName = {};
+  QString m_CellEnsembleAttributeMatrixName = {};
+  QString m_CellAttributeMatrixName = {};
+  bool m_FileWasRead = {};
+  QString m_PhaseNameArrayName = {};
+  QString m_MaterialNameArrayName = {};
+  QString m_InputFile = {};
+  uint32_t m_RefFrameZDir = {};
+  Ebsd::OEM m_Manufacturer = {};
+
+  QScopedPointer<ReadCtfDataPrivate> const d_ptr;
 
 public:
   ReadCtfData(const ReadCtfData&) = delete;            // Copy Constructor Not Implemented

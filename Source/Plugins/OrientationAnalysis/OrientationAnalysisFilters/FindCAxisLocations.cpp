@@ -35,12 +35,16 @@
 
 #include "FindCAxisLocations.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationLib/Core/OrientationTransformation.hpp"
 #include "OrientationLib/Core/Quaternion.hpp"
@@ -253,4 +257,57 @@ const QString FindCAxisLocations::getSubGroupName() const
 const QString FindCAxisLocations::getHumanLabel() const
 {
   return "Find C-Axis Locations";
+}
+
+// -----------------------------------------------------------------------------
+FindCAxisLocations::Pointer FindCAxisLocations::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindCAxisLocations> FindCAxisLocations::New()
+{
+  struct make_shared_enabler : public FindCAxisLocations
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindCAxisLocations::getNameOfClass() const
+{
+  return QString("FindCAxisLocations");
+}
+
+// -----------------------------------------------------------------------------
+QString FindCAxisLocations::ClassName()
+{
+  return QString("FindCAxisLocations");
+}
+
+// -----------------------------------------------------------------------------
+void FindCAxisLocations::setQuatsArrayPath(const DataArrayPath& value)
+{
+  m_QuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindCAxisLocations::getQuatsArrayPath() const
+{
+  return m_QuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindCAxisLocations::setCAxisLocationsArrayName(const QString& value)
+{
+  m_CAxisLocationsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindCAxisLocations::getCAxisLocationsArrayName() const
+{
+  return m_CAxisLocationsArrayName;
 }

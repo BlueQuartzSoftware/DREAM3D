@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -59,13 +59,36 @@ class SurfaceMeshing_EXPORT TriangleNormalFilter : public SurfaceMeshFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(TriangleNormalFilter)
-  SIMPL_FILTER_NEW_MACRO(TriangleNormalFilter)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(TriangleNormalFilter, SurfaceMeshFilter)
+  using Self = TriangleNormalFilter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<TriangleNormalFilter> New();
+
+  /**
+   * @brief Returns the name of the class for TriangleNormalFilter
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for TriangleNormalFilter
+   */
+  static QString ClassName();
 
   ~TriangleNormalFilter() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleNormalsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshTriangleNormalsArrayPath
+   */
+  void setSurfaceMeshTriangleNormalsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshTriangleNormalsArrayPath
+   * @return Value of SurfaceMeshTriangleNormalsArrayPath
+   */
+  DataArrayPath getSurfaceMeshTriangleNormalsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshTriangleNormalsArrayPath READ getSurfaceMeshTriangleNormalsArrayPath WRITE setSurfaceMeshTriangleNormalsArrayPath)
 
   /**
@@ -146,7 +169,10 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleNormals)
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshTriangleNormalsPtr;
+  double* m_SurfaceMeshTriangleNormals = nullptr;
+
+  DataArrayPath m_SurfaceMeshTriangleNormalsArrayPath = {};
 
 public:
   TriangleNormalFilter(const TriangleNormalFilter&) = delete; // Copy Constructor Not Implemented

@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Processing/ProcessingDLLExport.h"
 
@@ -67,28 +67,96 @@ class Processing_EXPORT ErodeDilateMask : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(ErodeDilateMask)
-  SIMPL_FILTER_NEW_MACRO(ErodeDilateMask)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ErodeDilateMask, AbstractFilter)
+  using Self = ErodeDilateMask;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<ErodeDilateMask> New();
+
+  /**
+   * @brief Returns the name of the class for ErodeDilateMask
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ErodeDilateMask
+   */
+  static QString ClassName();
 
   ~ErodeDilateMask() override;
 
-  SIMPL_FILTER_PARAMETER(unsigned int, Direction)
+  /**
+   * @brief Setter property for Direction
+   */
+  void setDirection(const unsigned int& value);
+  /**
+   * @brief Getter property for Direction
+   * @return Value of Direction
+   */
+  unsigned int getDirection() const;
+
   Q_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)
 
-  SIMPL_FILTER_PARAMETER(int, NumIterations)
+  /**
+   * @brief Setter property for NumIterations
+   */
+  void setNumIterations(const int& value);
+  /**
+   * @brief Getter property for NumIterations
+   * @return Value of NumIterations
+   */
+  int getNumIterations() const;
+
   Q_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations)
 
-  SIMPL_FILTER_PARAMETER(bool, XDirOn)
+  /**
+   * @brief Setter property for XDirOn
+   */
+  void setXDirOn(const bool& value);
+  /**
+   * @brief Getter property for XDirOn
+   * @return Value of XDirOn
+   */
+  bool getXDirOn() const;
+
   Q_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn)
 
-  SIMPL_FILTER_PARAMETER(bool, YDirOn)
+  /**
+   * @brief Setter property for YDirOn
+   */
+  void setYDirOn(const bool& value);
+  /**
+   * @brief Getter property for YDirOn
+   * @return Value of YDirOn
+   */
+  bool getYDirOn() const;
+
   Q_PROPERTY(bool YDirOn READ getYDirOn WRITE setYDirOn)
 
-  SIMPL_FILTER_PARAMETER(bool, ZDirOn)
+  /**
+   * @brief Setter property for ZDirOn
+   */
+  void setZDirOn(const bool& value);
+  /**
+   * @brief Getter property for ZDirOn
+   * @return Value of ZDirOn
+   */
+  bool getZDirOn() const;
+
   Q_PROPERTY(bool ZDirOn READ getZDirOn WRITE setZDirOn)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
+  /**
+   * @brief Setter property for MaskArrayPath
+   */
+  void setMaskArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for MaskArrayPath
+   * @return Value of MaskArrayPath
+   */
+  DataArrayPath getMaskArrayPath() const;
+
   Q_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
 
   /**
@@ -192,9 +260,17 @@ protected:
   void initialize();
 
 private:
-  bool* m_MaskCopy;
+  std::weak_ptr<DataArray<bool>> m_MaskPtr;
+  bool* m_Mask = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(bool, Mask)
+  unsigned int m_Direction = {};
+  int m_NumIterations = {};
+  bool m_XDirOn = {};
+  bool m_YDirOn = {};
+  bool m_ZDirOn = {};
+  DataArrayPath m_MaskArrayPath = {};
+
+  bool* m_MaskCopy;
 
 public:
   ErodeDilateMask(const ErodeDilateMask&) = delete; // Copy Constructor Not Implemented

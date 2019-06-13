@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 
@@ -63,19 +63,60 @@ class Reconstruction_EXPORT AlignSectionsFeatureCentroid : public AlignSections
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(AlignSectionsFeatureCentroid)
-  SIMPL_FILTER_NEW_MACRO(AlignSectionsFeatureCentroid)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(AlignSectionsFeatureCentroid, AlignSections)
+  using Self = AlignSectionsFeatureCentroid;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<AlignSectionsFeatureCentroid> New();
+
+  /**
+   * @brief Returns the name of the class for AlignSectionsFeatureCentroid
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for AlignSectionsFeatureCentroid
+   */
+  static QString ClassName();
 
   virtual ~AlignSectionsFeatureCentroid();
 
-  SIMPL_FILTER_PARAMETER(int, ReferenceSlice)
+  /**
+   * @brief Setter property for ReferenceSlice
+   */
+  void setReferenceSlice(const int& value);
+  /**
+   * @brief Getter property for ReferenceSlice
+   * @return Value of ReferenceSlice
+   */
+  int getReferenceSlice() const;
+
   Q_PROPERTY(int ReferenceSlice READ getReferenceSlice WRITE setReferenceSlice)
 
-  SIMPL_FILTER_PARAMETER(bool, UseReferenceSlice)
+  /**
+   * @brief Setter property for UseReferenceSlice
+   */
+  void setUseReferenceSlice(const bool& value);
+  /**
+   * @brief Getter property for UseReferenceSlice
+   * @return Value of UseReferenceSlice
+   */
+  bool getUseReferenceSlice() const;
+
   Q_PROPERTY(bool UseReferenceSlice READ getUseReferenceSlice WRITE setUseReferenceSlice)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  /**
+   * @brief Setter property for GoodVoxelsArrayPath
+   */
+  void setGoodVoxelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for GoodVoxelsArrayPath
+   * @return Value of GoodVoxelsArrayPath
+   */
+  DataArrayPath getGoodVoxelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
   /**
@@ -161,7 +202,12 @@ protected:
   virtual void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
+  std::weak_ptr<DataArray<bool>> m_GoodVoxelsPtr;
+  bool* m_GoodVoxels = nullptr;
+
+  int m_ReferenceSlice = {};
+  bool m_UseReferenceSlice = {};
+  DataArrayPath m_GoodVoxelsArrayPath = {};
 
 public:
   AlignSectionsFeatureCentroid(const AlignSectionsFeatureCentroid&) = delete; // Copy Constructor Not Implemented

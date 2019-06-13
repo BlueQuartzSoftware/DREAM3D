@@ -35,7 +35,7 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
@@ -63,22 +63,72 @@ class ImportExport_EXPORT ReadStlFile : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(ReadStlFile)
-  SIMPL_FILTER_NEW_MACRO(ReadStlFile)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ReadStlFile, AbstractFilter)
+  using Self = ReadStlFile;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<ReadStlFile> New();
+
+  /**
+   * @brief Returns the name of the class for ReadStlFile
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ReadStlFile
+   */
+  static QString ClassName();
 
   ~ReadStlFile() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshDataContainerName)
+  /**
+   * @brief Setter property for SurfaceMeshDataContainerName
+   */
+  void setSurfaceMeshDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshDataContainerName
+   * @return Value of SurfaceMeshDataContainerName
+   */
+  DataArrayPath getSurfaceMeshDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshDataContainerName READ getSurfaceMeshDataContainerName WRITE setSurfaceMeshDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
+  /**
+   * @brief Setter property for FaceAttributeMatrixName
+   */
+  void setFaceAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for FaceAttributeMatrixName
+   * @return Value of FaceAttributeMatrixName
+   */
+  QString getFaceAttributeMatrixName() const;
+
   Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, StlFilePath)
+  /**
+   * @brief Setter property for StlFilePath
+   */
+  void setStlFilePath(const QString& value);
+  /**
+   * @brief Getter property for StlFilePath
+   * @return Value of StlFilePath
+   */
+  QString getStlFilePath() const;
+
   Q_PROPERTY(QString StlFilePath READ getStlFilePath WRITE setStlFilePath)
 
-  SIMPL_FILTER_PARAMETER(QString, FaceNormalsArrayName)
+  /**
+   * @brief Setter property for FaceNormalsArrayName
+   */
+  void setFaceNormalsArrayName(const QString& value);
+  /**
+   * @brief Getter property for FaceNormalsArrayName
+   * @return Value of FaceNormalsArrayName
+   */
+  QString getFaceNormalsArrayName() const;
+
   Q_PROPERTY(QString FaceNormalsArrayName READ getFaceNormalsArrayName WRITE setFaceNormalsArrayName)
 
   /**
@@ -182,7 +232,13 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(double, FaceNormals)
+  std::weak_ptr<DataArray<double>> m_FaceNormalsPtr;
+  double* m_FaceNormals = nullptr;
+
+  DataArrayPath m_SurfaceMeshDataContainerName = {};
+  QString m_FaceAttributeMatrixName = {};
+  QString m_StlFilePath = {};
+  QString m_FaceNormalsArrayName = {};
 
   float m_minXcoord;
   float m_maxXcoord;

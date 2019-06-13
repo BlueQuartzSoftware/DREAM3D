@@ -4,9 +4,14 @@
 
 #include "FixNonmanifoldVoxels.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
@@ -267,4 +272,45 @@ const QString FixNonmanifoldVoxels::getHumanLabel() const
 const QUuid FixNonmanifoldVoxels::getUuid()
 {
   return QUuid("{1f7f2bec-50d9-5e24-a8d4-8fd291ffed9d}");
+}
+
+// -----------------------------------------------------------------------------
+FixNonmanifoldVoxels::Pointer FixNonmanifoldVoxels::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FixNonmanifoldVoxels> FixNonmanifoldVoxels::New()
+{
+  struct make_shared_enabler : public FixNonmanifoldVoxels
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FixNonmanifoldVoxels::getNameOfClass() const
+{
+  return QString("_SUPERFixNonmanifoldVoxels");
+}
+
+// -----------------------------------------------------------------------------
+QString FixNonmanifoldVoxels::ClassName()
+{
+  return QString("_SUPERFixNonmanifoldVoxels");
+}
+
+// -----------------------------------------------------------------------------
+void FixNonmanifoldVoxels::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FixNonmanifoldVoxels::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
 }

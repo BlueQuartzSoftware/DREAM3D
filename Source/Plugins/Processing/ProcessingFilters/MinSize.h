@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Processing/ProcessingDLLExport.h"
 
@@ -68,31 +68,108 @@ class Processing_EXPORT MinSize : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(MinSize)
-  SIMPL_FILTER_NEW_MACRO(MinSize)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(MinSize, AbstractFilter)
+  using Self = MinSize;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<MinSize> New();
+
+  /**
+   * @brief Returns the name of the class for MinSize
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for MinSize
+   */
+  static QString ClassName();
 
   ~MinSize() override;
 
-  SIMPL_FILTER_PARAMETER(int, MinAllowedFeatureSize)
+  /**
+   * @brief Setter property for MinAllowedFeatureSize
+   */
+  void setMinAllowedFeatureSize(const int& value);
+  /**
+   * @brief Getter property for MinAllowedFeatureSize
+   * @return Value of MinAllowedFeatureSize
+   */
+  int getMinAllowedFeatureSize() const;
+
   Q_PROPERTY(int MinAllowedFeatureSize READ getMinAllowedFeatureSize WRITE setMinAllowedFeatureSize)
 
-  SIMPL_FILTER_PARAMETER(bool, ApplyToSinglePhase)
+  /**
+   * @brief Setter property for ApplyToSinglePhase
+   */
+  void setApplyToSinglePhase(const bool& value);
+  /**
+   * @brief Getter property for ApplyToSinglePhase
+   * @return Value of ApplyToSinglePhase
+   */
+  bool getApplyToSinglePhase() const;
+
   Q_PROPERTY(bool ApplyToSinglePhase READ getApplyToSinglePhase WRITE setApplyToSinglePhase)
 
-  SIMPL_FILTER_PARAMETER(int, PhaseNumber)
+  /**
+   * @brief Setter property for PhaseNumber
+   */
+  void setPhaseNumber(const int& value);
+  /**
+   * @brief Getter property for PhaseNumber
+   * @return Value of PhaseNumber
+   */
+  int getPhaseNumber() const;
+
   Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  /**
+   * @brief Setter property for FeaturePhasesArrayPath
+   */
+  void setFeaturePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayPath
+   * @return Value of FeaturePhasesArrayPath
+   */
+  DataArrayPath getFeaturePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NumCellsArrayPath)
+  /**
+   * @brief Setter property for NumCellsArrayPath
+   */
+  void setNumCellsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NumCellsArrayPath
+   * @return Value of NumCellsArrayPath
+   */
+  DataArrayPath getNumCellsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath NumCellsArrayPath READ getNumCellsArrayPath WRITE setNumCellsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, IgnoredDataArrayPaths)
+  /**
+   * @brief Setter property for IgnoredDataArrayPaths
+   */
+  void setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value);
+  /**
+   * @brief Getter property for IgnoredDataArrayPaths
+   * @return Value of IgnoredDataArrayPaths
+   */
+  QVector<DataArrayPath> getIgnoredDataArrayPaths() const;
+
   Q_PROPERTY(QVector<DataArrayPath> IgnoredDataArrayPaths READ getIgnoredDataArrayPaths WRITE setIgnoredDataArrayPaths)
 
   /**
@@ -210,11 +287,22 @@ protected:
   QVector<bool> remove_smallfeatures();
 
 private:
-  int32_t* m_Neighbors = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_NumCellsPtr;
+  int32_t* m_NumCells = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, NumCells)
+  int m_MinAllowedFeatureSize = {};
+  bool m_ApplyToSinglePhase = {};
+  int m_PhaseNumber = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_FeaturePhasesArrayPath = {};
+  DataArrayPath m_NumCellsArrayPath = {};
+  QVector<DataArrayPath> m_IgnoredDataArrayPaths = {};
+
+  int32_t* m_Neighbors = nullptr;
 
 public:
   MinSize(const MinSize&) = delete;            // Copy Constructor Not Implemented

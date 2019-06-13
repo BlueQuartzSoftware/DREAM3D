@@ -35,8 +35,8 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/FileWriter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
@@ -63,19 +63,60 @@ class ImportExport_EXPORT LosAlamosFFTWriter : public FileWriter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(LosAlamosFFTWriter)
-  SIMPL_FILTER_NEW_MACRO(LosAlamosFFTWriter)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(LosAlamosFFTWriter, FileWriter)
+  using Self = LosAlamosFFTWriter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<LosAlamosFFTWriter> New();
+
+  /**
+   * @brief Returns the name of the class for LosAlamosFFTWriter
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for LosAlamosFFTWriter
+   */
+  static QString ClassName();
 
   ~LosAlamosFFTWriter() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  /**
+   * @brief Setter property for CellPhasesArrayPath
+   */
+  void setCellPhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellPhasesArrayPath
+   * @return Value of CellPhasesArrayPath
+   */
+  DataArrayPath getCellPhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+  /**
+   * @brief Setter property for CellEulerAnglesArrayPath
+   */
+  void setCellEulerAnglesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellEulerAnglesArrayPath
+   * @return Value of CellEulerAnglesArrayPath
+   */
+  DataArrayPath getCellEulerAnglesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
   /**
@@ -161,9 +202,16 @@ protected:
   virtual int32_t writeFile();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-  DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+  int32_t* m_CellPhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_CellEulerAnglesPtr;
+  float* m_CellEulerAngles = nullptr;
+
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_CellPhasesArrayPath = {};
+  DataArrayPath m_CellEulerAnglesArrayPath = {};
 
 public:
   LosAlamosFFTWriter(const LosAlamosFFTWriter&) = delete;            // Copy Constructor Not Implemented

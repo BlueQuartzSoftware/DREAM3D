@@ -44,7 +44,12 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
@@ -606,4 +611,81 @@ const QString ReadStlFile::getSubGroupName() const
 const QString ReadStlFile::getHumanLabel() const
 {
   return "Import STL File";
+}
+
+// -----------------------------------------------------------------------------
+ReadStlFile::Pointer ReadStlFile::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ReadStlFile> ReadStlFile::New()
+{
+  struct make_shared_enabler : public ReadStlFile
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString ReadStlFile::getNameOfClass() const
+{
+  return QString("ReadStlFile");
+}
+
+// -----------------------------------------------------------------------------
+QString ReadStlFile::ClassName()
+{
+  return QString("ReadStlFile");
+}
+
+// -----------------------------------------------------------------------------
+void ReadStlFile::setSurfaceMeshDataContainerName(const DataArrayPath& value)
+{
+  m_SurfaceMeshDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ReadStlFile::getSurfaceMeshDataContainerName() const
+{
+  return m_SurfaceMeshDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadStlFile::setFaceAttributeMatrixName(const QString& value)
+{
+  m_FaceAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadStlFile::getFaceAttributeMatrixName() const
+{
+  return m_FaceAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadStlFile::setStlFilePath(const QString& value)
+{
+  m_StlFilePath = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadStlFile::getStlFilePath() const
+{
+  return m_StlFilePath;
+}
+
+// -----------------------------------------------------------------------------
+void ReadStlFile::setFaceNormalsArrayName(const QString& value)
+{
+  m_FaceNormalsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadStlFile::getFaceNormalsArrayName() const
+{
+  return m_FaceNormalsArrayName;
 }

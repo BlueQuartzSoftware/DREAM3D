@@ -5,8 +5,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -38,31 +38,108 @@ class Statistics_EXPORT ComputeMomentInvariants2D : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(ComputeMomentInvariants2D)
-  SIMPL_FILTER_NEW_MACRO(ComputeMomentInvariants2D)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ComputeMomentInvariants2D, AbstractFilter)
+  using Self = ComputeMomentInvariants2D;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<ComputeMomentInvariants2D> New();
+
+  /**
+   * @brief Returns the name of the class for ComputeMomentInvariants2D
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ComputeMomentInvariants2D
+   */
+  static QString ClassName();
 
   ~ComputeMomentInvariants2D() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureRectArrayPath)
+  /**
+   * @brief Setter property for FeatureRectArrayPath
+   */
+  void setFeatureRectArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureRectArrayPath
+   * @return Value of FeatureRectArrayPath
+   */
+  DataArrayPath getFeatureRectArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureRectArrayPath READ getFeatureRectArrayPath WRITE setFeatureRectArrayPath)
 
-  SIMPL_FILTER_PARAMETER(bool, NormalizeMomentInvariants)
+  /**
+   * @brief Setter property for NormalizeMomentInvariants
+   */
+  void setNormalizeMomentInvariants(const bool& value);
+  /**
+   * @brief Getter property for NormalizeMomentInvariants
+   * @return Value of NormalizeMomentInvariants
+   */
+  bool getNormalizeMomentInvariants() const;
+
   Q_PROPERTY(bool NormalizeMomentInvariants READ getNormalizeMomentInvariants WRITE setNormalizeMomentInvariants)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, Omega1ArrayPath)
+  /**
+   * @brief Setter property for Omega1ArrayPath
+   */
+  void setOmega1ArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for Omega1ArrayPath
+   * @return Value of Omega1ArrayPath
+   */
+  DataArrayPath getOmega1ArrayPath() const;
+
   Q_PROPERTY(DataArrayPath Omega1ArrayPath READ getOmega1ArrayPath WRITE setOmega1ArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, Omega2ArrayPath)
+  /**
+   * @brief Setter property for Omega2ArrayPath
+   */
+  void setOmega2ArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for Omega2ArrayPath
+   * @return Value of Omega2ArrayPath
+   */
+  DataArrayPath getOmega2ArrayPath() const;
+
   Q_PROPERTY(DataArrayPath Omega2ArrayPath READ getOmega2ArrayPath WRITE setOmega2ArrayPath)
 
-  SIMPL_FILTER_PARAMETER(bool, SaveCentralMoments)
+  /**
+   * @brief Setter property for SaveCentralMoments
+   */
+  void setSaveCentralMoments(const bool& value);
+  /**
+   * @brief Getter property for SaveCentralMoments
+   * @return Value of SaveCentralMoments
+   */
+  bool getSaveCentralMoments() const;
+
   Q_PROPERTY(bool SaveCentralMoments READ getSaveCentralMoments WRITE setSaveCentralMoments)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CentralMomentsArrayPath)
+  /**
+   * @brief Setter property for CentralMomentsArrayPath
+   */
+  void setCentralMomentsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CentralMomentsArrayPath
+   * @return Value of CentralMomentsArrayPath
+   */
+  DataArrayPath getCentralMomentsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CentralMomentsArrayPath READ getCentralMomentsArrayPath WRITE setCentralMomentsArrayPath)
 
   /**
@@ -162,11 +239,24 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(uint32_t, FeatureRect)
-  DEFINE_DATAARRAY_VARIABLE(float, Omega1)
-  DEFINE_DATAARRAY_VARIABLE(float, Omega2)
-  DEFINE_DATAARRAY_VARIABLE(float, CentralMoments)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<uint32_t>> m_FeatureRectPtr;
+  uint32_t* m_FeatureRect = nullptr;
+  std::weak_ptr<DataArray<float>> m_Omega1Ptr;
+  float* m_Omega1 = nullptr;
+  std::weak_ptr<DataArray<float>> m_Omega2Ptr;
+  float* m_Omega2 = nullptr;
+  std::weak_ptr<DataArray<float>> m_CentralMomentsPtr;
+  float* m_CentralMoments = nullptr;
+
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_FeatureRectArrayPath = {};
+  bool m_NormalizeMomentInvariants = {};
+  DataArrayPath m_Omega1ArrayPath = {};
+  DataArrayPath m_Omega2ArrayPath = {};
+  bool m_SaveCentralMoments = {};
+  DataArrayPath m_CentralMomentsArrayPath = {};
 
 public:
   ComputeMomentInvariants2D(const ComputeMomentInvariants2D&) = delete; // Copy Constructor Not Implemented

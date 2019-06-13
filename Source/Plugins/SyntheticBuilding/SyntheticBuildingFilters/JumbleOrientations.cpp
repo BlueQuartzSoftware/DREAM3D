@@ -38,13 +38,16 @@
 #include <random>
 #include <chrono>
 
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
@@ -334,4 +337,93 @@ const QString JumbleOrientations::getSubGroupName() const
 const QString JumbleOrientations::getHumanLabel() const
 {
   return "Jumble Orientations";
+}
+
+// -----------------------------------------------------------------------------
+JumbleOrientations::Pointer JumbleOrientations::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<JumbleOrientations> JumbleOrientations::New()
+{
+  struct make_shared_enabler : public JumbleOrientations
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString JumbleOrientations::getNameOfClass() const
+{
+  return QString("JumbleOrientations");
+}
+
+// -----------------------------------------------------------------------------
+QString JumbleOrientations::ClassName()
+{
+  return QString("JumbleOrientations");
+}
+
+// -----------------------------------------------------------------------------
+void JumbleOrientations::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath JumbleOrientations::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void JumbleOrientations::setCellEulerAnglesArrayName(const QString& value)
+{
+  m_CellEulerAnglesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString JumbleOrientations::getCellEulerAnglesArrayName() const
+{
+  return m_CellEulerAnglesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void JumbleOrientations::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath JumbleOrientations::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void JumbleOrientations::setFeatureEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_FeatureEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath JumbleOrientations::getFeatureEulerAnglesArrayPath() const
+{
+  return m_FeatureEulerAnglesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void JumbleOrientations::setAvgQuatsArrayName(const QString& value)
+{
+  m_AvgQuatsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString JumbleOrientations::getAvgQuatsArrayName() const
+{
+  return m_AvgQuatsArrayName;
 }

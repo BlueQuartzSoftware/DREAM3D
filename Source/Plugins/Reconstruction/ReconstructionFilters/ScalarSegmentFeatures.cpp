@@ -37,8 +37,10 @@
 
 #include <chrono>
 
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -47,6 +49,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -624,4 +628,129 @@ const QString ScalarSegmentFeatures::getSubGroupName() const
 const QString ScalarSegmentFeatures::getHumanLabel() const
 {
   return "Segment Features (Scalar)";
+}
+
+// -----------------------------------------------------------------------------
+ScalarSegmentFeatures::Pointer ScalarSegmentFeatures::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ScalarSegmentFeatures> ScalarSegmentFeatures::New()
+{
+  struct make_shared_enabler : public ScalarSegmentFeatures
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString ScalarSegmentFeatures::getNameOfClass() const
+{
+  return QString("ScalarSegmentFeatures");
+}
+
+// -----------------------------------------------------------------------------
+QString ScalarSegmentFeatures::ClassName()
+{
+  return QString("ScalarSegmentFeatures");
+}
+
+// -----------------------------------------------------------------------------
+void ScalarSegmentFeatures::setCellFeatureAttributeMatrixName(const QString& value)
+{
+  m_CellFeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ScalarSegmentFeatures::getCellFeatureAttributeMatrixName() const
+{
+  return m_CellFeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ScalarSegmentFeatures::setScalarArrayPath(const DataArrayPath& value)
+{
+  m_ScalarArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ScalarSegmentFeatures::getScalarArrayPath() const
+{
+  return m_ScalarArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ScalarSegmentFeatures::setScalarTolerance(const float& value)
+{
+  m_ScalarTolerance = value;
+}
+
+// -----------------------------------------------------------------------------
+float ScalarSegmentFeatures::getScalarTolerance() const
+{
+  return m_ScalarTolerance;
+}
+
+// -----------------------------------------------------------------------------
+void ScalarSegmentFeatures::setRandomizeFeatureIds(const bool& value)
+{
+  m_RandomizeFeatureIds = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ScalarSegmentFeatures::getRandomizeFeatureIds() const
+{
+  return m_RandomizeFeatureIds;
+}
+
+// -----------------------------------------------------------------------------
+void ScalarSegmentFeatures::setUseGoodVoxels(const bool& value)
+{
+  m_UseGoodVoxels = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ScalarSegmentFeatures::getUseGoodVoxels() const
+{
+  return m_UseGoodVoxels;
+}
+
+// -----------------------------------------------------------------------------
+void ScalarSegmentFeatures::setGoodVoxelsArrayPath(const DataArrayPath& value)
+{
+  m_GoodVoxelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ScalarSegmentFeatures::getGoodVoxelsArrayPath() const
+{
+  return m_GoodVoxelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ScalarSegmentFeatures::setFeatureIdsArrayName(const QString& value)
+{
+  m_FeatureIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ScalarSegmentFeatures::getFeatureIdsArrayName() const
+{
+  return m_FeatureIdsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void ScalarSegmentFeatures::setActiveArrayName(const QString& value)
+{
+  m_ActiveArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ScalarSegmentFeatures::getActiveArrayName() const
+{
+  return m_ActiveArrayName;
 }

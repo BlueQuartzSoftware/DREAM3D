@@ -40,7 +40,6 @@
 #include <vector>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/StatsData/StatsData.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
@@ -52,9 +51,24 @@
 class LogNormalOps : public DistributionAnalysisOps
 {
   public:
-    SIMPL_SHARED_POINTERS(LogNormalOps)
-    SIMPL_TYPE_MACRO(LogNormalOps)
-    SIMPL_STATIC_NEW_MACRO(LogNormalOps)
+    using Self = LogNormalOps;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    /**
+     * @brief Returns the name of the class for LogNormalOps
+     */
+    const QString getNameOfClass() const;
+    /**
+     * @brief Returns the name of the class for LogNormalOps
+     */
+    static QString ClassName();
+
+    static Pointer New();
+
     virtual ~LogNormalOps();
 
 
@@ -69,6 +83,8 @@ class LogNormalOps : public DistributionAnalysisOps
     LogNormalOps(LogNormalOps&&) = delete;        // Move Constructor Not Implemented
     LogNormalOps& operator=(const LogNormalOps&) = delete; // Copy Assignment Not Implemented
     LogNormalOps& operator=(LogNormalOps&&) = delete;      // Move Assignment Not Implemented
+
+  private:
 };
 
 

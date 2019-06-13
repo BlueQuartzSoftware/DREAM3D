@@ -1170,3 +1170,27 @@ SIMPL::Rgb OrthoRhombicOps::generateMisorientationColor(const QuatType& q, const
   return rgb;
 }
 
+// -----------------------------------------------------------------------------
+OrthoRhombicOps::Pointer OrthoRhombicOps::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+const QString OrthoRhombicOps::getNameOfClass() const
+{
+  return QString("OrthoRhombicOps");
+}
+
+// -----------------------------------------------------------------------------
+QString OrthoRhombicOps::ClassName()
+{
+  return QString("OrthoRhombicOps");
+}
+
+// -----------------------------------------------------------------------------
+OrthoRhombicOps::Pointer OrthoRhombicOps::New()
+{
+  Pointer sharedPtr(new(OrthoRhombicOps));
+  return sharedPtr;
+}

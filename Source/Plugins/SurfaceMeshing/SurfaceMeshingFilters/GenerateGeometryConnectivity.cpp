@@ -35,10 +35,15 @@
 
 #include "GenerateGeometryConnectivity.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -223,4 +228,69 @@ const QString GenerateGeometryConnectivity::getSubGroupName() const
 const QString GenerateGeometryConnectivity::getHumanLabel() const
 {
   return "Generate Geometry Connectivity";
+}
+
+// -----------------------------------------------------------------------------
+GenerateGeometryConnectivity::Pointer GenerateGeometryConnectivity::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<GenerateGeometryConnectivity> GenerateGeometryConnectivity::New()
+{
+  struct make_shared_enabler : public GenerateGeometryConnectivity
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString GenerateGeometryConnectivity::getNameOfClass() const
+{
+  return QString("GenerateGeometryConnectivity");
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateGeometryConnectivity::ClassName()
+{
+  return QString("GenerateGeometryConnectivity");
+}
+
+// -----------------------------------------------------------------------------
+void GenerateGeometryConnectivity::setSurfaceDataContainerName(const DataArrayPath& value)
+{
+  m_SurfaceDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateGeometryConnectivity::getSurfaceDataContainerName() const
+{
+  return m_SurfaceDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateGeometryConnectivity::setGenerateVertexTriangleLists(const bool& value)
+{
+  m_GenerateVertexTriangleLists = value;
+}
+
+// -----------------------------------------------------------------------------
+bool GenerateGeometryConnectivity::getGenerateVertexTriangleLists() const
+{
+  return m_GenerateVertexTriangleLists;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateGeometryConnectivity::setGenerateTriangleNeighbors(const bool& value)
+{
+  m_GenerateTriangleNeighbors = value;
+}
+
+// -----------------------------------------------------------------------------
+bool GenerateGeometryConnectivity::getGenerateTriangleNeighbors() const
+{
+  return m_GenerateTriangleNeighbors;
 }

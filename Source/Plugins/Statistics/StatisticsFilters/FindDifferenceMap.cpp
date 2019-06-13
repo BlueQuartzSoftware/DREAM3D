@@ -4,11 +4,16 @@
 
 #include "FindDifferenceMap.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
@@ -372,4 +377,69 @@ const QUuid FindDifferenceMap::getUuid()
 const QString FindDifferenceMap::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MiscFilters;
+}
+
+// -----------------------------------------------------------------------------
+FindDifferenceMap::Pointer FindDifferenceMap::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindDifferenceMap> FindDifferenceMap::New()
+{
+  struct make_shared_enabler : public FindDifferenceMap
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindDifferenceMap::getNameOfClass() const
+{
+  return QString("FindDifferenceMap");
+}
+
+// -----------------------------------------------------------------------------
+QString FindDifferenceMap::ClassName()
+{
+  return QString("FindDifferenceMap");
+}
+
+// -----------------------------------------------------------------------------
+void FindDifferenceMap::setFirstInputArrayPath(const DataArrayPath& value)
+{
+  m_FirstInputArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindDifferenceMap::getFirstInputArrayPath() const
+{
+  return m_FirstInputArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindDifferenceMap::setSecondInputArrayPath(const DataArrayPath& value)
+{
+  m_SecondInputArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindDifferenceMap::getSecondInputArrayPath() const
+{
+  return m_SecondInputArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindDifferenceMap::setDifferenceMapArrayPath(const DataArrayPath& value)
+{
+  m_DifferenceMapArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindDifferenceMap::getDifferenceMapArrayPath() const
+{
+  return m_DifferenceMapArrayPath;
 }

@@ -4,7 +4,10 @@
 
 #include "OrientationUtility.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 
 #include "OrientationAnalysis/FilterParameters/OrientationUtilityFilterParameter.h"
@@ -147,4 +150,33 @@ const QString OrientationUtility::getSubGroupName() const
 const QString OrientationUtility::getHumanLabel() const
 {
   return "Orientation Utility";
+}
+
+// -----------------------------------------------------------------------------
+OrientationUtility::Pointer OrientationUtility::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<OrientationUtility> OrientationUtility::New()
+{
+  struct make_shared_enabler : public OrientationUtility
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString OrientationUtility::getNameOfClass() const
+{
+  return QString("OrientationUtility");
+}
+
+// -----------------------------------------------------------------------------
+QString OrientationUtility::ClassName()
+{
+  return QString("OrientationUtility");
 }

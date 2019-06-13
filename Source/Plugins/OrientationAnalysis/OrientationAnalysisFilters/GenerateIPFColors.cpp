@@ -35,7 +35,10 @@
 
 #include "GenerateIPFColors.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/Common/SIMPLRange.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -46,6 +49,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Utilities/ColorTable.h"
 #include "SIMPLib/Utilities/ParallelDataAlgorithm.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
@@ -416,4 +420,117 @@ const QString GenerateIPFColors::getSubGroupName() const
 const QString GenerateIPFColors::getHumanLabel() const
 {
   return "Generate IPF Colors";
+}
+
+// -----------------------------------------------------------------------------
+GenerateIPFColors::Pointer GenerateIPFColors::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<GenerateIPFColors> GenerateIPFColors::New()
+{
+  struct make_shared_enabler : public GenerateIPFColors
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString GenerateIPFColors::getNameOfClass() const
+{
+  return QString("GenerateIPFColors");
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateIPFColors::ClassName()
+{
+  return QString("GenerateIPFColors");
+}
+
+// -----------------------------------------------------------------------------
+void GenerateIPFColors::setReferenceDir(const FloatVec3Type& value)
+{
+  m_ReferenceDir = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type GenerateIPFColors::getReferenceDir() const
+{
+  return m_ReferenceDir;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateIPFColors::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateIPFColors::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateIPFColors::setCellEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_CellEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateIPFColors::getCellEulerAnglesArrayPath() const
+{
+  return m_CellEulerAnglesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateIPFColors::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateIPFColors::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateIPFColors::setUseGoodVoxels(const bool& value)
+{
+  m_UseGoodVoxels = value;
+}
+
+// -----------------------------------------------------------------------------
+bool GenerateIPFColors::getUseGoodVoxels() const
+{
+  return m_UseGoodVoxels;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateIPFColors::setGoodVoxelsArrayPath(const DataArrayPath& value)
+{
+  m_GoodVoxelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateIPFColors::getGoodVoxelsArrayPath() const
+{
+  return m_GoodVoxelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateIPFColors::setCellIPFColorsArrayName(const QString& value)
+{
+  m_CellIPFColorsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateIPFColors::getCellIPFColorsArrayName() const
+{
+  return m_CellIPFColorsArrayName;
 }

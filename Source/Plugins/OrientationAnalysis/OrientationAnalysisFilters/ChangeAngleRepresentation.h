@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -59,16 +59,48 @@ class OrientationAnalysis_EXPORT ChangeAngleRepresentation : public AbstractFilt
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(ChangeAngleRepresentation)
-  SIMPL_FILTER_NEW_MACRO(ChangeAngleRepresentation)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ChangeAngleRepresentation, AbstractFilter)
+  using Self = ChangeAngleRepresentation;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<ChangeAngleRepresentation> New();
+
+  /**
+   * @brief Returns the name of the class for ChangeAngleRepresentation
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ChangeAngleRepresentation
+   */
+  static QString ClassName();
 
   ~ChangeAngleRepresentation() override;
 
-  SIMPL_FILTER_PARAMETER(int, ConversionType)
+  /**
+   * @brief Setter property for ConversionType
+   */
+  void setConversionType(const int& value);
+  /**
+   * @brief Getter property for ConversionType
+   * @return Value of ConversionType
+   */
+  int getConversionType() const;
+
   Q_PROPERTY(int ConversionType READ getConversionType WRITE setConversionType)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+  /**
+   * @brief Setter property for CellEulerAnglesArrayPath
+   */
+  void setCellEulerAnglesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellEulerAnglesArrayPath
+   * @return Value of CellEulerAnglesArrayPath
+   */
+  DataArrayPath getCellEulerAnglesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
   /**
@@ -172,7 +204,11 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
+  std::weak_ptr<DataArray<float>> m_CellEulerAnglesPtr;
+  float* m_CellEulerAngles = nullptr;
+
+  int m_ConversionType = {};
+  DataArrayPath m_CellEulerAnglesArrayPath = {};
 
 public:
   ChangeAngleRepresentation(const ChangeAngleRepresentation&) = delete; // Copy Constructor Not Implemented

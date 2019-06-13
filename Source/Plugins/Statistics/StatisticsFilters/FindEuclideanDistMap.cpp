@@ -44,7 +44,10 @@
 #include <tbb/tick_count.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -54,6 +57,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -834,4 +839,153 @@ const QString FindEuclideanDistMap::getSubGroupName() const
 const QString FindEuclideanDistMap::getHumanLabel() const
 {
   return "Find Euclidean Distance Map";
+}
+
+// -----------------------------------------------------------------------------
+FindEuclideanDistMap::Pointer FindEuclideanDistMap::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindEuclideanDistMap> FindEuclideanDistMap::New()
+{
+  struct make_shared_enabler : public FindEuclideanDistMap
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindEuclideanDistMap::getNameOfClass() const
+{
+  return QString("FindEuclideanDistMap");
+}
+
+// -----------------------------------------------------------------------------
+QString FindEuclideanDistMap::ClassName()
+{
+  return QString("FindEuclideanDistMap");
+}
+
+// -----------------------------------------------------------------------------
+void FindEuclideanDistMap::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindEuclideanDistMap::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindEuclideanDistMap::setGBDistancesArrayName(const QString& value)
+{
+  m_GBDistancesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindEuclideanDistMap::getGBDistancesArrayName() const
+{
+  return m_GBDistancesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindEuclideanDistMap::setTJDistancesArrayName(const QString& value)
+{
+  m_TJDistancesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindEuclideanDistMap::getTJDistancesArrayName() const
+{
+  return m_TJDistancesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindEuclideanDistMap::setQPDistancesArrayName(const QString& value)
+{
+  m_QPDistancesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindEuclideanDistMap::getQPDistancesArrayName() const
+{
+  return m_QPDistancesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindEuclideanDistMap::setNearestNeighborsArrayName(const QString& value)
+{
+  m_NearestNeighborsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindEuclideanDistMap::getNearestNeighborsArrayName() const
+{
+  return m_NearestNeighborsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindEuclideanDistMap::setDoBoundaries(const bool& value)
+{
+  m_DoBoundaries = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindEuclideanDistMap::getDoBoundaries() const
+{
+  return m_DoBoundaries;
+}
+
+// -----------------------------------------------------------------------------
+void FindEuclideanDistMap::setDoTripleLines(const bool& value)
+{
+  m_DoTripleLines = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindEuclideanDistMap::getDoTripleLines() const
+{
+  return m_DoTripleLines;
+}
+
+// -----------------------------------------------------------------------------
+void FindEuclideanDistMap::setDoQuadPoints(const bool& value)
+{
+  m_DoQuadPoints = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindEuclideanDistMap::getDoQuadPoints() const
+{
+  return m_DoQuadPoints;
+}
+
+// -----------------------------------------------------------------------------
+void FindEuclideanDistMap::setSaveNearestNeighbors(const bool& value)
+{
+  m_SaveNearestNeighbors = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindEuclideanDistMap::getSaveNearestNeighbors() const
+{
+  return m_SaveNearestNeighbors;
+}
+
+// -----------------------------------------------------------------------------
+void FindEuclideanDistMap::setCalcManhattanDist(const bool& value)
+{
+  m_CalcManhattanDist = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindEuclideanDistMap::getCalcManhattanDist() const
+{
+  return m_CalcManhattanDist;
 }

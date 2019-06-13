@@ -41,7 +41,10 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/DataArrays/DynamicListArray.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -56,6 +59,9 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -1930,4 +1936,141 @@ const QString QuickSurfaceMesh::getSubGroupName() const
 const QString QuickSurfaceMesh::getHumanLabel() const
 {
   return "Quick Surface Mesh";
+}
+
+// -----------------------------------------------------------------------------
+QuickSurfaceMesh::Pointer QuickSurfaceMesh::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<QuickSurfaceMesh> QuickSurfaceMesh::New()
+{
+  struct make_shared_enabler : public QuickSurfaceMesh
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString QuickSurfaceMesh::getNameOfClass() const
+{
+  return QString("QuickSurfaceMesh");
+}
+
+// -----------------------------------------------------------------------------
+QString QuickSurfaceMesh::ClassName()
+{
+  return QString("QuickSurfaceMesh");
+}
+
+// -----------------------------------------------------------------------------
+void QuickSurfaceMesh::setSelectedDataArrayPaths(const QVector<DataArrayPath>& value)
+{
+  m_SelectedDataArrayPaths = value;
+}
+
+// -----------------------------------------------------------------------------
+QVector<DataArrayPath> QuickSurfaceMesh::getSelectedDataArrayPaths() const
+{
+  return m_SelectedDataArrayPaths;
+}
+
+// -----------------------------------------------------------------------------
+void QuickSurfaceMesh::setSurfaceDataContainerName(const DataArrayPath& value)
+{
+  m_SurfaceDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath QuickSurfaceMesh::getSurfaceDataContainerName() const
+{
+  return m_SurfaceDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void QuickSurfaceMesh::setTripleLineDataContainerName(const DataArrayPath& value)
+{
+  m_TripleLineDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath QuickSurfaceMesh::getTripleLineDataContainerName() const
+{
+  return m_TripleLineDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void QuickSurfaceMesh::setVertexAttributeMatrixName(const QString& value)
+{
+  m_VertexAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString QuickSurfaceMesh::getVertexAttributeMatrixName() const
+{
+  return m_VertexAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void QuickSurfaceMesh::setFaceAttributeMatrixName(const QString& value)
+{
+  m_FaceAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString QuickSurfaceMesh::getFaceAttributeMatrixName() const
+{
+  return m_FaceAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void QuickSurfaceMesh::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath QuickSurfaceMesh::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void QuickSurfaceMesh::setFaceLabelsArrayName(const QString& value)
+{
+  m_FaceLabelsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString QuickSurfaceMesh::getFaceLabelsArrayName() const
+{
+  return m_FaceLabelsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void QuickSurfaceMesh::setNodeTypesArrayName(const QString& value)
+{
+  m_NodeTypesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString QuickSurfaceMesh::getNodeTypesArrayName() const
+{
+  return m_NodeTypesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void QuickSurfaceMesh::setFeatureAttributeMatrixName(const QString& value)
+{
+  m_FeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString QuickSurfaceMesh::getFeatureAttributeMatrixName() const
+{
+  return m_FeatureAttributeMatrixName;
 }

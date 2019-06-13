@@ -36,8 +36,11 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+
+class IDataArray;
+using IDataArrayWkPtrType = std::weak_ptr<IDataArray>;
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -75,40 +78,144 @@ class Statistics_EXPORT CalculateArrayHistogram : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(CalculateArrayHistogram)
-  SIMPL_FILTER_NEW_MACRO(CalculateArrayHistogram)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CalculateArrayHistogram, AbstractFilter)
+  using Self = CalculateArrayHistogram;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<CalculateArrayHistogram> New();
+
+  /**
+   * @brief Returns the name of the class for CalculateArrayHistogram
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for CalculateArrayHistogram
+   */
+  static QString ClassName();
 
   ~CalculateArrayHistogram() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
+  /**
+   * @brief Setter property for SelectedArrayPath
+   */
+  void setSelectedArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SelectedArrayPath
+   * @return Value of SelectedArrayPath
+   */
+  DataArrayPath getSelectedArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
 
-  SIMPL_FILTER_PARAMETER(int, NumberOfBins)
+  /**
+   * @brief Setter property for NumberOfBins
+   */
+  void setNumberOfBins(const int& value);
+  /**
+   * @brief Getter property for NumberOfBins
+   * @return Value of NumberOfBins
+   */
+  int getNumberOfBins() const;
+
   Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
 
-  SIMPL_FILTER_PARAMETER(double, MinRange)
+  /**
+   * @brief Setter property for MinRange
+   */
+  void setMinRange(const double& value);
+  /**
+   * @brief Getter property for MinRange
+   * @return Value of MinRange
+   */
+  double getMinRange() const;
+
   Q_PROPERTY(double MinRange READ getMinRange WRITE setMinRange)
 
-  SIMPL_FILTER_PARAMETER(double, MaxRange)
+  /**
+   * @brief Setter property for MaxRange
+   */
+  void setMaxRange(const double& value);
+  /**
+   * @brief Getter property for MaxRange
+   * @return Value of MaxRange
+   */
+  double getMaxRange() const;
+
   Q_PROPERTY(double MaxRange READ getMaxRange WRITE setMaxRange)
 
-  SIMPL_FILTER_PARAMETER(bool, UserDefinedRange)
+  /**
+   * @brief Setter property for UserDefinedRange
+   */
+  void setUserDefinedRange(const bool& value);
+  /**
+   * @brief Getter property for UserDefinedRange
+   * @return Value of UserDefinedRange
+   */
+  bool getUserDefinedRange() const;
+
   Q_PROPERTY(bool UserDefinedRange READ getUserDefinedRange WRITE setUserDefinedRange)
 
-  SIMPL_FILTER_PARAMETER(bool, Normalize)
+  /**
+   * @brief Setter property for Normalize
+   */
+  void setNormalize(const bool& value);
+  /**
+   * @brief Getter property for Normalize
+   * @return Value of Normalize
+   */
+  bool getNormalize() const;
+
   Q_PROPERTY(bool Normalize READ getNormalize WRITE setNormalize)
 
-  SIMPL_FILTER_PARAMETER(QString, NewAttributeMatrixName)
+  /**
+   * @brief Setter property for NewAttributeMatrixName
+   */
+  void setNewAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for NewAttributeMatrixName
+   * @return Value of NewAttributeMatrixName
+   */
+  QString getNewAttributeMatrixName() const;
+
   Q_PROPERTY(QString NewAttributeMatrixName READ getNewAttributeMatrixName WRITE setNewAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, NewDataArrayName)
+  /**
+   * @brief Setter property for NewDataArrayName
+   */
+  void setNewDataArrayName(const QString& value);
+  /**
+   * @brief Getter property for NewDataArrayName
+   * @return Value of NewDataArrayName
+   */
+  QString getNewDataArrayName() const;
+
   Q_PROPERTY(QString NewDataArrayName READ getNewDataArrayName WRITE setNewDataArrayName)
 
-  SIMPL_FILTER_PARAMETER(bool, NewDataContainer)
+  /**
+   * @brief Setter property for NewDataContainer
+   */
+  void setNewDataContainer(const bool& value);
+  /**
+   * @brief Getter property for NewDataContainer
+   * @return Value of NewDataContainer
+   */
+  bool getNewDataContainer() const;
+
   Q_PROPERTY(bool NewDataContainer READ getNewDataContainer WRITE setNewDataContainer)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NewDataContainerName)
+  /**
+   * @brief Setter property for NewDataContainerName
+   */
+  void setNewDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NewDataContainerName
+   * @return Value of NewDataContainerName
+   */
+  DataArrayPath getNewDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
 
   /**
@@ -224,9 +331,22 @@ protected:
   void initialize();
 
 private:
-  DEFINE_IDATAARRAY_VARIABLE(InDataArray)
+  IDataArrayWkPtrType m_InDataArrayPtr;
+  void* m_InDataArray = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(double, NewDataArray)
+  std::weak_ptr<DataArray<double>> m_NewDataArrayPtr;
+  double* m_NewDataArray = nullptr;
+
+  DataArrayPath m_SelectedArrayPath = {};
+  int m_NumberOfBins = {};
+  double m_MinRange = {};
+  double m_MaxRange = {};
+  bool m_UserDefinedRange = {};
+  bool m_Normalize = {};
+  QString m_NewAttributeMatrixName = {};
+  QString m_NewDataArrayName = {};
+  bool m_NewDataContainer = {};
+  DataArrayPath m_NewDataContainerName = {};
 
 public:
   CalculateArrayHistogram(const CalculateArrayHistogram&) = delete;            // Copy Constructor Not Implemented

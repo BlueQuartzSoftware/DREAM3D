@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -59,13 +59,36 @@ class SurfaceMeshing_EXPORT TriangleAreaFilter : public SurfaceMeshFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(TriangleAreaFilter)
-  SIMPL_FILTER_NEW_MACRO(TriangleAreaFilter)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(TriangleAreaFilter, SurfaceMeshFilter)
+  using Self = TriangleAreaFilter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<TriangleAreaFilter> New();
+
+  /**
+   * @brief Returns the name of the class for TriangleAreaFilter
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for TriangleAreaFilter
+   */
+  static QString ClassName();
 
   ~TriangleAreaFilter() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleAreasArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshTriangleAreasArrayPath
+   */
+  void setSurfaceMeshTriangleAreasArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshTriangleAreasArrayPath
+   * @return Value of SurfaceMeshTriangleAreasArrayPath
+   */
+  DataArrayPath getSurfaceMeshTriangleAreasArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshTriangleAreasArrayPath READ getSurfaceMeshTriangleAreasArrayPath WRITE setSurfaceMeshTriangleAreasArrayPath)
 
   /**
@@ -146,7 +169,10 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleAreas)
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshTriangleAreasPtr;
+  double* m_SurfaceMeshTriangleAreas = nullptr;
+
+  DataArrayPath m_SurfaceMeshTriangleAreasArrayPath = {};
 
 public:
   TriangleAreaFilter(const TriangleAreaFilter&) = delete; // Copy Constructor Not Implemented

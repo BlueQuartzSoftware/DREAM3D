@@ -36,9 +36,9 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -68,28 +68,96 @@ class Statistics_EXPORT FindSizes : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindSizes)
-  SIMPL_FILTER_NEW_MACRO(FindSizes)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindSizes, AbstractFilter)
+  using Self = FindSizes;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindSizes> New();
+
+  /**
+   * @brief Returns the name of the class for FindSizes
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindSizes
+   */
+  static QString ClassName();
 
   ~FindSizes() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureAttributeMatrixName)
+  /**
+   * @brief Setter property for FeatureAttributeMatrixName
+   */
+  void setFeatureAttributeMatrixName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureAttributeMatrixName
+   * @return Value of FeatureAttributeMatrixName
+   */
+  DataArrayPath getFeatureAttributeMatrixName() const;
+
   Q_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, VolumesArrayName)
+  /**
+   * @brief Setter property for VolumesArrayName
+   */
+  void setVolumesArrayName(const QString& value);
+  /**
+   * @brief Getter property for VolumesArrayName
+   * @return Value of VolumesArrayName
+   */
+  QString getVolumesArrayName() const;
+
   Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, EquivalentDiametersArrayName)
+  /**
+   * @brief Setter property for EquivalentDiametersArrayName
+   */
+  void setEquivalentDiametersArrayName(const QString& value);
+  /**
+   * @brief Getter property for EquivalentDiametersArrayName
+   * @return Value of EquivalentDiametersArrayName
+   */
+  QString getEquivalentDiametersArrayName() const;
+
   Q_PROPERTY(QString EquivalentDiametersArrayName READ getEquivalentDiametersArrayName WRITE setEquivalentDiametersArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, NumElementsArrayName)
+  /**
+   * @brief Setter property for NumElementsArrayName
+   */
+  void setNumElementsArrayName(const QString& value);
+  /**
+   * @brief Getter property for NumElementsArrayName
+   * @return Value of NumElementsArrayName
+   */
+  QString getNumElementsArrayName() const;
+
   Q_PROPERTY(QString NumElementsArrayName READ getNumElementsArrayName WRITE setNumElementsArrayName)
 
-  SIMPL_FILTER_PARAMETER(bool, SaveElementSizes)
+  /**
+   * @brief Setter property for SaveElementSizes
+   */
+  void setSaveElementSizes(const bool& value);
+  /**
+   * @brief Getter property for SaveElementSizes
+   * @return Value of SaveElementSizes
+   */
+  bool getSaveElementSizes() const;
+
   Q_PROPERTY(bool SaveElementSizes READ getSaveElementSizes WRITE setSaveElementSizes)
 
   /**
@@ -212,10 +280,21 @@ protected:
   void findSizesUnstructured(IGeometry::Pointer igeom);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(float, Volumes)
-  DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, NumElements)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<float>> m_VolumesPtr;
+  float* m_Volumes = nullptr;
+  std::weak_ptr<DataArray<float>> m_EquivalentDiametersPtr;
+  float* m_EquivalentDiameters = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_NumElementsPtr;
+  int32_t* m_NumElements = nullptr;
+
+  DataArrayPath m_FeatureAttributeMatrixName = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  QString m_VolumesArrayName = {};
+  QString m_EquivalentDiametersArrayName = {};
+  QString m_NumElementsArrayName = {};
+  bool m_SaveElementSizes = {};
 
 public:
   FindSizes(const FindSizes&) = delete;            // Copy Constructor Not Implemented

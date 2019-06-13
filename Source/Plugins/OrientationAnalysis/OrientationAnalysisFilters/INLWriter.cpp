@@ -38,13 +38,18 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/TSL/AngConstants.h"
@@ -508,4 +513,117 @@ const QString INLWriter::getSubGroupName() const
 const QString INLWriter::getHumanLabel() const
 {
   return "Export INL File";
+}
+
+// -----------------------------------------------------------------------------
+INLWriter::Pointer INLWriter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<INLWriter> INLWriter::New()
+{
+  struct make_shared_enabler : public INLWriter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString INLWriter::getNameOfClass() const
+{
+  return QString("INLWriter");
+}
+
+// -----------------------------------------------------------------------------
+QString INLWriter::ClassName()
+{
+  return QString("INLWriter");
+}
+
+// -----------------------------------------------------------------------------
+void INLWriter::setMaterialNameArrayPath(const DataArrayPath& value)
+{
+  m_MaterialNameArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath INLWriter::getMaterialNameArrayPath() const
+{
+  return m_MaterialNameArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void INLWriter::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath INLWriter::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void INLWriter::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath INLWriter::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void INLWriter::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath INLWriter::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void INLWriter::setNumFeaturesArrayPath(const DataArrayPath& value)
+{
+  m_NumFeaturesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath INLWriter::getNumFeaturesArrayPath() const
+{
+  return m_NumFeaturesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void INLWriter::setCellEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_CellEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath INLWriter::getCellEulerAnglesArrayPath() const
+{
+  return m_CellEulerAnglesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void INLWriter::setMaterialNameArrayName(const QString& value)
+{
+  m_MaterialNameArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString INLWriter::getMaterialNameArrayName() const
+{
+  return m_MaterialNameArrayName;
 }

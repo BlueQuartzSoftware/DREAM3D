@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
 
@@ -61,19 +61,60 @@ class SurfaceMeshing_EXPORT FindTriangleGeomCentroids : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindTriangleGeomCentroids)
-  SIMPL_FILTER_NEW_MACRO(FindTriangleGeomCentroids)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindTriangleGeomCentroids, AbstractFilter)
+  using Self = FindTriangleGeomCentroids;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindTriangleGeomCentroids> New();
+
+  /**
+   * @brief Returns the name of the class for FindTriangleGeomCentroids
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindTriangleGeomCentroids
+   */
+  static QString ClassName();
 
   ~FindTriangleGeomCentroids() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureAttributeMatrixName)
+  /**
+   * @brief Setter property for FeatureAttributeMatrixName
+   */
+  void setFeatureAttributeMatrixName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureAttributeMatrixName
+   * @return Value of FeatureAttributeMatrixName
+   */
+  DataArrayPath getFeatureAttributeMatrixName() const;
+
   Q_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FaceLabelsArrayPath)
+  /**
+   * @brief Setter property for FaceLabelsArrayPath
+   */
+  void setFaceLabelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FaceLabelsArrayPath
+   * @return Value of FaceLabelsArrayPath
+   */
+  DataArrayPath getFaceLabelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FaceLabelsArrayPath READ getFaceLabelsArrayPath WRITE setFaceLabelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, CentroidsArrayName)
+  /**
+   * @brief Setter property for CentroidsArrayName
+   */
+  void setCentroidsArrayName(const QString& value);
+  /**
+   * @brief Getter property for CentroidsArrayName
+   * @return Value of CentroidsArrayName
+   */
+  QString getCentroidsArrayName() const;
+
   Q_PROPERTY(QString CentroidsArrayName READ getCentroidsArrayName WRITE setCentroidsArrayName)
 
   /**
@@ -173,8 +214,14 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FaceLabels)
-  DEFINE_DATAARRAY_VARIABLE(float, Centroids)
+  std::weak_ptr<DataArray<int32_t>> m_FaceLabelsPtr;
+  int32_t* m_FaceLabels = nullptr;
+  std::weak_ptr<DataArray<float>> m_CentroidsPtr;
+  float* m_Centroids = nullptr;
+
+  DataArrayPath m_FeatureAttributeMatrixName = {};
+  DataArrayPath m_FaceLabelsArrayPath = {};
+  QString m_CentroidsArrayName = {};
 
 public:
   FindTriangleGeomCentroids(const FindTriangleGeomCentroids&) = delete; // Copy Constructor Not Implemented

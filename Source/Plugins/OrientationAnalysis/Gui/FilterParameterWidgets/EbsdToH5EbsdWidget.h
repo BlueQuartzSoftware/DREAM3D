@@ -42,8 +42,6 @@
 #include "EbsdLib/EbsdTransform.h"
 #include "EbsdLib/EbsdConstants.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-
 #include "SVWidgetsLib/QtSupport/QtSPluginFrame.h"
 
 #include "SVWidgetsLib/SVWidgetsLib.h"

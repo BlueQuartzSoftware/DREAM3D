@@ -36,14 +36,16 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "EbsdLib/TSL/AngPhase.h"
 #include "EbsdLib/TSL/AngReader.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
+class DataContainer;
 
 // our PIMPL private class
 class ReadAngDataPrivate;
@@ -73,27 +75,94 @@ class OrientationAnalysis_EXPORT ReadAngData : public AbstractFilter
   Q_DECLARE_PRIVATE(ReadAngData)
 
 public:
-  SIMPL_SHARED_POINTERS(ReadAngData)
-  SIMPL_FILTER_NEW_MACRO(ReadAngData)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ReadAngData, AbstractFilter)
+  using Self = ReadAngData;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<ReadAngData> New();
+
+  /**
+   * @brief Returns the name of the class for ReadAngData
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ReadAngData
+   */
+  static QString ClassName();
 
   ~ReadAngData() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  DataArrayPath getDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+  /**
+   * @brief Setter property for CellEnsembleAttributeMatrixName
+   */
+  void setCellEnsembleAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellEnsembleAttributeMatrixName
+   * @return Value of CellEnsembleAttributeMatrixName
+   */
+  QString getCellEnsembleAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  QString getCellAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(bool, FileWasRead)
+  /**
+   * @brief Setter property for FileWasRead
+   */
+  void setFileWasRead(const bool& value);
+  /**
+   * @brief Getter property for FileWasRead
+   * @return Value of FileWasRead
+   */
+  bool getFileWasRead() const;
+
   Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
-  SIMPL_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
+  /**
+   * @brief Setter property for MaterialNameArrayName
+   */
+  void setMaterialNameArrayName(const QString& value);
+  /**
+   * @brief Getter property for MaterialNameArrayName
+   * @return Value of MaterialNameArrayName
+   */
+  QString getMaterialNameArrayName() const;
 
-  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  /**
+   * @brief Setter property for InputFile
+   */
+  void setInputFile(const QString& value);
+  /**
+   * @brief Getter property for InputFile
+   * @return Value of InputFile
+   */
+  QString getInputFile() const;
+
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
   /**
@@ -162,15 +231,56 @@ public:
   void preflight() override;
 
   /* These are non-exposed to the user through the GUI. Manual Pipelines are OK to set them */
-  SIMPL_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
+  /**
+   * @brief Setter property for RefFrameZDir
+   */
+  void setRefFrameZDir(const uint32_t& value);
+  /**
+   * @brief Getter property for RefFrameZDir
+   * @return Value of RefFrameZDir
+   */
+  uint32_t getRefFrameZDir() const;
 
-  SIMPL_INSTANCE_PROPERTY(Ebsd::OEM, Manufacturer)
+  /**
+   * @brief Setter property for Manufacturer
+   */
+  void setManufacturer(const Ebsd::OEM& value);
+  /**
+   * @brief Getter property for Manufacturer
+   * @return Value of Manufacturer
+   */
+  Ebsd::OEM getManufacturer() const;
 
-  SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
+  /**
+   * @brief Setter property for InputFile_Cache
+   */
+  void setInputFile_Cache(const QString& value);
+  /**
+   * @brief Getter property for InputFile_Cache
+   * @return Value of InputFile_Cache
+   */
+  QString getInputFile_Cache() const;
 
-  SIMPL_PIMPL_PROPERTY_DECL(QDateTime, TimeStamp_Cache)
+  /**
+   * @brief Setter property for TimeStamp_Cache
+   */
+  void setTimeStamp_Cache(const QDateTime& value);
+  /**
+   * @brief Getter property for TimeStamp_Cache
+   * @return Value of TimeStamp_Cache
+   */
+  QDateTime getTimeStamp_Cache() const;
 
-  SIMPL_PIMPL_PROPERTY_DECL(Ang_Private_Data, Data)
+  /**
+   * @brief Setter property for Data
+   */
+  void setData(const Ang_Private_Data& value);
+  /**
+   * @brief Getter property for Data
+   * @return Value of Data
+   */
+  Ang_Private_Data getData() const;
+
   Q_PROPERTY(Ang_Private_Data Data READ getData WRITE setData)
 
 signals:
@@ -239,12 +349,25 @@ protected:
   void readDataFile(AngReader* reader, const DataContainer::Pointer& m, std::vector<size_t>& tDims, ANG_READ_FLAG = ANG_FULL_FILE);
 
 private:
-  QScopedPointer<ReadAngDataPrivate> const d_ptr;
+  std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+  int32_t* m_CellPhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_CellEulerAnglesPtr;
+  float* m_CellEulerAngles = nullptr;
+  std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
+  uint32_t* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<float>> m_LatticeConstantsPtr;
+  float* m_LatticeConstants = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-  DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
-  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-  DEFINE_DATAARRAY_VARIABLE(float, LatticeConstants)
+  DataArrayPath m_DataContainerName = {};
+  QString m_CellEnsembleAttributeMatrixName = {};
+  QString m_CellAttributeMatrixName = {};
+  bool m_FileWasRead = {};
+  QString m_MaterialNameArrayName = {};
+  QString m_InputFile = {};
+  uint32_t m_RefFrameZDir = {};
+  Ebsd::OEM m_Manufacturer = {};
+
+  QScopedPointer<ReadAngDataPrivate> const d_ptr;
 
 public:
   ReadAngData(const ReadAngData&) = delete;            // Copy Constructor Not Implemented

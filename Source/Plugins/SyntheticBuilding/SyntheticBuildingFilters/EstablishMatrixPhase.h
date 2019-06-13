@@ -35,10 +35,10 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
 
@@ -76,46 +76,168 @@ class SyntheticBuilding_EXPORT EstablishMatrixPhase : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(EstablishMatrixPhase)
-  SIMPL_FILTER_NEW_MACRO(EstablishMatrixPhase)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(EstablishMatrixPhase, AbstractFilter)
+  using Self = EstablishMatrixPhase;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<EstablishMatrixPhase> New();
+
+  /**
+   * @brief Returns the name of the class for EstablishMatrixPhase
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for EstablishMatrixPhase
+   */
+  static QString ClassName();
 
   ~EstablishMatrixPhase() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, OutputCellAttributeMatrixPath)
+  /**
+   * @brief Setter property for OutputCellAttributeMatrixPath
+   */
+  void setOutputCellAttributeMatrixPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for OutputCellAttributeMatrixPath
+   * @return Value of OutputCellAttributeMatrixPath
+   */
+  DataArrayPath getOutputCellAttributeMatrixPath() const;
+
   Q_PROPERTY(DataArrayPath OutputCellAttributeMatrixPath READ getOutputCellAttributeMatrixPath WRITE setOutputCellAttributeMatrixPath)
 
-  SIMPL_INSTANCE_STRING_PROPERTY(OutputCellFeatureAttributeMatrixName)
+  /**
+   * @brief Setter property for OutputCellFeatureAttributeMatrixName
+   */
+  void setOutputCellFeatureAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for OutputCellFeatureAttributeMatrixName
+   * @return Value of OutputCellFeatureAttributeMatrixName
+   */
+  QString getOutputCellFeatureAttributeMatrixName() const;
+
   Q_PROPERTY(QString OutputCellFeatureAttributeMatrixName READ getOutputCellFeatureAttributeMatrixName WRITE setOutputCellFeatureAttributeMatrixName)
 
-  SIMPL_INSTANCE_STRING_PROPERTY(OutputCellEnsembleAttributeMatrixName)
+  /**
+   * @brief Setter property for OutputCellEnsembleAttributeMatrixName
+   */
+  void setOutputCellEnsembleAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for OutputCellEnsembleAttributeMatrixName
+   * @return Value of OutputCellEnsembleAttributeMatrixName
+   */
+  QString getOutputCellEnsembleAttributeMatrixName() const;
+
   Q_PROPERTY(QString OutputCellEnsembleAttributeMatrixName READ getOutputCellEnsembleAttributeMatrixName WRITE setOutputCellEnsembleAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+  /**
+   * @brief Setter property for FeatureIdsArrayName
+   */
+  void setFeatureIdsArrayName(const QString& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayName
+   * @return Value of FeatureIdsArrayName
+   */
+  QString getFeatureIdsArrayName() const;
+
   Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellPhasesArrayName)
+  /**
+   * @brief Setter property for CellPhasesArrayName
+   */
+  void setCellPhasesArrayName(const QString& value);
+  /**
+   * @brief Getter property for CellPhasesArrayName
+   * @return Value of CellPhasesArrayName
+   */
+  QString getCellPhasesArrayName() const;
+
   Q_PROPERTY(QString CellPhasesArrayName READ getCellPhasesArrayName WRITE setCellPhasesArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, FeaturePhasesArrayName)
+  /**
+   * @brief Setter property for FeaturePhasesArrayName
+   */
+  void setFeaturePhasesArrayName(const QString& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayName
+   * @return Value of FeaturePhasesArrayName
+   */
+  QString getFeaturePhasesArrayName() const;
+
   Q_PROPERTY(QString FeaturePhasesArrayName READ getFeaturePhasesArrayName WRITE setFeaturePhasesArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, NumFeaturesArrayName)
+  /**
+   * @brief Setter property for NumFeaturesArrayName
+   */
+  void setNumFeaturesArrayName(const QString& value);
+  /**
+   * @brief Getter property for NumFeaturesArrayName
+   * @return Value of NumFeaturesArrayName
+   */
+  QString getNumFeaturesArrayName() const;
+
   Q_PROPERTY(QString NumFeaturesArrayName READ getNumFeaturesArrayName WRITE setNumFeaturesArrayName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
+  /**
+   * @brief Setter property for MaskArrayPath
+   */
+  void setMaskArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for MaskArrayPath
+   * @return Value of MaskArrayPath
+   */
+  DataArrayPath getMaskArrayPath() const;
+
   Q_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
 
-  SIMPL_FILTER_PARAMETER(bool, UseMask)
+  /**
+   * @brief Setter property for UseMask
+   */
+  void setUseMask(const bool& value);
+  /**
+   * @brief Getter property for UseMask
+   * @return Value of UseMask
+   */
+  bool getUseMask() const;
+
   Q_PROPERTY(bool UseMask READ getUseMask WRITE setUseMask)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
+  /**
+   * @brief Setter property for InputStatsArrayPath
+   */
+  void setInputStatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for InputStatsArrayPath
+   * @return Value of InputStatsArrayPath
+   */
+  DataArrayPath getInputStatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
+  /**
+   * @brief Setter property for InputPhaseTypesArrayPath
+   */
+  void setInputPhaseTypesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for InputPhaseTypesArrayPath
+   * @return Value of InputPhaseTypesArrayPath
+   */
+  DataArrayPath getInputPhaseTypesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, InputPhaseNamesArrayPath)
+  /**
+   * @brief Setter property for InputPhaseNamesArrayPath
+   */
+  void setInputPhaseNamesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for InputPhaseNamesArrayPath
+   * @return Value of InputPhaseNamesArrayPath
+   */
+  DataArrayPath getInputPhaseNamesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath InputPhaseNamesArrayPath READ getInputPhaseNamesArrayPath WRITE setInputPhaseNamesArrayPath)
 
   /**
@@ -228,24 +350,39 @@ protected:
   std::vector<float> matrixphasefractions;
 
 private:
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+  int32_t* m_CellPhases = nullptr;
+  std::weak_ptr<DataArray<bool>> m_MaskPtr;
+  bool* m_Mask = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_NumFeaturesPtr;
+  int32_t* m_NumFeatures = nullptr;
+  std::weak_ptr<DataArray<PhaseType::EnumType>> m_PhaseTypesPtr;
+  PhaseType::EnumType* m_PhaseTypes = nullptr;
+
+  DataArrayPath m_OutputCellAttributeMatrixPath = {};
+  QString m_OutputCellFeatureAttributeMatrixName = {};
+  QString m_OutputCellEnsembleAttributeMatrixName = {};
+  QString m_FeatureIdsArrayName = {};
+  QString m_CellPhasesArrayName = {};
+  QString m_FeaturePhasesArrayName = {};
+  QString m_NumFeaturesArrayName = {};
+  DataArrayPath m_MaskArrayPath = {};
+  bool m_UseMask = {};
+  DataArrayPath m_InputStatsArrayPath = {};
+  DataArrayPath m_InputPhaseTypesArrayPath = {};
+  DataArrayPath m_InputPhaseNamesArrayPath = {};
+
   size_t firstMatrixFeature;
   float sizex;
   float sizey;
   float sizez;
   float totalvol;
 
-  // Cell Data - make sure these are all initialized to nullptr in the constructor
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-  DEFINE_DATAARRAY_VARIABLE(bool, Mask)
-
-  // Feature Data - make sure these are all initialized to nullptr in the constructor
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-
-  // Ensemble Data - make sure these are all initialized to nullptr in the constructor
-  DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
-  DEFINE_DATAARRAY_VARIABLE(PhaseType::EnumType, PhaseTypes)
-  DEFINE_STRINGARRAY_VARIABLE(PhaseNames)
+  StringDataArray::WeakPointer m_PhaseNamesPtr;
   StatsDataArray::WeakPointer m_StatsDataArray;
 
   /**

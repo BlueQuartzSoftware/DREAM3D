@@ -11,12 +11,16 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
@@ -390,4 +394,105 @@ const QString GenerateFZQuaternions::getSubGroupName() const
 const QString GenerateFZQuaternions::getHumanLabel() const
 {
   return "Reduce Orientations to Fundamental Zone";
+}
+
+// -----------------------------------------------------------------------------
+GenerateFZQuaternions::Pointer GenerateFZQuaternions::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<GenerateFZQuaternions> GenerateFZQuaternions::New()
+{
+  struct make_shared_enabler : public GenerateFZQuaternions
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString GenerateFZQuaternions::getNameOfClass() const
+{
+  return QString("GenerateFZQuaternions");
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateFZQuaternions::ClassName()
+{
+  return QString("GenerateFZQuaternions");
+}
+
+// -----------------------------------------------------------------------------
+void GenerateFZQuaternions::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateFZQuaternions::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateFZQuaternions::setQuatsArrayPath(const DataArrayPath& value)
+{
+  m_QuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateFZQuaternions::getQuatsArrayPath() const
+{
+  return m_QuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateFZQuaternions::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateFZQuaternions::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateFZQuaternions::setUseGoodVoxels(const bool& value)
+{
+  m_UseGoodVoxels = value;
+}
+
+// -----------------------------------------------------------------------------
+bool GenerateFZQuaternions::getUseGoodVoxels() const
+{
+  return m_UseGoodVoxels;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateFZQuaternions::setGoodVoxelsArrayPath(const DataArrayPath& value)
+{
+  m_GoodVoxelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateFZQuaternions::getGoodVoxelsArrayPath() const
+{
+  return m_GoodVoxelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateFZQuaternions::setFZQuatsArrayPath(const DataArrayPath& value)
+{
+  m_FZQuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateFZQuaternions::getFZQuatsArrayPath() const
+{
+  return m_FZQuatsArrayPath;
 }

@@ -48,7 +48,10 @@
 #include <tbb/tick_count.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
@@ -61,6 +64,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
@@ -1455,4 +1460,189 @@ const QString DetectEllipsoids::getSubGroupName() const
 const QString DetectEllipsoids::getHumanLabel() const
 {
   return "Detect 2D Ellipses";
+}
+
+// -----------------------------------------------------------------------------
+DetectEllipsoids::Pointer DetectEllipsoids::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<DetectEllipsoids> DetectEllipsoids::New()
+{
+  struct make_shared_enabler : public DetectEllipsoids
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString DetectEllipsoids::getNameOfClass() const
+{
+  return QString("DetectEllipsoids");
+}
+
+// -----------------------------------------------------------------------------
+QString DetectEllipsoids::ClassName()
+{
+  return QString("DetectEllipsoids");
+}
+
+// -----------------------------------------------------------------------------
+void DetectEllipsoids::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath DetectEllipsoids::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void DetectEllipsoids::setDetectedEllipsoidsFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_DetectedEllipsoidsFeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath DetectEllipsoids::getDetectedEllipsoidsFeatureIdsArrayPath() const
+{
+  return m_DetectedEllipsoidsFeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void DetectEllipsoids::setFeatureAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_FeatureAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath DetectEllipsoids::getFeatureAttributeMatrixPath() const
+{
+  return m_FeatureAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void DetectEllipsoids::setEllipseFeatureAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_EllipseFeatureAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath DetectEllipsoids::getEllipseFeatureAttributeMatrixPath() const
+{
+  return m_EllipseFeatureAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void DetectEllipsoids::setCenterCoordinatesArrayName(const QString& value)
+{
+  m_CenterCoordinatesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString DetectEllipsoids::getCenterCoordinatesArrayName() const
+{
+  return m_CenterCoordinatesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void DetectEllipsoids::setMajorAxisLengthArrayName(const QString& value)
+{
+  m_MajorAxisLengthArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString DetectEllipsoids::getMajorAxisLengthArrayName() const
+{
+  return m_MajorAxisLengthArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void DetectEllipsoids::setMinorAxisLengthArrayName(const QString& value)
+{
+  m_MinorAxisLengthArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString DetectEllipsoids::getMinorAxisLengthArrayName() const
+{
+  return m_MinorAxisLengthArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void DetectEllipsoids::setRotationalAnglesArrayName(const QString& value)
+{
+  m_RotationalAnglesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString DetectEllipsoids::getRotationalAnglesArrayName() const
+{
+  return m_RotationalAnglesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void DetectEllipsoids::setMinFiberAxisLength(const int& value)
+{
+  m_MinFiberAxisLength = value;
+}
+
+// -----------------------------------------------------------------------------
+int DetectEllipsoids::getMinFiberAxisLength() const
+{
+  return m_MinFiberAxisLength;
+}
+
+// -----------------------------------------------------------------------------
+void DetectEllipsoids::setMaxFiberAxisLength(const int& value)
+{
+  m_MaxFiberAxisLength = value;
+}
+
+// -----------------------------------------------------------------------------
+int DetectEllipsoids::getMaxFiberAxisLength() const
+{
+  return m_MaxFiberAxisLength;
+}
+
+// -----------------------------------------------------------------------------
+void DetectEllipsoids::setHoughTransformThreshold(const float& value)
+{
+  m_HoughTransformThreshold = value;
+}
+
+// -----------------------------------------------------------------------------
+float DetectEllipsoids::getHoughTransformThreshold() const
+{
+  return m_HoughTransformThreshold;
+}
+
+// -----------------------------------------------------------------------------
+void DetectEllipsoids::setMinAspectRatio(const float& value)
+{
+  m_MinAspectRatio = value;
+}
+
+// -----------------------------------------------------------------------------
+float DetectEllipsoids::getMinAspectRatio() const
+{
+  return m_MinAspectRatio;
+}
+
+// -----------------------------------------------------------------------------
+void DetectEllipsoids::setImageScaleBarLength(const int& value)
+{
+  m_ImageScaleBarLength = value;
+}
+
+// -----------------------------------------------------------------------------
+int DetectEllipsoids::getImageScaleBarLength() const
+{
+  return m_ImageScaleBarLength;
 }

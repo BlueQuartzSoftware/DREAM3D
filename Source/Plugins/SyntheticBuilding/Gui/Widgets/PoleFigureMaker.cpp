@@ -41,7 +41,10 @@
 #include <QtGui/QFont>
 #include <QtGui/QPainter>
 
+#include <QtCore/QDebug>
+
 #include "SIMPLib/Math/SIMPLibMath.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

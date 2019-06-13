@@ -46,7 +46,10 @@
 #include "H5Support/H5ScopedSentinel.h"
 #include "H5Support/H5Utilities.h"
 
+#include <QtCore/QDebug>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/Common/ShapeType.h"
 #include "SIMPLib/CoreFilters/DataContainerReader.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
@@ -60,6 +63,7 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/StatsData/StatsData.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "SVWidgetsLib/QtSupport/QtSFileCompleter.h"
 #include "SVWidgetsLib/QtSupport/QtSFileUtils.h"

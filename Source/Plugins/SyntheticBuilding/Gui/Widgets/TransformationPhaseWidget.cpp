@@ -45,7 +45,10 @@
 // Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/EbsdConstants.h"
 
+#include <QtCore/QDebug>
+
 #include "SIMPLib/DataArrays/StatsDataArray.h"
+
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
@@ -755,4 +758,40 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);
   setDataHasBeenGenerated(true);
+}
+
+// -----------------------------------------------------------------------------
+void TransformationPhaseWidget::setParentPhase(const unsigned int& value)
+{
+  m_ParentPhase = value;
+}
+
+// -----------------------------------------------------------------------------
+unsigned int TransformationPhaseWidget::getParentPhase() const
+{
+  return m_ParentPhase;
+}
+
+// -----------------------------------------------------------------------------
+void TransformationPhaseWidget::setPhaseType(const PhaseType::Type& value)
+{
+  m_PhaseType = value;
+}
+
+// -----------------------------------------------------------------------------
+PhaseType::Type TransformationPhaseWidget::getPhaseType() const
+{
+  return m_PhaseType;
+}
+
+// -----------------------------------------------------------------------------
+void TransformationPhaseWidget::setSGPlotWidgets(const QList<StatsGenPlotWidget*>& value)
+{
+  m_SGPlotWidgets = value;
+}
+
+// -----------------------------------------------------------------------------
+QList<StatsGenPlotWidget*> TransformationPhaseWidget::getSGPlotWidgets() const
+{
+  return m_SGPlotWidgets;
 }

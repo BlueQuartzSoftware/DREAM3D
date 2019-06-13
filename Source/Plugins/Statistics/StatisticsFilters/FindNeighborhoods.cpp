@@ -37,8 +37,10 @@
 
 #include <mutex>
 
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -47,6 +49,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -494,4 +498,105 @@ const QString FindNeighborhoods::getSubGroupName() const
 const QString FindNeighborhoods::getHumanLabel() const
 {
   return "Find Feature Neighborhoods";
+}
+
+// -----------------------------------------------------------------------------
+FindNeighborhoods::Pointer FindNeighborhoods::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindNeighborhoods> FindNeighborhoods::New()
+{
+  struct make_shared_enabler : public FindNeighborhoods
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindNeighborhoods::getNameOfClass() const
+{
+  return QString("FindNeighborhoods");
+}
+
+// -----------------------------------------------------------------------------
+QString FindNeighborhoods::ClassName()
+{
+  return QString("FindNeighborhoods");
+}
+
+// -----------------------------------------------------------------------------
+void FindNeighborhoods::setNeighborhoodListArrayName(const QString& value)
+{
+  m_NeighborhoodListArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindNeighborhoods::getNeighborhoodListArrayName() const
+{
+  return m_NeighborhoodListArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindNeighborhoods::setMultiplesOfAverage(const float& value)
+{
+  m_MultiplesOfAverage = value;
+}
+
+// -----------------------------------------------------------------------------
+float FindNeighborhoods::getMultiplesOfAverage() const
+{
+  return m_MultiplesOfAverage;
+}
+
+// -----------------------------------------------------------------------------
+void FindNeighborhoods::setEquivalentDiametersArrayPath(const DataArrayPath& value)
+{
+  m_EquivalentDiametersArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindNeighborhoods::getEquivalentDiametersArrayPath() const
+{
+  return m_EquivalentDiametersArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindNeighborhoods::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindNeighborhoods::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindNeighborhoods::setCentroidsArrayPath(const DataArrayPath& value)
+{
+  m_CentroidsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindNeighborhoods::getCentroidsArrayPath() const
+{
+  return m_CentroidsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindNeighborhoods::setNeighborhoodsArrayName(const QString& value)
+{
+  m_NeighborhoodsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindNeighborhoods::getNeighborhoodsArrayName() const
+{
+  return m_NeighborhoodsArrayName;
 }

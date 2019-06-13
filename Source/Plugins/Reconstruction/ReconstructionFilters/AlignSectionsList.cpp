@@ -39,12 +39,17 @@
 
 #include <QtCore/QFileInfo>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -285,4 +290,57 @@ const QString AlignSectionsList::getSubGroupName() const
 const QString AlignSectionsList::getHumanLabel() const
 {
   return "Align Sections (List)";
+}
+
+// -----------------------------------------------------------------------------
+AlignSectionsList::Pointer AlignSectionsList::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<AlignSectionsList> AlignSectionsList::New()
+{
+  struct make_shared_enabler : public AlignSectionsList
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString AlignSectionsList::getNameOfClass() const
+{
+  return QString("AlignSectionsList");
+}
+
+// -----------------------------------------------------------------------------
+QString AlignSectionsList::ClassName()
+{
+  return QString("AlignSectionsList");
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsList::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString AlignSectionsList::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsList::setDREAM3DAlignmentFile(const bool& value)
+{
+  m_DREAM3DAlignmentFile = value;
+}
+
+// -----------------------------------------------------------------------------
+bool AlignSectionsList::getDREAM3DAlignmentFile() const
+{
+  return m_DREAM3DAlignmentFile;
 }

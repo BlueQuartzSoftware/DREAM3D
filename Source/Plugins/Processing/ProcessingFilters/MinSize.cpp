@@ -35,7 +35,10 @@
 
 #include "MinSize.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
@@ -43,6 +46,8 @@
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
@@ -551,4 +556,117 @@ const QString MinSize::getSubGroupName() const
 const QString MinSize::getHumanLabel() const
 {
   return "Minimum Size";
+}
+
+// -----------------------------------------------------------------------------
+MinSize::Pointer MinSize::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<MinSize> MinSize::New()
+{
+  struct make_shared_enabler : public MinSize
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString MinSize::getNameOfClass() const
+{
+  return QString("MinSize");
+}
+
+// -----------------------------------------------------------------------------
+QString MinSize::ClassName()
+{
+  return QString("MinSize");
+}
+
+// -----------------------------------------------------------------------------
+void MinSize::setMinAllowedFeatureSize(const int& value)
+{
+  m_MinAllowedFeatureSize = value;
+}
+
+// -----------------------------------------------------------------------------
+int MinSize::getMinAllowedFeatureSize() const
+{
+  return m_MinAllowedFeatureSize;
+}
+
+// -----------------------------------------------------------------------------
+void MinSize::setApplyToSinglePhase(const bool& value)
+{
+  m_ApplyToSinglePhase = value;
+}
+
+// -----------------------------------------------------------------------------
+bool MinSize::getApplyToSinglePhase() const
+{
+  return m_ApplyToSinglePhase;
+}
+
+// -----------------------------------------------------------------------------
+void MinSize::setPhaseNumber(const int& value)
+{
+  m_PhaseNumber = value;
+}
+
+// -----------------------------------------------------------------------------
+int MinSize::getPhaseNumber() const
+{
+  return m_PhaseNumber;
+}
+
+// -----------------------------------------------------------------------------
+void MinSize::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MinSize::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MinSize::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MinSize::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MinSize::setNumCellsArrayPath(const DataArrayPath& value)
+{
+  m_NumCellsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MinSize::getNumCellsArrayPath() const
+{
+  return m_NumCellsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MinSize::setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value)
+{
+  m_IgnoredDataArrayPaths = value;
+}
+
+// -----------------------------------------------------------------------------
+QVector<DataArrayPath> MinSize::getIgnoredDataArrayPaths() const
+{
+  return m_IgnoredDataArrayPaths;
 }

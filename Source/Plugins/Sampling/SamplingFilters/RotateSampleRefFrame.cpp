@@ -42,7 +42,10 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -50,8 +53,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/GeometryMath.h"
-#include "SIMPLib/Math/MatrixMath.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
@@ -736,4 +739,81 @@ const QString RotateSampleRefFrame::getSubGroupName() const
 const QString RotateSampleRefFrame::getHumanLabel() const
 {
   return "Rotate Sample Reference Frame";
+}
+
+// -----------------------------------------------------------------------------
+RotateSampleRefFrame::Pointer RotateSampleRefFrame::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<RotateSampleRefFrame> RotateSampleRefFrame::New()
+{
+  struct make_shared_enabler : public RotateSampleRefFrame
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString RotateSampleRefFrame::getNameOfClass() const
+{
+  return QString("RotateSampleRefFrame");
+}
+
+// -----------------------------------------------------------------------------
+QString RotateSampleRefFrame::ClassName()
+{
+  return QString("RotateSampleRefFrame");
+}
+
+// -----------------------------------------------------------------------------
+void RotateSampleRefFrame::setCellAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_CellAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath RotateSampleRefFrame::getCellAttributeMatrixPath() const
+{
+  return m_CellAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void RotateSampleRefFrame::setRotationAxis(const FloatVec3Type& value)
+{
+  m_RotationAxis = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type RotateSampleRefFrame::getRotationAxis() const
+{
+  return m_RotationAxis;
+}
+
+// -----------------------------------------------------------------------------
+void RotateSampleRefFrame::setRotationAngle(const float& value)
+{
+  m_RotationAngle = value;
+}
+
+// -----------------------------------------------------------------------------
+float RotateSampleRefFrame::getRotationAngle() const
+{
+  return m_RotationAngle;
+}
+
+// -----------------------------------------------------------------------------
+void RotateSampleRefFrame::setSliceBySlice(const bool& value)
+{
+  m_SliceBySlice = value;
+}
+
+// -----------------------------------------------------------------------------
+bool RotateSampleRefFrame::getSliceBySlice() const
+{
+  return m_SliceBySlice;
 }

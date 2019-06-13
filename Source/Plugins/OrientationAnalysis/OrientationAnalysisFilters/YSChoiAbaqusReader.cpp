@@ -46,13 +46,18 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QString>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
@@ -625,4 +630,189 @@ const QString YSChoiAbaqusReader::getSubGroupName() const
 const QString YSChoiAbaqusReader::getHumanLabel() const
 {
   return "Import YS Choi Abaqus Vtk Output File";
+}
+
+// -----------------------------------------------------------------------------
+YSChoiAbaqusReader::Pointer YSChoiAbaqusReader::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<YSChoiAbaqusReader> YSChoiAbaqusReader::New()
+{
+  struct make_shared_enabler : public YSChoiAbaqusReader
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString YSChoiAbaqusReader::getNameOfClass() const
+{
+  return QString("YSChoiAbaqusReader");
+}
+
+// -----------------------------------------------------------------------------
+QString YSChoiAbaqusReader::ClassName()
+{
+  return QString("YSChoiAbaqusReader");
+}
+
+// -----------------------------------------------------------------------------
+void YSChoiAbaqusReader::setDataContainerName(const DataArrayPath& value)
+{
+  m_DataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath YSChoiAbaqusReader::getDataContainerName() const
+{
+  return m_DataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void YSChoiAbaqusReader::setCellEnsembleAttributeMatrixName(const QString& value)
+{
+  m_CellEnsembleAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString YSChoiAbaqusReader::getCellEnsembleAttributeMatrixName() const
+{
+  return m_CellEnsembleAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void YSChoiAbaqusReader::setCellFeatureAttributeMatrixName(const QString& value)
+{
+  m_CellFeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString YSChoiAbaqusReader::getCellFeatureAttributeMatrixName() const
+{
+  return m_CellFeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void YSChoiAbaqusReader::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString YSChoiAbaqusReader::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void YSChoiAbaqusReader::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString YSChoiAbaqusReader::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void YSChoiAbaqusReader::setInputFeatureInfoFile(const QString& value)
+{
+  m_InputFeatureInfoFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString YSChoiAbaqusReader::getInputFeatureInfoFile() const
+{
+  return m_InputFeatureInfoFile;
+}
+
+// -----------------------------------------------------------------------------
+void YSChoiAbaqusReader::setCellEulerAnglesArrayName(const QString& value)
+{
+  m_CellEulerAnglesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString YSChoiAbaqusReader::getCellEulerAnglesArrayName() const
+{
+  return m_CellEulerAnglesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void YSChoiAbaqusReader::setQuatsArrayName(const QString& value)
+{
+  m_QuatsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString YSChoiAbaqusReader::getQuatsArrayName() const
+{
+  return m_QuatsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void YSChoiAbaqusReader::setAvgQuatsArrayName(const QString& value)
+{
+  m_AvgQuatsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString YSChoiAbaqusReader::getAvgQuatsArrayName() const
+{
+  return m_AvgQuatsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void YSChoiAbaqusReader::setCellPhasesArrayName(const QString& value)
+{
+  m_CellPhasesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString YSChoiAbaqusReader::getCellPhasesArrayName() const
+{
+  return m_CellPhasesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void YSChoiAbaqusReader::setSurfaceFeaturesArrayName(const QString& value)
+{
+  m_SurfaceFeaturesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString YSChoiAbaqusReader::getSurfaceFeaturesArrayName() const
+{
+  return m_SurfaceFeaturesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void YSChoiAbaqusReader::setFeatureIdsArrayName(const QString& value)
+{
+  m_FeatureIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString YSChoiAbaqusReader::getFeatureIdsArrayName() const
+{
+  return m_FeatureIdsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void YSChoiAbaqusReader::setCrystalStructuresArrayName(const QString& value)
+{
+  m_CrystalStructuresArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString YSChoiAbaqusReader::getCrystalStructuresArrayName() const
+{
+  return m_CrystalStructuresArrayName;
 }

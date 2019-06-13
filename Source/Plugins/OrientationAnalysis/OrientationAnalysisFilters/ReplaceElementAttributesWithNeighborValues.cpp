@@ -34,7 +34,10 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ReplaceElementAttributesWithNeighborValues.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
@@ -44,6 +47,8 @@
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -56,9 +61,36 @@ static const int GreaterThan = 1;
 template <typename T> class LessThanComparison
 {
 public:
-  SIMPL_SHARED_POINTERS(LessThanComparison<T>)
-  SIMPL_STATIC_NEW_MACRO(LessThanComparison<T>)
-  SIMPL_TYPE_MACRO(LessThanComparison<T>)
+  using Self = LessThanComparison<T>;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer()
+  {
+    return Pointer(static_cast<Self*>(nullptr));
+  }
+
+  /**
+   * @brief Returns the name of the class for AbstractMessage
+   */
+  const QString getNameOfClass() const
+  {
+    return QString("LessThanComparison<T>");
+  }
+  /**
+   * @brief Returns the name of the class for AbstractMessage
+   */
+  static QString ClassName()
+  {
+    return QString("LessThanComparison<T>");
+  }
+
+  static Pointer New()
+  {
+    Pointer sharedPtr(new(Self));
+    return sharedPtr;
+  }
   virtual ~LessThanComparison() = default;
 
   virtual bool compare(T a, T b)
@@ -81,9 +113,40 @@ protected:
 template <typename T> class GreaterThanComparison : public LessThanComparison<T>
 {
 public:
-  SIMPL_SHARED_POINTERS(GreaterThanComparison<T>)
-  SIMPL_STATIC_NEW_MACRO(GreaterThanComparison<T>)
-  SIMPL_TYPE_MACRO_SUPER(GreaterThanComparison<T>, LessThanComparison<T>)
+  using Self = GreaterThanComparison<T>;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer()
+  {
+    return Pointer(static_cast<Self*>(nullptr));
+  }
+
+  static Pointer New()
+  {
+    Pointer sharedPtr(new(Self));
+    return sharedPtr;
+  }
+  /**
+   * @brief Returns the name of the class for _SUPERGreaterThanComparison<T>
+   */
+  /**
+   * @brief Returns the name of the class for _SUPERGreaterThanComparison<T>
+   */
+  const QString getNameOfClass() const
+  {
+    return QString("_SUPERGreaterThanComparison<T>");
+  }
+
+  /**
+   * @brief Returns the name of the class for _SUPERGreaterThanComparison<T>
+   */
+  QString ClassName()
+  {
+    return QString("_SUPERGreaterThanComparison<T>");
+  }
+
   ~GreaterThanComparison() override = default;
 
   bool compare(T a, T b) override
@@ -263,7 +326,6 @@ template <typename T> void ExecuteTemplate(ReplaceElementAttributesWithNeighborV
 // -----------------------------------------------------------------------------
 ReplaceElementAttributesWithNeighborValues::ReplaceElementAttributesWithNeighborValues()
 : m_MinConfidence(0.1f)
-, m_Loop(false)
 , m_ConfidenceIndexArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::ConfidenceIndex)
 , m_SelectedComparison(Detail::LessThan)
 {
@@ -453,4 +515,95 @@ const QString ReplaceElementAttributesWithNeighborValues::getSubGroupName() cons
 const QString ReplaceElementAttributesWithNeighborValues::getHumanLabel() const
 {
   return "Replace Element Attributes with Neighbor (Threshold)";
+}
+
+// -----------------------------------------------------------------------------
+ReplaceElementAttributesWithNeighborValues::Pointer ReplaceElementAttributesWithNeighborValues::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ReplaceElementAttributesWithNeighborValues> ReplaceElementAttributesWithNeighborValues::New()
+{
+  struct make_shared_enabler : public ReplaceElementAttributesWithNeighborValues
+  {
+
+  private:
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString ReplaceElementAttributesWithNeighborValues::getNameOfClass() const
+{
+  return QString("ReplaceElementAttributesWithNeighborValues");
+}
+
+// -----------------------------------------------------------------------------
+QString ReplaceElementAttributesWithNeighborValues::ClassName()
+{
+  return QString("ReplaceElementAttributesWithNeighborValues");
+}
+
+// -----------------------------------------------------------------------------
+void ReplaceElementAttributesWithNeighborValues::setMinConfidence(const float& value)
+{
+  m_MinConfidence = value;
+}
+
+// -----------------------------------------------------------------------------
+float ReplaceElementAttributesWithNeighborValues::getMinConfidence() const
+{
+  return m_MinConfidence;
+}
+
+// -----------------------------------------------------------------------------
+void ReplaceElementAttributesWithNeighborValues::setLoop(const bool& value)
+{
+  m_Loop = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ReplaceElementAttributesWithNeighborValues::getLoop() const
+{
+  return m_Loop;
+}
+
+// -----------------------------------------------------------------------------
+void ReplaceElementAttributesWithNeighborValues::setConfidenceIndexArrayPath(const DataArrayPath& value)
+{
+  m_ConfidenceIndexArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ReplaceElementAttributesWithNeighborValues::getConfidenceIndexArrayPath() const
+{
+  return m_ConfidenceIndexArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ReplaceElementAttributesWithNeighborValues::setSelectedComparison(const int& value)
+{
+  m_SelectedComparison = value;
+}
+
+// -----------------------------------------------------------------------------
+int ReplaceElementAttributesWithNeighborValues::getSelectedComparison() const
+{
+  return m_SelectedComparison;
+}
+
+// -----------------------------------------------------------------------------
+void ReplaceElementAttributesWithNeighborValues::setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value)
+{
+  m_IgnoredDataArrayPaths = value;
+}
+
+// -----------------------------------------------------------------------------
+QVector<DataArrayPath> ReplaceElementAttributesWithNeighborValues::getIgnoredDataArrayPaths() const
+{
+  return m_IgnoredDataArrayPaths;
 }

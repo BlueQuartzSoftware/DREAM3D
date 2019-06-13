@@ -35,6 +35,8 @@
 
 #include "AddOrientationNoise.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -43,6 +45,8 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
@@ -254,4 +258,57 @@ const QString AddOrientationNoise::getSubGroupName() const
 const QString AddOrientationNoise::getHumanLabel() const
 {
   return "Add Orientation Noise";
+}
+
+// -----------------------------------------------------------------------------
+AddOrientationNoise::Pointer AddOrientationNoise::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<AddOrientationNoise> AddOrientationNoise::New()
+{
+  struct make_shared_enabler : public AddOrientationNoise
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString AddOrientationNoise::getNameOfClass() const
+{
+  return QString("AddOrientationNoise");
+}
+
+// -----------------------------------------------------------------------------
+QString AddOrientationNoise::ClassName()
+{
+  return QString("AddOrientationNoise");
+}
+
+// -----------------------------------------------------------------------------
+void AddOrientationNoise::setMagnitude(const float& value)
+{
+  m_Magnitude = value;
+}
+
+// -----------------------------------------------------------------------------
+float AddOrientationNoise::getMagnitude() const
+{
+  return m_Magnitude;
+}
+
+// -----------------------------------------------------------------------------
+void AddOrientationNoise::setCellEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_CellEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AddOrientationNoise::getCellEulerAnglesArrayPath() const
+{
+  return m_CellEulerAnglesArrayPath;
 }

@@ -36,9 +36,11 @@
 #pragma once
 
 #include <QtCore/QVector>
+#include <QtCore/QString>
+#include <QtCore/QMap>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Utilities/ColorTable.h"
+
 #include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
 
 /**
@@ -55,8 +57,21 @@
 class SyntheticBuilding_EXPORT AbstractMicrostructurePreset
 {
 public:
-  SIMPL_SHARED_POINTERS(AbstractMicrostructurePreset)
-  SIMPL_TYPE_MACRO(AbstractMicrostructurePreset)
+  using Self = AbstractMicrostructurePreset;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  /**
+   * @brief Returns the name of the class for AbstractMicrostructurePreset
+   */
+  const QString getNameOfClass() const;
+  /**
+   * @brief Returns the name of the class for AbstractMicrostructurePreset
+   */
+  static QString ClassName();
 
   virtual ~AbstractMicrostructurePreset();
 
@@ -150,5 +165,7 @@ public:
   AbstractMicrostructurePreset(AbstractMicrostructurePreset&&) = delete;      // Move Constructor Not Implemented
   AbstractMicrostructurePreset& operator=(const AbstractMicrostructurePreset&) = delete; // Copy Assignment Not Implemented
   AbstractMicrostructurePreset& operator=(AbstractMicrostructurePreset&&) = delete;      // Move Assignment Not Implemented
+
+private:
 };
 

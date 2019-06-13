@@ -35,7 +35,6 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
@@ -52,9 +51,23 @@ class SurfaceMeshing_EXPORT SurfaceMeshFilter : public AbstractFilter
 {
   Q_OBJECT
 public:
-  SIMPL_SHARED_POINTERS(SurfaceMeshFilter)
-  SIMPL_FILTER_NEW_MACRO(SurfaceMeshFilter)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(SurfaceMeshFilter, AbstractFilter)
+  using Self = SurfaceMeshFilter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<SurfaceMeshFilter> New();
+
+  /**
+   * @brief Returns the name of the class for SurfaceMeshFilter
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for SurfaceMeshFilter
+   */
+  static QString ClassName();
 
   ~SurfaceMeshFilter() override;
 
@@ -89,5 +102,7 @@ public:
   SurfaceMeshFilter(SurfaceMeshFilter&&) = delete;      // Move Constructor Not Implemented
   SurfaceMeshFilter& operator=(const SurfaceMeshFilter&) = delete; // Copy Assignment Not Implemented
   SurfaceMeshFilter& operator=(SurfaceMeshFilter&&) = delete;      //
+
+private:
 };
 

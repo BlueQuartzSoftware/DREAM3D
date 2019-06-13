@@ -35,15 +35,6 @@
 
 #include "RotateEulerRefFrame.h"
 
-
-#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
-#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
-#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/Math/MatrixMath.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
-
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range.h>
 #include <tbb/blocked_range3d.h>
@@ -52,9 +43,16 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/Core/OrientationTransformation.hpp"
-#include "OrientationLib/Core/Quaternion.hpp"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include <QtCore/QTextStream>
+
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -83,7 +81,9 @@ public:
   void convert(size_t start, size_t end) const
   {
     float rotMat[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-    OrientationTransformation::ax2om<OrientationF, OrientationF>(OrientationF(axis[0], axis[1], axis[2], angle)).toGMatrix(rotMat);
+    FOrientArrayType om(9, 0.0f);
+    FOrientTransformsType::ax2om(FOrientArrayType(axis[0], axis[1], axis[2], angle), om);
+    om.toGMatrix(rotMat);
 
     float ea1 = 0, ea2 = 0, ea3 = 0;
     float g[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
@@ -93,15 +93,17 @@ public:
       ea1 = m_CellEulerAngles[3 * i + 0];
       ea2 = m_CellEulerAngles[3 * i + 1];
       ea3 = m_CellEulerAngles[3 * i + 2];
-      OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(ea1, ea2, ea3)).toGMatrix(g);
+      FOrientArrayType om(9);
+      FOrientTransformsType::eu2om(FOrientArrayType(ea1, ea2, ea3), om);
+      om.toGMatrix(g);
 
       MatrixMath::Multiply3x3with3x3(g, rotMat, gNew);
       MatrixMath::Normalize3x3(gNew);
       // Because we are going to simply wrap the m_CellEulerAngles array, the new
       // Euler angles will be directly written to the m_CellEulerAngles array
       // at the proper spot
-      OrientationF eu(m_CellEulerAngles + (3 * i), 3);
-      eu = OrientationTransformation::om2eu<OrientationF, OrientationF>(OrientationF(gNew));
+      FOrientArrayType eu(m_CellEulerAngles + (3 * i), 3);
+      FOrientTransformsType::om2eu(FOrientArrayType(gNew), eu);
     }
   }
 
@@ -301,4 +303,69 @@ const QString RotateEulerRefFrame::getSubGroupName() const
 const QString RotateEulerRefFrame::getHumanLabel() const
 {
   return "Rotate Euler Reference Frame";
+}
+
+// -----------------------------------------------------------------------------
+RotateEulerRefFrame::Pointer RotateEulerRefFrame::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<RotateEulerRefFrame> RotateEulerRefFrame::New()
+{
+  struct make_shared_enabler : public RotateEulerRefFrame
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString RotateEulerRefFrame::getNameOfClass() const
+{
+  return QString("RotateEulerRefFrame");
+}
+
+// -----------------------------------------------------------------------------
+QString RotateEulerRefFrame::ClassName()
+{
+  return QString("RotateEulerRefFrame");
+}
+
+// -----------------------------------------------------------------------------
+void RotateEulerRefFrame::setRotationAxis(const FloatVec3Type& value)
+{
+  m_RotationAxis = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type RotateEulerRefFrame::getRotationAxis() const
+{
+  return m_RotationAxis;
+}
+
+// -----------------------------------------------------------------------------
+void RotateEulerRefFrame::setRotationAngle(const float& value)
+{
+  m_RotationAngle = value;
+}
+
+// -----------------------------------------------------------------------------
+float RotateEulerRefFrame::getRotationAngle() const
+{
+  return m_RotationAngle;
+}
+
+// -----------------------------------------------------------------------------
+void RotateEulerRefFrame::setCellEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_CellEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath RotateEulerRefFrame::getCellEulerAnglesArrayPath() const
+{
+  return m_CellEulerAnglesArrayPath;
 }

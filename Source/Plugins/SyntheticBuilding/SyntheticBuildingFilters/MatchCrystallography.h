@@ -37,10 +37,10 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
@@ -89,55 +89,195 @@ class SyntheticBuilding_EXPORT MatchCrystallography : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(MatchCrystallography)
-  SIMPL_FILTER_NEW_MACRO(MatchCrystallography)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(MatchCrystallography, AbstractFilter)
+  using Self = MatchCrystallography;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<MatchCrystallography> New();
+
+  /**
+   * @brief Returns the name of the class for MatchCrystallography
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for MatchCrystallography
+   */
+  static QString ClassName();
 
   ~MatchCrystallography() override;
 
   // Input data from the StatsGenerator Data Container (or something equivalent)
-  SIMPL_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
+  /**
+   * @brief Setter property for InputStatsArrayPath
+   */
+  void setInputStatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for InputStatsArrayPath
+   * @return Value of InputStatsArrayPath
+   */
+  DataArrayPath getInputStatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, PhaseTypesArrayPath)
+  /**
+   * @brief Setter property for PhaseTypesArrayPath
+   */
+  void setPhaseTypesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for PhaseTypesArrayPath
+   * @return Value of PhaseTypesArrayPath
+   */
+  DataArrayPath getPhaseTypesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath PhaseTypesArrayPath READ getPhaseTypesArrayPath WRITE setPhaseTypesArrayPath)
 
   // Input data from the Synthetic Data Container (or something equivalent)
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  /**
+   * @brief Setter property for FeaturePhasesArrayPath
+   */
+  void setFeaturePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayPath
+   * @return Value of FeaturePhasesArrayPath
+   */
+  DataArrayPath getFeaturePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceFeaturesArrayPath)
+  /**
+   * @brief Setter property for SurfaceFeaturesArrayPath
+   */
+  void setSurfaceFeaturesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceFeaturesArrayPath
+   * @return Value of SurfaceFeaturesArrayPath
+   */
+  DataArrayPath getSurfaceFeaturesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceFeaturesArrayPath READ getSurfaceFeaturesArrayPath WRITE setSurfaceFeaturesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
+  /**
+   * @brief Setter property for NeighborListArrayPath
+   */
+  void setNeighborListArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NeighborListArrayPath
+   * @return Value of NeighborListArrayPath
+   */
+  DataArrayPath getNeighborListArrayPath() const;
+
   Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SharedSurfaceAreaListArrayPath)
+  /**
+   * @brief Setter property for SharedSurfaceAreaListArrayPath
+   */
+  void setSharedSurfaceAreaListArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SharedSurfaceAreaListArrayPath
+   * @return Value of SharedSurfaceAreaListArrayPath
+   */
+  DataArrayPath getSharedSurfaceAreaListArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SharedSurfaceAreaListArrayPath READ getSharedSurfaceAreaListArrayPath WRITE setSharedSurfaceAreaListArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NumFeaturesArrayPath)
+  /**
+   * @brief Setter property for NumFeaturesArrayPath
+   */
+  void setNumFeaturesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NumFeaturesArrayPath
+   * @return Value of NumFeaturesArrayPath
+   */
+  DataArrayPath getNumFeaturesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath NumFeaturesArrayPath READ getNumFeaturesArrayPath WRITE setNumFeaturesArrayPath)
 
   // Created Data Arrays
-  SIMPL_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
+  /**
+   * @brief Setter property for CellEulerAnglesArrayName
+   */
+  void setCellEulerAnglesArrayName(const QString& value);
+  /**
+   * @brief Getter property for CellEulerAnglesArrayName
+   * @return Value of CellEulerAnglesArrayName
+   */
+  QString getCellEulerAnglesArrayName() const;
+
   Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, VolumesArrayName)
+  /**
+   * @brief Setter property for VolumesArrayName
+   */
+  void setVolumesArrayName(const QString& value);
+  /**
+   * @brief Getter property for VolumesArrayName
+   * @return Value of VolumesArrayName
+   */
+  QString getVolumesArrayName() const;
+
   Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, FeatureEulerAnglesArrayName)
+  /**
+   * @brief Setter property for FeatureEulerAnglesArrayName
+   */
+  void setFeatureEulerAnglesArrayName(const QString& value);
+  /**
+   * @brief Getter property for FeatureEulerAnglesArrayName
+   * @return Value of FeatureEulerAnglesArrayName
+   */
+  QString getFeatureEulerAnglesArrayName() const;
+
   Q_PROPERTY(QString FeatureEulerAnglesArrayName READ getFeatureEulerAnglesArrayName WRITE setFeatureEulerAnglesArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, AvgQuatsArrayName)
+  /**
+   * @brief Setter property for AvgQuatsArrayName
+   */
+  void setAvgQuatsArrayName(const QString& value);
+  /**
+   * @brief Getter property for AvgQuatsArrayName
+   * @return Value of AvgQuatsArrayName
+   */
+  QString getAvgQuatsArrayName() const;
+
   Q_PROPERTY(QString AvgQuatsArrayName READ getAvgQuatsArrayName WRITE setAvgQuatsArrayName)
 
-  SIMPL_FILTER_PARAMETER(int, MaxIterations)
+  /**
+   * @brief Setter property for MaxIterations
+   */
+  void setMaxIterations(const int& value);
+  /**
+   * @brief Getter property for MaxIterations
+   * @return Value of MaxIterations
+   */
+  int getMaxIterations() const;
+
   Q_PROPERTY(int MaxIterations READ getMaxIterations WRITE setMaxIterations)
 
   /**
@@ -310,24 +450,53 @@ protected:
   void measure_misorientations(size_t ensem);
 
 private:
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<float>> m_CellEulerAnglesPtr;
+  float* m_CellEulerAngles = nullptr;
+  std::weak_ptr<DataArray<bool>> m_SurfaceFeaturesPtr;
+  bool* m_SurfaceFeatures = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_VolumesPtr;
+  float* m_Volumes = nullptr;
+  std::weak_ptr<DataArray<float>> m_FeatureEulerAnglesPtr;
+  float* m_FeatureEulerAngles = nullptr;
+  std::weak_ptr<DataArray<float>> m_AvgQuatsPtr;
+  float* m_AvgQuats = nullptr;
+  std::weak_ptr<DataArray<uint32_t>> m_SyntheticCrystalStructuresPtr;
+  uint32_t* m_SyntheticCrystalStructures = nullptr;
+  std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
+  uint32_t* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<PhaseType::EnumType>> m_PhaseTypesPtr;
+  PhaseType::EnumType* m_PhaseTypes = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_NumFeaturesPtr;
+  int32_t* m_NumFeatures = nullptr;
+
+  DataArrayPath m_InputStatsArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+  DataArrayPath m_PhaseTypesArrayPath = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_FeaturePhasesArrayPath = {};
+  DataArrayPath m_SurfaceFeaturesArrayPath = {};
+  DataArrayPath m_NeighborListArrayPath = {};
+  DataArrayPath m_SharedSurfaceAreaListArrayPath = {};
+  DataArrayPath m_NumFeaturesArrayPath = {};
+  QString m_CellEulerAnglesArrayName = {};
+  QString m_VolumesArrayName = {};
+  QString m_FeatureEulerAnglesArrayName = {};
+  QString m_AvgQuatsArrayName = {};
+  int m_MaxIterations = {};
+
   // Cell Data
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
 
   // Feature Data
-  DEFINE_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-  DEFINE_DATAARRAY_VARIABLE(float, Volumes)
-  DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
-  DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
-  DEFINE_DATAARRAY_VARIABLE(uint32_t, SyntheticCrystalStructures)
+
   NeighborList<int32_t>::WeakPointer m_NeighborList;
   NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;
 
   // Ensemble Data
-  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-  DEFINE_DATAARRAY_VARIABLE(PhaseType::EnumType, PhaseTypes)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
+
   StatsDataArray::WeakPointer m_StatsDataArray;
 
   // All other private instance variables

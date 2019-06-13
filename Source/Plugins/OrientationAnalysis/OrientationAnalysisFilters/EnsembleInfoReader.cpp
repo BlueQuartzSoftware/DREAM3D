@@ -38,13 +38,18 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -504,4 +509,93 @@ const QString EnsembleInfoReader::getSubGroupName() const
 const QString EnsembleInfoReader::getHumanLabel() const
 {
   return "Import Ensemble Info File";
+}
+
+// -----------------------------------------------------------------------------
+EnsembleInfoReader::Pointer EnsembleInfoReader::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<EnsembleInfoReader> EnsembleInfoReader::New()
+{
+  struct make_shared_enabler : public EnsembleInfoReader
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString EnsembleInfoReader::getNameOfClass() const
+{
+  return QString("EnsembleInfoReader");
+}
+
+// -----------------------------------------------------------------------------
+QString EnsembleInfoReader::ClassName()
+{
+  return QString("EnsembleInfoReader");
+}
+
+// -----------------------------------------------------------------------------
+void EnsembleInfoReader::setDataContainerName(const DataArrayPath& value)
+{
+  m_DataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath EnsembleInfoReader::getDataContainerName() const
+{
+  return m_DataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void EnsembleInfoReader::setCellEnsembleAttributeMatrixName(const QString& value)
+{
+  m_CellEnsembleAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EnsembleInfoReader::getCellEnsembleAttributeMatrixName() const
+{
+  return m_CellEnsembleAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void EnsembleInfoReader::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EnsembleInfoReader::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void EnsembleInfoReader::setCrystalStructuresArrayName(const QString& value)
+{
+  m_CrystalStructuresArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EnsembleInfoReader::getCrystalStructuresArrayName() const
+{
+  return m_CrystalStructuresArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void EnsembleInfoReader::setPhaseTypesArrayName(const QString& value)
+{
+  m_PhaseTypesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EnsembleInfoReader::getPhaseTypesArrayName() const
+{
+  return m_PhaseTypesArrayName;
 }

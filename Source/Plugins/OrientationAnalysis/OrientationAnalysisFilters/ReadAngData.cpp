@@ -37,7 +37,10 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QFileInfo>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
@@ -45,6 +48,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "EbsdLib/TSL/AngFields.h"
 
@@ -109,9 +114,47 @@ ReadAngData::~ReadAngData() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SIMPL_PIMPL_PROPERTY_DEF(ReadAngData, Ang_Private_Data, Data)
-SIMPL_PIMPL_PROPERTY_DEF(ReadAngData, QString, InputFile_Cache)
-SIMPL_PIMPL_PROPERTY_DEF(ReadAngData, QDateTime, TimeStamp_Cache)
+// -----------------------------------------------------------------------------
+void ReadAngData::setData(const Ang_Private_Data& value)
+{
+  Q_D(ReadAngData);
+  d->m_Data = value;
+}
+
+// -----------------------------------------------------------------------------
+Ang_Private_Data ReadAngData::getData() const
+{
+  Q_D(const ReadAngData);
+  return d->m_Data;
+}
+
+// -----------------------------------------------------------------------------
+void ReadAngData::setInputFile_Cache(const QString& value)
+{
+  Q_D(ReadAngData);
+  d->m_InputFile_Cache = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadAngData::getInputFile_Cache() const
+{
+  Q_D(const ReadAngData);
+  return d->m_InputFile_Cache;
+}
+
+// -----------------------------------------------------------------------------
+void ReadAngData::setTimeStamp_Cache(const QDateTime& value)
+{
+  Q_D(ReadAngData);
+  d->m_TimeStamp_Cache = value;
+}
+
+// -----------------------------------------------------------------------------
+QDateTime ReadAngData::getTimeStamp_Cache() const
+{
+  Q_D(const ReadAngData);
+  return d->m_TimeStamp_Cache;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -197,7 +240,7 @@ void ReadAngData::dataCheck()
 
   // File is at least on the system with the proper extension, now try to read it.
   std::shared_ptr<AngReader> reader(new AngReader());
-  readDataFile(reader.get(), m, tDims, ANG_HEADER_ONLY);
+  readDataFile(reader.get(), m.get(), tDims, ANG_HEADER_ONLY);
   if(getErrorCode() < 0)
   {
     return;
@@ -606,7 +649,7 @@ void ReadAngData::execute()
   AttributeMatrix::Pointer ebsdAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
   ebsdAttrMat->setType(AttributeMatrix::Type::Cell);
 
-  readDataFile(reader.get(), m, tDims, ANG_FULL_FILE);
+  readDataFile(reader.get(), m.get(), tDims, ANG_FULL_FILE);
   if(getErrorCode() < 0)
   {
     return;
@@ -698,4 +741,129 @@ const QString ReadAngData::getSubGroupName() const
 const QString ReadAngData::getHumanLabel() const
 {
   return "Import EDAX EBSD Data (.ang)";
+}
+
+// -----------------------------------------------------------------------------
+ReadAngData::Pointer ReadAngData::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ReadAngData> ReadAngData::New()
+{
+  struct make_shared_enabler : public ReadAngData
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString ReadAngData::getNameOfClass() const
+{
+  return QString("ReadAngData");
+}
+
+// -----------------------------------------------------------------------------
+QString ReadAngData::ClassName()
+{
+  return QString("ReadAngData");
+}
+
+// -----------------------------------------------------------------------------
+void ReadAngData::setDataContainerName(const DataArrayPath& value)
+{
+  m_DataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ReadAngData::getDataContainerName() const
+{
+  return m_DataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadAngData::setCellEnsembleAttributeMatrixName(const QString& value)
+{
+  m_CellEnsembleAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadAngData::getCellEnsembleAttributeMatrixName() const
+{
+  return m_CellEnsembleAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadAngData::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadAngData::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadAngData::setFileWasRead(const bool& value)
+{
+  m_FileWasRead = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ReadAngData::getFileWasRead() const
+{
+  return m_FileWasRead;
+}
+
+// -----------------------------------------------------------------------------
+void ReadAngData::setMaterialNameArrayName(const QString& value)
+{
+  m_MaterialNameArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadAngData::getMaterialNameArrayName() const
+{
+  return m_MaterialNameArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadAngData::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadAngData::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void ReadAngData::setRefFrameZDir(const uint32_t& value)
+{
+  m_RefFrameZDir = value;
+}
+
+// -----------------------------------------------------------------------------
+uint32_t ReadAngData::getRefFrameZDir() const
+{
+  return m_RefFrameZDir;
+}
+
+// -----------------------------------------------------------------------------
+void ReadAngData::setManufacturer(const Ebsd::OEM& value)
+{
+  m_Manufacturer = value;
+}
+
+// -----------------------------------------------------------------------------
+Ebsd::OEM ReadAngData::getManufacturer() const
+{
+  return m_Manufacturer;
 }

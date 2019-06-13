@@ -5,8 +5,10 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+
+class IDataArray;
+using IDataArrayWkPtrType = std::weak_ptr<IDataArray>;
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -30,19 +32,60 @@ class Statistics_EXPORT FindDifferenceMap : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindDifferenceMap)
-  SIMPL_FILTER_NEW_MACRO(FindDifferenceMap)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindDifferenceMap, AbstractFilter)
+  using Self = FindDifferenceMap;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindDifferenceMap> New();
+
+  /**
+   * @brief Returns the name of the class for FindDifferenceMap
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindDifferenceMap
+   */
+  static QString ClassName();
 
   ~FindDifferenceMap() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FirstInputArrayPath)
+  /**
+   * @brief Setter property for FirstInputArrayPath
+   */
+  void setFirstInputArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FirstInputArrayPath
+   * @return Value of FirstInputArrayPath
+   */
+  DataArrayPath getFirstInputArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FirstInputArrayPath READ getFirstInputArrayPath WRITE setFirstInputArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SecondInputArrayPath)
+  /**
+   * @brief Setter property for SecondInputArrayPath
+   */
+  void setSecondInputArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SecondInputArrayPath
+   * @return Value of SecondInputArrayPath
+   */
+  DataArrayPath getSecondInputArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SecondInputArrayPath READ getSecondInputArrayPath WRITE setSecondInputArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DifferenceMapArrayPath)
+  /**
+   * @brief Setter property for DifferenceMapArrayPath
+   */
+  void setDifferenceMapArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DifferenceMapArrayPath
+   * @return Value of DifferenceMapArrayPath
+   */
+  DataArrayPath getDifferenceMapArrayPath() const;
+
   Q_PROPERTY(DataArrayPath DifferenceMapArrayPath READ getDifferenceMapArrayPath WRITE setDifferenceMapArrayPath)
 
   /**
@@ -146,9 +189,16 @@ protected:
   void initialize();
 
 private:
-  DEFINE_IDATAARRAY_VARIABLE(FirstInputArray)
-  DEFINE_IDATAARRAY_VARIABLE(SecondInputArray)
-  DEFINE_IDATAARRAY_VARIABLE(DifferenceMap)
+  IDataArrayWkPtrType m_FirstInputArrayPtr;
+  void* m_FirstInputArray = nullptr;
+  IDataArrayWkPtrType m_SecondInputArrayPtr;
+  void* m_SecondInputArray = nullptr;
+  IDataArrayWkPtrType m_DifferenceMapPtr;
+  void* m_DifferenceMap = nullptr;
+
+  DataArrayPath m_FirstInputArrayPath = {};
+  DataArrayPath m_SecondInputArrayPath = {};
+  DataArrayPath m_DifferenceMapArrayPath = {};
 
 public:
   FindDifferenceMap(const FindDifferenceMap&) = delete; // Copy Constructor Not Implemented

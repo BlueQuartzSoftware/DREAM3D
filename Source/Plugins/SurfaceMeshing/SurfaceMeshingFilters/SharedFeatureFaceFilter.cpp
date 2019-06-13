@@ -35,12 +35,17 @@
 
 #include "SharedFeatureFaceFilter.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -340,4 +345,93 @@ const QString SharedFeatureFaceFilter::getSubGroupName() const
 const QString SharedFeatureFaceFilter::getHumanLabel() const
 {
   return "Generate Triangle Face Ids";
+}
+
+// -----------------------------------------------------------------------------
+SharedFeatureFaceFilter::Pointer SharedFeatureFaceFilter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<SharedFeatureFaceFilter> SharedFeatureFaceFilter::New()
+{
+  struct make_shared_enabler : public SharedFeatureFaceFilter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString SharedFeatureFaceFilter::getNameOfClass() const
+{
+  return QString("SharedFeatureFaceFilter");
+}
+
+// -----------------------------------------------------------------------------
+QString SharedFeatureFaceFilter::ClassName()
+{
+  return QString("SharedFeatureFaceFilter");
+}
+
+// -----------------------------------------------------------------------------
+void SharedFeatureFaceFilter::setFaceFeatureAttributeMatrixName(const QString& value)
+{
+  m_FaceFeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString SharedFeatureFaceFilter::getFaceFeatureAttributeMatrixName() const
+{
+  return m_FaceFeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void SharedFeatureFaceFilter::setSurfaceMeshFeatureFaceIdsArrayName(const QString& value)
+{
+  m_SurfaceMeshFeatureFaceIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString SharedFeatureFaceFilter::getSurfaceMeshFeatureFaceIdsArrayName() const
+{
+  return m_SurfaceMeshFeatureFaceIdsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void SharedFeatureFaceFilter::setSurfaceMeshFeatureFaceLabelsArrayName(const QString& value)
+{
+  m_SurfaceMeshFeatureFaceLabelsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString SharedFeatureFaceFilter::getSurfaceMeshFeatureFaceLabelsArrayName() const
+{
+  return m_SurfaceMeshFeatureFaceLabelsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void SharedFeatureFaceFilter::setSurfaceMeshFeatureFaceNumTrianglesArrayName(const QString& value)
+{
+  m_SurfaceMeshFeatureFaceNumTrianglesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString SharedFeatureFaceFilter::getSurfaceMeshFeatureFaceNumTrianglesArrayName() const
+{
+  return m_SurfaceMeshFeatureFaceNumTrianglesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void SharedFeatureFaceFilter::setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath SharedFeatureFaceFilter::getSurfaceMeshFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFaceLabelsArrayPath;
 }

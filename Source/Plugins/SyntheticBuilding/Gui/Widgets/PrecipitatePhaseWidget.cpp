@@ -509,3 +509,15 @@ QIcon PrecipitatePhaseWidget::getPhaseIcon()
   icon.addFile(QStringLiteral(":/StatsGenerator/icons/Precipitate_Selected.png"), QSize(), QIcon::Normal, QIcon::On);
   return icon;
 }
+
+// -----------------------------------------------------------------------------
+void PrecipitatePhaseWidget::setPptFraction(const float& value)
+{
+  m_PptFraction = value;
+}
+
+// -----------------------------------------------------------------------------
+float PrecipitatePhaseWidget::getPptFraction() const
+{
+  return m_PptFraction;
+}

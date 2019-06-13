@@ -40,7 +40,6 @@
 #include <vector>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/StatsData/StatsData.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
@@ -51,9 +50,24 @@
 class BetaOps : public DistributionAnalysisOps
 {
   public:
-    SIMPL_SHARED_POINTERS(BetaOps)
-    SIMPL_TYPE_MACRO(BetaOps)
-    SIMPL_STATIC_NEW_MACRO(BetaOps)
+    using Self = BetaOps;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    /**
+     * @brief Returns the name of the class for BetaOps
+     */
+    const QString getNameOfClass() const;
+    /**
+     * @brief Returns the name of the class for BetaOps
+     */
+    static QString ClassName();
+
+    static Pointer New();
+
     virtual ~BetaOps();
 
 
@@ -68,6 +82,8 @@ class BetaOps : public DistributionAnalysisOps
     BetaOps(BetaOps&&) = delete;             // Move Constructor Not Implemented
     BetaOps& operator=(const BetaOps&) = delete; // Copy Assignment Not Implemented
     BetaOps& operator=(BetaOps&&) = delete;      // Move Assignment Not Implemented
+
+  private:
 };
 
 

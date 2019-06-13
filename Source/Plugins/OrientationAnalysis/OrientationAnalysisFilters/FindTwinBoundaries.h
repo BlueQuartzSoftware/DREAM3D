@@ -36,9 +36,10 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -76,40 +77,144 @@ class OrientationAnalysis_EXPORT FindTwinBoundaries : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindTwinBoundaries)
-  SIMPL_FILTER_NEW_MACRO(FindTwinBoundaries)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindTwinBoundaries, AbstractFilter)
+  using Self = FindTwinBoundaries;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindTwinBoundaries> New();
+
+  /**
+   * @brief Returns the name of the class for FindTwinBoundaries
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindTwinBoundaries
+   */
+  static QString ClassName();
 
   ~FindTwinBoundaries() override;
 
-  SIMPL_FILTER_PARAMETER(float, AxisTolerance)
+  /**
+   * @brief Setter property for AxisTolerance
+   */
+  void setAxisTolerance(const float& value);
+  /**
+   * @brief Getter property for AxisTolerance
+   * @return Value of AxisTolerance
+   */
+  float getAxisTolerance() const;
+
   Q_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance)
 
-  SIMPL_FILTER_PARAMETER(float, AngleTolerance)
+  /**
+   * @brief Setter property for AngleTolerance
+   */
+  void setAngleTolerance(const float& value);
+  /**
+   * @brief Getter property for AngleTolerance
+   * @return Value of AngleTolerance
+   */
+  float getAngleTolerance() const;
+
   Q_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
 
-  SIMPL_FILTER_PARAMETER(bool, FindCoherence)
+  /**
+   * @brief Setter property for FindCoherence
+   */
+  void setFindCoherence(const bool& value);
+  /**
+   * @brief Getter property for FindCoherence
+   * @return Value of FindCoherence
+   */
+  bool getFindCoherence() const;
+
   Q_PROPERTY(bool FindCoherence READ getFindCoherence WRITE setFindCoherence)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  /**
+   * @brief Setter property for AvgQuatsArrayPath
+   */
+  void setAvgQuatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for AvgQuatsArrayPath
+   * @return Value of AvgQuatsArrayPath
+   */
+  DataArrayPath getAvgQuatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  /**
+   * @brief Setter property for FeaturePhasesArrayPath
+   */
+  void setFeaturePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayPath
+   * @return Value of FeaturePhasesArrayPath
+   */
+  DataArrayPath getFeaturePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceLabelsArrayPath
+   */
+  void setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceLabelsArrayPath
+   * @return Value of SurfaceMeshFaceLabelsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceNormalsArrayPath
+   */
+  void setSurfaceMeshFaceNormalsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceNormalsArrayPath
+   * @return Value of SurfaceMeshFaceNormalsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceNormalsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, SurfaceMeshTwinBoundaryArrayName)
+  /**
+   * @brief Setter property for SurfaceMeshTwinBoundaryArrayName
+   */
+  void setSurfaceMeshTwinBoundaryArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshTwinBoundaryArrayName
+   * @return Value of SurfaceMeshTwinBoundaryArrayName
+   */
+  QString getSurfaceMeshTwinBoundaryArrayName() const;
+
   Q_PROPERTY(QString SurfaceMeshTwinBoundaryArrayName READ getSurfaceMeshTwinBoundaryArrayName WRITE setSurfaceMeshTwinBoundaryArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, SurfaceMeshTwinBoundaryIncoherenceArrayName)
+  /**
+   * @brief Setter property for SurfaceMeshTwinBoundaryIncoherenceArrayName
+   */
+  void setSurfaceMeshTwinBoundaryIncoherenceArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshTwinBoundaryIncoherenceArrayName
+   * @return Value of SurfaceMeshTwinBoundaryIncoherenceArrayName
+   */
+  QString getSurfaceMeshTwinBoundaryIncoherenceArrayName() const;
+
   Q_PROPERTY(QString SurfaceMeshTwinBoundaryIncoherenceArrayName READ getSurfaceMeshTwinBoundaryIncoherenceArrayName WRITE setSurfaceMeshTwinBoundaryIncoherenceArrayName)
 
   /**
@@ -204,15 +309,33 @@ protected:
   FindTwinBoundaries();
 
 private:
+  std::weak_ptr<DataArray<float>> m_AvgQuatsPtr;
+  float* m_AvgQuats = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+  std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
+  uint32_t* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFaceLabelsPtr;
+  int32_t* m_SurfaceMeshFaceLabels = nullptr;
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshFaceNormalsPtr;
+  double* m_SurfaceMeshFaceNormals = nullptr;
+  std::weak_ptr<DataArray<bool>> m_SurfaceMeshTwinBoundaryPtr;
+  bool* m_SurfaceMeshTwinBoundary = nullptr;
+  std::weak_ptr<DataArray<float>> m_SurfaceMeshTwinBoundaryIncoherencePtr;
+  float* m_SurfaceMeshTwinBoundaryIncoherence = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
+  float m_AxisTolerance = {};
+  float m_AngleTolerance = {};
+  bool m_FindCoherence = {};
+  DataArrayPath m_AvgQuatsArrayPath = {};
+  DataArrayPath m_FeaturePhasesArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
+  DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {};
+  QString m_SurfaceMeshTwinBoundaryArrayName = {};
+  QString m_SurfaceMeshTwinBoundaryIncoherenceArrayName = {};
 
-  DEFINE_DATAARRAY_VARIABLE(bool, SurfaceMeshTwinBoundary)
-  DEFINE_DATAARRAY_VARIABLE(float, SurfaceMeshTwinBoundaryIncoherence)
+  QVector<LaueOps::Pointer> m_OrientationOps;
 
   /**
    * @brief dataCheckVoxel Checks for the appropriate parameter values and availability of arrays

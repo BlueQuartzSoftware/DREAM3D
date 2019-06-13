@@ -42,7 +42,6 @@
 
 #include <string>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/SurfaceMeshStructs.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
@@ -66,20 +65,59 @@ class M3CEntireVolume : public AbstractFilter
 {
   Q_OBJECT
 public:
-  SIMPL_SHARED_POINTERS(M3CEntireVolume)
-  SIMPL_FILTER_NEW_MACRO(M3CEntireVolume)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(M3CEntireVolume, AbstractFilter)
+  using Self = M3CEntireVolume;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<M3CEntireVolume> New();
+
+  /**
+   * @brief Returns the name of the class for M3CEntireVolume
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for M3CEntireVolume
+   */
+  static QString ClassName();
 
   ~M3CEntireVolume() override;
 
   //------ Created Surface Mesh Cell Data
-  SIMPL_INSTANCE_STRING_PROPERTY(SurfaceMeshEdgesArrayName)
-  SIMPL_INSTANCE_STRING_PROPERTY(SurfaceMeshInternalEdgesArrayName)
+  /**
+   * @brief Setter property for SurfaceMeshEdgesArrayName
+   */
+  void setSurfaceMeshEdgesArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshEdgesArrayName
+   * @return Value of SurfaceMeshEdgesArrayName
+   */
+  QString getSurfaceMeshEdgesArrayName() const;
+
+  /**
+   * @brief Setter property for SurfaceMeshInternalEdgesArrayName
+   */
+  void setSurfaceMeshInternalEdgesArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshInternalEdgesArrayName
+   * @return Value of SurfaceMeshInternalEdgesArrayName
+   */
+  QString getSurfaceMeshInternalEdgesArrayName() const;
 
   //------ Required Cell Data
 
   //--------- Input Parameters
-  SIMPL_INSTANCE_PROPERTY(bool, AddSurfaceLayer)
+  /**
+   * @brief Setter property for AddSurfaceLayer
+   */
+  void setAddSurfaceLayer(const bool& value);
+  /**
+   * @brief Getter property for AddSurfaceLayer
+   * @return Value of AddSurfaceLayer
+   */
+  bool getAddSurfaceLayer() const;
 
   /**
   * @brief This returns the group that the filter belonds to. You can select
@@ -137,6 +175,10 @@ protected:
   void initialize();
 
 private:
+  QString m_SurfaceMeshEdgesArrayName = {};
+  QString m_SurfaceMeshInternalEdgesArrayName = {};
+  bool m_AddSurfaceLayer = {};
+
   DEFINE_PTR_WEAKPTR_DATAARRAY(int32_t, GrainIds)
   DEFINE_PTR_WEAKPTR_DATAARRAY(int8_t, SurfaceMeshNodeType)
 

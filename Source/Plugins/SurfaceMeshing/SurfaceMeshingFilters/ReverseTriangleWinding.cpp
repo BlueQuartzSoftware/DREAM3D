@@ -35,10 +35,15 @@
 
 #include "ReverseTriangleWinding.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range.h>
@@ -262,4 +267,45 @@ const QString ReverseTriangleWinding::getSubGroupName() const
 const QString ReverseTriangleWinding::getHumanLabel() const
 {
   return "Reverse Triangle Winding";
+}
+
+// -----------------------------------------------------------------------------
+ReverseTriangleWinding::Pointer ReverseTriangleWinding::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ReverseTriangleWinding> ReverseTriangleWinding::New()
+{
+  struct make_shared_enabler : public ReverseTriangleWinding
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString ReverseTriangleWinding::getNameOfClass() const
+{
+  return QString("ReverseTriangleWinding");
+}
+
+// -----------------------------------------------------------------------------
+QString ReverseTriangleWinding::ClassName()
+{
+  return QString("ReverseTriangleWinding");
+}
+
+// -----------------------------------------------------------------------------
+void ReverseTriangleWinding::setSurfaceDataContainerName(const DataArrayPath& value)
+{
+  m_SurfaceDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ReverseTriangleWinding::getSurfaceDataContainerName() const
+{
+  return m_SurfaceDataContainerName;
 }

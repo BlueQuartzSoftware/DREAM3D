@@ -37,7 +37,12 @@
 
 #include <QtCore/QDir>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AxisAngleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -546,4 +551,93 @@ const QString VisualizeGBCDGMT::getSubGroupName() const
 const QString VisualizeGBCDGMT::getHumanLabel() const
 {
   return "Export GBCD Pole Figure (GMT 5)";
+}
+
+// -----------------------------------------------------------------------------
+VisualizeGBCDGMT::Pointer VisualizeGBCDGMT::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<VisualizeGBCDGMT> VisualizeGBCDGMT::New()
+{
+  struct make_shared_enabler : public VisualizeGBCDGMT
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString VisualizeGBCDGMT::getNameOfClass() const
+{
+  return QString("VisualizeGBCDGMT");
+}
+
+// -----------------------------------------------------------------------------
+QString VisualizeGBCDGMT::ClassName()
+{
+  return QString("VisualizeGBCDGMT");
+}
+
+// -----------------------------------------------------------------------------
+void VisualizeGBCDGMT::setOutputFile(const QString& value)
+{
+  m_OutputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VisualizeGBCDGMT::getOutputFile() const
+{
+  return m_OutputFile;
+}
+
+// -----------------------------------------------------------------------------
+void VisualizeGBCDGMT::setPhaseOfInterest(const int& value)
+{
+  m_PhaseOfInterest = value;
+}
+
+// -----------------------------------------------------------------------------
+int VisualizeGBCDGMT::getPhaseOfInterest() const
+{
+  return m_PhaseOfInterest;
+}
+
+// -----------------------------------------------------------------------------
+void VisualizeGBCDGMT::setMisorientationRotation(const AxisAngleInput_t& value)
+{
+  m_MisorientationRotation = value;
+}
+
+// -----------------------------------------------------------------------------
+AxisAngleInput_t VisualizeGBCDGMT::getMisorientationRotation() const
+{
+  return m_MisorientationRotation;
+}
+
+// -----------------------------------------------------------------------------
+void VisualizeGBCDGMT::setGBCDArrayPath(const DataArrayPath& value)
+{
+  m_GBCDArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath VisualizeGBCDGMT::getGBCDArrayPath() const
+{
+  return m_GBCDArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void VisualizeGBCDGMT::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath VisualizeGBCDGMT::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
 }

@@ -36,9 +36,10 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -62,19 +63,60 @@ class OrientationAnalysis_EXPORT FindAvgCAxes : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindAvgCAxes)
-  SIMPL_FILTER_NEW_MACRO(FindAvgCAxes)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindAvgCAxes, AbstractFilter)
+  using Self = FindAvgCAxes;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindAvgCAxes> New();
+
+  /**
+   * @brief Returns the name of the class for FindAvgCAxes
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindAvgCAxes
+   */
+  static QString ClassName();
 
   ~FindAvgCAxes() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+  /**
+   * @brief Setter property for QuatsArrayPath
+   */
+  void setQuatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for QuatsArrayPath
+   * @return Value of QuatsArrayPath
+   */
+  DataArrayPath getQuatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, AvgCAxesArrayPath)
+  /**
+   * @brief Setter property for AvgCAxesArrayPath
+   */
+  void setAvgCAxesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for AvgCAxesArrayPath
+   * @return Value of AvgCAxesArrayPath
+   */
+  DataArrayPath getAvgCAxesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath AvgCAxesArrayPath READ getAvgCAxesArrayPath WRITE setAvgCAxesArrayPath)
 
   /**
@@ -178,10 +220,18 @@ protected:
   void initialize();
 
 private:
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<float>> m_QuatsPtr;
+  float* m_Quats = nullptr;
+  std::weak_ptr<DataArray<float>> m_AvgCAxesPtr;
+  float* m_AvgCAxes = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(float, Quats)
-  DEFINE_DATAARRAY_VARIABLE(float, AvgCAxes)
+  DataArrayPath m_QuatsArrayPath = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_AvgCAxesArrayPath = {};
+
+  QVector<LaueOps::Pointer> m_OrientationOps;
 
 public:
   FindAvgCAxes(const FindAvgCAxes&) = delete;            // Copy Constructor Not Implemented

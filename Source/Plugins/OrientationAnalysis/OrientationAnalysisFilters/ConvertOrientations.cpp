@@ -35,12 +35,16 @@
 
 #include "ConvertOrientations.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -369,4 +373,81 @@ const QString ConvertOrientations::getSubGroupName() const
 const QString ConvertOrientations::getHumanLabel() const
 {
   return "Convert Orientation Representation";
+}
+
+// -----------------------------------------------------------------------------
+ConvertOrientations::Pointer ConvertOrientations::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ConvertOrientations> ConvertOrientations::New()
+{
+  struct make_shared_enabler : public ConvertOrientations
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString ConvertOrientations::getNameOfClass() const
+{
+  return QString("ConvertOrientations");
+}
+
+// -----------------------------------------------------------------------------
+QString ConvertOrientations::ClassName()
+{
+  return QString("ConvertOrientations");
+}
+
+// -----------------------------------------------------------------------------
+void ConvertOrientations::setInputType(const int& value)
+{
+  m_InputType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ConvertOrientations::getInputType() const
+{
+  return m_InputType;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertOrientations::setOutputType(const int& value)
+{
+  m_OutputType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ConvertOrientations::getOutputType() const
+{
+  return m_OutputType;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertOrientations::setInputOrientationArrayPath(const DataArrayPath& value)
+{
+  m_InputOrientationArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ConvertOrientations::getInputOrientationArrayPath() const
+{
+  return m_InputOrientationArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertOrientations::setOutputOrientationArrayName(const QString& value)
+{
+  m_OutputOrientationArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ConvertOrientations::getOutputOrientationArrayName() const
+{
+  return m_OutputOrientationArrayName;
 }

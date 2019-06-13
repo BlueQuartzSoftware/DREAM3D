@@ -42,11 +42,16 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -307,4 +312,45 @@ const QString TriangleAreaFilter::getSubGroupName() const
 const QString TriangleAreaFilter::getHumanLabel() const
 {
   return "Generate Triangle Areas";
+}
+
+// -----------------------------------------------------------------------------
+TriangleAreaFilter::Pointer TriangleAreaFilter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<TriangleAreaFilter> TriangleAreaFilter::New()
+{
+  struct make_shared_enabler : public TriangleAreaFilter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString TriangleAreaFilter::getNameOfClass() const
+{
+  return QString("TriangleAreaFilter");
+}
+
+// -----------------------------------------------------------------------------
+QString TriangleAreaFilter::ClassName()
+{
+  return QString("TriangleAreaFilter");
+}
+
+// -----------------------------------------------------------------------------
+void TriangleAreaFilter::setSurfaceMeshTriangleAreasArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshTriangleAreasArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath TriangleAreaFilter::getSurfaceMeshTriangleAreasArrayPath() const
+{
+  return m_SurfaceMeshTriangleAreasArrayPath;
 }

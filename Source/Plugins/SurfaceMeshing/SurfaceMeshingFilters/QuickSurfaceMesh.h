@@ -35,10 +35,10 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/IGeometryGrid.h"
-
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Geometry/IGeometry.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -75,37 +75,132 @@ class SurfaceMeshing_EXPORT QuickSurfaceMesh : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(QuickSurfaceMesh)
-  SIMPL_FILTER_NEW_MACRO(QuickSurfaceMesh)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(QuickSurfaceMesh, AbstractFilter)
+  using Self = QuickSurfaceMesh;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<QuickSurfaceMesh> New();
+
+  /**
+   * @brief Returns the name of the class for QuickSurfaceMesh
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for QuickSurfaceMesh
+   */
+  static QString ClassName();
 
   ~QuickSurfaceMesh() override;
 
-  SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedDataArrayPaths)
+  /**
+   * @brief Setter property for SelectedDataArrayPaths
+   */
+  void setSelectedDataArrayPaths(const QVector<DataArrayPath>& value);
+  /**
+   * @brief Getter property for SelectedDataArrayPaths
+   * @return Value of SelectedDataArrayPaths
+   */
+  QVector<DataArrayPath> getSelectedDataArrayPaths() const;
+
   Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceDataContainerName)
+  /**
+   * @brief Setter property for SurfaceDataContainerName
+   */
+  void setSurfaceDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceDataContainerName
+   * @return Value of SurfaceDataContainerName
+   */
+  DataArrayPath getSurfaceDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, TripleLineDataContainerName)
+  /**
+   * @brief Setter property for TripleLineDataContainerName
+   */
+  void setTripleLineDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for TripleLineDataContainerName
+   * @return Value of TripleLineDataContainerName
+   */
+  DataArrayPath getTripleLineDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath TripleLineDataContainerName READ getTripleLineDataContainerName WRITE setTripleLineDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+  /**
+   * @brief Setter property for VertexAttributeMatrixName
+   */
+  void setVertexAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for VertexAttributeMatrixName
+   * @return Value of VertexAttributeMatrixName
+   */
+  QString getVertexAttributeMatrixName() const;
+
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
+  /**
+   * @brief Setter property for FaceAttributeMatrixName
+   */
+  void setFaceAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for FaceAttributeMatrixName
+   * @return Value of FaceAttributeMatrixName
+   */
+  QString getFaceAttributeMatrixName() const;
+
   Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, FaceLabelsArrayName)
+  /**
+   * @brief Setter property for FaceLabelsArrayName
+   */
+  void setFaceLabelsArrayName(const QString& value);
+  /**
+   * @brief Getter property for FaceLabelsArrayName
+   * @return Value of FaceLabelsArrayName
+   */
+  QString getFaceLabelsArrayName() const;
+
   Q_PROPERTY(QString FaceLabelsArrayName READ getFaceLabelsArrayName WRITE setFaceLabelsArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, NodeTypesArrayName)
+  /**
+   * @brief Setter property for NodeTypesArrayName
+   */
+  void setNodeTypesArrayName(const QString& value);
+  /**
+   * @brief Getter property for NodeTypesArrayName
+   * @return Value of NodeTypesArrayName
+   */
+  QString getNodeTypesArrayName() const;
+
   Q_PROPERTY(QString NodeTypesArrayName READ getNodeTypesArrayName WRITE setNodeTypesArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, FeatureAttributeMatrixName)
+  /**
+   * @brief Setter property for FeatureAttributeMatrixName
+   */
+  void setFeatureAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for FeatureAttributeMatrixName
+   * @return Value of FeatureAttributeMatrixName
+   */
+  QString getFeatureAttributeMatrixName() const;
+
   Q_PROPERTY(QString FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
 
   /**
@@ -209,9 +304,22 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FaceLabels)
-  DEFINE_DATAARRAY_VARIABLE(int8_t, NodeTypes)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FaceLabelsPtr;
+  int32_t* m_FaceLabels = nullptr;
+  std::weak_ptr<DataArray<int8_t>> m_NodeTypesPtr;
+  int8_t* m_NodeTypes = nullptr;
+
+  QVector<DataArrayPath> m_SelectedDataArrayPaths = {};
+  DataArrayPath m_SurfaceDataContainerName = {};
+  DataArrayPath m_TripleLineDataContainerName = {};
+  QString m_VertexAttributeMatrixName = {};
+  QString m_FaceAttributeMatrixName = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  QString m_FaceLabelsArrayName = {};
+  QString m_NodeTypesArrayName = {};
+  QString m_FeatureAttributeMatrixName = {};
 
   std::vector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
   std::vector<IDataArray::WeakPointer> m_CreatedWeakPtrVector;

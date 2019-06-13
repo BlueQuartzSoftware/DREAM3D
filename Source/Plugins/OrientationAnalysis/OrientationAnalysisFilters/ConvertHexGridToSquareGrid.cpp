@@ -37,7 +37,10 @@
 
 #include <QtCore/QDir>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
 
@@ -483,18 +486,18 @@ AbstractFilter::Pointer ConvertHexGridToSquareGrid::newFilterInstance(bool copyF
     filter->setFilterParameters(getFilterParameters());
     // We are going to hand copy all of the parameters because the other way of copying the parameters are going to
     // miss some of them because we are not enumerating all of them.
-    SIMPL_COPY_INSTANCEVAR(ZStartIndex)
-    SIMPL_COPY_INSTANCEVAR(ZEndIndex)
-    SIMPL_COPY_INSTANCEVAR(XResolution)
-    SIMPL_COPY_INSTANCEVAR(YResolution)
-    SIMPL_COPY_INSTANCEVAR(InputPath)
-    SIMPL_COPY_INSTANCEVAR(OutputPath)
-    SIMPL_COPY_INSTANCEVAR(OutputPrefix)
-    SIMPL_COPY_INSTANCEVAR(FilePrefix)
-    SIMPL_COPY_INSTANCEVAR(FileSuffix)
-    SIMPL_COPY_INSTANCEVAR(FileExtension)
-    SIMPL_COPY_INSTANCEVAR(PaddingDigits)
-    SIMPL_COPY_INSTANCEVAR(HexGridStack)
+    filter->setZStartIndex(getZStartIndex());
+    filter->setZEndIndex(getZEndIndex());
+    filter->setXResolution(getXResolution());
+    filter->setYResolution(getYResolution());
+    filter->setInputPath(getInputPath());
+    filter->setOutputPath(getOutputPath());
+    filter->setOutputPrefix(getOutputPrefix());
+    filter->setFilePrefix(getFilePrefix());
+    filter->setFileSuffix(getFileSuffix());
+    filter->setFileExtension(getFileExtension());
+    filter->setPaddingDigits(getPaddingDigits());
+    filter->setHexGridStack(getHexGridStack());
   }
   return filter;
 }
@@ -555,4 +558,213 @@ const QString ConvertHexGridToSquareGrid::getSubGroupName() const
 const QString ConvertHexGridToSquareGrid::getHumanLabel() const
 {
   return "Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang)";
+}
+
+// -----------------------------------------------------------------------------
+ConvertHexGridToSquareGrid::Pointer ConvertHexGridToSquareGrid::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ConvertHexGridToSquareGrid> ConvertHexGridToSquareGrid::New()
+{
+  struct make_shared_enabler : public ConvertHexGridToSquareGrid
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString ConvertHexGridToSquareGrid::getNameOfClass() const
+{
+  return QString("ConvertHexGridToSquareGrid");
+}
+
+// -----------------------------------------------------------------------------
+QString ConvertHexGridToSquareGrid::ClassName()
+{
+  return QString("ConvertHexGridToSquareGrid");
+}
+
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGrid::setZStartIndex(const int64_t& value)
+{
+  m_ZStartIndex = value;
+}
+
+// -----------------------------------------------------------------------------
+int64_t ConvertHexGridToSquareGrid::getZStartIndex() const
+{
+  return m_ZStartIndex;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGrid::setZEndIndex(const int64_t& value)
+{
+  m_ZEndIndex = value;
+}
+
+// -----------------------------------------------------------------------------
+int64_t ConvertHexGridToSquareGrid::getZEndIndex() const
+{
+  return m_ZEndIndex;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGrid::setXResolution(const float& value)
+{
+  m_XResolution = value;
+}
+
+// -----------------------------------------------------------------------------
+float ConvertHexGridToSquareGrid::getXResolution() const
+{
+  return m_XResolution;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGrid::setYResolution(const float& value)
+{
+  m_YResolution = value;
+}
+
+// -----------------------------------------------------------------------------
+float ConvertHexGridToSquareGrid::getYResolution() const
+{
+  return m_YResolution;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGrid::setInputPath(const QString& value)
+{
+  m_InputPath = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ConvertHexGridToSquareGrid::getInputPath() const
+{
+  return m_InputPath;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGrid::setOutputPath(const QString& value)
+{
+  m_OutputPath = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ConvertHexGridToSquareGrid::getOutputPath() const
+{
+  return m_OutputPath;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGrid::setOutputPrefix(const QString& value)
+{
+  m_OutputPrefix = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ConvertHexGridToSquareGrid::getOutputPrefix() const
+{
+  return m_OutputPrefix;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGrid::setFilePrefix(const QString& value)
+{
+  m_FilePrefix = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ConvertHexGridToSquareGrid::getFilePrefix() const
+{
+  return m_FilePrefix;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGrid::setFileSuffix(const QString& value)
+{
+  m_FileSuffix = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ConvertHexGridToSquareGrid::getFileSuffix() const
+{
+  return m_FileSuffix;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGrid::setFileExtension(const QString& value)
+{
+  m_FileExtension = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ConvertHexGridToSquareGrid::getFileExtension() const
+{
+  return m_FileExtension;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGrid::setPaddingDigits(const int& value)
+{
+  m_PaddingDigits = value;
+}
+
+// -----------------------------------------------------------------------------
+int ConvertHexGridToSquareGrid::getPaddingDigits() const
+{
+  return m_PaddingDigits;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGrid::setNumCols(const int& value)
+{
+  m_NumCols = value;
+}
+
+// -----------------------------------------------------------------------------
+int ConvertHexGridToSquareGrid::getNumCols() const
+{
+  return m_NumCols;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGrid::setNumRows(const int& value)
+{
+  m_NumRows = value;
+}
+
+// -----------------------------------------------------------------------------
+int ConvertHexGridToSquareGrid::getNumRows() const
+{
+  return m_NumRows;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGrid::setHeaderIsComplete(const bool& value)
+{
+  m_HeaderIsComplete = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ConvertHexGridToSquareGrid::getHeaderIsComplete() const
+{
+  return m_HeaderIsComplete;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGrid::setHexGridStack(const int& value)
+{
+  m_HexGridStack = value;
+}
+
+// -----------------------------------------------------------------------------
+int ConvertHexGridToSquareGrid::getHexGridStack() const
+{
+  return m_HexGridStack;
 }

@@ -35,7 +35,12 @@
 
 #include "GBCDTriangleDumper.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
@@ -335,4 +340,93 @@ const QString GBCDTriangleDumper::getSubGroupName() const
 const QString GBCDTriangleDumper::getHumanLabel() const
 {
   return "Export GBCD Triangles File";
+}
+
+// -----------------------------------------------------------------------------
+GBCDTriangleDumper::Pointer GBCDTriangleDumper::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<GBCDTriangleDumper> GBCDTriangleDumper::New()
+{
+  struct make_shared_enabler : public GBCDTriangleDumper
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString GBCDTriangleDumper::getNameOfClass() const
+{
+  return QString("GBCDTriangleDumper");
+}
+
+// -----------------------------------------------------------------------------
+QString GBCDTriangleDumper::ClassName()
+{
+  return QString("GBCDTriangleDumper");
+}
+
+// -----------------------------------------------------------------------------
+void GBCDTriangleDumper::setOutputFile(const QString& value)
+{
+  m_OutputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GBCDTriangleDumper::getOutputFile() const
+{
+  return m_OutputFile;
+}
+
+// -----------------------------------------------------------------------------
+void GBCDTriangleDumper::setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GBCDTriangleDumper::getSurfaceMeshFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFaceLabelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GBCDTriangleDumper::setSurfaceMeshFaceNormalsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceNormalsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GBCDTriangleDumper::getSurfaceMeshFaceNormalsArrayPath() const
+{
+  return m_SurfaceMeshFaceNormalsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GBCDTriangleDumper::setSurfaceMeshFaceAreasArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceAreasArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GBCDTriangleDumper::getSurfaceMeshFaceAreasArrayPath() const
+{
+  return m_SurfaceMeshFaceAreasArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GBCDTriangleDumper::setFeatureEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_FeatureEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GBCDTriangleDumper::getFeatureEulerAnglesArrayPath() const
+{
+  return m_FeatureEulerAnglesArrayPath;
 }

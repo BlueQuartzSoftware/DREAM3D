@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "EMMPMFilter.h"
 
@@ -67,24 +67,74 @@ class EMMPM_EXPORT MultiEmmpmFilter : public EMMPMFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(MultiEmmpmFilter)
-  SIMPL_FILTER_NEW_MACRO(MultiEmmpmFilter)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(MultiEmmpmFilter, AbstractFilter)
+  using Self = MultiEmmpmFilter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<MultiEmmpmFilter> New();
+
+  /**
+   * @brief Returns the name of the class for MultiEmmpmFilter
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for MultiEmmpmFilter
+   */
+  static QString ClassName();
 
   virtual ~MultiEmmpmFilter();
 
   friend MultiEmmpmFilterMessageHandler;
 
-  SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, InputDataArrayVector)
+  /**
+   * @brief Setter property for InputDataArrayVector
+   */
+  void setInputDataArrayVector(const QVector<DataArrayPath>& value);
+  /**
+   * @brief Getter property for InputDataArrayVector
+   * @return Value of InputDataArrayVector
+   */
+  QVector<DataArrayPath> getInputDataArrayVector() const;
+
   Q_PROPERTY(QVector<DataArrayPath> InputDataArrayVector READ getInputDataArrayVector WRITE setInputDataArrayVector)
 
-  SIMPL_FILTER_PARAMETER(QString, OutputAttributeMatrixName)
+  /**
+   * @brief Setter property for OutputAttributeMatrixName
+   */
+  void setOutputAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for OutputAttributeMatrixName
+   * @return Value of OutputAttributeMatrixName
+   */
+  QString getOutputAttributeMatrixName() const;
+
   Q_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, OutputArrayPrefix)
+  /**
+   * @brief Setter property for OutputArrayPrefix
+   */
+  void setOutputArrayPrefix(const QString& value);
+  /**
+   * @brief Getter property for OutputArrayPrefix
+   * @return Value of OutputArrayPrefix
+   */
+  QString getOutputArrayPrefix() const;
+
   Q_PROPERTY(QString OutputArrayPrefix READ getOutputArrayPrefix WRITE setOutputArrayPrefix)
 
-  SIMPL_FILTER_PARAMETER(bool, UsePreviousMuSigma)
+  /**
+   * @brief Setter property for UsePreviousMuSigma
+   */
+  void setUsePreviousMuSigma(const bool& value);
+  /**
+   * @brief Getter property for UsePreviousMuSigma
+   * @return Value of UsePreviousMuSigma
+   */
+  bool getUsePreviousMuSigma() const;
+
   Q_PROPERTY(bool UsePreviousMuSigma READ getUsePreviousMuSigma WRITE setUsePreviousMuSigma)
 
   /**
@@ -172,8 +222,15 @@ protected slots:
   virtual void handleEmmpmMessage(const AbstractMessage::Pointer& msg);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(uint8_t, InputImage)
-  DEFINE_DATAARRAY_VARIABLE(uint8_t, OutputImage)
+  std::weak_ptr<DataArray<uint8_t>> m_InputImagePtr;
+  uint8_t* m_InputImage = nullptr;
+  std::weak_ptr<DataArray<uint8_t>> m_OutputImagePtr;
+  uint8_t* m_OutputImage = nullptr;
+
+  QVector<DataArrayPath> m_InputDataArrayVector = {};
+  QString m_OutputAttributeMatrixName = {};
+  QString m_OutputArrayPrefix = {};
+  bool m_UsePreviousMuSigma = {};
 
   int m_ArrayCount;
   int m_CurrentArrayIndex = 1;

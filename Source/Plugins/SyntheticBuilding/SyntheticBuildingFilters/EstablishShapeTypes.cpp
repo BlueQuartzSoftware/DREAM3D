@@ -35,13 +35,18 @@
 
 #include "EstablishShapeTypes.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/ShapeTypeSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
@@ -283,4 +288,69 @@ const QString EstablishShapeTypes::getSubGroupName() const
 const QString EstablishShapeTypes::getHumanLabel() const
 {
   return "Establish Shape Types";
+}
+
+// -----------------------------------------------------------------------------
+EstablishShapeTypes::Pointer EstablishShapeTypes::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<EstablishShapeTypes> EstablishShapeTypes::New()
+{
+  struct make_shared_enabler : public EstablishShapeTypes
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString EstablishShapeTypes::getNameOfClass() const
+{
+  return QString("EstablishShapeTypes");
+}
+
+// -----------------------------------------------------------------------------
+QString EstablishShapeTypes::ClassName()
+{
+  return QString("EstablishShapeTypes");
+}
+
+// -----------------------------------------------------------------------------
+void EstablishShapeTypes::setInputPhaseTypesArrayPath(const DataArrayPath& value)
+{
+  m_InputPhaseTypesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath EstablishShapeTypes::getInputPhaseTypesArrayPath() const
+{
+  return m_InputPhaseTypesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void EstablishShapeTypes::setShapeTypesArrayName(const QString& value)
+{
+  m_ShapeTypesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EstablishShapeTypes::getShapeTypesArrayName() const
+{
+  return m_ShapeTypesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void EstablishShapeTypes::setShapeTypeData(const ShapeType::Types& value)
+{
+  m_ShapeTypeData = value;
+}
+
+// -----------------------------------------------------------------------------
+ShapeType::Types EstablishShapeTypes::getShapeTypeData() const
+{
+  return m_ShapeTypeData;
 }

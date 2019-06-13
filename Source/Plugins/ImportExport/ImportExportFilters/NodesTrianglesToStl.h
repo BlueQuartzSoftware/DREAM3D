@@ -38,7 +38,6 @@
 #include <QtCore/QString>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
@@ -72,22 +71,72 @@ class ImportExport_EXPORT NodesTrianglesToStl : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(NodesTrianglesToStl)
-  SIMPL_FILTER_NEW_MACRO(NodesTrianglesToStl)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(NodesTrianglesToStl, AbstractFilter)
+  using Self = NodesTrianglesToStl;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<NodesTrianglesToStl> New();
+
+  /**
+   * @brief Returns the name of the class for NodesTrianglesToStl
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for NodesTrianglesToStl
+   */
+  static QString ClassName();
 
   ~NodesTrianglesToStl() override;
 
-  SIMPL_FILTER_PARAMETER(QString, NodesFile)
+  /**
+   * @brief Setter property for NodesFile
+   */
+  void setNodesFile(const QString& value);
+  /**
+   * @brief Getter property for NodesFile
+   * @return Value of NodesFile
+   */
+  QString getNodesFile() const;
+
   Q_PROPERTY(QString NodesFile READ getNodesFile WRITE setNodesFile)
 
-  SIMPL_FILTER_PARAMETER(QString, TrianglesFile)
+  /**
+   * @brief Setter property for TrianglesFile
+   */
+  void setTrianglesFile(const QString& value);
+  /**
+   * @brief Getter property for TrianglesFile
+   * @return Value of TrianglesFile
+   */
+  QString getTrianglesFile() const;
+
   Q_PROPERTY(QString TrianglesFile READ getTrianglesFile WRITE setTrianglesFile)
 
-  SIMPL_FILTER_PARAMETER(QString, OutputStlDirectory)
+  /**
+   * @brief Setter property for OutputStlDirectory
+   */
+  void setOutputStlDirectory(const QString& value);
+  /**
+   * @brief Getter property for OutputStlDirectory
+   * @return Value of OutputStlDirectory
+   */
+  QString getOutputStlDirectory() const;
+
   Q_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory)
 
-  SIMPL_FILTER_PARAMETER(QString, OutputStlPrefix)
+  /**
+   * @brief Setter property for OutputStlPrefix
+   */
+  void setOutputStlPrefix(const QString& value);
+  /**
+   * @brief Getter property for OutputStlPrefix
+   * @return Value of OutputStlPrefix
+   */
+  QString getOutputStlPrefix() const;
+
   Q_PROPERTY(QString OutputStlPrefix READ getOutputStlPrefix WRITE setOutputStlPrefix)
 
   /**
@@ -197,6 +246,11 @@ protected:
   int writeASCIIPointData(const QString& NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh);
 
 private:
+  QString m_NodesFile = {};
+  QString m_TrianglesFile = {};
+  QString m_OutputStlDirectory = {};
+  QString m_OutputStlPrefix = {};
+
   int writeHeader(FILE* f, const QString& header, int triCount);
   int writeNumTrianglesToFile(const QString& filename, int triCount);
 

@@ -36,9 +36,9 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
 
@@ -64,22 +64,72 @@ class SurfaceMeshing_EXPORT FindTriangleGeomNeighbors : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindTriangleGeomNeighbors)
-  SIMPL_FILTER_NEW_MACRO(FindTriangleGeomNeighbors)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindTriangleGeomNeighbors, AbstractFilter)
+  using Self = FindTriangleGeomNeighbors;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindTriangleGeomNeighbors> New();
+
+  /**
+   * @brief Returns the name of the class for FindTriangleGeomNeighbors
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindTriangleGeomNeighbors
+   */
+  static QString ClassName();
 
   ~FindTriangleGeomNeighbors() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureAttributeMatrixPath)
+  /**
+   * @brief Setter property for FeatureAttributeMatrixPath
+   */
+  void setFeatureAttributeMatrixPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureAttributeMatrixPath
+   * @return Value of FeatureAttributeMatrixPath
+   */
+  DataArrayPath getFeatureAttributeMatrixPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureAttributeMatrixPath READ getFeatureAttributeMatrixPath WRITE setFeatureAttributeMatrixPath)
 
-  SIMPL_FILTER_PARAMETER(QString, NeighborListArrayName)
+  /**
+   * @brief Setter property for NeighborListArrayName
+   */
+  void setNeighborListArrayName(const QString& value);
+  /**
+   * @brief Getter property for NeighborListArrayName
+   * @return Value of NeighborListArrayName
+   */
+  QString getNeighborListArrayName() const;
+
   Q_PROPERTY(QString NeighborListArrayName READ getNeighborListArrayName WRITE setNeighborListArrayName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FaceLabelsArrayPath)
+  /**
+   * @brief Setter property for FaceLabelsArrayPath
+   */
+  void setFaceLabelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FaceLabelsArrayPath
+   * @return Value of FaceLabelsArrayPath
+   */
+  DataArrayPath getFaceLabelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FaceLabelsArrayPath READ getFaceLabelsArrayPath WRITE setFaceLabelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, NumNeighborsArrayName)
+  /**
+   * @brief Setter property for NumNeighborsArrayName
+   */
+  void setNumNeighborsArrayName(const QString& value);
+  /**
+   * @brief Getter property for NumNeighborsArrayName
+   * @return Value of NumNeighborsArrayName
+   */
+  QString getNumNeighborsArrayName() const;
+
   Q_PROPERTY(QString NumNeighborsArrayName READ getNumNeighborsArrayName WRITE setNumNeighborsArrayName)
 
   /**
@@ -178,8 +228,15 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FaceLabels)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, NumNeighbors)
+  std::weak_ptr<DataArray<int32_t>> m_FaceLabelsPtr;
+  int32_t* m_FaceLabels = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_NumNeighborsPtr;
+  int32_t* m_NumNeighbors = nullptr;
+
+  DataArrayPath m_FeatureAttributeMatrixPath = {};
+  QString m_NeighborListArrayName = {};
+  DataArrayPath m_FaceLabelsArrayPath = {};
+  QString m_NumNeighborsArrayName = {};
 
   NeighborList<int32_t>::WeakPointer m_NeighborList;
 

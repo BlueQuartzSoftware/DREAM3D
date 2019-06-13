@@ -40,7 +40,6 @@
 #include "ui_StatsGenPlotWidget.h"
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/StatsData.h"
 
@@ -93,14 +92,75 @@ public:
   //    void setBins(QVector<float> &binValues);
   bool userUpdatedData();
 
-  SIMPL_INSTANCE_PROPERTY(float, Mu)
-  SIMPL_INSTANCE_PROPERTY(float, Sigma)
-  SIMPL_INSTANCE_PROPERTY(float, MinCutOff)
-  SIMPL_INSTANCE_PROPERTY(float, MaxCutOff)
-  SIMPL_INSTANCE_PROPERTY(float, BinStep)
+  /**
+   * @brief Setter property for Mu
+   */
+  void setMu(const float& value);
+  /**
+   * @brief Getter property for Mu
+   * @return Value of Mu
+   */
+  float getMu() const;
 
-  SIMPL_INSTANCE_PROPERTY(int, PhaseIndex)
-  SIMPL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
+  /**
+   * @brief Setter property for Sigma
+   */
+  void setSigma(const float& value);
+  /**
+   * @brief Getter property for Sigma
+   * @return Value of Sigma
+   */
+  float getSigma() const;
+
+  /**
+   * @brief Setter property for MinCutOff
+   */
+  void setMinCutOff(const float& value);
+  /**
+   * @brief Getter property for MinCutOff
+   * @return Value of MinCutOff
+   */
+  float getMinCutOff() const;
+
+  /**
+   * @brief Setter property for MaxCutOff
+   */
+  void setMaxCutOff(const float& value);
+  /**
+   * @brief Getter property for MaxCutOff
+   * @return Value of MaxCutOff
+   */
+  float getMaxCutOff() const;
+
+  /**
+   * @brief Setter property for BinStep
+   */
+  void setBinStep(const float& value);
+  /**
+   * @brief Getter property for BinStep
+   * @return Value of BinStep
+   */
+  float getBinStep() const;
+
+  /**
+   * @brief Setter property for PhaseIndex
+   */
+  void setPhaseIndex(const int& value);
+  /**
+   * @brief Getter property for PhaseIndex
+   * @return Value of PhaseIndex
+   */
+  int getPhaseIndex() const;
+
+  /**
+   * @brief Setter property for CrystalStructure
+   */
+  void setCrystalStructure(const unsigned int& value);
+  /**
+   * @brief Getter property for CrystalStructure
+   * @return Value of CrystalStructure
+   */
+  unsigned int getCrystalStructure() const;
 
   void setSizeDistributionValues(float mu, float sigma, float minCutOff, float maxCutOff, float binStepSize);
 
@@ -119,6 +179,14 @@ protected:
   void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
 
 private:
+  float m_Mu = {};
+  float m_Sigma = {};
+  float m_MinCutOff = {};
+  float m_MaxCutOff = {};
+  float m_BinStep = {};
+  int m_PhaseIndex = {};
+  unsigned int m_CrystalStructure = {};
+
   unsigned int m_DistributionType;
   SGAbstractTableModel* m_TableModel = nullptr;
   unsigned int m_StatsType;

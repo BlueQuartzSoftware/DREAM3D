@@ -4,7 +4,7 @@
 
 #include "GeneratePrimaryStatsData.h"
 
-#include "EbsdLib/EbsdConstants.h"
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
@@ -24,6 +24,10 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/Utilities/ColorUtilities.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+
+#include "EbsdLib/EbsdConstants.h"
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 
@@ -684,4 +688,249 @@ const QString GeneratePrimaryStatsData::getSubGroupName() const
 const QString GeneratePrimaryStatsData::getHumanLabel() const
 {
   return "Generate Primary StatsData";
+}
+
+// -----------------------------------------------------------------------------
+GeneratePrimaryStatsData::Pointer GeneratePrimaryStatsData::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<GeneratePrimaryStatsData> GeneratePrimaryStatsData::New()
+{
+  struct make_shared_enabler : public GeneratePrimaryStatsData
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString GeneratePrimaryStatsData::getNameOfClass() const
+{
+  return QString("GeneratePrimaryStatsData");
+}
+
+// -----------------------------------------------------------------------------
+QString GeneratePrimaryStatsData::ClassName()
+{
+  return QString("GeneratePrimaryStatsData");
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrimaryStatsData::setPhaseName(const QString& value)
+{
+  m_PhaseName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GeneratePrimaryStatsData::getPhaseName() const
+{
+  return m_PhaseName;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrimaryStatsData::setPhaseIndex(const int& value)
+{
+  m_PhaseIndex = value;
+}
+
+// -----------------------------------------------------------------------------
+int GeneratePrimaryStatsData::getPhaseIndex() const
+{
+  return m_PhaseIndex;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrimaryStatsData::setCrystalSymmetry(const int& value)
+{
+  m_CrystalSymmetry = value;
+}
+
+// -----------------------------------------------------------------------------
+int GeneratePrimaryStatsData::getCrystalSymmetry() const
+{
+  return m_CrystalSymmetry;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrimaryStatsData::setMicroPresetModel(const int& value)
+{
+  m_MicroPresetModel = value;
+}
+
+// -----------------------------------------------------------------------------
+int GeneratePrimaryStatsData::getMicroPresetModel() const
+{
+  return m_MicroPresetModel;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrimaryStatsData::setPhaseFraction(const double& value)
+{
+  m_PhaseFraction = value;
+}
+
+// -----------------------------------------------------------------------------
+double GeneratePrimaryStatsData::getPhaseFraction() const
+{
+  return m_PhaseFraction;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrimaryStatsData::setMu(const double& value)
+{
+  m_Mu = value;
+}
+
+// -----------------------------------------------------------------------------
+double GeneratePrimaryStatsData::getMu() const
+{
+  return m_Mu;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrimaryStatsData::setSigma(const double& value)
+{
+  m_Sigma = value;
+}
+
+// -----------------------------------------------------------------------------
+double GeneratePrimaryStatsData::getSigma() const
+{
+  return m_Sigma;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrimaryStatsData::setMinCutOff(const double& value)
+{
+  m_MinCutOff = value;
+}
+
+// -----------------------------------------------------------------------------
+double GeneratePrimaryStatsData::getMinCutOff() const
+{
+  return m_MinCutOff;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrimaryStatsData::setMaxCutOff(const double& value)
+{
+  m_MaxCutOff = value;
+}
+
+// -----------------------------------------------------------------------------
+double GeneratePrimaryStatsData::getMaxCutOff() const
+{
+  return m_MaxCutOff;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrimaryStatsData::setBinStepSize(const double& value)
+{
+  m_BinStepSize = value;
+}
+
+// -----------------------------------------------------------------------------
+double GeneratePrimaryStatsData::getBinStepSize() const
+{
+  return m_BinStepSize;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrimaryStatsData::setCreateEnsembleAttributeMatrix(const bool& value)
+{
+  m_CreateEnsembleAttributeMatrix = value;
+}
+
+// -----------------------------------------------------------------------------
+bool GeneratePrimaryStatsData::getCreateEnsembleAttributeMatrix() const
+{
+  return m_CreateEnsembleAttributeMatrix;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrimaryStatsData::setDataContainerName(const DataArrayPath& value)
+{
+  m_DataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GeneratePrimaryStatsData::getDataContainerName() const
+{
+  return m_DataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrimaryStatsData::setCellEnsembleAttributeMatrixName(const QString& value)
+{
+  m_CellEnsembleAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GeneratePrimaryStatsData::getCellEnsembleAttributeMatrixName() const
+{
+  return m_CellEnsembleAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrimaryStatsData::setAppendToExistingAttributeMatrix(const bool& value)
+{
+  m_AppendToExistingAttributeMatrix = value;
+}
+
+// -----------------------------------------------------------------------------
+bool GeneratePrimaryStatsData::getAppendToExistingAttributeMatrix() const
+{
+  return m_AppendToExistingAttributeMatrix;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrimaryStatsData::setSelectedEnsembleAttributeMatrix(const DataArrayPath& value)
+{
+  m_SelectedEnsembleAttributeMatrix = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GeneratePrimaryStatsData::getSelectedEnsembleAttributeMatrix() const
+{
+  return m_SelectedEnsembleAttributeMatrix;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrimaryStatsData::setOdfData(const DynamicTableData& value)
+{
+  m_OdfData = value;
+}
+
+// -----------------------------------------------------------------------------
+DynamicTableData GeneratePrimaryStatsData::getOdfData() const
+{
+  return m_OdfData;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrimaryStatsData::setMdfData(const DynamicTableData& value)
+{
+  m_MdfData = value;
+}
+
+// -----------------------------------------------------------------------------
+DynamicTableData GeneratePrimaryStatsData::getMdfData() const
+{
+  return m_MdfData;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrimaryStatsData::setAxisOdfData(const DynamicTableData& value)
+{
+  m_AxisOdfData = value;
+}
+
+// -----------------------------------------------------------------------------
+DynamicTableData GeneratePrimaryStatsData::getAxisOdfData() const
+{
+  return m_AxisOdfData;
 }

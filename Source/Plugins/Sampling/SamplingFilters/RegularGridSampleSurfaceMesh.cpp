@@ -35,7 +35,10 @@
 
 #include "RegularGridSampleSurfaceMesh.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -47,6 +50,8 @@
 #include "SIMPLib/Geometry/VertexGeom.h"
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
@@ -308,4 +313,129 @@ const QString RegularGridSampleSurfaceMesh::getSubGroupName() const
 const QString RegularGridSampleSurfaceMesh::getHumanLabel() const
 {
   return "Sample Triangle Geometry on Regular Grid";
+}
+
+// -----------------------------------------------------------------------------
+RegularGridSampleSurfaceMesh::Pointer RegularGridSampleSurfaceMesh::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<RegularGridSampleSurfaceMesh> RegularGridSampleSurfaceMesh::New()
+{
+  struct make_shared_enabler : public RegularGridSampleSurfaceMesh
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString RegularGridSampleSurfaceMesh::getNameOfClass() const
+{
+  return QString("RegularGridSampleSurfaceMesh");
+}
+
+// -----------------------------------------------------------------------------
+QString RegularGridSampleSurfaceMesh::ClassName()
+{
+  return QString("RegularGridSampleSurfaceMesh");
+}
+
+// -----------------------------------------------------------------------------
+void RegularGridSampleSurfaceMesh::setDataContainerName(const DataArrayPath& value)
+{
+  m_DataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath RegularGridSampleSurfaceMesh::getDataContainerName() const
+{
+  return m_DataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void RegularGridSampleSurfaceMesh::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString RegularGridSampleSurfaceMesh::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void RegularGridSampleSurfaceMesh::setXPoints(const int& value)
+{
+  m_XPoints = value;
+}
+
+// -----------------------------------------------------------------------------
+int RegularGridSampleSurfaceMesh::getXPoints() const
+{
+  return m_XPoints;
+}
+
+// -----------------------------------------------------------------------------
+void RegularGridSampleSurfaceMesh::setYPoints(const int& value)
+{
+  m_YPoints = value;
+}
+
+// -----------------------------------------------------------------------------
+int RegularGridSampleSurfaceMesh::getYPoints() const
+{
+  return m_YPoints;
+}
+
+// -----------------------------------------------------------------------------
+void RegularGridSampleSurfaceMesh::setZPoints(const int& value)
+{
+  m_ZPoints = value;
+}
+
+// -----------------------------------------------------------------------------
+int RegularGridSampleSurfaceMesh::getZPoints() const
+{
+  return m_ZPoints;
+}
+
+// -----------------------------------------------------------------------------
+void RegularGridSampleSurfaceMesh::setSpacing(const FloatVec3Type& value)
+{
+  m_Spacing = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type RegularGridSampleSurfaceMesh::getSpacing() const
+{
+  return m_Spacing;
+}
+
+// -----------------------------------------------------------------------------
+void RegularGridSampleSurfaceMesh::setOrigin(const FloatVec3Type& value)
+{
+  m_Origin = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type RegularGridSampleSurfaceMesh::getOrigin() const
+{
+  return m_Origin;
+}
+
+// -----------------------------------------------------------------------------
+void RegularGridSampleSurfaceMesh::setFeatureIdsArrayName(const QString& value)
+{
+  m_FeatureIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString RegularGridSampleSurfaceMesh::getFeatureIdsArrayName() const
+{
+  return m_FeatureIdsArrayName;
 }

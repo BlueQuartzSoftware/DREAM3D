@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -61,19 +61,60 @@ class Statistics_EXPORT FindLargestCrossSections : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindLargestCrossSections)
-  SIMPL_FILTER_NEW_MACRO(FindLargestCrossSections)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindLargestCrossSections, AbstractFilter)
+  using Self = FindLargestCrossSections;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindLargestCrossSections> New();
+
+  /**
+   * @brief Returns the name of the class for FindLargestCrossSections
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindLargestCrossSections
+   */
+  static QString ClassName();
 
   ~FindLargestCrossSections() override;
 
-  SIMPL_FILTER_PARAMETER(unsigned int, Plane)
+  /**
+   * @brief Setter property for Plane
+   */
+  void setPlane(const unsigned int& value);
+  /**
+   * @brief Getter property for Plane
+   * @return Value of Plane
+   */
+  unsigned int getPlane() const;
+
   Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, LargestCrossSectionsArrayPath)
+  /**
+   * @brief Setter property for LargestCrossSectionsArrayPath
+   */
+  void setLargestCrossSectionsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for LargestCrossSectionsArrayPath
+   * @return Value of LargestCrossSectionsArrayPath
+   */
+  DataArrayPath getLargestCrossSectionsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath LargestCrossSectionsArrayPath READ getLargestCrossSectionsArrayPath WRITE setLargestCrossSectionsArrayPath)
 
   /**
@@ -182,9 +223,14 @@ protected:
   void find_crosssections();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<float>> m_LargestCrossSectionsPtr;
+  float* m_LargestCrossSections = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(float, LargestCrossSections)
+  unsigned int m_Plane = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_LargestCrossSectionsArrayPath = {};
 
 public:
   FindLargestCrossSections(const FindLargestCrossSections&) = delete; // Copy Constructor Not Implemented

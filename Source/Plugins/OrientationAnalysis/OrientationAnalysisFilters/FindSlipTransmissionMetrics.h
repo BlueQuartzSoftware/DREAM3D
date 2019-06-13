@@ -36,9 +36,11 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -72,34 +74,120 @@ class OrientationAnalysis_EXPORT FindSlipTransmissionMetrics : public AbstractFi
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindSlipTransmissionMetrics)
-  SIMPL_FILTER_NEW_MACRO(FindSlipTransmissionMetrics)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindSlipTransmissionMetrics, AbstractFilter)
+  using Self = FindSlipTransmissionMetrics;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindSlipTransmissionMetrics> New();
+
+  /**
+   * @brief Returns the name of the class for FindSlipTransmissionMetrics
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindSlipTransmissionMetrics
+   */
+  static QString ClassName();
 
   ~FindSlipTransmissionMetrics() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
+  /**
+   * @brief Setter property for NeighborListArrayPath
+   */
+  void setNeighborListArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NeighborListArrayPath
+   * @return Value of NeighborListArrayPath
+   */
+  DataArrayPath getNeighborListArrayPath() const;
+
   Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, F1ListArrayName)
+  /**
+   * @brief Setter property for F1ListArrayName
+   */
+  void setF1ListArrayName(const QString& value);
+  /**
+   * @brief Getter property for F1ListArrayName
+   * @return Value of F1ListArrayName
+   */
+  QString getF1ListArrayName() const;
+
   Q_PROPERTY(QString F1ListArrayName READ getF1ListArrayName WRITE setF1ListArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, F1sptListArrayName)
+  /**
+   * @brief Setter property for F1sptListArrayName
+   */
+  void setF1sptListArrayName(const QString& value);
+  /**
+   * @brief Getter property for F1sptListArrayName
+   * @return Value of F1sptListArrayName
+   */
+  QString getF1sptListArrayName() const;
+
   Q_PROPERTY(QString F1sptListArrayName READ getF1sptListArrayName WRITE setF1sptListArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, F7ListArrayName)
+  /**
+   * @brief Setter property for F7ListArrayName
+   */
+  void setF7ListArrayName(const QString& value);
+  /**
+   * @brief Getter property for F7ListArrayName
+   * @return Value of F7ListArrayName
+   */
+  QString getF7ListArrayName() const;
+
   Q_PROPERTY(QString F7ListArrayName READ getF7ListArrayName WRITE setF7ListArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, mPrimeListArrayName)
+  /**
+   * @brief Setter property for mPrimeListArrayName
+   */
+  void setmPrimeListArrayName(const QString& value);
+  /**
+   * @brief Getter property for mPrimeListArrayName
+   * @return Value of mPrimeListArrayName
+   */
+  QString getmPrimeListArrayName() const;
+
   Q_PROPERTY(QString mPrimeListArrayName READ getmPrimeListArrayName WRITE setmPrimeListArrayName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  /**
+   * @brief Setter property for AvgQuatsArrayPath
+   */
+  void setAvgQuatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for AvgQuatsArrayPath
+   * @return Value of AvgQuatsArrayPath
+   */
+  DataArrayPath getAvgQuatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  /**
+   * @brief Setter property for FeaturePhasesArrayPath
+   */
+  void setFeaturePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayPath
+   * @return Value of FeaturePhasesArrayPath
+   */
+  DataArrayPath getFeaturePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -203,10 +291,23 @@ protected:
   void initialize();
 
 private:
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_AvgQuatsPtr;
+  float* m_AvgQuats = nullptr;
+  std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
+  uint32_t* m_CrystalStructures = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-  DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
-  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+  DataArrayPath m_NeighborListArrayPath = {};
+  QString m_F1ListArrayName = {};
+  QString m_F1sptListArrayName = {};
+  QString m_F7ListArrayName = {};
+  QString m_mPrimeListArrayName = {};
+  DataArrayPath m_AvgQuatsArrayPath = {};
+  DataArrayPath m_FeaturePhasesArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+
+  QVector<LaueOps::Pointer> m_OrientationOps;
 
   NeighborList<float>::WeakPointer m_F1List;
   NeighborList<float>::WeakPointer m_F1sptList;

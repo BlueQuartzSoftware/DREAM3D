@@ -43,12 +43,17 @@
 
 #include "FindDistsToCharactGBs.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
@@ -594,4 +599,141 @@ const QString FindDistsToCharactGBs::getSubGroupName() const
 const QString FindDistsToCharactGBs::getHumanLabel() const
 {
   return "Find Distances to Characteristic Grain Boundaries";
+}
+
+// -----------------------------------------------------------------------------
+FindDistsToCharactGBs::Pointer FindDistsToCharactGBs::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindDistsToCharactGBs> FindDistsToCharactGBs::New()
+{
+  struct make_shared_enabler : public FindDistsToCharactGBs
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindDistsToCharactGBs::getNameOfClass() const
+{
+  return QString("FindDistsToCharactGBs");
+}
+
+// -----------------------------------------------------------------------------
+QString FindDistsToCharactGBs::ClassName()
+{
+  return QString("FindDistsToCharactGBs");
+}
+
+// -----------------------------------------------------------------------------
+void FindDistsToCharactGBs::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindDistsToCharactGBs::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindDistsToCharactGBs::setFeatureEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_FeatureEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindDistsToCharactGBs::getFeatureEulerAnglesArrayPath() const
+{
+  return m_FeatureEulerAnglesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindDistsToCharactGBs::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindDistsToCharactGBs::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindDistsToCharactGBs::setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindDistsToCharactGBs::getSurfaceMeshFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFaceLabelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindDistsToCharactGBs::setSurfaceMeshFaceNormalsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceNormalsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindDistsToCharactGBs::getSurfaceMeshFaceNormalsArrayPath() const
+{
+  return m_SurfaceMeshFaceNormalsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindDistsToCharactGBs::setDistToTiltArrayPath(const DataArrayPath& value)
+{
+  m_DistToTiltArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindDistsToCharactGBs::getDistToTiltArrayPath() const
+{
+  return m_DistToTiltArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindDistsToCharactGBs::setDistToTwistArrayPath(const DataArrayPath& value)
+{
+  m_DistToTwistArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindDistsToCharactGBs::getDistToTwistArrayPath() const
+{
+  return m_DistToTwistArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindDistsToCharactGBs::setDistToSymmetricArrayPath(const DataArrayPath& value)
+{
+  m_DistToSymmetricArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindDistsToCharactGBs::getDistToSymmetricArrayPath() const
+{
+  return m_DistToSymmetricArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindDistsToCharactGBs::setDistTo180TiltArrayPath(const DataArrayPath& value)
+{
+  m_DistTo180TiltArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindDistsToCharactGBs::getDistTo180TiltArrayPath() const
+{
+  return m_DistTo180TiltArrayPath;
 }

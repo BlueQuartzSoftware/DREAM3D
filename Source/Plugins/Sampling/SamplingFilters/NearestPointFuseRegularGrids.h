@@ -36,7 +36,6 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "Sampling/SamplingDLLExport.h"
@@ -59,16 +58,48 @@ class Sampling_EXPORT NearestPointFuseRegularGrids : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(NearestPointFuseRegularGrids)
-  SIMPL_FILTER_NEW_MACRO(NearestPointFuseRegularGrids)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(NearestPointFuseRegularGrids, AbstractFilter)
+  using Self = NearestPointFuseRegularGrids;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<NearestPointFuseRegularGrids> New();
+
+  /**
+   * @brief Returns the name of the class for NearestPointFuseRegularGrids
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for NearestPointFuseRegularGrids
+   */
+  static QString ClassName();
 
   ~NearestPointFuseRegularGrids() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, ReferenceCellAttributeMatrixPath)
+  /**
+   * @brief Setter property for ReferenceCellAttributeMatrixPath
+   */
+  void setReferenceCellAttributeMatrixPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for ReferenceCellAttributeMatrixPath
+   * @return Value of ReferenceCellAttributeMatrixPath
+   */
+  DataArrayPath getReferenceCellAttributeMatrixPath() const;
+
   Q_PROPERTY(DataArrayPath ReferenceCellAttributeMatrixPath READ getReferenceCellAttributeMatrixPath WRITE setReferenceCellAttributeMatrixPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SamplingCellAttributeMatrixPath)
+  /**
+   * @brief Setter property for SamplingCellAttributeMatrixPath
+   */
+  void setSamplingCellAttributeMatrixPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SamplingCellAttributeMatrixPath
+   * @return Value of SamplingCellAttributeMatrixPath
+   */
+  DataArrayPath getSamplingCellAttributeMatrixPath() const;
+
   Q_PROPERTY(DataArrayPath SamplingCellAttributeMatrixPath READ getSamplingCellAttributeMatrixPath WRITE setSamplingCellAttributeMatrixPath)
 
   /**
@@ -176,5 +207,9 @@ public:
   NearestPointFuseRegularGrids(NearestPointFuseRegularGrids&&) = delete;      // Move Constructor Not Implemented
   NearestPointFuseRegularGrids& operator=(const NearestPointFuseRegularGrids&) = delete; // Copy Assignment Not Implemented
   NearestPointFuseRegularGrids& operator=(NearestPointFuseRegularGrids&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  DataArrayPath m_ReferenceCellAttributeMatrixPath = {};
+  DataArrayPath m_SamplingCellAttributeMatrixPath = {};
 };
 

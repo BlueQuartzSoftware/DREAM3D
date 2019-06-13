@@ -35,7 +35,10 @@
 
 #include "FindBoundaryStrengths.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -44,6 +47,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -410,4 +414,141 @@ const QString FindBoundaryStrengths::getSubGroupName() const
 const QString FindBoundaryStrengths::getHumanLabel() const
 {
   return "Find Feature Boundary Strength Metrics";
+}
+
+// -----------------------------------------------------------------------------
+FindBoundaryStrengths::Pointer FindBoundaryStrengths::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindBoundaryStrengths> FindBoundaryStrengths::New()
+{
+  struct make_shared_enabler : public FindBoundaryStrengths
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindBoundaryStrengths::getNameOfClass() const
+{
+  return QString("FindBoundaryStrengths");
+}
+
+// -----------------------------------------------------------------------------
+QString FindBoundaryStrengths::ClassName()
+{
+  return QString("FindBoundaryStrengths");
+}
+
+// -----------------------------------------------------------------------------
+void FindBoundaryStrengths::setLoading(const FloatVec3Type& value)
+{
+  m_Loading = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type FindBoundaryStrengths::getLoading() const
+{
+  return m_Loading;
+}
+
+// -----------------------------------------------------------------------------
+void FindBoundaryStrengths::setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindBoundaryStrengths::getSurfaceMeshFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFaceLabelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindBoundaryStrengths::setAvgQuatsArrayPath(const DataArrayPath& value)
+{
+  m_AvgQuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindBoundaryStrengths::getAvgQuatsArrayPath() const
+{
+  return m_AvgQuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindBoundaryStrengths::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindBoundaryStrengths::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindBoundaryStrengths::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindBoundaryStrengths::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindBoundaryStrengths::setSurfaceMeshF1sArrayName(const QString& value)
+{
+  m_SurfaceMeshF1sArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindBoundaryStrengths::getSurfaceMeshF1sArrayName() const
+{
+  return m_SurfaceMeshF1sArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindBoundaryStrengths::setSurfaceMeshF1sptsArrayName(const QString& value)
+{
+  m_SurfaceMeshF1sptsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindBoundaryStrengths::getSurfaceMeshF1sptsArrayName() const
+{
+  return m_SurfaceMeshF1sptsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindBoundaryStrengths::setSurfaceMeshF7sArrayName(const QString& value)
+{
+  m_SurfaceMeshF7sArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindBoundaryStrengths::getSurfaceMeshF7sArrayName() const
+{
+  return m_SurfaceMeshF7sArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindBoundaryStrengths::setSurfaceMeshmPrimesArrayName(const QString& value)
+{
+  m_SurfaceMeshmPrimesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindBoundaryStrengths::getSurfaceMeshmPrimesArrayName() const
+{
+  return m_SurfaceMeshmPrimesArrayName;
 }

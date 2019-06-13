@@ -11,10 +11,14 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -267,4 +271,69 @@ const QString GenerateQuaternionConjugate::getHumanLabel() const
 const QUuid GenerateQuaternionConjugate::getUuid()
 {
   return QUuid("{630d7486-75ea-5e04-874c-894460cd7c4d}");
+}
+
+// -----------------------------------------------------------------------------
+GenerateQuaternionConjugate::Pointer GenerateQuaternionConjugate::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<GenerateQuaternionConjugate> GenerateQuaternionConjugate::New()
+{
+  struct make_shared_enabler : public GenerateQuaternionConjugate
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString GenerateQuaternionConjugate::getNameOfClass() const
+{
+  return QString("_SUPERGenerateQuaternionConjugate");
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateQuaternionConjugate::ClassName()
+{
+  return QString("_SUPERGenerateQuaternionConjugate");
+}
+
+// -----------------------------------------------------------------------------
+void GenerateQuaternionConjugate::setQuaternionDataArrayPath(const DataArrayPath& value)
+{
+  m_QuaternionDataArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateQuaternionConjugate::getQuaternionDataArrayPath() const
+{
+  return m_QuaternionDataArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateQuaternionConjugate::setOutputDataArrayPath(const DataArrayPath& value)
+{
+  m_OutputDataArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateQuaternionConjugate::getOutputDataArrayPath() const
+{
+  return m_OutputDataArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateQuaternionConjugate::setDeleteOriginalData(const bool& value)
+{
+  m_DeleteOriginalData = value;
+}
+
+// -----------------------------------------------------------------------------
+bool GenerateQuaternionConjugate::getDeleteOriginalData() const
+{
+  return m_DeleteOriginalData;
 }

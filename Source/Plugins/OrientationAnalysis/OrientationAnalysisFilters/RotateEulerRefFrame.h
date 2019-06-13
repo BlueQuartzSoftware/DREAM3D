@@ -36,9 +36,9 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -62,19 +62,60 @@ class OrientationAnalysis_EXPORT RotateEulerRefFrame : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(RotateEulerRefFrame)
-  SIMPL_FILTER_NEW_MACRO(RotateEulerRefFrame)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(RotateEulerRefFrame, AbstractFilter)
+  using Self = RotateEulerRefFrame;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<RotateEulerRefFrame> New();
+
+  /**
+   * @brief Returns the name of the class for RotateEulerRefFrame
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for RotateEulerRefFrame
+   */
+  static QString ClassName();
 
   ~RotateEulerRefFrame() override;
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, RotationAxis)
+  /**
+   * @brief Setter property for RotationAxis
+   */
+  void setRotationAxis(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for RotationAxis
+   * @return Value of RotationAxis
+   */
+  FloatVec3Type getRotationAxis() const;
+
   Q_PROPERTY(FloatVec3Type RotationAxis READ getRotationAxis WRITE setRotationAxis)
 
-  SIMPL_FILTER_PARAMETER(float, RotationAngle)
+  /**
+   * @brief Setter property for RotationAngle
+   */
+  void setRotationAngle(const float& value);
+  /**
+   * @brief Getter property for RotationAngle
+   * @return Value of RotationAngle
+   */
+  float getRotationAngle() const;
+
   Q_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+  /**
+   * @brief Setter property for CellEulerAnglesArrayPath
+   */
+  void setCellEulerAnglesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellEulerAnglesArrayPath
+   * @return Value of CellEulerAnglesArrayPath
+   */
+  DataArrayPath getCellEulerAnglesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
   /**
@@ -178,7 +219,12 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
+  std::weak_ptr<DataArray<float>> m_CellEulerAnglesPtr;
+  float* m_CellEulerAngles = nullptr;
+
+  FloatVec3Type m_RotationAxis = {};
+  float m_RotationAngle = {};
+  DataArrayPath m_CellEulerAnglesArrayPath = {};
 
 public:
   RotateEulerRefFrame(const RotateEulerRefFrame&) = delete; // Copy Constructor Not Implemented

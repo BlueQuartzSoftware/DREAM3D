@@ -36,7 +36,6 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "Sampling/SamplingDLLExport.h"
@@ -61,19 +60,60 @@ class Sampling_EXPORT RegularizeZSpacing : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(RegularizeZSpacing)
-  SIMPL_FILTER_NEW_MACRO(RegularizeZSpacing)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(RegularizeZSpacing, AbstractFilter)
+  using Self = RegularizeZSpacing;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<RegularizeZSpacing> New();
+
+  /**
+   * @brief Returns the name of the class for RegularizeZSpacing
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for RegularizeZSpacing
+   */
+  static QString ClassName();
 
   ~RegularizeZSpacing() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
+  /**
+   * @brief Setter property for CellAttributeMatrixPath
+   */
+  void setCellAttributeMatrixPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixPath
+   * @return Value of CellAttributeMatrixPath
+   */
+  DataArrayPath getCellAttributeMatrixPath() const;
+
   Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
 
-  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  /**
+   * @brief Setter property for InputFile
+   */
+  void setInputFile(const QString& value);
+  /**
+   * @brief Getter property for InputFile
+   * @return Value of InputFile
+   */
+  QString getInputFile() const;
+
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-  SIMPL_FILTER_PARAMETER(float, NewZRes)
+  /**
+   * @brief Setter property for NewZRes
+   */
+  void setNewZRes(const float& value);
+  /**
+   * @brief Getter property for NewZRes
+   * @return Value of NewZRes
+   */
+  float getNewZRes() const;
+
   Q_PROPERTY(float NewZRes READ getNewZRes WRITE setNewZRes)
 
   /**
@@ -181,5 +221,10 @@ public:
   RegularizeZSpacing(RegularizeZSpacing&&) = delete;      // Move Constructor Not Implemented
   RegularizeZSpacing& operator=(const RegularizeZSpacing&) = delete; // Copy Assignment Not Implemented
   RegularizeZSpacing& operator=(RegularizeZSpacing&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  DataArrayPath m_CellAttributeMatrixPath = {};
+  QString m_InputFile = {};
+  float m_NewZRes = {};
 };
 

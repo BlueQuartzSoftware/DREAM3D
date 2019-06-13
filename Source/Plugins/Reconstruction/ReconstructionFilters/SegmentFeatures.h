@@ -35,7 +35,6 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
@@ -52,13 +51,35 @@ class Reconstruction_EXPORT SegmentFeatures : public AbstractFilter
 {
   Q_OBJECT
 public:
-  SIMPL_SHARED_POINTERS(SegmentFeatures)
-  SIMPL_FILTER_NEW_MACRO(SegmentFeatures)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(SegmentFeatures, AbstractFilter)
+  using Self = SegmentFeatures;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<SegmentFeatures> New();
+
+  /**
+   * @brief Returns the name of the class for SegmentFeatures
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for SegmentFeatures
+   */
+  static QString ClassName();
 
   ~SegmentFeatures() override;
 
-  SIMPL_INSTANCE_STRING_PROPERTY(DataContainerName)
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const QString& value);
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  QString getDataContainerName() const;
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -177,5 +198,8 @@ public:
   SegmentFeatures(SegmentFeatures&&) = delete;      // Move Constructor Not Implemented
   SegmentFeatures& operator=(const SegmentFeatures&) = delete; // Copy Assignment Not Implemented
   SegmentFeatures& operator=(SegmentFeatures&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  QString m_DataContainerName = {};
 };
 

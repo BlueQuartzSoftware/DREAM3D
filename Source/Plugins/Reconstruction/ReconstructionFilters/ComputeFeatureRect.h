@@ -5,8 +5,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Reconstruction/ReconstructionDLLExport.h"
 
@@ -28,16 +28,48 @@ class Reconstruction_EXPORT ComputeFeatureRect : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(ComputeFeatureRect)
-  SIMPL_FILTER_NEW_MACRO(ComputeFeatureRect)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ComputeFeatureRect, AbstractFilter)
+  using Self = ComputeFeatureRect;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<ComputeFeatureRect> New();
+
+  /**
+   * @brief Returns the name of the class for ComputeFeatureRect
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ComputeFeatureRect
+   */
+  static QString ClassName();
 
   ~ComputeFeatureRect() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureRectArrayPath)
+  /**
+   * @brief Setter property for FeatureRectArrayPath
+   */
+  void setFeatureRectArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureRectArrayPath
+   * @return Value of FeatureRectArrayPath
+   */
+  DataArrayPath getFeatureRectArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureRectArrayPath READ getFeatureRectArrayPath WRITE setFeatureRectArrayPath)
 
   /**
@@ -147,8 +179,13 @@ protected:
   size_t sub2ind(std::vector<size_t> tDims, size_t x, size_t y, size_t z) const;
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(uint32_t, FeatureRect)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<uint32_t>> m_FeatureRectPtr;
+  uint32_t* m_FeatureRect = nullptr;
+
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_FeatureRectArrayPath = {};
 
 public:
   ComputeFeatureRect(const ComputeFeatureRect&) = delete; // Copy Constructor Not Implemented

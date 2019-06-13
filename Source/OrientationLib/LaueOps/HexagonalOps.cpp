@@ -1850,3 +1850,28 @@ SIMPL::Rgb HexagonalOps::generateMisorientationColor(const QuatType& q, const Qu
   //now standard 0-255 rgb, needs inversion
   return RgbColor::dRgb(255 - RgbColor::dRed(rgb), 255 - RgbColor::dGreen(rgb), 255 - RgbColor::dBlue(rgb), 0);
 }
+
+// -----------------------------------------------------------------------------
+HexagonalOps::Pointer HexagonalOps::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+const QString HexagonalOps::getNameOfClass() const
+{
+  return QString("HexagonalOps");
+}
+
+// -----------------------------------------------------------------------------
+QString HexagonalOps::ClassName()
+{
+  return QString("HexagonalOps");
+}
+
+// -----------------------------------------------------------------------------
+HexagonalOps::Pointer HexagonalOps::New()
+{
+  Pointer sharedPtr(new(HexagonalOps));
+  return sharedPtr;
+}

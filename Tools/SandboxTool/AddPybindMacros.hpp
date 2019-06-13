@@ -61,6 +61,8 @@ public:
 
     QString _SIMPL_FILTER_PARAMETER("SIMPL_FILTER_PARAMETER");
     int32_t _SIMPL_FILTER_PARAMETER_Idx = 0;
+    QString pybindGuard("#ifdef SIMPL_ENABLE_PYTHON");
+    int32_t pybindGuardIndex = 0;
 
     bool hasSearchString = false;
 
@@ -86,6 +88,10 @@ public:
       if(compareLine.startsWith(pybindStart))
       {
         pybindStartIndex = lineIndex;
+      }
+      if(compareLine.startsWith(pybindGuard))
+      {
+        pybindGuardIndex = lineIndex;
       }
 
       if(compareLine.startsWith("PYB11_"))
@@ -127,7 +133,11 @@ public:
       outLines.push_back(line);
     }
 
+<<<<<<< HEAD
     if(pybindStartIndex > 0 && lastPybindMacroIndex > 0)
+=======
+    if(pybindGuardIndex == 0 && pybindStartIndex > 0 && lastPybindMacroIndex > 0)
+>>>>>>> Massive code modifications to clean up and reduce macro clutter
     {
 
       QString line;

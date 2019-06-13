@@ -35,7 +35,10 @@
 
 #include "MinNeighbors.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
@@ -43,6 +46,8 @@
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
@@ -556,4 +561,117 @@ const QString MinNeighbors::getSubGroupName() const
 const QString MinNeighbors::getHumanLabel() const
 {
   return "Minimum Number of Neighbors";
+}
+
+// -----------------------------------------------------------------------------
+MinNeighbors::Pointer MinNeighbors::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<MinNeighbors> MinNeighbors::New()
+{
+  struct make_shared_enabler : public MinNeighbors
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString MinNeighbors::getNameOfClass() const
+{
+  return QString("MinNeighbors");
+}
+
+// -----------------------------------------------------------------------------
+QString MinNeighbors::ClassName()
+{
+  return QString("MinNeighbors");
+}
+
+// -----------------------------------------------------------------------------
+void MinNeighbors::setMinNumNeighbors(const int& value)
+{
+  m_MinNumNeighbors = value;
+}
+
+// -----------------------------------------------------------------------------
+int MinNeighbors::getMinNumNeighbors() const
+{
+  return m_MinNumNeighbors;
+}
+
+// -----------------------------------------------------------------------------
+void MinNeighbors::setApplyToSinglePhase(const bool& value)
+{
+  m_ApplyToSinglePhase = value;
+}
+
+// -----------------------------------------------------------------------------
+bool MinNeighbors::getApplyToSinglePhase() const
+{
+  return m_ApplyToSinglePhase;
+}
+
+// -----------------------------------------------------------------------------
+void MinNeighbors::setPhaseNumber(const int& value)
+{
+  m_PhaseNumber = value;
+}
+
+// -----------------------------------------------------------------------------
+int MinNeighbors::getPhaseNumber() const
+{
+  return m_PhaseNumber;
+}
+
+// -----------------------------------------------------------------------------
+void MinNeighbors::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MinNeighbors::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MinNeighbors::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MinNeighbors::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MinNeighbors::setNumNeighborsArrayPath(const DataArrayPath& value)
+{
+  m_NumNeighborsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MinNeighbors::getNumNeighborsArrayPath() const
+{
+  return m_NumNeighborsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MinNeighbors::setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value)
+{
+  m_IgnoredDataArrayPaths = value;
+}
+
+// -----------------------------------------------------------------------------
+QVector<DataArrayPath> MinNeighbors::getIgnoredDataArrayPaths() const
+{
+  return m_IgnoredDataArrayPaths;
 }

@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Generic/GenericDLLExport.h"
 
@@ -65,25 +65,84 @@ class Generic_EXPORT FindBoundingBoxFeatures : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindBoundingBoxFeatures)
-  SIMPL_FILTER_NEW_MACRO(FindBoundingBoxFeatures)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindBoundingBoxFeatures, AbstractFilter)
+  using Self = FindBoundingBoxFeatures;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindBoundingBoxFeatures> New();
+
+  /**
+   * @brief Returns the name of the class for FindBoundingBoxFeatures
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindBoundingBoxFeatures
+   */
+  static QString ClassName();
 
   ~FindBoundingBoxFeatures() override;
 
-  SIMPL_FILTER_PARAMETER(bool, CalcByPhase)
+  /**
+   * @brief Setter property for CalcByPhase
+   */
+  void setCalcByPhase(const bool& value);
+  /**
+   * @brief Getter property for CalcByPhase
+   * @return Value of CalcByPhase
+   */
+  bool getCalcByPhase() const;
+
   Q_PROPERTY(bool CalcByPhase READ getCalcByPhase WRITE setCalcByPhase)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
+  /**
+   * @brief Setter property for CentroidsArrayPath
+   */
+  void setCentroidsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CentroidsArrayPath
+   * @return Value of CentroidsArrayPath
+   */
+  DataArrayPath getCentroidsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, PhasesArrayPath)
+  /**
+   * @brief Setter property for PhasesArrayPath
+   */
+  void setPhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for PhasesArrayPath
+   * @return Value of PhasesArrayPath
+   */
+  DataArrayPath getPhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath PhasesArrayPath READ getPhasesArrayPath WRITE setPhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceFeaturesArrayPath)
+  /**
+   * @brief Setter property for SurfaceFeaturesArrayPath
+   */
+  void setSurfaceFeaturesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceFeaturesArrayPath
+   * @return Value of SurfaceFeaturesArrayPath
+   */
+  DataArrayPath getSurfaceFeaturesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceFeaturesArrayPath READ getSurfaceFeaturesArrayPath WRITE setSurfaceFeaturesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, BiasedFeaturesArrayName)
+  /**
+   * @brief Setter property for BiasedFeaturesArrayName
+   */
+  void setBiasedFeaturesArrayName(const QString& value);
+  /**
+   * @brief Getter property for BiasedFeaturesArrayName
+   * @return Value of BiasedFeaturesArrayName
+   */
+  QString getBiasedFeaturesArrayName() const;
+
   Q_PROPERTY(QString BiasedFeaturesArrayName READ getBiasedFeaturesArrayName WRITE setBiasedFeaturesArrayName)
 
   /**
@@ -187,10 +246,20 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, Phases)
-  DEFINE_DATAARRAY_VARIABLE(float, Centroids)
-  DEFINE_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
-  DEFINE_DATAARRAY_VARIABLE(bool, BiasedFeatures)
+  std::weak_ptr<DataArray<int32_t>> m_PhasesPtr;
+  int32_t* m_Phases = nullptr;
+  std::weak_ptr<DataArray<float>> m_CentroidsPtr;
+  float* m_Centroids = nullptr;
+  std::weak_ptr<DataArray<bool>> m_SurfaceFeaturesPtr;
+  bool* m_SurfaceFeatures = nullptr;
+  std::weak_ptr<DataArray<bool>> m_BiasedFeaturesPtr;
+  bool* m_BiasedFeatures = nullptr;
+
+  bool m_CalcByPhase = {};
+  DataArrayPath m_CentroidsArrayPath = {};
+  DataArrayPath m_PhasesArrayPath = {};
+  DataArrayPath m_SurfaceFeaturesArrayPath = {};
+  QString m_BiasedFeaturesArrayName = {};
 
   /**
    * @brief find_boundingboxfeatures Determines which Features are biased by the outer surface of a 3D volume.

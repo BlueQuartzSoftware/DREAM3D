@@ -36,9 +36,9 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
@@ -83,49 +83,180 @@ class OrientationAnalysis_EXPORT FindSchmids : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindSchmids)
-  SIMPL_FILTER_NEW_MACRO(FindSchmids)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindSchmids, AbstractFilter)
+  using Self = FindSchmids;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindSchmids> New();
+
+  /**
+   * @brief Returns the name of the class for FindSchmids
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindSchmids
+   */
+  static QString ClassName();
 
   ~FindSchmids() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  /**
+   * @brief Setter property for FeaturePhasesArrayPath
+   */
+  void setFeaturePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayPath
+   * @return Value of FeaturePhasesArrayPath
+   */
+  DataArrayPath getFeaturePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  /**
+   * @brief Setter property for AvgQuatsArrayPath
+   */
+  void setAvgQuatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for AvgQuatsArrayPath
+   * @return Value of AvgQuatsArrayPath
+   */
+  DataArrayPath getAvgQuatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, SchmidsArrayName)
+  /**
+   * @brief Setter property for SchmidsArrayName
+   */
+  void setSchmidsArrayName(const QString& value);
+  /**
+   * @brief Getter property for SchmidsArrayName
+   * @return Value of SchmidsArrayName
+   */
+  QString getSchmidsArrayName() const;
+
   Q_PROPERTY(QString SchmidsArrayName READ getSchmidsArrayName WRITE setSchmidsArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, SlipSystemsArrayName)
+  /**
+   * @brief Setter property for SlipSystemsArrayName
+   */
+  void setSlipSystemsArrayName(const QString& value);
+  /**
+   * @brief Getter property for SlipSystemsArrayName
+   * @return Value of SlipSystemsArrayName
+   */
+  QString getSlipSystemsArrayName() const;
+
   Q_PROPERTY(QString SlipSystemsArrayName READ getSlipSystemsArrayName WRITE setSlipSystemsArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, PolesArrayName)
+  /**
+   * @brief Setter property for PolesArrayName
+   */
+  void setPolesArrayName(const QString& value);
+  /**
+   * @brief Getter property for PolesArrayName
+   * @return Value of PolesArrayName
+   */
+  QString getPolesArrayName() const;
+
   Q_PROPERTY(QString PolesArrayName READ getPolesArrayName WRITE setPolesArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, PhisArrayName)
+  /**
+   * @brief Setter property for PhisArrayName
+   */
+  void setPhisArrayName(const QString& value);
+  /**
+   * @brief Getter property for PhisArrayName
+   * @return Value of PhisArrayName
+   */
+  QString getPhisArrayName() const;
+
   Q_PROPERTY(QString PhisArrayName READ getPhisArrayName WRITE setPhisArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, LambdasArrayName)
+  /**
+   * @brief Setter property for LambdasArrayName
+   */
+  void setLambdasArrayName(const QString& value);
+  /**
+   * @brief Getter property for LambdasArrayName
+   * @return Value of LambdasArrayName
+   */
+  QString getLambdasArrayName() const;
+
   Q_PROPERTY(QString LambdasArrayName READ getLambdasArrayName WRITE setLambdasArrayName)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, LoadingDirection)
+  /**
+   * @brief Setter property for LoadingDirection
+   */
+  void setLoadingDirection(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for LoadingDirection
+   * @return Value of LoadingDirection
+   */
+  FloatVec3Type getLoadingDirection() const;
+
   Q_PROPERTY(FloatVec3Type LoadingDirection READ getLoadingDirection WRITE setLoadingDirection)
 
-  SIMPL_FILTER_PARAMETER(bool, StoreAngleComponents)
+  /**
+   * @brief Setter property for StoreAngleComponents
+   */
+  void setStoreAngleComponents(const bool& value);
+  /**
+   * @brief Getter property for StoreAngleComponents
+   * @return Value of StoreAngleComponents
+   */
+  bool getStoreAngleComponents() const;
+
   Q_PROPERTY(bool StoreAngleComponents READ getStoreAngleComponents WRITE setStoreAngleComponents)
 
-  SIMPL_FILTER_PARAMETER(bool, OverrideSystem)
+  /**
+   * @brief Setter property for OverrideSystem
+   */
+  void setOverrideSystem(const bool& value);
+  /**
+   * @brief Getter property for OverrideSystem
+   * @return Value of OverrideSystem
+   */
+  bool getOverrideSystem() const;
+
   Q_PROPERTY(bool OverrideSystem READ getOverrideSystem WRITE setOverrideSystem)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, SlipPlane)
+  /**
+   * @brief Setter property for SlipPlane
+   */
+  void setSlipPlane(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for SlipPlane
+   * @return Value of SlipPlane
+   */
+  FloatVec3Type getSlipPlane() const;
+
   Q_PROPERTY(FloatVec3Type SlipPlane READ getSlipPlane WRITE setSlipPlane)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, SlipDirection)
+  /**
+   * @brief Setter property for SlipDirection
+   */
+  void setSlipDirection(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for SlipDirection
+   * @return Value of SlipDirection
+   */
+  FloatVec3Type getSlipDirection() const;
+
   Q_PROPERTY(FloatVec3Type SlipDirection READ getSlipDirection WRITE setSlipDirection)
 
   /**
@@ -229,17 +360,38 @@ protected:
   void initialize();
 
 private:
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_AvgQuatsPtr;
+  float* m_AvgQuats = nullptr;
+  std::weak_ptr<DataArray<unsigned int>> m_CrystalStructuresPtr;
+  unsigned int* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<float>> m_SchmidsPtr;
+  float* m_Schmids = nullptr;
+  std::weak_ptr<DataArray<float>> m_PhisPtr;
+  float* m_Phis = nullptr;
+  std::weak_ptr<DataArray<float>> m_LambdasPtr;
+  float* m_Lambdas = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_PolesPtr;
+  int32_t* m_Poles = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_SlipSystemsPtr;
+  int32_t* m_SlipSystems = nullptr;
+
+  DataArrayPath m_FeaturePhasesArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+  DataArrayPath m_AvgQuatsArrayPath = {};
+  QString m_SchmidsArrayName = {};
+  QString m_SlipSystemsArrayName = {};
+  QString m_PolesArrayName = {};
+  QString m_PhisArrayName = {};
+  QString m_LambdasArrayName = {};
+  FloatVec3Type m_LoadingDirection = {};
+  bool m_StoreAngleComponents = {};
+  bool m_OverrideSystem = {};
+  FloatVec3Type m_SlipPlane = {};
+  FloatVec3Type m_SlipDirection = {};
+
   QVector<LaueOps::Pointer> m_OrientationOps;
-
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-  DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
-  DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-
-  DEFINE_DATAARRAY_VARIABLE(float, Schmids)
-  DEFINE_DATAARRAY_VARIABLE(float, Phis)
-  DEFINE_DATAARRAY_VARIABLE(float, Lambdas)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, Poles)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, SlipSystems)
 
 public:
   FindSchmids(const FindSchmids&) = delete;            // Copy Constructor Not Implemented

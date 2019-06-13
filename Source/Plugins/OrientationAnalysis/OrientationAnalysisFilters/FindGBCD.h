@@ -36,9 +36,9 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -74,40 +74,143 @@ class OrientationAnalysis_EXPORT FindGBCD : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindGBCD)
-  SIMPL_FILTER_NEW_MACRO(FindGBCD)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindGBCD, AbstractFilter)
+  using Self = FindGBCD;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindGBCD> New();
+
+  /**
+   * @brief Returns the name of the class for FindGBCD
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindGBCD
+   */
+  static QString ClassName();
 
   ~FindGBCD() override;
 
-  SIMPL_FILTER_PARAMETER(QString, FaceEnsembleAttributeMatrixName)
+  /**
+   * @brief Setter property for FaceEnsembleAttributeMatrixName
+   */
+  void setFaceEnsembleAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for FaceEnsembleAttributeMatrixName
+   * @return Value of FaceEnsembleAttributeMatrixName
+   */
+  QString getFaceEnsembleAttributeMatrixName() const;
+
   Q_PROPERTY(QString FaceEnsembleAttributeMatrixName READ getFaceEnsembleAttributeMatrixName WRITE setFaceEnsembleAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(float, GBCDRes)
+  /**
+   * @brief Setter property for GBCDRes
+   */
+  void setGBCDRes(const float& value);
+  /**
+   * @brief Getter property for GBCDRes
+   * @return Value of GBCDRes
+   */
+  float getGBCDRes() const;
+
   Q_PROPERTY(float GBCDRes READ getGBCDRes WRITE setGBCDRes)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceLabelsArrayPath
+   */
+  void setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceLabelsArrayPath
+   * @return Value of SurfaceMeshFaceLabelsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceNormalsArrayPath
+   */
+  void setSurfaceMeshFaceNormalsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceNormalsArrayPath
+   * @return Value of SurfaceMeshFaceNormalsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceNormalsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceAreasArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceAreasArrayPath
+   */
+  void setSurfaceMeshFaceAreasArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceAreasArrayPath
+   * @return Value of SurfaceMeshFaceAreasArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceAreasArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceAreasArrayPath READ getSurfaceMeshFaceAreasArrayPath WRITE setSurfaceMeshFaceAreasArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
+  /**
+   * @brief Setter property for FeatureEulerAnglesArrayPath
+   */
+  void setFeatureEulerAnglesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureEulerAnglesArrayPath
+   * @return Value of FeatureEulerAnglesArrayPath
+   */
+  DataArrayPath getFeatureEulerAnglesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  /**
+   * @brief Setter property for FeaturePhasesArrayPath
+   */
+  void setFeaturePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayPath
+   * @return Value of FeaturePhasesArrayPath
+   */
+  DataArrayPath getFeaturePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, GBCDArrayName)
+  /**
+   * @brief Setter property for GBCDArrayName
+   */
+  void setGBCDArrayName(const QString& value);
+  /**
+   * @brief Getter property for GBCDArrayName
+   * @return Value of GBCDArrayName
+   */
+  QString getGBCDArrayName() const;
+
   Q_PROPERTY(QString GBCDArrayName READ getGBCDArrayName WRITE setGBCDArrayName)
 
-  SIMPL_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, GBCDArrayNames)
+  /**
+   * @brief Setter property for GBCDArrayNames
+   */
+  void setGBCDArrayNames(const QVector<ComparisonInput_t>& value);
+  /**
+   * @brief Getter property for GBCDArrayNames
+   * @return Value of GBCDArrayNames
+   */
+  QVector<ComparisonInput_t> getGBCDArrayNames() const;
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -223,13 +326,31 @@ protected:
   void sizeGBCD(size_t faceChunkSize, size_t numMisoReps);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceAreas)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
-  DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-  DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-  DEFINE_DATAARRAY_VARIABLE(double, GBCD)
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshFaceAreasPtr;
+  double* m_SurfaceMeshFaceAreas = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFaceLabelsPtr;
+  int32_t* m_SurfaceMeshFaceLabels = nullptr;
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshFaceNormalsPtr;
+  double* m_SurfaceMeshFaceNormals = nullptr;
+  std::weak_ptr<DataArray<float>> m_FeatureEulerAnglesPtr;
+  float* m_FeatureEulerAngles = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+  std::weak_ptr<DataArray<unsigned int>> m_CrystalStructuresPtr;
+  unsigned int* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<double>> m_GBCDPtr;
+  double* m_GBCD = nullptr;
+
+  QString m_FaceEnsembleAttributeMatrixName = {};
+  float m_GBCDRes = {};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
+  DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {};
+  DataArrayPath m_SurfaceMeshFaceAreasArrayPath = {};
+  DataArrayPath m_FeatureEulerAnglesArrayPath = {};
+  DataArrayPath m_FeaturePhasesArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+  QString m_GBCDArrayName = {};
+  QVector<ComparisonInput_t> m_GBCDArrayNames = {};
 
   FloatArrayType::Pointer m_GbcdDeltasArray;
   Int32ArrayType::Pointer m_GbcdSizesArray;

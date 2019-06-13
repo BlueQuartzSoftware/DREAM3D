@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Generic/GenericDLLExport.h"
 
@@ -63,22 +63,72 @@ class Generic_EXPORT GenerateVectorColors : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(GenerateVectorColors)
-  SIMPL_FILTER_NEW_MACRO(GenerateVectorColors)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GenerateVectorColors, AbstractFilter)
+  using Self = GenerateVectorColors;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<GenerateVectorColors> New();
+
+  /**
+   * @brief Returns the name of the class for GenerateVectorColors
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for GenerateVectorColors
+   */
+  static QString ClassName();
 
   ~GenerateVectorColors() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, VectorsArrayPath)
+  /**
+   * @brief Setter property for VectorsArrayPath
+   */
+  void setVectorsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for VectorsArrayPath
+   * @return Value of VectorsArrayPath
+   */
+  DataArrayPath getVectorsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath VectorsArrayPath READ getVectorsArrayPath WRITE setVectorsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  /**
+   * @brief Setter property for GoodVoxelsArrayPath
+   */
+  void setGoodVoxelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for GoodVoxelsArrayPath
+   * @return Value of GoodVoxelsArrayPath
+   */
+  DataArrayPath getGoodVoxelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, CellVectorColorsArrayName)
+  /**
+   * @brief Setter property for CellVectorColorsArrayName
+   */
+  void setCellVectorColorsArrayName(const QString& value);
+  /**
+   * @brief Getter property for CellVectorColorsArrayName
+   * @return Value of CellVectorColorsArrayName
+   */
+  QString getCellVectorColorsArrayName() const;
+
   Q_PROPERTY(QString CellVectorColorsArrayName READ getCellVectorColorsArrayName WRITE setCellVectorColorsArrayName)
 
-  SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
+  /**
+   * @brief Setter property for UseGoodVoxels
+   */
+  void setUseGoodVoxels(const bool& value);
+  /**
+   * @brief Getter property for UseGoodVoxels
+   * @return Value of UseGoodVoxels
+   */
+  bool getUseGoodVoxels() const;
+
   Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
   /**
@@ -182,9 +232,17 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(float, Vectors)
-  DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
-  DEFINE_DATAARRAY_VARIABLE(uint8_t, CellVectorColors)
+  std::weak_ptr<DataArray<float>> m_VectorsPtr;
+  float* m_Vectors = nullptr;
+  std::weak_ptr<DataArray<bool>> m_GoodVoxelsPtr;
+  bool* m_GoodVoxels = nullptr;
+  std::weak_ptr<DataArray<uint8_t>> m_CellVectorColorsPtr;
+  uint8_t* m_CellVectorColors = nullptr;
+
+  DataArrayPath m_VectorsArrayPath = {};
+  DataArrayPath m_GoodVoxelsArrayPath = {};
+  QString m_CellVectorColorsArrayName = {};
+  bool m_UseGoodVoxels = {};
 
 public:
   GenerateVectorColors(const GenerateVectorColors&) = delete; // Copy Constructor Not Implemented

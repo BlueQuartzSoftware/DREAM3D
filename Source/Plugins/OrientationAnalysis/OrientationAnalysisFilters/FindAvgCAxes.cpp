@@ -35,12 +35,16 @@
 
 #include "FindAvgCAxes.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/GeometryMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
@@ -317,4 +321,69 @@ const QString FindAvgCAxes::getSubGroupName() const
 const QString FindAvgCAxes::getHumanLabel() const
 {
   return "Find Average C-Axis Orientations";
+}
+
+// -----------------------------------------------------------------------------
+FindAvgCAxes::Pointer FindAvgCAxes::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindAvgCAxes> FindAvgCAxes::New()
+{
+  struct make_shared_enabler : public FindAvgCAxes
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindAvgCAxes::getNameOfClass() const
+{
+  return QString("FindAvgCAxes");
+}
+
+// -----------------------------------------------------------------------------
+QString FindAvgCAxes::ClassName()
+{
+  return QString("FindAvgCAxes");
+}
+
+// -----------------------------------------------------------------------------
+void FindAvgCAxes::setQuatsArrayPath(const DataArrayPath& value)
+{
+  m_QuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindAvgCAxes::getQuatsArrayPath() const
+{
+  return m_QuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindAvgCAxes::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindAvgCAxes::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindAvgCAxes::setAvgCAxesArrayPath(const DataArrayPath& value)
+{
+  m_AvgCAxesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindAvgCAxes::getAvgCAxesArrayPath() const
+{
+  return m_AvgCAxesArrayPath;
 }

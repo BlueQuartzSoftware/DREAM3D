@@ -42,21 +42,58 @@
 class ConvertHexGridToSquareGridFilterParameter : public FilterParameter
 {
 public:
-  SIMPL_SHARED_POINTERS(ConvertHexGridToSquareGridFilterParameter)
-    SIMPL_STATIC_NEW_MACRO(ConvertHexGridToSquareGridFilterParameter)
-    SIMPL_TYPE_MACRO(ConvertHexGridToSquareGridFilterParameter)
+  using Self = ConvertHexGridToSquareGridFilterParameter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
 
-    static Pointer New(const QString& humanLabel, const QString& propertyName,
-    const QVariant& defaultValue, Category category, ConvertHexGridToSquareGrid* filter,
-    const QString& fileExtension = QString(""), const QString& fileType = QString(""),
-    int groupIndex = -1);
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for ConvertHexGridToSquareGridFilterParameter
+   */
+  const QString getNameOfClass() const;
+  /**
+   * @brief Returns the name of the class for ConvertHexGridToSquareGridFilterParameter
+   */
+  static QString ClassName();
+
+  static Pointer New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category, ConvertHexGridToSquareGrid* filter,
+                     const QString& fileExtension = QString(""), const QString& fileType = QString(""), int groupIndex = -1);
 
   virtual ~ConvertHexGridToSquareGridFilterParameter();
 
-  SIMPL_INSTANCE_STRING_PROPERTY(FileExtension)
-    SIMPL_INSTANCE_STRING_PROPERTY(FileType)
+  /**
+   * @brief Setter property for FileExtension
+   */
+  void setFileExtension(const QString& value);
+  /**
+   * @brief Getter property for FileExtension
+   * @return Value of FileExtension
+   */
+  QString getFileExtension() const;
 
-  SIMPL_POINTER_PROPERTY(ConvertHexGridToSquareGrid, Filter)
+  /**
+   * @brief Setter property for FileType
+   */
+  void setFileType(const QString& value);
+  /**
+   * @brief Getter property for FileType
+   * @return Value of FileType
+   */
+  QString getFileType() const;
+
+  /**
+   * @brief Setter property for Filter
+   */
+  void setFilter(ConvertHexGridToSquareGrid* value);
+  /**
+   * @brief Getter property for Filter
+   * @return Value of Filter
+   */
+  ConvertHexGridToSquareGrid* getFilter() const;
 
   QString getWidgetType() const override;
 
@@ -80,5 +117,11 @@ public:
   ConvertHexGridToSquareGridFilterParameter(ConvertHexGridToSquareGridFilterParameter&&) = delete;      // Move Constructor Not Implemented
   ConvertHexGridToSquareGridFilterParameter& operator=(const ConvertHexGridToSquareGridFilterParameter&) = delete; // Copy Assignment Not Implemented
   ConvertHexGridToSquareGridFilterParameter& operator=(ConvertHexGridToSquareGridFilterParameter&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  ConvertHexGridToSquareGrid* m_Filter = nullptr;
+
+  QString m_FileExtension = {};
+  QString m_FileType = {};
 };
 

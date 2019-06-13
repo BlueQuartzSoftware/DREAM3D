@@ -44,8 +44,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -83,37 +83,132 @@ class OrientationAnalysis_EXPORT FindDistsToCharactGBs : public AbstractFilter
 public:
   static const double INF_DIST;
 
-  SIMPL_SHARED_POINTERS(FindDistsToCharactGBs)
-  SIMPL_FILTER_NEW_MACRO(FindDistsToCharactGBs)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindDistsToCharactGBs, AbstractFilter)
+  using Self = FindDistsToCharactGBs;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindDistsToCharactGBs> New();
+
+  /**
+   * @brief Returns the name of the class for FindDistsToCharactGBs
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindDistsToCharactGBs
+   */
+  static QString ClassName();
 
   ~FindDistsToCharactGBs() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
+  /**
+   * @brief Setter property for FeatureEulerAnglesArrayPath
+   */
+  void setFeatureEulerAnglesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureEulerAnglesArrayPath
+   * @return Value of FeatureEulerAnglesArrayPath
+   */
+  DataArrayPath getFeatureEulerAnglesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  /**
+   * @brief Setter property for FeaturePhasesArrayPath
+   */
+  void setFeaturePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayPath
+   * @return Value of FeaturePhasesArrayPath
+   */
+  DataArrayPath getFeaturePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceLabelsArrayPath
+   */
+  void setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceLabelsArrayPath
+   * @return Value of SurfaceMeshFaceLabelsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceNormalsArrayPath
+   */
+  void setSurfaceMeshFaceNormalsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceNormalsArrayPath
+   * @return Value of SurfaceMeshFaceNormalsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceNormalsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DistToTiltArrayPath)
+  /**
+   * @brief Setter property for DistToTiltArrayPath
+   */
+  void setDistToTiltArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DistToTiltArrayPath
+   * @return Value of DistToTiltArrayPath
+   */
+  DataArrayPath getDistToTiltArrayPath() const;
+
   Q_PROPERTY(DataArrayPath DistToTiltArrayPath READ getDistToTiltArrayPath WRITE setDistToTiltArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DistToTwistArrayPath)
+  /**
+   * @brief Setter property for DistToTwistArrayPath
+   */
+  void setDistToTwistArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DistToTwistArrayPath
+   * @return Value of DistToTwistArrayPath
+   */
+  DataArrayPath getDistToTwistArrayPath() const;
+
   Q_PROPERTY(DataArrayPath DistToTwistArrayPath READ getDistToTwistArrayPath WRITE setDistToTwistArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DistToSymmetricArrayPath)
+  /**
+   * @brief Setter property for DistToSymmetricArrayPath
+   */
+  void setDistToSymmetricArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DistToSymmetricArrayPath
+   * @return Value of DistToSymmetricArrayPath
+   */
+  DataArrayPath getDistToSymmetricArrayPath() const;
+
   Q_PROPERTY(DataArrayPath DistToSymmetricArrayPath READ getDistToSymmetricArrayPath WRITE setDistToSymmetricArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DistTo180TiltArrayPath)
+  /**
+   * @brief Setter property for DistTo180TiltArrayPath
+   */
+  void setDistTo180TiltArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DistTo180TiltArrayPath
+   * @return Value of DistTo180TiltArrayPath
+   */
+  DataArrayPath getDistTo180TiltArrayPath() const;
+
   Q_PROPERTY(DataArrayPath DistTo180TiltArrayPath READ getDistTo180TiltArrayPath WRITE setDistTo180TiltArrayPath)
 
   /**
@@ -217,15 +312,34 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-  DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
-  DEFINE_DATAARRAY_VARIABLE(double, DistToTilt)
-  DEFINE_DATAARRAY_VARIABLE(double, DistToTwist)
-  DEFINE_DATAARRAY_VARIABLE(double, DistToSymmetric)
-  DEFINE_DATAARRAY_VARIABLE(double, DistTo180Tilt)
+  std::weak_ptr<DataArray<unsigned int>> m_CrystalStructuresPtr;
+  unsigned int* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<float>> m_FeatureEulerAnglesPtr;
+  float* m_FeatureEulerAngles = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFaceLabelsPtr;
+  int32_t* m_SurfaceMeshFaceLabels = nullptr;
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshFaceNormalsPtr;
+  double* m_SurfaceMeshFaceNormals = nullptr;
+  std::weak_ptr<DataArray<double>> m_DistToTiltPtr;
+  double* m_DistToTilt = nullptr;
+  std::weak_ptr<DataArray<double>> m_DistToTwistPtr;
+  double* m_DistToTwist = nullptr;
+  std::weak_ptr<DataArray<double>> m_DistToSymmetricPtr;
+  double* m_DistToSymmetric = nullptr;
+  std::weak_ptr<DataArray<double>> m_DistTo180TiltPtr;
+  double* m_DistTo180Tilt = nullptr;
+
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+  DataArrayPath m_FeatureEulerAnglesArrayPath = {};
+  DataArrayPath m_FeaturePhasesArrayPath = {};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
+  DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {};
+  DataArrayPath m_DistToTiltArrayPath = {};
+  DataArrayPath m_DistToTwistArrayPath = {};
+  DataArrayPath m_DistToSymmetricArrayPath = {};
+  DataArrayPath m_DistTo180TiltArrayPath = {};
 
 public:
   FindDistsToCharactGBs(const FindDistsToCharactGBs&) = delete;            // Copy Constructor Not Implemented

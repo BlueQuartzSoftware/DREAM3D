@@ -36,8 +36,11 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+
+class IDataArray;
+using IDataArrayWkPtrType = std::weak_ptr<IDataArray>;
 
 #include "Processing/ProcessingDLLExport.h"
 
@@ -71,34 +74,120 @@ class Processing_EXPORT FindRelativeMotionBetweenSlices : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindRelativeMotionBetweenSlices)
-  SIMPL_FILTER_NEW_MACRO(FindRelativeMotionBetweenSlices)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindRelativeMotionBetweenSlices, AbstractFilter)
+  using Self = FindRelativeMotionBetweenSlices;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindRelativeMotionBetweenSlices> New();
+
+  /**
+   * @brief Returns the name of the class for FindRelativeMotionBetweenSlices
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindRelativeMotionBetweenSlices
+   */
+  static QString ClassName();
 
   ~FindRelativeMotionBetweenSlices() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
+  /**
+   * @brief Setter property for SelectedArrayPath
+   */
+  void setSelectedArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SelectedArrayPath
+   * @return Value of SelectedArrayPath
+   */
+  DataArrayPath getSelectedArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
 
-  SIMPL_FILTER_PARAMETER(unsigned int, Plane)
+  /**
+   * @brief Setter property for Plane
+   */
+  void setPlane(const unsigned int& value);
+  /**
+   * @brief Getter property for Plane
+   * @return Value of Plane
+   */
+  unsigned int getPlane() const;
+
   Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
 
-  SIMPL_FILTER_PARAMETER(int, PSize1)
+  /**
+   * @brief Setter property for PSize1
+   */
+  void setPSize1(const int& value);
+  /**
+   * @brief Getter property for PSize1
+   * @return Value of PSize1
+   */
+  int getPSize1() const;
+
   Q_PROPERTY(int PSize1 READ getPSize1 WRITE setPSize1)
 
-  SIMPL_FILTER_PARAMETER(int, PSize2)
+  /**
+   * @brief Setter property for PSize2
+   */
+  void setPSize2(const int& value);
+  /**
+   * @brief Getter property for PSize2
+   * @return Value of PSize2
+   */
+  int getPSize2() const;
+
   Q_PROPERTY(int PSize2 READ getPSize2 WRITE setPSize2)
 
-  SIMPL_FILTER_PARAMETER(int, SSize1)
+  /**
+   * @brief Setter property for SSize1
+   */
+  void setSSize1(const int& value);
+  /**
+   * @brief Getter property for SSize1
+   * @return Value of SSize1
+   */
+  int getSSize1() const;
+
   Q_PROPERTY(int SSize1 READ getSSize1 WRITE setSSize1)
 
-  SIMPL_FILTER_PARAMETER(int, SSize2)
+  /**
+   * @brief Setter property for SSize2
+   */
+  void setSSize2(const int& value);
+  /**
+   * @brief Getter property for SSize2
+   * @return Value of SSize2
+   */
+  int getSSize2() const;
+
   Q_PROPERTY(int SSize2 READ getSSize2 WRITE setSSize2)
 
-  SIMPL_FILTER_PARAMETER(int, SliceStep)
+  /**
+   * @brief Setter property for SliceStep
+   */
+  void setSliceStep(const int& value);
+  /**
+   * @brief Getter property for SliceStep
+   * @return Value of SliceStep
+   */
+  int getSliceStep() const;
+
   Q_PROPERTY(int SliceStep READ getSliceStep WRITE setSliceStep)
 
-  SIMPL_FILTER_PARAMETER(QString, MotionDirectionArrayName)
+  /**
+   * @brief Setter property for MotionDirectionArrayName
+   */
+  void setMotionDirectionArrayName(const QString& value);
+  /**
+   * @brief Getter property for MotionDirectionArrayName
+   * @return Value of MotionDirectionArrayName
+   */
+  QString getMotionDirectionArrayName() const;
+
   Q_PROPERTY(QString MotionDirectionArrayName READ getMotionDirectionArrayName WRITE setMotionDirectionArrayName)
 
   /**
@@ -202,9 +291,20 @@ protected:
   void initialize();
 
 private:
-  DEFINE_IDATAARRAY_VARIABLE(InData)
+  IDataArrayWkPtrType m_InDataPtr;
+  void* m_InData = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(float, MotionDirection)
+  std::weak_ptr<DataArray<float>> m_MotionDirectionPtr;
+  float* m_MotionDirection = nullptr;
+
+  DataArrayPath m_SelectedArrayPath = {};
+  unsigned int m_Plane = {};
+  int m_PSize1 = {};
+  int m_PSize2 = {};
+  int m_SSize1 = {};
+  int m_SSize2 = {};
+  int m_SliceStep = {};
+  QString m_MotionDirectionArrayName = {};
 
 public:
   FindRelativeMotionBetweenSlices(const FindRelativeMotionBetweenSlices&) = delete; // Copy Constructor Not Implemented

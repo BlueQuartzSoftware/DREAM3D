@@ -40,7 +40,6 @@
 #endif
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
@@ -75,41 +74,176 @@ class OrientationAnalysis_EXPORT ConvertHexGridToSquareGrid : public AbstractFil
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(ConvertHexGridToSquareGrid)
-  SIMPL_FILTER_NEW_MACRO(ConvertHexGridToSquareGrid)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ConvertHexGridToSquareGrid, AbstractFilter)
+  using Self = ConvertHexGridToSquareGrid;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<ConvertHexGridToSquareGrid> New();
+
+  /**
+   * @brief Returns the name of the class for ConvertHexGridToSquareGrid
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ConvertHexGridToSquareGrid
+   */
+  static QString ClassName();
 
   ~ConvertHexGridToSquareGrid() override;
 
-  SIMPL_INSTANCE_PROPERTY(int64_t, ZStartIndex)
+  /**
+   * @brief Setter property for ZStartIndex
+   */
+  void setZStartIndex(const int64_t& value);
+  /**
+   * @brief Getter property for ZStartIndex
+   * @return Value of ZStartIndex
+   */
+  int64_t getZStartIndex() const;
 
-  SIMPL_INSTANCE_PROPERTY(int64_t, ZEndIndex)
+  /**
+   * @brief Setter property for ZEndIndex
+   */
+  void setZEndIndex(const int64_t& value);
+  /**
+   * @brief Getter property for ZEndIndex
+   * @return Value of ZEndIndex
+   */
+  int64_t getZEndIndex() const;
 
-  SIMPL_INSTANCE_PROPERTY(float, XResolution)
+  /**
+   * @brief Setter property for XResolution
+   */
+  void setXResolution(const float& value);
+  /**
+   * @brief Getter property for XResolution
+   * @return Value of XResolution
+   */
+  float getXResolution() const;
 
-  SIMPL_INSTANCE_PROPERTY(float, YResolution)
+  /**
+   * @brief Setter property for YResolution
+   */
+  void setYResolution(const float& value);
+  /**
+   * @brief Getter property for YResolution
+   * @return Value of YResolution
+   */
+  float getYResolution() const;
 
-  SIMPL_FILTER_PARAMETER(QString, InputPath)
+  /**
+   * @brief Setter property for InputPath
+   */
+  void setInputPath(const QString& value);
+  /**
+   * @brief Getter property for InputPath
+   * @return Value of InputPath
+   */
+  QString getInputPath() const;
 
-  SIMPL_FILTER_PARAMETER(QString, OutputPath)
+  /**
+   * @brief Setter property for OutputPath
+   */
+  void setOutputPath(const QString& value);
+  /**
+   * @brief Getter property for OutputPath
+   * @return Value of OutputPath
+   */
+  QString getOutputPath() const;
 
-  SIMPL_FILTER_PARAMETER(QString, OutputPrefix)
+  /**
+   * @brief Setter property for OutputPrefix
+   */
+  void setOutputPrefix(const QString& value);
+  /**
+   * @brief Getter property for OutputPrefix
+   * @return Value of OutputPrefix
+   */
+  QString getOutputPrefix() const;
 
-  SIMPL_FILTER_PARAMETER(QString, FilePrefix)
+  /**
+   * @brief Setter property for FilePrefix
+   */
+  void setFilePrefix(const QString& value);
+  /**
+   * @brief Getter property for FilePrefix
+   * @return Value of FilePrefix
+   */
+  QString getFilePrefix() const;
 
-  SIMPL_FILTER_PARAMETER(QString, FileSuffix)
+  /**
+   * @brief Setter property for FileSuffix
+   */
+  void setFileSuffix(const QString& value);
+  /**
+   * @brief Getter property for FileSuffix
+   * @return Value of FileSuffix
+   */
+  QString getFileSuffix() const;
 
-  SIMPL_FILTER_PARAMETER(QString, FileExtension)
+  /**
+   * @brief Setter property for FileExtension
+   */
+  void setFileExtension(const QString& value);
+  /**
+   * @brief Getter property for FileExtension
+   * @return Value of FileExtension
+   */
+  QString getFileExtension() const;
 
-  SIMPL_FILTER_PARAMETER(int, PaddingDigits)
+  /**
+   * @brief Setter property for PaddingDigits
+   */
+  void setPaddingDigits(const int& value);
+  /**
+   * @brief Getter property for PaddingDigits
+   * @return Value of PaddingDigits
+   */
+  int getPaddingDigits() const;
 
-  SIMPL_INSTANCE_PROPERTY(int, NumCols)
+  /**
+   * @brief Setter property for NumCols
+   */
+  void setNumCols(const int& value);
+  /**
+   * @brief Getter property for NumCols
+   * @return Value of NumCols
+   */
+  int getNumCols() const;
 
-  SIMPL_INSTANCE_PROPERTY(int, NumRows)
+  /**
+   * @brief Setter property for NumRows
+   */
+  void setNumRows(const int& value);
+  /**
+   * @brief Getter property for NumRows
+   * @return Value of NumRows
+   */
+  int getNumRows() const;
 
-  SIMPL_INSTANCE_PROPERTY(bool, HeaderIsComplete)
+  /**
+   * @brief Setter property for HeaderIsComplete
+   */
+  void setHeaderIsComplete(const bool& value);
+  /**
+   * @brief Getter property for HeaderIsComplete
+   * @return Value of HeaderIsComplete
+   */
+  bool getHeaderIsComplete() const;
 
-  SIMPL_FILTER_PARAMETER(int, HexGridStack)
+  /**
+   * @brief Setter property for HexGridStack
+   */
+  void setHexGridStack(const int& value);
+  /**
+   * @brief Getter property for HexGridStack
+   * @return Value of HexGridStack
+   */
+  int getHexGridStack() const;
+
   Q_PROPERTY(int HexGridStack READ getHexGridStack WRITE setHexGridStack)
 
   /**
@@ -213,6 +347,22 @@ protected:
   void initialize();
 
 private:
+  int64_t m_ZStartIndex = {};
+  int64_t m_ZEndIndex = {};
+  float m_XResolution = {};
+  float m_YResolution = {};
+  QString m_InputPath = {};
+  QString m_OutputPath = {};
+  QString m_OutputPrefix = {};
+  QString m_FilePrefix = {};
+  QString m_FileSuffix = {};
+  QString m_FileExtension = {};
+  int m_PaddingDigits = {};
+  int m_NumCols = {};
+  int m_NumRows = {};
+  bool m_HeaderIsComplete = {};
+  int m_HexGridStack = {};
+
   /**
    * @brief modifyAngHeaderLine Modifies a single line of the header section of the TSL .ang file if necessary
    * @param buf The line to possibly modify

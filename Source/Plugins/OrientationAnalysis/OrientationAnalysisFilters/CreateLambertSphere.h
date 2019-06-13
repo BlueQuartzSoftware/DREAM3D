@@ -32,13 +32,14 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
-
-class QuadGeom;
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Geometry/IGeometry.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
+class QuadGeom;
 
 /**
  * @brief The CreateLambertSphere fitler creates an equal area mesh on a unit
@@ -83,55 +84,195 @@ class OrientationAnalysis_EXPORT CreateLambertSphere : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(CreateLambertSphere)
-  SIMPL_FILTER_NEW_MACRO(CreateLambertSphere)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CreateLambertSphere, AbstractFilter)
+  using Self = CreateLambertSphere;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<CreateLambertSphere> New();
+
+  /**
+   * @brief Returns the name of the class for CreateLambertSphere
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for CreateLambertSphere
+   */
+  static QString ClassName();
 
   ~CreateLambertSphere() override;
 
-  SIMPL_FILTER_PARAMETER(int, Hemisphere)
+  /**
+   * @brief Setter property for Hemisphere
+   */
+  void setHemisphere(const int& value);
+  /**
+   * @brief Getter property for Hemisphere
+   * @return Value of Hemisphere
+   */
+  int getHemisphere() const;
+
   Q_PROPERTY(int Hemisphere READ getHemisphere WRITE setHemisphere)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, ImageDataArrayPath)
+  /**
+   * @brief Setter property for ImageDataArrayPath
+   */
+  void setImageDataArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for ImageDataArrayPath
+   * @return Value of ImageDataArrayPath
+   */
+  DataArrayPath getImageDataArrayPath() const;
+
   Q_PROPERTY(DataArrayPath ImageDataArrayPath READ getImageDataArrayPath WRITE setImageDataArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, QuadDataContainerName)
+  /**
+   * @brief Setter property for QuadDataContainerName
+   */
+  void setQuadDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for QuadDataContainerName
+   * @return Value of QuadDataContainerName
+   */
+  DataArrayPath getQuadDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath QuadDataContainerName READ getQuadDataContainerName WRITE setQuadDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, TriangleDataContainerName)
+  /**
+   * @brief Setter property for TriangleDataContainerName
+   */
+  void setTriangleDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for TriangleDataContainerName
+   * @return Value of TriangleDataContainerName
+   */
+  DataArrayPath getTriangleDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath TriangleDataContainerName READ getTriangleDataContainerName WRITE setTriangleDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, EdgeDataContainerName)
+  /**
+   * @brief Setter property for EdgeDataContainerName
+   */
+  void setEdgeDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for EdgeDataContainerName
+   * @return Value of EdgeDataContainerName
+   */
+  DataArrayPath getEdgeDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath EdgeDataContainerName READ getEdgeDataContainerName WRITE setEdgeDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, VertexDataContainerName)
+  /**
+   * @brief Setter property for VertexDataContainerName
+   */
+  void setVertexDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for VertexDataContainerName
+   * @return Value of VertexDataContainerName
+   */
+  DataArrayPath getVertexDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+  /**
+   * @brief Setter property for VertexAttributeMatrixName
+   */
+  void setVertexAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for VertexAttributeMatrixName
+   * @return Value of VertexAttributeMatrixName
+   */
+  QString getVertexAttributeMatrixName() const;
+
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, EdgeAttributeMatrixName)
+  /**
+   * @brief Setter property for EdgeAttributeMatrixName
+   */
+  void setEdgeAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for EdgeAttributeMatrixName
+   * @return Value of EdgeAttributeMatrixName
+   */
+  QString getEdgeAttributeMatrixName() const;
+
   Q_PROPERTY(QString EdgeAttributeMatrixName READ getEdgeAttributeMatrixName WRITE setEdgeAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
+  /**
+   * @brief Setter property for FaceAttributeMatrixName
+   */
+  void setFaceAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for FaceAttributeMatrixName
+   * @return Value of FaceAttributeMatrixName
+   */
+  QString getFaceAttributeMatrixName() const;
+
   Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
   //  SIMPL_FILTER_PARAMETER(QString, ImageFaceDataArrayName)
   //  Q_PROPERTY(QString ImageFaceDataArrayName READ getImageFaceDataArrayName WRITE setImageFaceDataArrayName)
 
-  SIMPL_FILTER_PARAMETER(bool, CreateVertexGeometry)
+  /**
+   * @brief Setter property for CreateVertexGeometry
+   */
+  void setCreateVertexGeometry(const bool& value);
+  /**
+   * @brief Getter property for CreateVertexGeometry
+   * @return Value of CreateVertexGeometry
+   */
+  bool getCreateVertexGeometry() const;
+
   Q_PROPERTY(bool CreateVertexGeometry READ getCreateVertexGeometry WRITE setCreateVertexGeometry)
 
-  SIMPL_FILTER_PARAMETER(bool, CreateEdgeGeometry)
+  /**
+   * @brief Setter property for CreateEdgeGeometry
+   */
+  void setCreateEdgeGeometry(const bool& value);
+  /**
+   * @brief Getter property for CreateEdgeGeometry
+   * @return Value of CreateEdgeGeometry
+   */
+  bool getCreateEdgeGeometry() const;
+
   Q_PROPERTY(bool CreateEdgeGeometry READ getCreateEdgeGeometry WRITE setCreateEdgeGeometry)
 
-  SIMPL_FILTER_PARAMETER(bool, CreateTriangleGeometry)
+  /**
+   * @brief Setter property for CreateTriangleGeometry
+   */
+  void setCreateTriangleGeometry(const bool& value);
+  /**
+   * @brief Getter property for CreateTriangleGeometry
+   * @return Value of CreateTriangleGeometry
+   */
+  bool getCreateTriangleGeometry() const;
+
   Q_PROPERTY(bool CreateTriangleGeometry READ getCreateTriangleGeometry WRITE setCreateTriangleGeometry)
 
-  SIMPL_FILTER_PARAMETER(bool, CreateQuadGeometry)
+  /**
+   * @brief Setter property for CreateQuadGeometry
+   */
+  void setCreateQuadGeometry(const bool& value);
+  /**
+   * @brief Getter property for CreateQuadGeometry
+   * @return Value of CreateQuadGeometry
+   */
+  bool getCreateQuadGeometry() const;
+
   Q_PROPERTY(bool CreateQuadGeometry READ getCreateQuadGeometry WRITE setCreateQuadGeometry)
 
-  SIMPL_FILTER_PARAMETER(bool, UseExistingImage)
+  /**
+   * @brief Setter property for UseExistingImage
+   */
+  void setUseExistingImage(const bool& value);
+  /**
+   * @brief Getter property for UseExistingImage
+   * @return Value of UseExistingImage
+   */
+  bool getUseExistingImage() const;
+
   Q_PROPERTY(bool UseExistingImage READ getUseExistingImage WRITE setUseExistingImage)
   
   /**
@@ -259,14 +400,33 @@ protected:
   void createQuadGeometry();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(uint8_t, ImageData)
+  std::weak_ptr<DataArray<uint8_t>> m_ImageDataPtr;
+  uint8_t* m_ImageData = nullptr;
+  std::weak_ptr<DataArray<uint8_t>> m_EdgeDataPtr;
+  uint8_t* m_EdgeData = nullptr;
+  std::weak_ptr<DataArray<uint8_t>> m_TriangleFaceDataPtr;
+  uint8_t* m_TriangleFaceData = nullptr;
+  std::weak_ptr<DataArray<uint8_t>> m_QuadFaceDataPtr;
+  uint8_t* m_QuadFaceData = nullptr;
+
+  int m_Hemisphere = {};
+  DataArrayPath m_ImageDataArrayPath = {};
+  DataArrayPath m_QuadDataContainerName = {};
+  DataArrayPath m_TriangleDataContainerName = {};
+  DataArrayPath m_EdgeDataContainerName = {};
+  DataArrayPath m_VertexDataContainerName = {};
+  QString m_VertexAttributeMatrixName = {};
+  QString m_EdgeAttributeMatrixName = {};
+  QString m_FaceAttributeMatrixName = {};
+  bool m_CreateVertexGeometry = {};
+  bool m_CreateEdgeGeometry = {};
+  bool m_CreateTriangleGeometry = {};
+  bool m_CreateQuadGeometry = {};
+  bool m_UseExistingImage = {};
 
   // DEFINE_DATAARRAY_VARIABLE(uint8_t, VertexData)
-  DEFINE_DATAARRAY_VARIABLE(uint8_t, EdgeData)
-  DEFINE_DATAARRAY_VARIABLE(uint8_t, TriangleFaceData)
-  DEFINE_DATAARRAY_VARIABLE(uint8_t, QuadFaceData)
 
-  SharedVertexList::Pointer m_Vertices;
+  std::shared_ptr<SharedVertexList> m_Vertices;
 
   QString m_VertexDataName;
   QString m_EdgeDataName;

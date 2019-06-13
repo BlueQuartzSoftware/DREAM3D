@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -75,9 +75,23 @@ class Statistics_EXPORT FindEuclideanDistMap : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindEuclideanDistMap)
-  SIMPL_FILTER_NEW_MACRO(FindEuclideanDistMap)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindEuclideanDistMap, AbstractFilter)
+  using Self = FindEuclideanDistMap;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindEuclideanDistMap> New();
+
+  /**
+   * @brief Returns the name of the class for FindEuclideanDistMap
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindEuclideanDistMap
+   */
+  static QString ClassName();
 
   ~FindEuclideanDistMap() override;
 
@@ -90,34 +104,124 @@ public:
     QuadPoint = 2,       //!<
   };
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, GBDistancesArrayName)
+  /**
+   * @brief Setter property for GBDistancesArrayName
+   */
+  void setGBDistancesArrayName(const QString& value);
+  /**
+   * @brief Getter property for GBDistancesArrayName
+   * @return Value of GBDistancesArrayName
+   */
+  QString getGBDistancesArrayName() const;
+
   Q_PROPERTY(QString GBDistancesArrayName READ getGBDistancesArrayName WRITE setGBDistancesArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, TJDistancesArrayName)
+  /**
+   * @brief Setter property for TJDistancesArrayName
+   */
+  void setTJDistancesArrayName(const QString& value);
+  /**
+   * @brief Getter property for TJDistancesArrayName
+   * @return Value of TJDistancesArrayName
+   */
+  QString getTJDistancesArrayName() const;
+
   Q_PROPERTY(QString TJDistancesArrayName READ getTJDistancesArrayName WRITE setTJDistancesArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, QPDistancesArrayName)
+  /**
+   * @brief Setter property for QPDistancesArrayName
+   */
+  void setQPDistancesArrayName(const QString& value);
+  /**
+   * @brief Getter property for QPDistancesArrayName
+   * @return Value of QPDistancesArrayName
+   */
+  QString getQPDistancesArrayName() const;
+
   Q_PROPERTY(QString QPDistancesArrayName READ getQPDistancesArrayName WRITE setQPDistancesArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, NearestNeighborsArrayName)
+  /**
+   * @brief Setter property for NearestNeighborsArrayName
+   */
+  void setNearestNeighborsArrayName(const QString& value);
+  /**
+   * @brief Getter property for NearestNeighborsArrayName
+   * @return Value of NearestNeighborsArrayName
+   */
+  QString getNearestNeighborsArrayName() const;
+
   Q_PROPERTY(QString NearestNeighborsArrayName READ getNearestNeighborsArrayName WRITE setNearestNeighborsArrayName)
 
-  SIMPL_FILTER_PARAMETER(bool, DoBoundaries)
+  /**
+   * @brief Setter property for DoBoundaries
+   */
+  void setDoBoundaries(const bool& value);
+  /**
+   * @brief Getter property for DoBoundaries
+   * @return Value of DoBoundaries
+   */
+  bool getDoBoundaries() const;
+
   Q_PROPERTY(bool DoBoundaries READ getDoBoundaries WRITE setDoBoundaries)
 
-  SIMPL_FILTER_PARAMETER(bool, DoTripleLines)
+  /**
+   * @brief Setter property for DoTripleLines
+   */
+  void setDoTripleLines(const bool& value);
+  /**
+   * @brief Getter property for DoTripleLines
+   * @return Value of DoTripleLines
+   */
+  bool getDoTripleLines() const;
+
   Q_PROPERTY(bool DoTripleLines READ getDoTripleLines WRITE setDoTripleLines)
 
-  SIMPL_FILTER_PARAMETER(bool, DoQuadPoints)
+  /**
+   * @brief Setter property for DoQuadPoints
+   */
+  void setDoQuadPoints(const bool& value);
+  /**
+   * @brief Getter property for DoQuadPoints
+   * @return Value of DoQuadPoints
+   */
+  bool getDoQuadPoints() const;
+
   Q_PROPERTY(bool DoQuadPoints READ getDoQuadPoints WRITE setDoQuadPoints)
 
-  SIMPL_FILTER_PARAMETER(bool, SaveNearestNeighbors)
+  /**
+   * @brief Setter property for SaveNearestNeighbors
+   */
+  void setSaveNearestNeighbors(const bool& value);
+  /**
+   * @brief Getter property for SaveNearestNeighbors
+   * @return Value of SaveNearestNeighbors
+   */
+  bool getSaveNearestNeighbors() const;
+
   Q_PROPERTY(bool SaveNearestNeighbors READ getSaveNearestNeighbors WRITE setSaveNearestNeighbors)
 
-  SIMPL_FILTER_PARAMETER(bool, CalcManhattanDist)
+  /**
+   * @brief Setter property for CalcManhattanDist
+   */
+  void setCalcManhattanDist(const bool& value);
+  /**
+   * @brief Getter property for CalcManhattanDist
+   * @return Value of CalcManhattanDist
+   */
+  bool getCalcManhattanDist() const;
+
   Q_PROPERTY(bool CalcManhattanDist READ getCalcManhattanDist WRITE setCalcManhattanDist)
 
   /**
@@ -227,19 +331,37 @@ protected:
   void findDistanceMap();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_NearestNeighborsPtr;
+  int32_t* m_NearestNeighbors = nullptr;
+  std::weak_ptr<DataArray<float>> m_GBEuclideanDistancesPtr;
+  float* m_GBEuclideanDistances = nullptr;
+  std::weak_ptr<DataArray<float>> m_TJEuclideanDistancesPtr;
+  float* m_TJEuclideanDistances = nullptr;
+  std::weak_ptr<DataArray<float>> m_QPEuclideanDistancesPtr;
+  float* m_QPEuclideanDistances = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_GBManhattanDistancesPtr;
+  int32_t* m_GBManhattanDistances = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_TJManhattanDistancesPtr;
+  int32_t* m_TJManhattanDistances = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_QPManhattanDistancesPtr;
+  int32_t* m_QPManhattanDistances = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(int32_t, NearestNeighbors)
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  QString m_GBDistancesArrayName = {};
+  QString m_TJDistancesArrayName = {};
+  QString m_QPDistancesArrayName = {};
+  QString m_NearestNeighborsArrayName = {};
+  bool m_DoBoundaries = {};
+  bool m_DoTripleLines = {};
+  bool m_DoQuadPoints = {};
+  bool m_SaveNearestNeighbors = {};
+  bool m_CalcManhattanDist = {};
 
   // Full Euclidean Distance Arrays
-  DEFINE_DATAARRAY_VARIABLE(float, GBEuclideanDistances)
-  DEFINE_DATAARRAY_VARIABLE(float, TJEuclideanDistances)
-  DEFINE_DATAARRAY_VARIABLE(float, QPEuclideanDistances)
 
   //  Distance Arrays
-  DEFINE_DATAARRAY_VARIABLE(int32_t, GBManhattanDistances)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, TJManhattanDistances)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, QPManhattanDistances)
 
 public:
   FindEuclideanDistMap(const FindEuclideanDistMap&) = delete; // Copy Constructor Not Implemented

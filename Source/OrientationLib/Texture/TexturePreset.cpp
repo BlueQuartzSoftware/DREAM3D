@@ -82,3 +82,88 @@ QVector<TexturePreset::Pointer> HexTexturePresets::getTextures()
 
   return textures;
 }
+
+// -----------------------------------------------------------------------------
+TexturePreset::Pointer TexturePreset::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+TexturePreset::Pointer TexturePreset::New()
+{
+  Pointer sharedPtr(new(TexturePreset));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+const QString TexturePreset::getNameOfClass() const
+{
+  return QString("TexturePreset");
+}
+
+// -----------------------------------------------------------------------------
+QString TexturePreset::ClassName()
+{
+  return QString("TexturePreset");
+}
+
+// -----------------------------------------------------------------------------
+void TexturePreset::setCrystalStructure(const unsigned int& value)
+{
+  m_CrystalStructure = value;
+}
+
+// -----------------------------------------------------------------------------
+unsigned int TexturePreset::getCrystalStructure() const
+{
+  return m_CrystalStructure;
+}
+
+// -----------------------------------------------------------------------------
+void TexturePreset::setName(const QString& value)
+{
+  m_Name = value;
+}
+
+// -----------------------------------------------------------------------------
+QString TexturePreset::getName() const
+{
+  return m_Name;
+}
+
+// -----------------------------------------------------------------------------
+void TexturePreset::setEuler1(const double& value)
+{
+  m_Euler1 = value;
+}
+
+// -----------------------------------------------------------------------------
+double TexturePreset::getEuler1() const
+{
+  return m_Euler1;
+}
+
+// -----------------------------------------------------------------------------
+void TexturePreset::setEuler2(const double& value)
+{
+  m_Euler2 = value;
+}
+
+// -----------------------------------------------------------------------------
+double TexturePreset::getEuler2() const
+{
+  return m_Euler2;
+}
+
+// -----------------------------------------------------------------------------
+void TexturePreset::setEuler3(const double& value)
+{
+  m_Euler3 = value;
+}
+
+// -----------------------------------------------------------------------------
+double TexturePreset::getEuler3() const
+{
+  return m_Euler3;
+}

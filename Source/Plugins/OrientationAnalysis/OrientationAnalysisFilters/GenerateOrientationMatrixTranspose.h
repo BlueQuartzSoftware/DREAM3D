@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -18,19 +18,60 @@ class OrientationAnalysis_EXPORT GenerateOrientationMatrixTranspose : public Abs
   Q_OBJECT
 
 public:
-  SIMPL_SHARED_POINTERS(GenerateOrientationMatrixTranspose)
-  SIMPL_FILTER_NEW_MACRO(GenerateOrientationMatrixTranspose)
-  SIMPL_TYPE_MACRO_SUPER(GenerateOrientationMatrixTranspose, AbstractFilter)
+  using Self = GenerateOrientationMatrixTranspose;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<GenerateOrientationMatrixTranspose> New();
+
+  /**
+   * @brief Returns the name of the class for _SUPERGenerateOrientationMatrixTranspose
+   */
+  const QString getNameOfClass() const;
+  /**
+   * @brief Returns the name of the class for _SUPERGenerateOrientationMatrixTranspose
+   */
+  static QString ClassName();
 
   ~GenerateOrientationMatrixTranspose() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, OrientationMatrixDataArrayPath)
+  /**
+   * @brief Setter property for OrientationMatrixDataArrayPath
+   */
+  void setOrientationMatrixDataArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for OrientationMatrixDataArrayPath
+   * @return Value of OrientationMatrixDataArrayPath
+   */
+  DataArrayPath getOrientationMatrixDataArrayPath() const;
+
   Q_PROPERTY(DataArrayPath OrientationMatrixDataArrayPath READ getOrientationMatrixDataArrayPath WRITE setOrientationMatrixDataArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, OutputDataArrayPath)
+  /**
+   * @brief Setter property for OutputDataArrayPath
+   */
+  void setOutputDataArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for OutputDataArrayPath
+   * @return Value of OutputDataArrayPath
+   */
+  DataArrayPath getOutputDataArrayPath() const;
+
   Q_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)
 
-  SIMPL_FILTER_PARAMETER(bool, DeleteOriginalData)
+  /**
+   * @brief Setter property for DeleteOriginalData
+   */
+  void setDeleteOriginalData(const bool& value);
+  /**
+   * @brief Getter property for DeleteOriginalData
+   * @return Value of DeleteOriginalData
+   */
+  bool getDeleteOriginalData() const;
+
   Q_PROPERTY(bool DeleteOriginalData READ getDeleteOriginalData WRITE setDeleteOriginalData)
 
   /**
@@ -130,8 +171,14 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(float, OrientationMatrix)
-  DEFINE_DATAARRAY_VARIABLE(float, OutputOrientationMatrix)
+  std::weak_ptr<DataArray<float>> m_OrientationMatrixPtr;
+  float* m_OrientationMatrix = nullptr;
+  std::weak_ptr<DataArray<float>> m_OutputOrientationMatrixPtr;
+  float* m_OutputOrientationMatrix = nullptr;
+
+  DataArrayPath m_OrientationMatrixDataArrayPath = {};
+  DataArrayPath m_OutputDataArrayPath = {};
+  bool m_DeleteOriginalData = {};
 
 public:
   /* Rule of 5: All special member functions should be defined if any are defined.

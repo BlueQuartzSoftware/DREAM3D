@@ -36,7 +36,10 @@
 
 #include <fstream>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -44,6 +47,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -680,4 +685,117 @@ const QString AlignSectionsMutualInformation::getSubGroupName() const
 const QString AlignSectionsMutualInformation::getHumanLabel() const
 {
   return "Align Sections (Mutual Information)";
+}
+
+// -----------------------------------------------------------------------------
+AlignSectionsMutualInformation::Pointer AlignSectionsMutualInformation::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<AlignSectionsMutualInformation> AlignSectionsMutualInformation::New()
+{
+  struct make_shared_enabler : public AlignSectionsMutualInformation
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString AlignSectionsMutualInformation::getNameOfClass() const
+{
+  return QString("AlignSectionsMutualInformation");
+}
+
+// -----------------------------------------------------------------------------
+QString AlignSectionsMutualInformation::ClassName()
+{
+  return QString("AlignSectionsMutualInformation");
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsMutualInformation::setMisorientationTolerance(const float& value)
+{
+  m_MisorientationTolerance = value;
+}
+
+// -----------------------------------------------------------------------------
+float AlignSectionsMutualInformation::getMisorientationTolerance() const
+{
+  return m_MisorientationTolerance;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsMutualInformation::setUseGoodVoxels(const bool& value)
+{
+  m_UseGoodVoxels = value;
+}
+
+// -----------------------------------------------------------------------------
+bool AlignSectionsMutualInformation::getUseGoodVoxels() const
+{
+  return m_UseGoodVoxels;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsMutualInformation::setQuatsArrayPath(const DataArrayPath& value)
+{
+  m_QuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AlignSectionsMutualInformation::getQuatsArrayPath() const
+{
+  return m_QuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsMutualInformation::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AlignSectionsMutualInformation::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsMutualInformation::setGoodVoxelsArrayPath(const DataArrayPath& value)
+{
+  m_GoodVoxelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AlignSectionsMutualInformation::getGoodVoxelsArrayPath() const
+{
+  return m_GoodVoxelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsMutualInformation::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AlignSectionsMutualInformation::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsMutualInformation::setFeatureCounts(const std::shared_ptr<DataArray<int32_t>>& value)
+{
+  m_FeatureCounts = value;
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<DataArray<int32_t>> AlignSectionsMutualInformation::getFeatureCounts() const
+{
+  return m_FeatureCounts;
 }

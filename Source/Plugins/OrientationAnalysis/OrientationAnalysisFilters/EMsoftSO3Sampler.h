@@ -31,13 +31,12 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
-#include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/OrientationLib.h"
+#include "OrientationLib/OrientationMath/OrientationArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -77,53 +76,161 @@ class OrientationAnalysis_EXPORT EMsoftSO3Sampler : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(EMsoftSO3Sampler)
-  SIMPL_FILTER_NEW_MACRO(EMsoftSO3Sampler)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(EMsoftSO3Sampler, AbstractFilter)
+  using Self = EMsoftSO3Sampler;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
 
-  ~EMsoftSO3Sampler() override;
+  static std::shared_ptr<EMsoftSO3Sampler> New();
 
   /**
-   * @brief OrientationListArrayType
+   * @brief Returns the name of the class for EMsoftSO3Sampler
    */
-  using OrientationListArrayType = std::list<OrientationD>;
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for EMsoftSO3Sampler
+   */
+  static QString ClassName();
+
+  ~EMsoftSO3Sampler() override;
 
   /**
    * EMsoftSO3Sampler filter parameters
    */
 
-  SIMPL_FILTER_PARAMETER(int, sampleModeSelector)
+  /**
+   * @brief Setter property for sampleModeSelector
+   */
+  void setsampleModeSelector(const int& value);
+  /**
+   * @brief Getter property for sampleModeSelector
+   * @return Value of sampleModeSelector
+   */
+  int getsampleModeSelector() const;
+
   Q_PROPERTY(int sampleModeSelector READ getsampleModeSelector WRITE setsampleModeSelector)
 
-  SIMPL_FILTER_PARAMETER(int, PointGroup)
-  Q_PROPERTY(int PointGroup READ getPointGroup WRITE setPointGroup);
+  /**
+   * @brief Setter property for PointGroup
+   */
+  void setPointGroup(const int& value);
+  /**
+   * @brief Getter property for PointGroup
+   * @return Value of PointGroup
+   */
+  int getPointGroup() const;
 
-  SIMPL_FILTER_PARAMETER(int, Numsp)
-  Q_PROPERTY(int Numsp READ getNumsp WRITE setNumsp);
+  Q_PROPERTY(int PointGroup READ getPointGroup WRITE setPointGroup)
 
-  SIMPL_FILTER_PARAMETER(double, MisOr)
-  Q_PROPERTY(int MisOr READ getMisOr WRITE setMisOr);
+  /**
+   * @brief Setter property for Numsp
+   */
+  void setNumsp(const int& value);
+  /**
+   * @brief Getter property for Numsp
+   * @return Value of Numsp
+   */
+  int getNumsp() const;
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, RefOr)
-  Q_PROPERTY(FloatVec3Type RefOr READ getRefOr WRITE setRefOr);
+  Q_PROPERTY(int Numsp READ getNumsp WRITE setNumsp)
 
-  SIMPL_FILTER_PARAMETER(double, MisOrFull)
-  Q_PROPERTY(int MisOrFull READ getMisOrFull WRITE setMisOrFull);
+  /**
+   * @brief Setter property for MisOr
+   */
+  void setMisOr(const double& value);
+  /**
+   * @brief Getter property for MisOr
+   * @return Value of MisOr
+   */
+  double getMisOr() const;
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, RefOrFull)
-  Q_PROPERTY(FloatVec3Type RefOrFull READ getRefOrFull WRITE setRefOrFull);
+  Q_PROPERTY(int MisOr READ getMisOr WRITE setMisOr)
 
-  SIMPL_FILTER_PARAMETER(bool, OffsetGrid)
-  Q_PROPERTY(bool OffsetGrid READ getOffsetGrid WRITE setOffsetGrid);
+  /**
+   * @brief Setter property for RefOr
+   */
+  void setRefOr(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for RefOr
+   * @return Value of RefOr
+   */
+  FloatVec3Type getRefOr() const;
 
-  SIMPL_FILTER_PARAMETER(QString, EulerAnglesArrayName)
-  Q_PROPERTY(QString EulerAnglesArrayName READ getEulerAnglesArrayName WRITE setEulerAnglesArrayName);
+  Q_PROPERTY(FloatVec3Type RefOr READ getRefOr WRITE setRefOr)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
-  Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName);
+  /**
+   * @brief Setter property for MisOrFull
+   */
+  void setMisOrFull(const double& value);
+  /**
+   * @brief Getter property for MisOrFull
+   * @return Value of MisOrFull
+   */
+  double getMisOrFull() const;
 
-  SIMPL_FILTER_PARAMETER(QString, EMsoftAttributeMatrixName)
-  Q_PROPERTY(QString EMsoftAttributeMatrixName READ getEMsoftAttributeMatrixName WRITE setEMsoftAttributeMatrixName);
+  Q_PROPERTY(int MisOrFull READ getMisOrFull WRITE setMisOrFull)
+
+  /**
+   * @brief Setter property for RefOrFull
+   */
+  void setRefOrFull(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for RefOrFull
+   * @return Value of RefOrFull
+   */
+  FloatVec3Type getRefOrFull() const;
+
+  Q_PROPERTY(FloatVec3Type RefOrFull READ getRefOrFull WRITE setRefOrFull)
+
+  /**
+   * @brief Setter property for OffsetGrid
+   */
+  void setOffsetGrid(const bool& value);
+  /**
+   * @brief Getter property for OffsetGrid
+   * @return Value of OffsetGrid
+   */
+  bool getOffsetGrid() const;
+
+  Q_PROPERTY(bool OffsetGrid READ getOffsetGrid WRITE setOffsetGrid)
+
+  /**
+   * @brief Setter property for EulerAnglesArrayName
+   */
+  void setEulerAnglesArrayName(const QString& value);
+  /**
+   * @brief Getter property for EulerAnglesArrayName
+   * @return Value of EulerAnglesArrayName
+   */
+  QString getEulerAnglesArrayName() const;
+
+  Q_PROPERTY(QString EulerAnglesArrayName READ getEulerAnglesArrayName WRITE setEulerAnglesArrayName)
+
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  DataArrayPath getDataContainerName() const;
+
+  Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+
+  /**
+   * @brief Setter property for EMsoftAttributeMatrixName
+   */
+  void setEMsoftAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for EMsoftAttributeMatrixName
+   * @return Value of EMsoftAttributeMatrixName
+   */
+  QString getEMsoftAttributeMatrixName() const;
+
+  Q_PROPERTY(QString EMsoftAttributeMatrixName READ getEMsoftAttributeMatrixName WRITE setEMsoftAttributeMatrixName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -190,7 +297,12 @@ public:
    * @param sigma
    * @param rod
    */
-  void RodriguesComposition(OrientationD sigma, OrientationD& rod);
+  void RodriguesComposition(DOrientArrayType sigma, DOrientArrayType& rod);
+
+  /**
+   * @brief OrientationListArrayType
+   */
+  typedef std::list<DOrientArrayType> OrientationListArrayType;
 
   /**
    * @brief IsinsideFZ
@@ -267,7 +379,20 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(float, EulerAngles)
+  std::weak_ptr<DataArray<float>> m_EulerAnglesPtr;
+  float* m_EulerAngles = nullptr;
+
+  int m_sampleModeSelector = {};
+  int m_PointGroup = {};
+  int m_Numsp = {};
+  double m_MisOr = {};
+  FloatVec3Type m_RefOr = {};
+  double m_MisOrFull = {};
+  FloatVec3Type m_RefOrFull = {};
+  bool m_OffsetGrid = {};
+  QString m_EulerAnglesArrayName = {};
+  DataArrayPath m_DataContainerName = {};
+  QString m_EMsoftAttributeMatrixName = {};
 
 public:
   EMsoftSO3Sampler(const EMsoftSO3Sampler&) = delete; // Copy Constructor Not Implemented

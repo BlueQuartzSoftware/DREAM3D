@@ -37,7 +37,12 @@
 
 #include <QtCore/QDir>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -445,4 +450,57 @@ const QString DxWriter::getSubGroupName() const
 const QString DxWriter::getHumanLabel() const
 {
   return "Export Dx File (Feature Ids)";
+}
+
+// -----------------------------------------------------------------------------
+DxWriter::Pointer DxWriter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<DxWriter> DxWriter::New()
+{
+  struct make_shared_enabler : public DxWriter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString DxWriter::getNameOfClass() const
+{
+  return QString("DxWriter");
+}
+
+// -----------------------------------------------------------------------------
+QString DxWriter::ClassName()
+{
+  return QString("DxWriter");
+}
+
+// -----------------------------------------------------------------------------
+void DxWriter::setAddSurfaceLayer(const bool& value)
+{
+  m_AddSurfaceLayer = value;
+}
+
+// -----------------------------------------------------------------------------
+bool DxWriter::getAddSurfaceLayer() const
+{
+  return m_AddSurfaceLayer;
+}
+
+// -----------------------------------------------------------------------------
+void DxWriter::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath DxWriter::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
 }

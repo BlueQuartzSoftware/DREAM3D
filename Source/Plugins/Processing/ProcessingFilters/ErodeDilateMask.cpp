@@ -35,7 +35,10 @@
 
 #include "ErodeDilateMask.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
@@ -43,6 +46,8 @@
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
@@ -340,4 +345,105 @@ const QString ErodeDilateMask::getSubGroupName() const
 const QString ErodeDilateMask::getHumanLabel() const
 {
   return "Erode/Dilate Mask";
+}
+
+// -----------------------------------------------------------------------------
+ErodeDilateMask::Pointer ErodeDilateMask::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ErodeDilateMask> ErodeDilateMask::New()
+{
+  struct make_shared_enabler : public ErodeDilateMask
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString ErodeDilateMask::getNameOfClass() const
+{
+  return QString("ErodeDilateMask");
+}
+
+// -----------------------------------------------------------------------------
+QString ErodeDilateMask::ClassName()
+{
+  return QString("ErodeDilateMask");
+}
+
+// -----------------------------------------------------------------------------
+void ErodeDilateMask::setDirection(const unsigned int& value)
+{
+  m_Direction = value;
+}
+
+// -----------------------------------------------------------------------------
+unsigned int ErodeDilateMask::getDirection() const
+{
+  return m_Direction;
+}
+
+// -----------------------------------------------------------------------------
+void ErodeDilateMask::setNumIterations(const int& value)
+{
+  m_NumIterations = value;
+}
+
+// -----------------------------------------------------------------------------
+int ErodeDilateMask::getNumIterations() const
+{
+  return m_NumIterations;
+}
+
+// -----------------------------------------------------------------------------
+void ErodeDilateMask::setXDirOn(const bool& value)
+{
+  m_XDirOn = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ErodeDilateMask::getXDirOn() const
+{
+  return m_XDirOn;
+}
+
+// -----------------------------------------------------------------------------
+void ErodeDilateMask::setYDirOn(const bool& value)
+{
+  m_YDirOn = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ErodeDilateMask::getYDirOn() const
+{
+  return m_YDirOn;
+}
+
+// -----------------------------------------------------------------------------
+void ErodeDilateMask::setZDirOn(const bool& value)
+{
+  m_ZDirOn = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ErodeDilateMask::getZDirOn() const
+{
+  return m_ZDirOn;
+}
+
+// -----------------------------------------------------------------------------
+void ErodeDilateMask::setMaskArrayPath(const DataArrayPath& value)
+{
+  m_MaskArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ErodeDilateMask::getMaskArrayPath() const
+{
+  return m_MaskArrayPath;
 }

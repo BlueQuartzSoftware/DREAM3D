@@ -35,7 +35,10 @@
 
 #include "AddBadData.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -43,6 +46,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
@@ -277,4 +282,93 @@ const QString AddBadData::getSubGroupName() const
 const QString AddBadData::getHumanLabel() const
 {
   return "Add Bad Data";
+}
+
+// -----------------------------------------------------------------------------
+AddBadData::Pointer AddBadData::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<AddBadData> AddBadData::New()
+{
+  struct make_shared_enabler : public AddBadData
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString AddBadData::getNameOfClass() const
+{
+  return QString("AddBadData");
+}
+
+// -----------------------------------------------------------------------------
+QString AddBadData::ClassName()
+{
+  return QString("AddBadData");
+}
+
+// -----------------------------------------------------------------------------
+void AddBadData::setGBEuclideanDistancesArrayPath(const DataArrayPath& value)
+{
+  m_GBEuclideanDistancesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AddBadData::getGBEuclideanDistancesArrayPath() const
+{
+  return m_GBEuclideanDistancesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void AddBadData::setPoissonNoise(const bool& value)
+{
+  m_PoissonNoise = value;
+}
+
+// -----------------------------------------------------------------------------
+bool AddBadData::getPoissonNoise() const
+{
+  return m_PoissonNoise;
+}
+
+// -----------------------------------------------------------------------------
+void AddBadData::setPoissonVolFraction(const float& value)
+{
+  m_PoissonVolFraction = value;
+}
+
+// -----------------------------------------------------------------------------
+float AddBadData::getPoissonVolFraction() const
+{
+  return m_PoissonVolFraction;
+}
+
+// -----------------------------------------------------------------------------
+void AddBadData::setBoundaryNoise(const bool& value)
+{
+  m_BoundaryNoise = value;
+}
+
+// -----------------------------------------------------------------------------
+bool AddBadData::getBoundaryNoise() const
+{
+  return m_BoundaryNoise;
+}
+
+// -----------------------------------------------------------------------------
+void AddBadData::setBoundaryVolFraction(const float& value)
+{
+  m_BoundaryVolFraction = value;
+}
+
+// -----------------------------------------------------------------------------
+float AddBadData::getBoundaryVolFraction() const
+{
+  return m_BoundaryVolFraction;
 }

@@ -35,8 +35,10 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+
+class IDataArray;
+using IDataArrayWkPtrType = std::weak_ptr<IDataArray>;
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -63,25 +65,84 @@ class OrientationAnalysis_EXPORT ReplaceElementAttributesWithNeighborValues : pu
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(ReplaceElementAttributesWithNeighborValues)
-  SIMPL_FILTER_NEW_MACRO(ReplaceElementAttributesWithNeighborValues)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ReplaceElementAttributesWithNeighborValues, AbstractFilter)
+  using Self = ReplaceElementAttributesWithNeighborValues;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<ReplaceElementAttributesWithNeighborValues> New();
+
+  /**
+   * @brief Returns the name of the class for ReplaceElementAttributesWithNeighborValues
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ReplaceElementAttributesWithNeighborValues
+   */
+  static QString ClassName();
 
   ~ReplaceElementAttributesWithNeighborValues() override;
 
-  SIMPL_FILTER_PARAMETER(float, MinConfidence)
+  /**
+   * @brief Setter property for MinConfidence
+   */
+  void setMinConfidence(const float& value);
+  /**
+   * @brief Getter property for MinConfidence
+   * @return Value of MinConfidence
+   */
+  float getMinConfidence() const;
+
   Q_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence)
 
-  SIMPL_FILTER_PARAMETER(bool, Loop)
+  /**
+   * @brief Setter property for Loop
+   */
+  void setLoop(const bool& value);
+  /**
+   * @brief Getter property for Loop
+   * @return Value of Loop
+   */
+  bool getLoop() const;
+
   Q_PROPERTY(bool Loop READ getLoop WRITE setLoop)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, ConfidenceIndexArrayPath)
+  /**
+   * @brief Setter property for ConfidenceIndexArrayPath
+   */
+  void setConfidenceIndexArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for ConfidenceIndexArrayPath
+   * @return Value of ConfidenceIndexArrayPath
+   */
+  DataArrayPath getConfidenceIndexArrayPath() const;
+
   Q_PROPERTY(DataArrayPath ConfidenceIndexArrayPath READ getConfidenceIndexArrayPath WRITE setConfidenceIndexArrayPath)
 
-  SIMPL_FILTER_PARAMETER(int, SelectedComparison)
+  /**
+   * @brief Setter property for SelectedComparison
+   */
+  void setSelectedComparison(const int& value);
+  /**
+   * @brief Getter property for SelectedComparison
+   * @return Value of SelectedComparison
+   */
+  int getSelectedComparison() const;
+
   Q_PROPERTY(int SelectedComparison READ getSelectedComparison WRITE setSelectedComparison)
 
-  SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, IgnoredDataArrayPaths)
+  /**
+   * @brief Setter property for IgnoredDataArrayPaths
+   */
+  void setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value);
+  /**
+   * @brief Getter property for IgnoredDataArrayPaths
+   * @return Value of IgnoredDataArrayPaths
+   */
+  QVector<DataArrayPath> getIgnoredDataArrayPaths() const;
+
   Q_PROPERTY(QVector<DataArrayPath> IgnoredDataArrayPaths READ getIgnoredDataArrayPaths WRITE setIgnoredDataArrayPaths)
 
   /**
@@ -185,7 +246,14 @@ protected:
   void initialize();
 
 private:
-  DEFINE_IDATAARRAY_VARIABLE(InArray)
+  IDataArrayWkPtrType m_InArrayPtr;
+  void* m_InArray = nullptr;
+
+  float m_MinConfidence = {};
+  bool m_Loop = {};
+  DataArrayPath m_ConfidenceIndexArrayPath = {};
+  int m_SelectedComparison = {};
+  QVector<DataArrayPath> m_IgnoredDataArrayPaths = {};
 
 public:
   ReplaceElementAttributesWithNeighborValues(const ReplaceElementAttributesWithNeighborValues&) = delete; // Copy Constructor Not Implemented

@@ -36,7 +36,6 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "Reconstruction/ReconstructionDLLExport.h"
@@ -65,24 +64,82 @@ class Reconstruction_EXPORT AlignSections : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(AlignSections)
-  SIMPL_FILTER_NEW_MACRO(AlignSections)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(AlignSections, AbstractFilter)
+  using Self = AlignSections;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<AlignSections> New();
+
+  /**
+   * @brief Returns the name of the class for AlignSections
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for AlignSections
+   */
+  static QString ClassName();
 
   ~AlignSections() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  DataArrayPath getDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  QString getCellAttributeMatrixName() const;
 
-  SIMPL_FILTER_PARAMETER(bool, WriteAlignmentShifts)
+  /**
+   * @brief Setter property for WriteAlignmentShifts
+   */
+  void setWriteAlignmentShifts(const bool& value);
+  /**
+   * @brief Getter property for WriteAlignmentShifts
+   * @return Value of WriteAlignmentShifts
+   */
+  bool getWriteAlignmentShifts() const;
+
   Q_PROPERTY(bool WriteAlignmentShifts READ getWriteAlignmentShifts WRITE setWriteAlignmentShifts)
 
-  SIMPL_FILTER_PARAMETER(QString, AlignmentShiftFileName)
+  /**
+   * @brief Setter property for AlignmentShiftFileName
+   */
+  void setAlignmentShiftFileName(const QString& value);
+  /**
+   * @brief Getter property for AlignmentShiftFileName
+   * @return Value of AlignmentShiftFileName
+   */
+  QString getAlignmentShiftFileName() const;
+
   Q_PROPERTY(QString AlignmentShiftFileName READ getAlignmentShiftFileName WRITE setAlignmentShiftFileName)
 
-  SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, IgnoredDataArrayPaths)
+  /**
+   * @brief Setter property for IgnoredDataArrayPaths
+   */
+  void setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value);
+  /**
+   * @brief Getter property for IgnoredDataArrayPaths
+   * @return Value of IgnoredDataArrayPaths
+   */
+  QVector<DataArrayPath> getIgnoredDataArrayPaths() const;
+
   Q_PROPERTY(QVector<DataArrayPath> IgnoredDataArrayPaths READ getIgnoredDataArrayPaths WRITE setIgnoredDataArrayPaths)
 
   void updateProgress(size_t p);
@@ -195,6 +252,12 @@ protected:
   virtual void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts);
 
 private:
+  DataArrayPath m_DataContainerName = {};
+  QString m_CellAttributeMatrixName = {};
+  bool m_WriteAlignmentShifts = {};
+  QString m_AlignmentShiftFileName = {};
+  QVector<DataArrayPath> m_IgnoredDataArrayPaths = {};
+
   size_t m_Progress = 0;
   size_t m_TotalProgress = 0;
 

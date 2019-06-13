@@ -47,7 +47,10 @@
 #include "EMMPM/EMMPMLib/EMMPMLib.h"
 #include "EMMPM/FilterParameters/EMMPMFilterParameter.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
@@ -65,6 +68,7 @@
 #include "SIMPLib/Messages/GenericErrorMessage.h"
 #include "SIMPLib/Messages/GenericWarningMessage.h"
 #include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "EMMPM/EMMPMVersion.h"
 
@@ -555,4 +559,225 @@ const QString EMMPMFilter::getSubGroupName() const
 const QString EMMPMFilter::getHumanLabel() const
 {
   return "Segment Features (EM/MPM)";
+}
+
+// -----------------------------------------------------------------------------
+EMMPMFilter::Pointer EMMPMFilter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<EMMPMFilter> EMMPMFilter::New()
+{
+  struct make_shared_enabler : public EMMPMFilter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString EMMPMFilter::getNameOfClass() const
+{
+  return QString("EMMPMFilter");
+}
+
+// -----------------------------------------------------------------------------
+QString EMMPMFilter::ClassName()
+{
+  return QString("EMMPMFilter");
+}
+
+// -----------------------------------------------------------------------------
+void EMMPMFilter::setInputDataArrayPath(const DataArrayPath& value)
+{
+  m_InputDataArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath EMMPMFilter::getInputDataArrayPath() const
+{
+  return m_InputDataArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void EMMPMFilter::setUseOneBasedValues(const bool& value)
+{
+  m_UseOneBasedValues = value;
+}
+
+// -----------------------------------------------------------------------------
+bool EMMPMFilter::getUseOneBasedValues() const
+{
+  return m_UseOneBasedValues;
+}
+
+// -----------------------------------------------------------------------------
+void EMMPMFilter::setNumClasses(const int& value)
+{
+  m_NumClasses = value;
+}
+
+// -----------------------------------------------------------------------------
+int EMMPMFilter::getNumClasses() const
+{
+  return m_NumClasses;
+}
+
+// -----------------------------------------------------------------------------
+void EMMPMFilter::setExchangeEnergy(const float& value)
+{
+  m_ExchangeEnergy = value;
+}
+
+// -----------------------------------------------------------------------------
+float EMMPMFilter::getExchangeEnergy() const
+{
+  return m_ExchangeEnergy;
+}
+
+// -----------------------------------------------------------------------------
+void EMMPMFilter::setHistogramLoops(const int& value)
+{
+  m_HistogramLoops = value;
+}
+
+// -----------------------------------------------------------------------------
+int EMMPMFilter::getHistogramLoops() const
+{
+  return m_HistogramLoops;
+}
+
+// -----------------------------------------------------------------------------
+void EMMPMFilter::setSegmentationLoops(const int& value)
+{
+  m_SegmentationLoops = value;
+}
+
+// -----------------------------------------------------------------------------
+int EMMPMFilter::getSegmentationLoops() const
+{
+  return m_SegmentationLoops;
+}
+
+// -----------------------------------------------------------------------------
+void EMMPMFilter::setEMMPMTableData(const DynamicTableData& value)
+{
+  m_EMMPMTableData = value;
+}
+
+// -----------------------------------------------------------------------------
+DynamicTableData EMMPMFilter::getEMMPMTableData() const
+{
+  return m_EMMPMTableData;
+}
+
+// -----------------------------------------------------------------------------
+void EMMPMFilter::setUseSimulatedAnnealing(const bool& value)
+{
+  m_UseSimulatedAnnealing = value;
+}
+
+// -----------------------------------------------------------------------------
+bool EMMPMFilter::getUseSimulatedAnnealing() const
+{
+  return m_UseSimulatedAnnealing;
+}
+
+// -----------------------------------------------------------------------------
+void EMMPMFilter::setUseGradientPenalty(const bool& value)
+{
+  m_UseGradientPenalty = value;
+}
+
+// -----------------------------------------------------------------------------
+bool EMMPMFilter::getUseGradientPenalty() const
+{
+  return m_UseGradientPenalty;
+}
+
+// -----------------------------------------------------------------------------
+void EMMPMFilter::setGradientBetaE(const double& value)
+{
+  m_GradientBetaE = value;
+}
+
+// -----------------------------------------------------------------------------
+double EMMPMFilter::getGradientBetaE() const
+{
+  return m_GradientBetaE;
+}
+
+// -----------------------------------------------------------------------------
+void EMMPMFilter::setUseCurvaturePenalty(const bool& value)
+{
+  m_UseCurvaturePenalty = value;
+}
+
+// -----------------------------------------------------------------------------
+bool EMMPMFilter::getUseCurvaturePenalty() const
+{
+  return m_UseCurvaturePenalty;
+}
+
+// -----------------------------------------------------------------------------
+void EMMPMFilter::setCurvatureBetaC(const double& value)
+{
+  m_CurvatureBetaC = value;
+}
+
+// -----------------------------------------------------------------------------
+double EMMPMFilter::getCurvatureBetaC() const
+{
+  return m_CurvatureBetaC;
+}
+
+// -----------------------------------------------------------------------------
+void EMMPMFilter::setCurvatureRMax(const double& value)
+{
+  m_CurvatureRMax = value;
+}
+
+// -----------------------------------------------------------------------------
+double EMMPMFilter::getCurvatureRMax() const
+{
+  return m_CurvatureRMax;
+}
+
+// -----------------------------------------------------------------------------
+void EMMPMFilter::setCurvatureEMLoopDelay(const int& value)
+{
+  m_CurvatureEMLoopDelay = value;
+}
+
+// -----------------------------------------------------------------------------
+int EMMPMFilter::getCurvatureEMLoopDelay() const
+{
+  return m_CurvatureEMLoopDelay;
+}
+
+// -----------------------------------------------------------------------------
+void EMMPMFilter::setOutputDataArrayPath(const DataArrayPath& value)
+{
+  m_OutputDataArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath EMMPMFilter::getOutputDataArrayPath() const
+{
+  return m_OutputDataArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void EMMPMFilter::setEmmpmInitType(const EMMPM_InitializationType& value)
+{
+  m_EmmpmInitType = value;
+}
+
+// -----------------------------------------------------------------------------
+EMMPM_InitializationType EMMPMFilter::getEmmpmInitType() const
+{
+  return m_EmmpmInitType;
 }

@@ -37,8 +37,8 @@
 #include <random>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
 #include "Reconstruction/ReconstructionDLLExport.h"
@@ -79,45 +79,166 @@ class Reconstruction_EXPORT GroupMicroTextureRegions : public GroupFeatures
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(GroupMicroTextureRegions)
-  SIMPL_FILTER_NEW_MACRO(GroupMicroTextureRegions)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GroupMicroTextureRegions, GroupFeatures)
+  using Self = GroupMicroTextureRegions;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<GroupMicroTextureRegions> New();
+
+  /**
+   * @brief Returns the name of the class for GroupMicroTextureRegions
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for GroupMicroTextureRegions
+   */
+  static QString ClassName();
 
   virtual ~GroupMicroTextureRegions();
 
-  SIMPL_FILTER_PARAMETER(QString, NewCellFeatureAttributeMatrixName)
+  /**
+   * @brief Setter property for NewCellFeatureAttributeMatrixName
+   */
+  void setNewCellFeatureAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for NewCellFeatureAttributeMatrixName
+   * @return Value of NewCellFeatureAttributeMatrixName
+   */
+  QString getNewCellFeatureAttributeMatrixName() const;
+
   Q_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(float, CAxisTolerance)
+  /**
+   * @brief Setter property for CAxisTolerance
+   */
+  void setCAxisTolerance(const float& value);
+  /**
+   * @brief Getter property for CAxisTolerance
+   * @return Value of CAxisTolerance
+   */
+  float getCAxisTolerance() const;
+
   Q_PROPERTY(float CAxisTolerance READ getCAxisTolerance WRITE setCAxisTolerance)
 
-  SIMPL_FILTER_PARAMETER(bool, UseRunningAverage)
+  /**
+   * @brief Setter property for UseRunningAverage
+   */
+  void setUseRunningAverage(const bool& value);
+  /**
+   * @brief Getter property for UseRunningAverage
+   * @return Value of UseRunningAverage
+   */
+  bool getUseRunningAverage() const;
+
   Q_PROPERTY(float UseRunningAverage READ getUseRunningAverage WRITE setUseRunningAverage)
 
-  SIMPL_INSTANCE_PROPERTY(bool, RandomizeParentIds)
+  /**
+   * @brief Setter property for RandomizeParentIds
+   */
+  void setRandomizeParentIds(const bool& value);
+  /**
+   * @brief Getter property for RandomizeParentIds
+   * @return Value of RandomizeParentIds
+   */
+  bool getRandomizeParentIds() const;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  /**
+   * @brief Setter property for FeaturePhasesArrayPath
+   */
+  void setFeaturePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayPath
+   * @return Value of FeaturePhasesArrayPath
+   */
+  DataArrayPath getFeaturePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, VolumesArrayPath)
+  /**
+   * @brief Setter property for VolumesArrayPath
+   */
+  void setVolumesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for VolumesArrayPath
+   * @return Value of VolumesArrayPath
+   */
+  DataArrayPath getVolumesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath VolumesArrayPath READ getVolumesArrayPath WRITE setVolumesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  /**
+   * @brief Setter property for AvgQuatsArrayPath
+   */
+  void setAvgQuatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for AvgQuatsArrayPath
+   * @return Value of AvgQuatsArrayPath
+   */
+  DataArrayPath getAvgQuatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, CellParentIdsArrayName)
+  /**
+   * @brief Setter property for CellParentIdsArrayName
+   */
+  void setCellParentIdsArrayName(const QString& value);
+  /**
+   * @brief Getter property for CellParentIdsArrayName
+   * @return Value of CellParentIdsArrayName
+   */
+  QString getCellParentIdsArrayName() const;
+
   Q_PROPERTY(QString CellParentIdsArrayName READ getCellParentIdsArrayName WRITE setCellParentIdsArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, FeatureParentIdsArrayName)
+  /**
+   * @brief Setter property for FeatureParentIdsArrayName
+   */
+  void setFeatureParentIdsArrayName(const QString& value);
+  /**
+   * @brief Getter property for FeatureParentIdsArrayName
+   * @return Value of FeatureParentIdsArrayName
+   */
+  QString getFeatureParentIdsArrayName() const;
+
   Q_PROPERTY(QString FeatureParentIdsArrayName READ getFeatureParentIdsArrayName WRITE setFeatureParentIdsArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, ActiveArrayName)
+  /**
+   * @brief Setter property for ActiveArrayName
+   */
+  void setActiveArrayName(const QString& value);
+  /**
+   * @brief Getter property for ActiveArrayName
+   * @return Value of ActiveArrayName
+   */
+  QString getActiveArrayName() const;
+
   Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
   /**
@@ -222,15 +343,35 @@ protected:
   void initializeVoxelSeedGenerator(const int32_t rangeMin, const int32_t rangeMax);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-  DEFINE_DATAARRAY_VARIABLE(float, Volumes)
-  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<float>> m_AvgQuatsPtr;
+  float* m_AvgQuats = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_VolumesPtr;
+  float* m_Volumes = nullptr;
+  std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
+  uint32_t* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<bool>> m_ActivePtr;
+  bool* m_Active = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_CellParentIdsPtr;
+  int32_t* m_CellParentIds = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeatureParentIdsPtr;
+  int32_t* m_FeatureParentIds = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(bool, Active)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, CellParentIds)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureParentIds)
+  QString m_NewCellFeatureAttributeMatrixName = {};
+  float m_CAxisTolerance = {};
+  bool m_UseRunningAverage = {};
+  bool m_RandomizeParentIds = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_FeaturePhasesArrayPath = {};
+  DataArrayPath m_VolumesArrayPath = {};
+  DataArrayPath m_AvgQuatsArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+  QString m_CellParentIdsArrayName = {};
+  QString m_FeatureParentIdsArrayName = {};
+  QString m_ActiveArrayName = {};
 
   float m_AvgCAxes[3];
   float m_CAxisToleranceRad;

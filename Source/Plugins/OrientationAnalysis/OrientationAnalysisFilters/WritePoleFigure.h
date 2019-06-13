@@ -36,9 +36,9 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -86,9 +86,23 @@ class OrientationAnalysis_EXPORT WritePoleFigure : public AbstractFilter
 
   //  PYB11_PROPERTY(bool UseDiscreteHeatMap READ getUseDiscreteHeatMap WRITE setUseDiscreteHeatMap)
 public:
-  SIMPL_SHARED_POINTERS(WritePoleFigure)
-  SIMPL_FILTER_NEW_MACRO(WritePoleFigure)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(WritePoleFigure, AbstractFilter)
+  using Self = WritePoleFigure;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<WritePoleFigure> New();
+
+  /**
+   * @brief Returns the name of the class for WritePoleFigure
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for WritePoleFigure
+   */
+  static QString ClassName();
 
   ~WritePoleFigure() override;
 
@@ -110,50 +124,184 @@ public:
       Unknown = 2,           //!
     };
 
-    SIMPL_FILTER_PARAMETER(QString, ImagePrefix)
+    /**
+     * @brief Setter property for ImagePrefix
+     */
+    void setImagePrefix(const QString& value);
+    /**
+     * @brief Getter property for ImagePrefix
+     * @return Value of ImagePrefix
+     */
+    QString getImagePrefix() const;
+
     Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
 
-    SIMPL_FILTER_PARAMETER(QString, OutputPath)
+    /**
+     * @brief Setter property for OutputPath
+     */
+    void setOutputPath(const QString& value);
+    /**
+     * @brief Getter property for OutputPath
+     * @return Value of OutputPath
+     */
+    QString getOutputPath() const;
+
     Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
 
-    SIMPL_FILTER_PARAMETER(int, ImageFormat)
+    /**
+     * @brief Setter property for ImageFormat
+     */
+    void setImageFormat(const int& value);
+    /**
+     * @brief Getter property for ImageFormat
+     * @return Value of ImageFormat
+     */
+    int getImageFormat() const;
+
     Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
 
-    SIMPL_FILTER_PARAMETER(int, ImageSize)
+    /**
+     * @brief Setter property for ImageSize
+     */
+    void setImageSize(const int& value);
+    /**
+     * @brief Getter property for ImageSize
+     * @return Value of ImageSize
+     */
+    int getImageSize() const;
+
     Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
 
-    SIMPL_FILTER_PARAMETER(int, LambertSize)
+    /**
+     * @brief Setter property for LambertSize
+     */
+    void setLambertSize(const int& value);
+    /**
+     * @brief Getter property for LambertSize
+     * @return Value of LambertSize
+     */
+    int getLambertSize() const;
+
     Q_PROPERTY(int LambertSize READ getLambertSize WRITE setLambertSize)
 
-    SIMPL_FILTER_PARAMETER(int, NumColors)
+    /**
+     * @brief Setter property for NumColors
+     */
+    void setNumColors(const int& value);
+    /**
+     * @brief Getter property for NumColors
+     * @return Value of NumColors
+     */
+    int getNumColors() const;
+
     Q_PROPERTY(int NumColors READ getNumColors WRITE setNumColors)
 
-    SIMPL_FILTER_PARAMETER(int, ImageLayout)
+    /**
+     * @brief Setter property for ImageLayout
+     */
+    void setImageLayout(const int& value);
+    /**
+     * @brief Getter property for ImageLayout
+     * @return Value of ImageLayout
+     */
+    int getImageLayout() const;
+
     Q_PROPERTY(int ImageLayout READ getImageLayout WRITE setImageLayout)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+    /**
+     * @brief Setter property for CellEulerAnglesArrayPath
+     */
+    void setCellEulerAnglesArrayPath(const DataArrayPath& value);
+    /**
+     * @brief Getter property for CellEulerAnglesArrayPath
+     * @return Value of CellEulerAnglesArrayPath
+     */
+    DataArrayPath getCellEulerAnglesArrayPath() const;
+
     Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    /**
+     * @brief Setter property for CellPhasesArrayPath
+     */
+    void setCellPhasesArrayPath(const DataArrayPath& value);
+    /**
+     * @brief Getter property for CellPhasesArrayPath
+     * @return Value of CellPhasesArrayPath
+     */
+    DataArrayPath getCellPhasesArrayPath() const;
+
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    /**
+     * @brief Setter property for CrystalStructuresArrayPath
+     */
+    void setCrystalStructuresArrayPath(const DataArrayPath& value);
+    /**
+     * @brief Getter property for CrystalStructuresArrayPath
+     * @return Value of CrystalStructuresArrayPath
+     */
+    DataArrayPath getCrystalStructuresArrayPath() const;
+
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+    /**
+     * @brief Setter property for GoodVoxelsArrayPath
+     */
+    void setGoodVoxelsArrayPath(const DataArrayPath& value);
+    /**
+     * @brief Getter property for GoodVoxelsArrayPath
+     * @return Value of GoodVoxelsArrayPath
+     */
+    DataArrayPath getGoodVoxelsArrayPath() const;
+
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
+    /**
+     * @brief Setter property for UseGoodVoxels
+     */
+    void setUseGoodVoxels(const bool& value);
+    /**
+     * @brief Getter property for UseGoodVoxels
+     * @return Value of UseGoodVoxels
+     */
+    bool getUseGoodVoxels() const;
+
     Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
-    SIMPL_FILTER_PARAMETER(int, GenerationAlgorithm)
+    /**
+     * @brief Setter property for GenerationAlgorithm
+     */
+    void setGenerationAlgorithm(const int& value);
+    /**
+     * @brief Getter property for GenerationAlgorithm
+     * @return Value of GenerationAlgorithm
+     */
+    int getGenerationAlgorithm() const;
+
     Q_PROPERTY(int GenerationAlgorithm READ getGenerationAlgorithm WRITE setGenerationAlgorithm)
 
-    SIMPL_FILTER_PARAMETER(QString, Title)
-    Q_PROPERTY(QString Title READ getTitle WRITE setTitle)
-        
+    /**
+     * @brief Setter property for Title
+     */
+    void setTitle(const QString& value);
+    /**
+     * @brief Getter property for Title
+     * @return Value of Title
+     */
+    QString getTitle() const;
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, MaterialNameArrayPath)
+    Q_PROPERTY(QString Title READ getTitle WRITE setTitle)
+
+    /**
+     * @brief Setter property for MaterialNameArrayPath
+     */
+    void setMaterialNameArrayPath(const DataArrayPath& value);
+    /**
+     * @brief Getter property for MaterialNameArrayPath
+     * @return Value of MaterialNameArrayPath
+     */
+    DataArrayPath getMaterialNameArrayPath() const;
+
     Q_PROPERTY(DataArrayPath MaterialNameArrayPath READ getMaterialNameArrayPath WRITE setMaterialNameArrayPath)
         
     //  SIMPL_FILTER_PARAMETER(bool, UseDiscreteHeatMap)
@@ -274,12 +422,33 @@ public:
     //void writeImage(QImage image, QString label);
 
   private:
+    std::weak_ptr<DataArray<float>> m_CellEulerAnglesPtr;
+    float* m_CellEulerAngles = nullptr;
+    std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+    int32_t* m_CellPhases = nullptr;
+    std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
+    uint32_t* m_CrystalStructures = nullptr;
+    std::weak_ptr<DataArray<bool>> m_GoodVoxelsPtr;
+    bool* m_GoodVoxels = nullptr;
+
+    QString m_ImagePrefix = {};
+    QString m_OutputPath = {};
+    int m_ImageFormat = {};
+    int m_ImageSize = {};
+    int m_LambertSize = {};
+    int m_NumColors = {};
+    int m_ImageLayout = {};
+    DataArrayPath m_CellEulerAnglesArrayPath = {};
+    DataArrayPath m_CellPhasesArrayPath = {};
+    DataArrayPath m_CrystalStructuresArrayPath = {};
+    DataArrayPath m_GoodVoxelsArrayPath = {};
+    bool m_UseGoodVoxels = {};
+    int m_GenerationAlgorithm = {};
+    QString m_Title = {};
+    DataArrayPath m_MaterialNameArrayPath = {};
+
     bool m_UseDiscreteHeatMap = false;
-    DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-    DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
-    
+
     StringDataArray::Pointer m_MaterialNames;
 
 public:

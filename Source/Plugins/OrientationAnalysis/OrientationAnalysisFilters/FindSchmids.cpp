@@ -35,7 +35,10 @@
 
 #include "FindSchmids.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -43,6 +46,7 @@
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
@@ -428,4 +432,189 @@ const QString FindSchmids::getSubGroupName() const
 const QString FindSchmids::getHumanLabel() const
 {
   return "Find Schmid Factors";
+}
+
+// -----------------------------------------------------------------------------
+FindSchmids::Pointer FindSchmids::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindSchmids> FindSchmids::New()
+{
+  struct make_shared_enabler : public FindSchmids
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindSchmids::getNameOfClass() const
+{
+  return QString("FindSchmids");
+}
+
+// -----------------------------------------------------------------------------
+QString FindSchmids::ClassName()
+{
+  return QString("FindSchmids");
+}
+
+// -----------------------------------------------------------------------------
+void FindSchmids::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindSchmids::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindSchmids::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindSchmids::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindSchmids::setAvgQuatsArrayPath(const DataArrayPath& value)
+{
+  m_AvgQuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindSchmids::getAvgQuatsArrayPath() const
+{
+  return m_AvgQuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindSchmids::setSchmidsArrayName(const QString& value)
+{
+  m_SchmidsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindSchmids::getSchmidsArrayName() const
+{
+  return m_SchmidsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindSchmids::setSlipSystemsArrayName(const QString& value)
+{
+  m_SlipSystemsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindSchmids::getSlipSystemsArrayName() const
+{
+  return m_SlipSystemsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindSchmids::setPolesArrayName(const QString& value)
+{
+  m_PolesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindSchmids::getPolesArrayName() const
+{
+  return m_PolesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindSchmids::setPhisArrayName(const QString& value)
+{
+  m_PhisArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindSchmids::getPhisArrayName() const
+{
+  return m_PhisArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindSchmids::setLambdasArrayName(const QString& value)
+{
+  m_LambdasArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindSchmids::getLambdasArrayName() const
+{
+  return m_LambdasArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindSchmids::setLoadingDirection(const FloatVec3Type& value)
+{
+  m_LoadingDirection = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type FindSchmids::getLoadingDirection() const
+{
+  return m_LoadingDirection;
+}
+
+// -----------------------------------------------------------------------------
+void FindSchmids::setStoreAngleComponents(const bool& value)
+{
+  m_StoreAngleComponents = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindSchmids::getStoreAngleComponents() const
+{
+  return m_StoreAngleComponents;
+}
+
+// -----------------------------------------------------------------------------
+void FindSchmids::setOverrideSystem(const bool& value)
+{
+  m_OverrideSystem = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindSchmids::getOverrideSystem() const
+{
+  return m_OverrideSystem;
+}
+
+// -----------------------------------------------------------------------------
+void FindSchmids::setSlipPlane(const FloatVec3Type& value)
+{
+  m_SlipPlane = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type FindSchmids::getSlipPlane() const
+{
+  return m_SlipPlane;
+}
+
+// -----------------------------------------------------------------------------
+void FindSchmids::setSlipDirection(const FloatVec3Type& value)
+{
+  m_SlipDirection = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type FindSchmids::getSlipDirection() const
+{
+  return m_SlipDirection;
 }

@@ -35,7 +35,11 @@
 
 #include "WriteStlFile.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -44,6 +48,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+
 #include <QtCore/QDir>
 
 #include "ImportExport/ImportExportConstants.h"
@@ -478,4 +483,93 @@ const QString WriteStlFile::getSubGroupName() const
 const QString WriteStlFile::getHumanLabel() const
 {
   return "Export STL Files from Triangle Geometry";
+}
+
+// -----------------------------------------------------------------------------
+WriteStlFile::Pointer WriteStlFile::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<WriteStlFile> WriteStlFile::New()
+{
+  struct make_shared_enabler : public WriteStlFile
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString WriteStlFile::getNameOfClass() const
+{
+  return QString("WriteStlFile");
+}
+
+// -----------------------------------------------------------------------------
+QString WriteStlFile::ClassName()
+{
+  return QString("WriteStlFile");
+}
+
+// -----------------------------------------------------------------------------
+void WriteStlFile::setOutputStlDirectory(const QString& value)
+{
+  m_OutputStlDirectory = value;
+}
+
+// -----------------------------------------------------------------------------
+QString WriteStlFile::getOutputStlDirectory() const
+{
+  return m_OutputStlDirectory;
+}
+
+// -----------------------------------------------------------------------------
+void WriteStlFile::setOutputStlPrefix(const QString& value)
+{
+  m_OutputStlPrefix = value;
+}
+
+// -----------------------------------------------------------------------------
+QString WriteStlFile::getOutputStlPrefix() const
+{
+  return m_OutputStlPrefix;
+}
+
+// -----------------------------------------------------------------------------
+void WriteStlFile::setGroupByPhase(const bool& value)
+{
+  m_GroupByPhase = value;
+}
+
+// -----------------------------------------------------------------------------
+bool WriteStlFile::getGroupByPhase() const
+{
+  return m_GroupByPhase;
+}
+
+// -----------------------------------------------------------------------------
+void WriteStlFile::setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath WriteStlFile::getSurfaceMeshFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFaceLabelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void WriteStlFile::setSurfaceMeshFacePhasesArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFacePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath WriteStlFile::getSurfaceMeshFacePhasesArrayPath() const
+{
+  return m_SurfaceMeshFacePhasesArrayPath;
 }

@@ -36,8 +36,9 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -67,19 +68,60 @@ class Statistics_EXPORT FitFeatureData : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FitFeatureData)
-  SIMPL_FILTER_NEW_MACRO(FitFeatureData)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FitFeatureData, AbstractFilter)
+  using Self = FitFeatureData;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FitFeatureData> New();
+
+  /**
+   * @brief Returns the name of the class for FitFeatureData
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FitFeatureData
+   */
+  static QString ClassName();
 
   ~FitFeatureData() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
+  /**
+   * @brief Setter property for SelectedFeatureArrayPath
+   */
+  void setSelectedFeatureArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SelectedFeatureArrayPath
+   * @return Value of SelectedFeatureArrayPath
+   */
+  DataArrayPath getSelectedFeatureArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
 
-  SIMPL_FILTER_PARAMETER(unsigned int, DistributionType)
+  /**
+   * @brief Setter property for DistributionType
+   */
+  void setDistributionType(const unsigned int& value);
+  /**
+   * @brief Getter property for DistributionType
+   * @return Value of DistributionType
+   */
+  unsigned int getDistributionType() const;
+
   Q_PROPERTY(unsigned int DistributionType READ getDistributionType WRITE setDistributionType)
 
-  SIMPL_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
+  /**
+   * @brief Setter property for RemoveBiasedFeatures
+   */
+  void setRemoveBiasedFeatures(const bool& value);
+  /**
+   * @brief Getter property for RemoveBiasedFeatures
+   * @return Value of RemoveBiasedFeatures
+   */
+  bool getRemoveBiasedFeatures() const;
+
   Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
 
   /**
@@ -87,13 +129,40 @@ public:
   * a different group if you want. The string returned here will be displayed
   * in the GUI for the filter
   */
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  /**
+   * @brief Setter property for FeaturePhasesArrayPath
+   */
+  void setFeaturePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayPath
+   * @return Value of FeaturePhasesArrayPath
+   */
+  DataArrayPath getFeaturePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
+  /**
+   * @brief Setter property for BiasedFeaturesArrayPath
+   */
+  void setBiasedFeaturesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for BiasedFeaturesArrayPath
+   * @return Value of BiasedFeaturesArrayPath
+   */
+  DataArrayPath getBiasedFeaturesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NewEnsembleArrayArray)
+  /**
+   * @brief Setter property for NewEnsembleArrayArray
+   */
+  void setNewEnsembleArrayArray(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NewEnsembleArrayArray
+   * @return Value of NewEnsembleArrayArray
+   */
+  DataArrayPath getNewEnsembleArrayArray() const;
+
   Q_PROPERTY(DataArrayPath NewEnsembleArrayArray READ getNewEnsembleArrayArray WRITE setNewEnsembleArrayArray)
 
   /**
@@ -197,11 +266,21 @@ protected:
   void initialize();
 
 private:
-  IDataArray::WeakPointer m_InDataArrayPtr;
-  DEFINE_DATAARRAY_VARIABLE(bool, BiasedFeatures)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+  std::weak_ptr<DataArray<bool>> m_BiasedFeaturesPtr;
+  bool* m_BiasedFeatures = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_NewEnsembleArrayPtr;
+  float* m_NewEnsembleArray = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(float, NewEnsembleArray)
+  DataArrayPath m_SelectedFeatureArrayPath = {};
+  unsigned int m_DistributionType = {};
+  bool m_RemoveBiasedFeatures = {};
+  DataArrayPath m_FeaturePhasesArrayPath = {};
+  DataArrayPath m_BiasedFeaturesArrayPath = {};
+  DataArrayPath m_NewEnsembleArrayArray = {};
+
+  IDataArray::WeakPointer m_InDataArrayPtr;
 
 public:
   FitFeatureData(const FitFeatureData&) = delete; // Copy Constructor Not Implemented

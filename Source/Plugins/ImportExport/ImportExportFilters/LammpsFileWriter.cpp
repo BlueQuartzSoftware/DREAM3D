@@ -35,8 +35,12 @@
 
 #include "LammpsFileWriter.h"
 
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
@@ -315,4 +319,57 @@ const QString LammpsFileWriter::getSubGroupName() const
 const QString LammpsFileWriter::getHumanLabel() const
 {
   return "Export Lammps File";
+}
+
+// -----------------------------------------------------------------------------
+LammpsFileWriter::Pointer LammpsFileWriter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<LammpsFileWriter> LammpsFileWriter::New()
+{
+  struct make_shared_enabler : public LammpsFileWriter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString LammpsFileWriter::getNameOfClass() const
+{
+  return QString("LammpsFileWriter");
+}
+
+// -----------------------------------------------------------------------------
+QString LammpsFileWriter::ClassName()
+{
+  return QString("LammpsFileWriter");
+}
+
+// -----------------------------------------------------------------------------
+void LammpsFileWriter::setVertexDataContainerName(const DataArrayPath& value)
+{
+  m_VertexDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath LammpsFileWriter::getVertexDataContainerName() const
+{
+  return m_VertexDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void LammpsFileWriter::setLammpsFile(const QString& value)
+{
+  m_LammpsFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString LammpsFileWriter::getLammpsFile() const
+{
+  return m_LammpsFile;
 }

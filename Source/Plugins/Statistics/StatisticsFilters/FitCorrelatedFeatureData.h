@@ -39,12 +39,13 @@
 #include <set>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+
 #include "Statistics/DistributionAnalysisOps/DistributionAnalysisOps.h"
 
 #include "Statistics/StatisticsConstants.h"
@@ -86,22 +87,81 @@ class Statistics_EXPORT FitCorrelatedFeatureData : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FitCorrelatedFeatureData)
-  SIMPL_FILTER_NEW_MACRO(FitCorrelatedFeatureData)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FitCorrelatedFeatureData, AbstractFilter)
+  using Self = FitCorrelatedFeatureData;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FitCorrelatedFeatureData> New();
+
+  /**
+   * @brief Returns the name of the class for FitCorrelatedFeatureData
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FitCorrelatedFeatureData
+   */
+  static QString ClassName();
 
   ~FitCorrelatedFeatureData() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
+  /**
+   * @brief Setter property for SelectedFeatureArrayPath
+   */
+  void setSelectedFeatureArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SelectedFeatureArrayPath
+   * @return Value of SelectedFeatureArrayPath
+   */
+  DataArrayPath getSelectedFeatureArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CorrelatedFeatureArrayPath)
+  /**
+   * @brief Setter property for CorrelatedFeatureArrayPath
+   */
+  void setCorrelatedFeatureArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CorrelatedFeatureArrayPath
+   * @return Value of CorrelatedFeatureArrayPath
+   */
+  DataArrayPath getCorrelatedFeatureArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CorrelatedFeatureArrayPath READ getCorrelatedFeatureArrayPath WRITE setCorrelatedFeatureArrayPath)
 
-  SIMPL_FILTER_PARAMETER(unsigned int, DistributionType)
+  /**
+   * @brief Setter property for DistributionType
+   */
+  void setDistributionType(const unsigned int& value);
+  /**
+   * @brief Getter property for DistributionType
+   * @return Value of DistributionType
+   */
+  unsigned int getDistributionType() const;
+
   Q_PROPERTY(unsigned int DistributionType READ getDistributionType WRITE setDistributionType)
-  SIMPL_FILTER_PARAMETER(int, NumberOfCorrelatedBins)
+  /**
+   * @brief Setter property for NumberOfCorrelatedBins
+   */
+  void setNumberOfCorrelatedBins(const int& value);
+  /**
+   * @brief Getter property for NumberOfCorrelatedBins
+   * @return Value of NumberOfCorrelatedBins
+   */
+  int getNumberOfCorrelatedBins() const;
+
   Q_PROPERTY(int NumberOfCorrelatedBins READ getNumberOfCorrelatedBins WRITE setNumberOfCorrelatedBins)
-  SIMPL_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
+  /**
+   * @brief Setter property for RemoveBiasedFeatures
+   */
+  void setRemoveBiasedFeatures(const bool& value);
+  /**
+   * @brief Getter property for RemoveBiasedFeatures
+   * @return Value of RemoveBiasedFeatures
+   */
+  bool getRemoveBiasedFeatures() const;
+
   Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
 
   /**
@@ -109,13 +169,40 @@ public:
   * a different group if you want. The string returned here will be displayed
   * in the GUI for the filter
   */
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  /**
+   * @brief Setter property for FeaturePhasesArrayPath
+   */
+  void setFeaturePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayPath
+   * @return Value of FeaturePhasesArrayPath
+   */
+  DataArrayPath getFeaturePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
+  /**
+   * @brief Setter property for BiasedFeaturesArrayPath
+   */
+  void setBiasedFeaturesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for BiasedFeaturesArrayPath
+   * @return Value of BiasedFeaturesArrayPath
+   */
+  DataArrayPath getBiasedFeaturesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NewEnsembleArrayArrayPath)
+  /**
+   * @brief Setter property for NewEnsembleArrayArrayPath
+   */
+  void setNewEnsembleArrayArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NewEnsembleArrayArrayPath
+   * @return Value of NewEnsembleArrayArrayPath
+   */
+  DataArrayPath getNewEnsembleArrayArrayPath() const;
+
   Q_PROPERTY(DataArrayPath NewEnsembleArrayArrayPath READ getNewEnsembleArrayArrayPath WRITE setNewEnsembleArrayArrayPath)
 
   /**
@@ -219,9 +306,21 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(bool, BiasedFeatures)
-  DEFINE_DATAARRAY_VARIABLE(float, NewEnsembleArray)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+  std::weak_ptr<DataArray<bool>> m_BiasedFeaturesPtr;
+  bool* m_BiasedFeatures = nullptr;
+  std::weak_ptr<DataArray<float>> m_NewEnsembleArrayPtr;
+  float* m_NewEnsembleArray = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+
+  DataArrayPath m_SelectedFeatureArrayPath = {};
+  DataArrayPath m_CorrelatedFeatureArrayPath = {};
+  unsigned int m_DistributionType = {};
+  int m_NumberOfCorrelatedBins = {};
+  bool m_RemoveBiasedFeatures = {};
+  DataArrayPath m_FeaturePhasesArrayPath = {};
+  DataArrayPath m_BiasedFeaturesArrayPath = {};
+  DataArrayPath m_NewEnsembleArrayArrayPath = {};
 
 public:
   FitCorrelatedFeatureData(const FitCorrelatedFeatureData&) = delete; // Copy Constructor Not Implemented

@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
@@ -18,9 +17,23 @@ class OrientationAnalysis_EXPORT OrientationUtility : public AbstractFilter
   Q_OBJECT
 
 public:
-  SIMPL_SHARED_POINTERS(OrientationUtility)
-  SIMPL_FILTER_NEW_MACRO(OrientationUtility)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(OrientationUtility, AbstractFilter)
+  using Self = OrientationUtility;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<OrientationUtility> New();
+
+  /**
+   * @brief Returns the name of the class for OrientationUtility
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for OrientationUtility
+   */
+  static QString ClassName();
 
   ~OrientationUtility() override;
 
@@ -129,5 +142,7 @@ public:
   OrientationUtility(OrientationUtility&&) = delete;      // Move Constructor Not Implemented
   OrientationUtility& operator=(const OrientationUtility&) = delete; // Copy Assignment Not Implemented
   OrientationUtility& operator=(OrientationUtility&&) = delete;      // Move Assignment Not Implemented
+
+private:
 };
 

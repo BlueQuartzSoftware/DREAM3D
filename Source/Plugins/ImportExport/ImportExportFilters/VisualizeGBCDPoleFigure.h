@@ -38,7 +38,7 @@
 // Needed for AxisAngle_t
 #include "EbsdLib/EbsdConstants.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
@@ -71,25 +71,84 @@ class ImportExport_EXPORT VisualizeGBCDPoleFigure : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(VisualizeGBCDPoleFigure)
-  SIMPL_FILTER_NEW_MACRO(VisualizeGBCDPoleFigure)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(VisualizeGBCDPoleFigure, AbstractFilter)
+  using Self = VisualizeGBCDPoleFigure;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<VisualizeGBCDPoleFigure> New();
+
+  /**
+   * @brief Returns the name of the class for VisualizeGBCDPoleFigure
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for VisualizeGBCDPoleFigure
+   */
+  static QString ClassName();
 
   ~VisualizeGBCDPoleFigure() override;
 
-  SIMPL_FILTER_PARAMETER(QString, OutputFile)
+  /**
+   * @brief Setter property for OutputFile
+   */
+  void setOutputFile(const QString& value);
+  /**
+   * @brief Getter property for OutputFile
+   * @return Value of OutputFile
+   */
+  QString getOutputFile() const;
+
   Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-  SIMPL_FILTER_PARAMETER(int, PhaseOfInterest)
+  /**
+   * @brief Setter property for PhaseOfInterest
+   */
+  void setPhaseOfInterest(const int& value);
+  /**
+   * @brief Getter property for PhaseOfInterest
+   * @return Value of PhaseOfInterest
+   */
+  int getPhaseOfInterest() const;
+
   Q_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
 
-  SIMPL_FILTER_PARAMETER(AxisAngleInput_t, MisorientationRotation)
+  /**
+   * @brief Setter property for MisorientationRotation
+   */
+  void setMisorientationRotation(const AxisAngleInput_t& value);
+  /**
+   * @brief Getter property for MisorientationRotation
+   * @return Value of MisorientationRotation
+   */
+  AxisAngleInput_t getMisorientationRotation() const;
+
   Q_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, GBCDArrayPath)
+  /**
+   * @brief Setter property for GBCDArrayPath
+   */
+  void setGBCDArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for GBCDArrayPath
+   * @return Value of GBCDArrayPath
+   */
+  DataArrayPath getGBCDArrayPath() const;
+
   Q_PROPERTY(DataArrayPath GBCDArrayPath READ getGBCDArrayPath WRITE setGBCDArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
@@ -201,8 +260,16 @@ protected:
   bool getSquareCoord(float* xstl1_norm1, float* sqCoord);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(double, GBCD)
-  DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+  std::weak_ptr<DataArray<double>> m_GBCDPtr;
+  double* m_GBCD = nullptr;
+  std::weak_ptr<DataArray<unsigned int>> m_CrystalStructuresPtr;
+  unsigned int* m_CrystalStructures = nullptr;
+
+  QString m_OutputFile = {};
+  int m_PhaseOfInterest = {};
+  AxisAngleInput_t m_MisorientationRotation = {};
+  DataArrayPath m_GBCDArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
 
   QVector<LaueOps::Pointer> m_OrientationOps;
 

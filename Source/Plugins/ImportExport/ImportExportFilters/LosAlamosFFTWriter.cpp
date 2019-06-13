@@ -37,7 +37,12 @@
 
 #include <QtCore/QDir>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
@@ -318,4 +323,69 @@ const QString LosAlamosFFTWriter::getSubGroupName() const
 const QString LosAlamosFFTWriter::getHumanLabel() const
 {
   return "Export Los Alamos FFT File";
+}
+
+// -----------------------------------------------------------------------------
+LosAlamosFFTWriter::Pointer LosAlamosFFTWriter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<LosAlamosFFTWriter> LosAlamosFFTWriter::New()
+{
+  struct make_shared_enabler : public LosAlamosFFTWriter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString LosAlamosFFTWriter::getNameOfClass() const
+{
+  return QString("LosAlamosFFTWriter");
+}
+
+// -----------------------------------------------------------------------------
+QString LosAlamosFFTWriter::ClassName()
+{
+  return QString("LosAlamosFFTWriter");
+}
+
+// -----------------------------------------------------------------------------
+void LosAlamosFFTWriter::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath LosAlamosFFTWriter::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void LosAlamosFFTWriter::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath LosAlamosFFTWriter::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void LosAlamosFFTWriter::setCellEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_CellEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath LosAlamosFFTWriter::getCellEulerAnglesArrayPath() const
+{
+  return m_CellEulerAnglesArrayPath;
 }

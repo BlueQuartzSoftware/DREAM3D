@@ -40,11 +40,12 @@
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -72,18 +73,58 @@ class Statistics_EXPORT CorrelateValuesWithVectorDirection : public AbstractFilt
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(CorrelateValuesWithVectorDirection)
-  SIMPL_FILTER_NEW_MACRO(CorrelateValuesWithVectorDirection)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CorrelateValuesWithVectorDirection, AbstractFilter)
+  using Self = CorrelateValuesWithVectorDirection;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<CorrelateValuesWithVectorDirection> New();
+
+  /**
+   * @brief Returns the name of the class for CorrelateValuesWithVectorDirection
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for CorrelateValuesWithVectorDirection
+   */
+  static QString ClassName();
 
   ~CorrelateValuesWithVectorDirection() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CorrelatedDataArrayPath)
+  /**
+   * @brief Setter property for CorrelatedDataArrayPath
+   */
+  void setCorrelatedDataArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CorrelatedDataArrayPath
+   * @return Value of CorrelatedDataArrayPath
+   */
+  DataArrayPath getCorrelatedDataArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CorrelatedDataArrayPath READ getCorrelatedDataArrayPath WRITE setCorrelatedDataArrayPath)
-  SIMPL_FILTER_PARAMETER(DataArrayPath, VectorDataArrayPath)
+  /**
+   * @brief Setter property for VectorDataArrayPath
+   */
+  void setVectorDataArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for VectorDataArrayPath
+   * @return Value of VectorDataArrayPath
+   */
+  DataArrayPath getVectorDataArrayPath() const;
+
   Q_PROPERTY(DataArrayPath VectorDataArrayPath READ getVectorDataArrayPath WRITE setVectorDataArrayPath)
 
-  SIMPL_INSTANCE_STRING_PROPERTY(Logfile)
+  /**
+   * @brief Setter property for Logfile
+   */
+  void setLogfile(const QString& value);
+  /**
+   * @brief Getter property for Logfile
+   * @return Value of Logfile
+   */
+  QString getLogfile() const;
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -193,7 +234,12 @@ protected:
   void createSterographicProjections(size_t numComps);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(float, VectorData)
+  std::weak_ptr<DataArray<float>> m_VectorDataPtr;
+  float* m_VectorData = nullptr;
+
+  DataArrayPath m_CorrelatedDataArrayPath = {};
+  DataArrayPath m_VectorDataArrayPath = {};
+  QString m_Logfile = {};
 
   DoubleArrayType::Pointer m_LambertProj;
 

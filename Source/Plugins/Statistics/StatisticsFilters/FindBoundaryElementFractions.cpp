@@ -35,11 +35,15 @@
 
 #include "FindBoundaryElementFractions.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -277,4 +281,69 @@ const QString FindBoundaryElementFractions::getSubGroupName() const
 const QString FindBoundaryElementFractions::getHumanLabel() const
 {
   return "Find Feature Boundary Element Fractions";
+}
+
+// -----------------------------------------------------------------------------
+FindBoundaryElementFractions::Pointer FindBoundaryElementFractions::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindBoundaryElementFractions> FindBoundaryElementFractions::New()
+{
+  struct make_shared_enabler : public FindBoundaryElementFractions
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindBoundaryElementFractions::getNameOfClass() const
+{
+  return QString("FindBoundaryElementFractions");
+}
+
+// -----------------------------------------------------------------------------
+QString FindBoundaryElementFractions::ClassName()
+{
+  return QString("FindBoundaryElementFractions");
+}
+
+// -----------------------------------------------------------------------------
+void FindBoundaryElementFractions::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindBoundaryElementFractions::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindBoundaryElementFractions::setBoundaryCellsArrayPath(const DataArrayPath& value)
+{
+  m_BoundaryCellsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindBoundaryElementFractions::getBoundaryCellsArrayPath() const
+{
+  return m_BoundaryCellsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindBoundaryElementFractions::setBoundaryCellFractionsArrayPath(const DataArrayPath& value)
+{
+  m_BoundaryCellFractionsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindBoundaryElementFractions::getBoundaryCellFractionsArrayPath() const
+{
+  return m_BoundaryCellFractionsArrayPath;
 }

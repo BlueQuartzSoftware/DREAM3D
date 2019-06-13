@@ -35,12 +35,16 @@
 
 #include "FindAvgScalarValueForFeatures.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -284,4 +288,69 @@ const QString FindAvgScalarValueForFeatures::getSubGroupName() const
 const QString FindAvgScalarValueForFeatures::getHumanLabel() const
 {
   return "Find Average Value of Scalars For Feature";
+}
+
+// -----------------------------------------------------------------------------
+FindAvgScalarValueForFeatures::Pointer FindAvgScalarValueForFeatures::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindAvgScalarValueForFeatures> FindAvgScalarValueForFeatures::New()
+{
+  struct make_shared_enabler : public FindAvgScalarValueForFeatures
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindAvgScalarValueForFeatures::getNameOfClass() const
+{
+  return QString("FindAvgScalarValueForFeatures");
+}
+
+// -----------------------------------------------------------------------------
+QString FindAvgScalarValueForFeatures::ClassName()
+{
+  return QString("FindAvgScalarValueForFeatures");
+}
+
+// -----------------------------------------------------------------------------
+void FindAvgScalarValueForFeatures::setSelectedCellArrayPath(const DataArrayPath& value)
+{
+  m_SelectedCellArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindAvgScalarValueForFeatures::getSelectedCellArrayPath() const
+{
+  return m_SelectedCellArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindAvgScalarValueForFeatures::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindAvgScalarValueForFeatures::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindAvgScalarValueForFeatures::setNewFeatureArrayArrayPath(const DataArrayPath& value)
+{
+  m_NewFeatureArrayArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindAvgScalarValueForFeatures::getNewFeatureArrayArrayPath() const
+{
+  return m_NewFeatureArrayArrayPath;
 }

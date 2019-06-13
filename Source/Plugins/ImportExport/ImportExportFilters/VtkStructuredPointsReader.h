@@ -35,7 +35,7 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataContainers/AttributeMatrix.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
@@ -69,36 +69,139 @@ class ImportExport_EXPORT VtkStructuredPointsReader : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(VtkStructuredPointsReader)
-  SIMPL_FILTER_NEW_MACRO(VtkStructuredPointsReader)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(VtkStructuredPointsReader, AbstractFilter)
+  using Self = VtkStructuredPointsReader;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<VtkStructuredPointsReader> New();
+
+  /**
+   * @brief Returns the name of the class for VtkStructuredPointsReader
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for VtkStructuredPointsReader
+   */
+  static QString ClassName();
 
   ~VtkStructuredPointsReader() override;
 
-  SIMPL_FILTER_PARAMETER(bool, ReadCellData)
+  /**
+   * @brief Setter property for ReadCellData
+   */
+  void setReadCellData(const bool& value);
+  /**
+   * @brief Getter property for ReadCellData
+   * @return Value of ReadCellData
+   */
+  bool getReadCellData() const;
+
   Q_PROPERTY(bool ReadCellData READ getReadCellData WRITE setReadCellData)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, VolumeDataContainerName)
+  /**
+   * @brief Setter property for VolumeDataContainerName
+   */
+  void setVolumeDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for VolumeDataContainerName
+   * @return Value of VolumeDataContainerName
+   */
+  DataArrayPath getVolumeDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  QString getCellAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(bool, ReadPointData)
+  /**
+   * @brief Setter property for ReadPointData
+   */
+  void setReadPointData(const bool& value);
+  /**
+   * @brief Getter property for ReadPointData
+   * @return Value of ReadPointData
+   */
+  bool getReadPointData() const;
+
   Q_PROPERTY(bool ReadPointData READ getReadPointData WRITE setReadPointData)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, VertexDataContainerName)
+  /**
+   * @brief Setter property for VertexDataContainerName
+   */
+  void setVertexDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for VertexDataContainerName
+   * @return Value of VertexDataContainerName
+   */
+  DataArrayPath getVertexDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+  /**
+   * @brief Setter property for VertexAttributeMatrixName
+   */
+  void setVertexAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for VertexAttributeMatrixName
+   * @return Value of VertexAttributeMatrixName
+   */
+  QString getVertexAttributeMatrixName() const;
+
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  /**
+   * @brief Setter property for InputFile
+   */
+  void setInputFile(const QString& value);
+  /**
+   * @brief Getter property for InputFile
+   * @return Value of InputFile
+   */
+  QString getInputFile() const;
+
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-  SIMPL_INSTANCE_STRING_PROPERTY(Comment)
-  SIMPL_INSTANCE_STRING_PROPERTY(DatasetType)
-  SIMPL_INSTANCE_PROPERTY(bool, FileIsBinary)
+  /**
+   * @brief Setter property for Comment
+   */
+  void setComment(const QString& value);
+  /**
+   * @brief Getter property for Comment
+   * @return Value of Comment
+   */
+  QString getComment() const;
+
+  /**
+   * @brief Setter property for DatasetType
+   */
+  void setDatasetType(const QString& value);
+  /**
+   * @brief Getter property for DatasetType
+   * @return Value of DatasetType
+   */
+  QString getDatasetType() const;
+
+  /**
+   * @brief Setter property for FileIsBinary
+   */
+  void setFileIsBinary(const bool& value);
+  /**
+   * @brief Getter property for FileIsBinary
+   * @return Value of FileIsBinary
+   */
+  bool getFileIsBinary() const;
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -292,6 +395,17 @@ protected:
   int32_t DecodeString(char* resname, const char* name);
 
 private:
+  bool m_ReadCellData = {};
+  DataArrayPath m_VolumeDataContainerName = {};
+  QString m_CellAttributeMatrixName = {};
+  bool m_ReadPointData = {};
+  DataArrayPath m_VertexDataContainerName = {};
+  QString m_VertexAttributeMatrixName = {};
+  QString m_InputFile = {};
+  QString m_Comment = {};
+  QString m_DatasetType = {};
+  bool m_FileIsBinary = {};
+
   AttributeMatrix::Pointer m_CurrentAttrMat;
 
 public:

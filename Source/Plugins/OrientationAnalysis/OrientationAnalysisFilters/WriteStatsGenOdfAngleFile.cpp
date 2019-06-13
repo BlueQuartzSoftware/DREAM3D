@@ -46,8 +46,10 @@
 #include <QtCore/QString>
 #include <QtCore/QString>
 
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -58,6 +60,7 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -466,4 +469,141 @@ const QString WriteStatsGenOdfAngleFile::getSubGroupName() const
 const QString WriteStatsGenOdfAngleFile::getHumanLabel() const
 {
   return "Export StatsGenerator ODF Angle File";
+}
+
+// -----------------------------------------------------------------------------
+WriteStatsGenOdfAngleFile::Pointer WriteStatsGenOdfAngleFile::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<WriteStatsGenOdfAngleFile> WriteStatsGenOdfAngleFile::New()
+{
+  struct make_shared_enabler : public WriteStatsGenOdfAngleFile
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString WriteStatsGenOdfAngleFile::getNameOfClass() const
+{
+  return QString("WriteStatsGenOdfAngleFile");
+}
+
+// -----------------------------------------------------------------------------
+QString WriteStatsGenOdfAngleFile::ClassName()
+{
+  return QString("WriteStatsGenOdfAngleFile");
+}
+
+// -----------------------------------------------------------------------------
+void WriteStatsGenOdfAngleFile::setOutputFile(const QString& value)
+{
+  m_OutputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString WriteStatsGenOdfAngleFile::getOutputFile() const
+{
+  return m_OutputFile;
+}
+
+// -----------------------------------------------------------------------------
+void WriteStatsGenOdfAngleFile::setWeight(const float& value)
+{
+  m_Weight = value;
+}
+
+// -----------------------------------------------------------------------------
+float WriteStatsGenOdfAngleFile::getWeight() const
+{
+  return m_Weight;
+}
+
+// -----------------------------------------------------------------------------
+void WriteStatsGenOdfAngleFile::setSigma(const int& value)
+{
+  m_Sigma = value;
+}
+
+// -----------------------------------------------------------------------------
+int WriteStatsGenOdfAngleFile::getSigma() const
+{
+  return m_Sigma;
+}
+
+// -----------------------------------------------------------------------------
+void WriteStatsGenOdfAngleFile::setDelimiter(const int& value)
+{
+  m_Delimiter = value;
+}
+
+// -----------------------------------------------------------------------------
+int WriteStatsGenOdfAngleFile::getDelimiter() const
+{
+  return m_Delimiter;
+}
+
+// -----------------------------------------------------------------------------
+void WriteStatsGenOdfAngleFile::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath WriteStatsGenOdfAngleFile::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void WriteStatsGenOdfAngleFile::setCellEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_CellEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath WriteStatsGenOdfAngleFile::getCellEulerAnglesArrayPath() const
+{
+  return m_CellEulerAnglesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void WriteStatsGenOdfAngleFile::setGoodVoxelsArrayPath(const DataArrayPath& value)
+{
+  m_GoodVoxelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath WriteStatsGenOdfAngleFile::getGoodVoxelsArrayPath() const
+{
+  return m_GoodVoxelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void WriteStatsGenOdfAngleFile::setConvertToDegrees(const bool& value)
+{
+  m_ConvertToDegrees = value;
+}
+
+// -----------------------------------------------------------------------------
+bool WriteStatsGenOdfAngleFile::getConvertToDegrees() const
+{
+  return m_ConvertToDegrees;
+}
+
+// -----------------------------------------------------------------------------
+void WriteStatsGenOdfAngleFile::setUseGoodVoxels(const bool& value)
+{
+  m_UseGoodVoxels = value;
+}
+
+// -----------------------------------------------------------------------------
+bool WriteStatsGenOdfAngleFile::getUseGoodVoxels() const
+{
+  return m_UseGoodVoxels;
 }

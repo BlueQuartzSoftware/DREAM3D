@@ -36,7 +36,6 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
@@ -67,22 +66,72 @@ class Reconstruction_EXPORT GroupFeatures : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(GroupFeatures)
-  SIMPL_FILTER_NEW_MACRO(GroupFeatures)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GroupFeatures, AbstractFilter)
+  using Self = GroupFeatures;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<GroupFeatures> New();
+
+  /**
+   * @brief Returns the name of the class for GroupFeatures
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for GroupFeatures
+   */
+  static QString ClassName();
 
   ~GroupFeatures() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, ContiguousNeighborListArrayPath)
+  /**
+   * @brief Setter property for ContiguousNeighborListArrayPath
+   */
+  void setContiguousNeighborListArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for ContiguousNeighborListArrayPath
+   * @return Value of ContiguousNeighborListArrayPath
+   */
+  DataArrayPath getContiguousNeighborListArrayPath() const;
+
   Q_PROPERTY(DataArrayPath ContiguousNeighborListArrayPath READ getContiguousNeighborListArrayPath WRITE setContiguousNeighborListArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NonContiguousNeighborListArrayPath)
+  /**
+   * @brief Setter property for NonContiguousNeighborListArrayPath
+   */
+  void setNonContiguousNeighborListArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NonContiguousNeighborListArrayPath
+   * @return Value of NonContiguousNeighborListArrayPath
+   */
+  DataArrayPath getNonContiguousNeighborListArrayPath() const;
+
   Q_PROPERTY(DataArrayPath NonContiguousNeighborListArrayPath READ getNonContiguousNeighborListArrayPath WRITE setNonContiguousNeighborListArrayPath)
 
-  SIMPL_FILTER_PARAMETER(bool, UseNonContiguousNeighbors)
+  /**
+   * @brief Setter property for UseNonContiguousNeighbors
+   */
+  void setUseNonContiguousNeighbors(const bool& value);
+  /**
+   * @brief Getter property for UseNonContiguousNeighbors
+   * @return Value of UseNonContiguousNeighbors
+   */
+  bool getUseNonContiguousNeighbors() const;
+
   Q_PROPERTY(float UseNonContiguousNeighbors READ getUseNonContiguousNeighbors WRITE setUseNonContiguousNeighbors)
 
-  SIMPL_FILTER_PARAMETER(bool, PatchGrouping)
+  /**
+   * @brief Setter property for PatchGrouping
+   */
+  void setPatchGrouping(const bool& value);
+  /**
+   * @brief Getter property for PatchGrouping
+   * @return Value of PatchGrouping
+   */
+  bool getPatchGrouping() const;
+
   Q_PROPERTY(float PatchGrouping READ getPatchGrouping WRITE setPatchGrouping)
 
   /**
@@ -218,6 +267,11 @@ protected:
   virtual bool growGrouping(int32_t referenceFeature, int32_t neighborFeature, int32_t newFid);
 
 private:
+  DataArrayPath m_ContiguousNeighborListArrayPath = {};
+  DataArrayPath m_NonContiguousNeighborListArrayPath = {};
+  bool m_UseNonContiguousNeighbors = {};
+  bool m_PatchGrouping = {};
+
   NeighborList<int32_t>::WeakPointer m_ContiguousNeighborList;
   NeighborList<int32_t>::WeakPointer m_NonContiguousNeighborList;
 

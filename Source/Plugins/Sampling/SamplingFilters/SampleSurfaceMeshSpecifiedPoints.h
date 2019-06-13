@@ -36,9 +36,9 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 
@@ -62,16 +62,48 @@ class Sampling_EXPORT SampleSurfaceMeshSpecifiedPoints : public SampleSurfaceMes
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(SampleSurfaceMeshSpecifiedPoints)
-  SIMPL_FILTER_NEW_MACRO(SampleSurfaceMeshSpecifiedPoints)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(SampleSurfaceMeshSpecifiedPoints, AbstractFilter)
+  using Self = SampleSurfaceMeshSpecifiedPoints;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<SampleSurfaceMeshSpecifiedPoints> New();
+
+  /**
+   * @brief Returns the name of the class for SampleSurfaceMeshSpecifiedPoints
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for SampleSurfaceMeshSpecifiedPoints
+   */
+  static QString ClassName();
 
   virtual ~SampleSurfaceMeshSpecifiedPoints();
 
-  SIMPL_FILTER_PARAMETER(QString, InputFilePath)
+  /**
+   * @brief Setter property for InputFilePath
+   */
+  void setInputFilePath(const QString& value);
+  /**
+   * @brief Getter property for InputFilePath
+   * @return Value of InputFilePath
+   */
+  QString getInputFilePath() const;
+
   Q_PROPERTY(QString InputFilePath READ getInputFilePath WRITE setInputFilePath)
 
-  SIMPL_FILTER_PARAMETER(QString, OutputFilePath)
+  /**
+   * @brief Setter property for OutputFilePath
+   */
+  void setOutputFilePath(const QString& value);
+  /**
+   * @brief Getter property for OutputFilePath
+   * @return Value of OutputFilePath
+   */
+  QString getOutputFilePath() const;
+
   Q_PROPERTY(QString OutputFilePath READ getOutputFilePath WRITE setOutputFilePath)
 
   /**
@@ -164,7 +196,11 @@ protected:
   virtual void assign_points(Int32ArrayType::Pointer iArray);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+
+  QString m_InputFilePath = {};
+  QString m_OutputFilePath = {};
 
   // number of specified points
   int64_t m_NumPoints;

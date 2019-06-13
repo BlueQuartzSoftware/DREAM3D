@@ -35,7 +35,10 @@
 
 #include "FillBadData.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -44,6 +47,8 @@
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
@@ -509,4 +514,93 @@ const QString FillBadData::getSubGroupName() const
 const QString FillBadData::getHumanLabel() const
 {
   return "Fill Bad Data";
+}
+
+// -----------------------------------------------------------------------------
+FillBadData::Pointer FillBadData::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FillBadData> FillBadData::New()
+{
+  struct make_shared_enabler : public FillBadData
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FillBadData::getNameOfClass() const
+{
+  return QString("FillBadData");
+}
+
+// -----------------------------------------------------------------------------
+QString FillBadData::ClassName()
+{
+  return QString("FillBadData");
+}
+
+// -----------------------------------------------------------------------------
+void FillBadData::setStoreAsNewPhase(const bool& value)
+{
+  m_StoreAsNewPhase = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FillBadData::getStoreAsNewPhase() const
+{
+  return m_StoreAsNewPhase;
+}
+
+// -----------------------------------------------------------------------------
+void FillBadData::setMinAllowedDefectSize(const int& value)
+{
+  m_MinAllowedDefectSize = value;
+}
+
+// -----------------------------------------------------------------------------
+int FillBadData::getMinAllowedDefectSize() const
+{
+  return m_MinAllowedDefectSize;
+}
+
+// -----------------------------------------------------------------------------
+void FillBadData::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FillBadData::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FillBadData::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FillBadData::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FillBadData::setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value)
+{
+  m_IgnoredDataArrayPaths = value;
+}
+
+// -----------------------------------------------------------------------------
+QVector<DataArrayPath> FillBadData::getIgnoredDataArrayPaths() const
+{
+  return m_IgnoredDataArrayPaths;
 }

@@ -35,9 +35,14 @@
 
 #include "SegmentFeatures.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -303,4 +308,45 @@ const QString SegmentFeatures::getSubGroupName() const
 const QString SegmentFeatures::getHumanLabel() const
 {
   return "Segment Features";
+}
+
+// -----------------------------------------------------------------------------
+SegmentFeatures::Pointer SegmentFeatures::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<SegmentFeatures> SegmentFeatures::New()
+{
+  struct make_shared_enabler : public SegmentFeatures
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString SegmentFeatures::getNameOfClass() const
+{
+  return QString("SegmentFeatures");
+}
+
+// -----------------------------------------------------------------------------
+QString SegmentFeatures::ClassName()
+{
+  return QString("SegmentFeatures");
+}
+
+// -----------------------------------------------------------------------------
+void SegmentFeatures::setDataContainerName(const QString& value)
+{
+  m_DataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString SegmentFeatures::getDataContainerName() const
+{
+  return m_DataContainerName;
 }

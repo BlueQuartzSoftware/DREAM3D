@@ -40,7 +40,12 @@
 
 #include <QtCore/QFileInfo>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -484,4 +489,93 @@ const QString VASPReader::getSubGroupName() const
 const QString VASPReader::getHumanLabel() const
 {
   return "Import VASP File";
+}
+
+// -----------------------------------------------------------------------------
+VASPReader::Pointer VASPReader::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<VASPReader> VASPReader::New()
+{
+  struct make_shared_enabler : public VASPReader
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString VASPReader::getNameOfClass() const
+{
+  return QString("VASPReader");
+}
+
+// -----------------------------------------------------------------------------
+QString VASPReader::ClassName()
+{
+  return QString("VASPReader");
+}
+
+// -----------------------------------------------------------------------------
+void VASPReader::setVertexDataContainerName(const DataArrayPath& value)
+{
+  m_VertexDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath VASPReader::getVertexDataContainerName() const
+{
+  return m_VertexDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void VASPReader::setVertexAttributeMatrixName(const QString& value)
+{
+  m_VertexAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VASPReader::getVertexAttributeMatrixName() const
+{
+  return m_VertexAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void VASPReader::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VASPReader::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void VASPReader::setAtomVelocitiesArrayName(const QString& value)
+{
+  m_AtomVelocitiesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VASPReader::getAtomVelocitiesArrayName() const
+{
+  return m_AtomVelocitiesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void VASPReader::setAtomTypesArrayName(const QString& value)
+{
+  m_AtomTypesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VASPReader::getAtomTypesArrayName() const
+{
+  return m_AtomTypesArrayName;
 }

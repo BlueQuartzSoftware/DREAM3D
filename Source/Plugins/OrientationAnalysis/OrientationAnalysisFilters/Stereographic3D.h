@@ -33,8 +33,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -56,16 +56,48 @@ class OrientationAnalysis_EXPORT Stereographic3D : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(Stereographic3D)
-  SIMPL_FILTER_NEW_MACRO(Stereographic3D)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(Stereographic3D, AbstractFilter)
+  using Self = Stereographic3D;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<Stereographic3D> New();
+
+  /**
+   * @brief Returns the name of the class for Stereographic3D
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for Stereographic3D
+   */
+  static QString ClassName();
 
   ~Stereographic3D() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+  /**
+   * @brief Setter property for QuatsArrayPath
+   */
+  void setQuatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for QuatsArrayPath
+   * @return Value of QuatsArrayPath
+   */
+  DataArrayPath getQuatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, CoordinatesArrayName)
+  /**
+   * @brief Setter property for CoordinatesArrayName
+   */
+  void setCoordinatesArrayName(const QString& value);
+  /**
+   * @brief Getter property for CoordinatesArrayName
+   * @return Value of CoordinatesArrayName
+   */
+  QString getCoordinatesArrayName() const;
+
   Q_PROPERTY(QString CoordinatesArrayName READ getCoordinatesArrayName WRITE setCoordinatesArrayName)
 
   /**
@@ -170,8 +202,13 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(float, Quats)
-  DEFINE_DATAARRAY_VARIABLE(float, CellCoordinates)
+  std::weak_ptr<DataArray<float>> m_QuatsPtr;
+  float* m_Quats = nullptr;
+  std::weak_ptr<DataArray<float>> m_CellCoordinatesPtr;
+  float* m_CellCoordinates = nullptr;
+
+  DataArrayPath m_QuatsArrayPath = {};
+  QString m_CoordinatesArrayName = {};
 
 public:
   Stereographic3D(const Stereographic3D&) = delete; // Copy Constructor Not Implemented

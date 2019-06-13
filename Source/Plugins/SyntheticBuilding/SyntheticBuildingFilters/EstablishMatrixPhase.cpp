@@ -35,7 +35,10 @@
 
 #include "EstablishMatrixPhase.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -50,6 +53,8 @@
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/StatsData/TransformationStatsData.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
@@ -511,4 +516,177 @@ const QString EstablishMatrixPhase::getSubGroupName() const
 const QString EstablishMatrixPhase::getHumanLabel() const
 {
   return "Establish Matrix Phase";
+}
+
+// -----------------------------------------------------------------------------
+EstablishMatrixPhase::Pointer EstablishMatrixPhase::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<EstablishMatrixPhase> EstablishMatrixPhase::New()
+{
+  struct make_shared_enabler : public EstablishMatrixPhase
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString EstablishMatrixPhase::getNameOfClass() const
+{
+  return QString("EstablishMatrixPhase");
+}
+
+// -----------------------------------------------------------------------------
+QString EstablishMatrixPhase::ClassName()
+{
+  return QString("EstablishMatrixPhase");
+}
+
+// -----------------------------------------------------------------------------
+void EstablishMatrixPhase::setOutputCellAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_OutputCellAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath EstablishMatrixPhase::getOutputCellAttributeMatrixPath() const
+{
+  return m_OutputCellAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void EstablishMatrixPhase::setOutputCellFeatureAttributeMatrixName(const QString& value)
+{
+  m_OutputCellFeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EstablishMatrixPhase::getOutputCellFeatureAttributeMatrixName() const
+{
+  return m_OutputCellFeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void EstablishMatrixPhase::setOutputCellEnsembleAttributeMatrixName(const QString& value)
+{
+  m_OutputCellEnsembleAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EstablishMatrixPhase::getOutputCellEnsembleAttributeMatrixName() const
+{
+  return m_OutputCellEnsembleAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void EstablishMatrixPhase::setFeatureIdsArrayName(const QString& value)
+{
+  m_FeatureIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EstablishMatrixPhase::getFeatureIdsArrayName() const
+{
+  return m_FeatureIdsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void EstablishMatrixPhase::setCellPhasesArrayName(const QString& value)
+{
+  m_CellPhasesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EstablishMatrixPhase::getCellPhasesArrayName() const
+{
+  return m_CellPhasesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void EstablishMatrixPhase::setFeaturePhasesArrayName(const QString& value)
+{
+  m_FeaturePhasesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EstablishMatrixPhase::getFeaturePhasesArrayName() const
+{
+  return m_FeaturePhasesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void EstablishMatrixPhase::setNumFeaturesArrayName(const QString& value)
+{
+  m_NumFeaturesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EstablishMatrixPhase::getNumFeaturesArrayName() const
+{
+  return m_NumFeaturesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void EstablishMatrixPhase::setMaskArrayPath(const DataArrayPath& value)
+{
+  m_MaskArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath EstablishMatrixPhase::getMaskArrayPath() const
+{
+  return m_MaskArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void EstablishMatrixPhase::setUseMask(const bool& value)
+{
+  m_UseMask = value;
+}
+
+// -----------------------------------------------------------------------------
+bool EstablishMatrixPhase::getUseMask() const
+{
+  return m_UseMask;
+}
+
+// -----------------------------------------------------------------------------
+void EstablishMatrixPhase::setInputStatsArrayPath(const DataArrayPath& value)
+{
+  m_InputStatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath EstablishMatrixPhase::getInputStatsArrayPath() const
+{
+  return m_InputStatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void EstablishMatrixPhase::setInputPhaseTypesArrayPath(const DataArrayPath& value)
+{
+  m_InputPhaseTypesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath EstablishMatrixPhase::getInputPhaseTypesArrayPath() const
+{
+  return m_InputPhaseTypesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void EstablishMatrixPhase::setInputPhaseNamesArrayPath(const DataArrayPath& value)
+{
+  m_InputPhaseNamesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath EstablishMatrixPhase::getInputPhaseNamesArrayPath() const
+{
+  return m_InputPhaseNamesArrayPath;
 }

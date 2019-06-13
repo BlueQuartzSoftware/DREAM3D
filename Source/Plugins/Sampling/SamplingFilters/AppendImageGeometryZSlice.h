@@ -36,7 +36,6 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "Sampling/SamplingDLLExport.h"
@@ -61,19 +60,60 @@ class Sampling_EXPORT AppendImageGeometryZSlice : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(AppendImageGeometryZSlice)
-  SIMPL_FILTER_NEW_MACRO(AppendImageGeometryZSlice)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(AppendImageGeometryZSlice, AbstractFilter)
+  using Self = AppendImageGeometryZSlice;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<AppendImageGeometryZSlice> New();
+
+  /**
+   * @brief Returns the name of the class for AppendImageGeometryZSlice
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for AppendImageGeometryZSlice
+   */
+  static QString ClassName();
 
   ~AppendImageGeometryZSlice() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, InputAttributeMatrix)
+  /**
+   * @brief Setter property for InputAttributeMatrix
+   */
+  void setInputAttributeMatrix(const DataArrayPath& value);
+  /**
+   * @brief Getter property for InputAttributeMatrix
+   * @return Value of InputAttributeMatrix
+   */
+  DataArrayPath getInputAttributeMatrix() const;
+
   Q_PROPERTY(DataArrayPath InputAttributeMatrix READ getInputAttributeMatrix WRITE setInputAttributeMatrix)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DestinationAttributeMatrix)
+  /**
+   * @brief Setter property for DestinationAttributeMatrix
+   */
+  void setDestinationAttributeMatrix(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DestinationAttributeMatrix
+   * @return Value of DestinationAttributeMatrix
+   */
+  DataArrayPath getDestinationAttributeMatrix() const;
+
   Q_PROPERTY(DataArrayPath DestinationAttributeMatrix READ getDestinationAttributeMatrix WRITE setDestinationAttributeMatrix)
 
-  SIMPL_FILTER_PARAMETER(bool, CheckResolution)
+  /**
+   * @brief Setter property for CheckResolution
+   */
+  void setCheckResolution(const bool& value);
+  /**
+   * @brief Getter property for CheckResolution
+   * @return Value of CheckResolution
+   */
+  bool getCheckResolution() const;
+
   Q_PROPERTY(bool CheckResolution READ getCheckResolution WRITE setCheckResolution)
 
   /**
@@ -182,5 +222,10 @@ public:
   AppendImageGeometryZSlice(AppendImageGeometryZSlice&&) = delete;      // Move Constructor Not Implemented
   AppendImageGeometryZSlice& operator=(const AppendImageGeometryZSlice&) = delete; // Copy Assignment Not Implemented
   AppendImageGeometryZSlice& operator=(AppendImageGeometryZSlice&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  DataArrayPath m_InputAttributeMatrix = {};
+  DataArrayPath m_DestinationAttributeMatrix = {};
+  bool m_CheckResolution = {};
 };
 

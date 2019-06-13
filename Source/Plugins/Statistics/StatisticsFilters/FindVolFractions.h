@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -59,16 +59,48 @@ class Statistics_EXPORT FindVolFractions : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindVolFractions)
-  SIMPL_FILTER_NEW_MACRO(FindVolFractions)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindVolFractions, AbstractFilter)
+  using Self = FindVolFractions;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindVolFractions> New();
+
+  /**
+   * @brief Returns the name of the class for FindVolFractions
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindVolFractions
+   */
+  static QString ClassName();
 
   ~FindVolFractions() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  /**
+   * @brief Setter property for CellPhasesArrayPath
+   */
+  void setCellPhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellPhasesArrayPath
+   * @return Value of CellPhasesArrayPath
+   */
+  DataArrayPath getCellPhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, VolFractionsArrayPath)
+  /**
+   * @brief Setter property for VolFractionsArrayPath
+   */
+  void setVolFractionsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for VolFractionsArrayPath
+   * @return Value of VolFractionsArrayPath
+   */
+  DataArrayPath getVolFractionsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath VolFractionsArrayPath READ getVolFractionsArrayPath WRITE setVolFractionsArrayPath)
 
   /**
@@ -172,9 +204,13 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+  std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+  int32_t* m_CellPhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_VolFractionsPtr;
+  float* m_VolFractions = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(float, VolFractions)
+  DataArrayPath m_CellPhasesArrayPath = {};
+  DataArrayPath m_VolFractionsArrayPath = {};
 
 public:
   FindVolFractions(const FindVolFractions&) = delete; // Copy Constructor Not Implemented

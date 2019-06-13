@@ -33,9 +33,12 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <QtCore/QTextStream>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <QtCore/QDebug>
+
 #include "SIMPLib/CoreFilters/DataContainerWriter.h"
+
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
@@ -45,6 +48,9 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+
 #include "UnitTestSupport.hpp"
 
 #include "SamplingTestFileLocations.h"
@@ -129,13 +135,8 @@ static float originalOrigin[3] = {0, 0, 0};
 class CropVolumeTest
 {
 public:
-  CropVolumeTest()
-  {
-  }
-  virtual ~CropVolumeTest()
-  {
-  }
-  SIMPL_TYPE_MACRO(CropVolumeTest)
+  CropVolumeTest() = default;
+  virtual ~CropVolumeTest() = default;
 
   // -----------------------------------------------------------------------------
   //

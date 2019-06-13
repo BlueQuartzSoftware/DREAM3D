@@ -4,8 +4,8 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -34,22 +34,72 @@ class OrientationAnalysis_EXPORT ConvertQuaternion : public AbstractFilter
   // clang-format on
 
 public:
-  SIMPL_SHARED_POINTERS(ConvertQuaternion)
-  SIMPL_FILTER_NEW_MACRO(ConvertQuaternion)
-  SIMPL_TYPE_MACRO_SUPER(ConvertQuaternion, AbstractFilter)
+  using Self = ConvertQuaternion;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<ConvertQuaternion> New();
+
+  /**
+   * @brief Returns the name of the class for _SUPERConvertQuaternion
+   */
+  const QString getNameOfClass() const;
+  /**
+   * @brief Returns the name of the class for _SUPERConvertQuaternion
+   */
+  static QString ClassName();
 
   ~ConvertQuaternion() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, QuaternionDataArrayPath)
+  /**
+   * @brief Setter property for QuaternionDataArrayPath
+   */
+  void setQuaternionDataArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for QuaternionDataArrayPath
+   * @return Value of QuaternionDataArrayPath
+   */
+  DataArrayPath getQuaternionDataArrayPath() const;
+
   Q_PROPERTY(DataArrayPath QuaternionDataArrayPath READ getQuaternionDataArrayPath WRITE setQuaternionDataArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, OutputDataArrayPath)
+  /**
+   * @brief Setter property for OutputDataArrayPath
+   */
+  void setOutputDataArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for OutputDataArrayPath
+   * @return Value of OutputDataArrayPath
+   */
+  DataArrayPath getOutputDataArrayPath() const;
+
   Q_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)
 
-  SIMPL_FILTER_PARAMETER(bool, DeleteOriginalData)
+  /**
+   * @brief Setter property for DeleteOriginalData
+   */
+  void setDeleteOriginalData(const bool& value);
+  /**
+   * @brief Getter property for DeleteOriginalData
+   * @return Value of DeleteOriginalData
+   */
+  bool getDeleteOriginalData() const;
+
   Q_PROPERTY(bool DeleteOriginalData READ getDeleteOriginalData WRITE setDeleteOriginalData)
 
-  SIMPL_FILTER_PARAMETER(int32_t, ConversionType)
+  /**
+   * @brief Setter property for ConversionType
+   */
+  void setConversionType(const int32_t& value);
+  /**
+   * @brief Getter property for ConversionType
+   * @return Value of ConversionType
+   */
+  int32_t getConversionType() const;
+
   Q_PROPERTY(int32_t ConversionType READ getConversionType WRITE setConversionType)
 
   static const int32_t k_ToScalarVector = 0;
@@ -151,8 +201,15 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(float, Quaternions)
-  DEFINE_DATAARRAY_VARIABLE(float, OutputQuaternions)
+  std::weak_ptr<DataArray<float>> m_QuaternionsPtr;
+  float* m_Quaternions = nullptr;
+  std::weak_ptr<DataArray<float>> m_OutputQuaternionsPtr;
+  float* m_OutputQuaternions = nullptr;
+
+  DataArrayPath m_QuaternionDataArrayPath = {};
+  DataArrayPath m_OutputDataArrayPath = {};
+  bool m_DeleteOriginalData = {};
+  int32_t m_ConversionType = {};
 
 public:
   /* Rule of 5: All special member functions should be defined if any are defined.

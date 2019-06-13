@@ -37,7 +37,6 @@
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
@@ -66,22 +65,72 @@ class OrientationAnalysis_EXPORT ConvertOrientations : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(ConvertOrientations)
-  SIMPL_FILTER_NEW_MACRO(ConvertOrientations)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ConvertOrientations, AbstractFilter)
+  using Self = ConvertOrientations;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<ConvertOrientations> New();
+
+  /**
+   * @brief Returns the name of the class for ConvertOrientations
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ConvertOrientations
+   */
+  static QString ClassName();
 
   ~ConvertOrientations() override;
 
-  SIMPL_FILTER_PARAMETER(int, InputType)
+  /**
+   * @brief Setter property for InputType
+   */
+  void setInputType(const int& value);
+  /**
+   * @brief Getter property for InputType
+   * @return Value of InputType
+   */
+  int getInputType() const;
+
   Q_PROPERTY(int InputType READ getInputType WRITE setInputType)
 
-  SIMPL_FILTER_PARAMETER(int, OutputType)
+  /**
+   * @brief Setter property for OutputType
+   */
+  void setOutputType(const int& value);
+  /**
+   * @brief Getter property for OutputType
+   * @return Value of OutputType
+   */
+  int getOutputType() const;
+
   Q_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, InputOrientationArrayPath)
+  /**
+   * @brief Setter property for InputOrientationArrayPath
+   */
+  void setInputOrientationArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for InputOrientationArrayPath
+   * @return Value of InputOrientationArrayPath
+   */
+  DataArrayPath getInputOrientationArrayPath() const;
+
   Q_PROPERTY(DataArrayPath InputOrientationArrayPath READ getInputOrientationArrayPath WRITE setInputOrientationArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, OutputOrientationArrayName)
+  /**
+   * @brief Setter property for OutputOrientationArrayName
+   */
+  void setOutputOrientationArrayName(const QString& value);
+  /**
+   * @brief Getter property for OutputOrientationArrayName
+   * @return Value of OutputOrientationArrayName
+   */
+  QString getOutputOrientationArrayName() const;
+
   Q_PROPERTY(QString OutputOrientationArrayName READ getOutputOrientationArrayName WRITE setOutputOrientationArrayName)
 
   /**
@@ -190,5 +239,11 @@ public:
   ConvertOrientations(ConvertOrientations&&) = delete;      // Move Constructor Not Implemented
   ConvertOrientations& operator=(const ConvertOrientations&) = delete; // Copy Assignment Not Implemented
   ConvertOrientations& operator=(ConvertOrientations&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  int m_InputType = {};
+  int m_OutputType = {};
+  DataArrayPath m_InputOrientationArrayPath = {};
+  QString m_OutputOrientationArrayName = {};
 };
 

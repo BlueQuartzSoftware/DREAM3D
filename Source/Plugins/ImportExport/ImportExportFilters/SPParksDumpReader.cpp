@@ -37,7 +37,12 @@
 
 #include <QtCore/QFileInfo>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
@@ -759,4 +764,117 @@ const QString SPParksDumpReader::getSubGroupName() const
 const QString SPParksDumpReader::getHumanLabel() const
 {
   return "Import SPParks Dump File";
+}
+
+// -----------------------------------------------------------------------------
+SPParksDumpReader::Pointer SPParksDumpReader::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<SPParksDumpReader> SPParksDumpReader::New()
+{
+  struct make_shared_enabler : public SPParksDumpReader
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString SPParksDumpReader::getNameOfClass() const
+{
+  return QString("SPParksDumpReader");
+}
+
+// -----------------------------------------------------------------------------
+QString SPParksDumpReader::ClassName()
+{
+  return QString("SPParksDumpReader");
+}
+
+// -----------------------------------------------------------------------------
+void SPParksDumpReader::setVolumeDataContainerName(const DataArrayPath& value)
+{
+  m_VolumeDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath SPParksDumpReader::getVolumeDataContainerName() const
+{
+  return m_VolumeDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void SPParksDumpReader::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString SPParksDumpReader::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void SPParksDumpReader::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString SPParksDumpReader::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void SPParksDumpReader::setOrigin(const FloatVec3Type& value)
+{
+  m_Origin = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type SPParksDumpReader::getOrigin() const
+{
+  return m_Origin;
+}
+
+// -----------------------------------------------------------------------------
+void SPParksDumpReader::setSpacing(const FloatVec3Type& value)
+{
+  m_Spacing = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type SPParksDumpReader::getSpacing() const
+{
+  return m_Spacing;
+}
+
+// -----------------------------------------------------------------------------
+void SPParksDumpReader::setOneBasedArrays(const bool& value)
+{
+  m_OneBasedArrays = value;
+}
+
+// -----------------------------------------------------------------------------
+bool SPParksDumpReader::getOneBasedArrays() const
+{
+  return m_OneBasedArrays;
+}
+
+// -----------------------------------------------------------------------------
+void SPParksDumpReader::setFeatureIdsArrayName(const QString& value)
+{
+  m_FeatureIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString SPParksDumpReader::getFeatureIdsArrayName() const
+{
+  return m_FeatureIdsArrayName;
 }

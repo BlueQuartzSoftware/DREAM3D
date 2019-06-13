@@ -40,8 +40,10 @@
 #include <QtCore/QMutex>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataContainers/AttributeMatrix.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 using DE_ComplexDoubleVector = std::vector<std::complex<double>>;
 
@@ -89,9 +91,23 @@ class Processing_EXPORT DetectEllipsoids : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(DetectEllipsoids)
-  SIMPL_FILTER_NEW_MACRO(DetectEllipsoids)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(DetectEllipsoids, AbstractFilter)
+  using Self = DetectEllipsoids;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<DetectEllipsoids> New();
+
+  /**
+   * @brief Returns the name of the class for DetectEllipsoids
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for DetectEllipsoids
+   */
+  static QString ClassName();
 
   ~DetectEllipsoids() override;
 
@@ -103,43 +119,160 @@ public:
     MicronUnits = 1
   };
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DetectedEllipsoidsFeatureIdsArrayPath)
+  /**
+   * @brief Setter property for DetectedEllipsoidsFeatureIdsArrayPath
+   */
+  void setDetectedEllipsoidsFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DetectedEllipsoidsFeatureIdsArrayPath
+   * @return Value of DetectedEllipsoidsFeatureIdsArrayPath
+   */
+  DataArrayPath getDetectedEllipsoidsFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath DetectedEllipsoidsFeatureIdsArrayPath READ getDetectedEllipsoidsFeatureIdsArrayPath WRITE setDetectedEllipsoidsFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureAttributeMatrixPath)
+  /**
+   * @brief Setter property for FeatureAttributeMatrixPath
+   */
+  void setFeatureAttributeMatrixPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureAttributeMatrixPath
+   * @return Value of FeatureAttributeMatrixPath
+   */
+  DataArrayPath getFeatureAttributeMatrixPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureAttributeMatrixPath READ getFeatureAttributeMatrixPath WRITE setFeatureAttributeMatrixPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, EllipseFeatureAttributeMatrixPath)
+  /**
+   * @brief Setter property for EllipseFeatureAttributeMatrixPath
+   */
+  void setEllipseFeatureAttributeMatrixPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for EllipseFeatureAttributeMatrixPath
+   * @return Value of EllipseFeatureAttributeMatrixPath
+   */
+  DataArrayPath getEllipseFeatureAttributeMatrixPath() const;
+
   Q_PROPERTY(DataArrayPath EllipseFeatureAttributeMatrixPath READ getEllipseFeatureAttributeMatrixPath WRITE setEllipseFeatureAttributeMatrixPath)
 
-  SIMPL_FILTER_PARAMETER(QString, CenterCoordinatesArrayName)
+  /**
+   * @brief Setter property for CenterCoordinatesArrayName
+   */
+  void setCenterCoordinatesArrayName(const QString& value);
+  /**
+   * @brief Getter property for CenterCoordinatesArrayName
+   * @return Value of CenterCoordinatesArrayName
+   */
+  QString getCenterCoordinatesArrayName() const;
+
   Q_PROPERTY(QString CenterCoordinatesArrayName READ getCenterCoordinatesArrayName WRITE setCenterCoordinatesArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, MajorAxisLengthArrayName)
+  /**
+   * @brief Setter property for MajorAxisLengthArrayName
+   */
+  void setMajorAxisLengthArrayName(const QString& value);
+  /**
+   * @brief Getter property for MajorAxisLengthArrayName
+   * @return Value of MajorAxisLengthArrayName
+   */
+  QString getMajorAxisLengthArrayName() const;
+
   Q_PROPERTY(QString MajorAxisLengthArrayName READ getMajorAxisLengthArrayName WRITE setMajorAxisLengthArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, MinorAxisLengthArrayName)
+  /**
+   * @brief Setter property for MinorAxisLengthArrayName
+   */
+  void setMinorAxisLengthArrayName(const QString& value);
+  /**
+   * @brief Getter property for MinorAxisLengthArrayName
+   * @return Value of MinorAxisLengthArrayName
+   */
+  QString getMinorAxisLengthArrayName() const;
+
   Q_PROPERTY(QString MinorAxisLengthArrayName READ getMinorAxisLengthArrayName WRITE setMinorAxisLengthArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, RotationalAnglesArrayName)
+  /**
+   * @brief Setter property for RotationalAnglesArrayName
+   */
+  void setRotationalAnglesArrayName(const QString& value);
+  /**
+   * @brief Getter property for RotationalAnglesArrayName
+   * @return Value of RotationalAnglesArrayName
+   */
+  QString getRotationalAnglesArrayName() const;
+
   Q_PROPERTY(QString RotationalAnglesArrayName READ getRotationalAnglesArrayName WRITE setRotationalAnglesArrayName)
 
-  SIMPL_FILTER_PARAMETER(int, MinFiberAxisLength)
+  /**
+   * @brief Setter property for MinFiberAxisLength
+   */
+  void setMinFiberAxisLength(const int& value);
+  /**
+   * @brief Getter property for MinFiberAxisLength
+   * @return Value of MinFiberAxisLength
+   */
+  int getMinFiberAxisLength() const;
+
   Q_PROPERTY(int MinFiberAxisLength READ getMinFiberAxisLength WRITE setMinFiberAxisLength)
 
-  SIMPL_FILTER_PARAMETER(int, MaxFiberAxisLength)
+  /**
+   * @brief Setter property for MaxFiberAxisLength
+   */
+  void setMaxFiberAxisLength(const int& value);
+  /**
+   * @brief Getter property for MaxFiberAxisLength
+   * @return Value of MaxFiberAxisLength
+   */
+  int getMaxFiberAxisLength() const;
+
   Q_PROPERTY(int MaxFiberAxisLength READ getMaxFiberAxisLength WRITE setMaxFiberAxisLength)
 
-  SIMPL_FILTER_PARAMETER(float, HoughTransformThreshold)
+  /**
+   * @brief Setter property for HoughTransformThreshold
+   */
+  void setHoughTransformThreshold(const float& value);
+  /**
+   * @brief Getter property for HoughTransformThreshold
+   * @return Value of HoughTransformThreshold
+   */
+  float getHoughTransformThreshold() const;
+
   Q_PROPERTY(float HoughTransformThreshold READ getHoughTransformThreshold WRITE setHoughTransformThreshold)
 
-  SIMPL_FILTER_PARAMETER(float, MinAspectRatio)
+  /**
+   * @brief Setter property for MinAspectRatio
+   */
+  void setMinAspectRatio(const float& value);
+  /**
+   * @brief Getter property for MinAspectRatio
+   * @return Value of MinAspectRatio
+   */
+  float getMinAspectRatio() const;
+
   Q_PROPERTY(float MinAspectRatio READ getMinAspectRatio WRITE setMinAspectRatio)
 
-  SIMPL_FILTER_PARAMETER(int, ImageScaleBarLength)
+  /**
+   * @brief Setter property for ImageScaleBarLength
+   */
+  void setImageScaleBarLength(const int& value);
+  /**
+   * @brief Getter property for ImageScaleBarLength
+   * @return Value of ImageScaleBarLength
+   */
+  int getImageScaleBarLength() const;
+
   Q_PROPERTY(int ImageScaleBarLength READ getImageScaleBarLength WRITE setImageScaleBarLength)
 
   void incrementEllipseCount();
@@ -265,6 +398,20 @@ protected:
   void initialize();
 
 private:
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_DetectedEllipsoidsFeatureIdsArrayPath = {};
+  DataArrayPath m_FeatureAttributeMatrixPath = {};
+  DataArrayPath m_EllipseFeatureAttributeMatrixPath = {};
+  QString m_CenterCoordinatesArrayName = {};
+  QString m_MajorAxisLengthArrayName = {};
+  QString m_MinorAxisLengthArrayName = {};
+  QString m_RotationalAnglesArrayName = {};
+  int m_MinFiberAxisLength = {};
+  int m_MaxFiberAxisLength = {};
+  float m_HoughTransformThreshold = {};
+  float m_MinAspectRatio = {};
+  int m_ImageScaleBarLength = {};
+
   static double m_img_scale_length;
   int32_t m_MaxFeatureId = 0;
   int32_t m_NextExecutedFeatureId = 1;

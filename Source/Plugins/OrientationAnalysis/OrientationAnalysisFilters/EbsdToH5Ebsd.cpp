@@ -40,7 +40,10 @@
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/H5ScopedSentinel.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
 
@@ -509,18 +512,18 @@ AbstractFilter::Pointer EbsdToH5Ebsd::newFilterInstance(bool copyFilterParameter
     filter->setFilterParameters(getFilterParameters());
     // We are going to hand copy all of the parameters because the other way of copying the parameters are going to
     // miss some of them because we are not enumerating all of them.
-    SIMPL_COPY_INSTANCEVAR(OutputFile)
-    SIMPL_COPY_INSTANCEVAR(ZStartIndex)
-    SIMPL_COPY_INSTANCEVAR(ZEndIndex)
-    SIMPL_COPY_INSTANCEVAR(ZResolution)
-    SIMPL_COPY_INSTANCEVAR(RefFrameZDir)
-    SIMPL_COPY_INSTANCEVAR(InputPath)
-    SIMPL_COPY_INSTANCEVAR(FilePrefix)
-    SIMPL_COPY_INSTANCEVAR(FileSuffix)
-    SIMPL_COPY_INSTANCEVAR(FileExtension)
-    SIMPL_COPY_INSTANCEVAR(PaddingDigits)
-    SIMPL_COPY_INSTANCEVAR(SampleTransformation)
-    SIMPL_COPY_INSTANCEVAR(EulerTransformation)
+    filter->setOutputFile(getOutputFile());
+    filter->setZStartIndex(getZStartIndex());
+    filter->setZEndIndex(getZEndIndex());
+    filter->setZResolution(getZResolution());
+    filter->setRefFrameZDir(getRefFrameZDir());
+    filter->setInputPath(getInputPath());
+    filter->setFilePrefix(getFilePrefix());
+    filter->setFileSuffix(getFileSuffix());
+    filter->setFileExtension(getFileExtension());
+    filter->setPaddingDigits(getPaddingDigits());
+    filter->setSampleTransformation(getSampleTransformation());
+    filter->setEulerTransformation(getEulerTransformation());
   }
   return filter;
 }
@@ -581,4 +584,177 @@ const QString EbsdToH5Ebsd::getSubGroupName() const
 const QString EbsdToH5Ebsd::getHumanLabel() const
 {
   return "Import Orientation File(s) to H5EBSD";
+}
+
+// -----------------------------------------------------------------------------
+EbsdToH5Ebsd::Pointer EbsdToH5Ebsd::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<EbsdToH5Ebsd> EbsdToH5Ebsd::New()
+{
+  struct make_shared_enabler : public EbsdToH5Ebsd
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString EbsdToH5Ebsd::getNameOfClass() const
+{
+  return QString("EbsdToH5Ebsd");
+}
+
+// -----------------------------------------------------------------------------
+QString EbsdToH5Ebsd::ClassName()
+{
+  return QString("EbsdToH5Ebsd");
+}
+
+// -----------------------------------------------------------------------------
+void EbsdToH5Ebsd::setOutputFile(const QString& value)
+{
+  m_OutputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EbsdToH5Ebsd::getOutputFile() const
+{
+  return m_OutputFile;
+}
+
+// -----------------------------------------------------------------------------
+void EbsdToH5Ebsd::setZStartIndex(const int64_t& value)
+{
+  m_ZStartIndex = value;
+}
+
+// -----------------------------------------------------------------------------
+int64_t EbsdToH5Ebsd::getZStartIndex() const
+{
+  return m_ZStartIndex;
+}
+
+// -----------------------------------------------------------------------------
+void EbsdToH5Ebsd::setZEndIndex(const int64_t& value)
+{
+  m_ZEndIndex = value;
+}
+
+// -----------------------------------------------------------------------------
+int64_t EbsdToH5Ebsd::getZEndIndex() const
+{
+  return m_ZEndIndex;
+}
+
+// -----------------------------------------------------------------------------
+void EbsdToH5Ebsd::setZResolution(const float& value)
+{
+  m_ZResolution = value;
+}
+
+// -----------------------------------------------------------------------------
+float EbsdToH5Ebsd::getZResolution() const
+{
+  return m_ZResolution;
+}
+
+// -----------------------------------------------------------------------------
+void EbsdToH5Ebsd::setRefFrameZDir(const uint32_t& value)
+{
+  m_RefFrameZDir = value;
+}
+
+// -----------------------------------------------------------------------------
+uint32_t EbsdToH5Ebsd::getRefFrameZDir() const
+{
+  return m_RefFrameZDir;
+}
+
+// -----------------------------------------------------------------------------
+void EbsdToH5Ebsd::setInputPath(const QString& value)
+{
+  m_InputPath = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EbsdToH5Ebsd::getInputPath() const
+{
+  return m_InputPath;
+}
+
+// -----------------------------------------------------------------------------
+void EbsdToH5Ebsd::setFilePrefix(const QString& value)
+{
+  m_FilePrefix = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EbsdToH5Ebsd::getFilePrefix() const
+{
+  return m_FilePrefix;
+}
+
+// -----------------------------------------------------------------------------
+void EbsdToH5Ebsd::setFileSuffix(const QString& value)
+{
+  m_FileSuffix = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EbsdToH5Ebsd::getFileSuffix() const
+{
+  return m_FileSuffix;
+}
+
+// -----------------------------------------------------------------------------
+void EbsdToH5Ebsd::setFileExtension(const QString& value)
+{
+  m_FileExtension = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EbsdToH5Ebsd::getFileExtension() const
+{
+  return m_FileExtension;
+}
+
+// -----------------------------------------------------------------------------
+void EbsdToH5Ebsd::setPaddingDigits(const int& value)
+{
+  m_PaddingDigits = value;
+}
+
+// -----------------------------------------------------------------------------
+int EbsdToH5Ebsd::getPaddingDigits() const
+{
+  return m_PaddingDigits;
+}
+
+// -----------------------------------------------------------------------------
+void EbsdToH5Ebsd::setSampleTransformation(const AxisAngleInput_t& value)
+{
+  m_SampleTransformation = value;
+}
+
+// -----------------------------------------------------------------------------
+AxisAngleInput_t EbsdToH5Ebsd::getSampleTransformation() const
+{
+  return m_SampleTransformation;
+}
+
+// -----------------------------------------------------------------------------
+void EbsdToH5Ebsd::setEulerTransformation(const AxisAngleInput_t& value)
+{
+  m_EulerTransformation = value;
+}
+
+// -----------------------------------------------------------------------------
+AxisAngleInput_t EbsdToH5Ebsd::getEulerTransformation() const
+{
+  return m_EulerTransformation;
 }

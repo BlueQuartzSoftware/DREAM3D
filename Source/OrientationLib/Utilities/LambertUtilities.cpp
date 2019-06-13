@@ -113,3 +113,28 @@ int32_t LambertUtilities::LambertSquareVertToSphereVert(float* vert, Hemisphere 
   vert[2] = z;
   return  0;
 }
+
+// -----------------------------------------------------------------------------
+LambertUtilities::Pointer LambertUtilities::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+LambertUtilities::Pointer LambertUtilities::New()
+{
+  Pointer sharedPtr(new(LambertUtilities));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+const QString LambertUtilities::getNameOfClass() const
+{
+  return QString("LambertUtilities");
+}
+
+// -----------------------------------------------------------------------------
+QString LambertUtilities::ClassName()
+{
+  return QString("LambertUtilities");
+}

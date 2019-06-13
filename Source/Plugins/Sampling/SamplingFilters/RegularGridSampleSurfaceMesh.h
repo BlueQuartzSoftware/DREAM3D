@@ -36,10 +36,10 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 
@@ -75,34 +75,120 @@ class Sampling_EXPORT RegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(RegularGridSampleSurfaceMesh)
-  SIMPL_FILTER_NEW_MACRO(RegularGridSampleSurfaceMesh)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(RegularGridSampleSurfaceMesh, AbstractFilter)
+  using Self = RegularGridSampleSurfaceMesh;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<RegularGridSampleSurfaceMesh> New();
+
+  /**
+   * @brief Returns the name of the class for RegularGridSampleSurfaceMesh
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for RegularGridSampleSurfaceMesh
+   */
+  static QString ClassName();
 
   ~RegularGridSampleSurfaceMesh() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  DataArrayPath getDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  QString getCellAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(int, XPoints)
+  /**
+   * @brief Setter property for XPoints
+   */
+  void setXPoints(const int& value);
+  /**
+   * @brief Getter property for XPoints
+   * @return Value of XPoints
+   */
+  int getXPoints() const;
+
   Q_PROPERTY(int XPoints READ getXPoints WRITE setXPoints)
 
-  SIMPL_FILTER_PARAMETER(int, YPoints)
+  /**
+   * @brief Setter property for YPoints
+   */
+  void setYPoints(const int& value);
+  /**
+   * @brief Getter property for YPoints
+   * @return Value of YPoints
+   */
+  int getYPoints() const;
+
   Q_PROPERTY(int YPoints READ getYPoints WRITE setYPoints)
 
-  SIMPL_FILTER_PARAMETER(int, ZPoints)
+  /**
+   * @brief Setter property for ZPoints
+   */
+  void setZPoints(const int& value);
+  /**
+   * @brief Getter property for ZPoints
+   * @return Value of ZPoints
+   */
+  int getZPoints() const;
+
   Q_PROPERTY(int ZPoints READ getZPoints WRITE setZPoints)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  /**
+   * @brief Setter property for Spacing
+   */
+  void setSpacing(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Spacing
+   * @return Value of Spacing
+   */
+  FloatVec3Type getSpacing() const;
+
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Origin)
+  /**
+   * @brief Setter property for Origin
+   */
+  void setOrigin(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Origin
+   * @return Value of Origin
+   */
+  FloatVec3Type getOrigin() const;
+
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
-  SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+  /**
+   * @brief Setter property for FeatureIdsArrayName
+   */
+  void setFeatureIdsArrayName(const QString& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayName
+   * @return Value of FeatureIdsArrayName
+   */
+  QString getFeatureIdsArrayName() const;
+
   Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
   /**
@@ -190,7 +276,17 @@ protected:
   void assign_points(Int32ArrayType::Pointer iArray) override;
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+
+  DataArrayPath m_DataContainerName = {};
+  QString m_CellAttributeMatrixName = {};
+  int m_XPoints = {};
+  int m_YPoints = {};
+  int m_ZPoints = {};
+  FloatVec3Type m_Spacing = {};
+  FloatVec3Type m_Origin = {};
+  QString m_FeatureIdsArrayName = {};
 
 public:
   RegularGridSampleSurfaceMesh(const RegularGridSampleSurfaceMesh&) = delete; // Copy Constructor Not Implemented

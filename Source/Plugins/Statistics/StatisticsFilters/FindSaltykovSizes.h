@@ -38,10 +38,10 @@
 #include <QtCore/QString>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -67,16 +67,48 @@ class Statistics_EXPORT FindSaltykovSizes : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindSaltykovSizes)
-  SIMPL_FILTER_NEW_MACRO(FindSaltykovSizes)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindSaltykovSizes, AbstractFilter)
+  using Self = FindSaltykovSizes;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindSaltykovSizes> New();
+
+  /**
+   * @brief Returns the name of the class for FindSaltykovSizes
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindSaltykovSizes
+   */
+  static QString ClassName();
 
   ~FindSaltykovSizes() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
+  /**
+   * @brief Setter property for EquivalentDiametersArrayPath
+   */
+  void setEquivalentDiametersArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for EquivalentDiametersArrayPath
+   * @return Value of EquivalentDiametersArrayPath
+   */
+  DataArrayPath getEquivalentDiametersArrayPath() const;
+
   Q_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SaltykovEquivalentDiametersArrayPath)
+  /**
+   * @brief Setter property for SaltykovEquivalentDiametersArrayPath
+   */
+  void setSaltykovEquivalentDiametersArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SaltykovEquivalentDiametersArrayPath
+   * @return Value of SaltykovEquivalentDiametersArrayPath
+   */
+  DataArrayPath getSaltykovEquivalentDiametersArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SaltykovEquivalentDiametersArrayPath READ getSaltykovEquivalentDiametersArrayPath WRITE setSaltykovEquivalentDiametersArrayPath)
 
   /**
@@ -212,8 +244,13 @@ protected:
   template <class T> int round_to_nearest_int(T x);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
-  DEFINE_DATAARRAY_VARIABLE(float, SaltykovEquivalentDiameters)
+  std::weak_ptr<DataArray<float>> m_EquivalentDiametersPtr;
+  float* m_EquivalentDiameters = nullptr;
+  std::weak_ptr<DataArray<float>> m_SaltykovEquivalentDiametersPtr;
+  float* m_SaltykovEquivalentDiameters = nullptr;
+
+  DataArrayPath m_EquivalentDiametersArrayPath = {};
+  DataArrayPath m_SaltykovEquivalentDiametersArrayPath = {};
 
 public:
   FindSaltykovSizes(const FindSaltykovSizes&) = delete; // Copy Constructor Not Implemented

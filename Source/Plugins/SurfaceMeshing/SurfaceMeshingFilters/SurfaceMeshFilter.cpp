@@ -44,3 +44,32 @@ SurfaceMeshFilter::SurfaceMeshFilter() = default;
 //
 // -----------------------------------------------------------------------------
 SurfaceMeshFilter::~SurfaceMeshFilter() = default;
+
+// -----------------------------------------------------------------------------
+SurfaceMeshFilter::Pointer SurfaceMeshFilter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<SurfaceMeshFilter> SurfaceMeshFilter::New()
+{
+  struct make_shared_enabler : public SurfaceMeshFilter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString SurfaceMeshFilter::getNameOfClass() const
+{
+  return QString("SurfaceMeshFilter");
+}
+
+// -----------------------------------------------------------------------------
+QString SurfaceMeshFilter::ClassName()
+{
+  return QString("SurfaceMeshFilter");
+}

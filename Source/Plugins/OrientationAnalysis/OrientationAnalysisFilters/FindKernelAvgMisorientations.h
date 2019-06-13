@@ -36,9 +36,9 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
@@ -69,28 +69,96 @@ class OrientationAnalysis_EXPORT FindKernelAvgMisorientations : public AbstractF
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindKernelAvgMisorientations)
-  SIMPL_FILTER_NEW_MACRO(FindKernelAvgMisorientations)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindKernelAvgMisorientations, AbstractFilter)
+  using Self = FindKernelAvgMisorientations;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindKernelAvgMisorientations> New();
+
+  /**
+   * @brief Returns the name of the class for FindKernelAvgMisorientations
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindKernelAvgMisorientations
+   */
+  static QString ClassName();
 
   ~FindKernelAvgMisorientations() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  /**
+   * @brief Setter property for CellPhasesArrayPath
+   */
+  void setCellPhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellPhasesArrayPath
+   * @return Value of CellPhasesArrayPath
+   */
+  DataArrayPath getCellPhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+  /**
+   * @brief Setter property for QuatsArrayPath
+   */
+  void setQuatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for QuatsArrayPath
+   * @return Value of QuatsArrayPath
+   */
+  DataArrayPath getQuatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, KernelAverageMisorientationsArrayName)
+  /**
+   * @brief Setter property for KernelAverageMisorientationsArrayName
+   */
+  void setKernelAverageMisorientationsArrayName(const QString& value);
+  /**
+   * @brief Getter property for KernelAverageMisorientationsArrayName
+   * @return Value of KernelAverageMisorientationsArrayName
+   */
+  QString getKernelAverageMisorientationsArrayName() const;
+
   Q_PROPERTY(QString KernelAverageMisorientationsArrayName READ getKernelAverageMisorientationsArrayName WRITE setKernelAverageMisorientationsArrayName)
 
-  SIMPL_FILTER_PARAMETER(IntVec3Type, KernelSize)
+  /**
+   * @brief Setter property for KernelSize
+   */
+  void setKernelSize(const IntVec3Type& value);
+  /**
+   * @brief Getter property for KernelSize
+   * @return Value of KernelSize
+   */
+  IntVec3Type getKernelSize() const;
+
   Q_PROPERTY(IntVec3Type KernelSize READ getKernelSize WRITE setKernelSize)
 
   /**
@@ -194,14 +262,25 @@ protected:
   void initialize();
 
 private:
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+  int32_t* m_CellPhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_QuatsPtr;
+  float* m_Quats = nullptr;
+  std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
+  uint32_t* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<float>> m_KernelAverageMisorientationsPtr;
+  float* m_KernelAverageMisorientations = nullptr;
+
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_CellPhasesArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+  DataArrayPath m_QuatsArrayPath = {};
+  QString m_KernelAverageMisorientationsArrayName = {};
+  IntVec3Type m_KernelSize = {};
+
   QVector<LaueOps::Pointer> m_OrientationOps;
-
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-  DEFINE_DATAARRAY_VARIABLE(float, Quats)
-  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-
-  DEFINE_DATAARRAY_VARIABLE(float, KernelAverageMisorientations)
 
 public:
   FindKernelAvgMisorientations(const FindKernelAvgMisorientations&) = delete;            // Copy Constructor Not Implemented

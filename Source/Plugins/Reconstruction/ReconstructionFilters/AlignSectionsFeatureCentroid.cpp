@@ -38,13 +38,18 @@
 #include <cmath>
 #include <fstream>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -366,4 +371,69 @@ const QString AlignSectionsFeatureCentroid::getSubGroupName() const
 const QString AlignSectionsFeatureCentroid::getHumanLabel() const
 {
   return "Align Sections (Feature Centroid)";
+}
+
+// -----------------------------------------------------------------------------
+AlignSectionsFeatureCentroid::Pointer AlignSectionsFeatureCentroid::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<AlignSectionsFeatureCentroid> AlignSectionsFeatureCentroid::New()
+{
+  struct make_shared_enabler : public AlignSectionsFeatureCentroid
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString AlignSectionsFeatureCentroid::getNameOfClass() const
+{
+  return QString("AlignSectionsFeatureCentroid");
+}
+
+// -----------------------------------------------------------------------------
+QString AlignSectionsFeatureCentroid::ClassName()
+{
+  return QString("AlignSectionsFeatureCentroid");
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsFeatureCentroid::setReferenceSlice(const int& value)
+{
+  m_ReferenceSlice = value;
+}
+
+// -----------------------------------------------------------------------------
+int AlignSectionsFeatureCentroid::getReferenceSlice() const
+{
+  return m_ReferenceSlice;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsFeatureCentroid::setUseReferenceSlice(const bool& value)
+{
+  m_UseReferenceSlice = value;
+}
+
+// -----------------------------------------------------------------------------
+bool AlignSectionsFeatureCentroid::getUseReferenceSlice() const
+{
+  return m_UseReferenceSlice;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsFeatureCentroid::setGoodVoxelsArrayPath(const DataArrayPath& value)
+{
+  m_GoodVoxelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AlignSectionsFeatureCentroid::getGoodVoxelsArrayPath() const
+{
+  return m_GoodVoxelsArrayPath;
 }

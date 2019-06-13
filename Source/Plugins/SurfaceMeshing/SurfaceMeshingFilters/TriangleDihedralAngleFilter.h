@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -59,13 +59,36 @@ class SurfaceMeshing_EXPORT TriangleDihedralAngleFilter : public SurfaceMeshFilt
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(TriangleDihedralAngleFilter)
-  SIMPL_FILTER_NEW_MACRO(TriangleDihedralAngleFilter)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(TriangleDihedralAngleFilter, SurfaceMeshFilter)
+  using Self = TriangleDihedralAngleFilter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<TriangleDihedralAngleFilter> New();
+
+  /**
+   * @brief Returns the name of the class for TriangleDihedralAngleFilter
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for TriangleDihedralAngleFilter
+   */
+  static QString ClassName();
 
   ~TriangleDihedralAngleFilter() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleDihedralAnglesArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshTriangleDihedralAnglesArrayPath
+   */
+  void setSurfaceMeshTriangleDihedralAnglesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshTriangleDihedralAnglesArrayPath
+   * @return Value of SurfaceMeshTriangleDihedralAnglesArrayPath
+   */
+  DataArrayPath getSurfaceMeshTriangleDihedralAnglesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshTriangleDihedralAnglesArrayPath READ getSurfaceMeshTriangleDihedralAnglesArrayPath WRITE setSurfaceMeshTriangleDihedralAnglesArrayPath)
 
   /**
@@ -146,7 +169,10 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleDihedralAngles)
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshTriangleDihedralAnglesPtr;
+  double* m_SurfaceMeshTriangleDihedralAngles = nullptr;
+
+  DataArrayPath m_SurfaceMeshTriangleDihedralAnglesArrayPath = {};
 
 public:
   TriangleDihedralAngleFilter(const TriangleDihedralAngleFilter&) = delete; // Copy Constructor Not Implemented

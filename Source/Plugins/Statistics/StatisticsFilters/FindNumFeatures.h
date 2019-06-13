@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -59,16 +59,48 @@ class Statistics_EXPORT FindNumFeatures : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindNumFeatures)
-  SIMPL_FILTER_NEW_MACRO(FindNumFeatures)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindNumFeatures, AbstractFilter)
+  using Self = FindNumFeatures;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindNumFeatures> New();
+
+  /**
+   * @brief Returns the name of the class for FindNumFeatures
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindNumFeatures
+   */
+  static QString ClassName();
 
   ~FindNumFeatures() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  /**
+   * @brief Setter property for FeaturePhasesArrayPath
+   */
+  void setFeaturePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayPath
+   * @return Value of FeaturePhasesArrayPath
+   */
+  DataArrayPath getFeaturePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NumFeaturesArrayPath)
+  /**
+   * @brief Setter property for NumFeaturesArrayPath
+   */
+  void setNumFeaturesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NumFeaturesArrayPath
+   * @return Value of NumFeaturesArrayPath
+   */
+  DataArrayPath getNumFeaturesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath NumFeaturesArrayPath READ getNumFeaturesArrayPath WRITE setNumFeaturesArrayPath)
 
   /**
@@ -172,9 +204,13 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_NumFeaturesPtr;
+  int32_t* m_NumFeatures = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
+  DataArrayPath m_FeaturePhasesArrayPath = {};
+  DataArrayPath m_NumFeaturesArrayPath = {};
 
 public:
   FindNumFeatures(const FindNumFeatures&) = delete; // Copy Constructor Not Implemented

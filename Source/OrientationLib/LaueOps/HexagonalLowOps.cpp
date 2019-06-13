@@ -1584,3 +1584,27 @@ SIMPL::Rgb HexagonalLowOps::generateMisorientationColor(const QuatType& q, const
   return rgb;
 }
 
+// -----------------------------------------------------------------------------
+HexagonalLowOps::Pointer HexagonalLowOps::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+const QString HexagonalLowOps::getNameOfClass() const
+{
+  return QString("HexagonalLowOps");
+}
+
+// -----------------------------------------------------------------------------
+QString HexagonalLowOps::ClassName()
+{
+  return QString("HexagonalLowOps");
+}
+
+// -----------------------------------------------------------------------------
+HexagonalLowOps::Pointer HexagonalLowOps::New()
+{
+  Pointer sharedPtr(new(HexagonalLowOps));
+  return sharedPtr;
+}

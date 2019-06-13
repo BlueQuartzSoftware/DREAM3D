@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -59,13 +59,36 @@ class SurfaceMeshing_EXPORT TriangleCentroidFilter : public SurfaceMeshFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(TriangleCentroidFilter)
-  SIMPL_FILTER_NEW_MACRO(TriangleCentroidFilter)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(TriangleCentroidFilter, SurfaceMeshFilter)
+  using Self = TriangleCentroidFilter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<TriangleCentroidFilter> New();
+
+  /**
+   * @brief Returns the name of the class for TriangleCentroidFilter
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for TriangleCentroidFilter
+   */
+  static QString ClassName();
 
   ~TriangleCentroidFilter() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleCentroidsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshTriangleCentroidsArrayPath
+   */
+  void setSurfaceMeshTriangleCentroidsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshTriangleCentroidsArrayPath
+   * @return Value of SurfaceMeshTriangleCentroidsArrayPath
+   */
+  DataArrayPath getSurfaceMeshTriangleCentroidsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshTriangleCentroidsArrayPath READ getSurfaceMeshTriangleCentroidsArrayPath WRITE setSurfaceMeshTriangleCentroidsArrayPath)
 
   /**
@@ -146,7 +169,10 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleCentroids)
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshTriangleCentroidsPtr;
+  double* m_SurfaceMeshTriangleCentroids = nullptr;
+
+  DataArrayPath m_SurfaceMeshTriangleCentroidsArrayPath = {};
 
 public:
   TriangleCentroidFilter(const TriangleCentroidFilter&) = delete; // Copy Constructor Not Implemented

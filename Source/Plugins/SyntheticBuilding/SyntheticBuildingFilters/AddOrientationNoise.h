@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
 
@@ -59,16 +59,48 @@ class SyntheticBuilding_EXPORT AddOrientationNoise : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(AddOrientationNoise)
-  SIMPL_FILTER_NEW_MACRO(AddOrientationNoise)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(AddOrientationNoise, AbstractFilter)
+  using Self = AddOrientationNoise;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<AddOrientationNoise> New();
+
+  /**
+   * @brief Returns the name of the class for AddOrientationNoise
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for AddOrientationNoise
+   */
+  static QString ClassName();
 
   ~AddOrientationNoise() override;
 
-  SIMPL_FILTER_PARAMETER(float, Magnitude)
+  /**
+   * @brief Setter property for Magnitude
+   */
+  void setMagnitude(const float& value);
+  /**
+   * @brief Getter property for Magnitude
+   * @return Value of Magnitude
+   */
+  float getMagnitude() const;
+
   Q_PROPERTY(float Magnitude READ getMagnitude WRITE setMagnitude)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+  /**
+   * @brief Setter property for CellEulerAnglesArrayPath
+   */
+  void setCellEulerAnglesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellEulerAnglesArrayPath
+   * @return Value of CellEulerAnglesArrayPath
+   */
+  DataArrayPath getCellEulerAnglesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
   /**
@@ -178,7 +210,11 @@ protected:
   void add_orientation_noise();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
+  std::weak_ptr<DataArray<float>> m_CellEulerAnglesPtr;
+  float* m_CellEulerAngles = nullptr;
+
+  float m_Magnitude = {};
+  DataArrayPath m_CellEulerAnglesArrayPath = {};
 
 public:
   AddOrientationNoise(const AddOrientationNoise&) = delete; // Copy Constructor Not Implemented

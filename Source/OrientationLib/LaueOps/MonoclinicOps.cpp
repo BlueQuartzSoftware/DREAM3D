@@ -969,3 +969,27 @@ SIMPL::Rgb MonoclinicOps::generateMisorientationColor(const QuatType& q, const Q
   return RgbColor::dRgb(0, 0, 0, 0);
 }
 
+// -----------------------------------------------------------------------------
+MonoclinicOps::Pointer MonoclinicOps::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+const QString MonoclinicOps::getNameOfClass() const
+{
+  return QString("MonoclinicOps");
+}
+
+// -----------------------------------------------------------------------------
+QString MonoclinicOps::ClassName()
+{
+  return QString("MonoclinicOps");
+}
+
+// -----------------------------------------------------------------------------
+MonoclinicOps::Pointer MonoclinicOps::New()
+{
+  Pointer sharedPtr(new(MonoclinicOps));
+  return sharedPtr;
+}

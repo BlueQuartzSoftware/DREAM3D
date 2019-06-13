@@ -54,10 +54,17 @@
 #include <iomanip>
 #include <limits>
 
+#include <QtCore/QTextStream>
+
+#include <QtCore/QDebug>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/DataArrays/StructArray.hpp"
 #include "SIMPLib/Geometry/MeshStructs.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/MeshFunctions.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/MeshLinearAlgebra.h"
@@ -1144,4 +1151,105 @@ const QString MovingFiniteElementSmoothing::getSubGroupName() const
 const QString MovingFiniteElementSmoothing::getHumanLabel() const
 {
   return "Moving Finite Element Smoothing";
+}
+
+// -----------------------------------------------------------------------------
+MovingFiniteElementSmoothing::Pointer MovingFiniteElementSmoothing::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<MovingFiniteElementSmoothing> MovingFiniteElementSmoothing::New()
+{
+  struct make_shared_enabler : public MovingFiniteElementSmoothing
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString MovingFiniteElementSmoothing::getNameOfClass() const
+{
+  return QString("MovingFiniteElementSmoothing");
+}
+
+// -----------------------------------------------------------------------------
+QString MovingFiniteElementSmoothing::ClassName()
+{
+  return QString("MovingFiniteElementSmoothing");
+}
+
+// -----------------------------------------------------------------------------
+void MovingFiniteElementSmoothing::setIterationSteps(const int& value)
+{
+  m_IterationSteps = value;
+}
+
+// -----------------------------------------------------------------------------
+int MovingFiniteElementSmoothing::getIterationSteps() const
+{
+  return m_IterationSteps;
+}
+
+// -----------------------------------------------------------------------------
+void MovingFiniteElementSmoothing::setNodeConstraints(const bool& value)
+{
+  m_NodeConstraints = value;
+}
+
+// -----------------------------------------------------------------------------
+bool MovingFiniteElementSmoothing::getNodeConstraints() const
+{
+  return m_NodeConstraints;
+}
+
+// -----------------------------------------------------------------------------
+void MovingFiniteElementSmoothing::setConstrainSurfaceNodes(const bool& value)
+{
+  m_ConstrainSurfaceNodes = value;
+}
+
+// -----------------------------------------------------------------------------
+bool MovingFiniteElementSmoothing::getConstrainSurfaceNodes() const
+{
+  return m_ConstrainSurfaceNodes;
+}
+
+// -----------------------------------------------------------------------------
+void MovingFiniteElementSmoothing::setConstrainQuadPoints(const bool& value)
+{
+  m_ConstrainQuadPoints = value;
+}
+
+// -----------------------------------------------------------------------------
+bool MovingFiniteElementSmoothing::getConstrainQuadPoints() const
+{
+  return m_ConstrainQuadPoints;
+}
+
+// -----------------------------------------------------------------------------
+void MovingFiniteElementSmoothing::setSmoothTripleLines(const bool& value)
+{
+  m_SmoothTripleLines = value;
+}
+
+// -----------------------------------------------------------------------------
+bool MovingFiniteElementSmoothing::getSmoothTripleLines() const
+{
+  return m_SmoothTripleLines;
+}
+
+// -----------------------------------------------------------------------------
+void MovingFiniteElementSmoothing::setSurfaceMeshNodeTypeArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshNodeTypeArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MovingFiniteElementSmoothing::getSurfaceMeshNodeTypeArrayPath() const
+{
+  return m_SurfaceMeshNodeTypeArrayPath;
 }

@@ -35,6 +35,8 @@
 
 #include "FindBoundaryCells.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -45,6 +47,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Generic/GenericConstants.h"
 #include "Generic/GenericVersion.h"
@@ -317,4 +321,81 @@ const QString FindBoundaryCells::getSubGroupName() const
 const QString FindBoundaryCells::getHumanLabel() const
 {
   return "Find Boundary Cells (Image)";
+}
+
+// -----------------------------------------------------------------------------
+FindBoundaryCells::Pointer FindBoundaryCells::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindBoundaryCells> FindBoundaryCells::New()
+{
+  struct make_shared_enabler : public FindBoundaryCells
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindBoundaryCells::getNameOfClass() const
+{
+  return QString("FindBoundaryCells");
+}
+
+// -----------------------------------------------------------------------------
+QString FindBoundaryCells::ClassName()
+{
+  return QString("FindBoundaryCells");
+}
+
+// -----------------------------------------------------------------------------
+void FindBoundaryCells::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindBoundaryCells::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindBoundaryCells::setBoundaryCellsArrayName(const QString& value)
+{
+  m_BoundaryCellsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindBoundaryCells::getBoundaryCellsArrayName() const
+{
+  return m_BoundaryCellsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindBoundaryCells::setIgnoreFeatureZero(const bool& value)
+{
+  m_IgnoreFeatureZero = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindBoundaryCells::getIgnoreFeatureZero() const
+{
+  return m_IgnoreFeatureZero;
+}
+
+// -----------------------------------------------------------------------------
+void FindBoundaryCells::setIncludeVolumeBoundary(const bool& value)
+{
+  m_IncludeVolumeBoundary = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindBoundaryCells::getIncludeVolumeBoundary() const
+{
+  return m_IncludeVolumeBoundary;
 }

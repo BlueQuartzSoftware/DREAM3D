@@ -36,8 +36,11 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+
+class IDataArray;
+using IDataArrayWkPtrType = std::weak_ptr<IDataArray>;
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -61,13 +64,36 @@ class Statistics_EXPORT FindAvgScalarValueForFeatures : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindAvgScalarValueForFeatures)
-  SIMPL_FILTER_NEW_MACRO(FindAvgScalarValueForFeatures)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindAvgScalarValueForFeatures, AbstractFilter)
+  using Self = FindAvgScalarValueForFeatures;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindAvgScalarValueForFeatures> New();
+
+  /**
+   * @brief Returns the name of the class for FindAvgScalarValueForFeatures
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindAvgScalarValueForFeatures
+   */
+  static QString ClassName();
 
   ~FindAvgScalarValueForFeatures() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
+  /**
+   * @brief Setter property for SelectedCellArrayPath
+   */
+  void setSelectedCellArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SelectedCellArrayPath
+   * @return Value of SelectedCellArrayPath
+   */
+  DataArrayPath getSelectedCellArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
   /**
@@ -75,10 +101,28 @@ public:
   * a different group if you want. The string returned here will be displayed
   * in the GUI for the filter
   */
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NewFeatureArrayArrayPath)
+  /**
+   * @brief Setter property for NewFeatureArrayArrayPath
+   */
+  void setNewFeatureArrayArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NewFeatureArrayArrayPath
+   * @return Value of NewFeatureArrayArrayPath
+   */
+  DataArrayPath getNewFeatureArrayArrayPath() const;
+
   Q_PROPERTY(DataArrayPath NewFeatureArrayArrayPath READ getNewFeatureArrayArrayPath WRITE setNewFeatureArrayArrayPath)
 
   /**
@@ -182,10 +226,17 @@ protected:
   void initialize();
 
 private:
-  DEFINE_IDATAARRAY_VARIABLE(InDataArray)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  IDataArrayWkPtrType m_InDataArrayPtr;
+  void* m_InDataArray = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(float, NewFeatureArray)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<float>> m_NewFeatureArrayPtr;
+  float* m_NewFeatureArray = nullptr;
+
+  DataArrayPath m_SelectedCellArrayPath = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_NewFeatureArrayArrayPath = {};
 
 public:
   FindAvgScalarValueForFeatures(const FindAvgScalarValueForFeatures&) = delete; // Copy Constructor Not Implemented

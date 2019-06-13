@@ -38,9 +38,9 @@
 #include <QtCore/QString>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -74,9 +74,23 @@ class OrientationAnalysis_EXPORT GenerateFaceSchuhMisorientationColoring : publi
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(GenerateFaceSchuhMisorientationColoring)
-  SIMPL_FILTER_NEW_MACRO(GenerateFaceSchuhMisorientationColoring)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GenerateFaceSchuhMisorientationColoring, AbstractFilter)
+  using Self = GenerateFaceSchuhMisorientationColoring;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<GenerateFaceSchuhMisorientationColoring> New();
+
+  /**
+   * @brief Returns the name of the class for GenerateFaceSchuhMisorientationColoring
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for GenerateFaceSchuhMisorientationColoring
+   */
+  static QString ClassName();
 
   ~GenerateFaceSchuhMisorientationColoring() override;
 
@@ -85,19 +99,64 @@ public:
    * a different group if you want. The string returned here will be displayed
    * in the GUI for the filter
    */
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceLabelsArrayPath
+   */
+  void setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceLabelsArrayPath
+   * @return Value of SurfaceMeshFaceLabelsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  /**
+   * @brief Setter property for AvgQuatsArrayPath
+   */
+  void setAvgQuatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for AvgQuatsArrayPath
+   * @return Value of AvgQuatsArrayPath
+   */
+  DataArrayPath getAvgQuatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  /**
+   * @brief Setter property for FeaturePhasesArrayPath
+   */
+  void setFeaturePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayPath
+   * @return Value of FeaturePhasesArrayPath
+   */
+  DataArrayPath getFeaturePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, SurfaceMeshFaceSchuhMisorientationColorsArrayName)
+  /**
+   * @brief Setter property for SurfaceMeshFaceSchuhMisorientationColorsArrayName
+   */
+  void setSurfaceMeshFaceSchuhMisorientationColorsArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceSchuhMisorientationColorsArrayName
+   * @return Value of SurfaceMeshFaceSchuhMisorientationColorsArrayName
+   */
+  QString getSurfaceMeshFaceSchuhMisorientationColorsArrayName() const;
+
   Q_PROPERTY(QString SurfaceMeshFaceSchuhMisorientationColorsArrayName READ getSurfaceMeshFaceSchuhMisorientationColorsArrayName WRITE setSurfaceMeshFaceSchuhMisorientationColorsArrayName)
 
   /**
@@ -202,11 +261,22 @@ protected:
   void dataCheckVoxel();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-  DEFINE_DATAARRAY_VARIABLE(uint8_t, SurfaceMeshFaceSchuhMisorientationColors)
-  DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-  DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+  std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFaceLabelsPtr;
+  int32_t* m_SurfaceMeshFaceLabels = nullptr;
+  std::weak_ptr<DataArray<uint8_t>> m_SurfaceMeshFaceSchuhMisorientationColorsPtr;
+  uint8_t* m_SurfaceMeshFaceSchuhMisorientationColors = nullptr;
+  std::weak_ptr<DataArray<float>> m_AvgQuatsPtr;
+  float* m_AvgQuats = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+  std::weak_ptr<DataArray<unsigned int>> m_CrystalStructuresPtr;
+  unsigned int* m_CrystalStructures = nullptr;
+
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
+  DataArrayPath m_AvgQuatsArrayPath = {};
+  DataArrayPath m_FeaturePhasesArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+  QString m_SurfaceMeshFaceSchuhMisorientationColorsArrayName = {};
 
 public:
   GenerateFaceSchuhMisorientationColoring(const GenerateFaceSchuhMisorientationColoring&) = delete;            // Copy Constructor Not Implemented

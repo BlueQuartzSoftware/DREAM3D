@@ -36,7 +36,6 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
@@ -61,16 +60,48 @@ class Reconstruction_EXPORT AlignSectionsList : public AlignSections
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(AlignSectionsList)
-  SIMPL_FILTER_NEW_MACRO(AlignSectionsList)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(AlignSectionsList, AlignSections)
+  using Self = AlignSectionsList;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<AlignSectionsList> New();
+
+  /**
+   * @brief Returns the name of the class for AlignSectionsList
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for AlignSectionsList
+   */
+  static QString ClassName();
 
   virtual ~AlignSectionsList();
 
-  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  /**
+   * @brief Setter property for InputFile
+   */
+  void setInputFile(const QString& value);
+  /**
+   * @brief Getter property for InputFile
+   * @return Value of InputFile
+   */
+  QString getInputFile() const;
+
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-  SIMPL_FILTER_PARAMETER(bool, DREAM3DAlignmentFile)
+  /**
+   * @brief Setter property for DREAM3DAlignmentFile
+   */
+  void setDREAM3DAlignmentFile(const bool& value);
+  /**
+   * @brief Getter property for DREAM3DAlignmentFile
+   * @return Value of DREAM3DAlignmentFile
+   */
+  bool getDREAM3DAlignmentFile() const;
+
   Q_PROPERTY(bool DREAM3DAlignmentFile READ getDREAM3DAlignmentFile WRITE setDREAM3DAlignmentFile)
 
   /**
@@ -160,5 +191,9 @@ public:
   AlignSectionsList(AlignSectionsList&&) = delete;      // Move Constructor Not Implemented
   AlignSectionsList& operator=(const AlignSectionsList&) = delete; // Copy Assignment Not Implemented
   AlignSectionsList& operator=(AlignSectionsList&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  QString m_InputFile = {};
+  bool m_DREAM3DAlignmentFile = {};
 };
 

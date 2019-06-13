@@ -196,3 +196,16 @@ unsigned int PrimaryEquiaxedPreset::getDistributionType(const QString& distType)
   }
   return SIMPL::DistributionType::UnknownDistributionType;
 }
+
+// -----------------------------------------------------------------------------
+PrimaryEquiaxedPreset::Pointer PrimaryEquiaxedPreset::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+PrimaryEquiaxedPreset::Pointer PrimaryEquiaxedPreset::New()
+{
+  Pointer sharedPtr(new(PrimaryEquiaxedPreset));
+  return sharedPtr;
+}

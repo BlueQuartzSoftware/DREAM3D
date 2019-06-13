@@ -44,7 +44,10 @@
 // Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/EbsdConstants.h"
 
+#include <QtCore/QDebug>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -890,4 +893,28 @@ QIcon PrimaryPhaseWidget::getPhaseIcon()
   icon.addFile(QStringLiteral(":/StatsGenerator/icons/Primary.png"), QSize(), QIcon::Normal, QIcon::Off);
   icon.addFile(QStringLiteral(":/StatsGenerator/icons/Primary_Selected.png"), QSize(), QIcon::Normal, QIcon::On);
   return icon;
+}
+
+// -----------------------------------------------------------------------------
+void PrimaryPhaseWidget::setPhaseType(const PhaseType::Type& value)
+{
+  m_PhaseType = value;
+}
+
+// -----------------------------------------------------------------------------
+PhaseType::Type PrimaryPhaseWidget::getPhaseType() const
+{
+  return m_PhaseType;
+}
+
+// -----------------------------------------------------------------------------
+void PrimaryPhaseWidget::setSGPlotWidgets(const QList<StatsGenPlotWidget*>& value)
+{
+  m_SGPlotWidgets = value;
+}
+
+// -----------------------------------------------------------------------------
+QList<StatsGenPlotWidget*> PrimaryPhaseWidget::getSGPlotWidgets() const
+{
+  return m_SGPlotWidgets;
 }

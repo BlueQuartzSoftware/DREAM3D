@@ -34,11 +34,15 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "AppendImageGeometryZSlice.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
@@ -352,4 +356,69 @@ const QString AppendImageGeometryZSlice::getSubGroupName() const
 const QString AppendImageGeometryZSlice::getHumanLabel() const
 {
   return "Append Z Slice (Image Geometry)";
+}
+
+// -----------------------------------------------------------------------------
+AppendImageGeometryZSlice::Pointer AppendImageGeometryZSlice::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<AppendImageGeometryZSlice> AppendImageGeometryZSlice::New()
+{
+  struct make_shared_enabler : public AppendImageGeometryZSlice
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString AppendImageGeometryZSlice::getNameOfClass() const
+{
+  return QString("AppendImageGeometryZSlice");
+}
+
+// -----------------------------------------------------------------------------
+QString AppendImageGeometryZSlice::ClassName()
+{
+  return QString("AppendImageGeometryZSlice");
+}
+
+// -----------------------------------------------------------------------------
+void AppendImageGeometryZSlice::setInputAttributeMatrix(const DataArrayPath& value)
+{
+  m_InputAttributeMatrix = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AppendImageGeometryZSlice::getInputAttributeMatrix() const
+{
+  return m_InputAttributeMatrix;
+}
+
+// -----------------------------------------------------------------------------
+void AppendImageGeometryZSlice::setDestinationAttributeMatrix(const DataArrayPath& value)
+{
+  m_DestinationAttributeMatrix = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AppendImageGeometryZSlice::getDestinationAttributeMatrix() const
+{
+  return m_DestinationAttributeMatrix;
+}
+
+// -----------------------------------------------------------------------------
+void AppendImageGeometryZSlice::setCheckResolution(const bool& value)
+{
+  m_CheckResolution = value;
+}
+
+// -----------------------------------------------------------------------------
+bool AppendImageGeometryZSlice::getCheckResolution() const
+{
+  return m_CheckResolution;
 }

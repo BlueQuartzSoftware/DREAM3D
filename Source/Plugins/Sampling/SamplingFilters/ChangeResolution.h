@@ -36,9 +36,9 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Sampling/SamplingDLLExport.h"
 
@@ -70,31 +70,108 @@ class Sampling_EXPORT ChangeResolution : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(ChangeResolution)
-  SIMPL_FILTER_NEW_MACRO(ChangeResolution)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ChangeResolution, AbstractFilter)
+  using Self = ChangeResolution;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<ChangeResolution> New();
+
+  /**
+   * @brief Returns the name of the class for ChangeResolution
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ChangeResolution
+   */
+  static QString ClassName();
 
   ~ChangeResolution() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NewDataContainerName)
+  /**
+   * @brief Setter property for NewDataContainerName
+   */
+  void setNewDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NewDataContainerName
+   * @return Value of NewDataContainerName
+   */
+  DataArrayPath getNewDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
+  /**
+   * @brief Setter property for CellAttributeMatrixPath
+   */
+  void setCellAttributeMatrixPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixPath
+   * @return Value of CellAttributeMatrixPath
+   */
+  DataArrayPath getCellAttributeMatrixPath() const;
+
   Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
+  /**
+   * @brief Setter property for CellFeatureAttributeMatrixPath
+   */
+  void setCellFeatureAttributeMatrixPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellFeatureAttributeMatrixPath
+   * @return Value of CellFeatureAttributeMatrixPath
+   */
+  DataArrayPath getCellFeatureAttributeMatrixPath() const;
+
   Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  /**
+   * @brief Setter property for Spacing
+   */
+  void setSpacing(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Spacing
+   * @return Value of Spacing
+   */
+  FloatVec3Type getSpacing() const;
+
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
-  SIMPL_FILTER_PARAMETER(bool, RenumberFeatures)
+  /**
+   * @brief Setter property for RenumberFeatures
+   */
+  void setRenumberFeatures(const bool& value);
+  /**
+   * @brief Getter property for RenumberFeatures
+   * @return Value of RenumberFeatures
+   */
+  bool getRenumberFeatures() const;
+
   Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
 
-  SIMPL_FILTER_PARAMETER(bool, SaveAsNewDataContainer)
+  /**
+   * @brief Setter property for SaveAsNewDataContainer
+   */
+  void setSaveAsNewDataContainer(const bool& value);
+  /**
+   * @brief Getter property for SaveAsNewDataContainer
+   * @return Value of SaveAsNewDataContainer
+   */
+  bool getSaveAsNewDataContainer() const;
+
   Q_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -199,7 +276,16 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+
+  DataArrayPath m_NewDataContainerName = {};
+  DataArrayPath m_CellAttributeMatrixPath = {};
+  DataArrayPath m_CellFeatureAttributeMatrixPath = {};
+  FloatVec3Type m_Spacing = {};
+  bool m_RenumberFeatures = {};
+  bool m_SaveAsNewDataContainer = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
 
 public:
   ChangeResolution(const ChangeResolution&) = delete; // Copy Constructor Not Implemented

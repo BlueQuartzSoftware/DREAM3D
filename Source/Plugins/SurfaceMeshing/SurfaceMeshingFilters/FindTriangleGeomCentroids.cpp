@@ -37,6 +37,8 @@
 
 #include <set>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
 
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
@@ -46,6 +48,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -294,4 +298,69 @@ const QString FindTriangleGeomCentroids::getSubGroupName() const
 const QString FindTriangleGeomCentroids::getHumanLabel() const
 {
   return "Find Feature Centroids from Triangle Geometry";
+}
+
+// -----------------------------------------------------------------------------
+FindTriangleGeomCentroids::Pointer FindTriangleGeomCentroids::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindTriangleGeomCentroids> FindTriangleGeomCentroids::New()
+{
+  struct make_shared_enabler : public FindTriangleGeomCentroids
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindTriangleGeomCentroids::getNameOfClass() const
+{
+  return QString("FindTriangleGeomCentroids");
+}
+
+// -----------------------------------------------------------------------------
+QString FindTriangleGeomCentroids::ClassName()
+{
+  return QString("FindTriangleGeomCentroids");
+}
+
+// -----------------------------------------------------------------------------
+void FindTriangleGeomCentroids::setFeatureAttributeMatrixName(const DataArrayPath& value)
+{
+  m_FeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindTriangleGeomCentroids::getFeatureAttributeMatrixName() const
+{
+  return m_FeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void FindTriangleGeomCentroids::setFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_FaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindTriangleGeomCentroids::getFaceLabelsArrayPath() const
+{
+  return m_FaceLabelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindTriangleGeomCentroids::setCentroidsArrayName(const QString& value)
+{
+  m_CentroidsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindTriangleGeomCentroids::getCentroidsArrayName() const
+{
+  return m_CentroidsArrayName;
 }

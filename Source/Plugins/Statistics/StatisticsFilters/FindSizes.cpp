@@ -35,7 +35,10 @@
 
 #include "FindSizes.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
@@ -44,6 +47,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -450,4 +455,105 @@ const QString FindSizes::getSubGroupName() const
 const QString FindSizes::getHumanLabel() const
 {
   return "Find Feature Sizes";
+}
+
+// -----------------------------------------------------------------------------
+FindSizes::Pointer FindSizes::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindSizes> FindSizes::New()
+{
+  struct make_shared_enabler : public FindSizes
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindSizes::getNameOfClass() const
+{
+  return QString("FindSizes");
+}
+
+// -----------------------------------------------------------------------------
+QString FindSizes::ClassName()
+{
+  return QString("FindSizes");
+}
+
+// -----------------------------------------------------------------------------
+void FindSizes::setFeatureAttributeMatrixName(const DataArrayPath& value)
+{
+  m_FeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindSizes::getFeatureAttributeMatrixName() const
+{
+  return m_FeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void FindSizes::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindSizes::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindSizes::setVolumesArrayName(const QString& value)
+{
+  m_VolumesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindSizes::getVolumesArrayName() const
+{
+  return m_VolumesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindSizes::setEquivalentDiametersArrayName(const QString& value)
+{
+  m_EquivalentDiametersArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindSizes::getEquivalentDiametersArrayName() const
+{
+  return m_EquivalentDiametersArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindSizes::setNumElementsArrayName(const QString& value)
+{
+  m_NumElementsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindSizes::getNumElementsArrayName() const
+{
+  return m_NumElementsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindSizes::setSaveElementSizes(const bool& value)
+{
+  m_SaveElementSizes = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindSizes::getSaveElementSizes() const
+{
+  return m_SaveElementSizes;
 }

@@ -37,12 +37,17 @@
 
 #include <array>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Generic/GenericConstants.h"
 #include "Generic/GenericVersion.h"
@@ -287,4 +292,57 @@ const QString FindFeatureCentroids::getSubGroupName() const
 const QString FindFeatureCentroids::getHumanLabel() const
 {
   return "Find Feature Centroids";
+}
+
+// -----------------------------------------------------------------------------
+FindFeatureCentroids::Pointer FindFeatureCentroids::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindFeatureCentroids> FindFeatureCentroids::New()
+{
+  struct make_shared_enabler : public FindFeatureCentroids
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindFeatureCentroids::getNameOfClass() const
+{
+  return QString("FindFeatureCentroids");
+}
+
+// -----------------------------------------------------------------------------
+QString FindFeatureCentroids::ClassName()
+{
+  return QString("FindFeatureCentroids");
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureCentroids::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeatureCentroids::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureCentroids::setCentroidsArrayPath(const DataArrayPath& value)
+{
+  m_CentroidsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeatureCentroids::getCentroidsArrayPath() const
+{
+  return m_CentroidsArrayPath;
 }

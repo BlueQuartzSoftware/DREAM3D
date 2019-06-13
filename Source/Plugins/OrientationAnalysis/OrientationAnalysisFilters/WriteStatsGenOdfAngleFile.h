@@ -37,10 +37,13 @@
 
 #include <QtCore/QString>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -80,37 +83,132 @@ class OrientationAnalysis_EXPORT WriteStatsGenOdfAngleFile : public AbstractFilt
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(WriteStatsGenOdfAngleFile)
-  SIMPL_FILTER_NEW_MACRO(WriteStatsGenOdfAngleFile)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(WriteStatsGenOdfAngleFile, AbstractFilter)
+  using Self = WriteStatsGenOdfAngleFile;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<WriteStatsGenOdfAngleFile> New();
+
+  /**
+   * @brief Returns the name of the class for WriteStatsGenOdfAngleFile
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for WriteStatsGenOdfAngleFile
+   */
+  static QString ClassName();
 
   ~WriteStatsGenOdfAngleFile() override;
 
-  SIMPL_FILTER_PARAMETER(QString, OutputFile)
+  /**
+   * @brief Setter property for OutputFile
+   */
+  void setOutputFile(const QString& value);
+  /**
+   * @brief Getter property for OutputFile
+   * @return Value of OutputFile
+   */
+  QString getOutputFile() const;
+
   Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-  SIMPL_FILTER_PARAMETER(float, Weight)
+  /**
+   * @brief Setter property for Weight
+   */
+  void setWeight(const float& value);
+  /**
+   * @brief Getter property for Weight
+   * @return Value of Weight
+   */
+  float getWeight() const;
+
   Q_PROPERTY(float Weight READ getWeight WRITE setWeight)
 
-  SIMPL_FILTER_PARAMETER(int, Sigma)
+  /**
+   * @brief Setter property for Sigma
+   */
+  void setSigma(const int& value);
+  /**
+   * @brief Getter property for Sigma
+   * @return Value of Sigma
+   */
+  int getSigma() const;
+
   Q_PROPERTY(int Sigma READ getSigma WRITE setSigma)
 
-  SIMPL_FILTER_PARAMETER(int, Delimiter)
+  /**
+   * @brief Setter property for Delimiter
+   */
+  void setDelimiter(const int& value);
+  /**
+   * @brief Getter property for Delimiter
+   * @return Value of Delimiter
+   */
+  int getDelimiter() const;
+
   Q_PROPERTY(int Delimiter READ getDelimiter WRITE setDelimiter)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  /**
+   * @brief Setter property for CellPhasesArrayPath
+   */
+  void setCellPhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellPhasesArrayPath
+   * @return Value of CellPhasesArrayPath
+   */
+  DataArrayPath getCellPhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+  /**
+   * @brief Setter property for CellEulerAnglesArrayPath
+   */
+  void setCellEulerAnglesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellEulerAnglesArrayPath
+   * @return Value of CellEulerAnglesArrayPath
+   */
+  DataArrayPath getCellEulerAnglesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  /**
+   * @brief Setter property for GoodVoxelsArrayPath
+   */
+  void setGoodVoxelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for GoodVoxelsArrayPath
+   * @return Value of GoodVoxelsArrayPath
+   */
+  DataArrayPath getGoodVoxelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(bool, ConvertToDegrees)
+  /**
+   * @brief Setter property for ConvertToDegrees
+   */
+  void setConvertToDegrees(const bool& value);
+  /**
+   * @brief Getter property for ConvertToDegrees
+   * @return Value of ConvertToDegrees
+   */
+  bool getConvertToDegrees() const;
+
   Q_PROPERTY(bool ConvertToDegrees READ getConvertToDegrees WRITE setConvertToDegrees)
 
-  SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
+  /**
+   * @brief Setter property for UseGoodVoxels
+   */
+  void setUseGoodVoxels(const bool& value);
+  /**
+   * @brief Getter property for UseGoodVoxels
+   * @return Value of UseGoodVoxels
+   */
+  bool getUseGoodVoxels() const;
+
   Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
   /**
@@ -218,10 +316,24 @@ protected:
   int writeOutputFile(QTextStream& out, int32_t lineCount, int64_t totalPoints, int32_t phase);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-  DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
+  std::weak_ptr<DataArray<float>> m_CellEulerAnglesPtr;
+  float* m_CellEulerAngles = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+  int32_t* m_CellPhases = nullptr;
+  std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
+  uint32_t* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<bool>> m_GoodVoxelsPtr;
+  bool* m_GoodVoxels = nullptr;
+
+  QString m_OutputFile = {};
+  float m_Weight = {};
+  int m_Sigma = {};
+  int m_Delimiter = {};
+  DataArrayPath m_CellPhasesArrayPath = {};
+  DataArrayPath m_CellEulerAnglesArrayPath = {};
+  DataArrayPath m_GoodVoxelsArrayPath = {};
+  bool m_ConvertToDegrees = {};
+  bool m_UseGoodVoxels = {};
 
 public:
   WriteStatsGenOdfAngleFile(const WriteStatsGenOdfAngleFile&) = delete; // Copy Constructor Not Implemented

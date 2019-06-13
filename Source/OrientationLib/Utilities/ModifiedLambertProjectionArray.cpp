@@ -737,3 +737,58 @@ QString ModifiedLambertProjectionArray::getInfoString(SIMPL::InfoStringFormat fo
   }
   return info;
 }
+
+// -----------------------------------------------------------------------------
+ModifiedLambertProjectionArray::Pointer ModifiedLambertProjectionArray::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+ModifiedLambertProjectionArray::Pointer ModifiedLambertProjectionArray::New()
+{
+  Pointer sharedPtr(new(ModifiedLambertProjectionArray));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+const QString ModifiedLambertProjectionArray::getNameOfClass() const
+{
+  return QString("ModifiedLambertProjectionArray");
+}
+
+// -----------------------------------------------------------------------------
+QString ModifiedLambertProjectionArray::ClassName()
+{
+  return QString("ModifiedLambertProjectionArray");
+}
+
+// -----------------------------------------------------------------------------
+void ModifiedLambertProjectionArray::setPhase(const int& value)
+{
+  m_Phase = value;
+}
+
+// -----------------------------------------------------------------------------
+int ModifiedLambertProjectionArray::getPhase() const
+{
+  return m_Phase;
+}
+
+// -----------------------------------------------------------------------------
+void ModifiedLambertProjectionArray::setModifiedLambertProjectionArray(const QVector<ModifiedLambertProjection::Pointer>& value)
+{
+  m_ModifiedLambertProjectionArray = value;
+}
+
+// -----------------------------------------------------------------------------
+QVector<ModifiedLambertProjection::Pointer> ModifiedLambertProjectionArray::getModifiedLambertProjectionArray() const
+{
+  return m_ModifiedLambertProjectionArray;
+}
+
+// -----------------------------------------------------------------------------
+int ModifiedLambertProjectionArray::getClassVersion()
+{
+  return 2;
+}

@@ -35,7 +35,10 @@
 
 #include "FindKernelAvgMisorientations.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
@@ -43,6 +46,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -389,4 +394,105 @@ const QString FindKernelAvgMisorientations::getSubGroupName() const
 const QString FindKernelAvgMisorientations::getHumanLabel() const
 {
   return "Find Kernel Average Misorientations";
+}
+
+// -----------------------------------------------------------------------------
+FindKernelAvgMisorientations::Pointer FindKernelAvgMisorientations::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindKernelAvgMisorientations> FindKernelAvgMisorientations::New()
+{
+  struct make_shared_enabler : public FindKernelAvgMisorientations
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindKernelAvgMisorientations::getNameOfClass() const
+{
+  return QString("FindKernelAvgMisorientations");
+}
+
+// -----------------------------------------------------------------------------
+QString FindKernelAvgMisorientations::ClassName()
+{
+  return QString("FindKernelAvgMisorientations");
+}
+
+// -----------------------------------------------------------------------------
+void FindKernelAvgMisorientations::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindKernelAvgMisorientations::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindKernelAvgMisorientations::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindKernelAvgMisorientations::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindKernelAvgMisorientations::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindKernelAvgMisorientations::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindKernelAvgMisorientations::setQuatsArrayPath(const DataArrayPath& value)
+{
+  m_QuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindKernelAvgMisorientations::getQuatsArrayPath() const
+{
+  return m_QuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindKernelAvgMisorientations::setKernelAverageMisorientationsArrayName(const QString& value)
+{
+  m_KernelAverageMisorientationsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindKernelAvgMisorientations::getKernelAverageMisorientationsArrayName() const
+{
+  return m_KernelAverageMisorientationsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindKernelAvgMisorientations::setKernelSize(const IntVec3Type& value)
+{
+  m_KernelSize = value;
+}
+
+// -----------------------------------------------------------------------------
+IntVec3Type FindKernelAvgMisorientations::getKernelSize() const
+{
+  return m_KernelSize;
 }

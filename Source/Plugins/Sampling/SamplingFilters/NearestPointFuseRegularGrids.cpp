@@ -35,12 +35,17 @@
 
 #include "NearestPointFuseRegularGrids.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
@@ -395,4 +400,57 @@ const QString NearestPointFuseRegularGrids::getSubGroupName() const
 const QString NearestPointFuseRegularGrids::getHumanLabel() const
 {
   return "Fuse Regular Grids (Nearest Point)";
+}
+
+// -----------------------------------------------------------------------------
+NearestPointFuseRegularGrids::Pointer NearestPointFuseRegularGrids::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<NearestPointFuseRegularGrids> NearestPointFuseRegularGrids::New()
+{
+  struct make_shared_enabler : public NearestPointFuseRegularGrids
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString NearestPointFuseRegularGrids::getNameOfClass() const
+{
+  return QString("NearestPointFuseRegularGrids");
+}
+
+// -----------------------------------------------------------------------------
+QString NearestPointFuseRegularGrids::ClassName()
+{
+  return QString("NearestPointFuseRegularGrids");
+}
+
+// -----------------------------------------------------------------------------
+void NearestPointFuseRegularGrids::setReferenceCellAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_ReferenceCellAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath NearestPointFuseRegularGrids::getReferenceCellAttributeMatrixPath() const
+{
+  return m_ReferenceCellAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void NearestPointFuseRegularGrids::setSamplingCellAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_SamplingCellAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath NearestPointFuseRegularGrids::getSamplingCellAttributeMatrixPath() const
+{
+  return m_SamplingCellAttributeMatrixPath;
 }

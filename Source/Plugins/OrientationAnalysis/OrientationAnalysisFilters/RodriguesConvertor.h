@@ -33,8 +33,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -46,19 +46,60 @@ class OrientationAnalysis_EXPORT RodriguesConvertor : public AbstractFilter
   Q_OBJECT
 
   public:
-    SIMPL_SHARED_POINTERS(RodriguesConvertor)
-    SIMPL_FILTER_NEW_MACRO(RodriguesConvertor)
-    SIMPL_TYPE_MACRO_SUPER(RodriguesConvertor, AbstractFilter)
+    using Self = RodriguesConvertor;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<RodriguesConvertor> New();
+
+    /**
+     * @brief Returns the name of the class for _SUPERRodriguesConvertor
+     */
+    const QString getNameOfClass() const;
+    /**
+     * @brief Returns the name of the class for _SUPERRodriguesConvertor
+     */
+    static QString ClassName();
 
     ~RodriguesConvertor() override;
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, RodriguesDataArrayPath)
+    /**
+     * @brief Setter property for RodriguesDataArrayPath
+     */
+    void setRodriguesDataArrayPath(const DataArrayPath& value);
+    /**
+     * @brief Getter property for RodriguesDataArrayPath
+     * @return Value of RodriguesDataArrayPath
+     */
+    DataArrayPath getRodriguesDataArrayPath() const;
+
     Q_PROPERTY(DataArrayPath RodriguesDataArrayPath READ getRodriguesDataArrayPath WRITE setRodriguesDataArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, OutputDataArrayPath)
+    /**
+     * @brief Setter property for OutputDataArrayPath
+     */
+    void setOutputDataArrayPath(const DataArrayPath& value);
+    /**
+     * @brief Getter property for OutputDataArrayPath
+     * @return Value of OutputDataArrayPath
+     */
+    DataArrayPath getOutputDataArrayPath() const;
+
     Q_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)
 
-    SIMPL_FILTER_PARAMETER(bool, DeleteOriginalData)
+    /**
+     * @brief Setter property for DeleteOriginalData
+     */
+    void setDeleteOriginalData(const bool& value);
+    /**
+     * @brief Getter property for DeleteOriginalData
+     * @return Value of DeleteOriginalData
+     */
+    bool getDeleteOriginalData() const;
+
     Q_PROPERTY(bool DeleteOriginalData READ getDeleteOriginalData WRITE setDeleteOriginalData)
 
 
@@ -158,10 +199,15 @@ class OrientationAnalysis_EXPORT RodriguesConvertor : public AbstractFilter
     */
     void initialize();
   private:
-  DEFINE_DATAARRAY_VARIABLE(float, RodriguesVectors)
-  DEFINE_DATAARRAY_VARIABLE(float, OutputRodriguesVectors)
+    std::weak_ptr<DataArray<float>> m_RodriguesVectorsPtr;
+    float* m_RodriguesVectors = nullptr;
+    std::weak_ptr<DataArray<float>> m_OutputRodriguesVectorsPtr;
+    float* m_OutputRodriguesVectors = nullptr;
 
-  
+    DataArrayPath m_RodriguesDataArrayPath = {};
+    DataArrayPath m_OutputDataArrayPath = {};
+    bool m_DeleteOriginalData = {};
+
   public:
     /* Rule of 5: All special member functions should be defined if any are defined.
     * https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#c21-if-you-define-or-delete-any-default-operation-define-or-delete-them-all

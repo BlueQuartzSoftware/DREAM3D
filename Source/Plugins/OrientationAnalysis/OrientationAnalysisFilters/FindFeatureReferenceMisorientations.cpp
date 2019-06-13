@@ -35,7 +35,10 @@
 
 #include "FindFeatureReferenceMisorientations.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
@@ -43,6 +46,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -453,4 +458,141 @@ const QString FindFeatureReferenceMisorientations::getSubGroupName() const
 const QString FindFeatureReferenceMisorientations::getHumanLabel() const
 {
   return "Find Feature Reference Misorientations";
+}
+
+// -----------------------------------------------------------------------------
+FindFeatureReferenceMisorientations::Pointer FindFeatureReferenceMisorientations::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindFeatureReferenceMisorientations> FindFeatureReferenceMisorientations::New()
+{
+  struct make_shared_enabler : public FindFeatureReferenceMisorientations
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindFeatureReferenceMisorientations::getNameOfClass() const
+{
+  return QString("FindFeatureReferenceMisorientations");
+}
+
+// -----------------------------------------------------------------------------
+QString FindFeatureReferenceMisorientations::ClassName()
+{
+  return QString("FindFeatureReferenceMisorientations");
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureReferenceMisorientations::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeatureReferenceMisorientations::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureReferenceMisorientations::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeatureReferenceMisorientations::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureReferenceMisorientations::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeatureReferenceMisorientations::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureReferenceMisorientations::setQuatsArrayPath(const DataArrayPath& value)
+{
+  m_QuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeatureReferenceMisorientations::getQuatsArrayPath() const
+{
+  return m_QuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureReferenceMisorientations::setAvgQuatsArrayPath(const DataArrayPath& value)
+{
+  m_AvgQuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeatureReferenceMisorientations::getAvgQuatsArrayPath() const
+{
+  return m_AvgQuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureReferenceMisorientations::setGBEuclideanDistancesArrayPath(const DataArrayPath& value)
+{
+  m_GBEuclideanDistancesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeatureReferenceMisorientations::getGBEuclideanDistancesArrayPath() const
+{
+  return m_GBEuclideanDistancesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureReferenceMisorientations::setFeatureAvgMisorientationsArrayName(const QString& value)
+{
+  m_FeatureAvgMisorientationsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindFeatureReferenceMisorientations::getFeatureAvgMisorientationsArrayName() const
+{
+  return m_FeatureAvgMisorientationsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureReferenceMisorientations::setFeatureReferenceMisorientationsArrayName(const QString& value)
+{
+  m_FeatureReferenceMisorientationsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindFeatureReferenceMisorientations::getFeatureReferenceMisorientationsArrayName() const
+{
+  return m_FeatureReferenceMisorientationsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureReferenceMisorientations::setReferenceOrientation(const int& value)
+{
+  m_ReferenceOrientation = value;
+}
+
+// -----------------------------------------------------------------------------
+int FindFeatureReferenceMisorientations::getReferenceOrientation() const
+{
+  return m_ReferenceOrientation;
 }

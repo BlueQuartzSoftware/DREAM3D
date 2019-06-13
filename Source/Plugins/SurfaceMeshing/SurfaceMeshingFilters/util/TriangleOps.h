@@ -41,6 +41,7 @@
 
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/Geometry/IGeometry.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/Vector3.h"
 

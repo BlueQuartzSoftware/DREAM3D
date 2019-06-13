@@ -35,8 +35,8 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/FileWriter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
@@ -60,16 +60,48 @@ class ImportExport_EXPORT DxWriter : public FileWriter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(DxWriter)
-  SIMPL_FILTER_NEW_MACRO(DxWriter)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(DxWriter, FileWriter)
+  using Self = DxWriter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<DxWriter> New();
+
+  /**
+   * @brief Returns the name of the class for DxWriter
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for DxWriter
+   */
+  static QString ClassName();
 
   ~DxWriter() override;
 
-  SIMPL_FILTER_PARAMETER(bool, AddSurfaceLayer)
+  /**
+   * @brief Setter property for AddSurfaceLayer
+   */
+  void setAddSurfaceLayer(const bool& value);
+  /**
+   * @brief Getter property for AddSurfaceLayer
+   * @return Value of AddSurfaceLayer
+   */
+  bool getAddSurfaceLayer() const;
+
   Q_PROPERTY(bool AddSurfaceLayer READ getAddSurfaceLayer WRITE setAddSurfaceLayer)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -155,7 +187,11 @@ protected:
   virtual int32_t writeFile();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+
+  bool m_AddSurfaceLayer = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
 
 public:
   DxWriter(const DxWriter&) = delete;            // Copy Constructor Not Implemented

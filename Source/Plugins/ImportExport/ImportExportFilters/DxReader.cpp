@@ -38,7 +38,14 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QFileInfo>
 
+#include <QtCore/QTextStream>
+
+#include <QtCore/QDebug>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -116,9 +123,47 @@ DxReader::~DxReader() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SIMPL_PIMPL_PROPERTY_DEF(DxReader, std::vector<size_t>, Dims)
-SIMPL_PIMPL_PROPERTY_DEF(DxReader, QString, InputFile_Cache)
-SIMPL_PIMPL_PROPERTY_DEF(DxReader, QDateTime, LastRead)
+// -----------------------------------------------------------------------------
+void DxReader::setDims(const QVector<size_t>& value)
+{
+  Q_D(DxReader);
+  d->m_Dims = value;
+}
+
+// -----------------------------------------------------------------------------
+QVector<size_t> DxReader::getDims() const
+{
+  Q_D(const DxReader);
+  return d->m_Dims;
+}
+
+// -----------------------------------------------------------------------------
+void DxReader::setInputFile_Cache(const QString& value)
+{
+  Q_D(DxReader);
+  d->m_InputFile_Cache = value;
+}
+
+// -----------------------------------------------------------------------------
+QString DxReader::getInputFile_Cache() const
+{
+  Q_D(const DxReader);
+  return d->m_InputFile_Cache;
+}
+
+// -----------------------------------------------------------------------------
+void DxReader::setLastRead(const QDateTime& value)
+{
+  Q_D(DxReader);
+  d->m_LastRead = value;
+}
+
+// -----------------------------------------------------------------------------
+QDateTime DxReader::getLastRead() const
+{
+  Q_D(const DxReader);
+  return d->m_LastRead;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -603,4 +648,117 @@ const QString DxReader::getSubGroupName() const
 const QString DxReader::getHumanLabel() const
 {
   return "Import Dx File (Feature Ids)";
+}
+
+// -----------------------------------------------------------------------------
+DxReader::Pointer DxReader::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<DxReader> DxReader::New()
+{
+  struct make_shared_enabler : public DxReader
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString DxReader::getNameOfClass() const
+{
+  return QString("DxReader");
+}
+
+// -----------------------------------------------------------------------------
+QString DxReader::ClassName()
+{
+  return QString("DxReader");
+}
+
+// -----------------------------------------------------------------------------
+void DxReader::setVolumeDataContainerName(const DataArrayPath& value)
+{
+  m_VolumeDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath DxReader::getVolumeDataContainerName() const
+{
+  return m_VolumeDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void DxReader::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString DxReader::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void DxReader::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString DxReader::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void DxReader::setOrigin(const FloatVec3Type& value)
+{
+  m_Origin = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type DxReader::getOrigin() const
+{
+  return m_Origin;
+}
+
+// -----------------------------------------------------------------------------
+void DxReader::setSpacing(const FloatVec3Type& value)
+{
+  m_Spacing = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type DxReader::getSpacing() const
+{
+  return m_Spacing;
+}
+
+// -----------------------------------------------------------------------------
+void DxReader::setFileWasRead(const bool& value)
+{
+  m_FileWasRead = value;
+}
+
+// -----------------------------------------------------------------------------
+bool DxReader::getFileWasRead() const
+{
+  return m_FileWasRead;
+}
+
+// -----------------------------------------------------------------------------
+void DxReader::setFeatureIdsArrayName(const QString& value)
+{
+  m_FeatureIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString DxReader::getFeatureIdsArrayName() const
+{
+  return m_FeatureIdsArrayName;
 }

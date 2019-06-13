@@ -42,10 +42,15 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -294,4 +299,45 @@ const QString TriangleCentroidFilter::getSubGroupName() const
 const QString TriangleCentroidFilter::getHumanLabel() const
 {
   return "Generate Triangle Centroids";
+}
+
+// -----------------------------------------------------------------------------
+TriangleCentroidFilter::Pointer TriangleCentroidFilter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<TriangleCentroidFilter> TriangleCentroidFilter::New()
+{
+  struct make_shared_enabler : public TriangleCentroidFilter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString TriangleCentroidFilter::getNameOfClass() const
+{
+  return QString("TriangleCentroidFilter");
+}
+
+// -----------------------------------------------------------------------------
+QString TriangleCentroidFilter::ClassName()
+{
+  return QString("TriangleCentroidFilter");
+}
+
+// -----------------------------------------------------------------------------
+void TriangleCentroidFilter::setSurfaceMeshTriangleCentroidsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshTriangleCentroidsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath TriangleCentroidFilter::getSurfaceMeshTriangleCentroidsArrayPath() const
+{
+  return m_SurfaceMeshTriangleCentroidsArrayPath;
 }

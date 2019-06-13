@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -61,19 +61,60 @@ class Statistics_EXPORT FindBoundaryElementFractions : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindBoundaryElementFractions)
-  SIMPL_FILTER_NEW_MACRO(FindBoundaryElementFractions)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindBoundaryElementFractions, AbstractFilter)
+  using Self = FindBoundaryElementFractions;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindBoundaryElementFractions> New();
+
+  /**
+   * @brief Returns the name of the class for FindBoundaryElementFractions
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindBoundaryElementFractions
+   */
+  static QString ClassName();
 
   ~FindBoundaryElementFractions() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, BoundaryCellsArrayPath)
+  /**
+   * @brief Setter property for BoundaryCellsArrayPath
+   */
+  void setBoundaryCellsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for BoundaryCellsArrayPath
+   * @return Value of BoundaryCellsArrayPath
+   */
+  DataArrayPath getBoundaryCellsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath BoundaryCellsArrayPath READ getBoundaryCellsArrayPath WRITE setBoundaryCellsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, BoundaryCellFractionsArrayPath)
+  /**
+   * @brief Setter property for BoundaryCellFractionsArrayPath
+   */
+  void setBoundaryCellFractionsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for BoundaryCellFractionsArrayPath
+   * @return Value of BoundaryCellFractionsArrayPath
+   */
+  DataArrayPath getBoundaryCellFractionsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath BoundaryCellFractionsArrayPath READ getBoundaryCellFractionsArrayPath WRITE setBoundaryCellFractionsArrayPath)
 
   /**
@@ -182,10 +223,16 @@ protected:
   void find_surface_voxel_fractions();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(int8_t, BoundaryCells)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<int8_t>> m_BoundaryCellsPtr;
+  int8_t* m_BoundaryCells = nullptr;
+  std::weak_ptr<DataArray<float>> m_BoundaryCellFractionsPtr;
+  float* m_BoundaryCellFractions = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(float, BoundaryCellFractions)
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_BoundaryCellsArrayPath = {};
+  DataArrayPath m_BoundaryCellFractionsArrayPath = {};
 
 public:
   FindBoundaryElementFractions(const FindBoundaryElementFractions&) = delete; // Copy Constructor Not Implemented

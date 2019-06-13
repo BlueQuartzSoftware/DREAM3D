@@ -36,9 +36,10 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -60,16 +61,48 @@ class OrientationAnalysis_EXPORT FindCAxisLocations : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindCAxisLocations)
-  SIMPL_FILTER_NEW_MACRO(FindCAxisLocations)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindCAxisLocations, AbstractFilter)
+  using Self = FindCAxisLocations;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindCAxisLocations> New();
+
+  /**
+   * @brief Returns the name of the class for FindCAxisLocations
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindCAxisLocations
+   */
+  static QString ClassName();
 
   ~FindCAxisLocations() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+  /**
+   * @brief Setter property for QuatsArrayPath
+   */
+  void setQuatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for QuatsArrayPath
+   * @return Value of QuatsArrayPath
+   */
+  DataArrayPath getQuatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, CAxisLocationsArrayName)
+  /**
+   * @brief Setter property for CAxisLocationsArrayName
+   */
+  void setCAxisLocationsArrayName(const QString& value);
+  /**
+   * @brief Getter property for CAxisLocationsArrayName
+   * @return Value of CAxisLocationsArrayName
+   */
+  QString getCAxisLocationsArrayName() const;
+
   Q_PROPERTY(QString CAxisLocationsArrayName READ getCAxisLocationsArrayName WRITE setCAxisLocationsArrayName)
 
   /**
@@ -173,10 +206,15 @@ protected:
   void initialize();
 
 private:
+  std::weak_ptr<DataArray<float>> m_QuatsPtr;
+  float* m_Quats = nullptr;
+  std::weak_ptr<DataArray<float>> m_CAxisLocationsPtr;
+  float* m_CAxisLocations = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(float, Quats)
+  DataArrayPath m_QuatsArrayPath = {};
+  QString m_CAxisLocationsArrayName = {};
 
-  DEFINE_DATAARRAY_VARIABLE(float, CAxisLocations)
+  QVector<LaueOps::Pointer> m_OrientationOps;
 
 public:
   FindCAxisLocations(const FindCAxisLocations&) = delete; // Copy Constructor Not Implemented

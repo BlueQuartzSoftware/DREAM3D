@@ -37,7 +37,10 @@
 
 #include <QtCore/QDir>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
@@ -50,6 +53,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Utilities/ColorTable.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/LaueOps/CubicLowOps.h"
 #include "OrientationLib/LaueOps/CubicOps.h"
@@ -1078,4 +1083,213 @@ const QString WritePoleFigure::getSubGroupName() const
 const QString WritePoleFigure::getHumanLabel() const
 {
   return "Export Pole Figure Images";
+}
+
+// -----------------------------------------------------------------------------
+WritePoleFigure::Pointer WritePoleFigure::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<WritePoleFigure> WritePoleFigure::New()
+{
+  struct make_shared_enabler : public WritePoleFigure
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString WritePoleFigure::getNameOfClass() const
+{
+  return QString("WritePoleFigure");
+}
+
+// -----------------------------------------------------------------------------
+QString WritePoleFigure::ClassName()
+{
+  return QString("WritePoleFigure");
+}
+
+// -----------------------------------------------------------------------------
+void WritePoleFigure::setImagePrefix(const QString& value)
+{
+  m_ImagePrefix = value;
+}
+
+// -----------------------------------------------------------------------------
+QString WritePoleFigure::getImagePrefix() const
+{
+  return m_ImagePrefix;
+}
+
+// -----------------------------------------------------------------------------
+void WritePoleFigure::setOutputPath(const QString& value)
+{
+  m_OutputPath = value;
+}
+
+// -----------------------------------------------------------------------------
+QString WritePoleFigure::getOutputPath() const
+{
+  return m_OutputPath;
+}
+
+// -----------------------------------------------------------------------------
+void WritePoleFigure::setImageFormat(const int& value)
+{
+  m_ImageFormat = value;
+}
+
+// -----------------------------------------------------------------------------
+int WritePoleFigure::getImageFormat() const
+{
+  return m_ImageFormat;
+}
+
+// -----------------------------------------------------------------------------
+void WritePoleFigure::setImageSize(const int& value)
+{
+  m_ImageSize = value;
+}
+
+// -----------------------------------------------------------------------------
+int WritePoleFigure::getImageSize() const
+{
+  return m_ImageSize;
+}
+
+// -----------------------------------------------------------------------------
+void WritePoleFigure::setLambertSize(const int& value)
+{
+  m_LambertSize = value;
+}
+
+// -----------------------------------------------------------------------------
+int WritePoleFigure::getLambertSize() const
+{
+  return m_LambertSize;
+}
+
+// -----------------------------------------------------------------------------
+void WritePoleFigure::setNumColors(const int& value)
+{
+  m_NumColors = value;
+}
+
+// -----------------------------------------------------------------------------
+int WritePoleFigure::getNumColors() const
+{
+  return m_NumColors;
+}
+
+// -----------------------------------------------------------------------------
+void WritePoleFigure::setImageLayout(const int& value)
+{
+  m_ImageLayout = value;
+}
+
+// -----------------------------------------------------------------------------
+int WritePoleFigure::getImageLayout() const
+{
+  return m_ImageLayout;
+}
+
+// -----------------------------------------------------------------------------
+void WritePoleFigure::setCellEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_CellEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath WritePoleFigure::getCellEulerAnglesArrayPath() const
+{
+  return m_CellEulerAnglesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void WritePoleFigure::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath WritePoleFigure::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void WritePoleFigure::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath WritePoleFigure::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void WritePoleFigure::setGoodVoxelsArrayPath(const DataArrayPath& value)
+{
+  m_GoodVoxelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath WritePoleFigure::getGoodVoxelsArrayPath() const
+{
+  return m_GoodVoxelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void WritePoleFigure::setUseGoodVoxels(const bool& value)
+{
+  m_UseGoodVoxels = value;
+}
+
+// -----------------------------------------------------------------------------
+bool WritePoleFigure::getUseGoodVoxels() const
+{
+  return m_UseGoodVoxels;
+}
+
+// -----------------------------------------------------------------------------
+void WritePoleFigure::setGenerationAlgorithm(const int& value)
+{
+  m_GenerationAlgorithm = value;
+}
+
+// -----------------------------------------------------------------------------
+int WritePoleFigure::getGenerationAlgorithm() const
+{
+  return m_GenerationAlgorithm;
+}
+
+// -----------------------------------------------------------------------------
+void WritePoleFigure::setTitle(const QString& value)
+{
+  m_Title = value;
+}
+
+// -----------------------------------------------------------------------------
+QString WritePoleFigure::getTitle() const
+{
+  return m_Title;
+}
+
+// -----------------------------------------------------------------------------
+void WritePoleFigure::setMaterialNameArrayPath(const DataArrayPath& value)
+{
+  m_MaterialNameArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath WritePoleFigure::getMaterialNameArrayPath() const
+{
+  return m_MaterialNameArrayPath;
 }

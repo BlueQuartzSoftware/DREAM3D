@@ -37,7 +37,10 @@
 
 #include <cmath>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -45,6 +48,7 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/GeometryMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
@@ -415,4 +419,117 @@ const QString FindFeatureNeighborCAxisMisalignments::getSubGroupName() const
 const QString FindFeatureNeighborCAxisMisalignments::getHumanLabel() const
 {
   return "Find Feature Neighbor C-Axis Misalignments";
+}
+
+// -----------------------------------------------------------------------------
+FindFeatureNeighborCAxisMisalignments::Pointer FindFeatureNeighborCAxisMisalignments::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindFeatureNeighborCAxisMisalignments> FindFeatureNeighborCAxisMisalignments::New()
+{
+  struct make_shared_enabler : public FindFeatureNeighborCAxisMisalignments
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindFeatureNeighborCAxisMisalignments::getNameOfClass() const
+{
+  return QString("FindFeatureNeighborCAxisMisalignments");
+}
+
+// -----------------------------------------------------------------------------
+QString FindFeatureNeighborCAxisMisalignments::ClassName()
+{
+  return QString("FindFeatureNeighborCAxisMisalignments");
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureNeighborCAxisMisalignments::setFindAvgMisals(const bool& value)
+{
+  m_FindAvgMisals = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindFeatureNeighborCAxisMisalignments::getFindAvgMisals() const
+{
+  return m_FindAvgMisals;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureNeighborCAxisMisalignments::setNeighborListArrayPath(const DataArrayPath& value)
+{
+  m_NeighborListArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeatureNeighborCAxisMisalignments::getNeighborListArrayPath() const
+{
+  return m_NeighborListArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureNeighborCAxisMisalignments::setCAxisMisalignmentListArrayName(const QString& value)
+{
+  m_CAxisMisalignmentListArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindFeatureNeighborCAxisMisalignments::getCAxisMisalignmentListArrayName() const
+{
+  return m_CAxisMisalignmentListArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureNeighborCAxisMisalignments::setAvgQuatsArrayPath(const DataArrayPath& value)
+{
+  m_AvgQuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeatureNeighborCAxisMisalignments::getAvgQuatsArrayPath() const
+{
+  return m_AvgQuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureNeighborCAxisMisalignments::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeatureNeighborCAxisMisalignments::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureNeighborCAxisMisalignments::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeatureNeighborCAxisMisalignments::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureNeighborCAxisMisalignments::setAvgCAxisMisalignmentsArrayName(const QString& value)
+{
+  m_AvgCAxisMisalignmentsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindFeatureNeighborCAxisMisalignments::getAvgCAxisMisalignmentsArrayName() const
+{
+  return m_AvgCAxisMisalignmentsArrayName;
 }

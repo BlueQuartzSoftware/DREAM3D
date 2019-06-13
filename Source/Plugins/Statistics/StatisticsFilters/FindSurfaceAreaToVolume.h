@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -65,25 +65,84 @@ class Statistics_EXPORT FindSurfaceAreaToVolume : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindSurfaceAreaToVolume)
-  SIMPL_FILTER_NEW_MACRO(FindSurfaceAreaToVolume)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindSurfaceAreaToVolume, AbstractFilter)
+  using Self = FindSurfaceAreaToVolume;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindSurfaceAreaToVolume> New();
+
+  /**
+   * @brief Returns the name of the class for FindSurfaceAreaToVolume
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindSurfaceAreaToVolume
+   */
+  static QString ClassName();
 
   ~FindSurfaceAreaToVolume() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NumCellsArrayPath)
+  /**
+   * @brief Setter property for NumCellsArrayPath
+   */
+  void setNumCellsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NumCellsArrayPath
+   * @return Value of NumCellsArrayPath
+   */
+  DataArrayPath getNumCellsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath NumCellsArrayPath READ getNumCellsArrayPath WRITE setNumCellsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, SurfaceAreaVolumeRatioArrayName)
+  /**
+   * @brief Setter property for SurfaceAreaVolumeRatioArrayName
+   */
+  void setSurfaceAreaVolumeRatioArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceAreaVolumeRatioArrayName
+   * @return Value of SurfaceAreaVolumeRatioArrayName
+   */
+  QString getSurfaceAreaVolumeRatioArrayName() const;
+
   Q_PROPERTY(QString SurfaceAreaVolumeRatioArrayName READ getSurfaceAreaVolumeRatioArrayName WRITE setSurfaceAreaVolumeRatioArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, SphericityArrayName)
+  /**
+   * @brief Setter property for SphericityArrayName
+   */
+  void setSphericityArrayName(const QString& value);
+  /**
+   * @brief Getter property for SphericityArrayName
+   * @return Value of SphericityArrayName
+   */
+  QString getSphericityArrayName() const;
+
   Q_PROPERTY(QString SphericityArrayName READ getSphericityArrayName WRITE setSphericityArrayName)
 
-  SIMPL_FILTER_PARAMETER(bool, CalculateSphericity)
+  /**
+   * @brief Setter property for CalculateSphericity
+   */
+  void setCalculateSphericity(const bool& value);
+  /**
+   * @brief Getter property for CalculateSphericity
+   * @return Value of CalculateSphericity
+   */
+  bool getCalculateSphericity() const;
+
   Q_PROPERTY(bool CalculateSphericity READ getCalculateSphericity WRITE setCalculateSphericity)
 
   /**
@@ -187,10 +246,20 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, NumCells)
-  DEFINE_DATAARRAY_VARIABLE(float, SurfaceAreaVolumeRatio)
-  DEFINE_DATAARRAY_VARIABLE(float, Sphericity)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_NumCellsPtr;
+  int32_t* m_NumCells = nullptr;
+  std::weak_ptr<DataArray<float>> m_SurfaceAreaVolumeRatioPtr;
+  float* m_SurfaceAreaVolumeRatio = nullptr;
+  std::weak_ptr<DataArray<float>> m_SphericityPtr;
+  float* m_Sphericity = nullptr;
+
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_NumCellsArrayPath = {};
+  QString m_SurfaceAreaVolumeRatioArrayName = {};
+  QString m_SphericityArrayName = {};
+  bool m_CalculateSphericity = {};
 
 public:
   FindSurfaceAreaToVolume(const FindSurfaceAreaToVolume&) = delete; // Copy Constructor Not Implemented

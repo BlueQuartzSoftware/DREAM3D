@@ -35,7 +35,10 @@
 
 #include "ErodeDilateBadData.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
@@ -44,6 +47,8 @@
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
@@ -421,4 +426,117 @@ const QString ErodeDilateBadData::getSubGroupName() const
 const QString ErodeDilateBadData::getHumanLabel() const
 {
   return "Erode/Dilate Bad Data";
+}
+
+// -----------------------------------------------------------------------------
+ErodeDilateBadData::Pointer ErodeDilateBadData::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ErodeDilateBadData> ErodeDilateBadData::New()
+{
+  struct make_shared_enabler : public ErodeDilateBadData
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString ErodeDilateBadData::getNameOfClass() const
+{
+  return QString("ErodeDilateBadData");
+}
+
+// -----------------------------------------------------------------------------
+QString ErodeDilateBadData::ClassName()
+{
+  return QString("ErodeDilateBadData");
+}
+
+// -----------------------------------------------------------------------------
+void ErodeDilateBadData::setDirection(const unsigned int& value)
+{
+  m_Direction = value;
+}
+
+// -----------------------------------------------------------------------------
+unsigned int ErodeDilateBadData::getDirection() const
+{
+  return m_Direction;
+}
+
+// -----------------------------------------------------------------------------
+void ErodeDilateBadData::setNumIterations(const int& value)
+{
+  m_NumIterations = value;
+}
+
+// -----------------------------------------------------------------------------
+int ErodeDilateBadData::getNumIterations() const
+{
+  return m_NumIterations;
+}
+
+// -----------------------------------------------------------------------------
+void ErodeDilateBadData::setXDirOn(const bool& value)
+{
+  m_XDirOn = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ErodeDilateBadData::getXDirOn() const
+{
+  return m_XDirOn;
+}
+
+// -----------------------------------------------------------------------------
+void ErodeDilateBadData::setYDirOn(const bool& value)
+{
+  m_YDirOn = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ErodeDilateBadData::getYDirOn() const
+{
+  return m_YDirOn;
+}
+
+// -----------------------------------------------------------------------------
+void ErodeDilateBadData::setZDirOn(const bool& value)
+{
+  m_ZDirOn = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ErodeDilateBadData::getZDirOn() const
+{
+  return m_ZDirOn;
+}
+
+// -----------------------------------------------------------------------------
+void ErodeDilateBadData::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ErodeDilateBadData::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ErodeDilateBadData::setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value)
+{
+  m_IgnoredDataArrayPaths = value;
+}
+
+// -----------------------------------------------------------------------------
+QVector<DataArrayPath> ErodeDilateBadData::getIgnoredDataArrayPaths() const
+{
+  return m_IgnoredDataArrayPaths;
 }

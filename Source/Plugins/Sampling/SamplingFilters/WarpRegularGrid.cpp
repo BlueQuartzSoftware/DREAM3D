@@ -35,7 +35,10 @@
 
 #include "WarpRegularGrid.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
@@ -47,6 +50,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/ThirdOrderPolynomialFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
@@ -387,4 +392,153 @@ const QString WarpRegularGrid::getSubGroupName() const
 const QString WarpRegularGrid::getHumanLabel() const
 {
   return "Warp Rectilinear Grid";
+}
+
+// -----------------------------------------------------------------------------
+WarpRegularGrid::Pointer WarpRegularGrid::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<WarpRegularGrid> WarpRegularGrid::New()
+{
+  struct make_shared_enabler : public WarpRegularGrid
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString WarpRegularGrid::getNameOfClass() const
+{
+  return QString("WarpRegularGrid");
+}
+
+// -----------------------------------------------------------------------------
+QString WarpRegularGrid::ClassName()
+{
+  return QString("WarpRegularGrid");
+}
+
+// -----------------------------------------------------------------------------
+void WarpRegularGrid::setNewDataContainerName(const DataArrayPath& value)
+{
+  m_NewDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath WarpRegularGrid::getNewDataContainerName() const
+{
+  return m_NewDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void WarpRegularGrid::setCellAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_CellAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath WarpRegularGrid::getCellAttributeMatrixPath() const
+{
+  return m_CellAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void WarpRegularGrid::setPolyOrder(const int& value)
+{
+  m_PolyOrder = value;
+}
+
+// -----------------------------------------------------------------------------
+int WarpRegularGrid::getPolyOrder() const
+{
+  return m_PolyOrder;
+}
+
+// -----------------------------------------------------------------------------
+void WarpRegularGrid::setSecondOrderACoeff(const Float2ndOrderPoly_t& value)
+{
+  m_SecondOrderACoeff = value;
+}
+
+// -----------------------------------------------------------------------------
+Float2ndOrderPoly_t WarpRegularGrid::getSecondOrderACoeff() const
+{
+  return m_SecondOrderACoeff;
+}
+
+// -----------------------------------------------------------------------------
+void WarpRegularGrid::setSecondOrderBCoeff(const Float2ndOrderPoly_t& value)
+{
+  m_SecondOrderBCoeff = value;
+}
+
+// -----------------------------------------------------------------------------
+Float2ndOrderPoly_t WarpRegularGrid::getSecondOrderBCoeff() const
+{
+  return m_SecondOrderBCoeff;
+}
+
+// -----------------------------------------------------------------------------
+void WarpRegularGrid::setThirdOrderACoeff(const Float3rdOrderPoly_t& value)
+{
+  m_ThirdOrderACoeff = value;
+}
+
+// -----------------------------------------------------------------------------
+Float3rdOrderPoly_t WarpRegularGrid::getThirdOrderACoeff() const
+{
+  return m_ThirdOrderACoeff;
+}
+
+// -----------------------------------------------------------------------------
+void WarpRegularGrid::setThirdOrderBCoeff(const Float3rdOrderPoly_t& value)
+{
+  m_ThirdOrderBCoeff = value;
+}
+
+// -----------------------------------------------------------------------------
+Float3rdOrderPoly_t WarpRegularGrid::getThirdOrderBCoeff() const
+{
+  return m_ThirdOrderBCoeff;
+}
+
+// -----------------------------------------------------------------------------
+void WarpRegularGrid::setFourthOrderACoeff(const Float4thOrderPoly_t& value)
+{
+  m_FourthOrderACoeff = value;
+}
+
+// -----------------------------------------------------------------------------
+Float4thOrderPoly_t WarpRegularGrid::getFourthOrderACoeff() const
+{
+  return m_FourthOrderACoeff;
+}
+
+// -----------------------------------------------------------------------------
+void WarpRegularGrid::setFourthOrderBCoeff(const Float4thOrderPoly_t& value)
+{
+  m_FourthOrderBCoeff = value;
+}
+
+// -----------------------------------------------------------------------------
+Float4thOrderPoly_t WarpRegularGrid::getFourthOrderBCoeff() const
+{
+  return m_FourthOrderBCoeff;
+}
+
+// -----------------------------------------------------------------------------
+void WarpRegularGrid::setSaveAsNewDataContainer(const bool& value)
+{
+  m_SaveAsNewDataContainer = value;
+}
+
+// -----------------------------------------------------------------------------
+bool WarpRegularGrid::getSaveAsNewDataContainer() const
+{
+  return m_SaveAsNewDataContainer;
 }

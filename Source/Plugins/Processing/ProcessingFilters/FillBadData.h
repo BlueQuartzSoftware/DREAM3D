@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Processing/ProcessingDLLExport.h"
 
@@ -64,25 +64,84 @@ class Processing_EXPORT FillBadData : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FillBadData)
-  SIMPL_FILTER_NEW_MACRO(FillBadData)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FillBadData, AbstractFilter)
+  using Self = FillBadData;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FillBadData> New();
+
+  /**
+   * @brief Returns the name of the class for FillBadData
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FillBadData
+   */
+  static QString ClassName();
 
   ~FillBadData() override;
 
-  SIMPL_FILTER_PARAMETER(bool, StoreAsNewPhase)
+  /**
+   * @brief Setter property for StoreAsNewPhase
+   */
+  void setStoreAsNewPhase(const bool& value);
+  /**
+   * @brief Getter property for StoreAsNewPhase
+   * @return Value of StoreAsNewPhase
+   */
+  bool getStoreAsNewPhase() const;
+
   Q_PROPERTY(bool StoreAsNewPhase READ getStoreAsNewPhase WRITE setStoreAsNewPhase)
 
-  SIMPL_FILTER_PARAMETER(int, MinAllowedDefectSize)
+  /**
+   * @brief Setter property for MinAllowedDefectSize
+   */
+  void setMinAllowedDefectSize(const int& value);
+  /**
+   * @brief Getter property for MinAllowedDefectSize
+   * @return Value of MinAllowedDefectSize
+   */
+  int getMinAllowedDefectSize() const;
+
   Q_PROPERTY(int MinAllowedDefectSize READ getMinAllowedDefectSize WRITE setMinAllowedDefectSize)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  /**
+   * @brief Setter property for CellPhasesArrayPath
+   */
+  void setCellPhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellPhasesArrayPath
+   * @return Value of CellPhasesArrayPath
+   */
+  DataArrayPath getCellPhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, IgnoredDataArrayPaths)
+  /**
+   * @brief Setter property for IgnoredDataArrayPaths
+   */
+  void setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value);
+  /**
+   * @brief Getter property for IgnoredDataArrayPaths
+   * @return Value of IgnoredDataArrayPaths
+   */
+  QVector<DataArrayPath> getIgnoredDataArrayPaths() const;
+
   Q_PROPERTY(QVector<DataArrayPath> IgnoredDataArrayPaths READ getIgnoredDataArrayPaths WRITE setIgnoredDataArrayPaths)
 
   /**
@@ -186,11 +245,19 @@ protected:
   void initialize();
 
 private:
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+  int32_t* m_CellPhases = nullptr;
+
+  bool m_StoreAsNewPhase = {};
+  int m_MinAllowedDefectSize = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_CellPhasesArrayPath = {};
+  QVector<DataArrayPath> m_IgnoredDataArrayPaths = {};
+
   bool* m_AlreadyChecked;
   int32_t* m_Neighbors;
-
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
 
 public:
   FillBadData(const FillBadData&) = delete;            // Copy Constructor Not Implemented

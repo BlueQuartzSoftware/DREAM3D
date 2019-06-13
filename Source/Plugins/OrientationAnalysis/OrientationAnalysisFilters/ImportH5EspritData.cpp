@@ -45,9 +45,14 @@
 #include "EbsdLib/BrukerNano/H5EspritFields.h"
 #include "EbsdLib/BrukerNano/H5EspritReader.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Geometry/ImageGeom.h"
+
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
@@ -96,7 +101,19 @@ ImportH5EspritData::ImportH5EspritData()
 ImportH5EspritData::~ImportH5EspritData() = default;
 
 // -----------------------------------------------------------------------------
-SIMPL_PIMPL_PROPERTY_DEF(ImportH5EspritData, Esprit_Private_Data, FileCacheData)
+// -----------------------------------------------------------------------------
+void ImportH5EspritData::setFileCacheData(const Esprit_Private_Data& value)
+{
+  Q_D(ImportH5EspritData);
+  d->m_FileCacheData = value;
+}
+
+// -----------------------------------------------------------------------------
+Esprit_Private_Data ImportH5EspritData::getFileCacheData() const
+{
+  Q_D(const ImportH5EspritData);
+  return d->m_FileCacheData;
+}
 
 #if 0
 void ImportH5EspritData::setFileCacheData(const Esprit_Private_Data& value)
@@ -729,4 +746,57 @@ void ImportH5EspritData::copyRawEbsdData(EbsdReader* ebsdReader, std::vector<siz
   {
     copyPointerData<Ebsd::H5Esprit::RawPatterns_t, H5EspritReader>(reader, Ebsd::H5Esprit::RawPatterns, ebsdArrayMap.value(Ebsd::H5Esprit::RawPatterns), offset, totalPoints, ebsdAttrMat);
   }
+}
+
+// -----------------------------------------------------------------------------
+ImportH5EspritData::Pointer ImportH5EspritData::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ImportH5EspritData> ImportH5EspritData::New()
+{
+  struct make_shared_enabler : public ImportH5EspritData
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString ImportH5EspritData::getNameOfClass() const
+{
+  return QString("ImportH5EspritData");
+}
+
+// -----------------------------------------------------------------------------
+QString ImportH5EspritData::ClassName()
+{
+  return QString("ImportH5EspritData");
+}
+
+// -----------------------------------------------------------------------------
+void ImportH5EspritData::setCombineEulerAngles(const bool& value)
+{
+  m_CombineEulerAngles = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ImportH5EspritData::getCombineEulerAngles() const
+{
+  return m_CombineEulerAngles;
+}
+
+// -----------------------------------------------------------------------------
+void ImportH5EspritData::setDegreesToRadians(const bool& value)
+{
+  m_DegreesToRadians = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ImportH5EspritData::getDegreesToRadians() const
+{
+  return m_DegreesToRadians;
 }

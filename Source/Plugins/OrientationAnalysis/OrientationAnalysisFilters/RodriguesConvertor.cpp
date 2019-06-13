@@ -34,10 +34,14 @@
 
 #include <cmath>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -302,3 +306,67 @@ const QUuid RodriguesConvertor::getUuid()
   return QUuid("{a2b62395-1a7d-5058-a840-752d8f8e2430}");
 }
 
+// -----------------------------------------------------------------------------
+RodriguesConvertor::Pointer RodriguesConvertor::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<RodriguesConvertor> RodriguesConvertor::New()
+{
+  struct make_shared_enabler : public RodriguesConvertor
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString RodriguesConvertor::getNameOfClass() const
+{
+  return QString("_SUPERRodriguesConvertor");
+}
+
+// -----------------------------------------------------------------------------
+QString RodriguesConvertor::ClassName()
+{
+  return QString("_SUPERRodriguesConvertor");
+}
+
+// -----------------------------------------------------------------------------
+void RodriguesConvertor::setRodriguesDataArrayPath(const DataArrayPath& value)
+{
+  m_RodriguesDataArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath RodriguesConvertor::getRodriguesDataArrayPath() const
+{
+  return m_RodriguesDataArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void RodriguesConvertor::setOutputDataArrayPath(const DataArrayPath& value)
+{
+  m_OutputDataArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath RodriguesConvertor::getOutputDataArrayPath() const
+{
+  return m_OutputDataArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void RodriguesConvertor::setDeleteOriginalData(const bool& value)
+{
+  m_DeleteOriginalData = value;
+}
+
+// -----------------------------------------------------------------------------
+bool RodriguesConvertor::getDeleteOriginalData() const
+{
+  return m_DeleteOriginalData;
+}

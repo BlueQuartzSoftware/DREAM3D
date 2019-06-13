@@ -46,7 +46,10 @@
 #include <tbb/tick_count.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -54,6 +57,8 @@
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -624,4 +629,129 @@ const QString NeighborOrientationCorrelation::getSubGroupName() const
 const QString NeighborOrientationCorrelation::getHumanLabel() const
 {
   return "Neighbor Orientation Correlation";
+}
+
+// -----------------------------------------------------------------------------
+NeighborOrientationCorrelation::Pointer NeighborOrientationCorrelation::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<NeighborOrientationCorrelation> NeighborOrientationCorrelation::New()
+{
+  struct make_shared_enabler : public NeighborOrientationCorrelation
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString NeighborOrientationCorrelation::getNameOfClass() const
+{
+  return QString("NeighborOrientationCorrelation");
+}
+
+// -----------------------------------------------------------------------------
+QString NeighborOrientationCorrelation::ClassName()
+{
+  return QString("NeighborOrientationCorrelation");
+}
+
+// -----------------------------------------------------------------------------
+void NeighborOrientationCorrelation::setMisorientationTolerance(const float& value)
+{
+  m_MisorientationTolerance = value;
+}
+
+// -----------------------------------------------------------------------------
+float NeighborOrientationCorrelation::getMisorientationTolerance() const
+{
+  return m_MisorientationTolerance;
+}
+
+// -----------------------------------------------------------------------------
+void NeighborOrientationCorrelation::setMinConfidence(const float& value)
+{
+  m_MinConfidence = value;
+}
+
+// -----------------------------------------------------------------------------
+float NeighborOrientationCorrelation::getMinConfidence() const
+{
+  return m_MinConfidence;
+}
+
+// -----------------------------------------------------------------------------
+void NeighborOrientationCorrelation::setLevel(const int& value)
+{
+  m_Level = value;
+}
+
+// -----------------------------------------------------------------------------
+int NeighborOrientationCorrelation::getLevel() const
+{
+  return m_Level;
+}
+
+// -----------------------------------------------------------------------------
+void NeighborOrientationCorrelation::setConfidenceIndexArrayPath(const DataArrayPath& value)
+{
+  m_ConfidenceIndexArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath NeighborOrientationCorrelation::getConfidenceIndexArrayPath() const
+{
+  return m_ConfidenceIndexArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void NeighborOrientationCorrelation::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath NeighborOrientationCorrelation::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void NeighborOrientationCorrelation::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath NeighborOrientationCorrelation::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void NeighborOrientationCorrelation::setQuatsArrayPath(const DataArrayPath& value)
+{
+  m_QuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath NeighborOrientationCorrelation::getQuatsArrayPath() const
+{
+  return m_QuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void NeighborOrientationCorrelation::setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value)
+{
+  m_IgnoredDataArrayPaths = value;
+}
+
+// -----------------------------------------------------------------------------
+QVector<DataArrayPath> NeighborOrientationCorrelation::getIgnoredDataArrayPaths() const
+{
+  return m_IgnoredDataArrayPaths;
 }

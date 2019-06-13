@@ -39,8 +39,9 @@
 #include <QtCore/QString>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -60,14 +61,44 @@ class SurfaceMeshing_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
   //  PYB11_CREATE_BINDINGS(VerifyTriangleWinding SUPERCLASS SurfaceMeshFilter)
   //  PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
   public:
-    SIMPL_SHARED_POINTERS(VerifyTriangleWinding)
-    SIMPL_FILTER_NEW_MACRO(VerifyTriangleWinding)
-    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(VerifyTriangleWinding, SurfaceMeshFilter)
+    using Self = VerifyTriangleWinding;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<VerifyTriangleWinding> New();
+
+    /**
+     * @brief Returns the name of the class for VerifyTriangleWinding
+     */
+    const QString getNameOfClass() const override;
+    /**
+     * @brief Returns the name of the class for VerifyTriangleWinding
+     */
+    static QString ClassName();
 
     ~VerifyTriangleWinding() override;
-    SIMPL_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
+    /**
+     * @brief Setter property for SurfaceDataContainerName
+     */
+    void setSurfaceDataContainerName(const QString& value);
+    /**
+     * @brief Getter property for SurfaceDataContainerName
+     * @return Value of SurfaceDataContainerName
+     */
+    QString getSurfaceDataContainerName() const;
 
-    SIMPL_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeFacesArrayName)
+    /**
+     * @brief Setter property for SurfaceMeshNodeFacesArrayName
+     */
+    void setSurfaceMeshNodeFacesArrayName(const QString& value);
+    /**
+     * @brief Getter property for SurfaceMeshNodeFacesArrayName
+     * @return Value of SurfaceMeshNodeFacesArrayName
+     */
+    QString getSurfaceMeshNodeFacesArrayName() const;
 
     typedef QMap<int, QSet<int> >                      LabelFaceMap_t;
     typedef QVector<int32_t>                               FaceList_t;
@@ -77,7 +108,16 @@ class SurfaceMeshing_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+    /**
+     * @brief Setter property for SurfaceMeshFaceLabelsArrayPath
+     */
+    void setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value);
+    /**
+     * @brief Getter property for SurfaceMeshFaceLabelsArrayPath
+     * @return Value of SurfaceMeshFaceLabelsArrayPath
+     */
+    DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
+
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
     const QString getCompiledLibraryName() const override;
@@ -162,7 +202,12 @@ class SurfaceMeshing_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
     int32_t getSeedTriangle(int32_t label, QSet<int32_t>& triangleIndices);
 
   private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+    std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFaceLabelsPtr;
+    int32_t* m_SurfaceMeshFaceLabels = nullptr;
+
+    QString m_SurfaceDataContainerName = {};
+    QString m_SurfaceMeshNodeFacesArrayName = {};
+    DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
 
     bool m_DoNodeFaceConnectivityFilter;
 

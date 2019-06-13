@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Generic/GenericDLLExport.h"
 
@@ -59,16 +59,48 @@ class Generic_EXPORT FindFeatureCentroids : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindFeatureCentroids)
-  SIMPL_FILTER_NEW_MACRO(FindFeatureCentroids)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindFeatureCentroids, AbstractFilter)
+  using Self = FindFeatureCentroids;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindFeatureCentroids> New();
+
+  /**
+   * @brief Returns the name of the class for FindFeatureCentroids
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindFeatureCentroids
+   */
+  static QString ClassName();
 
   ~FindFeatureCentroids() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
+  /**
+   * @brief Setter property for CentroidsArrayPath
+   */
+  void setCentroidsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CentroidsArrayPath
+   * @return Value of CentroidsArrayPath
+   */
+  DataArrayPath getCentroidsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 
   /**
@@ -177,8 +209,13 @@ protected:
   void find_centroids();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(float, Centroids)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<float>> m_CentroidsPtr;
+  float* m_Centroids = nullptr;
+
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_CentroidsArrayPath = {};
 
 public:
   FindFeatureCentroids(const FindFeatureCentroids&) = delete; // Copy Constructor Not Implemented

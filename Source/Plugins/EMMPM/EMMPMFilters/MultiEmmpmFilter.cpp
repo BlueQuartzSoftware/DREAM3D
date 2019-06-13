@@ -44,7 +44,10 @@
 #include "EMMPM/EMMPMLib/Core/InitializationFunctions.h"
 #include "EMMPM/EMMPMLib/EMMPMLib.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -55,6 +58,7 @@
 #include "SIMPLib/Messages/GenericStatusMessage.h"
 #include "SIMPLib/Messages/GenericErrorMessage.h"
 #include "SIMPLib/Messages/GenericWarningMessage.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "EMMPM/EMMPMVersion.h"
 
@@ -403,19 +407,19 @@ AbstractFilter::Pointer MultiEmmpmFilter::newFilterInstance(bool copyFilterParam
   MultiEmmpmFilter::Pointer filter = MultiEmmpmFilter::New();
   if(copyFilterParameters)
   {
-    SIMPL_COPY_INSTANCEVAR(InputDataArrayVector)
-    SIMPL_COPY_INSTANCEVAR(NumClasses)
-    SIMPL_COPY_INSTANCEVAR(ExchangeEnergy)
-    SIMPL_COPY_INSTANCEVAR(HistogramLoops)
-    SIMPL_COPY_INSTANCEVAR(SegmentationLoops)
-    SIMPL_COPY_INSTANCEVAR(UseSimulatedAnnealing)
-    SIMPL_COPY_INSTANCEVAR(UseGradientPenalty)
-    SIMPL_COPY_INSTANCEVAR(GradientBetaE)
-    SIMPL_COPY_INSTANCEVAR(UseCurvaturePenalty)
-    SIMPL_COPY_INSTANCEVAR(CurvatureBetaC)
-    SIMPL_COPY_INSTANCEVAR(CurvatureRMax)
-    SIMPL_COPY_INSTANCEVAR(CurvatureEMLoopDelay)
-    SIMPL_COPY_INSTANCEVAR(OutputAttributeMatrixName)
+    filter->setInputDataArrayVector(getInputDataArrayVector());
+    filter->setNumClasses(getNumClasses());
+    filter->setExchangeEnergy(getExchangeEnergy());
+    filter->setHistogramLoops(getHistogramLoops());
+    filter->setSegmentationLoops(getSegmentationLoops());
+    filter->setUseSimulatedAnnealing(getUseSimulatedAnnealing());
+    filter->setUseGradientPenalty(getUseGradientPenalty());
+    filter->setGradientBetaE(getGradientBetaE());
+    filter->setUseCurvaturePenalty(getUseCurvaturePenalty());
+    filter->setCurvatureBetaC(getCurvatureBetaC());
+    filter->setCurvatureRMax(getCurvatureRMax());
+    filter->setCurvatureEMLoopDelay(getCurvatureEMLoopDelay());
+    filter->setOutputAttributeMatrixName(getOutputAttributeMatrixName());
   }
   return filter;
 }
@@ -476,4 +480,81 @@ const QString MultiEmmpmFilter::getSubGroupName() const
 const QString MultiEmmpmFilter::getHumanLabel() const
 {
   return "Segment Features (EM/MPM Multi-Array)";
+}
+
+// -----------------------------------------------------------------------------
+MultiEmmpmFilter::Pointer MultiEmmpmFilter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<MultiEmmpmFilter> MultiEmmpmFilter::New()
+{
+  struct make_shared_enabler : public MultiEmmpmFilter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString MultiEmmpmFilter::getNameOfClass() const
+{
+  return QString("MultiEmmpmFilter");
+}
+
+// -----------------------------------------------------------------------------
+QString MultiEmmpmFilter::ClassName()
+{
+  return QString("MultiEmmpmFilter");
+}
+
+// -----------------------------------------------------------------------------
+void MultiEmmpmFilter::setInputDataArrayVector(const QVector<DataArrayPath>& value)
+{
+  m_InputDataArrayVector = value;
+}
+
+// -----------------------------------------------------------------------------
+QVector<DataArrayPath> MultiEmmpmFilter::getInputDataArrayVector() const
+{
+  return m_InputDataArrayVector;
+}
+
+// -----------------------------------------------------------------------------
+void MultiEmmpmFilter::setOutputAttributeMatrixName(const QString& value)
+{
+  m_OutputAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString MultiEmmpmFilter::getOutputAttributeMatrixName() const
+{
+  return m_OutputAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void MultiEmmpmFilter::setOutputArrayPrefix(const QString& value)
+{
+  m_OutputArrayPrefix = value;
+}
+
+// -----------------------------------------------------------------------------
+QString MultiEmmpmFilter::getOutputArrayPrefix() const
+{
+  return m_OutputArrayPrefix;
+}
+
+// -----------------------------------------------------------------------------
+void MultiEmmpmFilter::setUsePreviousMuSigma(const bool& value)
+{
+  m_UsePreviousMuSigma = value;
+}
+
+// -----------------------------------------------------------------------------
+bool MultiEmmpmFilter::getUsePreviousMuSigma() const
+{
+  return m_UsePreviousMuSigma;
 }

@@ -37,13 +37,18 @@
 
 #include <fstream>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
@@ -337,4 +342,69 @@ const QString RegularizeZSpacing::getSubGroupName() const
 const QString RegularizeZSpacing::getHumanLabel() const
 {
   return "Regularize Z Spacing";
+}
+
+// -----------------------------------------------------------------------------
+RegularizeZSpacing::Pointer RegularizeZSpacing::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<RegularizeZSpacing> RegularizeZSpacing::New()
+{
+  struct make_shared_enabler : public RegularizeZSpacing
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString RegularizeZSpacing::getNameOfClass() const
+{
+  return QString("RegularizeZSpacing");
+}
+
+// -----------------------------------------------------------------------------
+QString RegularizeZSpacing::ClassName()
+{
+  return QString("RegularizeZSpacing");
+}
+
+// -----------------------------------------------------------------------------
+void RegularizeZSpacing::setCellAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_CellAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath RegularizeZSpacing::getCellAttributeMatrixPath() const
+{
+  return m_CellAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void RegularizeZSpacing::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString RegularizeZSpacing::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void RegularizeZSpacing::setNewZRes(const float& value)
+{
+  m_NewZRes = value;
+}
+
+// -----------------------------------------------------------------------------
+float RegularizeZSpacing::getNewZRes() const
+{
+  return m_NewZRes;
 }

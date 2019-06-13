@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -62,13 +62,36 @@ class Reconstruction_EXPORT AlignSectionsFeature : public AlignSections
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(AlignSectionsFeature)
-  SIMPL_FILTER_NEW_MACRO(AlignSectionsFeature)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(AlignSectionsFeature, AlignSections)
+  using Self = AlignSectionsFeature;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<AlignSectionsFeature> New();
+
+  /**
+   * @brief Returns the name of the class for AlignSectionsFeature
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for AlignSectionsFeature
+   */
+  static QString ClassName();
 
   virtual ~AlignSectionsFeature();
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  /**
+   * @brief Setter property for GoodVoxelsArrayPath
+   */
+  void setGoodVoxelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for GoodVoxelsArrayPath
+   * @return Value of GoodVoxelsArrayPath
+   */
+  DataArrayPath getGoodVoxelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
   /**
@@ -154,7 +177,10 @@ protected:
   virtual void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
+  std::weak_ptr<DataArray<bool>> m_GoodVoxelsPtr;
+  bool* m_GoodVoxels = nullptr;
+
+  DataArrayPath m_GoodVoxelsArrayPath = {};
 
 public:
   AlignSectionsFeature(const AlignSectionsFeature&) = delete; // Copy Constructor Not Implemented

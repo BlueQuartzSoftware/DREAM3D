@@ -36,9 +36,9 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -70,31 +70,108 @@ class OrientationAnalysis_EXPORT GenerateIPFColors : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(GenerateIPFColors)
-  SIMPL_FILTER_NEW_MACRO(GenerateIPFColors)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GenerateIPFColors, AbstractFilter)
+  using Self = GenerateIPFColors;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<GenerateIPFColors> New();
+
+  /**
+   * @brief Returns the name of the class for GenerateIPFColors
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for GenerateIPFColors
+   */
+  static QString ClassName();
 
   ~GenerateIPFColors() override;
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, ReferenceDir)
+  /**
+   * @brief Setter property for ReferenceDir
+   */
+  void setReferenceDir(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for ReferenceDir
+   * @return Value of ReferenceDir
+   */
+  FloatVec3Type getReferenceDir() const;
+
   Q_PROPERTY(FloatVec3Type ReferenceDir READ getReferenceDir WRITE setReferenceDir)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  /**
+   * @brief Setter property for CellPhasesArrayPath
+   */
+  void setCellPhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellPhasesArrayPath
+   * @return Value of CellPhasesArrayPath
+   */
+  DataArrayPath getCellPhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+  /**
+   * @brief Setter property for CellEulerAnglesArrayPath
+   */
+  void setCellEulerAnglesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellEulerAnglesArrayPath
+   * @return Value of CellEulerAnglesArrayPath
+   */
+  DataArrayPath getCellEulerAnglesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-  SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
+  /**
+   * @brief Setter property for UseGoodVoxels
+   */
+  void setUseGoodVoxels(const bool& value);
+  /**
+   * @brief Getter property for UseGoodVoxels
+   * @return Value of UseGoodVoxels
+   */
+  bool getUseGoodVoxels() const;
+
   Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  /**
+   * @brief Setter property for GoodVoxelsArrayPath
+   */
+  void setGoodVoxelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for GoodVoxelsArrayPath
+   * @return Value of GoodVoxelsArrayPath
+   */
+  DataArrayPath getGoodVoxelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, CellIPFColorsArrayName)
+  /**
+   * @brief Setter property for CellIPFColorsArrayName
+   */
+  void setCellIPFColorsArrayName(const QString& value);
+  /**
+   * @brief Getter property for CellIPFColorsArrayName
+   * @return Value of CellIPFColorsArrayName
+   */
+  QString getCellIPFColorsArrayName() const;
+
   Q_PROPERTY(QString CellIPFColorsArrayName READ getCellIPFColorsArrayName WRITE setCellIPFColorsArrayName)
 
   /**
@@ -203,12 +280,25 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-  DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
-  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-  DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
+  std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+  int32_t* m_CellPhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_CellEulerAnglesPtr;
+  float* m_CellEulerAngles = nullptr;
+  std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
+  uint32_t* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<bool>> m_GoodVoxelsPtr;
+  bool* m_GoodVoxels = nullptr;
+  std::weak_ptr<DataArray<uint8_t>> m_CellIPFColorsPtr;
+  uint8_t* m_CellIPFColors = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(uint8_t, CellIPFColors)
+  FloatVec3Type m_ReferenceDir = {};
+  DataArrayPath m_CellPhasesArrayPath = {};
+  DataArrayPath m_CellEulerAnglesArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+  bool m_UseGoodVoxels = {};
+  DataArrayPath m_GoodVoxelsArrayPath = {};
+  QString m_CellIPFColorsArrayName = {};
+
   int32_t m_PhaseWarningCount = 0;
 
 public:

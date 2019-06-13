@@ -35,8 +35,12 @@
 
 #include <QtCore/QFile>
 
+#include <QtCore/QTextStream>
+
+#include <QtCore/QDebug>
+
 #include "SIMPLib/Common/Observer.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+
 #include "SIMPLib/CoreFilters/DataContainerWriter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"

@@ -39,9 +39,9 @@
 #include <set>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -78,29 +78,97 @@ class Statistics_EXPORT QuiltCellData : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(QuiltCellData)
-  SIMPL_FILTER_NEW_MACRO(QuiltCellData)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(QuiltCellData, AbstractFilter)
+  using Self = QuiltCellData;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<QuiltCellData> New();
+
+  /**
+   * @brief Returns the name of the class for QuiltCellData
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for QuiltCellData
+   */
+  static QString ClassName();
 
   ~QuiltCellData() override;
 
   // What Cell Array do they want to work on
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
+  /**
+   * @brief Setter property for SelectedCellArrayPath
+   */
+  void setSelectedCellArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SelectedCellArrayPath
+   * @return Value of SelectedCellArrayPath
+   */
+  DataArrayPath getSelectedCellArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
-  SIMPL_FILTER_PARAMETER(IntVec3Type, QuiltStep)
+  /**
+   * @brief Setter property for QuiltStep
+   */
+  void setQuiltStep(const IntVec3Type& value);
+  /**
+   * @brief Getter property for QuiltStep
+   * @return Value of QuiltStep
+   */
+  IntVec3Type getQuiltStep() const;
+
   Q_PROPERTY(IntVec3Type QuiltStep READ getQuiltStep WRITE setQuiltStep)
-  SIMPL_FILTER_PARAMETER(IntVec3Type, PatchSize)
+  /**
+   * @brief Setter property for PatchSize
+   */
+  void setPatchSize(const IntVec3Type& value);
+  /**
+   * @brief Getter property for PatchSize
+   * @return Value of PatchSize
+   */
+  IntVec3Type getPatchSize() const;
+
   Q_PROPERTY(IntVec3Type PatchSize READ getPatchSize WRITE setPatchSize)
 
   // The user selects a new DataContainerName
-  SIMPL_FILTER_PARAMETER(DataArrayPath, OutputDataContainerName)
+  /**
+   * @brief Setter property for OutputDataContainerName
+   */
+  void setOutputDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for OutputDataContainerName
+   * @return Value of OutputDataContainerName
+   */
+  DataArrayPath getOutputDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName)
   // Name the new AttributeMatrix that will get created
-  SIMPL_FILTER_PARAMETER(QString, OutputAttributeMatrixName)
+  /**
+   * @brief Setter property for OutputAttributeMatrixName
+   */
+  void setOutputAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for OutputAttributeMatrixName
+   * @return Value of OutputAttributeMatrixName
+   */
+  QString getOutputAttributeMatrixName() const;
+
   Q_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
   // Give the created data array a name
-  SIMPL_FILTER_PARAMETER(QString, OutputArrayName)
+  /**
+   * @brief Setter property for OutputArrayName
+   */
+  void setOutputArrayName(const QString& value);
+  /**
+   * @brief Getter property for OutputArrayName
+   * @return Value of OutputArrayName
+   */
+  QString getOutputArrayName() const;
+
   Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName)
 
   /**
@@ -205,7 +273,15 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(float, OutputArray)
+  std::weak_ptr<DataArray<float>> m_OutputArrayPtr;
+  float* m_OutputArray = nullptr;
+
+  DataArrayPath m_SelectedCellArrayPath = {};
+  IntVec3Type m_QuiltStep = {};
+  IntVec3Type m_PatchSize = {};
+  DataArrayPath m_OutputDataContainerName = {};
+  QString m_OutputAttributeMatrixName = {};
+  QString m_OutputArrayName = {};
 
 public:
   QuiltCellData(const QuiltCellData&) = delete;  // Copy Constructor Not Implemented

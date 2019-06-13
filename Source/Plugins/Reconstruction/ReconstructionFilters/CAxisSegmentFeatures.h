@@ -37,8 +37,8 @@
 #include <random>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
@@ -78,39 +78,142 @@ class Reconstruction_EXPORT CAxisSegmentFeatures : public SegmentFeatures
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(CAxisSegmentFeatures)
-  SIMPL_FILTER_NEW_MACRO(CAxisSegmentFeatures)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CAxisSegmentFeatures, SegmentFeatures)
+  using Self = CAxisSegmentFeatures;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<CAxisSegmentFeatures> New();
+
+  /**
+   * @brief Returns the name of the class for CAxisSegmentFeatures
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for CAxisSegmentFeatures
+   */
+  static QString ClassName();
 
   virtual ~CAxisSegmentFeatures();
 
-  SIMPL_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
+  /**
+   * @brief Setter property for CellFeatureAttributeMatrixName
+   */
+  void setCellFeatureAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellFeatureAttributeMatrixName
+   * @return Value of CellFeatureAttributeMatrixName
+   */
+  QString getCellFeatureAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(float, MisorientationTolerance)
+  /**
+   * @brief Setter property for MisorientationTolerance
+   */
+  void setMisorientationTolerance(const float& value);
+  /**
+   * @brief Getter property for MisorientationTolerance
+   * @return Value of MisorientationTolerance
+   */
+  float getMisorientationTolerance() const;
+
   Q_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
 
-  SIMPL_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
+  /**
+   * @brief Setter property for RandomizeFeatureIds
+   */
+  void setRandomizeFeatureIds(const bool& value);
+  /**
+   * @brief Getter property for RandomizeFeatureIds
+   * @return Value of RandomizeFeatureIds
+   */
+  bool getRandomizeFeatureIds() const;
 
-  SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
+  /**
+   * @brief Setter property for UseGoodVoxels
+   */
+  void setUseGoodVoxels(const bool& value);
+  /**
+   * @brief Getter property for UseGoodVoxels
+   * @return Value of UseGoodVoxels
+   */
+  bool getUseGoodVoxels() const;
+
   Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  /**
+   * @brief Setter property for CellPhasesArrayPath
+   */
+  void setCellPhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellPhasesArrayPath
+   * @return Value of CellPhasesArrayPath
+   */
+  DataArrayPath getCellPhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+  /**
+   * @brief Setter property for QuatsArrayPath
+   */
+  void setQuatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for QuatsArrayPath
+   * @return Value of QuatsArrayPath
+   */
+  DataArrayPath getQuatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  /**
+   * @brief Setter property for GoodVoxelsArrayPath
+   */
+  void setGoodVoxelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for GoodVoxelsArrayPath
+   * @return Value of GoodVoxelsArrayPath
+   */
+  DataArrayPath getGoodVoxelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+  /**
+   * @brief Setter property for FeatureIdsArrayName
+   */
+  void setFeatureIdsArrayName(const QString& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayName
+   * @return Value of FeatureIdsArrayName
+   */
+  QString getFeatureIdsArrayName() const;
+
   Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, ActiveArrayName)
+  /**
+   * @brief Setter property for ActiveArrayName
+   */
+  void setActiveArrayName(const QString& value);
+  /**
+   * @brief Getter property for ActiveArrayName
+   * @return Value of ActiveArrayName
+   */
+  QString getActiveArrayName() const;
+
   Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
   /**
@@ -201,15 +304,31 @@ protected:
   virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum);
 
 private:
+  std::weak_ptr<DataArray<float>> m_QuatsPtr;
+  float* m_Quats = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+  int32_t* m_CellPhases = nullptr;
+  std::weak_ptr<DataArray<bool>> m_GoodVoxelsPtr;
+  bool* m_GoodVoxels = nullptr;
+  std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
+  uint32_t* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<bool>> m_ActivePtr;
+  bool* m_Active = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+
+  QString m_CellFeatureAttributeMatrixName = {};
+  float m_MisorientationTolerance = {};
+  bool m_RandomizeFeatureIds = {};
+  bool m_UseGoodVoxels = {};
+  DataArrayPath m_CellPhasesArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+  DataArrayPath m_QuatsArrayPath = {};
+  DataArrayPath m_GoodVoxelsArrayPath = {};
+  QString m_FeatureIdsArrayName = {};
+  QString m_ActiveArrayName = {};
+
   QVector<LaueOps::Pointer> m_OrientationOps;
-
-  DEFINE_DATAARRAY_VARIABLE(float, Quats)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-  DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
-  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-
-  DEFINE_DATAARRAY_VARIABLE(bool, Active)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
   std::random_device m_RandomDevice;
   std::mt19937_64 m_Generator;

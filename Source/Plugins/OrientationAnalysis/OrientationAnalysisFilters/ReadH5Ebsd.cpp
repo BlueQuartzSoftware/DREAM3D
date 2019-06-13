@@ -36,6 +36,7 @@
 #include "ReadH5Ebsd.h"
 
 #include <QtCore/QFileInfo>
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -46,6 +47,8 @@
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "EbsdLib/H5EbsdVolumeInfo.h"
 #include "EbsdLib/HKL/CtfFields.h"
@@ -75,8 +78,6 @@ ReadH5Ebsd::ReadH5Ebsd()
 , m_PhaseNameArrayName("")
 , m_MaterialNameArrayName(SIMPL::EnsembleData::MaterialName)
 , m_InputFile("")
-, m_ZStartIndex(0)
-, m_ZEndIndex(0)
 , m_UseTransformations(true)
 , m_AngleRepresentation(Ebsd::AngleRepresentation::Radians)
 , m_RefFrameZDir(SIMPL::RefFrameZDir::UnknownRefFrameZDirection)
@@ -140,7 +141,7 @@ void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], DataContainer::Pointer m)
+int32_t ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], const DataContainer::Pointer& m)
 {
   int32_t err = 0;
 /* Sanity check what we are trying to load to make sure it can fit in our address space.
@@ -1075,4 +1076,273 @@ const QString ReadH5Ebsd::getSubGroupName() const
 const QString ReadH5Ebsd::getHumanLabel() const
 {
   return "Import H5EBSD File";
+}
+
+// -----------------------------------------------------------------------------
+ReadH5Ebsd::Pointer ReadH5Ebsd::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ReadH5Ebsd> ReadH5Ebsd::New()
+{
+  struct make_shared_enabler : public ReadH5Ebsd
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString ReadH5Ebsd::getNameOfClass() const
+{
+  return QString("ReadH5Ebsd");
+}
+
+// -----------------------------------------------------------------------------
+QString ReadH5Ebsd::ClassName()
+{
+  return QString("ReadH5Ebsd");
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setDataContainerName(const DataArrayPath& value)
+{
+  m_DataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ReadH5Ebsd::getDataContainerName() const
+{
+  return m_DataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setCellEnsembleAttributeMatrixName(const QString& value)
+{
+  m_CellEnsembleAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadH5Ebsd::getCellEnsembleAttributeMatrixName() const
+{
+  return m_CellEnsembleAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadH5Ebsd::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setPhaseNameArrayName(const QString& value)
+{
+  m_PhaseNameArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadH5Ebsd::getPhaseNameArrayName() const
+{
+  return m_PhaseNameArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setMaterialNameArrayName(const QString& value)
+{
+  m_MaterialNameArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadH5Ebsd::getMaterialNameArrayName() const
+{
+  return m_MaterialNameArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadH5Ebsd::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setZStartIndex(const int& value)
+{
+  m_ZStartIndex = value;
+}
+
+// -----------------------------------------------------------------------------
+int ReadH5Ebsd::getZStartIndex() const
+{
+  return m_ZStartIndex;
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setZEndIndex(const int& value)
+{
+  m_ZEndIndex = value;
+}
+
+// -----------------------------------------------------------------------------
+int ReadH5Ebsd::getZEndIndex() const
+{
+  return m_ZEndIndex;
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setUseTransformations(const bool& value)
+{
+  m_UseTransformations = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ReadH5Ebsd::getUseTransformations() const
+{
+  return m_UseTransformations;
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setSelectedArrayNames(const QSet<QString>& value)
+{
+  m_SelectedArrayNames = value;
+}
+
+// -----------------------------------------------------------------------------
+QSet<QString> ReadH5Ebsd::getSelectedArrayNames() const
+{
+  return m_SelectedArrayNames;
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setDataArrayNames(const QSet<QString>& value)
+{
+  m_DataArrayNames = value;
+}
+
+// -----------------------------------------------------------------------------
+QSet<QString> ReadH5Ebsd::getDataArrayNames() const
+{
+  return m_DataArrayNames;
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setAngleRepresentation(const int& value)
+{
+  m_AngleRepresentation = value;
+}
+
+// -----------------------------------------------------------------------------
+int ReadH5Ebsd::getAngleRepresentation() const
+{
+  return m_AngleRepresentation;
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setRefFrameZDir(const uint32_t& value)
+{
+  m_RefFrameZDir = value;
+}
+
+// -----------------------------------------------------------------------------
+uint32_t ReadH5Ebsd::getRefFrameZDir() const
+{
+  return m_RefFrameZDir;
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setManufacturer(const Ebsd::OEM& value)
+{
+  m_Manufacturer = value;
+}
+
+// -----------------------------------------------------------------------------
+Ebsd::OEM ReadH5Ebsd::getManufacturer() const
+{
+  return m_Manufacturer;
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setSampleTransformation(const AxisAngleInput_t& value)
+{
+  m_SampleTransformation = value;
+}
+
+// -----------------------------------------------------------------------------
+AxisAngleInput_t ReadH5Ebsd::getSampleTransformation() const
+{
+  return m_SampleTransformation;
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setEulerTransformation(const AxisAngleInput_t& value)
+{
+  m_EulerTransformation = value;
+}
+
+// -----------------------------------------------------------------------------
+AxisAngleInput_t ReadH5Ebsd::getEulerTransformation() const
+{
+  return m_EulerTransformation;
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setCrystalStructuresArrayName(const QString& value)
+{
+  m_CrystalStructuresArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadH5Ebsd::getCrystalStructuresArrayName() const
+{
+  return m_CrystalStructuresArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setLatticeConstantsArrayName(const QString& value)
+{
+  m_LatticeConstantsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadH5Ebsd::getLatticeConstantsArrayName() const
+{
+  return m_LatticeConstantsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setCellPhasesArrayName(const QString& value)
+{
+  m_CellPhasesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadH5Ebsd::getCellPhasesArrayName() const
+{
+  return m_CellPhasesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setCellEulerAnglesArrayName(const QString& value)
+{
+  m_CellEulerAnglesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadH5Ebsd::getCellEulerAnglesArrayName() const
+{
+  return m_CellEulerAnglesArrayName;
 }

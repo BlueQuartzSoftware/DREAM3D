@@ -34,13 +34,18 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "IdentifySample.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
@@ -383,4 +388,57 @@ const QString IdentifySample::getSubGroupName() const
 const QString IdentifySample::getHumanLabel() const
 {
   return "Isolate Largest Feature (Identify Sample)";
+}
+
+// -----------------------------------------------------------------------------
+IdentifySample::Pointer IdentifySample::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<IdentifySample> IdentifySample::New()
+{
+  struct make_shared_enabler : public IdentifySample
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString IdentifySample::getNameOfClass() const
+{
+  return QString("IdentifySample");
+}
+
+// -----------------------------------------------------------------------------
+QString IdentifySample::ClassName()
+{
+  return QString("IdentifySample");
+}
+
+// -----------------------------------------------------------------------------
+void IdentifySample::setFillHoles(const bool& value)
+{
+  m_FillHoles = value;
+}
+
+// -----------------------------------------------------------------------------
+bool IdentifySample::getFillHoles() const
+{
+  return m_FillHoles;
+}
+
+// -----------------------------------------------------------------------------
+void IdentifySample::setGoodVoxelsArrayPath(const DataArrayPath& value)
+{
+  m_GoodVoxelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath IdentifySample::getGoodVoxelsArrayPath() const
+{
+  return m_GoodVoxelsArrayPath;
 }

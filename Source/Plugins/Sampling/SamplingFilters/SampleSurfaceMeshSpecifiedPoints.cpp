@@ -37,12 +37,17 @@
 
 #include <fstream>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
@@ -316,4 +321,57 @@ const QString SampleSurfaceMeshSpecifiedPoints::getSubGroupName() const
 const QString SampleSurfaceMeshSpecifiedPoints::getHumanLabel() const
 {
   return "Sample Triangle Geometry at Specified Points";
+}
+
+// -----------------------------------------------------------------------------
+SampleSurfaceMeshSpecifiedPoints::Pointer SampleSurfaceMeshSpecifiedPoints::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<SampleSurfaceMeshSpecifiedPoints> SampleSurfaceMeshSpecifiedPoints::New()
+{
+  struct make_shared_enabler : public SampleSurfaceMeshSpecifiedPoints
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString SampleSurfaceMeshSpecifiedPoints::getNameOfClass() const
+{
+  return QString("SampleSurfaceMeshSpecifiedPoints");
+}
+
+// -----------------------------------------------------------------------------
+QString SampleSurfaceMeshSpecifiedPoints::ClassName()
+{
+  return QString("SampleSurfaceMeshSpecifiedPoints");
+}
+
+// -----------------------------------------------------------------------------
+void SampleSurfaceMeshSpecifiedPoints::setInputFilePath(const QString& value)
+{
+  m_InputFilePath = value;
+}
+
+// -----------------------------------------------------------------------------
+QString SampleSurfaceMeshSpecifiedPoints::getInputFilePath() const
+{
+  return m_InputFilePath;
+}
+
+// -----------------------------------------------------------------------------
+void SampleSurfaceMeshSpecifiedPoints::setOutputFilePath(const QString& value)
+{
+  m_OutputFilePath = value;
+}
+
+// -----------------------------------------------------------------------------
+QString SampleSurfaceMeshSpecifiedPoints::getOutputFilePath() const
+{
+  return m_OutputFilePath;
 }

@@ -1,6 +1,9 @@
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/DataContainers/AttributeMatrix.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
@@ -27,28 +30,117 @@ class GenerateFeatureIds : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(GenerateFeatureIds)
-  SIMPL_FILTER_NEW_MACRO(GenerateFeatureIds)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GenerateFeatureIds, AbstractFilter)
-
-  ~GenerateFeatureIds()
+  using Self = GenerateFeatureIds;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer()
   {
+    return Pointer(static_cast<Self*>(nullptr));
   }
-  SIMPL_INSTANCE_STRING_PROPERTY(DataContainerName)
-  //------ Created Cell Data
-  SIMPL_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-  SIMPL_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-  SIMPL_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
 
-  virtual const QString getGroupName() const override
+  /**
+   * @brief New
+   * @return
+   */
+  static Pointer New()
+  {
+    Pointer sharedPtr(new(Self));
+    return sharedPtr;
+  }
+
+  /**
+   * @brief Returns the name of the class for AbstractMessage
+   */
+  const QString getNameOfClass() const override
+  {
+    return QString("GenerateFeatureIds");
+  }
+  /**
+   * @brief Returns the name of the class for AbstractMessage
+   */
+  static QString ClassName()
+  {
+    return QString("GenerateFeatureIds");
+  }
+
+  ~GenerateFeatureIds() override = default;
+
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const QString& value)
+  {
+    m_DataContainerName = value;
+  }
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  QString getDataContainerName() const
+  {
+    return m_DataContainerName;
+  }
+
+  //------ Created Cell Data
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const QString& value)
+  {
+    m_CellAttributeMatrixName = value;
+  }
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  QString getCellAttributeMatrixName() const
+  {
+    return m_CellAttributeMatrixName;
+  }
+
+  /**
+   * @brief Setter property for CellFeatureAttributeMatrixName
+   */
+  void setCellFeatureAttributeMatrixName(const QString& value)
+  {
+    m_CellFeatureAttributeMatrixName = value;
+  }
+  /**
+   * @brief Getter property for CellFeatureAttributeMatrixName
+   * @return Value of CellFeatureAttributeMatrixName
+   */
+  QString getCellFeatureAttributeMatrixName() const
+  {
+    return m_CellFeatureAttributeMatrixName;
+  }
+
+  /**
+   * @brief Setter property for CellEnsembleAttributeMatrixName
+   */
+  void setCellEnsembleAttributeMatrixName(const QString& value)
+  {
+    m_CellEnsembleAttributeMatrixName = value;
+  }
+  /**
+   * @brief Getter property for CellEnsembleAttributeMatrixName
+   * @return Value of CellEnsembleAttributeMatrixName
+   */
+  QString getCellEnsembleAttributeMatrixName() const
+  {
+    return m_CellEnsembleAttributeMatrixName;
+  }
+
+  const QString getGroupName() const override
   {
     return "UnitTest";
   }
-  virtual const QString getHumanLabel() const override
+  const QString getHumanLabel() const override
   {
     return "Generate Feature Ids";
   }
-  virtual void execute() override
+  void execute() override
   {
     clearErrorCode();
     clearWarningCode();
@@ -75,7 +167,7 @@ public:
       m_FeatureIds[i] = i + UnitTest::FeatureIdsTest::Offset;
     }
   }
-  virtual void preflight() override
+  void preflight() override
   {
     dataCheck();
   }
@@ -91,14 +183,20 @@ protected:
   : m_DataContainerName(SIMPL::Defaults::DataContainerName)
   , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
   , m_CellFeatureAttributeMatrixName(SIMPL::Defaults::CellFeatureAttributeMatrixName)
-  , m_FeatureIds(nullptr)
   , m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
   {
   }
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  QString m_DataContainerName = {};
+  QString m_CellAttributeMatrixName = {};
+  QString m_CellFeatureAttributeMatrixName = {};
+  QString m_CellEnsembleAttributeMatrixName = {};
+
   QString m_FeatureIdsArrayName;
+
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
 
   void dataCheck()
   {
@@ -143,15 +241,90 @@ class CreateImageGeomDataContainer : public AbstractFilter
   Q_OBJECT
 
 public:
-  SIMPL_SHARED_POINTERS(CreateImageGeomDataContainer)
-  SIMPL_FILTER_NEW_MACRO(CreateImageGeomDataContainer)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CreateImageGeomDataContainer, AbstractFilter)
+  using Self = CreateImageGeomDataContainer;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer()
+  {
+    return Pointer(static_cast<Self*>(nullptr));
+  }
 
-  SIMPL_FILTER_PARAMETER(size_t, XDim)
-  SIMPL_FILTER_PARAMETER(size_t, YDim)
-  SIMPL_FILTER_PARAMETER(size_t, ZDim)
+  /**
+   * @brief New
+   * @return
+   */
+  static Pointer New()
+  {
+    Pointer sharedPtr(new(Self));
+    return sharedPtr;
+  }
 
-  ~CreateImageGeomDataContainer() = default;
+  /**
+   * @brief Returns the name of the class for AbstractMessage
+   */
+  const QString getNameOfClass() const override
+  {
+    return QString("CreateImageGeomDataContainer");
+  }
+  /**
+   * @brief Returns the name of the class for AbstractMessage
+   */
+  static QString ClassName()
+  {
+    return QString("CreateImageGeomDataContainer");
+  }
+
+  /**
+   * @brief Setter property for XDim
+   */
+  void setXDim(const size_t& value)
+  {
+    m_XDim = value;
+  }
+  /**
+   * @brief Getter property for XDim
+   * @return Value of XDim
+   */
+  size_t getXDim() const
+  {
+    return m_XDim;
+  }
+
+  /**
+   * @brief Setter property for YDim
+   */
+  void setYDim(const size_t& value)
+  {
+    m_YDim = value;
+  }
+  /**
+   * @brief Getter property for YDim
+   * @return Value of YDim
+   */
+  size_t getYDim() const
+  {
+    return m_YDim;
+  }
+
+  /**
+   * @brief Setter property for ZDim
+   */
+  void setZDim(const size_t& value)
+  {
+    m_ZDim = value;
+  }
+  /**
+   * @brief Getter property for ZDim
+   * @return Value of ZDim
+   */
+  size_t getZDim() const
+  {
+    return m_ZDim;
+  }
+
+  ~CreateImageGeomDataContainer() override = default;
 
   /**
    * @brief This returns the group that the filter belonds to. You can select
@@ -196,12 +369,7 @@ public:
   }
 
 protected:
-  CreateImageGeomDataContainer()
-  : m_XDim(0)
-  , m_YDim(0)
-  , m_ZDim(0)
-  {
-  }
+  CreateImageGeomDataContainer() = default;
 
   /**
    * @brief Checks for the appropriate parameter values and availability of
@@ -233,4 +401,9 @@ public:
   CreateImageGeomDataContainer(CreateImageGeomDataContainer&&) = delete;                 // Move Constructor Not Implemented
   CreateImageGeomDataContainer& operator=(const CreateImageGeomDataContainer&) = delete; // Copy Assignment Not Implemented
   CreateImageGeomDataContainer& operator=(CreateImageGeomDataContainer&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  size_t m_XDim = 0;
+  size_t m_YDim = 0;
+  size_t m_ZDim = 0;
 };

@@ -41,7 +41,12 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 
+#include <QtCore/QTextStream>
+
+#include <QtCore/QDebug>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/Common/ShapeType.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -61,6 +66,8 @@
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
 #include "SIMPLib/Utilities/TimeUtilities.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
@@ -3592,4 +3599,285 @@ const QString PackPrimaryPhases::getSubGroupName() const
 const QString PackPrimaryPhases::getHumanLabel() const
 {
   return "Pack Primary Phases";
+}
+
+// -----------------------------------------------------------------------------
+PackPrimaryPhases::Pointer PackPrimaryPhases::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<PackPrimaryPhases> PackPrimaryPhases::New()
+{
+  struct make_shared_enabler : public PackPrimaryPhases
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString PackPrimaryPhases::getNameOfClass() const
+{
+  return QString("PackPrimaryPhases");
+}
+
+// -----------------------------------------------------------------------------
+QString PackPrimaryPhases::ClassName()
+{
+  return QString("PackPrimaryPhases");
+}
+
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::setOutputCellAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_OutputCellAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath PackPrimaryPhases::getOutputCellAttributeMatrixPath() const
+{
+  return m_OutputCellAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::setOutputCellFeatureAttributeMatrixName(const QString& value)
+{
+  m_OutputCellFeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString PackPrimaryPhases::getOutputCellFeatureAttributeMatrixName() const
+{
+  return m_OutputCellFeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::setOutputCellEnsembleAttributeMatrixName(const QString& value)
+{
+  m_OutputCellEnsembleAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString PackPrimaryPhases::getOutputCellEnsembleAttributeMatrixName() const
+{
+  return m_OutputCellEnsembleAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::setFeatureIdsArrayName(const QString& value)
+{
+  m_FeatureIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString PackPrimaryPhases::getFeatureIdsArrayName() const
+{
+  return m_FeatureIdsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::setCellPhasesArrayName(const QString& value)
+{
+  m_CellPhasesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString PackPrimaryPhases::getCellPhasesArrayName() const
+{
+  return m_CellPhasesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::setFeaturePhasesArrayName(const QString& value)
+{
+  m_FeaturePhasesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString PackPrimaryPhases::getFeaturePhasesArrayName() const
+{
+  return m_FeaturePhasesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::setNumFeaturesArrayName(const QString& value)
+{
+  m_NumFeaturesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString PackPrimaryPhases::getNumFeaturesArrayName() const
+{
+  return m_NumFeaturesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::setInputStatsArrayPath(const DataArrayPath& value)
+{
+  m_InputStatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath PackPrimaryPhases::getInputStatsArrayPath() const
+{
+  return m_InputStatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::setInputPhaseTypesArrayPath(const DataArrayPath& value)
+{
+  m_InputPhaseTypesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath PackPrimaryPhases::getInputPhaseTypesArrayPath() const
+{
+  return m_InputPhaseTypesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::setInputPhaseNamesArrayPath(const DataArrayPath& value)
+{
+  m_InputPhaseNamesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath PackPrimaryPhases::getInputPhaseNamesArrayPath() const
+{
+  return m_InputPhaseNamesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::setInputShapeTypesArrayPath(const DataArrayPath& value)
+{
+  m_InputShapeTypesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath PackPrimaryPhases::getInputShapeTypesArrayPath() const
+{
+  return m_InputShapeTypesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::setMaskArrayPath(const DataArrayPath& value)
+{
+  m_MaskArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath PackPrimaryPhases::getMaskArrayPath() const
+{
+  return m_MaskArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::setUseMask(const bool& value)
+{
+  m_UseMask = value;
+}
+
+// -----------------------------------------------------------------------------
+bool PackPrimaryPhases::getUseMask() const
+{
+  return m_UseMask;
+}
+
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::setFeatureGeneration(const int& value)
+{
+  m_FeatureGeneration = value;
+}
+
+// -----------------------------------------------------------------------------
+int PackPrimaryPhases::getFeatureGeneration() const
+{
+  return m_FeatureGeneration;
+}
+
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::setFeatureInputFile(const QString& value)
+{
+  m_FeatureInputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString PackPrimaryPhases::getFeatureInputFile() const
+{
+  return m_FeatureInputFile;
+}
+
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::setCsvOutputFile(const QString& value)
+{
+  m_CsvOutputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString PackPrimaryPhases::getCsvOutputFile() const
+{
+  return m_CsvOutputFile;
+}
+
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::setPeriodicBoundaries(const bool& value)
+{
+  m_PeriodicBoundaries = value;
+}
+
+// -----------------------------------------------------------------------------
+bool PackPrimaryPhases::getPeriodicBoundaries() const
+{
+  return m_PeriodicBoundaries;
+}
+
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::setWriteGoalAttributes(const bool& value)
+{
+  m_WriteGoalAttributes = value;
+}
+
+// -----------------------------------------------------------------------------
+bool PackPrimaryPhases::getWriteGoalAttributes() const
+{
+  return m_WriteGoalAttributes;
+}
+
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::setSaveGeometricDescriptions(const int& value)
+{
+  m_SaveGeometricDescriptions = value;
+}
+
+// -----------------------------------------------------------------------------
+int PackPrimaryPhases::getSaveGeometricDescriptions() const
+{
+  return m_SaveGeometricDescriptions;
+}
+
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::setNewAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_NewAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath PackPrimaryPhases::getNewAttributeMatrixPath() const
+{
+  return m_NewAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void PackPrimaryPhases::setSelectedAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_SelectedAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath PackPrimaryPhases::getSelectedAttributeMatrixPath() const
+{
+  return m_SelectedAttributeMatrixPath;
 }

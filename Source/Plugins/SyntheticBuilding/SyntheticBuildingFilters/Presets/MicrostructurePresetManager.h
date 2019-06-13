@@ -35,7 +35,6 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "AbstractMicrostructurePreset.h"
 #include "AbstractMicrostructurePresetFactory.h"
@@ -56,8 +55,21 @@
 class SyntheticBuilding_EXPORT MicrostructurePresetManager
 {
 public:
-  SIMPL_SHARED_POINTERS(MicrostructurePresetManager)
-  SIMPL_TYPE_MACRO(MicrostructurePresetManager)
+  using Self = MicrostructurePresetManager;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  /**
+   * @brief Returns the name of the class for MicrostructurePresetManager
+   */
+  const QString getNameOfClass() const;
+  /**
+   * @brief Returns the name of the class for MicrostructurePresetManager
+   */
+  static QString ClassName();
 
   virtual ~MicrostructurePresetManager();
 

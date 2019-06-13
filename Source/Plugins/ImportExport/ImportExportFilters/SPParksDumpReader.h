@@ -41,7 +41,6 @@
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/HKL/DataParser.hpp"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/FileReader.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -80,31 +79,108 @@ class ImportExport_EXPORT SPParksDumpReader : public FileReader
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(SPParksDumpReader)
-  SIMPL_FILTER_NEW_MACRO(SPParksDumpReader)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(SPParksDumpReader, FileReader)
+  using Self = SPParksDumpReader;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<SPParksDumpReader> New();
+
+  /**
+   * @brief Returns the name of the class for SPParksDumpReader
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for SPParksDumpReader
+   */
+  static QString ClassName();
 
   ~SPParksDumpReader() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, VolumeDataContainerName)
+  /**
+   * @brief Setter property for VolumeDataContainerName
+   */
+  void setVolumeDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for VolumeDataContainerName
+   * @return Value of VolumeDataContainerName
+   */
+  DataArrayPath getVolumeDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  QString getCellAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  /**
+   * @brief Setter property for InputFile
+   */
+  void setInputFile(const QString& value);
+  /**
+   * @brief Getter property for InputFile
+   * @return Value of InputFile
+   */
+  QString getInputFile() const;
+
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Origin)
+  /**
+   * @brief Setter property for Origin
+   */
+  void setOrigin(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Origin
+   * @return Value of Origin
+   */
+  FloatVec3Type getOrigin() const;
+
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  /**
+   * @brief Setter property for Spacing
+   */
+  void setSpacing(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Spacing
+   * @return Value of Spacing
+   */
+  FloatVec3Type getSpacing() const;
+
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
-  SIMPL_FILTER_PARAMETER(bool, OneBasedArrays)
+  /**
+   * @brief Setter property for OneBasedArrays
+   */
+  void setOneBasedArrays(const bool& value);
+  /**
+   * @brief Getter property for OneBasedArrays
+   * @return Value of OneBasedArrays
+   */
+  bool getOneBasedArrays() const;
+
   Q_PROPERTY(bool OneBasedArrays READ getOneBasedArrays WRITE setOneBasedArrays)
 
-  SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+  /**
+   * @brief Setter property for FeatureIdsArrayName
+   */
+  void setFeatureIdsArrayName(const QString& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayName
+   * @return Value of FeatureIdsArrayName
+   */
+  QString getFeatureIdsArrayName() const;
+
   Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
   /**
@@ -226,6 +302,14 @@ protected:
   void parseDataLine(QByteArray& line, std::vector<size_t> dims, int64_t xCol, int64_t yCol, int64_t zCol, size_t lineNum);
 
 private:
+  DataArrayPath m_VolumeDataContainerName = {};
+  QString m_CellAttributeMatrixName = {};
+  QString m_InputFile = {};
+  FloatVec3Type m_Origin = {};
+  FloatVec3Type m_Spacing = {};
+  bool m_OneBasedArrays = {};
+  QString m_FeatureIdsArrayName = {};
+
   QFile m_InStream;
   QMap<QString, DataParser::Pointer> m_NamePointerMap;
   ImageGeom* m_CachedGeometry = nullptr;

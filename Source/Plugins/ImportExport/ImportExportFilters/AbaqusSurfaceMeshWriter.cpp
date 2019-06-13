@@ -37,8 +37,13 @@
 
 #include <QtCore/QDir>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
@@ -420,4 +425,57 @@ const QString AbaqusSurfaceMeshWriter::getSubGroupName() const
 const QString AbaqusSurfaceMeshWriter::getHumanLabel() const
 {
   return "Export Abaqus Surface Mesh";
+}
+
+// -----------------------------------------------------------------------------
+AbaqusSurfaceMeshWriter::Pointer AbaqusSurfaceMeshWriter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<AbaqusSurfaceMeshWriter> AbaqusSurfaceMeshWriter::New()
+{
+  struct make_shared_enabler : public AbaqusSurfaceMeshWriter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString AbaqusSurfaceMeshWriter::getNameOfClass() const
+{
+  return QString("AbaqusSurfaceMeshWriter");
+}
+
+// -----------------------------------------------------------------------------
+QString AbaqusSurfaceMeshWriter::ClassName()
+{
+  return QString("AbaqusSurfaceMeshWriter");
+}
+
+// -----------------------------------------------------------------------------
+void AbaqusSurfaceMeshWriter::setOutputFile(const QString& value)
+{
+  m_OutputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString AbaqusSurfaceMeshWriter::getOutputFile() const
+{
+  return m_OutputFile;
+}
+
+// -----------------------------------------------------------------------------
+void AbaqusSurfaceMeshWriter::setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AbaqusSurfaceMeshWriter::getSurfaceMeshFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFaceLabelsArrayPath;
 }

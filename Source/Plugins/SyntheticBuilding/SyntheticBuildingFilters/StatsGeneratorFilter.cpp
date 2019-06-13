@@ -34,7 +34,10 @@
 
 #include <QtCore/QJsonDocument>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
@@ -52,6 +55,8 @@
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/StatsData/TransformationStatsData.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "SyntheticBuilding/FilterParameters/StatsGeneratorFilterParameter.h"
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
@@ -356,13 +361,10 @@ void StatsGeneratorFilter::execute()
 
         // RDF Data ************************************************************************
         RdfData::Pointer rdf = pp->getRadialDistFunction();
-        float boxSize[3] = {0.0f, 0.0f, 0.0f};
-        float boxRes[3] = {0.0f, 0.0f, 0.0f};
-        rdf->getBoxSize(boxSize);
-        rdf->getBoxResolution(boxRes);
-        std::vector<float> boxSizeVec = {boxSize[0], boxSize[1], boxSize[2]};
-        std::vector<float> boxResVec = {boxRes[0], boxRes[1], boxRes[2]};
-        std::vector<float> freqs = RadialDistributionFunction::GenerateRandomDistribution(rdf->getMinDistance(), rdf->getMaxDistance(), rdf->getNumberOfBins(), boxSizeVec, boxResVec);
+        std::array<float, 3> boxSize = rdf->getBoxSize();
+        std::array<float, 3> boxRes = rdf->getBoxResolution();
+
+        std::vector<float> freqs = RadialDistributionFunction::GenerateRandomDistribution(rdf->getMinDistance(), rdf->getMaxDistance(), rdf->getNumberOfBins(), boxSize, boxRes);
         RdfData::Pointer cleanRDF = RdfData::New();
         cleanRDF->setFrequencies(freqs);
         cleanRDF->setMinDistance(rdf->getMinDistance());
@@ -545,4 +547,165 @@ const QString StatsGeneratorFilter::getSubGroupName() const
 const QString StatsGeneratorFilter::getHumanLabel() const
 {
   return "StatsGenerator";
+}
+
+// -----------------------------------------------------------------------------
+StatsGeneratorFilter::Pointer StatsGeneratorFilter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<StatsGeneratorFilter> StatsGeneratorFilter::New()
+{
+  struct make_shared_enabler : public StatsGeneratorFilter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString StatsGeneratorFilter::getNameOfClass() const
+{
+  return QString("StatsGeneratorFilter");
+}
+
+// -----------------------------------------------------------------------------
+QString StatsGeneratorFilter::ClassName()
+{
+  return QString("StatsGeneratorFilter");
+}
+
+// -----------------------------------------------------------------------------
+void StatsGeneratorFilter::setStatsGeneratorDataContainerName(const DataArrayPath& value)
+{
+  m_StatsGeneratorDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath StatsGeneratorFilter::getStatsGeneratorDataContainerName() const
+{
+  return m_StatsGeneratorDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGeneratorFilter::setCellEnsembleAttributeMatrixName(const QString& value)
+{
+  m_CellEnsembleAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString StatsGeneratorFilter::getCellEnsembleAttributeMatrixName() const
+{
+  return m_CellEnsembleAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGeneratorFilter::setStatsDataArrayName(const QString& value)
+{
+  m_StatsDataArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString StatsGeneratorFilter::getStatsDataArrayName() const
+{
+  return m_StatsDataArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGeneratorFilter::setCrystalStructuresArrayName(const QString& value)
+{
+  m_CrystalStructuresArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString StatsGeneratorFilter::getCrystalStructuresArrayName() const
+{
+  return m_CrystalStructuresArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGeneratorFilter::setPhaseTypesArrayName(const QString& value)
+{
+  m_PhaseTypesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString StatsGeneratorFilter::getPhaseTypesArrayName() const
+{
+  return m_PhaseTypesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGeneratorFilter::setPhaseNamesArrayName(const QString& value)
+{
+  m_PhaseNamesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString StatsGeneratorFilter::getPhaseNamesArrayName() const
+{
+  return m_PhaseNamesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGeneratorFilter::setStatsDataArray(const StatsDataArray::Pointer& value)
+{
+  m_StatsDataArray = value;
+}
+
+// -----------------------------------------------------------------------------
+StatsDataArray::Pointer StatsGeneratorFilter::getStatsDataArray() const
+{
+  return m_StatsDataArray;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGeneratorFilter::setCrystalStructures(const UInt32ArrayType::Pointer& value)
+{
+  m_CrystalStructures = value;
+}
+
+// -----------------------------------------------------------------------------
+UInt32ArrayType::Pointer StatsGeneratorFilter::getCrystalStructures() const
+{
+  return m_CrystalStructures;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGeneratorFilter::setPhaseTypes(const UInt32ArrayType::Pointer& value)
+{
+  m_PhaseTypes = value;
+}
+
+// -----------------------------------------------------------------------------
+UInt32ArrayType::Pointer StatsGeneratorFilter::getPhaseTypes() const
+{
+  return m_PhaseTypes;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGeneratorFilter::setPhaseNames(const StringDataArray::Pointer& value)
+{
+  m_PhaseNames = value;
+}
+
+// -----------------------------------------------------------------------------
+StringDataArray::Pointer StatsGeneratorFilter::getPhaseNames() const
+{
+  return m_PhaseNames;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGeneratorFilter::setPath(const DataArrayPath& value)
+{
+  m_Path = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath StatsGeneratorFilter::getPath() const
+{
+  return m_Path;
 }

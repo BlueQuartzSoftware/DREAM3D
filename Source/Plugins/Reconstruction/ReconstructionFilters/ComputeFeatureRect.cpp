@@ -4,11 +4,14 @@
 
 #include "ComputeFeatureRect.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
 
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -290,4 +293,57 @@ const QString ComputeFeatureRect::getSubGroupName() const
 const QString ComputeFeatureRect::getHumanLabel() const
 {
   return "Compute Feature Corners";
+}
+
+// -----------------------------------------------------------------------------
+ComputeFeatureRect::Pointer ComputeFeatureRect::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ComputeFeatureRect> ComputeFeatureRect::New()
+{
+  struct make_shared_enabler : public ComputeFeatureRect
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString ComputeFeatureRect::getNameOfClass() const
+{
+  return QString("ComputeFeatureRect");
+}
+
+// -----------------------------------------------------------------------------
+QString ComputeFeatureRect::ClassName()
+{
+  return QString("ComputeFeatureRect");
+}
+
+// -----------------------------------------------------------------------------
+void ComputeFeatureRect::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ComputeFeatureRect::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ComputeFeatureRect::setFeatureRectArrayPath(const DataArrayPath& value)
+{
+  m_FeatureRectArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ComputeFeatureRect::getFeatureRectArrayPath() const
+{
+  return m_FeatureRectArrayPath;
 }

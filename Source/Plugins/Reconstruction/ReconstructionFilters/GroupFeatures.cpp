@@ -35,11 +35,15 @@
 
 #include "GroupFeatures.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "Reconstruction/ReconstructionVersion.h"
 
@@ -338,4 +342,81 @@ const QString GroupFeatures::getSubGroupName() const
 const QString GroupFeatures::getHumanLabel() const
 {
   return "Group Features";
+}
+
+// -----------------------------------------------------------------------------
+GroupFeatures::Pointer GroupFeatures::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<GroupFeatures> GroupFeatures::New()
+{
+  struct make_shared_enabler : public GroupFeatures
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString GroupFeatures::getNameOfClass() const
+{
+  return QString("GroupFeatures");
+}
+
+// -----------------------------------------------------------------------------
+QString GroupFeatures::ClassName()
+{
+  return QString("GroupFeatures");
+}
+
+// -----------------------------------------------------------------------------
+void GroupFeatures::setContiguousNeighborListArrayPath(const DataArrayPath& value)
+{
+  m_ContiguousNeighborListArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GroupFeatures::getContiguousNeighborListArrayPath() const
+{
+  return m_ContiguousNeighborListArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GroupFeatures::setNonContiguousNeighborListArrayPath(const DataArrayPath& value)
+{
+  m_NonContiguousNeighborListArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GroupFeatures::getNonContiguousNeighborListArrayPath() const
+{
+  return m_NonContiguousNeighborListArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GroupFeatures::setUseNonContiguousNeighbors(const bool& value)
+{
+  m_UseNonContiguousNeighbors = value;
+}
+
+// -----------------------------------------------------------------------------
+bool GroupFeatures::getUseNonContiguousNeighbors() const
+{
+  return m_UseNonContiguousNeighbors;
+}
+
+// -----------------------------------------------------------------------------
+void GroupFeatures::setPatchGrouping(const bool& value)
+{
+  m_PatchGrouping = value;
+}
+
+// -----------------------------------------------------------------------------
+bool GroupFeatures::getPatchGrouping() const
+{
+  return m_PatchGrouping;
 }

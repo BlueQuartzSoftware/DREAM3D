@@ -39,7 +39,6 @@
 #include "EbsdLib/TSL/AngPhase.h"
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "OrientationAnalysis/FilterParameters/EbsdMontageImportFilterParameter.h"
@@ -64,29 +63,79 @@ class OrientationAnalysis_EXPORT ImportEbsdMontage : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-  PYB11_PROPERTY(EbsdMontageListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
+  PYB11_PROPERTY(EbsdMontageListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
   PYB11_PROPERTY(bool GenerateIPFColorMap READ getGenerateIPFColorMap WRITE setGenerateIPFColorMap)
   PYB11_PROPERTY(QString CellIPFColorsArrayName READ getCellIPFColorsArrayName WRITE setCellIPFColorsArrayName)
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(ImportEbsdMontage)
-  SIMPL_FILTER_NEW_MACRO(ImportEbsdMontage)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ImportEbsdMontage, AbstractFilter)
+  using Self = ImportEbsdMontage;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<ImportEbsdMontage> New();
+
+  /**
+   * @brief Returns the name of the class for ImportEbsdMontage
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ImportEbsdMontage
+   */
+  static QString ClassName();
 
   ~ImportEbsdMontage() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  DataArrayPath getDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+  /**
+   * @brief Setter property for CellEnsembleAttributeMatrixName
+   */
+  void setCellEnsembleAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellEnsembleAttributeMatrixName
+   * @return Value of CellEnsembleAttributeMatrixName
+   */
+  QString getCellEnsembleAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  QString getCellAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(EbsdMontageListInfo, InputFileListInfo)
-  Q_PROPERTY(EbsdMontageListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
+  /**
+   * @brief Setter property for InputFileListInfo
+   */
+  void setInputFileListInfo(const EbsdMontageListInfo_t& value);
+  /**
+   * @brief Getter property for InputFileListInfo
+   * @return Value of InputFileListInfo
+   */
+  EbsdMontageListInfo_t getInputFileListInfo() const;
+
+  Q_PROPERTY(EbsdMontageListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
 
   SIMPL_FILTER_PARAMETER(bool, GenerateIPFColorMap)
   Q_PROPERTY(bool GenerateIPFColorMap READ getGenerateIPFColorMap WRITE setGenerateIPFColorMap)
@@ -191,6 +240,11 @@ protected:
   void initialize();
 
 private:
+  DataArrayPath m_DataContainerName = {};
+  QString m_CellEnsembleAttributeMatrixName = {};
+  QString m_CellAttributeMatrixName = {};
+  EbsdMontageListInfo_t m_InputFileListInfo = {};
+
   std::map<QString, AbstractFilter::Pointer> m_FilterCache;
   // DEFINE_DATAARRAY_VARIABLE(uint8_t, CellIPFColors)
   FloatVec3Type m_ReferenceDir = {0.0f, 0.0f, 1.0f};

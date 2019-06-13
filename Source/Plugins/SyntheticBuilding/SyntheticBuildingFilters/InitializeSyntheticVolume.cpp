@@ -40,7 +40,10 @@
 #include "H5Support/H5ScopedSentinel.h"
 #include "H5Support/QH5Utilities.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -63,6 +66,8 @@
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/StatsData/TransformationStatsData.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
@@ -514,4 +519,165 @@ const QString InitializeSyntheticVolume::getSubGroupName() const
 const QString InitializeSyntheticVolume::getHumanLabel() const
 {
   return "Initialize Synthetic Volume";
+}
+
+// -----------------------------------------------------------------------------
+InitializeSyntheticVolume::Pointer InitializeSyntheticVolume::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<InitializeSyntheticVolume> InitializeSyntheticVolume::New()
+{
+  struct make_shared_enabler : public InitializeSyntheticVolume
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString InitializeSyntheticVolume::getNameOfClass() const
+{
+  return QString("InitializeSyntheticVolume");
+}
+
+// -----------------------------------------------------------------------------
+QString InitializeSyntheticVolume::ClassName()
+{
+  return QString("InitializeSyntheticVolume");
+}
+
+// -----------------------------------------------------------------------------
+void InitializeSyntheticVolume::setDataContainerName(const DataArrayPath& value)
+{
+  m_DataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath InitializeSyntheticVolume::getDataContainerName() const
+{
+  return m_DataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void InitializeSyntheticVolume::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString InitializeSyntheticVolume::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void InitializeSyntheticVolume::setEnsembleAttributeMatrixName(const QString& value)
+{
+  m_EnsembleAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString InitializeSyntheticVolume::getEnsembleAttributeMatrixName() const
+{
+  return m_EnsembleAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void InitializeSyntheticVolume::setLengthUnit(const int32_t& value)
+{
+  m_LengthUnit = value;
+}
+
+// -----------------------------------------------------------------------------
+int32_t InitializeSyntheticVolume::getLengthUnit() const
+{
+  return m_LengthUnit;
+}
+
+// -----------------------------------------------------------------------------
+void InitializeSyntheticVolume::setDimensions(const IntVec3Type& value)
+{
+  m_Dimensions = value;
+}
+
+// -----------------------------------------------------------------------------
+IntVec3Type InitializeSyntheticVolume::getDimensions() const
+{
+  return m_Dimensions;
+}
+
+// -----------------------------------------------------------------------------
+void InitializeSyntheticVolume::setSpacing(const FloatVec3Type& value)
+{
+  m_Spacing = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type InitializeSyntheticVolume::getSpacing() const
+{
+  return m_Spacing;
+}
+
+// -----------------------------------------------------------------------------
+void InitializeSyntheticVolume::setOrigin(const FloatVec3Type& value)
+{
+  m_Origin = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type InitializeSyntheticVolume::getOrigin() const
+{
+  return m_Origin;
+}
+
+// -----------------------------------------------------------------------------
+void InitializeSyntheticVolume::setInputStatsArrayPath(const DataArrayPath& value)
+{
+  m_InputStatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath InitializeSyntheticVolume::getInputStatsArrayPath() const
+{
+  return m_InputStatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void InitializeSyntheticVolume::setInputPhaseTypesArrayPath(const DataArrayPath& value)
+{
+  m_InputPhaseTypesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath InitializeSyntheticVolume::getInputPhaseTypesArrayPath() const
+{
+  return m_InputPhaseTypesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void InitializeSyntheticVolume::setInputPhaseNamesArrayPath(const DataArrayPath& value)
+{
+  m_InputPhaseNamesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath InitializeSyntheticVolume::getInputPhaseNamesArrayPath() const
+{
+  return m_InputPhaseNamesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void InitializeSyntheticVolume::setEstimateNumberOfFeatures(const bool& value)
+{
+  m_EstimateNumberOfFeatures = value;
+}
+
+// -----------------------------------------------------------------------------
+bool InitializeSyntheticVolume::getEstimateNumberOfFeatures() const
+{
+  return m_EstimateNumberOfFeatures;
 }

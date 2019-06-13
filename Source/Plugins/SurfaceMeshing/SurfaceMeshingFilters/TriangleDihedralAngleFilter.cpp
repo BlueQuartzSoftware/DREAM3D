@@ -42,11 +42,16 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -328,4 +333,45 @@ const QString TriangleDihedralAngleFilter::getSubGroupName() const
 const QString TriangleDihedralAngleFilter::getHumanLabel() const
 {
   return "Find Minimum Triangle Dihedral Angle";
+}
+
+// -----------------------------------------------------------------------------
+TriangleDihedralAngleFilter::Pointer TriangleDihedralAngleFilter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<TriangleDihedralAngleFilter> TriangleDihedralAngleFilter::New()
+{
+  struct make_shared_enabler : public TriangleDihedralAngleFilter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString TriangleDihedralAngleFilter::getNameOfClass() const
+{
+  return QString("TriangleDihedralAngleFilter");
+}
+
+// -----------------------------------------------------------------------------
+QString TriangleDihedralAngleFilter::ClassName()
+{
+  return QString("TriangleDihedralAngleFilter");
+}
+
+// -----------------------------------------------------------------------------
+void TriangleDihedralAngleFilter::setSurfaceMeshTriangleDihedralAnglesArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshTriangleDihedralAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath TriangleDihedralAngleFilter::getSurfaceMeshTriangleDihedralAnglesArrayPath() const
+{
+  return m_SurfaceMeshTriangleDihedralAnglesArrayPath;
 }

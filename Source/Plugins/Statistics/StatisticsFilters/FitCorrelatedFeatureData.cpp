@@ -35,7 +35,10 @@
 
 #include "FitCorrelatedFeatureData.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
@@ -43,6 +46,8 @@
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Statistics/DistributionAnalysisOps/BetaOps.h"
 #include "Statistics/DistributionAnalysisOps/LogNormalOps.h"
@@ -538,4 +543,129 @@ const QString FitCorrelatedFeatureData::getSubGroupName() const
 const QString FitCorrelatedFeatureData::getHumanLabel() const
 {
   return "Fit Correlated Distributions To Feature Data";
+}
+
+// -----------------------------------------------------------------------------
+FitCorrelatedFeatureData::Pointer FitCorrelatedFeatureData::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FitCorrelatedFeatureData> FitCorrelatedFeatureData::New()
+{
+  struct make_shared_enabler : public FitCorrelatedFeatureData
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FitCorrelatedFeatureData::getNameOfClass() const
+{
+  return QString("FitCorrelatedFeatureData");
+}
+
+// -----------------------------------------------------------------------------
+QString FitCorrelatedFeatureData::ClassName()
+{
+  return QString("FitCorrelatedFeatureData");
+}
+
+// -----------------------------------------------------------------------------
+void FitCorrelatedFeatureData::setSelectedFeatureArrayPath(const DataArrayPath& value)
+{
+  m_SelectedFeatureArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FitCorrelatedFeatureData::getSelectedFeatureArrayPath() const
+{
+  return m_SelectedFeatureArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FitCorrelatedFeatureData::setCorrelatedFeatureArrayPath(const DataArrayPath& value)
+{
+  m_CorrelatedFeatureArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FitCorrelatedFeatureData::getCorrelatedFeatureArrayPath() const
+{
+  return m_CorrelatedFeatureArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FitCorrelatedFeatureData::setDistributionType(const unsigned int& value)
+{
+  m_DistributionType = value;
+}
+
+// -----------------------------------------------------------------------------
+unsigned int FitCorrelatedFeatureData::getDistributionType() const
+{
+  return m_DistributionType;
+}
+
+// -----------------------------------------------------------------------------
+void FitCorrelatedFeatureData::setNumberOfCorrelatedBins(const int& value)
+{
+  m_NumberOfCorrelatedBins = value;
+}
+
+// -----------------------------------------------------------------------------
+int FitCorrelatedFeatureData::getNumberOfCorrelatedBins() const
+{
+  return m_NumberOfCorrelatedBins;
+}
+
+// -----------------------------------------------------------------------------
+void FitCorrelatedFeatureData::setRemoveBiasedFeatures(const bool& value)
+{
+  m_RemoveBiasedFeatures = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FitCorrelatedFeatureData::getRemoveBiasedFeatures() const
+{
+  return m_RemoveBiasedFeatures;
+}
+
+// -----------------------------------------------------------------------------
+void FitCorrelatedFeatureData::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FitCorrelatedFeatureData::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FitCorrelatedFeatureData::setBiasedFeaturesArrayPath(const DataArrayPath& value)
+{
+  m_BiasedFeaturesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FitCorrelatedFeatureData::getBiasedFeaturesArrayPath() const
+{
+  return m_BiasedFeaturesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FitCorrelatedFeatureData::setNewEnsembleArrayArrayPath(const DataArrayPath& value)
+{
+  m_NewEnsembleArrayArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FitCorrelatedFeatureData::getNewEnsembleArrayArrayPath() const
+{
+  return m_NewEnsembleArrayArrayPath;
 }

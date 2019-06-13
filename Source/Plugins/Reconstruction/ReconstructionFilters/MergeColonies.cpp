@@ -39,7 +39,10 @@
 #include <cmath>
 #include <random>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -49,6 +52,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 
 
@@ -763,4 +768,201 @@ const QString MergeColonies::getSubGroupName() const
 const QString MergeColonies::getHumanLabel() const
 {
   return "Merge Colonies";
+}
+
+// -----------------------------------------------------------------------------
+MergeColonies::Pointer MergeColonies::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<MergeColonies> MergeColonies::New()
+{
+  struct make_shared_enabler : public MergeColonies
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString MergeColonies::getNameOfClass() const
+{
+  return QString("MergeColonies");
+}
+
+// -----------------------------------------------------------------------------
+QString MergeColonies::ClassName()
+{
+  return QString("MergeColonies");
+}
+
+// -----------------------------------------------------------------------------
+void MergeColonies::setNewCellFeatureAttributeMatrixName(const QString& value)
+{
+  m_NewCellFeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString MergeColonies::getNewCellFeatureAttributeMatrixName() const
+{
+  return m_NewCellFeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void MergeColonies::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MergeColonies::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MergeColonies::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MergeColonies::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MergeColonies::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MergeColonies::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MergeColonies::setAvgQuatsArrayPath(const DataArrayPath& value)
+{
+  m_AvgQuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MergeColonies::getAvgQuatsArrayPath() const
+{
+  return m_AvgQuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MergeColonies::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MergeColonies::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MergeColonies::setCellParentIdsArrayName(const QString& value)
+{
+  m_CellParentIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString MergeColonies::getCellParentIdsArrayName() const
+{
+  return m_CellParentIdsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void MergeColonies::setGlobAlphaArrayName(const QString& value)
+{
+  m_GlobAlphaArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString MergeColonies::getGlobAlphaArrayName() const
+{
+  return m_GlobAlphaArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void MergeColonies::setFeatureParentIdsArrayName(const QString& value)
+{
+  m_FeatureParentIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString MergeColonies::getFeatureParentIdsArrayName() const
+{
+  return m_FeatureParentIdsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void MergeColonies::setActiveArrayName(const QString& value)
+{
+  m_ActiveArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString MergeColonies::getActiveArrayName() const
+{
+  return m_ActiveArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void MergeColonies::setAxisTolerance(const float& value)
+{
+  m_AxisTolerance = value;
+}
+
+// -----------------------------------------------------------------------------
+float MergeColonies::getAxisTolerance() const
+{
+  return m_AxisTolerance;
+}
+
+// -----------------------------------------------------------------------------
+void MergeColonies::setAngleTolerance(const float& value)
+{
+  m_AngleTolerance = value;
+}
+
+// -----------------------------------------------------------------------------
+float MergeColonies::getAngleTolerance() const
+{
+  return m_AngleTolerance;
+}
+
+// -----------------------------------------------------------------------------
+void MergeColonies::setRandomizeParentIds(const bool& value)
+{
+  m_RandomizeParentIds = value;
+}
+
+// -----------------------------------------------------------------------------
+bool MergeColonies::getRandomizeParentIds() const
+{
+  return m_RandomizeParentIds;
+}
+
+// -----------------------------------------------------------------------------
+void MergeColonies::setIdentifyGlobAlpha(const bool& value)
+{
+  m_IdentifyGlobAlpha = value;
+}
+
+// -----------------------------------------------------------------------------
+bool MergeColonies::getIdentifyGlobAlpha() const
+{
+  return m_IdentifyGlobAlpha;
 }

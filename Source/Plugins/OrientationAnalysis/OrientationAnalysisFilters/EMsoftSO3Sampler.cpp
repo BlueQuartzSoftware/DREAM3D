@@ -32,7 +32,10 @@
 
 #include <cmath>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DoubleFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
@@ -42,6 +45,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/SIMPLibVersion.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
@@ -817,4 +822,165 @@ const QString EMsoftSO3Sampler::getSubGroupName() const
 const QString EMsoftSO3Sampler::getHumanLabel() const
 {
   return "SO3 Angle Sampler";
+}
+
+// -----------------------------------------------------------------------------
+EMsoftSO3Sampler::Pointer EMsoftSO3Sampler::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<EMsoftSO3Sampler> EMsoftSO3Sampler::New()
+{
+  struct make_shared_enabler : public EMsoftSO3Sampler
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString EMsoftSO3Sampler::getNameOfClass() const
+{
+  return QString("EMsoftSO3Sampler");
+}
+
+// -----------------------------------------------------------------------------
+QString EMsoftSO3Sampler::ClassName()
+{
+  return QString("EMsoftSO3Sampler");
+}
+
+// -----------------------------------------------------------------------------
+void EMsoftSO3Sampler::setsampleModeSelector(const int& value)
+{
+  m_sampleModeSelector = value;
+}
+
+// -----------------------------------------------------------------------------
+int EMsoftSO3Sampler::getsampleModeSelector() const
+{
+  return m_sampleModeSelector;
+}
+
+// -----------------------------------------------------------------------------
+void EMsoftSO3Sampler::setPointGroup(const int& value)
+{
+  m_PointGroup = value;
+}
+
+// -----------------------------------------------------------------------------
+int EMsoftSO3Sampler::getPointGroup() const
+{
+  return m_PointGroup;
+}
+
+// -----------------------------------------------------------------------------
+void EMsoftSO3Sampler::setNumsp(const int& value)
+{
+  m_Numsp = value;
+}
+
+// -----------------------------------------------------------------------------
+int EMsoftSO3Sampler::getNumsp() const
+{
+  return m_Numsp;
+}
+
+// -----------------------------------------------------------------------------
+void EMsoftSO3Sampler::setMisOr(const double& value)
+{
+  m_MisOr = value;
+}
+
+// -----------------------------------------------------------------------------
+double EMsoftSO3Sampler::getMisOr() const
+{
+  return m_MisOr;
+}
+
+// -----------------------------------------------------------------------------
+void EMsoftSO3Sampler::setRefOr(const FloatVec3Type& value)
+{
+  m_RefOr = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type EMsoftSO3Sampler::getRefOr() const
+{
+  return m_RefOr;
+}
+
+// -----------------------------------------------------------------------------
+void EMsoftSO3Sampler::setMisOrFull(const double& value)
+{
+  m_MisOrFull = value;
+}
+
+// -----------------------------------------------------------------------------
+double EMsoftSO3Sampler::getMisOrFull() const
+{
+  return m_MisOrFull;
+}
+
+// -----------------------------------------------------------------------------
+void EMsoftSO3Sampler::setRefOrFull(const FloatVec3Type& value)
+{
+  m_RefOrFull = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type EMsoftSO3Sampler::getRefOrFull() const
+{
+  return m_RefOrFull;
+}
+
+// -----------------------------------------------------------------------------
+void EMsoftSO3Sampler::setOffsetGrid(const bool& value)
+{
+  m_OffsetGrid = value;
+}
+
+// -----------------------------------------------------------------------------
+bool EMsoftSO3Sampler::getOffsetGrid() const
+{
+  return m_OffsetGrid;
+}
+
+// -----------------------------------------------------------------------------
+void EMsoftSO3Sampler::setEulerAnglesArrayName(const QString& value)
+{
+  m_EulerAnglesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EMsoftSO3Sampler::getEulerAnglesArrayName() const
+{
+  return m_EulerAnglesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void EMsoftSO3Sampler::setDataContainerName(const DataArrayPath& value)
+{
+  m_DataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath EMsoftSO3Sampler::getDataContainerName() const
+{
+  return m_DataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void EMsoftSO3Sampler::setEMsoftAttributeMatrixName(const QString& value)
+{
+  m_EMsoftAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EMsoftSO3Sampler::getEMsoftAttributeMatrixName() const
+{
+  return m_EMsoftAttributeMatrixName;
 }

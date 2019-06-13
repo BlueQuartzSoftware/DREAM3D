@@ -6,7 +6,11 @@
 
 #include <QtCore/QFileInfo>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
@@ -346,4 +350,57 @@ const QString ImportAvxmMDSim::getHumanLabel() const
 const QUuid ImportAvxmMDSim::getUuid()
 {
   return QUuid("{71e18332-4db1-5554-85e6-ae8db5826587}");
+}
+
+// -----------------------------------------------------------------------------
+ImportAvxmMDSim::Pointer ImportAvxmMDSim::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ImportAvxmMDSim> ImportAvxmMDSim::New()
+{
+  struct make_shared_enabler : public ImportAvxmMDSim
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString ImportAvxmMDSim::getNameOfClass() const
+{
+  return QString("_SUPERImportAvxmMDSim");
+}
+
+// -----------------------------------------------------------------------------
+QString ImportAvxmMDSim::ClassName()
+{
+  return QString("_SUPERImportAvxmMDSim");
+}
+
+// -----------------------------------------------------------------------------
+void ImportAvxmMDSim::setInputFileListInfo(const FileListInfo_t& value)
+{
+  m_InputFileListInfo = value;
+}
+
+// -----------------------------------------------------------------------------
+FileListInfo_t ImportAvxmMDSim::getInputFileListInfo() const
+{
+  return m_InputFileListInfo;
+}
+
+// -----------------------------------------------------------------------------
+void ImportAvxmMDSim::setSeparatorChoice(const int& value)
+{
+  m_SeparatorChoice = value;
+}
+
+// -----------------------------------------------------------------------------
+int ImportAvxmMDSim::getSeparatorChoice() const
+{
+  return m_SeparatorChoice;
 }

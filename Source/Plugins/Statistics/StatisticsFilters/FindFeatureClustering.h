@@ -36,9 +36,9 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -78,45 +78,166 @@ class Statistics_EXPORT FindFeatureClustering : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindFeatureClustering)
-  SIMPL_FILTER_NEW_MACRO(FindFeatureClustering)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindFeatureClustering, AbstractFilter)
+  using Self = FindFeatureClustering;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindFeatureClustering> New();
+
+  /**
+   * @brief Returns the name of the class for FindFeatureClustering
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindFeatureClustering
+   */
+  static QString ClassName();
 
   ~FindFeatureClustering() override;
 
-  SIMPL_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
+  /**
+   * @brief Setter property for ErrorOutputFile
+   */
+  void setErrorOutputFile(const QString& value);
+  /**
+   * @brief Getter property for ErrorOutputFile
+   * @return Value of ErrorOutputFile
+   */
+  QString getErrorOutputFile() const;
 
-  SIMPL_FILTER_PARAMETER(int, NumberOfBins)
+  /**
+   * @brief Setter property for NumberOfBins
+   */
+  void setNumberOfBins(const int& value);
+  /**
+   * @brief Getter property for NumberOfBins
+   * @return Value of NumberOfBins
+   */
+  int getNumberOfBins() const;
+
   Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
 
-  SIMPL_FILTER_PARAMETER(int, PhaseNumber)
+  /**
+   * @brief Setter property for PhaseNumber
+   */
+  void setPhaseNumber(const int& value);
+  /**
+   * @brief Getter property for PhaseNumber
+   * @return Value of PhaseNumber
+   */
+  int getPhaseNumber() const;
+
   Q_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixName)
+  /**
+   * @brief Setter property for CellEnsembleAttributeMatrixName
+   */
+  void setCellEnsembleAttributeMatrixName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellEnsembleAttributeMatrixName
+   * @return Value of CellEnsembleAttributeMatrixName
+   */
+  DataArrayPath getCellEnsembleAttributeMatrixName() const;
+
   Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
+  /**
+   * @brief Setter property for RemoveBiasedFeatures
+   */
+  void setRemoveBiasedFeatures(const bool& value);
+  /**
+   * @brief Getter property for RemoveBiasedFeatures
+   * @return Value of RemoveBiasedFeatures
+   */
+  bool getRemoveBiasedFeatures() const;
+
   Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
+  /**
+   * @brief Setter property for BiasedFeaturesArrayPath
+   */
+  void setBiasedFeaturesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for BiasedFeaturesArrayPath
+   * @return Value of BiasedFeaturesArrayPath
+   */
+  DataArrayPath getBiasedFeaturesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
+  /**
+   * @brief Setter property for EquivalentDiametersArrayPath
+   */
+  void setEquivalentDiametersArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for EquivalentDiametersArrayPath
+   * @return Value of EquivalentDiametersArrayPath
+   */
+  DataArrayPath getEquivalentDiametersArrayPath() const;
+
   Q_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  /**
+   * @brief Setter property for FeaturePhasesArrayPath
+   */
+  void setFeaturePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayPath
+   * @return Value of FeaturePhasesArrayPath
+   */
+  DataArrayPath getFeaturePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
+  /**
+   * @brief Setter property for CentroidsArrayPath
+   */
+  void setCentroidsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CentroidsArrayPath
+   * @return Value of CentroidsArrayPath
+   */
+  DataArrayPath getCentroidsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, ClusteringListArrayName)
+  /**
+   * @brief Setter property for ClusteringListArrayName
+   */
+  void setClusteringListArrayName(const QString& value);
+  /**
+   * @brief Getter property for ClusteringListArrayName
+   * @return Value of ClusteringListArrayName
+   */
+  QString getClusteringListArrayName() const;
+
   Q_PROPERTY(QString ClusteringListArrayName READ getClusteringListArrayName WRITE setClusteringListArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, NewEnsembleArrayArrayName)
+  /**
+   * @brief Setter property for NewEnsembleArrayArrayName
+   */
+  void setNewEnsembleArrayArrayName(const QString& value);
+  /**
+   * @brief Getter property for NewEnsembleArrayArrayName
+   * @return Value of NewEnsembleArrayArrayName
+   */
+  QString getNewEnsembleArrayArrayName() const;
+
   Q_PROPERTY(QString NewEnsembleArrayArrayName READ getNewEnsembleArrayArrayName WRITE setNewEnsembleArrayArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, MaxMinArrayName)
+  /**
+   * @brief Setter property for MaxMinArrayName
+   */
+  void setMaxMinArrayName(const QString& value);
+  /**
+   * @brief Getter property for MaxMinArrayName
+   * @return Value of MaxMinArrayName
+   */
+  QString getMaxMinArrayName() const;
+
   Q_PROPERTY(QString MaxMinArrayName READ getMaxMinArrayName WRITE setMaxMinArrayName)
 
   /**
@@ -225,12 +346,31 @@ protected:
   void find_clustering();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-  DEFINE_DATAARRAY_VARIABLE(float, Centroids)
-  DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
-  DEFINE_DATAARRAY_VARIABLE(float, NewEnsembleArray)
-  DEFINE_DATAARRAY_VARIABLE(float, MaxMinArray)
-  DEFINE_DATAARRAY_VARIABLE(bool, BiasedFeatures)
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_CentroidsPtr;
+  float* m_Centroids = nullptr;
+  std::weak_ptr<DataArray<float>> m_EquivalentDiametersPtr;
+  float* m_EquivalentDiameters = nullptr;
+  std::weak_ptr<DataArray<float>> m_NewEnsembleArrayPtr;
+  float* m_NewEnsembleArray = nullptr;
+  std::weak_ptr<DataArray<float>> m_MaxMinArrayPtr;
+  float* m_MaxMinArray = nullptr;
+  std::weak_ptr<DataArray<bool>> m_BiasedFeaturesPtr;
+  bool* m_BiasedFeatures = nullptr;
+
+  QString m_ErrorOutputFile = {};
+  int m_NumberOfBins = {};
+  int m_PhaseNumber = {};
+  DataArrayPath m_CellEnsembleAttributeMatrixName = {};
+  bool m_RemoveBiasedFeatures = {};
+  DataArrayPath m_BiasedFeaturesArrayPath = {};
+  DataArrayPath m_EquivalentDiametersArrayPath = {};
+  DataArrayPath m_FeaturePhasesArrayPath = {};
+  DataArrayPath m_CentroidsArrayPath = {};
+  QString m_ClusteringListArrayName = {};
+  QString m_NewEnsembleArrayArrayName = {};
+  QString m_MaxMinArrayName = {};
 
   NeighborList<float>::WeakPointer m_ClusteringList;
   std::vector<float> m_RandomCentroids;

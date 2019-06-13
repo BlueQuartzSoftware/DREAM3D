@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
@@ -62,16 +62,48 @@ class Processing_EXPORT IdentifySample : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(IdentifySample)
-  SIMPL_FILTER_NEW_MACRO(IdentifySample)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(IdentifySample, AbstractFilter)
+  using Self = IdentifySample;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<IdentifySample> New();
+
+  /**
+   * @brief Returns the name of the class for IdentifySample
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for IdentifySample
+   */
+  static QString ClassName();
 
   ~IdentifySample() override;
 
-  SIMPL_FILTER_PARAMETER(bool, FillHoles)
+  /**
+   * @brief Setter property for FillHoles
+   */
+  void setFillHoles(const bool& value);
+  /**
+   * @brief Getter property for FillHoles
+   * @return Value of FillHoles
+   */
+  bool getFillHoles() const;
+
   Q_PROPERTY(bool FillHoles READ getFillHoles WRITE setFillHoles)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  /**
+   * @brief Setter property for GoodVoxelsArrayPath
+   */
+  void setGoodVoxelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for GoodVoxelsArrayPath
+   * @return Value of GoodVoxelsArrayPath
+   */
+  DataArrayPath getGoodVoxelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
   /**
@@ -175,7 +207,11 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
+  std::weak_ptr<DataArray<bool>> m_GoodVoxelsPtr;
+  bool* m_GoodVoxels = nullptr;
+
+  bool m_FillHoles = {};
+  DataArrayPath m_GoodVoxelsArrayPath = {};
 
 public:
   IdentifySample(const IdentifySample&) = delete; // Copy Constructor Not Implemented

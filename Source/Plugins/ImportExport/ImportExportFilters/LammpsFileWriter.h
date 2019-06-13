@@ -38,7 +38,6 @@
 #include <QtCore/QString>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -69,16 +68,48 @@ class ImportExport_EXPORT LammpsFileWriter : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(LammpsFileWriter)
-  SIMPL_FILTER_NEW_MACRO(LammpsFileWriter)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(LammpsFileWriter, AbstractFilter)
+  using Self = LammpsFileWriter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<LammpsFileWriter> New();
+
+  /**
+   * @brief Returns the name of the class for LammpsFileWriter
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for LammpsFileWriter
+   */
+  static QString ClassName();
 
   ~LammpsFileWriter() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, VertexDataContainerName)
+  /**
+   * @brief Setter property for VertexDataContainerName
+   */
+  void setVertexDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for VertexDataContainerName
+   * @return Value of VertexDataContainerName
+   */
+  DataArrayPath getVertexDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, LammpsFile)
+  /**
+   * @brief Setter property for LammpsFile
+   */
+  void setLammpsFile(const QString& value);
+  /**
+   * @brief Getter property for LammpsFile
+   * @return Value of LammpsFile
+   */
+  QString getLammpsFile() const;
+
   Q_PROPERTY(QString LammpsFile READ getLammpsFile WRITE setLammpsFile)
 
   /**
@@ -187,4 +218,8 @@ public:
   LammpsFileWriter(LammpsFileWriter&&) = delete;                 // Move Constructor Not Implemented
   LammpsFileWriter& operator=(const LammpsFileWriter&) = delete; // Copy Assignment Not Implemented
   LammpsFileWriter& operator=(LammpsFileWriter&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  DataArrayPath m_VertexDataContainerName = {};
+  QString m_LammpsFile = {};
 };

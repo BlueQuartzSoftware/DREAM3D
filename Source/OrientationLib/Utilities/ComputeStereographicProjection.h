@@ -32,7 +32,7 @@
 #pragma once
 
 #include "SIMPLib/DataArrays/DataArray.hpp"
-
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"

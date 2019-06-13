@@ -39,7 +39,6 @@
 #include "EbsdLib/EbsdConstants.h"
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
@@ -77,35 +76,145 @@ class OrientationAnalysis_EXPORT EbsdToH5Ebsd : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(EbsdToH5Ebsd)
-  SIMPL_FILTER_NEW_MACRO(EbsdToH5Ebsd)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(EbsdToH5Ebsd, AbstractFilter)
+  using Self = EbsdToH5Ebsd;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<EbsdToH5Ebsd> New();
+
+  /**
+   * @brief Returns the name of the class for EbsdToH5Ebsd
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for EbsdToH5Ebsd
+   */
+  static QString ClassName();
 
   ~EbsdToH5Ebsd() override;
 
-  SIMPL_INSTANCE_STRING_PROPERTY(OutputFile)
+  /**
+   * @brief Setter property for OutputFile
+   */
+  void setOutputFile(const QString& value);
+  /**
+   * @brief Getter property for OutputFile
+   * @return Value of OutputFile
+   */
+  QString getOutputFile() const;
 
-  SIMPL_INSTANCE_PROPERTY(int64_t, ZStartIndex)
+  /**
+   * @brief Setter property for ZStartIndex
+   */
+  void setZStartIndex(const int64_t& value);
+  /**
+   * @brief Getter property for ZStartIndex
+   * @return Value of ZStartIndex
+   */
+  int64_t getZStartIndex() const;
 
-  SIMPL_INSTANCE_PROPERTY(int64_t, ZEndIndex)
+  /**
+   * @brief Setter property for ZEndIndex
+   */
+  void setZEndIndex(const int64_t& value);
+  /**
+   * @brief Getter property for ZEndIndex
+   * @return Value of ZEndIndex
+   */
+  int64_t getZEndIndex() const;
 
-  SIMPL_INSTANCE_PROPERTY(float, ZResolution)
+  /**
+   * @brief Setter property for ZResolution
+   */
+  void setZResolution(const float& value);
+  /**
+   * @brief Getter property for ZResolution
+   * @return Value of ZResolution
+   */
+  float getZResolution() const;
 
-  SIMPL_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
+  /**
+   * @brief Setter property for RefFrameZDir
+   */
+  void setRefFrameZDir(const uint32_t& value);
+  /**
+   * @brief Getter property for RefFrameZDir
+   * @return Value of RefFrameZDir
+   */
+  uint32_t getRefFrameZDir() const;
 
-  SIMPL_FILTER_PARAMETER(QString, InputPath)
+  /**
+   * @brief Setter property for InputPath
+   */
+  void setInputPath(const QString& value);
+  /**
+   * @brief Getter property for InputPath
+   * @return Value of InputPath
+   */
+  QString getInputPath() const;
 
-  SIMPL_FILTER_PARAMETER(QString, FilePrefix)
+  /**
+   * @brief Setter property for FilePrefix
+   */
+  void setFilePrefix(const QString& value);
+  /**
+   * @brief Getter property for FilePrefix
+   * @return Value of FilePrefix
+   */
+  QString getFilePrefix() const;
 
-  SIMPL_FILTER_PARAMETER(QString, FileSuffix)
+  /**
+   * @brief Setter property for FileSuffix
+   */
+  void setFileSuffix(const QString& value);
+  /**
+   * @brief Getter property for FileSuffix
+   * @return Value of FileSuffix
+   */
+  QString getFileSuffix() const;
 
-  SIMPL_FILTER_PARAMETER(QString, FileExtension)
+  /**
+   * @brief Setter property for FileExtension
+   */
+  void setFileExtension(const QString& value);
+  /**
+   * @brief Getter property for FileExtension
+   * @return Value of FileExtension
+   */
+  QString getFileExtension() const;
 
-  SIMPL_FILTER_PARAMETER(int, PaddingDigits)
+  /**
+   * @brief Setter property for PaddingDigits
+   */
+  void setPaddingDigits(const int& value);
+  /**
+   * @brief Getter property for PaddingDigits
+   * @return Value of PaddingDigits
+   */
+  int getPaddingDigits() const;
 
-  SIMPL_FILTER_PARAMETER(AxisAngleInput_t, SampleTransformation)
+  /**
+   * @brief Setter property for SampleTransformation
+   */
+  void setSampleTransformation(const AxisAngleInput_t& value);
+  /**
+   * @brief Getter property for SampleTransformation
+   * @return Value of SampleTransformation
+   */
+  AxisAngleInput_t getSampleTransformation() const;
 
-  SIMPL_FILTER_PARAMETER(AxisAngleInput_t, EulerTransformation)
+  /**
+   * @brief Setter property for EulerTransformation
+   */
+  void setEulerTransformation(const AxisAngleInput_t& value);
+  /**
+   * @brief Getter property for EulerTransformation
+   * @return Value of EulerTransformation
+   */
+  AxisAngleInput_t getEulerTransformation() const;
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -212,5 +321,19 @@ public:
   EbsdToH5Ebsd(EbsdToH5Ebsd&&) = delete;                 // Move Constructor Not Implemented
   EbsdToH5Ebsd& operator=(const EbsdToH5Ebsd&) = delete; // Copy Assignment Not Implemented
   EbsdToH5Ebsd& operator=(EbsdToH5Ebsd&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  QString m_OutputFile = {};
+  int64_t m_ZStartIndex = {};
+  int64_t m_ZEndIndex = {};
+  float m_ZResolution = {};
+  uint32_t m_RefFrameZDir = {};
+  QString m_InputPath = {};
+  QString m_FilePrefix = {};
+  QString m_FileSuffix = {};
+  QString m_FileExtension = {};
+  int m_PaddingDigits = {};
+  AxisAngleInput_t m_SampleTransformation = {};
+  AxisAngleInput_t m_EulerTransformation = {};
 };
 

@@ -36,7 +36,6 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
@@ -59,13 +58,36 @@ class SurfaceMeshing_EXPORT ReverseTriangleWinding : public SurfaceMeshFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(ReverseTriangleWinding)
-  SIMPL_FILTER_NEW_MACRO(ReverseTriangleWinding)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ReverseTriangleWinding, SurfaceMeshFilter)
+  using Self = ReverseTriangleWinding;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<ReverseTriangleWinding> New();
+
+  /**
+   * @brief Returns the name of the class for ReverseTriangleWinding
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ReverseTriangleWinding
+   */
+  static QString ClassName();
 
   ~ReverseTriangleWinding() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceDataContainerName)
+  /**
+   * @brief Setter property for SurfaceDataContainerName
+   */
+  void setSurfaceDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceDataContainerName
+   * @return Value of SurfaceDataContainerName
+   */
+  DataArrayPath getSurfaceDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
   /**
@@ -150,5 +172,8 @@ public:
   ReverseTriangleWinding(ReverseTriangleWinding&&) = delete;                 // Move Constructor Not Implemented
   ReverseTriangleWinding& operator=(const ReverseTriangleWinding&) = delete; // Copy Assignment Not Implemented
   ReverseTriangleWinding& operator=(ReverseTriangleWinding&&) = delete;      //        // Move assignment Not Implemented
+
+private:
+  DataArrayPath m_SurfaceDataContainerName = {};
 };
 

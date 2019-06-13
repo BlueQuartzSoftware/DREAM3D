@@ -40,7 +40,10 @@
 
 #include "EbsdLib/HKL/CtfFields.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
@@ -50,7 +53,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
-
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -117,9 +121,47 @@ ReadCtfData::~ReadCtfData() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SIMPL_PIMPL_PROPERTY_DEF(ReadCtfData, Ctf_Private_Data, Data)
-SIMPL_PIMPL_PROPERTY_DEF(ReadCtfData, QString, InputFile_Cache)
-SIMPL_PIMPL_PROPERTY_DEF(ReadCtfData, QDateTime, TimeStamp_Cache)
+// -----------------------------------------------------------------------------
+void ReadCtfData::setData(const Ctf_Private_Data& value)
+{
+  Q_D(ReadCtfData);
+  d->m_Data = value;
+}
+
+// -----------------------------------------------------------------------------
+Ctf_Private_Data ReadCtfData::getData() const
+{
+  Q_D(const ReadCtfData);
+  return d->m_Data;
+}
+
+// -----------------------------------------------------------------------------
+void ReadCtfData::setInputFile_Cache(const QString& value)
+{
+  Q_D(ReadCtfData);
+  d->m_InputFile_Cache = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadCtfData::getInputFile_Cache() const
+{
+  Q_D(const ReadCtfData);
+  return d->m_InputFile_Cache;
+}
+
+// -----------------------------------------------------------------------------
+void ReadCtfData::setTimeStamp_Cache(const QDateTime& value)
+{
+  Q_D(ReadCtfData);
+  d->m_TimeStamp_Cache = value;
+}
+
+// -----------------------------------------------------------------------------
+QDateTime ReadCtfData::getTimeStamp_Cache() const
+{
+  Q_D(const ReadCtfData);
+  return d->m_TimeStamp_Cache;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -715,4 +757,165 @@ const QString ReadCtfData::getSubGroupName() const
 const QString ReadCtfData::getHumanLabel() const
 {
   return "Import Oxford Instr. EBSD Data (.ctf)";
+}
+
+// -----------------------------------------------------------------------------
+ReadCtfData::Pointer ReadCtfData::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ReadCtfData> ReadCtfData::New()
+{
+  struct make_shared_enabler : public ReadCtfData
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString ReadCtfData::getNameOfClass() const
+{
+  return QString("ReadCtfData");
+}
+
+// -----------------------------------------------------------------------------
+QString ReadCtfData::ClassName()
+{
+  return QString("ReadCtfData");
+}
+
+// -----------------------------------------------------------------------------
+void ReadCtfData::setDegreesToRadians(const bool& value)
+{
+  m_DegreesToRadians = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ReadCtfData::getDegreesToRadians() const
+{
+  return m_DegreesToRadians;
+}
+
+// -----------------------------------------------------------------------------
+void ReadCtfData::setEdaxHexagonalAlignment(const bool& value)
+{
+  m_EdaxHexagonalAlignment = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ReadCtfData::getEdaxHexagonalAlignment() const
+{
+  return m_EdaxHexagonalAlignment;
+}
+
+// -----------------------------------------------------------------------------
+void ReadCtfData::setDataContainerName(const DataArrayPath& value)
+{
+  m_DataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ReadCtfData::getDataContainerName() const
+{
+  return m_DataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadCtfData::setCellEnsembleAttributeMatrixName(const QString& value)
+{
+  m_CellEnsembleAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadCtfData::getCellEnsembleAttributeMatrixName() const
+{
+  return m_CellEnsembleAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadCtfData::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadCtfData::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadCtfData::setFileWasRead(const bool& value)
+{
+  m_FileWasRead = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ReadCtfData::getFileWasRead() const
+{
+  return m_FileWasRead;
+}
+
+// -----------------------------------------------------------------------------
+void ReadCtfData::setPhaseNameArrayName(const QString& value)
+{
+  m_PhaseNameArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadCtfData::getPhaseNameArrayName() const
+{
+  return m_PhaseNameArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadCtfData::setMaterialNameArrayName(const QString& value)
+{
+  m_MaterialNameArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadCtfData::getMaterialNameArrayName() const
+{
+  return m_MaterialNameArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadCtfData::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadCtfData::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void ReadCtfData::setRefFrameZDir(const uint32_t& value)
+{
+  m_RefFrameZDir = value;
+}
+
+// -----------------------------------------------------------------------------
+uint32_t ReadCtfData::getRefFrameZDir() const
+{
+  return m_RefFrameZDir;
+}
+
+// -----------------------------------------------------------------------------
+void ReadCtfData::setManufacturer(const Ebsd::OEM& value)
+{
+  m_Manufacturer = value;
+}
+
+// -----------------------------------------------------------------------------
+Ebsd::OEM ReadCtfData::getManufacturer() const
+{
+  return m_Manufacturer;
 }

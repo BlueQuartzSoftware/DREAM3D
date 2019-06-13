@@ -4,10 +4,14 @@
 
 #include "GenerateOrientationMatrixTranspose.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -277,4 +281,69 @@ const QString GenerateOrientationMatrixTranspose::getHumanLabel() const
 const QUuid GenerateOrientationMatrixTranspose::getUuid()
 {
   return QUuid("{ec58f4fe-8e51-527e-9536-8b6f185684be}");
+}
+
+// -----------------------------------------------------------------------------
+GenerateOrientationMatrixTranspose::Pointer GenerateOrientationMatrixTranspose::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<GenerateOrientationMatrixTranspose> GenerateOrientationMatrixTranspose::New()
+{
+  struct make_shared_enabler : public GenerateOrientationMatrixTranspose
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString GenerateOrientationMatrixTranspose::getNameOfClass() const
+{
+  return QString("_SUPERGenerateOrientationMatrixTranspose");
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateOrientationMatrixTranspose::ClassName()
+{
+  return QString("_SUPERGenerateOrientationMatrixTranspose");
+}
+
+// -----------------------------------------------------------------------------
+void GenerateOrientationMatrixTranspose::setOrientationMatrixDataArrayPath(const DataArrayPath& value)
+{
+  m_OrientationMatrixDataArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateOrientationMatrixTranspose::getOrientationMatrixDataArrayPath() const
+{
+  return m_OrientationMatrixDataArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateOrientationMatrixTranspose::setOutputDataArrayPath(const DataArrayPath& value)
+{
+  m_OutputDataArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateOrientationMatrixTranspose::getOutputDataArrayPath() const
+{
+  return m_OutputDataArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateOrientationMatrixTranspose::setDeleteOriginalData(const bool& value)
+{
+  m_DeleteOriginalData = value;
+}
+
+// -----------------------------------------------------------------------------
+bool GenerateOrientationMatrixTranspose::getDeleteOriginalData() const
+{
+  return m_DeleteOriginalData;
 }

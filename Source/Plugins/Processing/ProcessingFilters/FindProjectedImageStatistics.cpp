@@ -42,7 +42,10 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
@@ -52,6 +55,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
@@ -659,4 +664,117 @@ const QString FindProjectedImageStatistics::getSubGroupName() const
 const QString FindProjectedImageStatistics::getHumanLabel() const
 {
   return "Find Projected Image Statistics";
+}
+
+// -----------------------------------------------------------------------------
+FindProjectedImageStatistics::Pointer FindProjectedImageStatistics::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindProjectedImageStatistics> FindProjectedImageStatistics::New()
+{
+  struct make_shared_enabler : public FindProjectedImageStatistics
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindProjectedImageStatistics::getNameOfClass() const
+{
+  return QString("FindProjectedImageStatistics");
+}
+
+// -----------------------------------------------------------------------------
+QString FindProjectedImageStatistics::ClassName()
+{
+  return QString("FindProjectedImageStatistics");
+}
+
+// -----------------------------------------------------------------------------
+void FindProjectedImageStatistics::setSelectedArrayPath(const DataArrayPath& value)
+{
+  m_SelectedArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindProjectedImageStatistics::getSelectedArrayPath() const
+{
+  return m_SelectedArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindProjectedImageStatistics::setPlane(const unsigned int& value)
+{
+  m_Plane = value;
+}
+
+// -----------------------------------------------------------------------------
+unsigned int FindProjectedImageStatistics::getPlane() const
+{
+  return m_Plane;
+}
+
+// -----------------------------------------------------------------------------
+void FindProjectedImageStatistics::setProjectedImageMinArrayName(const QString& value)
+{
+  m_ProjectedImageMinArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindProjectedImageStatistics::getProjectedImageMinArrayName() const
+{
+  return m_ProjectedImageMinArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindProjectedImageStatistics::setProjectedImageMaxArrayName(const QString& value)
+{
+  m_ProjectedImageMaxArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindProjectedImageStatistics::getProjectedImageMaxArrayName() const
+{
+  return m_ProjectedImageMaxArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindProjectedImageStatistics::setProjectedImageAvgArrayName(const QString& value)
+{
+  m_ProjectedImageAvgArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindProjectedImageStatistics::getProjectedImageAvgArrayName() const
+{
+  return m_ProjectedImageAvgArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindProjectedImageStatistics::setProjectedImageStdArrayName(const QString& value)
+{
+  m_ProjectedImageStdArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindProjectedImageStatistics::getProjectedImageStdArrayName() const
+{
+  return m_ProjectedImageStdArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindProjectedImageStatistics::setProjectedImageVarArrayName(const QString& value)
+{
+  m_ProjectedImageVarArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindProjectedImageStatistics::getProjectedImageVarArrayName() const
+{
+  return m_ProjectedImageVarArrayName;
 }

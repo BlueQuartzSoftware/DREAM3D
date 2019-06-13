@@ -41,6 +41,8 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QStyleOptionComboBox>
 
+#include <QtCore/QDebug>
+
 #include "SIMPLib/Utilities/ColorTable.h"
 
 #include "SyntheticBuilding/Gui/Widgets/Delegates/SGLogNormalItemDelegate.h"

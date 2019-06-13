@@ -36,9 +36,9 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Sampling/SamplingDLLExport.h"
 
@@ -58,13 +58,36 @@ class Sampling_EXPORT SampleSurfaceMesh : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(SampleSurfaceMesh)
-  SIMPL_FILTER_NEW_MACRO(SampleSurfaceMesh)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(SampleSurfaceMesh, AbstractFilter)
+  using Self = SampleSurfaceMesh;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<SampleSurfaceMesh> New();
+
+  /**
+   * @brief Returns the name of the class for SampleSurfaceMesh
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for SampleSurfaceMesh
+   */
+  static QString ClassName();
 
   ~SampleSurfaceMesh() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceLabelsArrayPath
+   */
+  void setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceLabelsArrayPath
+   * @return Value of SurfaceMeshFaceLabelsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
   /**
@@ -188,7 +211,11 @@ protected:
   virtual void assign_points(Int32ArrayType::Pointer iArray);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+  std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFaceLabelsPtr;
+  int32_t* m_SurfaceMeshFaceLabels = nullptr;
+
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
+
   size_t m_NumCompleted = 0;
   qint64 m_StartMillis = 0;
   qint64 m_Millis = 0;

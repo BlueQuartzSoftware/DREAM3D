@@ -37,8 +37,8 @@
 
 #include <QtCore/QFile>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/FileReader.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
@@ -77,36 +77,139 @@ class ImportExport_EXPORT DxReader : public FileReader
 
   Q_DECLARE_PRIVATE(DxReader)
 public:
-  SIMPL_SHARED_POINTERS(DxReader)
-  SIMPL_FILTER_NEW_MACRO(DxReader)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(DxReader, FileReader)
+  using Self = DxReader;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<DxReader> New();
+
+  /**
+   * @brief Returns the name of the class for DxReader
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for DxReader
+   */
+  static QString ClassName();
 
   ~DxReader() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, VolumeDataContainerName)
+  /**
+   * @brief Setter property for VolumeDataContainerName
+   */
+  void setVolumeDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for VolumeDataContainerName
+   * @return Value of VolumeDataContainerName
+   */
+  DataArrayPath getVolumeDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  QString getCellAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  /**
+   * @brief Setter property for InputFile
+   */
+  void setInputFile(const QString& value);
+  /**
+   * @brief Getter property for InputFile
+   * @return Value of InputFile
+   */
+  QString getInputFile() const;
+
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Origin)
+  /**
+   * @brief Setter property for Origin
+   */
+  void setOrigin(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Origin
+   * @return Value of Origin
+   */
+  FloatVec3Type getOrigin() const;
+
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  /**
+   * @brief Setter property for Spacing
+   */
+  void setSpacing(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Spacing
+   * @return Value of Spacing
+   */
+  FloatVec3Type getSpacing() const;
+
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
-  SIMPL_FILTER_PARAMETER(bool, FileWasRead)
+  /**
+   * @brief Setter property for FileWasRead
+   */
+  void setFileWasRead(const bool& value);
+  /**
+   * @brief Getter property for FileWasRead
+   * @return Value of FileWasRead
+   */
+  bool getFileWasRead() const;
+
   Q_PROPERTY(bool FileWasRead READ getFileWasRead)
 
-  SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+  /**
+   * @brief Setter property for FeatureIdsArrayName
+   */
+  void setFeatureIdsArrayName(const QString& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayName
+   * @return Value of FeatureIdsArrayName
+   */
+  QString getFeatureIdsArrayName() const;
+
   Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
-  SIMPL_PIMPL_PROPERTY_DECL(std::vector<size_t>, Dims)
-  SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
-  SIMPL_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
+  /**
+   * @brief Setter property for Dims
+   */
+  void setDims(const QVector<size_t>& value);
+  /**
+   * @brief Getter property for Dims
+   * @return Value of Dims
+   */
+  QVector<size_t> getDims() const;
+
+  /**
+   * @brief Setter property for InputFile_Cache
+   */
+  void setInputFile_Cache(const QString& value);
+  /**
+   * @brief Getter property for InputFile_Cache
+   * @return Value of InputFile_Cache
+   */
+  QString getInputFile_Cache() const;
+
+  /**
+   * @brief Setter property for LastRead
+   */
+  void setLastRead(const QDateTime& value);
+  /**
+   * @brief Getter property for LastRead
+   * @return Value of LastRead
+   */
+  QDateTime getLastRead() const;
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -208,9 +311,19 @@ protected:
   void updateCellInstancePointers();
 
 private:
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+
+  DataArrayPath m_VolumeDataContainerName = {};
+  QString m_CellAttributeMatrixName = {};
+  QString m_InputFile = {};
+  FloatVec3Type m_Origin = {};
+  FloatVec3Type m_Spacing = {};
+  bool m_FileWasRead = {};
+  QString m_FeatureIdsArrayName = {};
+
   QScopedPointer<DxReaderPrivate> const d_ptr;
 
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
   size_t m_Dims[3];
   QFile m_InStream;
 

@@ -39,12 +39,12 @@
 #include <set>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -81,19 +81,60 @@ class Statistics_EXPORT FindFeatureHistogram : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindFeatureHistogram)
-  SIMPL_FILTER_NEW_MACRO(FindFeatureHistogram)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindFeatureHistogram, AbstractFilter)
+  using Self = FindFeatureHistogram;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindFeatureHistogram> New();
+
+  /**
+   * @brief Returns the name of the class for FindFeatureHistogram
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindFeatureHistogram
+   */
+  static QString ClassName();
 
   ~FindFeatureHistogram() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
+  /**
+   * @brief Setter property for SelectedFeatureArrayPath
+   */
+  void setSelectedFeatureArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SelectedFeatureArrayPath
+   * @return Value of SelectedFeatureArrayPath
+   */
+  DataArrayPath getSelectedFeatureArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
 
-  SIMPL_FILTER_PARAMETER(int, NumberOfBins)
+  /**
+   * @brief Setter property for NumberOfBins
+   */
+  void setNumberOfBins(const int& value);
+  /**
+   * @brief Getter property for NumberOfBins
+   * @return Value of NumberOfBins
+   */
+  int getNumberOfBins() const;
+
   Q_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
 
-  SIMPL_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
+  /**
+   * @brief Setter property for RemoveBiasedFeatures
+   */
+  void setRemoveBiasedFeatures(const bool& value);
+  /**
+   * @brief Getter property for RemoveBiasedFeatures
+   * @return Value of RemoveBiasedFeatures
+   */
+  bool getRemoveBiasedFeatures() const;
+
   Q_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)
 
   /**
@@ -101,13 +142,40 @@ public:
   * a different group if you want. The string returned here will be displayed
   * in the GUI for the filter
   */
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  /**
+   * @brief Setter property for FeaturePhasesArrayPath
+   */
+  void setFeaturePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayPath
+   * @return Value of FeaturePhasesArrayPath
+   */
+  DataArrayPath getFeaturePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
+  /**
+   * @brief Setter property for BiasedFeaturesArrayPath
+   */
+  void setBiasedFeaturesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for BiasedFeaturesArrayPath
+   * @return Value of BiasedFeaturesArrayPath
+   */
+  DataArrayPath getBiasedFeaturesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NewEnsembleArrayArrayPath)
+  /**
+   * @brief Setter property for NewEnsembleArrayArrayPath
+   */
+  void setNewEnsembleArrayArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NewEnsembleArrayArrayPath
+   * @return Value of NewEnsembleArrayArrayPath
+   */
+  DataArrayPath getNewEnsembleArrayArrayPath() const;
+
   Q_PROPERTY(DataArrayPath NewEnsembleArrayArrayPath READ getNewEnsembleArrayArrayPath WRITE setNewEnsembleArrayArrayPath)
 
   /**
@@ -211,9 +279,19 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(bool, BiasedFeatures)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, NewEnsembleArray)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+  std::weak_ptr<DataArray<bool>> m_BiasedFeaturesPtr;
+  bool* m_BiasedFeatures = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_NewEnsembleArrayPtr;
+  int32_t* m_NewEnsembleArray = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+
+  DataArrayPath m_SelectedFeatureArrayPath = {};
+  int m_NumberOfBins = {};
+  bool m_RemoveBiasedFeatures = {};
+  DataArrayPath m_FeaturePhasesArrayPath = {};
+  DataArrayPath m_BiasedFeaturesArrayPath = {};
+  DataArrayPath m_NewEnsembleArrayArrayPath = {};
 
 public:
   FindFeatureHistogram(const FindFeatureHistogram&) = delete; // Copy Constructor Not Implemented

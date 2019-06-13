@@ -37,7 +37,12 @@
 
 #include <QtCore/QFileInfo>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -493,4 +498,165 @@ const QString GoldfeatherReader::getSubGroupName() const
 const QString GoldfeatherReader::getHumanLabel() const
 {
   return "Goldfeather Mesh Importer";
+}
+
+// -----------------------------------------------------------------------------
+GoldfeatherReader::Pointer GoldfeatherReader::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<GoldfeatherReader> GoldfeatherReader::New()
+{
+  struct make_shared_enabler : public GoldfeatherReader
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString GoldfeatherReader::getNameOfClass() const
+{
+  return QString("GoldfeatherReader");
+}
+
+// -----------------------------------------------------------------------------
+QString GoldfeatherReader::ClassName()
+{
+  return QString("GoldfeatherReader");
+}
+
+// -----------------------------------------------------------------------------
+void GoldfeatherReader::setSurfaceDataContainerName(const DataArrayPath& value)
+{
+  m_SurfaceDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GoldfeatherReader::getSurfaceDataContainerName() const
+{
+  return m_SurfaceDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void GoldfeatherReader::setVertexAttributeMatrixName(const QString& value)
+{
+  m_VertexAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GoldfeatherReader::getVertexAttributeMatrixName() const
+{
+  return m_VertexAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void GoldfeatherReader::setFaceAttributeMatrixName(const QString& value)
+{
+  m_FaceAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GoldfeatherReader::getFaceAttributeMatrixName() const
+{
+  return m_FaceAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void GoldfeatherReader::setSurfaceMeshPrincipalCurvature1sArrayName(const QString& value)
+{
+  m_SurfaceMeshPrincipalCurvature1sArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GoldfeatherReader::getSurfaceMeshPrincipalCurvature1sArrayName() const
+{
+  return m_SurfaceMeshPrincipalCurvature1sArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void GoldfeatherReader::setSurfaceMeshPrincipalCurvature2sArrayName(const QString& value)
+{
+  m_SurfaceMeshPrincipalCurvature2sArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GoldfeatherReader::getSurfaceMeshPrincipalCurvature2sArrayName() const
+{
+  return m_SurfaceMeshPrincipalCurvature2sArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void GoldfeatherReader::setSurfaceMeshPrincipalDirection1sArrayName(const QString& value)
+{
+  m_SurfaceMeshPrincipalDirection1sArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GoldfeatherReader::getSurfaceMeshPrincipalDirection1sArrayName() const
+{
+  return m_SurfaceMeshPrincipalDirection1sArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void GoldfeatherReader::setSurfaceMeshPrincipalDirection2sArrayName(const QString& value)
+{
+  m_SurfaceMeshPrincipalDirection2sArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GoldfeatherReader::getSurfaceMeshPrincipalDirection2sArrayName() const
+{
+  return m_SurfaceMeshPrincipalDirection2sArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void GoldfeatherReader::setSurfaceMeshNodeNormalsArrayName(const QString& value)
+{
+  m_SurfaceMeshNodeNormalsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GoldfeatherReader::getSurfaceMeshNodeNormalsArrayName() const
+{
+  return m_SurfaceMeshNodeNormalsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void GoldfeatherReader::setSurfaceMeshFaceLabelsArrayName(const QString& value)
+{
+  m_SurfaceMeshFaceLabelsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GoldfeatherReader::getSurfaceMeshFaceLabelsArrayName() const
+{
+  return m_SurfaceMeshFaceLabelsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void GoldfeatherReader::setSurfaceMeshFaceNormalsArrayName(const QString& value)
+{
+  m_SurfaceMeshFaceNormalsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GoldfeatherReader::getSurfaceMeshFaceNormalsArrayName() const
+{
+  return m_SurfaceMeshFaceNormalsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void GoldfeatherReader::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GoldfeatherReader::getInputFile() const
+{
+  return m_InputFile;
 }

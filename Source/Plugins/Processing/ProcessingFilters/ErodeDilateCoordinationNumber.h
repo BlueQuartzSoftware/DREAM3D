@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Processing/ProcessingDLLExport.h"
 
@@ -62,22 +62,72 @@ class Processing_EXPORT ErodeDilateCoordinationNumber : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(ErodeDilateCoordinationNumber)
-  SIMPL_FILTER_NEW_MACRO(ErodeDilateCoordinationNumber)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ErodeDilateCoordinationNumber, AbstractFilter)
+  using Self = ErodeDilateCoordinationNumber;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<ErodeDilateCoordinationNumber> New();
+
+  /**
+   * @brief Returns the name of the class for ErodeDilateCoordinationNumber
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ErodeDilateCoordinationNumber
+   */
+  static QString ClassName();
 
   ~ErodeDilateCoordinationNumber() override;
 
-  SIMPL_FILTER_PARAMETER(bool, Loop)
+  /**
+   * @brief Setter property for Loop
+   */
+  void setLoop(const bool& value);
+  /**
+   * @brief Getter property for Loop
+   * @return Value of Loop
+   */
+  bool getLoop() const;
+
   Q_PROPERTY(bool Loop READ getLoop WRITE setLoop)
 
-  SIMPL_FILTER_PARAMETER(int, CoordinationNumber)
+  /**
+   * @brief Setter property for CoordinationNumber
+   */
+  void setCoordinationNumber(const int& value);
+  /**
+   * @brief Getter property for CoordinationNumber
+   * @return Value of CoordinationNumber
+   */
+  int getCoordinationNumber() const;
+
   Q_PROPERTY(int CoordinationNumber READ getCoordinationNumber WRITE setCoordinationNumber)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, IgnoredDataArrayPaths)
+  /**
+   * @brief Setter property for IgnoredDataArrayPaths
+   */
+  void setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value);
+  /**
+   * @brief Getter property for IgnoredDataArrayPaths
+   * @return Value of IgnoredDataArrayPaths
+   */
+  QVector<DataArrayPath> getIgnoredDataArrayPaths() const;
+
   Q_PROPERTY(QVector<DataArrayPath> IgnoredDataArrayPaths READ getIgnoredDataArrayPaths WRITE setIgnoredDataArrayPaths)
 
   /**
@@ -181,9 +231,15 @@ protected:
   void initialize();
 
 private:
-  int32_t* m_Neighbors;
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  bool m_Loop = {};
+  int m_CoordinationNumber = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  QVector<DataArrayPath> m_IgnoredDataArrayPaths = {};
+
+  int32_t* m_Neighbors;
 
 public:
   ErodeDilateCoordinationNumber(const ErodeDilateCoordinationNumber&) = delete; // Copy Constructor Not Implemented

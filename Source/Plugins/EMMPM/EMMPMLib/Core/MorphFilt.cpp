@@ -245,3 +245,40 @@ const QString MorphFilter::getHumanLabel() const
 {
   return "EMMPM";
 }
+
+// -----------------------------------------------------------------------------
+MorphFilter::Pointer MorphFilter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+MorphFilter::Pointer MorphFilter::New()
+{
+  Pointer sharedPtr(new(MorphFilter));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+const QString MorphFilter::getNameOfClass() const
+{
+  return QString("MorphFilter");
+}
+
+// -----------------------------------------------------------------------------
+QString MorphFilter::ClassName()
+{
+  return QString("MorphFilter");
+}
+
+// -----------------------------------------------------------------------------
+void MorphFilter::setErrorCode(const int& value)
+{
+  m_ErrorCode = value;
+}
+
+// -----------------------------------------------------------------------------
+int MorphFilter::getErrorCode() const
+{
+  return m_ErrorCode;
+}

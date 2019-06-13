@@ -35,13 +35,18 @@
 
 #include "FindLargestCrossSections.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -337,4 +342,69 @@ const QString FindLargestCrossSections::getSubGroupName() const
 const QString FindLargestCrossSections::getHumanLabel() const
 {
   return "Find Feature Largest Cross-Section Areas";
+}
+
+// -----------------------------------------------------------------------------
+FindLargestCrossSections::Pointer FindLargestCrossSections::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindLargestCrossSections> FindLargestCrossSections::New()
+{
+  struct make_shared_enabler : public FindLargestCrossSections
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindLargestCrossSections::getNameOfClass() const
+{
+  return QString("FindLargestCrossSections");
+}
+
+// -----------------------------------------------------------------------------
+QString FindLargestCrossSections::ClassName()
+{
+  return QString("FindLargestCrossSections");
+}
+
+// -----------------------------------------------------------------------------
+void FindLargestCrossSections::setPlane(const unsigned int& value)
+{
+  m_Plane = value;
+}
+
+// -----------------------------------------------------------------------------
+unsigned int FindLargestCrossSections::getPlane() const
+{
+  return m_Plane;
+}
+
+// -----------------------------------------------------------------------------
+void FindLargestCrossSections::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindLargestCrossSections::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindLargestCrossSections::setLargestCrossSectionsArrayPath(const DataArrayPath& value)
+{
+  m_LargestCrossSectionsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindLargestCrossSections::getLargestCrossSectionsArrayPath() const
+{
+  return m_LargestCrossSectionsArrayPath;
 }

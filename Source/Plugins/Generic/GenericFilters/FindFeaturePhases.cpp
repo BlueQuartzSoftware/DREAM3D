@@ -35,12 +35,15 @@
 
 #include "FindFeaturePhases.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "Generic/GenericConstants.h"
 #include "Generic/GenericVersion.h"
@@ -297,4 +300,69 @@ const QString FindFeaturePhases::getSubGroupName() const
 const QString FindFeaturePhases::getHumanLabel() const
 {
   return "Find Feature Phases";
+}
+
+// -----------------------------------------------------------------------------
+FindFeaturePhases::Pointer FindFeaturePhases::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindFeaturePhases> FindFeaturePhases::New()
+{
+  struct make_shared_enabler : public FindFeaturePhases
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindFeaturePhases::getNameOfClass() const
+{
+  return QString("FindFeaturePhases");
+}
+
+// -----------------------------------------------------------------------------
+QString FindFeaturePhases::ClassName()
+{
+  return QString("FindFeaturePhases");
+}
+
+// -----------------------------------------------------------------------------
+void FindFeaturePhases::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeaturePhases::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeaturePhases::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeaturePhases::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeaturePhases::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeaturePhases::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
 }

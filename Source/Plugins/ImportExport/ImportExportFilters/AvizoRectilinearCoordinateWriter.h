@@ -40,7 +40,7 @@
 #include <QtCore/QString>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -74,29 +74,87 @@ class ImportExport_EXPORT AvizoRectilinearCoordinateWriter : public AbstractFilt
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(AvizoRectilinearCoordinateWriter)
-  SIMPL_FILTER_NEW_MACRO(AvizoRectilinearCoordinateWriter)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(AvizoRectilinearCoordinateWriter, AbstractFilter)
+  using Self = AvizoRectilinearCoordinateWriter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<AvizoRectilinearCoordinateWriter> New();
+
+  /**
+   * @brief Returns the name of the class for AvizoRectilinearCoordinateWriter
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for AvizoRectilinearCoordinateWriter
+   */
+  static QString ClassName();
 
   ~AvizoRectilinearCoordinateWriter() override;
 
-  SIMPL_FILTER_PARAMETER(QString, OutputFile)
+  /**
+   * @brief Setter property for OutputFile
+   */
+  void setOutputFile(const QString& value);
+  /**
+   * @brief Getter property for OutputFile
+   * @return Value of OutputFile
+   */
+  QString getOutputFile() const;
+
   Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-  SIMPL_FILTER_PARAMETER(bool, WriteBinaryFile)
+  /**
+   * @brief Setter property for WriteBinaryFile
+   */
+  void setWriteBinaryFile(const bool& value);
+  /**
+   * @brief Getter property for WriteBinaryFile
+   * @return Value of WriteBinaryFile
+   */
+  bool getWriteBinaryFile() const;
+
   Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
 
-  SIMPL_FILTER_PARAMETER(QString, Units)
+  /**
+   * @brief Setter property for Units
+   */
+  void setUnits(const QString& value);
+  /**
+   * @brief Getter property for Units
+   * @return Value of Units
+   */
+  QString getUnits() const;
+
   Q_PROPERTY(QString Units READ getUnits WRITE setUnits)
 
-  SIMPL_INSTANCE_PROPERTY(bool, WriteFeatureIds)
+  /**
+   * @brief Setter property for WriteFeatureIds
+   */
+  void setWriteFeatureIds(const bool& value);
+  /**
+   * @brief Getter property for WriteFeatureIds
+   * @return Value of WriteFeatureIds
+   */
+  bool getWriteFeatureIds() const;
 
   /**
    * @brief This returns the group that the filter belonds to. You can select
    * a different group if you want. The string returned here will be displayed
    * in the GUI for the filter
    */
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -213,7 +271,14 @@ protected:
   int writeData(FILE* f);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+
+  QString m_OutputFile = {};
+  bool m_WriteBinaryFile = {};
+  QString m_Units = {};
+  bool m_WriteFeatureIds = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
 
 public:
   AvizoRectilinearCoordinateWriter(const AvizoRectilinearCoordinateWriter&) = delete;            // Copy Constructor Not Implemented

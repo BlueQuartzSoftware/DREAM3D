@@ -36,7 +36,7 @@
 #pragma once
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
@@ -66,25 +66,84 @@ class ImportExport_EXPORT AbaqusHexahedronWriter : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(AbaqusHexahedronWriter)
-  SIMPL_FILTER_NEW_MACRO(AbaqusHexahedronWriter)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(AbaqusHexahedronWriter, AbstractFilter)
+  using Self = AbaqusHexahedronWriter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<AbaqusHexahedronWriter> New();
+
+  /**
+   * @brief Returns the name of the class for AbaqusHexahedronWriter
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for AbaqusHexahedronWriter
+   */
+  static QString ClassName();
 
   ~AbaqusHexahedronWriter() override;
 
-  SIMPL_FILTER_PARAMETER(QString, OutputPath)
+  /**
+   * @brief Setter property for OutputPath
+   */
+  void setOutputPath(const QString& value);
+  /**
+   * @brief Getter property for OutputPath
+   * @return Value of OutputPath
+   */
+  QString getOutputPath() const;
+
   Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
 
-  SIMPL_FILTER_PARAMETER(QString, FilePrefix)
+  /**
+   * @brief Setter property for FilePrefix
+   */
+  void setFilePrefix(const QString& value);
+  /**
+   * @brief Getter property for FilePrefix
+   * @return Value of FilePrefix
+   */
+  QString getFilePrefix() const;
+
   Q_PROPERTY(QString FilePrefix READ getFilePrefix WRITE setFilePrefix)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(int, HourglassStiffness)
+  /**
+   * @brief Setter property for HourglassStiffness
+   */
+  void setHourglassStiffness(const int& value);
+  /**
+   * @brief Getter property for HourglassStiffness
+   * @return Value of HourglassStiffness
+   */
+  int getHourglassStiffness() const;
+
   Q_PROPERTY(int HourglassStiffness READ getHourglassStiffness WRITE setHourglassStiffness)
 
-  SIMPL_FILTER_PARAMETER(QString, JobName)
+  /**
+   * @brief Setter property for JobName
+   */
+  void setJobName(const QString& value);
+  /**
+   * @brief Getter property for JobName
+   * @return Value of JobName
+   */
+  QString getJobName() const;
+
   Q_PROPERTY(QString JobName READ getJobName WRITE setJobName)
 
   /**
@@ -188,7 +247,14 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+
+  QString m_OutputPath = {};
+  QString m_FilePrefix = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  int m_HourglassStiffness = {};
+  QString m_JobName = {};
 
   /**
    * @brief writeNodes Writes the _nodes.inp file

@@ -35,7 +35,10 @@
 
 #include "ErodeDilateCoordinationNumber.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -43,6 +46,8 @@
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
@@ -413,4 +418,81 @@ const QString ErodeDilateCoordinationNumber::getSubGroupName() const
 const QString ErodeDilateCoordinationNumber::getHumanLabel() const
 {
   return "Smooth Bad Data (Coordination Number)";
+}
+
+// -----------------------------------------------------------------------------
+ErodeDilateCoordinationNumber::Pointer ErodeDilateCoordinationNumber::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ErodeDilateCoordinationNumber> ErodeDilateCoordinationNumber::New()
+{
+  struct make_shared_enabler : public ErodeDilateCoordinationNumber
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString ErodeDilateCoordinationNumber::getNameOfClass() const
+{
+  return QString("ErodeDilateCoordinationNumber");
+}
+
+// -----------------------------------------------------------------------------
+QString ErodeDilateCoordinationNumber::ClassName()
+{
+  return QString("ErodeDilateCoordinationNumber");
+}
+
+// -----------------------------------------------------------------------------
+void ErodeDilateCoordinationNumber::setLoop(const bool& value)
+{
+  m_Loop = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ErodeDilateCoordinationNumber::getLoop() const
+{
+  return m_Loop;
+}
+
+// -----------------------------------------------------------------------------
+void ErodeDilateCoordinationNumber::setCoordinationNumber(const int& value)
+{
+  m_CoordinationNumber = value;
+}
+
+// -----------------------------------------------------------------------------
+int ErodeDilateCoordinationNumber::getCoordinationNumber() const
+{
+  return m_CoordinationNumber;
+}
+
+// -----------------------------------------------------------------------------
+void ErodeDilateCoordinationNumber::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ErodeDilateCoordinationNumber::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ErodeDilateCoordinationNumber::setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value)
+{
+  m_IgnoredDataArrayPaths = value;
+}
+
+// -----------------------------------------------------------------------------
+QVector<DataArrayPath> ErodeDilateCoordinationNumber::getIgnoredDataArrayPaths() const
+{
+  return m_IgnoredDataArrayPaths;
 }

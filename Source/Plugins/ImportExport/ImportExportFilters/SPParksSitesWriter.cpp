@@ -38,7 +38,12 @@
 
 #include <QtCore/QDateTime>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
@@ -322,4 +327,45 @@ const QString SPParksSitesWriter::getSubGroupName() const
 const QString SPParksSitesWriter::getHumanLabel() const
 {
   return "Export SPParks Sites File";
+}
+
+// -----------------------------------------------------------------------------
+SPParksSitesWriter::Pointer SPParksSitesWriter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<SPParksSitesWriter> SPParksSitesWriter::New()
+{
+  struct make_shared_enabler : public SPParksSitesWriter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString SPParksSitesWriter::getNameOfClass() const
+{
+  return QString("SPParksSitesWriter");
+}
+
+// -----------------------------------------------------------------------------
+QString SPParksSitesWriter::ClassName()
+{
+  return QString("SPParksSitesWriter");
+}
+
+// -----------------------------------------------------------------------------
+void SPParksSitesWriter::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath SPParksSitesWriter::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
 }

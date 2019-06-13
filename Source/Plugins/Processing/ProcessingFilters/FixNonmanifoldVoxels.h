@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Processing/ProcessingDLLExport.h"
 
@@ -18,13 +18,36 @@ class Processing_EXPORT FixNonmanifoldVoxels : public AbstractFilter
   Q_OBJECT
 
 public:
-  SIMPL_SHARED_POINTERS(FixNonmanifoldVoxels)
-  SIMPL_FILTER_NEW_MACRO(FixNonmanifoldVoxels)
-  SIMPL_TYPE_MACRO_SUPER(FixNonmanifoldVoxels, AbstractFilter)
+  using Self = FixNonmanifoldVoxels;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FixNonmanifoldVoxels> New();
+
+  /**
+   * @brief Returns the name of the class for _SUPERFixNonmanifoldVoxels
+   */
+  const QString getNameOfClass() const;
+  /**
+   * @brief Returns the name of the class for _SUPERFixNonmanifoldVoxels
+   */
+  static QString ClassName();
 
   ~FixNonmanifoldVoxels() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
@@ -124,7 +147,10 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+
+  DataArrayPath m_FeatureIdsArrayPath = {};
 
   /* Rule of 5: All special member functions should be defined if any are defined.
    * https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#c21-if-you-define-or-delete-any-default-operation-define-or-delete-them-all

@@ -35,7 +35,10 @@
 
 #include "ChangeResolution.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -45,6 +48,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
@@ -498,4 +503,117 @@ const QString ChangeResolution::getSubGroupName() const
 const QString ChangeResolution::getHumanLabel() const
 {
   return "Change Spacing";
+}
+
+// -----------------------------------------------------------------------------
+ChangeResolution::Pointer ChangeResolution::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ChangeResolution> ChangeResolution::New()
+{
+  struct make_shared_enabler : public ChangeResolution
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString ChangeResolution::getNameOfClass() const
+{
+  return QString("ChangeResolution");
+}
+
+// -----------------------------------------------------------------------------
+QString ChangeResolution::ClassName()
+{
+  return QString("ChangeResolution");
+}
+
+// -----------------------------------------------------------------------------
+void ChangeResolution::setNewDataContainerName(const DataArrayPath& value)
+{
+  m_NewDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ChangeResolution::getNewDataContainerName() const
+{
+  return m_NewDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void ChangeResolution::setCellAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_CellAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ChangeResolution::getCellAttributeMatrixPath() const
+{
+  return m_CellAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void ChangeResolution::setCellFeatureAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_CellFeatureAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ChangeResolution::getCellFeatureAttributeMatrixPath() const
+{
+  return m_CellFeatureAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void ChangeResolution::setSpacing(const FloatVec3Type& value)
+{
+  m_Spacing = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ChangeResolution::getSpacing() const
+{
+  return m_Spacing;
+}
+
+// -----------------------------------------------------------------------------
+void ChangeResolution::setRenumberFeatures(const bool& value)
+{
+  m_RenumberFeatures = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ChangeResolution::getRenumberFeatures() const
+{
+  return m_RenumberFeatures;
+}
+
+// -----------------------------------------------------------------------------
+void ChangeResolution::setSaveAsNewDataContainer(const bool& value)
+{
+  m_SaveAsNewDataContainer = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ChangeResolution::getSaveAsNewDataContainer() const
+{
+  return m_SaveAsNewDataContainer;
+}
+
+// -----------------------------------------------------------------------------
+void ChangeResolution::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ChangeResolution::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
 }

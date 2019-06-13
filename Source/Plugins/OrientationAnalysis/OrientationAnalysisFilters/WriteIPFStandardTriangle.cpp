@@ -37,7 +37,10 @@
 
 #include <QtCore/QDir>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
@@ -329,4 +332,69 @@ const QString WriteIPFStandardTriangle::getSubGroupName() const
 const QString WriteIPFStandardTriangle::getHumanLabel() const
 {
   return "Export IPF Triangle Legend";
+}
+
+// -----------------------------------------------------------------------------
+WriteIPFStandardTriangle::Pointer WriteIPFStandardTriangle::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<WriteIPFStandardTriangle> WriteIPFStandardTriangle::New()
+{
+  struct make_shared_enabler : public WriteIPFStandardTriangle
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString WriteIPFStandardTriangle::getNameOfClass() const
+{
+  return QString("WriteIPFStandardTriangle");
+}
+
+// -----------------------------------------------------------------------------
+QString WriteIPFStandardTriangle::ClassName()
+{
+  return QString("WriteIPFStandardTriangle");
+}
+
+// -----------------------------------------------------------------------------
+void WriteIPFStandardTriangle::setLaueClass(const int& value)
+{
+  m_LaueClass = value;
+}
+
+// -----------------------------------------------------------------------------
+int WriteIPFStandardTriangle::getLaueClass() const
+{
+  return m_LaueClass;
+}
+
+// -----------------------------------------------------------------------------
+void WriteIPFStandardTriangle::setOutputFile(const QString& value)
+{
+  m_OutputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString WriteIPFStandardTriangle::getOutputFile() const
+{
+  return m_OutputFile;
+}
+
+// -----------------------------------------------------------------------------
+void WriteIPFStandardTriangle::setImageSize(const int& value)
+{
+  m_ImageSize = value;
+}
+
+// -----------------------------------------------------------------------------
+int WriteIPFStandardTriangle::getImageSize() const
+{
+  return m_ImageSize;
 }

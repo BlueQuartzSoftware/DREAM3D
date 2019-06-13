@@ -49,6 +49,8 @@
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
@@ -762,4 +764,117 @@ const QString InsertAtoms::getSubGroupName() const
 const QString InsertAtoms::getHumanLabel() const
 {
   return "Insert Atoms";
+}
+
+// -----------------------------------------------------------------------------
+InsertAtoms::Pointer InsertAtoms::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<InsertAtoms> InsertAtoms::New()
+{
+  struct make_shared_enabler : public InsertAtoms
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString InsertAtoms::getNameOfClass() const
+{
+  return QString("InsertAtoms");
+}
+
+// -----------------------------------------------------------------------------
+QString InsertAtoms::ClassName()
+{
+  return QString("InsertAtoms");
+}
+
+// -----------------------------------------------------------------------------
+void InsertAtoms::setVertexDataContainerName(const DataArrayPath& value)
+{
+  m_VertexDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath InsertAtoms::getVertexDataContainerName() const
+{
+  return m_VertexDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void InsertAtoms::setVertexAttributeMatrixName(const QString& value)
+{
+  m_VertexAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString InsertAtoms::getVertexAttributeMatrixName() const
+{
+  return m_VertexAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void InsertAtoms::setLatticeConstants(const FloatVec3Type& value)
+{
+  m_LatticeConstants = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type InsertAtoms::getLatticeConstants() const
+{
+  return m_LatticeConstants;
+}
+
+// -----------------------------------------------------------------------------
+void InsertAtoms::setBasis(const int& value)
+{
+  m_Basis = value;
+}
+
+// -----------------------------------------------------------------------------
+int InsertAtoms::getBasis() const
+{
+  return m_Basis;
+}
+
+// -----------------------------------------------------------------------------
+void InsertAtoms::setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath InsertAtoms::getSurfaceMeshFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFaceLabelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void InsertAtoms::setAvgQuatsArrayPath(const DataArrayPath& value)
+{
+  m_AvgQuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath InsertAtoms::getAvgQuatsArrayPath() const
+{
+  return m_AvgQuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void InsertAtoms::setAtomFeatureLabelsArrayName(const QString& value)
+{
+  m_AtomFeatureLabelsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString InsertAtoms::getAtomFeatureLabelsArrayName() const
+{
+  return m_AtomFeatureLabelsArrayName;
 }

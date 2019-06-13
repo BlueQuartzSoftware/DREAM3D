@@ -35,13 +35,18 @@
 
 #include "CreateEnsembleInfo.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Filtering/ThresholdFilterHelper.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationAnalysis/FilterParameters/EnsembleInfoFilterParameter.h"
 
@@ -326,4 +331,105 @@ const QString CreateEnsembleInfo::getSubGroupName() const
 const QString CreateEnsembleInfo::getHumanLabel() const
 {
   return "Create Ensemble Info";
+}
+
+// -----------------------------------------------------------------------------
+CreateEnsembleInfo::Pointer CreateEnsembleInfo::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<CreateEnsembleInfo> CreateEnsembleInfo::New()
+{
+  struct make_shared_enabler : public CreateEnsembleInfo
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString CreateEnsembleInfo::getNameOfClass() const
+{
+  return QString("CreateEnsembleInfo");
+}
+
+// -----------------------------------------------------------------------------
+QString CreateEnsembleInfo::ClassName()
+{
+  return QString("CreateEnsembleInfo");
+}
+
+// -----------------------------------------------------------------------------
+void CreateEnsembleInfo::setDataContainerName(const DataArrayPath& value)
+{
+  m_DataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath CreateEnsembleInfo::getDataContainerName() const
+{
+  return m_DataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void CreateEnsembleInfo::setCellEnsembleAttributeMatrixName(const QString& value)
+{
+  m_CellEnsembleAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString CreateEnsembleInfo::getCellEnsembleAttributeMatrixName() const
+{
+  return m_CellEnsembleAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void CreateEnsembleInfo::setEnsemble(const EnsembleInfo& value)
+{
+  m_Ensemble = value;
+}
+
+// -----------------------------------------------------------------------------
+EnsembleInfo CreateEnsembleInfo::getEnsemble() const
+{
+  return m_Ensemble;
+}
+
+// -----------------------------------------------------------------------------
+void CreateEnsembleInfo::setCrystalStructuresArrayName(const QString& value)
+{
+  m_CrystalStructuresArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString CreateEnsembleInfo::getCrystalStructuresArrayName() const
+{
+  return m_CrystalStructuresArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void CreateEnsembleInfo::setPhaseTypesArrayName(const QString& value)
+{
+  m_PhaseTypesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString CreateEnsembleInfo::getPhaseTypesArrayName() const
+{
+  return m_PhaseTypesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void CreateEnsembleInfo::setPhaseNamesArrayName(const QString& value)
+{
+  m_PhaseNamesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString CreateEnsembleInfo::getPhaseNamesArrayName() const
+{
+  return m_PhaseNamesArrayName;
 }

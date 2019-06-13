@@ -39,6 +39,8 @@
 #include <QtCore/QFile>
 #include <QtCore/QString>
 #include <QtCore/QVector>
+#include <QtCore/QTextStream>
+#include <QtCore/QDebug>
 
 #include "SIMPLib/Common/Observer.h"
 #include "SIMPLib/CoreFilters/DataContainerWriter.h"
@@ -47,6 +49,8 @@
 #include "SIMPLib/Filtering/QMetaObjectUtilities.h"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "UnitTestSupport.hpp"
 

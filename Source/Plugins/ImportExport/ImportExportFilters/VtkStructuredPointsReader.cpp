@@ -38,7 +38,12 @@
 
 #include <QtCore/QFileInfo>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
@@ -1261,4 +1266,153 @@ const QString VtkStructuredPointsReader::getSubGroupName() const
 const QString VtkStructuredPointsReader::getHumanLabel() const
 {
   return "VTK STRUCTURED_POINTS Importer";
+}
+
+// -----------------------------------------------------------------------------
+VtkStructuredPointsReader::Pointer VtkStructuredPointsReader::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<VtkStructuredPointsReader> VtkStructuredPointsReader::New()
+{
+  struct make_shared_enabler : public VtkStructuredPointsReader
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString VtkStructuredPointsReader::getNameOfClass() const
+{
+  return QString("VtkStructuredPointsReader");
+}
+
+// -----------------------------------------------------------------------------
+QString VtkStructuredPointsReader::ClassName()
+{
+  return QString("VtkStructuredPointsReader");
+}
+
+// -----------------------------------------------------------------------------
+void VtkStructuredPointsReader::setReadCellData(const bool& value)
+{
+  m_ReadCellData = value;
+}
+
+// -----------------------------------------------------------------------------
+bool VtkStructuredPointsReader::getReadCellData() const
+{
+  return m_ReadCellData;
+}
+
+// -----------------------------------------------------------------------------
+void VtkStructuredPointsReader::setVolumeDataContainerName(const DataArrayPath& value)
+{
+  m_VolumeDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath VtkStructuredPointsReader::getVolumeDataContainerName() const
+{
+  return m_VolumeDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void VtkStructuredPointsReader::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VtkStructuredPointsReader::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void VtkStructuredPointsReader::setReadPointData(const bool& value)
+{
+  m_ReadPointData = value;
+}
+
+// -----------------------------------------------------------------------------
+bool VtkStructuredPointsReader::getReadPointData() const
+{
+  return m_ReadPointData;
+}
+
+// -----------------------------------------------------------------------------
+void VtkStructuredPointsReader::setVertexDataContainerName(const DataArrayPath& value)
+{
+  m_VertexDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath VtkStructuredPointsReader::getVertexDataContainerName() const
+{
+  return m_VertexDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void VtkStructuredPointsReader::setVertexAttributeMatrixName(const QString& value)
+{
+  m_VertexAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VtkStructuredPointsReader::getVertexAttributeMatrixName() const
+{
+  return m_VertexAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void VtkStructuredPointsReader::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VtkStructuredPointsReader::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void VtkStructuredPointsReader::setComment(const QString& value)
+{
+  m_Comment = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VtkStructuredPointsReader::getComment() const
+{
+  return m_Comment;
+}
+
+// -----------------------------------------------------------------------------
+void VtkStructuredPointsReader::setDatasetType(const QString& value)
+{
+  m_DatasetType = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VtkStructuredPointsReader::getDatasetType() const
+{
+  return m_DatasetType;
+}
+
+// -----------------------------------------------------------------------------
+void VtkStructuredPointsReader::setFileIsBinary(const bool& value)
+{
+  m_FileIsBinary = value;
+}
+
+// -----------------------------------------------------------------------------
+bool VtkStructuredPointsReader::getFileIsBinary() const
+{
+  return m_FileIsBinary;
 }

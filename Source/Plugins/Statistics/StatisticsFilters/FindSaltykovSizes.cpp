@@ -35,7 +35,10 @@
 
 #include "FindSaltykovSizes.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -43,6 +46,8 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
@@ -495,4 +500,57 @@ const QString FindSaltykovSizes::getSubGroupName() const
 const QString FindSaltykovSizes::getHumanLabel() const
 {
   return "Find Feature Saltykov Sizes";
+}
+
+// -----------------------------------------------------------------------------
+FindSaltykovSizes::Pointer FindSaltykovSizes::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindSaltykovSizes> FindSaltykovSizes::New()
+{
+  struct make_shared_enabler : public FindSaltykovSizes
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString FindSaltykovSizes::getNameOfClass() const
+{
+  return QString("FindSaltykovSizes");
+}
+
+// -----------------------------------------------------------------------------
+QString FindSaltykovSizes::ClassName()
+{
+  return QString("FindSaltykovSizes");
+}
+
+// -----------------------------------------------------------------------------
+void FindSaltykovSizes::setEquivalentDiametersArrayPath(const DataArrayPath& value)
+{
+  m_EquivalentDiametersArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindSaltykovSizes::getEquivalentDiametersArrayPath() const
+{
+  return m_EquivalentDiametersArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindSaltykovSizes::setSaltykovEquivalentDiametersArrayPath(const DataArrayPath& value)
+{
+  m_SaltykovEquivalentDiametersArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindSaltykovSizes::getSaltykovEquivalentDiametersArrayPath() const
+{
+  return m_SaltykovEquivalentDiametersArrayPath;
 }

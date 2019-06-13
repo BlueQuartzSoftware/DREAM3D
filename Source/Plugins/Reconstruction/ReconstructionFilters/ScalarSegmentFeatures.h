@@ -37,8 +37,11 @@
 #include <random>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+
+class IDataArray;
+using IDataArrayWkPtrType = std::weak_ptr<IDataArray>;
 
 #include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
 
@@ -74,33 +77,118 @@ class Reconstruction_EXPORT ScalarSegmentFeatures : public SegmentFeatures
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(ScalarSegmentFeatures)
-  SIMPL_FILTER_NEW_MACRO(ScalarSegmentFeatures)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ScalarSegmentFeatures, AbstractFilter)
+  using Self = ScalarSegmentFeatures;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<ScalarSegmentFeatures> New();
+
+  /**
+   * @brief Returns the name of the class for ScalarSegmentFeatures
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ScalarSegmentFeatures
+   */
+  static QString ClassName();
 
   virtual ~ScalarSegmentFeatures();
 
-  SIMPL_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
+  /**
+   * @brief Setter property for CellFeatureAttributeMatrixName
+   */
+  void setCellFeatureAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellFeatureAttributeMatrixName
+   * @return Value of CellFeatureAttributeMatrixName
+   */
+  QString getCellFeatureAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, ScalarArrayPath)
+  /**
+   * @brief Setter property for ScalarArrayPath
+   */
+  void setScalarArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for ScalarArrayPath
+   * @return Value of ScalarArrayPath
+   */
+  DataArrayPath getScalarArrayPath() const;
+
   Q_PROPERTY(DataArrayPath ScalarArrayPath READ getScalarArrayPath WRITE setScalarArrayPath)
 
-  SIMPL_FILTER_PARAMETER(float, ScalarTolerance)
+  /**
+   * @brief Setter property for ScalarTolerance
+   */
+  void setScalarTolerance(const float& value);
+  /**
+   * @brief Getter property for ScalarTolerance
+   * @return Value of ScalarTolerance
+   */
+  float getScalarTolerance() const;
+
   Q_PROPERTY(float ScalarTolerance READ getScalarTolerance WRITE setScalarTolerance)
 
-  SIMPL_INSTANCE_PROPERTY(bool, RandomizeFeatureIds)
+  /**
+   * @brief Setter property for RandomizeFeatureIds
+   */
+  void setRandomizeFeatureIds(const bool& value);
+  /**
+   * @brief Getter property for RandomizeFeatureIds
+   * @return Value of RandomizeFeatureIds
+   */
+  bool getRandomizeFeatureIds() const;
 
-  SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
+  /**
+   * @brief Setter property for UseGoodVoxels
+   */
+  void setUseGoodVoxels(const bool& value);
+  /**
+   * @brief Getter property for UseGoodVoxels
+   * @return Value of UseGoodVoxels
+   */
+  bool getUseGoodVoxels() const;
+
   Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  /**
+   * @brief Setter property for GoodVoxelsArrayPath
+   */
+  void setGoodVoxelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for GoodVoxelsArrayPath
+   * @return Value of GoodVoxelsArrayPath
+   */
+  DataArrayPath getGoodVoxelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+  /**
+   * @brief Setter property for FeatureIdsArrayName
+   */
+  void setFeatureIdsArrayName(const QString& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayName
+   * @return Value of FeatureIdsArrayName
+   */
+  QString getFeatureIdsArrayName() const;
+
   Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, ActiveArrayName)
+  /**
+   * @brief Setter property for ActiveArrayName
+   */
+  void setActiveArrayName(const QString& value);
+  /**
+   * @brief Getter property for ActiveArrayName
+   * @return Value of ActiveArrayName
+   */
+  QString getActiveArrayName() const;
+
   Q_PROPERTY(QString ActiveArrayName READ getActiveArrayName WRITE setActiveArrayName)
 
   /**
@@ -191,11 +279,24 @@ protected:
   virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
-  DEFINE_IDATAARRAY_VARIABLE(InputData)
+  IDataArrayWkPtrType m_InputDataPtr;
+  void* m_InputData = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(bool, Active)
+  std::weak_ptr<DataArray<bool>> m_GoodVoxelsPtr;
+  bool* m_GoodVoxels = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<bool>> m_ActivePtr;
+  bool* m_Active = nullptr;
+
+  QString m_CellFeatureAttributeMatrixName = {};
+  DataArrayPath m_ScalarArrayPath = {};
+  float m_ScalarTolerance = {};
+  bool m_RandomizeFeatureIds = {};
+  bool m_UseGoodVoxels = {};
+  DataArrayPath m_GoodVoxelsArrayPath = {};
+  QString m_FeatureIdsArrayName = {};
+  QString m_ActiveArrayName = {};
 
   std::shared_ptr<CompareFunctor> m_Compare;
 

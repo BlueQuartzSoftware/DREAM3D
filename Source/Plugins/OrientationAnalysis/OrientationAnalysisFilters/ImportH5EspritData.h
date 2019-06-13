@@ -34,8 +34,8 @@
 
 #include "EbsdLib/BrukerNano/EspritPhase.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
@@ -53,19 +53,60 @@ class OrientationAnalysis_EXPORT ImportH5EspritData : public ImportH5OimData
   Q_DECLARE_PRIVATE(ImportH5EspritData)
 
 public:
-  SIMPL_SHARED_POINTERS(ImportH5EspritData)
-  SIMPL_FILTER_NEW_MACRO(ImportH5EspritData)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ImportH5EspritData, ImportH5OimData)
+  using Self = ImportH5EspritData;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<ImportH5EspritData> New();
+
+  /**
+   * @brief Returns the name of the class for ImportH5EspritData
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ImportH5EspritData
+   */
+  static QString ClassName();
 
   ~ImportH5EspritData() override;
 
-  SIMPL_PIMPL_PROPERTY_DECL(Esprit_Private_Data, FileCacheData)
+  /**
+   * @brief Setter property for FileCacheData
+   */
+  void setFileCacheData(const Esprit_Private_Data& value);
+  /**
+   * @brief Getter property for FileCacheData
+   * @return Value of FileCacheData
+   */
+  Esprit_Private_Data getFileCacheData() const;
+
   Q_PROPERTY(Esprit_Private_Data FileCacheData READ getFileCacheData WRITE setFileCacheData)
 
-  SIMPL_FILTER_PARAMETER(bool, CombineEulerAngles)
+  /**
+   * @brief Setter property for CombineEulerAngles
+   */
+  void setCombineEulerAngles(const bool& value);
+  /**
+   * @brief Getter property for CombineEulerAngles
+   * @return Value of CombineEulerAngles
+   */
+  bool getCombineEulerAngles() const;
+
   Q_PROPERTY(bool CombineEulerAngles READ getCombineEulerAngles WRITE setCombineEulerAngles)
 
-  SIMPL_FILTER_PARAMETER(bool, DegreesToRadians)
+  /**
+   * @brief Setter property for DegreesToRadians
+   */
+  void setDegreesToRadians(const bool& value);
+  /**
+   * @brief Getter property for DegreesToRadians
+   * @return Value of DegreesToRadians
+   */
+  bool getDegreesToRadians() const;
+
   Q_PROPERTY(bool DegreesToRadians READ getDegreesToRadians WRITE setDegreesToRadians)
 
 
@@ -152,10 +193,17 @@ protected:
   void dataCheckOEM() override;
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
-  DEFINE_DATAARRAY_VARIABLE(uint8_t, CellPatternData)
-  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-  DEFINE_DATAARRAY_VARIABLE(float, LatticeConstants)
+  std::weak_ptr<DataArray<float>> m_CellEulerAnglesPtr;
+  float* m_CellEulerAngles = nullptr;
+  std::weak_ptr<DataArray<uint8_t>> m_CellPatternDataPtr;
+  uint8_t* m_CellPatternData = nullptr;
+  std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
+  uint32_t* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<float>> m_LatticeConstantsPtr;
+  float* m_LatticeConstants = nullptr;
+
+  bool m_CombineEulerAngles = {};
+  bool m_DegreesToRadians = {};
 
   QScopedPointer<ImportH5EspritDataPrivate> const d_ptr;
 

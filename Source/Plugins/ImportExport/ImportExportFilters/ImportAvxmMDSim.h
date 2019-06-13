@@ -4,7 +4,6 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
@@ -19,9 +18,23 @@ class ImportExport_EXPORT ImportAvxmMDSim : public AbstractFilter
   Q_OBJECT
 
 public:
-  SIMPL_SHARED_POINTERS(ImportAvxmMDSim)
-  SIMPL_FILTER_NEW_MACRO(ImportAvxmMDSim)
-  SIMPL_TYPE_MACRO_SUPER(ImportAvxmMDSim, AbstractFilter)
+  using Self = ImportAvxmMDSim;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<ImportAvxmMDSim> New();
+
+  /**
+   * @brief Returns the name of the class for _SUPERImportAvxmMDSim
+   */
+  const QString getNameOfClass() const;
+  /**
+   * @brief Returns the name of the class for _SUPERImportAvxmMDSim
+   */
+  static QString ClassName();
 
   ~ImportAvxmMDSim() override;
 
@@ -31,10 +44,28 @@ public:
     Space
   };
 
-  SIMPL_FILTER_PARAMETER(FileListInfo_t, InputFileListInfo)
+  /**
+   * @brief Setter property for InputFileListInfo
+   */
+  void setInputFileListInfo(const FileListInfo_t& value);
+  /**
+   * @brief Getter property for InputFileListInfo
+   * @return Value of InputFileListInfo
+   */
+  FileListInfo_t getInputFileListInfo() const;
+
   Q_PROPERTY(FileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
 
-  SIMPL_FILTER_PARAMETER(int, SeparatorChoice)
+  /**
+   * @brief Setter property for SeparatorChoice
+   */
+  void setSeparatorChoice(const int& value);
+  /**
+   * @brief Getter property for SeparatorChoice
+   * @return Value of SeparatorChoice
+   */
+  int getSeparatorChoice() const;
+
   Q_PROPERTY(int SeparatorChoice READ getSeparatorChoice WRITE setSeparatorChoice)
 
   /**
@@ -134,6 +165,9 @@ protected:
   void initialize();
 
 private:
+  FileListInfo_t m_InputFileListInfo = {};
+  int m_SeparatorChoice = {};
+
   QVector<QString> m_FilePathList;
 
   /**

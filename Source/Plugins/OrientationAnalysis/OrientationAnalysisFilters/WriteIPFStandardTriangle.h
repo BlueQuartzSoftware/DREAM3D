@@ -35,7 +35,6 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
@@ -54,19 +53,60 @@ class OrientationAnalysis_EXPORT WriteIPFStandardTriangle : public AbstractFilte
   // PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
   // PYB11_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
 public:
-  SIMPL_SHARED_POINTERS(WriteIPFStandardTriangle)
-  SIMPL_FILTER_NEW_MACRO(WriteIPFStandardTriangle)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(WriteIPFStandardTriangle, AbstractFilter)
+  using Self = WriteIPFStandardTriangle;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<WriteIPFStandardTriangle> New();
+
+  /**
+   * @brief Returns the name of the class for WriteIPFStandardTriangle
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for WriteIPFStandardTriangle
+   */
+  static QString ClassName();
 
   ~WriteIPFStandardTriangle() override;
 
-  SIMPL_FILTER_PARAMETER(int, LaueClass)
+  /**
+   * @brief Setter property for LaueClass
+   */
+  void setLaueClass(const int& value);
+  /**
+   * @brief Getter property for LaueClass
+   * @return Value of LaueClass
+   */
+  int getLaueClass() const;
+
   Q_PROPERTY(int LaueClass READ getLaueClass WRITE setLaueClass)
 
-  SIMPL_FILTER_PARAMETER(QString, OutputFile)
+  /**
+   * @brief Setter property for OutputFile
+   */
+  void setOutputFile(const QString& value);
+  /**
+   * @brief Getter property for OutputFile
+   * @return Value of OutputFile
+   */
+  QString getOutputFile() const;
+
   Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-  SIMPL_FILTER_PARAMETER(int, ImageSize)
+  /**
+   * @brief Setter property for ImageSize
+   */
+  void setImageSize(const int& value);
+  /**
+   * @brief Getter property for ImageSize
+   * @return Value of ImageSize
+   */
+  int getImageSize() const;
+
   Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
 
   enum ImageFormatType
@@ -201,5 +241,10 @@ public:
   WriteIPFStandardTriangle(WriteIPFStandardTriangle&&) = delete;      // Move Constructor Not Implemented
   WriteIPFStandardTriangle& operator=(const WriteIPFStandardTriangle&) = delete; // Copy Assignment Not Implemented
   WriteIPFStandardTriangle& operator=(WriteIPFStandardTriangle&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  int m_LaueClass = {};
+  QString m_OutputFile = {};
+  int m_ImageSize = {};
 };
 

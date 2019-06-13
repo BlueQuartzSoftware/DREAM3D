@@ -36,8 +36,8 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -71,37 +71,140 @@ class Statistics_EXPORT FindShapes : public AbstractFilter
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindShapes)
-  SIMPL_FILTER_NEW_MACRO(FindShapes)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindShapes, AbstractFilter)
+  using Self = FindShapes;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<FindShapes> New();
+
+  /**
+   * @brief Returns the name of the class for FindShapes
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindShapes
+   */
+  static QString ClassName();
 
   ~FindShapes() override;
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
+  /**
+   * @brief Setter property for CellFeatureAttributeMatrixName
+   */
+  void setCellFeatureAttributeMatrixName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellFeatureAttributeMatrixName
+   * @return Value of CellFeatureAttributeMatrixName
+   */
+  DataArrayPath getCellFeatureAttributeMatrixName() const;
+
   Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
+  // N x 6 Array
+  /**
+   * @brief Setter property for FeatureMomentsPtr
+   */
+  void setFeatureMomentsPtr(const std::shared_ptr<DataArray<double>>& value);
+  /**
+   * @brief Getter property for FeatureMomentsPtr
+   * @return Value of FeatureMomentsPtr
+   */
+  std::shared_ptr<DataArray<double>> getFeatureMomentsPtr() const;
 
-  SIMPL_DECLARE_ARRAY(double, m_FeatureMoments, FeatureMomentsPtr) // N x 6 Array
+  // N x 3 Array
+  /**
+   * @brief Setter property for FeatureEigenValsPtr
+   */
+  void setFeatureEigenValsPtr(const std::shared_ptr<DataArray<double>>& value);
+  /**
+   * @brief Getter property for FeatureEigenValsPtr
+   * @return Value of FeatureEigenValsPtr
+   */
+  std::shared_ptr<DataArray<double>> getFeatureEigenValsPtr() const;
 
-  SIMPL_DECLARE_ARRAY(double, m_FeatureEigenVals, FeatureEigenValsPtr) // N x 3 Array
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
+  /**
+   * @brief Setter property for CentroidsArrayPath
+   */
+  void setCentroidsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CentroidsArrayPath
+   * @return Value of CentroidsArrayPath
+   */
+  DataArrayPath getCentroidsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, Omega3sArrayName)
+  /**
+   * @brief Setter property for Omega3sArrayName
+   */
+  void setOmega3sArrayName(const QString& value);
+  /**
+   * @brief Getter property for Omega3sArrayName
+   * @return Value of Omega3sArrayName
+   */
+  QString getOmega3sArrayName() const;
+
   Q_PROPERTY(QString Omega3sArrayName READ getOmega3sArrayName WRITE setOmega3sArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, VolumesArrayName)
+  /**
+   * @brief Setter property for VolumesArrayName
+   */
+  void setVolumesArrayName(const QString& value);
+  /**
+   * @brief Getter property for VolumesArrayName
+   * @return Value of VolumesArrayName
+   */
+  QString getVolumesArrayName() const;
+
   Q_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, AxisLengthsArrayName)
+  /**
+   * @brief Setter property for AxisLengthsArrayName
+   */
+  void setAxisLengthsArrayName(const QString& value);
+  /**
+   * @brief Getter property for AxisLengthsArrayName
+   * @return Value of AxisLengthsArrayName
+   */
+  QString getAxisLengthsArrayName() const;
+
   Q_PROPERTY(QString AxisLengthsArrayName READ getAxisLengthsArrayName WRITE setAxisLengthsArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, AxisEulerAnglesArrayName)
+  /**
+   * @brief Setter property for AxisEulerAnglesArrayName
+   */
+  void setAxisEulerAnglesArrayName(const QString& value);
+  /**
+   * @brief Getter property for AxisEulerAnglesArrayName
+   * @return Value of AxisEulerAnglesArrayName
+   */
+  QString getAxisEulerAnglesArrayName() const;
+
   Q_PROPERTY(QString AxisEulerAnglesArrayName READ getAxisEulerAnglesArrayName WRITE setAxisEulerAnglesArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, AspectRatiosArrayName)
+  /**
+   * @brief Setter property for AspectRatiosArrayName
+   */
+  void setAspectRatiosArrayName(const QString& value);
+  /**
+   * @brief Getter property for AspectRatiosArrayName
+   * @return Value of AspectRatiosArrayName
+   */
+  QString getAspectRatiosArrayName() const;
+
   Q_PROPERTY(QString AspectRatiosArrayName READ getAspectRatiosArrayName WRITE setAspectRatiosArrayName)
 
   /**
@@ -235,14 +338,32 @@ protected:
   void find_axiseulers2D();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(float, Centroids)
-
-  DEFINE_DATAARRAY_VARIABLE(float, AxisEulerAngles)
-  DEFINE_DATAARRAY_VARIABLE(float, AxisLengths)
-  DEFINE_DATAARRAY_VARIABLE(float, Omega3s)
-  DEFINE_DATAARRAY_VARIABLE(float, Volumes)
-  DEFINE_DATAARRAY_VARIABLE(float, AspectRatios)
+  DataArrayPath m_CellFeatureAttributeMatrixName = {};
+  std::shared_ptr<DataArray<double>> m_FeatureMomentsPtr;
+  double* m_FeatureMoments = nullptr;
+  std::shared_ptr<DataArray<double>> m_FeatureEigenValsPtr;
+  double* m_FeatureEigenVals = nullptr;
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_CentroidsArrayPath = {};
+  QString m_Omega3sArrayName = {};
+  QString m_VolumesArrayName = {};
+  QString m_AxisLengthsArrayName = {};
+  QString m_AxisEulerAnglesArrayName = {};
+  QString m_AspectRatiosArrayName = {};
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<float>> m_CentroidsPtr;
+  float* m_Centroids = nullptr;
+  std::weak_ptr<DataArray<float>> m_AxisEulerAnglesPtr;
+  float* m_AxisEulerAngles = nullptr;
+  std::weak_ptr<DataArray<float>> m_AxisLengthsPtr;
+  float* m_AxisLengths = nullptr;
+  std::weak_ptr<DataArray<float>> m_Omega3sPtr;
+  float* m_Omega3s = nullptr;
+  std::weak_ptr<DataArray<float>> m_VolumesPtr;
+  float* m_Volumes = nullptr;
+  std::weak_ptr<DataArray<float>> m_AspectRatiosPtr;
+  float* m_AspectRatios = nullptr;
 
   double m_ScaleFactor;
 

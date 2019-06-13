@@ -42,12 +42,18 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include <QtCore/QTextStream>
+
+#include <QtCore/QDebug>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -294,4 +300,57 @@ const QString ChangeAngleRepresentation::getSubGroupName() const
 const QString ChangeAngleRepresentation::getHumanLabel() const
 {
   return "Convert Angles to Degrees or Radians";
+}
+
+// -----------------------------------------------------------------------------
+ChangeAngleRepresentation::Pointer ChangeAngleRepresentation::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ChangeAngleRepresentation> ChangeAngleRepresentation::New()
+{
+  struct make_shared_enabler : public ChangeAngleRepresentation
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+const QString ChangeAngleRepresentation::getNameOfClass() const
+{
+  return QString("ChangeAngleRepresentation");
+}
+
+// -----------------------------------------------------------------------------
+QString ChangeAngleRepresentation::ClassName()
+{
+  return QString("ChangeAngleRepresentation");
+}
+
+// -----------------------------------------------------------------------------
+void ChangeAngleRepresentation::setConversionType(const int& value)
+{
+  m_ConversionType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ChangeAngleRepresentation::getConversionType() const
+{
+  return m_ConversionType;
+}
+
+// -----------------------------------------------------------------------------
+void ChangeAngleRepresentation::setCellEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_CellEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ChangeAngleRepresentation::getCellEulerAnglesArrayPath() const
+{
+  return m_CellEulerAnglesArrayPath;
 }

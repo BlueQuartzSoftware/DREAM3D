@@ -37,9 +37,9 @@
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/PhaseType.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/FileReader.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -67,25 +67,84 @@ class OrientationAnalysis_EXPORT EnsembleInfoReader : public FileReader
 #endif
 
 public:
-  SIMPL_SHARED_POINTERS(EnsembleInfoReader)
-  SIMPL_FILTER_NEW_MACRO(EnsembleInfoReader)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(EnsembleInfoReader, FileReader)
+  using Self = EnsembleInfoReader;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static std::shared_ptr<EnsembleInfoReader> New();
+
+  /**
+   * @brief Returns the name of the class for EnsembleInfoReader
+   */
+  const QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for EnsembleInfoReader
+   */
+  static QString ClassName();
 
   virtual ~EnsembleInfoReader();
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  DataArrayPath getDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+  /**
+   * @brief Setter property for CellEnsembleAttributeMatrixName
+   */
+  void setCellEnsembleAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellEnsembleAttributeMatrixName
+   * @return Value of CellEnsembleAttributeMatrixName
+   */
+  QString getCellEnsembleAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  /**
+   * @brief Setter property for InputFile
+   */
+  void setInputFile(const QString& value);
+  /**
+   * @brief Getter property for InputFile
+   * @return Value of InputFile
+   */
+  QString getInputFile() const;
+
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-  SIMPL_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
+  /**
+   * @brief Setter property for CrystalStructuresArrayName
+   */
+  void setCrystalStructuresArrayName(const QString& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayName
+   * @return Value of CrystalStructuresArrayName
+   */
+  QString getCrystalStructuresArrayName() const;
+
   Q_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, PhaseTypesArrayName)
+  /**
+   * @brief Setter property for PhaseTypesArrayName
+   */
+  void setPhaseTypesArrayName(const QString& value);
+  /**
+   * @brief Getter property for PhaseTypesArrayName
+   * @return Value of PhaseTypesArrayName
+   */
+  QString getPhaseTypesArrayName() const;
+
   Q_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
 
   /**
@@ -183,8 +242,16 @@ protected:
   void ensembleLookup(QStringList values);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-  DEFINE_DATAARRAY_VARIABLE(PhaseType::EnumType, PhaseTypes)
+  std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
+  uint32_t* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<PhaseType::EnumType>> m_PhaseTypesPtr;
+  PhaseType::EnumType* m_PhaseTypes = nullptr;
+
+  DataArrayPath m_DataContainerName = {};
+  QString m_CellEnsembleAttributeMatrixName = {};
+  QString m_InputFile = {};
+  QString m_CrystalStructuresArrayName = {};
+  QString m_PhaseTypesArrayName = {};
 
   PhaseType::Type m_ptype;
   uint32_t m_crystruct;
