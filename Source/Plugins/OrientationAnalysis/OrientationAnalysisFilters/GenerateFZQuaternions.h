@@ -21,6 +21,14 @@ class OrientationAnalysis_EXPORT GenerateFZQuaternions : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(GenerateFZQuaternions SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(GenerateFZQuaternions)
+  PYB11_FILTER_NEW_MACRO(GenerateFZQuaternions)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(bool, UseGoodVoxels)
+  PYB11_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FZQuatsArrayPath)
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)

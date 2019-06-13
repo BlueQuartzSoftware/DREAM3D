@@ -50,6 +50,13 @@ class SyntheticBuilding_EXPORT AddBadData : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(AddBadData SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(AddBadData)
+  PYB11_FILTER_NEW_MACRO(AddBadData)
+  PYB11_FILTER_PARAMETER(DataArrayPath, GBEuclideanDistancesArrayPath)
+  PYB11_FILTER_PARAMETER(bool, PoissonNoise)
+  PYB11_FILTER_PARAMETER(float, PoissonVolFraction)
+  PYB11_FILTER_PARAMETER(bool, BoundaryNoise)
+  PYB11_FILTER_PARAMETER(float, BoundaryVolFraction)
   PYB11_PROPERTY(DataArrayPath GBEuclideanDistancesArrayPath READ getGBEuclideanDistancesArrayPath WRITE setGBEuclideanDistancesArrayPath)
   PYB11_PROPERTY(bool PoissonNoise READ getPoissonNoise WRITE setPoissonNoise)
   PYB11_PROPERTY(float PoissonVolFraction READ getPoissonVolFraction WRITE setPoissonVolFraction)

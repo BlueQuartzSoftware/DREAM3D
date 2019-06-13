@@ -51,6 +51,9 @@ class ImportExport_EXPORT PhWriter : public FileWriter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(PhWriter SUPERCLASS FileWriter)
+  PYB11_SHARED_POINTERS(PhWriter)
+  PYB11_FILTER_NEW_MACRO(PhWriter)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 #endif
 

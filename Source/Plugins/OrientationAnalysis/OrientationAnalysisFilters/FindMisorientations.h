@@ -53,6 +53,15 @@ class OrientationAnalysis_EXPORT FindMisorientations : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindMisorientations SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindMisorientations)
+  PYB11_FILTER_NEW_MACRO(FindMisorientations)
+  PYB11_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
+  PYB11_FILTER_PARAMETER(QString, MisorientationListArrayName)
+  PYB11_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(QString, AvgMisorientationsArrayName)
+  PYB11_FILTER_PARAMETER(bool, FindAvgMisors)
   PYB11_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
   PYB11_PROPERTY(QString MisorientationListArrayName READ getMisorientationListArrayName WRITE setMisorientationListArrayName)
   PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)

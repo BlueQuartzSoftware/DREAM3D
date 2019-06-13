@@ -53,6 +53,18 @@ class OrientationAnalysis_EXPORT FindTwinBoundarySchmidFactors : public Abstract
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindTwinBoundarySchmidFactors SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindTwinBoundarySchmidFactors)
+  PYB11_FILTER_NEW_MACRO(FindTwinBoundarySchmidFactors)
+  PYB11_FILTER_PARAMETER(bool, WriteFile)
+  PYB11_FILTER_PARAMETER(QString, TwinBoundarySchmidFactorsFile)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, LoadingDir)
+  PYB11_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTwinBoundaryArrayPath)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshTwinBoundarySchmidFactorsArrayName)
   PYB11_PROPERTY(bool WriteFile READ getWriteFile WRITE setWriteFile)
   PYB11_PROPERTY(QString TwinBoundarySchmidFactorsFile READ getTwinBoundarySchmidFactorsFile WRITE setTwinBoundarySchmidFactorsFile)
   PYB11_PROPERTY(FloatVec3Type LoadingDir READ getLoadingDir WRITE setLoadingDir)

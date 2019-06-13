@@ -58,6 +58,15 @@ class ImportExport_EXPORT SurfaceMeshToVtk : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(SurfaceMeshToVtk SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(SurfaceMeshToVtk)
+  PYB11_FILTER_NEW_MACRO(SurfaceMeshToVtk)
+  PYB11_FILTER_PARAMETER(QString, OutputVtkFile)
+  PYB11_FILTER_PARAMETER(bool, WriteBinaryFile)
+  PYB11_FILTER_PARAMETER(bool, WriteConformalMesh)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshNodeTypeArrayPath)
+  PYB11_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedFaceArrays)
+  PYB11_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedVertexArrays)
   PYB11_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile)
   PYB11_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
   PYB11_PROPERTY(bool WriteConformalMesh READ getWriteConformalMesh WRITE setWriteConformalMesh)

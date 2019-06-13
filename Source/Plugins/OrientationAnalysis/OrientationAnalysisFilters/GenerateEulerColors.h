@@ -58,6 +58,14 @@ class OrientationAnalysis_EXPORT GenerateEulerColors : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(GenerateEulerColors SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(GenerateEulerColors)
+  PYB11_FILTER_NEW_MACRO(GenerateEulerColors)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, CellEulerColorsArrayName)
+  PYB11_FILTER_PARAMETER(bool, UseGoodVoxels)
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
   PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)

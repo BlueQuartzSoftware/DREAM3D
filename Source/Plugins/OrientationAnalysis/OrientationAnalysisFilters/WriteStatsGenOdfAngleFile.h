@@ -57,6 +57,17 @@ class OrientationAnalysis_EXPORT WriteStatsGenOdfAngleFile : public AbstractFilt
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(WriteStatsGenOdfAngleFile SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(WriteStatsGenOdfAngleFile)
+  PYB11_FILTER_NEW_MACRO(WriteStatsGenOdfAngleFile)
+  PYB11_FILTER_PARAMETER(QString, OutputFile)
+  PYB11_FILTER_PARAMETER(float, Weight)
+  PYB11_FILTER_PARAMETER(int, Sigma)
+  PYB11_FILTER_PARAMETER(int, Delimiter)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  PYB11_FILTER_PARAMETER(bool, ConvertToDegrees)
+  PYB11_FILTER_PARAMETER(bool, UseGoodVoxels)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
   PYB11_PROPERTY(float Weight READ getWeight WRITE setWeight)
   PYB11_PROPERTY(int Sigma READ getSigma WRITE setSigma)

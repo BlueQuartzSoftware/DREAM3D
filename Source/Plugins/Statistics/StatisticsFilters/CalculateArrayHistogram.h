@@ -50,6 +50,18 @@ class Statistics_EXPORT CalculateArrayHistogram : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(CalculateArrayHistogram SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(CalculateArrayHistogram)
+  PYB11_FILTER_NEW_MACRO(CalculateArrayHistogram)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
+  PYB11_FILTER_PARAMETER(int, NumberOfBins)
+  PYB11_FILTER_PARAMETER(double, MinRange)
+  PYB11_FILTER_PARAMETER(double, MaxRange)
+  PYB11_FILTER_PARAMETER(bool, UserDefinedRange)
+  PYB11_FILTER_PARAMETER(bool, Normalize)
+  PYB11_FILTER_PARAMETER(QString, NewAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, NewDataArrayName)
+  PYB11_FILTER_PARAMETER(bool, NewDataContainer)
+  PYB11_FILTER_PARAMETER(DataArrayPath, NewDataContainerName)
   PYB11_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
   PYB11_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
   PYB11_PROPERTY(double MinRange READ getMinRange WRITE setMinRange)

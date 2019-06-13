@@ -54,6 +54,17 @@ class Sampling_EXPORT UncertainRegularGridSampleSurfaceMesh : public SampleSurfa
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(UncertainRegularGridSampleSurfaceMesh SUPERCLASS SampleSurfaceMesh)
+  PYB11_SHARED_POINTERS(UncertainRegularGridSampleSurfaceMesh)
+  PYB11_FILTER_NEW_MACRO(UncertainRegularGridSampleSurfaceMesh)
+  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(int, XPoints)
+  PYB11_FILTER_PARAMETER(int, YPoints)
+  PYB11_FILTER_PARAMETER(int, ZPoints)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, Uncertainty)
+  PYB11_FILTER_PARAMETER(QString, FeatureIdsArrayName)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(int XPoints READ getXPoints WRITE setXPoints)

@@ -53,6 +53,18 @@ class Sampling_EXPORT WarpRegularGrid : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(WarpRegularGrid SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(WarpRegularGrid)
+  PYB11_FILTER_NEW_MACRO(WarpRegularGrid)
+  PYB11_FILTER_PARAMETER(DataArrayPath, NewDataContainerName)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
+  PYB11_FILTER_PARAMETER(int, PolyOrder)
+  PYB11_FILTER_PARAMETER(Float2ndOrderPoly_t, SecondOrderACoeff)
+  PYB11_FILTER_PARAMETER(Float2ndOrderPoly_t, SecondOrderBCoeff)
+  PYB11_FILTER_PARAMETER(Float3rdOrderPoly_t, ThirdOrderACoeff)
+  PYB11_FILTER_PARAMETER(Float3rdOrderPoly_t, ThirdOrderBCoeff)
+  PYB11_FILTER_PARAMETER(Float4thOrderPoly_t, FourthOrderACoeff)
+  PYB11_FILTER_PARAMETER(Float4thOrderPoly_t, FourthOrderBCoeff)
+  PYB11_FILTER_PARAMETER(bool, SaveAsNewDataContainer)
   PYB11_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
   PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
   PYB11_PROPERTY(int PolyOrder READ getPolyOrder WRITE setPolyOrder)

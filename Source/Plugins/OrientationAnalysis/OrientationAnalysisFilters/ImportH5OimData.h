@@ -62,6 +62,18 @@ class OrientationAnalysis_EXPORT ImportH5OimData : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ImportH5OimData SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(ImportH5OimData)
+  PYB11_FILTER_NEW_MACRO(ImportH5OimData)
+  PYB11_FILTER_PARAMETER(QString, InputFile)
+  PYB11_FILTER_PARAMETER(QStringList, SelectedScanNames)
+  PYB11_FILTER_PARAMETER(int, NumberOfScans)
+  PYB11_FILTER_PARAMETER(double, ZSpacing)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
+  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  PYB11_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(bool, ReadPatternData)
+  PYB11_FILTER_PARAMETER(bool, FileWasRead)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(QStringList SelectedScanNames READ getSelectedScanNames WRITE setSelectedScanNames)
   PYB11_PROPERTY(int NumberOfScans READ getNumberOfScans WRITE setNumberOfScans)

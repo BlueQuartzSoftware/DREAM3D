@@ -53,6 +53,10 @@ class Processing_EXPORT IdentifySample : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(IdentifySample SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(IdentifySample)
+  PYB11_FILTER_NEW_MACRO(IdentifySample)
+  PYB11_FILTER_PARAMETER(bool, FillHoles)
+  PYB11_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
   PYB11_PROPERTY(bool FillHoles READ getFillHoles WRITE setFillHoles)
   PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 #endif

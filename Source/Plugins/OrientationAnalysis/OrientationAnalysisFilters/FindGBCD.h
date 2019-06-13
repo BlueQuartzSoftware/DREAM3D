@@ -51,6 +51,17 @@ class OrientationAnalysis_EXPORT FindGBCD : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindGBCD SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindGBCD)
+  PYB11_FILTER_NEW_MACRO(FindGBCD)
+  PYB11_FILTER_PARAMETER(QString, FaceEnsembleAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(float, GBCDRes)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceAreasArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(QString, GBCDArrayName)
   PYB11_PROPERTY(QString FaceEnsembleAttributeMatrixName READ getFaceEnsembleAttributeMatrixName WRITE setFaceEnsembleAttributeMatrixName)
   PYB11_PROPERTY(float GBCDRes READ getGBCDRes WRITE setGBCDRes)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)

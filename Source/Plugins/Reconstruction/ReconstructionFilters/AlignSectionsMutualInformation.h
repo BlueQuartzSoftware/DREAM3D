@@ -54,6 +54,14 @@ class Reconstruction_EXPORT AlignSectionsMutualInformation : public AlignSection
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(AlignSectionsMutualInformation SUPERCLASS AlignSections)
+  PYB11_SHARED_POINTERS(AlignSectionsMutualInformation)
+  PYB11_FILTER_NEW_MACRO(AlignSectionsMutualInformation)
+  PYB11_FILTER_PARAMETER(float, MisorientationTolerance)
+  PYB11_FILTER_PARAMETER(bool, UseGoodVoxels)
+  PYB11_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
   PYB11_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
   PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
   PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)

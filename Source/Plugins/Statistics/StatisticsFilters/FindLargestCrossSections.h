@@ -50,6 +50,11 @@ class Statistics_EXPORT FindLargestCrossSections : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindLargestCrossSections SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindLargestCrossSections)
+  PYB11_FILTER_NEW_MACRO(FindLargestCrossSections)
+  PYB11_FILTER_PARAMETER(unsigned int, Plane)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, LargestCrossSectionsArrayPath)
   PYB11_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath LargestCrossSectionsArrayPath READ getLargestCrossSectionsArrayPath WRITE setLargestCrossSectionsArrayPath)

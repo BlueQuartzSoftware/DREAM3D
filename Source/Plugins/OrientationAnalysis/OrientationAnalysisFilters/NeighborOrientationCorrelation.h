@@ -52,6 +52,16 @@ class OrientationAnalysis_EXPORT NeighborOrientationCorrelation : public Abstrac
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(NeighborOrientationCorrelation SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(NeighborOrientationCorrelation)
+  PYB11_FILTER_NEW_MACRO(NeighborOrientationCorrelation)
+  PYB11_FILTER_PARAMETER(float, MisorientationTolerance)
+  PYB11_FILTER_PARAMETER(float, MinConfidence)
+  PYB11_FILTER_PARAMETER(int, Level)
+  PYB11_FILTER_PARAMETER(DataArrayPath, ConfidenceIndexArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+  PYB11_FILTER_PARAMETER(QVector<DataArrayPath>, IgnoredDataArrayPaths)
   PYB11_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
   PYB11_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence)
   PYB11_PROPERTY(int Level READ getLevel WRITE setLevel)

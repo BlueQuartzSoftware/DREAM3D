@@ -66,6 +66,14 @@ class Reconstruction_EXPORT SineParamsSegmentFeatures : public SegmentFeatures
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(SineParamsSegmentFeatures SUPERCLASS SegmentFeatures)
+  PYB11_SHARED_POINTERS(SineParamsSegmentFeatures)
+  PYB11_FILTER_NEW_MACRO(SineParamsSegmentFeatures)
+  PYB11_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SineParamsArrayPath)
+  PYB11_FILTER_PARAMETER(bool, UseGoodVoxels)
+  PYB11_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+  PYB11_FILTER_PARAMETER(QString, ActiveArrayName)
   PYB11_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
   PYB11_PROPERTY(DataArrayPath SineParamsArrayPath READ getSineParamsArrayPath WRITE setSineParamsArrayPath)
   PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)

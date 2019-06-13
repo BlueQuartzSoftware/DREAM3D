@@ -52,6 +52,11 @@ class SurfaceMeshing_EXPORT GenerateGeometryConnectivity : public SurfaceMeshFil
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(GenerateGeometryConnectivity SUPERCLASS SurfaceMeshFilter)
+  PYB11_SHARED_POINTERS(GenerateGeometryConnectivity)
+  PYB11_FILTER_NEW_MACRO(GenerateGeometryConnectivity)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceDataContainerName)
+  PYB11_FILTER_PARAMETER(bool, GenerateVertexTriangleLists)
+  PYB11_FILTER_PARAMETER(bool, GenerateTriangleNeighbors)
   PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
   PYB11_PROPERTY(bool GenerateVertexTriangleLists READ getGenerateVertexTriangleLists WRITE setGenerateVertexTriangleLists)
   PYB11_PROPERTY(bool GenerateTriangleNeighbors READ getGenerateTriangleNeighbors WRITE setGenerateTriangleNeighbors)

@@ -19,6 +19,10 @@ class Reconstruction_EXPORT ComputeFeatureRect : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ComputeFeatureRect SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(ComputeFeatureRect)
+  PYB11_FILTER_NEW_MACRO(ComputeFeatureRect)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureRectArrayPath)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath FeatureRectArrayPath READ getFeatureRectArrayPath WRITE setFeatureRectArrayPath)
 #endif

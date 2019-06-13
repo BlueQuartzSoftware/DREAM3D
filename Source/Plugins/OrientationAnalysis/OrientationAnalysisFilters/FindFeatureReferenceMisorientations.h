@@ -51,6 +51,17 @@ class OrientationAnalysis_EXPORT FindFeatureReferenceMisorientations : public Ab
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindFeatureReferenceMisorientations SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindFeatureReferenceMisorientations)
+  PYB11_FILTER_NEW_MACRO(FindFeatureReferenceMisorientations)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, GBEuclideanDistancesArrayPath)
+  PYB11_FILTER_PARAMETER(QString, FeatureAvgMisorientationsArrayName)
+  PYB11_FILTER_PARAMETER(QString, FeatureReferenceMisorientationsArrayName)
+  PYB11_FILTER_PARAMETER(int, ReferenceOrientation)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)

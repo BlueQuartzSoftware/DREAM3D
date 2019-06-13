@@ -50,6 +50,14 @@ class Processing_EXPORT ErodeDilateMask : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ErodeDilateMask SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(ErodeDilateMask)
+  PYB11_FILTER_NEW_MACRO(ErodeDilateMask)
+  PYB11_FILTER_PARAMETER(unsigned int, Direction)
+  PYB11_FILTER_PARAMETER(int, NumIterations)
+  PYB11_FILTER_PARAMETER(bool, XDirOn)
+  PYB11_FILTER_PARAMETER(bool, YDirOn)
+  PYB11_FILTER_PARAMETER(bool, ZDirOn)
+  PYB11_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
   PYB11_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)
   PYB11_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations)
   PYB11_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn)

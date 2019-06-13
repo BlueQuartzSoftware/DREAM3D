@@ -50,6 +50,12 @@ class Generic_EXPORT FindBoundaryCells : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindBoundaryCells SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindBoundaryCells)
+  PYB11_FILTER_NEW_MACRO(FindBoundaryCells)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, BoundaryCellsArrayName)
+  PYB11_FILTER_PARAMETER(bool, IgnoreFeatureZero)
+  PYB11_FILTER_PARAMETER(bool, IncludeVolumeBoundary)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(QString BoundaryCellsArrayName READ getBoundaryCellsArrayName WRITE setBoundaryCellsArrayName)
   PYB11_PROPERTY(bool IgnoreFeatureZero READ getIgnoreFeatureZero WRITE setIgnoreFeatureZero)

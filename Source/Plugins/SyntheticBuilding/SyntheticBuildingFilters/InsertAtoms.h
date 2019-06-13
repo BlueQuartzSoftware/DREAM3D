@@ -51,6 +51,15 @@ class SyntheticBuilding_EXPORT InsertAtoms : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(InsertAtoms SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(InsertAtoms)
+  PYB11_FILTER_NEW_MACRO(InsertAtoms)
+  PYB11_FILTER_PARAMETER(DataArrayPath, VertexDataContainerName)
+  PYB11_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, LatticeConstants)
+  PYB11_FILTER_PARAMETER(int, Basis)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, AtomFeatureLabelsArrayName)
   PYB11_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
   PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
   PYB11_PROPERTY(FloatVec3Type LatticeConstants READ getLatticeConstants WRITE setLatticeConstants)

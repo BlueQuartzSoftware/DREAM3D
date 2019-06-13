@@ -53,6 +53,14 @@ class OrientationAnalysis_EXPORT CreateEnsembleInfo : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(CreateEnsembleInfo SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(CreateEnsembleInfo)
+  PYB11_FILTER_NEW_MACRO(CreateEnsembleInfo)
+  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  PYB11_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(EnsembleInfo, Ensemble)
+  PYB11_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
+  PYB11_FILTER_PARAMETER(QString, PhaseTypesArrayName)
+  PYB11_FILTER_PARAMETER(QString, PhaseNamesArrayName)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
   PYB11_PROPERTY(EnsembleInfo Ensemble READ getEnsemble WRITE setEnsemble)

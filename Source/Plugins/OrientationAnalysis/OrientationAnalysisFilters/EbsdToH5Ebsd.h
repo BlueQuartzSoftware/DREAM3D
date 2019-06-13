@@ -54,6 +54,15 @@ class OrientationAnalysis_EXPORT EbsdToH5Ebsd : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(EbsdToH5Ebsd SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(EbsdToH5Ebsd)
+  PYB11_FILTER_NEW_MACRO(EbsdToH5Ebsd)
+  PYB11_FILTER_PARAMETER(QString, InputPath)
+  PYB11_FILTER_PARAMETER(QString, FilePrefix)
+  PYB11_FILTER_PARAMETER(QString, FileSuffix)
+  PYB11_FILTER_PARAMETER(QString, FileExtension)
+  PYB11_FILTER_PARAMETER(int, PaddingDigits)
+  PYB11_FILTER_PARAMETER(AxisAngleInput_t, SampleTransformation)
+  PYB11_FILTER_PARAMETER(AxisAngleInput_t, EulerTransformation)
   PYB11_PROPERTY(QString InputPath READ getInputPath WRITE setInputPath)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
   PYB11_PROPERTY(QString FilePrefix READ getFilePrefix WRITE setFilePrefix)

@@ -50,6 +50,12 @@ class Generic_EXPORT GenerateVectorColors : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(GenerateVectorColors SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(GenerateVectorColors)
+  PYB11_FILTER_NEW_MACRO(GenerateVectorColors)
+  PYB11_FILTER_PARAMETER(DataArrayPath, VectorsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, CellVectorColorsArrayName)
+  PYB11_FILTER_PARAMETER(bool, UseGoodVoxels)
   PYB11_PROPERTY(DataArrayPath VectorsArrayPath READ getVectorsArrayPath WRITE setVectorsArrayPath)
   PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
   PYB11_PROPERTY(QString CellVectorColorsArrayName READ getCellVectorColorsArrayName WRITE setCellVectorColorsArrayName)

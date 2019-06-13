@@ -61,6 +61,13 @@ class OrientationAnalysis_EXPORT FindOrientationFieldCurl : public AbstractFilte
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindOrientationFieldCurl SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindOrientationFieldCurl)
+  PYB11_FILTER_NEW_MACRO(FindOrientationFieldCurl)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, DislocationTensorsArrayName)
+  PYB11_FILTER_PARAMETER(IntVec3Type, CurlSize)
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
   PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)

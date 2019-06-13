@@ -50,6 +50,10 @@ class Sampling_EXPORT NearestPointFuseRegularGrids : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(NearestPointFuseRegularGrids SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(NearestPointFuseRegularGrids)
+  PYB11_FILTER_NEW_MACRO(NearestPointFuseRegularGrids)
+  PYB11_FILTER_PARAMETER(DataArrayPath, ReferenceCellAttributeMatrixPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SamplingCellAttributeMatrixPath)
   PYB11_PROPERTY(DataArrayPath ReferenceCellAttributeMatrixPath READ getReferenceCellAttributeMatrixPath WRITE setReferenceCellAttributeMatrixPath)
   PYB11_PROPERTY(DataArrayPath SamplingCellAttributeMatrixPath READ getSamplingCellAttributeMatrixPath WRITE setSamplingCellAttributeMatrixPath)
 #endif

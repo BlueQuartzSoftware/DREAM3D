@@ -50,6 +50,13 @@ class ImportExport_EXPORT WriteStlFile : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(WriteStlFile SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(WriteStlFile)
+  PYB11_FILTER_NEW_MACRO(WriteStlFile)
+  PYB11_FILTER_PARAMETER(QString, OutputStlDirectory)
+  PYB11_FILTER_PARAMETER(QString, OutputStlPrefix)
+  PYB11_FILTER_PARAMETER(bool, GroupByPhase)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFacePhasesArrayPath)
   PYB11_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory)
   PYB11_PROPERTY(QString OutputStlPrefix READ getOutputStlPrefix WRITE setOutputStlPrefix)
   PYB11_PROPERTY(bool GroupByPhase READ getGroupByPhase WRITE setGroupByPhase)

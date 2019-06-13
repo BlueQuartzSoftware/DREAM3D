@@ -52,6 +52,10 @@ class Reconstruction_EXPORT AlignSectionsList : public AlignSections
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(AlignSectionsList SUPERCLASS AlignSections)
+  PYB11_SHARED_POINTERS(AlignSectionsList)
+  PYB11_FILTER_NEW_MACRO(AlignSectionsList)
+  PYB11_FILTER_PARAMETER(QString, InputFile)
+  PYB11_FILTER_PARAMETER(bool, DREAM3DAlignmentFile)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(bool DREAM3DAlignmentFile READ getDREAM3DAlignmentFile WRITE setDREAM3DAlignmentFile)
 #endif

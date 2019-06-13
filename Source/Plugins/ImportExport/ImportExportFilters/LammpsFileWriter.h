@@ -60,6 +60,10 @@ class ImportExport_EXPORT LammpsFileWriter : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(LammpsFileWriter SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(LammpsFileWriter)
+  PYB11_FILTER_NEW_MACRO(LammpsFileWriter)
+  PYB11_FILTER_PARAMETER(DataArrayPath, VertexDataContainerName)
+  PYB11_FILTER_PARAMETER(QString, LammpsFile)
   PYB11_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
   PYB11_PROPERTY(QString LammpsFile READ getLammpsFile WRITE setLammpsFile)
 #endif

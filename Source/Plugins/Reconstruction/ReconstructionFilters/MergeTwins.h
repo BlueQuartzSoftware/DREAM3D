@@ -54,6 +54,18 @@ class Reconstruction_EXPORT MergeTwins : public GroupFeatures
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(MergeTwins SUPERCLASS GroupFeatures)
+  PYB11_SHARED_POINTERS(MergeTwins)
+  PYB11_FILTER_NEW_MACRO(MergeTwins)
+  PYB11_FILTER_PARAMETER(QString, NewCellFeatureAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(float, AxisTolerance)
+  PYB11_FILTER_PARAMETER(float, AngleTolerance)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(QString, CellParentIdsArrayName)
+  PYB11_FILTER_PARAMETER(QString, FeatureParentIdsArrayName)
+  PYB11_FILTER_PARAMETER(QString, ActiveArrayName)
   PYB11_PROPERTY(QString NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
   PYB11_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance)
   PYB11_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)

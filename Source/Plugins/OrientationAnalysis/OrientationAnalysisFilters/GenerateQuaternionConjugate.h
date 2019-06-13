@@ -20,6 +20,11 @@ class OrientationAnalysis_EXPORT GenerateQuaternionConjugate : public AbstractFi
 
 #ifdef SIMPL_ENABLE_PYTHON
     PYB11_CREATE_BINDINGS(GenerateQuaternionConjugate SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(GenerateQuaternionConjugate)
+  PYB11_FILTER_NEW_MACRO(GenerateQuaternionConjugate)
+  PYB11_FILTER_PARAMETER(DataArrayPath, QuaternionDataArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, OutputDataArrayPath)
+  PYB11_FILTER_PARAMETER(bool, DeleteOriginalData)
     PYB11_PROPERTY(DataArrayPath QuaternionDataArrayPath READ getQuaternionDataArrayPath WRITE setQuaternionDataArrayPath)
     PYB11_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)
     PYB11_PROPERTY(bool DeleteOriginalData READ getDeleteOriginalData WRITE setDeleteOriginalData)

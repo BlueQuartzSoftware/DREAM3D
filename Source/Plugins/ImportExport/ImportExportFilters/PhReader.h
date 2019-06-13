@@ -55,6 +55,15 @@ class ImportExport_EXPORT PhReader : public FileReader
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(PhReader SUPERCLASS FileReader)
+  PYB11_SHARED_POINTERS(PhReader)
+  PYB11_FILTER_NEW_MACRO(PhReader)
+  PYB11_FILTER_PARAMETER(DataArrayPath, VolumeDataContainerName)
+  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, InputFile)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  PYB11_FILTER_PARAMETER(bool, FileWasRead)
+  PYB11_FILTER_PARAMETER(QString, FeatureIdsArrayName)
   PYB11_PROPERTY(DataArrayPath VolumeDataContainerName READ getVolumeDataContainerName WRITE setVolumeDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)

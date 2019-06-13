@@ -49,6 +49,13 @@ class OrientationAnalysis_EXPORT ReplaceElementAttributesWithNeighborValues : pu
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ReplaceElementAttributesWithNeighborValues SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(ReplaceElementAttributesWithNeighborValues)
+  PYB11_FILTER_NEW_MACRO(ReplaceElementAttributesWithNeighborValues)
+  PYB11_FILTER_PARAMETER(float, MinConfidence)
+  PYB11_FILTER_PARAMETER(bool, Loop)
+  PYB11_FILTER_PARAMETER(DataArrayPath, ConfidenceIndexArrayPath)
+  PYB11_FILTER_PARAMETER(int, SelectedComparison)
+  PYB11_FILTER_PARAMETER(QVector<DataArrayPath>, IgnoredDataArrayPaths)
   PYB11_PROPERTY(float MinConfidence READ getMinConfidence WRITE setMinConfidence)
   PYB11_PROPERTY(bool Loop READ getLoop WRITE setLoop)
   PYB11_PROPERTY(DataArrayPath ConfidenceIndexArrayPath READ getConfidenceIndexArrayPath WRITE setConfidenceIndexArrayPath)

@@ -52,6 +52,9 @@ class SurfaceMeshing_EXPORT ReverseTriangleWinding : public SurfaceMeshFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ReverseTriangleWinding SUPERCLASS SurfaceMeshFilter)
+  PYB11_SHARED_POINTERS(ReverseTriangleWinding)
+  PYB11_FILTER_NEW_MACRO(ReverseTriangleWinding)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceDataContainerName)
   PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 #endif
 

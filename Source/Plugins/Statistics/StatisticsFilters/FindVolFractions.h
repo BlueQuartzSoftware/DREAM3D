@@ -50,6 +50,10 @@ class Statistics_EXPORT FindVolFractions : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindVolFractions SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindVolFractions)
+  PYB11_FILTER_NEW_MACRO(FindVolFractions)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, VolFractionsArrayPath)
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath VolFractionsArrayPath READ getVolFractionsArrayPath WRITE setVolFractionsArrayPath)
 #endif

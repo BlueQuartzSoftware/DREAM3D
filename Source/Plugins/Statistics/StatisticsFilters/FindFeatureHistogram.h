@@ -64,6 +64,14 @@ class Statistics_EXPORT FindFeatureHistogram : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindFeatureHistogram SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindFeatureHistogram)
+  PYB11_FILTER_NEW_MACRO(FindFeatureHistogram)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
+  PYB11_FILTER_PARAMETER(int, NumberOfBins)
+  PYB11_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, NewEnsembleArrayArrayPath)
   PYB11_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
   PYB11_PROPERTY(int NumberOfBins READ getNumberOfBins WRITE setNumberOfBins)
   PYB11_PROPERTY(bool RemoveBiasedFeatures READ getRemoveBiasedFeatures WRITE setRemoveBiasedFeatures)

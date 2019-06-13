@@ -52,6 +52,9 @@ class SurfaceMeshing_EXPORT TriangleCentroidFilter : public SurfaceMeshFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(TriangleCentroidFilter SUPERCLASS SurfaceMeshFilter)
+  PYB11_SHARED_POINTERS(TriangleCentroidFilter)
+  PYB11_FILTER_NEW_MACRO(TriangleCentroidFilter)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleCentroidsArrayPath)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleCentroidsArrayPath READ getSurfaceMeshTriangleCentroidsArrayPath WRITE setSurfaceMeshTriangleCentroidsArrayPath)
 #endif
 

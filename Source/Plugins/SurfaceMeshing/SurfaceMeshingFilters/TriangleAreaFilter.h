@@ -52,6 +52,9 @@ class SurfaceMeshing_EXPORT TriangleAreaFilter : public SurfaceMeshFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(TriangleAreaFilter SUPERCLASS SurfaceMeshFilter)
+  PYB11_SHARED_POINTERS(TriangleAreaFilter)
+  PYB11_FILTER_NEW_MACRO(TriangleAreaFilter)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleAreasArrayPath)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleAreasArrayPath READ getSurfaceMeshTriangleAreasArrayPath WRITE setSurfaceMeshTriangleAreasArrayPath)
 #endif
 

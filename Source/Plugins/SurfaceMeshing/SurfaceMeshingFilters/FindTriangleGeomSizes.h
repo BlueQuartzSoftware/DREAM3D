@@ -50,6 +50,11 @@ class SurfaceMeshing_EXPORT FindTriangleGeomSizes : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindTriangleGeomSizes SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindTriangleGeomSizes)
+  PYB11_FILTER_NEW_MACRO(FindTriangleGeomSizes)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FaceLabelsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, VolumesArrayName)
   PYB11_PROPERTY(DataArrayPath FaceLabelsArrayPath READ getFaceLabelsArrayPath WRITE setFaceLabelsArrayPath)
   PYB11_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
   PYB11_PROPERTY(QString VolumesArrayName READ getVolumesArrayName WRITE setVolumesArrayName)

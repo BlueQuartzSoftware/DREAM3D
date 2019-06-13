@@ -51,6 +51,15 @@ class OrientationAnalysis_EXPORT FindFeatureReferenceCAxisMisorientations : publ
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindFeatureReferenceCAxisMisorientations SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindFeatureReferenceCAxisMisorientations)
+  PYB11_FILTER_NEW_MACRO(FindFeatureReferenceCAxisMisorientations)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, AvgCAxesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, FeatureAvgCAxisMisorientationsArrayName)
+  PYB11_FILTER_PARAMETER(QString, FeatureStdevCAxisMisorientationsArrayName)
+  PYB11_FILTER_PARAMETER(QString, FeatureReferenceCAxisMisorientationsArrayName)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath AvgCAxesArrayPath READ getAvgCAxesArrayPath WRITE setAvgCAxesArrayPath)

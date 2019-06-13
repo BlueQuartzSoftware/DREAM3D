@@ -50,6 +50,15 @@ class Processing_EXPORT MinSize : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(MinSize SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(MinSize)
+  PYB11_FILTER_NEW_MACRO(MinSize)
+  PYB11_FILTER_PARAMETER(int, MinAllowedFeatureSize)
+  PYB11_FILTER_PARAMETER(bool, ApplyToSinglePhase)
+  PYB11_FILTER_PARAMETER(int, PhaseNumber)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, NumCellsArrayPath)
+  PYB11_FILTER_PARAMETER(QVector<DataArrayPath>, IgnoredDataArrayPaths)
   PYB11_PROPERTY(int MinAllowedFeatureSize READ getMinAllowedFeatureSize WRITE setMinAllowedFeatureSize)
   PYB11_PROPERTY(bool ApplyToSinglePhase READ getApplyToSinglePhase WRITE setApplyToSinglePhase)
   PYB11_PROPERTY(int PhaseNumber READ getPhaseNumber WRITE setPhaseNumber)

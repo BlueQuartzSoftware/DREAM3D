@@ -65,6 +65,16 @@ class Statistics_EXPORT FitCorrelatedFeatureData : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FitCorrelatedFeatureData SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FitCorrelatedFeatureData)
+  PYB11_FILTER_NEW_MACRO(FitCorrelatedFeatureData)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SelectedFeatureArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CorrelatedFeatureArrayPath)
+  PYB11_FILTER_PARAMETER(unsigned int, DistributionType)
+  PYB11_FILTER_PARAMETER(int, NumberOfCorrelatedBins)
+  PYB11_FILTER_PARAMETER(bool, RemoveBiasedFeatures)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, NewEnsembleArrayArrayPath)
   PYB11_PROPERTY(DataArrayPath SelectedFeatureArrayPath READ getSelectedFeatureArrayPath WRITE setSelectedFeatureArrayPath)
   PYB11_PROPERTY(DataArrayPath CorrelatedFeatureArrayPath READ getCorrelatedFeatureArrayPath WRITE setCorrelatedFeatureArrayPath)
   PYB11_PROPERTY(unsigned int DistributionType READ getDistributionType WRITE setDistributionType)

@@ -51,6 +51,18 @@ class OrientationAnalysis_EXPORT FindTwinBoundaries : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindTwinBoundaries SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindTwinBoundaries)
+  PYB11_FILTER_NEW_MACRO(FindTwinBoundaries)
+  PYB11_FILTER_PARAMETER(float, AxisTolerance)
+  PYB11_FILTER_PARAMETER(float, AngleTolerance)
+  PYB11_FILTER_PARAMETER(bool, FindCoherence)
+  PYB11_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshTwinBoundaryArrayName)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshTwinBoundaryIncoherenceArrayName)
   PYB11_PROPERTY(float AxisTolerance READ getAxisTolerance WRITE setAxisTolerance)
   PYB11_PROPERTY(float AngleTolerance READ getAngleTolerance WRITE setAngleTolerance)
   PYB11_PROPERTY(bool FindCoherence READ getFindCoherence WRITE setFindCoherence)

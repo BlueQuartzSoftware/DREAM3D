@@ -58,6 +58,17 @@ class OrientationAnalysis_EXPORT FindDistsToCharactGBs : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindDistsToCharactGBs SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindDistsToCharactGBs)
+  PYB11_FILTER_NEW_MACRO(FindDistsToCharactGBs)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, DistToTiltArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, DistToTwistArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, DistToSymmetricArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, DistTo180TiltArrayPath)
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
   PYB11_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
   PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)

@@ -52,6 +52,11 @@ class Reconstruction_EXPORT AlignSectionsFeatureCentroid : public AlignSections
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(AlignSectionsFeatureCentroid SUPERCLASS AlignSections)
+  PYB11_SHARED_POINTERS(AlignSectionsFeatureCentroid)
+  PYB11_FILTER_NEW_MACRO(AlignSectionsFeatureCentroid)
+  PYB11_FILTER_PARAMETER(int, ReferenceSlice)
+  PYB11_FILTER_PARAMETER(bool, UseReferenceSlice)
+  PYB11_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
   PYB11_PROPERTY(int ReferenceSlice READ getReferenceSlice WRITE setReferenceSlice)
   PYB11_PROPERTY(bool UseReferenceSlice READ getUseReferenceSlice WRITE setUseReferenceSlice)
   PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)

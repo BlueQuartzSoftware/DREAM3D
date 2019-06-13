@@ -52,6 +52,13 @@ class SurfaceMeshing_EXPORT SharedFeatureFaceFilter : public SurfaceMeshFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(SharedFeatureFaceFilter SUPERCLASS SurfaceMeshFilter)
+  PYB11_SHARED_POINTERS(SharedFeatureFaceFilter)
+  PYB11_FILTER_NEW_MACRO(SharedFeatureFaceFilter)
+  PYB11_FILTER_PARAMETER(QString, FaceFeatureAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceIdsArrayName)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceLabelsArrayName)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceNumTrianglesArrayName)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
   PYB11_PROPERTY(QString FaceFeatureAttributeMatrixName READ getFaceFeatureAttributeMatrixName WRITE setFaceFeatureAttributeMatrixName)
   PYB11_PROPERTY(QString SurfaceMeshFeatureFaceIdsArrayName READ getSurfaceMeshFeatureFaceIdsArrayName WRITE setSurfaceMeshFeatureFaceIdsArrayName)
   PYB11_PROPERTY(QString SurfaceMeshFeatureFaceLabelsArrayName READ getSurfaceMeshFeatureFaceLabelsArrayName WRITE setSurfaceMeshFeatureFaceLabelsArrayName)

@@ -50,6 +50,13 @@ class Generic_EXPORT FindBoundingBoxFeatures : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindBoundingBoxFeatures SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindBoundingBoxFeatures)
+  PYB11_FILTER_NEW_MACRO(FindBoundingBoxFeatures)
+  PYB11_FILTER_PARAMETER(bool, CalcByPhase)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, PhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceFeaturesArrayPath)
+  PYB11_FILTER_PARAMETER(QString, BiasedFeaturesArrayName)
   PYB11_PROPERTY(bool CalcByPhase READ getCalcByPhase WRITE setCalcByPhase)
   PYB11_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
   PYB11_PROPERTY(DataArrayPath PhasesArrayPath READ getPhasesArrayPath WRITE setPhasesArrayPath)

@@ -59,6 +59,12 @@ class ImportExport_EXPORT NodesTrianglesToStl : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(NodesTrianglesToStl SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(NodesTrianglesToStl)
+  PYB11_FILTER_NEW_MACRO(NodesTrianglesToStl)
+  PYB11_FILTER_PARAMETER(QString, NodesFile)
+  PYB11_FILTER_PARAMETER(QString, TrianglesFile)
+  PYB11_FILTER_PARAMETER(QString, OutputStlDirectory)
+  PYB11_FILTER_PARAMETER(QString, OutputStlPrefix)
   PYB11_PROPERTY(QString NodesFile READ getNodesFile WRITE setNodesFile)
   PYB11_PROPERTY(QString TrianglesFile READ getTrianglesFile WRITE setTrianglesFile)
   PYB11_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory)

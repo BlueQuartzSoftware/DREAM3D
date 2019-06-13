@@ -50,6 +50,11 @@ class Statistics_EXPORT FindBoundaryElementFractions : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindBoundaryElementFractions SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindBoundaryElementFractions)
+  PYB11_FILTER_NEW_MACRO(FindBoundaryElementFractions)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, BoundaryCellsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, BoundaryCellFractionsArrayPath)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath BoundaryCellsArrayPath READ getBoundaryCellsArrayPath WRITE setBoundaryCellsArrayPath)
   PYB11_PROPERTY(DataArrayPath BoundaryCellFractionsArrayPath READ getBoundaryCellFractionsArrayPath WRITE setBoundaryCellFractionsArrayPath)

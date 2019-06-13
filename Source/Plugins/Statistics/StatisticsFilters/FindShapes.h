@@ -50,6 +50,16 @@ class Statistics_EXPORT FindShapes : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindShapes SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindShapes)
+  PYB11_FILTER_NEW_MACRO(FindShapes)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, Omega3sArrayName)
+  PYB11_FILTER_PARAMETER(QString, VolumesArrayName)
+  PYB11_FILTER_PARAMETER(QString, AxisLengthsArrayName)
+  PYB11_FILTER_PARAMETER(QString, AxisEulerAnglesArrayName)
+  PYB11_FILTER_PARAMETER(QString, AspectRatiosArrayName)
   PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)

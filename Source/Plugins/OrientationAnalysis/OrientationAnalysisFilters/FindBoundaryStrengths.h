@@ -53,6 +53,17 @@ class OrientationAnalysis_EXPORT FindBoundaryStrengths : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindBoundaryStrengths SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindBoundaryStrengths)
+  PYB11_FILTER_NEW_MACRO(FindBoundaryStrengths)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, Loading)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshF1sArrayName)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshF1sptsArrayName)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshF7sArrayName)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshmPrimesArrayName)
   PYB11_PROPERTY(FloatVec3Type Loading READ getLoading WRITE setLoading)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
   PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)

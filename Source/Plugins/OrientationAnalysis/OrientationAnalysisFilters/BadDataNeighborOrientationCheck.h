@@ -52,6 +52,14 @@ class OrientationAnalysis_EXPORT BadDataNeighborOrientationCheck : public Abstra
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(BadDataNeighborOrientationCheck SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(BadDataNeighborOrientationCheck)
+  PYB11_FILTER_NEW_MACRO(BadDataNeighborOrientationCheck)
+  PYB11_FILTER_PARAMETER(float, MisorientationTolerance)
+  PYB11_FILTER_PARAMETER(int, NumberOfNeighbors)
+  PYB11_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
   PYB11_PROPERTY(float MisorientationTolerance READ getMisorientationTolerance WRITE setMisorientationTolerance)
   PYB11_PROPERTY(int NumberOfNeighbors READ getNumberOfNeighbors WRITE setNumberOfNeighbors)
   PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)

@@ -63,6 +63,10 @@ class Statistics_EXPORT CorrelateValuesWithVectorDirection : public AbstractFilt
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(CorrelateValuesWithVectorDirection SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(CorrelateValuesWithVectorDirection)
+  PYB11_FILTER_NEW_MACRO(CorrelateValuesWithVectorDirection)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CorrelatedDataArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, VectorDataArrayPath)
   PYB11_PROPERTY(DataArrayPath CorrelatedDataArrayPath READ getCorrelatedDataArrayPath WRITE setCorrelatedDataArrayPath)
   PYB11_PROPERTY(DataArrayPath VectorDataArrayPath READ getVectorDataArrayPath WRITE setVectorDataArrayPath)
 #endif

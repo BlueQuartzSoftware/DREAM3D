@@ -52,6 +52,15 @@ class OrientationAnalysis_EXPORT FindFeatureNeighborCAxisMisalignments : public 
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindFeatureNeighborCAxisMisalignments SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindFeatureNeighborCAxisMisalignments)
+  PYB11_FILTER_NEW_MACRO(FindFeatureNeighborCAxisMisalignments)
+  PYB11_FILTER_PARAMETER(bool, FindAvgMisals)
+  PYB11_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
+  PYB11_FILTER_PARAMETER(QString, CAxisMisalignmentListArrayName)
+  PYB11_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(QString, AvgCAxisMisalignmentsArrayName)
   PYB11_PROPERTY(bool FindAvgMisals READ getFindAvgMisals WRITE setFindAvgMisals)
   PYB11_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
   PYB11_PROPERTY(QString CAxisMisalignmentListArrayName READ getCAxisMisalignmentListArrayName WRITE setCAxisMisalignmentListArrayName)

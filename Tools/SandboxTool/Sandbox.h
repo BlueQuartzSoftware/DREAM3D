@@ -8,7 +8,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QTextStream>
 
-#define OVERWRITE_SOURCE_FILE 0
+#define OVERWRITE_SOURCE_FILE 1
 
 class Sandbox
 {

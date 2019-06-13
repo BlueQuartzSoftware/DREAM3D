@@ -60,6 +60,13 @@ class ImportExport_EXPORT VASPReader : public FileReader
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(VASPReader SUPERCLASS FileReader)
+  PYB11_SHARED_POINTERS(VASPReader)
+  PYB11_FILTER_NEW_MACRO(VASPReader)
+  PYB11_FILTER_PARAMETER(DataArrayPath, VertexDataContainerName)
+  PYB11_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, InputFile)
+  PYB11_FILTER_PARAMETER(QString, AtomVelocitiesArrayName)
+  PYB11_FILTER_PARAMETER(QString, AtomTypesArrayName)
   PYB11_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
   PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)

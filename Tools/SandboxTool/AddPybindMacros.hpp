@@ -50,6 +50,18 @@ public:
 
     int32_t lastPybindMacroIndex = 0;
 
+    QString _SIMPL_STATIC_NEW_MACRO("SIMPL_STATIC_NEW_MACRO");
+    int32_t _SIMPL_STATIC_NEW_MACRO_Idx = 0;
+
+    QString _SIMPL_FILTER_NEW_MACRO("SIMPL_FILTER_NEW_MACRO");
+    int32_t _SIMPL_FILTER_NEW_MACRO_Idx = 0;
+
+    QString _SIMPL_SHARED_POINTERS("SIMPL_SHARED_POINTERS");
+    int32_t _SIMPL_SHARED_POINTERS_Idx = 0;
+
+    QString _SIMPL_FILTER_PARAMETER("SIMPL_FILTER_PARAMETER");
+    int32_t _SIMPL_FILTER_PARAMETER_Idx = 0;
+
     bool hasSearchString = false;
 
     QString firstSIMPLInclude("#include \"SIMPLib/");
@@ -81,6 +93,31 @@ public:
         lastPybindMacroIndex = lineIndex;
       }
 
+      if(compareLine.startsWith(_SIMPL_STATIC_NEW_MACRO))
+      {
+        _SIMPL_STATIC_NEW_MACRO_Idx = lineIndex;
+        compareLine = compareLine.replace("SIMPL_STATIC_NEW_MACRO", "  PYB11_STATIC_NEW_MACRO");
+        outLines[pybindStartIndex] = outLines[pybindStartIndex] + "\n" + compareLine;
+      }
+      if(compareLine.startsWith(_SIMPL_FILTER_NEW_MACRO))
+      {
+        _SIMPL_FILTER_NEW_MACRO_Idx = lineIndex;
+        compareLine = compareLine.replace("SIMPL_FILTER_NEW_MACRO", "  PYB11_FILTER_NEW_MACRO");
+        outLines[pybindStartIndex] = outLines[pybindStartIndex] + "\n" + compareLine;
+      }
+      if(compareLine.startsWith(_SIMPL_SHARED_POINTERS))
+      {
+        _SIMPL_SHARED_POINTERS_Idx = lineIndex;
+        compareLine = compareLine.replace("SIMPL_SHARED_POINTERS", "  PYB11_SHARED_POINTERS");
+        outLines[pybindStartIndex] = outLines[pybindStartIndex] + "\n" + compareLine;
+      }
+      if(compareLine.startsWith(_SIMPL_FILTER_PARAMETER))
+      {
+        _SIMPL_FILTER_PARAMETER_Idx = lineIndex;
+        compareLine = compareLine.replace("SIMPL_FILTER_PARAMETER", "  PYB11_FILTER_PARAMETER");
+        outLines[pybindStartIndex] = outLines[pybindStartIndex] + "\n" + compareLine;
+      }
+
       if(compareLine.startsWith(firstSIMPLInclude) && lineIndex < firstSIMPLIncludeIndex)
       {
         firstSIMPLIncludeIndex = lineIndex;
@@ -90,26 +127,27 @@ public:
       outLines.push_back(line);
     }
 
-    if(simplibIncludeIndex > 0 && pybindStartIndex > 0 && lastPybindMacroIndex > 0)
+    if(pybindStartIndex > 0 && lastPybindMacroIndex > 0)
     {
+
       QString line;
       QTextStream out(&line);
       out << "\n"
           << "#ifdef SIMPL_ENABLE_PYTHON\n"
           << outLines.at(pybindStartIndex);
 
-      outLines[pybindStartIndex] = line;
+      // outLines[pybindStartIndex] = line;
 
       line.clear();
       out << outLines.at(lastPybindMacroIndex) << "\n"
           << "#endif\n\n";
-      outLines[lastPybindMacroIndex] = line;
+      // outLines[lastPybindMacroIndex] = line;
       hasSearchString = true;
 
       line.clear();
-      out << simplibInclude << "\n" << outLines[firstSIMPLIncludeIndex];
-      outLines[firstSIMPLIncludeIndex] = line;
-      outLines.remove(simplibIncludeIndex);
+      // out << simplibInclude << "\n" << outLines[firstSIMPLIncludeIndex];
+      // outLines[firstSIMPLIncludeIndex] = line;
+      // outLines.remove(simplibIncludeIndex);
     }
 
     writeOutput(hasSearchString, outLines, hFile);

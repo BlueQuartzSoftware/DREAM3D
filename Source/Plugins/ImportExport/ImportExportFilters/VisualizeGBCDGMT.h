@@ -53,6 +53,13 @@ class ImportExport_EXPORT VisualizeGBCDGMT : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(VisualizeGBCDGMT SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(VisualizeGBCDGMT)
+  PYB11_FILTER_NEW_MACRO(VisualizeGBCDGMT)
+  PYB11_FILTER_PARAMETER(QString, OutputFile)
+  PYB11_FILTER_PARAMETER(int, PhaseOfInterest)
+  PYB11_FILTER_PARAMETER(AxisAngleInput_t, MisorientationRotation)
+  PYB11_FILTER_PARAMETER(DataArrayPath, GBCDArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
   PYB11_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
   PYB11_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)

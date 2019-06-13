@@ -19,6 +19,15 @@ class Statistics_EXPORT ComputeMomentInvariants2D : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(ComputeMomentInvariants2D SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(ComputeMomentInvariants2D)
+  PYB11_FILTER_NEW_MACRO(ComputeMomentInvariants2D)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureRectArrayPath)
+  PYB11_FILTER_PARAMETER(bool, NormalizeMomentInvariants)
+  PYB11_FILTER_PARAMETER(DataArrayPath, Omega1ArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, Omega2ArrayPath)
+  PYB11_FILTER_PARAMETER(bool, SaveCentralMoments)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CentralMomentsArrayPath)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath FeatureRectArrayPath READ getFeatureRectArrayPath WRITE setFeatureRectArrayPath)
   PYB11_PROPERTY(bool NormalizeMomentInvariants READ getNormalizeMomentInvariants WRITE setNormalizeMomentInvariants)

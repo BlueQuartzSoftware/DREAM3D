@@ -50,6 +50,18 @@ class Statistics_EXPORT FindEuclideanDistMap : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindEuclideanDistMap SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindEuclideanDistMap)
+  PYB11_FILTER_NEW_MACRO(FindEuclideanDistMap)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, GBDistancesArrayName)
+  PYB11_FILTER_PARAMETER(QString, TJDistancesArrayName)
+  PYB11_FILTER_PARAMETER(QString, QPDistancesArrayName)
+  PYB11_FILTER_PARAMETER(QString, NearestNeighborsArrayName)
+  PYB11_FILTER_PARAMETER(bool, DoBoundaries)
+  PYB11_FILTER_PARAMETER(bool, DoTripleLines)
+  PYB11_FILTER_PARAMETER(bool, DoQuadPoints)
+  PYB11_FILTER_PARAMETER(bool, SaveNearestNeighbors)
+  PYB11_FILTER_PARAMETER(bool, CalcManhattanDist)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(QString GBDistancesArrayName READ getGBDistancesArrayName WRITE setGBDistancesArrayName)
   PYB11_PROPERTY(QString TJDistancesArrayName READ getTJDistancesArrayName WRITE setTJDistancesArrayName)

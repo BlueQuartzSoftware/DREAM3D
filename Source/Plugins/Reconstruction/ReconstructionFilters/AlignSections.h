@@ -51,6 +51,13 @@ class Reconstruction_EXPORT AlignSections : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(AlignSections SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(AlignSections)
+  PYB11_FILTER_NEW_MACRO(AlignSections)
+  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(bool, WriteAlignmentShifts)
+  PYB11_FILTER_PARAMETER(QString, AlignmentShiftFileName)
+  PYB11_FILTER_PARAMETER(QVector<DataArrayPath>, IgnoredDataArrayPaths)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(bool WriteAlignmentShifts READ getWriteAlignmentShifts WRITE WriteAlignmentShifts)

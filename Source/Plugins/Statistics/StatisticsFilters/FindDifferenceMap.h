@@ -19,6 +19,11 @@ class Statistics_EXPORT FindDifferenceMap : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindDifferenceMap SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindDifferenceMap)
+  PYB11_FILTER_NEW_MACRO(FindDifferenceMap)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FirstInputArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SecondInputArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, DifferenceMapArrayPath)
   PYB11_PROPERTY(DataArrayPath FirstInputArrayPath READ getFirstInputArrayPath WRITE setFirstInputArrayPath)
   PYB11_PROPERTY(DataArrayPath SecondInputArrayPath READ getSecondInputArrayPath WRITE setSecondInputArrayPath)
   PYB11_PROPERTY(DataArrayPath DifferenceMapArrayPath READ getDifferenceMapArrayPath WRITE setDifferenceMapArrayPath)

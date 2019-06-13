@@ -51,6 +51,14 @@ class Statistics_EXPORT FindNeighborhoods : public AbstractFilter
 
 #ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindNeighborhoods SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindNeighborhoods)
+  PYB11_FILTER_NEW_MACRO(FindNeighborhoods)
+  PYB11_FILTER_PARAMETER(QString, NeighborhoodListArrayName)
+  PYB11_FILTER_PARAMETER(float, MultiplesOfAverage)
+  PYB11_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, NeighborhoodsArrayName)
   PYB11_PROPERTY(QString NeighborhoodListArrayName READ getNeighborhoodListArrayName WRITE setNeighborhoodListArrayName)
   PYB11_PROPERTY(float MultiplesOfAverage READ getMultiplesOfAverage WRITE setMultiplesOfAverage)
   PYB11_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
