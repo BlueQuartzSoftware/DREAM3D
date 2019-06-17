@@ -56,6 +56,9 @@ class OrientationAnalysis_EXPORT ImportEbsdMontage : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  PYB11_PROPERTY(EbsdMontageListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
+  PYB11_PROPERTY(bool GenerateIPFColorMap READ getGenerateIPFColorMap WRITE setGenerateIPFColorMap)
+  PYB11_PROPERTY(QString CellIPFColorsArrayName READ getCellIPFColorsArrayName WRITE setCellIPFColorsArrayName)
 
 public:
   SIMPL_SHARED_POINTERS(ImportEbsdMontage)
@@ -75,6 +78,12 @@ public:
 
   SIMPL_FILTER_PARAMETER(EbsdMontageListInfo_t, InputFileListInfo)
   Q_PROPERTY(EbsdMontageListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
+
+  SIMPL_FILTER_PARAMETER(bool, GenerateIPFColorMap)
+  Q_PROPERTY(bool GenerateIPFColorMap READ getGenerateIPFColorMap WRITE setGenerateIPFColorMap)
+
+  SIMPL_FILTER_PARAMETER(QString, CellIPFColorsArrayName)
+  Q_PROPERTY(QString CellIPFColorsArrayName READ getCellIPFColorsArrayName WRITE setCellIPFColorsArrayName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -174,6 +183,8 @@ protected:
 
 private:
   std::map<QString, AbstractFilter::Pointer> m_FilterCache;
+  // DEFINE_DATAARRAY_VARIABLE(uint8_t, CellIPFColors)
+  FloatVec3Type m_ReferenceDir = {0.0f, 0.0f, 1.0f};
 
 public:
   /* Rule of 5: All special member functions should be defined if any are defined.
