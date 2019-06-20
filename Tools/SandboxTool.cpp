@@ -41,15 +41,7 @@
 #include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-//#include <QtCore/QJsonArray>
-//#include <QtCore/QJsonDocument>
-//#include <QtCore/QJsonObject>
-//#include <QtCore/QJsonValue>
-//#include <QtCore/QMetaProperty>
-//#include <QtCore/QSet>
 #include <QtCore/QString>
-//#include <QtCore/QTextStream>
-//#include <QtCore/QUuid>
 
 // SIMPLib includes
 #if 0
@@ -64,7 +56,7 @@
 
 #include "DREAM3DToolsConfiguration.h"
 
-#include "SandboxTool/CleanQtHeaders.hpp"
+#include "SandboxTool/RemoveSIMPLMacros.h"
 
 /**
  * @brief findPath
@@ -211,7 +203,7 @@ int main(int argc, char* argv[])
 
   for(auto const& dir : dirs)
   {
-    RecursiveFileSearch<CleanQtHeaders>(dir, filters);
+    RecursiveFileSearch<RemoveSIMPLMacros>(dir, filters);
   }
 
   return 0;
