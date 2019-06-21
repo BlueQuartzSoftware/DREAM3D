@@ -35,7 +35,10 @@
 #include <QtCore/QMetaType>
 #include <QtCore/QString>
 
-class EbsdMontageListInfo
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
+
+class OrientationAnalysis_EXPORT EbsdMontageListInfo
 {
 public:
   EbsdMontageListInfo();
