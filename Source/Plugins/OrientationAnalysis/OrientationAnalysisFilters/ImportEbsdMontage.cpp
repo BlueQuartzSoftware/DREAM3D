@@ -41,17 +41,23 @@
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
+#include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
 
 #include "OrientationAnalysis/FilterParameters/EbsdMontageImportFilterParameter.h"
-
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisFilters/GenerateIPFColors.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/ReadAngData.h"
 #include "OrientationAnalysis/OrientationAnalysisFilters/ReadCtfData.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
+
+enum createdPathID : RenameDataPath::DataID_t
+{
+  DataArrayID31 = 31
+};
 
 // -----------------------------------------------------------------------------
 //
@@ -91,6 +97,10 @@ void ImportEbsdMontage::setupFilterParameters()
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, ImportEbsdMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, ImportEbsdMontage));
+
+  QStringList linkedProps("CellIPFColorsArrayName");
+  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Generate IPF Color Map", GenerateIPFColorMap, FilterParameter::Parameter, ImportEbsdMontage, linkedProps));
+  parameters.push_back(SIMPL_NEW_STRING_FP("IPF Colors", CellIPFColorsArrayName, FilterParameter::CreatedArray, ImportEbsdMontage));
 
   setFilterParameters(parameters);
 }
@@ -137,7 +147,7 @@ void readEbsdFile(ImportEbsdMontage* filter, const QString& fileName, std::map<Q
   }
   if(reader->getErrorCode() < 0)
   {
-    QString msg = QString("Sub filter (%1) caused an error during preflight.").arg(reader->getHumanLabel());
+    QString msg = QString("Sub filter (%1) caused an error.").arg(reader->getHumanLabel());
     filter->setErrorCondition(reader->getErrorCode(), msg);
     return;
   }
@@ -208,14 +218,23 @@ void ImportEbsdMontage::dataCheck()
     {
       QFileInfo fi(tile2D.FileName);
       QString fname = fi.completeBaseName();
+      QString phasesName;
+      QString eulersName;
+      QString xtalName;
 
       if(m_InputFileListInfo.FileExtension == Ebsd::Ang::FileExt)
       {
         readEbsdFile<ReadAngData>(this, tile2D.FileName, m_FilterCache, newFilterCache);
+        phasesName = Ebsd::AngFile::Phases;
+        eulersName = Ebsd::AngFile::EulerAngles;
+        xtalName = Ebsd::AngFile::CrystalStructures;
       }
       if(m_InputFileListInfo.FileExtension == Ebsd::Ctf::FileExt)
       {
         readEbsdFile<ReadCtfData>(this, tile2D.FileName, m_FilterCache, newFilterCache);
+        phasesName = Ebsd::CtfFile::Phases;
+        eulersName = Ebsd::CtfFile::EulerAngles;
+        xtalName = Ebsd::CtfFile::CrystalStructures;
       }
       if(!fi.exists())
       {
@@ -250,6 +269,55 @@ void ImportEbsdMontage::dataCheck()
           QString msg = QString("==> [%1/%2] %3").arg(tilesRead).arg(totalTiles).arg(tile2D.FileName);
           notifyStatusMessage(msg);
         }
+
+        if(getGenerateIPFColorMap())
+        {
+          if(getCellIPFColorsArrayName().isEmpty())
+          {
+            ss = QObject::tr("Generate IPF Colors is ENABLED. Please set name for the generated IPColors DataArray");
+            setErrorCondition(-23500, ss);
+          }
+          else
+          {
+            DataArrayPath dap(fname, getCellAttributeMatrixName(), getCellIPFColorsArrayName());
+            // QVector<size_t> cDims = {3};
+
+            GenerateIPFColors::Pointer generateIPFColors = GenerateIPFColors::New();
+            generateIPFColors->setDataContainerArray(getDataContainerArray());
+            generateIPFColors->setReferenceDir(m_ReferenceDir);
+            dap.setDataArrayName(phasesName);
+            generateIPFColors->setCellPhasesArrayPath(dap);
+            dap.setDataArrayName(eulersName);
+            generateIPFColors->setCellEulerAnglesArrayPath(dap);
+
+            dap.setAttributeMatrixName(getCellEnsembleAttributeMatrixName());
+            dap.setDataArrayName(xtalName);
+            generateIPFColors->setCrystalStructuresArrayPath(dap);
+            generateIPFColors->setUseGoodVoxels(false);
+
+            generateIPFColors->setCellIPFColorsArrayName(getCellIPFColorsArrayName());
+            if(getInPreflight())
+            {
+              generateIPFColors->preflight();
+              if(generateIPFColors->getErrorCode() < 0)
+              {
+                ss = QObject::tr("Preflight of GenerateIPFColors failed with error code ").arg(generateIPFColors->getErrorCode());
+                setErrorCondition(generateIPFColors->getErrorCode(), ss);
+              }
+            }
+            else
+            {
+              QString msg = QString("==> [%1/%2] %3 Generating IPF Colors").arg(tilesRead).arg(totalTiles).arg(tile2D.FileName);
+              notifyStatusMessage(msg);
+              generateIPFColors->execute();
+              if(generateIPFColors->getErrorCode() < 0)
+              {
+                ss = QObject::tr("GenerateIPFColors failed with error code ").arg(generateIPFColors->getErrorCode());
+                setErrorCondition(generateIPFColors->getErrorCode(), ss);
+              }
+            }
+          }
+        }
       }
     }
     globalTileOrigin[1] += tileHeight;
@@ -283,7 +351,6 @@ void ImportEbsdMontage::execute()
 
   // The entire Reading of the data, whether that is in prefligth (so just read the header) or in execute is performed
   // in the dataCheck() method so we essentially do nothing here.
-
 }
 
 // -----------------------------------------------------------------------------
