@@ -92,7 +92,7 @@ public:
   /**
    * @brief Setter property for ReadCellData
    */
-  void setReadCellData(const bool& value);
+  void setReadCellData(bool value);
   /**
    * @brief Getter property for ReadCellData
    * @return Value of ReadCellData
@@ -128,7 +128,7 @@ public:
   /**
    * @brief Setter property for ReadPointData
    */
-  void setReadPointData(const bool& value);
+  void setReadPointData(bool value);
   /**
    * @brief Getter property for ReadPointData
    * @return Value of ReadPointData
@@ -196,7 +196,7 @@ public:
   /**
    * @brief Setter property for FileIsBinary
    */
-  void setFileIsBinary(const bool& value);
+  void setFileIsBinary(bool value);
   /**
    * @brief Getter property for FileIsBinary
    * @return Value of FileIsBinary

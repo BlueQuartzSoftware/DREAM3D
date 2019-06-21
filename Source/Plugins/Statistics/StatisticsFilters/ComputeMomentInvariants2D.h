@@ -85,7 +85,7 @@ public:
   /**
    * @brief Setter property for NormalizeMomentInvariants
    */
-  void setNormalizeMomentInvariants(const bool& value);
+  void setNormalizeMomentInvariants(bool value);
   /**
    * @brief Getter property for NormalizeMomentInvariants
    * @return Value of NormalizeMomentInvariants
@@ -121,7 +121,7 @@ public:
   /**
    * @brief Setter property for SaveCentralMoments
    */
-  void setSaveCentralMoments(const bool& value);
+  void setSaveCentralMoments(bool value);
   /**
    * @brief Getter property for SaveCentralMoments
    * @return Value of SaveCentralMoments

@@ -142,7 +142,7 @@ public:
   /**
    * @brief Setter property for IterationSteps
    */
-  void setIterationSteps(const int& value);
+  void setIterationSteps(int value);
   /**
    * @brief Getter property for IterationSteps
    * @return Value of IterationSteps
@@ -154,7 +154,7 @@ public:
   /**
    * @brief Setter property for Lambda
    */
-  void setLambda(const float& value);
+  void setLambda(float value);
   /**
    * @brief Getter property for Lambda
    * @return Value of Lambda
@@ -166,7 +166,7 @@ public:
   /**
    * @brief Setter property for SurfacePointLambda
    */
-  void setSurfacePointLambda(const float& value);
+  void setSurfacePointLambda(float value);
   /**
    * @brief Getter property for SurfacePointLambda
    * @return Value of SurfacePointLambda
@@ -178,7 +178,7 @@ public:
   /**
    * @brief Setter property for TripleLineLambda
    */
-  void setTripleLineLambda(const float& value);
+  void setTripleLineLambda(float value);
   /**
    * @brief Getter property for TripleLineLambda
    * @return Value of TripleLineLambda
@@ -190,7 +190,7 @@ public:
   /**
    * @brief Setter property for QuadPointLambda
    */
-  void setQuadPointLambda(const float& value);
+  void setQuadPointLambda(float value);
   /**
    * @brief Getter property for QuadPointLambda
    * @return Value of QuadPointLambda
@@ -202,7 +202,7 @@ public:
   /**
    * @brief Setter property for SurfaceTripleLineLambda
    */
-  void setSurfaceTripleLineLambda(const float& value);
+  void setSurfaceTripleLineLambda(float value);
   /**
    * @brief Getter property for SurfaceTripleLineLambda
    * @return Value of SurfaceTripleLineLambda
@@ -214,7 +214,7 @@ public:
   /**
    * @brief Setter property for SurfaceQuadPointLambda
    */
-  void setSurfaceQuadPointLambda(const float& value);
+  void setSurfaceQuadPointLambda(float value);
   /**
    * @brief Getter property for SurfaceQuadPointLambda
    * @return Value of SurfaceQuadPointLambda
@@ -226,7 +226,7 @@ public:
   /**
    * @brief Setter property for UseTaubinSmoothing
    */
-  void setUseTaubinSmoothing(const bool& value);
+  void setUseTaubinSmoothing(bool value);
   /**
    * @brief Getter property for UseTaubinSmoothing
    * @return Value of UseTaubinSmoothing
@@ -238,7 +238,7 @@ public:
   /**
    * @brief Setter property for MuFactor
    */
-  void setMuFactor(const float& value);
+  void setMuFactor(float value);
   /**
    * @brief Getter property for MuFactor
    * @return Value of MuFactor

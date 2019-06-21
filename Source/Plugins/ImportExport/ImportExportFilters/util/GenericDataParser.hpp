@@ -89,7 +89,7 @@ class GenericDataParser
     }
 
     // -----------------------------------------------------------------------------
-    void setColumnIndex(const int& value)
+    void setColumnIndex(int value)
     {
       m_ColumnIndex = value;
     }

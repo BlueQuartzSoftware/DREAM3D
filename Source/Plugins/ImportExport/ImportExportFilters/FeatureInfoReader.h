@@ -137,7 +137,7 @@ public:
   /**
    * @brief Setter property for CreateCellLevelArrays
    */
-  void setCreateCellLevelArrays(const bool& value);
+  void setCreateCellLevelArrays(bool value);
   /**
    * @brief Getter property for CreateCellLevelArrays
    * @return Value of CreateCellLevelArrays
@@ -149,7 +149,7 @@ public:
   /**
    * @brief Setter property for RenumberFeatures
    */
-  void setRenumberFeatures(const bool& value);
+  void setRenumberFeatures(bool value);
   /**
    * @brief Getter property for RenumberFeatures
    * @return Value of RenumberFeatures
@@ -221,7 +221,7 @@ public:
   /**
    * @brief Setter property for Delimiter
    */
-  void setDelimiter(const int& value);
+  void setDelimiter(int value);
   /**
    * @brief Getter property for Delimiter
    * @return Value of Delimiter

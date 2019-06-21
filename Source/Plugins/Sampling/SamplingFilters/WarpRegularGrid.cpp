@@ -448,7 +448,7 @@ DataArrayPath WarpRegularGrid::getCellAttributeMatrixPath() const
 }
 
 // -----------------------------------------------------------------------------
-void WarpRegularGrid::setPolyOrder(const int& value)
+void WarpRegularGrid::setPolyOrder(int value)
 {
   m_PolyOrder = value;
 }
@@ -532,7 +532,7 @@ Float4thOrderPoly_t WarpRegularGrid::getFourthOrderBCoeff() const
 }
 
 // -----------------------------------------------------------------------------
-void WarpRegularGrid::setSaveAsNewDataContainer(const bool& value)
+void WarpRegularGrid::setSaveAsNewDataContainer(bool value)
 {
   m_SaveAsNewDataContainer = value;
 }

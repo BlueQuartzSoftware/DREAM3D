@@ -107,7 +107,7 @@ public:
   /**
    * @brief Setter property for NewZRes
    */
-  void setNewZRes(const float& value);
+  void setNewZRes(float value);
   /**
    * @brief Getter property for NewZRes
    * @return Value of NewZRes

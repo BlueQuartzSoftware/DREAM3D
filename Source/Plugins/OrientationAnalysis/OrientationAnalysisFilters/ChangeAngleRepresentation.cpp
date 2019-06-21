@@ -332,7 +332,7 @@ QString ChangeAngleRepresentation::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void ChangeAngleRepresentation::setConversionType(const int& value)
+void ChangeAngleRepresentation::setConversionType(int value)
 {
   m_ConversionType = value;
 }

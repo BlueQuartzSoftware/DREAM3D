@@ -88,7 +88,7 @@ public:
   /**
    * @brief Setter property for AspectRatio1
    */
-  void setAspectRatio1(const float& value);
+  void setAspectRatio1(float value);
   /**
    * @brief Getter property for AspectRatio1
    * @return Value of AspectRatio1
@@ -98,7 +98,7 @@ public:
   /**
    * @brief Setter property for AspectRatio2
    */
-  void setAspectRatio2(const float& value);
+  void setAspectRatio2(float value);
   /**
    * @brief Getter property for AspectRatio2
    * @return Value of AspectRatio2

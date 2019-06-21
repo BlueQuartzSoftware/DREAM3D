@@ -356,7 +356,7 @@ DataArrayPath ConvertQuaternion::getOutputDataArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void ConvertQuaternion::setDeleteOriginalData(const bool& value)
+void ConvertQuaternion::setDeleteOriginalData(bool value)
 {
   m_DeleteOriginalData = value;
 }
@@ -368,7 +368,7 @@ bool ConvertQuaternion::getDeleteOriginalData() const
 }
 
 // -----------------------------------------------------------------------------
-void ConvertQuaternion::setConversionType(const int32_t& value)
+void ConvertQuaternion::setConversionType(int32_t value)
 {
   m_ConversionType = value;
 }

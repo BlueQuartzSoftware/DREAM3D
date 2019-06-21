@@ -107,7 +107,7 @@ public:
   /**
    * @brief Setter property for CheckResolution
    */
-  void setCheckResolution(const bool& value);
+  void setCheckResolution(bool value);
   /**
    * @brief Getter property for CheckResolution
    * @return Value of CheckResolution

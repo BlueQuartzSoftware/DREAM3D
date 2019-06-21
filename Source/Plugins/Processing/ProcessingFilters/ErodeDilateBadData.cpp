@@ -458,7 +458,7 @@ QString ErodeDilateBadData::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void ErodeDilateBadData::setDirection(const unsigned int& value)
+void ErodeDilateBadData::setDirection(unsigned int value)
 {
   m_Direction = value;
 }
@@ -470,7 +470,7 @@ unsigned int ErodeDilateBadData::getDirection() const
 }
 
 // -----------------------------------------------------------------------------
-void ErodeDilateBadData::setNumIterations(const int& value)
+void ErodeDilateBadData::setNumIterations(int value)
 {
   m_NumIterations = value;
 }
@@ -482,7 +482,7 @@ int ErodeDilateBadData::getNumIterations() const
 }
 
 // -----------------------------------------------------------------------------
-void ErodeDilateBadData::setXDirOn(const bool& value)
+void ErodeDilateBadData::setXDirOn(bool value)
 {
   m_XDirOn = value;
 }
@@ -494,7 +494,7 @@ bool ErodeDilateBadData::getXDirOn() const
 }
 
 // -----------------------------------------------------------------------------
-void ErodeDilateBadData::setYDirOn(const bool& value)
+void ErodeDilateBadData::setYDirOn(bool value)
 {
   m_YDirOn = value;
 }
@@ -506,7 +506,7 @@ bool ErodeDilateBadData::getYDirOn() const
 }
 
 // -----------------------------------------------------------------------------
-void ErodeDilateBadData::setZDirOn(const bool& value)
+void ErodeDilateBadData::setZDirOn(bool value)
 {
   m_ZDirOn = value;
 }

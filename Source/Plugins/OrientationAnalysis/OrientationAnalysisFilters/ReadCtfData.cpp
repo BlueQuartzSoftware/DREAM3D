@@ -789,7 +789,7 @@ QString ReadCtfData::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void ReadCtfData::setDegreesToRadians(const bool& value)
+void ReadCtfData::setDegreesToRadians(bool value)
 {
   m_DegreesToRadians = value;
 }
@@ -801,7 +801,7 @@ bool ReadCtfData::getDegreesToRadians() const
 }
 
 // -----------------------------------------------------------------------------
-void ReadCtfData::setEdaxHexagonalAlignment(const bool& value)
+void ReadCtfData::setEdaxHexagonalAlignment(bool value)
 {
   m_EdaxHexagonalAlignment = value;
 }
@@ -849,7 +849,7 @@ QString ReadCtfData::getCellAttributeMatrixName() const
 }
 
 // -----------------------------------------------------------------------------
-void ReadCtfData::setFileWasRead(const bool& value)
+void ReadCtfData::setFileWasRead(bool value)
 {
   m_FileWasRead = value;
 }
@@ -897,7 +897,7 @@ QString ReadCtfData::getInputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void ReadCtfData::setRefFrameZDir(const uint32_t& value)
+void ReadCtfData::setRefFrameZDir(uint32_t value)
 {
   m_RefFrameZDir = value;
 }

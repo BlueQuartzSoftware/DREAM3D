@@ -136,7 +136,7 @@ public:
   /**
    * @brief Setter property for CalculateSphericity
    */
-  void setCalculateSphericity(const bool& value);
+  void setCalculateSphericity(bool value);
   /**
    * @brief Getter property for CalculateSphericity
    * @return Value of CalculateSphericity

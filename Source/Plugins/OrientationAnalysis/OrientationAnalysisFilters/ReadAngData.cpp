@@ -809,7 +809,7 @@ QString ReadAngData::getCellAttributeMatrixName() const
 }
 
 // -----------------------------------------------------------------------------
-void ReadAngData::setFileWasRead(const bool& value)
+void ReadAngData::setFileWasRead(bool value)
 {
   m_FileWasRead = value;
 }
@@ -845,7 +845,7 @@ QString ReadAngData::getInputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void ReadAngData::setRefFrameZDir(const uint32_t& value)
+void ReadAngData::setRefFrameZDir(uint32_t value)
 {
   m_RefFrameZDir = value;
 }

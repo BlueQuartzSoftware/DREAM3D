@@ -546,7 +546,7 @@ QString FillBadData::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void FillBadData::setStoreAsNewPhase(const bool& value)
+void FillBadData::setStoreAsNewPhase(bool value)
 {
   m_StoreAsNewPhase = value;
 }
@@ -558,7 +558,7 @@ bool FillBadData::getStoreAsNewPhase() const
 }
 
 // -----------------------------------------------------------------------------
-void FillBadData::setMinAllowedDefectSize(const int& value)
+void FillBadData::setMinAllowedDefectSize(int value)
 {
   m_MinAllowedDefectSize = value;
 }

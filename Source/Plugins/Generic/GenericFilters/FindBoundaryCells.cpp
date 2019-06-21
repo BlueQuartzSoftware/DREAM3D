@@ -377,7 +377,7 @@ QString FindBoundaryCells::getBoundaryCellsArrayName() const
 }
 
 // -----------------------------------------------------------------------------
-void FindBoundaryCells::setIgnoreFeatureZero(const bool& value)
+void FindBoundaryCells::setIgnoreFeatureZero(bool value)
 {
   m_IgnoreFeatureZero = value;
 }
@@ -389,7 +389,7 @@ bool FindBoundaryCells::getIgnoreFeatureZero() const
 }
 
 // -----------------------------------------------------------------------------
-void FindBoundaryCells::setIncludeVolumeBoundary(const bool& value)
+void FindBoundaryCells::setIncludeVolumeBoundary(bool value)
 {
   m_IncludeVolumeBoundary = value;
 }

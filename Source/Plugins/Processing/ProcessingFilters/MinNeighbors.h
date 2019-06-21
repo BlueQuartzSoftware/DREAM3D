@@ -94,7 +94,7 @@ public:
   /**
    * @brief Setter property for MinNumNeighbors
    */
-  void setMinNumNeighbors(const int& value);
+  void setMinNumNeighbors(int value);
   /**
    * @brief Getter property for MinNumNeighbors
    * @return Value of MinNumNeighbors
@@ -106,7 +106,7 @@ public:
   /**
    * @brief Setter property for ApplyToSinglePhase
    */
-  void setApplyToSinglePhase(const bool& value);
+  void setApplyToSinglePhase(bool value);
   /**
    * @brief Getter property for ApplyToSinglePhase
    * @return Value of ApplyToSinglePhase
@@ -118,7 +118,7 @@ public:
   /**
    * @brief Setter property for PhaseNumber
    */
-  void setPhaseNumber(const int& value);
+  void setPhaseNumber(int value);
   /**
    * @brief Getter property for PhaseNumber
    * @return Value of PhaseNumber

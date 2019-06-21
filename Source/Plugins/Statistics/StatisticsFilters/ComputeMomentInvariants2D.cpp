@@ -426,7 +426,7 @@ DataArrayPath ComputeMomentInvariants2D::getFeatureRectArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void ComputeMomentInvariants2D::setNormalizeMomentInvariants(const bool& value)
+void ComputeMomentInvariants2D::setNormalizeMomentInvariants(bool value)
 {
   m_NormalizeMomentInvariants = value;
 }
@@ -462,7 +462,7 @@ DataArrayPath ComputeMomentInvariants2D::getOmega2ArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void ComputeMomentInvariants2D::setSaveCentralMoments(const bool& value)
+void ComputeMomentInvariants2D::setSaveCentralMoments(bool value)
 {
   m_SaveCentralMoments = value;
 }

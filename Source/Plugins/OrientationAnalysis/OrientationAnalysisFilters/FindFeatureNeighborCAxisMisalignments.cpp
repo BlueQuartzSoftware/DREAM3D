@@ -451,7 +451,7 @@ QString FindFeatureNeighborCAxisMisalignments::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void FindFeatureNeighborCAxisMisalignments::setFindAvgMisals(const bool& value)
+void FindFeatureNeighborCAxisMisalignments::setFindAvgMisals(bool value)
 {
   m_FindAvgMisals = value;
 }

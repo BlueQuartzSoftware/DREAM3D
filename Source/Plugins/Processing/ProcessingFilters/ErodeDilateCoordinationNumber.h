@@ -85,7 +85,7 @@ public:
   /**
    * @brief Setter property for Loop
    */
-  void setLoop(const bool& value);
+  void setLoop(bool value);
   /**
    * @brief Getter property for Loop
    * @return Value of Loop
@@ -97,7 +97,7 @@ public:
   /**
    * @brief Setter property for CoordinationNumber
    */
-  void setCoordinationNumber(const int& value);
+  void setCoordinationNumber(int value);
   /**
    * @brief Getter property for CoordinationNumber
    * @return Value of CoordinationNumber

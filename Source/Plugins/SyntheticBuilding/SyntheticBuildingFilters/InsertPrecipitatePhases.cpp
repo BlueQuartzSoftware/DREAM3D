@@ -3205,7 +3205,7 @@ DataArrayPath InsertPrecipitatePhases::getMaskArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::setUseMask(const bool& value)
+void InsertPrecipitatePhases::setUseMask(bool value)
 {
   m_UseMask = value;
 }
@@ -3217,7 +3217,7 @@ bool InsertPrecipitatePhases::getUseMask() const
 }
 
 // -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::setFeatureGeneration(const int& value)
+void InsertPrecipitatePhases::setFeatureGeneration(int value)
 {
   m_FeatureGeneration = value;
 }
@@ -3241,7 +3241,7 @@ QString InsertPrecipitatePhases::getPrecipInputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::setPeriodicBoundaries(const bool& value)
+void InsertPrecipitatePhases::setPeriodicBoundaries(bool value)
 {
   m_PeriodicBoundaries = value;
 }
@@ -3253,7 +3253,7 @@ bool InsertPrecipitatePhases::getPeriodicBoundaries() const
 }
 
 // -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::setMatchRDF(const bool& value)
+void InsertPrecipitatePhases::setMatchRDF(bool value)
 {
   m_MatchRDF = value;
 }
@@ -3265,7 +3265,7 @@ bool InsertPrecipitatePhases::getMatchRDF() const
 }
 
 // -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::setWriteGoalAttributes(const bool& value)
+void InsertPrecipitatePhases::setWriteGoalAttributes(bool value)
 {
   m_WriteGoalAttributes = value;
 }
@@ -3457,7 +3457,7 @@ DataArrayPath InsertPrecipitatePhases::getNumFeaturesArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::setSaveGeometricDescriptions(const int& value)
+void InsertPrecipitatePhases::setSaveGeometricDescriptions(int value)
 {
   m_SaveGeometricDescriptions = value;
 }

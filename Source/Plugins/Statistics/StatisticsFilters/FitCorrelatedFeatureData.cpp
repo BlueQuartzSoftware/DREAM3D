@@ -599,7 +599,7 @@ DataArrayPath FitCorrelatedFeatureData::getCorrelatedFeatureArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void FitCorrelatedFeatureData::setDistributionType(const unsigned int& value)
+void FitCorrelatedFeatureData::setDistributionType(unsigned int value)
 {
   m_DistributionType = value;
 }
@@ -611,7 +611,7 @@ unsigned int FitCorrelatedFeatureData::getDistributionType() const
 }
 
 // -----------------------------------------------------------------------------
-void FitCorrelatedFeatureData::setNumberOfCorrelatedBins(const int& value)
+void FitCorrelatedFeatureData::setNumberOfCorrelatedBins(int value)
 {
   m_NumberOfCorrelatedBins = value;
 }
@@ -623,7 +623,7 @@ int FitCorrelatedFeatureData::getNumberOfCorrelatedBins() const
 }
 
 // -----------------------------------------------------------------------------
-void FitCorrelatedFeatureData::setRemoveBiasedFeatures(const bool& value)
+void FitCorrelatedFeatureData::setRemoveBiasedFeatures(bool value)
 {
   m_RemoveBiasedFeatures = value;
 }

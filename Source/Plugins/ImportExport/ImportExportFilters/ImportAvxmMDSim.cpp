@@ -394,7 +394,7 @@ FileListInfo_t ImportAvxmMDSim::getInputFileListInfo() const
 }
 
 // -----------------------------------------------------------------------------
-void ImportAvxmMDSim::setSeparatorChoice(const int& value)
+void ImportAvxmMDSim::setSeparatorChoice(int value)
 {
   m_SeparatorChoice = value;
 }

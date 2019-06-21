@@ -1015,7 +1015,7 @@ QString SurfaceMeshToNonconformalVtk::getOutputVtkFile() const
 }
 
 // -----------------------------------------------------------------------------
-void SurfaceMeshToNonconformalVtk::setWriteBinaryFile(const bool& value)
+void SurfaceMeshToNonconformalVtk::setWriteBinaryFile(bool value)
 {
   m_WriteBinaryFile = value;
 }

@@ -356,7 +356,7 @@ EMMPM_Data::Pointer EMCalculation::getData() const
 }
 
 // -----------------------------------------------------------------------------
-void EMCalculation::setErrorCode(const int& value)
+void EMCalculation::setErrorCode(int value)
 {
   m_ErrorCode = value;
 }

@@ -374,7 +374,7 @@ QString FindLargestCrossSections::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void FindLargestCrossSections::setPlane(const unsigned int& value)
+void FindLargestCrossSections::setPlane(unsigned int value)
 {
   m_Plane = value;
 }

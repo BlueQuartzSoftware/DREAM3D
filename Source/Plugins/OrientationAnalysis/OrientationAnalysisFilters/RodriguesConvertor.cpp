@@ -360,7 +360,7 @@ DataArrayPath RodriguesConvertor::getOutputDataArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void RodriguesConvertor::setDeleteOriginalData(const bool& value)
+void RodriguesConvertor::setDeleteOriginalData(bool value)
 {
   m_DeleteOriginalData = value;
 }

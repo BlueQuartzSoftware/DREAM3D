@@ -128,7 +128,7 @@ public:
   /**
    * @brief Setter property for UseOneBasedValues
    */
-  void setUseOneBasedValues(const bool& value);
+  void setUseOneBasedValues(bool value);
   /**
    * @brief Getter property for UseOneBasedValues
    * @return Value of UseOneBasedValues
@@ -140,7 +140,7 @@ public:
   /**
    * @brief Setter property for NumClasses
    */
-  void setNumClasses(const int& value);
+  void setNumClasses(int value);
   /**
    * @brief Getter property for NumClasses
    * @return Value of NumClasses
@@ -152,7 +152,7 @@ public:
   /**
    * @brief Setter property for ExchangeEnergy
    */
-  void setExchangeEnergy(const float& value);
+  void setExchangeEnergy(float value);
   /**
    * @brief Getter property for ExchangeEnergy
    * @return Value of ExchangeEnergy
@@ -164,7 +164,7 @@ public:
   /**
    * @brief Setter property for HistogramLoops
    */
-  void setHistogramLoops(const int& value);
+  void setHistogramLoops(int value);
   /**
    * @brief Getter property for HistogramLoops
    * @return Value of HistogramLoops
@@ -176,7 +176,7 @@ public:
   /**
    * @brief Setter property for SegmentationLoops
    */
-  void setSegmentationLoops(const int& value);
+  void setSegmentationLoops(int value);
   /**
    * @brief Getter property for SegmentationLoops
    * @return Value of SegmentationLoops
@@ -200,7 +200,7 @@ public:
   /**
    * @brief Setter property for UseSimulatedAnnealing
    */
-  void setUseSimulatedAnnealing(const bool& value);
+  void setUseSimulatedAnnealing(bool value);
   /**
    * @brief Getter property for UseSimulatedAnnealing
    * @return Value of UseSimulatedAnnealing
@@ -212,7 +212,7 @@ public:
   /**
    * @brief Setter property for UseGradientPenalty
    */
-  void setUseGradientPenalty(const bool& value);
+  void setUseGradientPenalty(bool value);
   /**
    * @brief Getter property for UseGradientPenalty
    * @return Value of UseGradientPenalty
@@ -224,7 +224,7 @@ public:
   /**
    * @brief Setter property for GradientBetaE
    */
-  void setGradientBetaE(const double& value);
+  void setGradientBetaE(double value);
   /**
    * @brief Getter property for GradientBetaE
    * @return Value of GradientBetaE
@@ -236,7 +236,7 @@ public:
   /**
    * @brief Setter property for UseCurvaturePenalty
    */
-  void setUseCurvaturePenalty(const bool& value);
+  void setUseCurvaturePenalty(bool value);
   /**
    * @brief Getter property for UseCurvaturePenalty
    * @return Value of UseCurvaturePenalty
@@ -248,7 +248,7 @@ public:
   /**
    * @brief Setter property for CurvatureBetaC
    */
-  void setCurvatureBetaC(const double& value);
+  void setCurvatureBetaC(double value);
   /**
    * @brief Getter property for CurvatureBetaC
    * @return Value of CurvatureBetaC
@@ -260,7 +260,7 @@ public:
   /**
    * @brief Setter property for CurvatureRMax
    */
-  void setCurvatureRMax(const double& value);
+  void setCurvatureRMax(double value);
   /**
    * @brief Getter property for CurvatureRMax
    * @return Value of CurvatureRMax
@@ -272,7 +272,7 @@ public:
   /**
    * @brief Setter property for CurvatureEMLoopDelay
    */
-  void setCurvatureEMLoopDelay(const int& value);
+  void setCurvatureEMLoopDelay(int value);
   /**
    * @brief Getter property for CurvatureEMLoopDelay
    * @return Value of CurvatureEMLoopDelay

@@ -3775,7 +3775,7 @@ DataArrayPath PackPrimaryPhases::getMaskArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::setUseMask(const bool& value)
+void PackPrimaryPhases::setUseMask(bool value)
 {
   m_UseMask = value;
 }
@@ -3787,7 +3787,7 @@ bool PackPrimaryPhases::getUseMask() const
 }
 
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::setFeatureGeneration(const int& value)
+void PackPrimaryPhases::setFeatureGeneration(int value)
 {
   m_FeatureGeneration = value;
 }
@@ -3823,7 +3823,7 @@ QString PackPrimaryPhases::getCsvOutputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::setPeriodicBoundaries(const bool& value)
+void PackPrimaryPhases::setPeriodicBoundaries(bool value)
 {
   m_PeriodicBoundaries = value;
 }
@@ -3835,7 +3835,7 @@ bool PackPrimaryPhases::getPeriodicBoundaries() const
 }
 
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::setWriteGoalAttributes(const bool& value)
+void PackPrimaryPhases::setWriteGoalAttributes(bool value)
 {
   m_WriteGoalAttributes = value;
 }
@@ -3847,7 +3847,7 @@ bool PackPrimaryPhases::getWriteGoalAttributes() const
 }
 
 // -----------------------------------------------------------------------------
-void PackPrimaryPhases::setSaveGeometricDescriptions(const int& value)
+void PackPrimaryPhases::setSaveGeometricDescriptions(int value)
 {
   m_SaveGeometricDescriptions = value;
 }

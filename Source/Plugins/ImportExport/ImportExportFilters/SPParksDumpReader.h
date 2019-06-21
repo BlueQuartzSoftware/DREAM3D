@@ -162,7 +162,7 @@ public:
   /**
    * @brief Setter property for OneBasedArrays
    */
-  void setOneBasedArrays(const bool& value);
+  void setOneBasedArrays(bool value);
   /**
    * @brief Getter property for OneBasedArrays
    * @return Value of OneBasedArrays

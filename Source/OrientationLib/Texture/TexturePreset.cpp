@@ -109,7 +109,7 @@ QString TexturePreset::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void TexturePreset::setCrystalStructure(const unsigned int& value)
+void TexturePreset::setCrystalStructure(unsigned int value)
 {
   m_CrystalStructure = value;
 }
@@ -133,7 +133,7 @@ QString TexturePreset::getName() const
 }
 
 // -----------------------------------------------------------------------------
-void TexturePreset::setEuler1(const double& value)
+void TexturePreset::setEuler1(double value)
 {
   m_Euler1 = value;
 }
@@ -145,7 +145,7 @@ double TexturePreset::getEuler1() const
 }
 
 // -----------------------------------------------------------------------------
-void TexturePreset::setEuler2(const double& value)
+void TexturePreset::setEuler2(double value)
 {
   m_Euler2 = value;
 }
@@ -157,7 +157,7 @@ double TexturePreset::getEuler2() const
 }
 
 // -----------------------------------------------------------------------------
-void TexturePreset::setEuler3(const double& value)
+void TexturePreset::setEuler3(double value)
 {
   m_Euler3 = value;
 }

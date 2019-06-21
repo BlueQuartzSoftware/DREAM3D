@@ -88,7 +88,7 @@ public:
   /**
    * @brief Setter property for CombineEulerAngles
    */
-  void setCombineEulerAngles(const bool& value);
+  void setCombineEulerAngles(bool value);
   /**
    * @brief Getter property for CombineEulerAngles
    * @return Value of CombineEulerAngles
@@ -100,7 +100,7 @@ public:
   /**
    * @brief Setter property for DegreesToRadians
    */
-  void setDegreesToRadians(const bool& value);
+  void setDegreesToRadians(bool value);
   /**
    * @brief Getter property for DegreesToRadians
    * @return Value of DegreesToRadians

@@ -110,7 +110,7 @@ public:
   /**
    * @brief Setter property for IgnoreFeatureZero
    */
-  void setIgnoreFeatureZero(const bool& value);
+  void setIgnoreFeatureZero(bool value);
   /**
    * @brief Getter property for IgnoreFeatureZero
    * @return Value of IgnoreFeatureZero
@@ -122,7 +122,7 @@ public:
   /**
    * @brief Setter property for IncludeVolumeBoundary
    */
-  void setIncludeVolumeBoundary(const bool& value);
+  void setIncludeVolumeBoundary(bool value);
   /**
    * @brief Getter property for IncludeVolumeBoundary
    * @return Value of IncludeVolumeBoundary

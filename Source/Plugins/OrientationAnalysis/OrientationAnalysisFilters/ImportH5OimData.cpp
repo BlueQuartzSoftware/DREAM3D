@@ -999,7 +999,7 @@ QStringList ImportH5OimData::getSelectedScanNames() const
 }
 
 // -----------------------------------------------------------------------------
-void ImportH5OimData::setNumberOfScans(const int& value)
+void ImportH5OimData::setNumberOfScans(int value)
 {
   m_NumberOfScans = value;
 }
@@ -1011,7 +1011,7 @@ int ImportH5OimData::getNumberOfScans() const
 }
 
 // -----------------------------------------------------------------------------
-void ImportH5OimData::setZSpacing(const double& value)
+void ImportH5OimData::setZSpacing(double value)
 {
   m_ZSpacing = value;
 }
@@ -1071,7 +1071,7 @@ QString ImportH5OimData::getCellAttributeMatrixName() const
 }
 
 // -----------------------------------------------------------------------------
-void ImportH5OimData::setReadPatternData(const bool& value)
+void ImportH5OimData::setReadPatternData(bool value)
 {
   m_ReadPatternData = value;
 }
@@ -1083,7 +1083,7 @@ bool ImportH5OimData::getReadPatternData() const
 }
 
 // -----------------------------------------------------------------------------
-void ImportH5OimData::setFileWasRead(const bool& value)
+void ImportH5OimData::setFileWasRead(bool value)
 {
   m_FileWasRead = value;
 }
@@ -1119,7 +1119,7 @@ QString ImportH5OimData::getMaterialNameArrayName() const
 }
 
 // -----------------------------------------------------------------------------
-void ImportH5OimData::setRefFrameZDir(const uint32_t& value)
+void ImportH5OimData::setRefFrameZDir(uint32_t value)
 {
   m_RefFrameZDir = value;
 }

@@ -405,7 +405,7 @@ QString ConvertOrientations::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void ConvertOrientations::setInputType(const int& value)
+void ConvertOrientations::setInputType(int value)
 {
   m_InputType = value;
 }
@@ -417,7 +417,7 @@ int ConvertOrientations::getInputType() const
 }
 
 // -----------------------------------------------------------------------------
-void ConvertOrientations::setOutputType(const int& value)
+void ConvertOrientations::setOutputType(int value)
 {
   m_OutputType = value;
 }

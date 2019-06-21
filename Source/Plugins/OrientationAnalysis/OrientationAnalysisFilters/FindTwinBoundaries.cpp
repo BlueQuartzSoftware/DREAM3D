@@ -570,7 +570,7 @@ QString FindTwinBoundaries::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void FindTwinBoundaries::setAxisTolerance(const float& value)
+void FindTwinBoundaries::setAxisTolerance(float value)
 {
   m_AxisTolerance = value;
 }
@@ -582,7 +582,7 @@ float FindTwinBoundaries::getAxisTolerance() const
 }
 
 // -----------------------------------------------------------------------------
-void FindTwinBoundaries::setAngleTolerance(const float& value)
+void FindTwinBoundaries::setAngleTolerance(float value)
 {
   m_AngleTolerance = value;
 }
@@ -594,7 +594,7 @@ float FindTwinBoundaries::getAngleTolerance() const
 }
 
 // -----------------------------------------------------------------------------
-void FindTwinBoundaries::setFindCoherence(const bool& value)
+void FindTwinBoundaries::setFindCoherence(bool value)
 {
   m_FindCoherence = value;
 }

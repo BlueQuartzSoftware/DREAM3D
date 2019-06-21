@@ -954,7 +954,7 @@ float StatsGenFeatureSizeWidget::getBinStep()
 }
 
 // -----------------------------------------------------------------------------
-void StatsGenFeatureSizeWidget::setPhaseIndex(const int& value)
+void StatsGenFeatureSizeWidget::setPhaseIndex(int value)
 {
   m_PhaseIndex = value;
 }
@@ -966,7 +966,7 @@ int StatsGenFeatureSizeWidget::getPhaseIndex() const
 }
 
 // -----------------------------------------------------------------------------
-void StatsGenFeatureSizeWidget::setCrystalStructure(const unsigned int& value)
+void StatsGenFeatureSizeWidget::setCrystalStructure(unsigned int value)
 {
   m_CrystalStructure = value;
 }

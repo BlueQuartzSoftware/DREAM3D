@@ -571,7 +571,7 @@ QString MergeTwins::getNewCellFeatureAttributeMatrixName() const
 }
 
 // -----------------------------------------------------------------------------
-void MergeTwins::setAxisTolerance(const float& value)
+void MergeTwins::setAxisTolerance(float value)
 {
   m_AxisTolerance = value;
 }
@@ -583,7 +583,7 @@ float MergeTwins::getAxisTolerance() const
 }
 
 // -----------------------------------------------------------------------------
-void MergeTwins::setAngleTolerance(const float& value)
+void MergeTwins::setAngleTolerance(float value)
 {
   m_AngleTolerance = value;
 }
@@ -595,7 +595,7 @@ float MergeTwins::getAngleTolerance() const
 }
 
 // -----------------------------------------------------------------------------
-void MergeTwins::setRandomizeParentIds(const bool& value)
+void MergeTwins::setRandomizeParentIds(bool value)
 {
   m_RandomizeParentIds = value;
 }

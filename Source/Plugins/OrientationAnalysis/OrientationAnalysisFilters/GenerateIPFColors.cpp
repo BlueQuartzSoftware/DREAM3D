@@ -500,7 +500,7 @@ DataArrayPath GenerateIPFColors::getCrystalStructuresArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateIPFColors::setUseGoodVoxels(const bool& value)
+void GenerateIPFColors::setUseGoodVoxels(bool value)
 {
   m_UseGoodVoxels = value;
 }

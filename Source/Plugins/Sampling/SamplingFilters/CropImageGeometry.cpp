@@ -862,7 +862,7 @@ DataArrayPath CropImageGeometry::getCellFeatureAttributeMatrixPath() const
 }
 
 // -----------------------------------------------------------------------------
-void CropImageGeometry::setXMin(const int& value)
+void CropImageGeometry::setXMin(int value)
 {
   m_XMin = value;
 }
@@ -874,7 +874,7 @@ int CropImageGeometry::getXMin() const
 }
 
 // -----------------------------------------------------------------------------
-void CropImageGeometry::setYMin(const int& value)
+void CropImageGeometry::setYMin(int value)
 {
   m_YMin = value;
 }
@@ -886,7 +886,7 @@ int CropImageGeometry::getYMin() const
 }
 
 // -----------------------------------------------------------------------------
-void CropImageGeometry::setZMin(const int& value)
+void CropImageGeometry::setZMin(int value)
 {
   m_ZMin = value;
 }
@@ -898,7 +898,7 @@ int CropImageGeometry::getZMin() const
 }
 
 // -----------------------------------------------------------------------------
-void CropImageGeometry::setXMax(const int& value)
+void CropImageGeometry::setXMax(int value)
 {
   m_XMax = value;
 }
@@ -910,7 +910,7 @@ int CropImageGeometry::getXMax() const
 }
 
 // -----------------------------------------------------------------------------
-void CropImageGeometry::setYMax(const int& value)
+void CropImageGeometry::setYMax(int value)
 {
   m_YMax = value;
 }
@@ -922,7 +922,7 @@ int CropImageGeometry::getYMax() const
 }
 
 // -----------------------------------------------------------------------------
-void CropImageGeometry::setZMax(const int& value)
+void CropImageGeometry::setZMax(int value)
 {
   m_ZMax = value;
 }
@@ -934,7 +934,7 @@ int CropImageGeometry::getZMax() const
 }
 
 // -----------------------------------------------------------------------------
-void CropImageGeometry::setRenumberFeatures(const bool& value)
+void CropImageGeometry::setRenumberFeatures(bool value)
 {
   m_RenumberFeatures = value;
 }
@@ -946,7 +946,7 @@ bool CropImageGeometry::getRenumberFeatures() const
 }
 
 // -----------------------------------------------------------------------------
-void CropImageGeometry::setSaveAsNewDataContainer(const bool& value)
+void CropImageGeometry::setSaveAsNewDataContainer(bool value)
 {
   m_SaveAsNewDataContainer = value;
 }
@@ -958,7 +958,7 @@ bool CropImageGeometry::getSaveAsNewDataContainer() const
 }
 
 // -----------------------------------------------------------------------------
-void CropImageGeometry::setUpdateOrigin(const bool& value)
+void CropImageGeometry::setUpdateOrigin(bool value)
 {
   m_UpdateOrigin = value;
 }

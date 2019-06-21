@@ -1183,7 +1183,7 @@ QString MovingFiniteElementSmoothing::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void MovingFiniteElementSmoothing::setIterationSteps(const int& value)
+void MovingFiniteElementSmoothing::setIterationSteps(int value)
 {
   m_IterationSteps = value;
 }
@@ -1195,7 +1195,7 @@ int MovingFiniteElementSmoothing::getIterationSteps() const
 }
 
 // -----------------------------------------------------------------------------
-void MovingFiniteElementSmoothing::setNodeConstraints(const bool& value)
+void MovingFiniteElementSmoothing::setNodeConstraints(bool value)
 {
   m_NodeConstraints = value;
 }
@@ -1207,7 +1207,7 @@ bool MovingFiniteElementSmoothing::getNodeConstraints() const
 }
 
 // -----------------------------------------------------------------------------
-void MovingFiniteElementSmoothing::setConstrainSurfaceNodes(const bool& value)
+void MovingFiniteElementSmoothing::setConstrainSurfaceNodes(bool value)
 {
   m_ConstrainSurfaceNodes = value;
 }
@@ -1219,7 +1219,7 @@ bool MovingFiniteElementSmoothing::getConstrainSurfaceNodes() const
 }
 
 // -----------------------------------------------------------------------------
-void MovingFiniteElementSmoothing::setConstrainQuadPoints(const bool& value)
+void MovingFiniteElementSmoothing::setConstrainQuadPoints(bool value)
 {
   m_ConstrainQuadPoints = value;
 }
@@ -1231,7 +1231,7 @@ bool MovingFiniteElementSmoothing::getConstrainQuadPoints() const
 }
 
 // -----------------------------------------------------------------------------
-void MovingFiniteElementSmoothing::setSmoothTripleLines(const bool& value)
+void MovingFiniteElementSmoothing::setSmoothTripleLines(bool value)
 {
   m_SmoothTripleLines = value;
 }

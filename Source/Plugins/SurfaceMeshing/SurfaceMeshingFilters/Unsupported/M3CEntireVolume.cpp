@@ -5269,7 +5269,7 @@ QString M3CEntireVolume::getSurfaceMeshInternalEdgesArrayName() const
 }
 
 // -----------------------------------------------------------------------------
-void M3CEntireVolume::setAddSurfaceLayer(const bool& value)
+void M3CEntireVolume::setAddSurfaceLayer(bool value)
 {
   m_AddSurfaceLayer = value;
 }

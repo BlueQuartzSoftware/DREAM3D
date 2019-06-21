@@ -627,7 +627,7 @@ QString FeatureInfoReader::getInputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void FeatureInfoReader::setCreateCellLevelArrays(const bool& value)
+void FeatureInfoReader::setCreateCellLevelArrays(bool value)
 {
   m_CreateCellLevelArrays = value;
 }
@@ -639,7 +639,7 @@ bool FeatureInfoReader::getCreateCellLevelArrays() const
 }
 
 // -----------------------------------------------------------------------------
-void FeatureInfoReader::setRenumberFeatures(const bool& value)
+void FeatureInfoReader::setRenumberFeatures(bool value)
 {
   m_RenumberFeatures = value;
 }
@@ -711,7 +711,7 @@ QString FeatureInfoReader::getFeatureEulerAnglesArrayName() const
 }
 
 // -----------------------------------------------------------------------------
-void FeatureInfoReader::setDelimiter(const int& value)
+void FeatureInfoReader::setDelimiter(int value)
 {
   m_Delimiter = value;
 }

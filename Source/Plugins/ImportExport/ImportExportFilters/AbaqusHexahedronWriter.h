@@ -125,7 +125,7 @@ public:
   /**
    * @brief Setter property for HourglassStiffness
    */
-  void setHourglassStiffness(const int& value);
+  void setHourglassStiffness(int value);
   /**
    * @brief Getter property for HourglassStiffness
    * @return Value of HourglassStiffness

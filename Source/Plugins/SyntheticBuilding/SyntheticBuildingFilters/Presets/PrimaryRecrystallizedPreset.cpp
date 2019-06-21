@@ -212,7 +212,7 @@ PrimaryRecrystallizedPreset::Pointer PrimaryRecrystallizedPreset::New()
 }
 
 // -----------------------------------------------------------------------------
-void PrimaryRecrystallizedPreset::setPercentRecrystallized(const float& value)
+void PrimaryRecrystallizedPreset::setPercentRecrystallized(float value)
 {
   m_PercentRecrystallized = value;
 }

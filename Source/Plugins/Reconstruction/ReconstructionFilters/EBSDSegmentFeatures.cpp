@@ -562,7 +562,7 @@ QString EBSDSegmentFeatures::getCellFeatureAttributeMatrixName() const
 }
 
 // -----------------------------------------------------------------------------
-void EBSDSegmentFeatures::setMisorientationTolerance(const float& value)
+void EBSDSegmentFeatures::setMisorientationTolerance(float value)
 {
   m_MisorientationTolerance = value;
 }
@@ -574,7 +574,7 @@ float EBSDSegmentFeatures::getMisorientationTolerance() const
 }
 
 // -----------------------------------------------------------------------------
-void EBSDSegmentFeatures::setRandomizeFeatureIds(const bool& value)
+void EBSDSegmentFeatures::setRandomizeFeatureIds(bool value)
 {
   m_RandomizeFeatureIds = value;
 }
@@ -586,7 +586,7 @@ bool EBSDSegmentFeatures::getRandomizeFeatureIds() const
 }
 
 // -----------------------------------------------------------------------------
-void EBSDSegmentFeatures::setUseGoodVoxels(const bool& value)
+void EBSDSegmentFeatures::setUseGoodVoxels(bool value)
 {
   m_UseGoodVoxels = value;
 }

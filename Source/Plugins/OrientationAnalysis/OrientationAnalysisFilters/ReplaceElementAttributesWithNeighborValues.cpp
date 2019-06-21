@@ -549,7 +549,7 @@ QString ReplaceElementAttributesWithNeighborValues::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void ReplaceElementAttributesWithNeighborValues::setMinConfidence(const float& value)
+void ReplaceElementAttributesWithNeighborValues::setMinConfidence(float value)
 {
   m_MinConfidence = value;
 }
@@ -561,7 +561,7 @@ float ReplaceElementAttributesWithNeighborValues::getMinConfidence() const
 }
 
 // -----------------------------------------------------------------------------
-void ReplaceElementAttributesWithNeighborValues::setLoop(const bool& value)
+void ReplaceElementAttributesWithNeighborValues::setLoop(bool value)
 {
   m_Loop = value;
 }
@@ -585,7 +585,7 @@ DataArrayPath ReplaceElementAttributesWithNeighborValues::getConfidenceIndexArra
 }
 
 // -----------------------------------------------------------------------------
-void ReplaceElementAttributesWithNeighborValues::setSelectedComparison(const int& value)
+void ReplaceElementAttributesWithNeighborValues::setSelectedComparison(int value)
 {
   m_SelectedComparison = value;
 }

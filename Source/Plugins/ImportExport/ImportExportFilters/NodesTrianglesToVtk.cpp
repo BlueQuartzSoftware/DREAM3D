@@ -702,7 +702,7 @@ QString NodesTrianglesToVtk::getOutputVtkFile() const
 }
 
 // -----------------------------------------------------------------------------
-void NodesTrianglesToVtk::setWriteBinaryFile(const bool& value)
+void NodesTrianglesToVtk::setWriteBinaryFile(bool value)
 {
   m_WriteBinaryFile = value;
 }
@@ -714,7 +714,7 @@ bool NodesTrianglesToVtk::getWriteBinaryFile() const
 }
 
 // -----------------------------------------------------------------------------
-void NodesTrianglesToVtk::setWriteConformalMesh(const bool& value)
+void NodesTrianglesToVtk::setWriteConformalMesh(bool value)
 {
   m_WriteConformalMesh = value;
 }

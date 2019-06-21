@@ -91,7 +91,7 @@ public:
   /**
    * @brief Setter property for MinAllowedFeatureSize
    */
-  void setMinAllowedFeatureSize(const int& value);
+  void setMinAllowedFeatureSize(int value);
   /**
    * @brief Getter property for MinAllowedFeatureSize
    * @return Value of MinAllowedFeatureSize
@@ -103,7 +103,7 @@ public:
   /**
    * @brief Setter property for ApplyToSinglePhase
    */
-  void setApplyToSinglePhase(const bool& value);
+  void setApplyToSinglePhase(bool value);
   /**
    * @brief Getter property for ApplyToSinglePhase
    * @return Value of ApplyToSinglePhase
@@ -115,7 +115,7 @@ public:
   /**
    * @brief Setter property for PhaseNumber
    */
-  void setPhaseNumber(const int& value);
+  void setPhaseNumber(int value);
   /**
    * @brief Getter property for PhaseNumber
    * @return Value of PhaseNumber

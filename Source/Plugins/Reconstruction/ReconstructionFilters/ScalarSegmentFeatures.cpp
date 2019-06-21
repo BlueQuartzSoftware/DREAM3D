@@ -684,7 +684,7 @@ DataArrayPath ScalarSegmentFeatures::getScalarArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void ScalarSegmentFeatures::setScalarTolerance(const float& value)
+void ScalarSegmentFeatures::setScalarTolerance(float value)
 {
   m_ScalarTolerance = value;
 }
@@ -696,7 +696,7 @@ float ScalarSegmentFeatures::getScalarTolerance() const
 }
 
 // -----------------------------------------------------------------------------
-void ScalarSegmentFeatures::setRandomizeFeatureIds(const bool& value)
+void ScalarSegmentFeatures::setRandomizeFeatureIds(bool value)
 {
   m_RandomizeFeatureIds = value;
 }
@@ -708,7 +708,7 @@ bool ScalarSegmentFeatures::getRandomizeFeatureIds() const
 }
 
 // -----------------------------------------------------------------------------
-void ScalarSegmentFeatures::setUseGoodVoxels(const bool& value)
+void ScalarSegmentFeatures::setUseGoodVoxels(bool value)
 {
   m_UseGoodVoxels = value;
 }

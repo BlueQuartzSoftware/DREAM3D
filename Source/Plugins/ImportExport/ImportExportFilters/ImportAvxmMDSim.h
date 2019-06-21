@@ -59,7 +59,7 @@ public:
   /**
    * @brief Setter property for SeparatorChoice
    */
-  void setSeparatorChoice(const int& value);
+  void setSeparatorChoice(int value);
   /**
    * @brief Getter property for SeparatorChoice
    * @return Value of SeparatorChoice

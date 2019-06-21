@@ -148,7 +148,7 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  void setAutoDelete(const bool& value)
+  void setAutoDelete(bool value)
   {
     m_AutoDelete = value;
   }
@@ -3297,7 +3297,7 @@ QString M3CSliceBySlice::getSurfaceMeshNodeTypesArrayName() const
 }
 
 // -----------------------------------------------------------------------------
-void M3CSliceBySlice::setDeleteTempFiles(const bool& value)
+void M3CSliceBySlice::setDeleteTempFiles(bool value)
 {
   m_DeleteTempFiles = value;
 }

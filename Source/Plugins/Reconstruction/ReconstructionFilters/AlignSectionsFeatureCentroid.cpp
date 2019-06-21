@@ -403,7 +403,7 @@ QString AlignSectionsFeatureCentroid::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void AlignSectionsFeatureCentroid::setReferenceSlice(const int& value)
+void AlignSectionsFeatureCentroid::setReferenceSlice(int value)
 {
   m_ReferenceSlice = value;
 }
@@ -415,7 +415,7 @@ int AlignSectionsFeatureCentroid::getReferenceSlice() const
 }
 
 // -----------------------------------------------------------------------------
-void AlignSectionsFeatureCentroid::setUseReferenceSlice(const bool& value)
+void AlignSectionsFeatureCentroid::setUseReferenceSlice(bool value)
 {
   m_UseReferenceSlice = value;
 }

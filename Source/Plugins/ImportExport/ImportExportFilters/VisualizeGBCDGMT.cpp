@@ -595,7 +595,7 @@ QString VisualizeGBCDGMT::getOutputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void VisualizeGBCDGMT::setPhaseOfInterest(const int& value)
+void VisualizeGBCDGMT::setPhaseOfInterest(int value)
 {
   m_PhaseOfInterest = value;
 }

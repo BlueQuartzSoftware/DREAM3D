@@ -708,7 +708,7 @@ DataArrayPath FindProjectedImageStatistics::getSelectedArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void FindProjectedImageStatistics::setPlane(const unsigned int& value)
+void FindProjectedImageStatistics::setPlane(unsigned int value)
 {
   m_Plane = value;
 }

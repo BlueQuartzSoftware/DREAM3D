@@ -856,7 +856,7 @@ FloatVec3Type SPParksDumpReader::getSpacing() const
 }
 
 // -----------------------------------------------------------------------------
-void SPParksDumpReader::setOneBasedArrays(const bool& value)
+void SPParksDumpReader::setOneBasedArrays(bool value)
 {
   m_OneBasedArrays = value;
 }

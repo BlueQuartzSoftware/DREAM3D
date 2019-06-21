@@ -832,7 +832,7 @@ FloatVec3Type InsertAtoms::getLatticeConstants() const
 }
 
 // -----------------------------------------------------------------------------
-void InsertAtoms::setBasis(const int& value)
+void InsertAtoms::setBasis(int value)
 {
   m_Basis = value;
 }

@@ -569,7 +569,7 @@ QString FindEllipsoidError::getEllipsoidErrorArrayName() const
 }
 
 // -----------------------------------------------------------------------------
-void FindEllipsoidError::setWriteIdealEllipseFeatureIds(const bool& value)
+void FindEllipsoidError::setWriteIdealEllipseFeatureIds(bool value)
 {
   m_WriteIdealEllipseFeatureIds = value;
 }

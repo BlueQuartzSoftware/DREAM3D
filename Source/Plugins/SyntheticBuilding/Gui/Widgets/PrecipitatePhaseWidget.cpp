@@ -141,7 +141,7 @@ void PrecipitatePhaseWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrecipitatePhaseWidget::setPhaseIndex(const int& index)
+void PrecipitatePhaseWidget::setPhaseIndex(int index)
 {
   StatsGenWidget::setPhaseIndex(index);
   getFeatureSizeWidget()->setPhaseIndex(index);
@@ -155,7 +155,7 @@ void PrecipitatePhaseWidget::setPhaseIndex(const int& index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrecipitatePhaseWidget::setCrystalStructure(const unsigned int& xtal)
+void PrecipitatePhaseWidget::setCrystalStructure(unsigned int xtal)
 {
   StatsGenWidget::setCrystalStructure(xtal);
   getFeatureSizeWidget()->setCrystalStructure(xtal);
@@ -511,7 +511,7 @@ QIcon PrecipitatePhaseWidget::getPhaseIcon()
 }
 
 // -----------------------------------------------------------------------------
-void PrecipitatePhaseWidget::setPptFraction(const float& value)
+void PrecipitatePhaseWidget::setPptFraction(float value)
 {
   m_PptFraction = value;
 }

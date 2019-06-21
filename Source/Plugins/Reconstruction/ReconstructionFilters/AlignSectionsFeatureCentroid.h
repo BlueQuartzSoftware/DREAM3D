@@ -86,7 +86,7 @@ public:
   /**
    * @brief Setter property for ReferenceSlice
    */
-  void setReferenceSlice(const int& value);
+  void setReferenceSlice(int value);
   /**
    * @brief Getter property for ReferenceSlice
    * @return Value of ReferenceSlice
@@ -98,7 +98,7 @@ public:
   /**
    * @brief Setter property for UseReferenceSlice
    */
-  void setUseReferenceSlice(const bool& value);
+  void setUseReferenceSlice(bool value);
   /**
    * @brief Getter property for UseReferenceSlice
    * @return Value of UseReferenceSlice

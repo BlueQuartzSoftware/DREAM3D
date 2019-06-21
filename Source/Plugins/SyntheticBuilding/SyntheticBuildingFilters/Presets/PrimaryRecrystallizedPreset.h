@@ -86,7 +86,7 @@ public:
   /**
    * @brief Setter property for PercentRecrystallized
    */
-  void setPercentRecrystallized(const float& value);
+  void setPercentRecrystallized(float value);
   /**
    * @brief Getter property for PercentRecrystallized
    * @return Value of PercentRecrystallized

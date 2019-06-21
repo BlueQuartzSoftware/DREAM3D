@@ -412,7 +412,7 @@ DataArrayPath AppendImageGeometryZSlice::getDestinationAttributeMatrix() const
 }
 
 // -----------------------------------------------------------------------------
-void AppendImageGeometryZSlice::setCheckResolution(const bool& value)
+void AppendImageGeometryZSlice::setCheckResolution(bool value)
 {
   m_CheckResolution = value;
 }

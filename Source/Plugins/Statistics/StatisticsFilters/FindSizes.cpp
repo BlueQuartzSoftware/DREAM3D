@@ -547,7 +547,7 @@ QString FindSizes::getNumElementsArrayName() const
 }
 
 // -----------------------------------------------------------------------------
-void FindSizes::setSaveElementSizes(const bool& value)
+void FindSizes::setSaveElementSizes(bool value)
 {
   m_SaveElementSizes = value;
 }

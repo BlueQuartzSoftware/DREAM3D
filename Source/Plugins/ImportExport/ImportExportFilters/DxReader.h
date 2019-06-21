@@ -160,7 +160,7 @@ public:
   /**
    * @brief Setter property for FileWasRead
    */
-  void setFileWasRead(const bool& value);
+  void setFileWasRead(bool value);
   /**
    * @brief Getter property for FileWasRead
    * @return Value of FileWasRead

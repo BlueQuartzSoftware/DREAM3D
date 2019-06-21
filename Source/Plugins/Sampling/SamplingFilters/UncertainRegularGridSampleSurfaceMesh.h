@@ -124,7 +124,7 @@ public:
   /**
    * @brief Setter property for XPoints
    */
-  void setXPoints(const int& value);
+  void setXPoints(int value);
   /**
    * @brief Getter property for XPoints
    * @return Value of XPoints
@@ -136,7 +136,7 @@ public:
   /**
    * @brief Setter property for YPoints
    */
-  void setYPoints(const int& value);
+  void setYPoints(int value);
   /**
    * @brief Getter property for YPoints
    * @return Value of YPoints
@@ -148,7 +148,7 @@ public:
   /**
    * @brief Setter property for ZPoints
    */
-  void setZPoints(const int& value);
+  void setZPoints(int value);
   /**
    * @brief Getter property for ZPoints
    * @return Value of ZPoints

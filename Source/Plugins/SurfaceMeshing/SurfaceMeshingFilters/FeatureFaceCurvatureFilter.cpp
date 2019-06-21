@@ -644,7 +644,7 @@ QString FeatureFaceCurvatureFilter::getSurfaceMeshMeanCurvaturesArrayName() cons
 }
 
 // -----------------------------------------------------------------------------
-void FeatureFaceCurvatureFilter::setNRing(const int& value)
+void FeatureFaceCurvatureFilter::setNRing(int value)
 {
   m_NRing = value;
 }
@@ -656,7 +656,7 @@ int FeatureFaceCurvatureFilter::getNRing() const
 }
 
 // -----------------------------------------------------------------------------
-void FeatureFaceCurvatureFilter::setComputePrincipalDirectionVectors(const bool& value)
+void FeatureFaceCurvatureFilter::setComputePrincipalDirectionVectors(bool value)
 {
   m_ComputePrincipalDirectionVectors = value;
 }
@@ -668,7 +668,7 @@ bool FeatureFaceCurvatureFilter::getComputePrincipalDirectionVectors() const
 }
 
 // -----------------------------------------------------------------------------
-void FeatureFaceCurvatureFilter::setComputeMeanCurvature(const bool& value)
+void FeatureFaceCurvatureFilter::setComputeMeanCurvature(bool value)
 {
   m_ComputeMeanCurvature = value;
 }
@@ -680,7 +680,7 @@ bool FeatureFaceCurvatureFilter::getComputeMeanCurvature() const
 }
 
 // -----------------------------------------------------------------------------
-void FeatureFaceCurvatureFilter::setComputeGaussianCurvature(const bool& value)
+void FeatureFaceCurvatureFilter::setComputeGaussianCurvature(bool value)
 {
   m_ComputeGaussianCurvature = value;
 }
@@ -692,7 +692,7 @@ bool FeatureFaceCurvatureFilter::getComputeGaussianCurvature() const
 }
 
 // -----------------------------------------------------------------------------
-void FeatureFaceCurvatureFilter::setUseNormalsForCurveFitting(const bool& value)
+void FeatureFaceCurvatureFilter::setUseNormalsForCurveFitting(bool value)
 {
   m_UseNormalsForCurveFitting = value;
 }

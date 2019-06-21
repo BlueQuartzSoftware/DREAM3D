@@ -789,7 +789,7 @@ DataArrayPath FindRelativeMotionBetweenSlices::getSelectedArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void FindRelativeMotionBetweenSlices::setPlane(const unsigned int& value)
+void FindRelativeMotionBetweenSlices::setPlane(unsigned int value)
 {
   m_Plane = value;
 }
@@ -801,7 +801,7 @@ unsigned int FindRelativeMotionBetweenSlices::getPlane() const
 }
 
 // -----------------------------------------------------------------------------
-void FindRelativeMotionBetweenSlices::setPSize1(const int& value)
+void FindRelativeMotionBetweenSlices::setPSize1(int value)
 {
   m_PSize1 = value;
 }
@@ -813,7 +813,7 @@ int FindRelativeMotionBetweenSlices::getPSize1() const
 }
 
 // -----------------------------------------------------------------------------
-void FindRelativeMotionBetweenSlices::setPSize2(const int& value)
+void FindRelativeMotionBetweenSlices::setPSize2(int value)
 {
   m_PSize2 = value;
 }
@@ -825,7 +825,7 @@ int FindRelativeMotionBetweenSlices::getPSize2() const
 }
 
 // -----------------------------------------------------------------------------
-void FindRelativeMotionBetweenSlices::setSSize1(const int& value)
+void FindRelativeMotionBetweenSlices::setSSize1(int value)
 {
   m_SSize1 = value;
 }
@@ -837,7 +837,7 @@ int FindRelativeMotionBetweenSlices::getSSize1() const
 }
 
 // -----------------------------------------------------------------------------
-void FindRelativeMotionBetweenSlices::setSSize2(const int& value)
+void FindRelativeMotionBetweenSlices::setSSize2(int value)
 {
   m_SSize2 = value;
 }
@@ -849,7 +849,7 @@ int FindRelativeMotionBetweenSlices::getSSize2() const
 }
 
 // -----------------------------------------------------------------------------
-void FindRelativeMotionBetweenSlices::setSliceStep(const int& value)
+void FindRelativeMotionBetweenSlices::setSliceStep(int value)
 {
   m_SliceStep = value;
 }

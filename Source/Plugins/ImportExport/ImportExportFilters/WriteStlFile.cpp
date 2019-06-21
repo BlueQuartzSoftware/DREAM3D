@@ -539,7 +539,7 @@ QString WriteStlFile::getOutputStlPrefix() const
 }
 
 // -----------------------------------------------------------------------------
-void WriteStlFile::setGroupByPhase(const bool& value)
+void WriteStlFile::setGroupByPhase(bool value)
 {
   m_GroupByPhase = value;
 }

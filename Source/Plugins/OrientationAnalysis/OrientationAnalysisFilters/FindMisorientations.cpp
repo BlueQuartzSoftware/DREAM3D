@@ -483,7 +483,7 @@ QString FindMisorientations::getAvgMisorientationsArrayName() const
 }
 
 // -----------------------------------------------------------------------------
-void FindMisorientations::setFindAvgMisors(const bool& value)
+void FindMisorientations::setFindAvgMisors(bool value)
 {
   m_FindAvgMisors = value;
 }

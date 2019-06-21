@@ -517,7 +517,7 @@ QString AlignSections::getCellAttributeMatrixName() const
 }
 
 // -----------------------------------------------------------------------------
-void AlignSections::setWriteAlignmentShifts(const bool& value)
+void AlignSections::setWriteAlignmentShifts(bool value)
 {
   m_WriteAlignmentShifts = value;
 }

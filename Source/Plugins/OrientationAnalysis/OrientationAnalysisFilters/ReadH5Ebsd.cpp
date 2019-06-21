@@ -1180,7 +1180,7 @@ QString ReadH5Ebsd::getInputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::setZStartIndex(const int& value)
+void ReadH5Ebsd::setZStartIndex(int value)
 {
   m_ZStartIndex = value;
 }
@@ -1192,7 +1192,7 @@ int ReadH5Ebsd::getZStartIndex() const
 }
 
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::setZEndIndex(const int& value)
+void ReadH5Ebsd::setZEndIndex(int value)
 {
   m_ZEndIndex = value;
 }
@@ -1204,7 +1204,7 @@ int ReadH5Ebsd::getZEndIndex() const
 }
 
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::setUseTransformations(const bool& value)
+void ReadH5Ebsd::setUseTransformations(bool value)
 {
   m_UseTransformations = value;
 }
@@ -1240,7 +1240,7 @@ QSet<QString> ReadH5Ebsd::getDataArrayNames() const
 }
 
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::setAngleRepresentation(const int& value)
+void ReadH5Ebsd::setAngleRepresentation(int value)
 {
   m_AngleRepresentation = value;
 }
@@ -1252,7 +1252,7 @@ int ReadH5Ebsd::getAngleRepresentation() const
 }
 
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::setRefFrameZDir(const uint32_t& value)
+void ReadH5Ebsd::setRefFrameZDir(uint32_t value)
 {
   m_RefFrameZDir = value;
 }

@@ -85,7 +85,7 @@ public:
   /**
    * @brief Setter property for FillRemovedFeatures
    */
-  void setFillRemovedFeatures(const bool& value);
+  void setFillRemovedFeatures(bool value);
   /**
    * @brief Getter property for FillRemovedFeatures
    * @return Value of FillRemovedFeatures

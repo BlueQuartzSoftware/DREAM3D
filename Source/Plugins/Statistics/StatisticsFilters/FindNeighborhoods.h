@@ -103,7 +103,7 @@ public:
   /**
    * @brief Setter property for MultiplesOfAverage
    */
-  void setMultiplesOfAverage(const float& value);
+  void setMultiplesOfAverage(float value);
   /**
    * @brief Getter property for MultiplesOfAverage
    * @return Value of MultiplesOfAverage

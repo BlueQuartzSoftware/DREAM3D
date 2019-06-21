@@ -1830,7 +1830,7 @@ QString GenerateEnsembleStatistics::getStatisticsArrayName() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateEnsembleStatistics::setIncludeRadialDistFunc(const bool& value)
+void GenerateEnsembleStatistics::setIncludeRadialDistFunc(bool value)
 {
   m_IncludeRadialDistFunc = value;
 }
@@ -1842,7 +1842,7 @@ bool GenerateEnsembleStatistics::getIncludeRadialDistFunc() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateEnsembleStatistics::setCalculateMorphologicalStats(const bool& value)
+void GenerateEnsembleStatistics::setCalculateMorphologicalStats(bool value)
 {
   m_CalculateMorphologicalStats = value;
 }
@@ -1854,7 +1854,7 @@ bool GenerateEnsembleStatistics::getCalculateMorphologicalStats() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateEnsembleStatistics::setComputeSizeDistribution(const bool& value)
+void GenerateEnsembleStatistics::setComputeSizeDistribution(bool value)
 {
   m_ComputeSizeDistribution = value;
 }
@@ -1866,7 +1866,7 @@ bool GenerateEnsembleStatistics::getComputeSizeDistribution() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateEnsembleStatistics::setSizeDistributionFitType(const int& value)
+void GenerateEnsembleStatistics::setSizeDistributionFitType(int value)
 {
   m_SizeDistributionFitType = value;
 }
@@ -1878,7 +1878,7 @@ int GenerateEnsembleStatistics::getSizeDistributionFitType() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateEnsembleStatistics::setComputeAspectRatioDistribution(const bool& value)
+void GenerateEnsembleStatistics::setComputeAspectRatioDistribution(bool value)
 {
   m_ComputeAspectRatioDistribution = value;
 }
@@ -1890,7 +1890,7 @@ bool GenerateEnsembleStatistics::getComputeAspectRatioDistribution() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateEnsembleStatistics::setAspectRatioDistributionFitType(const int& value)
+void GenerateEnsembleStatistics::setAspectRatioDistributionFitType(int value)
 {
   m_AspectRatioDistributionFitType = value;
 }
@@ -1902,7 +1902,7 @@ int GenerateEnsembleStatistics::getAspectRatioDistributionFitType() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateEnsembleStatistics::setComputeOmega3Distribution(const bool& value)
+void GenerateEnsembleStatistics::setComputeOmega3Distribution(bool value)
 {
   m_ComputeOmega3Distribution = value;
 }
@@ -1914,7 +1914,7 @@ bool GenerateEnsembleStatistics::getComputeOmega3Distribution() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateEnsembleStatistics::setOmega3DistributionFitType(const int& value)
+void GenerateEnsembleStatistics::setOmega3DistributionFitType(int value)
 {
   m_Omega3DistributionFitType = value;
 }
@@ -1926,7 +1926,7 @@ int GenerateEnsembleStatistics::getOmega3DistributionFitType() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateEnsembleStatistics::setComputeNeighborhoodDistribution(const bool& value)
+void GenerateEnsembleStatistics::setComputeNeighborhoodDistribution(bool value)
 {
   m_ComputeNeighborhoodDistribution = value;
 }
@@ -1938,7 +1938,7 @@ bool GenerateEnsembleStatistics::getComputeNeighborhoodDistribution() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateEnsembleStatistics::setNeighborhoodDistributionFitType(const int& value)
+void GenerateEnsembleStatistics::setNeighborhoodDistributionFitType(int value)
 {
   m_NeighborhoodDistributionFitType = value;
 }
@@ -1950,7 +1950,7 @@ int GenerateEnsembleStatistics::getNeighborhoodDistributionFitType() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateEnsembleStatistics::setCalculateCrystallographicStats(const bool& value)
+void GenerateEnsembleStatistics::setCalculateCrystallographicStats(bool value)
 {
   m_CalculateCrystallographicStats = value;
 }
@@ -1962,7 +1962,7 @@ bool GenerateEnsembleStatistics::getCalculateCrystallographicStats() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateEnsembleStatistics::setCalculateODF(const bool& value)
+void GenerateEnsembleStatistics::setCalculateODF(bool value)
 {
   m_CalculateODF = value;
 }
@@ -1974,7 +1974,7 @@ bool GenerateEnsembleStatistics::getCalculateODF() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateEnsembleStatistics::setCalculateMDF(const bool& value)
+void GenerateEnsembleStatistics::setCalculateMDF(bool value)
 {
   m_CalculateMDF = value;
 }
@@ -1986,7 +1986,7 @@ bool GenerateEnsembleStatistics::getCalculateMDF() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateEnsembleStatistics::setCalculateAxisODF(const bool& value)
+void GenerateEnsembleStatistics::setCalculateAxisODF(bool value)
 {
   m_CalculateAxisODF = value;
 }
@@ -1998,7 +1998,7 @@ bool GenerateEnsembleStatistics::getCalculateAxisODF() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateEnsembleStatistics::setSizeCorrelationResolution(const float& value)
+void GenerateEnsembleStatistics::setSizeCorrelationResolution(float value)
 {
   m_SizeCorrelationResolution = value;
 }

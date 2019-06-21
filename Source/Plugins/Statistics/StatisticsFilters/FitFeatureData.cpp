@@ -405,7 +405,7 @@ DataArrayPath FitFeatureData::getSelectedFeatureArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void FitFeatureData::setDistributionType(const unsigned int& value)
+void FitFeatureData::setDistributionType(unsigned int value)
 {
   m_DistributionType = value;
 }
@@ -417,7 +417,7 @@ unsigned int FitFeatureData::getDistributionType() const
 }
 
 // -----------------------------------------------------------------------------
-void FitFeatureData::setRemoveBiasedFeatures(const bool& value)
+void FitFeatureData::setRemoveBiasedFeatures(bool value)
 {
   m_RemoveBiasedFeatures = value;
 }

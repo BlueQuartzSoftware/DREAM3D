@@ -55,7 +55,7 @@ class EnsembleInfoItemDelegate : public QStyledItemDelegate
   Q_OBJECT
 
 public:
-  explicit EnsembleInfoItemDelegate(int numPhases, QObject* parent = 0);
+  explicit EnsembleInfoItemDelegate(int numPhases, QObject* parent = nullptr);
 
   virtual ~EnsembleInfoItemDelegate();
 

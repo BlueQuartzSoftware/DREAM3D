@@ -92,7 +92,7 @@ public:
   /**
    * @brief Setter property for MisorientationTolerance
    */
-  void setMisorientationTolerance(const float& value);
+  void setMisorientationTolerance(float value);
   /**
    * @brief Getter property for MisorientationTolerance
    * @return Value of MisorientationTolerance
@@ -104,7 +104,7 @@ public:
   /**
    * @brief Setter property for NumberOfNeighbors
    */
-  void setNumberOfNeighbors(const int& value);
+  void setNumberOfNeighbors(int value);
   /**
    * @brief Getter property for NumberOfNeighbors
    * @return Value of NumberOfNeighbors

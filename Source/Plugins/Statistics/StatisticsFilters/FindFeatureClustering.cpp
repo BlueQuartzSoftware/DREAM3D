@@ -570,7 +570,7 @@ QString FindFeatureClustering::getErrorOutputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void FindFeatureClustering::setNumberOfBins(const int& value)
+void FindFeatureClustering::setNumberOfBins(int value)
 {
   m_NumberOfBins = value;
 }
@@ -582,7 +582,7 @@ int FindFeatureClustering::getNumberOfBins() const
 }
 
 // -----------------------------------------------------------------------------
-void FindFeatureClustering::setPhaseNumber(const int& value)
+void FindFeatureClustering::setPhaseNumber(int value)
 {
   m_PhaseNumber = value;
 }
@@ -606,7 +606,7 @@ DataArrayPath FindFeatureClustering::getCellEnsembleAttributeMatrixName() const
 }
 
 // -----------------------------------------------------------------------------
-void FindFeatureClustering::setRemoveBiasedFeatures(const bool& value)
+void FindFeatureClustering::setRemoveBiasedFeatures(bool value)
 {
   m_RemoveBiasedFeatures = value;
 }

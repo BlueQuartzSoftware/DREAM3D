@@ -75,7 +75,7 @@ public:
   /**
    * @brief Setter property for EnableAxisDecorations
    */
-  void setEnableAxisDecorations(const bool& value);
+  void setEnableAxisDecorations(bool value);
   /**
    * @brief Getter property for EnableAxisDecorations
    * @return Value of EnableAxisDecorations
@@ -116,7 +116,7 @@ protected:
   /**
    * @brief Setter property for Initializing
    */
-  void setInitializing(const bool& value);
+  void setInitializing(bool value);
   /**
    * @brief Getter property for Initializing
    * @return Value of Initializing

@@ -66,7 +66,7 @@ public:
   /**
    * @brief Setter property for PhaseType
    */
-  virtual void setPhaseType(const PhaseType::Type& value);
+  virtual void setPhaseType(PhaseType::Type value);
   /**
    * @brief Getter property for PhaseType
    * @return Value of PhaseType
@@ -76,7 +76,7 @@ public:
   /**
    * @brief Setter property for CrystalStructure
    */
-  virtual void setCrystalStructure(const unsigned int& value);
+  virtual void setCrystalStructure(unsigned int value);
   /**
    * @brief Getter property for CrystalStructure
    * @return Value of CrystalStructure
@@ -86,7 +86,7 @@ public:
   /**
    * @brief Setter property for PhaseIndex
    */
-  virtual void setPhaseIndex(const int& value);
+  virtual void setPhaseIndex(int value);
   /**
    * @brief Getter property for PhaseIndex
    * @return Value of PhaseIndex
@@ -96,7 +96,7 @@ public:
   /**
    * @brief Setter property for PhaseFraction
    */
-  virtual void setPhaseFraction(const float& value);
+  virtual void setPhaseFraction(float value);
   /**
    * @brief Getter property for PhaseFraction
    * @return Value of PhaseFraction
@@ -106,7 +106,7 @@ public:
   /**
    * @brief Setter property for TotalPhaseFraction
    */
-  virtual void setTotalPhaseFraction(const float& value);
+  virtual void setTotalPhaseFraction(float value);
   /**
    * @brief Getter property for TotalPhaseFraction
    * @return Value of TotalPhaseFraction
@@ -116,7 +116,7 @@ public:
   /**
    * @brief Setter property for DataHasBeenGenerated
    */
-  virtual void setDataHasBeenGenerated(const bool& value);
+  virtual void setDataHasBeenGenerated(bool value);
   /**
    * @brief Getter property for DataHasBeenGenerated
    * @return Value of DataHasBeenGenerated
@@ -126,7 +126,7 @@ public:
   /**
    * @brief Setter property for BulkLoadFailure
    */
-  virtual void setBulkLoadFailure(const bool& value);
+  virtual void setBulkLoadFailure(bool value);
   /**
    * @brief Getter property for BulkLoadFailure
    * @return Value of BulkLoadFailure

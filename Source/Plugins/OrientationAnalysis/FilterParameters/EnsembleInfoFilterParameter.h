@@ -121,7 +121,7 @@ public:
   /**
    * @brief Setter property for ShowOperators
    */
-  void setShowOperators(const bool& value);
+  void setShowOperators(bool value);
   /**
    * @brief Getter property for ShowOperators
    * @return Value of ShowOperators

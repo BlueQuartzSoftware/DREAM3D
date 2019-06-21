@@ -96,7 +96,7 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
     /**
      * @brief Setter property for Phase
      */
-    void setPhase(const int& value);
+    void setPhase(int value);
     /**
      * @brief Getter property for Phase
      * @return Value of Phase

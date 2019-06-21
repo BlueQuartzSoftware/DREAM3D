@@ -409,7 +409,7 @@ public:
   /**
    * @brief Setter property for IncludeRadialDistFunc
    */
-  void setIncludeRadialDistFunc(const bool& value);
+  void setIncludeRadialDistFunc(bool value);
   /**
    * @brief Getter property for IncludeRadialDistFunc
    * @return Value of IncludeRadialDistFunc
@@ -421,7 +421,7 @@ public:
   /**
    * @brief Setter property for CalculateMorphologicalStats
    */
-  void setCalculateMorphologicalStats(const bool& value);
+  void setCalculateMorphologicalStats(bool value);
   /**
    * @brief Getter property for CalculateMorphologicalStats
    * @return Value of CalculateMorphologicalStats
@@ -433,7 +433,7 @@ public:
   /**
    * @brief Setter property for ComputeSizeDistribution
    */
-  void setComputeSizeDistribution(const bool& value);
+  void setComputeSizeDistribution(bool value);
   /**
    * @brief Getter property for ComputeSizeDistribution
    * @return Value of ComputeSizeDistribution
@@ -445,7 +445,7 @@ public:
   /**
    * @brief Setter property for SizeDistributionFitType
    */
-  void setSizeDistributionFitType(const int& value);
+  void setSizeDistributionFitType(int value);
   /**
    * @brief Getter property for SizeDistributionFitType
    * @return Value of SizeDistributionFitType
@@ -457,7 +457,7 @@ public:
   /**
    * @brief Setter property for ComputeAspectRatioDistribution
    */
-  void setComputeAspectRatioDistribution(const bool& value);
+  void setComputeAspectRatioDistribution(bool value);
   /**
    * @brief Getter property for ComputeAspectRatioDistribution
    * @return Value of ComputeAspectRatioDistribution
@@ -469,7 +469,7 @@ public:
   /**
    * @brief Setter property for AspectRatioDistributionFitType
    */
-  void setAspectRatioDistributionFitType(const int& value);
+  void setAspectRatioDistributionFitType(int value);
   /**
    * @brief Getter property for AspectRatioDistributionFitType
    * @return Value of AspectRatioDistributionFitType
@@ -481,7 +481,7 @@ public:
   /**
    * @brief Setter property for ComputeOmega3Distribution
    */
-  void setComputeOmega3Distribution(const bool& value);
+  void setComputeOmega3Distribution(bool value);
   /**
    * @brief Getter property for ComputeOmega3Distribution
    * @return Value of ComputeOmega3Distribution
@@ -493,7 +493,7 @@ public:
   /**
    * @brief Setter property for Omega3DistributionFitType
    */
-  void setOmega3DistributionFitType(const int& value);
+  void setOmega3DistributionFitType(int value);
   /**
    * @brief Getter property for Omega3DistributionFitType
    * @return Value of Omega3DistributionFitType
@@ -505,7 +505,7 @@ public:
   /**
    * @brief Setter property for ComputeNeighborhoodDistribution
    */
-  void setComputeNeighborhoodDistribution(const bool& value);
+  void setComputeNeighborhoodDistribution(bool value);
   /**
    * @brief Getter property for ComputeNeighborhoodDistribution
    * @return Value of ComputeNeighborhoodDistribution
@@ -517,7 +517,7 @@ public:
   /**
    * @brief Setter property for NeighborhoodDistributionFitType
    */
-  void setNeighborhoodDistributionFitType(const int& value);
+  void setNeighborhoodDistributionFitType(int value);
   /**
    * @brief Getter property for NeighborhoodDistributionFitType
    * @return Value of NeighborhoodDistributionFitType
@@ -529,7 +529,7 @@ public:
   /**
    * @brief Setter property for CalculateCrystallographicStats
    */
-  void setCalculateCrystallographicStats(const bool& value);
+  void setCalculateCrystallographicStats(bool value);
   /**
    * @brief Getter property for CalculateCrystallographicStats
    * @return Value of CalculateCrystallographicStats
@@ -541,7 +541,7 @@ public:
   /**
    * @brief Setter property for CalculateODF
    */
-  void setCalculateODF(const bool& value);
+  void setCalculateODF(bool value);
   /**
    * @brief Getter property for CalculateODF
    * @return Value of CalculateODF
@@ -553,7 +553,7 @@ public:
   /**
    * @brief Setter property for CalculateMDF
    */
-  void setCalculateMDF(const bool& value);
+  void setCalculateMDF(bool value);
   /**
    * @brief Getter property for CalculateMDF
    * @return Value of CalculateMDF
@@ -565,7 +565,7 @@ public:
   /**
    * @brief Setter property for CalculateAxisODF
    */
-  void setCalculateAxisODF(const bool& value);
+  void setCalculateAxisODF(bool value);
   /**
    * @brief Getter property for CalculateAxisODF
    * @return Value of CalculateAxisODF
@@ -577,7 +577,7 @@ public:
   /**
    * @brief Setter property for SizeCorrelationResolution
    */
-  void setSizeCorrelationResolution(const float& value);
+  void setSizeCorrelationResolution(float value);
   /**
    * @brief Getter property for SizeCorrelationResolution
    * @return Value of SizeCorrelationResolution

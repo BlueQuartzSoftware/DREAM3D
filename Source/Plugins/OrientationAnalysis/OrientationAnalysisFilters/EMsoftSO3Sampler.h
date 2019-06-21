@@ -103,7 +103,7 @@ public:
   /**
    * @brief Setter property for sampleModeSelector
    */
-  void setsampleModeSelector(const int& value);
+  void setsampleModeSelector(int value);
   /**
    * @brief Getter property for sampleModeSelector
    * @return Value of sampleModeSelector
@@ -115,7 +115,7 @@ public:
   /**
    * @brief Setter property for PointGroup
    */
-  void setPointGroup(const int& value);
+  void setPointGroup(int value);
   /**
    * @brief Getter property for PointGroup
    * @return Value of PointGroup
@@ -127,7 +127,7 @@ public:
   /**
    * @brief Setter property for Numsp
    */
-  void setNumsp(const int& value);
+  void setNumsp(int value);
   /**
    * @brief Getter property for Numsp
    * @return Value of Numsp
@@ -139,7 +139,7 @@ public:
   /**
    * @brief Setter property for MisOr
    */
-  void setMisOr(const double& value);
+  void setMisOr(double value);
   /**
    * @brief Getter property for MisOr
    * @return Value of MisOr
@@ -163,7 +163,7 @@ public:
   /**
    * @brief Setter property for MisOrFull
    */
-  void setMisOrFull(const double& value);
+  void setMisOrFull(double value);
   /**
    * @brief Getter property for MisOrFull
    * @return Value of MisOrFull
@@ -187,7 +187,7 @@ public:
   /**
    * @brief Setter property for OffsetGrid
    */
-  void setOffsetGrid(const bool& value);
+  void setOffsetGrid(bool value);
   /**
    * @brief Getter property for OffsetGrid
    * @return Value of OffsetGrid

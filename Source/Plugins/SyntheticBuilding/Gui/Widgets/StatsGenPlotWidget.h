@@ -95,7 +95,7 @@ public:
   /**
    * @brief Setter property for Mu
    */
-  void setMu(const float& value);
+  void setMu(float value);
   /**
    * @brief Getter property for Mu
    * @return Value of Mu
@@ -105,7 +105,7 @@ public:
   /**
    * @brief Setter property for Sigma
    */
-  void setSigma(const float& value);
+  void setSigma(float value);
   /**
    * @brief Getter property for Sigma
    * @return Value of Sigma
@@ -115,7 +115,7 @@ public:
   /**
    * @brief Setter property for MinCutOff
    */
-  void setMinCutOff(const float& value);
+  void setMinCutOff(float value);
   /**
    * @brief Getter property for MinCutOff
    * @return Value of MinCutOff
@@ -125,7 +125,7 @@ public:
   /**
    * @brief Setter property for MaxCutOff
    */
-  void setMaxCutOff(const float& value);
+  void setMaxCutOff(float value);
   /**
    * @brief Getter property for MaxCutOff
    * @return Value of MaxCutOff
@@ -135,7 +135,7 @@ public:
   /**
    * @brief Setter property for BinStep
    */
-  void setBinStep(const float& value);
+  void setBinStep(float value);
   /**
    * @brief Getter property for BinStep
    * @return Value of BinStep
@@ -145,7 +145,7 @@ public:
   /**
    * @brief Setter property for PhaseIndex
    */
-  void setPhaseIndex(const int& value);
+  void setPhaseIndex(int value);
   /**
    * @brief Getter property for PhaseIndex
    * @return Value of PhaseIndex
@@ -155,7 +155,7 @@ public:
   /**
    * @brief Setter property for CrystalStructure
    */
-  void setCrystalStructure(const unsigned int& value);
+  void setCrystalStructure(unsigned int value);
   /**
    * @brief Getter property for CrystalStructure
    * @return Value of CrystalStructure

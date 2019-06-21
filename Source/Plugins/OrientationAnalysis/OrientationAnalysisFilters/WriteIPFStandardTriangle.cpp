@@ -364,7 +364,7 @@ QString WriteIPFStandardTriangle::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void WriteIPFStandardTriangle::setLaueClass(const int& value)
+void WriteIPFStandardTriangle::setLaueClass(int value)
 {
   m_LaueClass = value;
 }
@@ -388,7 +388,7 @@ QString WriteIPFStandardTriangle::getOutputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void WriteIPFStandardTriangle::setImageSize(const int& value)
+void WriteIPFStandardTriangle::setImageSize(int value)
 {
   m_ImageSize = value;
 }

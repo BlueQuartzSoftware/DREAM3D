@@ -93,7 +93,7 @@ class OrientationLib_EXPORT TexturePreset
     /**
      * @brief Setter property for CrystalStructure
      */
-    void setCrystalStructure(const unsigned int& value);
+    void setCrystalStructure(unsigned int value);
     /**
      * @brief Getter property for CrystalStructure
      * @return Value of CrystalStructure
@@ -113,7 +113,7 @@ class OrientationLib_EXPORT TexturePreset
     /**
      * @brief Setter property for Euler1
      */
-    void setEuler1(const double& value);
+    void setEuler1(double value);
     /**
      * @brief Getter property for Euler1
      * @return Value of Euler1
@@ -123,7 +123,7 @@ class OrientationLib_EXPORT TexturePreset
     /**
      * @brief Setter property for Euler2
      */
-    void setEuler2(const double& value);
+    void setEuler2(double value);
     /**
      * @brief Getter property for Euler2
      * @return Value of Euler2
@@ -133,7 +133,7 @@ class OrientationLib_EXPORT TexturePreset
     /**
      * @brief Setter property for Euler3
      */
-    void setEuler3(const double& value);
+    void setEuler3(double value);
     /**
      * @brief Getter property for Euler3
      * @return Value of Euler3

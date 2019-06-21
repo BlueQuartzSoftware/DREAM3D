@@ -1144,7 +1144,7 @@ QString FindGBCDMetricBased::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void FindGBCDMetricBased::setPhaseOfInterest(const int& value)
+void FindGBCDMetricBased::setPhaseOfInterest(int value)
 {
   m_PhaseOfInterest = value;
 }
@@ -1168,7 +1168,7 @@ AxisAngleInput_t FindGBCDMetricBased::getMisorientationRotation() const
 }
 
 // -----------------------------------------------------------------------------
-void FindGBCDMetricBased::setChosenLimitDists(const int& value)
+void FindGBCDMetricBased::setChosenLimitDists(int value)
 {
   m_ChosenLimitDists = value;
 }
@@ -1180,7 +1180,7 @@ int FindGBCDMetricBased::getChosenLimitDists() const
 }
 
 // -----------------------------------------------------------------------------
-void FindGBCDMetricBased::setNumSamplPts(const int& value)
+void FindGBCDMetricBased::setNumSamplPts(int value)
 {
   m_NumSamplPts = value;
 }
@@ -1192,7 +1192,7 @@ int FindGBCDMetricBased::getNumSamplPts() const
 }
 
 // -----------------------------------------------------------------------------
-void FindGBCDMetricBased::setExcludeTripleLines(const bool& value)
+void FindGBCDMetricBased::setExcludeTripleLines(bool value)
 {
   m_ExcludeTripleLines = value;
 }
@@ -1228,7 +1228,7 @@ QString FindGBCDMetricBased::getErrOutputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void FindGBCDMetricBased::setSaveRelativeErr(const bool& value)
+void FindGBCDMetricBased::setSaveRelativeErr(bool value)
 {
   m_SaveRelativeErr = value;
 }

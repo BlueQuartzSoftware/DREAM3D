@@ -549,7 +549,7 @@ DataArrayPath VectorSegmentFeatures::getSelectedVectorArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void VectorSegmentFeatures::setAngleTolerance(const float& value)
+void VectorSegmentFeatures::setAngleTolerance(float value)
 {
   m_AngleTolerance = value;
 }
@@ -561,7 +561,7 @@ float VectorSegmentFeatures::getAngleTolerance() const
 }
 
 // -----------------------------------------------------------------------------
-void VectorSegmentFeatures::setRandomizeFeatureIds(const bool& value)
+void VectorSegmentFeatures::setRandomizeFeatureIds(bool value)
 {
   m_RandomizeFeatureIds = value;
 }
@@ -573,7 +573,7 @@ bool VectorSegmentFeatures::getRandomizeFeatureIds() const
 }
 
 // -----------------------------------------------------------------------------
-void VectorSegmentFeatures::setUseGoodVoxels(const bool& value)
+void VectorSegmentFeatures::setUseGoodVoxels(bool value)
 {
   m_UseGoodVoxels = value;
 }

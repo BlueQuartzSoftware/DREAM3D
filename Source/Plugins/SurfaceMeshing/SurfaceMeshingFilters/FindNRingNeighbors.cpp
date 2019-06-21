@@ -172,7 +172,7 @@ QString FindNRingNeighbors::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void FindNRingNeighbors::setTriangleId(const int64_t& value)
+void FindNRingNeighbors::setTriangleId(int64_t value)
 {
   m_TriangleId = value;
 }
@@ -184,7 +184,7 @@ int64_t FindNRingNeighbors::getTriangleId() const
 }
 
 // -----------------------------------------------------------------------------
-void FindNRingNeighbors::setRegionId0(const int32_t& value)
+void FindNRingNeighbors::setRegionId0(int32_t value)
 {
   m_RegionId0 = value;
 }
@@ -196,7 +196,7 @@ int32_t FindNRingNeighbors::getRegionId0() const
 }
 
 // -----------------------------------------------------------------------------
-void FindNRingNeighbors::setRegionId1(const int32_t& value)
+void FindNRingNeighbors::setRegionId1(int32_t value)
 {
   m_RegionId1 = value;
 }
@@ -208,7 +208,7 @@ int32_t FindNRingNeighbors::getRegionId1() const
 }
 
 // -----------------------------------------------------------------------------
-void FindNRingNeighbors::setRing(const int64_t& value)
+void FindNRingNeighbors::setRing(int64_t value)
 {
   m_Ring = value;
 }
@@ -220,7 +220,7 @@ int64_t FindNRingNeighbors::getRing() const
 }
 
 // -----------------------------------------------------------------------------
-void FindNRingNeighbors::setWriteBinaryFile(const bool& value)
+void FindNRingNeighbors::setWriteBinaryFile(bool value)
 {
   m_WriteBinaryFile = value;
 }
@@ -232,7 +232,7 @@ bool FindNRingNeighbors::getWriteBinaryFile() const
 }
 
 // -----------------------------------------------------------------------------
-void FindNRingNeighbors::setWriteConformalMesh(const bool& value)
+void FindNRingNeighbors::setWriteConformalMesh(bool value)
 {
   m_WriteConformalMesh = value;
 }

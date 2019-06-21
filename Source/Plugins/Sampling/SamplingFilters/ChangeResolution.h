@@ -141,7 +141,7 @@ public:
   /**
    * @brief Setter property for RenumberFeatures
    */
-  void setRenumberFeatures(const bool& value);
+  void setRenumberFeatures(bool value);
   /**
    * @brief Getter property for RenumberFeatures
    * @return Value of RenumberFeatures
@@ -153,7 +153,7 @@ public:
   /**
    * @brief Setter property for SaveAsNewDataContainer
    */
-  void setSaveAsNewDataContainer(const bool& value);
+  void setSaveAsNewDataContainer(bool value);
   /**
    * @brief Getter property for SaveAsNewDataContainer
    * @return Value of SaveAsNewDataContainer

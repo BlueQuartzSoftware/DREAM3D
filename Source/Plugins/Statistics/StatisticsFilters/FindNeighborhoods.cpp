@@ -542,7 +542,7 @@ QString FindNeighborhoods::getNeighborhoodListArrayName() const
 }
 
 // -----------------------------------------------------------------------------
-void FindNeighborhoods::setMultiplesOfAverage(const float& value)
+void FindNeighborhoods::setMultiplesOfAverage(float value)
 {
   m_MultiplesOfAverage = value;
 }

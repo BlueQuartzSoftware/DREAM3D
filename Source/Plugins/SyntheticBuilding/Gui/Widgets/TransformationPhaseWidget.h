@@ -62,15 +62,15 @@ public:
 
   void updatePlots();
 
-  void setCrystalStructure(const unsigned int& xtal) override;
+  void setCrystalStructure(unsigned int xtal) override;
   unsigned int getCrystalStructure() const override;
-  void setPhaseIndex(const int& index) override;
+  void setPhaseIndex(int index) override;
   int getPhaseIndex() const override;
 
   /**
    * @brief Setter property for ParentPhase
    */
-  void setParentPhase(const unsigned int& value);
+  void setParentPhase(unsigned int value);
   /**
    * @brief Getter property for ParentPhase
    * @return Value of ParentPhase
@@ -80,12 +80,12 @@ public:
   /**
    * @brief Setter property for PhaseType
    */
-  void setPhaseType(const PhaseType::Type& value);
+  void setPhaseType(PhaseType::Type value);
   /**
    * @brief Getter property for PhaseType
    * @return Value of PhaseType
    */
-  PhaseType::Type getPhaseType() const;
+  PhaseType::Type getPhaseType() const override;
 
   /**
    * @brief Setter property for SGPlotWidgets

@@ -663,7 +663,7 @@ QString GroupMicroTextureRegions::getNewCellFeatureAttributeMatrixName() const
 }
 
 // -----------------------------------------------------------------------------
-void GroupMicroTextureRegions::setCAxisTolerance(const float& value)
+void GroupMicroTextureRegions::setCAxisTolerance(float value)
 {
   m_CAxisTolerance = value;
 }
@@ -675,7 +675,7 @@ float GroupMicroTextureRegions::getCAxisTolerance() const
 }
 
 // -----------------------------------------------------------------------------
-void GroupMicroTextureRegions::setUseRunningAverage(const bool& value)
+void GroupMicroTextureRegions::setUseRunningAverage(bool value)
 {
   m_UseRunningAverage = value;
 }
@@ -687,7 +687,7 @@ bool GroupMicroTextureRegions::getUseRunningAverage() const
 }
 
 // -----------------------------------------------------------------------------
-void GroupMicroTextureRegions::setRandomizeParentIds(const bool& value)
+void GroupMicroTextureRegions::setRandomizeParentIds(bool value)
 {
   m_RandomizeParentIds = value;
 }

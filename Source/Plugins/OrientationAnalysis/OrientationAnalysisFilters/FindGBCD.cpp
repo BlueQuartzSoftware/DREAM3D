@@ -909,7 +909,7 @@ QString FindGBCD::getFaceEnsembleAttributeMatrixName() const
 }
 
 // -----------------------------------------------------------------------------
-void FindGBCD::setGBCDRes(const float& value)
+void FindGBCD::setGBCDRes(float value)
 {
   m_GBCDRes = value;
 }

@@ -97,7 +97,7 @@ public:
   /**
    * @brief Setter property for RotationAngle
    */
-  void setRotationAngle(const float& value);
+  void setRotationAngle(float value);
   /**
    * @brief Getter property for RotationAngle
    * @return Value of RotationAngle

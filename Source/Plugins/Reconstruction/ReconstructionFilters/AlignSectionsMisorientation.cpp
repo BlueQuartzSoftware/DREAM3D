@@ -505,7 +505,7 @@ QString AlignSectionsMisorientation::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void AlignSectionsMisorientation::setMisorientationTolerance(const float& value)
+void AlignSectionsMisorientation::setMisorientationTolerance(float value)
 {
   m_MisorientationTolerance = value;
 }
@@ -517,7 +517,7 @@ float AlignSectionsMisorientation::getMisorientationTolerance() const
 }
 
 // -----------------------------------------------------------------------------
-void AlignSectionsMisorientation::setUseGoodVoxels(const bool& value)
+void AlignSectionsMisorientation::setUseGoodVoxels(bool value)
 {
   m_UseGoodVoxels = value;
 }

@@ -97,7 +97,7 @@ public:
   /**
    * @brief Setter property for GenerateVertexTriangleLists
    */
-  void setGenerateVertexTriangleLists(const bool& value);
+  void setGenerateVertexTriangleLists(bool value);
   /**
    * @brief Getter property for GenerateVertexTriangleLists
    * @return Value of GenerateVertexTriangleLists
@@ -109,7 +109,7 @@ public:
   /**
    * @brief Setter property for GenerateTriangleNeighbors
    */
-  void setGenerateTriangleNeighbors(const bool& value);
+  void setGenerateTriangleNeighbors(bool value);
   /**
    * @brief Getter property for GenerateTriangleNeighbors
    * @return Value of GenerateTriangleNeighbors

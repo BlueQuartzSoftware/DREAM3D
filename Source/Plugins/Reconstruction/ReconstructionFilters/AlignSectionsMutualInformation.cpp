@@ -717,7 +717,7 @@ QString AlignSectionsMutualInformation::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void AlignSectionsMutualInformation::setMisorientationTolerance(const float& value)
+void AlignSectionsMutualInformation::setMisorientationTolerance(float value)
 {
   m_MisorientationTolerance = value;
 }
@@ -729,7 +729,7 @@ float AlignSectionsMutualInformation::getMisorientationTolerance() const
 }
 
 // -----------------------------------------------------------------------------
-void AlignSectionsMutualInformation::setUseGoodVoxels(const bool& value)
+void AlignSectionsMutualInformation::setUseGoodVoxels(bool value)
 {
   m_UseGoodVoxels = value;
 }

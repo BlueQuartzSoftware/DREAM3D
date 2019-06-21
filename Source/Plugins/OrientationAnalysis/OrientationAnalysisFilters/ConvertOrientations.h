@@ -88,7 +88,7 @@ public:
   /**
    * @brief Setter property for InputType
    */
-  void setInputType(const int& value);
+  void setInputType(int value);
   /**
    * @brief Getter property for InputType
    * @return Value of InputType
@@ -100,7 +100,7 @@ public:
   /**
    * @brief Setter property for OutputType
    */
-  void setOutputType(const int& value);
+  void setOutputType(int value);
   /**
    * @brief Getter property for OutputType
    * @return Value of OutputType

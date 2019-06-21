@@ -101,7 +101,7 @@ public:
   /**
    * @brief Setter property for WriteFile
    */
-  void setWriteFile(const bool& value);
+  void setWriteFile(bool value);
   /**
    * @brief Getter property for WriteFile
    * @return Value of WriteFile

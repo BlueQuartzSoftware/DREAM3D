@@ -133,7 +133,7 @@ public:
   /**
    * @brief Setter property for WriteBinaryFile
    */
-  void setWriteBinaryFile(const bool& value);
+  void setWriteBinaryFile(bool value);
   /**
    * @brief Getter property for WriteBinaryFile
    * @return Value of WriteBinaryFile
@@ -145,7 +145,7 @@ public:
   /**
    * @brief Setter property for WriteConformalMesh
    */
-  void setWriteConformalMesh(const bool& value);
+  void setWriteConformalMesh(bool value);
   /**
    * @brief Getter property for WriteConformalMesh
    * @return Value of WriteConformalMesh

@@ -167,7 +167,7 @@ public:
   /**
    * @brief Setter property for DoBoundaries
    */
-  void setDoBoundaries(const bool& value);
+  void setDoBoundaries(bool value);
   /**
    * @brief Getter property for DoBoundaries
    * @return Value of DoBoundaries
@@ -179,7 +179,7 @@ public:
   /**
    * @brief Setter property for DoTripleLines
    */
-  void setDoTripleLines(const bool& value);
+  void setDoTripleLines(bool value);
   /**
    * @brief Getter property for DoTripleLines
    * @return Value of DoTripleLines
@@ -191,7 +191,7 @@ public:
   /**
    * @brief Setter property for DoQuadPoints
    */
-  void setDoQuadPoints(const bool& value);
+  void setDoQuadPoints(bool value);
   /**
    * @brief Getter property for DoQuadPoints
    * @return Value of DoQuadPoints
@@ -203,7 +203,7 @@ public:
   /**
    * @brief Setter property for SaveNearestNeighbors
    */
-  void setSaveNearestNeighbors(const bool& value);
+  void setSaveNearestNeighbors(bool value);
   /**
    * @brief Getter property for SaveNearestNeighbors
    * @return Value of SaveNearestNeighbors
@@ -215,7 +215,7 @@ public:
   /**
    * @brief Setter property for CalcManhattanDist
    */
-  void setCalcManhattanDist(const bool& value);
+  void setCalcManhattanDist(bool value);
   /**
    * @brief Getter property for CalcManhattanDist
    * @return Value of CalcManhattanDist

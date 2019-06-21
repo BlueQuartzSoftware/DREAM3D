@@ -593,7 +593,7 @@ QString MinNeighbors::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void MinNeighbors::setMinNumNeighbors(const int& value)
+void MinNeighbors::setMinNumNeighbors(int value)
 {
   m_MinNumNeighbors = value;
 }
@@ -605,7 +605,7 @@ int MinNeighbors::getMinNumNeighbors() const
 }
 
 // -----------------------------------------------------------------------------
-void MinNeighbors::setApplyToSinglePhase(const bool& value)
+void MinNeighbors::setApplyToSinglePhase(bool value)
 {
   m_ApplyToSinglePhase = value;
 }
@@ -617,7 +617,7 @@ bool MinNeighbors::getApplyToSinglePhase() const
 }
 
 // -----------------------------------------------------------------------------
-void MinNeighbors::setPhaseNumber(const int& value)
+void MinNeighbors::setPhaseNumber(int value)
 {
   m_PhaseNumber = value;
 }

@@ -437,7 +437,7 @@ QString AvizoRectilinearCoordinateWriter::getOutputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void AvizoRectilinearCoordinateWriter::setWriteBinaryFile(const bool& value)
+void AvizoRectilinearCoordinateWriter::setWriteBinaryFile(bool value)
 {
   m_WriteBinaryFile = value;
 }
@@ -461,7 +461,7 @@ QString AvizoRectilinearCoordinateWriter::getUnits() const
 }
 
 // -----------------------------------------------------------------------------
-void AvizoRectilinearCoordinateWriter::setWriteFeatureIds(const bool& value)
+void AvizoRectilinearCoordinateWriter::setWriteFeatureIds(bool value)
 {
   m_WriteFeatureIds = value;
 }

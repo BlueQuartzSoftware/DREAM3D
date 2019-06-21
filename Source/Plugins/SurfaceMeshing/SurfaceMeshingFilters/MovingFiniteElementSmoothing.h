@@ -95,7 +95,7 @@ class SurfaceMeshing_EXPORT MovingFiniteElementSmoothing : public SurfaceMeshFil
     /**
      * @brief Setter property for IterationSteps
      */
-    void setIterationSteps(const int& value);
+    void setIterationSteps(int value);
     /**
      * @brief Getter property for IterationSteps
      * @return Value of IterationSteps
@@ -106,7 +106,7 @@ class SurfaceMeshing_EXPORT MovingFiniteElementSmoothing : public SurfaceMeshFil
     /**
      * @brief Setter property for NodeConstraints
      */
-    void setNodeConstraints(const bool& value);
+    void setNodeConstraints(bool value);
     /**
      * @brief Getter property for NodeConstraints
      * @return Value of NodeConstraints
@@ -117,7 +117,7 @@ class SurfaceMeshing_EXPORT MovingFiniteElementSmoothing : public SurfaceMeshFil
     /**
      * @brief Setter property for ConstrainSurfaceNodes
      */
-    void setConstrainSurfaceNodes(const bool& value);
+    void setConstrainSurfaceNodes(bool value);
     /**
      * @brief Getter property for ConstrainSurfaceNodes
      * @return Value of ConstrainSurfaceNodes
@@ -128,7 +128,7 @@ class SurfaceMeshing_EXPORT MovingFiniteElementSmoothing : public SurfaceMeshFil
     /**
      * @brief Setter property for ConstrainQuadPoints
      */
-    void setConstrainQuadPoints(const bool& value);
+    void setConstrainQuadPoints(bool value);
     /**
      * @brief Getter property for ConstrainQuadPoints
      * @return Value of ConstrainQuadPoints
@@ -139,7 +139,7 @@ class SurfaceMeshing_EXPORT MovingFiniteElementSmoothing : public SurfaceMeshFil
     /**
      * @brief Setter property for SmoothTripleLines
      */
-    void setSmoothTripleLines(const bool& value);
+    void setSmoothTripleLines(bool value);
     /**
      * @brief Getter property for SmoothTripleLines
      * @return Value of SmoothTripleLines

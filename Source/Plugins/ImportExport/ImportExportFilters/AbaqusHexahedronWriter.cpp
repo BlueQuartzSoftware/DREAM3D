@@ -787,7 +787,7 @@ DataArrayPath AbaqusHexahedronWriter::getFeatureIdsArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void AbaqusHexahedronWriter::setHourglassStiffness(const int& value)
+void AbaqusHexahedronWriter::setHourglassStiffness(int value)
 {
   m_HourglassStiffness = value;
 }

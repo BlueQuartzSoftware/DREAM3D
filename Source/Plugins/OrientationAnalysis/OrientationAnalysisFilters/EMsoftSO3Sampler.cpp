@@ -854,7 +854,7 @@ QString EMsoftSO3Sampler::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void EMsoftSO3Sampler::setsampleModeSelector(const int& value)
+void EMsoftSO3Sampler::setsampleModeSelector(int value)
 {
   m_sampleModeSelector = value;
 }
@@ -866,7 +866,7 @@ int EMsoftSO3Sampler::getsampleModeSelector() const
 }
 
 // -----------------------------------------------------------------------------
-void EMsoftSO3Sampler::setPointGroup(const int& value)
+void EMsoftSO3Sampler::setPointGroup(int value)
 {
   m_PointGroup = value;
 }
@@ -878,7 +878,7 @@ int EMsoftSO3Sampler::getPointGroup() const
 }
 
 // -----------------------------------------------------------------------------
-void EMsoftSO3Sampler::setNumsp(const int& value)
+void EMsoftSO3Sampler::setNumsp(int value)
 {
   m_Numsp = value;
 }
@@ -890,7 +890,7 @@ int EMsoftSO3Sampler::getNumsp() const
 }
 
 // -----------------------------------------------------------------------------
-void EMsoftSO3Sampler::setMisOr(const double& value)
+void EMsoftSO3Sampler::setMisOr(double value)
 {
   m_MisOr = value;
 }
@@ -914,7 +914,7 @@ FloatVec3Type EMsoftSO3Sampler::getRefOr() const
 }
 
 // -----------------------------------------------------------------------------
-void EMsoftSO3Sampler::setMisOrFull(const double& value)
+void EMsoftSO3Sampler::setMisOrFull(double value)
 {
   m_MisOrFull = value;
 }
@@ -938,7 +938,7 @@ FloatVec3Type EMsoftSO3Sampler::getRefOrFull() const
 }
 
 // -----------------------------------------------------------------------------
-void EMsoftSO3Sampler::setOffsetGrid(const bool& value)
+void EMsoftSO3Sampler::setOffsetGrid(bool value)
 {
   m_OffsetGrid = value;
 }

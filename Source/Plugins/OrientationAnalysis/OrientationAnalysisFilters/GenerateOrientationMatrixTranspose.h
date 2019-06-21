@@ -65,7 +65,7 @@ public:
   /**
    * @brief Setter property for DeleteOriginalData
    */
-  void setDeleteOriginalData(const bool& value);
+  void setDeleteOriginalData(bool value);
   /**
    * @brief Getter property for DeleteOriginalData
    * @return Value of DeleteOriginalData

@@ -540,7 +540,7 @@ DataArrayPath SineParamsSegmentFeatures::getSineParamsArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void SineParamsSegmentFeatures::setRandomizeFeatureIds(const bool& value)
+void SineParamsSegmentFeatures::setRandomizeFeatureIds(bool value)
 {
   m_RandomizeFeatureIds = value;
 }
@@ -552,7 +552,7 @@ bool SineParamsSegmentFeatures::getRandomizeFeatureIds() const
 }
 
 // -----------------------------------------------------------------------------
-void SineParamsSegmentFeatures::setUseGoodVoxels(const bool& value)
+void SineParamsSegmentFeatures::setUseGoodVoxels(bool value)
 {
   m_UseGoodVoxels = value;
 }

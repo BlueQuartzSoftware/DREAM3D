@@ -608,7 +608,7 @@ FloatVec3Type PhReader::getSpacing() const
 }
 
 // -----------------------------------------------------------------------------
-void PhReader::setFileWasRead(const bool& value)
+void PhReader::setFileWasRead(bool value)
 {
   m_FileWasRead = value;
 }

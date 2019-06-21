@@ -214,7 +214,7 @@ public:
   /**
    * @brief Setter property for StoreAngleComponents
    */
-  void setStoreAngleComponents(const bool& value);
+  void setStoreAngleComponents(bool value);
   /**
    * @brief Getter property for StoreAngleComponents
    * @return Value of StoreAngleComponents
@@ -226,7 +226,7 @@ public:
   /**
    * @brief Setter property for OverrideSystem
    */
-  void setOverrideSystem(const bool& value);
+  void setOverrideSystem(bool value);
   /**
    * @brief Getter property for OverrideSystem
    * @return Value of OverrideSystem

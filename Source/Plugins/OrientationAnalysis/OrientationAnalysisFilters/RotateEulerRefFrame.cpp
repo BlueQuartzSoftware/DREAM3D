@@ -347,7 +347,7 @@ FloatVec3Type RotateEulerRefFrame::getRotationAxis() const
 }
 
 // -----------------------------------------------------------------------------
-void RotateEulerRefFrame::setRotationAngle(const float& value)
+void RotateEulerRefFrame::setRotationAngle(float value)
 {
   m_RotationAngle = value;
 }

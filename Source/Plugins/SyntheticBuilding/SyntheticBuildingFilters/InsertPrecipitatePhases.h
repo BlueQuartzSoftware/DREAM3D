@@ -209,7 +209,7 @@ public:
   /**
    * @brief Setter property for UseMask
    */
-  void setUseMask(const bool& value);
+  void setUseMask(bool value);
   /**
    * @brief Getter property for UseMask
    * @return Value of UseMask
@@ -221,7 +221,7 @@ public:
   /**
    * @brief Setter property for FeatureGeneration
    */
-  void setFeatureGeneration(const int& value);
+  void setFeatureGeneration(int value);
   /**
    * @brief Getter property for FeatureGeneration
    * @return Value of FeatureGeneration
@@ -245,7 +245,7 @@ public:
   /**
    * @brief Setter property for PeriodicBoundaries
    */
-  void setPeriodicBoundaries(const bool& value);
+  void setPeriodicBoundaries(bool value);
   /**
    * @brief Getter property for PeriodicBoundaries
    * @return Value of PeriodicBoundaries
@@ -257,7 +257,7 @@ public:
   /**
    * @brief Setter property for MatchRDF
    */
-  void setMatchRDF(const bool& value);
+  void setMatchRDF(bool value);
   /**
    * @brief Getter property for MatchRDF
    * @return Value of MatchRDF
@@ -269,7 +269,7 @@ public:
   /**
    * @brief Setter property for WriteGoalAttributes
    */
-  void setWriteGoalAttributes(const bool& value);
+  void setWriteGoalAttributes(bool value);
   /**
    * @brief Getter property for WriteGoalAttributes
    * @return Value of WriteGoalAttributes
@@ -461,7 +461,7 @@ public:
   /**
    * @brief Setter property for SaveGeometricDescriptions
    */
-  void setSaveGeometricDescriptions(const int& value);
+  void setSaveGeometricDescriptions(int value);
   /**
    * @brief Getter property for SaveGeometricDescriptions
    * @return Value of SaveGeometricDescriptions

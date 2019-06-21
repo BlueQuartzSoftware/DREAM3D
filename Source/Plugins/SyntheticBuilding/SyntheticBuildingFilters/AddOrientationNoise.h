@@ -82,7 +82,7 @@ public:
   /**
    * @brief Setter property for Magnitude
    */
-  void setMagnitude(const float& value);
+  void setMagnitude(float value);
   /**
    * @brief Getter property for Magnitude
    * @return Value of Magnitude

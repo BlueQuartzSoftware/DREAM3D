@@ -945,7 +945,7 @@ QString SurfaceMeshToVtk::getOutputVtkFile() const
 }
 
 // -----------------------------------------------------------------------------
-void SurfaceMeshToVtk::setWriteBinaryFile(const bool& value)
+void SurfaceMeshToVtk::setWriteBinaryFile(bool value)
 {
   m_WriteBinaryFile = value;
 }
@@ -957,7 +957,7 @@ bool SurfaceMeshToVtk::getWriteBinaryFile() const
 }
 
 // -----------------------------------------------------------------------------
-void SurfaceMeshToVtk::setWriteConformalMesh(const bool& value)
+void SurfaceMeshToVtk::setWriteConformalMesh(bool value)
 {
   m_WriteConformalMesh = value;
 }

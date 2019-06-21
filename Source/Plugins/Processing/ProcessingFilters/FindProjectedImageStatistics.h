@@ -107,7 +107,7 @@ public:
   /**
    * @brief Setter property for Plane
    */
-  void setPlane(const unsigned int& value);
+  void setPlane(unsigned int value);
   /**
    * @brief Getter property for Plane
    * @return Value of Plane

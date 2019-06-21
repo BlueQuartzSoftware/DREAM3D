@@ -218,7 +218,7 @@ public:
   /**
    * @brief Setter property for MinFiberAxisLength
    */
-  void setMinFiberAxisLength(const int& value);
+  void setMinFiberAxisLength(int value);
   /**
    * @brief Getter property for MinFiberAxisLength
    * @return Value of MinFiberAxisLength
@@ -230,7 +230,7 @@ public:
   /**
    * @brief Setter property for MaxFiberAxisLength
    */
-  void setMaxFiberAxisLength(const int& value);
+  void setMaxFiberAxisLength(int value);
   /**
    * @brief Getter property for MaxFiberAxisLength
    * @return Value of MaxFiberAxisLength
@@ -242,7 +242,7 @@ public:
   /**
    * @brief Setter property for HoughTransformThreshold
    */
-  void setHoughTransformThreshold(const float& value);
+  void setHoughTransformThreshold(float value);
   /**
    * @brief Getter property for HoughTransformThreshold
    * @return Value of HoughTransformThreshold
@@ -254,7 +254,7 @@ public:
   /**
    * @brief Setter property for MinAspectRatio
    */
-  void setMinAspectRatio(const float& value);
+  void setMinAspectRatio(float value);
   /**
    * @brief Getter property for MinAspectRatio
    * @return Value of MinAspectRatio
@@ -266,7 +266,7 @@ public:
   /**
    * @brief Setter property for ImageScaleBarLength
    */
-  void setImageScaleBarLength(const int& value);
+  void setImageScaleBarLength(int value);
   /**
    * @brief Getter property for ImageScaleBarLength
    * @return Value of ImageScaleBarLength

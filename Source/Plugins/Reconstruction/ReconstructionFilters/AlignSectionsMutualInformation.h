@@ -94,7 +94,7 @@ public:
   /**
    * @brief Setter property for MisorientationTolerance
    */
-  void setMisorientationTolerance(const float& value);
+  void setMisorientationTolerance(float value);
   /**
    * @brief Getter property for MisorientationTolerance
    * @return Value of MisorientationTolerance
@@ -116,7 +116,7 @@ public:
   /**
    * @brief Setter property for UseGoodVoxels
    */
-  void setUseGoodVoxels(const bool& value);
+  void setUseGoodVoxels(bool value);
   /**
    * @brief Getter property for UseGoodVoxels
    * @return Value of UseGoodVoxels

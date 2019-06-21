@@ -97,7 +97,7 @@ public:
   /**
    * @brief Setter property for ZStartIndex
    */
-  void setZStartIndex(const int64_t& value);
+  void setZStartIndex(int64_t value);
   /**
    * @brief Getter property for ZStartIndex
    * @return Value of ZStartIndex
@@ -107,7 +107,7 @@ public:
   /**
    * @brief Setter property for ZEndIndex
    */
-  void setZEndIndex(const int64_t& value);
+  void setZEndIndex(int64_t value);
   /**
    * @brief Getter property for ZEndIndex
    * @return Value of ZEndIndex
@@ -117,7 +117,7 @@ public:
   /**
    * @brief Setter property for XResolution
    */
-  void setXResolution(const float& value);
+  void setXResolution(float value);
   /**
    * @brief Getter property for XResolution
    * @return Value of XResolution
@@ -127,7 +127,7 @@ public:
   /**
    * @brief Setter property for YResolution
    */
-  void setYResolution(const float& value);
+  void setYResolution(float value);
   /**
    * @brief Getter property for YResolution
    * @return Value of YResolution
@@ -197,7 +197,7 @@ public:
   /**
    * @brief Setter property for PaddingDigits
    */
-  void setPaddingDigits(const int& value);
+  void setPaddingDigits(int value);
   /**
    * @brief Getter property for PaddingDigits
    * @return Value of PaddingDigits
@@ -207,7 +207,7 @@ public:
   /**
    * @brief Setter property for NumCols
    */
-  void setNumCols(const int& value);
+  void setNumCols(int value);
   /**
    * @brief Getter property for NumCols
    * @return Value of NumCols
@@ -217,7 +217,7 @@ public:
   /**
    * @brief Setter property for NumRows
    */
-  void setNumRows(const int& value);
+  void setNumRows(int value);
   /**
    * @brief Getter property for NumRows
    * @return Value of NumRows
@@ -227,7 +227,7 @@ public:
   /**
    * @brief Setter property for HeaderIsComplete
    */
-  void setHeaderIsComplete(const bool& value);
+  void setHeaderIsComplete(bool value);
   /**
    * @brief Getter property for HeaderIsComplete
    * @return Value of HeaderIsComplete
@@ -237,7 +237,7 @@ public:
   /**
    * @brief Setter property for HexGridStack
    */
-  void setHexGridStack(const int& value);
+  void setHexGridStack(int value);
   /**
    * @brief Getter property for HexGridStack
    * @return Value of HexGridStack

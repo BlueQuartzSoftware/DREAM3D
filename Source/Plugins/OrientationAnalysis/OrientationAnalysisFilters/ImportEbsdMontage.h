@@ -60,6 +60,9 @@ class OrientationAnalysis_EXPORT ImportEbsdMontage : public AbstractFilter
   PYB11_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
   PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
   PYB11_FILTER_PARAMETER(EbsdMontageListInfo_t, InputFileListInfo)
+  PYB11_FILTER_PARAMETER(bool, GenerateIPFColorMap)
+  PYB11_FILTER_PARAMETER(QString, CellIPFColorsArrayName)
+
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
@@ -134,13 +137,28 @@ public:
    * @return Value of InputFileListInfo
    */
   EbsdMontageListInfo_t getInputFileListInfo() const;
-
   Q_PROPERTY(EbsdMontageListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
 
-  SIMPL_FILTER_PARAMETER(bool, GenerateIPFColorMap)
+  /**
+   * @brief Setter property for GenerateIPFColorMap
+   */
+  void setGenerateIPFColorMap(bool value);
+  /**
+   * @brief Getter property for GenerateIPFColorMap
+   * @return Value of GenerateIPFColorMap
+   */
+  bool getGenerateIPFColorMap() const;
   Q_PROPERTY(bool GenerateIPFColorMap READ getGenerateIPFColorMap WRITE setGenerateIPFColorMap)
 
-  SIMPL_FILTER_PARAMETER(QString, CellIPFColorsArrayName)
+  /**
+   * @brief Setter property for CellIPFColorsArrayName
+   */
+  void setCellIPFColorsArrayName(const QString& value);
+  /**
+   * @brief Getter property for CellIPFColorsArrayName
+   * @return Value of CellIPFColorsArrayName
+   */
+  QString getCellIPFColorsArrayName() const;
   Q_PROPERTY(QString CellIPFColorsArrayName READ getCellIPFColorsArrayName WRITE setCellIPFColorsArrayName)
 
   /**
@@ -246,13 +264,12 @@ private:
   EbsdMontageListInfo_t m_InputFileListInfo = {};
 
   std::map<QString, AbstractFilter::Pointer> m_FilterCache;
-  // DEFINE_DATAARRAY_VARIABLE(uint8_t, CellIPFColors)
   FloatVec3Type m_ReferenceDir = {0.0f, 0.0f, 1.0f};
 
+  bool m_GenerateIPFColorMap = false;
+  QString m_CellIPFColorsArrayName = QString(SIMPL::CellData::IPFColor);
+
 public:
-  /* Rule of 5: All special member functions should be defined if any are defined.
-   * https://github.com/isocpp/CppCoreGuidelines/blob/master/CppCoreGuidelines.md#c21-if-you-define-or-delete-any-default-operation-define-or-delete-them-all
-   */
   ImportEbsdMontage(const ImportEbsdMontage&) = delete;            // Copy Constructor Not Implemented
   ImportEbsdMontage& operator=(const ImportEbsdMontage&) = delete; // Copy Assignment Not Implemented
   ImportEbsdMontage(ImportEbsdMontage&&) = delete;                 // Move Constructor Not Implemented

@@ -114,7 +114,7 @@ public:
   /**
    * @brief Setter property for CAxisTolerance
    */
-  void setCAxisTolerance(const float& value);
+  void setCAxisTolerance(float value);
   /**
    * @brief Getter property for CAxisTolerance
    * @return Value of CAxisTolerance
@@ -126,7 +126,7 @@ public:
   /**
    * @brief Setter property for UseRunningAverage
    */
-  void setUseRunningAverage(const bool& value);
+  void setUseRunningAverage(bool value);
   /**
    * @brief Getter property for UseRunningAverage
    * @return Value of UseRunningAverage
@@ -138,7 +138,7 @@ public:
   /**
    * @brief Setter property for RandomizeParentIds
    */
-  void setRandomizeParentIds(const bool& value);
+  void setRandomizeParentIds(bool value);
   /**
    * @brief Getter property for RandomizeParentIds
    * @return Value of RandomizeParentIds

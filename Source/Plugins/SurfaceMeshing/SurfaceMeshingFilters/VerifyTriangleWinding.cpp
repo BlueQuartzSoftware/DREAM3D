@@ -176,7 +176,7 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  void setPrimed(const bool& value)
+  void setPrimed(bool value)
   {
     m_Primed = value;
   }
@@ -188,7 +188,7 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  void setNewLabel(const int32_t& value)
+  void setNewLabel(int32_t value)
   {
     m_NewLabel = value;
   }
@@ -200,7 +200,7 @@ public:
   }
 
   // -----------------------------------------------------------------------------
-  void setRelabeled(const bool& value)
+  void setRelabeled(bool value)
   {
     m_Relabeled = value;
   }

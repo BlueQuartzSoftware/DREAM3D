@@ -452,7 +452,7 @@ void PrimaryPhaseWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::setPhaseIndex(const int& index)
+void PrimaryPhaseWidget::setPhaseIndex(int index)
 {
   StatsGenWidget::setPhaseIndex(index);
   m_Omega3Plot->setPhaseIndex(index);
@@ -471,7 +471,7 @@ void PrimaryPhaseWidget::setPhaseIndex(const int& index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::setCrystalStructure(const unsigned int& xtal)
+void PrimaryPhaseWidget::setCrystalStructure(unsigned int xtal)
 {
   StatsGenWidget::setCrystalStructure(xtal);
   m_Omega3Plot->setCrystalStructure(xtal);
@@ -896,7 +896,7 @@ QIcon PrimaryPhaseWidget::getPhaseIcon()
 }
 
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::setPhaseType(const PhaseType::Type& value)
+void PrimaryPhaseWidget::setPhaseType(PhaseType::Type value)
 {
   m_PhaseType = value;
 }

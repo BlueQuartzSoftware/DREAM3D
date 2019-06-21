@@ -778,7 +778,7 @@ QString ImportH5EspritData::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void ImportH5EspritData::setCombineEulerAngles(const bool& value)
+void ImportH5EspritData::setCombineEulerAngles(bool value)
 {
   m_CombineEulerAngles = value;
 }
@@ -790,7 +790,7 @@ bool ImportH5EspritData::getCombineEulerAngles() const
 }
 
 // -----------------------------------------------------------------------------
-void ImportH5EspritData::setDegreesToRadians(const bool& value)
+void ImportH5EspritData::setDegreesToRadians(bool value)
 {
   m_DegreesToRadians = value;
 }

@@ -740,7 +740,7 @@ FloatVec3Type DxReader::getSpacing() const
 }
 
 // -----------------------------------------------------------------------------
-void DxReader::setFileWasRead(const bool& value)
+void DxReader::setFileWasRead(bool value)
 {
   m_FileWasRead = value;
 }

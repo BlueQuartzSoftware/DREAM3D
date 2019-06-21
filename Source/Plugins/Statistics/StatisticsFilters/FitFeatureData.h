@@ -103,7 +103,7 @@ public:
   /**
    * @brief Setter property for DistributionType
    */
-  void setDistributionType(const unsigned int& value);
+  void setDistributionType(unsigned int value);
   /**
    * @brief Getter property for DistributionType
    * @return Value of DistributionType
@@ -115,7 +115,7 @@ public:
   /**
    * @brief Setter property for RemoveBiasedFeatures
    */
-  void setRemoveBiasedFeatures(const bool& value);
+  void setRemoveBiasedFeatures(bool value);
   /**
    * @brief Getter property for RemoveBiasedFeatures
    * @return Value of RemoveBiasedFeatures

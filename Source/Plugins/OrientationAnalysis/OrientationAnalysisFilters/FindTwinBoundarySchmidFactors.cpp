@@ -605,7 +605,7 @@ QString FindTwinBoundarySchmidFactors::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void FindTwinBoundarySchmidFactors::setWriteFile(const bool& value)
+void FindTwinBoundarySchmidFactors::setWriteFile(bool value)
 {
   m_WriteFile = value;
 }

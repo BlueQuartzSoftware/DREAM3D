@@ -589,7 +589,7 @@ QString CAxisSegmentFeatures::getCellFeatureAttributeMatrixName() const
 }
 
 // -----------------------------------------------------------------------------
-void CAxisSegmentFeatures::setMisorientationTolerance(const float& value)
+void CAxisSegmentFeatures::setMisorientationTolerance(float value)
 {
   m_MisorientationTolerance = value;
 }
@@ -601,7 +601,7 @@ float CAxisSegmentFeatures::getMisorientationTolerance() const
 }
 
 // -----------------------------------------------------------------------------
-void CAxisSegmentFeatures::setRandomizeFeatureIds(const bool& value)
+void CAxisSegmentFeatures::setRandomizeFeatureIds(bool value)
 {
   m_RandomizeFeatureIds = value;
 }
@@ -613,7 +613,7 @@ bool CAxisSegmentFeatures::getRandomizeFeatureIds() const
 }
 
 // -----------------------------------------------------------------------------
-void CAxisSegmentFeatures::setUseGoodVoxels(const bool& value)
+void CAxisSegmentFeatures::setUseGoodVoxels(bool value)
 {
   m_UseGoodVoxels = value;
 }

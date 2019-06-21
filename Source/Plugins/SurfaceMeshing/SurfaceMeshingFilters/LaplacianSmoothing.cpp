@@ -665,7 +665,7 @@ DataArrayPath LaplacianSmoothing::getSurfaceMeshFaceLabelsArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void LaplacianSmoothing::setIterationSteps(const int& value)
+void LaplacianSmoothing::setIterationSteps(int value)
 {
   m_IterationSteps = value;
 }
@@ -677,7 +677,7 @@ int LaplacianSmoothing::getIterationSteps() const
 }
 
 // -----------------------------------------------------------------------------
-void LaplacianSmoothing::setLambda(const float& value)
+void LaplacianSmoothing::setLambda(float value)
 {
   m_Lambda = value;
 }
@@ -689,7 +689,7 @@ float LaplacianSmoothing::getLambda() const
 }
 
 // -----------------------------------------------------------------------------
-void LaplacianSmoothing::setSurfacePointLambda(const float& value)
+void LaplacianSmoothing::setSurfacePointLambda(float value)
 {
   m_SurfacePointLambda = value;
 }
@@ -701,7 +701,7 @@ float LaplacianSmoothing::getSurfacePointLambda() const
 }
 
 // -----------------------------------------------------------------------------
-void LaplacianSmoothing::setTripleLineLambda(const float& value)
+void LaplacianSmoothing::setTripleLineLambda(float value)
 {
   m_TripleLineLambda = value;
 }
@@ -713,7 +713,7 @@ float LaplacianSmoothing::getTripleLineLambda() const
 }
 
 // -----------------------------------------------------------------------------
-void LaplacianSmoothing::setQuadPointLambda(const float& value)
+void LaplacianSmoothing::setQuadPointLambda(float value)
 {
   m_QuadPointLambda = value;
 }
@@ -725,7 +725,7 @@ float LaplacianSmoothing::getQuadPointLambda() const
 }
 
 // -----------------------------------------------------------------------------
-void LaplacianSmoothing::setSurfaceTripleLineLambda(const float& value)
+void LaplacianSmoothing::setSurfaceTripleLineLambda(float value)
 {
   m_SurfaceTripleLineLambda = value;
 }
@@ -737,7 +737,7 @@ float LaplacianSmoothing::getSurfaceTripleLineLambda() const
 }
 
 // -----------------------------------------------------------------------------
-void LaplacianSmoothing::setSurfaceQuadPointLambda(const float& value)
+void LaplacianSmoothing::setSurfaceQuadPointLambda(float value)
 {
   m_SurfaceQuadPointLambda = value;
 }
@@ -749,7 +749,7 @@ float LaplacianSmoothing::getSurfaceQuadPointLambda() const
 }
 
 // -----------------------------------------------------------------------------
-void LaplacianSmoothing::setUseTaubinSmoothing(const bool& value)
+void LaplacianSmoothing::setUseTaubinSmoothing(bool value)
 {
   m_UseTaubinSmoothing = value;
 }
@@ -761,7 +761,7 @@ bool LaplacianSmoothing::getUseTaubinSmoothing() const
 }
 
 // -----------------------------------------------------------------------------
-void LaplacianSmoothing::setMuFactor(const float& value)
+void LaplacianSmoothing::setMuFactor(float value)
 {
   m_MuFactor = value;
 }

@@ -374,7 +374,7 @@ InitializationFunction::Pointer EMMPM::getInitializationFunction() const
 }
 
 // -----------------------------------------------------------------------------
-void EMMPM::setErrorCode(const int& value)
+void EMMPM::setErrorCode(int value)
 {
   m_ErrorCode = value;
 }

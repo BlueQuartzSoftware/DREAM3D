@@ -462,7 +462,7 @@ DataArrayPath GenerateFZQuaternions::getCrystalStructuresArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateFZQuaternions::setUseGoodVoxels(const bool& value)
+void GenerateFZQuaternions::setUseGoodVoxels(bool value)
 {
   m_UseGoodVoxels = value;
 }

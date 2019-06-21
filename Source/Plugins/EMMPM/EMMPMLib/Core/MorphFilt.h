@@ -93,7 +93,7 @@ class EMMPMLib_EXPORT MorphFilter : public Observable
     /**
      * @brief Setter property for ErrorCode
      */
-    void setErrorCode(const int& value);
+    void setErrorCode(int value);
     /**
      * @brief Getter property for ErrorCode
      * @return Value of ErrorCode

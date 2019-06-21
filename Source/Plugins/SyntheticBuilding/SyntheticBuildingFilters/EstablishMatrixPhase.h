@@ -195,7 +195,7 @@ public:
   /**
    * @brief Setter property for UseMask
    */
-  void setUseMask(const bool& value);
+  void setUseMask(bool value);
   /**
    * @brief Getter property for UseMask
    * @return Value of UseMask

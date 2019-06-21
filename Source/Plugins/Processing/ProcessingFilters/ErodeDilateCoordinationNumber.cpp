@@ -450,7 +450,7 @@ QString ErodeDilateCoordinationNumber::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void ErodeDilateCoordinationNumber::setLoop(const bool& value)
+void ErodeDilateCoordinationNumber::setLoop(bool value)
 {
   m_Loop = value;
 }
@@ -462,7 +462,7 @@ bool ErodeDilateCoordinationNumber::getLoop() const
 }
 
 // -----------------------------------------------------------------------------
-void ErodeDilateCoordinationNumber::setCoordinationNumber(const int& value)
+void ErodeDilateCoordinationNumber::setCoordinationNumber(int value)
 {
   m_CoordinationNumber = value;
 }

@@ -100,7 +100,7 @@ void StatsGenWidget::generateDefaultData()
 //}
 
 // -----------------------------------------------------------------------------
-void StatsGenWidget::setPhaseType(const PhaseType::Type& value)
+void StatsGenWidget::setPhaseType(PhaseType::Type value)
 {
   m_PhaseType = value;
 }
@@ -112,7 +112,7 @@ PhaseType::Type StatsGenWidget::getPhaseType() const
 }
 
 // -----------------------------------------------------------------------------
-void StatsGenWidget::setCrystalStructure(const unsigned int& value)
+void StatsGenWidget::setCrystalStructure(unsigned int value)
 {
   m_CrystalStructure = value;
 }
@@ -124,7 +124,7 @@ unsigned int StatsGenWidget::getCrystalStructure() const
 }
 
 // -----------------------------------------------------------------------------
-void StatsGenWidget::setPhaseIndex(const int& value)
+void StatsGenWidget::setPhaseIndex(int value)
 {
   m_PhaseIndex = value;
 }
@@ -136,7 +136,7 @@ int StatsGenWidget::getPhaseIndex() const
 }
 
 // -----------------------------------------------------------------------------
-void StatsGenWidget::setPhaseFraction(const float& value)
+void StatsGenWidget::setPhaseFraction(float value)
 {
   m_PhaseFraction = value;
 }
@@ -148,7 +148,7 @@ float StatsGenWidget::getPhaseFraction() const
 }
 
 // -----------------------------------------------------------------------------
-void StatsGenWidget::setTotalPhaseFraction(const float& value)
+void StatsGenWidget::setTotalPhaseFraction(float value)
 {
   m_TotalPhaseFraction = value;
 }
@@ -160,7 +160,7 @@ float StatsGenWidget::getTotalPhaseFraction() const
 }
 
 // -----------------------------------------------------------------------------
-void StatsGenWidget::setDataHasBeenGenerated(const bool& value)
+void StatsGenWidget::setDataHasBeenGenerated(bool value)
 {
   m_DataHasBeenGenerated = value;
 }
@@ -172,7 +172,7 @@ bool StatsGenWidget::getDataHasBeenGenerated() const
 }
 
 // -----------------------------------------------------------------------------
-void StatsGenWidget::setBulkLoadFailure(const bool& value)
+void StatsGenWidget::setBulkLoadFailure(bool value)
 {
   m_BulkLoadFailure = value;
 }

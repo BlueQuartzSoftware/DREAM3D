@@ -137,7 +137,7 @@ public:
   /**
    * @brief Setter property for LengthUnit
    */
-  void setLengthUnit(const int32_t& value);
+  void setLengthUnit(int32_t value);
   /**
    * @brief Getter property for LengthUnit
    * @return Value of LengthUnit
@@ -223,7 +223,7 @@ public:
   /**
    * @brief Setter property for EstimateNumberOfFeatures
    */
-  void setEstimateNumberOfFeatures(const bool& value);
+  void setEstimateNumberOfFeatures(bool value);
   /**
    * @brief Getter property for EstimateNumberOfFeatures
    * @return Value of EstimateNumberOfFeatures

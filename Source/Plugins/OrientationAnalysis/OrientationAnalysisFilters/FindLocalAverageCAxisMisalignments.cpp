@@ -445,7 +445,7 @@ DataArrayPath FindLocalAverageCAxisMisalignments::getNewCellFeatureAttributeMatr
 }
 
 // -----------------------------------------------------------------------------
-void FindLocalAverageCAxisMisalignments::setCalcUnbiasedAvg(const bool& value)
+void FindLocalAverageCAxisMisalignments::setCalcUnbiasedAvg(bool value)
 {
   m_CalcUnbiasedAvg = value;
 }
@@ -457,7 +457,7 @@ bool FindLocalAverageCAxisMisalignments::getCalcUnbiasedAvg() const
 }
 
 // -----------------------------------------------------------------------------
-void FindLocalAverageCAxisMisalignments::setCalcBiasedAvg(const bool& value)
+void FindLocalAverageCAxisMisalignments::setCalcBiasedAvg(bool value)
 {
   m_CalcBiasedAvg = value;
 }

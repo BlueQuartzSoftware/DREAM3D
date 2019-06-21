@@ -433,7 +433,7 @@ QString GenerateRodriguesColors::getCellRodriguesColorsArrayName() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateRodriguesColors::setUseGoodVoxels(const bool& value)
+void GenerateRodriguesColors::setUseGoodVoxels(bool value)
 {
   m_UseGoodVoxels = value;
 }

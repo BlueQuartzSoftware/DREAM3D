@@ -327,7 +327,7 @@ DataArrayPath GenerateQuaternionConjugate::getOutputDataArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateQuaternionConjugate::setDeleteOriginalData(const bool& value)
+void GenerateQuaternionConjugate::setDeleteOriginalData(bool value)
 {
   m_DeleteOriginalData = value;
 }

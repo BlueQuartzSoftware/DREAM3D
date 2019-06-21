@@ -95,7 +95,7 @@ public:
   /**
    * @brief Setter property for MisorientationTolerance
    */
-  void setMisorientationTolerance(const float& value);
+  void setMisorientationTolerance(float value);
   /**
    * @brief Getter property for MisorientationTolerance
    * @return Value of MisorientationTolerance
@@ -107,7 +107,7 @@ public:
   /**
    * @brief Setter property for MinConfidence
    */
-  void setMinConfidence(const float& value);
+  void setMinConfidence(float value);
   /**
    * @brief Getter property for MinConfidence
    * @return Value of MinConfidence
@@ -119,7 +119,7 @@ public:
   /**
    * @brief Setter property for Level
    */
-  void setLevel(const int& value);
+  void setLevel(int value);
   /**
    * @brief Getter property for Level
    * @return Value of Level

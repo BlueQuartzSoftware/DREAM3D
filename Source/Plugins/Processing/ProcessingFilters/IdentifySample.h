@@ -85,7 +85,7 @@ public:
   /**
    * @brief Setter property for FillHoles
    */
-  void setFillHoles(const bool& value);
+  void setFillHoles(bool value);
   /**
    * @brief Getter property for FillHoles
    * @return Value of FillHoles

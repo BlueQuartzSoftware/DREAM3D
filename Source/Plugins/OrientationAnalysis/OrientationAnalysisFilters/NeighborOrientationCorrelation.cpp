@@ -661,7 +661,7 @@ QString NeighborOrientationCorrelation::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void NeighborOrientationCorrelation::setMisorientationTolerance(const float& value)
+void NeighborOrientationCorrelation::setMisorientationTolerance(float value)
 {
   m_MisorientationTolerance = value;
 }
@@ -673,7 +673,7 @@ float NeighborOrientationCorrelation::getMisorientationTolerance() const
 }
 
 // -----------------------------------------------------------------------------
-void NeighborOrientationCorrelation::setMinConfidence(const float& value)
+void NeighborOrientationCorrelation::setMinConfidence(float value)
 {
   m_MinConfidence = value;
 }
@@ -685,7 +685,7 @@ float NeighborOrientationCorrelation::getMinConfidence() const
 }
 
 // -----------------------------------------------------------------------------
-void NeighborOrientationCorrelation::setLevel(const int& value)
+void NeighborOrientationCorrelation::setLevel(int value)
 {
   m_Level = value;
 }

@@ -100,7 +100,7 @@ public:
   /**
    * @brief Setter property for AxisTolerance
    */
-  void setAxisTolerance(const float& value);
+  void setAxisTolerance(float value);
   /**
    * @brief Getter property for AxisTolerance
    * @return Value of AxisTolerance
@@ -112,7 +112,7 @@ public:
   /**
    * @brief Setter property for AngleTolerance
    */
-  void setAngleTolerance(const float& value);
+  void setAngleTolerance(float value);
   /**
    * @brief Getter property for AngleTolerance
    * @return Value of AngleTolerance
@@ -124,7 +124,7 @@ public:
   /**
    * @brief Setter property for FindCoherence
    */
-  void setFindCoherence(const bool& value);
+  void setFindCoherence(bool value);
   /**
    * @brief Getter property for FindCoherence
    * @return Value of FindCoherence

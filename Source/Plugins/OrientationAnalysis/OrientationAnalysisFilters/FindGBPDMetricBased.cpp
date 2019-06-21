@@ -1249,7 +1249,7 @@ QString FindGBPDMetricBased::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void FindGBPDMetricBased::setPhaseOfInterest(const int& value)
+void FindGBPDMetricBased::setPhaseOfInterest(int value)
 {
   m_PhaseOfInterest = value;
 }
@@ -1261,7 +1261,7 @@ int FindGBPDMetricBased::getPhaseOfInterest() const
 }
 
 // -----------------------------------------------------------------------------
-void FindGBPDMetricBased::setLimitDist(const float& value)
+void FindGBPDMetricBased::setLimitDist(float value)
 {
   m_LimitDist = value;
 }
@@ -1273,7 +1273,7 @@ float FindGBPDMetricBased::getLimitDist() const
 }
 
 // -----------------------------------------------------------------------------
-void FindGBPDMetricBased::setNumSamplPts(const int& value)
+void FindGBPDMetricBased::setNumSamplPts(int value)
 {
   m_NumSamplPts = value;
 }
@@ -1285,7 +1285,7 @@ int FindGBPDMetricBased::getNumSamplPts() const
 }
 
 // -----------------------------------------------------------------------------
-void FindGBPDMetricBased::setExcludeTripleLines(const bool& value)
+void FindGBPDMetricBased::setExcludeTripleLines(bool value)
 {
   m_ExcludeTripleLines = value;
 }
@@ -1321,7 +1321,7 @@ QString FindGBPDMetricBased::getErrOutputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void FindGBPDMetricBased::setSaveRelativeErr(const bool& value)
+void FindGBPDMetricBased::setSaveRelativeErr(bool value)
 {
   m_SaveRelativeErr = value;
 }

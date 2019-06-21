@@ -334,7 +334,7 @@ QString AlignSectionsList::getInputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void AlignSectionsList::setDREAM3DAlignmentFile(const bool& value)
+void AlignSectionsList::setDREAM3DAlignmentFile(bool value)
 {
   m_DREAM3DAlignmentFile = value;
 }

@@ -110,7 +110,7 @@ public:
   /**
    * @brief Setter property for RotationAngle
    */
-  void setRotationAngle(const float& value);
+  void setRotationAngle(float value);
   /**
    * @brief Getter property for RotationAngle
    * @return Value of RotationAngle
@@ -123,7 +123,7 @@ public:
   /**
    * @brief Setter property for SliceBySlice
    */
-  void setSliceBySlice(const bool& value);
+  void setSliceBySlice(bool value);
   /**
    * @brief Getter property for SliceBySlice
    * @return Value of SliceBySlice

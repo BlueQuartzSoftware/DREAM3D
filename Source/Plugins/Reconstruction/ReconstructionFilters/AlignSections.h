@@ -109,7 +109,7 @@ public:
   /**
    * @brief Setter property for WriteAlignmentShifts
    */
-  void setWriteAlignmentShifts(const bool& value);
+  void setWriteAlignmentShifts(bool value);
   /**
    * @brief Getter property for WriteAlignmentShifts
    * @return Value of WriteAlignmentShifts

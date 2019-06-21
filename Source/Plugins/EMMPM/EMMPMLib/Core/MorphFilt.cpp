@@ -272,7 +272,7 @@ QString MorphFilter::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void MorphFilter::setErrorCode(const int& value)
+void MorphFilter::setErrorCode(int value)
 {
   m_ErrorCode = value;
 }

@@ -160,7 +160,7 @@ public:
   /**
    * @brief Setter property for DeleteTempFiles
    */
-  void setDeleteTempFiles(const bool& value);
+  void setDeleteTempFiles(bool value);
   /**
    * @brief Getter property for DeleteTempFiles
    * @return Value of DeleteTempFiles

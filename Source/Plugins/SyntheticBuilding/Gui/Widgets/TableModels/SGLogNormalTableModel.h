@@ -62,7 +62,7 @@ public:
     ColumnCount
   };
 
-  SGLogNormalTableModel(QObject* parent = 0);
+  SGLogNormalTableModel(QObject* parent = nullptr);
   virtual ~SGLogNormalTableModel();
 
   Qt::ItemFlags flags(const QModelIndex& index) const;

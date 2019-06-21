@@ -109,7 +109,7 @@ public:
   /**
    * @brief Setter property for ZStartIndex
    */
-  void setZStartIndex(const int64_t& value);
+  void setZStartIndex(int64_t value);
   /**
    * @brief Getter property for ZStartIndex
    * @return Value of ZStartIndex
@@ -119,7 +119,7 @@ public:
   /**
    * @brief Setter property for ZEndIndex
    */
-  void setZEndIndex(const int64_t& value);
+  void setZEndIndex(int64_t value);
   /**
    * @brief Getter property for ZEndIndex
    * @return Value of ZEndIndex
@@ -129,7 +129,7 @@ public:
   /**
    * @brief Setter property for ZResolution
    */
-  void setZResolution(const float& value);
+  void setZResolution(float value);
   /**
    * @brief Getter property for ZResolution
    * @return Value of ZResolution
@@ -139,7 +139,7 @@ public:
   /**
    * @brief Setter property for RefFrameZDir
    */
-  void setRefFrameZDir(const uint32_t& value);
+  void setRefFrameZDir(uint32_t value);
   /**
    * @brief Getter property for RefFrameZDir
    * @return Value of RefFrameZDir
@@ -189,7 +189,7 @@ public:
   /**
    * @brief Setter property for PaddingDigits
    */
-  void setPaddingDigits(const int& value);
+  void setPaddingDigits(int value);
   /**
    * @brief Getter property for PaddingDigits
    * @return Value of PaddingDigits

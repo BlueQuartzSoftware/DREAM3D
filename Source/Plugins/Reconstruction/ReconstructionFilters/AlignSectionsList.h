@@ -95,7 +95,7 @@ public:
   /**
    * @brief Setter property for DREAM3DAlignmentFile
    */
-  void setDREAM3DAlignmentFile(const bool& value);
+  void setDREAM3DAlignmentFile(bool value);
   /**
    * @brief Getter property for DREAM3DAlignmentFile
    * @return Value of DREAM3DAlignmentFile

@@ -572,7 +572,7 @@ FloatVec3Type FindSchmids::getLoadingDirection() const
 }
 
 // -----------------------------------------------------------------------------
-void FindSchmids::setStoreAngleComponents(const bool& value)
+void FindSchmids::setStoreAngleComponents(bool value)
 {
   m_StoreAngleComponents = value;
 }
@@ -584,7 +584,7 @@ bool FindSchmids::getStoreAngleComponents() const
 }
 
 // -----------------------------------------------------------------------------
-void FindSchmids::setOverrideSystem(const bool& value)
+void FindSchmids::setOverrideSystem(bool value)
 {
   m_OverrideSystem = value;
 }

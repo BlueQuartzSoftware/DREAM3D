@@ -125,7 +125,7 @@ public:
   /**
    * @brief Setter property for CalcUnbiasedAvg
    */
-  void setCalcUnbiasedAvg(const bool& value);
+  void setCalcUnbiasedAvg(bool value);
   /**
    * @brief Getter property for CalcUnbiasedAvg
    * @return Value of CalcUnbiasedAvg
@@ -137,7 +137,7 @@ public:
   /**
    * @brief Setter property for CalcBiasedAvg
    */
-  void setCalcBiasedAvg(const bool& value);
+  void setCalcBiasedAvg(bool value);
   /**
    * @brief Getter property for CalcBiasedAvg
    * @return Value of CalcBiasedAvg

@@ -130,7 +130,7 @@ public:
   /**
    * @brief Setter property for Basis
    */
-  void setBasis(const int& value);
+  void setBasis(int value);
   /**
    * @brief Getter property for Basis
    * @return Value of Basis

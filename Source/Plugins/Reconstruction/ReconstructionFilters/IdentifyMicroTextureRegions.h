@@ -110,7 +110,7 @@ public:
   /**
    * @brief Setter property for CAxisTolerance
    */
-  void setCAxisTolerance(const float& value);
+  void setCAxisTolerance(float value);
   /**
    * @brief Getter property for CAxisTolerance
    * @return Value of CAxisTolerance
@@ -122,7 +122,7 @@ public:
   /**
    * @brief Setter property for MinMTRSize
    */
-  void setMinMTRSize(const float& value);
+  void setMinMTRSize(float value);
   /**
    * @brief Getter property for MinMTRSize
    * @return Value of MinMTRSize
@@ -134,7 +134,7 @@ public:
   /**
    * @brief Setter property for MinVolFrac
    */
-  void setMinVolFrac(const float& value);
+  void setMinVolFrac(float value);
   /**
    * @brief Getter property for MinVolFrac
    * @return Value of MinVolFrac
@@ -146,7 +146,7 @@ public:
   /**
    * @brief Setter property for RandomizeMTRIds
    */
-  void setRandomizeMTRIds(const bool& value);
+  void setRandomizeMTRIds(bool value);
   /**
    * @brief Getter property for RandomizeMTRIds
    * @return Value of RandomizeMTRIds

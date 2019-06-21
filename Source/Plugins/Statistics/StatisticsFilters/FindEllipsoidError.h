@@ -203,7 +203,7 @@ public:
   /**
    * @brief Setter property for WriteIdealEllipseFeatureIds
    */
-  void setWriteIdealEllipseFeatureIds(const bool& value);
+  void setWriteIdealEllipseFeatureIds(bool value);
   /**
    * @brief Getter property for WriteIdealEllipseFeatureIds
    * @return Value of WriteIdealEllipseFeatureIds

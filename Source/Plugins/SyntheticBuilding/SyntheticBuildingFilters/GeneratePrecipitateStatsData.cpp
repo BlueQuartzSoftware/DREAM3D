@@ -776,7 +776,7 @@ QString GeneratePrecipitateStatsData::getPhaseName() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrecipitateStatsData::setPhaseIndex(const int& value)
+void GeneratePrecipitateStatsData::setPhaseIndex(int value)
 {
   m_PhaseIndex = value;
 }
@@ -788,7 +788,7 @@ int GeneratePrecipitateStatsData::getPhaseIndex() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrecipitateStatsData::setCrystalSymmetry(const int& value)
+void GeneratePrecipitateStatsData::setCrystalSymmetry(int value)
 {
   m_CrystalSymmetry = value;
 }
@@ -800,7 +800,7 @@ int GeneratePrecipitateStatsData::getCrystalSymmetry() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrecipitateStatsData::setMicroPresetModel(const int& value)
+void GeneratePrecipitateStatsData::setMicroPresetModel(int value)
 {
   m_MicroPresetModel = value;
 }
@@ -812,7 +812,7 @@ int GeneratePrecipitateStatsData::getMicroPresetModel() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrecipitateStatsData::setPhaseFraction(const double& value)
+void GeneratePrecipitateStatsData::setPhaseFraction(double value)
 {
   m_PhaseFraction = value;
 }
@@ -824,7 +824,7 @@ double GeneratePrecipitateStatsData::getPhaseFraction() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrecipitateStatsData::setMu(const double& value)
+void GeneratePrecipitateStatsData::setMu(double value)
 {
   m_Mu = value;
 }
@@ -836,7 +836,7 @@ double GeneratePrecipitateStatsData::getMu() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrecipitateStatsData::setSigma(const double& value)
+void GeneratePrecipitateStatsData::setSigma(double value)
 {
   m_Sigma = value;
 }
@@ -848,7 +848,7 @@ double GeneratePrecipitateStatsData::getSigma() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrecipitateStatsData::setMinCutOff(const double& value)
+void GeneratePrecipitateStatsData::setMinCutOff(double value)
 {
   m_MinCutOff = value;
 }
@@ -860,7 +860,7 @@ double GeneratePrecipitateStatsData::getMinCutOff() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrecipitateStatsData::setMaxCutOff(const double& value)
+void GeneratePrecipitateStatsData::setMaxCutOff(double value)
 {
   m_MaxCutOff = value;
 }
@@ -872,7 +872,7 @@ double GeneratePrecipitateStatsData::getMaxCutOff() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrecipitateStatsData::setBinStepSize(const double& value)
+void GeneratePrecipitateStatsData::setBinStepSize(double value)
 {
   m_BinStepSize = value;
 }
@@ -884,7 +884,7 @@ double GeneratePrecipitateStatsData::getBinStepSize() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrecipitateStatsData::setCreateEnsembleAttributeMatrix(const bool& value)
+void GeneratePrecipitateStatsData::setCreateEnsembleAttributeMatrix(bool value)
 {
   m_CreateEnsembleAttributeMatrix = value;
 }
@@ -920,7 +920,7 @@ QString GeneratePrecipitateStatsData::getCellEnsembleAttributeMatrixName() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrecipitateStatsData::setAppendToExistingAttributeMatrix(const bool& value)
+void GeneratePrecipitateStatsData::setAppendToExistingAttributeMatrix(bool value)
 {
   m_AppendToExistingAttributeMatrix = value;
 }
@@ -992,7 +992,7 @@ FloatVec2Type GeneratePrecipitateStatsData::getRdfMinMaxDistance() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrecipitateStatsData::setRdfNumBins(const int& value)
+void GeneratePrecipitateStatsData::setRdfNumBins(int value)
 {
   m_RdfNumBins = value;
 }

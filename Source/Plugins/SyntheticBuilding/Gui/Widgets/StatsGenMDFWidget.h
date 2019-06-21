@@ -71,7 +71,7 @@ public:
   /**
    * @brief Setter property for PhaseIndex
    */
-  void setPhaseIndex(const int& value);
+  void setPhaseIndex(int value);
   /**
    * @brief Getter property for PhaseIndex
    * @return Value of PhaseIndex
@@ -81,7 +81,7 @@ public:
   /**
    * @brief Setter property for CrystalStructure
    */
-  void setCrystalStructure(const unsigned int& value);
+  void setCrystalStructure(unsigned int value);
   /**
    * @brief Getter property for CrystalStructure
    * @return Value of CrystalStructure

@@ -119,7 +119,7 @@ public:
   /**
    * @brief Setter property for DegreesToRadians
    */
-  void setDegreesToRadians(const bool& value);
+  void setDegreesToRadians(bool value);
   /**
    * @brief Getter property for DegreesToRadians
    * @return Value of DegreesToRadians
@@ -131,7 +131,7 @@ public:
   /**
    * @brief Setter property for EdaxHexagonalAlignment
    */
-  void setEdaxHexagonalAlignment(const bool& value);
+  void setEdaxHexagonalAlignment(bool value);
   /**
    * @brief Getter property for EdaxHexagonalAlignment
    * @return Value of EdaxHexagonalAlignment
@@ -179,7 +179,7 @@ public:
   /**
    * @brief Setter property for FileWasRead
    */
-  void setFileWasRead(const bool& value);
+  void setFileWasRead(bool value);
   /**
    * @brief Getter property for FileWasRead
    * @return Value of FileWasRead
@@ -289,7 +289,7 @@ public:
   /**
    * @brief Setter property for RefFrameZDir
    */
-  void setRefFrameZDir(const uint32_t& value);
+  void setRefFrameZDir(uint32_t value);
   /**
    * @brief Getter property for RefFrameZDir
    * @return Value of RefFrameZDir

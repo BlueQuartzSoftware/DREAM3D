@@ -151,7 +151,7 @@ public:
     /**
      * @brief Setter property for ImageFormat
      */
-    void setImageFormat(const int& value);
+    void setImageFormat(int value);
     /**
      * @brief Getter property for ImageFormat
      * @return Value of ImageFormat
@@ -163,7 +163,7 @@ public:
     /**
      * @brief Setter property for ImageSize
      */
-    void setImageSize(const int& value);
+    void setImageSize(int value);
     /**
      * @brief Getter property for ImageSize
      * @return Value of ImageSize
@@ -175,7 +175,7 @@ public:
     /**
      * @brief Setter property for LambertSize
      */
-    void setLambertSize(const int& value);
+    void setLambertSize(int value);
     /**
      * @brief Getter property for LambertSize
      * @return Value of LambertSize
@@ -187,7 +187,7 @@ public:
     /**
      * @brief Setter property for NumColors
      */
-    void setNumColors(const int& value);
+    void setNumColors(int value);
     /**
      * @brief Getter property for NumColors
      * @return Value of NumColors
@@ -199,7 +199,7 @@ public:
     /**
      * @brief Setter property for ImageLayout
      */
-    void setImageLayout(const int& value);
+    void setImageLayout(int value);
     /**
      * @brief Getter property for ImageLayout
      * @return Value of ImageLayout
@@ -259,7 +259,7 @@ public:
     /**
      * @brief Setter property for UseGoodVoxels
      */
-    void setUseGoodVoxels(const bool& value);
+    void setUseGoodVoxels(bool value);
     /**
      * @brief Getter property for UseGoodVoxels
      * @return Value of UseGoodVoxels
@@ -271,7 +271,7 @@ public:
     /**
      * @brief Setter property for GenerationAlgorithm
      */
-    void setGenerationAlgorithm(const int& value);
+    void setGenerationAlgorithm(int value);
     /**
      * @brief Getter property for GenerationAlgorithm
      * @return Value of GenerationAlgorithm

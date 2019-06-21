@@ -506,3 +506,26 @@ EbsdMontageListInfo_t ImportEbsdMontage::getInputFileListInfo() const
 {
   return m_InputFileListInfo;
 }
+
+// -----------------------------------------------------------------------------
+void ImportEbsdMontage::setGenerateIPFColorMap(bool value)
+{
+  m_GenerateIPFColorMap = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ImportEbsdMontage::getGenerateIPFColorMap() const
+{
+  return m_GenerateIPFColorMap;
+}
+// -----------------------------------------------------------------------------
+void ImportEbsdMontage::setCellIPFColorsArrayName(const QString& value)
+{
+  m_CellIPFColorsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportEbsdMontage::getCellIPFColorsArrayName() const
+{
+  return m_CellIPFColorsArrayName;
+}

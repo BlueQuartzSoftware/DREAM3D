@@ -398,7 +398,7 @@ QString RegularizeZSpacing::getInputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void RegularizeZSpacing::setNewZRes(const float& value)
+void RegularizeZSpacing::setNewZRes(float value)
 {
   m_NewZRes = value;
 }

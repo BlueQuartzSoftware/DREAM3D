@@ -603,7 +603,7 @@ DataArrayPath EMMPMFilter::getInputDataArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void EMMPMFilter::setUseOneBasedValues(const bool& value)
+void EMMPMFilter::setUseOneBasedValues(bool value)
 {
   m_UseOneBasedValues = value;
 }
@@ -615,7 +615,7 @@ bool EMMPMFilter::getUseOneBasedValues() const
 }
 
 // -----------------------------------------------------------------------------
-void EMMPMFilter::setNumClasses(const int& value)
+void EMMPMFilter::setNumClasses(int value)
 {
   m_NumClasses = value;
 }
@@ -627,7 +627,7 @@ int EMMPMFilter::getNumClasses() const
 }
 
 // -----------------------------------------------------------------------------
-void EMMPMFilter::setExchangeEnergy(const float& value)
+void EMMPMFilter::setExchangeEnergy(float value)
 {
   m_ExchangeEnergy = value;
 }
@@ -639,7 +639,7 @@ float EMMPMFilter::getExchangeEnergy() const
 }
 
 // -----------------------------------------------------------------------------
-void EMMPMFilter::setHistogramLoops(const int& value)
+void EMMPMFilter::setHistogramLoops(int value)
 {
   m_HistogramLoops = value;
 }
@@ -651,7 +651,7 @@ int EMMPMFilter::getHistogramLoops() const
 }
 
 // -----------------------------------------------------------------------------
-void EMMPMFilter::setSegmentationLoops(const int& value)
+void EMMPMFilter::setSegmentationLoops(int value)
 {
   m_SegmentationLoops = value;
 }
@@ -675,7 +675,7 @@ DynamicTableData EMMPMFilter::getEMMPMTableData() const
 }
 
 // -----------------------------------------------------------------------------
-void EMMPMFilter::setUseSimulatedAnnealing(const bool& value)
+void EMMPMFilter::setUseSimulatedAnnealing(bool value)
 {
   m_UseSimulatedAnnealing = value;
 }
@@ -687,7 +687,7 @@ bool EMMPMFilter::getUseSimulatedAnnealing() const
 }
 
 // -----------------------------------------------------------------------------
-void EMMPMFilter::setUseGradientPenalty(const bool& value)
+void EMMPMFilter::setUseGradientPenalty(bool value)
 {
   m_UseGradientPenalty = value;
 }
@@ -699,7 +699,7 @@ bool EMMPMFilter::getUseGradientPenalty() const
 }
 
 // -----------------------------------------------------------------------------
-void EMMPMFilter::setGradientBetaE(const double& value)
+void EMMPMFilter::setGradientBetaE(double value)
 {
   m_GradientBetaE = value;
 }
@@ -711,7 +711,7 @@ double EMMPMFilter::getGradientBetaE() const
 }
 
 // -----------------------------------------------------------------------------
-void EMMPMFilter::setUseCurvaturePenalty(const bool& value)
+void EMMPMFilter::setUseCurvaturePenalty(bool value)
 {
   m_UseCurvaturePenalty = value;
 }
@@ -723,7 +723,7 @@ bool EMMPMFilter::getUseCurvaturePenalty() const
 }
 
 // -----------------------------------------------------------------------------
-void EMMPMFilter::setCurvatureBetaC(const double& value)
+void EMMPMFilter::setCurvatureBetaC(double value)
 {
   m_CurvatureBetaC = value;
 }
@@ -735,7 +735,7 @@ double EMMPMFilter::getCurvatureBetaC() const
 }
 
 // -----------------------------------------------------------------------------
-void EMMPMFilter::setCurvatureRMax(const double& value)
+void EMMPMFilter::setCurvatureRMax(double value)
 {
   m_CurvatureRMax = value;
 }
@@ -747,7 +747,7 @@ double EMMPMFilter::getCurvatureRMax() const
 }
 
 // -----------------------------------------------------------------------------
-void EMMPMFilter::setCurvatureEMLoopDelay(const int& value)
+void EMMPMFilter::setCurvatureEMLoopDelay(int value)
 {
   m_CurvatureEMLoopDelay = value;
 }

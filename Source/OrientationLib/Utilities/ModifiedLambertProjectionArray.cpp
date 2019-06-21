@@ -764,7 +764,7 @@ QString ModifiedLambertProjectionArray::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void ModifiedLambertProjectionArray::setPhase(const int& value)
+void ModifiedLambertProjectionArray::setPhase(int value)
 {
   m_Phase = value;
 }

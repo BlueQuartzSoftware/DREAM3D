@@ -181,7 +181,7 @@ public:
   /**
    * @brief Setter property for StoreBoundaryCells
    */
-  void setStoreBoundaryCells(const bool& value);
+  void setStoreBoundaryCells(bool value);
   /**
    * @brief Getter property for StoreBoundaryCells
    * @return Value of StoreBoundaryCells
@@ -193,7 +193,7 @@ public:
   /**
    * @brief Setter property for StoreSurfaceFeatures
    */
-  void setStoreSurfaceFeatures(const bool& value);
+  void setStoreSurfaceFeatures(bool value);
   /**
    * @brief Getter property for StoreSurfaceFeatures
    * @return Value of StoreSurfaceFeatures

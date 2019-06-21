@@ -100,7 +100,7 @@ public:
   /**
    * @brief Setter property for PoissonNoise
    */
-  void setPoissonNoise(const bool& value);
+  void setPoissonNoise(bool value);
   /**
    * @brief Getter property for PoissonNoise
    * @return Value of PoissonNoise
@@ -112,7 +112,7 @@ public:
   /**
    * @brief Setter property for PoissonVolFraction
    */
-  void setPoissonVolFraction(const float& value);
+  void setPoissonVolFraction(float value);
   /**
    * @brief Getter property for PoissonVolFraction
    * @return Value of PoissonVolFraction
@@ -124,7 +124,7 @@ public:
   /**
    * @brief Setter property for BoundaryNoise
    */
-  void setBoundaryNoise(const bool& value);
+  void setBoundaryNoise(bool value);
   /**
    * @brief Getter property for BoundaryNoise
    * @return Value of BoundaryNoise
@@ -136,7 +136,7 @@ public:
   /**
    * @brief Setter property for BoundaryVolFraction
    */
-  void setBoundaryVolFraction(const float& value);
+  void setBoundaryVolFraction(float value);
   /**
    * @brief Getter property for BoundaryVolFraction
    * @return Value of BoundaryVolFraction

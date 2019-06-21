@@ -446,7 +446,7 @@ DataArrayPath CalculateArrayHistogram::getSelectedArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void CalculateArrayHistogram::setNumberOfBins(const int& value)
+void CalculateArrayHistogram::setNumberOfBins(int value)
 {
   m_NumberOfBins = value;
 }
@@ -458,7 +458,7 @@ int CalculateArrayHistogram::getNumberOfBins() const
 }
 
 // -----------------------------------------------------------------------------
-void CalculateArrayHistogram::setMinRange(const double& value)
+void CalculateArrayHistogram::setMinRange(double value)
 {
   m_MinRange = value;
 }
@@ -470,7 +470,7 @@ double CalculateArrayHistogram::getMinRange() const
 }
 
 // -----------------------------------------------------------------------------
-void CalculateArrayHistogram::setMaxRange(const double& value)
+void CalculateArrayHistogram::setMaxRange(double value)
 {
   m_MaxRange = value;
 }
@@ -482,7 +482,7 @@ double CalculateArrayHistogram::getMaxRange() const
 }
 
 // -----------------------------------------------------------------------------
-void CalculateArrayHistogram::setUserDefinedRange(const bool& value)
+void CalculateArrayHistogram::setUserDefinedRange(bool value)
 {
   m_UserDefinedRange = value;
 }
@@ -494,7 +494,7 @@ bool CalculateArrayHistogram::getUserDefinedRange() const
 }
 
 // -----------------------------------------------------------------------------
-void CalculateArrayHistogram::setNormalize(const bool& value)
+void CalculateArrayHistogram::setNormalize(bool value)
 {
   m_Normalize = value;
 }
@@ -530,7 +530,7 @@ QString CalculateArrayHistogram::getNewDataArrayName() const
 }
 
 // -----------------------------------------------------------------------------
-void CalculateArrayHistogram::setNewDataContainer(const bool& value)
+void CalculateArrayHistogram::setNewDataContainer(bool value)
 {
   m_NewDataContainer = value;
 }

@@ -492,7 +492,7 @@ QString RemoveFlaggedFeatures::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void RemoveFlaggedFeatures::setFillRemovedFeatures(const bool& value)
+void RemoveFlaggedFeatures::setFillRemovedFeatures(bool value)
 {
   m_FillRemovedFeatures = value;
 }

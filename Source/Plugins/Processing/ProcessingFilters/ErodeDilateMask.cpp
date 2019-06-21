@@ -377,7 +377,7 @@ QString ErodeDilateMask::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void ErodeDilateMask::setDirection(const unsigned int& value)
+void ErodeDilateMask::setDirection(unsigned int value)
 {
   m_Direction = value;
 }
@@ -389,7 +389,7 @@ unsigned int ErodeDilateMask::getDirection() const
 }
 
 // -----------------------------------------------------------------------------
-void ErodeDilateMask::setNumIterations(const int& value)
+void ErodeDilateMask::setNumIterations(int value)
 {
   m_NumIterations = value;
 }
@@ -401,7 +401,7 @@ int ErodeDilateMask::getNumIterations() const
 }
 
 // -----------------------------------------------------------------------------
-void ErodeDilateMask::setXDirOn(const bool& value)
+void ErodeDilateMask::setXDirOn(bool value)
 {
   m_XDirOn = value;
 }
@@ -413,7 +413,7 @@ bool ErodeDilateMask::getXDirOn() const
 }
 
 // -----------------------------------------------------------------------------
-void ErodeDilateMask::setYDirOn(const bool& value)
+void ErodeDilateMask::setYDirOn(bool value)
 {
   m_YDirOn = value;
 }
@@ -425,7 +425,7 @@ bool ErodeDilateMask::getYDirOn() const
 }
 
 // -----------------------------------------------------------------------------
-void ErodeDilateMask::setZDirOn(const bool& value)
+void ErodeDilateMask::setZDirOn(bool value)
 {
   m_ZDirOn = value;
 }

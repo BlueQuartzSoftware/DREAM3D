@@ -151,7 +151,7 @@ public:
   /**
    * @brief Setter property for SaveElementSizes
    */
-  void setSaveElementSizes(const bool& value);
+  void setSaveElementSizes(bool value);
   /**
    * @brief Getter property for SaveElementSizes
    * @return Value of SaveElementSizes

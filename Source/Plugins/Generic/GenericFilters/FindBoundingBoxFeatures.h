@@ -88,7 +88,7 @@ public:
   /**
    * @brief Setter property for CalcByPhase
    */
-  void setCalcByPhase(const bool& value);
+  void setCalcByPhase(bool value);
   /**
    * @brief Getter property for CalcByPhase
    * @return Value of CalcByPhase

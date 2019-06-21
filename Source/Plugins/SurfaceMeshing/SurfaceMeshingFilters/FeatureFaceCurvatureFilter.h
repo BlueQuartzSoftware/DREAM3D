@@ -181,7 +181,7 @@ public:
   /**
    * @brief Setter property for NRing
    */
-  void setNRing(const int& value);
+  void setNRing(int value);
   /**
    * @brief Getter property for NRing
    * @return Value of NRing
@@ -193,7 +193,7 @@ public:
   /**
    * @brief Setter property for ComputePrincipalDirectionVectors
    */
-  void setComputePrincipalDirectionVectors(const bool& value);
+  void setComputePrincipalDirectionVectors(bool value);
   /**
    * @brief Getter property for ComputePrincipalDirectionVectors
    * @return Value of ComputePrincipalDirectionVectors
@@ -205,7 +205,7 @@ public:
   /**
    * @brief Setter property for ComputeMeanCurvature
    */
-  void setComputeMeanCurvature(const bool& value);
+  void setComputeMeanCurvature(bool value);
   /**
    * @brief Getter property for ComputeMeanCurvature
    * @return Value of ComputeMeanCurvature
@@ -217,7 +217,7 @@ public:
   /**
    * @brief Setter property for ComputeGaussianCurvature
    */
-  void setComputeGaussianCurvature(const bool& value);
+  void setComputeGaussianCurvature(bool value);
   /**
    * @brief Getter property for ComputeGaussianCurvature
    * @return Value of ComputeGaussianCurvature
@@ -229,7 +229,7 @@ public:
   /**
    * @brief Setter property for UseNormalsForCurveFitting
    */
-  void setUseNormalsForCurveFitting(const bool& value);
+  void setUseNormalsForCurveFitting(bool value);
   /**
    * @brief Getter property for UseNormalsForCurveFitting
    * @return Value of UseNormalsForCurveFitting

@@ -654,7 +654,7 @@ QString VisualizeGBCDPoleFigure::getOutputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void VisualizeGBCDPoleFigure::setPhaseOfInterest(const int& value)
+void VisualizeGBCDPoleFigure::setPhaseOfInterest(int value)
 {
   m_PhaseOfInterest = value;
 }

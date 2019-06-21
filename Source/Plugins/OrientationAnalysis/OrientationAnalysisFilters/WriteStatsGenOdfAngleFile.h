@@ -118,7 +118,7 @@ public:
   /**
    * @brief Setter property for Weight
    */
-  void setWeight(const float& value);
+  void setWeight(float value);
   /**
    * @brief Getter property for Weight
    * @return Value of Weight
@@ -130,7 +130,7 @@ public:
   /**
    * @brief Setter property for Sigma
    */
-  void setSigma(const int& value);
+  void setSigma(int value);
   /**
    * @brief Getter property for Sigma
    * @return Value of Sigma
@@ -142,7 +142,7 @@ public:
   /**
    * @brief Setter property for Delimiter
    */
-  void setDelimiter(const int& value);
+  void setDelimiter(int value);
   /**
    * @brief Getter property for Delimiter
    * @return Value of Delimiter
@@ -190,7 +190,7 @@ public:
   /**
    * @brief Setter property for ConvertToDegrees
    */
-  void setConvertToDegrees(const bool& value);
+  void setConvertToDegrees(bool value);
   /**
    * @brief Getter property for ConvertToDegrees
    * @return Value of ConvertToDegrees
@@ -202,7 +202,7 @@ public:
   /**
    * @brief Setter property for UseGoodVoxels
    */
-  void setUseGoodVoxels(const bool& value);
+  void setUseGoodVoxels(bool value);
   /**
    * @brief Getter property for UseGoodVoxels
    * @return Value of UseGoodVoxels

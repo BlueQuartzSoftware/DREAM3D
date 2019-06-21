@@ -770,7 +770,7 @@ QString CreateLambertSphere::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void CreateLambertSphere::setHemisphere(const int& value)
+void CreateLambertSphere::setHemisphere(int value)
 {
   m_Hemisphere = value;
 }
@@ -878,7 +878,7 @@ QString CreateLambertSphere::getFaceAttributeMatrixName() const
 }
 
 // -----------------------------------------------------------------------------
-void CreateLambertSphere::setCreateVertexGeometry(const bool& value)
+void CreateLambertSphere::setCreateVertexGeometry(bool value)
 {
   m_CreateVertexGeometry = value;
 }
@@ -890,7 +890,7 @@ bool CreateLambertSphere::getCreateVertexGeometry() const
 }
 
 // -----------------------------------------------------------------------------
-void CreateLambertSphere::setCreateEdgeGeometry(const bool& value)
+void CreateLambertSphere::setCreateEdgeGeometry(bool value)
 {
   m_CreateEdgeGeometry = value;
 }
@@ -902,7 +902,7 @@ bool CreateLambertSphere::getCreateEdgeGeometry() const
 }
 
 // -----------------------------------------------------------------------------
-void CreateLambertSphere::setCreateTriangleGeometry(const bool& value)
+void CreateLambertSphere::setCreateTriangleGeometry(bool value)
 {
   m_CreateTriangleGeometry = value;
 }
@@ -914,7 +914,7 @@ bool CreateLambertSphere::getCreateTriangleGeometry() const
 }
 
 // -----------------------------------------------------------------------------
-void CreateLambertSphere::setCreateQuadGeometry(const bool& value)
+void CreateLambertSphere::setCreateQuadGeometry(bool value)
 {
   m_CreateQuadGeometry = value;
 }
@@ -926,7 +926,7 @@ bool CreateLambertSphere::getCreateQuadGeometry() const
 }
 
 // -----------------------------------------------------------------------------
-void CreateLambertSphere::setUseExistingImage(const bool& value)
+void CreateLambertSphere::setUseExistingImage(bool value)
 {
   m_UseExistingImage = value;
 }

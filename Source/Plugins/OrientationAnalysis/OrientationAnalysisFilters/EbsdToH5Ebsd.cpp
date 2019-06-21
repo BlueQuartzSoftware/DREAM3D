@@ -628,7 +628,7 @@ QString EbsdToH5Ebsd::getOutputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void EbsdToH5Ebsd::setZStartIndex(const int64_t& value)
+void EbsdToH5Ebsd::setZStartIndex(int64_t value)
 {
   m_ZStartIndex = value;
 }
@@ -640,7 +640,7 @@ int64_t EbsdToH5Ebsd::getZStartIndex() const
 }
 
 // -----------------------------------------------------------------------------
-void EbsdToH5Ebsd::setZEndIndex(const int64_t& value)
+void EbsdToH5Ebsd::setZEndIndex(int64_t value)
 {
   m_ZEndIndex = value;
 }
@@ -652,7 +652,7 @@ int64_t EbsdToH5Ebsd::getZEndIndex() const
 }
 
 // -----------------------------------------------------------------------------
-void EbsdToH5Ebsd::setZResolution(const float& value)
+void EbsdToH5Ebsd::setZResolution(float value)
 {
   m_ZResolution = value;
 }
@@ -664,7 +664,7 @@ float EbsdToH5Ebsd::getZResolution() const
 }
 
 // -----------------------------------------------------------------------------
-void EbsdToH5Ebsd::setRefFrameZDir(const uint32_t& value)
+void EbsdToH5Ebsd::setRefFrameZDir(uint32_t value)
 {
   m_RefFrameZDir = value;
 }
@@ -724,7 +724,7 @@ QString EbsdToH5Ebsd::getFileExtension() const
 }
 
 // -----------------------------------------------------------------------------
-void EbsdToH5Ebsd::setPaddingDigits(const int& value)
+void EbsdToH5Ebsd::setPaddingDigits(int value)
 {
   m_PaddingDigits = value;
 }

@@ -861,7 +861,7 @@ QString IdentifyMicroTextureRegions::getNewCellFeatureAttributeMatrixName() cons
 }
 
 // -----------------------------------------------------------------------------
-void IdentifyMicroTextureRegions::setCAxisTolerance(const float& value)
+void IdentifyMicroTextureRegions::setCAxisTolerance(float value)
 {
   m_CAxisTolerance = value;
 }
@@ -873,7 +873,7 @@ float IdentifyMicroTextureRegions::getCAxisTolerance() const
 }
 
 // -----------------------------------------------------------------------------
-void IdentifyMicroTextureRegions::setMinMTRSize(const float& value)
+void IdentifyMicroTextureRegions::setMinMTRSize(float value)
 {
   m_MinMTRSize = value;
 }
@@ -885,7 +885,7 @@ float IdentifyMicroTextureRegions::getMinMTRSize() const
 }
 
 // -----------------------------------------------------------------------------
-void IdentifyMicroTextureRegions::setMinVolFrac(const float& value)
+void IdentifyMicroTextureRegions::setMinVolFrac(float value)
 {
   m_MinVolFrac = value;
 }
@@ -897,7 +897,7 @@ float IdentifyMicroTextureRegions::getMinVolFrac() const
 }
 
 // -----------------------------------------------------------------------------
-void IdentifyMicroTextureRegions::setRandomizeMTRIds(const bool& value)
+void IdentifyMicroTextureRegions::setRandomizeMTRIds(bool value)
 {
   m_RandomizeMTRIds = value;
 }

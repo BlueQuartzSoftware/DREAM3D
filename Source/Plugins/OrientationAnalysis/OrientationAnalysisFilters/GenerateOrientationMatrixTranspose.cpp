@@ -337,7 +337,7 @@ DataArrayPath GenerateOrientationMatrixTranspose::getOutputDataArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateOrientationMatrixTranspose::setDeleteOriginalData(const bool& value)
+void GenerateOrientationMatrixTranspose::setDeleteOriginalData(bool value)
 {
   m_DeleteOriginalData = value;
 }

@@ -66,14 +66,14 @@ public:
 
   void updatePlots();
 
-  void setCrystalStructure(const unsigned int& xtal) override;
+  void setCrystalStructure(unsigned int xtal) override;
 
-  void setPhaseIndex(const int& index) override;
+  void setPhaseIndex(int index) override;
 
   /**
    * @brief Setter property for PptFraction
    */
-  void setPptFraction(const float& value);
+  void setPptFraction(float value);
   /**
    * @brief Getter property for PptFraction
    * @return Value of PptFraction

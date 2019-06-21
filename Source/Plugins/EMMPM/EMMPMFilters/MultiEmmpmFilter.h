@@ -128,7 +128,7 @@ public:
   /**
    * @brief Setter property for UsePreviousMuSigma
    */
-  void setUsePreviousMuSigma(const bool& value);
+  void setUsePreviousMuSigma(bool value);
   /**
    * @brief Getter property for UsePreviousMuSigma
    * @return Value of UsePreviousMuSigma

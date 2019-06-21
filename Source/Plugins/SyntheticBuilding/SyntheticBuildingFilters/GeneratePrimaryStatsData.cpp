@@ -732,7 +732,7 @@ QString GeneratePrimaryStatsData::getPhaseName() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrimaryStatsData::setPhaseIndex(const int& value)
+void GeneratePrimaryStatsData::setPhaseIndex(int value)
 {
   m_PhaseIndex = value;
 }
@@ -744,7 +744,7 @@ int GeneratePrimaryStatsData::getPhaseIndex() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrimaryStatsData::setCrystalSymmetry(const int& value)
+void GeneratePrimaryStatsData::setCrystalSymmetry(int value)
 {
   m_CrystalSymmetry = value;
 }
@@ -756,7 +756,7 @@ int GeneratePrimaryStatsData::getCrystalSymmetry() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrimaryStatsData::setMicroPresetModel(const int& value)
+void GeneratePrimaryStatsData::setMicroPresetModel(int value)
 {
   m_MicroPresetModel = value;
 }
@@ -768,7 +768,7 @@ int GeneratePrimaryStatsData::getMicroPresetModel() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrimaryStatsData::setPhaseFraction(const double& value)
+void GeneratePrimaryStatsData::setPhaseFraction(double value)
 {
   m_PhaseFraction = value;
 }
@@ -780,7 +780,7 @@ double GeneratePrimaryStatsData::getPhaseFraction() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrimaryStatsData::setMu(const double& value)
+void GeneratePrimaryStatsData::setMu(double value)
 {
   m_Mu = value;
 }
@@ -792,7 +792,7 @@ double GeneratePrimaryStatsData::getMu() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrimaryStatsData::setSigma(const double& value)
+void GeneratePrimaryStatsData::setSigma(double value)
 {
   m_Sigma = value;
 }
@@ -804,7 +804,7 @@ double GeneratePrimaryStatsData::getSigma() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrimaryStatsData::setMinCutOff(const double& value)
+void GeneratePrimaryStatsData::setMinCutOff(double value)
 {
   m_MinCutOff = value;
 }
@@ -816,7 +816,7 @@ double GeneratePrimaryStatsData::getMinCutOff() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrimaryStatsData::setMaxCutOff(const double& value)
+void GeneratePrimaryStatsData::setMaxCutOff(double value)
 {
   m_MaxCutOff = value;
 }
@@ -828,7 +828,7 @@ double GeneratePrimaryStatsData::getMaxCutOff() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrimaryStatsData::setBinStepSize(const double& value)
+void GeneratePrimaryStatsData::setBinStepSize(double value)
 {
   m_BinStepSize = value;
 }
@@ -840,7 +840,7 @@ double GeneratePrimaryStatsData::getBinStepSize() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrimaryStatsData::setCreateEnsembleAttributeMatrix(const bool& value)
+void GeneratePrimaryStatsData::setCreateEnsembleAttributeMatrix(bool value)
 {
   m_CreateEnsembleAttributeMatrix = value;
 }
@@ -876,7 +876,7 @@ QString GeneratePrimaryStatsData::getCellEnsembleAttributeMatrixName() const
 }
 
 // -----------------------------------------------------------------------------
-void GeneratePrimaryStatsData::setAppendToExistingAttributeMatrix(const bool& value)
+void GeneratePrimaryStatsData::setAppendToExistingAttributeMatrix(bool value)
 {
   m_AppendToExistingAttributeMatrix = value;
 }

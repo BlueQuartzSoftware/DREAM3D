@@ -47,15 +47,15 @@ public:
   /**
    * @brief Setter property for PhaseType
    */
-  void setPhaseType(const PhaseType::Type& value);
+  void setPhaseType(PhaseType::Type value) override;
   /**
    * @brief Getter property for PhaseType
    * @return Value of PhaseType
    */
-  PhaseType::Type getPhaseType() const;
+  PhaseType::Type getPhaseType() const override;
 
-  void setCrystalStructure(const unsigned int& xtal) override;
-  void setPhaseIndex(const int& index) override;
+  void setCrystalStructure(unsigned int xtal) override;
+  void setPhaseIndex(int index) override;
 
   /**
    * @brief Setter property for SGPlotWidgets

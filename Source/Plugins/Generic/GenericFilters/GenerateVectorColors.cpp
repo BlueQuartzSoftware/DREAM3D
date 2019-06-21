@@ -426,7 +426,7 @@ QString GenerateVectorColors::getCellVectorColorsArrayName() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateVectorColors::setUseGoodVoxels(const bool& value)
+void GenerateVectorColors::setUseGoodVoxels(bool value)
 {
   m_UseGoodVoxels = value;
 }

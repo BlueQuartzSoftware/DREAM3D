@@ -400,7 +400,7 @@ EnsembleInfoCreationWidget::ArrayListType EnsembleInfoCreationWidget::getArrayLi
 }
 
 // -----------------------------------------------------------------------------
-void EnsembleInfoCreationWidget::setShowOperators(const bool& value)
+void EnsembleInfoCreationWidget::setShowOperators(bool value)
 {
   m_ShowOperators = value;
 }

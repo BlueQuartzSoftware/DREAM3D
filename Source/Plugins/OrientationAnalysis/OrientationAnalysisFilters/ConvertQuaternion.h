@@ -81,7 +81,7 @@ public:
   /**
    * @brief Setter property for DeleteOriginalData
    */
-  void setDeleteOriginalData(const bool& value);
+  void setDeleteOriginalData(bool value);
   /**
    * @brief Getter property for DeleteOriginalData
    * @return Value of DeleteOriginalData
@@ -93,7 +93,7 @@ public:
   /**
    * @brief Setter property for ConversionType
    */
-  void setConversionType(const int32_t& value);
+  void setConversionType(int32_t value);
   /**
    * @brief Getter property for ConversionType
    * @return Value of ConversionType

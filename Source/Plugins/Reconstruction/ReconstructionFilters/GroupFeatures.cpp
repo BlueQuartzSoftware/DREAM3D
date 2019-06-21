@@ -398,7 +398,7 @@ DataArrayPath GroupFeatures::getNonContiguousNeighborListArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void GroupFeatures::setUseNonContiguousNeighbors(const bool& value)
+void GroupFeatures::setUseNonContiguousNeighbors(bool value)
 {
   m_UseNonContiguousNeighbors = value;
 }
@@ -410,7 +410,7 @@ bool GroupFeatures::getUseNonContiguousNeighbors() const
 }
 
 // -----------------------------------------------------------------------------
-void GroupFeatures::setPatchGrouping(const bool& value)
+void GroupFeatures::setPatchGrouping(bool value)
 {
   m_PatchGrouping = value;
 }

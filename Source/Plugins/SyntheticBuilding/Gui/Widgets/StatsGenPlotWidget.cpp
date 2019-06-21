@@ -783,7 +783,7 @@ SGAbstractTableModel* StatsGenPlotWidget::tableModel()
 }
 
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setMu(const float& value)
+void StatsGenPlotWidget::setMu(float value)
 {
   m_Mu = value;
 }
@@ -795,7 +795,7 @@ float StatsGenPlotWidget::getMu() const
 }
 
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setSigma(const float& value)
+void StatsGenPlotWidget::setSigma(float value)
 {
   m_Sigma = value;
 }
@@ -807,7 +807,7 @@ float StatsGenPlotWidget::getSigma() const
 }
 
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setMinCutOff(const float& value)
+void StatsGenPlotWidget::setMinCutOff(float value)
 {
   m_MinCutOff = value;
 }
@@ -819,7 +819,7 @@ float StatsGenPlotWidget::getMinCutOff() const
 }
 
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setMaxCutOff(const float& value)
+void StatsGenPlotWidget::setMaxCutOff(float value)
 {
   m_MaxCutOff = value;
 }
@@ -831,7 +831,7 @@ float StatsGenPlotWidget::getMaxCutOff() const
 }
 
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setBinStep(const float& value)
+void StatsGenPlotWidget::setBinStep(float value)
 {
   m_BinStep = value;
 }
@@ -843,7 +843,7 @@ float StatsGenPlotWidget::getBinStep() const
 }
 
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setPhaseIndex(const int& value)
+void StatsGenPlotWidget::setPhaseIndex(int value)
 {
   m_PhaseIndex = value;
 }
@@ -855,7 +855,7 @@ int StatsGenPlotWidget::getPhaseIndex() const
 }
 
 // -----------------------------------------------------------------------------
-void StatsGenPlotWidget::setCrystalStructure(const unsigned int& value)
+void StatsGenPlotWidget::setCrystalStructure(unsigned int value)
 {
   m_CrystalStructure = value;
 }

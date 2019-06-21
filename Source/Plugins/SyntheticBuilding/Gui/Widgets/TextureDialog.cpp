@@ -160,7 +160,7 @@ void TextureDialog::getODFEntry(float& e1, float& e2, float& e3, float& w, float
 }
 
 // -----------------------------------------------------------------------------
-void TextureDialog::setCrystalStructure(const unsigned int& value)
+void TextureDialog::setCrystalStructure(unsigned int value)
 {
   m_CrystalStructure = value;
 }

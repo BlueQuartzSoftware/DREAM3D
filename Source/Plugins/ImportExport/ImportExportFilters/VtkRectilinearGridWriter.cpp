@@ -557,7 +557,7 @@ QString VtkRectilinearGridWriter::getOutputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void VtkRectilinearGridWriter::setWriteBinaryFile(const bool& value)
+void VtkRectilinearGridWriter::setWriteBinaryFile(bool value)
 {
   m_WriteBinaryFile = value;
 }

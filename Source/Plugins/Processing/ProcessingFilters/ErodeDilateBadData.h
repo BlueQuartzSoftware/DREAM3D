@@ -95,7 +95,7 @@ public:
   /**
    * @brief Setter property for Direction
    */
-  void setDirection(const unsigned int& value);
+  void setDirection(unsigned int value);
   /**
    * @brief Getter property for Direction
    * @return Value of Direction
@@ -107,7 +107,7 @@ public:
   /**
    * @brief Setter property for NumIterations
    */
-  void setNumIterations(const int& value);
+  void setNumIterations(int value);
   /**
    * @brief Getter property for NumIterations
    * @return Value of NumIterations
@@ -119,7 +119,7 @@ public:
   /**
    * @brief Setter property for XDirOn
    */
-  void setXDirOn(const bool& value);
+  void setXDirOn(bool value);
   /**
    * @brief Getter property for XDirOn
    * @return Value of XDirOn
@@ -131,7 +131,7 @@ public:
   /**
    * @brief Setter property for YDirOn
    */
-  void setYDirOn(const bool& value);
+  void setYDirOn(bool value);
   /**
    * @brief Getter property for YDirOn
    * @return Value of YDirOn
@@ -143,7 +143,7 @@ public:
   /**
    * @brief Setter property for ZDirOn
    */
-  void setZDirOn(const bool& value);
+  void setZDirOn(bool value);
   /**
    * @brief Getter property for ZDirOn
    * @return Value of ZDirOn

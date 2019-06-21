@@ -795,7 +795,7 @@ FloatVec3Type RotateSampleRefFrame::getRotationAxis() const
 }
 
 // -----------------------------------------------------------------------------
-void RotateSampleRefFrame::setRotationAngle(const float& value)
+void RotateSampleRefFrame::setRotationAngle(float value)
 {
   m_RotationAngle = value;
 }
@@ -807,7 +807,7 @@ float RotateSampleRefFrame::getRotationAngle() const
 }
 
 // -----------------------------------------------------------------------------
-void RotateSampleRefFrame::setSliceBySlice(const bool& value)
+void RotateSampleRefFrame::setSliceBySlice(bool value)
 {
   m_SliceBySlice = value;
 }

@@ -1455,7 +1455,7 @@ QString MatchCrystallography::getAvgQuatsArrayName() const
 }
 
 // -----------------------------------------------------------------------------
-void MatchCrystallography::setMaxIterations(const int& value)
+void MatchCrystallography::setMaxIterations(int value)
 {
   m_MaxIterations = value;
 }

@@ -124,7 +124,7 @@ public:
   /**
    * @brief Setter property for PolyOrder
    */
-  void setPolyOrder(const int& value);
+  void setPolyOrder(int value);
   /**
    * @brief Getter property for PolyOrder
    * @return Value of PolyOrder
@@ -208,7 +208,7 @@ public:
   /**
    * @brief Setter property for SaveAsNewDataContainer
    */
-  void setSaveAsNewDataContainer(const bool& value);
+  void setSaveAsNewDataContainer(bool value);
   /**
    * @brief Getter property for SaveAsNewDataContainer
    * @return Value of SaveAsNewDataContainer

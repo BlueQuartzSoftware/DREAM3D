@@ -392,7 +392,7 @@ QString UncertainRegularGridSampleSurfaceMesh::getCellAttributeMatrixName() cons
 }
 
 // -----------------------------------------------------------------------------
-void UncertainRegularGridSampleSurfaceMesh::setXPoints(const int& value)
+void UncertainRegularGridSampleSurfaceMesh::setXPoints(int value)
 {
   m_XPoints = value;
 }
@@ -404,7 +404,7 @@ int UncertainRegularGridSampleSurfaceMesh::getXPoints() const
 }
 
 // -----------------------------------------------------------------------------
-void UncertainRegularGridSampleSurfaceMesh::setYPoints(const int& value)
+void UncertainRegularGridSampleSurfaceMesh::setYPoints(int value)
 {
   m_YPoints = value;
 }
@@ -416,7 +416,7 @@ int UncertainRegularGridSampleSurfaceMesh::getYPoints() const
 }
 
 // -----------------------------------------------------------------------------
-void UncertainRegularGridSampleSurfaceMesh::setZPoints(const int& value)
+void UncertainRegularGridSampleSurfaceMesh::setZPoints(int value)
 {
   m_ZPoints = value;
 }

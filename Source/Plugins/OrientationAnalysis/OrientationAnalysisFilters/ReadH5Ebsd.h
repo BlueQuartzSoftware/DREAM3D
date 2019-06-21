@@ -171,7 +171,7 @@ public:
   /**
    * @brief Setter property for ZStartIndex
    */
-  void setZStartIndex(const int& value);
+  void setZStartIndex(int value);
   /**
    * @brief Getter property for ZStartIndex
    * @return Value of ZStartIndex
@@ -183,7 +183,7 @@ public:
   /**
    * @brief Setter property for ZEndIndex
    */
-  void setZEndIndex(const int& value);
+  void setZEndIndex(int value);
   /**
    * @brief Getter property for ZEndIndex
    * @return Value of ZEndIndex
@@ -195,7 +195,7 @@ public:
   /**
    * @brief Setter property for UseTransformations
    */
-  void setUseTransformations(const bool& value);
+  void setUseTransformations(bool value);
   /**
    * @brief Getter property for UseTransformations
    * @return Value of UseTransformations
@@ -231,7 +231,7 @@ public:
   /**
    * @brief Setter property for AngleRepresentation
    */
-  void setAngleRepresentation(const int& value);
+  void setAngleRepresentation(int value);
   /**
    * @brief Getter property for AngleRepresentation
    * @return Value of AngleRepresentation
@@ -246,7 +246,7 @@ public:
   /**
    * @brief Setter property for RefFrameZDir
    */
-  void setRefFrameZDir(const uint32_t& value);
+  void setRefFrameZDir(uint32_t value);
   /**
    * @brief Getter property for RefFrameZDir
    * @return Value of RefFrameZDir

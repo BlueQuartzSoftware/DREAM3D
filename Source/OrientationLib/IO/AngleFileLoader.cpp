@@ -268,7 +268,7 @@ QString AngleFileLoader::getErrorMessage() const
 }
 
 // -----------------------------------------------------------------------------
-void AngleFileLoader::setErrorCode(const int& value)
+void AngleFileLoader::setErrorCode(int value)
 {
   m_ErrorCode = value;
 }
@@ -292,7 +292,7 @@ QString AngleFileLoader::getInputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void AngleFileLoader::setFileAnglesInDegrees(const bool& value)
+void AngleFileLoader::setFileAnglesInDegrees(bool value)
 {
   m_FileAnglesInDegrees = value;
 }
@@ -304,7 +304,7 @@ bool AngleFileLoader::getFileAnglesInDegrees() const
 }
 
 // -----------------------------------------------------------------------------
-void AngleFileLoader::setOutputAnglesInDegrees(const bool& value)
+void AngleFileLoader::setOutputAnglesInDegrees(bool value)
 {
   m_OutputAnglesInDegrees = value;
 }
@@ -316,7 +316,7 @@ bool AngleFileLoader::getOutputAnglesInDegrees() const
 }
 
 // -----------------------------------------------------------------------------
-void AngleFileLoader::setAngleRepresentation(const uint32_t& value)
+void AngleFileLoader::setAngleRepresentation(uint32_t value)
 {
   m_AngleRepresentation = value;
 }
@@ -340,7 +340,7 @@ QString AngleFileLoader::getDelimiter() const
 }
 
 // -----------------------------------------------------------------------------
-void AngleFileLoader::setIgnoreMultipleDelimiters(const bool& value)
+void AngleFileLoader::setIgnoreMultipleDelimiters(bool value)
 {
   m_IgnoreMultipleDelimiters = value;
 }

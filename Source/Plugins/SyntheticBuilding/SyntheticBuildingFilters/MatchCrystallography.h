@@ -271,7 +271,7 @@ public:
   /**
    * @brief Setter property for MaxIterations
    */
-  void setMaxIterations(const int& value);
+  void setMaxIterations(int value);
   /**
    * @brief Getter property for MaxIterations
    * @return Value of MaxIterations

@@ -548,7 +548,7 @@ QString MultiEmmpmFilter::getOutputArrayPrefix() const
 }
 
 // -----------------------------------------------------------------------------
-void MultiEmmpmFilter::setUsePreviousMuSigma(const bool& value)
+void MultiEmmpmFilter::setUsePreviousMuSigma(bool value)
 {
   m_UsePreviousMuSigma = value;
 }

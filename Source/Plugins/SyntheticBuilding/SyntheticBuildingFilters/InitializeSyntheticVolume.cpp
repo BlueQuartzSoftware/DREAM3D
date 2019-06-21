@@ -587,7 +587,7 @@ QString InitializeSyntheticVolume::getEnsembleAttributeMatrixName() const
 }
 
 // -----------------------------------------------------------------------------
-void InitializeSyntheticVolume::setLengthUnit(const int32_t& value)
+void InitializeSyntheticVolume::setLengthUnit(int32_t value)
 {
   m_LengthUnit = value;
 }
@@ -671,7 +671,7 @@ DataArrayPath InitializeSyntheticVolume::getInputPhaseNamesArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void InitializeSyntheticVolume::setEstimateNumberOfFeatures(const bool& value)
+void InitializeSyntheticVolume::setEstimateNumberOfFeatures(bool value)
 {
   m_EstimateNumberOfFeatures = value;
 }

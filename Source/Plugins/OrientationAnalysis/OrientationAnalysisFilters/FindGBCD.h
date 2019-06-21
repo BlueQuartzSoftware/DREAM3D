@@ -109,7 +109,7 @@ public:
   /**
    * @brief Setter property for GBCDRes
    */
-  void setGBCDRes(const float& value);
+  void setGBCDRes(float value);
   /**
    * @brief Getter property for GBCDRes
    * @return Value of GBCDRes

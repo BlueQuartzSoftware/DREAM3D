@@ -95,7 +95,7 @@ public:
   /**
    * @brief Setter property for FindAvgMisals
    */
-  void setFindAvgMisals(const bool& value);
+  void setFindAvgMisals(bool value);
   /**
    * @brief Getter property for FindAvgMisals
    * @return Value of FindAvgMisals

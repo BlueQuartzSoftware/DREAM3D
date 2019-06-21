@@ -401,7 +401,7 @@ QString AvizoUniformCoordinateWriter::getOutputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void AvizoUniformCoordinateWriter::setWriteBinaryFile(const bool& value)
+void AvizoUniformCoordinateWriter::setWriteBinaryFile(bool value)
 {
   m_WriteBinaryFile = value;
 }
@@ -425,7 +425,7 @@ QString AvizoUniformCoordinateWriter::getUnits() const
 }
 
 // -----------------------------------------------------------------------------
-void AvizoUniformCoordinateWriter::setWriteFeatureIds(const bool& value)
+void AvizoUniformCoordinateWriter::setWriteFeatureIds(bool value)
 {
   m_WriteFeatureIds = value;
 }

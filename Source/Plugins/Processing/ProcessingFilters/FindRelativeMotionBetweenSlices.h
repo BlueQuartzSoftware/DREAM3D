@@ -109,7 +109,7 @@ public:
   /**
    * @brief Setter property for Plane
    */
-  void setPlane(const unsigned int& value);
+  void setPlane(unsigned int value);
   /**
    * @brief Getter property for Plane
    * @return Value of Plane
@@ -121,7 +121,7 @@ public:
   /**
    * @brief Setter property for PSize1
    */
-  void setPSize1(const int& value);
+  void setPSize1(int value);
   /**
    * @brief Getter property for PSize1
    * @return Value of PSize1
@@ -133,7 +133,7 @@ public:
   /**
    * @brief Setter property for PSize2
    */
-  void setPSize2(const int& value);
+  void setPSize2(int value);
   /**
    * @brief Getter property for PSize2
    * @return Value of PSize2
@@ -145,7 +145,7 @@ public:
   /**
    * @brief Setter property for SSize1
    */
-  void setSSize1(const int& value);
+  void setSSize1(int value);
   /**
    * @brief Getter property for SSize1
    * @return Value of SSize1
@@ -157,7 +157,7 @@ public:
   /**
    * @brief Setter property for SSize2
    */
-  void setSSize2(const int& value);
+  void setSSize2(int value);
   /**
    * @brief Getter property for SSize2
    * @return Value of SSize2
@@ -169,7 +169,7 @@ public:
   /**
    * @brief Setter property for SliceStep
    */
-  void setSliceStep(const int& value);
+  void setSliceStep(int value);
   /**
    * @brief Getter property for SliceStep
    * @return Value of SliceStep

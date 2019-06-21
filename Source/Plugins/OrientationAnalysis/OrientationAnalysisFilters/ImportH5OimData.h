@@ -138,7 +138,7 @@ public:
   /**
    * @brief Setter property for NumberOfScans
    */
-  void setNumberOfScans(const int& value);
+  void setNumberOfScans(int value);
   /**
    * @brief Getter property for NumberOfScans
    * @return Value of NumberOfScans
@@ -150,7 +150,7 @@ public:
   /**
    * @brief Setter property for ZSpacing
    */
-  void setZSpacing(const double& value);
+  void setZSpacing(double value);
   /**
    * @brief Getter property for ZSpacing
    * @return Value of ZSpacing
@@ -210,7 +210,7 @@ public:
   /**
    * @brief Setter property for ReadPatternData
    */
-  void setReadPatternData(const bool& value);
+  void setReadPatternData(bool value);
   /**
    * @brief Getter property for ReadPatternData
    * @return Value of ReadPatternData
@@ -222,7 +222,7 @@ public:
   /**
    * @brief Setter property for FileWasRead
    */
-  void setFileWasRead(const bool& value);
+  void setFileWasRead(bool value);
   /**
    * @brief Getter property for FileWasRead
    * @return Value of FileWasRead
@@ -320,7 +320,7 @@ public:
   /**
    * @brief Setter property for RefFrameZDir
    */
-  void setRefFrameZDir(const uint32_t& value);
+  void setRefFrameZDir(uint32_t value);
   /**
    * @brief Getter property for RefFrameZDir
    * @return Value of RefFrameZDir

@@ -588,7 +588,7 @@ QString MinSize::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void MinSize::setMinAllowedFeatureSize(const int& value)
+void MinSize::setMinAllowedFeatureSize(int value)
 {
   m_MinAllowedFeatureSize = value;
 }
@@ -600,7 +600,7 @@ int MinSize::getMinAllowedFeatureSize() const
 }
 
 // -----------------------------------------------------------------------------
-void MinSize::setApplyToSinglePhase(const bool& value)
+void MinSize::setApplyToSinglePhase(bool value)
 {
   m_ApplyToSinglePhase = value;
 }
@@ -612,7 +612,7 @@ bool MinSize::getApplyToSinglePhase() const
 }
 
 // -----------------------------------------------------------------------------
-void MinSize::setPhaseNumber(const int& value)
+void MinSize::setPhaseNumber(int value)
 {
   m_PhaseNumber = value;
 }

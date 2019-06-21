@@ -1139,7 +1139,7 @@ QString WritePoleFigure::getOutputPath() const
 }
 
 // -----------------------------------------------------------------------------
-void WritePoleFigure::setImageFormat(const int& value)
+void WritePoleFigure::setImageFormat(int value)
 {
   m_ImageFormat = value;
 }
@@ -1151,7 +1151,7 @@ int WritePoleFigure::getImageFormat() const
 }
 
 // -----------------------------------------------------------------------------
-void WritePoleFigure::setImageSize(const int& value)
+void WritePoleFigure::setImageSize(int value)
 {
   m_ImageSize = value;
 }
@@ -1163,7 +1163,7 @@ int WritePoleFigure::getImageSize() const
 }
 
 // -----------------------------------------------------------------------------
-void WritePoleFigure::setLambertSize(const int& value)
+void WritePoleFigure::setLambertSize(int value)
 {
   m_LambertSize = value;
 }
@@ -1175,7 +1175,7 @@ int WritePoleFigure::getLambertSize() const
 }
 
 // -----------------------------------------------------------------------------
-void WritePoleFigure::setNumColors(const int& value)
+void WritePoleFigure::setNumColors(int value)
 {
   m_NumColors = value;
 }
@@ -1187,7 +1187,7 @@ int WritePoleFigure::getNumColors() const
 }
 
 // -----------------------------------------------------------------------------
-void WritePoleFigure::setImageLayout(const int& value)
+void WritePoleFigure::setImageLayout(int value)
 {
   m_ImageLayout = value;
 }
@@ -1247,7 +1247,7 @@ DataArrayPath WritePoleFigure::getGoodVoxelsArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void WritePoleFigure::setUseGoodVoxels(const bool& value)
+void WritePoleFigure::setUseGoodVoxels(bool value)
 {
   m_UseGoodVoxels = value;
 }
@@ -1259,7 +1259,7 @@ bool WritePoleFigure::getUseGoodVoxels() const
 }
 
 // -----------------------------------------------------------------------------
-void WritePoleFigure::setGenerationAlgorithm(const int& value)
+void WritePoleFigure::setGenerationAlgorithm(int value)
 {
   m_GenerationAlgorithm = value;
 }

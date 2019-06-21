@@ -420,7 +420,7 @@ QString IdentifySample::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void IdentifySample::setFillHoles(const bool& value)
+void IdentifySample::setFillHoles(bool value)
 {
   m_FillHoles = value;
 }

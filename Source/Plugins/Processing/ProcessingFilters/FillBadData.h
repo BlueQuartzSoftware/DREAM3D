@@ -87,7 +87,7 @@ public:
   /**
    * @brief Setter property for StoreAsNewPhase
    */
-  void setStoreAsNewPhase(const bool& value);
+  void setStoreAsNewPhase(bool value);
   /**
    * @brief Getter property for StoreAsNewPhase
    * @return Value of StoreAsNewPhase
@@ -99,7 +99,7 @@ public:
   /**
    * @brief Setter property for MinAllowedDefectSize
    */
-  void setMinAllowedDefectSize(const int& value);
+  void setMinAllowedDefectSize(int value);
   /**
    * @brief Getter property for MinAllowedDefectSize
    * @return Value of MinAllowedDefectSize

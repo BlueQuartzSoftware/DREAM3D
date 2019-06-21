@@ -249,7 +249,7 @@ PrecipitateRolledPreset::Pointer PrecipitateRolledPreset::New()
 }
 
 // -----------------------------------------------------------------------------
-void PrecipitateRolledPreset::setAspectRatio1(const float& value)
+void PrecipitateRolledPreset::setAspectRatio1(float value)
 {
   m_AspectRatio1 = value;
 }
@@ -261,7 +261,7 @@ float PrecipitateRolledPreset::getAspectRatio1() const
 }
 
 // -----------------------------------------------------------------------------
-void PrecipitateRolledPreset::setAspectRatio2(const float& value)
+void PrecipitateRolledPreset::setAspectRatio2(float value)
 {
   m_AspectRatio2 = value;
 }

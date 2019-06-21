@@ -513,7 +513,7 @@ QString WriteStatsGenOdfAngleFile::getOutputFile() const
 }
 
 // -----------------------------------------------------------------------------
-void WriteStatsGenOdfAngleFile::setWeight(const float& value)
+void WriteStatsGenOdfAngleFile::setWeight(float value)
 {
   m_Weight = value;
 }
@@ -525,7 +525,7 @@ float WriteStatsGenOdfAngleFile::getWeight() const
 }
 
 // -----------------------------------------------------------------------------
-void WriteStatsGenOdfAngleFile::setSigma(const int& value)
+void WriteStatsGenOdfAngleFile::setSigma(int value)
 {
   m_Sigma = value;
 }
@@ -537,7 +537,7 @@ int WriteStatsGenOdfAngleFile::getSigma() const
 }
 
 // -----------------------------------------------------------------------------
-void WriteStatsGenOdfAngleFile::setDelimiter(const int& value)
+void WriteStatsGenOdfAngleFile::setDelimiter(int value)
 {
   m_Delimiter = value;
 }
@@ -585,7 +585,7 @@ DataArrayPath WriteStatsGenOdfAngleFile::getGoodVoxelsArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void WriteStatsGenOdfAngleFile::setConvertToDegrees(const bool& value)
+void WriteStatsGenOdfAngleFile::setConvertToDegrees(bool value)
 {
   m_ConvertToDegrees = value;
 }
@@ -597,7 +597,7 @@ bool WriteStatsGenOdfAngleFile::getConvertToDegrees() const
 }
 
 // -----------------------------------------------------------------------------
-void WriteStatsGenOdfAngleFile::setUseGoodVoxels(const bool& value)
+void WriteStatsGenOdfAngleFile::setUseGoodVoxels(bool value)
 {
   m_UseGoodVoxels = value;
 }

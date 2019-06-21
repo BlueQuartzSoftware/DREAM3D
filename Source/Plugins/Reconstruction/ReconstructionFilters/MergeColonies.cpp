@@ -920,7 +920,7 @@ QString MergeColonies::getActiveArrayName() const
 }
 
 // -----------------------------------------------------------------------------
-void MergeColonies::setAxisTolerance(const float& value)
+void MergeColonies::setAxisTolerance(float value)
 {
   m_AxisTolerance = value;
 }
@@ -932,7 +932,7 @@ float MergeColonies::getAxisTolerance() const
 }
 
 // -----------------------------------------------------------------------------
-void MergeColonies::setAngleTolerance(const float& value)
+void MergeColonies::setAngleTolerance(float value)
 {
   m_AngleTolerance = value;
 }
@@ -944,7 +944,7 @@ float MergeColonies::getAngleTolerance() const
 }
 
 // -----------------------------------------------------------------------------
-void MergeColonies::setRandomizeParentIds(const bool& value)
+void MergeColonies::setRandomizeParentIds(bool value)
 {
   m_RandomizeParentIds = value;
 }
@@ -956,7 +956,7 @@ bool MergeColonies::getRandomizeParentIds() const
 }
 
 // -----------------------------------------------------------------------------
-void MergeColonies::setIdentifyGlobAlpha(const bool& value)
+void MergeColonies::setIdentifyGlobAlpha(bool value)
 {
   m_IdentifyGlobAlpha = value;
 }

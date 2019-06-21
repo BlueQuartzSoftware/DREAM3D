@@ -107,7 +107,7 @@ public:
   /**
    * @brief Setter property for Hemisphere
    */
-  void setHemisphere(const int& value);
+  void setHemisphere(int value);
   /**
    * @brief Getter property for Hemisphere
    * @return Value of Hemisphere
@@ -218,7 +218,7 @@ public:
   /**
    * @brief Setter property for CreateVertexGeometry
    */
-  void setCreateVertexGeometry(const bool& value);
+  void setCreateVertexGeometry(bool value);
   /**
    * @brief Getter property for CreateVertexGeometry
    * @return Value of CreateVertexGeometry
@@ -230,7 +230,7 @@ public:
   /**
    * @brief Setter property for CreateEdgeGeometry
    */
-  void setCreateEdgeGeometry(const bool& value);
+  void setCreateEdgeGeometry(bool value);
   /**
    * @brief Getter property for CreateEdgeGeometry
    * @return Value of CreateEdgeGeometry
@@ -242,7 +242,7 @@ public:
   /**
    * @brief Setter property for CreateTriangleGeometry
    */
-  void setCreateTriangleGeometry(const bool& value);
+  void setCreateTriangleGeometry(bool value);
   /**
    * @brief Getter property for CreateTriangleGeometry
    * @return Value of CreateTriangleGeometry
@@ -254,7 +254,7 @@ public:
   /**
    * @brief Setter property for CreateQuadGeometry
    */
-  void setCreateQuadGeometry(const bool& value);
+  void setCreateQuadGeometry(bool value);
   /**
    * @brief Getter property for CreateQuadGeometry
    * @return Value of CreateQuadGeometry
@@ -266,7 +266,7 @@ public:
   /**
    * @brief Setter property for UseExistingImage
    */
-  void setUseExistingImage(const bool& value);
+  void setUseExistingImage(bool value);
   /**
    * @brief Getter property for UseExistingImage
    * @return Value of UseExistingImage

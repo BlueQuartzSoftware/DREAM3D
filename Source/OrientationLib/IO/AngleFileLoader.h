@@ -94,7 +94,7 @@ class OrientationLib_EXPORT AngleFileLoader
     /**
      * @brief Setter property for ErrorCode
      */
-    void setErrorCode(const int& value);
+    void setErrorCode(int value);
     /**
      * @brief Getter property for ErrorCode
      * @return Value of ErrorCode
@@ -114,7 +114,7 @@ class OrientationLib_EXPORT AngleFileLoader
     /**
      * @brief Setter property for FileAnglesInDegrees
      */
-    void setFileAnglesInDegrees(const bool& value);
+    void setFileAnglesInDegrees(bool value);
     /**
      * @brief Getter property for FileAnglesInDegrees
      * @return Value of FileAnglesInDegrees
@@ -124,7 +124,7 @@ class OrientationLib_EXPORT AngleFileLoader
     /**
      * @brief Setter property for OutputAnglesInDegrees
      */
-    void setOutputAnglesInDegrees(const bool& value);
+    void setOutputAnglesInDegrees(bool value);
     /**
      * @brief Getter property for OutputAnglesInDegrees
      * @return Value of OutputAnglesInDegrees
@@ -134,7 +134,7 @@ class OrientationLib_EXPORT AngleFileLoader
     /**
      * @brief Setter property for AngleRepresentation
      */
-    void setAngleRepresentation(const uint32_t& value);
+    void setAngleRepresentation(uint32_t value);
     /**
      * @brief Getter property for AngleRepresentation
      * @return Value of AngleRepresentation
@@ -154,7 +154,7 @@ class OrientationLib_EXPORT AngleFileLoader
     /**
      * @brief Setter property for IgnoreMultipleDelimiters
      */
-    void setIgnoreMultipleDelimiters(const bool& value);
+    void setIgnoreMultipleDelimiters(bool value);
     /**
      * @brief Getter property for IgnoreMultipleDelimiters
      * @return Value of IgnoreMultipleDelimiters

@@ -482,7 +482,7 @@ QString DxWriter::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void DxWriter::setAddSurfaceLayer(const bool& value)
+void DxWriter::setAddSurfaceLayer(bool value)
 {
   m_AddSurfaceLayer = value;
 }

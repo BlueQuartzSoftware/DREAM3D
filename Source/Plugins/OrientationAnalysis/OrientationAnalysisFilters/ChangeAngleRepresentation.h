@@ -82,7 +82,7 @@ public:
   /**
    * @brief Setter property for ConversionType
    */
-  void setConversionType(const int& value);
+  void setConversionType(int value);
   /**
    * @brief Getter property for ConversionType
    * @return Value of ConversionType

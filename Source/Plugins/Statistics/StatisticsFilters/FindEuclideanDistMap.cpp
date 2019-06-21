@@ -931,7 +931,7 @@ QString FindEuclideanDistMap::getNearestNeighborsArrayName() const
 }
 
 // -----------------------------------------------------------------------------
-void FindEuclideanDistMap::setDoBoundaries(const bool& value)
+void FindEuclideanDistMap::setDoBoundaries(bool value)
 {
   m_DoBoundaries = value;
 }
@@ -943,7 +943,7 @@ bool FindEuclideanDistMap::getDoBoundaries() const
 }
 
 // -----------------------------------------------------------------------------
-void FindEuclideanDistMap::setDoTripleLines(const bool& value)
+void FindEuclideanDistMap::setDoTripleLines(bool value)
 {
   m_DoTripleLines = value;
 }
@@ -955,7 +955,7 @@ bool FindEuclideanDistMap::getDoTripleLines() const
 }
 
 // -----------------------------------------------------------------------------
-void FindEuclideanDistMap::setDoQuadPoints(const bool& value)
+void FindEuclideanDistMap::setDoQuadPoints(bool value)
 {
   m_DoQuadPoints = value;
 }
@@ -967,7 +967,7 @@ bool FindEuclideanDistMap::getDoQuadPoints() const
 }
 
 // -----------------------------------------------------------------------------
-void FindEuclideanDistMap::setSaveNearestNeighbors(const bool& value)
+void FindEuclideanDistMap::setSaveNearestNeighbors(bool value)
 {
   m_SaveNearestNeighbors = value;
 }
@@ -979,7 +979,7 @@ bool FindEuclideanDistMap::getSaveNearestNeighbors() const
 }
 
 // -----------------------------------------------------------------------------
-void FindEuclideanDistMap::setCalcManhattanDist(const bool& value)
+void FindEuclideanDistMap::setCalcManhattanDist(bool value)
 {
   m_CalcManhattanDist = value;
 }

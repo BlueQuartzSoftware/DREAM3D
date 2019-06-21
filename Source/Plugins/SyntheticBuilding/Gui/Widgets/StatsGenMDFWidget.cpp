@@ -502,7 +502,7 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, PhaseType::Ty
 }
 
 // -----------------------------------------------------------------------------
-void StatsGenMDFWidget::setPhaseIndex(const int& value)
+void StatsGenMDFWidget::setPhaseIndex(int value)
 {
   m_PhaseIndex = value;
 }
@@ -514,7 +514,7 @@ int StatsGenMDFWidget::getPhaseIndex() const
 }
 
 // -----------------------------------------------------------------------------
-void StatsGenMDFWidget::setCrystalStructure(const unsigned int& value)
+void StatsGenMDFWidget::setCrystalStructure(unsigned int value)
 {
   m_CrystalStructure = value;
 }

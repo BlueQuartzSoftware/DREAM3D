@@ -409,7 +409,7 @@ QString GenerateEulerColors::getCellEulerColorsArrayName() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateEulerColors::setUseGoodVoxels(const bool& value)
+void GenerateEulerColors::setUseGoodVoxels(bool value)
 {
   m_UseGoodVoxels = value;
 }

@@ -106,7 +106,7 @@ public:
   /**
    * @brief Setter property for PhaseOfInterest
    */
-  void setPhaseOfInterest(const int& value);
+  void setPhaseOfInterest(int value);
   /**
    * @brief Getter property for PhaseOfInterest
    * @return Value of PhaseOfInterest

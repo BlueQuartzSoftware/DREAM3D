@@ -644,7 +644,7 @@ DataArrayPath EstablishMatrixPhase::getMaskArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void EstablishMatrixPhase::setUseMask(const bool& value)
+void EstablishMatrixPhase::setUseMask(bool value)
 {
   m_UseMask = value;
 }

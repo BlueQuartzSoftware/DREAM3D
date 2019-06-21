@@ -108,7 +108,7 @@ public:
   /**
    * @brief Setter property for PhaseIndex
    */
-  void setPhaseIndex(const int& value);
+  void setPhaseIndex(int value);
   /**
    * @brief Getter property for PhaseIndex
    * @return Value of PhaseIndex
@@ -120,7 +120,7 @@ public:
   /**
    * @brief Setter property for CrystalSymmetry
    */
-  void setCrystalSymmetry(const int& value);
+  void setCrystalSymmetry(int value);
   /**
    * @brief Getter property for CrystalSymmetry
    * @return Value of CrystalSymmetry
@@ -132,7 +132,7 @@ public:
   /**
    * @brief Setter property for MicroPresetModel
    */
-  void setMicroPresetModel(const int& value);
+  void setMicroPresetModel(int value);
   /**
    * @brief Getter property for MicroPresetModel
    * @return Value of MicroPresetModel
@@ -144,7 +144,7 @@ public:
   /**
    * @brief Setter property for PhaseFraction
    */
-  void setPhaseFraction(const double& value);
+  void setPhaseFraction(double value);
   /**
    * @brief Getter property for PhaseFraction
    * @return Value of PhaseFraction
@@ -156,7 +156,7 @@ public:
   /**
    * @brief Setter property for Mu
    */
-  void setMu(const double& value);
+  void setMu(double value);
   /**
    * @brief Getter property for Mu
    * @return Value of Mu
@@ -168,7 +168,7 @@ public:
   /**
    * @brief Setter property for Sigma
    */
-  void setSigma(const double& value);
+  void setSigma(double value);
   /**
    * @brief Getter property for Sigma
    * @return Value of Sigma
@@ -180,7 +180,7 @@ public:
   /**
    * @brief Setter property for MinCutOff
    */
-  void setMinCutOff(const double& value);
+  void setMinCutOff(double value);
   /**
    * @brief Getter property for MinCutOff
    * @return Value of MinCutOff
@@ -192,7 +192,7 @@ public:
   /**
    * @brief Setter property for MaxCutOff
    */
-  void setMaxCutOff(const double& value);
+  void setMaxCutOff(double value);
   /**
    * @brief Getter property for MaxCutOff
    * @return Value of MaxCutOff
@@ -204,7 +204,7 @@ public:
   /**
    * @brief Setter property for BinStepSize
    */
-  void setBinStepSize(const double& value);
+  void setBinStepSize(double value);
   /**
    * @brief Getter property for BinStepSize
    * @return Value of BinStepSize
@@ -216,7 +216,7 @@ public:
   /**
    * @brief Setter property for CreateEnsembleAttributeMatrix
    */
-  void setCreateEnsembleAttributeMatrix(const bool& value);
+  void setCreateEnsembleAttributeMatrix(bool value);
   /**
    * @brief Getter property for CreateEnsembleAttributeMatrix
    * @return Value of CreateEnsembleAttributeMatrix
@@ -252,7 +252,7 @@ public:
   /**
    * @brief Setter property for AppendToExistingAttributeMatrix
    */
-  void setAppendToExistingAttributeMatrix(const bool& value);
+  void setAppendToExistingAttributeMatrix(bool value);
   /**
    * @brief Getter property for AppendToExistingAttributeMatrix
    * @return Value of AppendToExistingAttributeMatrix
@@ -330,7 +330,7 @@ public:
   /**
    * @brief Setter property for RdfNumBins
    */
-  void setRdfNumBins(const int& value);
+  void setRdfNumBins(int value);
   /**
    * @brief Getter property for RdfNumBins
    * @return Value of RdfNumBins

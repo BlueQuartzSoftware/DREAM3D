@@ -113,7 +113,7 @@ public:
   /**
    * @brief Setter property for GroupByPhase
    */
-  void setGroupByPhase(const bool& value);
+  void setGroupByPhase(bool value);
   /**
    * @brief Getter property for GroupByPhase
    * @return Value of GroupByPhase

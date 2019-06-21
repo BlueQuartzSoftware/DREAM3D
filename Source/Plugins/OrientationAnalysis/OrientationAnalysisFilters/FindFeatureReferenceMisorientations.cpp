@@ -586,7 +586,7 @@ QString FindFeatureReferenceMisorientations::getFeatureReferenceMisorientationsA
 }
 
 // -----------------------------------------------------------------------------
-void FindFeatureReferenceMisorientations::setReferenceOrientation(const int& value)
+void FindFeatureReferenceMisorientations::setReferenceOrientation(int value)
 {
   m_ReferenceOrientation = value;
 }

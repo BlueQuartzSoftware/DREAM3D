@@ -627,7 +627,7 @@ QString FindNeighbors::getSurfaceFeaturesArrayName() const
 }
 
 // -----------------------------------------------------------------------------
-void FindNeighbors::setStoreBoundaryCells(const bool& value)
+void FindNeighbors::setStoreBoundaryCells(bool value)
 {
   m_StoreBoundaryCells = value;
 }
@@ -639,7 +639,7 @@ bool FindNeighbors::getStoreBoundaryCells() const
 }
 
 // -----------------------------------------------------------------------------
-void FindNeighbors::setStoreSurfaceFeatures(const bool& value)
+void FindNeighbors::setStoreSurfaceFeatures(bool value)
 {
   m_StoreSurfaceFeatures = value;
 }

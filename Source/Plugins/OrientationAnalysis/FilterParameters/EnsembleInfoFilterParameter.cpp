@@ -178,7 +178,7 @@ QVector<QString> EnsembleInfoFilterParameter::getChoices() const
 }
 
 // -----------------------------------------------------------------------------
-void EnsembleInfoFilterParameter::setShowOperators(const bool& value)
+void EnsembleInfoFilterParameter::setShowOperators(bool value)
 {
   m_ShowOperators = value;
 }

@@ -113,7 +113,7 @@ public:
   /**
    * @brief Setter property for UseNonContiguousNeighbors
    */
-  void setUseNonContiguousNeighbors(const bool& value);
+  void setUseNonContiguousNeighbors(bool value);
   /**
    * @brief Getter property for UseNonContiguousNeighbors
    * @return Value of UseNonContiguousNeighbors
@@ -125,7 +125,7 @@ public:
   /**
    * @brief Setter property for PatchGrouping
    */
-  void setPatchGrouping(const bool& value);
+  void setPatchGrouping(bool value);
   /**
    * @brief Getter property for PatchGrouping
    * @return Value of PatchGrouping

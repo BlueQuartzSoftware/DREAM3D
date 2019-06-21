@@ -290,7 +290,7 @@ QString AddOrientationNoise::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void AddOrientationNoise::setMagnitude(const float& value)
+void AddOrientationNoise::setMagnitude(float value)
 {
   m_Magnitude = value;
 }

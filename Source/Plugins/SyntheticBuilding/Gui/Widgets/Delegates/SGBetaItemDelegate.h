@@ -58,7 +58,7 @@ class SGBetaItemDelegate : public QStyledItemDelegate
   Q_OBJECT
 
 public:
-  explicit SGBetaItemDelegate(QObject* parent = 0)
+  explicit SGBetaItemDelegate(QObject* parent = nullptr)
   : QStyledItemDelegate(parent)
   {
   }

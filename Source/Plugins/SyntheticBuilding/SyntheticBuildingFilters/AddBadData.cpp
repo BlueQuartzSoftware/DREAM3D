@@ -326,7 +326,7 @@ DataArrayPath AddBadData::getGBEuclideanDistancesArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void AddBadData::setPoissonNoise(const bool& value)
+void AddBadData::setPoissonNoise(bool value)
 {
   m_PoissonNoise = value;
 }
@@ -338,7 +338,7 @@ bool AddBadData::getPoissonNoise() const
 }
 
 // -----------------------------------------------------------------------------
-void AddBadData::setPoissonVolFraction(const float& value)
+void AddBadData::setPoissonVolFraction(float value)
 {
   m_PoissonVolFraction = value;
 }
@@ -350,7 +350,7 @@ float AddBadData::getPoissonVolFraction() const
 }
 
 // -----------------------------------------------------------------------------
-void AddBadData::setBoundaryNoise(const bool& value)
+void AddBadData::setBoundaryNoise(bool value)
 {
   m_BoundaryNoise = value;
 }
@@ -362,7 +362,7 @@ bool AddBadData::getBoundaryNoise() const
 }
 
 // -----------------------------------------------------------------------------
-void AddBadData::setBoundaryVolFraction(const float& value)
+void AddBadData::setBoundaryVolFraction(float value)
 {
   m_BoundaryVolFraction = value;
 }

@@ -482,7 +482,7 @@ QString FindSurfaceAreaToVolume::getSphericityArrayName() const
 }
 
 // -----------------------------------------------------------------------------
-void FindSurfaceAreaToVolume::setCalculateSphericity(const bool& value)
+void FindSurfaceAreaToVolume::setCalculateSphericity(bool value)
 {
   m_CalculateSphericity = value;
 }

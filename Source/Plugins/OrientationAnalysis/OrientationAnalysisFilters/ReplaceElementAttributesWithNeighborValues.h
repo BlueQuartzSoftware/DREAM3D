@@ -88,7 +88,7 @@ public:
   /**
    * @brief Setter property for MinConfidence
    */
-  void setMinConfidence(const float& value);
+  void setMinConfidence(float value);
   /**
    * @brief Getter property for MinConfidence
    * @return Value of MinConfidence
@@ -100,7 +100,7 @@ public:
   /**
    * @brief Setter property for Loop
    */
-  void setLoop(const bool& value);
+  void setLoop(bool value);
   /**
    * @brief Getter property for Loop
    * @return Value of Loop
@@ -124,7 +124,7 @@ public:
   /**
    * @brief Setter property for SelectedComparison
    */
-  void setSelectedComparison(const int& value);
+  void setSelectedComparison(int value);
   /**
    * @brief Getter property for SelectedComparison
    * @return Value of SelectedComparison

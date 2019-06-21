@@ -112,7 +112,7 @@ public:
   /**
    * @brief Setter property for AddSurfaceLayer
    */
-  void setAddSurfaceLayer(const bool& value);
+  void setAddSurfaceLayer(bool value);
   /**
    * @brief Getter property for AddSurfaceLayer
    * @return Value of AddSurfaceLayer

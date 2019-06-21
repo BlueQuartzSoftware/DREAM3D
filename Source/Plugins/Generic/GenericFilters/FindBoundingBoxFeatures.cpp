@@ -579,7 +579,7 @@ QString FindBoundingBoxFeatures::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void FindBoundingBoxFeatures::setCalcByPhase(const bool& value)
+void FindBoundingBoxFeatures::setCalcByPhase(bool value)
 {
   m_CalcByPhase = value;
 }

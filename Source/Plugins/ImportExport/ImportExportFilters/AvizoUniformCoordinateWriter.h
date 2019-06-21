@@ -109,7 +109,7 @@ public:
   /**
    * @brief Setter property for WriteBinaryFile
    */
-  void setWriteBinaryFile(const bool& value);
+  void setWriteBinaryFile(bool value);
   /**
    * @brief Getter property for WriteBinaryFile
    * @return Value of WriteBinaryFile
@@ -133,7 +133,7 @@ public:
   /**
    * @brief Setter property for WriteFeatureIds
    */
-  void setWriteFeatureIds(const bool& value);
+  void setWriteFeatureIds(bool value);
   /**
    * @brief Getter property for WriteFeatureIds
    * @return Value of WriteFeatureIds

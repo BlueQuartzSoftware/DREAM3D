@@ -76,7 +76,7 @@ public:
   /**
    * @brief Setter property for LaueClass
    */
-  void setLaueClass(const int& value);
+  void setLaueClass(int value);
   /**
    * @brief Getter property for LaueClass
    * @return Value of LaueClass
@@ -100,7 +100,7 @@ public:
   /**
    * @brief Setter property for ImageSize
    */
-  void setImageSize(const int& value);
+  void setImageSize(int value);
   /**
    * @brief Getter property for ImageSize
    * @return Value of ImageSize

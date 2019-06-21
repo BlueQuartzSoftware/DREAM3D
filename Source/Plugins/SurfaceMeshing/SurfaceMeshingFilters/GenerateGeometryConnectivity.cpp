@@ -272,7 +272,7 @@ DataArrayPath GenerateGeometryConnectivity::getSurfaceDataContainerName() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateGeometryConnectivity::setGenerateVertexTriangleLists(const bool& value)
+void GenerateGeometryConnectivity::setGenerateVertexTriangleLists(bool value)
 {
   m_GenerateVertexTriangleLists = value;
 }
@@ -284,7 +284,7 @@ bool GenerateGeometryConnectivity::getGenerateVertexTriangleLists() const
 }
 
 // -----------------------------------------------------------------------------
-void GenerateGeometryConnectivity::setGenerateTriangleNeighbors(const bool& value)
+void GenerateGeometryConnectivity::setGenerateTriangleNeighbors(bool value)
 {
   m_GenerateTriangleNeighbors = value;
 }

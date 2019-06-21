@@ -118,7 +118,7 @@ public:
   /**
    * @brief Setter property for PhaseOfInterest
    */
-  void setPhaseOfInterest(const int& value);
+  void setPhaseOfInterest(int value);
   /**
    * @brief Getter property for PhaseOfInterest
    * @return Value of PhaseOfInterest
@@ -130,7 +130,7 @@ public:
   /**
    * @brief Setter property for LimitDist
    */
-  void setLimitDist(const float& value);
+  void setLimitDist(float value);
   /**
    * @brief Getter property for LimitDist
    * @return Value of LimitDist
@@ -142,7 +142,7 @@ public:
   /**
    * @brief Setter property for NumSamplPts
    */
-  void setNumSamplPts(const int& value);
+  void setNumSamplPts(int value);
   /**
    * @brief Getter property for NumSamplPts
    * @return Value of NumSamplPts
@@ -154,7 +154,7 @@ public:
   /**
    * @brief Setter property for ExcludeTripleLines
    */
-  void setExcludeTripleLines(const bool& value);
+  void setExcludeTripleLines(bool value);
   /**
    * @brief Getter property for ExcludeTripleLines
    * @return Value of ExcludeTripleLines
@@ -190,7 +190,7 @@ public:
   /**
    * @brief Setter property for SaveRelativeErr
    */
-  void setSaveRelativeErr(const bool& value);
+  void setSaveRelativeErr(bool value);
   /**
    * @brief Getter property for SaveRelativeErr
    * @return Value of SaveRelativeErr

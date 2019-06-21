@@ -72,7 +72,7 @@ class FindNRingNeighbors
     /**
      * @brief Setter property for TriangleId
      */
-    void setTriangleId(const int64_t& value);
+    void setTriangleId(int64_t value);
     /**
      * @brief Getter property for TriangleId
      * @return Value of TriangleId
@@ -85,7 +85,7 @@ class FindNRingNeighbors
     /**
      * @brief Setter property for RegionId0
      */
-    void setRegionId0(const int32_t& value);
+    void setRegionId0(int32_t value);
     /**
      * @brief Getter property for RegionId0
      * @return Value of RegionId0
@@ -98,7 +98,7 @@ class FindNRingNeighbors
     /**
      * @brief Setter property for RegionId1
      */
-    void setRegionId1(const int32_t& value);
+    void setRegionId1(int32_t value);
     /**
      * @brief Getter property for RegionId1
      * @return Value of RegionId1
@@ -118,7 +118,7 @@ class FindNRingNeighbors
     /**
      * @brief Setter property for Ring
      */
-    void setRing(const int64_t& value);
+    void setRing(int64_t value);
     /**
      * @brief Getter property for Ring
      * @return Value of Ring
@@ -142,7 +142,7 @@ class FindNRingNeighbors
     /**
      * @brief Setter property for WriteBinaryFile
      */
-    void setWriteBinaryFile(const bool& value);
+    void setWriteBinaryFile(bool value);
     /**
      * @brief Getter property for WriteBinaryFile
      * @return Value of WriteBinaryFile
@@ -152,7 +152,7 @@ class FindNRingNeighbors
     /**
      * @brief Setter property for WriteConformalMesh
      */
-    void setWriteConformalMesh(const bool& value);
+    void setWriteConformalMesh(bool value);
     /**
      * @brief Getter property for WriteConformalMesh
      * @return Value of WriteConformalMesh

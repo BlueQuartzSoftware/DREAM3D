@@ -148,7 +148,7 @@ public:
   /**
    * @brief Setter property for XMin
    */
-  void setXMin(const int& value);
+  void setXMin(int value);
   /**
    * @brief Getter property for XMin
    * @return Value of XMin
@@ -160,7 +160,7 @@ public:
   /**
    * @brief Setter property for YMin
    */
-  void setYMin(const int& value);
+  void setYMin(int value);
   /**
    * @brief Getter property for YMin
    * @return Value of YMin
@@ -172,7 +172,7 @@ public:
   /**
    * @brief Setter property for ZMin
    */
-  void setZMin(const int& value);
+  void setZMin(int value);
   /**
    * @brief Getter property for ZMin
    * @return Value of ZMin
@@ -184,7 +184,7 @@ public:
   /**
    * @brief Setter property for XMax
    */
-  void setXMax(const int& value);
+  void setXMax(int value);
   /**
    * @brief Getter property for XMax
    * @return Value of XMax
@@ -196,7 +196,7 @@ public:
   /**
    * @brief Setter property for YMax
    */
-  void setYMax(const int& value);
+  void setYMax(int value);
   /**
    * @brief Getter property for YMax
    * @return Value of YMax
@@ -208,7 +208,7 @@ public:
   /**
    * @brief Setter property for ZMax
    */
-  void setZMax(const int& value);
+  void setZMax(int value);
   /**
    * @brief Getter property for ZMax
    * @return Value of ZMax
@@ -220,7 +220,7 @@ public:
   /**
    * @brief Setter property for RenumberFeatures
    */
-  void setRenumberFeatures(const bool& value);
+  void setRenumberFeatures(bool value);
   /**
    * @brief Getter property for RenumberFeatures
    * @return Value of RenumberFeatures
@@ -232,7 +232,7 @@ public:
   /**
    * @brief Setter property for SaveAsNewDataContainer
    */
-  void setSaveAsNewDataContainer(const bool& value);
+  void setSaveAsNewDataContainer(bool value);
   /**
    * @brief Getter property for SaveAsNewDataContainer
    * @return Value of SaveAsNewDataContainer
@@ -244,7 +244,7 @@ public:
   /**
    * @brief Setter property for UpdateOrigin
    */
-  void setUpdateOrigin(const bool& value);
+  void setUpdateOrigin(bool value);
   /**
    * @brief Getter property for UpdateOrigin
    * @return Value of UpdateOrigin

@@ -124,7 +124,7 @@ public:
   /**
    * @brief Setter property for ScalarTolerance
    */
-  void setScalarTolerance(const float& value);
+  void setScalarTolerance(float value);
   /**
    * @brief Getter property for ScalarTolerance
    * @return Value of ScalarTolerance
@@ -136,7 +136,7 @@ public:
   /**
    * @brief Setter property for RandomizeFeatureIds
    */
-  void setRandomizeFeatureIds(const bool& value);
+  void setRandomizeFeatureIds(bool value);
   /**
    * @brief Getter property for RandomizeFeatureIds
    * @return Value of RandomizeFeatureIds
@@ -146,7 +146,7 @@ public:
   /**
    * @brief Setter property for UseGoodVoxels
    */
-  void setUseGoodVoxels(const bool& value);
+  void setUseGoodVoxels(bool value);
   /**
    * @brief Getter property for UseGoodVoxels
    * @return Value of UseGoodVoxels

@@ -590,7 +590,7 @@ QString ConvertHexGridToSquareGrid::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void ConvertHexGridToSquareGrid::setZStartIndex(const int64_t& value)
+void ConvertHexGridToSquareGrid::setZStartIndex(int64_t value)
 {
   m_ZStartIndex = value;
 }
@@ -602,7 +602,7 @@ int64_t ConvertHexGridToSquareGrid::getZStartIndex() const
 }
 
 // -----------------------------------------------------------------------------
-void ConvertHexGridToSquareGrid::setZEndIndex(const int64_t& value)
+void ConvertHexGridToSquareGrid::setZEndIndex(int64_t value)
 {
   m_ZEndIndex = value;
 }
@@ -614,7 +614,7 @@ int64_t ConvertHexGridToSquareGrid::getZEndIndex() const
 }
 
 // -----------------------------------------------------------------------------
-void ConvertHexGridToSquareGrid::setXResolution(const float& value)
+void ConvertHexGridToSquareGrid::setXResolution(float value)
 {
   m_XResolution = value;
 }
@@ -626,7 +626,7 @@ float ConvertHexGridToSquareGrid::getXResolution() const
 }
 
 // -----------------------------------------------------------------------------
-void ConvertHexGridToSquareGrid::setYResolution(const float& value)
+void ConvertHexGridToSquareGrid::setYResolution(float value)
 {
   m_YResolution = value;
 }
@@ -710,7 +710,7 @@ QString ConvertHexGridToSquareGrid::getFileExtension() const
 }
 
 // -----------------------------------------------------------------------------
-void ConvertHexGridToSquareGrid::setPaddingDigits(const int& value)
+void ConvertHexGridToSquareGrid::setPaddingDigits(int value)
 {
   m_PaddingDigits = value;
 }
@@ -722,7 +722,7 @@ int ConvertHexGridToSquareGrid::getPaddingDigits() const
 }
 
 // -----------------------------------------------------------------------------
-void ConvertHexGridToSquareGrid::setNumCols(const int& value)
+void ConvertHexGridToSquareGrid::setNumCols(int value)
 {
   m_NumCols = value;
 }
@@ -734,7 +734,7 @@ int ConvertHexGridToSquareGrid::getNumCols() const
 }
 
 // -----------------------------------------------------------------------------
-void ConvertHexGridToSquareGrid::setNumRows(const int& value)
+void ConvertHexGridToSquareGrid::setNumRows(int value)
 {
   m_NumRows = value;
 }
@@ -746,7 +746,7 @@ int ConvertHexGridToSquareGrid::getNumRows() const
 }
 
 // -----------------------------------------------------------------------------
-void ConvertHexGridToSquareGrid::setHeaderIsComplete(const bool& value)
+void ConvertHexGridToSquareGrid::setHeaderIsComplete(bool value)
 {
   m_HeaderIsComplete = value;
 }
@@ -758,7 +758,7 @@ bool ConvertHexGridToSquareGrid::getHeaderIsComplete() const
 }
 
 // -----------------------------------------------------------------------------
-void ConvertHexGridToSquareGrid::setHexGridStack(const int& value)
+void ConvertHexGridToSquareGrid::setHexGridStack(int value)
 {
   m_HexGridStack = value;
 }

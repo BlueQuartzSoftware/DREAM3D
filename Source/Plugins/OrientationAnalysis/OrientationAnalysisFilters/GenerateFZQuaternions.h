@@ -97,7 +97,7 @@ public:
   /**
    * @brief Setter property for UseGoodVoxels
    */
-  void setUseGoodVoxels(const bool& value);
+  void setUseGoodVoxels(bool value);
   /**
    * @brief Getter property for UseGoodVoxels
    * @return Value of UseGoodVoxels

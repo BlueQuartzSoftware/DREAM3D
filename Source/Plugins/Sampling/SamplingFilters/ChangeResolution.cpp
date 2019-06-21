@@ -583,7 +583,7 @@ FloatVec3Type ChangeResolution::getSpacing() const
 }
 
 // -----------------------------------------------------------------------------
-void ChangeResolution::setRenumberFeatures(const bool& value)
+void ChangeResolution::setRenumberFeatures(bool value)
 {
   m_RenumberFeatures = value;
 }
@@ -595,7 +595,7 @@ bool ChangeResolution::getRenumberFeatures() const
 }
 
 // -----------------------------------------------------------------------------
-void ChangeResolution::setSaveAsNewDataContainer(const bool& value)
+void ChangeResolution::setSaveAsNewDataContainer(bool value)
 {
   m_SaveAsNewDataContainer = value;
 }

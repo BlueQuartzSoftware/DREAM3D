@@ -251,7 +251,7 @@ PrimaryRolledPreset::Pointer PrimaryRolledPreset::New()
 }
 
 // -----------------------------------------------------------------------------
-void PrimaryRolledPreset::setAspectRatio1(const float& value)
+void PrimaryRolledPreset::setAspectRatio1(float value)
 {
   m_AspectRatio1 = value;
 }
@@ -263,7 +263,7 @@ float PrimaryRolledPreset::getAspectRatio1() const
 }
 
 // -----------------------------------------------------------------------------
-void PrimaryRolledPreset::setAspectRatio2(const float& value)
+void PrimaryRolledPreset::setAspectRatio2(float value)
 {
   m_AspectRatio2 = value;
 }

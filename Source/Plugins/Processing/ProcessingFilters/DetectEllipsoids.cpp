@@ -1588,7 +1588,7 @@ QString DetectEllipsoids::getRotationalAnglesArrayName() const
 }
 
 // -----------------------------------------------------------------------------
-void DetectEllipsoids::setMinFiberAxisLength(const int& value)
+void DetectEllipsoids::setMinFiberAxisLength(int value)
 {
   m_MinFiberAxisLength = value;
 }
@@ -1600,7 +1600,7 @@ int DetectEllipsoids::getMinFiberAxisLength() const
 }
 
 // -----------------------------------------------------------------------------
-void DetectEllipsoids::setMaxFiberAxisLength(const int& value)
+void DetectEllipsoids::setMaxFiberAxisLength(int value)
 {
   m_MaxFiberAxisLength = value;
 }
@@ -1612,7 +1612,7 @@ int DetectEllipsoids::getMaxFiberAxisLength() const
 }
 
 // -----------------------------------------------------------------------------
-void DetectEllipsoids::setHoughTransformThreshold(const float& value)
+void DetectEllipsoids::setHoughTransformThreshold(float value)
 {
   m_HoughTransformThreshold = value;
 }
@@ -1624,7 +1624,7 @@ float DetectEllipsoids::getHoughTransformThreshold() const
 }
 
 // -----------------------------------------------------------------------------
-void DetectEllipsoids::setMinAspectRatio(const float& value)
+void DetectEllipsoids::setMinAspectRatio(float value)
 {
   m_MinAspectRatio = value;
 }
@@ -1636,7 +1636,7 @@ float DetectEllipsoids::getMinAspectRatio() const
 }
 
 // -----------------------------------------------------------------------------
-void DetectEllipsoids::setImageScaleBarLength(const int& value)
+void DetectEllipsoids::setImageScaleBarLength(int value)
 {
   m_ImageScaleBarLength = value;
 }

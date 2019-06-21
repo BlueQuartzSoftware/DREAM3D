@@ -1298,7 +1298,7 @@ QString VtkStructuredPointsReader::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void VtkStructuredPointsReader::setReadCellData(const bool& value)
+void VtkStructuredPointsReader::setReadCellData(bool value)
 {
   m_ReadCellData = value;
 }
@@ -1334,7 +1334,7 @@ QString VtkStructuredPointsReader::getCellAttributeMatrixName() const
 }
 
 // -----------------------------------------------------------------------------
-void VtkStructuredPointsReader::setReadPointData(const bool& value)
+void VtkStructuredPointsReader::setReadPointData(bool value)
 {
   m_ReadPointData = value;
 }
@@ -1406,7 +1406,7 @@ QString VtkStructuredPointsReader::getDatasetType() const
 }
 
 // -----------------------------------------------------------------------------
-void VtkStructuredPointsReader::setFileIsBinary(const bool& value)
+void VtkStructuredPointsReader::setFileIsBinary(bool value)
 {
   m_FileIsBinary = value;
 }

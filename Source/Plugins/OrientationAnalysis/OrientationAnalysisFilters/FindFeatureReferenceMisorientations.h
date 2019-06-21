@@ -194,7 +194,7 @@ public:
   /**
    * @brief Setter property for ReferenceOrientation
    */
-  void setReferenceOrientation(const int& value);
+  void setReferenceOrientation(int value);
   /**
    * @brief Getter property for ReferenceOrientation
    * @return Value of ReferenceOrientation

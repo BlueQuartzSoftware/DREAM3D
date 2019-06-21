@@ -631,7 +631,7 @@ void StatsGenAxisODFWidget::on_savePoleFigureImage_clicked()
 }
 
 // -----------------------------------------------------------------------------
-void StatsGenAxisODFWidget::setEnableAxisDecorations(const bool& value)
+void StatsGenAxisODFWidget::setEnableAxisDecorations(bool value)
 {
   m_EnableAxisDecorations = value;
 }
@@ -643,7 +643,7 @@ bool StatsGenAxisODFWidget::getEnableAxisDecorations() const
 }
 
 // -----------------------------------------------------------------------------
-void StatsGenAxisODFWidget::setInitializing(const bool& value)
+void StatsGenAxisODFWidget::setInitializing(bool value)
 {
   m_Initializing = value;
 }

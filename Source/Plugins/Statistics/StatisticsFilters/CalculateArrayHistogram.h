@@ -113,7 +113,7 @@ public:
   /**
    * @brief Setter property for NumberOfBins
    */
-  void setNumberOfBins(const int& value);
+  void setNumberOfBins(int value);
   /**
    * @brief Getter property for NumberOfBins
    * @return Value of NumberOfBins
@@ -125,7 +125,7 @@ public:
   /**
    * @brief Setter property for MinRange
    */
-  void setMinRange(const double& value);
+  void setMinRange(double value);
   /**
    * @brief Getter property for MinRange
    * @return Value of MinRange
@@ -137,7 +137,7 @@ public:
   /**
    * @brief Setter property for MaxRange
    */
-  void setMaxRange(const double& value);
+  void setMaxRange(double value);
   /**
    * @brief Getter property for MaxRange
    * @return Value of MaxRange
@@ -149,7 +149,7 @@ public:
   /**
    * @brief Setter property for UserDefinedRange
    */
-  void setUserDefinedRange(const bool& value);
+  void setUserDefinedRange(bool value);
   /**
    * @brief Getter property for UserDefinedRange
    * @return Value of UserDefinedRange
@@ -161,7 +161,7 @@ public:
   /**
    * @brief Setter property for Normalize
    */
-  void setNormalize(const bool& value);
+  void setNormalize(bool value);
   /**
    * @brief Getter property for Normalize
    * @return Value of Normalize
@@ -197,7 +197,7 @@ public:
   /**
    * @brief Setter property for NewDataContainer
    */
-  void setNewDataContainer(const bool& value);
+  void setNewDataContainer(bool value);
   /**
    * @brief Getter property for NewDataContainer
    * @return Value of NewDataContainer

@@ -469,7 +469,7 @@ QString BadDataNeighborOrientationCheck::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void BadDataNeighborOrientationCheck::setMisorientationTolerance(const float& value)
+void BadDataNeighborOrientationCheck::setMisorientationTolerance(float value)
 {
   m_MisorientationTolerance = value;
 }
@@ -481,7 +481,7 @@ float BadDataNeighborOrientationCheck::getMisorientationTolerance() const
 }
 
 // -----------------------------------------------------------------------------
-void BadDataNeighborOrientationCheck::setNumberOfNeighbors(const int& value)
+void BadDataNeighborOrientationCheck::setNumberOfNeighbors(int value)
 {
   m_NumberOfNeighbors = value;
 }

@@ -116,7 +116,7 @@ public:
   /**
    * @brief Setter property for NumberOfBins
    */
-  void setNumberOfBins(const int& value);
+  void setNumberOfBins(int value);
   /**
    * @brief Getter property for NumberOfBins
    * @return Value of NumberOfBins
@@ -128,7 +128,7 @@ public:
   /**
    * @brief Setter property for RemoveBiasedFeatures
    */
-  void setRemoveBiasedFeatures(const bool& value);
+  void setRemoveBiasedFeatures(bool value);
   /**
    * @brief Getter property for RemoveBiasedFeatures
    * @return Value of RemoveBiasedFeatures

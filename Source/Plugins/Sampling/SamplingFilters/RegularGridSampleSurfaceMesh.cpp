@@ -369,7 +369,7 @@ QString RegularGridSampleSurfaceMesh::getCellAttributeMatrixName() const
 }
 
 // -----------------------------------------------------------------------------
-void RegularGridSampleSurfaceMesh::setXPoints(const int& value)
+void RegularGridSampleSurfaceMesh::setXPoints(int value)
 {
   m_XPoints = value;
 }
@@ -381,7 +381,7 @@ int RegularGridSampleSurfaceMesh::getXPoints() const
 }
 
 // -----------------------------------------------------------------------------
-void RegularGridSampleSurfaceMesh::setYPoints(const int& value)
+void RegularGridSampleSurfaceMesh::setYPoints(int value)
 {
   m_YPoints = value;
 }
@@ -393,7 +393,7 @@ int RegularGridSampleSurfaceMesh::getYPoints() const
 }
 
 // -----------------------------------------------------------------------------
-void RegularGridSampleSurfaceMesh::setZPoints(const int& value)
+void RegularGridSampleSurfaceMesh::setZPoints(int value)
 {
   m_ZPoints = value;
 }

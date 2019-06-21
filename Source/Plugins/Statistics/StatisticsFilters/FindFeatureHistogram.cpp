@@ -423,7 +423,7 @@ DataArrayPath FindFeatureHistogram::getSelectedFeatureArrayPath() const
 }
 
 // -----------------------------------------------------------------------------
-void FindFeatureHistogram::setNumberOfBins(const int& value)
+void FindFeatureHistogram::setNumberOfBins(int value)
 {
   m_NumberOfBins = value;
 }
@@ -435,7 +435,7 @@ int FindFeatureHistogram::getNumberOfBins() const
 }
 
 // -----------------------------------------------------------------------------
-void FindFeatureHistogram::setRemoveBiasedFeatures(const bool& value)
+void FindFeatureHistogram::setRemoveBiasedFeatures(bool value)
 {
   m_RemoveBiasedFeatures = value;
 }
