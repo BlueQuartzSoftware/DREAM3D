@@ -262,7 +262,7 @@ void FindDifferenceMap::dataCheck()
 
   // At this point we have two valid arrays of the same type and component dimensions, so we
   // are safe to make the output array with the correct type and component dimensions
-  QVector<size_t> cDims = m_FirstInputArrayPtr.lock()->getComponentDimensions();
+  std::vector<size_t> cDims = m_FirstInputArrayPtr.lock()->getComponentDimensions();
   m_DifferenceMapPtr = TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, getDifferenceMapArrayPath(), cDims, m_FirstInputArrayPtr.lock());
   if(getErrorCode() >= 0)
   {

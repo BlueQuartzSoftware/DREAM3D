@@ -391,7 +391,7 @@ void InsertPrecipitatePhases::dataCheck()
   QVector<DataArrayPath> cellDataArrayPaths;
   QVector<DataArrayPath> ensembleDataArrayPaths;
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   m_PhaseTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), cDims);
   if(nullptr != m_PhaseTypesPtr.lock())
   {
@@ -478,7 +478,7 @@ void InsertPrecipitatePhases::dataCheck()
     }
   }
 
-  QVector<size_t> tDims(1, 0);
+  std::vector<size_t> tDims(1, 0);
   DataContainer::Pointer m = getDataContainerArray()->getPrereqDataContainer(this, getFeaturePhasesArrayPath().getDataContainerName());
   if(getErrorCode() < 0)
   {
@@ -724,7 +724,7 @@ void InsertPrecipitatePhases::load_precipitates()
 
   m_FirstPrecipitateFeature = cellFeatureAttrMat->getNumberOfTuples();
 
-  QVector<size_t> tDims(1, m_FirstPrecipitateFeature + numPrecips);
+  std::vector<size_t> tDims(1, m_FirstPrecipitateFeature + numPrecips);
   cellFeatureAttrMat->setTupleDimensions(tDims);
   updateFeatureInstancePointers();
 
@@ -823,7 +823,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 
   int32_t currentnumfeatures = static_cast<int32_t>(m_FeaturePhasesPtr.lock()->getNumberOfTuples());
   size_t numensembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
-  QVector<size_t> tDims(1, 1);
+  std::vector<size_t> tDims(1, 1);
   if(currentnumfeatures == 0)
   {
     m->getAttributeMatrix(getFeaturePhasesArrayPath().getAttributeMatrixName())->resizeAttributeArrays(tDims);
@@ -2995,7 +2995,7 @@ void InsertPrecipitatePhases::moveShapeDescriptions()
 // -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::saveToNewAttributeMatrix(QList<IDataArray::Pointer> incomingArrays)
 {
-  QVector<size_t> tDims(1, 0);
+  std::vector<size_t> tDims(1, 0);
 
   AttributeMatrix::Pointer newAM = getDataContainerArray()->getAttributeMatrix(getNewAttributeMatrixPath());
   if(newAM != AttributeMatrix::NullPointer())
@@ -3020,7 +3020,7 @@ void InsertPrecipitatePhases::saveToNewAttributeMatrix(QList<IDataArray::Pointer
 // -----------------------------------------------------------------------------
 void InsertPrecipitatePhases::appendToExistingAttributeMatrix(QList<IDataArray::Pointer> incomingArrays)
 {
-  QVector<size_t> tDims(1, 0);
+  std::vector<size_t> tDims(1, 0);
 
   AttributeMatrix::Pointer existingAM = getDataContainerArray()->getAttributeMatrix(getSelectedAttributeMatrixPath());
   if(existingAM != AttributeMatrix::NullPointer())

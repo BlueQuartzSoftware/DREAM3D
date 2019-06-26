@@ -262,7 +262,7 @@ public:
     tet_DC->setGeometry(tets);
 
     // Create an element AttributeMatrix and FeatureIds array for each geometry
-    QVector<size_t> tDims(1, 4);
+    std::vector<size_t> tDims(1, 4);
     AttributeMatrix::Pointer image2D_AttrMat = AttributeMatrix::New(tDims, "Image2DData", AttributeMatrix::Type::Cell);
     Int32ArrayType::Pointer image2D_fIDs = Int32ArrayType::CreateArray(4, SIMPL::CellData::FeatureIds);
     image2D_fIDs->initializeWithValue(1);
@@ -406,7 +406,7 @@ public:
     quad_featureAttrMat.setDataArrayName("Volumes");
     tet_featureAttrMat.setDataArrayName("Volumes");
 
-    QVector<size_t> cDims(1, 1);
+    std::vector<size_t> cDims(1, 1);
 
     FloatArrayType::Pointer image2D_volumes = dca->getPrereqArrayFromPath<FloatArrayType, AbstractFilter>(NULL, imageGeom2D_featureAttrMat, cDims);
     FloatArrayType::Pointer image3D_volumes = dca->getPrereqArrayFromPath<FloatArrayType, AbstractFilter>(NULL, imageGeom3D_featureAttrMat, cDims);

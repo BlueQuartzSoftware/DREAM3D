@@ -279,12 +279,12 @@ void ScalarSegmentFeatures::dataCheck()
     return;
   }
 
-  QVector<size_t> tDims(1, 0);
+  std::vector<size_t> tDims(1, 0);
   m->createNonPrereqAttributeMatrix(this, getCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID21);
 
   QVector<DataArrayPath> dataArrayPaths;
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   tempPath.update(getDataContainerName(), m_ScalarArrayPath.getAttributeMatrixName(), getFeatureIdsArrayName());
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
       this, tempPath, 0, cDims);              /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -424,7 +424,7 @@ int64_t ScalarSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
   if(seed >= 0)
   {
     m_FeatureIds[seed] = gnum;
-    QVector<size_t> tDims(1, gnum + 1);
+    std::vector<size_t> tDims(1, gnum + 1);
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
     updateFeatureInstancePointers();
   }
@@ -473,7 +473,7 @@ void ScalarSegmentFeatures::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
-  QVector<size_t> tDims(1, 1);
+  std::vector<size_t> tDims(1, 1);
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
   updateFeatureInstancePointers();
 

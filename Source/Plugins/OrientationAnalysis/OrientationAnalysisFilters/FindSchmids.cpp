@@ -179,7 +179,7 @@ void FindSchmids::dataCheck()
   clearWarningCode();
   DataArrayPath tempPath;
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
 
   QVector<DataArrayPath> dataArrayPaths;
 

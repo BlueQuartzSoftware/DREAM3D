@@ -97,7 +97,7 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  DataContainerArray::Pointer initializeDataContainerArray(QVector<size_t> tDims)
+  DataContainerArray::Pointer initializeDataContainerArray(std::vector<size_t> tDims)
   {
     DataContainerArray::Pointer dca = DataContainerArray::New();
 
@@ -115,7 +115,7 @@ public:
     m->addOrReplaceAttributeMatrix(attrMat1);
     dca->addOrReplaceDataContainer(m);
 
-    QVector<size_t> cDims(1, 1);
+    std::vector<size_t> cDims(1, 1);
 
     Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(tDims, cDims, k_FeatureIdsArrayPath.getDataArrayName());
     int err = attrMat1->insertOrAssign(featureIds);
@@ -220,7 +220,7 @@ public:
   // -----------------------------------------------------------------------------
   int RunTest()
   {
-    QVector<size_t> tDims = {10, 6, 1};
+    std::vector<size_t> tDims = {10, 6, 1};
     DataContainerArray::Pointer dca = initializeDataContainerArray(tDims);
 
     QString filtName = "FindEuclideanDistMap";

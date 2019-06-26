@@ -224,7 +224,7 @@ void GoldfeatherReader::dataCheck()
   {
     return;
   }
-  QVector<size_t> tDims(1, 0);
+  std::vector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer vertAttrMat = sm->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID21);
   if(getErrorCode() < 0 || nullptr == vertAttrMat.get())
   {
@@ -255,7 +255,7 @@ void GoldfeatherReader::dataCheck()
 
   const QString surfaceDCName = getSurfaceDataContainerName().getDataContainerName();
 
-  QVector<size_t> dims(1, 3);
+  std::vector<size_t> dims(1, 3);
   tempPath.update(surfaceDCName, getVertexAttributeMatrixName(), getSurfaceMeshNodeNormalsArrayName());
   m_SurfaceMeshNodeNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
       this, tempPath, 0, dims, "", DataArrayID30);  /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -363,7 +363,7 @@ void GoldfeatherReader::execute()
   triangleGeom->initializeWithZeros();
   float* nodes = triangleGeom->getVertexPointer(0);
 
-  QVector<size_t> tDims(1, nNodes);
+  std::vector<size_t> tDims(1, nNodes);
   sm->getAttributeMatrix(getVertexAttributeMatrixName())->resizeAttributeArrays(tDims);
   updateVertexInstancePointers();
 

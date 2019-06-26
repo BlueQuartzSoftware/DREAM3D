@@ -146,7 +146,7 @@ void VisualizeGBCDGMT::dataCheck()
     setOutputFile(absPath);
   }
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(),
                                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_CrystalStructuresPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -162,7 +162,7 @@ void VisualizeGBCDGMT::dataCheck()
 
   if(nullptr != tmpGBCDPtr.get())
   {
-    QVector<size_t> cDims = tmpGBCDPtr->getComponentDimensions();
+    std::vector<size_t> cDims = tmpGBCDPtr->getComponentDimensions();
     m_GBCDPtr =
         getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getGBCDArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != m_GBCDPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -265,7 +265,7 @@ void VisualizeGBCDGMT::execute()
   gbcdLimits[9] = sqrtf(SIMPLib::Constants::k_Pi / 2.0f);
 
   // get num components of GBCD
-  QVector<size_t> cDims = m_GBCDPtr.lock()->getComponentDimensions();
+  std::vector<size_t> cDims = m_GBCDPtr.lock()->getComponentDimensions();
 
   gbcdSizes[0] = cDims[0];
   gbcdSizes[1] = cDims[1];

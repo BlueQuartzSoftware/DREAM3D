@@ -77,7 +77,7 @@ void ComputeFeatureRect::dataCheck()
 
   IGeometry::Pointer igeom = getDataContainerArray()->getPrereqGeometryFromDataContainer<IGeometry, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims);
   if(nullptr != m_FeatureIdsPtr.lock())
   {
@@ -123,7 +123,7 @@ void ComputeFeatureRect::execute()
 
   int featureId = 0;
   size_t numComps = 6;
-  QVector<size_t> cDims(1, numComps);
+  std::vector<size_t> cDims(1, numComps);
   int err = 0;
   AttributeMatrix::Pointer featureAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, m_FeatureRectArrayPath, err);
 
@@ -141,7 +141,7 @@ void ComputeFeatureRect::execute()
     corners->setComponent(i, 5, std::numeric_limits<uint32_t>::min());
   }
   AttributeMatrix::Pointer featureIdsAM = getDataContainerArray()->getAttributeMatrix(m_FeatureIdsArrayPath);
-  QVector<size_t> imageDims = featureIdsAM->getTupleDimensions();
+  std::vector<size_t> imageDims = featureIdsAM->getTupleDimensions();
   size_t xDim = imageDims[0], yDim = imageDims[1], zDim = imageDims[2];
 
   size_t index = 0;
@@ -214,7 +214,7 @@ void ComputeFeatureRect::execute()
 // -----------------------------------------------------------------------------
 // Helper Method - Grabs Index From Matrix Coordinates
 // -----------------------------------------------------------------------------
-size_t ComputeFeatureRect::sub2ind(QVector<size_t> tDims, size_t x, size_t y, size_t z) const
+size_t ComputeFeatureRect::sub2ind(std::vector<size_t> tDims, size_t x, size_t y, size_t z) const
 {
   return (tDims[1] * tDims[0] * z) + (tDims[0] * y) + x;
 }

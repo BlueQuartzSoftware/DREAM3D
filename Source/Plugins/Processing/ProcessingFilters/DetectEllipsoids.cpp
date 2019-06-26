@@ -195,10 +195,10 @@ void DetectEllipsoids::dataCheck()
   clearErrorCode();
   clearWarningCode();
 
-  getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, m_FeatureIdsArrayPath, QVector<size_t>(1, 1));
+  getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, m_FeatureIdsArrayPath, std::vector<size_t>(1, 1));
 
   m_DetectedEllipsoidsFeatureIdsPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<Int32ArrayType, AbstractFilter, int32_t>(this, m_DetectedEllipsoidsFeatureIdsArrayPath, 0, QVector<size_t>(1, 1), "", DataArrayID31);
+      getDataContainerArray()->createNonPrereqArrayFromPath<Int32ArrayType, AbstractFilter, int32_t>(this, m_DetectedEllipsoidsFeatureIdsArrayPath, 0, std::vector<size_t>(1, 1), "", DataArrayID31);
   DataContainer::Pointer ellipseDC = getDataContainerArray()->getPrereqDataContainer(this, m_EllipseFeatureAttributeMatrixPath.getDataContainerName());
   if(getErrorCode() < 0)
   {
@@ -214,22 +214,22 @@ void DetectEllipsoids::dataCheck()
 
   m_TotalNumberOfFeatures = featureAM->getNumberOfTuples();
 
-  m_EllipseFeatureAttributeMatrixPtr = ellipseDC->createNonPrereqAttributeMatrix(this, m_EllipseFeatureAttributeMatrixPath.getAttributeMatrixName(), QVector<size_t>(1, m_TotalNumberOfFeatures + 1),
-                                                                                 AttributeMatrix::Type::CellFeature);
+  m_EllipseFeatureAttributeMatrixPtr = ellipseDC->createNonPrereqAttributeMatrix(this, m_EllipseFeatureAttributeMatrixPath.getAttributeMatrixName(),
+                                                                                 std::vector<size_t>(1, m_TotalNumberOfFeatures + 1), AttributeMatrix::Type::CellFeature);
 
   DataArrayPath tmp = m_EllipseFeatureAttributeMatrixPath;
   tmp.setDataArrayName(m_CenterCoordinatesArrayName);
   m_CenterCoordinatesPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), QVector<size_t>(1, 2), "", DataArrayID32);
+      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), std::vector<size_t>(1, 2), "", DataArrayID32);
   tmp.setDataArrayName(m_MajorAxisLengthArrayName);
   m_MajorAxisLengthArrayPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), QVector<size_t>(1, 1), "", DataArrayID33);
+      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), std::vector<size_t>(1, 1), "", DataArrayID33);
   tmp.setDataArrayName(m_MinorAxisLengthArrayName);
   m_MinorAxisLengthArrayPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), QVector<size_t>(1, 1), "", DataArrayID34);
+      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), std::vector<size_t>(1, 1), "", DataArrayID34);
   tmp.setDataArrayName(m_RotationalAnglesArrayName);
   m_RotationalAnglesArrayPtr =
-      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), QVector<size_t>(1, 1), "", DataArrayID35);
+      getDataContainerArray()->createNonPrereqArrayFromPath<DoubleArrayType, AbstractFilter, double>(this, tmp, std::numeric_limits<double>::quiet_NaN(), std::vector<size_t>(1, 1), "", DataArrayID35);
 }
 
 // -----------------------------------------------------------------------------
@@ -259,7 +259,7 @@ void DetectEllipsoids::execute()
   }
 
   /* Finding the top-left and bottom-right corners of each featureId  */
-  Int32ArrayType::Pointer cellFeatureIds = getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, m_FeatureIdsArrayPath, QVector<size_t>(1, 1));
+  Int32ArrayType::Pointer cellFeatureIds = getDataContainerArray()->getPrereqArrayFromPath<Int32ArrayType, AbstractFilter>(this, m_FeatureIdsArrayPath, std::vector<size_t>(1, 1));
   if(getErrorCode() < 0)
   {
     return;
@@ -270,7 +270,7 @@ void DetectEllipsoids::execute()
   {
     int featureId = 0;
     size_t numComps = 6;
-    QVector<size_t> cDims(1, numComps);
+    std::vector<size_t> cDims(1, numComps);
     int err = 0;
     AttributeMatrix::Pointer featureAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, m_FeatureAttributeMatrixPath, err);
 
@@ -288,7 +288,7 @@ void DetectEllipsoids::execute()
 
     AttributeMatrix::Pointer featureIdsAM = getDataContainerArray()->getAttributeMatrix(m_FeatureIdsArrayPath);
 
-    QVector<size_t> imageDims = featureIdsAM->getTupleDimensions();
+    std::vector<size_t> imageDims = featureIdsAM->getTupleDimensions();
     size_t xDim = imageDims[0], yDim = imageDims[1], zDim = imageDims[2];
 
     size_t index = 0;
@@ -356,7 +356,7 @@ void DetectEllipsoids::execute()
     double axis_max = std::round(m_MaxFiberAxisLength / img_pix_length);
 
     // Execute the Orientation Filter and Hough Circle Filter
-    QVector<size_t> orient_tDims;
+    std::vector<size_t> orient_tDims;
     DoubleArrayType::Pointer orientArray = orientationFilter(axis_min, axis_max, orient_tDims);
     DE_ComplexDoubleVector houghCircleVector = houghCircleFilter(axis_min, axis_max);
 
@@ -382,7 +382,7 @@ void DetectEllipsoids::execute()
 
     // Execute the smoothing filter
     int n_size = 3;
-    QVector<size_t> smooth_tDims;
+    std::vector<size_t> smooth_tDims;
     std::vector<double> smoothFil = smoothingFilter(n_size, smooth_tDims);
 
     // Reverse this kernel now so that we don't have to reverse it during every single convolution run on each feature id
@@ -474,7 +474,7 @@ void DetectEllipsoids::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DoubleArrayType::Pointer DetectEllipsoids::orientationFilter(int minAxisLength, int maxAxisLength, QVector<size_t>& tDims)
+DoubleArrayType::Pointer DetectEllipsoids::orientationFilter(int minAxisLength, int maxAxisLength, std::vector<size_t>& tDims)
 {
   double doubleMax = static_cast<double>(maxAxisLength);
   double doubleMin = static_cast<double>(minAxisLength);
@@ -484,7 +484,7 @@ DoubleArrayType::Pointer DetectEllipsoids::orientationFilter(int minAxisLength, 
   size_t xDim = 2 * maxAxisLength + 1;
   size_t yDim = 2 * maxAxisLength + 1;
   size_t zDim = 1; // 3DIM: This can be changed later to handle 3-dimensions
-  QVector<size_t> cDims(1, 3);
+  std::vector<size_t> cDims(1, 3);
   tDims.clear();
   tDims.push_back(xDim);
   tDims.push_back(yDim);
@@ -534,7 +534,7 @@ DE_ComplexDoubleVector DetectEllipsoids::houghCircleFilter(int minAxisLength, in
   size_t yDim = 2 * maxAxisLength + 1;
   size_t zDim = 1; // 3DIM: This can be changed later to handle 3-dimensions
   size_t totalElements = xDim * yDim * zDim;
-  QVector<size_t> tDims;
+  std::vector<size_t> tDims;
   tDims.push_back(xDim);
   tDims.push_back(yDim);
   tDims.push_back(zDim);
@@ -607,7 +607,7 @@ void DetectEllipsoids::convolutionFilter(DoubleArrayType::Pointer orientationFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<double> DetectEllipsoids::smoothingFilter(int n_size, QVector<size_t>& tDims)
+std::vector<double> DetectEllipsoids::smoothingFilter(int n_size, std::vector<size_t>& tDims)
 {
   int xDim = 2 * n_size + 1;
   int yDim = 2 * n_size + 1;
@@ -648,9 +648,9 @@ std::vector<double> DetectEllipsoids::smoothingFilter(int n_size, QVector<size_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Int32ArrayType::Pointer DetectEllipsoids::createOffsetArray(QVector<size_t> kernel_tDims)
+Int32ArrayType::Pointer DetectEllipsoids::createOffsetArray(std::vector<size_t> kernel_tDims)
 {
-  QVector<size_t> cDims(1, 3);
+  std::vector<size_t> cDims(1, 3);
   Int32ArrayType::Pointer offsetArray = Int32ArrayType::CreateArray(kernel_tDims, cDims, "Coordinate Array");
   size_t xDim = kernel_tDims[0], yDim = kernel_tDims[1], zDim = kernel_tDims[2];
   int index = 0;
@@ -749,7 +749,7 @@ DoubleArrayType::Pointer DetectEllipsoids::plotEllipsev2(double xc, double yc, d
   // (Note this is a bad approximation if the eccentricity is high)
   size_t perim = static_cast<size_t>(std::ceil((M_PI * sqrt(2 * (p * p + q * q) - std::pow((p - q), 2) / 2))));
   // Preallocate array using estimated perimeter
-  DoubleArrayType::Pointer ellipseCoords = DoubleArrayType::CreateArray(perim, QVector<size_t>(1, 2), "Ellipse Coordinates");
+  DoubleArrayType::Pointer ellipseCoords = DoubleArrayType::CreateArray(perim, std::vector<size_t>(1, 2), "Ellipse Coordinates");
   for(int i = 0; i < ellipseCoords->getNumberOfTuples(); i++)
   {
     ellipseCoords->setComponent(i, 0, std::numeric_limits<double>::quiet_NaN());
@@ -1184,7 +1184,7 @@ DoubleArrayType::Pointer DetectEllipsoids::plotEllipsev2(double xc, double yc, d
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Int32ArrayType::Pointer DetectEllipsoids::fillEllipse(Int32ArrayType::Pointer I, QVector<size_t> I_tDims, double xc, double yc, double p, double q, double theta, double val)
+Int32ArrayType::Pointer DetectEllipsoids::fillEllipse(Int32ArrayType::Pointer I, std::vector<size_t> I_tDims, double xc, double yc, double p, double q, double theta, double val)
 {
   /* if(theta >= 0) %(xa,xb) is in 1st quadrant and (xb,yb) is in 2nd quadrant
    else (xa,xb) is in 4th quadrant and (xb,yb) is in 1nd quadrant */
@@ -1216,9 +1216,9 @@ Int32ArrayType::Pointer DetectEllipsoids::fillEllipse(Int32ArrayType::Pointer I,
   int maxStack = 1000; // Initial stack size
 
   // Artifical stack
-  DoubleArrayType::Pointer stackX = DoubleArrayType::CreateArray(maxStack, QVector<size_t>(1, 1), "stackX");
+  DoubleArrayType::Pointer stackX = DoubleArrayType::CreateArray(maxStack, std::vector<size_t>(1, 1), "stackX");
   stackX->initializeWithZeros();
-  DoubleArrayType::Pointer stackY = DoubleArrayType::CreateArray(maxStack, QVector<size_t>(1, 1), "stackY");
+  DoubleArrayType::Pointer stackY = DoubleArrayType::CreateArray(maxStack, std::vector<size_t>(1, 1), "stackY");
   stackY->initializeWithZeros();
 
   // push back current point to begin search
@@ -1235,7 +1235,7 @@ Int32ArrayType::Pointer DetectEllipsoids::fillEllipse(Int32ArrayType::Pointer I,
     return Int32ArrayType::NullPointer();
   }
 
-  Int32ArrayType::Pointer I_tmp = Int32ArrayType::CreateArray(I_tDims, QVector<size_t>(1, 1), I->getName());
+  Int32ArrayType::Pointer I_tmp = Int32ArrayType::CreateArray(I_tDims, std::vector<size_t>(1, 1), I->getName());
   I_tmp->initializeWithZeros();
 
   bool copy = I->copyIntoArray(I_tmp);
@@ -1313,7 +1313,7 @@ Int32ArrayType::Pointer DetectEllipsoids::fillEllipse(Int32ArrayType::Pointer I,
 // -----------------------------------------------------------------------------
 // Helper Method - Grabs Index From Matrix Coordinates
 // -----------------------------------------------------------------------------
-size_t DetectEllipsoids::sub2ind(QVector<size_t> tDims, size_t x, size_t y, size_t z) const
+size_t DetectEllipsoids::sub2ind(std::vector<size_t> tDims, size_t x, size_t y, size_t z) const
 {
   return (tDims[1] * tDims[0] * z) + (tDims[0] * y) + x;
 }
@@ -1321,7 +1321,7 @@ size_t DetectEllipsoids::sub2ind(QVector<size_t> tDims, size_t x, size_t y, size
 // -----------------------------------------------------------------------------
 // Helper Method - Grabs Matrix Coordinates From Array Index
 // -----------------------------------------------------------------------------
-void DetectEllipsoids::ind2sub(QVector<size_t> tDims, size_t index, size_t& x, size_t& y, size_t& z) const
+void DetectEllipsoids::ind2sub(std::vector<size_t> tDims, size_t index, size_t& x, size_t& y, size_t& z) const
 {
   x = (index % tDims[0]);
   y = (index / tDims[0]) % tDims[1];

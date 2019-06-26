@@ -342,7 +342,7 @@ void ReplaceElementAttributesWithNeighborValues::dataCheck()
     return;
   }
 
-  QVector<size_t> cDims = m_InArrayPtr.lock()->getComponentDimensions();
+  std::vector<size_t> cDims = m_InArrayPtr.lock()->getComponentDimensions();
   if(cDims.size() != 1 && cDims.at(0) != 1)
   {
     QString ss = QObject::tr("The number of components must be 1.");

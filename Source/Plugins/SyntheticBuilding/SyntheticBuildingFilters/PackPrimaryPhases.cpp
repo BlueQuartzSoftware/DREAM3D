@@ -603,7 +603,7 @@ void PackPrimaryPhases::dataCheck()
   QVector<DataArrayPath> ensembleDataArrayPaths;
 
   // Input Ensemble Data that we require
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   m_PhaseTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), cDims);
   if(nullptr != m_PhaseTypesPtr.lock())
   {
@@ -687,7 +687,7 @@ void PackPrimaryPhases::dataCheck()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
-  QVector<size_t> tDims(1, 0);
+  std::vector<size_t> tDims(1, 0);
   m->createNonPrereqAttributeMatrix(this, getOutputCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID21);
 
   PackPrimaryPhases::SaveMethod saveMethod = static_cast<PackPrimaryPhases::SaveMethod>(getSaveGeometricDescriptions());
@@ -1034,7 +1034,7 @@ void PackPrimaryPhases::loadFeatures()
 
   m_FirstPrimaryFeature = 1;
 
-  QVector<size_t> tDims(1, m_FirstPrimaryFeature + numFeatures);
+  std::vector<size_t> tDims(1, m_FirstPrimaryFeature + numFeatures);
   cellFeatureAttrMat->setTupleDimensions(tDims);
   updateFeatureInstancePointers();
 
@@ -1162,7 +1162,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
     m_PrimaryPhaseFractions[i] = m_PrimaryPhaseFractions[i] / totalprimaryfractions;
   }
 
-  QVector<size_t> cDim(1, 1);
+  std::vector<size_t> cDim(1, 1);
   Int32ArrayType::Pointer exclusionOwnersPtr = Int32ArrayType::CreateArray(m_TotalPackingPoints, cDim, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::exclusions_owners");
   exclusionOwnersPtr->initializeWithValue(0);
 
@@ -1235,7 +1235,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
 
   // Estimate the total Number of features here
   int32_t estNumFeatures = estimateNumFeatures(udims[0], udims[1], udims[2], spacing[0], spacing[1], spacing[2]);
-  QVector<size_t> tDims(1, estNumFeatures);
+  std::vector<size_t> tDims(1, estNumFeatures);
   m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);
   // need to update pointers after resize, buut do not need to run full data check because pointers are still valid
   updateFeatureInstancePointers();
@@ -3251,7 +3251,7 @@ int32_t PackPrimaryPhases::estimateNumFeatures(size_t xpoints, size_t ypoints, s
   DataContainerArray::Pointer dca = getDataContainerArray();
 
   // DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   m_PhaseTypesPtr = dca->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), cDims);
   DataArray<uint32_t>* phaseType = m_PhaseTypesPtr.lock().get();
 
@@ -3458,7 +3458,7 @@ void PackPrimaryPhases::moveShapeDescriptions()
   names << m_EquivalentDiametersArrayName << m_Omega3sArrayName << m_AxisEulerAnglesArrayName << m_AxisLengthsArrayName << m_VolumesArrayName << m_CentroidsArrayName << m_NeighborhoodsArrayName;
 
   AttributeMatrix::Pointer cellFeatureAttrMat = m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName);
-  QVector<size_t> tDims(1, 0);
+  std::vector<size_t> tDims(1, 0);
 
   QList<IDataArray::Pointer> attrArrays;
   foreach(const QString name, names)

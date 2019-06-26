@@ -119,7 +119,7 @@ void FindTriangleGeomSizes::dataCheck()
 
   dataArrays.push_back(triangles->getTriangles());
 
-  QVector<size_t> cDims(1, 2);
+  std::vector<size_t> cDims(1, 2);
 
   m_FaceLabelsPtr =
       getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFaceLabelsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -202,7 +202,7 @@ void FindTriangleGeomSizes::execute()
     if(m_FaceLabels[2 * i + 1] > 0) { featureSet.insert(m_FaceLabels[2 * i + 1]); }
   }
 
-  QVector<size_t> tDims(1, featureSet.size() + 1);
+  std::vector<size_t> tDims(1, featureSet.size() + 1);
   AttributeMatrix::Pointer featAttrMat = getDataContainerArray()->getDataContainer(m_FaceLabelsArrayPath.getDataContainerName())->getAttributeMatrix(m_FeatureAttributeMatrixName);
   featAttrMat->resizeAttributeArrays(tDims);
   m_Volumes = m_VolumesPtr.lock()->getPointer(0);

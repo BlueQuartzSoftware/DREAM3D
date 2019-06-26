@@ -243,7 +243,7 @@ void GeneratePrimaryStatsData::dataCheck()
       return;
     }
 
-    QVector<size_t> tDims(1, 2); // we need 2 slots in the array. ZERO=Junk, 1 = our new primary stats data
+    std::vector<size_t> tDims(1, 2); // we need 2 slots in the array. ZERO=Junk, 1 = our new primary stats data
     AttributeMatrix::Pointer cellEnsembleAttrMat = dc->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID21);
     if(getErrorCode() < 0)
     {
@@ -258,7 +258,7 @@ void GeneratePrimaryStatsData::dataCheck()
     statsDataArray->setStatsData(1, primaryStatsData);
     m_PrimaryStatsData = primaryStatsData.get();
 
-    QVector<size_t> cDims(1, 1);
+    std::vector<size_t> cDims(1, 1);
     UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::CrystalStructures);
     crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
     cellEnsembleAttrMat->insertOrAssign(crystalStructures);
@@ -290,7 +290,7 @@ void GeneratePrimaryStatsData::dataCheck()
     }
 
     // Resize the AttributeMatrix, which should resize all the AttributeArrays
-    QVector<size_t> tDims(1, cellEnsembleAttrMat->getNumberOfTuples() + 1);
+    std::vector<size_t> tDims(1, cellEnsembleAttrMat->getNumberOfTuples() + 1);
     cellEnsembleAttrMat->resizeAttributeArrays(tDims);
 
     StatsDataArray::Pointer statsDataArray = cellEnsembleAttrMat->getAttributeArrayAs<StatsDataArray>(SIMPL::EnsembleData::Statistics);
@@ -306,7 +306,7 @@ void GeneratePrimaryStatsData::dataCheck()
     statsDataArray->setStatsData(tDims[0] - 1, primaryStatsData);
     m_PrimaryStatsData = primaryStatsData.get();
 
-    QVector<size_t> cDims(1, 1);
+    std::vector<size_t> cDims(1, 1);
 
     UInt32ArrayType::Pointer crystalStructures = cellEnsembleAttrMat->getAttributeArrayAs<UInt32ArrayType>(SIMPL::EnsembleData::CrystalStructures);
     if(nullptr == crystalStructures.get())

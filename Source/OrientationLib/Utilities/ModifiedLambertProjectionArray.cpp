@@ -70,7 +70,7 @@ QString ModifiedLambertProjectionArray::getTypeAsString() { return "ModifiedLamb
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer ModifiedLambertProjectionArray::createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate)
+IDataArray::Pointer ModifiedLambertProjectionArray::createNewArray(size_t numElements, int rank, const size_t* dims, const QString& name, bool allocate)
 {
   return ModifiedLambertProjectionArray::NullPointer();
 }
@@ -78,19 +78,10 @@ IDataArray::Pointer ModifiedLambertProjectionArray::createNewArray(size_t numEle
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer ModifiedLambertProjectionArray::createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate)
+IDataArray::Pointer ModifiedLambertProjectionArray::createNewArray(size_t numElements, const std::vector<size_t>& dims, const QString& name, bool allocate)
 {
   return ModifiedLambertProjectionArray::NullPointer();
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-IDataArray::Pointer ModifiedLambertProjectionArray::createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate)
-{
-  return ModifiedLambertProjectionArray::NullPointer();
-}
-
 
 // -----------------------------------------------------------------------------
 //
@@ -255,9 +246,9 @@ int ModifiedLambertProjectionArray::getNumberOfComponents()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<size_t> ModifiedLambertProjectionArray::getComponentDimensions()
+std::vector<size_t> ModifiedLambertProjectionArray::getComponentDimensions()
 {
-  QVector<size_t> dims(1, 1);
+  std::vector<size_t> dims(1, 1);
   return dims;
 }
 
@@ -287,7 +278,7 @@ size_t ModifiedLambertProjectionArray::getTypeSize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ModifiedLambertProjectionArray::eraseTuples(QVector<size_t>& idxs)
+int ModifiedLambertProjectionArray::eraseTuples(std::vector<size_t>& idxs)
 {
   int err = 0;
 
@@ -305,7 +296,7 @@ int ModifiedLambertProjectionArray::eraseTuples(QVector<size_t>& idxs)
 
   // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
   // off the end of the array and return an error code.
-  for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
+  for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
   {
     if (idxs[i] >= static_cast<size_t>(m_ModifiedLambertProjectionArray.size()))
     {
@@ -607,7 +598,7 @@ void Create2DExpandableDataset(hid_t gid, const QString& dsetName, int lambertSi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ModifiedLambertProjectionArray::writeH5Data(hid_t parentId, QVector<size_t> tDims)
+int ModifiedLambertProjectionArray::writeH5Data(hid_t parentId, std::vector<size_t> tDims)
 {
   herr_t err = 0;
   if(m_ModifiedLambertProjectionArray.empty())

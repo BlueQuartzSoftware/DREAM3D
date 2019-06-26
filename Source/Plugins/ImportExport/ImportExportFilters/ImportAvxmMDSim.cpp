@@ -121,8 +121,8 @@ void ImportAvxmMDSim::dataCheck()
     QFileInfo fi(filePath);
     DataArrayPath typeDAPath(fi.baseName(), "CellData", "Type");
 
-    QVector<size_t> tDims(1, 0);
-    QVector<size_t> cDims(1, 1);
+    std::vector<size_t> tDims(1, 0);
+    std::vector<size_t> cDims(1, 1);
 
     DataContainerShPtr dc = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, typeDAPath.getDataContainerName());
     AttributeMatrixShPtr am = dc->createNonPrereqAttributeMatrix(this, typeDAPath, tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
@@ -171,7 +171,7 @@ void ImportAvxmMDSim::execute()
     DataArrayPath typeDAPath(fi.baseName(), "CellData", "Type");
 
     QStringList lines = readLines(filePath);
-    QVector<size_t> tDims(1, lines.size());
+    std::vector<size_t> tDims(1, lines.size());
 
     DataContainerShPtr dc = getDataContainerArray()->getDataContainer(typeDAPath);
 
@@ -180,7 +180,7 @@ void ImportAvxmMDSim::execute()
 
     UInt8ArrayType::Pointer da = am->getAttributeArrayAs<UInt8ArrayType>(typeDAPath.getDataArrayName());
 
-    FloatArrayType::Pointer verts = FloatArrayType::CreateArray(lines.size(), QVector<size_t>(1, 3), "SharedVertexList");
+    FloatArrayType::Pointer verts = FloatArrayType::CreateArray(lines.size(), std::vector<size_t>(1, 3), "SharedVertexList");
 
     for(size_t j = 0; j < lines.size(); j++)
     {

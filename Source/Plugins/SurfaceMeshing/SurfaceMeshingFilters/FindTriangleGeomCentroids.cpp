@@ -124,7 +124,7 @@ void FindTriangleGeomCentroids::dataCheck()
 
   dataArrays.push_back(triangles->getTriangles());
 
-  QVector<size_t> cDims(1, 2);
+  std::vector<size_t> cDims(1, 2);
 
   m_FaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFaceLabelsArrayPath(),
                                                                                                         cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */

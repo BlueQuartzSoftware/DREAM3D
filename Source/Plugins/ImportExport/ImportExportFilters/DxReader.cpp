@@ -70,7 +70,7 @@ class DxReaderPrivate
   Q_DECLARE_PUBLIC(DxReader)
   DxReader* const q_ptr;
   DxReaderPrivate(DxReader* ptr);
-  QVector<size_t> m_Dims;
+  std::vector<size_t> m_Dims;
   QString m_InputFile_Cache;
   QDateTime m_LastRead;
 };
@@ -116,7 +116,7 @@ DxReader::~DxReader() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SIMPL_PIMPL_PROPERTY_DEF(DxReader, QVector<size_t>, Dims)
+SIMPL_PIMPL_PROPERTY_DEF(DxReader, std::vector<size_t>, Dims)
 SIMPL_PIMPL_PROPERTY_DEF(DxReader, QString, InputFile_Cache)
 SIMPL_PIMPL_PROPERTY_DEF(DxReader, QDateTime, LastRead)
 
@@ -172,7 +172,7 @@ void DxReader::updateCellInstancePointers()
 void DxReader::flushCache()
 {
   setInputFile_Cache("");
-  QVector<size_t> v;
+  std::vector<size_t> v;
   v.push_back(0);
   v.push_back(0);
   v.push_back(0);
@@ -235,7 +235,7 @@ void DxReader::dataCheck()
     {
       // We are reading from the cache, so set the FileWasRead flag to false
       m_FileWasRead = false;
-      QVector<size_t> v = getDims();
+      std::vector<size_t> v = getDims();
       ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
       if(nullptr != imageGeom.get())
       {
@@ -270,14 +270,14 @@ void DxReader::dataCheck()
     }
   }
 
-  QVector<size_t> tDims = getDims();
+  std::vector<size_t> tDims = getDims();
   m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCode() < 0)
   {
     return;
   }
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   tempPath.update(getVolumeDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID31);
   if(nullptr != m_FeatureIdsPtr.lock())
@@ -424,7 +424,7 @@ int32_t DxReader::readHeader()
   }
 
   // Set the values into the cache, so that they can be used later
-  QVector<size_t> v;
+  std::vector<size_t> v;
   v.push_back(nx);
   v.push_back(ny);
   v.push_back(nz);
@@ -455,7 +455,7 @@ int32_t DxReader::readFile()
   size_t index = 0;
 
   // Resize the Cell Attribute Matrix based on the number of points about to be read.
-  QVector<size_t> tDims(3, 0);
+  std::vector<size_t> tDims(3, 0);
   tDims[0] = m->getGeometryAs<ImageGeom>()->getXPoints();
   tDims[1] = m->getGeometryAs<ImageGeom>()->getYPoints();
   tDims[2] = m->getGeometryAs<ImageGeom>()->getZPoints();

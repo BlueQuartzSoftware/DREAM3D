@@ -293,7 +293,7 @@ void ReadH5Ebsd::dataCheck()
     return;
   }
 
-  QVector<size_t> tDims(3, 0);
+  std::vector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCode() < 0)
   {
@@ -376,7 +376,7 @@ void ReadH5Ebsd::dataCheck()
   // Get the list of data arrays in the EBSD file
   m_DataArrayNames = reader->getDataArrayNames();
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   for(int32_t i = 0; i < names.size(); ++i)
   {
     // First check to see if the name is in our list of names to read.
@@ -790,14 +790,14 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
   AttributeMatrix::Pointer cellAttrMatrix = m->getAttributeMatrix(getCellAttributeMatrixName());
-  QVector<size_t> tDims(3, 0);
+  std::vector<size_t> tDims(3, 0);
   tDims[0] = m->getGeometryAs<ImageGeom>()->getXPoints();
   tDims[1] = m->getGeometryAs<ImageGeom>()->getYPoints();
   tDims[2] = m->getGeometryAs<ImageGeom>()->getZPoints();
   cellAttrMatrix->resizeAttributeArrays(tDims); // Resize the attribute Matrix to the proper dimensions
 
   size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   if(m_SelectedArrayNames.find(m_CellPhasesArrayName) != m_SelectedArrayNames.end())
   {
     phasePtr = reinterpret_cast<int32_t*>(ebsdReader->getPointerByName(Ebsd::Ang::PhaseData));
@@ -894,14 +894,14 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   AttributeMatrix::Pointer cellAttrMatrix = m->getAttributeMatrix(getCellAttributeMatrixName());
-  QVector<size_t> tDims(3, 0);
+  std::vector<size_t> tDims(3, 0);
   tDims[0] = m->getGeometryAs<ImageGeom>()->getXPoints();
   tDims[1] = m->getGeometryAs<ImageGeom>()->getYPoints();
   tDims[2] = m->getGeometryAs<ImageGeom>()->getZPoints();
   cellAttrMatrix->resizeAttributeArrays(tDims); // Resize the attribute Matrix to the proper dimensions
 
   size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   phasePtr = reinterpret_cast<int32_t*>(ebsdReader->getPointerByName(Ebsd::Ctf::Phase));
   iArray = Int32ArrayType::CreateArray(tDims, cDims, SIMPL::CellData::Phases);
   ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);

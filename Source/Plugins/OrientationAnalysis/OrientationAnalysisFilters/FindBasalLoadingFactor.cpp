@@ -119,7 +119,7 @@ void FindBasalLoadingFactor::dataCheck()
   clearErrorCode();
   clearWarningCode();
 
-  QVector<size_t> dims(1, 4);
+  std::vector<size_t> dims(1, 4);
   m_AvgQuatsPtr =
       getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getAvgQuatsArrayPath(), dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_AvgQuatsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */

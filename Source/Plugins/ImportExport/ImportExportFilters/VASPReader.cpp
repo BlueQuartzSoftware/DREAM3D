@@ -161,7 +161,7 @@ void VASPReader::dataCheck()
   {
     return;
   }
-  QVector<size_t> tDims(1, 0);
+  std::vector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer vertexAttrMat = m->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID21);
   if(getErrorCode() < 0 || nullptr == vertexAttrMat.get())
   {
@@ -184,7 +184,7 @@ void VASPReader::dataCheck()
     setErrorCondition(-388, ss);
   }
 
-  QVector<size_t> dims(1, 3);
+  std::vector<size_t> dims(1, 3);
   tempPath.update(getVertexDataContainerName().getDataContainerName(), getVertexAttributeMatrixName(), getAtomVelocitiesArrayName());
   m_AtomVelocitiesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
       this, tempPath, 0.0, dims, "", DataArrayID31); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -334,7 +334,7 @@ int VASPReader::readHeader()
   VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(totalAtoms, SIMPL::VertexData::SurfaceMeshNodes, !getInPreflight());
   m->setGeometry(vertices);
 
-  QVector<size_t> tDims(1, totalAtoms);
+  std::vector<size_t> tDims(1, totalAtoms);
   vertexAttrMat->resizeAttributeArrays(tDims);
   updateVertexInstancePointers();
 

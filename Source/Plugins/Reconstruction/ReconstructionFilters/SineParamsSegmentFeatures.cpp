@@ -169,7 +169,7 @@ void SineParamsSegmentFeatures::dataCheck()
   {
     return;
   }
-  QVector<size_t> tDims(1, 0);
+  std::vector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix(this, getCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID21);
   if(getErrorCode() < 0 || nullptr == cellFeatureAttrMat.get())
   {
@@ -182,7 +182,7 @@ void SineParamsSegmentFeatures::dataCheck()
     return;
   }
 
-  QVector<size_t> dims(1, 3);
+  std::vector<size_t> dims(1, 3);
   m_SineParamsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getSineParamsArrayPath(), dims);
   if(nullptr != m_SineParamsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -243,7 +243,7 @@ void SineParamsSegmentFeatures::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
 
-  QVector<size_t> tDims(1, 1);
+  std::vector<size_t> tDims(1, 1);
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
 
   // This runs a subfilter
@@ -359,7 +359,7 @@ int64_t SineParamsSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
   if(seed >= 0)
   {
     m_FeatureIds[seed] = gnum;
-    QVector<size_t> tDims(1, gnum + 1);
+    std::vector<size_t> tDims(1, gnum + 1);
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
     updateFeatureInstancePointers();
   }

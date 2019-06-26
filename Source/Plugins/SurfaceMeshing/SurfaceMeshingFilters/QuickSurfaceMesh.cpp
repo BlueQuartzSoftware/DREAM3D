@@ -251,7 +251,7 @@ void QuickSurfaceMesh::dataCheck()
 
   QVector<DataArrayPath> dataArrayPaths;
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
                                                                                                         cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_FeatureIdsPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -292,7 +292,7 @@ void QuickSurfaceMesh::dataCheck()
     return;
   }
 
-  QVector<size_t> tDims(1, 0);
+  std::vector<size_t> tDims(1, 0);
   sm->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID21);
   sm->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face, AttributeMatrixID22);
 
@@ -321,7 +321,7 @@ void QuickSurfaceMesh::dataCheck()
   {
     tempPath.update(getSurfaceDataContainerName().getDataContainerName(), getFaceAttributeMatrixName(), m_SelectedDataArrayPaths[static_cast<int32_t>(i)].getDataArrayName());
     cDims = m_SelectedWeakPtrVector[i].lock()->getComponentDimensions();
-    QVector<size_t> faceDims;
+    std::vector<size_t> faceDims;
     // If the cell array is 1-dimensional, scale the face array accordingly
     if(cDims.size() == 1)
     {
@@ -947,7 +947,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
     }
   }
 
-  QVector<size_t> featDims(1, numFeatures + 1);
+  std::vector<size_t> featDims(1, numFeatures + 1);
   featAttrMat->setTupleDimensions(featDims);
 
   IGeometryGrid::Pointer grid = m->getGeometryAs<IGeometryGrid>();
@@ -972,7 +972,7 @@ void QuickSurfaceMesh::createNodesAndTriangles(std::vector<MeshIndexType> m_Node
   float* vertex = triangleGeom->getVertexPointer(0);
   MeshIndexType* triangle = triangleGeom->getTriPointer(0);
 
-  QVector<size_t> tDims(1, nodeCount);
+  std::vector<size_t> tDims(1, nodeCount);
   sm->getAttributeMatrix(getVertexAttributeMatrixName())->resizeAttributeArrays(tDims);
   tDims[0] = triangleCount;
   sm->getAttributeMatrix(getFaceAttributeMatrixName())->resizeAttributeArrays(tDims);
@@ -1681,7 +1681,7 @@ void QuickSurfaceMesh::generateTripleLines()
     }
   }
 
-  QVector<size_t> featDims(1, static_cast<size_t>(numFeatures) + 1);
+  std::vector<size_t> featDims(1, static_cast<size_t>(numFeatures) + 1);
   featAttrMat->setTupleDimensions(featDims);
 
   IGeometryGrid::Pointer grid = m->getGeometryAs<IGeometryGrid>();

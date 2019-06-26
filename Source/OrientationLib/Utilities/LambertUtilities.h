@@ -42,7 +42,7 @@ class OrientationLib_EXPORT LambertUtilities
     SIMPL_SHARED_POINTERS(LambertUtilities)
     SIMPL_STATIC_NEW_MACRO(LambertUtilities)
     SIMPL_TYPE_MACRO(LambertUtilities)
-    SIMPL_CLASS_VERSION(1)
+    int getClassVersion();
 
     virtual ~LambertUtilities();
 

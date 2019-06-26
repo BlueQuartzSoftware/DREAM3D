@@ -137,7 +137,7 @@ public:
     image2->setSpacing(res);
     idc2->setGeometry(image2);
 
-    QVector<size_t> tDims = {256, 128, 64};
+    std::vector<size_t> tDims = {256, 128, 64};
     AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
     idc->addOrReplaceAttributeMatrix(attrMat);
 
@@ -146,7 +146,7 @@ public:
     AttributeMatrix::Pointer featAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellFeatureAttributeMatrixName, AttributeMatrix::Type::CellFeature);
     idc->addOrReplaceAttributeMatrix(featAttrMat);
 
-    QVector<size_t> cDims(1, 1);
+    std::vector<size_t> cDims(1, 1);
     Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(256 * 128 * 64, cDims, SIMPL::CellData::FeatureIds);
     featureIds->initializeWithValue(1);
     attrMat->insertOrAssign(featureIds);

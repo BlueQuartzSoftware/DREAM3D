@@ -187,12 +187,12 @@ void EBSDSegmentFeatures::dataCheck()
     return;
   }
 
-  QVector<size_t> tDims(1, 0);
+  std::vector<size_t> tDims(1, 0);
   m->createNonPrereqAttributeMatrix(this, getCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID21);
 
   QVector<DataArrayPath> dataArrayPaths;
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   if(m_UseGoodVoxels)
   {
     m_GoodVoxelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<bool>, AbstractFilter>(this, getGoodVoxelsArrayPath(),
@@ -345,7 +345,7 @@ int64_t EBSDSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
   if(seed >= 0)
   {
     m_FeatureIds[seed] = gnum;
-    QVector<size_t> tDims(1, gnum + 1);
+    std::vector<size_t> tDims(1, gnum + 1);
     m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
     updateFeatureInstancePointers();
   }
@@ -418,7 +418,7 @@ void EBSDSegmentFeatures::execute()
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   int64_t totalPoints = static_cast<int64_t>(m_FeatureIdsPtr.lock()->getNumberOfTuples());
 
-  QVector<size_t> tDims(1, 1);
+  std::vector<size_t> tDims(1, 1);
   m->getAttributeMatrix(getCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
   updateFeatureInstancePointers();
 

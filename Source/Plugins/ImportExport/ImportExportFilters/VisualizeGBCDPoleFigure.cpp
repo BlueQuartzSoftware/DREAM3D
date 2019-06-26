@@ -135,7 +135,7 @@ void VisualizeGBCDPoleFigure::dataCheck()
   }
   FileSystemPathHelper::CheckOutputFile(this, "Output VTK File", getOutputFile(), true);
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   m_CrystalStructuresPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<unsigned int>, AbstractFilter>(this, getCrystalStructuresArrayPath(),
                                                                                                                     cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_CrystalStructuresPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -151,7 +151,7 @@ void VisualizeGBCDPoleFigure::dataCheck()
 
   if(nullptr != tmpGBCDPtr.get())
   {
-    QVector<size_t> cDims = tmpGBCDPtr->getComponentDimensions();
+    std::vector<size_t> cDims = tmpGBCDPtr->getComponentDimensions();
     m_GBCDPtr =
         getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, getGBCDArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != m_GBCDPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -258,7 +258,7 @@ void VisualizeGBCDPoleFigure::execute()
   gbcdLimits[9] = sqrtf(SIMPLib::Constants::k_PiOver2);
 
   // get num components of GBCD
-  QVector<size_t> cDims = m_GBCDPtr.lock()->getComponentDimensions();
+  std::vector<size_t> cDims = m_GBCDPtr.lock()->getComponentDimensions();
 
   gbcdSizes[0] = cDims[0];
   gbcdSizes[1] = cDims[1];
@@ -324,7 +324,7 @@ void VisualizeGBCDPoleFigure::execute()
 
   int64_t totalGBCDBins = gbcdSizes[0] * gbcdSizes[1] * gbcdSizes[2] * gbcdSizes[3] * gbcdSizes[4] * 2;
 
-  QVector<size_t> dims(1, 1);
+  std::vector<size_t> dims(1, 1);
   DoubleArrayType::Pointer poleFigureArray = DoubleArrayType::NullPointer();
   poleFigureArray = DoubleArrayType::CreateArray(xpoints * ypoints, dims, "PoleFigure");
   poleFigureArray->initializeWithZeros();

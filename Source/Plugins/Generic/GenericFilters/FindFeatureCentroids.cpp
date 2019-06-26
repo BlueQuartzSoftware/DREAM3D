@@ -115,7 +115,7 @@ void FindFeatureCentroids::dataCheck()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
                                                                                                         cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_FeatureIdsPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -154,7 +154,7 @@ void FindFeatureCentroids::find_centroids()
 
   size_t totalFeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
 
-  QVector<size_t> dims(1, 4);
+  std::vector<size_t> dims(1, 4);
   FloatArrayType::Pointer m_FeatureCentersPtr = FloatArrayType::CreateArray(totalFeatures, dims, "_INTERNAL_USE_ONLY_Centroids");
   m_FeatureCentersPtr->initializeWithZeros();
   float* featurecenters = m_FeatureCentersPtr->getPointer(0);

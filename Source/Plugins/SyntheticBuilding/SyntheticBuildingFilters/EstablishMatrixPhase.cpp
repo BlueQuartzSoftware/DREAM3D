@@ -209,7 +209,7 @@ void EstablishMatrixPhase::dataCheck()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getOutputCellAttributeMatrixPath().getDataContainerName());
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   m_PhaseTypesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), cDims);
   if(nullptr != m_PhaseTypesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -257,7 +257,7 @@ void EstablishMatrixPhase::dataCheck()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getOutputCellAttributeMatrixPath().getDataContainerName());
 
-  QVector<size_t> tDims(1, 0);
+  std::vector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellFeatureAttrMat = m->createNonPrereqAttributeMatrix(this, getOutputCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID21);
   if(getErrorCode() < 0 || nullptr == cellFeatureAttrMat.get())
   {
@@ -372,7 +372,7 @@ void EstablishMatrixPhase::establish_matrix()
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t currentnumfeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
   size_t numensembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
-  QVector<size_t> tDims(1, 1);
+  std::vector<size_t> tDims(1, 1);
   if(currentnumfeatures == 0)
   {
     m->getAttributeMatrix(m_OutputCellFeatureAttributeMatrixName)->resizeAttributeArrays(tDims);

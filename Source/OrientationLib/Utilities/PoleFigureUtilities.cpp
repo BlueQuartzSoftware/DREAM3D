@@ -93,7 +93,7 @@ int writeVtkFile(FloatArrayType* xyz, const QString& filename)
 // -----------------------------------------------------------------------------
 UInt8ArrayType::Pointer PoleFigureUtilities::CreateColorImage(DoubleArrayType* data, int width, int height, int nColors, const QString& name, double min, double max)
 {
-  QVector<size_t> dims(1, 4);
+  std::vector<size_t> dims(1, 4);
   UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(static_cast<size_t>(width * height), dims, name);
   PoleFigureConfiguration_t config;
   config.imageDim = width;
@@ -203,7 +203,7 @@ void PoleFigureUtilities::GenerateHexPoleFigures(FloatArrayType* eulers, int lam
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for HEX ONLY, <0001> Family
-  QVector<size_t> dims(1, 3);
+  std::vector<size_t> dims(1, 3);
   FloatArrayType::Pointer xyz0001 = FloatArrayType::CreateArray(numOrientations * 2, dims, "TEMP_<0001>_xyzCoords");
   // this is size for HEX ONLY, <10-10> Family
   FloatArrayType::Pointer xyz1010 = FloatArrayType::CreateArray(numOrientations * 6, dims, "TEMP_<1010>_xyzCoords");
@@ -265,7 +265,7 @@ void PoleFigureUtilities::GenerateOrthoPoleFigures(FloatArrayType* eulers, int l
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for ORTHO ONLY, <100> Family
-  QVector<size_t> dims(1, 3);
+  std::vector<size_t> dims(1, 3);
   FloatArrayType::Pointer xyz100 = FloatArrayType::CreateArray(numOrientations * 2, dims, "TEMP_<100>_xyzCoords");
   // this is size for ORTHO ONLY, <010> Family
   FloatArrayType::Pointer xyz010 = FloatArrayType::CreateArray(numOrientations * 2, dims, "TEMP_<010>_xyzCoords");

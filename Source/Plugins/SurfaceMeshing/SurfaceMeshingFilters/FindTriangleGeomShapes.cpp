@@ -139,11 +139,11 @@ void FindTriangleGeomShapes::dataCheck()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getFaceLabelsArrayPath().getDataContainerName());
 
-  INIT_DataArray(m_FeatureMoments, double);
-  INIT_DataArray(m_FeatureEigenVals, double);
+  m_FeatureMoments = DataArray<double>::CreateArray(0, "m_FeatureMoments");
+  m_FeatureEigenVals = DataArray<double>::CreateArray(0, "m_FeatureEigenVals");
 
   //REQUIRED FACE DATA
-  QVector<size_t> cDims(1, 2);
+  std::vector<size_t> cDims(1, 2);
   m_FaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFaceLabelsArrayPath(),
                                                                                                         cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_FaceLabelsPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */

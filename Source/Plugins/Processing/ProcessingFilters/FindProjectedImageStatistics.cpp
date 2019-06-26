@@ -251,7 +251,7 @@ void FindProjectedImageStatistics::dataCheck()
     }
   }
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   tempPath.update(getSelectedArrayPath().getDataContainerName(), getSelectedArrayPath().getAttributeMatrixName(), getProjectedImageMinArrayName());
   m_ProjectedImageMinPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
       this, tempPath, 0, cDims);                     /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */

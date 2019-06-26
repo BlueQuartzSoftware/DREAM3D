@@ -181,7 +181,7 @@ void ReadCtfData::dataCheck()
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
 
-  QVector<size_t> tDims(3, 0);
+  std::vector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCode() < 0)
   {
@@ -210,7 +210,7 @@ void ReadCtfData::dataCheck()
 
   if(!m_InputFile.isEmpty()) // User set a filename, so lets check it
   {
-    QVector<size_t> tDims(3, 0);
+    std::vector<size_t> tDims(3, 0);
 
     QString ext = fi.suffix().toLower();
     QVector<QString> names;
@@ -223,7 +223,7 @@ void ReadCtfData::dataCheck()
       cellAttrMat->resizeAttributeArrays(tDims);
       CtfFields ctffeatures;
       names = ctffeatures.getFilterFeatures<QVector<QString>>();
-      QVector<size_t> cDims(1, 1);
+      std::vector<size_t> cDims(1, 1);
       for(const auto& name : names)
       {
         if(reader->getPointerType(name) == Ebsd::Int32)
@@ -243,7 +243,7 @@ void ReadCtfData::dataCheck()
       return;
     }
 
-    QVector<size_t> cDims(1, 3);
+    std::vector<size_t> cDims(1, 3);
     tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), Ebsd::CtfFile::EulerAngles);
     m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
         this, tempPath, 0, cDims);             /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -309,7 +309,7 @@ void ReadCtfData::flushCache()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadCtfData::readDataFile(CtfReader* reader, const DataContainer::Pointer& m, QVector<size_t>& tDims, CTF_READ_FLAG flag)
+void ReadCtfData::readDataFile(CtfReader* reader, const DataContainer::Pointer& m, std::vector<size_t>& tDims, CTF_READ_FLAG flag)
 {
   QFileInfo fi(m_InputFile);
   QDateTime timeStamp(fi.lastModified());
@@ -414,7 +414,7 @@ int32_t ReadCtfData::loadMaterialInfo(CtfReader* reader)
 
   DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, Ebsd::CtfFile::CrystalStructures);
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, getMaterialNameArrayName());
-  QVector<size_t> cDims(1, 6);
+  std::vector<size_t> cDims(1, 6);
   FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, cDims, Ebsd::CtfFile::LatticeConstants);
 
   // Initialize the zero'th element to unknowns. The other elements will
@@ -455,7 +455,7 @@ int32_t ReadCtfData::loadMaterialInfo(CtfReader* reader)
   }
 
   // Resize the AttributeMatrix based on the size of the crystal structures array
-  QVector<size_t> tDims(1, crystalStructures->getNumberOfTuples());
+  std::vector<size_t> tDims(1, crystalStructures->getNumberOfTuples());
   attrMatrix->resizeAttributeArrays(tDims);
   // Now add the attributeArray to the AttributeMatrix
   attrMatrix->insertOrAssign(crystalStructures);
@@ -480,7 +480,7 @@ int32_t ReadCtfData::loadMaterialInfo(CtfReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadCtfData::copyRawEbsdData(CtfReader* reader, QVector<size_t>& tDims, QVector<size_t>& cDims)
+void ReadCtfData::copyRawEbsdData(CtfReader* reader, std::vector<size_t>& tDims, std::vector<size_t>& cDims)
 {
   float* f1 = nullptr;
   float* f2 = nullptr;
@@ -529,7 +529,7 @@ void ReadCtfData::copyRawEbsdData(CtfReader* reader, QVector<size_t>& tDims, QVe
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ctf::Euler1));
     f2 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ctf::Euler2));
     f3 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ctf::Euler3));
-    QVector<size_t> dims(1, 3);
+    std::vector<size_t> dims(1, 3);
     fArray = FloatArrayType::CreateArray(totalPoints, dims, SIMPL::CellData::EulerAngles);
     float* cellEulerAngles = fArray->getPointer(0);
     int32_t* cellPhases = iArray->getPointer(0);
@@ -618,8 +618,8 @@ void ReadCtfData::execute()
   }
 
   std::shared_ptr<CtfReader> reader(new CtfReader());
-  QVector<size_t> tDims(3, 0);
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> tDims(3, 0);
+  std::vector<size_t> cDims(1, 1);
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   AttributeMatrix::Pointer ebsdAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
   ebsdAttrMat->setType(AttributeMatrix::Type::Cell);

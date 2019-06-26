@@ -104,7 +104,7 @@ template <typename K> void PrintTuple(DataContainerArray::Pointer dca, size_t t)
   for(int i = 0; i < 7; i++)
   {
     DataArrayPath daPath(DCName, AMName, k_InputNames[i]);
-    QVector<size_t> cDims(1, k_CompDims[i]);
+    std::vector<size_t> cDims(1, k_CompDims[i]);
     typename DataArray<K>::Pointer data = dca->getPrereqArrayFromPath<DataArray<K>, AbstractFilter>(nullptr, daPath, cDims);
     std::cout << "'" << data->getName().toStdString() << "'"
               << "\t";
@@ -120,7 +120,7 @@ template <typename K> void PrintTuple(DataContainerArray::Pointer dca, size_t t)
 // -----------------------------------------------------------------------------
 template <typename K> void PrintTuple(typename DataArray<K>::Pointer data, size_t t)
 {
-  QVector<size_t> cDims = data->getComponentDimensions();
+  std::vector<size_t> cDims = data->getComponentDimensions();
   printf("%s\n", data->getName().toStdString().c_str());
   for(int a = 0; a < cDims[0]; a++)
   {

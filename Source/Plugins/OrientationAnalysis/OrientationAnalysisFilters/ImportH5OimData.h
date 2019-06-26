@@ -248,7 +248,7 @@ protected:
    * @param cDims Component dimensions
    * @param index Current slice index
    */
-  virtual void copyRawEbsdData(EbsdReader* reader, QVector<size_t>& tDims, QVector<size_t>& cDims, int index);
+  virtual void copyRawEbsdData(EbsdReader* reader, std::vector<size_t>& tDims, std::vector<size_t>& cDims, int index);
 
   /**
    * @brief loadMaterialInfo Reads the values for the phase type, crystal structure
@@ -264,7 +264,7 @@ protected:
    * @param m DataContainer instance pointer
    * @param tDims Tuple dimensions
    */
-  virtual void readDataFile(EbsdReader* reader, DataContainer* m, QVector<size_t>& tDims, const QString& scanName, ANG_READ_FLAG flag);
+  virtual void readDataFile(EbsdReader* reader, DataContainer* m, std::vector<size_t>& tDims, const QString& scanName, ANG_READ_FLAG flag);
 
   /**
    * @brief readManufacturer

@@ -181,7 +181,7 @@ void Stereographic3D::dataCheck()
   clearWarningCode();
   QVector<DataArrayPath> dataArrayPaths;
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
 
   cDims[0] = 4;
   m_QuatsPtr =

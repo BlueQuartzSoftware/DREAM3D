@@ -147,8 +147,8 @@ void ModifiedLambertProjection::initializeSquares(int dims, float sphereRadius)
   m_HalfDimension = static_cast<float>(m_Dimension) / 2.0;
   m_HalfDimensionTimesStepSize = m_HalfDimension * m_StepSize;
 
-  QVector<size_t> tDims(2, m_Dimension);
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> tDims(2, m_Dimension);
+  std::vector<size_t> cDims(1, 1);
   m_NorthSquare = DoubleArrayType::CreateArray(tDims, cDims, "ModifiedLambert_NorthSquare");
   m_NorthSquare->initializeWithZeros();
   m_SouthSquare = DoubleArrayType::CreateArray(tDims, cDims, "ModifiedLambert_SouthSquare");
@@ -164,7 +164,7 @@ int ModifiedLambertProjection::writeHDF5Data(hid_t groupId)
 {
   int err = -1;
   #if 0
-  QVector<size_t> dims = { static_cast<size_t>(m_Dimension), static_cast<size_t>(m_Dimension), 1};
+  std::vector<size_t> dims = { static_cast<size_t>(m_Dimension), static_cast<size_t>(m_Dimension), 1};
   err = m_NorthSquare->writeH5Data(groupId, dims);
   std::cout << "Err: " << err << std::endl;
   err = m_SouthSquare->writeH5Data(groupId, dims);
@@ -595,8 +595,8 @@ void ModifiedLambertProjection::createStereographicProjection(int dim, DoubleArr
 // -----------------------------------------------------------------------------
 DoubleArrayType::Pointer ModifiedLambertProjection::createStereographicProjection(int dim)
 {
-  QVector<size_t> tDims(2, dim);
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> tDims(2, dim);
+  std::vector<size_t> cDims(1, 1);
   DoubleArrayType::Pointer stereoIntensity = DoubleArrayType::CreateArray(tDims, cDims, "ModifiedLambertProjection_StereographicProjection");
   stereoIntensity->initializeWithZeros();
   createStereographicProjection(dim, stereoIntensity.get());

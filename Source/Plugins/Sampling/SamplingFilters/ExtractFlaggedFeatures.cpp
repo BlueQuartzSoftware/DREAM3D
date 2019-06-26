@@ -112,7 +112,7 @@ void ExtractFlaggedFeatures::dataCheck()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getFeatureIdsArrayPath().getDataContainerName());
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
                                                                                                         cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_FeatureIdsPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -155,7 +155,7 @@ void ExtractFlaggedFeatures::find_feature_bounds()
       static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
   };
 
-  QVector<size_t> cDims(1, 6);
+  std::vector<size_t> cDims(1, 6);
   m_BoundsPtr = Int32ArrayType::CreateArray(totalFeatures, cDims, "_INTERNAL_USE_ONLY_Bounds");
   m_FeatureBounds = m_BoundsPtr->getPointer(0);
   m_BoundsPtr->initializeWithValue(-1);

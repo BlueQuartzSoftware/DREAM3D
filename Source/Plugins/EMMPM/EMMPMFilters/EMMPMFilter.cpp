@@ -268,7 +268,7 @@ void EMMPMFilter::dataCheck()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<ImageGeom, AbstractFilter>(this, getInputDataArrayPath().getDataContainerName());
 
-  QVector<size_t> cDims(1, 1); // We need a single component, gray scale image
+  std::vector<size_t> cDims(1, 1); // We need a single component, gray scale image
   m_InputImagePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getInputDataArrayPath(),
                                                                                                         cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_InputImagePtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -383,9 +383,9 @@ void EMMPMFilter::segment(EMMPM_InitializationType initType)
 
   DataArrayPath dap = getInputDataArrayPath();
   AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(dap);
-  QVector<size_t> tDims = am->getTupleDimensions();
+  std::vector<size_t> tDims = am->getTupleDimensions();
   IDataArray::Pointer iDataArray = am->getAttributeArray(getInputDataArrayPath().getDataArrayName());
-  QVector<size_t> cDims = iDataArray->getComponentDimensions();
+  std::vector<size_t> cDims = iDataArray->getComponentDimensions();
 
   m_Data->columns = tDims[0];
   m_Data->rows = tDims[1];

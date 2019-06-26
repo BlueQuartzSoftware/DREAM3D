@@ -178,7 +178,7 @@ void CreateLambertSphere::dataCheck()
     setErrorCondition(-99006, msg);
     return;
   }
-  QVector<size_t> cDims = {1};
+  std::vector<size_t> cDims = {1};
   DataContainerArray::Pointer dca = getDataContainerArray();
   
   
@@ -238,7 +238,7 @@ void CreateLambertSphere::dataCheck()
   }
 
   size_t numVertices = static_cast<size_t>(points[0] * points[1]);
-  QVector<size_t> vertDims(1, 3);
+  std::vector<size_t> vertDims(1, 3);
   m_Vertices = SharedVertexList::CreateArray(numVertices, vertDims, SIMPL::Geometry::SharedVertexList, !getInPreflight());
   m_Vertices->initializeWithZeros();
 
@@ -254,11 +254,11 @@ void CreateLambertSphere::dataCheck()
     // Create the Vertex Geometry
     VertexGeom::Pointer vertGeom = VertexGeom::CreateGeometry(m_Vertices, "VertexGeometry");
     vertDC->setGeometry(vertGeom);
-    
-    QVector<size_t> tDims = {static_cast<size_t>(totalVerts)};
+
+    std::vector<size_t> tDims = {static_cast<size_t>(totalVerts)};
     vertDC->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID21);
 
-    //    QVector<size_t> cDims = {1};
+    //    std::vector<size_t> cDims = {1};
     //    DataArrayPath path(getVertexDataContainerName(), getVertexAttributeMatrixName(), m_VertexDataName);
     //    m_VertexDataPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter, uint8_t>(this, path, 0, cDims, "", DataArrayID31);    //
     //    if(nullptr != m_VertexDataPtr.lock())
@@ -278,13 +278,13 @@ void CreateLambertSphere::dataCheck()
 
     size_t numEdges = ((imageDims[0] + 1) * imageDims[0]) + ((imageDims[1] + 1) * imageDims[1]);
 
-    QVector<size_t> tDims = {static_cast<size_t>(totalVerts)};
+    std::vector<size_t> tDims = {static_cast<size_t>(totalVerts)};
     edgeDC->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID22);
     tDims[0] = numEdges;
     edgeDC->createNonPrereqAttributeMatrix(this, getEdgeAttributeMatrixName(), tDims, AttributeMatrix::Type::Edge, AttributeMatrixID23);
 
     // Create Edge Geometry
-    QVector<size_t> cDims = {2};
+    std::vector<size_t> cDims = {2};
     EdgeGeom::Pointer edgetGeom = EdgeGeom::CreateGeometry(numEdges, m_Vertices, "EdgeGeometry");
     edgeDC->setGeometry(edgetGeom);
     
@@ -306,14 +306,14 @@ void CreateLambertSphere::dataCheck()
       return;
     }
 
-    QVector<size_t> tDims = {static_cast<size_t>(totalVerts)};
+    std::vector<size_t> tDims = {static_cast<size_t>(totalVerts)};
     triangleDC->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID24);
     tDims[0] = static_cast<size_t>(totalQuads * 2);
     triangleDC->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face, AttributeMatrixID25);
 
     // Create a Triangle Geometry
     size_t numTris = imageDims[0] * imageDims[1] * 2; // Twice the number of Quads
-    QVector<size_t> cDims = {3};
+    std::vector<size_t> cDims = {3};
     TriangleGeom::Pointer triangleGeom = TriangleGeom::CreateGeometry(numTris, m_Vertices, "Triangle Geometry");
     triangleDC->setGeometry(triangleGeom);
 
@@ -335,7 +335,7 @@ void CreateLambertSphere::dataCheck()
       return;
     }
 
-    QVector<size_t> tDims(1, static_cast<size_t>(totalVerts));
+    std::vector<size_t> tDims(1, static_cast<size_t>(totalVerts));
     quadDC->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID26);
     tDims[0] = static_cast<size_t>(totalQuads);
     quadDC->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face, AttributeMatrixID27);
@@ -596,7 +596,7 @@ void CreateLambertSphere::createQuadGeometry()
   size_t vIndex = 0;
 
   size_t totalQuads = (imageDims[0] * imageDims[1]);
-  QVector<size_t> tDims(1, totalQuads);
+  std::vector<size_t> tDims(1, totalQuads);
   quadDC->getAttributeMatrix(getFaceAttributeMatrixName())->resizeAttributeArrays(tDims);
   AttributeMatrix::Pointer am = quadDC->getAttributeMatrix(getFaceAttributeMatrixName());
 

@@ -410,14 +410,14 @@ void InsertAtoms::dataCheck()
   VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(0, SIMPL::Geometry::VertexGeometry, !getInPreflight());
   v->setGeometry(vertices);
 
-  QVector<size_t> tDims(1, 0);
+  std::vector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer vertexAttrMat = v->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID21);
   if(getErrorCode() < 0 || nullptr == vertexAttrMat.get())
   {
     return;
   }
 
-  QVector<size_t> cDims(1, 2);
+  std::vector<size_t> cDims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(),
                                                                                                                    cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshFaceLabelsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -492,7 +492,7 @@ void InsertAtoms::assign_points(QVector<VertexGeom::Pointer> points, QVector<Boo
   VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(count, SIMPL::VertexData::SurfaceMeshNodes);
 
   AttributeMatrix::Pointer vertexAttrMat = v->getAttributeMatrix(getVertexAttributeMatrixName());
-  QVector<size_t> tDims(1, count);
+  std::vector<size_t> tDims(1, count);
   vertexAttrMat->resizeAttributeArrays(tDims);
   updateVertexInstancePointers();
 

@@ -185,7 +185,7 @@ void FindOrientationFieldCurl::dataCheck()
   clearErrorCode();
   clearWarningCode();
 
-  QVector<size_t> dims(1, 1);
+  std::vector<size_t> dims(1, 1);
   m_CellPhasesPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getCellPhasesArrayPath(),
                                                                                                         dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_CellPhasesPtr.lock())                                                                        /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -263,8 +263,8 @@ void FindOrientationFieldCurl::execute()
 
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
   size_t totalFaces = ((xP + 1) * yP * zP) + ((yP + 1) * xP * zP) + ((zP + 1) * xP * yP);
-  QVector<size_t> tDims(1, totalFaces);
-  QVector<size_t> cDims(1, 3);
+  std::vector<size_t> tDims(1, totalFaces);
+  std::vector<size_t> cDims(1, 3);
   FloatArrayType::Pointer misoVecsPtr = FloatArrayType::CreateArray(tDims, cDims, "misoVecs");
   misoVecsPtr->initializeWithValue(0);
   float* misoVecs = misoVecsPtr->getPointer(0);

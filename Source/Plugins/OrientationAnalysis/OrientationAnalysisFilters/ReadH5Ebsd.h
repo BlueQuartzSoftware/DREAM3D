@@ -287,12 +287,12 @@ protected:
     }
 
     // Resize the Ensemble Attribute Matrix to be the correct number of phases.
-    QVector<size_t> tDims(1, phases.size() + 1);
+    std::vector<size_t> tDims(1, phases.size() + 1);
     attrMatrix->resizeAttributeArrays(tDims);
 
     DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, getCrystalStructuresArrayName());
     StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, getMaterialNameArrayName());
-    QVector<size_t> cDims(1, 6);
+    std::vector<size_t> cDims(1, 6);
     FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, cDims, getLatticeConstantsArrayName());
 
     // Initialize the zero'th element to unknowns. The other elements will

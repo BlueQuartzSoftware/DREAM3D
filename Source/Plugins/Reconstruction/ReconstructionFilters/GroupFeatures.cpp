@@ -111,7 +111,7 @@ void GroupFeatures::dataCheck()
   clearWarningCode();
   initialize();
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   m_ContiguousNeighborList = getDataContainerArray()->getPrereqArrayFromPath<NeighborList<int32_t>, AbstractFilter>(this, getContiguousNeighborListArrayPath(), cDims);
 
   if(m_UseNonContiguousNeighbors)

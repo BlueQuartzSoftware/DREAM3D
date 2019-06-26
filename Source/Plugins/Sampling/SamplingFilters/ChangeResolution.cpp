@@ -168,7 +168,7 @@ void ChangeResolution::dataCheck()
 
   if(getRenumberFeatures())
   {
-    QVector<size_t> cDims(1, 1);
+    std::vector<size_t> cDims(1, 1);
     m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
                                                                                                           cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != m_FeatureIdsPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -232,7 +232,7 @@ void ChangeResolution::preflight()
   image->setDimensions(std::make_tuple(m_XP, m_YP, m_ZP));
   image->setSpacing(std::make_tuple(m_Spacing[0], m_Spacing[1], m_Spacing[2]));
 
-  QVector<size_t> tDims(3, 0);
+  std::vector<size_t> tDims(3, 0);
   tDims[0] = m_XP;
   tDims[1] = m_YP;
   tDims[2] = m_ZP;
@@ -367,7 +367,7 @@ void ChangeResolution::execute()
   QString ss = QObject::tr("Copying Data...");
   notifyStatusMessage(ss);
 
-  QVector<size_t> tDims(3, 0);
+  std::vector<size_t> tDims(3, 0);
   tDims[0] = m_XP;
   tDims[1] = m_YP;
   tDims[2] = m_ZP;

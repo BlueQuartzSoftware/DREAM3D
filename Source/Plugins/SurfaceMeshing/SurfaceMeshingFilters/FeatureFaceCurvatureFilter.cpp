@@ -213,7 +213,7 @@ void FeatureFaceCurvatureFilter::dataCheck()
 
   // We do not know the size of the array so we can not use the macro so we just manually call
   // the needed methods that will propagate these array additions to the pipeline
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   tempPath = getFaceAttributeMatrixPath();
   tempPath.setDataArrayName(getSurfaceMeshPrincipalCurvature1sArrayName());
   m_SurfaceMeshPrincipalCurvature1sPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(

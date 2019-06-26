@@ -118,7 +118,7 @@ void ComputeMomentInvariants2D::dataCheck()
     setErrorCondition(-73000, ss);
   }
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims);
   if(nullptr != m_FeatureIdsPtr.lock())
   {

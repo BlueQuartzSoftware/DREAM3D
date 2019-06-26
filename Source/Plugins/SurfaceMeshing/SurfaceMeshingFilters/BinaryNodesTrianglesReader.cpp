@@ -157,14 +157,14 @@ void BinaryNodesTrianglesReader::dataCheck()
 
   DataArrayPath tempPath;
 
-  QVector<size_t> dims(1, 1);
+  std::vector<size_t> dims(1, 1);
 
   DataContainer::Pointer sm = getDataContainerArray()->createNonPrereqDataContainer<AbstractFilter>(this, getSurfaceDataContainerName(), DataContainerID);
   if(getErrorCode() < 0)
   {
     return;
   }
-  QVector<size_t> tDims(1, 0);
+  std::vector<size_t> tDims(1, 0);
 
   AttributeMatrix::Pointer vertexAttrMat = sm->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID21);
   if(getErrorCode() < 0)
@@ -302,7 +302,7 @@ int BinaryNodesTrianglesReader::read()
   triangleGeom->resizeVertexList(nNodes);
   float* m_NodeList = triangleGeom->getVertexPointer(0);
 
-  QVector<size_t> tDims(1, nNodes);
+  std::vector<size_t> tDims(1, nNodes);
   vertAttrMat->resizeAttributeArrays(tDims);
   updateVertexInstancePointers();
   {

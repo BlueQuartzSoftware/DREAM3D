@@ -277,7 +277,7 @@ void CropImageGeometry::dataCheck()
     setErrorCondition(-5550, ss);
   }
 
-  QVector<size_t> tDims(3, 0);
+  std::vector<size_t> tDims(3, 0);
   if(getXMax() - getXMin() < 0)
   {
     setXMax(getXMin() + 1);
@@ -344,7 +344,7 @@ void CropImageGeometry::dataCheck()
 
   if(m_RenumberFeatures)
   {
-    QVector<size_t> cDims(1, 1);
+    std::vector<size_t> cDims(1, 1);
     m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(nullptr, getFeatureIdsArrayPath(), cDims);
     if(nullptr != m_FeatureIdsPtr.lock())
     {
@@ -517,7 +517,7 @@ void CropImageGeometry::execute()
   }
   destCellDataContainer->getGeometryAs<ImageGeom>()->setDimensions(static_cast<size_t>(XP), static_cast<size_t>(YP), static_cast<size_t>(ZP));
   totalPoints = destCellDataContainer->getGeometryAs<ImageGeom>()->getNumberOfElements();
-  QVector<size_t> tDims(3, 0);
+  std::vector<size_t> tDims(3, 0);
   tDims[0] = XP;
   tDims[1] = YP;
   tDims[2] = ZP;
@@ -537,7 +537,7 @@ void CropImageGeometry::execute()
       return;
     }
 
-    // QVector<size_t> cDims(1, 1);
+    // std::vector<size_t> cDims(1, 1);
     DataArrayPath dap = getFeatureIdsArrayPath();
     if(getSaveAsNewDataContainer())
     {

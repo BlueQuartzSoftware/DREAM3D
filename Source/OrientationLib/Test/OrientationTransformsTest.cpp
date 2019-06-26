@@ -120,7 +120,7 @@ public:
   // -----------------------------------------------------------------------------
   template <typename T> void GenerateEulers(size_t nSteps, AttributeMatrix::Pointer attrMat)
   {
-    QVector<size_t> cDims(1, 3);
+    std::vector<size_t> cDims(1, 3);
 
     T phi1_min = static_cast<T>(0.0);
     T phi1_max = DConst::k_2Pi;
@@ -366,7 +366,7 @@ public:
 
       size_t nStepsCubed = (nSteps + 1) * (nSteps + 1) * (nSteps + 1);
 
-      QVector<size_t> tDims(1, nStepsCubed);
+      std::vector<size_t> tDims(1, nStepsCubed);
       AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, AMName, AttributeMatrix::Type::Cell);
       m->addOrReplaceAttributeMatrix(attrMat);
       dca->addOrReplaceDataContainer(m);
@@ -463,7 +463,7 @@ public:
         DREAM3D_REQUIRED(err, >=, 0)
 
         DataArrayPath daPath(DCName, AMName, diffMapArrayName);
-        QVector<size_t> cDims(1, k_CompDims[cDim]);
+        std::vector<size_t> cDims(1, k_CompDims[cDim]);
         typename DataArray<K>::Pointer diff = dca->getPrereqArrayFromPath<DataArray<K>, AbstractFilter>(diffMapFilt.get(), daPath, cDims);
 #if 1
         size_t tuples = diff->getNumberOfTuples();

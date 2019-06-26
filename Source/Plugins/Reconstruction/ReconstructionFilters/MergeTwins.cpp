@@ -184,10 +184,10 @@ void MergeTwins::dataCheck()
     return;
   }
 
-  QVector<size_t> tDims(1, 0);
+  std::vector<size_t> tDims(1, 0);
   m->createNonPrereqAttributeMatrix(this, getNewCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID21);
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -307,7 +307,7 @@ int32_t MergeTwins::getSeed(int32_t newFid)
   if(seed >= 0)
   {
     m_FeatureParentIds[seed] = newFid;
-    QVector<size_t> tDims(1, newFid + 1);
+    std::vector<size_t> tDims(1, newFid + 1);
     getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName())->getAttributeMatrix(getNewCellFeatureAttributeMatrixName())->resizeAttributeArrays(tDims);
     updateFeatureInstancePointers();
   }

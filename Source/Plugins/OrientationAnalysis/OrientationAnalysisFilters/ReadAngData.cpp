@@ -193,7 +193,7 @@ void ReadAngData::dataCheck()
 
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
-  QVector<size_t> tDims(3, 0);
+  std::vector<size_t> tDims(3, 0);
 
   // File is at least on the system with the proper extension, now try to read it.
   std::shared_ptr<AngReader> reader(new AngReader());
@@ -235,7 +235,7 @@ void ReadAngData::dataCheck()
     }
   }
 
-  QVector<size_t> cDims(1, 3);
+  std::vector<size_t> cDims(1, 3);
   tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), Ebsd::AngFile::EulerAngles);
   m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, cDims, "");
   if(nullptr != m_CellEulerAnglesPtr.lock())
@@ -296,7 +296,7 @@ void ReadAngData::flushCache()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadAngData::readDataFile(AngReader* reader, const DataContainer::Pointer& m, QVector<size_t>& tDims, ANG_READ_FLAG flag)
+void ReadAngData::readDataFile(AngReader* reader, const DataContainer::Pointer& m, std::vector<size_t>& tDims, ANG_READ_FLAG flag)
 {
   QFileInfo fi(m_InputFile);
   QDateTime timeStamp(fi.lastModified());
@@ -421,7 +421,7 @@ int32_t ReadAngData::loadMaterialInfo(AngReader* reader)
 
   DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, Ebsd::AngFile::CrystalStructures);
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, Ebsd::AngFile::MaterialName);
-  QVector<size_t> cDims(1, 6);
+  std::vector<size_t> cDims(1, 6);
   FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, cDims, Ebsd::AngFile::LatticeConstants);
 
   // Initialize the zero'th element to unknowns. The other elements will
@@ -462,7 +462,7 @@ int32_t ReadAngData::loadMaterialInfo(AngReader* reader)
   }
 
   // Resize the AttributeMatrix based on the size of the crystal structures array
-  QVector<size_t> tDims(1, crystalStructures->getNumberOfTuples());
+  std::vector<size_t> tDims(1, crystalStructures->getNumberOfTuples());
   attrMatrix->resizeAttributeArrays(tDims);
   // Now add the attributeArray to the AttributeMatrix
   attrMatrix->insertOrAssign(crystalStructures);
@@ -487,7 +487,7 @@ int32_t ReadAngData::loadMaterialInfo(AngReader* reader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadAngData::copyRawEbsdData(AngReader* reader, QVector<size_t>& tDims, QVector<size_t>& cDims)
+void ReadAngData::copyRawEbsdData(AngReader* reader, std::vector<size_t>& tDims, std::vector<size_t>& cDims)
 {
   float* f1 = nullptr;
   float* f2 = nullptr;
@@ -600,8 +600,8 @@ void ReadAngData::execute()
   }
 
   std::shared_ptr<AngReader> reader(new AngReader());
-  QVector<size_t> tDims(3, 0);
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> tDims(3, 0);
+  std::vector<size_t> cDims(1, 1);
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   AttributeMatrix::Pointer ebsdAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
   ebsdAttrMat->setType(AttributeMatrix::Type::Cell);

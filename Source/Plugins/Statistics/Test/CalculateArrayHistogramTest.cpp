@@ -135,9 +135,9 @@ public:
     DataContainerArray::Pointer dca = DataContainerArray::New();
     DataContainer::Pointer dc = DataContainer::New(DCName);
 
-    QVector<size_t> tDims(1, 0);
+    std::vector<size_t> tDims(1, 0);
     tDims[0] = Faithful_Rows;
-    QVector<size_t> cDims(1);
+    std::vector<size_t> cDims(1);
     cDims[0] = 1;
     AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, Data_AMName, AttributeMatrix::Type::Cell);
 

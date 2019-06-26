@@ -194,7 +194,7 @@ void TriangleDihedralAngleFilter::dataCheck()
     dataArrays.push_back(triangles->getTriangles());
   }
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   m_SurfaceMeshTriangleDihedralAnglesPtr =
       getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getSurfaceMeshTriangleDihedralAnglesArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_SurfaceMeshTriangleDihedralAnglesPtr.lock())          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */

@@ -232,7 +232,7 @@ void NodesTrianglesToStl::execute()
   size_t nread = 0;
   // Read the POINTS data (Vertex)
   QMap<int, int> nodeIdToIndex;
-  QVector<size_t> cDims(1, 3);
+  std::vector<size_t> cDims(1, 3);
   SharedVertexList::Pointer nodesPtr = SharedVertexList::CreateArray(nNodes, cDims, SIMPL::VertexData::SurfaceMeshNodes);
   float* nodes = nodesPtr->getPointer(0);
 

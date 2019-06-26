@@ -196,7 +196,7 @@ void FeatureInfoReader::dataCheck()
     return;
   }
 
-  QVector<size_t> tDims(1, 0);
+  std::vector<size_t> tDims(1, 0);
   m->createNonPrereqAttributeMatrix(this, getCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID21);
 
   QFileInfo fi(getInputFile());
@@ -217,7 +217,7 @@ void FeatureInfoReader::dataCheck()
     setErrorCondition(-1, ss);
   }
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(), cDims);
   if(nullptr != m_FeatureIdsPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -352,7 +352,7 @@ int32_t FeatureInfoReader::readFile()
     return getErrorCode();
   }
 
-  QVector<size_t> tDims(1, static_cast<size_t>(numfeatures + 1));
+  std::vector<size_t> tDims(1, static_cast<size_t>(numfeatures + 1));
   cellFeatureAttrMat->setTupleDimensions(tDims);
   updateFeatureInstancePointers();
 

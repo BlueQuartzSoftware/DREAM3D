@@ -113,8 +113,8 @@ public:
     int64_t xDim = (2 * m_CritDim[0]) + 1;
     int64_t yDim = (2 * m_CritDim[1]) + 1;
     int64_t zDim = (2 * m_CritDim[2]) + 1;
-    QVector<size_t> tDims(1, xDim * yDim * zDim);
-    QVector<size_t> cDims(1, 3);
+    std::vector<size_t> tDims(1, xDim * yDim * zDim);
+    std::vector<size_t> cDims(1, 3);
     FloatArrayType::Pointer cAxisLocsPtr = FloatArrayType::CreateArray(tDims, cDims, "_INTERNAL_USE_ONLY_cAxisLocs");
     cAxisLocsPtr->initializeWithValue(0);
     float* cAxisLocs = cAxisLocsPtr->getPointer(0);
@@ -349,10 +349,10 @@ void IdentifyMicroTextureRegions::dataCheck()
     return;
   }
 
-  QVector<size_t> tDims(1, 0);
+  std::vector<size_t> tDims(1, 0);
   m->createNonPrereqAttributeMatrix(this, getNewCellFeatureAttributeMatrixName(), tDims, AttributeMatrix::Type::CellFeature, AttributeMatrixID21);
 
-  QVector<size_t> cDims(1, 3);
+  std::vector<size_t> cDims(1, 3);
 
   QVector<DataArrayPath> dataArrayPaths;
 
@@ -546,7 +546,7 @@ void IdentifyMicroTextureRegions::execute()
   tmpDC->getGeometryAs<ImageGeom>()->setSpacing(critRes);
   tmpDC->getGeometryAs<ImageGeom>()->setOrigin(origin);
 
-  QVector<size_t> tDims;
+  std::vector<size_t> tDims;
   tDims[0] = newDim[0];
   tDims[1] = newDim[1];
   tDims[2] = newDim[2];
@@ -558,7 +558,7 @@ void IdentifyMicroTextureRegions::execute()
 
   DataArrayPath tempPath;
   tDims[0] = totalPatches;
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   tempPath.update("_INTERNAL_USE_ONLY_PatchDataContainer(Temp)", "_INTERNAL_USE_ONLY_PatchAM(Temp)", "_INTERNAL_USE_ONLY_InMTR");
   m_InMTRPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<bool>, AbstractFilter, bool>(this, tempPath, false, cDims, "", DataArrayID33);
   if(nullptr != m_InMTRPtr.lock())                                                                                  /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */

@@ -189,14 +189,14 @@ public:
     tris[3 * 11 + 1] = 3;
     tris[3 * 11 + 2] = 0;
 
-    QVector<size_t> tDims(1, 12);
+    std::vector<size_t> tDims(1, 12);
 
     AttributeMatrix::Pointer faceAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::FaceAttributeMatrixName, AttributeMatrix::Type::Face);
     tdc->addOrReplaceAttributeMatrix(faceAttrMat);
     tDims[0] = 2;
     AttributeMatrix::Pointer featAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::FaceFeatureAttributeMatrixName, AttributeMatrix::Type::FaceFeature);
     tdc->addOrReplaceAttributeMatrix(featAttrMat);
-    QVector<size_t> cDims(1, 2);
+    std::vector<size_t> cDims(1, 2);
     Int32ArrayType::Pointer faceLabels = Int32ArrayType::CreateArray(12, cDims, SIMPL::FaceData::SurfaceMeshFaceLabels);
     faceAttrMat->insertOrAssign(faceLabels);
     int32_t* faceLabelsPtr = faceLabels->getPointer(0);

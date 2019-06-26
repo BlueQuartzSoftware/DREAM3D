@@ -223,7 +223,7 @@ void QuiltCellData::dataCheck()
   m2->getGeometryAs<ImageGeom>()->setOrigin(FloatVec3Type(0.0f, 0.0f, 0.0f));
 
   // Create the cell attrMat in the new data container
-  QVector<size_t> tDims(3, 0);
+  std::vector<size_t> tDims(3, 0);
   tDims[0] = m2->getGeometryAs<ImageGeom>()->getXPoints();
   tDims[1] = m2->getGeometryAs<ImageGeom>()->getYPoints();
   tDims[2] = m2->getGeometryAs<ImageGeom>()->getZPoints();
@@ -235,7 +235,7 @@ void QuiltCellData::dataCheck()
   }
 
   // Get the name and create the array in the new data attrMat
-  QVector<size_t> dims(1, 1);
+  std::vector<size_t> dims(1, 1);
   tempPath.update(getOutputDataContainerName().getDataContainerName(), getOutputAttributeMatrixName(), getOutputArrayName());
   m_OutputArrayPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, tempPath, 0, dims, "", DataArrayID31);
   if(nullptr != m_OutputArrayPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */

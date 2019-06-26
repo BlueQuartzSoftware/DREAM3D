@@ -159,7 +159,7 @@ void TriangleCentroidFilter::dataCheck()
     dataArrays.push_back(triangles->getTriangles());
   }
 
-  QVector<size_t> cDims(1, 3);
+  std::vector<size_t> cDims(1, 3);
   m_SurfaceMeshTriangleCentroidsPtr =
       getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, getSurfaceMeshTriangleCentroidsArrayPath(), 0, cDims, "", DataArrayID31);
   if(nullptr != m_SurfaceMeshTriangleCentroidsPtr.lock())          /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */

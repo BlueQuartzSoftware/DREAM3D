@@ -238,7 +238,7 @@ protected:
    * @param tDims Tuple dimensions
    * @param cDims Component dimensions
    */
-  void copyRawEbsdData(CtfReader* reader, QVector<size_t>& tDims, QVector<size_t>& cDims);
+  void copyRawEbsdData(CtfReader* reader, std::vector<size_t>& tDims, std::vector<size_t>& cDims);
 
   /**
    * @brief loadMaterialInfo Reads the values for the phase type, crystal structure
@@ -254,7 +254,7 @@ protected:
    * @param m DataContainer instance pointer
    * @param tDims Tuple dimensions
    */
-  void readDataFile(CtfReader* reader, const DataContainer::Pointer& m, QVector<size_t>& tDims, CTF_READ_FLAG flag);
+  void readDataFile(CtfReader* reader, const DataContainer::Pointer& m, std::vector<size_t>& tDims, CTF_READ_FLAG flag);
 
 private:
   QScopedPointer<ReadCtfDataPrivate> const d_ptr;

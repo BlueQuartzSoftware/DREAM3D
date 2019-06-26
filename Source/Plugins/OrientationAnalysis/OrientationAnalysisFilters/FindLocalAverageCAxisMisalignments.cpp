@@ -174,7 +174,7 @@ void FindLocalAverageCAxisMisalignments::dataCheck()
   clearWarningCode();
 
   // Cell Data
-  QVector<size_t> dims(1, 1);
+  std::vector<size_t> dims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
                                                                                                         dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_FeatureIdsPtr.lock())                                                                        /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */

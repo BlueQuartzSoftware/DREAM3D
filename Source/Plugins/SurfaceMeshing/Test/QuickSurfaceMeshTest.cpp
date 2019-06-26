@@ -144,7 +144,7 @@ public:
     rectGrid_DC->setGeometry(rectGrid);
 
     // Create an element AttributeMatrix and FeatureIds array for each geometry
-    QVector<size_t> tDims(1, 4);
+    std::vector<size_t> tDims(1, 4);
 
     AttributeMatrix::Pointer image3D_AttrMat = AttributeMatrix::New(tDims, "Image3DData", AttributeMatrix::Type::Cell);
     Int32ArrayType::Pointer image3D_fIDs = Int32ArrayType::CreateArray(4, SIMPL::CellData::FeatureIds);

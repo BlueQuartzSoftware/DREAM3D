@@ -137,7 +137,7 @@ protected:
    * @param z
    * @return
    */
-  size_t sub2ind(QVector<size_t> tDims, size_t x, size_t y, size_t z) const;
+  size_t sub2ind(std::vector<size_t> tDims, size_t x, size_t y, size_t z) const;
 
 private:
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)

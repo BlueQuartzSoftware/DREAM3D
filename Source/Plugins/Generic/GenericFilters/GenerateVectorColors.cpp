@@ -123,7 +123,7 @@ void GenerateVectorColors::dataCheck()
 
   QVector<DataArrayPath> dataArrayPaths;
 
-  QVector<size_t> cDims(1, 3);
+  std::vector<size_t> cDims(1, 3);
   m_VectorsPtr =
       getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getVectorsArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_VectorsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */

@@ -1812,7 +1812,7 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
-  QVector<size_t> dims(1, 3);
+  std::vector<size_t> dims(1, 3);
   FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize0, dims, label0 + QString("xyzCoords"));
   // this is size for CUBIC ONLY, <011> Family
   FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize1, dims, label1 + QString("xyzCoords"));
@@ -1963,7 +1963,7 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
 UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
 {
 
-  QVector<size_t> dims(1, 4);
+  std::vector<size_t> dims(1, 4);
   UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, dims, getSymmetryName() + " Triangle Legend");
   uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
 
@@ -2140,7 +2140,7 @@ SIMPL::Rgb CubicOps::generateMisorientationColor(const QuatF& q, const QuatF& re
 // -----------------------------------------------------------------------------
 UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float angle, int n1, int n2, int imageDim)
 {
-  QVector<size_t> dims(1, 4);
+  std::vector<size_t> dims(1, 4);
   UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, dims, "Cubic High Misorientation Triangle Legend");
 #if 0
   //uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));

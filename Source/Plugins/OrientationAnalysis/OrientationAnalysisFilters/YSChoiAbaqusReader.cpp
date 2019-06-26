@@ -235,7 +235,7 @@ void YSChoiAbaqusReader::dataCheck()
   ImageGeom::Pointer image = ImageGeom::CreateGeometry(SIMPL::Geometry::ImageGeometry);
   m->setGeometry(image);
 
-  QVector<size_t> tDims(3, 0);
+  std::vector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCode() < 0 || nullptr == cellAttrMat.get())
   {
@@ -309,7 +309,7 @@ void YSChoiAbaqusReader::dataCheck()
     }
   }
 
-  QVector<size_t> dims(1, 3);
+  std::vector<size_t> dims(1, 3);
   tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getCellEulerAnglesArrayName());
   m_CellEulerAnglesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
       this, tempPath, 0, dims);                    /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -441,7 +441,7 @@ void YSChoiAbaqusReader::execute()
   buf = in2.readLine();
   QList<QByteArray> tokens = buf.split(' ');
   //  in2 >> word >> word >> word >> word >> word >> word;
-  QVector<size_t> tDims(3, 0);
+  std::vector<size_t> tDims(3, 0);
   tDims[0] = xpoints;
   tDims[1] = ypoints;
   tDims[2] = zpoints;

@@ -111,10 +111,10 @@ public:
     DataContainer::Pointer m = DataContainer::New(SIMPL::Defaults::DataContainerName);
     dca->addOrReplaceDataContainer(m);
 
-    AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New(QVector<size_t>(1, 20), SIMPL::Defaults::AttributeMatrixName, AttributeMatrix::Type::Generic);
+    AttributeMatrix::Pointer attrMatrix = AttributeMatrix::New(std::vector<size_t>(1, 20), SIMPL::Defaults::AttributeMatrixName, AttributeMatrix::Type::Generic);
     m->addOrReplaceAttributeMatrix(attrMatrix);
 
-    AttributeMatrix::Pointer attrMatrix2 = AttributeMatrix::New(QVector<size_t>(1, 20), SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
+    AttributeMatrix::Pointer attrMatrix2 = AttributeMatrix::New(std::vector<size_t>(1, 20), SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
     m->addOrReplaceAttributeMatrix(attrMatrix2);
     int size = 20;
 

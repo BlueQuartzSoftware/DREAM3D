@@ -101,8 +101,8 @@ void GenerateQuaternionConjugate::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
   DataArraySelectionFilterParameter::RequirementType dasReq;
-  QVector<QVector<size_t>> comp;
-  comp.push_back(QVector<size_t>(1, 4));
+  std::vector<std::vector<size_t>> comp;
+  comp.push_back(std::vector<size_t>(1, 4));
   dasReq.componentDimensions = comp;
   dasReq.daTypes = { SIMPL::TypeNames::Float };
   parameters.push_back(SIMPL_NEW_DA_SELECTION_FP("Quaternion Array", QuaternionDataArrayPath, FilterParameter::Parameter, GenerateQuaternionConjugate, dasReq));
@@ -120,7 +120,7 @@ void GenerateQuaternionConjugate::dataCheck()
   clearErrorCode();
   clearWarningCode();
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   cDims[0] = 4;
   m_QuaternionsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getQuaternionDataArrayPath(), cDims);
   if(nullptr != m_QuaternionsPtr.lock())

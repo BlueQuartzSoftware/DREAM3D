@@ -141,10 +141,10 @@ void SampleSurfaceMeshSpecifiedPoints::dataCheck()
   VertexGeom::Pointer vertices = VertexGeom::CreateGeometry(0, SIMPL::Geometry::VertexGeometry, !getInPreflight());
   v->setGeometry(vertices);
 
-  QVector<size_t> tDims(1, 0);
+  std::vector<size_t> tDims(1, 0);
   v->createNonPrereqAttributeMatrix(this, "SpecifiedPointsData", tDims, AttributeMatrix::Type::Vertex, AttributeMatrixID21);
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   tempPath.update("SpecifiedPoints", "SpecifiedPointsData", "FeatureIds");
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
       this, tempPath, 0, cDims);              /* Assigns the shared_ptr<>(this, tempPath, -301, dims);  Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -211,7 +211,7 @@ VertexGeom::Pointer SampleSurfaceMeshSpecifiedPoints::generate_points()
 // -----------------------------------------------------------------------------
 void SampleSurfaceMeshSpecifiedPoints::assign_points(Int32ArrayType::Pointer iArray)
 {
-  QVector<size_t> tDims(1, m_NumPoints);
+  std::vector<size_t> tDims(1, m_NumPoints);
   getDataContainerArray()->getDataContainer("SpecifiedPoints")->getAttributeMatrix("SpecifiedPointsData")->resizeAttributeArrays(tDims);
   updateVertexInstancePointers();
 

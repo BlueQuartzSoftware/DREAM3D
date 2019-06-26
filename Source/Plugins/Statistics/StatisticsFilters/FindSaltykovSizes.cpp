@@ -110,7 +110,7 @@ void FindSaltykovSizes::dataCheck()
   clearErrorCode();
   clearWarningCode();
 
-  QVector<size_t> dims(1, 1);
+  std::vector<size_t> dims(1, 1);
   m_EquivalentDiametersPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getEquivalentDiametersArrayPath(),
                                                                                                                dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_EquivalentDiametersPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
