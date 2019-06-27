@@ -1,11 +1,6 @@
 #pragma once
 #include <QtCore/QTextStream>
 
-#include "SIMPLib/DataArrays/DataArray.hpp"
-
-class IDataArray;
-using IDataArrayWkPtrType = std::weak_ptr<IDataArray>;
-
 #include <iostream>
 
 #include <QtCore/QProcess>

@@ -39,18 +39,13 @@
 #include <vector>
 
 #include <QtCore/QString>
-
 #include <QtCore/QTextStream>
-
-#include "SIMPLib/SIMPLib.h"
-
-class IDataArray;
-using IDataArrayShPtrType = std::shared_ptr<IDataArray>;
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 
-
+class IDataArray;
+using IDataArrayShPtrType = std::shared_ptr<IDataArray>;
 /**
  * @brief The ModifiedLambertProjectionArray class
  */
@@ -122,7 +117,7 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param allocate
      * @return
      */
-    virtual IDataArrayShPtrType createNewArray(size_t numElements, int rank, size_t* dims, const QString& name, bool allocate = true);
+    IDataArrayShPtrType createNewArray(size_t numElements, int rank, const size_t* dims, const QString& name, bool allocate = true) override;
 
     /**
      * @brief createNewArray
@@ -132,17 +127,12 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param allocate
      * @return
      */
-    virtual IDataArrayShPtrType createNewArray(size_t numElements, std::vector<size_t> dims, const QString& name, bool allocate = true);
-
-    /**
-     * @brief
-     */
-    virtual IDataArrayShPtrType createNewArray(size_t numElements, QVector<size_t> dims, const QString& name, bool allocate = true);
+    IDataArrayShPtrType createNewArray(size_t numElements, const std::vector<size_t>& dims, const QString& name, bool allocate = true) override;
 
     /**
     * @brief
     */
-    virtual bool isAllocated();
+    bool isAllocated() override;
 
     /**
      * @brief clearAll
@@ -303,7 +293,7 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param sourceArray
      * @return
      */
-    virtual bool copyFromArray(size_t destTupleOffset, IDataArrayShPtrType sourceArray, size_t srcTupleOffset, size_t totalSrcTuples);
+    bool copyFromArray(size_t destTupleOffset, IDataArrayShPtrType sourceArray, size_t srcTupleOffset, size_t totalSrcTuples) override;
 
     /**
      * @brief Splats the same value c across all values in the Tuple
@@ -321,7 +311,7 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @brief deepCopy
      * @return
      */
-    virtual IDataArrayShPtrType deepCopy(bool forceNoAllocate = false);
+    IDataArrayShPtrType deepCopy(bool forceNoAllocate = false) override;
 
     /**
      * @brief Reseizes the internal array

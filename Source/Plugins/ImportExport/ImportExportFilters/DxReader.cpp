@@ -98,7 +98,6 @@ DxReader::DxReader()
 : m_VolumeDataContainerName(SIMPL::Defaults::ImageDataContainerName)
 , m_CellAttributeMatrixName(SIMPL::Defaults::CellAttributeMatrixName)
 , m_InputFile("")
-, m_FileWasRead(false)
 , m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
 , d_ptr(new DxReaderPrivate(this))
 {
@@ -124,14 +123,14 @@ DxReader::~DxReader() = default;
 //
 // -----------------------------------------------------------------------------
 // -----------------------------------------------------------------------------
-void DxReader::setDims(const QVector<size_t>& value)
+void DxReader::setDims(const std::vector<size_t>& value)
 {
   Q_D(DxReader);
   d->m_Dims = value;
 }
 
 // -----------------------------------------------------------------------------
-QVector<size_t> DxReader::getDims() const
+std::vector<size_t> DxReader::getDims() const
 {
   Q_D(const DxReader);
   return d->m_Dims;

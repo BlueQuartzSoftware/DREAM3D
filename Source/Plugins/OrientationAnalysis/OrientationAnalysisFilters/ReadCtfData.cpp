@@ -259,7 +259,7 @@ void ReadCtfData::dataCheck()
     if(ext == Ebsd::Ctf::FileExt)
     {
       std::shared_ptr<CtfReader> reader(new CtfReader());
-      readDataFile(reader.get(), m, tDims, CTF_HEADER_ONLY);
+      readDataFile(reader.get(), m.get(), tDims, CTF_HEADER_ONLY);
 
       // Update the size of the Cell Attribute Matrix now that the dimensions of the volume are known
       cellAttrMat->resizeAttributeArrays(tDims);
@@ -351,7 +351,7 @@ void ReadCtfData::flushCache()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadCtfData::readDataFile(CtfReader* reader, const DataContainer::Pointer& m, std::vector<size_t>& tDims, CTF_READ_FLAG flag)
+void ReadCtfData::readDataFile(CtfReader* reader, DataContainer* m, std::vector<size_t>& tDims, CTF_READ_FLAG flag)
 {
   QFileInfo fi(m_InputFile);
   QDateTime timeStamp(fi.lastModified());
@@ -666,7 +666,7 @@ void ReadCtfData::execute()
   AttributeMatrix::Pointer ebsdAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
   ebsdAttrMat->setType(AttributeMatrix::Type::Cell);
 
-  readDataFile(reader.get(), m, tDims, CTF_FULL_FILE);
+  readDataFile(reader.get(), m.get(), tDims, CTF_FULL_FILE);
   if(getErrorCode() < 0)
   {
     return;

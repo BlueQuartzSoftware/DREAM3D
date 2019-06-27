@@ -48,12 +48,6 @@ LambertUtilities::LambertUtilities() = default;
 LambertUtilities::~LambertUtilities() = default;
 
 // -----------------------------------------------------------------------------
-int LambertUtilities::getClassVersion()
-{
-  return 1;
-}
-
-// -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int32_t LambertUtilities::LambertSquareVertToSphereVert(float* vert, Hemisphere hemi)

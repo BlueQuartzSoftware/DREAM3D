@@ -402,7 +402,7 @@ protected:
    * @param m DataContainer instance pointer
    * @param tDims Tuple dimensions
    */
-  void readDataFile(CtfReader* reader, const DataContainer::Pointer& m, std::vector<size_t>& tDims, CTF_READ_FLAG flag);
+  void readDataFile(CtfReader* reader, DataContainer* m, std::vector<size_t>& tDims, CTF_READ_FLAG flag);
 
 private:
   std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;

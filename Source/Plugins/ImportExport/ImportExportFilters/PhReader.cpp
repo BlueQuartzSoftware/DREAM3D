@@ -121,14 +121,14 @@ PhReader::PhReader()
 PhReader::~PhReader() = default;
 
 // -----------------------------------------------------------------------------
-void PhReader::setDims(const QVector<size_t>& value)
+void PhReader::setDims(const std::vector<size_t>& value)
 {
   Q_D(PhReader);
   d->m_Dims = value;
 }
 
 // -----------------------------------------------------------------------------
-QVector<size_t> PhReader::getDims() const
+std::vector<size_t> PhReader::getDims() const
 {
   Q_D(const PhReader);
   return d->m_Dims;

@@ -182,12 +182,12 @@ public:
   /**
    * @brief Setter property for Dims
    */
-  void setDims(const QVector<size_t>& value);
+  void setDims(const std::vector<size_t>& value);
   /**
    * @brief Getter property for Dims
    * @return Value of Dims
    */
-  QVector<size_t> getDims() const;
+  std::vector<size_t> getDims() const;
 
   /**
    * @brief Setter property for InputFile_Cache
