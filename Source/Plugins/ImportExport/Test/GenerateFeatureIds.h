@@ -50,7 +50,7 @@ public:
     DataContainer::Pointer m = getDataContainerArray()->getDataContainer(SIMPL::Defaults::DataContainerName);
 
     int size = UnitTest::FeatureIdsTest::XSize * UnitTest::FeatureIdsTest::YSize * UnitTest::FeatureIdsTest::ZSize;
-    QVector<size_t> tDims(3, 0);
+    std::vector<size_t> tDims(3, 0);
     tDims[0] = UnitTest::FeatureIdsTest::XSize;
     tDims[1] = UnitTest::FeatureIdsTest::YSize;
     tDims[2] = UnitTest::FeatureIdsTest::ZSize;
@@ -104,7 +104,7 @@ private:
       return;
     }
 
-    QVector<size_t> dims(1, 1);
+    std::vector<size_t> dims(1, 1);
     m_FeatureIdsPtr =
         cellAttrMat->createNonPrereqArray<DataArray<int32_t>, AbstractFilter>(this, m_FeatureIdsArrayName, 0, dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
     if(nullptr != m_FeatureIdsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -209,7 +209,7 @@ protected:
     m->setName(SIMPL::Defaults::DataContainerName);
     m->getGeometryAs<ImageGeom>()->setDimensions(m_XDim, m_YDim, m_ZDim);
     getDataContainerArray()->addOrReplaceDataContainer(m);
-    QVector<size_t> tDims(3, 0);
+    std::vector<size_t> tDims(3, 0);
     tDims[0] = m_XDim;
     tDims[1] = m_YDim;
     tDims[2] = m_ZDim;

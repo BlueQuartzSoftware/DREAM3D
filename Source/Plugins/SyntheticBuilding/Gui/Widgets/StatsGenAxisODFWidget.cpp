@@ -38,17 +38,12 @@
 #include <iostream>
 
 //-- Qt Includes
-#include <QtConcurrent/QtConcurrentMap>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-#include <QtCore/QFileInfo>
 #include <QtCore/QModelIndex>
-#include <QtCore/QSettings>
 #include <QtCore/QString>
-#include <QtGui/QCloseEvent>
 #include <QtWidgets/QAbstractItemDelegate>
 #include <QtWidgets/QFileDialog>
-#include <QtWidgets/QMessageBox>
 
 #include "EbsdLib/EbsdConstants.h"
 
@@ -463,7 +458,7 @@ void StatsGenAxisODFWidget::calculateAxisODF()
   int lamberSize = m_PFLambertSize->value();
   int numColors = 16;
   int npoints = pfSamplePoints->value();
-  QVector<size_t> dims(1, 3);
+  std::vector<size_t> dims(1, 3);
   FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, dims, "Eulers");
 
   odf.resize(OrthoRhombicOps::k_OdfSize);

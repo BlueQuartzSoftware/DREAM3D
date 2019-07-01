@@ -199,14 +199,14 @@ void ConvertOrientations::dataCheck()
   FloatArrayType::Pointer fArray = std::dynamic_pointer_cast<FloatArrayType>(iDataArrayPtr);
   if(nullptr != fArray.get())
   {
-    QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);
+    std::vector<size_t> outputCDims(1, componentCounts[getOutputType()]);
     getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(this, outputArrayPath, 0, outputCDims, "", DataArrayID31);
   }
 
   DoubleArrayType::Pointer dArray = std::dynamic_pointer_cast<DoubleArrayType>(iDataArrayPtr);
   if(nullptr != dArray.get())
   {
-    QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);
+    std::vector<size_t> outputCDims(1, componentCounts[getOutputType()]);
     getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, outputArrayPath, 0, outputCDims, "", DataArrayID32);
   }
 }
@@ -284,7 +284,7 @@ void ConvertOrientations::execute()
   if(nullptr != fArray.get())
   {
     QVector<int32_t> componentCounts = OrientationConverter<float>::GetComponentCounts();
-    QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);
+    std::vector<size_t> outputCDims(1, componentCounts[getOutputType()]);
     FloatArrayType::Pointer outData = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, outputArrayPath, outputCDims);
     generateRepresentation<float>(this, fArray, outData);
   }
@@ -293,7 +293,7 @@ void ConvertOrientations::execute()
   if(nullptr != dArray.get())
   {
     QVector<int32_t> componentCounts = OrientationConverter<double>::GetComponentCounts();
-    QVector<size_t> outputCDims(1, componentCounts[getOutputType()]);
+    std::vector<size_t> outputCDims(1, componentCounts[getOutputType()]);
     DoubleArrayType::Pointer outData = getDataContainerArray()->getPrereqArrayFromPath<DataArray<double>, AbstractFilter>(this, outputArrayPath, outputCDims);
     generateRepresentation<double>(this, dArray, outData);
   }

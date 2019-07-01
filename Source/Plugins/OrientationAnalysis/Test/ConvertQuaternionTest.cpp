@@ -3,8 +3,6 @@
 // -----------------------------------------------------------------------------
 #pragma once
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QFile>
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -53,11 +51,11 @@ class ConvertQuaternionTest
     DataContainerArray::Pointer dca = DataContainerArray::New();
     DataContainer::Pointer dc = DataContainer::New("Data Container");
     dca->addOrReplaceDataContainer(dc);
-    QVector<size_t> tDims = {50};
+    std::vector<size_t> tDims = {50};
     AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, "Cell Data", AttributeMatrix::Type::Cell);
     dc->addOrReplaceAttributeMatrix(am);
 
-    QVector<size_t> cDims = {4};
+    std::vector<size_t> cDims = {4};
     FloatArrayType::Pointer vectorScalarPtr = FloatArrayType::CreateArray(tDims[0], cDims, "VectorScalar");
 
     am->addOrReplaceAttributeArray(vectorScalarPtr);

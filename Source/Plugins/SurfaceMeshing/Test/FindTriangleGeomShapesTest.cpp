@@ -33,7 +33,6 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -149,11 +148,11 @@ public:
     image->setDimensions(dims);
     idc->setGeometry(image);
 
-    QVector<size_t> tDims = {256, 128, 64};
+    std::vector<size_t> tDims = {256, 128, 64};
     AttributeMatrix::Pointer attrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
     idc->addOrReplaceAttributeMatrix(attrMat);
 
-    QVector<size_t> cDims(1, 1);
+    std::vector<size_t> cDims(1, 1);
     Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(tDims, cDims, SIMPL::CellData::FeatureIds);
     featureIds->initializeWithValue(1);
     attrMat->insertOrAssign(featureIds);

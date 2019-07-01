@@ -35,11 +35,7 @@
 
 #pragma once
 
-#include <QtCore/QSettings>
 #include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QUrl>
-#include <QtCore/QVector>
 
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 

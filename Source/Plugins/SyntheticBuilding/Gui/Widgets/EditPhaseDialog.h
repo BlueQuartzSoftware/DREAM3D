@@ -37,7 +37,6 @@
 
 #include "ui_EditPhaseDialog.h"
 #include <QtGui/QDoubleValidator>
-#include <QtWidgets/QDialog>
 
 #include "EbsdLib/EbsdConstants.h"
 

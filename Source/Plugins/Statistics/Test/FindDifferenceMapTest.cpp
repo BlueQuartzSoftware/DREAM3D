@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -169,7 +168,7 @@ public:
     DataContainer::Pointer m = DataContainer::New("FindDifferenceMapTest");
 
     // Create Attribute Matrices with different tDims to test validation of tuple compatibility
-    QVector<size_t> tDims(1, 100);
+    std::vector<size_t> tDims(1, 100);
     AttributeMatrix::Pointer attrMat1 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat1", AttributeMatrix::Type::Cell);
     AttributeMatrix::Pointer attrMat2 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat2", AttributeMatrix::Type::Cell);
     AttributeMatrix::Pointer attrMat11 = AttributeMatrix::New(tDims, "DiffMapTestAttrMat11", AttributeMatrix::Type::Cell);
@@ -185,7 +184,7 @@ public:
     m->addOrReplaceAttributeMatrix(attrMat3);
     dca->addOrReplaceDataContainer(m);
 
-    QVector<size_t> cDims(1, 3);
+    std::vector<size_t> cDims(1, 3);
     int32_t initVal = 10;
     tDims[0] = 100;
 
@@ -289,8 +288,8 @@ public:
     QString diffMapName = "DifferenceMap";
 
     DataContainer::Pointer dc = dca->getDataContainer("FindDifferenceMapTest");
-    QVector<size_t> checkDims1;
-    QVector<size_t> checkDims2;
+    std::vector<size_t> checkDims1;
+    std::vector<size_t> checkDims2;
     IDataArray::Pointer diffMap;
     IDataArray::Pointer firstArray;
 

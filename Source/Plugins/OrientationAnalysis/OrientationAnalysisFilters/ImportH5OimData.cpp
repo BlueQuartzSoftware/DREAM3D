@@ -270,7 +270,7 @@ void ImportH5OimData::flushCache()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportH5OimData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, QVector<size_t>& tDims, const QString& scanName, ANG_READ_FLAG flag)
+void ImportH5OimData::readDataFile(EbsdReader* ebsdReader, DataContainer* m, std::vector<size_t>& tDims, const QString& scanName, ANG_READ_FLAG flag)
 {
 
   auto reader = dynamic_cast<H5OIMReader*>(ebsdReader);
@@ -379,7 +379,7 @@ int32_t ImportH5OimData::loadMaterialInfo(EbsdReader* ebsdReader)
 
   DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, Ebsd::AngFile::CrystalStructures);
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, Ebsd::AngFile::MaterialName);
-  QVector<size_t> dims(1, 6);
+  std::vector<size_t> dims(1, 6);
   FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, dims, Ebsd::AngFile::LatticeConstants);
 
   // Initialize the zero'th element to unknowns. The other elements will
@@ -420,7 +420,7 @@ int32_t ImportH5OimData::loadMaterialInfo(EbsdReader* ebsdReader)
   }
 
   // Resize the AttributeMatrix based on the size of the crystal structures array
-  QVector<size_t> tDims(1, crystalStructures->getNumberOfTuples());
+  std::vector<size_t> tDims(1, crystalStructures->getNumberOfTuples());
   attrMatrix->resizeAttributeArrays(tDims);
   // Now add the attributeArray to the AttributeMatrix
   attrMatrix->insertOrAssign(crystalStructures);
@@ -445,7 +445,7 @@ int32_t ImportH5OimData::loadMaterialInfo(EbsdReader* ebsdReader)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>& tDims, QVector<size_t>& cDims, int index)
+void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, std::vector<size_t>& tDims, std::vector<size_t>& cDims, int index)
 {
   auto reader = dynamic_cast<H5OIMReader*>(ebsdReader);
 
@@ -541,7 +541,7 @@ void ImportH5OimData::copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>& t
 
     if(pDims[0] != 0 && pDims[1] != 0)
     {
-      QVector<size_t> pDimsV(2);
+      std::vector<size_t> pDimsV(2);
       pDimsV[0] = pDims[0];
       pDimsV[1] = pDims[1];
 
@@ -575,8 +575,8 @@ void ImportH5OimData::execute()
 
   H5OIMReader::Pointer reader = H5OIMReader::New();
   reader->setFileName(m_InputFile);
-  QVector<size_t> tDims(3, 0);
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> tDims(3, 0);
+  std::vector<size_t> cDims(1, 1);
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getDataContainerName());
   AttributeMatrix::Pointer ebsdAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
   ebsdAttrMat->setType(AttributeMatrix::Type::Cell);
@@ -754,7 +754,7 @@ void ImportH5OimData::dataCheckOEM()
   m->setGeometry(image);
   image->setUnits(IGeometry::LengthUnit::Micrometer);
 
-  QVector<size_t> tDims(3, 0);
+  std::vector<size_t> tDims(3, 0);
   AttributeMatrix::Pointer cellAttrMat = m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCode() < 0)
   {
@@ -770,7 +770,7 @@ void ImportH5OimData::dataCheckOEM()
 
   DataArrayPath tempPath;
 
-  QVector<size_t> cDims(3, 0);
+  std::vector<size_t> cDims(3, 0);
 
   H5OIMReader::Pointer reader = H5OIMReader::New();
   reader->setFileName(getInputFile());

@@ -393,7 +393,7 @@ void GenerateEnsembleStatistics::dataCheck()
 
   DataArrayPath tempPath;
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
 
   setComputeSizeDistribution(getCalculateMorphologicalStats());
   setComputeAspectRatioDistribution(getCalculateMorphologicalStats());
@@ -1381,7 +1381,7 @@ int GenerateEnsembleStatistics::getPhaseCount()
 
   // qDebug() << getNameOfClass() << "::getPhaseCount() data->getNumberOfTuples(): " << inputAttrMat->getTupleDimensions();
   // qDebug() << "Name" << inputAttrMat->getName();
-  QVector<size_t> tupleDims = inputAttrMat->getTupleDimensions();
+  std::vector<size_t> tupleDims = inputAttrMat->getTupleDimensions();
 
   size_t phaseCount = 1;
   for(int32_t i = 0; i < tupleDims.size(); i++)

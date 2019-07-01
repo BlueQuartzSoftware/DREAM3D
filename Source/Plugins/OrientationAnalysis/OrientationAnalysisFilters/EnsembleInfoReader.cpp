@@ -197,14 +197,14 @@ void EnsembleInfoReader::dataCheck()
     setErrorCondition(-10003, ss);
   }
 
-  QVector<size_t> tDims(1, numphases + 1);
+  std::vector<size_t> tDims(1, numphases + 1);
   m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID21);
   if(getErrorCode() < 0)
   {
     return;
   }
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName());
   m_CrystalStructuresPtr =
       getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims, "", DataArrayID31);
@@ -277,7 +277,7 @@ int32_t EnsembleInfoReader::readFile()
   std::vector<bool> visited(numphases + 1, false);
   visited[0] = true; // this is DREAM3D's internal, which is always visited.
 
-  QVector<size_t> tDims(1, numphases + 1);
+  std::vector<size_t> tDims(1, numphases + 1);
   cellensembleAttrMat->resizeAttributeArrays(tDims);
   updateEnsembleInstancePointers();
   for(int32_t index = 1; index < numphases + 1; index++)

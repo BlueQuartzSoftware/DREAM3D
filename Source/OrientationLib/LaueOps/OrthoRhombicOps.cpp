@@ -781,7 +781,7 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
   int numOrientations = config.eulers->getNumberOfTuples();
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
-  QVector<size_t> dims(1, 3);
+  std::vector<size_t> dims(1, 3);
   std::vector<FloatArrayType::Pointer> coords(3);
   coords[0] = FloatArrayType::CreateArray(numOrientations * Detail::Orthorhombic::symSize0, dims, label0 + QString("001_Coords"));
   coords[1] = FloatArrayType::CreateArray(numOrientations * Detail::Orthorhombic::symSize1, dims, label1 + QString("100_Coords"));
@@ -921,7 +921,7 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
 UInt8ArrayType::Pointer OrthoRhombicOps::generateIPFTriangleLegend(int imageDim)
 {
 
-  QVector<size_t> dims(1, 4);
+  std::vector<size_t> dims(1, 4);
   UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, dims, getSymmetryName() + " Triangle Legend");
   uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
 

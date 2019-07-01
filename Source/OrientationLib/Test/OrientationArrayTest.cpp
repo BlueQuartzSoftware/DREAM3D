@@ -991,7 +991,7 @@ Orientation Matrix               : | -1.0000   0.0000   0.0000 |
   // -----------------------------------------------------------------------------
   void TestInputs()
   {
-    QVector<size_t> cDims(1, 3);
+    std::vector<size_t> cDims(1, 3);
     FloatArrayType::Pointer data = FloatArrayType::CreateArray(2, cDims, "Eulers");
     data->initializeWithZeros();
     float* fPtr = data->getPointer(0);

@@ -152,7 +152,7 @@ void LaplacianSmoothing::dataCheck()
     nodeDataArrays.push_back(triangles->getVertices());
   }
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   m_SurfaceMeshNodeTypePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int8_t>, AbstractFilter>(this, getSurfaceMeshNodeTypeArrayPath(),
                                                                                                                 cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshNodeTypePtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -302,7 +302,7 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
   numConnections->initializeWithZeros();
   int32_t* ncon = numConnections->getPointer(0);
 
-  QVector<size_t> cDims(1, 3);
+  std::vector<size_t> cDims(1, 3);
   DataArray<double>::Pointer deltaArray = DataArray<double>::CreateArray(nvert, cDims, "_INTERNAL_USE_ONLY_Laplacian_Smoothing_Delta_Array");
   deltaArray->initializeWithZeros();
   double* delta = deltaArray->getPointer(0);

@@ -30,7 +30,6 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -108,7 +107,7 @@ public:
     size_t dims_in[3] = { 5, 5, 1};
     igeom->setDimensions(dims_in);
     dc->setGeometry(igeom);
-    QVector<size_t> dims(3, 0);
+    std::vector<size_t> dims(3, 0);
     dims[0] = 5;
     dims[1] = 5;
     dims[2] = 1;
@@ -143,7 +142,7 @@ public:
       0, 1, 1, 1, 0,
       0, 0, 0, 0, 0;
 #endif
-    QVector<size_t> compDims(1, 6);
+    std::vector<size_t> compDims(1, 6);
     UInt32ArrayType::Pointer rect = UInt32ArrayType::CreateArray(2, compDims, "Rect Coords", true);
     rect->initializeWithZeros();
     rect->setValue(6, 1);

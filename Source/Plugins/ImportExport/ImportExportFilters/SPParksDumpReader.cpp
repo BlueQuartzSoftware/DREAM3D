@@ -160,7 +160,7 @@ void SPParksDumpReader::dataCheck()
     return;
   }
 
-  QVector<size_t> tDims(3, 0);
+  std::vector<size_t> tDims(3, 0);
   m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCode() < 0)
   {
@@ -169,7 +169,7 @@ void SPParksDumpReader::dataCheck()
 
   // Creating a Feature Ids array here in preflight so that it appears in the current data structure
   // This is a temporary array that will be overwritten by the correct array at the end of reading the file
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   DataArrayPath fIdsPath(getVolumeDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
   getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, fIdsPath, 0, cDims, "", DataArrayID31);
   QFileInfo fi(getInputFile());
@@ -395,7 +395,7 @@ int32_t SPParksDumpReader::readFile()
   // The readHeader() function should have set the dimensions correctly
   size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
 
-  QVector<size_t> tDims(3, 0);
+  std::vector<size_t> tDims(3, 0);
   tDims[0] = m->getGeometryAs<ImageGeom>()->getXPoints();
   tDims[1] = m->getGeometryAs<ImageGeom>()->getYPoints();
   tDims[2] = m->getGeometryAs<ImageGeom>()->getZPoints();
@@ -498,7 +498,7 @@ int32_t SPParksDumpReader::readFile()
   DataParser::Pointer parser = m_NamePointerMap["type"];
   if(nullptr != parser.get())
   {
-    QVector<size_t> cDims(1, 1);
+    std::vector<size_t> cDims(1, 1);
     // Create a new DataArray that wraps the already allocated memory
     Int32ArrayType::Pointer typePtr = Int32ArrayType::WrapPointer(static_cast<int*>(parser->getVoidPointer()), totalPoints, cDims, getFeatureIdsArrayName(), true);
     // Release the DataParser from having to delete the memory
@@ -521,7 +521,7 @@ int32_t SPParksDumpReader::readFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SPParksDumpReader::parseDataLine(QByteArray& line, QVector<size_t> dims, int64_t xCol, int64_t yCol, int64_t zCol, size_t lineNum)
+void SPParksDumpReader::parseDataLine(QByteArray& line, std::vector<size_t> dims, int64_t xCol, int64_t yCol, int64_t zCol, size_t lineNum)
 {
   // Filter the line to convert European command style decimals to US/UK style points
   for(qint32 c = 0; c < line.size(); ++c)

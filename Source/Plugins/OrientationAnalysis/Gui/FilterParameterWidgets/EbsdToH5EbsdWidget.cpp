@@ -41,9 +41,6 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QFileInfoList>
 #include <QtCore/QString>
-#include <QtCore/QThread>
-#include <QtCore/QUrl>
-#include <QtGui/QCloseEvent>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QPainter>
 #include <QtWidgets/QButtonGroup>
@@ -51,7 +48,6 @@
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QListWidgetItem>
 #include <QtWidgets/QMenu>
-#include <QtWidgets/QMessageBox>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"

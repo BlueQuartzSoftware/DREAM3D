@@ -110,7 +110,7 @@ void CorrelateValuesWithVectorDirection::dataCheck()
   clearWarningCode();
   DataArrayPath tempPath;
 
-  QVector<size_t> dims(1, 3);
+  std::vector<size_t> dims(1, 3);
   m_VectorDataPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getVectorDataArrayPath(),
                                                                                                       dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_VectorDataPtr.lock())                                                                      /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -286,8 +286,8 @@ void CorrelateValuesWithVectorDirection::execute()
 // -----------------------------------------------------------------------------
 void CorrelateValuesWithVectorDirection::makeLambertProjection(size_t numComps)
 {
-  QVector<size_t> tDims(2, m_Dimension);
-  QVector<size_t> cDims(1, numComps);
+  std::vector<size_t> tDims(2, m_Dimension);
+  std::vector<size_t> cDims(1, numComps);
   m_LambertProj = DoubleArrayType::CreateArray(tDims, cDims, "ModifiedLambertProjection");
   m_LambertProj->initializeWithZeros();
 }
@@ -391,10 +391,10 @@ void CorrelateValuesWithVectorDirection::createSterographicProjections(size_t nu
   float xtmp, ytmp;
   float xyz[3];
 
-  QVector<size_t> tDims(2, 0);
+  std::vector<size_t> tDims(2, 0);
   tDims[0] = xpoints;
   tDims[1] = ypoints;
-  QVector<size_t> cDims(1, numComps);
+  std::vector<size_t> cDims(1, numComps);
   DoubleArrayType::Pointer stereoIntensity = DoubleArrayType::CreateArray(tDims, cDims, "StereoProjection");
   stereoIntensity->initializeWithValue(-1000.0f);
   double* intensity = stereoIntensity->getPointer(0);
@@ -497,10 +497,10 @@ void CorrelateValuesWithVectorDirection::writeLambertProjection(size_t numComps)
   float yres = m_StepSize;
   float zres = (xres + yres) / 2.0;
 
-  QVector<size_t> tDims(2, 0);
+  std::vector<size_t> tDims(2, 0);
   tDims[0] = xpoints;
   tDims[1] = ypoints;
-  QVector<size_t> cDims(1, numComps);
+  std::vector<size_t> cDims(1, numComps);
   DoubleArrayType::Pointer modLamIntensity = DoubleArrayType::CreateArray(tDims, cDims, "ModLamProjection");
   modLamIntensity->initializeWithZeros();
   double* intensity = modLamIntensity->getPointer(0);

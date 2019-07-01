@@ -38,7 +38,6 @@
 #include <complex>
 
 #include <QtCore/QMutex>
-#include <QtCore/QSemaphore>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -274,7 +273,7 @@ private:
    * @brief orientationFilter
    * @return
    */
-  DoubleArrayType::Pointer orientationFilter(int minAxisLength, int maxAxisLength, QVector<size_t>& tDims);
+  DoubleArrayType::Pointer orientationFilter(int minAxisLength, int maxAxisLength, std::vector<size_t>& tDims);
 
   /**
    * @brief houghCircleFilter
@@ -299,14 +298,14 @@ private:
    * @param kernel_tDims
    * @return
    */
-  Int32ArrayType::Pointer createOffsetArray(QVector<size_t> kernel_tDims);
+  Int32ArrayType::Pointer createOffsetArray(std::vector<size_t> kernel_tDims);
 
   /**
    * @brief smoothingFilter
    * @param n_size
    * @return
    */
-  std::vector<double> smoothingFilter(int n_size, QVector<size_t>& tDims);
+  std::vector<double> smoothingFilter(int n_size, std::vector<size_t>& tDims);
 
   /**
    * @brief plotEllipsev2
@@ -332,7 +331,7 @@ private:
    * @param val
    * @return
    */
-  Int32ArrayType::Pointer fillEllipse(Int32ArrayType::Pointer I, QVector<size_t> I_tDims, double xc, double yc, double p, double q, double theta, double val);
+  Int32ArrayType::Pointer fillEllipse(Int32ArrayType::Pointer I, std::vector<size_t> I_tDims, double xc, double yc, double p, double q, double theta, double val);
 
   /**
    * @brief sub2ind Helper Method.  Computes index from matrix coordinates
@@ -342,7 +341,7 @@ private:
    * @param z
    * @return
    */
-  size_t sub2ind(QVector<size_t> tDims, size_t x, size_t y, size_t z) const;
+  size_t sub2ind(std::vector<size_t> tDims, size_t x, size_t y, size_t z) const;
 
   /**
    * @brief ind2sub Helper Method.  Computes matrix coordinates from index
@@ -352,7 +351,7 @@ private:
    * @param y
    * @param z
    */
-  void ind2sub(QVector<size_t> tDims, size_t index, size_t& x, size_t& y, size_t& z) const;
+  void ind2sub(std::vector<size_t> tDims, size_t index, size_t& x, size_t& y, size_t& z) const;
 
 public:
   DetectEllipsoids(const DetectEllipsoids&) = delete;            // Copy Constructor Not Implemented

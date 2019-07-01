@@ -235,7 +235,7 @@ void FindRelativeMotionBetweenSlices::dataCheck()
     }
   }
 
-  QVector<size_t> cDims(1, 3);
+  std::vector<size_t> cDims(1, 3);
   tempPath.update(m_SelectedArrayPath.getDataContainerName(), m_SelectedArrayPath.getAttributeMatrixName(), getMotionDirectionArrayName());
   m_MotionDirectionPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<float>, AbstractFilter, float>(
       this, tempPath, 0, cDims);                   /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -338,7 +338,7 @@ void FindRelativeMotionBetweenSlices::execute()
   int32_t buffer1 = (m_PSize1 / 2) + (m_SSize1 / 2);
   int32_t buffer2 = (m_PSize2 / 2) + (m_SSize1 / 2);
 
-  QVector<size_t> cDims(1, 4);
+  std::vector<size_t> cDims(1, 4);
   Int32ArrayType::Pointer patchPointsPtr = Int32ArrayType::CreateArray((m_PSize1 * m_PSize2), "_INTERNAL_USE_ONLY_patchPoints");
   Int32ArrayType::Pointer searchPointsPtr = Int32ArrayType::CreateArray((m_SSize1 * m_SSize2), cDims, "_INTERNAL_USE_ONLY_searchPoints");
   BoolArrayType::Pointer validPointsPtr = BoolArrayType::CreateArray(totalPoints, "_INTERNAL_USE_ONLY_validPoints");

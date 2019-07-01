@@ -36,13 +36,17 @@
 #pragma once
 
 #include <QtCore/QJsonObject>
-#include <QtCore/QMetaType>
 #include <QtCore/QString>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationAnalysis/FilterParameters/EbsdMontageListInfo.h"
+
+using EbsdMontageListInfo_t = EbsdMontageListInfo;
+
+#if 0
 typedef struct
 {
   qint32 PaddingDigits = 3;
@@ -93,8 +97,7 @@ typedef struct
     return false;
   }
 }EbsdMontageListInfo_t;
-
-Q_DECLARE_METATYPE(EbsdMontageListInfo_t)
+#endif
 
 /**
  * @brief SIMPL_NEW_EbsdMontageListInfo_FP This macro is a short-form way of instantiating an instance of

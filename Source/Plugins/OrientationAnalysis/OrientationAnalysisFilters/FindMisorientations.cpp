@@ -147,7 +147,7 @@ void FindMisorientations::dataCheck()
 
   DataArrayPath tempPath;
 
-  QVector<size_t> cDims(1, 4);
+  std::vector<size_t> cDims(1, 4);
 
   QVector<DataArrayPath> dataArrayPaths;
 

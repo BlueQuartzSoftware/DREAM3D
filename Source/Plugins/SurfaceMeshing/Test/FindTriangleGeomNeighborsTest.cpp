@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
@@ -304,13 +303,13 @@ public:
     tris[3 * 31 + 1] = 14;
     tris[3 * 31 + 2] = 15;
 
-    QVector<size_t> tDims(1, 32);
+    std::vector<size_t> tDims(1, 32);
     AttributeMatrix::Pointer faceAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::FaceAttributeMatrixName, AttributeMatrix::Type::Face);
     tdc->addOrReplaceAttributeMatrix(faceAttrMat);
     tDims[0] = 4;
     AttributeMatrix::Pointer featAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::FaceFeatureAttributeMatrixName, AttributeMatrix::Type::FaceFeature);
     tdc->addOrReplaceAttributeMatrix(featAttrMat);
-    QVector<size_t> cDims(1, 2);
+    std::vector<size_t> cDims(1, 2);
     Int32ArrayType::Pointer faceLabels = Int32ArrayType::CreateArray(32, cDims, SIMPL::FaceData::SurfaceMeshFaceLabels);
     faceAttrMat->insertOrAssign(faceLabels);
     int32_t* faceLabelsPtr = faceLabels->getPointer(0);

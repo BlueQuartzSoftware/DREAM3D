@@ -34,9 +34,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include <QtCore/QCoreApplication>
-#include <QtCore/QDateTime>
-#include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QTime>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"

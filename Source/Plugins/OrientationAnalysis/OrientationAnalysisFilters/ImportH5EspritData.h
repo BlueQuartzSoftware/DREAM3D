@@ -31,7 +31,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #pragma once
 
-#include <QtCore/QSharedPointer>
 
 #include "EbsdLib/BrukerNano/EspritPhase.h"
 
@@ -123,7 +122,7 @@ protected:
    * @param cDims Component dimensions
    * @param index Current slice index
    */
-  void copyRawEbsdData(EbsdReader* ebsdReader, QVector<size_t>& tDims, QVector<size_t>& cDims, int index) override;
+  void copyRawEbsdData(EbsdReader* ebsdReader, std::vector<size_t>& tDims, std::vector<size_t>& cDims, int index) override;
 
   /**
    * @brief loadMaterialInfo Reads the values for the phase type, crystal structure
@@ -139,7 +138,7 @@ protected:
    * @param m DataContainer instance pointer
    * @param tDims Tuple dimensions
    */
-  void readDataFile(EbsdReader* reader, DataContainer* m, QVector<size_t>& tDims, const QString& scanName, ANG_READ_FLAG flag) override;
+  void readDataFile(EbsdReader* reader, DataContainer* m, std::vector<size_t>& tDims, const QString& scanName, ANG_READ_FLAG flag) override;
 
   /**
    * @brief readManfacturer

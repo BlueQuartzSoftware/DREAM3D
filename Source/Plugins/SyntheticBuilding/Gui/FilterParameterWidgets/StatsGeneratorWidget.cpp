@@ -39,11 +39,8 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtCore/QJsonDocument>
-#include <QtCore/QSettings>
 #include <QtCore/QString>
 #include <QtCore/QVector>
-#include <QtGui/QCloseEvent>
-#include <QtGui/QDesktopServices>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QProgressDialog>
@@ -125,7 +122,7 @@ void StatsGeneratorWidget::setupGui()
     m_NeedDataLoad = true;
     size_t ensembles = sda->getNumberOfTuples();
 
-    QVector<size_t> tDims(1, ensembles);
+    std::vector<size_t> tDims(1, ensembles);
     m_CellEnsembleAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellEnsembleAttributeMatrixName, AttributeMatrix::Type::CellEnsemble);
     m_CellEnsembleAttrMat->insertOrAssign(sda);
     UInt32ArrayType::Pointer phaseTypes = m_Filter->getPhaseTypes();
@@ -645,7 +642,7 @@ DataContainerArray::Pointer StatsGeneratorWidget::generateDataContainerArray()
   DataContainer::Pointer m = DataContainer::New(SIMPL::Defaults::StatsGenerator);
   dca->addOrReplaceDataContainer(m);
 
-  QVector<size_t> tDims(1, nPhases);
+  std::vector<size_t> tDims(1, nPhases);
   AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellEnsembleAttributeMatrixName, AttributeMatrix::Type::CellEnsemble);
   m->addOrReplaceAttributeMatrix(cellEnsembleAttrMat);
 
@@ -653,7 +650,7 @@ DataContainerArray::Pointer StatsGeneratorWidget::generateDataContainerArray()
   statsDataArray->resizeTuples(nPhases);
   cellEnsembleAttrMat->insertOrAssign(statsDataArray);
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::CrystalStructures);
   crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
   cellEnsembleAttrMat->insertOrAssign(crystalStructures);
@@ -838,7 +835,7 @@ void StatsGeneratorWidget::on_openStatsFile_clicked()
   DataContainerArray::Pointer dca = DataContainerArray::New();
   DataContainer::Pointer m = DataContainer::New(SIMPL::Defaults::StatsGenerator);
   dca->addOrReplaceDataContainer(m);
-  QVector<size_t> tDims(1, 0);
+  std::vector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer cellEnsembleAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellEnsembleAttributeMatrixName, AttributeMatrix::Type::CellEnsemble);
   m->addOrReplaceAttributeMatrix(cellEnsembleAttrMat);
 

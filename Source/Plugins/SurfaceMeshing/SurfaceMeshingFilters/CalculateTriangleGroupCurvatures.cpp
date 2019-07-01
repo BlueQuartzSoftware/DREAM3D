@@ -35,7 +35,6 @@
 
 #include "CalculateTriangleGroupCurvatures.h"
 
-#include <QtCore/QtGlobal>
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/task.h>
@@ -286,7 +285,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
 // -----------------------------------------------------------------------------
 DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(int64_t triId, UniqueFaceIds_t& triPatch, double* data, const QString& name) const
 {
-  QVector<size_t> cDims(1, 3);
+  std::vector<size_t> cDims(1, 3);
   DataArray<double>::Pointer extractedData = DataArray<double>::CreateArray(triPatch.size(), cDims, name);
   // This little chunk makes sure the current seed triangles centroid and normal data appear
   // first in the returned arrays which makes the next steps a tad easier.

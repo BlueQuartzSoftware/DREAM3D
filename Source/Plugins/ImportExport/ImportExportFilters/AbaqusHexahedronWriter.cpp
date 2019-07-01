@@ -129,7 +129,7 @@ void AbaqusHexahedronWriter::dataCheck()
     setWarningCondition(-10100, ss);
   }
 
-  QVector<size_t> cDims(1, 1); // The component dimensions of the needed array.
+  std::vector<size_t> cDims(1, 1); // The component dimensions of the needed array.
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
                                                                                                         cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_FeatureIdsPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */

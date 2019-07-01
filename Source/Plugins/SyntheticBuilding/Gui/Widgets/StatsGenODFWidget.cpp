@@ -41,15 +41,12 @@
 #include <iostream>
 
 //-- Qt Includes
-#include <QtConcurrent/QtConcurrentMap>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
-#include <QtCore/QSettings>
 #include <QtCore/QString>
 #include <QtCore/QVector>
 
-#include <QtGui/QCloseEvent>
 #include <QtWidgets/QAbstractItemDelegate>
 #include <QtWidgets/QFileDialog>
 #include <QtWidgets/QMessageBox>
@@ -555,7 +552,7 @@ void StatsGenODFWidget::calculateODF()
   int lamberSize = m_PFLambertSize->value();
   int numColors = 16;
 
-  QVector<size_t> dims(1, 3);
+  std::vector<size_t> dims(1, 3);
   FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, dims, "Eulers");
   PoleFigureConfiguration_t config;
   config.eulers = eulers.get();

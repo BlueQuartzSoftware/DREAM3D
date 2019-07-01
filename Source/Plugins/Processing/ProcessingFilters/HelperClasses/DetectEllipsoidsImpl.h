@@ -32,21 +32,20 @@
  *    United States Prime Contract Navy N00173-07-C-2068
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
 #pragma once
 
-#include <QtCore/QVector>
+#include <complex>
+#include <vector>
 
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
 
 #include "Processing/ProcessingFilters/DetectEllipsoids.h"
 
-#include <complex>
 
 class DetectEllipsoids;
 
-typedef std::vector<std::complex<double>> DE_ComplexDoubleVector;
+using DE_ComplexDoubleVector = std::vector<std::complex<double>>;
 
 /**
  * @brief The DetectEllipsoidsImpl class implements a threaded algorithm that detects ellipsoids in a FeatureIds array
@@ -54,10 +53,10 @@ typedef std::vector<std::complex<double>> DE_ComplexDoubleVector;
 class DetectEllipsoidsImpl
 {
 public:
-  DetectEllipsoidsImpl(int threadIndex, DetectEllipsoids* filter, int* cellFeatureIdsPtr, QVector<size_t> cellFeatureIdsDims, UInt32ArrayType::Pointer corners, DE_ComplexDoubleVector convCoords_X,
-                       DE_ComplexDoubleVector convCoords_Y, DE_ComplexDoubleVector convCoords_Z, QVector<size_t> kernel_tDims, Int32ArrayType::Pointer convOffsetArray, std::vector<double> smoothFil,
-                       Int32ArrayType::Pointer smoothOffsetArray, double axis_min, double axis_max, float tol_ellipse, float ba_min, DoubleArrayType::Pointer center, DoubleArrayType::Pointer majaxis,
-                       DoubleArrayType::Pointer minaxis, DoubleArrayType::Pointer rotangle, AttributeMatrix::Pointer ellipseFeatureAM);
+  DetectEllipsoidsImpl(int threadIndex, DetectEllipsoids* filter, int* cellFeatureIdsPtr, std::vector<size_t> cellFeatureIdsDims, UInt32ArrayType::Pointer corners, DE_ComplexDoubleVector convCoords_X,
+                       DE_ComplexDoubleVector convCoords_Y, DE_ComplexDoubleVector convCoords_Z, std::vector<size_t> kernel_tDims, Int32ArrayType::Pointer convOffsetArray,
+                       std::vector<double> smoothFil, Int32ArrayType::Pointer smoothOffsetArray, double axis_min, double axis_max, float tol_ellipse, float ba_min, DoubleArrayType::Pointer center,
+                       DoubleArrayType::Pointer majaxis, DoubleArrayType::Pointer minaxis, DoubleArrayType::Pointer rotangle, AttributeMatrix::Pointer ellipseFeatureAM);
 
   virtual ~DetectEllipsoidsImpl();
 
@@ -72,9 +71,10 @@ public:
    * @param image_tDims
    * @return
    */
-  template <typename T> Int8ArrayType::Pointer findEdges(typename DataArray<T>::Pointer imagePtr, QVector<size_t> image_tDims) const
+  template <typename T>
+  Int8ArrayType::Pointer findEdges(typename DataArray<T>::Pointer imagePtr, std::vector<size_t> image_tDims) const
   {
-    Int8ArrayType::Pointer edgeArray = Int8ArrayType::CreateArray(image_tDims, QVector<size_t>(1, 1), "Edge Array");
+    Int8ArrayType::Pointer edgeArray = Int8ArrayType::CreateArray(image_tDims, std::vector<size_t>(1, 1), "Edge Array");
     edgeArray->initializeWithZeros();
 
     size_t xDim = image_tDims[0];
@@ -139,7 +139,8 @@ public:
    * @param image_tDims
    * @return
    */
-  template <typename T> std::vector<T> convoluteImage(DoubleArrayType::Pointer image, std::vector<T> kernel, Int32ArrayType::Pointer offsetArray, QVector<size_t> image_tDims) const
+  template <typename T>
+  std::vector<T> convoluteImage(DoubleArrayType::Pointer image, std::vector<T> kernel, Int32ArrayType::Pointer offsetArray, std::vector<size_t> image_tDims) const
   {
     std::vector<T> convArray;
 
@@ -203,7 +204,7 @@ public:
    * @param tDims
    * @return
    */
-  QList<int> findExtrema(DoubleArrayType::Pointer thresholdArray, QVector<size_t> tDims) const;
+  QList<int> findExtrema(DoubleArrayType::Pointer thresholdArray, std::vector<size_t> tDims) const;
 
   /**
    * @brief plotlineEdgeInter
@@ -215,7 +216,7 @@ public:
    * @param imageDims
    * @return
    */
-  QPair<size_t, size_t> plotlineEdgeInter(int x0, int y0, int x1, int y1, DoubleArrayType::Pointer binImage, QVector<size_t> imageDims) const;
+  QPair<size_t, size_t> plotlineEdgeInter(int x0, int y0, int x1, int y1, DoubleArrayType::Pointer binImage, std::vector<size_t> imageDims) const;
 
   /**
    * @brief getIdOfMax
@@ -225,12 +226,16 @@ public:
   template <typename T> int getIdOfMax(typename DataArray<T>::Pointer array) const
   {
     if(array.get() == nullptr)
+    {
       return -1;
+    }
 
     int arrayLength = array->getNumberOfTuples() * array->getNumberOfComponents();
 
     if(arrayLength <= 0)
+    {
       return -1;
+    }
 
     double maxId = 0;
     double maxValue = std::numeric_limits<T>::min();
@@ -254,16 +259,19 @@ public:
    * @param tDims
    * @return
    */
-  template <typename T> SizeTArrayType::Pointer findNonZeroIndices(typename DataArray<T>::Pointer array, QVector<size_t> tDims) const
+  template <typename T>
+  SizeTArrayType::Pointer findNonZeroIndices(typename DataArray<T>::Pointer array, std::vector<size_t> tDims) const
   {
     int size = array->getNumberOfTuples();
     size_t xDim = tDims[0];
     size_t yDim = tDims[1];
     size_t zDim = 1; // 3DIM: This can be changed later to handle 3-dimensions
-    typename DataArray<size_t>::Pointer indices = DataArray<size_t>::CreateArray(size, QVector<size_t>(1, 2), "Non-Zero Indices");
+    typename DataArray<size_t>::Pointer indices = DataArray<size_t>::CreateArray(size, std::vector<size_t>(1, 2), "Non-Zero Indices");
 
     if(array.get() == nullptr)
+    {
       return indices;
+    }
 
     size_t count = 0;
     for(size_t x = 0; x < xDim; x++)
@@ -311,19 +319,19 @@ public:
    * @param rot_can
    * @param accum_can
    */
-  void analyzeEdgePair(SizeTArrayType::Pointer obj_edge_pair_a1, SizeTArrayType::Pointer obj_edge_pair_b1, size_t index, QVector<size_t> obj_tDims, Int8ArrayType::Pointer obj_mask_edge,
+  void analyzeEdgePair(SizeTArrayType::Pointer obj_edge_pair_a1, SizeTArrayType::Pointer obj_edge_pair_b1, size_t index, std::vector<size_t> obj_tDims, Int8ArrayType::Pointer obj_mask_edge,
                        size_t& can_num, DoubleArrayType::Pointer cenx_can, DoubleArrayType::Pointer ceny_can, DoubleArrayType::Pointer maj_can, DoubleArrayType::Pointer min_can,
                        DoubleArrayType::Pointer rot_can, DoubleArrayType::Pointer accum_can) const;
 
 private:
   DetectEllipsoids* m_Filter;
   int* m_CellFeatureIdsPtr;
-  QVector<size_t> m_CellFeatureIdsDims;
+  std::vector<size_t> m_CellFeatureIdsDims;
   UInt32ArrayType::Pointer m_Corners;
   DE_ComplexDoubleVector m_ConvCoords_X;
   DE_ComplexDoubleVector m_ConvCoords_Y;
   DE_ComplexDoubleVector m_ConvCoords_Z;
-  QVector<size_t> m_ConvKernel_tDims;
+  std::vector<size_t> m_ConvKernel_tDims;
   Int32ArrayType::Pointer m_ConvOffsetArray;
   std::vector<double> m_SmoothKernel;
   Int32ArrayType::Pointer m_SmoothOffsetArray;

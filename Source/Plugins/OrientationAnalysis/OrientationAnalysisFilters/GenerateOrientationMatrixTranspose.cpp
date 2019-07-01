@@ -105,8 +105,8 @@ void GenerateOrientationMatrixTranspose::setupFilterParameters()
 {
   FilterParameterVectorType parameters;
   DataArraySelectionFilterParameter::RequirementType dasReq;
-  QVector<QVector<size_t>> comp;
-  comp.push_back(QVector<size_t>(1, 9));
+  std::vector<std::vector<size_t>> comp;
+  comp.push_back(std::vector<size_t>(1, 9));
   dasReq.componentDimensions = comp;
   dasReq.daTypes = { SIMPL::TypeNames::Float };
   
@@ -125,7 +125,7 @@ void GenerateOrientationMatrixTranspose::dataCheck()
   clearErrorCode();
   clearWarningCode();
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   cDims[0] = 9;
   m_OrientationMatrixPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<float>, AbstractFilter>(this, getOrientationMatrixDataArrayPath(), cDims);
   if(nullptr != m_OrientationMatrixPtr.lock())

@@ -37,7 +37,6 @@
 #include "StatsGeneratorUI.h"
 
 #include <QtCore/QDir>
-#include <QtCore/QFileInfo>
 #include <QtWidgets/QDesktopWidget>
 
 // Include the MOC generated CPP file which has all the QMetaObject methods/data

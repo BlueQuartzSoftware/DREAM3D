@@ -3,7 +3,6 @@
 // -----------------------------------------------------------------------------
 #pragma once
 
-#include <QtCore/QCoreApplication>
 #include <QtCore/QFile>
 
 #include "SIMPLib/SIMPLib.h"

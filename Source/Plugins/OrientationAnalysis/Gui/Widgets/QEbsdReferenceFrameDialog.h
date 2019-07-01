@@ -35,10 +35,7 @@
 
 #pragma once
 
-#include <QtCore/QSettings>
 #include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtWidgets/QDialog>
 
 class QGraphicsPixmapItem;
 class DataArrayPath;

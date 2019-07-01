@@ -138,7 +138,7 @@ void FindFeatureReferenceCAxisMisorientations::dataCheck()
 
   QVector<DataArrayPath> dataArrayPaths;
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   m_FeatureIdsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getFeatureIdsArrayPath(),
                                                                                                         cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_FeatureIdsPtr.lock())                                                                         /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
@@ -239,7 +239,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
   size_t totalFeatures = m_AvgCAxesPtr.lock()->getNumberOfTuples();
 
   int32_t avgMisoComps = 3;
-  QVector<size_t> dims(1, avgMisoComps);
+  std::vector<size_t> dims(1, avgMisoComps);
   FloatArrayType::Pointer avgmisoPtr = FloatArrayType::CreateArray(totalFeatures, dims, "_INTERNAL_USE_ONLY_AvgMiso_Temp");
   avgmisoPtr->initializeWithZeros();
   float* avgmiso = avgmisoPtr->getPointer(0);

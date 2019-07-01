@@ -89,7 +89,7 @@ public:
   SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
   Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
-  SIMPL_PIMPL_PROPERTY_DECL(QVector<size_t>, Dims)
+  SIMPL_PIMPL_PROPERTY_DECL(std::vector<size_t>, Dims)
   SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
   SIMPL_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
 

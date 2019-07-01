@@ -174,7 +174,7 @@ void EMsoftSO3Sampler::dataCheck()
   // if (getErrorCode() < 0) { return; }
 
   // Now try to either get or create the needed AttributeMatrix
-  QVector<size_t> tDims(1, 1);
+  std::vector<size_t> tDims(1, 1);
   AttributeMatrix::Pointer emsoftAttrMat = m->getAttributeMatrix(getEMsoftAttributeMatrixName());
   if(nullptr == emsoftAttrMat.get())
   {
@@ -185,7 +185,7 @@ void EMsoftSO3Sampler::dataCheck()
     return;
   }
 
-  //  QVector<size_t> tDims(1, 1);
+  //  std::vector<size_t> tDims(1, 1);
   //  AttributeMatrix::Pointer emsoftAttrMat = m->createNonPrereqAttributeMatrix(this, getEMsoftAttributeMatrixName(), tDims, AttributeMatrix::Type::Generic, AttributeMatrixID22);
   //  if (getErrorCode() < 0) { return; }
   //  m->addOrReplaceAttributeMatrix(emsoftAttrMat->getName(),emsoftAttrMat);
@@ -238,7 +238,7 @@ void EMsoftSO3Sampler::dataCheck()
   QVector<DataArrayPath> dataArraypaths;
 
   // allocate space for the EulerAngles array, which will subsequently be filled by the SO(3) sampling code.
-  QVector<size_t> cDims(1);
+  std::vector<size_t> cDims(1);
   cDims[0] = 3;
   DataArrayPath tempPath;
   tempPath.update(getDataContainerName().getDataContainerName(), getEMsoftAttributeMatrixName(), getEulerAnglesArrayName());
@@ -546,7 +546,7 @@ void EMsoftSO3Sampler::execute()
 
   // resize the EulerAngles array to the number of items in FZlist; don't forget to redefine the hard pointer
   AttributeMatrix::Pointer am = getDataContainerArray()->getAttributeMatrix(DataArrayPath(getDataContainerName().getDataContainerName(), getEMsoftAttributeMatrixName(), ""));
-  QVector<size_t> tDims(1, FZlist.size());
+  std::vector<size_t> tDims(1, FZlist.size());
   am->resizeAttributeArrays(tDims);
   m_EulerAngles = m_EulerAnglesPtr.lock()->getPointer(0);
 

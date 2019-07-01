@@ -211,7 +211,7 @@ protected:
    * @param zCol Z coordinate
    * @param lineNum
    */
-  void parseDataLine(QByteArray& line, QVector<size_t> dims, int64_t xCol, int64_t yCol, int64_t zCol, size_t lineNum);
+  void parseDataLine(QByteArray& line, std::vector<size_t> dims, int64_t xCol, int64_t yCol, int64_t zCol, size_t lineNum);
 
 private:
   QFile m_InStream;

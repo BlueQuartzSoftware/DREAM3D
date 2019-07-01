@@ -39,7 +39,6 @@
 #include <limits>
 #include <random>
 
-#include <QtCore/QDateTime>
 
 #include "SIMPLib/Math/SIMPLibRandom.h"
 #include "SIMPLib/Utilities/ColorTable.h"

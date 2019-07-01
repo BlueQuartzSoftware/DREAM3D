@@ -40,13 +40,9 @@
 #include <vector>
 
 #include <QtCore/QCoreApplication>
-#include <QtCore/QDir>
-#include <QtCore/QFile>
+#include <QtCore/QDebug>
 #include <QtCore/QMetaProperty>
-#include <QtCore/QObject>
-#include <QtCore/QSettings>
 #include <QtCore/QString>
-#include <QtCore/QtDebug>
 
 #include "SIMPLib/Common/Observer.h"
 #include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"

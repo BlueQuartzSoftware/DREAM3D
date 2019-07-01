@@ -165,8 +165,8 @@ void CalculateArrayHistogram::dataCheck()
     return;
   }
 
-  QVector<size_t> tDims(1, m_NumberOfBins);
-  QVector<size_t> cDims(1, 2);
+  std::vector<size_t> tDims(1, m_NumberOfBins);
+  std::vector<size_t> cDims(1, 2);
 
   QString newArrayName;
   if(m_Normalize)

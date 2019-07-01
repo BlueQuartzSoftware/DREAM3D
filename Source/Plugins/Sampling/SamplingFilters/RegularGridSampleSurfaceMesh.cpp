@@ -152,7 +152,7 @@ void RegularGridSampleSurfaceMesh::dataCheck()
   m->getGeometryAs<ImageGeom>()->setSpacing(m_Spacing);
   m->getGeometryAs<ImageGeom>()->setOrigin(m_Origin);
 
-  QVector<size_t> tDims(3, 0);
+  std::vector<size_t> tDims(3, 0);
   tDims[0] = m_XPoints;
   tDims[1] = m_YPoints;
   tDims[2] = m_ZPoints;
@@ -163,7 +163,7 @@ void RegularGridSampleSurfaceMesh::dataCheck()
     return;
   }
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   tempPath.update(getDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(
       this, tempPath, 0, cDims);              /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */

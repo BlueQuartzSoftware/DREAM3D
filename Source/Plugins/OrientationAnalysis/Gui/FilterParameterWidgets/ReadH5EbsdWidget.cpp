@@ -37,9 +37,7 @@
 
 #include <QtGui/QKeyEvent>
 #include <QtGui/QPainter>
-#include <QtWidgets/QComboBox>
 #include <QtWidgets/QFileDialog>
-#include <QtWidgets/QLabel>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMessageBox>
 

@@ -121,7 +121,7 @@ void EstablishShapeTypes::dataCheck()
 
   DataContainerArray::Pointer dca = getDataContainerArray();
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   m_PhaseTypesPtr = dca->getPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter>(this, getInputPhaseTypesArrayPath(), cDims);
   if(nullptr != m_PhaseTypesPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */
   {
@@ -204,7 +204,7 @@ int EstablishShapeTypes::getPhaseCount()
     return 0;
   }
 
-  QVector<size_t> tupleDims = inputAttrMat->getTupleDimensions();
+  std::vector<size_t> tupleDims = inputAttrMat->getTupleDimensions();
   size_t phaseCount = 1;
   for(int32_t i = 0; i < tupleDims.size(); i++)
   {

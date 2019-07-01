@@ -177,7 +177,7 @@ void VtkStructuredPointsReader::dataCheck()
   ImageGeom::Pointer pointDataGeom = ImageGeom::CreateGeometry(getVertexDataContainerName().getDataContainerName());
   pointData_DataContainer->setGeometry(pointDataGeom);
 
-  QVector<size_t> tDims(1, 0);
+  std::vector<size_t> tDims(1, 0);
   AttributeMatrix::Pointer pointAttrMat = pointData_DataContainer->createNonPrereqAttributeMatrix(this, getVertexAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCode() < 0)
   {
@@ -415,8 +415,8 @@ template <typename T> int32_t readDataChunk(AttributeMatrix::Pointer attrMat, st
 {
   size_t numTuples = attrMat->getNumberOfTuples();
 
-  QVector<size_t> tDims = attrMat->getTupleDimensions();
-  QVector<size_t> cDims(1, scalarNumComp);
+  std::vector<size_t> tDims = attrMat->getTupleDimensions();
+  std::vector<size_t> cDims(1, scalarNumComp);
 
   typename DataArray<T>::Pointer data = DataArray<T>::CreateArray(tDims, cDims, scalarName, !inPreflight);
   data->initializeWithZeros();
@@ -573,12 +573,12 @@ int32_t VtkStructuredPointsReader::readFile()
   bool ok = false;
   err = readLine(in, buffer, kBufferSize); // Read Line 5 which is the Dimension values
   // But we need the 'extents' which is one less in all directions (unless dim=1)
-  QVector<size_t> dims(3, 0);
+  std::vector<size_t> dims(3, 0);
   QList<QByteArray> tokens = buf.split(' ');
   dims[0] = tokens[1].toInt(&ok, 10);
   dims[1] = tokens[2].toInt(&ok, 10);
   dims[2] = tokens[3].toInt(&ok, 10);
-  QVector<size_t> tDims(3, 0);
+  std::vector<size_t> tDims(3, 0);
   tDims[0] = dims[0];
   tDims[1] = dims[1];
   tDims[2] = dims[2];

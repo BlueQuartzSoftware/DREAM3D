@@ -35,8 +35,6 @@
 
 #pragma once
 
-#include <QtCore/QFutureWatcher>
-#include <QtGui/QImage>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QWidget>
 

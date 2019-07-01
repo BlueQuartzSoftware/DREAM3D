@@ -142,7 +142,7 @@ void SurfaceMeshToNonconformalVtk::dataCheck()
   {
     setErrorCondition(-387, "DataContainer Geometry missing Triangles");
   }
-  QVector<size_t> dims(1, 2);
+  std::vector<size_t> dims(1, 2);
   m_SurfaceMeshFaceLabelsPtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, getSurfaceMeshFaceLabelsArrayPath(),
                                                                                                                    dims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
   if(nullptr != m_SurfaceMeshFaceLabelsPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */

@@ -813,7 +813,7 @@ QVector<UInt8ArrayType::Pointer> TrigonalOps::generatePoleFigure(PoleFigureConfi
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
-  QVector<size_t> dims(1, 3);
+  std::vector<size_t> dims(1, 3);
   FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::TrigonalHigh::symSize0, dims, label0 + QString("xyzCoords"));
   // this is size for CUBIC ONLY, <011> Family
   FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::TrigonalHigh::symSize1, dims, label1 + QString("xyzCoords"));
@@ -955,7 +955,7 @@ QVector<UInt8ArrayType::Pointer> TrigonalOps::generatePoleFigure(PoleFigureConfi
 UInt8ArrayType::Pointer TrigonalOps::generateIPFTriangleLegend(int imageDim)
 {
 
-  QVector<size_t> dims(1, 4);
+  std::vector<size_t> dims(1, 4);
   UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, dims, getSymmetryName() + " Triangle Legend");
   uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
 

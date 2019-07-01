@@ -35,7 +35,6 @@
 
 #include "InitializeSyntheticVolume.h"
 
-#include <QtCore/QFileInfo>
 
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5ScopedSentinel.h"
@@ -230,7 +229,7 @@ void InitializeSyntheticVolume::dataCheck()
   image->setUnits(static_cast<IGeometry::LengthUnit>(m_LengthUnit));
 
   // Create our output Cell and Ensemble Attribute Matrix objects
-  QVector<size_t> tDims(3, 0);
+  std::vector<size_t> tDims(3, 0);
   tDims[0] = static_cast<size_t>(m_Dimensions[0]);
   tDims[1] = static_cast<size_t>(m_Dimensions[1]);
   tDims[2] = static_cast<size_t>(m_Dimensions[2]);
@@ -276,7 +275,7 @@ void InitializeSyntheticVolume::execute()
   AttributeMatrix::Pointer cellAttrMat = m->getAttributeMatrix(getCellAttributeMatrixName());
 
   // Resize the Cell AttributeMatrix to have the correct Tuple Dimensions.
-  QVector<size_t> tDims(3, 0);
+  std::vector<size_t> tDims(3, 0);
   tDims[0] = m->getGeometryAs<ImageGeom>()->getXPoints();
   tDims[1] = m->getGeometryAs<ImageGeom>()->getYPoints();
   tDims[2] = m->getGeometryAs<ImageGeom>()->getZPoints();
@@ -302,7 +301,7 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3Type dims, FloatVe
   DataContainerArray::Pointer dca = getDataContainerArray();
 
   // Get the PhaseTypes - Remember there is a Dummy PhaseType in the first slot of the array
-  QVector<size_t> cDims(1, 1); // This states that we are looking for an array with a single component
+  std::vector<size_t> cDims(1, 1); // This states that we are looking for an array with a single component
   UInt32ArrayType::Pointer phaseType = dca->getPrereqArrayFromPath<UInt32ArrayType, AbstractFilter>(nullptr, getInputPhaseTypesArrayPath(), cDims);
   if(phaseType == nullptr)
   {
@@ -312,7 +311,7 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3Type dims, FloatVe
     return "0";
   }
 
-  QVector<size_t> statsDims(1, 1);
+  std::vector<size_t> statsDims(1, 1);
   StatsDataArray::Pointer statsPtr = dca->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), statsDims);
   if(statsPtr == nullptr)
   {

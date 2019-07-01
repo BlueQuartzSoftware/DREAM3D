@@ -130,7 +130,7 @@ void NearestPointFuseRegularGrids::dataCheck()
       }
       else
       {
-        QVector<size_t> cDims = tmpDataArray->getComponentDimensions();
+        std::vector<size_t> cDims = tmpDataArray->getComponentDimensions();
         TemplateHelpers::CreateNonPrereqArrayFromArrayType()(this, tempPath, cDims, tmpDataArray);
       }
     }

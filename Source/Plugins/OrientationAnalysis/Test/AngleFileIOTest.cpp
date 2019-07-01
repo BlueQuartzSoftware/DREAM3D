@@ -30,9 +30,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
@@ -78,11 +77,11 @@ public:
     dca->addOrReplaceDataContainer(m);
 
     // Create Attribute Matrices with different tDims to test validation of tuple compatibility
-    QVector<size_t> tDims(1, k_AngleCount);
+    std::vector<size_t> tDims(1, k_AngleCount);
     AttributeMatrix::Pointer attrMat1 = AttributeMatrix::New(tDims, SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
     m->addOrReplaceAttributeMatrix(attrMat1);
 
-    QVector<size_t> cDims(1, 3);
+    std::vector<size_t> cDims(1, 3);
     DataArray<float>::Pointer angles = DataArray<float>::CreateArray(k_AngleCount, cDims, SIMPL::CellData::EulerAngles, true);
     attrMat1->insertOrAssign(angles);
     cDims[0] = 1;

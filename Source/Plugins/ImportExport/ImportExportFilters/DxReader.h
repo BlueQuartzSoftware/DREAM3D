@@ -91,7 +91,7 @@ public:
   SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
   Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
-  SIMPL_PIMPL_PROPERTY_DECL(QVector<size_t>, Dims)
+  SIMPL_PIMPL_PROPERTY_DECL(std::vector<size_t>, Dims)
   SIMPL_PIMPL_PROPERTY_DECL(QString, InputFile_Cache)
   SIMPL_PIMPL_PROPERTY_DECL(QDateTime, LastRead)
 
@@ -172,12 +172,12 @@ protected:
   /**
    * @brief readHeader Reimplemented from @see FileReader class
    */
-  virtual int32_t readHeader();
+  int32_t readHeader() override;
 
   /**
    * @brief readFile Reimplemented from @see FileReader class
    */
-  virtual int32_t readFile();
+  int32_t readFile() override;
 
   /**
    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays

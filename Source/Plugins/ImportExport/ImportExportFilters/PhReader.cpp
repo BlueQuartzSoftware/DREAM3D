@@ -72,7 +72,7 @@ class PhReaderPrivate
   Q_DECLARE_PUBLIC(PhReader)
   PhReader* const q_ptr;
   PhReaderPrivate(PhReader* ptr);
-  QVector<size_t> m_Dims;
+  std::vector<size_t> m_Dims;
   QString m_InputFile_Cache;
   QDateTime m_LastRead;
 };
@@ -118,7 +118,7 @@ PhReader::~PhReader() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SIMPL_PIMPL_PROPERTY_DEF(PhReader, QVector<size_t>, Dims)
+SIMPL_PIMPL_PROPERTY_DEF(PhReader, std::vector<size_t>, Dims)
 SIMPL_PIMPL_PROPERTY_DEF(PhReader, QString, InputFile_Cache)
 SIMPL_PIMPL_PROPERTY_DEF(PhReader, QDateTime, LastRead)
 
@@ -176,7 +176,7 @@ void PhReader::updateCellInstancePointers()
 void PhReader::flushCache()
 {
   setInputFile_Cache("");
-  QVector<size_t> v;
+  std::vector<size_t> v;
   v.push_back(0);
   v.push_back(0);
   v.push_back(0);
@@ -229,7 +229,7 @@ void PhReader::dataCheck()
       // We are reading from the cache, so set the FileWasRead flag to false
       m_FileWasRead = false;
 
-      QVector<size_t> v = getDims();
+      std::vector<size_t> v = getDims();
       ImageGeom::Pointer imageGeom = m->getGeometryAs<ImageGeom>();
       if(nullptr != imageGeom.get())
       {
@@ -264,14 +264,14 @@ void PhReader::dataCheck()
     }
   }
 
-  QVector<size_t> tDims = getDims();
+  std::vector<size_t> tDims = getDims();
   m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);
   if(getErrorCode() < 0)
   {
     return;
   }
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   tempPath.update(getVolumeDataContainerName().getDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
   m_FeatureIdsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter, int32_t>(this, tempPath, 0, cDims, "", DataArrayID31);
   if(nullptr != m_FeatureIdsPtr.lock())
@@ -348,7 +348,7 @@ int32_t PhReader::readHeader()
   fscanf(m_InStream, "%d %d %d\n", &nx, &ny, &nz);
 
   // Set the values into the cache, so that they can be used later
-  QVector<size_t> v;
+  std::vector<size_t> v;
   v.push_back(static_cast<size_t>(nx));
   v.push_back(static_cast<size_t>(ny));
   v.push_back(static_cast<size_t>(nz));
@@ -382,7 +382,7 @@ int32_t PhReader::readFile()
 
   size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
 
-  QVector<size_t> tDims(3, 0);
+  std::vector<size_t> tDims(3, 0);
   tDims[0] = m->getGeometryAs<ImageGeom>()->getXPoints();
   tDims[1] = m->getGeometryAs<ImageGeom>()->getYPoints();
   tDims[2] = m->getGeometryAs<ImageGeom>()->getZPoints();

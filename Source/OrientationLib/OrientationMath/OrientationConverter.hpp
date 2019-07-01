@@ -82,7 +82,6 @@ class OrientationConverter
   public:
     SIMPL_SHARED_POINTERS(OrientationConverter<T> )
     SIMPL_TYPE_MACRO(OrientationConverter<T>)
-    SIMPL_CLASS_VERSION(1)
 
     virtual ~OrientationConverter() = default;
     
@@ -410,37 +409,36 @@ class ConvertRepresentation
  */
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 
-#define OC_CONVERT_BODY(OUTSTRIDE, OUT_ARRAY_NAME, CONVERSION_METHOD, FUNCTOR)\
-  sanityCheckInputData();\
-  typename DataArray<T>::Pointer input = this->getInputData();\
-  T* inPtr = input->getPointer(0);\
-  size_t nTuples = this->getInputData()->getNumberOfTuples();\
-  int inStride = input->getNumberOfComponents();\
-  size_t outStride = OUTSTRIDE;\
-  QVector<size_t> cDims = {outStride};\
-  typename DataArray<T>::Pointer output = DataArray<T>::CreateArray(nTuples, cDims, #OUT_ARRAY_NAME);\
-  output->initializeWithZeros(); /* Intialize the array with Zeros */\
-  T* outPtr = output->getPointer(0);\
-  tbb::task_scheduler_init init;\
-  tbb::parallel_for(tbb::blocked_range<size_t>(0, nTuples),\
-  ConvertRepresentation<T, Convertors::FUNCTOR<T>>(inPtr, outPtr, inStride, outStride), tbb::auto_partitioner());\
+#define OC_CONVERT_BODY(OUTSTRIDE, OUT_ARRAY_NAME, CONVERSION_METHOD, FUNCTOR)                                                                                                                         \
+  sanityCheckInputData();                                                                                                                                                                              \
+  typename DataArray<T>::Pointer input = this->getInputData();                                                                                                                                         \
+  T* inPtr = input->getPointer(0);                                                                                                                                                                     \
+  size_t nTuples = this->getInputData()->getNumberOfTuples();                                                                                                                                          \
+  int inStride = input->getNumberOfComponents();                                                                                                                                                       \
+  size_t outStride = OUTSTRIDE;                                                                                                                                                                        \
+  std::vector<size_t> cDims = {outStride};                                                                                                                                                             \
+  typename DataArray<T>::Pointer output = DataArray<T>::CreateArray(nTuples, cDims, #OUT_ARRAY_NAME);                                                                                                  \
+  output->initializeWithZeros(); /* Intialize the array with Zeros */                                                                                                                                  \
+  T* outPtr = output->getPointer(0);                                                                                                                                                                   \
+  tbb::task_scheduler_init init;                                                                                                                                                                       \
+  tbb::parallel_for(tbb::blocked_range<size_t>(0, nTuples), ConvertRepresentation<T, Convertors::FUNCTOR<T>>(inPtr, outPtr, inStride, outStride), tbb::auto_partitioner());                            \
   this->setOutputData(output);
 
 #else
 
-#define OC_CONVERT_BODY(OUTSTRIDE, OUT_ARRAY_NAME, CONVERSION_METHOD, FUNCTOR)\
-  sanityCheckInputData();\
-  typename DataArray<T>::Pointer input = this->getInputData();\
-  T* inPtr = input->getPointer(0);\
-  size_t nTuples = this->getInputData()->getNumberOfTuples();\
-  int inStride = input->getNumberOfComponents();\
-  size_t outStride = OUTSTRIDE;\
-  QVector<size_t> cDims = {outStride}; /* Create the n component (nx1) based array.*/\
-  typename DataArray<T>::Pointer output = DataArray<T>::CreateArray(nTuples, cDims, #OUT_ARRAY_NAME);\
-  output->initializeWithZeros(); /* Intialize the array with Zeros */\
-  T* outPtr = output->getPointer(0);\
-  ConvertRepresentation<T, Convertors::FUNCTOR <T>> serial(inPtr, outPtr, inStride, outStride);\
-  serial.convert(0, nTuples);\
+#define OC_CONVERT_BODY(OUTSTRIDE, OUT_ARRAY_NAME, CONVERSION_METHOD, FUNCTOR)                                                                                                                         \
+  sanityCheckInputData();                                                                                                                                                                              \
+  typename DataArray<T>::Pointer input = this->getInputData();                                                                                                                                         \
+  T* inPtr = input->getPointer(0);                                                                                                                                                                     \
+  size_t nTuples = this->getInputData()->getNumberOfTuples();                                                                                                                                          \
+  int inStride = input->getNumberOfComponents();                                                                                                                                                       \
+  size_t outStride = OUTSTRIDE;                                                                                                                                                                        \
+  std::vector<size_t> cDims = {outStride}; /* Create the n component (nx1) based array.*/                                                                                                              \
+  typename DataArray<T>::Pointer output = DataArray<T>::CreateArray(nTuples, cDims, #OUT_ARRAY_NAME);                                                                                                  \
+  output->initializeWithZeros(); /* Intialize the array with Zeros */                                                                                                                                  \
+  T* outPtr = output->getPointer(0);                                                                                                                                                                   \
+  ConvertRepresentation<T, Convertors::FUNCTOR<T>> serial(inPtr, outPtr, inStride, outStride);                                                                                                         \
+  serial.convert(0, nTuples);                                                                                                                                                                          \
   this->setOutputData(output);
 
 #endif
@@ -499,8 +497,6 @@ class EulerConverter : public OrientationConverter<T>
   public:
     SIMPL_SHARED_POINTERS(EulerConverter<T> )
     SIMPL_TYPE_MACRO_SUPER(EulerConverter<T>, OrientationConverter<T>)
-    SIMPL_CLASS_VERSION(1)
-
     SIMPL_STATIC_NEW_MACRO(EulerConverter<T>)
 
     virtual ~EulerConverter()
@@ -688,12 +684,9 @@ class OrientationMatrixConverter : public OrientationConverter<T>
   public:
     SIMPL_SHARED_POINTERS(OrientationMatrixConverter<T> )
     SIMPL_TYPE_MACRO_SUPER(OrientationMatrixConverter<T>, OrientationConverter<T>)
-    SIMPL_CLASS_VERSION(1)
     SIMPL_STATIC_NEW_MACRO(OrientationMatrixConverter<T>)
 
-    virtual ~OrientationMatrixConverter()
-    {
-    }
+    virtual ~OrientationMatrixConverter() = default;
 
     virtual OrientationRepresentation::Type getOrientationRepresentation()
     {
@@ -859,7 +852,6 @@ class QuaternionConverter : public OrientationConverter<T>
   public:
     SIMPL_SHARED_POINTERS(QuaternionConverter<T> )
     SIMPL_TYPE_MACRO_SUPER(QuaternionConverter<T>, OrientationConverter<T>)
-    SIMPL_CLASS_VERSION(1)
     SIMPL_STATIC_NEW_MACRO(QuaternionConverter<T>)
 
     virtual ~QuaternionConverter()
@@ -1025,7 +1017,6 @@ class AxisAngleConverter : public OrientationConverter<T>
   public:
     SIMPL_SHARED_POINTERS(AxisAngleConverter<T> )
     SIMPL_TYPE_MACRO_SUPER(AxisAngleConverter<T>, OrientationConverter<T>)
-    SIMPL_CLASS_VERSION(1)
     SIMPL_STATIC_NEW_MACRO(AxisAngleConverter<T>)
 
     virtual ~AxisAngleConverter()
@@ -1192,7 +1183,6 @@ class RodriguesConverter : public OrientationConverter<T>
   public:
     SIMPL_SHARED_POINTERS(RodriguesConverter<T> )
     SIMPL_TYPE_MACRO_SUPER(RodriguesConverter<T>, OrientationConverter<T>)
-    SIMPL_CLASS_VERSION(1)
     SIMPL_STATIC_NEW_MACRO(RodriguesConverter<T>)
 
     virtual ~RodriguesConverter()
@@ -1361,12 +1351,9 @@ class HomochoricConverter : public OrientationConverter<T>
   public:
     SIMPL_SHARED_POINTERS(HomochoricConverter<T> )
     SIMPL_TYPE_MACRO_SUPER(HomochoricConverter<T>, OrientationConverter<T>)
-    SIMPL_CLASS_VERSION(1)
     SIMPL_STATIC_NEW_MACRO(HomochoricConverter<T>)
 
-    virtual ~HomochoricConverter()
-    {
-    }
+    virtual ~HomochoricConverter() = default;
 
     virtual OrientationRepresentation::Type getOrientationRepresentation()
     {
@@ -1531,7 +1518,6 @@ class CubochoricConverter : public OrientationConverter<T>
   public:
     SIMPL_SHARED_POINTERS(CubochoricConverter<T> )
     SIMPL_TYPE_MACRO_SUPER(CubochoricConverter<T>, OrientationConverter<T>)
-    SIMPL_CLASS_VERSION(1)
     SIMPL_STATIC_NEW_MACRO(CubochoricConverter<T>)
 
     virtual ~CubochoricConverter()

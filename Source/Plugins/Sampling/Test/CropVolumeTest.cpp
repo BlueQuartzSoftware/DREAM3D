@@ -33,7 +33,6 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <QtCore/QCoreApplication>
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/DataContainerWriter.h"
@@ -185,19 +184,19 @@ public:
     dc1->getGeometryAs<ImageGeom>()->setOrigin(originalOrigin);
     dc1->getGeometryAs<ImageGeom>()->setSpacing(originalRes);
 
-    QVector<size_t> amDims;
+    std::vector<size_t> amDims;
     amDims.push_back(X.getMax());
     amDims.push_back(Y.getMax());
     amDims.push_back(Z.getMax());
     AttributeMatrix::Pointer am1 = AttributeMatrix::New(amDims, SIMPL::Defaults::CellAttributeMatrixName, AttributeMatrix::Type::Cell);
     AttributeMatrix::Pointer am2 = AttributeMatrix::New(amDims, SIMPL::Defaults::CellFeatureAttributeMatrixName, AttributeMatrix::Type::CellFeature);
 
-    QVector<size_t> tDims;
+    std::vector<size_t> tDims;
     tDims.push_back(X.getMax());
     tDims.push_back(Y.getMax());
     tDims.push_back(Z.getMax());
 
-    QVector<size_t> cDims(1, numComponents);
+    std::vector<size_t> cDims(1, numComponents);
 
     Int32ArrayType::Pointer genericData = Int32ArrayType::CreateArray(tDims, cDims, k_DataArrayName, true);
     cDims[0] = 4;
@@ -401,7 +400,7 @@ public:
 
     int numComponents = p.getNumberOfComponents();
 
-    QVector<size_t> cDims(1, numComponents);
+    std::vector<size_t> cDims(1, numComponents);
     qDebug() << "---------------- " << ptr->getName() << " -------------------";
     for(int64_t z = Z.getMin(); z < Z.getMax(); z++)
     {
@@ -959,7 +958,7 @@ public:
     DREAM3D_REQUIRE(writer->getErrorCode() > -1);
 
     //  AttributeMatrix::Pointer am = cropVolume->getDataContainerArray()->getAttributeMatrix(dap);
-    //  QVector<size_t> tDims = am->getTupleDimensions();
+    //  std::vector<size_t> tDims = am->getTupleDimensions();
     //  for(size_t i = 0; i < tDims.size(); i++) { qDebug() << tDims[i]; }
 
     // Now we need to check that the FeatureIds got cropped correctly

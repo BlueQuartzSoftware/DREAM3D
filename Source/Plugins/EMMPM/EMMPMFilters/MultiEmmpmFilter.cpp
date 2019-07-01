@@ -218,7 +218,7 @@ void MultiEmmpmFilter::dataCheck()
     setErrorCondition(-89004, ss);
   }
 
-  QVector<size_t> cDims(1, 1); // We need a single component, gray scale image
+  std::vector<size_t> cDims(1, 1); // We need a single component, gray scale image
 
 #if 0
   m_InputImagePtr = getDataContainerArray()->getPrereqArrayFromPath<DataArray<uint8_t>, AbstractFilter>(this, getInputDataArrayPath(), cDims); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -261,7 +261,7 @@ void MultiEmmpmFilter::dataCheck()
   }
 
   // Now create our output attributeMatrix which will contain all of our segmented images
-  QVector<size_t> tDims = inAM->getTupleDimensions();
+  std::vector<size_t> tDims = inAM->getTupleDimensions();
   AttributeMatrix::Pointer outAM = getDataContainerArray()
                                        ->getDataContainer(inputAMPath.getDataContainerName())
                                        ->createNonPrereqAttributeMatrix(this, getOutputAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell, AttributeMatrixID21);

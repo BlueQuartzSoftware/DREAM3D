@@ -39,7 +39,6 @@
 
 #include <QtWidgets/QAbstractItemDelegate>
 #include <QtWidgets/QApplication>
-#include <QtWidgets/QStyleOptionComboBox>
 
 #include "SyntheticBuilding/Gui/Widgets/Delegates/SGMDFItemDelegate.h"
 

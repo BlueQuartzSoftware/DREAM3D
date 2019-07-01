@@ -147,14 +147,14 @@ void CreateEnsembleInfo::dataCheck()
     return;
   }
 
-  QVector<size_t> tDims(1, numPhases + 1);
+  std::vector<size_t> tDims(1, numPhases + 1);
   m->createNonPrereqAttributeMatrix(this, getCellEnsembleAttributeMatrixName(), tDims, AttributeMatrix::Type::CellEnsemble, AttributeMatrixID21);
   if(getErrorCode() < 0)
   {
     return;
   }
 
-  QVector<size_t> cDims(1, 1);
+  std::vector<size_t> cDims(1, 1);
   DataArrayPath tempPath;
   tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), getCrystalStructuresArrayName());
   m_CrystalStructuresPtr =

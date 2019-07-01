@@ -40,8 +40,6 @@
 #include <QtCore/QFileInfo>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QFileDialog>
-#include <QtWidgets/QListWidget>
-#include <QtWidgets/QListWidgetItem>
 #include <QtWidgets/QMessageBox>
 
 #include "H5Support/H5Lite.h"

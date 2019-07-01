@@ -74,7 +74,7 @@ enum createdPathID : RenameDataPath::DataID_t
 class FindUniqueIdsImpl
 {
 public:
-  FindUniqueIdsImpl(SharedVertexList::Pointer vertex, QVector<QVector<size_t>> nodesInBin, int64_t* uniqueIds)
+  FindUniqueIdsImpl(SharedVertexList::Pointer vertex, QVector<std::vector<size_t>> nodesInBin, int64_t* uniqueIds)
   : m_Vertex(vertex)
   , m_NodesInBin(nodesInBin)
   , m_UniqueIds(uniqueIds)
@@ -112,7 +112,7 @@ public:
 #endif
 private:
   SharedVertexList::Pointer m_Vertex;
-  QVector<QVector<size_t>> m_NodesInBin;
+  QVector<std::vector<size_t>> m_NodesInBin;
   int64_t* m_UniqueIds;
 };
 
@@ -229,10 +229,10 @@ void ReadStlFile::dataCheck()
 
   sm->setGeometry(triangleGeom);
 
-  QVector<size_t> tDims(1, 0);
+  std::vector<size_t> tDims(1, 0);
   sm->createNonPrereqAttributeMatrix(this, getFaceAttributeMatrixName(), tDims, AttributeMatrix::Type::Face, AttributeMatrixID21);
 
-  QVector<size_t> cDims(1, 3);
+  std::vector<size_t> cDims(1, 3);
   tempPath.update(getSurfaceMeshDataContainerName().getDataContainerName(), getFaceAttributeMatrixName(), getFaceNormalsArrayName());
   m_FaceNormalsPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(this, tempPath, 0, cDims, "", DataArrayID31);
   if(nullptr != m_FaceNormalsPtr.lock())
@@ -319,7 +319,7 @@ void ReadStlFile::readFile()
   MeshIndexType* triangles = triangleGeom->getTriPointer(0);
 
   // Resize the triangle attribute matrix to hold the normals and update the normals pointer
-  QVector<size_t> tDims(1, static_cast<size_t>(triCount));
+  std::vector<size_t> tDims(1, static_cast<size_t>(triCount));
   sm->getAttributeMatrix(getFaceAttributeMatrixName())->resizeAttributeArrays(tDims);
   updateFaceInstancePointers();
 
@@ -448,7 +448,7 @@ void ReadStlFile::eliminate_duplicate_nodes()
   float stepY = (m_maxYcoord - m_minYcoord) / 100.0f;
   float stepZ = (m_maxZcoord - m_minZcoord) / 100.0f;
 
-  QVector<QVector<size_t>> nodesInBin(100 * 100 * 100);
+  QVector<std::vector<size_t>> nodesInBin(100 * 100 * 100);
 
   // determine (xyz) bin each node falls in - used to speed up node comparison
   int32_t bin = 0, xBin = 0, yBin = 0, zBin = 0;
