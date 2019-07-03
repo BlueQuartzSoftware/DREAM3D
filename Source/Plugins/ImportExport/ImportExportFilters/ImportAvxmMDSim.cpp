@@ -180,7 +180,7 @@ void ImportAvxmMDSim::execute()
 
     UInt8ArrayType::Pointer da = am->getAttributeArrayAs<UInt8ArrayType>(typeDAPath.getDataArrayName());
 
-    FloatArrayType::Pointer verts = FloatArrayType::CreateArray(lines.size(), std::vector<size_t>(1, 3), "SharedVertexList");
+    FloatArrayType::Pointer verts = FloatArrayType::CreateArray(lines.size(), std::vector<size_t>(1, 3), "SharedVertexList", true);
 
     for(size_t j = 0; j < lines.size(); j++)
     {

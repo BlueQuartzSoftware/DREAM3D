@@ -326,7 +326,7 @@ void FindFeatureReferenceMisorientations::execute()
     }
   }
 
-  FloatArrayType::Pointer avgMisoPtr = FloatArrayType::CreateArray(totalFeatures * 2, "_INTERNAL_USE_ONLY_AVERAGE_MISORIENTATION");
+  FloatArrayType::Pointer avgMisoPtr = FloatArrayType::CreateArray(totalFeatures * 2, "_INTERNAL_USE_ONLY_AVERAGE_MISORIENTATION", true);
   avgMisoPtr->initializeWithZeros();
   float* avgMiso = avgMisoPtr->getPointer(0);
 

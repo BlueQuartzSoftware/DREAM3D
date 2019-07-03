@@ -651,15 +651,15 @@ DataContainerArray::Pointer StatsGeneratorWidget::generateDataContainerArray()
   cellEnsembleAttrMat->insertOrAssign(statsDataArray);
 
   std::vector<size_t> cDims(1, 1);
-  UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::CrystalStructures);
+  UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::CrystalStructures, true);
   crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
   cellEnsembleAttrMat->insertOrAssign(crystalStructures);
 
-  UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::PhaseTypes);
+  UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::PhaseTypes, true);
   phaseTypes->setValue(0, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown));
   cellEnsembleAttrMat->insertOrAssign(phaseTypes);
 
-  StringDataArray::Pointer phaseNames = StringDataArray::CreateArray(tDims[0], SIMPL::EnsembleData::PhaseName);
+  StringDataArray::Pointer phaseNames = StringDataArray::CreateArray(tDims[0], SIMPL::EnsembleData::PhaseName, true);
   phaseNames->setValue(0, PhaseType::UnknownStr());
   cellEnsembleAttrMat->insertOrAssign(phaseNames);
 
@@ -864,7 +864,7 @@ void StatsGeneratorWidget::on_openStatsFile_clicked()
   scopedFileSentinel.addGroupId(&amGid);
 
   // We need to read one of the arrays to get the number of phases so that we can resize our attributeMatrix
-  UInt32ArrayType::Pointer phases = UInt32ArrayType::CreateArray(1, SIMPL::EnsembleData::PhaseTypes);
+  UInt32ArrayType::Pointer phases = UInt32ArrayType::CreateArray(1, SIMPL::EnsembleData::PhaseTypes, true);
   int err = phases->readH5Data(amGid);
   if(err < 0)
   {

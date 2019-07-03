@@ -81,37 +81,37 @@ DetectEllipsoidsImpl::~DetectEllipsoidsImpl() = default;
 void DetectEllipsoidsImpl::operator()() const
 {
   // Initialize temporary arrays for candidate ellipse and accumulation counter
-  DoubleArrayType::Pointer cenx_can = DoubleArrayType::CreateArray(10, std::vector<size_t>(1, 1), "cenx_can"); // x-coordinate of ellipse
+  DoubleArrayType::Pointer cenx_can = DoubleArrayType::CreateArray(10, std::vector<size_t>(1, 1), "cenx_can", true); // x-coordinate of ellipse
   for(int i = 0; i < cenx_can->getNumberOfTuples(); i++)
   {
     cenx_can->setComponent(i, 0, std::numeric_limits<double>::quiet_NaN());
   }
 
-  DoubleArrayType::Pointer ceny_can = DoubleArrayType::CreateArray(10, std::vector<size_t>(1, 1), "ceny_can"); // y-coordinate of ellipse
+  DoubleArrayType::Pointer ceny_can = DoubleArrayType::CreateArray(10, std::vector<size_t>(1, 1), "ceny_can", true); // y-coordinate of ellipse
   for(int i = 0; i < ceny_can->getNumberOfTuples(); i++)
   {
     ceny_can->setComponent(i, 0, std::numeric_limits<double>::quiet_NaN());
   }
 
-  DoubleArrayType::Pointer maj_can = DoubleArrayType::CreateArray(10, std::vector<size_t>(1, 1), "maj_can"); // major semi-axis
+  DoubleArrayType::Pointer maj_can = DoubleArrayType::CreateArray(10, std::vector<size_t>(1, 1), "maj_can", true); // major semi-axis
   for(int i = 0; i < maj_can->getNumberOfTuples(); i++)
   {
     maj_can->setComponent(i, 0, std::numeric_limits<double>::quiet_NaN());
   }
 
-  DoubleArrayType::Pointer min_can = DoubleArrayType::CreateArray(10, std::vector<size_t>(1, 1), "min_can"); // minor semi-axis
+  DoubleArrayType::Pointer min_can = DoubleArrayType::CreateArray(10, std::vector<size_t>(1, 1), "min_can", true); // minor semi-axis
   for(int i = 0; i < min_can->getNumberOfTuples(); i++)
   {
     min_can->setComponent(i, 0, std::numeric_limits<double>::quiet_NaN());
   }
 
-  DoubleArrayType::Pointer rot_can = DoubleArrayType::CreateArray(10, std::vector<size_t>(1, 1), "rot_can"); // Counter clockwise rotation from x-axis
+  DoubleArrayType::Pointer rot_can = DoubleArrayType::CreateArray(10, std::vector<size_t>(1, 1), "rot_can", true); // Counter clockwise rotation from x-axis
   for(int i = 0; i < rot_can->getNumberOfTuples(); i++)
   {
     rot_can->setComponent(i, 0, std::numeric_limits<double>::quiet_NaN());
   }
 
-  DoubleArrayType::Pointer accum_can = DoubleArrayType::CreateArray(10, std::vector<size_t>(1, 1), "accum_can"); // Accumulation matrix
+  DoubleArrayType::Pointer accum_can = DoubleArrayType::CreateArray(10, std::vector<size_t>(1, 1), "accum_can", true); // Accumulation matrix
   for(int i = 0; i < accum_can->getNumberOfTuples(); i++)
   {
     accum_can->setComponent(i, 0, std::numeric_limits<double>::quiet_NaN());
@@ -140,7 +140,7 @@ void DetectEllipsoidsImpl::operator()() const
 
     // Copy the feature id object into its own flattened 2D array called featureObjArray
     std::vector<size_t> cDims(1, 1);
-    DoubleArrayType::Pointer featureObjArray = DoubleArrayType::CreateArray(paddedObj_tDims, cDims, "featureObjArray");
+    DoubleArrayType::Pointer featureObjArray = DoubleArrayType::CreateArray(paddedObj_tDims, cDims, "featureObjArray", true);
     featureObjArray->initializeWithZeros();
 
     size_t z = 0; // 3DIM: This can be changed later to handle 3-dimensions
@@ -196,7 +196,7 @@ void DetectEllipsoidsImpl::operator()() const
       DE_ComplexDoubleVector gradY_conv = convoluteImage(gradY, m_ConvCoords_Y, m_ConvOffsetArray, paddedObj_tDims);
 
       // Calculate the magnitude matrix of the convolution.
-      DoubleArrayType::Pointer obj_conv_mag = DoubleArrayType::CreateArray(gradX_conv.size(), std::vector<size_t>(1, 1), "obj_conv_mag");
+      DoubleArrayType::Pointer obj_conv_mag = DoubleArrayType::CreateArray(gradX_conv.size(), std::vector<size_t>(1, 1), "obj_conv_mag", true);
       for(int i = 0; i < gradX_conv.size(); i++)
       {
         std::complex<double> complexValue = gradX_conv[i] + gradY_conv[i];
@@ -218,7 +218,7 @@ void DetectEllipsoidsImpl::operator()() const
       }
 
       // Create threshold matrix
-      DoubleArrayType::Pointer obj_conv_thresh = DoubleArrayType::CreateArray(obj_conv_mag->getNumberOfTuples(), std::vector<size_t>(1, 1), "obj_conv_thresh");
+      DoubleArrayType::Pointer obj_conv_thresh = DoubleArrayType::CreateArray(obj_conv_mag->getNumberOfTuples(), std::vector<size_t>(1, 1), "obj_conv_thresh", true);
       obj_conv_thresh->initializeWithZeros();
       for(int i = 0; i < obj_conv_thresh->getNumberOfTuples(); i++)
       {
@@ -279,7 +279,7 @@ void DetectEllipsoidsImpl::operator()() const
         }
 
         // Create and populate mask array of the sub-object
-        DoubleArrayType::Pointer obj_mask = DoubleArrayType::CreateArray(paddedObj_tDims, std::vector<size_t>(1, 1), "obj_mask");
+        DoubleArrayType::Pointer obj_mask = DoubleArrayType::CreateArray(paddedObj_tDims, std::vector<size_t>(1, 1), "obj_mask", true);
         obj_mask->initializeWithZeros();
 
         for(size_t y = mask_min_y - 1; y < mask_max_y; y++)
@@ -296,10 +296,10 @@ void DetectEllipsoidsImpl::operator()() const
 
         SizeTArrayType::Pointer obj_edges = findNonZeroIndices<int8_t>(edgeArray, paddedObj_tDims);
 
-        SizeTArrayType::Pointer obj_edge_pair_a = SizeTArrayType::CreateArray(obj_edges->getNumberOfTuples(), std::vector<size_t>(1, 1), "obj_edge_pair_a");
-        SizeTArrayType::Pointer obj_edge_pair_b = SizeTArrayType::CreateArray(obj_edges->getNumberOfTuples(), std::vector<size_t>(1, 1), "obj_edge_pair_b");
-        SizeTArrayType::Pointer obj_edge_pair_a1 = SizeTArrayType::CreateArray(obj_edges->getNumberOfTuples(), std::vector<size_t>(1, 2), "obj_edge_pair_a1");
-        SizeTArrayType::Pointer obj_edge_pair_b1 = SizeTArrayType::CreateArray(obj_edges->getNumberOfTuples(), std::vector<size_t>(1, 2), "obj_edge_pair_b1");
+        SizeTArrayType::Pointer obj_edge_pair_a = SizeTArrayType::CreateArray(obj_edges->getNumberOfTuples(), std::vector<size_t>(1, 1), "obj_edge_pair_a", true);
+        SizeTArrayType::Pointer obj_edge_pair_b = SizeTArrayType::CreateArray(obj_edges->getNumberOfTuples(), std::vector<size_t>(1, 1), "obj_edge_pair_b", true);
+        SizeTArrayType::Pointer obj_edge_pair_a1 = SizeTArrayType::CreateArray(obj_edges->getNumberOfTuples(), std::vector<size_t>(1, 2), "obj_edge_pair_a1", true);
+        SizeTArrayType::Pointer obj_edge_pair_b1 = SizeTArrayType::CreateArray(obj_edges->getNumberOfTuples(), std::vector<size_t>(1, 2), "obj_edge_pair_b1", true);
 
         // Determine edge pairs that will be used to analyze if the sub-object is an ellipse
         int count = 0;
@@ -381,7 +381,7 @@ void DetectEllipsoidsImpl::operator()() const
           m_Rotangle->setValue(objId, rotangle_val);
 
           // Remove the sub-object from the feature id object's 2D array
-          Int32ArrayType::Pointer featureObjOnesArray = Int32ArrayType::CreateArray(paddedObj_tDims, std::vector<size_t>(1, 1), "featureObjOnesArray");
+          Int32ArrayType::Pointer featureObjOnesArray = Int32ArrayType::CreateArray(paddedObj_tDims, std::vector<size_t>(1, 1), "featureObjOnesArray", true);
           featureObjOnesArray->initializeWithValue(1);
 
           Int32ArrayType::Pointer I_tmp = m_Filter->fillEllipse(featureObjOnesArray, paddedObj_tDims, cenx_val, ceny_val, majaxis_val + 1, minaxis_val + 1, rotangle_val, 0);
@@ -764,7 +764,7 @@ SizeTArrayType::Pointer DetectEllipsoidsImpl::bitwiseMatrixCombination(SizeTArra
   }
   else
   {
-    result = SizeTArrayType::CreateArray(matrix1->getNumberOfTuples(), matrix1->getComponentDimensions(), "Bitwise Matrix Combination");
+    result = SizeTArrayType::CreateArray(matrix1->getNumberOfTuples(), matrix1->getComponentDimensions(), "Bitwise Matrix Combination", true);
 
     for(int y = 0; y < matrix1->getNumberOfTuples(); y++)
     {
@@ -803,7 +803,7 @@ void DetectEllipsoidsImpl::analyzeEdgePair(SizeTArrayType::Pointer obj_edge_pair
   double a = sqrt(std::pow((x2 - x1), 2) + std::pow((y2 - y1), 2)) / 2;
   double alpha = atan2(y2 - y1, x2 - x1);
 
-  SizeTArrayType::Pointer accum = SizeTArrayType::CreateArray(daxis, std::vector<size_t>(1, 1), "Accumulator");
+  SizeTArrayType::Pointer accum = SizeTArrayType::CreateArray(daxis, std::vector<size_t>(1, 1), "Accumulator", true);
   accum->initializeWithZeros();
 
   if(a >= m_Axis_Min && a <= m_Axis_Max)
@@ -860,7 +860,7 @@ void DetectEllipsoidsImpl::analyzeEdgePair(SizeTArrayType::Pointer obj_edge_pair
         I_check_dims.push_back(dobj_y);
         I_check_dims.push_back(dobj_x);
 
-        SizeTArrayType::Pointer I_check = SizeTArrayType::CreateArray(I_check_dims, std::vector<size_t>(1, 1), "I_check");
+        SizeTArrayType::Pointer I_check = SizeTArrayType::CreateArray(I_check_dims, std::vector<size_t>(1, 1), "I_check", true);
         I_check->initializeWithZeros();
 
         for(int k = 0; k < ellipseCoords->getNumberOfTuples(); k++)

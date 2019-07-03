@@ -553,7 +553,7 @@ void StatsGenODFWidget::calculateODF()
   int numColors = 16;
 
   std::vector<size_t> dims(1, 3);
-  FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, dims, "Eulers");
+  FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, dims, "Eulers", true);
   PoleFigureConfiguration_t config;
   config.eulers = eulers.get();
   config.imageDim = imageSize;

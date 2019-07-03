@@ -641,7 +641,7 @@ void InsertPrecipitatePhases::execute()
     notifyStatusMessage("Packing Precipitates || Generating and Placing Precipitates");
     // this initializes the arrays to hold the details of the locations of all
     // of the features during packing
-    Int32ArrayType::Pointer exclusionZonesPtr = Int32ArrayType::CreateArray(m_TotalPoints, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::exclusion_zones");
+    Int32ArrayType::Pointer exclusionZonesPtr = Int32ArrayType::CreateArray(m_TotalPoints, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::exclusion_zones", true);
     exclusionZonesPtr->initializeWithZeros();
     place_precipitates(exclusionZonesPtr);
     if(getErrorCode() < 0 || getWarningCode() < 0)
@@ -2686,7 +2686,7 @@ void InsertPrecipitatePhases::assign_gaps()
   neighpoints[4] = xPoints;
   neighpoints[5] = xPoints * yPoints;
 
-  Int64ArrayType::Pointer neighborsPtr = Int64ArrayType::CreateArray(m->getGeometryAs<ImageGeom>()->getNumberOfElements(), "_INTERNAL_USE_ONLY_Neighbors");
+  Int64ArrayType::Pointer neighborsPtr = Int64ArrayType::CreateArray(m->getGeometryAs<ImageGeom>()->getNumberOfElements(), "_INTERNAL_USE_ONLY_Neighbors", true);
   neighborsPtr->initializeWithValue(-1);
   m_Neighbors = neighborsPtr->getPointer(0);
 

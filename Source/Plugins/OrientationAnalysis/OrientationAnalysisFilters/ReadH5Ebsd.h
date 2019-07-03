@@ -290,10 +290,10 @@ protected:
     std::vector<size_t> tDims(1, phases.size() + 1);
     attrMatrix->resizeAttributeArrays(tDims);
 
-    DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, getCrystalStructuresArrayName());
+    DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, getCrystalStructuresArrayName(), true);
     StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, getMaterialNameArrayName());
     std::vector<size_t> cDims(1, 6);
-    FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, cDims, getLatticeConstantsArrayName());
+    FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, cDims, getLatticeConstantsArrayName(), true);
 
     // Initialize the zero'th element to unknowns. The other elements will
     // be filled in based on values from the data file

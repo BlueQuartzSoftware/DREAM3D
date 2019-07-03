@@ -153,7 +153,7 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
 
   // Allocate enough for the angles
   std::vector<size_t> dims(1, 5);
-  angles = FloatArrayType::CreateArray(numOrients, dims, "EulerAngles_From_File");
+  angles = FloatArrayType::CreateArray(numOrients, dims, "EulerAngles_From_File", true);
 
   for(int i = 0; i < numOrients; i++)
   {

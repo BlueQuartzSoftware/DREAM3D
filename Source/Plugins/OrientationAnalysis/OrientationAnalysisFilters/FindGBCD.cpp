@@ -630,7 +630,7 @@ void FindGBCD::execute()
   int32_t hemisphere = 0;
 
   // create an array to hold the total face area for each phase and initialize the array to 0.0
-  DoubleArrayType::Pointer totalFaceAreaPtr = DoubleArrayType::CreateArray(totalPhases, "totalFaceArea");
+  DoubleArrayType::Pointer totalFaceAreaPtr = DoubleArrayType::CreateArray(totalPhases, "totalFaceArea", true);
   totalFaceAreaPtr->initializeWithValue(0.0);
   double* totalFaceArea = totalFaceAreaPtr->getPointer(0);
 
@@ -726,16 +726,16 @@ void FindGBCD::execute()
 // -----------------------------------------------------------------------------
 void FindGBCD::sizeGBCD(size_t faceChunkSize, size_t numMisoReps)
 {
-  m_GbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
+  m_GbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas", true);
   m_GbcdDeltasArray->initializeWithZeros();
-  m_GbcdLimitsArray = FloatArrayType::CreateArray(10, "GBCDLimits");
+  m_GbcdLimitsArray = FloatArrayType::CreateArray(10, "GBCDLimits", true);
   m_GbcdLimitsArray->initializeWithZeros();
-  m_GbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes");
+  m_GbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes", true);
   m_GbcdSizesArray->initializeWithZeros();
   std::vector<size_t> cDims(1, numMisoReps);
-  m_GbcdBinsArray = Int32ArrayType::CreateArray(faceChunkSize, cDims, "GBCDBins");
+  m_GbcdBinsArray = Int32ArrayType::CreateArray(faceChunkSize, cDims, "GBCDBins", true);
   m_GbcdBinsArray->initializeWithZeros();
-  m_GbcdHemiCheckArray = BoolArrayType::CreateArray(faceChunkSize, cDims, "GBCDHemiCheck");
+  m_GbcdHemiCheckArray = BoolArrayType::CreateArray(faceChunkSize, cDims, "GBCDHemiCheck", true);
   m_GbcdHemiCheckArray->initializeWithValue(false);
 
   m_GbcdDeltas = m_GbcdDeltasArray->getPointer(0);

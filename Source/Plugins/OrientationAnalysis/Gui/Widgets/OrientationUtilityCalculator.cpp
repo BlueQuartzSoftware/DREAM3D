@@ -106,7 +106,7 @@ QVector<double> OrientationUtilityCalculator::getValues(OrientationRepresentatio
   QVector<OrientationRepresentation::Type> ocTypes = OCType::GetOrientationTypes();
 
   std::vector<size_t> cDims(1, m_InputData.size());
-  DataArray<double>::Pointer inputDataArray = DataArray<double>::CreateArray(1, cDims, "Input Data");
+  DataArray<double>::Pointer inputDataArray = DataArray<double>::CreateArray(1, cDims, "Input Data", true);
   for(int i = 0; i < m_InputData.size(); i++)
   {
     inputDataArray->setComponent(0, i, m_InputData[i]);

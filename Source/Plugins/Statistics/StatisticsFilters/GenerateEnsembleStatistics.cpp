@@ -630,7 +630,7 @@ void GenerateEnsembleStatistics::dataCheck()
     return;
   }
 
-  m_StatsDataArray = StatsDataArray::CreateArray(m_PhaseTypesPtr.lock()->getNumberOfTuples(), getStatisticsArrayName());
+  m_StatsDataArray = StatsDataArray::CreateArray(m_PhaseTypesPtr.lock()->getNumberOfTuples(), getStatisticsArrayName(), true);
   m_StatsDataArray->fillArrayWithNewStatsData(m_PhaseTypesPtr.lock()->getNumberOfTuples(), m_PhaseTypes);
   attrMat->insertOrAssign(m_StatsDataArray);
 
@@ -721,7 +721,7 @@ void GenerateEnsembleStatistics::gatherSizeStats()
       DistributionAnalysisOps::determineMaxAndMinValues(values[i][0], maxdiam, mindiam);
       int32_t numbins = int32_t(maxdiam / m_SizeCorrelationResolution) + 1;
       pp->setFeatureDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
-      binnumbers = FloatArrayType::CreateArray(numbins, SIMPL::StringConstants::BinNumber);
+      binnumbers = FloatArrayType::CreateArray(numbins, SIMPL::StringConstants::BinNumber, true);
       DistributionAnalysisOps::determineBinNumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
       pp->setBinNumbers(binnumbers);
     }
@@ -734,7 +734,7 @@ void GenerateEnsembleStatistics::gatherSizeStats()
       DistributionAnalysisOps::determineMaxAndMinValues(values[i][0], maxdiam, mindiam);
       int32_t numbins = int32_t(maxdiam / m_SizeCorrelationResolution) + 1;
       pp->setFeatureDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
-      binnumbers = FloatArrayType::CreateArray(numbins, SIMPL::StringConstants::BinNumber);
+      binnumbers = FloatArrayType::CreateArray(numbins, SIMPL::StringConstants::BinNumber, true);
       DistributionAnalysisOps::determineBinNumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
       pp->setBinNumbers(binnumbers);
     }
@@ -747,7 +747,7 @@ void GenerateEnsembleStatistics::gatherSizeStats()
       DistributionAnalysisOps::determineMaxAndMinValues(values[i][0], maxdiam, mindiam);
       int numbins = int(maxdiam / m_SizeCorrelationResolution) + 1;
       tp->setFeatureDiameterInfo(m_SizeCorrelationResolution, maxdiam, mindiam);
-      binnumbers = FloatArrayType::CreateArray(numbins, SIMPL::StringConstants::BinNumber);
+      binnumbers = FloatArrayType::CreateArray(numbins, SIMPL::StringConstants::BinNumber, true);
       DistributionAnalysisOps::determineBinNumbers(maxdiam, mindiam, m_SizeCorrelationResolution, binnumbers);
       tp->setBinNumbers(binnumbers);
     }
@@ -1038,7 +1038,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
     if(m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal_High)
     {
       dims = 36 * 36 * 12;
-      eulerodf[i] = FloatArrayType::CreateArray(dims, SIMPL::StringConstants::ODF);
+      eulerodf[i] = FloatArrayType::CreateArray(dims, SIMPL::StringConstants::ODF, true);
       for(uint64_t j = 0; j < dims; j++)
       {
         eulerodf[i]->setValue(j, 0.0);
@@ -1047,7 +1047,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
     else if(m_CrystalStructures[i] == Ebsd::CrystalStructure::Cubic_High)
     {
       dims = 18 * 18 * 18;
-      eulerodf[i] = FloatArrayType::CreateArray(dims, SIMPL::StringConstants::ODF);
+      eulerodf[i] = FloatArrayType::CreateArray(dims, SIMPL::StringConstants::ODF, true);
       for(uint64_t j = 0; j < dims; j++)
       {
         eulerodf[i]->setValue(j, 0.0);
@@ -1129,12 +1129,12 @@ void GenerateEnsembleStatistics::gatherMDFStats()
     if(Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructures[i])
     {
       numbins = 36 * 36 * 12;
-      misobin[i] = FloatArrayType::CreateArray(numbins, SIMPL::StringConstants::MisorientationBins);
+      misobin[i] = FloatArrayType::CreateArray(numbins, SIMPL::StringConstants::MisorientationBins, true);
     }
     else if(Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[i])
     {
       numbins = 18 * 18 * 18;
-      misobin[i] = FloatArrayType::CreateArray(numbins, SIMPL::StringConstants::MisorientationBins);
+      misobin[i] = FloatArrayType::CreateArray(numbins, SIMPL::StringConstants::MisorientationBins, true);
     }
     // Now initialize all bins to 0.0
     for(int32_t j = 0; j < numbins; j++)
@@ -1218,7 +1218,7 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
   for(size_t i = 1; i < numXTals; i++)
   {
     totalaxes[i] = 0.0;
-    axisodf[i] = FloatArrayType::CreateArray((36 * 36 * 36), SIMPL::StringConstants::AxisOrientation);
+    axisodf[i] = FloatArrayType::CreateArray((36 * 36 * 36), SIMPL::StringConstants::AxisOrientation, true);
     for(int32_t j = 0; j < (36 * 36 * 36); j++)
     {
       axisodf[i]->setValue(j, 0.0);

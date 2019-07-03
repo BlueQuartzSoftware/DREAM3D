@@ -74,7 +74,7 @@ public:
   template <typename T>
   Int8ArrayType::Pointer findEdges(typename DataArray<T>::Pointer imagePtr, std::vector<size_t> image_tDims) const
   {
-    Int8ArrayType::Pointer edgeArray = Int8ArrayType::CreateArray(image_tDims, std::vector<size_t>(1, 1), "Edge Array");
+    Int8ArrayType::Pointer edgeArray = Int8ArrayType::CreateArray(image_tDims, std::vector<size_t>(1, 1), "Edge Array", true);
     edgeArray->initializeWithZeros();
 
     size_t xDim = image_tDims[0];
@@ -266,7 +266,7 @@ public:
     size_t xDim = tDims[0];
     size_t yDim = tDims[1];
     size_t zDim = 1; // 3DIM: This can be changed later to handle 3-dimensions
-    typename DataArray<size_t>::Pointer indices = DataArray<size_t>::CreateArray(size, std::vector<size_t>(1, 2), "Non-Zero Indices");
+    typename DataArray<size_t>::Pointer indices = DataArray<size_t>::CreateArray(size, std::vector<size_t>(1, 2), "Non-Zero Indices", true);
 
     if(array.get() == nullptr)
     {

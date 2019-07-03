@@ -282,7 +282,7 @@ void MovingFiniteElementSmoothing::execute()
   int numberNodes = floatNodesPtr->getNumberOfTuples();
   int ntri = trianglesPtr->getNumberOfTuples();
 
-  StructArray<VertexArray::VertD_t>::Pointer nodesDPtr = StructArray<VertexArray::VertD_t>::CreateArray(numberNodes, "MFE_Double_Nodes");
+  StructArray<VertexArray::VertD_t>::Pointer nodesDPtr = StructArray<VertexArray::VertD_t>::CreateArray(numberNodes, "MFE_Double_Nodes", true);
   nodesDPtr->initializeWithZeros();
   VertexArray::VertD_t* nodes = nodesDPtr->getPointer(0);
 
@@ -297,7 +297,7 @@ void MovingFiniteElementSmoothing::execute()
   bool isVerbose = true;
 
   // We need a few more arrays to support the code from CMU:
-  StructArray<TripleNN>::Pointer triplennPtr = StructArray<TripleNN>::CreateArray(numberNodes, "TripleLine_Neighbors_Or_IDS");
+  StructArray<TripleNN>::Pointer triplennPtr = StructArray<TripleNN>::CreateArray(numberNodes, "TripleLine_Neighbors_Or_IDS", true);
   triplennPtr->initializeWithZeros();
   TripleNN* triplenn = triplennPtr->getPointer(0);
 

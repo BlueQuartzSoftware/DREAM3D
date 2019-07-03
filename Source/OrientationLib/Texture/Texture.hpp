@@ -87,7 +87,7 @@ public:
   template <typename T> static void CalculateCubicODFData(T* e1s, T* e2s, T* e3s, T* weights, T* sigmas, bool normalize, T* odf, size_t numEntries)
   {
     CubicOps ops;
-    Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
+    Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins", true);
     int32_t* TextureBins = textureBins->getPointer(0);
 
     float addweight = 0;
@@ -225,7 +225,7 @@ public:
   template <typename T> static void CalculateHexODFData(T* e1s, T* e2s, T* e3s, T* weights, T* sigmas, bool normalize, T* odf, size_t numEntries)
   {
     HexagonalOps hexOps;
-    Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
+    Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins", true);
     int32_t* TextureBins = textureBins->getPointer(0);
     float addweight = 0;
     float totaladdweight = 0;
@@ -363,7 +363,7 @@ public:
   {
     OrthoRhombicOps ops;
     SIMPL_RANDOMNG_NEW()
-    Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
+    Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins", true);
     int32_t* TextureBins = textureBins->getPointer(0);
     float addweight = 0;
     float totaladdweight = 0;

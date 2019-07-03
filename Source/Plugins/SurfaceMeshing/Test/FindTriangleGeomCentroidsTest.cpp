@@ -197,7 +197,7 @@ public:
     AttributeMatrix::Pointer featAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::FaceFeatureAttributeMatrixName, AttributeMatrix::Type::FaceFeature);
     tdc->addOrReplaceAttributeMatrix(featAttrMat);
     std::vector<size_t> cDims(1, 2);
-    Int32ArrayType::Pointer faceLabels = Int32ArrayType::CreateArray(12, cDims, SIMPL::FaceData::SurfaceMeshFaceLabels);
+    Int32ArrayType::Pointer faceLabels = Int32ArrayType::CreateArray(12, cDims, SIMPL::FaceData::SurfaceMeshFaceLabels, true);
     faceAttrMat->insertOrAssign(faceLabels);
     int32_t* faceLabelsPtr = faceLabels->getPointer(0);
 

@@ -117,10 +117,10 @@ void M3CEntireVolume::dataCheck()
   }
   else
   {
-    StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(1, SIMPL::CellData::SurfaceMeshNodes);
-    StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(1, SIMPL::CellData::SurfaceMeshTriangles);
-    StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(1, SIMPL::CellData::SurfaceMeshEdges);
-    StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(1, SIMPL::CellData::SurfaceMeshInternalEdges);
+    StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(1, SIMPL::CellData::SurfaceMeshNodes, true);
+    StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(1, SIMPL::CellData::SurfaceMeshTriangles, true);
+    StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(1, SIMPL::CellData::SurfaceMeshEdges, true);
+    StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(1, SIMPL::CellData::SurfaceMeshInternalEdges, true);
 
     m_SurfaceMeshNodeTypePtr = sattrMat->createNonPrereqArray<DataArray<int8_t>, AbstractFilter, int8_t>(this, m_CellAttributeMatrixName, m_SurfaceMeshNodeTypeArrayName, 0, 1,
                                                                                                          1); /* Assigns the shared_ptr<> to an instance variable that is a weak_ptr<> */
@@ -284,12 +284,12 @@ int M3CEntireVolume::createMesh()
 
   StructArray<Neighbor>::Pointer neighbors = StructArray<Neighbor>::CreateArray(NS + 1, SIMPL::CellData::SurfaceMeshNeighbors);
   neighbors->initializeWithZeros();
-  StructArray<Face>::Pointer squares = StructArray<Face>::CreateArray(3 * NS, SIMPL::CellData::SurfaceMeshFaces);
+  StructArray<Face>::Pointer squares = StructArray<Face>::CreateArray(3 * NS, SIMPL::CellData::SurfaceMeshFaces, true);
   squares->initializeWithZeros();
-  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(7 * NS, SIMPL::CellData::SurfaceMeshNodes);
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(7 * NS, SIMPL::CellData::SurfaceMeshNodes, true);
   nodesPtr->initializeWithZeros();
 
-  DataArray<int8_t>::Pointer nodeKindPtr = DataArray<int8_t>::CreateArray(7 * NS, SIMPL::CellData::SurfaceMeshNodeType);
+  DataArray<int8_t>::Pointer nodeKindPtr = DataArray<int8_t>::CreateArray(7 * NS, SIMPL::CellData::SurfaceMeshNodeType, true);
   nodeKindPtr->initializeWithValues(0);
   m_SurfaceMeshNodeType = nodeKindPtr->GetPointer(0);
 
@@ -317,7 +317,7 @@ int M3CEntireVolume::createMesh()
 
   // memory allocation for face edges...
   //  fedge = (segment *)malloc(nFEdge * sizeof(segment));
-  StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(nFEdge, SIMPL::CellData::SurfaceMeshEdges);
+  StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(nFEdge, SIMPL::CellData::SurfaceMeshEdges, true);
   faceEdges->initializeWithZeros();
   Segment* fedge = faceEdges.get()->GetPointer(0);
 
@@ -332,11 +332,11 @@ int M3CEntireVolume::createMesh()
 
   // memory allocation for triangle...
   //  triangle = (patch *)malloc(nTriangle * sizeof(patch));
-  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(nTriangle, SIMPL::CellData::SurfaceMeshTriangles);
+  StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(nTriangle, SIMPL::CellData::SurfaceMeshTriangles, true);
   triangles->initializeWithZeros();
   sm->setTriangles(triangles);
   Triangle* triangle = triangles.get()->GetPointer(0);
-  Int32ArrayType::Pointer mCubeIDPtr = Int32ArrayType::CreateArray(nTriangle, "Cube Id");
+  Int32ArrayType::Pointer mCubeIDPtr = Int32ArrayType::CreateArray(nTriangle, "Cube Id", true);
   mCubeIDPtr->initializeWithZeros();
   int32_t* mCubeID = mCubeIDPtr->GetPointer(0);
 
@@ -351,7 +351,7 @@ int M3CEntireVolume::createMesh()
   // printf("\ttotal number of unique inner edges = %d\n", tnIEdge);
   // memory allocation for inner edges...
   //  iedge = (isegment *)malloc(tnIEdge * sizeof(isegment));
-  StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(tnIEdge, SIMPL::CellData::SurfaceMeshInternalEdges);
+  StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(tnIEdge, SIMPL::CellData::SurfaceMeshInternalEdges, true);
   internalEdges->initializeWithZeros();
   ISegment* iedge = internalEdges.get()->GetPointer(0);
 
@@ -374,9 +374,9 @@ int M3CEntireVolume::createMesh()
   notifyStatusMessage(ss.str());
 
   // Create new shortend arrays for the Triangles and the Nodes and NodeKind
-  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodes = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(nNodes, SIMPL::CellData::SurfaceMeshNodes);
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodes = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(nNodes, SIMPL::CellData::SurfaceMeshNodes, true);
   nodes->initializeWithZeros();
-  DataArray<int8_t>::Pointer shortNodeKindPtr = DataArray<int8_t>::CreateArray(nNodes, SIMPL::CellData::SurfaceMeshNodeType);
+  DataArray<int8_t>::Pointer shortNodeKindPtr = DataArray<int8_t>::CreateArray(nNodes, SIMPL::CellData::SurfaceMeshNodeType, true);
 
   generate_update_nodes_edges_array(new_ids_for_nodes, shortNodeKindPtr, nodes, nodesPtr, triangles, faceEdges, internalEdges, maxGrainId);
 

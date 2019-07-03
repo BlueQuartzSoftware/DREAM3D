@@ -227,13 +227,13 @@ void VisualizeGBCDGMT::execute()
     return;
   }
 
-  FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
+  FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas", true);
   gbcdDeltasArray->initializeWithZeros();
 
-  FloatArrayType::Pointer gbcdLimitsArray = FloatArrayType::CreateArray(10, "GBCDLimits");
+  FloatArrayType::Pointer gbcdLimitsArray = FloatArrayType::CreateArray(10, "GBCDLimits", true);
   gbcdLimitsArray->initializeWithZeros();
 
-  Int32ArrayType::Pointer gbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes");
+  Int32ArrayType::Pointer gbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes", true);
   gbcdSizesArray->initializeWithZeros();
 
   float* gbcdDeltas = gbcdDeltasArray->getPointer(0);

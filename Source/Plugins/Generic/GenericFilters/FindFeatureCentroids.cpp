@@ -155,7 +155,7 @@ void FindFeatureCentroids::find_centroids()
   size_t totalFeatures = m_CentroidsPtr.lock()->getNumberOfTuples();
 
   std::vector<size_t> dims(1, 4);
-  FloatArrayType::Pointer m_FeatureCentersPtr = FloatArrayType::CreateArray(totalFeatures, dims, "_INTERNAL_USE_ONLY_Centroids");
+  FloatArrayType::Pointer m_FeatureCentersPtr = FloatArrayType::CreateArray(totalFeatures, dims, "_INTERNAL_USE_ONLY_Centroids", true);
   m_FeatureCentersPtr->initializeWithZeros();
   float* featurecenters = m_FeatureCentersPtr->getPointer(0);
 

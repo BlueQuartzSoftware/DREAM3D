@@ -147,7 +147,7 @@ public:
     idc->addOrReplaceAttributeMatrix(featAttrMat);
 
     std::vector<size_t> cDims(1, 1);
-    Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(256 * 128 * 64, cDims, SIMPL::CellData::FeatureIds);
+    Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(256 * 128 * 64, cDims, SIMPL::CellData::FeatureIds, true);
     featureIds->initializeWithValue(1);
     attrMat->insertOrAssign(featureIds);
 
@@ -163,7 +163,7 @@ public:
     featAttrMat = AttributeMatrix::New(tDims, SIMPL::Defaults::CellFeatureAttributeMatrixName, AttributeMatrix::Type::CellFeature);
     idc2->addOrReplaceAttributeMatrix(featAttrMat);
 
-    featureIds = Int32ArrayType::CreateArray(256 * 128 * 1, cDims, SIMPL::CellData::FeatureIds);
+    featureIds = Int32ArrayType::CreateArray(256 * 128 * 1, cDims, SIMPL::CellData::FeatureIds, true);
     featureIds->initializeWithValue(1);
     attrMat->insertOrAssign(featureIds);
 

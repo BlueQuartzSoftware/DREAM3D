@@ -158,17 +158,17 @@ public:
     RectGridGeom::Pointer rectGrid = RectGridGeom::CreateGeometry(SIMPL::Geometry::RectGridGeometry);
     dims[2] = 1;
     rectGrid->setDimensions(dims);
-    FloatArrayType::Pointer xBounds = FloatArrayType::CreateArray(3, SIMPL::Geometry::xBoundsList);
+    FloatArrayType::Pointer xBounds = FloatArrayType::CreateArray(3, SIMPL::Geometry::xBoundsList, true);
     xBounds->setValue(0, 0.0f);
     xBounds->setValue(1, 1.0f);
     xBounds->setValue(2, 2.0f);
     rectGrid->setXBounds(xBounds);
-    FloatArrayType::Pointer yBounds = FloatArrayType::CreateArray(3, SIMPL::Geometry::yBoundsList);
+    FloatArrayType::Pointer yBounds = FloatArrayType::CreateArray(3, SIMPL::Geometry::yBoundsList, true);
     yBounds->setValue(0, 0.0f);
     yBounds->setValue(1, 1.0f);
     yBounds->setValue(2, 2.0f);
     rectGrid->setYBounds(yBounds);
-    FloatArrayType::Pointer zBounds = FloatArrayType::CreateArray(2, SIMPL::Geometry::zBoundsList);
+    FloatArrayType::Pointer zBounds = FloatArrayType::CreateArray(2, SIMPL::Geometry::zBoundsList, true);
     zBounds->setValue(0, 0.0f);
     zBounds->setValue(1, 2.0f);
     rectGrid->setZBounds(zBounds);
@@ -264,7 +264,7 @@ public:
     // Create an element AttributeMatrix and FeatureIds array for each geometry
     std::vector<size_t> tDims(1, 4);
     AttributeMatrix::Pointer image2D_AttrMat = AttributeMatrix::New(tDims, "Image2DData", AttributeMatrix::Type::Cell);
-    Int32ArrayType::Pointer image2D_fIDs = Int32ArrayType::CreateArray(4, SIMPL::CellData::FeatureIds);
+    Int32ArrayType::Pointer image2D_fIDs = Int32ArrayType::CreateArray(4, SIMPL::CellData::FeatureIds, true);
     image2D_fIDs->initializeWithValue(1);
     image2D_fIDs->setValue(2, 2);
     image2D_fIDs->setValue(3, 2);
@@ -273,7 +273,7 @@ public:
 
     tDims[0] = 8;
     AttributeMatrix::Pointer image3D_AttrMat = AttributeMatrix::New(tDims, "Image3DData", AttributeMatrix::Type::Cell);
-    Int32ArrayType::Pointer image3D_fIDs = Int32ArrayType::CreateArray(8, SIMPL::CellData::FeatureIds);
+    Int32ArrayType::Pointer image3D_fIDs = Int32ArrayType::CreateArray(8, SIMPL::CellData::FeatureIds, true);
     image3D_fIDs->initializeWithValue(1);
     image3D_fIDs->setValue(4, 2);
     image3D_fIDs->setValue(5, 2);
@@ -284,7 +284,7 @@ public:
 
     tDims[0] = 4;
     AttributeMatrix::Pointer rectGrid_AttrMat = AttributeMatrix::New(tDims, "RectGridData", AttributeMatrix::Type::Cell);
-    Int32ArrayType::Pointer rectGrid_fIDs = Int32ArrayType::CreateArray(4, SIMPL::CellData::FeatureIds);
+    Int32ArrayType::Pointer rectGrid_fIDs = Int32ArrayType::CreateArray(4, SIMPL::CellData::FeatureIds, true);
     rectGrid_fIDs->initializeWithValue(1);
     rectGrid_fIDs->setValue(2, 2);
     rectGrid_fIDs->setValue(3, 2);
@@ -293,7 +293,7 @@ public:
 
     tDims[0] = 2;
     AttributeMatrix::Pointer vertex_AttrMat = AttributeMatrix::New(tDims, "VertexData", AttributeMatrix::Type::Vertex);
-    Int32ArrayType::Pointer vertex_fIDs = Int32ArrayType::CreateArray(2, SIMPL::CellData::FeatureIds);
+    Int32ArrayType::Pointer vertex_fIDs = Int32ArrayType::CreateArray(2, SIMPL::CellData::FeatureIds, true);
     vertex_fIDs->initializeWithValue(1);
     ;
     vertex_fIDs->setValue(1, 2);
@@ -301,7 +301,7 @@ public:
     vertex_DC->addOrReplaceAttributeMatrix(vertex_AttrMat);
 
     AttributeMatrix::Pointer edge_AttrMat = AttributeMatrix::New(tDims, "EdgeData", AttributeMatrix::Type::Edge);
-    Int32ArrayType::Pointer edge_fIDs = Int32ArrayType::CreateArray(2, SIMPL::CellData::FeatureIds);
+    Int32ArrayType::Pointer edge_fIDs = Int32ArrayType::CreateArray(2, SIMPL::CellData::FeatureIds, true);
     edge_fIDs->initializeWithValue(1);
     ;
     edge_fIDs->setValue(1, 2);
@@ -309,7 +309,7 @@ public:
     edge_DC->addOrReplaceAttributeMatrix(edge_AttrMat);
 
     AttributeMatrix::Pointer tri_AttrMat = AttributeMatrix::New(tDims, "TriData", AttributeMatrix::Type::Face);
-    Int32ArrayType::Pointer tri_fIDs = Int32ArrayType::CreateArray(2, SIMPL::CellData::FeatureIds);
+    Int32ArrayType::Pointer tri_fIDs = Int32ArrayType::CreateArray(2, SIMPL::CellData::FeatureIds, true);
     tri_fIDs->initializeWithValue(1);
     ;
     tri_fIDs->setValue(1, 2);
@@ -317,7 +317,7 @@ public:
     triangle_DC->addOrReplaceAttributeMatrix(tri_AttrMat);
 
     AttributeMatrix::Pointer quad_AttrMat = AttributeMatrix::New(tDims, "QuadData", AttributeMatrix::Type::Face);
-    Int32ArrayType::Pointer quad_fIDs = Int32ArrayType::CreateArray(2, SIMPL::CellData::FeatureIds);
+    Int32ArrayType::Pointer quad_fIDs = Int32ArrayType::CreateArray(2, SIMPL::CellData::FeatureIds, true);
     quad_fIDs->initializeWithValue(1);
     ;
     quad_fIDs->setValue(1, 2);
@@ -325,7 +325,7 @@ public:
     quad_DC->addOrReplaceAttributeMatrix(quad_AttrMat);
 
     AttributeMatrix::Pointer tet_AttrMat = AttributeMatrix::New(tDims, "TetData", AttributeMatrix::Type::Face);
-    Int32ArrayType::Pointer tet_fIDs = Int32ArrayType::CreateArray(2, SIMPL::CellData::FeatureIds);
+    Int32ArrayType::Pointer tet_fIDs = Int32ArrayType::CreateArray(2, SIMPL::CellData::FeatureIds, true);
     tet_fIDs->initializeWithValue(1);
     ;
     tet_fIDs->setValue(1, 2);

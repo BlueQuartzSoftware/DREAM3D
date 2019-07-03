@@ -992,7 +992,7 @@ Orientation Matrix               : | -1.0000   0.0000   0.0000 |
   void TestInputs()
   {
     std::vector<size_t> cDims(1, 3);
-    FloatArrayType::Pointer data = FloatArrayType::CreateArray(2, cDims, "Eulers");
+    FloatArrayType::Pointer data = FloatArrayType::CreateArray(2, cDims, "Eulers", true);
     data->initializeWithZeros();
     float* fPtr = data->getPointer(0);
     fPtr[0] = 90.0 * SIMPLib::Constants::k_PiOver180;

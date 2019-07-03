@@ -459,7 +459,7 @@ void StatsGenAxisODFWidget::calculateAxisODF()
   int numColors = 16;
   int npoints = pfSamplePoints->value();
   std::vector<size_t> dims(1, 3);
-  FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, dims, "Eulers");
+  FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, dims, "Eulers", true);
 
   odf.resize(OrthoRhombicOps::k_OdfSize);
 

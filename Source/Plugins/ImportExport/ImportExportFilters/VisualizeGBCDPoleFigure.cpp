@@ -214,13 +214,13 @@ void VisualizeGBCDPoleFigure::execute()
     return;
   }
 
-  FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas");
+  FloatArrayType::Pointer gbcdDeltasArray = FloatArrayType::CreateArray(5, "GBCDDeltas", true);
   gbcdDeltasArray->initializeWithZeros();
 
-  FloatArrayType::Pointer gbcdLimitsArray = FloatArrayType::CreateArray(10, "GBCDLimits");
+  FloatArrayType::Pointer gbcdLimitsArray = FloatArrayType::CreateArray(10, "GBCDLimits", true);
   gbcdLimitsArray->initializeWithZeros();
 
-  Int32ArrayType::Pointer gbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes");
+  Int32ArrayType::Pointer gbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes", true);
   gbcdSizesArray->initializeWithZeros();
 
   float* gbcdDeltas = gbcdDeltasArray->getPointer(0);
@@ -326,7 +326,7 @@ void VisualizeGBCDPoleFigure::execute()
 
   std::vector<size_t> dims(1, 1);
   DoubleArrayType::Pointer poleFigureArray = DoubleArrayType::NullPointer();
-  poleFigureArray = DoubleArrayType::CreateArray(xpoints * ypoints, dims, "PoleFigure");
+  poleFigureArray = DoubleArrayType::CreateArray(xpoints * ypoints, dims, "PoleFigure", true);
   poleFigureArray->initializeWithZeros();
   double* poleFigure = poleFigureArray->getPointer(0);
 

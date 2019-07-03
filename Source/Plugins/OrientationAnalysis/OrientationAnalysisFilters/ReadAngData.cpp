@@ -266,7 +266,7 @@ void ReadAngData::dataCheck()
     m_LatticeConstants = m_LatticeConstantsPtr.lock()->getPointer(0);
   }
 
-  StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), SIMPL::EnsembleData::MaterialName);
+  StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), SIMPL::EnsembleData::MaterialName, true);
   cellEnsembleAttrMat->insertOrAssign(materialNames);
 }
 
@@ -419,10 +419,10 @@ int32_t ReadAngData::loadMaterialInfo(AngReader* reader)
     return getErrorCode();
   }
 
-  DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, Ebsd::AngFile::CrystalStructures);
+  DataArray<uint32_t>::Pointer crystalStructures = DataArray<uint32_t>::CreateArray(phases.size() + 1, Ebsd::AngFile::CrystalStructures, true);
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(phases.size() + 1, Ebsd::AngFile::MaterialName);
   std::vector<size_t> cDims(1, 6);
-  FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, cDims, Ebsd::AngFile::LatticeConstants);
+  FloatArrayType::Pointer latticeConstants = FloatArrayType::CreateArray(phases.size() + 1, cDims, Ebsd::AngFile::LatticeConstants, true);
 
   // Initialize the zero'th element to unknowns. The other elements will
   // be filled in based on values from the data file
@@ -519,7 +519,7 @@ void ReadAngData::copyRawEbsdData(AngReader* reader, std::vector<size_t>& tDims,
         phasePtr[i] = 1;
       }
     }
-    iArray = Int32ArrayType::CreateArray(tDims, cDims, SIMPL::CellData::Phases);
+    iArray = Int32ArrayType::CreateArray(tDims, cDims, SIMPL::CellData::Phases, true);
     ::memcpy(iArray->getPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
     ebsdAttrMat->insertOrAssign(iArray);
   }
@@ -530,7 +530,7 @@ void ReadAngData::copyRawEbsdData(AngReader* reader, std::vector<size_t>& tDims,
     f2 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi));
     f3 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Phi2));
     cDims[0] = 3;
-    fArray = FloatArrayType::CreateArray(tDims, cDims, SIMPL::CellData::EulerAngles);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, SIMPL::CellData::EulerAngles, true);
     float* cellEulerAngles = fArray->getPointer(0);
 
     for(size_t i = 0; i < totalPoints; i++)
@@ -545,42 +545,42 @@ void ReadAngData::copyRawEbsdData(AngReader* reader, std::vector<size_t>& tDims,
   cDims[0] = 1;
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ImageQuality));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ImageQuality);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ImageQuality, true);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::ConfidenceIndex));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ConfidenceIndex);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::ConfidenceIndex, true);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::SEMSignal));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::SEMSignal);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::SEMSignal, true);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::Fit));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::Fit);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::Fit, true);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::XPosition));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::XPosition);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::XPosition, true);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->insertOrAssign(fArray);
   }
 
   {
     f1 = reinterpret_cast<float*>(reader->getPointerByName(Ebsd::Ang::YPosition));
-    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::YPosition);
+    fArray = FloatArrayType::CreateArray(tDims, cDims, Ebsd::Ang::YPosition, true);
     ::memcpy(fArray->getPointer(0), f1, sizeof(float) * totalPoints);
     ebsdAttrMat->insertOrAssign(fArray);
   }

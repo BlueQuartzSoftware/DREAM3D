@@ -862,8 +862,8 @@ int StatsGenFeatureSizeWidget::getStatisticsData(PrimaryStatsData* primaryStatsD
   // Feature Size Distribution
   {
     VectorOfFloatArray data;
-    FloatArrayType::Pointer d1 = FloatArrayType::CreateArray(1, SIMPL::StringConstants::Average);
-    FloatArrayType::Pointer d2 = FloatArrayType::CreateArray(1, SIMPL::StringConstants::StandardDeviation);
+    FloatArrayType::Pointer d1 = FloatArrayType::CreateArray(1, SIMPL::StringConstants::Average, true);
+    FloatArrayType::Pointer d2 = FloatArrayType::CreateArray(1, SIMPL::StringConstants::StandardDeviation, true);
     data.push_back(d1);
     data.push_back(d2);
     d1->setValue(0, avglogdiam);

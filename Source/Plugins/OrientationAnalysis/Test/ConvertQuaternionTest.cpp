@@ -56,7 +56,7 @@ class ConvertQuaternionTest
     dc->addOrReplaceAttributeMatrix(am);
 
     std::vector<size_t> cDims = {4};
-    FloatArrayType::Pointer vectorScalarPtr = FloatArrayType::CreateArray(tDims[0], cDims, "VectorScalar");
+    FloatArrayType::Pointer vectorScalarPtr = FloatArrayType::CreateArray(tDims[0], cDims, "VectorScalar", true);
 
     am->addOrReplaceAttributeArray(vectorScalarPtr);
 

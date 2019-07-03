@@ -486,8 +486,8 @@ void MatchCrystallography::initializeArrays(size_t ensem)
     return;
   }
 
-  m_SimOdf = FloatArrayType::CreateArray(m_ActualOdf->getSize(), SIMPL::StringConstants::ODF);
-  m_SimMdf = FloatArrayType::CreateArray(m_ActualMdf->getSize(), SIMPL::StringConstants::MisorientationBins);
+  m_SimOdf = FloatArrayType::CreateArray(m_ActualOdf->getSize(), SIMPL::StringConstants::ODF, true);
+  m_SimMdf = FloatArrayType::CreateArray(m_ActualMdf->getSize(), SIMPL::StringConstants::MisorientationBins, true);
   for(size_t j = 0; j < m_SimOdf->getSize(); j++)
   {
     m_SimOdf->setValue(j, 0.0);

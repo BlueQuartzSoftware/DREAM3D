@@ -119,7 +119,7 @@ public:
     int size = 20;
 
     {
-      Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, SIMPL::CellData::CellPhases);
+      Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, SIMPL::CellData::CellPhases, true);
       for(int i = 0; i < size; ++i) // create an array with values 20 to 39
       {
         intArray->setValue(i, i + 20);
@@ -127,7 +127,7 @@ public:
       attrMatrix->insertOrAssign(intArray);
     }
     {
-      Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, SIMPL::CellData::ConfidenceIndexNoSpace);
+      Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, SIMPL::CellData::ConfidenceIndexNoSpace, true);
       for(int i = 0; i < size; ++i) // create an array with values 20 to 39
       {
         intArray->setValue(i, i + 20);
@@ -135,7 +135,7 @@ public:
       attrMatrix->insertOrAssign(intArray);
     }
     {
-      BoolArrayType::Pointer boolArray = BoolArrayType::CreateArray(size, SIMPL::GeneralData::ThresholdArray);
+      BoolArrayType::Pointer boolArray = BoolArrayType::CreateArray(size, SIMPL::GeneralData::ThresholdArray, true);
       for(int i = 0; i < size; ++i) // create an bool array with true and false values
       {
         if(i % 2 == 0)
@@ -150,7 +150,7 @@ public:
       attrMatrix->insertOrAssign(boolArray);
     }
     {
-      Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, SIMPL::CellData::ConfidenceIndexNoSpace);
+      Int32ArrayType::Pointer intArray = Int32ArrayType::CreateArray(size, SIMPL::CellData::ConfidenceIndexNoSpace, true);
       for(int i = 0; i < size; ++i) // create an array with values 20 to 39
       {
         intArray->setValue(i, i + 20);

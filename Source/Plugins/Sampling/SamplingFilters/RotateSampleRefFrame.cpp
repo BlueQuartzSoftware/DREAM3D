@@ -580,7 +580,7 @@ void RotateSampleRefFrame::execute()
 
   int64_t newNumCellTuples = params.xpNew * params.ypNew * params.zpNew;
 
-  DataArray<int64_t>::Pointer newIndiciesPtr = DataArray<int64_t>::CreateArray(newNumCellTuples, "_INTERNAL_USE_ONLY_RotateSampleRef_NewIndicies");
+  DataArray<int64_t>::Pointer newIndiciesPtr = DataArray<int64_t>::CreateArray(newNumCellTuples, "_INTERNAL_USE_ONLY_RotateSampleRef_NewIndicies", true);
   newIndiciesPtr->initializeWithValue(-1);
   int64_t* newindicies = newIndiciesPtr->getPointer(0);
 

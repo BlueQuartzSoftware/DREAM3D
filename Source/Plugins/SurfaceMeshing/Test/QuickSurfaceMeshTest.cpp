@@ -127,17 +127,17 @@ public:
 
     RectGridGeom::Pointer rectGrid = RectGridGeom::CreateGeometry(SIMPL::Geometry::RectGridGeometry);
     rectGrid->setDimensions(dims);
-    FloatArrayType::Pointer xBounds = FloatArrayType::CreateArray(3, SIMPL::Geometry::xBoundsList);
+    FloatArrayType::Pointer xBounds = FloatArrayType::CreateArray(3, SIMPL::Geometry::xBoundsList, true);
     xBounds->setValue(0, 0.0f);
     xBounds->setValue(1, 1.0f);
     xBounds->setValue(2, 2.0f);
     rectGrid->setXBounds(xBounds);
-    FloatArrayType::Pointer yBounds = FloatArrayType::CreateArray(3, SIMPL::Geometry::yBoundsList);
+    FloatArrayType::Pointer yBounds = FloatArrayType::CreateArray(3, SIMPL::Geometry::yBoundsList, true);
     yBounds->setValue(0, 0.0f);
     yBounds->setValue(1, 1.0f);
     yBounds->setValue(2, 2.0f);
     rectGrid->setYBounds(yBounds);
-    FloatArrayType::Pointer zBounds = FloatArrayType::CreateArray(2, SIMPL::Geometry::zBoundsList);
+    FloatArrayType::Pointer zBounds = FloatArrayType::CreateArray(2, SIMPL::Geometry::zBoundsList, true);
     zBounds->setValue(0, 0.0f);
     zBounds->setValue(1, 2.0f);
     rectGrid->setZBounds(zBounds);
@@ -147,7 +147,7 @@ public:
     std::vector<size_t> tDims(1, 4);
 
     AttributeMatrix::Pointer image3D_AttrMat = AttributeMatrix::New(tDims, "Image3DData", AttributeMatrix::Type::Cell);
-    Int32ArrayType::Pointer image3D_fIDs = Int32ArrayType::CreateArray(4, SIMPL::CellData::FeatureIds);
+    Int32ArrayType::Pointer image3D_fIDs = Int32ArrayType::CreateArray(4, SIMPL::CellData::FeatureIds, true);
     image3D_fIDs->initializeWithValue(1);
     image3D_fIDs->setValue(2, 2);
     image3D_fIDs->setValue(3, 2);
@@ -155,7 +155,7 @@ public:
     image3D_DC->addOrReplaceAttributeMatrix(image3D_AttrMat);
 
     AttributeMatrix::Pointer rectGrid_AttrMat = AttributeMatrix::New(tDims, "RectGridData", AttributeMatrix::Type::Cell);
-    Int32ArrayType::Pointer rectGrid_fIDs = Int32ArrayType::CreateArray(4, SIMPL::CellData::FeatureIds);
+    Int32ArrayType::Pointer rectGrid_fIDs = Int32ArrayType::CreateArray(4, SIMPL::CellData::FeatureIds, true);
     rectGrid_fIDs->initializeWithValue(1);
     rectGrid_fIDs->setValue(2, 2);
     rectGrid_fIDs->setValue(3, 2);

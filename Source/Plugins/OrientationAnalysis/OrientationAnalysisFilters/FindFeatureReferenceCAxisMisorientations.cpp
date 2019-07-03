@@ -240,7 +240,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
 
   int32_t avgMisoComps = 3;
   std::vector<size_t> dims(1, avgMisoComps);
-  FloatArrayType::Pointer avgmisoPtr = FloatArrayType::CreateArray(totalFeatures, dims, "_INTERNAL_USE_ONLY_AvgMiso_Temp");
+  FloatArrayType::Pointer avgmisoPtr = FloatArrayType::CreateArray(totalFeatures, dims, "_INTERNAL_USE_ONLY_AvgMiso_Temp", true);
   avgmisoPtr->initializeWithZeros();
   float* avgmiso = avgmisoPtr->getPointer(0);
 

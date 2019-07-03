@@ -1813,11 +1813,11 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
   std::vector<size_t> dims(1, 3);
-  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize0, dims, label0 + QString("xyzCoords"));
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize0, dims, label0 + QString("xyzCoords"), true);
   // this is size for CUBIC ONLY, <011> Family
-  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize1, dims, label1 + QString("xyzCoords"));
+  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize1, dims, label1 + QString("xyzCoords"), true);
   // this is size for CUBIC ONLY, <111> Family
-  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize2, dims, label2 + QString("xyzCoords"));
+  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize2, dims, label2 + QString("xyzCoords"), true);
 
   config.sphereRadius = 1.0f;
 
@@ -1826,9 +1826,9 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
 
   // These arrays hold the "intensity" images which eventually get converted to an actual Color RGB image
   // Generate the modified Lambert projection images (Squares, 2 of them, 1 for northern hemisphere, 1 for southern hemisphere
-  DoubleArrayType::Pointer intensity001 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label0 + "_Intensity_Image");
-  DoubleArrayType::Pointer intensity011 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label1 + "_Intensity_Image");
-  DoubleArrayType::Pointer intensity111 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label2 + "_Intensity_Image");
+  DoubleArrayType::Pointer intensity001 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label0 + "_Intensity_Image", true);
+  DoubleArrayType::Pointer intensity011 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label1 + "_Intensity_Image", true);
+  DoubleArrayType::Pointer intensity111 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, label2 + "_Intensity_Image", true);
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
@@ -1904,9 +1904,9 @@ QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfigur
   config.maxScale = max;
 
   dims[0] = 4;
-  UInt8ArrayType::Pointer image001 = UInt8ArrayType::CreateArray(static_cast<size_t>(config.imageDim * config.imageDim), dims, label0);
-  UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(static_cast<size_t>(config.imageDim * config.imageDim), dims, label1);
-  UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(static_cast<size_t>(config.imageDim * config.imageDim), dims, label2);
+  UInt8ArrayType::Pointer image001 = UInt8ArrayType::CreateArray(static_cast<size_t>(config.imageDim * config.imageDim), dims, label0, true);
+  UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(static_cast<size_t>(config.imageDim * config.imageDim), dims, label1, true);
+  UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(static_cast<size_t>(config.imageDim * config.imageDim), dims, label2, true);
 
   QVector<UInt8ArrayType::Pointer> poleFigures(3);
   if(config.order.size() == 3)
@@ -1964,7 +1964,7 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
 {
 
   std::vector<size_t> dims(1, 4);
-  UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, dims, getSymmetryName() + " Triangle Legend");
+  UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, dims, getSymmetryName() + " Triangle Legend", true);
   uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
 
   float indexConst1 = 0.414f / static_cast<float>(imageDim);
@@ -2141,7 +2141,7 @@ SIMPL::Rgb CubicOps::generateMisorientationColor(const QuatF& q, const QuatF& re
 UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float angle, int n1, int n2, int imageDim)
 {
   std::vector<size_t> dims(1, 4);
-  UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, dims, "Cubic High Misorientation Triangle Legend");
+  UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, dims, "Cubic High Misorientation Triangle Legend", true);
 #if 0
   //uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
 

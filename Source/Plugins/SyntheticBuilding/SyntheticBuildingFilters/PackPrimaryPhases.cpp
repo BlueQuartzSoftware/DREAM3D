@@ -1163,7 +1163,7 @@ void PackPrimaryPhases::placeFeatures(Int32ArrayType::Pointer featureOwnersPtr)
   }
 
   std::vector<size_t> cDim(1, 1);
-  Int32ArrayType::Pointer exclusionOwnersPtr = Int32ArrayType::CreateArray(m_TotalPackingPoints, cDim, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::exclusions_owners");
+  Int32ArrayType::Pointer exclusionOwnersPtr = Int32ArrayType::CreateArray(m_TotalPackingPoints, cDim, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::exclusions_owners", true);
   exclusionOwnersPtr->initializeWithValue(0);
 
   // This is the set that we are going to keep updated with the points that are not in an exclusion zone
@@ -1755,7 +1755,7 @@ Int32ArrayType::Pointer PackPrimaryPhases::initializePackingGrid()
 
   m_TotalPackingPoints = m_PackingPoints[0] * m_PackingPoints[1] * m_PackingPoints[2];
 
-  Int32ArrayType::Pointer featureOwnersPtr = Int32ArrayType::CreateArray(m_TotalPackingPoints, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::feature_owners");
+  Int32ArrayType::Pointer featureOwnersPtr = Int32ArrayType::CreateArray(m_TotalPackingPoints, "_INTERNAL_USE_ONLY_PackPrimaryFeatures::feature_owners", true);
   featureOwnersPtr->initializeWithZeros();
 
   return featureOwnersPtr;
@@ -2641,11 +2641,11 @@ void PackPrimaryPhases::assignVoxels()
 
   FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
 
-  Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totalPoints, "_INTERNAL_USE_ONLY_newowners");
+  Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totalPoints, "_INTERNAL_USE_ONLY_newowners", true);
   newownersPtr->initializeWithValue(-1);
   int32_t* newowners = newownersPtr->getPointer(0);
 
-  FloatArrayType::Pointer ellipfuncsPtr = FloatArrayType::CreateArray(totalPoints, "_INTERNAL_USE_ONLY_ellipfuncs");
+  FloatArrayType::Pointer ellipfuncsPtr = FloatArrayType::CreateArray(totalPoints, "_INTERNAL_USE_ONLY_ellipfuncs", true);
   ellipfuncsPtr->initializeWithValue(-1);
   float* ellipfuncs = ellipfuncsPtr->getPointer(0);
 
@@ -2878,7 +2878,7 @@ void PackPrimaryPhases::assignGapsOnly()
   neighpoints[4] = xPoints;
   neighpoints[5] = xPoints * yPoints;
 
-  Int64ArrayType::Pointer neighborsPtr = Int64ArrayType::CreateArray(m->getGeometryAs<ImageGeom>()->getNumberOfElements(), "_INTERNAL_USE_ONLY_Neighbors");
+  Int64ArrayType::Pointer neighborsPtr = Int64ArrayType::CreateArray(m->getGeometryAs<ImageGeom>()->getNumberOfElements(), "_INTERNAL_USE_ONLY_Neighbors", true);
   neighborsPtr->initializeWithValue(-1);
   m_Neighbors = neighborsPtr->getPointer(0);
 

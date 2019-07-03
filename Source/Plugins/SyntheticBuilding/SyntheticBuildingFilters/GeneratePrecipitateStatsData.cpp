@@ -273,17 +273,17 @@ void GeneratePrecipitateStatsData::dataCheck()
     m_PrecipitateStatsData = PrecipitateStatsData.get();
 
     std::vector<size_t> cDims(1, 1);
-    UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::CrystalStructures);
+    UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::CrystalStructures, true);
     crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
     cellEnsembleAttrMat->insertOrAssign(crystalStructures);
     m_CrystalStructures = crystalStructures.get();
 
-    UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::PhaseTypes);
+    UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::PhaseTypes, true);
     phaseTypes->setValue(0, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown));
     cellEnsembleAttrMat->insertOrAssign(phaseTypes);
     m_PhaseTypes = phaseTypes.get();
 
-    StringDataArray::Pointer phaseNames = StringDataArray::CreateArray(tDims[0], SIMPL::EnsembleData::PhaseName);
+    StringDataArray::Pointer phaseNames = StringDataArray::CreateArray(tDims[0], SIMPL::EnsembleData::PhaseName, true);
     phaseNames->setValue(0, PhaseType::getPhaseTypeString(PhaseType::Type::Unknown));
     cellEnsembleAttrMat->insertOrAssign(phaseNames);
     m_PhaseNames = phaseNames.get();
@@ -324,7 +324,7 @@ void GeneratePrecipitateStatsData::dataCheck()
     UInt32ArrayType::Pointer crystalStructures = cellEnsembleAttrMat->getAttributeArrayAs<UInt32ArrayType>(SIMPL::EnsembleData::CrystalStructures);
     if(nullptr == crystalStructures.get())
     {
-      crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::CrystalStructures);
+      crystalStructures = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::CrystalStructures, true);
       crystalStructures->setValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
       cellEnsembleAttrMat->insertOrAssign(crystalStructures);
     }
@@ -333,7 +333,7 @@ void GeneratePrecipitateStatsData::dataCheck()
     UInt32ArrayType::Pointer phaseTypes = cellEnsembleAttrMat->getAttributeArrayAs<UInt32ArrayType>(SIMPL::EnsembleData::PhaseTypes);
     if(nullptr == phaseTypes.get())
     {
-      phaseTypes = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::PhaseTypes);
+      phaseTypes = UInt32ArrayType::CreateArray(tDims, cDims, SIMPL::EnsembleData::PhaseTypes, true);
       phaseTypes->setValue(0, static_cast<PhaseType::EnumType>(PhaseType::Type::Unknown));
       cellEnsembleAttrMat->insertOrAssign(phaseTypes);
     }
@@ -342,7 +342,7 @@ void GeneratePrecipitateStatsData::dataCheck()
     StringDataArray::Pointer phaseNames = cellEnsembleAttrMat->getAttributeArrayAs<StringDataArray>(SIMPL::EnsembleData::PhaseName);
     if(nullptr == phaseNames.get())
     {
-      phaseNames = StringDataArray::CreateArray(tDims[0], SIMPL::EnsembleData::PhaseName);
+      phaseNames = StringDataArray::CreateArray(tDims[0], SIMPL::EnsembleData::PhaseName, true);
       phaseNames->setValue(0, PhaseType::getPhaseTypeString(PhaseType::Type::Unknown));
       cellEnsembleAttrMat->insertOrAssign(phaseNames);
     }
@@ -463,8 +463,8 @@ void GeneratePrecipitateStatsData::execute()
   // Feature Size Distribution
   {
     VectorOfFloatArray data;
-    FloatArrayType::Pointer d1 = FloatArrayType::CreateArray(1, SIMPL::StringConstants::Average);
-    FloatArrayType::Pointer d2 = FloatArrayType::CreateArray(1, SIMPL::StringConstants::StandardDeviation);
+    FloatArrayType::Pointer d1 = FloatArrayType::CreateArray(1, SIMPL::StringConstants::Average, true);
+    FloatArrayType::Pointer d2 = FloatArrayType::CreateArray(1, SIMPL::StringConstants::StandardDeviation, true);
     data.push_back(d1);
     data.push_back(d2);
     d1->setValue(0, m_Mu);
