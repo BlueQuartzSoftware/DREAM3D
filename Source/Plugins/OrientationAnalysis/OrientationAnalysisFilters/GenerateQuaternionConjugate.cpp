@@ -26,11 +26,11 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
-enum createdPathID : RenameDataPath::DataID_t
-{
-  DataArrayID30 = 30,
-  DataArrayID31 = 31,
-};
+// enum createdPathID : RenameDataPath::DataID_t
+// {
+//   DataArrayID30 = 30,
+//   DataArrayID31 = 31,
+// };
 
 class GenerateQuaternionConjugateImpl
 {

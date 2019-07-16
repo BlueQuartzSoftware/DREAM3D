@@ -120,7 +120,7 @@ void ReadCtfData::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INPUT_FILE_FP("Input File", InputFile, FilterParameter::Parameter, ReadCtfData, "*.ctf"));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Convert Eulers to Radians", DegreesToRadians, FilterParameter::Parameter, ReadCtfData));
   parameters.push_back(SIMPL_NEW_BOOL_FP("Convert Hexagonal X-Axis to Edax Standard", EdaxHexagonalAlignment, FilterParameter::Parameter, ReadCtfData));
-  parameters.push_back(SIMPL_NEW_DC_CREATION_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ReadCtfData));
+  parameters.push_back(SIMPL_NEW_STRING_FP("Data Container", DataContainerName, FilterParameter::CreatedArray, ReadCtfData));
   parameters.push_back(SeparatorFilterParameter::New("Cell Data", FilterParameter::CreatedArray));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, ReadCtfData));
   parameters.push_back(SeparatorFilterParameter::New("Cell Ensemble Data", FilterParameter::CreatedArray));
@@ -136,7 +136,7 @@ void ReadCtfData::readFilterParameters(AbstractFilterParametersReader* reader, i
   reader->openFilterGroup(this, index);
   setDegreesToRadians(reader->readValue("DegreesToRadians", getDegreesToRadians()));
   setEdaxHexagonalAlignment(reader->readValue("EdaxHexagonalAlignment", getEdaxHexagonalAlignment()));
-  setDataContainerName(reader->readDataArrayPath("DataContainerName", getDataContainerName()));
+  setDataContainerName(reader->readString("DataContainerName", getDataContainerName()));
   setCellAttributeMatrixName(reader->readString("CellAttributeMatrixName", getCellAttributeMatrixName()));
   setCellEnsembleAttributeMatrixName(reader->readString("CellEnsembleAttributeMatrixName", getCellEnsembleAttributeMatrixName()));
   setInputFile(reader->readString("InputFile", getInputFile()));
@@ -254,7 +254,7 @@ void ReadCtfData::dataCheck()
       m_CellPhases = m_CellPhasesPtr.lock()->getPointer(0);
     } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-    tempPath.update(getDataContainerName().getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::CtfFile::CrystalStructures);
+    tempPath.update(getDataContainerName(), getCellEnsembleAttributeMatrixName(), Ebsd::CtfFile::CrystalStructures);
     m_CrystalStructuresPtr =
         getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<uint32_t>, AbstractFilter, uint32_t>(this, tempPath, Ebsd::CrystalStructure::UnknownCrystalStructure, cDims);
     if(nullptr != m_CrystalStructuresPtr.lock()) /* Validate the Weak Pointer wraps a non-nullptr pointer to a DataArray<T> object */

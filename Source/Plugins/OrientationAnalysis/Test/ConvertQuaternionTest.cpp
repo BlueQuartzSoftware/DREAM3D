@@ -52,15 +52,15 @@ class ConvertQuaternionTest
   {
     DataContainerArray::Pointer dca = DataContainerArray::New();
     DataContainer::Pointer dc = DataContainer::New("Data Container");
-    dca->addOrReplaceDataContainer(dc);
+    dca->addDataContainer(dc);
     QVector<size_t> tDims = {50};
     AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, "Cell Data", AttributeMatrix::Type::Cell);
-    dc->addOrReplaceAttributeMatrix(am);
+    dc->addAttributeMatrix(am->getName(), am);
 
     QVector<size_t> cDims = {4};
     FloatArrayType::Pointer vectorScalarPtr = FloatArrayType::CreateArray(tDims[0], cDims, "VectorScalar");
 
-    am->addOrReplaceAttributeArray(vectorScalarPtr);
+    am->addAttributeArray(vectorScalarPtr->getName(), vectorScalarPtr);
 
     filter->setDataContainerArray(dca);
     DataArrayPath inputDap("Data Container", "Cell Data", "VectorScalar");
@@ -91,7 +91,7 @@ class ConvertQuaternionTest
       DataContainerArray::Pointer dca = createDataStructure(filter, 0);
       filter->setDataContainerArray(dca);
       filter->preflight();
-      int32_t err = filter->getErrorCode();
+      int32_t err = filter->getErrorCondition();
 
       DREAM3D_REQUIRED(err, >=, 0)
     }
@@ -100,7 +100,7 @@ class ConvertQuaternionTest
       DataContainerArray::Pointer dca = createDataStructure(filter, 0);
       filter->setDataContainerArray(dca);
       filter->execute();
-      int32_t err = filter->getErrorCode();
+      int32_t err = filter->getErrorCondition();
       DREAM3D_REQUIRED(err, >=, 0)
 
       FloatArrayType::Pointer inputArrayPtr = dca->getDataContainer("Data Container")->getAttributeMatrix("Cell Data")->getAttributeArrayAs<FloatArrayType>("VectorScalar");
@@ -122,7 +122,7 @@ class ConvertQuaternionTest
       DataContainerArray::Pointer dca = createDataStructure(filter, 1);
       filter->setDataContainerArray(dca);
       filter->execute();
-      int32_t err = filter->getErrorCode();
+      int32_t err = filter->getErrorCondition();
       DREAM3D_REQUIRED(err, >=, 0)
 
       FloatArrayType::Pointer inputArrayPtr = dca->getDataContainer("Data Container")->getAttributeMatrix("Cell Data")->getAttributeArrayAs<FloatArrayType>("VectorScalar");
