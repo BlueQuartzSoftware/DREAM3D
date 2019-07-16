@@ -3,7 +3,7 @@
         "CellAttributeMatrixName": "EBSD Scan Data",
         "CellEnsembleAttributeMatrixName": "Phase Data",
         "DataContainerName": "Small IN100 Slice 1",
-        "FilterVersion": "6.5.97",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Import EDAX EBSD Data (.ang)",
         "Filter_Name": "ReadAngData",
@@ -16,7 +16,7 @@
             "Data Array Name": "",
             "Data Container Name": "Small IN100 Slice 1"
         },
-        "FilterVersion": "6.5.97",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Rotate Sample Reference Frame",
         "Filter_Name": "RotateSampleRefFrame",
@@ -34,7 +34,7 @@
             "Data Array Name": "EulerAngles",
             "Data Container Name": "Small IN100 Slice 1"
         },
-        "FilterVersion": "6.5.97",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Rotate Euler Reference Frame",
         "Filter_Name": "RotateEulerRefFrame",
@@ -48,7 +48,7 @@
     },
     "03": {
         "DestinationArrayName": "Mask",
-        "FilterVersion": "1.2.758",
+        "FilterVersion": "1.2.808",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Threshold Objects",
         "Filter_Name": "MultiThresholdObjects",
@@ -71,7 +71,7 @@
         ]
     },
     "04": {
-        "FilterVersion": "6.5.97",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Convert Orientation Representation",
         "Filter_Name": "ConvertOrientations",
@@ -87,7 +87,7 @@
     },
     "05": {
         "FillHoles": 0,
-        "FilterVersion": "6.5.97",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Isolate Largest Feature (Identify Sample)",
         "Filter_Name": "IdentifySample",
@@ -109,7 +109,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "Small IN100 Slice 1"
         },
-        "FilterVersion": "6.5.97",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Neighbor Orientation Comparison (Bad Data)",
         "Filter_Name": "BadDataNeighborOrientationCheck",
@@ -143,7 +143,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "Small IN100 Slice 1"
         },
-        "FilterVersion": "6.5.97",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Neighbor Orientation Correlation",
         "Filter_Name": "NeighborOrientationCorrelation",
@@ -173,7 +173,7 @@
             "Data Container Name": "Small IN100 Slice 1"
         },
         "FeatureIdsArrayName": "FeatureIds",
-        "FilterVersion": "6.5.97",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Segment Features (Misorientation)",
         "Filter_Name": "EBSDSegmentFeatures",
@@ -207,7 +207,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "Small IN100 Slice 1"
         },
-        "FilterVersion": "6.5.97",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Find Feature Phases",
         "Filter_Name": "FindFeaturePhases",
@@ -219,7 +219,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "Small IN100 Slice 1"
         },
-        "FilterVersion": "6.5.97",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Find Number of Features",
         "Filter_Name": "FindNumFeatures",
@@ -251,7 +251,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "Small IN100 Slice 1"
         },
-        "FilterVersion": "6.5.97",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Export INL File",
         "Filter_Name": "INLWriter",
@@ -285,7 +285,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "Small IN100 Slice 1"
         },
-        "FilterVersion": "6.5.97",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
@@ -304,7 +304,7 @@
     },
     "13": {
         "FileName": "Data/Output/INL_Example/Small_IN100_Slice_1.png",
-        "FilterVersion": "1.0.486",
+        "FilterVersion": "1.0.494",
         "Filter_Enabled": true,
         "Filter_Human_Label": "ITK::Image Writer",
         "Filter_Name": "ITKImageWriter",
@@ -319,15 +319,15 @@
     "14": {
         "Delimiter": 0,
         "FileExtension": ".txt",
-        "FilterVersion": "1.2.758",
+        "FilterVersion": "1.2.808",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Export ASCII Data",
         "Filter_Name": "WriteASCIIData",
         "Filter_Uuid": "{5fbf9204-2c6c-597b-856a-f4612adbac38}",
         "MaxValPerLine": -1,
         "OutputFilePath": "Data/Output/INL_Example/Data.csv",
-        "OutputPath": "",
-        "OutputType": 1,
+        "OutputPath": "/Users/mjackson",
+        "OutputStyle": 1,
         "SelectedDataArrayPaths": [
             {
                 "Attribute Matrix Name": "EBSD Scan Data",

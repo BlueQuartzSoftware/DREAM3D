@@ -1,4 +1,5 @@
-# DREAM.3D Contributors #
+DREAM.3D Contributors
+=============
 
 This file contains quick details of contributions to the DREAM.3D project made by developers external to BlueQuartz Software. Developers are presented in alphabetical order. For affiliations, please reference the top level ReadMe. If any information in this file is missing or incorrect, please submit a pull request with the corrections.
 

@@ -89,7 +89,6 @@ void error_handler  (HPDF_STATUS   error_no,
 WritePoleFigure::WritePoleFigure()
 : m_ImagePrefix("")
 , m_OutputPath("")
-, m_ImageFormat(0)
 , m_ImageSize(512)
 , m_LambertSize(64)
 , m_NumColors(32)
@@ -97,6 +96,7 @@ WritePoleFigure::WritePoleFigure()
 , m_CellEulerAnglesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::EulerAngles)
 , m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
 , m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
+, m_MaterialNameArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::MaterialName)
 , m_GoodVoxelsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Mask)
 , m_UseGoodVoxels(false)
 , m_GenerationAlgorithm(0)
@@ -128,7 +128,7 @@ void WritePoleFigure::setupFilterParameters()
     parameter->setDefaultValue(0);
 
     QVector<QString> choices;
-    choices.push_back("Lambert Square");
+    choices.push_back("Color Intensity");
     choices.push_back("Discrete");
 
     parameter->setChoices(choices);
@@ -145,7 +145,9 @@ void WritePoleFigure::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_INTEGER_FP("Number of Colors", NumColors, FilterParameter::Parameter, WritePoleFigure, 0));
 
   // parameters.push_back(SIMPL_NEW_BOOL_FP("Generate Color Heat Map Style", UseDiscreteHeatMap, FilterParameter::Parameter, WritePoleFigure, 1));
-
+#if 0
+// This code is not compiled because we are only supporting PDF output. If/When we decide to support more output types
+// this code would be ready to go so I am leaving it in for historical reasons.
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Image Format");
@@ -162,6 +164,7 @@ void WritePoleFigure::setupFilterParameters()
     parameter->setCategory(FilterParameter::Parameter);
     parameters.push_back(parameter);
   }
+#endif
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Image Layout");
@@ -227,7 +230,7 @@ void WritePoleFigure::readFilterParameters(AbstractFilterParametersReader* reade
   setCellEulerAnglesArrayPath(reader->readDataArrayPath("CellEulerAnglesArrayPath", getCellEulerAnglesArrayPath()));
   setImagePrefix(reader->readString("ImagePrefix", getImagePrefix()));
   setOutputPath(reader->readString("OutputPath", getOutputPath()));
-  setImageFormat(reader->readValue("ImageFormat", getImageFormat()));
+  // setImageFormat(reader->readValue("ImageFormat", getImageFormat()));
   setImageLayout(reader->readValue("ImageLayout", getImageLayout()));
   setImageSize(reader->readValue("ImageSize", getImageSize()));
   setLambertSize(reader->readValue("LambertSize", getLambertSize()));
@@ -352,23 +355,25 @@ template <typename Ops> QVector<UInt8ArrayType::Pointer> makePoleFigures(PoleFig
 QString WritePoleFigure::generateImagePath(const QString &label)
 {
   QString path = m_OutputPath + "/" + m_ImagePrefix + label;
-//  if(m_ImageFormat == TifImageType)
-//  {
-//    path.append(".tif");
-//  }
-//  else if(m_ImageFormat == BmpImageType)
-//  {
-//    path.append(".bmp");
-//  }
-//  else if(m_ImageFormat == PngImageType)
-//  {
-//    path.append(".png");
-//  }
-//  else if(m_ImageFormat == JpgImageType)
-//  {
-//    path.append(".jpg");
-//  }
-//  else if(m_ImageFormat == PdfImageType)
+#if 0  
+  if(m_ImageFormat == TifImageType)
+  {
+    path.append(".tif");
+  }
+  else if(m_ImageFormat == BmpImageType)
+  {
+    path.append(".bmp");
+  }
+  else if(m_ImageFormat == PngImageType)
+  {
+    path.append(".png");
+  }
+  else if(m_ImageFormat == JpgImageType)
+  {
+    path.append(".jpg");
+  }
+  else if(m_ImageFormat == PdfImageType)
+#endif
   {
     path.append(".pdf");
   }

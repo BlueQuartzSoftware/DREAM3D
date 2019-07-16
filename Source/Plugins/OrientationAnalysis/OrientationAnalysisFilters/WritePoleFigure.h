@@ -51,7 +51,7 @@ class OrientationAnalysis_EXPORT WritePoleFigure : public AbstractFilter
     PYB11_CREATE_BINDINGS(WritePoleFigure SUPERCLASS AbstractFilter)
     PYB11_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
     PYB11_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
-    PYB11_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
+    //    PYB11_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
     PYB11_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
     PYB11_PROPERTY(int LambertSize READ getLambertSize WRITE setLambertSize)
     PYB11_PROPERTY(int NumColors READ getNumColors WRITE setNumColors)
@@ -95,8 +95,8 @@ public:
     SIMPL_FILTER_PARAMETER(QString, OutputPath)
     Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
 
-    SIMPL_FILTER_PARAMETER(int, ImageFormat)
-    Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
+    //    SIMPL_FILTER_PARAMETER(int, ImageFormat)
+    //    Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
 
     SIMPL_FILTER_PARAMETER(int, ImageSize)
     Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
@@ -119,6 +119,9 @@ public:
     SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
+    SIMPL_FILTER_PARAMETER(DataArrayPath, MaterialNameArrayPath)
+    Q_PROPERTY(DataArrayPath MaterialNameArrayPath READ getMaterialNameArrayPath WRITE setMaterialNameArrayPath)
+
     SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
@@ -131,9 +134,6 @@ public:
     SIMPL_FILTER_PARAMETER(QString, Title)
     Q_PROPERTY(QString Title READ getTitle WRITE setTitle)
         
-
-    SIMPL_FILTER_PARAMETER(DataArrayPath, MaterialNameArrayPath)
-    Q_PROPERTY(DataArrayPath MaterialNameArrayPath READ getMaterialNameArrayPath WRITE setMaterialNameArrayPath)
         
     //  SIMPL_FILTER_PARAMETER(bool, UseDiscreteHeatMap)
     //  Q_PROPERTY(bool UseDiscreteHeatMap READ getUseDiscreteHeatMap WRITE setUseDiscreteHeatMap)

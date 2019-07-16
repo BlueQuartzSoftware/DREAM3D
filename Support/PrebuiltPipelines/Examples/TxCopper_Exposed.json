@@ -2,14 +2,10 @@
     "0": {
         "CellAttributeMatrixName": "EBSD Scan Data",
         "CellEnsembleAttributeMatrixName": "Phase Data",
-        "DataContainerName": {
-            "Attribute Matrix Name": "",
-            "Data Array Name": "",
-            "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
-        },
+        "DataContainerName": "Cugrid_after 2nd_15kv_2kx_2",
         "DegreesToRadians": 1,
         "EdaxHexagonalAlignment": 1,
-        "FilterVersion": "6.6.0",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Import Oxford Instr. EBSD Data (.ctf)",
         "Filter_Name": "ReadCtfData",
@@ -22,7 +18,7 @@
             "Data Array Name": "",
             "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
-        "FilterVersion": "6.6.0",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Rotate Sample Reference Frame",
         "Filter_Name": "RotateSampleRefFrame",
@@ -50,17 +46,13 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
-        "FilterVersion": "6.6.0",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Crop Geometry (Image)",
         "Filter_Name": "CropImageGeometry",
         "Filter_Uuid": "{baa4b7fe-31e5-5e63-a2cb-0bb9d844cfaf}",
         "NewBoxDimensions": "X Range: 0 to 46.1 (Delta: 46.1) 0-460 Voxels\nY Range: 0 to 40 (Delta: 40) 0-399 Voxels\nZ Range: 0 to 1 (Delta: 1) 0-0 Voxels\n",
-        "NewDataContainerName": {
-            "Attribute Matrix Name": "",
-            "Data Array Name": "",
-            "Data Container Name": "NewCugrid_after 2nd_15kv_2kx_2"
-        },
+        "NewDataContainerName": "",
         "OldBoxDimensions": "X Range: 0 to 55 (Delta: 55) 0-549 Voxels\nY Range: 0 to 40 (Delta: 40) 0-399 Voxels\nZ Range: 0 to 1 (Delta: 1) 0-0 Voxels\n",
         "RenumberFeatures": 0,
         "SaveAsNewDataContainer": 0,
@@ -74,7 +66,7 @@
     },
     "3": {
         "DestinationArrayName": "Mask",
-        "FilterVersion": "2.0.62",
+        "FilterVersion": "1.2.808",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Threshold Objects",
         "Filter_Name": "MultiThresholdObjects",
@@ -106,7 +98,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
-        "FilterVersion": "6.6.0",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
@@ -125,7 +117,7 @@
     },
     "5": {
         "FileName": "Data/Output/TexturedCopper/IPF_Exposed.png",
-        "FilterVersion": "1.0.516",
+        "FilterVersion": "1.0.494",
         "Filter_Enabled": true,
         "Filter_Human_Label": "ITK::Image Writer",
         "Filter_Name": "ITKImageWriter",
@@ -153,7 +145,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
-        "FilterVersion": "6.6.0",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Export Pole Figure Images",
         "Filter_Name": "WritePoleFigure",
@@ -164,7 +156,6 @@
             "Data Array Name": "Mask",
             "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
-        "ImageFormat": 0,
         "ImageLayout": 0,
         "ImagePrefix": "Exposed_Lambert_",
         "ImageSize": 1000,
@@ -195,7 +186,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
-        "FilterVersion": "6.6.0",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Export Pole Figure Images",
         "Filter_Name": "WritePoleFigure",
@@ -206,7 +197,6 @@
             "Data Array Name": "Mask",
             "Data Container Name": "Cugrid_after 2nd_15kv_2kx_2"
         },
-        "ImageFormat": 0,
         "ImageLayout": 0,
         "ImagePrefix": "Exposed_Discrete_",
         "ImageSize": 1000,

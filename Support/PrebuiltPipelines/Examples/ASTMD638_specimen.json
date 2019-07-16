@@ -2,7 +2,7 @@
     "00": {
         "FaceAttributeMatrixName": "FaceData",
         "FaceNormalsArrayName": "FaceNormals",
-        "FilterVersion": "6.5.64",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Import STL File",
         "Filter_Name": "ReadStlFile",
@@ -11,31 +11,7 @@
         "SurfaceMeshDataContainerName": "ASTMD638_SurfaceMesh"
     },
     "01": {
-        "ApplyToSurfaceMesh": 1,
-        "ApplyToVoxelVolume": 0,
-        "DataContainerName": {
-            "Attribute Matrix Name": "",
-            "Data Array Name": "",
-            "Data Container Name": ""
-        },
-        "FilterVersion": "2.0.171",
-        "Filter_Enabled": true,
-        "Filter_Human_Label": "Change Scaling of Volume",
-        "Filter_Name": "ScaleVolume",
-        "Filter_Uuid": "{3cf44c27-9149-5548-945a-deef1dc994a8}",
-        "ScaleFactor": {
-            "x": 5,
-            "y": 5,
-            "z": 5
-        },
-        "SurfaceDataContainerName": {
-            "Attribute Matrix Name": "",
-            "Data Array Name": "",
-            "Data Container Name": "ASTMD638_SurfaceMesh"
-        }
-    },
-    "02": {
-        "FilterVersion": "2.0.171",
+        "FilterVersion": "1.2.808",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Data Array",
         "Filter_Name": "CreateDataArray",
@@ -55,7 +31,7 @@
         "ScalarType": 4
     },
     "02": {
-        "FilterVersion": "1.2.707",
+        "FilterVersion": "1.2.808",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Create Data Array",
         "Filter_Name": "CreateDataArray",
@@ -75,7 +51,7 @@
         "ScalarType": 4
     },
     "03": {
-        "FilterVersion": "1.2.707",
+        "FilterVersion": "1.2.808",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Combine Attribute Arrays",
         "Filter_Name": "CombineAttributeArrays",
@@ -100,7 +76,7 @@
         "CellAttributeMatrixName": "CellData",
         "DataContainerName": "ASTMD638_ImageGeom",
         "FeatureIdsArrayName": "FeatureIds",
-        "FilterVersion": "6.5.64",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Sample Triangle Geometry on Regular Grid",
         "Filter_Name": "RegularGridSampleSurfaceMesh",
@@ -120,15 +96,15 @@
             "Data Array Name": "FaceLabels",
             "Data Container Name": "ASTMD638_SurfaceMesh"
         },
-        "XPoints": 900,
-        "YPoints": 95,
-        "ZPoints": 16
+        "XPoints": 1800,
+        "YPoints": 190,
+        "ZPoints": 32
     },
     "05": {
         "DestinationArrayName": "Mask",
-        "FilterVersion": "1.2.707",
+        "FilterVersion": "1.2.808",
         "Filter_Enabled": true,
-        "Filter_Human_Label": "Threshold Objects 2",
+        "Filter_Human_Label": "Threshold Objects (Advanced)",
         "Filter_Name": "MultiThresholdObjects2",
         "Filter_Uuid": "{686d5393-2b02-5c86-b887-dd81a8ae80f2}",
         "SelectedThresholds": {
@@ -157,92 +133,110 @@
             "1": {
                 "AxisODF-Weights": {
                 },
-                "Bin Count": 5,
+                "Bin Count": 7,
                 "BinNumber": [
-                    2.7182817459106445,
-                    6.7192816734313965,
-                    10.720281600952148,
-                    14.721281051635742,
-                    18.722280502319336
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7
                 ],
-                "BoundaryArea": 2.33596454002947e-42,
+                "BoundaryArea": 0,
                 "Crystal Symmetry": 1,
                 "FeatureSize Distribution": {
-                    "Average": 2,
+                    "Average": 1,
                     "Standard Deviation": 0.20000000298023224
                 },
                 "FeatureSize Vs B Over A Distributions": {
                     "Alpha": [
-                        15.778168678283691,
-                        15.817675590515137,
-                        15.26584243774414,
-                        15.148798942565918,
-                        15.430841445922852
+                        15.978363990783691,
+                        15.190934181213379,
+                        15.321611404418945,
+                        15.289162635803223,
+                        15.240915298461914,
+                        15.821465492248535,
+                        15.077518463134766
                     ],
                     "Beta": [
-                        1.4524030685424805,
-                        1.593014121055603,
-                        1.5522019863128662,
-                        1.719294786453247,
-                        1.2641477584838867
+                        1.3108303546905518,
+                        1.5985941886901855,
+                        1.3759998083114624,
+                        1.4414080381393433,
+                        1.357185959815979,
+                        1.6214041709899902,
+                        1.274958610534668
                     ],
                     "Distribution Type": "Beta Distribution"
                 },
                 "FeatureSize Vs C Over A Distributions": {
                     "Alpha": [
-                        15.929208755493164,
-                        15.597922325134277,
-                        15.19825553894043,
-                        15.660086631774902,
-                        15.857970237731934
+                        15.773932456970215,
+                        15.394630432128906,
+                        15.344663619995117,
+                        15.9539155960083,
+                        15.708008766174316,
+                        15.691307067871094,
+                        15.618109703063965
                     ],
                     "Beta": [
-                        1.588549017906189,
-                        1.257418155670166,
-                        1.4114246368408203,
-                        1.4332995414733887,
-                        1.4336546659469604
+                        1.578046202659607,
+                        1.3954976797103882,
+                        1.4536755084991455,
+                        1.340291976928711,
+                        1.3328419923782349,
+                        1.3954721689224243,
+                        1.3157879114151
                     ],
                     "Distribution Type": "Beta Distribution"
                 },
                 "FeatureSize Vs Neighbors Distributions": {
                     "Average": [
+                        2.079441547393799,
                         2.3025851249694824,
                         2.4849066734313965,
                         2.6390573978424072,
                         2.7725887298583984,
-                        2.890371799468994
+                        2.890371799468994,
+                        2.995732307434082
                     ],
                     "Distribution Type": "Log Normal Distribution",
                     "Standard Deviation": [
                         0.4000000059604645,
-                        0.3499999940395355,
+                        0.36666667461395264,
+                        0.3333333432674408,
                         0.30000001192092896,
-                        0.25,
+                        0.2666666507720947,
+                        0.23333333432674408,
                         0.20000000298023224
                     ]
                 },
                 "FeatureSize Vs Omega3 Distributions": {
                     "Alpha": [
-                        10.75639820098877,
-                        10.343717575073242,
-                        10.833803176879883,
-                        10.44859790802002,
-                        10.880826950073242
+                        10.873414993286133,
+                        10.98062801361084,
+                        10.185344696044922,
+                        10.596653938293457,
+                        10.646502494812012,
+                        10.95963191986084,
+                        10.54850959777832
                     ],
                     "Beta": [
-                        1.919753909111023,
-                        1.7540937662124634,
-                        1.6846297979354858,
-                        1.8138713836669922,
-                        1.9706240892410278
+                        1.9961856603622437,
+                        1.695103406906128,
+                        1.6361192464828491,
+                        1.739335298538208,
+                        1.6186805963516235,
+                        1.6911628246307373,
+                        1.9604464769363403
                     ],
                     "Distribution Type": "Beta Distribution"
                 },
                 "Feature_Diameter_Info": [
-                    4.000999927520752,
-                    20.08553695678711,
-                    2.7182817459106445
+                    1,
+                    7.389056205749512,
+                    1
                 ],
                 "MDF-Weights": {
                 },
@@ -258,18 +252,19 @@
         "StatsDataArrayName": "Statistics",
         "StatsGeneratorDataContainerName": "StatsGeneratorDataContainer"
     },
-    "08": {
+    "07": {
+        "BoxDimensions": "X Range: 0 to 180 (Delta: 180)\nY Range: 0 to 19 (Delta: 19)\nZ Range: 0 to 3.2 (Delta: 3.2)",
         "CellAttributeMatrixName": "CellData",
         "DataContainerName": "ASTMD638_Synthetic",
         "Dimensions": {
-            "x": 900,
-            "y": 95,
-            "z": 16
+            "x": 1800,
+            "y": 190,
+            "z": 32
         },
         "EnsembleAttributeMatrixName": "CellEnsembleData",
         "EstimateNumberOfFeatures": 1,
-        "EstimatedPrimaryFeatures": "883",
-        "FilterVersion": "6.5.64",
+        "EstimatedPrimaryFeatures": "865",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Initialize Synthetic Volume",
         "Filter_Name": "InitializeSyntheticVolume",
@@ -296,7 +291,7 @@
         }
     },
     "08": {
-        "FilterVersion": "6.5.64",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Establish Shape Types",
         "Filter_Name": "EstablishShapeTypes",
@@ -316,9 +311,9 @@
         "CellPhasesArrayName": "Phases",
         "FeatureGeneration": 0,
         "FeatureIdsArrayName": "FeatureIds",
-        "FeatureInputFile": "",
+        "FeatureInputFile": "/Users/mjackson",
         "FeaturePhasesArrayName": "Phases",
-        "FilterVersion": "6.5.64",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Pack Primary Phases",
         "Filter_Name": "PackPrimaryPhases",
@@ -382,7 +377,7 @@
             "Data Array Name": "FeatureIds",
             "Data Container Name": "ASTMD638_Synthetic"
         },
-        "FilterVersion": "6.5.64",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Find Feature Neighbors",
         "Filter_Name": "FindNeighbors",
@@ -413,7 +408,7 @@
             "Data Array Name": "Phases",
             "Data Container Name": "ASTMD638_Synthetic"
         },
-        "FilterVersion": "6.5.64",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Match Crystallography",
         "Filter_Name": "MatchCrystallography",
@@ -468,7 +463,7 @@
             "Data Array Name": "CrystalStructures",
             "Data Container Name": "StatsGeneratorDataContainer"
         },
-        "FilterVersion": "6.5.64",
+        "FilterVersion": "6.5.126",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Generate IPF Colors",
         "Filter_Name": "GenerateIPFColors",
@@ -486,7 +481,7 @@
         "UseGoodVoxels": 0
     },
     "13": {
-        "FilterVersion": "1.2.707",
+        "FilterVersion": "1.2.808",
         "Filter_Enabled": true,
         "Filter_Human_Label": "Write DREAM.3D Data File",
         "Filter_Name": "DataContainerWriter",
