@@ -42,8 +42,6 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/DynamicListArray.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -53,10 +51,12 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/GeometryMath.h"
-
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+
+#include "OrientationLib/OrientationMath/OrientationArray.hpp"
+#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
@@ -439,6 +439,13 @@ void InsertAtoms::dataCheck()
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
   getDataContainerArray()->validateNumberOfTuples<AbstractFilter>(this, dataArrays);
+
+  if(m_Basis < 0 || m_Basis > 3)
+  {
+    setErrorCondition(-302);
+    notifyErrorMessage(getHumanLabel(), "Basis value out of range. Valid values are: 0=Simpl Cubic, 1=Body Centered Cubic, 2=Face Centered Cubic, 3=Cubic Diamond", getErrorCondition());
+    return;
+  }
 }
 
 // -----------------------------------------------------------------------------

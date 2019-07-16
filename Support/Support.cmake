@@ -40,6 +40,7 @@ set(DREAM3D_DATA_DIRECTORIES
   ${DREAM3D_DATA_DIR}/Data/Image 
   ${DREAM3D_DATA_DIR}/Data/Textured_Copper
   ${DREAM3D_DATA_DIR}/Data/Models
+  ${DREAM3D_DATA_DIR}/Data/T12-MAI-2010
 )
 
 foreach(data_dir ${DREAM3D_DATA_DIRECTORIES})
