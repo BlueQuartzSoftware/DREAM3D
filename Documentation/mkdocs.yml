@@ -6,7 +6,7 @@ theme:
     primary: light-blue
     accent: light-blue
 repo_url: https://github.com/bluequartzsoftware/dream3d/
-use_directory_urls: false
+use_directory_urls: true
 docs_dir: ReferenceManual
 site_dir: '${HTML_OUTPUT_DIR}'
 
