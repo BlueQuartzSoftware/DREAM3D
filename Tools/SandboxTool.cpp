@@ -56,7 +56,7 @@
 
 #include "DREAM3DToolsConfiguration.h"
 
-#include "SandboxTool/RemoveSIMPLMacros.h"
+#include "SandboxTool/UpdateMDHeader.hpp"
 
 /**
  * @brief findPath
