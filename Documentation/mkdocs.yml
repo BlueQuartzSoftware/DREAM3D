@@ -1,7 +1,7 @@
 site_name: DREAM.3D
 theme:
   name: 'material'
-  custom_dir: '${DREAM3DProj_SOURCE_DIR}/Documentation/material-dream3d'
+  #custom_dir: '${DREAM3DProj_SOURCE_DIR}/Documentation/material-dream3d'
   palette:
     primary: light-blue
     accent: light-blue
@@ -9,10 +9,6 @@ repo_url: https://github.com/bluequartzsoftware/dream3d/
 use_directory_urls: true
 docs_dir: ReferenceManual
 site_dir: '${HTML_OUTPUT_DIR}'
-
-markdown_extensions:
-    - toc:
-        permalink: True
 
 # Extensions
 markdown_extensions:
