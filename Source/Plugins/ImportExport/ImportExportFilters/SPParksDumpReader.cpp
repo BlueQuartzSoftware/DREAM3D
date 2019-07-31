@@ -149,19 +149,6 @@ void SPParksDumpReader::dataCheck()
     return;
   }
 
-  QVector<size_t> tDims(3, 0);
-  m->createNonPrereqAttributeMatrix(this, getCellAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
-  if(getErrorCondition() < 0)
-  {
-    return;
-  }
-
-  // Creating a Feature Ids array here in preflight so that it appears in the current data structure
-  // This is a temporary array that will be overwritten by the correct array at the end of reading the file
-  QVector<size_t> cDims(1, 1);
-  DataArrayPath fIdsPath(getVolumeDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
-  getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, fIdsPath, 0, cDims);
-
   QFileInfo fi(getInputFile());
   if(getInputFile().isEmpty())
   {
@@ -194,6 +181,7 @@ void SPParksDumpReader::dataCheck()
     {
       int32_t error = readHeader();
       m_InStream.close();
+
       if(error < 0)
       {
         setErrorCondition(error);
@@ -235,12 +223,16 @@ void SPParksDumpReader::execute()
   m_InStream.setFileName(getInputFile());
   m_InStream.open(QFile::ReadOnly);
 
-  err = readHeader();
-  if(err < 0)
-  {
-    m_InStream.close();
-    return;
-  }
+  // We need to skip the header since it is already read
+  QByteArray buf = m_InStream.readLine(); // ITEM: TIMESTEP
+  buf = m_InStream.readLine();            // 210    21000.6
+  buf = m_InStream.readLine();            // ITEM: NUMBER OF ATOMS
+  buf = m_InStream.readLine();            // 106480
+  buf = m_InStream.readLine();            // ITEM: BOX BOUNDS
+  buf = m_InStream.readLine();            // 0.5 44.5
+  buf = m_InStream.readLine();            // 0.5 44.5
+  buf = m_InStream.readLine();            // 0.5 55.5
+
   err = readFile();
   m_InStream.close();
   if(err < 0)
@@ -274,7 +266,7 @@ int32_t SPParksDumpReader::readHeader()
     oneBase = 1;
   }
 
-  bool ok = false; // Use this to verify that the comversions from string to numbers actually works.
+  bool ok = false; // Use this to verify that the conversions from string to numbers actually works.
   int64_t nx = 0;
   int64_t ny = 0;
   int64_t nz = 0;
@@ -377,6 +369,16 @@ int32_t SPParksDumpReader::readHeader()
   m_CachedGeometry->setResolution(std::make_tuple(res.x, res.y, res.z));
   FloatVec3_t origin = getOrigin();
   m_CachedGeometry->setOrigin(std::make_tuple(origin.x, origin.y, origin.z));
+
+  // Creating a Feature Ids array here in preflight so that it appears in the current data structure
+  // This is a temporary array that will be overwritten by the correct array at the end of reading the file
+
+  DataArrayPath fIdsPath(getVolumeDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
+  QVector<size_t> tDims = {static_cast<size_t>(nx), static_cast<size_t>(ny), static_cast<size_t>(nz)};
+  m->createNonPrereqAttributeMatrix(this, fIdsPath, tDims, AttributeMatrix::Type::Cell);
+
+  QVector<size_t> cDims = {1};
+  getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, fIdsPath, 0, cDims);
 
   return 0;
 }

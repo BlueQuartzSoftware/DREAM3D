@@ -25,6 +25,10 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 + InsertAtoms: Fixing crashes during filter (reported by MicroClue <whsiao1995@hotmail.com>)
 + Improved some of the prebuilt pipelines to run faster and with less memory overhead.
 + Write Pole Figure Improvements: Proper default for Material Names, Only allow PDF, updated descriptions for types of output (Color Intensity & Discrete)
++ AbaqusHexahedronWriter did not provide enough arguments to an error message
++ SPParksDumpReader did not properly create AttributeMatrix and DataArray with the proper number of tuples. This effected filters downstream that depend on that information.
++ Export 3D Solid Mesh now does not time out
++ ITKImagePairWiseRegistration filter added into DREAM3DReview branch
 
 ### 6.5.126 Fixed SIMPL Issues ###
 
