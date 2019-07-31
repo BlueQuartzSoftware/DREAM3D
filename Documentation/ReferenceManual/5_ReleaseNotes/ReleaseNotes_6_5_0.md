@@ -1,5 +1,4 @@
-Version 6.5 Release Notes
-=============
+# Version 6.5 Release Notes #
 
 These release notes summarize the major changes for each officially released version of DREAM.3D. The official bug report is located at the [DREAM.3D GitHub issues page](https://github.com/bluequartzsoftware/DREAM3D/issues).
 
@@ -10,6 +9,25 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 [DREAM.3D Users List](https://groups.google.com/forum/?/dream3d-users#!forum/dream3d-users)
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
+
+## Version 6.5.128 ##
+
+### 6.5.128 New Filters & Features ###
+
++ ItkPairwiseRegistration contributed by AFRL (DREAM3DReview)
+
+### 6.5.128 Fixed DREAM3D Issues ###
+
++ Find Average Orienation now has default values
++ CTF Files written by EMsoft no longer print spurious warning message
++ Reference Frame default transform is correctly set.
++ Reference Frame transform is guessed based on file extension first time dialog is launched
+
+### 6.5.128 Fixed SIMPL Issues ###
+
++ Import HDF5 could not import anything more than 2GB worth of elements
++ Fixed ambiguous logic in TetrahedralGeom
++ Fixed Issue with MultiDataArraySelectionWidget not clearing the lists when a new Attribute Matrix was selected.
 
 ## Version 6.5.126 ##
 
@@ -25,6 +43,10 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 + InsertAtoms: Fixing crashes during filter (reported by MicroClue <whsiao1995@hotmail.com>)
 + Improved some of the prebuilt pipelines to run faster and with less memory overhead.
 + Write Pole Figure Improvements: Proper default for Material Names, Only allow PDF, updated descriptions for types of output (Color Intensity & Discrete)
++ AbaqusHexahedronWriter did not provide enough arguments to an error message
++ SPParksDumpReader did not properly create AttributeMatrix and DataArray with the proper number of tuples. This effected filters downstream that depend on that information.
++ Export 3D Solid Mesh now does not time out
++ ITKImagePairWiseRegistration filter added into DREAM3DReview branch
 
 ### 6.5.126 Fixed SIMPL Issues ###
 
@@ -62,7 +84,7 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 + Added casts to int64_t when faceId values to local variables in GeometryMath.cpp.  These variables were used for referencing vertex pointer indices where int64_t values were expected
 + Fixed a few uninitialized variables
 + Fixed type casting in CubeOctohedronOps.cpp
-+ Added missing `f` in plane4Comp and plane7Comp arithmetic operations.  This was determined as a mistake by looking at other operations where the same calculations were consistently done with a floating point constant, but the 'f' was left off in two places.  The static_cast<float> was determined to silence a warning regarding type casting down from double to float due to the propagation of the double type through the calculation.
++ Added missing `f` in plane4Comp and plane7Comp arithmetic operations. This was determined as a mistake by looking at other operations where the same calculations were consistently done with a floating point constant, but the `f` was left off in two places.  The `static_cast<float>`  was determined to silence a warning regarding type casting down from double to float due to the propagation of the double type through the calculation.
 + Added default value to ErrorObject::ok boolean in ParseFunctors
 + Silenced initialized variable warning
 + Added default construction to SIMPLib property macros
