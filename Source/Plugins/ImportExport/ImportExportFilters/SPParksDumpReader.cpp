@@ -379,11 +379,13 @@ int32_t SPParksDumpReader::readHeader()
   // Creating a Feature Ids array here in preflight so that it appears in the current data structure
   // This is a temporary array that will be overwritten by the correct array at the end of reading the file
 
-  DataArrayPath fIdsPath(getVolumeDataContainerName(), getCellAttributeMatrixName(), getFeatureIdsArrayName());
-  QVector<size_t> tDims = {static_cast<size_t>(nx), static_cast<size_t>(ny), static_cast<size_t>(nz)};
+  DataArrayPath fIdsPath = getVolumeDataContainerName();
+  fIdsPath.setAttributeMatrixName(getCellAttributeMatrixName());
+  fIdsPath.setDataArrayName(getFeatureIdsArrayName());
+  std::vector<size_t> tDims = {static_cast<size_t>(nx), static_cast<size_t>(ny), static_cast<size_t>(nz)};
   m->createNonPrereqAttributeMatrix(this, fIdsPath, tDims, AttributeMatrix::Type::Cell);
 
-  QVector<size_t> cDims = {1};
+  std::vector<size_t> cDims = {1};
   getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<int32_t>, AbstractFilter>(this, fIdsPath, 0, cDims);
 
   return 0;
