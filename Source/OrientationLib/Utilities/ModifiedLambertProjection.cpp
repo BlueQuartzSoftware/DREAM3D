@@ -149,9 +149,9 @@ void ModifiedLambertProjection::initializeSquares(int dims, float sphereRadius)
 
   std::vector<size_t> tDims(2, m_Dimension);
   std::vector<size_t> cDims(1, 1);
-  m_NorthSquare = DoubleArrayType::CreateArray(tDims, cDims, "ModifiedLambert_NorthSquare");
+  m_NorthSquare = DoubleArrayType::CreateArray(tDims, cDims, "ModifiedLambert_NorthSquare", true);
   m_NorthSquare->initializeWithZeros();
-  m_SouthSquare = DoubleArrayType::CreateArray(tDims, cDims, "ModifiedLambert_SouthSquare");
+  m_SouthSquare = DoubleArrayType::CreateArray(tDims, cDims, "ModifiedLambert_SouthSquare", true);
   m_SouthSquare->initializeWithZeros();
 
 
@@ -597,7 +597,7 @@ DoubleArrayType::Pointer ModifiedLambertProjection::createStereographicProjectio
 {
   std::vector<size_t> tDims(2, dim);
   std::vector<size_t> cDims(1, 1);
-  DoubleArrayType::Pointer stereoIntensity = DoubleArrayType::CreateArray(tDims, cDims, "ModifiedLambertProjection_StereographicProjection");
+  DoubleArrayType::Pointer stereoIntensity = DoubleArrayType::CreateArray(tDims, cDims, "ModifiedLambertProjection_StereographicProjection", true);
   stereoIntensity->initializeWithZeros();
   createStereographicProjection(dim, stereoIntensity.get());
   return stereoIntensity;

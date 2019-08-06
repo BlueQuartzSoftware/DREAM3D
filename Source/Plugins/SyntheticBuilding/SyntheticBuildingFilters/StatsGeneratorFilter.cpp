@@ -128,7 +128,7 @@ void StatsGeneratorFilter::readFilterParameters(AbstractFilterParametersReader* 
     m_StatsDataArray = StatsDataArray::NullPointer();
   }
 
-  m_StatsDataArray = StatsDataArray::CreateArray(0, "THIS SHOULD BE RESET");
+  m_StatsDataArray = StatsDataArray::CreateArray(0, "THIS SHOULD BE RESET", true);
 
   if(dynamic_cast<H5FilterParametersReader*>(reader) != nullptr)
   {
@@ -169,7 +169,7 @@ void StatsGeneratorFilter::readFilterParameters(QJsonObject& obj)
     m_StatsDataArray = StatsDataArray::NullPointer();
   }
 
-  m_StatsDataArray = StatsDataArray::CreateArray(0, "THIS SHOULD BE RESET");
+  m_StatsDataArray = StatsDataArray::CreateArray(0, "THIS SHOULD BE RESET", true);
 
   m_StatsDataArray->readFromJson(obj);
   size_t numTuples = m_StatsDataArray->getNumberOfTuples();

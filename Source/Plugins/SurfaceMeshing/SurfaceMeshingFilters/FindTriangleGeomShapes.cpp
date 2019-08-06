@@ -139,8 +139,8 @@ void FindTriangleGeomShapes::dataCheck()
 
   getDataContainerArray()->getPrereqGeometryFromDataContainer<TriangleGeom, AbstractFilter>(this, getFaceLabelsArrayPath().getDataContainerName());
 
-  m_FeatureMoments = DataArray<double>::CreateArray(0, "m_FeatureMoments");
-  m_FeatureEigenVals = DataArray<double>::CreateArray(0, "m_FeatureEigenVals");
+  m_FeatureMoments = DataArray<double>::CreateArray(0, "m_FeatureMoments", true);
+  m_FeatureEigenVals = DataArray<double>::CreateArray(0, "m_FeatureEigenVals", true);
 
   //REQUIRED FACE DATA
   std::vector<size_t> cDims(1, 2);

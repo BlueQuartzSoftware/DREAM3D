@@ -417,7 +417,7 @@ class ConvertRepresentation
   int inStride = input->getNumberOfComponents();                                                                                                                                                       \
   size_t outStride = OUTSTRIDE;                                                                                                                                                                        \
   std::vector<size_t> cDims = {outStride};                                                                                                                                                             \
-  typename DataArray<T>::Pointer output = DataArray<T>::CreateArray(nTuples, cDims, #OUT_ARRAY_NAME);                                                                                                  \
+  typename DataArray<T>::Pointer output = DataArray<T>::CreateArray(nTuples, cDims, #OUT_ARRAY_NAME, true);                                                                                            \
   output->initializeWithZeros(); /* Intialize the array with Zeros */                                                                                                                                  \
   T* outPtr = output->getPointer(0);                                                                                                                                                                   \
   tbb::task_scheduler_init init;                                                                                                                                                                       \
@@ -434,7 +434,7 @@ class ConvertRepresentation
   int inStride = input->getNumberOfComponents();                                                                                                                                                       \
   size_t outStride = OUTSTRIDE;                                                                                                                                                                        \
   std::vector<size_t> cDims = {outStride}; /* Create the n component (nx1) based array.*/                                                                                                              \
-  typename DataArray<T>::Pointer output = DataArray<T>::CreateArray(nTuples, cDims, #OUT_ARRAY_NAME);                                                                                                  \
+  typename DataArray<T>::Pointer output = DataArray<T>::CreateArray(nTuples, cDims, #OUT_ARRAY_NAME, true);                                                                                            \
   output->initializeWithZeros(); /* Intialize the array with Zeros */                                                                                                                                  \
   T* outPtr = output->getPointer(0);                                                                                                                                                                   \
   ConvertRepresentation<T, Convertors::FUNCTOR<T>> serial(inPtr, outPtr, inStride, outStride);                                                                                                         \

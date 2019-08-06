@@ -726,7 +726,8 @@ QFilterWidget* InitializeSyntheticVolumeWidget::createDeepCopy()
 
   //  int count = m_ShapeTypeCombos.count();
   //  DataArray<unsigned int>::Pointer shapeTypes =
-  //    DataArray<unsigned int>::CreateArray(count+1, SIMPL::EnsembleData::ShapeTypes);
+  //    DataArray<unsigned int>::CreateArray(count+1, SIMPL::EnsembleData::ShapeTypes, 
+true);
   //  shapeTypes->SetValue(0, SIMPL::ShapeType::UnknownShapeType);
   //  bool ok = false;
   //  for (int i = 0; i < count; ++i)

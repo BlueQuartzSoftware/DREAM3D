@@ -117,7 +117,7 @@ public:
 
     std::vector<size_t> cDims(1, 1);
 
-    Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(tDims, cDims, k_FeatureIdsArrayPath.getDataArrayName());
+    Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(tDims, cDims, k_FeatureIdsArrayPath.getDataArrayName(), true);
     int err = attrMat1->insertOrAssign(featureIds);
     DREAM3D_REQUIRE(err >= 0);
     featureIds->initializeWithValue(1);

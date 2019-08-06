@@ -494,22 +494,22 @@ void M3CSliceBySlice::execute()
   DataArray<int32_t>::Pointer neighCSiteIdPtr = DataArray<int32_t>::CreateArray(2 * NSP + 1, "M3CSliceBySlice_SurfaceMesh::M3C::Neighbor_CSiteId_Array");
   neighCSiteIdPtr->initializeWithZeros();
 
-  StructArray<SurfaceMesh::M3C::Face>::Pointer cSquarePtr = StructArray<SurfaceMesh::M3C::Face>::CreateArray(3 * 2 * NSP, "M3CSliceBySlice_SurfaceMesh::M3C::Face_Array");
+  StructArray<SurfaceMesh::M3C::Face>::Pointer cSquarePtr = StructArray<SurfaceMesh::M3C::Face>::CreateArray(3 * 2 * NSP, "M3CSliceBySlice_SurfaceMesh::M3C::Face_Array", true);
   cSquarePtr->initializeWithZeros();
 
-  VertexArray::Pointer cVertexPtr = VertexArray::CreateArray(2 * 7 * NSP, "M3CSliceBySlice_Node_Array");
+  VertexArray::Pointer cVertexPtr = VertexArray::CreateArray(2 * 7 * NSP, "M3CSliceBySlice_Node_Array", true);
   cVertexPtr->initializeWithZeros();
 
-  DataArray<int32_t>::Pointer cVertexNodeIdPtr = DataArray<int32_t>::CreateArray(2 * 7 * NSP, "M3CSliceBySlice_Node_NodeId_Array");
+  DataArray<int32_t>::Pointer cVertexNodeIdPtr = DataArray<int32_t>::CreateArray(2 * 7 * NSP, "M3CSliceBySlice_Node_NodeId_Array", true);
   cVertexNodeIdPtr->initializeWithZeros();
 
-  DataArray<int8_t>::Pointer cVertexNodeTypePtr = DataArray<int8_t>::CreateArray(2 * 7 * NSP, "M3CSliceBySlice_Node_NodeKind_Array");
+  DataArray<int8_t>::Pointer cVertexNodeTypePtr = DataArray<int8_t>::CreateArray(2 * 7 * NSP, "M3CSliceBySlice_Node_NodeKind_Array", true);
   cVertexNodeTypePtr->initializeWithValue(SIMPL::SurfaceMesh::NodeType::Unused);
 
-  StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr = StructArray<SurfaceMesh::M3C::Patch>::CreateArray(0, "M3CSliceBySlice_Triangle_Array");
+  StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr = StructArray<SurfaceMesh::M3C::Patch>::CreateArray(0, "M3CSliceBySlice_Triangle_Array", true);
   cTrianglePtr->initializeWithZeros();
 
-  StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr = StructArray<SurfaceMesh::M3C::Segment>::CreateArray(0, "M3CSliceBySlice_SurfaceMesh::M3C::Segment_Array");
+  StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr = StructArray<SurfaceMesh::M3C::Segment>::CreateArray(0, "M3CSliceBySlice_SurfaceMesh::M3C::Segment_Array", true);
   cEdgePtr->initializeWithZeros();
 
   // Prime the working voxels (2 layers worth) with -3 values indicating border voxels if the

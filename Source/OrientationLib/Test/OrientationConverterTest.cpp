@@ -67,7 +67,7 @@ public:
     size_t nTuples = 2;
     int qStride = 4;
     std::vector<size_t> cDims(1, 3);
-    FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(nTuples, cDims, "Eulers");
+    FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(nTuples, cDims, "Eulers", true);
     // Initialize the Eulers with some values
     eulers->setComponent(0, 0, 302.84f * SIMPLib::Constants::k_PiOver180);
     eulers->setComponent(0, 1, 51.282f * SIMPLib::Constants::k_PiOver180);
@@ -106,7 +106,7 @@ public:
     size_t nTuples = 1;
     int qStride = 4;
     std::vector<size_t> cDims(1, 3);
-    FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(nTuples, cDims, "Eulers");
+    FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(nTuples, cDims, "Eulers", true);
     // Initialize the Eulers with some values
     eulers->setComponent(0, 0, phi1);
     eulers->setComponent(0, 1, phi);

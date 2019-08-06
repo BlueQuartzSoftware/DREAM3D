@@ -141,8 +141,8 @@ public:
     cDims[0] = 1;
     AttributeMatrix::Pointer am = AttributeMatrix::New(tDims, Data_AMName, AttributeMatrix::Type::Cell);
 
-    DoubleArrayType::Pointer duration = DoubleArrayType::CreateArray(tDims, cDims, Duration_Name);
-    DoubleArrayType::Pointer wait = DoubleArrayType::CreateArray(tDims, cDims, WaitTime_Name);
+    DoubleArrayType::Pointer duration = DoubleArrayType::CreateArray(tDims, cDims, Duration_Name, true);
+    DoubleArrayType::Pointer wait = DoubleArrayType::CreateArray(tDims, cDims, WaitTime_Name, true);
 
     for(size_t i = 0; i < tDims[0]; i++)
     {

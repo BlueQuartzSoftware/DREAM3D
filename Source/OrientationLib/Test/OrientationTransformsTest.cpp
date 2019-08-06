@@ -135,7 +135,7 @@ public:
     T phi2_delta = (phi2_max - phi2_min) / static_cast<T>(nSteps);
 
     size_t nStepsCubed = (nSteps + 1) * (nSteps + 1) * (nSteps + 1);
-    typename DataArray<T>::Pointer eulers = DataArray<T>::CreateArray(nStepsCubed, cDims, k_InputNames[0]);
+    typename DataArray<T>::Pointer eulers = DataArray<T>::CreateArray(nStepsCubed, cDims, k_InputNames[0], true);
 
     size_t counter = 0;
     for(int i = 0; i <= nSteps; i++)
@@ -545,7 +545,7 @@ public:
         entry.pop_back();
       }
 
-      typename DataArray<K>::Pointer junk = DataArray<K>::CreateArray(1, "Junk");
+      typename DataArray<K>::Pointer junk = DataArray<K>::CreateArray(1, "Junk", true);
       QString typeName = junk->getTypeAsString();
 #if REMOVE_TEST_FILES
       {

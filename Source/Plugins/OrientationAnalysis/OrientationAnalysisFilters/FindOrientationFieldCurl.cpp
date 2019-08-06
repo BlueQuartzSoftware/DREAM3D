@@ -265,14 +265,14 @@ void FindOrientationFieldCurl::execute()
   size_t totalFaces = ((xP + 1) * yP * zP) + ((yP + 1) * xP * zP) + ((zP + 1) * xP * yP);
   std::vector<size_t> tDims(1, totalFaces);
   std::vector<size_t> cDims(1, 3);
-  FloatArrayType::Pointer misoVecsPtr = FloatArrayType::CreateArray(tDims, cDims, "misoVecs");
+  FloatArrayType::Pointer misoVecsPtr = FloatArrayType::CreateArray(tDims, cDims, "misoVecs", true);
   misoVecsPtr->initializeWithValue(0);
   float* misoVecs = misoVecsPtr->getPointer(0);
   tDims[0] = (xP * yP * zP);
-  Int64ArrayType::Pointer neighborsPtr = Int64ArrayType::CreateArray(tDims, cDims, "neighbors");
+  Int64ArrayType::Pointer neighborsPtr = Int64ArrayType::CreateArray(tDims, cDims, "neighbors", true);
   neighborsPtr->initializeWithValue(-1);
   int64_t* neighbors = neighborsPtr->getPointer(0);
-  Int64ArrayType::Pointer faceIdsPtr = Int64ArrayType::CreateArray(tDims, cDims, "faceIds");
+  Int64ArrayType::Pointer faceIdsPtr = Int64ArrayType::CreateArray(tDims, cDims, "faceIds", true);
   faceIdsPtr->initializeWithValue(-1);
   int64_t* faceIds = faceIdsPtr->getPointer(0);
 

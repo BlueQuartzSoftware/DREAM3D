@@ -153,7 +153,7 @@ public:
     idc->addOrReplaceAttributeMatrix(attrMat);
 
     std::vector<size_t> cDims(1, 1);
-    Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(tDims, cDims, SIMPL::CellData::FeatureIds);
+    Int32ArrayType::Pointer featureIds = Int32ArrayType::CreateArray(tDims, cDims, SIMPL::CellData::FeatureIds, true);
     featureIds->initializeWithValue(1);
     attrMat->insertOrAssign(featureIds);
 

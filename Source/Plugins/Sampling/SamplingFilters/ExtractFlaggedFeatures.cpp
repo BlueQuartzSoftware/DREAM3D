@@ -156,7 +156,7 @@ void ExtractFlaggedFeatures::find_feature_bounds()
   };
 
   std::vector<size_t> cDims(1, 6);
-  m_BoundsPtr = Int32ArrayType::CreateArray(totalFeatures, cDims, "_INTERNAL_USE_ONLY_Bounds");
+  m_BoundsPtr = Int32ArrayType::CreateArray(totalFeatures, cDims, "_INTERNAL_USE_ONLY_Bounds", true);
   m_FeatureBounds = m_BoundsPtr->getPointer(0);
   m_BoundsPtr->initializeWithValue(-1);
 

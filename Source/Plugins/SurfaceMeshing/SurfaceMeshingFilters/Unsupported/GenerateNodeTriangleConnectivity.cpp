@@ -119,7 +119,7 @@ void GenerateNodeTriangleConnectivity::dataCheck()
 
     // We do not know the size of the array so we can not use the macro so we just manually call
     // the needed methods that will propagate these array additions to the pipeline
-    DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, 2, SIMPL::CellData::SurfaceMeshUniqueEdges);
+    DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, 2, SIMPL::CellData::SurfaceMeshUniqueEdges, true);
     sm->getAttributeMatrix(getCellAttributeMatrixName())->insertOrAssign(uniqueEdgesArray);
 
     // This is just for tracking what Arrays are being created by this filter. Normally the macro
@@ -210,7 +210,7 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
     return;
   }
 
-  ManagedPointerArray<int>::Pointer nodeTriangleArray = ManagedPointerArray<int>::CreateArray(m_Node2Triangle.size(), SIMPL::CellData::SurfaceMeshNodeTriangles);
+  ManagedPointerArray<int>::Pointer nodeTriangleArray = ManagedPointerArray<int>::CreateArray(m_Node2Triangle.size(), SIMPL::CellData::SurfaceMeshNodeTriangles, true);
 
   float progIndex = 0.0;
   float curPercent = 0.0;

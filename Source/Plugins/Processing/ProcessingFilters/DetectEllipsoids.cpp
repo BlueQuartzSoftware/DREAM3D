@@ -275,7 +275,7 @@ void DetectEllipsoids::execute()
     AttributeMatrix::Pointer featureAM = getDataContainerArray()->getPrereqAttributeMatrixFromPath<AbstractFilter>(this, m_FeatureAttributeMatrixPath, err);
 
     // Create corners array, which stores pixel coordinates for the top-left and bottom-right coordinates of each feature object
-    UInt32ArrayType::Pointer corners = UInt32ArrayType::CreateArray(featureAM->getTupleDimensions(), cDims, "Corners of Feature");
+    UInt32ArrayType::Pointer corners = UInt32ArrayType::CreateArray(featureAM->getTupleDimensions(), cDims, "Corners of Feature", true);
     for(int i = 0; i < corners->getNumberOfTuples(); i++)
     {
       corners->setComponent(i, 0, std::numeric_limits<uint32_t>::max());
@@ -489,7 +489,7 @@ DoubleArrayType::Pointer DetectEllipsoids::orientationFilter(int minAxisLength, 
   tDims.push_back(xDim);
   tDims.push_back(yDim);
   tDims.push_back(zDim);
-  DoubleArrayType::Pointer orientationCoords = DoubleArrayType::CreateArray(tDims, cDims, "Orientation Coordinates");
+  DoubleArrayType::Pointer orientationCoords = DoubleArrayType::CreateArray(tDims, cDims, "Orientation Coordinates", true);
 
   for(int z = 1; z <= zDim; z++)
   {
@@ -651,7 +651,7 @@ std::vector<double> DetectEllipsoids::smoothingFilter(int n_size, std::vector<si
 Int32ArrayType::Pointer DetectEllipsoids::createOffsetArray(std::vector<size_t> kernel_tDims)
 {
   std::vector<size_t> cDims(1, 3);
-  Int32ArrayType::Pointer offsetArray = Int32ArrayType::CreateArray(kernel_tDims, cDims, "Coordinate Array");
+  Int32ArrayType::Pointer offsetArray = Int32ArrayType::CreateArray(kernel_tDims, cDims, "Coordinate Array", true);
   size_t xDim = kernel_tDims[0], yDim = kernel_tDims[1], zDim = kernel_tDims[2];
   int index = 0;
 
@@ -749,7 +749,7 @@ DoubleArrayType::Pointer DetectEllipsoids::plotEllipsev2(double xc, double yc, d
   // (Note this is a bad approximation if the eccentricity is high)
   size_t perim = static_cast<size_t>(std::ceil((M_PI * sqrt(2 * (p * p + q * q) - std::pow((p - q), 2) / 2))));
   // Preallocate array using estimated perimeter
-  DoubleArrayType::Pointer ellipseCoords = DoubleArrayType::CreateArray(perim, std::vector<size_t>(1, 2), "Ellipse Coordinates");
+  DoubleArrayType::Pointer ellipseCoords = DoubleArrayType::CreateArray(perim, std::vector<size_t>(1, 2), "Ellipse Coordinates", true);
   for(int i = 0; i < ellipseCoords->getNumberOfTuples(); i++)
   {
     ellipseCoords->setComponent(i, 0, std::numeric_limits<double>::quiet_NaN());
@@ -1216,9 +1216,9 @@ Int32ArrayType::Pointer DetectEllipsoids::fillEllipse(Int32ArrayType::Pointer I,
   int maxStack = 1000; // Initial stack size
 
   // Artifical stack
-  DoubleArrayType::Pointer stackX = DoubleArrayType::CreateArray(maxStack, std::vector<size_t>(1, 1), "stackX");
+  DoubleArrayType::Pointer stackX = DoubleArrayType::CreateArray(maxStack, std::vector<size_t>(1, 1), "stackX", true);
   stackX->initializeWithZeros();
-  DoubleArrayType::Pointer stackY = DoubleArrayType::CreateArray(maxStack, std::vector<size_t>(1, 1), "stackY");
+  DoubleArrayType::Pointer stackY = DoubleArrayType::CreateArray(maxStack, std::vector<size_t>(1, 1), "stackY", true);
   stackY->initializeWithZeros();
 
   // push back current point to begin search
@@ -1235,7 +1235,7 @@ Int32ArrayType::Pointer DetectEllipsoids::fillEllipse(Int32ArrayType::Pointer I,
     return Int32ArrayType::NullPointer();
   }
 
-  Int32ArrayType::Pointer I_tmp = Int32ArrayType::CreateArray(I_tDims, std::vector<size_t>(1, 1), I->getName());
+  Int32ArrayType::Pointer I_tmp = Int32ArrayType::CreateArray(I_tDims, std::vector<size_t>(1, 1), I->getName(), true);
   I_tmp->initializeWithZeros();
 
   bool copy = I->copyIntoArray(I_tmp);

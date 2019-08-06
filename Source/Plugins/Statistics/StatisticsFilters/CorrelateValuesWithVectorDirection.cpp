@@ -288,7 +288,7 @@ void CorrelateValuesWithVectorDirection::makeLambertProjection(size_t numComps)
 {
   std::vector<size_t> tDims(2, m_Dimension);
   std::vector<size_t> cDims(1, numComps);
-  m_LambertProj = DoubleArrayType::CreateArray(tDims, cDims, "ModifiedLambertProjection");
+  m_LambertProj = DoubleArrayType::CreateArray(tDims, cDims, "ModifiedLambertProjection", true);
   m_LambertProj->initializeWithZeros();
 }
 
@@ -395,7 +395,7 @@ void CorrelateValuesWithVectorDirection::createSterographicProjections(size_t nu
   tDims[0] = xpoints;
   tDims[1] = ypoints;
   std::vector<size_t> cDims(1, numComps);
-  DoubleArrayType::Pointer stereoIntensity = DoubleArrayType::CreateArray(tDims, cDims, "StereoProjection");
+  DoubleArrayType::Pointer stereoIntensity = DoubleArrayType::CreateArray(tDims, cDims, "StereoProjection", true);
   stereoIntensity->initializeWithValue(-1000.0f);
   double* intensity = stereoIntensity->getPointer(0);
   double* m_LambertProjection = m_LambertProj->getPointer(0);
@@ -501,7 +501,7 @@ void CorrelateValuesWithVectorDirection::writeLambertProjection(size_t numComps)
   tDims[0] = xpoints;
   tDims[1] = ypoints;
   std::vector<size_t> cDims(1, numComps);
-  DoubleArrayType::Pointer modLamIntensity = DoubleArrayType::CreateArray(tDims, cDims, "ModLamProjection");
+  DoubleArrayType::Pointer modLamIntensity = DoubleArrayType::CreateArray(tDims, cDims, "ModLamProjection", true);
   modLamIntensity->initializeWithZeros();
   double* intensity = modLamIntensity->getPointer(0);
   double* m_LambertProjection = m_LambertProj->getPointer(0);

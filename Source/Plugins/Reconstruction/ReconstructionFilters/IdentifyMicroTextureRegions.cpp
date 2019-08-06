@@ -115,7 +115,7 @@ public:
     int64_t zDim = (2 * m_CritDim[2]) + 1;
     std::vector<size_t> tDims(1, xDim * yDim * zDim);
     std::vector<size_t> cDims(1, 3);
-    FloatArrayType::Pointer cAxisLocsPtr = FloatArrayType::CreateArray(tDims, cDims, "_INTERNAL_USE_ONLY_cAxisLocs");
+    FloatArrayType::Pointer cAxisLocsPtr = FloatArrayType::CreateArray(tDims, cDims, "_INTERNAL_USE_ONLY_cAxisLocs", true);
     cAxisLocsPtr->initializeWithValue(0);
     float* cAxisLocs = cAxisLocsPtr->getPointer(0);
     std::vector<int64_t> goodCounts;
@@ -430,7 +430,7 @@ void IdentifyMicroTextureRegions::randomizeFeatureIds(int64_t totalPoints, int64
   const int32_t rangeMax = totalFeatures - 1;
   initializeVoxelSeedGenerator(rangeMin, rangeMax);
 
-  DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFeatures, "_INTERNAL_USE_ONLY_NewFeatureIds");
+  DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFeatures, "_INTERNAL_USE_ONLY_NewFeatureIds", true);
 
   int32_t* gid = rndNumbers->getPointer(0);
   gid[0] = 0;

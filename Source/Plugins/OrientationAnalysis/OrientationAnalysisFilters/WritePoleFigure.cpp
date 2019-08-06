@@ -404,7 +404,7 @@ void WritePoleFigure::writeImage(QImage image, QString label)
 // -----------------------------------------------------------------------------
 UInt8ArrayType::Pointer flipAndMirrorPoleFigure(UInt8ArrayType* src, const PoleFigureConfiguration_t config)
 {
-  UInt8ArrayType::Pointer converted = UInt8ArrayType::CreateArray(static_cast<size_t>(config.imageDim * config.imageDim), std::vector<size_t>(1, 3), src->getName());
+  UInt8ArrayType::Pointer converted = UInt8ArrayType::CreateArray(static_cast<size_t>(config.imageDim * config.imageDim), std::vector<size_t>(1, 3), src->getName(), true);
   // We need to flip the image "vertically", which means the bottom row becomes
   // the top row and convert from BGRA to RGB ordering (This is a Little Endian code)
   // If this is ever compiled on a BIG ENDIAN machine the colors will be off.
@@ -708,7 +708,7 @@ void WritePoleFigure::execute()
       }
     }
     std::vector<size_t> eulerCompDim(1, 3);
-    FloatArrayType::Pointer subEulers = FloatArrayType::CreateArray(count, eulerCompDim, "Eulers_Per_Phase");
+    FloatArrayType::Pointer subEulers = FloatArrayType::CreateArray(count, eulerCompDim, "Eulers_Per_Phase", true);
     subEulers->initializeWithValue(std::numeric_limits<float>::signaling_NaN());
     float* eu = subEulers->getPointer(0);
 

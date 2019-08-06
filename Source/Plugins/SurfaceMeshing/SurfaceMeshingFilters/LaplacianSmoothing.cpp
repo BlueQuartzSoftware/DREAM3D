@@ -225,7 +225,7 @@ int32_t LaplacianSmoothing::generateLambdaArray()
 {
   size_t numNodes = m_SurfaceMeshNodeTypePtr.lock()->getNumberOfTuples();
 
-  DataArray<float>::Pointer lambdas = DataArray<float>::CreateArray(numNodes, "_INTERNAL_USE_ONLY_Laplacian_Smoothing_Lambda_Array");
+  DataArray<float>::Pointer lambdas = DataArray<float>::CreateArray(numNodes, "_INTERNAL_USE_ONLY_Laplacian_Smoothing_Lambda_Array", true);
   lambdas->initializeWithZeros();
 
   for(size_t i = 0; i < numNodes; ++i)
@@ -298,12 +298,12 @@ int32_t LaplacianSmoothing::edgeBasedSmoothing()
   MeshIndexType* uedges = surfaceMesh->getEdgePointer(0);
   MeshIndexType nedges = surfaceMesh->getNumberOfEdges();
 
-  DataArray<int32_t>::Pointer numConnections = DataArray<int32_t>::CreateArray(nvert, "_INTERNAL_USE_ONLY_Laplacian_Smoothing_NumberConnections_Array");
+  DataArray<int32_t>::Pointer numConnections = DataArray<int32_t>::CreateArray(nvert, "_INTERNAL_USE_ONLY_Laplacian_Smoothing_NumberConnections_Array", true);
   numConnections->initializeWithZeros();
   int32_t* ncon = numConnections->getPointer(0);
 
   std::vector<size_t> cDims(1, 3);
-  DataArray<double>::Pointer deltaArray = DataArray<double>::CreateArray(nvert, cDims, "_INTERNAL_USE_ONLY_Laplacian_Smoothing_Delta_Array");
+  DataArray<double>::Pointer deltaArray = DataArray<double>::CreateArray(nvert, cDims, "_INTERNAL_USE_ONLY_Laplacian_Smoothing_Delta_Array", true);
   deltaArray->initializeWithZeros();
   double* delta = deltaArray->getPointer(0);
 
