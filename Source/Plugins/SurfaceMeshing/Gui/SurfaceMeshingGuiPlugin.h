@@ -1,5 +1,7 @@
 #pragma once
 
+#include <QtCore/QObject>
+
 #include "SurfaceMeshing/SurfaceMeshingPlugin.h"
 
 class SurfaceMeshingGuiPlugin : public SurfaceMeshingPlugin
