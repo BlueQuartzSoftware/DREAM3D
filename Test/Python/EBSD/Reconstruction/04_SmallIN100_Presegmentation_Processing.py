@@ -16,38 +16,9 @@ def small_in100_presegmentation_processing():
     dca = simpl.DataContainerArray.New()
 
     # Read DREAM3D File
-    dcap = simpl.DataContainerArrayProxy()
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy("Confidence Index").Flag = 2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "EulerAngles").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "Fit").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "IPFColor").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "Image Quality").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "Mask").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "Phases").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "Quats").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "SEM Signal").Flag =2
-
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Phase Data").getDataArrayProxy(
-        "CrystalStructures").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Phase Data").getDataArrayProxy(
-        "LatticeConstants").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Phase Data").getDataArrayProxy(
-        "MaterialName").Flag =2
-
-    err = d3d.data_container_reader(dca,
-                                    sd.GetBuildDirectory() +
-                                    "/Data/Output/Reconstruction/03_SmallIN100_Aligned.dream3d",
-                                    False, dcap)
+    err = sc.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + "/Data/Output/Reconstruction/03_SmallIN100_Aligned.dream3d")
     if err < 0:
-        print("DataContainerReader ErrorCondition %d" % err)
+            print("Read DataContainerArray Structure Failed %d" % err)
 
     # Neighbor Orientation Comparison (Bad Data)
     err = orientation_analysis.bad_data_neighbor_orientation_check(dca, 5, 4,

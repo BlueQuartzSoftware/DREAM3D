@@ -45,12 +45,12 @@ def single_cubic_phase_equiaxed():
     phase_names.setValue(0, "Primary")
 
     # TESTING --> FloatArrayType array
-    (z1, floatArray1) = sc.ConvertToDataArray("FloatArray", np.zeros((1,)).astype('float32'))
-    floatArray1.Name = "Average"
-    floatArray1.setValue(0, 2.3)
-    (z2, floatArray2) = sc.ConvertToDataArray("FloatArray", np.zeros((1,)).astype('float32'))
-    floatArray2.Name = "Standard Deviation"
-    floatArray2.setValue(0, 0.4)
+
+    cDims = simpl.VectorSizeT([1])
+    floatArray1 = simpl.FloatArrayType(1, cDims, "Average", 2.3)
+
+    floatArray2 = simpl.FloatArrayType(1, cDims, "Standard Deviation", 0.4)
+
     stats_data_array.getStatsData(0).FeatureSizeDistribution = [floatArray1, floatArray2]
 
     # err = syntheticbuilding.stats_generator_filter(dca, "StatsGeneratorDataContainer",

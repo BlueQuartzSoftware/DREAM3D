@@ -16,99 +16,17 @@ def small_in100_cryst_stats():
     dca = simpl.DataContainerArray.New()
 
     # Read DREAM3D File
-    dcap = simpl.DataContainerArrayProxy()
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "Confidence Index").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "CriticalField").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "EulerAngles").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "FeatureIds").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "Fit").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "GBManhattanDistances").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "IPFColor").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "Image Quality").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "Mask").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "ParentIds").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "Phases").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "QPManhattanDistances").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "Quats").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "SEM Signal").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "TJManhattanDistances").Flag =2
-
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Phase Data").getDataArrayProxy(
-        "CrystalStructures").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Phase Data").getDataArrayProxy(
-        "LatticeConstants").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Phase Data").getDataArrayProxy(
-        "MaterialName").Flag =2
-
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy("Active").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "AspectRatios").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "AvgEuler").Flag =2
-    # dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data")
-    # .getDataArrayProxy("AvgQuats").Flag =2 # Not sure why, it is not flagged
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "AxisEulerAngles").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "AxisLengths").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "Centroids").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "CriticalFields").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "EquivalentDiameters").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "NeighborList").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "NeighborhoodList").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "Neighborhoods").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "NumElements").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "NumNeighbors").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "NumNeighbors2").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "Omega3s").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "ParentIds").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy("Phases").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "Shape Volumes").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "SharedSurfaceAreaList").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "Size Volumes").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "Sphericity").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "SurfaceAreaVolumeRatio").Flag =2
-
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("NewGrain Data").getDataArrayProxy(
-        "Active").Flag =2
-
-    err = d3d.data_container_reader(dca,
-                                    sd.GetBuildDirectory() + "/Data/Output/Statistics/SmallIN100_CopyCritical.dream3d",
-                                    False, dcap)
+    err = sc.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + "/Data/Output/Statistics/SmallIN100_CopyCritical.dream3d")
+    
     if err < 0:
         print("DataContainerReader ErrorCondition %d" % err)
 
+    # We need to remove an Attribute Array that will be recreated in a filter.
+    dc = dca.getDataContainer("Small IN100")
+    grainDataAM = dc.getAttributeMatrix("Grain Data")
+    grainDataAM.removeAttributeArray("AvgQuats")
+    
+    
     # Find Feature Average Orientations
     err = orientation_analysis.find_avg_orientations(dca,
                                                      simpl.DataArrayPath("Small IN100", "EBSD Scan Data", "FeatureIds"),
