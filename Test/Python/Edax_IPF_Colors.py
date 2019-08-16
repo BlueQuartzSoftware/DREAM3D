@@ -4,6 +4,15 @@ Pipeline example based on Edax_IPF_Colors
 
 """
 
+#import matplotlib.pyplot as plt
+
+try:
+    import numpy as np
+except ImportError:
+    raise RuntimeError("This module depends on the numpy module. Please make\
+sure that it is installed properly.")
+
+
 from dream3d import simpl
 from dream3d import simpl_helpers as sc
 from dream3d import simpl_test_dirs as sd
@@ -64,6 +73,15 @@ def color_data_change_test():
     err = sc.WriteDREAM3DFile(sd.GetBuildDirectory() + "/Data/Output/Examples/Slice_1.dream3d", dca)
     if err < 0:
         print("WriteDREAM3DFile ErrorCondition: %d" % err)
+
+
+    # This section shows using MatPlotLib to graph the histogram.
+    # dc = dca.getDataContainer("EBSD Scan")
+    # am = dc.getAttributeMatrix("Scan Data")
+    # iq = am.getAttributeArray("Image Quality")
+    # plt.hist(np.asarray(iq), 256)
+    # plt.show()
+
 
 """
 Main entry point for python script

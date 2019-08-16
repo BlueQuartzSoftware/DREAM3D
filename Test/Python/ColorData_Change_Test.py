@@ -87,9 +87,15 @@ def color_data_change_test():
         row[1] = 128
         row[2] = 0
     
-    newdata = sc.ConvertToDataArray("IPFColor", np_array, comp_dims[0])
-    #sc.RemoveArray(dca, ["EBSD Scan", "Scan Data", "IPFColor"])
-    didInsert = am.addOrReplaceAttributeArray(newdata[1])
+    if not np_array.flags.contiguous:
+        np_array = np.ascontiguousarray(np_array)
+        assert np_array.flags.contiguous, 'Only contiguous arrays are supported.'
+
+
+    # Create the wrapped DataArray<float> object
+    newdata = simpl.UInt8ArrayType(np_array, "IPFColor", False)
+    # Add the DataArray to the AttributeMatrix
+    am.addOrReplaceAttributeArray(newdata)
 
     # ITK Image Writer
     image_writer = itkimageprocessing.ITKImageWriter.New()
