@@ -310,6 +310,12 @@ QString InitializeSyntheticVolume::estimateNumFeatures(IntVec3Type dims, FloatVe
     setErrorCondition(-11002, ss);
     return "0";
   }
+  if(!phaseType->isAllocated())
+  {
+    QString ss = QObject::tr("Phase types array was not allocated and could not be accessed for values. The path is %1").arg(getInputPhaseTypesArrayPath().serialize());
+    setWarningCondition(-11003, ss);
+    return "0";
+  }
 
   std::vector<size_t> statsDims(1, 1);
   StatsDataArray::Pointer statsPtr = dca->getPrereqArrayFromPath<StatsDataArray, AbstractFilter>(this, getInputStatsArrayPath(), statsDims);
