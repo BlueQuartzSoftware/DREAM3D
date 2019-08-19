@@ -44,7 +44,7 @@
 
 #include "OrientationAnalysis/FilterParameters/EbsdMontageListInfo.h"
 
-using EbsdMontageListInfo_t = EbsdMontageListInfo;
+//using EbsdMontageListInfo_t = EbsdMontageListInfo;
 
 #if 0
 typedef struct
@@ -124,8 +124,8 @@ public:
   SIMPL_STATIC_NEW_MACRO(EbsdMontageImportFilterParameter)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(EbsdMontageImportFilterParameter, FilterParameter)
 
-  using SetterCallbackType = std::function<void(EbsdMontageListInfo_t)>;
-  using GetterCallbackType = std::function<EbsdMontageListInfo_t(void)>;
+  using SetterCallbackType = std::function<void(EbsdMontageListInfo)>;
+  using GetterCallbackType = std::function<EbsdMontageListInfo(void)>;
 
   /**
    * @brief New This function instantiates an instance of the EbsdMontageImportFilterParameter. Although this
@@ -143,7 +143,7 @@ public:
   * that this FilterParameter subclass represents.
    * @return
    */
-  static Pointer New(const QString& humanLabel, const QString& propertyName, const EbsdMontageListInfo_t& defaultValue, Category category, SetterCallbackType setterCallback,
+  static Pointer New(const QString& humanLabel, const QString& propertyName, const EbsdMontageListInfo& defaultValue, Category category, SetterCallbackType setterCallback,
                      GetterCallbackType getterCallback);
 
   ~EbsdMontageImportFilterParameter() override;
