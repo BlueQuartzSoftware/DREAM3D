@@ -137,7 +137,7 @@ void EMCalculation::execute()
   EMMPM_Data* data = m_Data.get();
   int k;
   int emiter = data->emIterations;
-  real_t* simAnnealKappas = nullptr;
+  std::vector<real_t> simAnnealKappas;
   bool stop = false;
 
   float totalLoops = (float)(data->emIterations * data->mpmIterations + data->mpmIterations);
@@ -156,7 +156,7 @@ void EMCalculation::execute()
   // If we are using Sim Anneal then create a ramped beta
   if(data->simulatedAnnealing != 0 && data->emIterations > 1)
   {
-    simAnnealKappas = (real_t*)(malloc(sizeof(real_t) * data->emIterations));
+    simAnnealKappas.resize(data->emIterations);
     for(int i = 0; i < data->emIterations; ++i)
     {
       simAnnealKappas[i] = data->workingKappa + pow(i / (data->emIterations - 1.0), 8) * (10.0 * data->workingKappa - data->workingKappa);
@@ -306,7 +306,6 @@ void EMCalculation::execute()
   EMMPMUtilities::ConvertXtToOutputImage(getData());
 
   data->inside_em_loop = 0;
-  free(simAnnealKappas);
 }
 
 // -----------------------------------------------------------------------------

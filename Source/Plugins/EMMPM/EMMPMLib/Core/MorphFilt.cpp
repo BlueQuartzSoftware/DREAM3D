@@ -91,7 +91,7 @@ unsigned int MorphFilter::mini(int a, int b)
 // -----------------------------------------------------------------------------
 void MorphFilter::morphFilt(EMMPM_Data* data, unsigned char* curve, unsigned char* se, int r)
 {
-  unsigned char* erosion;
+  std::vector<unsigned char> erosion;
   unsigned int l, maxr, maxc;
   // int ii, jj;
   int w;
@@ -104,8 +104,8 @@ void MorphFilter::morphFilt(EMMPM_Data* data, unsigned char* curve, unsigned cha
 
   se_cols = 2 * r + 1;
 
-  erosion = (unsigned char*)malloc(cols * rows * sizeof(unsigned char));
-  ::memset(erosion, 0, cols * rows * sizeof(unsigned char));
+  erosion.resize(cols * rows);
+  ::memset(erosion.data(), 0, cols * rows * sizeof(unsigned char));
 
   for(int i = 0; i < rows; i++)
   {
@@ -164,8 +164,6 @@ void MorphFilter::morphFilt(EMMPM_Data* data, unsigned char* curve, unsigned cha
       }
     }
   }
-
-  free(erosion);
 }
 
 // -----------------------------------------------------------------------------
@@ -175,8 +173,8 @@ void MorphFilter::multiSE(EMMPM_Data* data)
 {
   int k, l;
   int ri;
-  unsigned char* se = nullptr;
-  unsigned char* curve = nullptr;
+  std::vector<unsigned char> se;
+  std::vector<unsigned char> curve;
   real_t r, r_sq, pnlty;
   size_t ij, lij, iirijjri;
   size_t se_cols;
@@ -188,7 +186,7 @@ void MorphFilter::multiSE(EMMPM_Data* data)
 
   pnlty = 1 / (real_t)NUM_SES;
 
-  curve = (unsigned char*)malloc(cols * rows * sizeof(unsigned char));
+  curve.resize(cols * rows);
 
   for(k = 0; k < NUM_SES; k++)
   {
@@ -201,7 +199,9 @@ void MorphFilter::multiSE(EMMPM_Data* data)
     /* Create Morphological SE */
     se_cols = (2 * ri + 1);
     se_rows = (2 * ri + 1);
-    se = (unsigned char*)malloc(se_cols * se_rows * sizeof(unsigned char));
+
+    se.resize(se_cols * se_rows);
+
     for(int ii = -((int)ri); ii <= (int)ri; ii++)
     {
       for(int jj = -((int)ri); jj <= (int)ri; jj++)
@@ -219,7 +219,7 @@ void MorphFilter::multiSE(EMMPM_Data* data)
         }
       }
     }
-    morphFilt(data, curve, se, ri);
+    morphFilt(data, curve.data(), se.data(), ri);
 
     for(int32_t i = 0; i < rows; i++)
     {
@@ -235,10 +235,7 @@ void MorphFilter::multiSE(EMMPM_Data* data)
         }
       }
     }
-
-    free(se);
   }
-  free(curve);
 }
 
 // -----------------------------------------------------------------------------

@@ -71,6 +71,30 @@ namespace Detail
   }
 }
 
+static const QuatD CubicQuatSymD[24] = {QuaternionMathD::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
+                                        QuaternionMathD::New(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
+                                        QuaternionMathD::New(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f),
+                                        QuaternionMathD::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
+                                        QuaternionMathD::New(SIMPLib::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f, SIMPLib::Constants::k_1OverRoot2),
+                                        QuaternionMathD::New(0.000000000f, SIMPLib::Constants::k_1OverRoot2, 0.000000000f, SIMPLib::Constants::k_1OverRoot2),
+                                        QuaternionMathD::New(0.000000000f, 0.000000000f, SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2),
+                                        QuaternionMathD::New(-SIMPLib::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f, SIMPLib::Constants::k_1OverRoot2),
+                                        QuaternionMathD::New(0.000000000f, -SIMPLib::Constants::k_1OverRoot2, 0.000000000f, SIMPLib::Constants::k_1OverRoot2),
+                                        QuaternionMathD::New(0.000000000f, 0.000000000f, -SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2),
+                                        QuaternionMathD::New(SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f),
+                                        QuaternionMathD::New(-SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000f, 0.000000000f),
+                                        QuaternionMathD::New(0.000000000f, SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000f),
+                                        QuaternionMathD::New(0.000000000f, -SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000f),
+                                        QuaternionMathD::New(SIMPLib::Constants::k_1OverRoot2, 0.000000000f, SIMPLib::Constants::k_1OverRoot2, 0.000000000f),
+                                        QuaternionMathD::New(-SIMPLib::Constants::k_1OverRoot2, 0.000000000f, SIMPLib::Constants::k_1OverRoot2, 0.000000000f),
+                                        QuaternionMathD::New(0.500000000f, 0.500000000f, 0.500000000f, 0.500000000f),
+                                        QuaternionMathD::New(-0.500000000f, -0.500000000f, -0.500000000f, 0.500000000f),
+                                        QuaternionMathD::New(0.500000000f, -0.500000000f, 0.500000000f, 0.500000000f),
+                                        QuaternionMathD::New(-0.500000000f, 0.500000000f, -0.500000000f, 0.500000000f),
+                                        QuaternionMathD::New(-0.500000000f, 0.500000000f, 0.500000000f, 0.500000000f),
+                                        QuaternionMathD::New(0.500000000f, -0.500000000f, -0.500000000f, 0.500000000f),
+                                        QuaternionMathD::New(-0.500000000f, -0.500000000f, 0.500000000f, 0.500000000f),
+                                        QuaternionMathD::New(0.500000000f, 0.500000000f, -0.500000000f, 0.500000000f)};
 
 static const QuatF CubicQuatSym[24] =
 {
@@ -1646,6 +1670,22 @@ void _TripletSort(T a, T b, T c, T& x, T& y, T& z)
   }
 }
 
+bool inUnitTriangleD(double eta, double chi)
+{
+  double etaDeg = eta * SIMPLib::Constants::k_180OverPi;
+  double chiMax;
+  if(etaDeg > 45.0)
+  {
+    chiMax = sqrt(1.0 / (2.0 + std::tan(0.5 * SIMPLib::Constants::k_Pi - eta) * std::tan(0.5 * SIMPLib::Constants::k_Pi - eta)));
+  }
+  else
+  {
+    chiMax = sqrt(1.0 / (2.0 + std::tan(eta) * std::tan(eta)));
+  }
+  SIMPLibMath::boundD(chiMax, -1.0f, 1.0f);
+  chiMax = acos(chiMax);
+  return !(eta < 0.0 || eta > (45.0 * SIMPLib::Constants::k_PiOver180) || chi < 0.0 || chi > chiMax);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -1687,26 +1727,26 @@ SIMPL::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, doub
     phi2 = phi2 * SIMPLib::Constants::k_DegToRad;
   }
 
-  QuatF qc = QuaternionMath<float>::New();
-  QuatF q1 = QuaternionMath<float>::New();
-  float g[3][3];
-  float p[3];
-  float refDirection[3] = { 0.0f, 0.0f, 0.0f};
-  float chi = 0.0f, eta = 0.0f;
-  float _rgb[3] = { 0.0, 0.0, 0.0 };
+  QuatD qc = QuaternionMath<double>::New();
+  QuatD q1 = QuaternionMath<double>::New();
+  double g[3][3];
+  double p[3];
+  double refDirection[3] = {0.0f, 0.0f, 0.0f};
+  double chi = 0.0f, eta = 0.0f;
+  double _rgb[3] = {0.0, 0.0, 0.0};
 
-  FOrientArrayType eu(phi1, phi, phi2);
-  FOrientArrayType qu(4);
-  FOrientArrayType om(9); // Reusable for the loop
-  OrientationTransforms<FOrientArrayType, float>::eu2qu(eu, qu);
+  DOrientArrayType eu(phi1, phi, phi2);
+  DOrientArrayType qu(4);
+  DOrientArrayType om(9); // Reusable for the loop
+  OrientationTransforms<DOrientArrayType, double>::eu2qu(eu, qu);
   q1 = qu.toQuaternion();
-
-  for (int j = 0; j < 24; j++)
+  int inUnitTriangleCounter = 0;
+  for(int j = 0; j < 24; j++)
   {
-    QuaternionMathF::Multiply(CubicQuatSym[j], q1, qc);
+    QuaternionMathD::Multiply(CubicQuatSymD[j], q1, qc);
 
     qu.fromQuaternion(qc);
-    OrientationTransforms<FOrientArrayType, float>::qu2om(qu, om);
+    OrientationTransforms<DOrientArrayType, double>::qu2om(qu, om);
     om.toGMatrix(g);
 
     refDirection[0] = refDir0;
@@ -1725,27 +1765,33 @@ SIMPL::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, doub
     }
     chi = std::acos(p[2]);
     eta = std::atan2(p[1], p[0]);
-    if(!inUnitTriangle(eta, chi))
+    if(!inUnitTriangleD(eta, chi))
     {
+      inUnitTriangleCounter++;
       continue;
     }
 
       break;
   }
 
-  float etaMin = 0.0;
-  float etaMax = 45.0;
-  float etaDeg = eta * SIMPLib::Constants::k_180OverPi;
-  float chiMax;
+  if(inUnitTriangleCounter == 24)
+  {
+    std::cout << " Something bad.... " << std::endl;
+  }
+
+  double etaMin = 0.0;
+  double etaMax = 45.0;
+  double etaDeg = eta * SIMPLib::Constants::k_180OverPi;
+  double chiMax;
   if(etaDeg > 45.0)
   {
-    chiMax = std::sqrt(1.0 / (2.0 + tanf(0.5 * SIMPLib::Constants::k_Pi - eta) * tanf(0.5 * SIMPLib::Constants::k_Pi - eta)));
+    chiMax = std::sqrt(1.0 / (2.0 + std::tan(0.5 * SIMPLib::Constants::k_Pi - eta) * std::tan(0.5 * SIMPLib::Constants::k_Pi - eta)));
   }
   else
   {
-    chiMax = std::sqrt(1.0 / (2.0 + tanf(eta) * tanf(eta)));
+    chiMax = std::sqrt(1.0 / (2.0 + std::tan(eta) * std::tan(eta)));
   }
-  SIMPLibMath::boundF(chiMax, -1.0f, 1.0f);
+  SIMPLibMath::boundD(chiMax, -1.0, 1.0);
   chiMax = std::acos(chiMax);
 
   _rgb[0] = 1.0 - chi / chiMax;
@@ -1757,7 +1803,7 @@ SIMPL::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, doub
   _rgb[1] = std::sqrt(_rgb[1]);
   _rgb[2] = std::sqrt(_rgb[2]);
 
-  float max = _rgb[0];
+  double max = _rgb[0];
   if (_rgb[1] > max)
   {
     max = _rgb[1];

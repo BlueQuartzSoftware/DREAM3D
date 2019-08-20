@@ -179,7 +179,7 @@ char* EMMPMInputParser::copyFilenameToNewCharBuffer(const std::string& fname)
   char* buf = nullptr;
   if(size > 1)
   {
-    buf = (char*)malloc(size);
+    buf = new char[size]();
     ::memset(buf, 0, size);
     strncpy(buf, fname.c_str(), size - 1);
   }

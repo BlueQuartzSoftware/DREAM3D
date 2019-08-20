@@ -90,8 +90,8 @@ class EMMPMLib_EXPORT EMMPMInputParser
     int parseMuSigmaValues(const std::string& values, EMMPM_Data* inputs);
 
     /**
-     * @brief Copys the std::string contents into a newly malloc'ed char array which
-     * the programmer will need to free when they are finished with it.
+     * @brief Copys the std::string contents into a new'ed char array which
+     * the programmer will need to delete[] when they are finished with it.
      * @param fname The filename to copy
      */
     char* copyFilenameToNewCharBuffer( const std::string& fname);

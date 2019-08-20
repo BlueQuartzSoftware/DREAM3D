@@ -38,7 +38,7 @@
 #define EMMPM_FREE_POINTER(ptr)                                                                                                                                                                        \
   if(nullptr != (ptr))                                                                                                                                                                                 \
   {                                                                                                                                                                                                    \
-    free(ptr);                                                                                                                                                                                         \
+    delete[](ptr);                                                                                                                                                                                     \
     (ptr) = nullptr;                                                                                                                                                                                   \
   }
 
@@ -61,12 +61,12 @@ EMMPM_Data::~EMMPM_Data()
 
   if(this->inputImage != nullptr)
   {
-    free(this->inputImage);
+    delete[](this->inputImage);
     this->inputImage = nullptr;
   }
   if(this->outputImage != nullptr)
   {
-    free(this->outputImage);
+    delete[](this->outputImage);
     this->outputImage = nullptr;
   }
 
@@ -94,7 +94,7 @@ int EMMPM_Data::allocateDataStructureMemory()
 {
   if(nullptr == this->y)
   {
-    this->y = (unsigned char*)malloc(this->columns * this->rows * this->dims * sizeof(unsigned char));
+    this->y = new unsigned char[this->columns * this->rows * this->dims]();
   }
   if(nullptr == this->y)
   {
@@ -103,7 +103,7 @@ int EMMPM_Data::allocateDataStructureMemory()
 
   if(nullptr == this->xt)
   {
-    this->xt = (unsigned char*)malloc(this->columns * this->rows * sizeof(unsigned char));
+    this->xt = new unsigned char[this->columns * this->rows * this->dims]();
   }
   if(nullptr == this->xt)
   {
@@ -112,7 +112,7 @@ int EMMPM_Data::allocateDataStructureMemory()
 
   if(nullptr == this->mean)
   {
-    this->mean = (real_t*)malloc(this->classes * this->dims * sizeof(real_t));
+    this->mean = new real_t[this->classes * this->dims]();
   }
   if(nullptr == this->mean)
   {
@@ -121,7 +121,7 @@ int EMMPM_Data::allocateDataStructureMemory()
 
   if(nullptr == this->prev_mu)
   {
-    this->prev_mu = (real_t*)malloc(this->classes * this->dims * sizeof(real_t));
+    this->prev_mu = new real_t[this->classes * this->dims]();
   }
   if(nullptr == this->prev_mu)
   {
@@ -130,7 +130,7 @@ int EMMPM_Data::allocateDataStructureMemory()
 
   if(nullptr == this->variance)
   {
-    this->variance = (real_t*)malloc(this->classes * this->dims * sizeof(real_t));
+    this->variance = new real_t[this->classes * this->dims]();
   }
   if(nullptr == this->variance)
   {
@@ -139,7 +139,7 @@ int EMMPM_Data::allocateDataStructureMemory()
 
   if(nullptr == this->prev_variance)
   {
-    this->prev_variance = (real_t*)malloc(this->classes * this->dims * sizeof(real_t));
+    this->prev_variance = new real_t[this->classes * this->dims]();
   }
   if(nullptr == this->prev_variance)
   {
@@ -148,7 +148,7 @@ int EMMPM_Data::allocateDataStructureMemory()
 
   if(nullptr == this->probs)
   {
-    this->probs = (real_t*)malloc(this->classes * this->columns * this->rows * sizeof(real_t));
+    this->probs = new real_t[this->classes * this->columns * this->rows]();
   }
   if(nullptr == this->probs)
   {
@@ -157,7 +157,7 @@ int EMMPM_Data::allocateDataStructureMemory()
 
   if(nullptr == this->histograms)
   {
-    this->histograms = (real_t*)malloc(this->classes * this->dims * 256 * sizeof(real_t));
+    this->histograms = new real_t[this->classes * this->dims * 256]();
   }
   if(nullptr == this->histograms)
   {
@@ -168,7 +168,7 @@ int EMMPM_Data::allocateDataStructureMemory()
   {
     unsigned int cSize = this->classes + 1;
     size_t couplingElements = cSize * cSize;
-    this->couplingBeta = static_cast<real_t*>(malloc(sizeof(real_t) * couplingElements));
+    this->couplingBeta = new real_t[couplingElements]();
   }
   if(nullptr == this->couplingBeta)
   {
@@ -185,11 +185,11 @@ void EMMPM_Data::allocateOutputImage()
 {
   if(nullptr != this->outputImage)
   {
-    free(this->outputImage);
+    delete[](this->outputImage);
     this->outputImage = nullptr;
   }
 
-  this->outputImage = reinterpret_cast<unsigned char*>(malloc(this->columns * this->rows * this->dims));
+  this->outputImage = new unsigned char[this->columns * this->rows * this->dims]();
 }
 
 // -----------------------------------------------------------------------------
