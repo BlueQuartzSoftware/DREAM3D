@@ -44,8 +44,6 @@
 
 #include "OrientationAnalysis/FilterParameters/EbsdMontageListInfo.h"
 
-//using EbsdMontageListInfo_t = EbsdMontageListInfo;
-
 #if 0
 typedef struct
 {
