@@ -310,6 +310,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     ReadCtfData::Pointer reader = ReadCtfData::New();
     reader->setInputFile(m_EbsdFileName);
     reader->setDataContainerArray(dca);
+    reader->setDegreesToRadians(degToRads->isChecked());
     reader->execute();
     int err = reader->getErrorCode();
 
@@ -334,47 +335,6 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     cellPhasesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::CtfFile::Phases);
     cellEulerAnglesArrayPath = DataArrayPath(dcName, cellAttrMatName, Ebsd::CtfFile::EulerAngles);
     crystalStructuresArrayPath = DataArrayPath(dcName, cellEnsembleName, Ebsd::CtfFile::CrystalStructures);
-  }
-
-  // If they want to convert the Eulers to Radians
-  if(degToRads->isChecked())
-  {
-    QString filtName = ChangeAngleRepresentation::ClassName();
-    FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer convertEulerFactory = fm->getFactoryFromClassName(filtName);
-    if(nullptr != convertEulerFactory.get())
-    {
-      // If we get this far, the Factory is good so creating the filter should not fail unless something has
-      // horribly gone wrong in which case the system is going to come down quickly after this.
-      AbstractFilter::Pointer convert = convertEulerFactory->create();
-
-      DataArrayPath eulerAnglesPath(dcName, cellAttrMatName, Ebsd::CtfFile::EulerAngles);
-      QVariant var;
-      var.setValue(eulerAnglesPath);
-      convert->setProperty("ConversionType", SIMPL::EulerAngleConversionType::DegreesToRadians);
-      convert->setProperty("CellEulerAnglesArrayPath", var);
-
-      convert->setDataContainerArray(dca);
-      convert->execute();
-      int err = convert->getErrorCode();
-      if(err < 0)
-      {
-        m_BaseImage = QImage();
-        m_DisplayedImage = QImage();
-      }
-    }
-    else
-    {
-      QMessageBox msgBox;
-      msgBox.setText("Missing Dependent Filter to change Degrees to Radians");
-      QString iText;
-      QTextStream ss(&iText);
-      ss << "A filter is needed to convert the data from Degrees to Radians. That filter is missing from this instance of the application. You can proceed with the import if you wish.";
-      msgBox.setInformativeText(iText);
-      msgBox.setStandardButtons(QMessageBox::Ok);
-      msgBox.setDefaultButton(QMessageBox::Ok);
-      msgBox.exec();
-    }
   }
 
   QString outputArrayName;

@@ -519,13 +519,17 @@ int CtfReader::parseHeaderLines(QList<QByteArray>& headerLines)
     {
       // We do not really do anything with this entry
     }
+    else if(sLine.startsWith("EMsoft"))
+    {
+      // We do not really do anything with this entry
+    }
     else // This is the generic Catch all
     {
       EbsdHeaderEntry::Pointer p = m_HeaderMap[tabTokens[0]];
       if(nullptr == p.get())
       {
         std::cout << "---------------------------" << std::endl;
-        std::cout << "Could not find header entry for key '" << line[0] << "'" << std::endl;
+        std::cout << "Could not find header entry for line '" << line.toStdString() << "'" << std::endl;
         //        QString upper(line[0]);
         //        std::transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
         //        std::cout << "#define ANG_" << upper << "     \"" << line[0] << "\"" << std::endl;

@@ -10,6 +10,90 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+## Version 6.5.128 ##
+
+### 6.5.128 New Filters & Features ###
+
++ ItkPairwiseRegistration contributed by AFRL (DREAM3DReview)
+
+### 6.5.128 Fixed DREAM3D Issues ###
+
++ Find Average Orienation now has default values
++ CTF Files written by EMsoft no longer print spurious warning message
++ Reference Frame default transform is correctly set.
++ Reference Frame transform is guessed based on file extension first time dialog is launched
+
+### 6.5.128 Fixed SIMPL Issues ###
+
++ Import HDF5 could not import anything more than 2GB worth of elements
++ Fixed ambiguous logic in TetrahedralGeom
++ Fixed Issue with MultiDataArraySelectionWidget not clearing the lists when a new Attribute Matrix was selected.
+
+## Version 6.5.126 ##
+
+### 6.5.126 New Filters & Features ###
+
++ Convert Quaternion: Converts a Quaternion between Scalar-Vector and Vector-Scalar memory layout
++ Quaternion Conjugate: Computes the conjugate of a quaterion
+
+### 6.5.126 Fixed DREAM3D Issues ###
+
++ Fix issue where "Reveal in Finder/Explorer" would not actually open the proper Finder/Explorer Window
++ ReadCTF Data: Allows user to convert Eulers to Radians and allows user to disable the Hexagonal basal plane X axis convention.
++ InsertAtoms: Fixing crashes during filter (reported by MicroClue <whsiao1995@hotmail.com>)
++ Improved some of the prebuilt pipelines to run faster and with less memory overhead.
++ Write Pole Figure Improvements: Proper default for Material Names, Only allow PDF, updated descriptions for types of output (Color Intensity & Discrete)
++ AbaqusHexahedronWriter did not provide enough arguments to an error message
++ SPParksDumpReader did not properly create AttributeMatrix and DataArray with the proper number of tuples. This effected filters downstream that depend on that information.
++ Export 3D Solid Mesh now does not time out
++ ITKImagePairWiseRegistration filter added into DREAM3DReview branch
+
+### 6.5.126 Fixed SIMPL Issues ###
+
++ Use proper icon in MultiDataContainerSelectionWidget
++ Fix to resolve spurious warnings about QGradient at the end of pipeline execution
++ Fix to itkCommand subclass to properly implement it using ITK Macros
++ Use 'Spacing' instead of 'Resolution' in ImageGeometry descriptive text
++ Addressed arithmetic overflow and other code analysis warnings
++ Initialized PipelineMessage index
++ Marked a possible coding error in ImportAsciiDataArray where two identical error conditions are checked using || operator.
++ Fixed an incorrect cast in ReadASCIIData where a double is cast to a float for a method parameter that is expecting a double.  Due to multiple calculations of the same value, it was saved to a constant before the first calculation was required.
++ Changed a for loop variable in geometry compute methods to avoid default castings when dereferencing a pointer multiple times per iteration.
++ Changed geometry requirements in addAttributeMatrix from using || for enum checks to &&.  The previous versions could never be false and invalidated the entire method.
++ Fixed a possible overflow when calculating ImageGeom and RectGridGeom coords.  The previous versions would have overflowed before casting to a larger size.
++ Updated variables used to store min and max float values to constexpr to take advantage of the fact that they are known at compile time and are never modified.
++ Removed unnecessary casts in SIMPLibRandom where doubles were cast to float and then saved as a double.
++ Fixed ColorTable::GetColorTable due to the current implementation going out of array bounds.  The 2D array float color[8][3] was being accessed with indices [8][2].
++ Updated VTKFileReader::skipVolume to use size_t dimensions
++ Changed xDim, yDim, and zDim parameters to size_t from int.  If either one or three of them were negative, the total size variable used to allocate memory would save a negative number as an unsigned value, causing overflow.  Moreover, any negative dimensions would silently prevent data from being read.
++ Updated ColorTable::GetColorTable with static_cast and rename
++ Updated preset color table only.
++ Removed duplicate error checks in ImportAsciDataArray
++ Other errors are already handled, so these seem to be redundant rather than typos.
++ Updated ColorTable::GetColorTable for json values
++ Applied fixes from preset color table method.
++ Updated incorrect currBinIndex maximum value in preset table method
++ Moved variables inside the loop where appropriate.
++ Updated numColors parameter to size_t both for cast issues and because it makes no sense to have a negative number of colors.
++ Made variables const where appropriate.
++ Ran clang-format on ColorTable.cpp for readability
++ Fixed more arithmetic overflow warnings with type casts
++ Performed casts on getNumberOfComponents() to size_t for calculations.  This method should probably return size_t instead of a signed int if a negative component dimension is not possible.
++ Changed DynamicTableData::ExpandData parameters nRows and nCols from signed int to size_t.  Negative values were not handled, and the values are more descriptive with their current type.  size_t should be preferred over int when it comes to dimensions unless there is a good reason to include negative values as a valid option.
++ Added a hsize_t cast to H5DataArrayWriter when calculating rank size in H5DataArrayWriter.hpp  By casting the first value, arithmetic operations progress it forward while preventing int32_t-related overflow.
++ Added casts to int64_t when faceId values to local variables in GeometryMath.cpp.  These variables were used for referencing vertex pointer indices where int64_t values were expected
++ Fixed a few uninitialized variables
++ Fixed type casting in CubeOctohedronOps.cpp
++ Added missing `f` in plane4Comp and plane7Comp arithmetic operations. This was determined as a mistake by looking at other operations where the same calculations were consistently done with a floating point constant, but the `f` was left off in two places.  The `static_cast<float>`  was determined to silence a warning regarding type casting down from double to float due to the propagation of the double type through the calculation.
++ Added default value to ErrorObject::ok boolean in ParseFunctors
++ Silenced initialized variable warning
++ Added default construction to SIMPLib property macros
++ This is unlikely to affect the default values for integers, floating point numbers, and booleans (not created with SIMPL_BOOL_PROPERTY).
++ Hard sets boolean properties to false using SIMPL_BOOL_PROPERTY
++ Silences uninitialized variable warnings for other types.
++ These macros still have the potential to cause bugs due to uninitialized variables.
++ Added a default initialization for PipelineMessage code.
+
 ## Version 6.5.121 ##
 
 ### 6.5.121 New Filters & Features ###
