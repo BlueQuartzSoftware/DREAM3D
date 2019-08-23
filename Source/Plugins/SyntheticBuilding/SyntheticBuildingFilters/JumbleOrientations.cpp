@@ -258,7 +258,7 @@ void JumbleOrientations::execute()
   {
     FOrientArrayType quat(4, 0.0);
     FOrientTransformsType::eu2qu(FOrientArrayType(&(m_FeatureEulerAngles[3 * i]), 3), quat);
-    QuaternionMathF::Copy(quat.toQuaternion(), avgQuats[i]);
+    QuaternionMathF::Copy(quat.toQuaternion<float>(), avgQuats[i]);
   }
 
 

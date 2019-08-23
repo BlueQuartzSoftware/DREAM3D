@@ -256,13 +256,13 @@ void VisualizeGBCDGMT::execute()
   gbcdLimits[0] = 0.0f;
   gbcdLimits[1] = 0.0f;
   gbcdLimits[2] = 0.0f;
-  gbcdLimits[3] = -sqrtf(SIMPLib::Constants::k_Pi / 2.0f);
-  gbcdLimits[4] = -sqrtf(SIMPLib::Constants::k_Pi / 2.0f);
+  gbcdLimits[3] = -sqrtf(SIMPLib::Constants::k_PiOver2);
+  gbcdLimits[4] = -sqrtf(SIMPLib::Constants::k_PiOver2);
   gbcdLimits[5] = SIMPLib::Constants::k_Pi / 2.0f;
   gbcdLimits[6] = 1.0f;
   gbcdLimits[7] = SIMPLib::Constants::k_Pi / 2.0f;
-  gbcdLimits[8] = sqrtf(SIMPLib::Constants::k_Pi / 2.0f);
-  gbcdLimits[9] = sqrtf(SIMPLib::Constants::k_Pi / 2.0f);
+  gbcdLimits[8] = sqrtf(SIMPLib::Constants::k_PiOver2);
+  gbcdLimits[9] = sqrtf(SIMPLib::Constants::k_PiOver2);
 
   // get num components of GBCD
   std::vector<size_t> cDims = m_GBCDPtr.lock()->getComponentDimensions();

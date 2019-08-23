@@ -67,13 +67,13 @@ class CalculateTwinBoundaryImpl
 {
   float m_AxisTol;
   float m_AngTol;
-  int32_t* m_Labels;
-  double* m_Normals;
-  int32_t* m_Phases;
-  float* m_Quats;
-  bool* m_TwinBoundary;
-  float* m_TwinBoundaryIncoherence;
-  uint32_t* m_CrystalStructures;
+  int32_t* m_Labels = nullptr;
+  double* m_Normals = nullptr;
+  int32_t* m_Phases = nullptr;
+  float* m_Quats = nullptr;
+  bool* m_TwinBoundary = nullptr;
+  float* m_TwinBoundaryIncoherence = nullptr;
+  uint32_t* m_CrystalStructures = nullptr;
   bool m_FindCoherence;
   QVector<LaueOps::Pointer> m_OrientationOps;
 
@@ -99,25 +99,25 @@ public:
   void generate(size_t start, size_t end) const
   {
     int32_t feature1 = 0, feature2 = 0;
-    float normal[3] = {0.0f, 0.0f, 0.0f};
-    float g1[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-    float w = 0.0f;
+    double normal[3] = {0.0, 0.0, 0.0};
+    double g1[3][3] = {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}};
+    double w = 0.0;
     uint32_t phase1 = 0, phase2 = 0;
-    QuatF q1 = QuaternionMathF::New();
-    QuatF q2 = QuaternionMathF::New();
-    float axisdiff111 = 0.0f, angdiff60 = 0.0f;
-    float n[3] = {0.0f, 0.0f, 0.0f};
-    float incoherence = 0.0f;
-    float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
 
-    QuatF misq = QuaternionMathF::New();
-    QuatF sym_q = QuaternionMathF::New();
-    QuatF s1_misq = QuaternionMathF::New();
-    QuatF s2_misq = QuaternionMathF::New();
+    double axisdiff111 = 0.0, angdiff60 = 0.0;
+    double n[3] = {0.0, 0.0, 0.0};
+    double incoherence = 0.0;
+    double n1 = 0.0, n2 = 0.0, n3 = 0.0;
+
+    QuatType misq = QuaternionMathType::New();
+    QuatType sym_q = QuaternionMathType::New();
+    QuatType s1_misq = QuaternionMathType::New();
+    QuatType s2_misq = QuaternionMathType::New();
+
     QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
-    float xstl_norm[3] = {0.0f, 0.0f, 0.0f};
-    float s_xstl_norm[3] = {0.0f, 0.0f, 0.0f};
+    double xstl_norm[3] = {0.0, 0.0, 0.0};
+    double s_xstl_norm[3] = {0.0, 0.0, 0.0};
 
     for(size_t i = start; i < end; i++)
     {
@@ -133,18 +133,18 @@ public:
       {
         w = std::numeric_limits<float>::max();
 
-        QuaternionMathF::Copy(quats[feature1], q1);
-        QuaternionMathF::Copy(quats[feature2], q2);
+        QuatType q1 = QuaternionMathType::FromType<float>(quats[feature1]);
+        QuatType q2 = QuaternionMathType::FromType<float>(quats[feature2]);
 
         phase1 = m_CrystalStructures[m_Phases[feature1]];
         phase2 = m_CrystalStructures[m_Phases[feature2]];
         if(phase1 == phase2)
         {
           int32_t nsym = m_OrientationOps[phase1]->getNumSymOps();
-          QuaternionMathF::Conjugate(q2);
-          QuaternionMathF::Multiply(q1, q2, misq);
-          FOrientArrayType om(9);
-          FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
+          QuaternionMathType::Conjugate(q2);
+          QuaternionMathType::Multiply(q1, q2, misq);
+          OrientArrayType om(9);
+          OrientTransformsType::qu2om(OrientArrayType(q1), om);
           om.toGMatrix(g1);
 
           if(m_FindCoherence)
@@ -156,27 +156,27 @@ public:
           {
             m_OrientationOps[phase1]->getQuatSymOp(j, sym_q);
             // calculate crystal direction parallel to normal
-            QuaternionMathF::Multiply(misq, sym_q, s1_misq);
+            QuaternionMathType::Multiply(misq, sym_q, s1_misq);
 
             if(m_FindCoherence)
             {
-              QuaternionMathF::MultiplyQuatVec(sym_q, xstl_norm, s_xstl_norm);
+              QuaternionMathType::MultiplyQuatVec(sym_q, xstl_norm, s_xstl_norm);
             }
 
             for(int32_t k = 0; k < nsym; k++)
             {
               // calculate the symmetric misorienation
               m_OrientationOps[phase1]->getQuatSymOp(k, sym_q);
-              QuaternionMathF::Conjugate(sym_q);
-              QuaternionMathF::Multiply(sym_q, s1_misq, s2_misq);
+              QuaternionMathType::Conjugate(sym_q);
+              QuaternionMathType::Multiply(sym_q, s1_misq, s2_misq);
 
-              FOrientArrayType ax(n1, n2, n3, w);
-              FOrientTransformsType::qu2ax(FOrientArrayType(s2_misq), ax);
+              OrientArrayType ax(n1, n2, n3, w);
+              OrientTransformsType::qu2ax(OrientArrayType(s2_misq), ax);
               ax.toAxisAngle(n1, n2, n3, w);
 
               w = w * 180.0f / SIMPLib::Constants::k_Pi;
-              axisdiff111 = acosf(fabsf(n1) * 0.57735f + fabsf(n2) * 0.57735f + fabsf(n3) * 0.57735f);
-              angdiff60 = fabsf(w - 60.0f);
+              axisdiff111 = acosf(std::fabs(n1) * 0.57735f + std::fabs(n2) * 0.57735f + std::fabs(n3) * 0.57735f);
+              angdiff60 = std::fabs(w - 60.0f);
               if(axisdiff111 < m_AxisTol && angdiff60 < m_AngTol)
               {
                 n[0] = n1;
@@ -185,10 +185,10 @@ public:
                 m_TwinBoundary[i] = true;
                 if(m_FindCoherence)
                 {
-                  incoherence = 180.0f * acosf(GeometryMath::CosThetaBetweenVectors(n, s_xstl_norm)) / SIMPLib::Constants::k_Pi;
-                  if(incoherence > 90.0f)
+                  incoherence = 180.0 * acosf(GeometryMath::CosThetaBetweenVectors(n, s_xstl_norm)) / SIMPLib::Constants::k_Pi;
+                  if(incoherence > 90.0)
                   {
-                    incoherence = 180.0f - incoherence;
+                    incoherence = 180.0 - incoherence;
                   }
                   if(incoherence < m_TwinBoundaryIncoherence[i])
                   {

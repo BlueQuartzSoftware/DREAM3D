@@ -101,8 +101,7 @@ public:
     SIMPL::Rgb argb = 0x00000000;
 
     int grain1, grain2, phase1, phase2;
-    QuatF q1;
-    QuatF q2;
+
     QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
     for(size_t i = start; i < end; i++)
@@ -136,8 +135,9 @@ public:
         {
           if(m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Cubic_High)
           {
-            QuaternionMathF::Copy(quats[grain1], q1);
-            QuaternionMathF::Copy(quats[grain2], q2);
+            QuatType q1 = QuaternionMathType::FromType<float>(quats[grain1]);
+            QuatType q2 = QuaternionMathType::FromType<float>(quats[grain2]);
+
             argb = ops[m_CrystalStructures[phase1]]->generateMisorientationColor(q1, q2);
             m_Colors[3 * i] = RgbColor::dRed(argb);
             m_Colors[3 * i + 1] = RgbColor::dGreen(argb);

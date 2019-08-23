@@ -71,22 +71,25 @@ public:
 
   void convert(size_t start, size_t end) const
   {
-    QuatF q1;
-    QuatF q2;
-    QuatF delq;
-    float misoVec[3];
+
+    QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+
+    QuatType delq;
+    double misoVec[3];
     for(size_t i = start; i < end; i++)
     {
       for(int j = 0; j < 3; j++)
       {
-        QuaternionMathF::Copy(m_Quats[i], q1);
+        QuatType q1 = QuaternionMathType::FromType<float>(quats[i]);
+        QuatType q2 = QuaternionMathType::FromType<float>(quats[i]);
+
         if(m_Neighbors[3 * i + j] > 0)
         {
-          QuaternionMathF::Copy(m_Quats[m_Neighbors[3 * i + j]], q2);
-          QuaternionMathF::Conjugate(q2);
-          QuaternionMathF::Multiply(q1, q2, delq);
+          q2 = QuaternionMathType::FromType<float>(m_Quats[m_Neighbors[3 * i + j]]);
+          QuaternionMathType::Conjugate(q2);
+          QuaternionMathType::Multiply(q1, q2, delq);
           m_OrientationOps[1]->getFZQuat(delq);
-          QuaternionMathF::GetMisorientationVector(delq, misoVec);
+          QuaternionMathType::GetMisorientationVector(delq, misoVec);
           m_MisoVecs[3 * m_FaceIds[3 * i + j] + 0] = misoVec[0];
           m_MisoVecs[3 * m_FaceIds[3 * i + j] + 1] = misoVec[1];
           m_MisoVecs[3 * m_FaceIds[3 * i + j] + 2] = misoVec[2];

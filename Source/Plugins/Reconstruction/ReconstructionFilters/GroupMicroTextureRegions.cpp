@@ -473,7 +473,7 @@ bool GroupMicroTextureRegions::determineGrouping(int32_t referenceFeature, int32
       {
         w = GeometryMath::CosThetaBetweenVectors(c1, c2);
       }
-      SIMPLibMath::boundF(w, -1, 1);
+      SIMPLibMath::bound(w, -1.0f, 1.0f);
       w = acosf(w);
       if(w <= m_CAxisToleranceRad || (SIMPLib::Constants::k_Pi - w) <= m_CAxisToleranceRad)
       {

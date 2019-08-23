@@ -248,13 +248,12 @@ void FindSlipTransmissionMetrics::execute()
   std::vector<std::vector<float>> F7lists;
   std::vector<std::vector<float>> mPrimelists;
 
-  float mprime = 0.0f, F1 = 0.0f, F1spt = 0.0f, F7 = 0.0f;
+  double mprime = 0.0f, F1 = 0.0f, F1spt = 0.0f, F7 = 0.0f;
   int32_t nname;
-  QuatF q1 = QuaternionMathF::New();
-  QuatF q2 = QuaternionMathF::New();
+
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
-  float LD[3] = {0.0f, 0.0f, 1.0f};
+  double LD[3] = {0.0f, 0.0f, 1.0f};
 
   F1lists.resize(totalFeatures);
   F1sptlists.resize(totalFeatures);
@@ -270,8 +269,9 @@ void FindSlipTransmissionMetrics::execute()
     for(size_t j = 0; j < neighborlist[i].size(); j++)
     {
       nname = neighborlist[i][j];
-      QuaternionMathF::Copy(avgQuats[i], q1);
-      QuaternionMathF::Copy(avgQuats[nname], q1);
+      QuatType q1 = QuaternionMathType::FromType<float>(avgQuats[i]);
+      QuatType q2 = QuaternionMathType::FromType<float>(avgQuats[nname]);
+
       if(m_CrystalStructures[m_FeaturePhases[i]] == m_CrystalStructures[m_FeaturePhases[nname]] && m_FeaturePhases[i] > 0)
       {
         m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getmPrime(q1, q2, LD, mprime);

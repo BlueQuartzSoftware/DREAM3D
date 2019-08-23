@@ -297,7 +297,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
           // normalize so that the magnitude is 1
           MatrixMath::Normalize3x1(AvgCAxis);
           w = GeometryMath::CosThetaBetweenVectors(c1, AvgCAxis);
-          SIMPLibMath::boundF(w, -1, 1);
+          SIMPLibMath::bound(w, -1.0f, 1.0f);
           w = acosf(w);
           w = w * SIMPLib::Constants::k_180OverPi;
           if(w > 90.0)

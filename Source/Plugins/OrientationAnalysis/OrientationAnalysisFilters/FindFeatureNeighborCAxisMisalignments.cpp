@@ -299,7 +299,7 @@ void FindFeatureNeighborCAxisMisalignments::execute()
         MatrixMath::Normalize3x1(c2);
 
         w = GeometryMath::CosThetaBetweenVectors(c1, c2);
-        SIMPLibMath::boundF(w, -1, 1);
+        SIMPLibMath::bound(w, -1.0f, 1.0f);
         w = acosf(w);
         if(w > (SIMPLib::Constants::k_Pi / 2))
         {

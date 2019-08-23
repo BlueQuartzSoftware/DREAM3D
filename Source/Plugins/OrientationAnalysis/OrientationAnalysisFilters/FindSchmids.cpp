@@ -296,21 +296,20 @@ void FindSchmids::execute()
   size_t totalFeatures = m_SchmidsPtr.lock()->getNumberOfTuples();
 
   int32_t ss = 0;
-  QuatF q1 = QuaternionMathF::New();
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
-  float g[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-  float sampleLoading[3] = {0.0f, 0.0f, 0.0f};
-  float crystalLoading[3] = {0.0f, 0.0f, 0.0f};
-  float angleComps[2] = {0.0f, 0.0f};
-  float schmid = 0.0f;
+  double g[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+  double sampleLoading[3] = {0.0f, 0.0f, 0.0f};
+  double crystalLoading[3] = {0.0f, 0.0f, 0.0f};
+  double angleComps[2] = {0.0f, 0.0f};
+  double schmid = 0.0f;
 
   sampleLoading[0] = m_LoadingDirection[0];
   sampleLoading[1] = m_LoadingDirection[1];
   sampleLoading[2] = m_LoadingDirection[2];
   MatrixMath::Normalize3x1(sampleLoading);
-  float plane[3] = {0.0f, 0.0f};
-  float direction[3] = {0.0f, 0.0f};
+  double plane[3] = {0.0f, 0.0f};
+  double direction[3] = {0.0f, 0.0f};
 
   if(m_OverrideSystem)
   {
@@ -327,9 +326,10 @@ void FindSchmids::execute()
 
   for(size_t i = 1; i < totalFeatures; i++)
   {
-    QuaternionMathF::Copy(avgQuats[i], q1);
-    FOrientArrayType om(9);
-    FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
+    QuatType q1 = QuaternionMathType::FromType<float>(avgQuats[i]);
+
+    OrientArrayType om(9);
+    OrientTransformsType::qu2om(OrientArrayType(q1), om);
     om.toGMatrix(g);
 
     MatrixMath::Multiply3x3with3x1(g, sampleLoading, crystalLoading);
@@ -358,7 +358,6 @@ void FindSchmids::execute()
       m_SlipSystems[i] = ss;
     }
   }
-
 }
 
 // -----------------------------------------------------------------------------
