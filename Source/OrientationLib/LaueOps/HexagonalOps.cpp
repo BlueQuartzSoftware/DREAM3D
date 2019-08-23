@@ -1191,7 +1191,7 @@ namespace Detail
             direction[2] = 1.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->getPointer(i * 6));
             MatrixMath::Copy3x1(m_xyz001->getPointer(i * 6), m_xyz001->getPointer(i * 6 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 6 + 3), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 6 + 3), -1.0f);
 
             // -----------------------------------------------------------------------------
             // 1010 Family
@@ -1200,19 +1200,19 @@ namespace Detail
             direction[2] = 0.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 18));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 18), m_xyz011->getPointer(i * 18 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 18 + 3), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 18 + 3), -1.0f);
             direction[0] = 0.0;
             direction[1] = 1.0;
             direction[2] = 0.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 18 + 6));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 18 + 6), m_xyz011->getPointer(i * 18 + 9));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 18 + 9), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 18 + 9), -1.0f);
             direction[0] = -SIMPLib::Constants::k_Root3Over2;
             direction[1] = 0.5;
             direction[2] = 0.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 18 + 12));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 18 + 12), m_xyz011->getPointer(i * 18 + 15));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 18 + 15), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 18 + 15), -1.0f);
 
             // -----------------------------------------------------------------------------
             // 1120 Family
@@ -1221,19 +1221,19 @@ namespace Detail
             direction[2] = 0.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 18));
             MatrixMath::Copy3x1(m_xyz111->getPointer(i * 18), m_xyz111->getPointer(i * 18 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 18 + 3), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 18 + 3), -1.0f);
             direction[0] = 0.5;
             direction[1] = SIMPLib::Constants::k_Root3Over2;
             direction[2] = 0.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 18 + 6));
             MatrixMath::Copy3x1(m_xyz111->getPointer(i * 18 + 6), m_xyz111->getPointer(i * 18 + 9));
-            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 18 + 9), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 18 + 9), -1.0f);
             direction[0] = -0.5;
             direction[1] = SIMPLib::Constants::k_Root3Over2;
             direction[2] = 0.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 18 + 12));
             MatrixMath::Copy3x1(m_xyz111->getPointer(i * 18 + 12), m_xyz111->getPointer(i * 18 + 15));
-            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 18 + 15), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 18 + 15), -1.0f);
           }
 
         }

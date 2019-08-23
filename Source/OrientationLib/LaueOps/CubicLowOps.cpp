@@ -653,19 +653,19 @@ void CubicLowOps::getF7(QuatType& q1, QuatType& q2, double LD[3], bool maxSF, do
             direction[2] = 0.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->getPointer(i * 18));
             MatrixMath::Copy3x1(m_xyz001->getPointer(i * 18), m_xyz001->getPointer(i * 18 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 18 + 3), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 18 + 3), -1.0f);
             direction[0] = 0.0;
             direction[1] = 1.0;
             direction[2] = 0.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->getPointer(i * 18 + 6));
             MatrixMath::Copy3x1(m_xyz001->getPointer(i * 18 + 6), m_xyz001->getPointer(i * 18 + 9));
-            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 18 + 9), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 18 + 9), -1.0f);
             direction[0] = 0.0;
             direction[1] = 0.0;
             direction[2] = 1.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->getPointer(i * 18 + 12));
             MatrixMath::Copy3x1(m_xyz001->getPointer(i * 18 + 12), m_xyz001->getPointer(i * 18 + 15));
-            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 18 + 15), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 18 + 15), -1.0f);
 
             // -----------------------------------------------------------------------------
             // 011 Family
@@ -674,37 +674,37 @@ void CubicLowOps::getF7(QuatType& q1, QuatType& q2, double LD[3], bool maxSF, do
             direction[2] = 0.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36), m_xyz011->getPointer(i * 36 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 3), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 3), -1.0f);
             direction[0] = SIMPLib::Constants::k_1OverRoot2;
             direction[1] = 0.0;
             direction[2] = SIMPLib::Constants::k_1OverRoot2;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 6));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 6), m_xyz011->getPointer(i * 36 + 9));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 9), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 9), -1.0f);
             direction[0] = 0.0;
             direction[1] = SIMPLib::Constants::k_1OverRoot2;
             direction[2] = SIMPLib::Constants::k_1OverRoot2;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 12));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 12), m_xyz011->getPointer(i * 36 + 15));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 15), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 15), -1.0f);
             direction[0] = -SIMPLib::Constants::k_1OverRoot2;
             direction[1] = -SIMPLib::Constants::k_1OverRoot2;
             direction[2] = 0.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 18));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 18), m_xyz011->getPointer(i * 36 + 21));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 21), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 21), -1.0f);
             direction[0] = -SIMPLib::Constants::k_1OverRoot2;
             direction[1] = 0.0;
             direction[2] = SIMPLib::Constants::k_1OverRoot2;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 24));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 24), m_xyz011->getPointer(i * 36 + 27));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 27), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 27), -1.0f);
             direction[0] = 0.0;
             direction[1] = -SIMPLib::Constants::k_1OverRoot2;
             direction[2] = SIMPLib::Constants::k_1OverRoot2;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 36 + 30));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 36 + 30), m_xyz011->getPointer(i * 36 + 33));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 33), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 36 + 33), -1.0f);
 
             // -----------------------------------------------------------------------------
             // 111 Family
@@ -713,25 +713,25 @@ void CubicLowOps::getF7(QuatType& q1, QuatType& q2, double LD[3], bool maxSF, do
             direction[2] = SIMPLib::Constants::k_1OverRoot3;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24));
             MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24), m_xyz111->getPointer(i * 24 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 3), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 3), -1.0f);
             direction[0] = -SIMPLib::Constants::k_1OverRoot3;
             direction[1] = SIMPLib::Constants::k_1OverRoot3;
             direction[2] = SIMPLib::Constants::k_1OverRoot3;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24 + 6));
             MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24 + 6), m_xyz111->getPointer(i * 24 + 9));
-            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 9), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 9), -1.0f);
             direction[0] = SIMPLib::Constants::k_1OverRoot3;
             direction[1] = -SIMPLib::Constants::k_1OverRoot3;
             direction[2] = SIMPLib::Constants::k_1OverRoot3;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24 + 12));
             MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24 + 12), m_xyz111->getPointer(i * 24 + 15));
-            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 15), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 15), -1.0f);
             direction[0] = SIMPLib::Constants::k_1OverRoot3;
             direction[1] = SIMPLib::Constants::k_1OverRoot3;
             direction[2] = -SIMPLib::Constants::k_1OverRoot3;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 24 + 18));
             MatrixMath::Copy3x1(m_xyz111->getPointer(i * 24 + 18), m_xyz111->getPointer(i * 24 + 21));
-            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 21), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 24 + 21), -1.0f);
           }
 
         }

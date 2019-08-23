@@ -175,7 +175,7 @@ void FindCAxisLocations::execute()
     MatrixMath::Normalize3x1(c1);
     if(c1[2] < 0)
     {
-      MatrixMath::Multiply3x1withConstant(c1, -1);
+      MatrixMath::Multiply3x1withConstant(c1, -1.0f);
     }
     m_CAxisLocations[index] = c1[0];
     m_CAxisLocations[index + 1] = c1[1];

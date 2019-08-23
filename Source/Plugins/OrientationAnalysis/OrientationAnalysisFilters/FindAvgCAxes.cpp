@@ -222,7 +222,7 @@ void FindAvgCAxes::execute()
       w = GeometryMath::CosThetaBetweenVectors(c1, curCAxis);
       if(w < 0)
       {
-        MatrixMath::Multiply3x1withConstant(c1, -1);
+        MatrixMath::Multiply3x1withConstant(c1, -1.0f);
       }
       counter[m_FeatureIds[i]]++;
       m_AvgCAxes[index] += c1[0];

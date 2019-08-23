@@ -339,11 +339,11 @@ bool VectorSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t ne
     v2[2] = m_Vectors[3 * neighborpoint + 2];
     if(v1[2] < 0)
     {
-      MatrixMath::Multiply3x1withConstant(v1, -1);
+      MatrixMath::Multiply3x1withConstant(v1, -1.0f);
     }
     if(v2[2] < 0)
     {
-      MatrixMath::Multiply3x1withConstant(v2, -1);
+      MatrixMath::Multiply3x1withConstant(v2, -1.0f);
     }
     float w = GeometryMath::CosThetaBetweenVectors(v1, v2);
     w = acosf(w);

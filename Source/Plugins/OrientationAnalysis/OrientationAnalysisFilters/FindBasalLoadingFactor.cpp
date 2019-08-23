@@ -195,7 +195,7 @@ void FindBasalLoadingFactor::execute()
     MatrixMath::Normalize3x1(c1);
     if(c1[2] < 0)
     {
-      MatrixMath::Multiply3x1withConstant(c1, -1);
+      MatrixMath::Multiply3x1withConstant(c1, -1.0f);
     }
     w = GeometryMath::CosThetaBetweenVectors(c1, sampleLoading);
     w = acos(w);
