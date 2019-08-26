@@ -44,61 +44,6 @@
 
 #include "OrientationAnalysis/FilterParameters/EbsdMontageListInfo.h"
 
-using EbsdMontageListInfo_t = EbsdMontageListInfo;
-
-#if 0
-typedef struct
-{
-  qint32 PaddingDigits = 3;
-  quint32 Ordering = 0; /* Ordering=0 = RowColumn, Ordering=1 = ColumnRow */
-  qint32 RowStart = 0;
-  qint32 RowEnd = 2;
-  qint32 ColStart = 0;
-  qint32 ColEnd = 2;
-  qint32 IncrementIndex = 1;
-  QString InputPath;
-  QString FilePrefix;
-  QString FileSuffix;
-  QString FileExtension;
-
-  void writeJson(QJsonObject& json)
-  {
-    json["PaddingDigits"] = static_cast<qint32>(PaddingDigits);
-    json["Ordering"] = static_cast<qint32>(Ordering);
-    json["RowStart"] = static_cast<qint32>(RowStart);
-    json["ColStart"] = static_cast<qint32>(ColStart);
-    json["RowEnd"] = static_cast<qint32>(RowEnd);
-    json["ColEnd"] = static_cast<qint32>(ColEnd);
-    json["IncrementIndex"] = static_cast<qint32>(IncrementIndex);
-    json["InputPath"] = InputPath;
-    json["FilePrefix"] = FilePrefix;
-    json["FileSuffix"] = FileSuffix;
-    json["FileExtension"] = FileExtension;
-  }
-
-  bool readJson(QJsonObject& json)
-  {
-    if(json["PaddingDigits"].isDouble() && json["Ordering"].isDouble() && json["RowStart"].isDouble() && json["ColStart"].isDouble() && json["IncrementIndex"].isDouble() &&
-       json["InputPath"].isString() && json["FilePrefix"].isString() && json["FileSuffix"].isString() && json["FileExtension"].isString())
-    {
-      PaddingDigits = static_cast<qint32>(json["PaddingDigits"].toInt());
-      Ordering = static_cast<quint32>(json["Ordering"].toInt());
-      RowStart = static_cast<qint32>(json["RowStart"].toInt());
-      ColStart = static_cast<qint32>(json["ColStart"].toInt());
-      RowEnd = static_cast<qint32>(json["RowEnd"].toInt());
-      ColEnd = static_cast<qint32>(json["ColEnd"].toInt());
-      IncrementIndex = static_cast<qint32>(json["IncrementIndex"].toInt());
-      InputPath = json["InputPath"].toString();
-      FilePrefix = json["FilePrefix"].toString();
-      FileSuffix = json["FileSuffix"].toString();
-      FileExtension = json["FileExtension"].toString();
-      return true;
-    }
-    return false;
-  }
-}EbsdMontageListInfo_t;
-#endif
-
 /**
  * @brief SIMPL_NEW_EbsdMontageListInfo_FP This macro is a short-form way of instantiating an instance of
  * EbsdMontageImportFilterParameter. There are 4 required parameters that are always passed to this macro
@@ -124,8 +69,8 @@ public:
   SIMPL_STATIC_NEW_MACRO(EbsdMontageImportFilterParameter)
   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(EbsdMontageImportFilterParameter, FilterParameter)
 
-  using SetterCallbackType = std::function<void(EbsdMontageListInfo_t)>;
-  using GetterCallbackType = std::function<EbsdMontageListInfo_t(void)>;
+  using SetterCallbackType = std::function<void(EbsdMontageListInfo)>;
+  using GetterCallbackType = std::function<EbsdMontageListInfo(void)>;
 
   /**
    * @brief New This function instantiates an instance of the EbsdMontageImportFilterParameter. Although this
@@ -143,7 +88,7 @@ public:
   * that this FilterParameter subclass represents.
    * @return
    */
-  static Pointer New(const QString& humanLabel, const QString& propertyName, const EbsdMontageListInfo_t& defaultValue, Category category, SetterCallbackType setterCallback,
+  static Pointer New(const QString& humanLabel, const QString& propertyName, const EbsdMontageListInfo& defaultValue, Category category, SetterCallbackType setterCallback,
                      GetterCallbackType getterCallback);
 
   ~EbsdMontageImportFilterParameter() override;
