@@ -428,19 +428,19 @@ bool MergeColonies::determineGrouping(int32_t referenceFeature, int32_t neighbor
 
       w = w * (180.0f / SIMPLib::Constants::k_Pi);
       float angdiff1 = std::fabs(w - 10.53f);
-      float axisdiff1 = std::acos(std::fabs(n1) * 0.0000f + std::fabs(n2) * 0.0000f + std::fabs(n3) * 1.0000f);
+      float axisdiff1 = std::acos(/*std::fabs(n1) * 0.0000f + std::fabs(n2) * 0.0000f +*/ std::fabs(n3) /* * 1.0000f */);
       if(angdiff1 < m_AngleTolerance && axisdiff1 < m_AxisToleranceRad)
       {
         colony = true;
       }
       float angdiff2 = std::fabs(w - 90.00f);
-      float axisdiff2 = std::acos(std::fabs(n1) * 0.9958f + std::fabs(n2) * 0.0917f + std::fabs(n3) * 0.0000f);
+      float axisdiff2 = std::acos(std::fabs(n1) * 0.9958f + std::fabs(n2) * 0.0917f /* + std::fabs(n3) * 0.0000f */);
       if(angdiff2 < m_AngleTolerance && axisdiff2 < m_AxisToleranceRad)
       {
         colony = true;
       }
       float angdiff3 = std::fabs(w - 60.00f);
-      float axisdiff3 = std::acos(std::fabs(n1) * 1.0000f + std::fabs(n2) * 0.0000f + std::fabs(n3) * 0.0000f);
+      float axisdiff3 = std::acos(std::fabs(n1) /* * 1.0000f + std::fabs(n2) * 0.0000f + std::fabs(n3) * 0.0000f*/);
       if(angdiff3 < m_AngleTolerance && axisdiff3 < m_AxisToleranceRad)
       {
         colony = true;
@@ -452,7 +452,7 @@ bool MergeColonies::determineGrouping(int32_t referenceFeature, int32_t neighbor
         colony = true;
       }
       float angdiff5 = std::fabs(w - 63.26f);
-      float axisdiff5 = std::acos(std::fabs(n1) * 0.9549f + std::fabs(n2) * 0.0000f + std::fabs(n3) * 0.2969f);
+      float axisdiff5 = std::acos(std::fabs(n1) * 0.9549f /* + std::fabs(n2) * 0.0000f */+ std::fabs(n3) * 0.2969f);
       if(angdiff5 < m_AngleTolerance && axisdiff5 < m_AxisToleranceRad)
       {
         colony = true;

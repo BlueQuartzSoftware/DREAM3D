@@ -969,7 +969,7 @@ UInt8ArrayType::Pointer OrthoRhombicOps::generateIPFTriangleLegend(int imageDim)
       double sumSquares = (x * x) + (y * y);
       if(sumSquares > 1.0) // Outside unit circle
       {
-        color = 0xFFFFFFF;
+        color = 0xFFFFFFFF;
       }
       else if ( sumSquares > (rad-2*xInc) && sumSquares < (rad+2*xInc))
       {
