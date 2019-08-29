@@ -44,17 +44,12 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/Math/QuaternionMath.hpp"
 
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 #include "OrientationLib/Utilities/PoleFigureUtilities.h"
-
-using OrientArrayType = OrientationArray<double>;
-using QuatType = QuaternionMath<double>::Quaternion;
-using QuaternionMathType = QuaternionMath<double>;
-using OrientTransformsType = OrientationTransforms<OrientArrayType, double>;
 
 /*
  * @class LaueOps LaueOps.h OrientationLib/LaueOps/LaueOps.h
@@ -137,32 +132,45 @@ class OrientationLib_EXPORT LaueOps
      * @param i The index into the Symmetry operators array
      * @param q [output] The quaternion to store the value into
      */
-    virtual void getQuatSymOp(int i, QuatType& q) const = 0;
+    virtual QuatType getQuatSymOp(int i) const = 0;
     virtual void getRodSymOp(int i, double* r) const = 0;
 
     virtual void getMatSymOp(int i, double g[3][3]) const = 0;
     virtual void getMatSymOp(int i, float g[3][3]) const = 0;
 
-    virtual OrientArrayType getODFFZRod(OrientArrayType rod) const = 0;
-    virtual OrientArrayType getMDFFZRod(OrientArrayType rod) const = 0;
+    virtual OrientationType getODFFZRod(const OrientationType& rod) const = 0;
+    virtual OrientationType getMDFFZRod(const OrientationType& rod) const = 0;
 
-    virtual void getNearestQuat(QuatType& q1, QuatType& q2) const = 0;
-    virtual void getNearestQuat(QuatF& q1, QuatF& q2) const = 0;
+    virtual QuatType getNearestQuat(const QuatType& q1, const QuatType& q2) const = 0;
+    virtual QuatF getNearestQuat(const QuatF& q1f, const QuatF& q2f) const = 0;
 
-    virtual void getFZQuat(QuatType& qr) const;
-    virtual int getMisoBin(OrientArrayType rod) const = 0;
+    virtual QuatType getFZQuat(const QuatType& qr) const;
+
+    virtual int getMisoBin(const OrientationType& rod) const = 0;
+
     virtual bool inUnitTriangle(double eta, double chi) const = 0;
-    virtual OrientArrayType determineEulerAngles(uint64_t seed, int choose) const = 0;
-    virtual OrientArrayType randomizeEulerAngles(OrientArrayType euler) const = 0;
+
+    virtual OrientationType determineEulerAngles(uint64_t seed, int choose) const = 0;
+
+    virtual OrientationType randomizeEulerAngles(const OrientationType& euler) const = 0;
+
     virtual size_t getRandomSymmetryOperatorIndex(int numSymOps) const;
-    virtual OrientArrayType determineRodriguesVector(uint64_t seed, int choose) const = 0;
-    virtual int getOdfBin(OrientArrayType rod) const = 0;
+
+    virtual OrientationType determineRodriguesVector(uint64_t seed, int choose) const = 0;
+
+    virtual int getOdfBin(const OrientationType& rod) const = 0;
+
     virtual void getSchmidFactorAndSS(double load[3], double& schmidfactor, double angleComps[2], int& slipsys) const = 0;
+
     virtual void getSchmidFactorAndSS(double load[3], double plane[3], double direction[3], double& schmidfactor, double angleComps[2], int& slipsys) const = 0;
-    virtual void getmPrime(QuatType& q1, QuatType& q2, double LD[3], double& mPrime) const = 0;
-    virtual void getF1(QuatType& q1, QuatType& q2, double LD[3], bool maxSF, double& F1) const = 0;
-    virtual void getF1spt(QuatType& q1, QuatType& q2, double LD[3], bool maxSF, double& F1spt) const = 0;
-    virtual void getF7(QuatType& q1, QuatType& q2, double LD[3], bool maxSF, double& F7) const = 0;
+
+    virtual double getmPrime(const QuatType& q1, const QuatType& q2, double LD[3]) const = 0;
+
+    virtual double getF1(const QuatType& q1, const QuatType& q2, double LD[3], bool maxSF) const = 0;
+
+    virtual double getF1spt(const QuatType& q1, const QuatType& q2, double LD[3], bool maxSF) const = 0;
+
+    virtual double getF7(const QuatType& q1, const QuatType& q2, double LD[3], bool maxSF) const = 0;
 
     virtual void generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* c1, FloatArrayType* c2, FloatArrayType* c3) const = 0;
 
@@ -219,15 +227,15 @@ class OrientationLib_EXPORT LaueOps
   protected:
     LaueOps();
 
-    double _calcMisoQuat(const QuatType quatsym[24], int numsym, QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const;
+    double _calcMisoQuat(const QuatType quatsym[24], int numsym, const QuatType& q1, const QuatType& q2, double& n1, double& n2, double& n3) const;
 
-    OrientArrayType _calcRodNearestOrigin(const double rodsym[24][3], int numsym, OrientArrayType rod) const;
-    void _calcNearestQuat(const QuatType quatsym[24], int numsym, QuatType& q1, QuatType& q2) const;
-    void _calcQuatNearestOrigin(const QuatType quatsym[24], int numsym, QuatType& qr) const;
+    OrientationType _calcRodNearestOrigin(const double rodsym[24][3], int numsym, const OrientationType& rod) const;
+    QuatType _calcNearestQuat(const QuatType quatsym[24], int numsym, const QuatType& q1, const QuatType& q2) const;
+    QuatType _calcQuatNearestOrigin(const QuatType quatsym[24], int numsym, const QuatType& qr) const;
 
-    int _calcMisoBin(double dim[3], double bins[3], double step[3], const OrientArrayType& homochoric) const;
+    int _calcMisoBin(double dim[3], double bins[3], double step[3], const OrientationType& homochoric) const;
     void _calcDetermineHomochoricValues(uint64_t seed, double init[3], double step[3], int32_t phi[3], int choose, double& r1, double& r2, double& r3) const;
-    int _calcODFBin(double dim[3], double bins[3], double step[3], OrientArrayType homochoric) const;
+    int _calcODFBin(double dim[3], double bins[3], double step[3], const OrientationType& homochoric) const;
 
   public:
     LaueOps(const LaueOps&) = delete;        // Copy Constructor Not Implemented

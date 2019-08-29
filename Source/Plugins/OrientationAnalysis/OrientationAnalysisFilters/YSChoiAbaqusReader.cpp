@@ -54,7 +54,9 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/MatrixMath.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -64,6 +66,8 @@
 #define DIMS "DIMENSIONS"
 #define RES "SPACING"
 #define LOOKUP "LOOKUP_TABLE"
+
+using QuatF = Quaternion<float>;
 
 enum createdPathID : RenameDataPath::DataID_t
 {
@@ -502,24 +506,25 @@ void YSChoiAbaqusReader::execute()
     }
   }
   // Read feature info
-  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
-  avgQuats[0].x = 0.0;
-  avgQuats[0].y = 0.0;
-  avgQuats[0].z = 0.0;
-  avgQuats[0].w = 0.0;
+  float* avgQuats = m_AvgQuatsPtr.lock()->getTuplePointer(0);
+  // Initialize the first Quat to all zeros
+  avgQuats[0] = 0.0;
+  avgQuats[1] = 0.0;
+  avgQuats[2] = 0.0;
+  avgQuats[3] = 0.0;
 
   for(int i = 1; i < numfeatures + 1; i++)
   {
     buf = in2.readLine();
     tokens = buf.split(' ');
     gnum = tokens[0].toInt(&ok, 10);
-    avgQuats[i].x = tokens[2].toFloat(&ok);
-    avgQuats[i].y = tokens[3].toFloat(&ok);
-    avgQuats[i].z = tokens[4].toFloat(&ok);
-    avgQuats[i].w = tokens[5].toFloat(&ok);
+    avgQuats[i * 4 + 0] = tokens[2].toFloat(&ok);
+    avgQuats[i * 4 + 1] = tokens[3].toFloat(&ok);
+    avgQuats[i * 4 + 2] = tokens[4].toFloat(&ok);
+    avgQuats[i * 4 + 3] = tokens[5].toFloat(&ok);
   }
-  QuatF q;
-  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+  //  QuatF q;
+  //  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
   float g[3][3];
   for(int i = 0; i < (xpoints * ypoints * zpoints); i++)
   {
@@ -531,13 +536,19 @@ void YSChoiAbaqusReader::execute()
       }
     }
     MatrixMath::Normalize3x3(g);
-    q.w = static_cast<float>(sqrt((1.0 + g[0][0] + g[1][1] + g[2][2])) / 2.0);
-    q.x = static_cast<float>((g[1][2] - g[2][1]) / (4.0 * q.w));
-    q.y = static_cast<float>((g[2][0] - g[0][2]) / (4.0 * q.w));
-    q.z = static_cast<float>((g[0][1] - g[1][0]) / (4.0 * q.w));
-    QuaternionMathF::Copy(q, quats[i]);
-    FOrientArrayType eu(m_CellEulerAngles + (3 * i), 3);
-    FOrientTransformsType::qu2eu(FOrientArrayType(q), eu);
+    QuatF q;
+    q.w() = static_cast<float>(sqrt((1.0 + g[0][0] + g[1][1] + g[2][2])) / 2.0);
+    q.x() = static_cast<float>((g[1][2] - g[2][1]) / (4.0 * q.w()));
+    q.y() = static_cast<float>((g[2][0] - g[0][2]) / (4.0 * q.w()));
+    q.z() = static_cast<float>((g[0][1] - g[1][0]) / (4.0 * q.w()));
+
+    m_Quats[i * 4 + 0] = q[0];
+    m_Quats[i * 4 + 1] = q[1];
+    m_Quats[i * 4 + 2] = q[2];
+    m_Quats[i * 4 + 3] = q[3];
+
+    OrientationF eu(m_CellEulerAngles + (3 * i), 3);
+    eu = OrientationTransformation::qu2eu<QuatF, OrientationF>(q);
 
     delete[] mat[i];
   }

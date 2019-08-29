@@ -44,7 +44,10 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -87,9 +90,6 @@ FindSchmids::FindSchmids()
   m_SlipDirection[0] = 1.0f;
   m_SlipDirection[1] = 0.0f;
   m_SlipDirection[2] = 0.0f;
-
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
-
 }
 
 // -----------------------------------------------------------------------------
@@ -292,11 +292,13 @@ void FindSchmids::execute()
   {
     return;
   }
+  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   size_t totalFeatures = m_SchmidsPtr.lock()->getNumberOfTuples();
 
   int32_t ss = 0;
-  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+  // QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+  FloatArrayType::Pointer avgQuatPtr = m_AvgQuatsPtr.lock();
 
   double g[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
   double sampleLoading[3] = {0.0f, 0.0f, 0.0f};
@@ -326,11 +328,8 @@ void FindSchmids::execute()
 
   for(size_t i = 1; i < totalFeatures; i++)
   {
-    QuatType q1 = QuaternionMathType::FromType<float>(avgQuats[i]);
-
-    OrientArrayType om(9);
-    OrientTransformsType::qu2om(OrientArrayType(q1), om);
-    om.toGMatrix(g);
+    QuatF q1(avgQuatPtr->getTuplePointer(i));
+    OrientationTransformation::qu2om<QuatF, OrientationD>(q1).toGMatrix(g);
 
     MatrixMath::Multiply3x3with3x1(g, sampleLoading, crystalLoading);
 

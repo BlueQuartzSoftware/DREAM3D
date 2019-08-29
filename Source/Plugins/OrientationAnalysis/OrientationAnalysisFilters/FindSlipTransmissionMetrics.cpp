@@ -42,6 +42,11 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
+#include "OrientationLib/LaueOps/LaueOps.h"
+
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
@@ -68,7 +73,6 @@ FindSlipTransmissionMetrics::FindSlipTransmissionMetrics()
 , m_FeaturePhasesArrayPath("", "", "")
 , m_CrystalStructuresArrayPath("", "", "")
 {
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   m_F1List = NeighborList<float>::NullPointer();
   m_F1sptList = NeighborList<float>::NullPointer();
@@ -235,6 +239,7 @@ void FindSlipTransmissionMetrics::execute()
   {
     return;
   }
+  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   size_t totalFeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
 
@@ -251,7 +256,8 @@ void FindSlipTransmissionMetrics::execute()
   double mprime = 0.0f, F1 = 0.0f, F1spt = 0.0f, F7 = 0.0f;
   int32_t nname;
 
-  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+  // QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+  FloatArrayType::Pointer avgQuatPtr = m_AvgQuatsPtr.lock();
 
   double LD[3] = {0.0f, 0.0f, 1.0f};
 
@@ -269,15 +275,17 @@ void FindSlipTransmissionMetrics::execute()
     for(size_t j = 0; j < neighborlist[i].size(); j++)
     {
       nname = neighborlist[i][j];
-      QuatType q1 = QuaternionMathType::FromType<float>(avgQuats[i]);
-      QuatType q2 = QuaternionMathType::FromType<float>(avgQuats[nname]);
+      float* avgQuat = m_AvgQuats + i * 4;
+      QuatType q1(avgQuat[0], avgQuat[1], avgQuat[2], avgQuat[3]);
+      avgQuat = m_AvgQuats + nname * 4;
+      QuatType q2(avgQuat[0], avgQuat[1], avgQuat[2], avgQuat[3]);
 
       if(m_CrystalStructures[m_FeaturePhases[i]] == m_CrystalStructures[m_FeaturePhases[nname]] && m_FeaturePhases[i] > 0)
       {
-        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getmPrime(q1, q2, LD, mprime);
-        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getF1(q1, q2, LD, true, F1);
-        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getF1spt(q1, q2, LD, true, F1spt);
-        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getF7(q1, q2, LD, true, F7);
+        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getmPrime(q1, q2, LD);
+        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getF1(q1, q2, LD, true);
+        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getF1spt(q1, q2, LD, true);
+        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[i]]]->getF7(q1, q2, LD, true);
       }
       else
       {

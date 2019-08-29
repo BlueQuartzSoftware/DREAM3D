@@ -40,10 +40,7 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
-
 #include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
-
 #include "Reconstruction/ReconstructionDLLExport.h"
 
 /**
@@ -220,8 +217,6 @@ private:
 
   float m_AvgCAxes[3];
   float m_CAxisToleranceRad;
-
-  QVector<LaueOps::Pointer> m_OrientationOps;
 
   /**
    * @brief updateFeatureInstancePointers Updates raw Feature pointers

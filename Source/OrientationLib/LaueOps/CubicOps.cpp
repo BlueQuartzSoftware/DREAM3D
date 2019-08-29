@@ -50,8 +50,8 @@
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/Utilities/ColorUtilities.h"
 
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/Core/Orientation.hpp"
+
 #include "OrientationLib/Utilities/ComputeStereographicProjection.h"
 
 namespace Detail
@@ -71,30 +71,30 @@ static const int symSize2 = 8;
 } // namespace CubicHigh
 }
 
-static const QuatType CubicQuatSym[24] = {QuaternionMathType::New(0.000000000, 0.000000000, 0.000000000, 1.000000000),
-                                          QuaternionMathType::New(1.000000000, 0.000000000, 0.000000000, 0.000000000),
-                                          QuaternionMathType::New(0.000000000, 1.000000000, 0.000000000, 0.000000000),
-                                          QuaternionMathType::New(0.000000000, 0.000000000, 1.000000000, 0.000000000),
-                                          QuaternionMathType::New(SIMPLib::Constants::k_1OverRoot2, 0.000000000, 0.000000000, SIMPLib::Constants::k_1OverRoot2),
-                                          QuaternionMathType::New(0.000000000, SIMPLib::Constants::k_1OverRoot2, 0.000000000, SIMPLib::Constants::k_1OverRoot2),
-                                          QuaternionMathType::New(0.000000000, 0.000000000, SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2),
-                                          QuaternionMathType::New(-SIMPLib::Constants::k_1OverRoot2, 0.000000000, 0.000000000, SIMPLib::Constants::k_1OverRoot2),
-                                          QuaternionMathType::New(0.000000000, -SIMPLib::Constants::k_1OverRoot2, 0.000000000, SIMPLib::Constants::k_1OverRoot2),
-                                          QuaternionMathType::New(0.000000000, 0.000000000, -SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2),
-                                          QuaternionMathType::New(SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000, 0.000000000),
-                                          QuaternionMathType::New(-SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000, 0.000000000),
-                                          QuaternionMathType::New(0.000000000, SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000),
-                                          QuaternionMathType::New(0.000000000, -SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000),
-                                          QuaternionMathType::New(SIMPLib::Constants::k_1OverRoot2, 0.000000000, SIMPLib::Constants::k_1OverRoot2, 0.000000000),
-                                          QuaternionMathType::New(-SIMPLib::Constants::k_1OverRoot2, 0.000000000, SIMPLib::Constants::k_1OverRoot2, 0.000000000),
-                                          QuaternionMathType::New(0.500000000, 0.500000000, 0.500000000, 0.500000000),
-                                          QuaternionMathType::New(-0.500000000, -0.500000000, -0.500000000, 0.500000000),
-                                          QuaternionMathType::New(0.500000000, -0.500000000, 0.500000000, 0.500000000),
-                                          QuaternionMathType::New(-0.500000000, 0.500000000, -0.500000000, 0.500000000),
-                                          QuaternionMathType::New(-0.500000000, 0.500000000, 0.500000000, 0.500000000),
-                                          QuaternionMathType::New(0.500000000, -0.500000000, -0.500000000, 0.500000000),
-                                          QuaternionMathType::New(-0.500000000, -0.500000000, 0.500000000, 0.500000000),
-                                          QuaternionMathType::New(0.500000000, 0.500000000, -0.500000000, 0.500000000)};
+static const QuatType CubicQuatSym[24] = {QuatType(0.000000000, 0.000000000, 0.000000000, 1.000000000),
+                                          QuatType(1.000000000, 0.000000000, 0.000000000, 0.000000000),
+                                          QuatType(0.000000000, 1.000000000, 0.000000000, 0.000000000),
+                                          QuatType(0.000000000, 0.000000000, 1.000000000, 0.000000000),
+                                          QuatType(SIMPLib::Constants::k_1OverRoot2, 0.000000000, 0.000000000, SIMPLib::Constants::k_1OverRoot2),
+                                          QuatType(0.000000000, SIMPLib::Constants::k_1OverRoot2, 0.000000000, SIMPLib::Constants::k_1OverRoot2),
+                                          QuatType(0.000000000, 0.000000000, SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2),
+                                          QuatType(-SIMPLib::Constants::k_1OverRoot2, 0.000000000, 0.000000000, SIMPLib::Constants::k_1OverRoot2),
+                                          QuatType(0.000000000, -SIMPLib::Constants::k_1OverRoot2, 0.000000000, SIMPLib::Constants::k_1OverRoot2),
+                                          QuatType(0.000000000, 0.000000000, -SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2),
+                                          QuatType(SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000, 0.000000000),
+                                          QuatType(-SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000, 0.000000000),
+                                          QuatType(0.000000000, SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000),
+                                          QuatType(0.000000000, -SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2, 0.000000000),
+                                          QuatType(SIMPLib::Constants::k_1OverRoot2, 0.000000000, SIMPLib::Constants::k_1OverRoot2, 0.000000000),
+                                          QuatType(-SIMPLib::Constants::k_1OverRoot2, 0.000000000, SIMPLib::Constants::k_1OverRoot2, 0.000000000),
+                                          QuatType(0.500000000, 0.500000000, 0.500000000, 0.500000000),
+                                          QuatType(-0.500000000, -0.500000000, -0.500000000, 0.500000000),
+                                          QuatType(0.500000000, -0.500000000, 0.500000000, 0.500000000),
+                                          QuatType(-0.500000000, 0.500000000, -0.500000000, 0.500000000),
+                                          QuatType(-0.500000000, 0.500000000, 0.500000000, 0.500000000),
+                                          QuatType(0.500000000, -0.500000000, -0.500000000, 0.500000000),
+                                          QuatType(-0.500000000, -0.500000000, 0.500000000, 0.500000000),
+                                          QuatType(0.500000000, 0.500000000, -0.500000000, 0.500000000)};
 
 static const double CubicRodSym[24][3] = {{0.0, 0.0, 0.0},
                                           {10000000000.0, 0.0, 0.0},
@@ -238,8 +238,8 @@ double CubicOps::getMisoQuat(QuatType& q1, QuatType& q2, double& n1, double& n2,
 // -----------------------------------------------------------------------------
 float CubicOps::getMisoQuat(QuatF& q1f, QuatF& q2f, float& n1f, float& n2f, float& n3f) const
 {
-  QuatType q1 = QuaternionMathType::FromType<float>(q1f);
-  QuatType q2 = QuaternionMathType::FromType<float>(q2f);
+  QuatType q1(q1f[0], q1f[1], q1f[2], q1f[3]);
+  QuatType q2(q2f[0], q2f[1], q2f[2], q2f[3]);
   double n1 = n1f;
   double n2 = n2f;
   double n3 = n3f;
@@ -257,200 +257,198 @@ double CubicOps::_calcMisoQuat(const QuatType quatsym[24], int numsym, QuatType&
 {
   double wmin = 9999999.0f; //,na,nb,nc;
   QuatType qco;
-  QuatType qc;
   QuatType q2inv;
   int type = 1;
   double sin_wmin_over_2 = 0.0;
 
-  QuaternionMathType::Conjugate(q2, q2inv); // Computes the Conjugate of q2 and places the result in q2inv
-  QuaternionMathType::Multiply(q1, q2inv, qc);
-  QuaternionMathType::ElementWiseAbs(qc);
+  QuatType qc = q1 * q2.conjugate();
+  qc.elementWiseAbs();
 
-  //if qc.x is smallest
-  if ( qc.x <= qc.y && qc.x <= qc.z && qc.x <= qc.w)
+  // if qc.x() is smallest
+  if(qc.x() <= qc.y() && qc.x() <= qc.z() && qc.x() <= qc.w())
   {
-    qco.x = qc.x;
-    //if qc.y is next smallest
-    if (qc.y <= qc.z && qc.y <= qc.w)
+    qco.x() = qc.x();
+    // if qc.y() is next smallest
+    if(qc.y() <= qc.z() && qc.y() <= qc.w())
     {
-      qco.y = qc.y;
-      if(qc.z <= qc.w)
+      qco.y() = qc.y();
+      if(qc.z() <= qc.w())
       {
-        qco.z = qc.z, qco.w = qc.w;
+        qco.z() = qc.z(), qco.w() = qc.w();
       }
       else
       {
-        qco.z = qc.w, qco.w = qc.z;
+        qco.z() = qc.w(), qco.w() = qc.z();
       }
     }
-    //if qc.z is next smallest
-    else if (qc.z <= qc.y && qc.z <= qc.w)
+    // if qc.z() is next smallest
+    else if(qc.z() <= qc.y() && qc.z() <= qc.w())
     {
-      qco.y = qc.z;
-      if(qc.y <= qc.w)
+      qco.y() = qc.z();
+      if(qc.y() <= qc.w())
       {
-        qco.z = qc.y, qco.w = qc.w;
+        qco.z() = qc.y(), qco.w() = qc.w();
       }
       else
       {
-        qco.z = qc.w, qco.w = qc.y;
+        qco.z() = qc.w(), qco.w() = qc.y();
       }
     }
-    //if qc.w is next smallest
+    // if qc.w() is next smallest
     else
     {
-      qco.y = qc.w;
-      if(qc.y <= qc.z)
+      qco.y() = qc.w();
+      if(qc.y() <= qc.z())
       {
-        qco.z = qc.y, qco.w = qc.z;
+        qco.z() = qc.y(), qco.w() = qc.z();
       }
       else
       {
-        qco.z = qc.z, qco.w = qc.y;
+        qco.z() = qc.z(), qco.w() = qc.y();
       }
     }
   }
-  //if qc.y is smallest
-  else if ( qc.y <= qc.x && qc.y <= qc.z && qc.y <= qc.w)
+  // if qc.y() is smallest
+  else if(qc.y() <= qc.x() && qc.y() <= qc.z() && qc.y() <= qc.w())
   {
-    qco.x = qc.y;
-    //if qc.x is next smallest
-    if (qc.x <= qc.z && qc.x <= qc.w)
+    qco.x() = qc.y();
+    // if qc.x() is next smallest
+    if(qc.x() <= qc.z() && qc.x() <= qc.w())
     {
-      qco.y = qc.x;
-      if(qc.z <= qc.w)
+      qco.y() = qc.x();
+      if(qc.z() <= qc.w())
       {
-        qco.z = qc.z, qco.w = qc.w;
+        qco.z() = qc.z(), qco.w() = qc.w();
       }
       else
       {
-        qco.z = qc.w, qco.w = qc.z;
+        qco.z() = qc.w(), qco.w() = qc.z();
       }
     }
-    //if qc.z is next smallest
-    else if (qc.z <= qc.x && qc.z <= qc.w)
+    // if qc.z() is next smallest
+    else if(qc.z() <= qc.x() && qc.z() <= qc.w())
     {
-      qco.y = qc.z;
-      if(qc.x <= qc.w)
+      qco.y() = qc.z();
+      if(qc.x() <= qc.w())
       {
-        qco.z = qc.x, qco.w = qc.w;
+        qco.z() = qc.x(), qco.w() = qc.w();
       }
       else
       {
-        qco.z = qc.w, qco.w = qc.x;
+        qco.z() = qc.w(), qco.w() = qc.x();
       }
     }
-    //if qc.w is next smallest
+    // if qc.w() is next smallest
     else
     {
-      qco.y = qc.w;
-      if(qc.x <= qc.z)
+      qco.y() = qc.w();
+      if(qc.x() <= qc.z())
       {
-        qco.z = qc.x, qco.w = qc.z;
+        qco.z() = qc.x(), qco.w() = qc.z();
       }
       else
       {
-        qco.z = qc.z, qco.w = qc.x;
+        qco.z() = qc.z(), qco.w() = qc.x();
       }
     }
   }
-  //if qc.z is smallest
-  else if ( qc.z <= qc.x && qc.z <= qc.y && qc.z <= qc.w)
+  // if qc.z() is smallest
+  else if(qc.z() <= qc.x() && qc.z() <= qc.y() && qc.z() <= qc.w())
   {
-    qco.x = qc.z;
-    //if qc.x is next smallest
-    if (qc.x <= qc.y && qc.x <= qc.w)
+    qco.x() = qc.z();
+    // if qc.x() is next smallest
+    if(qc.x() <= qc.y() && qc.x() <= qc.w())
     {
-      qco.y = qc.x;
-      if(qc.y <= qc.w)
+      qco.y() = qc.x();
+      if(qc.y() <= qc.w())
       {
-        qco.z = qc.y, qco.w = qc.w;
+        qco.z() = qc.y(), qco.w() = qc.w();
       }
       else
       {
-        qco.z = qc.w, qco.w = qc.y;
+        qco.z() = qc.w(), qco.w() = qc.y();
       }
     }
-    //if qc.y is next smallest
-    else if (qc.y <= qc.x && qc.y <= qc.w)
+    // if qc.y() is next smallest
+    else if(qc.y() <= qc.x() && qc.y() <= qc.w())
     {
-      qco.y = qc.y;
-      if(qc.x <= qc.w)
+      qco.y() = qc.y();
+      if(qc.x() <= qc.w())
       {
-        qco.z = qc.x, qco.w = qc.w;
+        qco.z() = qc.x(), qco.w() = qc.w();
       }
       else
       {
-        qco.z = qc.w, qco.w = qc.x;
+        qco.z() = qc.w(), qco.w() = qc.x();
       }
     }
-    //if qc.w is next smallest
+    // if qc.w() is next smallest
     else
     {
-      qco.y = qc.w;
-      if(qc.x <= qc.y)
+      qco.y() = qc.w();
+      if(qc.x() <= qc.y())
       {
-        qco.z = qc.x, qco.w = qc.y;
+        qco.z() = qc.x(), qco.w() = qc.y();
       }
       else
       {
-        qco.z = qc.y, qco.w = qc.x;
+        qco.z() = qc.y(), qco.w() = qc.x();
       }
     }
   }
-  //if qc.w is smallest
+  // if qc.w() is smallest
   else
   {
-    qco.x = qc.w;
-    //if qc.x is next smallest
-    if (qc.x <= qc.y && qc.x <= qc.z)
+    qco.x() = qc.w();
+    // if qc.x() is next smallest
+    if(qc.x() <= qc.y() && qc.x() <= qc.z())
     {
-      qco.y = qc.x;
-      if(qc.y <= qc.z)
+      qco.y() = qc.x();
+      if(qc.y() <= qc.z())
       {
-        qco.z = qc.y, qco.w = qc.z;
+        qco.z() = qc.y(), qco.w() = qc.z();
       }
       else
       {
-        qco.z = qc.z, qco.w = qc.y;
+        qco.z() = qc.z(), qco.w() = qc.y();
       }
     }
-    //if qc.y is next smallest
-    else if (qc.y <= qc.x && qc.y <= qc.z)
+    // if qc.y() is next smallest
+    else if(qc.y() <= qc.x() && qc.y() <= qc.z())
     {
-      qco.y = qc.y;
-      if(qc.x <= qc.z)
+      qco.y() = qc.y();
+      if(qc.x() <= qc.z())
       {
-        qco.z = qc.x, qco.w = qc.z;
+        qco.z() = qc.x(), qco.w() = qc.z();
       }
       else
       {
-        qco.z = qc.z, qco.w = qc.x;
+        qco.z() = qc.z(), qco.w() = qc.x();
       }
     }
-    //if qc.z is next smallest
+    // if qc.z() is next smallest
     else
     {
-      qco.y = qc.z;
-      if(qc.x <= qc.y)
+      qco.y() = qc.z();
+      if(qc.x() <= qc.y())
       {
-        qco.z = qc.x, qco.w = qc.y;
+        qco.z() = qc.x(), qco.w() = qc.y();
       }
       else
       {
-        qco.z = qc.y, qco.w = qc.x;
+        qco.z() = qc.y(), qco.w() = qc.x();
       }
     }
   }
-  wmin = qco.w;
-  if (((qco.z + qco.w) / (SIMPLib::Constants::k_Sqrt2)) > wmin)
+  wmin = qco.w();
+  if(((qco.z() + qco.w()) / (SIMPLib::Constants::k_Sqrt2)) > wmin)
   {
-    wmin = ((qco.z + qco.w) / (SIMPLib::Constants::k_Sqrt2));
+    wmin = ((qco.z() + qco.w()) / (SIMPLib::Constants::k_Sqrt2));
     type = 2;
   }
-  if (((qco.x + qco.y + qco.z + qco.w) / 2) > wmin)
+  if(((qco.x() + qco.y() + qco.z() + qco.w()) / 2) > wmin)
   {
-    wmin = ((qco.x + qco.y + qco.z + qco.w) / 2);
+    wmin = ((qco.x() + qco.y() + qco.z() + qco.w()) / 2);
     type = 3;
   }
   if (wmin < -1.0)
@@ -473,21 +471,21 @@ double CubicOps::_calcMisoQuat(const QuatType quatsym[24], int numsym, QuatType&
 
   if(type == 1)
   {
-    n1 = qco.x / sin_wmin_over_2;
-    n2 = qco.y / sin_wmin_over_2;
-    n3 = qco.z / sin_wmin_over_2;
+    n1 = qco.x() / sin_wmin_over_2;
+    n2 = qco.y() / sin_wmin_over_2;
+    n3 = qco.z() / sin_wmin_over_2;
   }
   if(type == 2)
   {
-    n1 = ((qco.x - qco.y) / (SIMPLib::Constants::k_Sqrt2)) / sin_wmin_over_2;
-    n2 = ((qco.x + qco.y) / (SIMPLib::Constants::k_Sqrt2)) / sin_wmin_over_2;
-    n3 = ((qco.z - qco.w) / (SIMPLib::Constants::k_Sqrt2)) / sin_wmin_over_2;
+    n1 = ((qco.x() - qco.y()) / (SIMPLib::Constants::k_Sqrt2)) / sin_wmin_over_2;
+    n2 = ((qco.x() + qco.y()) / (SIMPLib::Constants::k_Sqrt2)) / sin_wmin_over_2;
+    n3 = ((qco.z() - qco.w()) / (SIMPLib::Constants::k_Sqrt2)) / sin_wmin_over_2;
   }
   if(type == 3)
   {
-    n1 = ((qco.x - qco.y + qco.z - qco.w) / (2.0)) / sin_wmin_over_2;
-    n2 = ((qco.x + qco.y - qco.z - qco.w) / (2.0)) / sin_wmin_over_2;
-    n3 = ((-qco.x + qco.y + qco.z - qco.w) / (2.0)) / sin_wmin_over_2;
+    n1 = ((qco.x() - qco.y() + qco.z() - qco.w()) / (2.0)) / sin_wmin_over_2;
+    n2 = ((qco.x() + qco.y() - qco.z() - qco.w()) / (2.0)) / sin_wmin_over_2;
+    n3 = ((-qco.x() + qco.y() + qco.z() - qco.w()) / (2.0)) / sin_wmin_over_2;
   }
   double denom = sqrt((n1 * n1 + n2 * n2 + n3 * n3));
   n1 = n1 / denom;
@@ -506,9 +504,9 @@ double CubicOps::_calcMisoQuat(const QuatType quatsym[24], int numsym, QuatType&
 
 }
 
-void CubicOps::getQuatSymOp(int i, QuatType& q) const
+QuatType CubicOps::getQuatSymOp(int32_t i) const
 {
-  QuaternionMathD::Copy(CubicQuatSym[i], q);
+  return CubicQuatSym[i];
 }
 
 void CubicOps::getRodSymOp(int i, double* r) const
@@ -547,7 +545,7 @@ void CubicOps::getMatSymOp(int i, float g[3][3]) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientArrayType CubicOps::getODFFZRod(OrientArrayType rod) const
+OrientationType CubicOps::getODFFZRod(const OrientationType& rod) const
 {
   return _calcRodNearestOrigin(CubicRodSym, k_NumSymQuats, rod);
 }
@@ -555,14 +553,14 @@ OrientArrayType CubicOps::getODFFZRod(OrientArrayType rod) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientArrayType CubicOps::getMDFFZRod(OrientArrayType rod) const
+OrientationType CubicOps::getMDFFZRod(const OrientationType& inRod) const
 {
   double w, n1, n2, n3;
   double FZw, FZn1, FZn2, FZn3;
 
-  rod = _calcRodNearestOrigin(CubicRodSym, 12, rod);
-  OrientArrayType ax(4, 0.0);
-  OrientationTransforms<OrientArrayType, double>::ro2ax(rod, ax);
+  OrientationType rod = _calcRodNearestOrigin(CubicRodSym, 12, inRod);
+  OrientationType ax = OrientationTransformation::ro2ax<OrientationType, OrientationType>(rod);
+
   n1 = ax[0];
   n2 = ax[1], n3 = ax[2], w = ax[3];
 
@@ -575,7 +573,7 @@ OrientArrayType CubicOps::getMDFFZRod(OrientArrayType rod) const
     if(n1 > n3)
     {
       FZn1 = n1;
-      if (n2 > n3)
+      if(n2 > n3)
       {
         FZn2 = n2, FZn3 = n3;
       }
@@ -594,7 +592,7 @@ OrientArrayType CubicOps::getMDFFZRod(OrientArrayType rod) const
     if(n2 > n3)
     {
       FZn1 = n2;
-      if (n1 > n3)
+      if(n1 > n3)
       {
         FZn2 = n1, FZn3 = n3;
       }
@@ -609,43 +607,38 @@ OrientArrayType CubicOps::getMDFFZRod(OrientArrayType rod) const
     }
   }
 
-  ax.fromAxisAngle(FZn1, FZn2, FZn3, FZw);
-  OrientationTransforms<OrientArrayType, double>::ax2ro(ax, rod);
-  return rod;
+  return OrientationTransformation::ax2ro<OrientationType, OrientationType>(OrientationType(FZn1, FZn2, FZn3, FZw));
 }
 
-void CubicOps::getNearestQuat(QuatType& q1, QuatType& q2) const
+QuatType CubicOps::getNearestQuat(const QuatType& q1, const QuatType& q2) const
 {
-  _calcNearestQuat(CubicQuatSym, k_NumSymQuats, q1, q2);
+  return _calcNearestQuat(CubicQuatSym, k_NumSymQuats, q1, q2);
 }
 
-void CubicOps::getNearestQuat(QuatF& q1f, QuatF& q2f) const
+QuatF CubicOps::getNearestQuat(const QuatF& q1f, const QuatF& q2f) const
 {
-  QuatType q1 = QuaternionMathType::FromType<float>(q1f);
-  QuatType q2 = QuaternionMathType::FromType<float>(q2f);
-  _calcNearestQuat(CubicQuatSym, k_NumSymQuats, q1, q2);
-  q2f.x = q2.x;
-  q2f.y = q2.y;
-  q2f.z = q2.z;
-  q2f.w = q2.w;
+  QuatType q1(q1f[0], q1f[1], q1f[2], q1f[3]);
+  QuatType q2(q2f[0], q2f[1], q2f[2], q2f[3]);
+  QuatType temp = _calcNearestQuat(CubicQuatSym, k_NumSymQuats, q1, q2);
+  QuatF out(temp.x(), temp.y(), temp.z(), temp.w());
+  return out;
 }
 
-void CubicOps::getFZQuat(QuatType& qr) const
+QuatType CubicOps::getFZQuat(const QuatType& qr) const
 {
-  _calcQuatNearestOrigin(CubicQuatSym, k_NumSymQuats, qr);
+  return _calcQuatNearestOrigin(CubicQuatSym, k_NumSymQuats, qr);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CubicOps::getMisoBin(OrientArrayType rod) const
+int CubicOps::getMisoBin(const OrientationType& rod) const
 {
   double dim[3];
   double bins[3];
   double step[3];
 
-  OrientArrayType ho(3);
-  OrientationTransforms<OrientArrayType, double>::ro2ho(rod, ho);
+  OrientationType ho = OrientationTransformation::ro2ho<OrientationType, OrientationType>(rod);
 
   dim[0] = Detail::CubicDim1InitValue;
   dim[1] = Detail::CubicDim2InitValue;
@@ -663,7 +656,7 @@ int CubicOps::getMisoBin(OrientArrayType rod) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientArrayType CubicOps::determineEulerAngles(uint64_t seed, int choose) const
+OrientationType CubicOps::determineEulerAngles(uint64_t seed, int choose) const
 {
   double init[3];
   double step[3];
@@ -682,39 +675,28 @@ OrientArrayType CubicOps::determineEulerAngles(uint64_t seed, int choose) const
 
   _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
 
-  OrientArrayType ho(h1, h2, h3);
-  OrientArrayType ro(4);
-  OrientationTransforms<OrientArrayType, double>::ho2ro(ho, ro);
-
+  OrientationType ho(h1, h2, h3);
+  OrientationType ro = OrientationTransformation::ho2ro<OrientationType, OrientationType>(ho);
   ro = getODFFZRod(ro);
-  OrientArrayType eu(4);
-  OrientationTransforms<OrientArrayType, double>::ro2eu(ro, eu);
+  OrientationType eu = OrientationTransformation::ro2eu<OrientationType, OrientationType>(ro);
   return eu;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientArrayType CubicOps::randomizeEulerAngles(OrientArrayType synea) const
+OrientationType CubicOps::randomizeEulerAngles(const OrientationType& synea) const
 {
-  QuatType q;
-  QuatType qc;
   size_t symOp = getRandomSymmetryOperatorIndex(k_NumSymQuats);
-
-  OrientArrayType quat(4, 0.0);
-  OrientationTransforms<OrientArrayType, double>::eu2qu(synea, quat);
-  q = quat.toQuaternion<double>();
-  QuaternionMathType::Multiply(CubicQuatSym[symOp], q, qc);
-
-  quat.fromQuaternion(qc);
-  OrientationTransforms<OrientArrayType, double>::qu2eu(quat, synea);
-  return synea;
+  QuatType quat = OrientationTransformation::eu2qu<OrientationType, QuatType>(synea);
+  QuatType qc = CubicQuatSym[symOp] * quat;
+  return OrientationTransformation::qu2eu<QuatType, OrientationType>(qc);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientArrayType CubicOps::determineRodriguesVector(uint64_t seed, int choose) const
+OrientationType CubicOps::determineRodriguesVector(uint64_t seed, int choose) const
 {
   double init[3];
   double step[3];
@@ -732,9 +714,8 @@ OrientArrayType CubicOps::determineRodriguesVector(uint64_t seed, int choose) co
   phi[2] = static_cast<int32_t>(choose / (18 * 18));
 
   _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
-  OrientArrayType ho(h1, h2, h3);
-  OrientArrayType ro(4);
-  OrientationTransforms<OrientArrayType, double>::ho2ro(ho, ro);
+  OrientationType ho(h1, h2, h3);
+  OrientationType ro = OrientationTransformation::ho2ro<OrientationType, OrientationType>(ho);
   ro = getMDFFZRod(ro);
   return ro;
 }
@@ -742,14 +723,13 @@ OrientArrayType CubicOps::determineRodriguesVector(uint64_t seed, int choose) co
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CubicOps::getOdfBin(OrientArrayType rod) const
+int CubicOps::getOdfBin(const OrientationType& rod) const
 {
   double dim[3];
   double bins[3];
   double step[3];
 
-  OrientArrayType ho(3);
-  OrientationTransforms<OrientArrayType, double>::ro2ho(rod, ho);
+  OrientationType ho = OrientationTransformation::ro2ho<OrientationType, OrientationType>(rod);
 
   dim[0] = Detail::CubicDim1InitValue;
   dim[1] = Detail::CubicDim2InitValue;
@@ -940,7 +920,7 @@ void CubicOps::getSchmidFactorAndSS(double load[3], double plane[3], double dire
   }
 }
 
-void CubicOps::getmPrime(QuatType& q1, QuatType& q2, double LD[3], double& mPrime) const
+double CubicOps::getmPrime(const QuatType& q1, const QuatType& q2, double LD[3]) const
 {
   double g1[3][3];
   double g2[3][3];
@@ -953,11 +933,8 @@ void CubicOps::getmPrime(QuatType& q1, QuatType& q2, double LD[3], double& mPrim
   double planeMisalignment = 0, directionMisalignment = 0;
   int ss1 = 0, ss2 = 0;
 
-  OrientArrayType om(9);
-  OrientTransformsType::qu2om(OrientArrayType(q1), om);
-  om.toGMatrix(g1);
-  OrientTransformsType::qu2om(OrientArrayType(q2), om);
-  om.toGMatrix(g2);
+  OrientationTransformation::qu2om<QuatType, OrientationType>(q1).toGMatrix(g1);
+  OrientationTransformation::qu2om<QuatType, OrientationType>(q2).toGMatrix(g2);
   MatrixMath::Transpose3x3(g1, g1);
   MatrixMath::Transpose3x3(g2, g2);
   for(int i = 0; i < 12; i++)
@@ -1026,10 +1003,10 @@ void CubicOps::getmPrime(QuatType& q1, QuatType& q2, double LD[3], double& mPrim
   MatrixMath::Normalize3x1(uvw2);
   planeMisalignment = std::fabs(GeometryMath::CosThetaBetweenVectors(hkl1, hkl2));
   directionMisalignment = std::fabs(GeometryMath::CosThetaBetweenVectors(uvw1, uvw2));
-  mPrime = planeMisalignment * directionMisalignment;
+  return planeMisalignment * directionMisalignment;
 }
 
-void CubicOps::getF1(QuatType& q1, QuatType& q2, double LD[3], bool maxSF, double& F1) const
+double CubicOps::getF1(const QuatType& q1, const QuatType& q2, double LD[3], bool maxSF) const
 {
   double g1[3][3];
   double g2[3][3];
@@ -1040,13 +1017,11 @@ void CubicOps::getF1(QuatType& q1, QuatType& q2, double LD[3], bool maxSF, doubl
   double schmidFactor1 = 0, maxSchmidFactor = 0;
   double directionComponent1 = 0, planeComponent1 = 0;
   // double directionComponent2 = 0, planeComponent2 = 0;
-  double maxF1 = 0;
+  double maxF1 = 0.0;
+  double F1 = 0.0;
 
-  OrientArrayType om(9);
-  OrientTransformsType::qu2om(OrientArrayType(q1), om);
-  om.toGMatrix(g1);
-  OrientTransformsType::qu2om(OrientArrayType(q2), om);
-  om.toGMatrix(g2);
+  OrientationTransformation::qu2om<QuatType, OrientationType>(q1).toGMatrix(g1);
+  OrientationTransformation::qu2om<QuatType, OrientationType>(q2).toGMatrix(g2);
   MatrixMath::Transpose3x3(g1, g1);
   MatrixMath::Transpose3x3(g2, g2);
 
@@ -1110,9 +1085,10 @@ void CubicOps::getF1(QuatType& q1, QuatType& q2, double LD[3], bool maxSF, doubl
       }
     }
   }
+  return F1;
 }
 
-void CubicOps::getF1spt(QuatType& q1, QuatType& q2, double LD[3], bool maxSF, double& F1spt) const
+double CubicOps::getF1spt(const QuatType& q1, const QuatType& q2, double LD[3], bool maxSF) const
 {
   double g1[3][3];
   double g2[3][3];
@@ -1124,13 +1100,10 @@ void CubicOps::getF1spt(QuatType& q1, QuatType& q2, double LD[3], bool maxSF, do
   double schmidFactor1 = 0, maxSchmidFactor = 0;
   double directionComponent1 = 0, planeComponent1 = 0;
   // s double directionComponent2 = 0, planeComponent2 = 0;
-  double maxF1spt = 0;
-
-  OrientArrayType om(9);
-  OrientTransformsType::qu2om(OrientArrayType(q1), om);
-  om.toGMatrix(g1);
-  OrientTransformsType::qu2om(OrientArrayType(q2), om);
-  om.toGMatrix(g2);
+  double maxF1spt = 0.0;
+  double F1spt = 0.0f;
+  OrientationTransformation::qu2om<QuatType, OrientationType>(q1).toGMatrix(g1);
+  OrientationTransformation::qu2om<QuatType, OrientationType>(q2).toGMatrix(g2);
   MatrixMath::Transpose3x3(g1, g1);
   MatrixMath::Transpose3x3(g2, g2);
 
@@ -1197,9 +1170,10 @@ void CubicOps::getF1spt(QuatType& q1, QuatType& q2, double LD[3], bool maxSF, do
       }
     }
   }
+  return F1spt;
 }
 
-void CubicOps::getF7(QuatType& q1, QuatType& q2, double LD[3], bool maxSF, double& F7) const
+double CubicOps::getF7(const QuatType& q1, const QuatType& q2, double LD[3], bool maxSF) const
 {
   double g1[3][3];
   double g2[3][3];
@@ -1207,16 +1181,16 @@ void CubicOps::getF7(QuatType& q1, QuatType& q2, double LD[3], bool maxSF, doubl
   double hkl2[3], uvw2[3];
   double slipDirection[3], slipPlane[3];
   double directionMisalignment = 0, totalDirectionMisalignment = 0;
-  double schmidFactor1 = 0, maxSchmidFactor = 0;
-  double directionComponent1 = 0, planeComponent1 = 0;
-  // double directionComponent2 = 0, planeComponent2 = 0;
-  double maxF7 = 0;
+  double schmidFactor1 = 0.0, maxSchmidFactor = 0.0;
+  double directionComponent1 = 0.0;
+  double planeComponent1 = 0.0;
 
-  OrientArrayType om(9);
-  OrientTransformsType::qu2om(OrientArrayType(q1), om);
-  om.toGMatrix(g1);
-  OrientTransformsType::qu2om(OrientArrayType(q2), om);
-  om.toGMatrix(g2);
+  // double directionComponent2 = 0, planeComponent2 = 0;
+  double maxF7 = 0.0;
+  double F7 = 0.0f;
+
+  OrientationTransformation::qu2om<QuatType, OrientationType>(q1).toGMatrix(g1);
+  OrientationTransformation::qu2om<QuatType, OrientationType>(q2).toGMatrix(g2);
   MatrixMath::Transpose3x3(g1, g1);
   MatrixMath::Transpose3x3(g2, g2);
 
@@ -1276,6 +1250,7 @@ void CubicOps::getF7(QuatType& q1, QuatType& q2, double LD[3], bool maxSF, doubl
       }
     }
   }
+  return F7;
 }
 
 // -----------------------------------------------------------------------------
@@ -1309,10 +1284,9 @@ namespace Detail
 
           for(size_t i = start; i < end; ++i)
           {
-            OrientArrayType eu(m_Eulers->getValue(i * 3), m_Eulers->getValue(i * 3 + 1), m_Eulers->getValue(i * 3 + 2));
-            OrientArrayType om(9, 0.0);
-            OrientationTransforms<OrientArrayType, double>::eu2om(eu, om);
-            om.toGMatrix(g);
+            OrientationType eu(m_Eulers->getValue(i * 3), m_Eulers->getValue(i * 3 + 1), m_Eulers->getValue(i * 3 + 2));
+            OrientationTransformation::eu2om<OrientationType, OrientationType>(eu).toGMatrix(g);
+
             MatrixMath::Transpose3x3(g, gTranpose);
 
             // -----------------------------------------------------------------------------
@@ -1625,9 +1599,6 @@ SIMPL::Rgb CubicOps::generateIPFColor(double* eulers, double* refDir, bool conve
 // -----------------------------------------------------------------------------
 SIMPL::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad) const
 {
-  using OrientArrayType = OrientationArray<double>;
-  using QuatType = QuaternionMath<double>::Quaternion;
-  using QuaternionMathType = QuaternionMath<double>;
   if(degToRad)
   {
     phi1 = phi1 * SIMPLib::Constants::k_DegToRad;
@@ -1635,29 +1606,20 @@ SIMPL::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, doub
     phi2 = phi2 * SIMPLib::Constants::k_DegToRad;
   }
 
-  QuatType qc = QuaternionMathD::New();
-  QuatType q1 = QuaternionMathD::New();
   double g[3][3];
   double p[3];
-  double refDirection[3] = {0.0, 0.0, 0.0};
-  double eta = 0.0;
-  double chi = 0.0;
+  double refDirection[3] = {0.0f, 0.0f, 0.0f};
+  double chi = 0.0f, eta = 0.0f;
   double _rgb[3] = {0.0, 0.0, 0.0};
 
-  // 1) find rotation matrix from Euler angles
-  OrientArrayType eu(phi1, phi, phi2);
-  OrientArrayType qu(4);
-  OrientArrayType om(9); // Reusable for the loop
-  OrientationTransforms<OrientArrayType, double>::eu2qu(eu, qu);
-  q1 = qu.toQuaternion<double>();
+  OrientationType eu(phi1, phi, phi2);
+  OrientationType om(9); // Reusable for the loop
+  QuatType q1 = OrientationTransformation::eu2qu<OrientationType, QuatType>(eu);
 
-  for (int j = 0; j < 24; j++)
+  for(int j = 0; j < k_NumSymQuats; j++)
   {
-    QuaternionMathType::Multiply(CubicQuatSym[j], q1, qc);
-
-    qu.fromQuaternion(qc);
-    OrientationTransforms<OrientArrayType, double>::qu2om(qu, om);
-    om.toGMatrix(g);
+    QuatType qu = getQuatSymOp(j) * q1;
+    OrientationTransformation::qu2om<QuatType, OrientationType>(qu).toGMatrix(g);
 
     refDirection[0] = refDir0;
     refDirection[1] = refDir1;
@@ -1681,9 +1643,8 @@ SIMPL::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, doub
       continue;
     }
 
-      break;
+    break;
   }
-
   double etaMin = 0.0;
   double etaMax = 45.0;
   double etaDeg = eta * SIMPLib::Constants::k_180OverPi;
@@ -2010,11 +1971,10 @@ SIMPL::Rgb CubicOps::generateMisorientationColor(const QuatType& q, const QuatTy
   double z, z1, z2, z3, z4, z5, z6, z7;
   double k, h, s, v;
 
-  QuatType q1, q2;
-  QuaternionMathType::Copy(q, q1);
-  QuaternionMathType::Copy(refFrame, q2);
+  QuatType q1 = q;
+  QuatType q2 = refFrame;
 
-  //get disorientation
+  // get disorientation
   w = getMisoQuat(q1, q2, n1, n2, n3);
   n1 = std::fabs(n1);
   n2 = std::fabs(n2);
@@ -2396,17 +2356,17 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(double an
   for(std::vector< std::pair<double, double> >::size_type i = 0; i < ba.size(); i++)
   {
     QuatType quat, refQuat;
-    refQuat.x = 0;
-    refQuat.y = 0;
-    refQuat.z = 0;
-    refQuat.w = 1;
+    refQuat.x() = 0;
+    refQuat.y() = 0;
+    refQuat.z(), () = 0;
+    refQuat.w() = 1;
     //have rodrigues vector, need quat
     double tanAng = sqrt(d1[i] * d1[i] + d2[i] * d2[i] + d3[i] * d3[i]);
     double cosAng = cosf(atanf(tanAng));
-    quat.x = d1[i] * cosAng * tanAng;
-    quat.y = d2[i] * cosAng * tanAng;
-    quat.z = d3[i] * cosAng * tanAng;
-    quat.w = cosAng;
+    quat.x() = d1[i] * cosAng * tanAng;
+    quat.y() = d2[i] * cosAng * tanAng;
+    quat.z(), () = d3[i] * cosAng * tanAng;
+    quat.w() = cosAng;
     SIMPL::Rgb pix = generateMisorientationColor(quat, refQuat);
     //image.setPixel(qpointba[i].x(), qpointba[i].y(), pix);
   }

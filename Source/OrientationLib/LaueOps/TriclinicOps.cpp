@@ -49,10 +49,10 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/ColorTable.h"
 
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
-#include "OrientationLib/Utilities/PoleFigureUtilities.h"
+#include "OrientationLib/Core/Orientation.hpp"
+
 #include "OrientationLib/Utilities/ComputeStereographicProjection.h"
+#include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
 namespace Detail
 {
@@ -71,7 +71,7 @@ static const int symSize2 = 2;
 } // namespace Triclinic
 } // namespace Detail
 
-static const QuatType TriclinicQuatSym[1] = {QuaternionMathType::New(0.000000000, 0.000000000, 0.000000000, 1.000000000)};
+static const QuatType TriclinicQuatSym[1] = {QuatType(0.000000000, 0.000000000, 0.000000000, 1.000000000)};
 
 static const double TriclinicRodSym[1][3] = {{0.0, 0.0, 0.0}};
 
@@ -140,8 +140,8 @@ double TriclinicOps::getMisoQuat(QuatType& q1, QuatType& q2, double& n1, double&
 // -----------------------------------------------------------------------------
 float TriclinicOps::getMisoQuat(QuatF& q1f, QuatF& q2f, float& n1f, float& n2f, float& n3f) const
 {
-  QuatType q1 = QuaternionMathType::FromType<float>(q1f);
-  QuatType q2 = QuaternionMathType::FromType<float>(q2f);
+  QuatType q1(q1f[0], q1f[1], q1f[2], q1f[3]);
+  QuatType q2(q2f[0], q2f[1], q2f[2], q2f[3]);
   double n1 = n1f;
   double n2 = n2f;
   double n3 = n3f;
@@ -158,32 +158,32 @@ float TriclinicOps::getMisoQuat(QuatF& q1f, QuatF& q2f, float& n1f, float& n2f, 
 double TriclinicOps::_calcMisoQuat(const QuatType quatsym[24], int numsym, QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const
 {
   double wmin = 9999999.0f; //,na,nb,nc;
-  double w = 0;
+  double w = 0.0;
   double n1min = 0.0f;
   double n2min = 0.0f;
   double n3min = 0.0f;
-  QuatType qr;
   QuatType qc;
-  QuatType q2inv;
-  QuaternionMathType::Copy(q2, q2inv);
-  QuaternionMathType::Conjugate(q2inv);
 
-  QuaternionMathType::Multiply(q1, q2inv, qr);
+  QuatType qr = q1 * (q2.conjugate());
+
   for (int i = 0; i < numsym; i++)
   {
-    QuaternionMathType::Multiply(quatsym[i], qr, qc);
-    if (qc.w < -1)
+    qc = quatsym[i] * qr;
+
+    if(qc.w() < -1)
     {
-      qc.w = -1;
+      qc.w() = -1.0;
     }
-    else if (qc.w > 1)
+    else if(qc.w() > 1)
     {
-      qc.w = 1;
+      qc.w() = 1.0;
     }
 
-    OrientArrayType ax(4, 0.0);
-    OrientTransformsType::qu2ax(OrientArrayType(qc.x, qc.y, qc.z, qc.w), ax);
-    ax.toAxisAngle(n1, n2, n3, w);
+    OrientationType ax = OrientationTransformation::qu2ax<QuatType, OrientationType>(qc);
+    n1 = ax[0];
+    n2 = ax[1];
+    n3 = ax[2];
+    w = ax[3];
 
     if (w > SIMPLib::Constants::k_Pi)
     {
@@ -212,9 +212,9 @@ double TriclinicOps::_calcMisoQuat(const QuatType quatsym[24], int numsym, QuatT
   return wmin;
 }
 
-void TriclinicOps::getQuatSymOp(int i, QuatType& q) const
+QuatType TriclinicOps::getQuatSymOp(int32_t i) const
 {
-  QuaternionMathD::Copy(TriclinicQuatSym[i], q);
+  return TriclinicQuatSym[i];
 }
 
 void TriclinicOps::getRodSymOp(int i, double* r) const
@@ -252,7 +252,7 @@ void TriclinicOps::getMatSymOp(int i, float g[3][3]) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientArrayType TriclinicOps::getODFFZRod(OrientArrayType rod) const
+OrientationType TriclinicOps::getODFFZRod(const OrientationType& rod) const
 {
   int numsym = 1;
 
@@ -262,56 +262,41 @@ OrientArrayType TriclinicOps::getODFFZRod(OrientArrayType rod) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientArrayType TriclinicOps::getMDFFZRod(OrientArrayType rod) const
+OrientationType TriclinicOps::getMDFFZRod(const OrientationType& inRod) const
 {
-  double w = 0.0, n1 = 0.0, n2 = 0.0, n3 = 0.0;
-  double FZw = 0.0, FZn1 = 0.0, FZn2 = 0.0, FZn3 = 0.0;
+  OrientationType rod = LaueOps::_calcRodNearestOrigin(TriclinicRodSym, 1, inRod);
 
-  rod = LaueOps::_calcRodNearestOrigin(TriclinicRodSym, 1, rod);
-  OrientArrayType ax(4, 0.0);
-  OrientationTransforms<OrientArrayType, double>::ro2ax(rod, ax);
-  n1 = ax[0];
-  n2 = ax[1], n3 = ax[2], w = ax[3];
+  OrientationType ax = OrientationTransformation::ro2ax<OrientationType, OrientationType>(rod);
 
-  FZn1 = n1;
-  FZn2 = n2;
-  FZn3 = n3;
-  FZw = w;
-
-  ax.fromAxisAngle(FZn1, FZn2, FZn3, FZw);
-  OrientationTransforms<OrientArrayType, double>::ax2ro(ax, rod);
-  return rod;
+  return OrientationTransformation::ax2ro<OrientationType, OrientationType>(ax);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriclinicOps::getNearestQuat(QuatType& q1, QuatType& q2) const
+QuatType TriclinicOps::getNearestQuat(const QuatType& q1, const QuatType& q2) const
 {
-  _calcNearestQuat(TriclinicQuatSym, k_NumSymQuats, q1, q2);
+  return _calcNearestQuat(TriclinicQuatSym, k_NumSymQuats, q1, q2);
 }
-void TriclinicOps::getNearestQuat(QuatF& q1f, QuatF& q2f) const
+QuatF TriclinicOps::getNearestQuat(const QuatF& q1f, const QuatF& q2f) const
 {
-  QuatType q1 = QuaternionMathType::FromType<float>(q1f);
-  QuatType q2 = QuaternionMathType::FromType<float>(q2f);
-  _calcNearestQuat(TriclinicQuatSym, k_NumSymQuats, q1, q2);
-  q2f.x = q2.x;
-  q2f.y = q2.y;
-  q2f.z = q2.z;
-  q2f.w = q2.w;
+  QuatType q1(q1f[0], q1f[1], q1f[2], q1f[3]);
+  QuatType q2(q2f[0], q2f[1], q2f[2], q2f[3]);
+  QuatType temp = _calcNearestQuat(TriclinicQuatSym, k_NumSymQuats, q1, q2);
+  QuatF out(temp.x(), temp.y(), temp.z(), temp.w());
+  return out;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TriclinicOps::getMisoBin(OrientArrayType rod) const
+int TriclinicOps::getMisoBin(const OrientationType& rod) const
 {
   double dim[3];
   double bins[3];
   double step[3];
 
-  OrientArrayType ho(3);
-  OrientationTransforms<OrientArrayType, double>::ro2ho(rod, ho);
+  OrientationType ho = OrientationTransformation::ro2ho<OrientationType, OrientationType>(rod);
 
   dim[0] = Detail::TriclinicDim1InitValue;
   dim[1] = Detail::TriclinicDim2InitValue;
@@ -329,7 +314,7 @@ int TriclinicOps::getMisoBin(OrientArrayType rod) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientArrayType TriclinicOps::determineEulerAngles(uint64_t seed, int choose) const
+OrientationType TriclinicOps::determineEulerAngles(uint64_t seed, int choose) const
 {
   double init[3];
   double step[3];
@@ -348,39 +333,28 @@ OrientArrayType TriclinicOps::determineEulerAngles(uint64_t seed, int choose) co
 
   _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
 
-  OrientArrayType ho(h1, h2, h3);
-  OrientArrayType ro(4);
-  OrientationTransforms<OrientArrayType, double>::ho2ro(ho, ro);
-
+  OrientationType ho(h1, h2, h3);
+  OrientationType ro = OrientationTransformation::ho2ro<OrientationType, OrientationType>(ho);
   ro = getODFFZRod(ro);
-  OrientArrayType eu(4);
-  OrientationTransforms<OrientArrayType, double>::ro2eu(ro, eu);
+  OrientationType eu = OrientationTransformation::ro2eu<OrientationType, OrientationType>(ro);
   return eu;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientArrayType TriclinicOps::randomizeEulerAngles(OrientArrayType synea) const
+OrientationType TriclinicOps::randomizeEulerAngles(const OrientationType& synea) const
 {
-  QuatType q;
-  QuatType qc;
   size_t symOp = getRandomSymmetryOperatorIndex(k_NumSymQuats);
-
-  OrientArrayType quat(4, 0.0);
-  OrientationTransforms<OrientArrayType, double>::eu2qu(synea, quat);
-  q = quat.toQuaternion<double>();
-  QuaternionMathType::Multiply(TriclinicQuatSym[symOp], q, qc);
-
-  quat.fromQuaternion(qc);
-  OrientationTransforms<OrientArrayType, double>::qu2eu(quat, synea);
-  return synea;
+  QuatType quat = OrientationTransformation::eu2qu<OrientationType, QuatType>(synea);
+  QuatType qc = TriclinicQuatSym[symOp] * quat;
+  return OrientationTransformation::qu2eu<QuatType, OrientationType>(qc);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientArrayType TriclinicOps::determineRodriguesVector(uint64_t seed, int choose) const
+OrientationType TriclinicOps::determineRodriguesVector(uint64_t seed, int choose) const
 {
   double init[3];
   double step[3];
@@ -398,9 +372,8 @@ OrientArrayType TriclinicOps::determineRodriguesVector(uint64_t seed, int choose
   phi[2] = static_cast<int32_t>(choose / (72 * 72));
 
   _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
-  OrientArrayType ho(h1, h2, h3);
-  OrientArrayType ro(4);
-  OrientationTransforms<OrientArrayType, double>::ho2ro(ho, ro);
+  OrientationType ho(h1, h2, h3);
+  OrientationType ro = OrientationTransformation::ho2ro<OrientationType, OrientationType>(ho);
   ro = getMDFFZRod(ro);
   return ro;
 }
@@ -408,14 +381,13 @@ OrientArrayType TriclinicOps::determineRodriguesVector(uint64_t seed, int choose
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TriclinicOps::getOdfBin(OrientArrayType rod) const
+int TriclinicOps::getOdfBin(const OrientationType& rod) const
 {
   double dim[3];
   double bins[3];
   double step[3];
 
-  OrientArrayType ho(3);
-  OrientationTransforms<OrientArrayType, double>::ro2ho(rod, ho);
+  OrientationType ho = OrientationTransformation::ro2ho<OrientationType, OrientationType>(rod);
 
   dim[0] = Detail::TriclinicDim1InitValue;
   dim[1] = Detail::TriclinicDim2InitValue;
@@ -483,24 +455,24 @@ void TriclinicOps::getSchmidFactorAndSS(double load[3], double plane[3], double 
   }
 }
 
-void TriclinicOps::getmPrime(QuatType& q1, QuatType& q2, double LD[3], double& mPrime) const
+double TriclinicOps::getmPrime(const QuatType& q1, const QuatType& q2, double LD[3]) const
 {
-  mPrime = 0;
+  return 0.0;
 }
 
-void TriclinicOps::getF1(QuatType& q1, QuatType& q2, double LD[3], bool maxS, double& F1) const
+double TriclinicOps::getF1(const QuatType& q1, const QuatType& q2, double LD[3], bool maxS) const
 {
-  F1 = 0;
+  return 0.0;
 }
 
-void TriclinicOps::getF1spt(QuatType& q1, QuatType& q2, double LD[3], bool maxS, double& F1spt) const
+double TriclinicOps::getF1spt(const QuatType& q1, const QuatType& q2, double LD[3], bool maxS) const
 {
-  F1spt = 0;
+  return 0.0;
 }
 
-void TriclinicOps::getF7(QuatType& q1, QuatType& q2, double LD[3], bool maxS, double& F7) const
+double TriclinicOps::getF7(const QuatType& q1, const QuatType& q2, double LD[3], bool maxS) const
 {
-  F7 = 0;
+  return 0.0;
 }
 // -----------------------------------------------------------------------------
 //
@@ -534,10 +506,9 @@ namespace Detail
           // Geneate all the Coordinates
           for(size_t i = start; i < end; ++i)
           {
-            OrientArrayType eu(m_Eulers->getValue(i * 3), m_Eulers->getValue(i * 3 + 1), m_Eulers->getValue(i * 3 + 2));
-            OrientArrayType om(9, 0.0);
-            OrientationTransforms<OrientArrayType, double>::eu2om(eu, om);
-            om.toGMatrix(g);
+            OrientationType eu(m_Eulers->getValue(i * 3), m_Eulers->getValue(i * 3 + 1), m_Eulers->getValue(i * 3 + 2));
+            OrientationTransformation::eu2om<OrientationType, OrientationType>(eu).toGMatrix(g);
+
             MatrixMath::Transpose3x3(g, gTranpose);
 
             // -----------------------------------------------------------------------------
@@ -644,40 +615,27 @@ SIMPL::Rgb TriclinicOps::generateIPFColor(double* eulers, double* refDir, bool c
 // -----------------------------------------------------------------------------
 SIMPL::Rgb TriclinicOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad) const
 {
-  using OrientArrayType = OrientationArray<double>;
-  using QuatType = QuaternionMath<double>::Quaternion;
-  using QuaternionMathType = QuaternionMath<double>;
   if(degToRad)
   {
     phi1 = phi1 * SIMPLib::Constants::k_DegToRad;
     phi = phi * SIMPLib::Constants::k_DegToRad;
     phi2 = phi2 * SIMPLib::Constants::k_DegToRad;
   }
-  QuatType qc = QuaternionMathType::New();
-  QuatType q1 = QuaternionMathType::New();
-  QuatType q2 = QuaternionMathType::New();
+
   double g[3][3];
   double p[3];
-  double refDirection[3] = {0.0, 0.0, 0.0};
-  double eta = 0.0;
-  double chi = 0.0;
+  double refDirection[3] = {0.0f, 0.0f, 0.0f};
+  double chi = 0.0f, eta = 0.0f;
   double _rgb[3] = {0.0, 0.0, 0.0};
 
-  // 1) find rotation matrix from Euler angles
-  OrientArrayType eu(phi1, phi, phi2);
-  OrientArrayType qu(4);
-  OrientArrayType om(9); // Reusable for the loop
-  OrientationTransforms<OrientArrayType, double>::eu2qu(eu, qu);
-  q1 = qu.toQuaternion<double>();
+  OrientationType eu(phi1, phi, phi2);
+  OrientationType om(9); // Reusable for the loop
+  QuatType q1 = OrientationTransformation::eu2qu<OrientationType, QuatType>(eu);
 
-  for (int j = 0; j < 1; j++)
+  for(int j = 0; j < k_NumSymQuats; j++)
   {
-    getQuatSymOp(j, q2);
-    QuaternionMathType::Multiply(q2, q1, qc);
-
-    qu.fromQuaternion(qc);
-    OrientationTransforms<OrientArrayType, double>::qu2om(qu, om);
-    om.toGMatrix(g);
+    QuatType qu = getQuatSymOp(j) * q1;
+    OrientationTransformation::qu2om<QuatType, OrientationType>(qu).toGMatrix(g);
 
     refDirection[0] = refDir0;
     refDirection[1] = refDir1;
@@ -700,7 +658,7 @@ SIMPL::Rgb TriclinicOps::generateIPFColor(double phi1, double phi, double phi2, 
       continue;
     }
 
-      break;
+    break;
   }
 
   double etaMin = 0.0;

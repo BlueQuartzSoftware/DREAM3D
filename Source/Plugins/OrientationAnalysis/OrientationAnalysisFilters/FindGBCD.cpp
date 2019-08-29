@@ -36,13 +36,6 @@
 #include "FindGBCD.h"
 #include <utility>
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-#include <tbb/blocked_range.h>
-#include <tbb/parallel_for.h>
-#include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
-#endif
-
 #include <QtCore/QDateTime>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -55,9 +48,17 @@
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Utilities/TimeUtilities.h"
 
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+#include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
+
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
 #include "OrientationLib/LaueOps/LaueOps.h"
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -196,12 +197,9 @@ public:
             g2ea[m] = eulers[3 * feature2 + m];
           }
 
-          FOrientArrayType om(9, 0.0f);
-          FOrientTransformsType::eu2om(FOrientArrayType(g1ea, 3), om);
-          om.toGMatrix(g1);
+          OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(g1ea, 3)).toGMatrix(g1);
 
-          FOrientTransformsType::eu2om(FOrientArrayType(g2ea, 3), om);
-          om.toGMatrix(g2);
+          OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(g2ea, 3)).toGMatrix(g2);
 
           int32_t nsym = m_OrientationOps[cryst]->getNumSymOps();
           for(j = 0; j < nsym; j++)
@@ -231,10 +229,10 @@ public:
               // calculate delta g
               MatrixMath::Multiply3x3with3x3(g1s, g2t, dg);
               // translate matrix to euler angles
-              FOrientArrayType om(dg);
+              OrientationF om(dg);
 
-              FOrientArrayType eu(euler_mis, 3);
-              FOrientTransformsType::om2eu(om, eu);
+              OrientationF eu(euler_mis, 3);
+              eu = OrientationTransformation::om2eu<OrientationF, OrientationF>(om);
 
               if(euler_mis[0] < SIMPLib::Constants::k_PiOver2 && euler_mis[1] < SIMPLib::Constants::k_PiOver2 && euler_mis[2] < SIMPLib::Constants::k_PiOver2)
               {

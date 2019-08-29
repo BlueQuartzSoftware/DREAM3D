@@ -35,14 +35,18 @@
 
 #include "AddOrientationNoise.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
@@ -156,8 +160,6 @@ void AddOrientationNoise::add_orientation_noise()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(getCellEulerAnglesArrayPath().getDataContainerName());
 
-  FOrientArrayType om(9, 0.0);
-  FOrientArrayType ax(4, 0.0);
   float g[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
   float newg[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
   float rot[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
@@ -168,20 +170,18 @@ void AddOrientationNoise::add_orientation_noise()
   size_t totalPoints = m->getGeometryAs<ImageGeom>()->getNumberOfElements();
   for(size_t i = 0; i < totalPoints; ++i)
   {
-    FOrientTransformsType::eu2om(FOrientArrayType(&(m_CellEulerAngles[3 * i]), 3), om);
-    om.toGMatrix(g);
+    OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(m_CellEulerAngles + 3 * i, 3)).toGMatrix(g);
     nx = static_cast<float>(rg.genrand_res53());
     ny = static_cast<float>(rg.genrand_res53());
     nz = static_cast<float>(rg.genrand_res53());
     w = static_cast<float>(rg.genrand_res53());
     w = 2.0f * (w - 0.5f);
     w *= m_Magnitude;
-    ax.fromAxisAngle(nx, ny, nz, w);
-    FOrientTransformsType::ax2om(ax, om);
-    om.toGMatrix(rot);
+    ;
+    OrientationTransformation::ax2om<OrientationF, OrientationF>(OrientationF(nx, ny, nz, w)).toGMatrix(rot);
     MatrixMath::Multiply3x3with3x3(g, rot, newg);
-    FOrientArrayType eu(m_CellEulerAngles + (3 * i), 3);
-    FOrientTransformsType::om2eu(FOrientArrayType(newg), eu);
+    OrientationF eu(m_CellEulerAngles + (3 * i), 3);
+    eu = OrientationTransformation::om2eu<OrientationF, OrientationF>(OrientationF(newg));
   }
 }
 

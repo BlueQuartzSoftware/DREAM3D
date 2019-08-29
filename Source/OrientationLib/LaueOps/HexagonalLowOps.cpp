@@ -49,10 +49,10 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/ColorTable.h"
 
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
-#include "OrientationLib/Utilities/PoleFigureUtilities.h"
+#include "OrientationLib/Core/Orientation.hpp"
+
 #include "OrientationLib/Utilities/ComputeStereographicProjection.h"
+#include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
 namespace Detail
 {
@@ -76,10 +76,9 @@ const int HexagonalLowOps::k_OdfSize = 62208;
 const int HexagonalLowOps::k_MdfSize = 62208;
 const int HexagonalLowOps::k_NumSymQuats = 6;
 
-static const QuatType HexQuatSym[HexagonalLowOps::k_NumSymQuats] = {
-    QuaternionMathType::New(0.000000000, 0.000000000, 0.000000000, 1.000000000), QuaternionMathType::New(0.000000000, 0.000000000, 0.500000000, 0.866025400),
-    QuaternionMathType::New(0.000000000, 0.000000000, 0.866025400, 0.500000000), QuaternionMathType::New(0.000000000, 0.000000000, 1.000000000, 0.000000000),
-    QuaternionMathType::New(0.000000000, 0.000000000, 0.866025400, -0.50000000), QuaternionMathType::New(0.000000000, 0.000000000, 0.500000000, -0.86602540)};
+static const QuatType HexQuatSym[HexagonalLowOps::k_NumSymQuats] = {QuatType(0.000000000, 0.000000000, 0.000000000, 1.000000000), QuatType(0.000000000, 0.000000000, 0.500000000, 0.866025400),
+                                                                    QuatType(0.000000000, 0.000000000, 0.866025400, 0.500000000), QuatType(0.000000000, 0.000000000, 1.000000000, 0.000000000),
+                                                                    QuatType(0.000000000, 0.000000000, 0.866025400, -0.50000000), QuatType(0.000000000, 0.000000000, 0.500000000, -0.86602540)};
 
 static const double HexRodSym[HexagonalLowOps::k_NumSymQuats][3] = {{0.0, 0.0, 0.0},       {0.0, 0.0, 0.57735f}, {0.0, 0.0, 1.73205f}, {0.0, 0.0, 1000000000000.0},
                                                                     {0.0, 0.0, -1.73205f}, {0.0, 0.0, -0.57735f}};
@@ -160,32 +159,32 @@ QString HexagonalLowOps::getSymmetryName() const
 double HexagonalLowOps::_calcMisoQuat(const QuatType quatsym[12], int numsym, QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const
 {
   double wmin = 9999999.0f; //,na,nb,nc;
-  double w = 0;
+  double w = 0.0;
   double n1min = 0.0f;
   double n2min = 0.0f;
   double n3min = 0.0f;
-  QuatType qr;
   QuatType qc;
-  QuatType q2inv;
-  QuaternionMathType::Copy(q2, q2inv);
-  QuaternionMathType::Conjugate(q2inv);
 
-  QuaternionMathType::Multiply(q1, q2inv, qr);
+  QuatType qr = q1 * (q2.conjugate());
+
   for (int i = 0; i < numsym; i++)
   {
-    QuaternionMathType::Multiply(quatsym[i], qr, qc);
-    if (qc.w < -1)
+    qc = quatsym[i] * qr;
+
+    if(qc.w() < -1)
     {
-      qc.w = -1;
+      qc.w() = -1.0;
     }
-    else if (qc.w > 1)
+    else if(qc.w() > 1)
     {
-      qc.w = 1;
+      qc.w() = 1.0;
     }
 
-    OrientArrayType ax(4, 0.0);
-    OrientTransformsType::qu2ax(OrientArrayType(qc.x, qc.y, qc.z, qc.w), ax);
-    ax.toAxisAngle(n1, n2, n3, w);
+    OrientationType ax = OrientationTransformation::qu2ax<QuatType, OrientationType>(qc);
+    n1 = ax[0];
+    n2 = ax[1];
+    n3 = ax[2];
+    w = ax[3];
 
     if (w > SIMPLib::Constants::k_Pi)
     {
@@ -222,8 +221,8 @@ double HexagonalLowOps::getMisoQuat(QuatType& q1, QuatType& q2, double& n1, doub
 // -----------------------------------------------------------------------------
 float HexagonalLowOps::getMisoQuat(QuatF& q1f, QuatF& q2f, float& n1f, float& n2f, float& n3f) const
 {
-  QuatType q1 = QuaternionMathType::FromType<float>(q1f);
-  QuatType q2 = QuaternionMathType::FromType<float>(q2f);
+  QuatType q1(q1f[0], q1f[1], q1f[2], q1f[3]);
+  QuatType q2(q2f[0], q2f[1], q2f[2], q2f[3]);
   double n1 = n1f;
   double n2 = n2f;
   double n3 = n3f;
@@ -234,9 +233,9 @@ float HexagonalLowOps::getMisoQuat(QuatF& q1f, QuatF& q2f, float& n1f, float& n2
   return w;
 }
 
-void HexagonalLowOps::getQuatSymOp(int i, QuatType& q) const
+QuatType HexagonalLowOps::getQuatSymOp(int32_t i) const
 {
-  QuaternionMathD::Copy(HexQuatSym[i], q);
+  return HexQuatSym[i];
 }
 
 void HexagonalLowOps::getRodSymOp(int i, double* r) const
@@ -275,7 +274,7 @@ void HexagonalLowOps::getMatSymOp(int i, float g[3][3]) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientArrayType HexagonalLowOps::getODFFZRod(OrientArrayType rod) const
+OrientationType HexagonalLowOps::getODFFZRod(const OrientationType& rod) const
 {
   int numsym = 6;
   return _calcRodNearestOrigin(HexRodSym, numsym, rod);
@@ -284,20 +283,20 @@ OrientArrayType HexagonalLowOps::getODFFZRod(OrientArrayType rod) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientArrayType HexagonalLowOps::getMDFFZRod(OrientArrayType rod) const
+OrientationType HexagonalLowOps::getMDFFZRod(const OrientationType& inRod) const
 {
-  double w = 0.0, n1 = 0.0, n2 = 0.0, n3 = 0.0f;
-  double FZn1 = 0.0, FZn2 = 0.0, FZn3 = 0.0, FZw = 0.0f;
+  double w = 0.0, n1 = 0.0, n2 = 0.0, n3 = 0.0;
+  double FZn1 = 0.0, FZn2 = 0.0, FZn3 = 0.0, FZw = 0.0;
   double n1n2mag = 0.0f;
 
-  rod = _calcRodNearestOrigin(HexRodSym, 12, rod);
+  OrientationType rod = _calcRodNearestOrigin(HexRodSym, 12, inRod);
 
-  OrientArrayType ax(4, 0.0);
-  OrientationTransforms<OrientArrayType, double>::ro2ax(rod, ax);
+  OrientationType ax = OrientationTransformation::ro2ax<OrientationType, OrientationType>(rod);
+
   n1 = ax[0];
   n2 = ax[1], n3 = ax[2], w = ax[3];
 
-  double denom = sqrt((n1 * n1 + n2 * n2 + n3 * n3));
+  float denom = sqrt((n1 * n1 + n2 * n2 + n3 * n3));
   n1 = n1 / denom;
   n2 = n2 / denom;
   n3 = n3 / denom;
@@ -305,7 +304,7 @@ OrientArrayType HexagonalLowOps::getMDFFZRod(OrientArrayType rod) const
   {
     n1 = -n1, n2 = -n2, n3 = -n3;
   }
-  double angle = 180.0f * atan2(n2, n1) * SIMPLib::Constants::k_1OverPi;
+  float angle = 180.0f * atan2(n2, n1) * SIMPLib::Constants::k_1OverPi;
   if(angle < 0)
   {
     angle = angle + 360.0f;
@@ -313,19 +312,19 @@ OrientArrayType HexagonalLowOps::getMDFFZRod(OrientArrayType rod) const
   FZn1 = n1;
   FZn2 = n2;
   FZn3 = n3;
-  if(angle > 30.0)
+  if(angle > 30.0f)
   {
     n1n2mag = sqrt(n1 * n1 + n2 * n2);
-    if (int(angle / 30) % 2 == 0)
+    if(int(angle / 30) % 2 == 0)
     {
-      FZw = angle - (30.0f * int(angle / 30.0));
+      FZw = angle - (30.0f * int(angle / 30.0f));
       FZw = FZw * SIMPLib::Constants::k_PiOver180;
       FZn1 = n1n2mag * cosf(FZw);
       FZn2 = n1n2mag * sinf(FZw);
     }
     else
     {
-      FZw = angle - (30.0f * int(angle / 30.0));
+      FZw = angle - (30.0f * int(angle / 30.0f));
       FZw = 30.0f - FZw;
       FZw = FZw * SIMPLib::Constants::k_PiOver180;
       FZn1 = n1n2mag * cosf(FZw);
@@ -333,47 +332,41 @@ OrientArrayType HexagonalLowOps::getMDFFZRod(OrientArrayType rod) const
     }
   }
 
-  ax.fromAxisAngle(FZn1, FZn2, FZn3, w);
-  OrientationTransforms<OrientArrayType, double>::ax2ro(ax, rod);
-  return rod;
+  return OrientationTransformation::ax2ro<OrientationType, OrientationType>(OrientationType(FZn1, FZn2, FZn3, w));
 }
 
-void HexagonalLowOps::getNearestQuat(QuatType& q1, QuatType& q2) const
+QuatType HexagonalLowOps::getNearestQuat(const QuatType& q1, const QuatType& q2) const
 {
-  _calcNearestQuat(HexQuatSym, k_NumSymQuats, q1, q2);
+  return _calcNearestQuat(HexQuatSym, k_NumSymQuats, q1, q2);
 }
 
-void HexagonalLowOps::getNearestQuat(QuatF& q1f, QuatF& q2f) const
+QuatF HexagonalLowOps::getNearestQuat(const QuatF& q1f, const QuatF& q2f) const
 {
-  QuatType q1 = QuaternionMathType::FromType<float>(q1f);
-  QuatType q2 = QuaternionMathType::FromType<float>(q2f);
-  _calcNearestQuat(HexQuatSym, k_NumSymQuats, q1, q2);
-  q2f.x = q2.x;
-  q2f.y = q2.y;
-  q2f.z = q2.z;
-  q2f.w = q2.w;
+  QuatType q1(q1f[0], q1f[1], q1f[2], q1f[3]);
+  QuatType q2(q2f[0], q2f[1], q2f[2], q2f[3]);
+  QuatType temp = _calcNearestQuat(HexQuatSym, k_NumSymQuats, q1, q2);
+  QuatF out(temp.x(), temp.y(), temp.z(), temp.w());
+  return out;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void HexagonalLowOps::getFZQuat(QuatType& qr) const
+QuatType HexagonalLowOps::getFZQuat(const QuatType& qr) const
 {
-  int numsym = 6;
-  _calcQuatNearestOrigin(HexQuatSym, numsym, qr);
+  return _calcQuatNearestOrigin(HexQuatSym, k_NumSymQuats, qr);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int HexagonalLowOps::getMisoBin(OrientArrayType rod) const
+int HexagonalLowOps::getMisoBin(const OrientationType& rod) const
 {
   double dim[3];
   double bins[3];
   double step[3];
 
-  OrientArrayType ho(3);
-  OrientationTransforms<OrientArrayType, double>::ro2ho(rod, ho);
+  OrientationType ho = OrientationTransformation::ro2ho<OrientationType, OrientationType>(rod);
 
   dim[0] = HexDim1InitValue;
   dim[1] = HexDim2InitValue;
@@ -391,7 +384,7 @@ int HexagonalLowOps::getMisoBin(OrientArrayType rod) const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientArrayType HexagonalLowOps::determineEulerAngles(uint64_t seed, int choose) const
+OrientationType HexagonalLowOps::determineEulerAngles(uint64_t seed, int choose) const
 {
   double init[3];
   double step[3];
@@ -410,39 +403,28 @@ OrientArrayType HexagonalLowOps::determineEulerAngles(uint64_t seed, int choose)
 
   _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
 
-  OrientArrayType ho(h1, h2, h3);
-  OrientArrayType ro(4);
-  OrientationTransforms<OrientArrayType, double>::ho2ro(ho, ro);
-
+  OrientationType ho(h1, h2, h3);
+  OrientationType ro = OrientationTransformation::ho2ro<OrientationType, OrientationType>(ho);
   ro = getODFFZRod(ro);
-  OrientArrayType eu(4);
-  OrientationTransforms<OrientArrayType, double>::ro2eu(ro, eu);
+  OrientationType eu = OrientationTransformation::ro2eu<OrientationType, OrientationType>(ro);
   return eu;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientArrayType HexagonalLowOps::randomizeEulerAngles(OrientArrayType synea) const
+OrientationType HexagonalLowOps::randomizeEulerAngles(const OrientationType& synea) const
 {
-  QuatType q;
-  QuatType qc;
   size_t symOp = getRandomSymmetryOperatorIndex(k_NumSymQuats);
-
-  OrientArrayType quat(4, 0.0);
-  OrientationTransforms<OrientArrayType, double>::eu2qu(synea, quat);
-  q = quat.toQuaternion<double>();
-  QuaternionMathType::Multiply(HexQuatSym[symOp], q, qc);
-
-  quat.fromQuaternion(qc);
-  OrientationTransforms<OrientArrayType, double>::qu2eu(quat, synea);
-  return synea;
+  QuatType quat = OrientationTransformation::eu2qu<OrientationType, QuatType>(synea);
+  QuatType qc = HexQuatSym[symOp] * quat;
+  return OrientationTransformation::qu2eu<QuatType, OrientationType>(qc);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientArrayType HexagonalLowOps::determineRodriguesVector(uint64_t seed, int choose) const
+OrientationType HexagonalLowOps::determineRodriguesVector(uint64_t seed, int choose) const
 {
   double init[3];
   double step[3];
@@ -460,9 +442,8 @@ OrientArrayType HexagonalLowOps::determineRodriguesVector(uint64_t seed, int cho
   phi[2] = static_cast<int32_t>(choose / (72 * 72));
 
   _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
-  OrientArrayType ho(h1, h2, h3);
-  OrientArrayType ro(4);
-  OrientationTransforms<OrientArrayType, double>::ho2ro(ho, ro);
+  OrientationType ho(h1, h2, h3);
+  OrientationType ro = OrientationTransformation::ho2ro<OrientationType, OrientationType>(ho);
   ro = getMDFFZRod(ro);
   return ro;
 }
@@ -470,14 +451,13 @@ OrientArrayType HexagonalLowOps::determineRodriguesVector(uint64_t seed, int cho
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int HexagonalLowOps::getOdfBin(OrientArrayType rod) const
+int HexagonalLowOps::getOdfBin(const OrientationType& rod) const
 {
   double dim[3];
   double bins[3];
   double step[3];
 
-  OrientArrayType ho(3);
-  OrientationTransforms<OrientArrayType, double>::ro2ho(rod, ho);
+  OrientationType ho = OrientationTransformation::ro2ho<OrientationType, OrientationType>(rod);
 
   dim[0] = HexDim1InitValue;
   dim[1] = HexDim2InitValue;
@@ -846,7 +826,7 @@ void HexagonalLowOps::getSchmidFactorAndSS(double load[3], double plane[3], doub
   }
 }
 
-void HexagonalLowOps::getmPrime(QuatType& q1, QuatType& q2, double LD[3], double& mPrime) const
+double HexagonalLowOps::getmPrime(const QuatType& q1, const QuatType& q2, double LD[3]) const
 {
   Q_ASSERT(false);
 #if 0
@@ -883,9 +863,10 @@ void HexagonalLowOps::getmPrime(QuatType& q1, QuatType& q2, double LD[3], double
   directionmisalignment = fabs((u1 * u2 + v1 * v2 + w1 * w2) / (denomuvw1 * denomuvw2));
   mPrime = planemisalignment * directionmisalignment;
 #endif
+return 0.0;
 }
 
-void HexagonalLowOps::getF1(QuatType& q1, QuatType& q2, double LD[3], bool maxSF, double& F1) const
+double HexagonalLowOps::getF1(const QuatType& q1, const QuatType& q2, double LD[3], bool maxSF) const
 {
   Q_ASSERT(false);
 #if 0
@@ -960,9 +941,10 @@ void HexagonalLowOps::getF1(QuatType& q1, QuatType& q2, double LD[3], bool maxSF
   */
 #endif
 }
-void HexagonalLowOps::getF1spt(QuatType& q1, QuatType& q2, double LD[3], bool maxSF, double& F1spt) const
+double HexagonalLowOps::getF1spt(const QuatType& q1, const QuatType& q2, double LD[3], bool maxSF) const
 {
   Q_ASSERT(false);
+  return 0.0;
 #if 0
   double g1[3][3];
   double g2[3][3];
@@ -1037,9 +1019,10 @@ void HexagonalLowOps::getF1spt(QuatType& q1, QuatType& q2, double LD[3], bool ma
 #endif
 }
 
-void HexagonalLowOps::getF7(QuatType& q1, QuatType& q2, double LD[3], bool maxSF, double& F7) const
+double HexagonalLowOps::getF7(const QuatType& q1, const QuatType& q2, double LD[3], bool maxSF) const
 {
   Q_ASSERT(false);
+  return 0.0;
 #if 0
   double g1[3][3];
   double g2[3][3];
@@ -1135,10 +1118,9 @@ namespace Detail
 
           for(size_t i = start; i < end; ++i)
           {
-            OrientArrayType eu(m_Eulers->getValue(i * 3), m_Eulers->getValue(i * 3 + 1), m_Eulers->getValue(i * 3 + 2));
-            OrientArrayType om(9, 0.0);
-            OrientationTransforms<OrientArrayType, double>::eu2om(eu, om);
-            om.toGMatrix(g);
+            OrientationType eu(m_Eulers->getValue(i * 3), m_Eulers->getValue(i * 3 + 1), m_Eulers->getValue(i * 3 + 2));
+            OrientationTransformation::eu2om<OrientationType, OrientationType>(eu).toGMatrix(g);
+
             MatrixMath::Transpose3x3(g, gTranpose);
 
             // -----------------------------------------------------------------------------
@@ -1244,9 +1226,6 @@ SIMPL::Rgb HexagonalLowOps::generateIPFColor(double* eulers, double* refDir, boo
 // -----------------------------------------------------------------------------
 SIMPL::Rgb HexagonalLowOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad) const
 {
-  using OrientArrayType = OrientationArray<double>;
-  using QuatType = QuaternionMath<double>::Quaternion;
-  using QuaternionMathType = QuaternionMath<double>;
   if(degToRad)
   {
     phi1 = phi1 * SIMPLib::Constants::k_DegToRad;
@@ -1254,29 +1233,20 @@ SIMPL::Rgb HexagonalLowOps::generateIPFColor(double phi1, double phi, double phi
     phi2 = phi2 * SIMPLib::Constants::k_DegToRad;
   }
 
-  QuatType qc = QuaternionMathD::New();
-  QuatType q1 = QuaternionMathD::New();
   double g[3][3];
   double p[3];
-  double refDirection[3] = {0.0, 0.0, 0.0};
-  double eta = 0.0;
-  double chi = 0.0;
+  double refDirection[3] = {0.0f, 0.0f, 0.0f};
+  double chi = 0.0f, eta = 0.0f;
   double _rgb[3] = {0.0, 0.0, 0.0};
 
-  // 1) find rotation matrix from Euler angles
-  OrientArrayType eu(phi1, phi, phi2);
-  OrientArrayType qu(4);
-  OrientArrayType om(9); // Reusable for the loop
-  OrientationTransforms<OrientArrayType, double>::qu2om(qu, om);
-  q1 = qu.toQuaternion<double>();
+  OrientationType eu(phi1, phi, phi2);
+  OrientationType om(9); // Reusable for the loop
+  QuatType q1 = OrientationTransformation::eu2qu<OrientationType, QuatType>(eu);
 
-  for (int j = 0; j < 6; j++)
+  for(int j = 0; j < k_NumSymQuats; j++)
   {
-    QuaternionMathType::Multiply(HexQuatSym[j], q1, qc);
-
-    qu.fromQuaternion(qc);
-    OrientationTransforms<OrientArrayType, double>::qu2om(qu, om);
-    om.toGMatrix(g);
+    QuatType qu = getQuatSymOp(j) * q1;
+    OrientationTransformation::qu2om<QuatType, OrientationType>(qu).toGMatrix(g);
 
     refDirection[0] = refDir0;
     refDirection[1] = refDir1;
@@ -1299,7 +1269,7 @@ SIMPL::Rgb HexagonalLowOps::generateIPFColor(double phi1, double phi, double phi
       continue;
     }
 
-      break;
+    break;
   }
 
   double etaMin = 0.0;

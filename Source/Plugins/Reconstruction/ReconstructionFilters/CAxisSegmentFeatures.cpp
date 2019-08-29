@@ -51,8 +51,8 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
 
+#include "OrientationLib/Core/OrientationTransformation.hpp"
 #include "OrientationLib/LaueOps/LaueOps.h"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -367,9 +367,10 @@ bool CAxisSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t nei
 {
   bool group = false;
   float w = std::numeric_limits<float>::max();
-  QuatF q1 = QuaternionMathF::New();
-  QuatF q2 = QuaternionMathF::New();
-  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+  //  QuatF q1 = QuaternionMathF::New();
+  //  QuatF q2 = QuaternionMathF::New();
+  //  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+
   float g1[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
   float g2[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
   float g1t[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
@@ -380,16 +381,13 @@ bool CAxisSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t nei
 
   if(m_FeatureIds[neighborpoint] == 0 && (!m_UseGoodVoxels || m_GoodVoxels[neighborpoint]))
   {
-    QuaternionMathF::Copy(quats[referencepoint], q1);
-    QuaternionMathF::Copy(quats[neighborpoint], q2);
+    QuatF q1(m_Quats + referencepoint * 4);
+    QuatF q2(m_Quats + neighborpoint * 4);
 
     if(m_CellPhases[referencepoint] == m_CellPhases[neighborpoint])
     {
-      FOrientArrayType om(9);
-      FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
-      om.toGMatrix(g1);
-      FOrientTransformsType::qu2om(FOrientArrayType(q2), om);
-      om.toGMatrix(g2);
+      OrientationTransformation::qu2om<QuatF, Orientation<float>>(q1).toGMatrix(g1);
+      OrientationTransformation::qu2om<QuatF, Orientation<float>>(q2).toGMatrix(g2);
 
       // transpose the g matricies so when caxis is multiplied by it
       // it will give the sample direction that the caxis is along

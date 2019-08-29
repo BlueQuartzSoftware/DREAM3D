@@ -36,8 +36,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -68,6 +68,11 @@ public:
   ~EMsoftSO3Sampler() override;
 
   /**
+   * @brief OrientationListArrayType
+   */
+  using OrientationListArrayType = std::list<OrientationD>;
+
+  /**
    * EMsoftSO3Sampler filter parameters
    */
 
@@ -75,34 +80,34 @@ public:
   Q_PROPERTY(int sampleModeSelector READ getsampleModeSelector WRITE setsampleModeSelector)
 
   SIMPL_FILTER_PARAMETER(int, PointGroup)
-  Q_PROPERTY(int PointGroup READ getPointGroup WRITE setPointGroup)
+  Q_PROPERTY(int PointGroup READ getPointGroup WRITE setPointGroup);
 
   SIMPL_FILTER_PARAMETER(int, Numsp)
-  Q_PROPERTY(int Numsp READ getNumsp WRITE setNumsp)
+  Q_PROPERTY(int Numsp READ getNumsp WRITE setNumsp);
 
   SIMPL_FILTER_PARAMETER(double, MisOr)
-  Q_PROPERTY(int MisOr READ getMisOr WRITE setMisOr)
+  Q_PROPERTY(int MisOr READ getMisOr WRITE setMisOr);
 
   SIMPL_FILTER_PARAMETER(FloatVec3Type, RefOr)
-  Q_PROPERTY(FloatVec3Type RefOr READ getRefOr WRITE setRefOr)
+  Q_PROPERTY(FloatVec3Type RefOr READ getRefOr WRITE setRefOr);
 
   SIMPL_FILTER_PARAMETER(double, MisOrFull)
-  Q_PROPERTY(int MisOrFull READ getMisOrFull WRITE setMisOrFull)
+  Q_PROPERTY(int MisOrFull READ getMisOrFull WRITE setMisOrFull);
 
   SIMPL_FILTER_PARAMETER(FloatVec3Type, RefOrFull)
-  Q_PROPERTY(FloatVec3Type RefOrFull READ getRefOrFull WRITE setRefOrFull)
+  Q_PROPERTY(FloatVec3Type RefOrFull READ getRefOrFull WRITE setRefOrFull);
 
   SIMPL_FILTER_PARAMETER(bool, OffsetGrid)
-  Q_PROPERTY(bool OffsetGrid READ getOffsetGrid WRITE setOffsetGrid)
+  Q_PROPERTY(bool OffsetGrid READ getOffsetGrid WRITE setOffsetGrid);
 
   SIMPL_FILTER_PARAMETER(QString, EulerAnglesArrayName)
-  Q_PROPERTY(QString EulerAnglesArrayName READ getEulerAnglesArrayName WRITE setEulerAnglesArrayName)
+  Q_PROPERTY(QString EulerAnglesArrayName READ getEulerAnglesArrayName WRITE setEulerAnglesArrayName);
 
   SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
-  Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName);
 
   SIMPL_FILTER_PARAMETER(QString, EMsoftAttributeMatrixName)
-  Q_PROPERTY(QString EMsoftAttributeMatrixName READ getEMsoftAttributeMatrixName WRITE setEMsoftAttributeMatrixName)
+  Q_PROPERTY(QString EMsoftAttributeMatrixName READ getEMsoftAttributeMatrixName WRITE setEMsoftAttributeMatrixName);
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -169,12 +174,7 @@ public:
    * @param sigma
    * @param rod
    */
-  void RodriguesComposition(DOrientArrayType sigma, DOrientArrayType& rod);
-
-  /**
-   * @brief OrientationListArrayType
-   */
-  typedef std::list<DOrientArrayType> OrientationListArrayType;
+  void RodriguesComposition(OrientationD sigma, OrientationD& rod);
 
   /**
    * @brief IsinsideFZ

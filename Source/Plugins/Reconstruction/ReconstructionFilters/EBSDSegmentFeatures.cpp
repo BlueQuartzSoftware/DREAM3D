@@ -48,6 +48,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 
+#include "OrientationLib/LaueOps/LaueOps.h"
+
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
 
@@ -75,10 +77,7 @@ EBSDSegmentFeatures::EBSDSegmentFeatures()
 , m_FeatureIdsArrayName(SIMPL::CellData::FeatureIds)
 , m_ActiveArrayName(SIMPL::FeatureData::Active)
 {
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
-
   m_MisoTolerance = 0.0f;
-
 }
 
 // -----------------------------------------------------------------------------
@@ -358,6 +357,7 @@ int64_t EBSDSegmentFeatures::getSeed(int32_t gnum, int64_t nextSeed)
 bool EBSDSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neighborpoint, int32_t gnum)
 {
   bool group = false;
+  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   // Get the phases for each voxel
   int32_t phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
@@ -371,13 +371,9 @@ bool EBSDSegmentFeatures::determineGrouping(int64_t referencepoint, int64_t neig
   if(m_FeatureIds[neighborpoint] == 0 && (!m_UseGoodVoxels || m_GoodVoxels[neighborpoint]))
   {
     float w = std::numeric_limits<float>::max();
-    QuatF q1 = QuaternionMathF::New();
-    QuatF q2 = QuaternionMathF::New();
-    QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
     float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
-
-    QuaternionMathF::Copy(quats[referencepoint], q1);
-    QuaternionMathF::Copy(quats[neighborpoint], q2);
+    QuatF q1(m_Quats + referencepoint * 4);
+    QuatF q2(m_Quats + neighborpoint * 4);
 
     if(m_CellPhases[referencepoint] == m_CellPhases[neighborpoint])
     {

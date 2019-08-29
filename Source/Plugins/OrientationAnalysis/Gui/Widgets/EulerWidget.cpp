@@ -39,6 +39,8 @@
 
 #include "SIMPLib/Math/SIMPLibMath.h"
 
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -117,7 +119,7 @@ void EulerWidget::valuesUpdated(const QString& text)
     values = toRadians(values);
   }
 
-  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::eu_check(values);
+  OrientationTransformation::ResultType result = OrientationTransformation::eu_check(values);
   int errorCode = result.result;
   QString errorMsg = QString::fromStdString(result.msg);
 

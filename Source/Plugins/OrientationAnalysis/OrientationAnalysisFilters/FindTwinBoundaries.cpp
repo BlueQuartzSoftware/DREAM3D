@@ -35,12 +35,7 @@
 
 #include "FindTwinBoundaries.h"
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-#include <tbb/blocked_range.h>
-#include <tbb/parallel_for.h>
-#include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
-#endif
+#include <array>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -54,10 +49,20 @@
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Math/GeometryMath.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
+
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+#include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
 
 /**
  * @brief The CalculateTwinBoundaryImpl class implements a threaded algorithm that determines whether a boundary is twin related and calculates
@@ -109,15 +114,15 @@ public:
     double incoherence = 0.0;
     double n1 = 0.0, n2 = 0.0, n3 = 0.0;
 
-    QuatType misq = QuaternionMathType::New();
-    QuatType sym_q = QuaternionMathType::New();
-    QuatType s1_misq = QuaternionMathType::New();
-    QuatType s2_misq = QuaternionMathType::New();
+    QuatType misq;
+    QuatType sym_q;
+    QuatType s1_misq;
+    QuatType s2_misq;
 
-    QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+    // QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
-    double xstl_norm[3] = {0.0, 0.0, 0.0};
-    double s_xstl_norm[3] = {0.0, 0.0, 0.0};
+    std::array<double, 3> xstl_norm = {0.0, 0.0, 0.0};
+    std::array<double, 3> s_xstl_norm = {0.0, 0.0, 0.0};
 
     for(size_t i = start; i < end; i++)
     {
@@ -132,47 +137,45 @@ public:
       if(feature1 > 0 && feature2 > 0 && m_Phases[feature1] == m_Phases[feature2])
       {
         w = std::numeric_limits<float>::max();
+        float* quatPtr = m_Quats + feature1 * 4;
+        QuatType q1(quatPtr[0], quatPtr[1], quatPtr[2], quatPtr[3]);
 
-        QuatType q1 = QuaternionMathType::FromType<float>(quats[feature1]);
-        QuatType q2 = QuaternionMathType::FromType<float>(quats[feature2]);
+        quatPtr = m_Quats + feature2 * 4;
+        QuatType q2(quatPtr[0], quatPtr[1], quatPtr[2], quatPtr[3]);
 
         phase1 = m_CrystalStructures[m_Phases[feature1]];
         phase2 = m_CrystalStructures[m_Phases[feature2]];
         if(phase1 == phase2)
         {
           int32_t nsym = m_OrientationOps[phase1]->getNumSymOps();
-          QuaternionMathType::Conjugate(q2);
-          QuaternionMathType::Multiply(q1, q2, misq);
-          OrientArrayType om(9);
-          OrientTransformsType::qu2om(OrientArrayType(q1), om);
-          om.toGMatrix(g1);
+          q2 = q2.conjugate();
+          misq = q1 * q2;
+          OrientationTransformation::qu2om<QuatType, OrientationD>(q1).toGMatrix(g1);
 
           if(m_FindCoherence)
           {
-            MatrixMath::Multiply3x3with3x1(g1, normal, xstl_norm);
+            MatrixMath::Multiply3x3with3x1(g1, normal, xstl_norm.data());
           }
 
           for(int32_t j = 0; j < nsym; j++)
           {
-            m_OrientationOps[phase1]->getQuatSymOp(j, sym_q);
+            sym_q = m_OrientationOps[phase1]->getQuatSymOp(j);
             // calculate crystal direction parallel to normal
-            QuaternionMathType::Multiply(misq, sym_q, s1_misq);
+            s1_misq = misq * sym_q;
 
             if(m_FindCoherence)
             {
-              QuaternionMathType::MultiplyQuatVec(sym_q, xstl_norm, s_xstl_norm);
+              s_xstl_norm = sym_q.multiplyByVector(xstl_norm.data());
             }
 
             for(int32_t k = 0; k < nsym; k++)
             {
               // calculate the symmetric misorienation
-              m_OrientationOps[phase1]->getQuatSymOp(k, sym_q);
-              QuaternionMathType::Conjugate(sym_q);
-              QuaternionMathType::Multiply(sym_q, s1_misq, s2_misq);
+              sym_q = m_OrientationOps[phase1]->getQuatSymOp(k);
+              sym_q = sym_q.conjugate();
+              s2_misq = sym_q * s1_misq;
 
-              OrientArrayType ax(n1, n2, n3, w);
-              OrientTransformsType::qu2ax(OrientArrayType(s2_misq), ax);
-              ax.toAxisAngle(n1, n2, n3, w);
+              OrientationTransformation::qu2ax<QuatType, OrientationD>(s2_misq).toAxisAngle(n1, n2, n3, w);
 
               w = w * 180.0f / SIMPLib::Constants::k_Pi;
               axisdiff111 = acosf(std::fabs(n1) * 0.57735f + std::fabs(n2) * 0.57735f + std::fabs(n3) * 0.57735f);
@@ -185,7 +188,7 @@ public:
                 m_TwinBoundary[i] = true;
                 if(m_FindCoherence)
                 {
-                  incoherence = 180.0 * acosf(GeometryMath::CosThetaBetweenVectors(n, s_xstl_norm)) / SIMPLib::Constants::k_Pi;
+                  incoherence = 180.0 * std::acosf(GeometryMath::CosThetaBetweenVectors(n, s_xstl_norm.data())) / SIMPLib::Constants::k_Pi;
                   if(incoherence > 90.0)
                   {
                     incoherence = 180.0 - incoherence;
@@ -226,7 +229,6 @@ FindTwinBoundaries::FindTwinBoundaries()
 , m_SurfaceMeshTwinBoundaryArrayName(SIMPL::FaceData::SurfaceMeshTwinBoundary)
 , m_SurfaceMeshTwinBoundaryIncoherenceArrayName(SIMPL::FaceData::SurfaceMeshTwinBoundaryIncoherence)
 {
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 }
 
 // -----------------------------------------------------------------------------

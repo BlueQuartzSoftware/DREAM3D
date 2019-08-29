@@ -45,12 +45,13 @@
 #include "SIMPLib/Math/SIMPLibRandom.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
 #include "OrientationLib/LaueOps/CubicOps.h"
 #include "OrientationLib/LaueOps/HexagonalOps.h"
 #include "OrientationLib/LaueOps/LaueOps.h"
 #include "OrientationLib/LaueOps/OrthoRhombicOps.h"
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 /**
  * @class Texture Texture.h AIM/Common/Texture.h
@@ -84,11 +85,6 @@ public:
   */
   template <typename T> static void CalculateCubicODFData(T* e1s, T* e2s, T* e3s, T* weights, T* sigmas, bool normalize, T* odf, size_t numEntries)
   {
-    // using OrientArrayType = OrientationArray<T>;
-    using OrientArrayTypeD = OrientationArray<double>;
-    // using OrientTransformsType = OrientationTransforms<OrientArrayType, T>;
-    using OrientTransformsTypeD = OrientationTransforms<OrientArrayTypeD, double>;
-
     CubicOps ops;
     Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins", true);
     int32_t* TextureBins = textureBins->getPointer(0);
@@ -103,9 +99,8 @@ public:
     // Use double precision for the calculations
     for(size_t i = 0; i < numEntries; i++)
     {
-      OrientArrayTypeD eu(e1s[i], e2s[i], e3s[i]);
-      OrientArrayTypeD rod(4);
-      OrientTransformsTypeD::eu2ro(eu, rod);
+      OrientationF eu(e1s[i], e2s[i], e3s[i]);
+      OrientationD rod = OrientationTransformation::eu2ro<OrientationF, OrientationD>(eu);
 
       rod = ops.getODFFZRod(rod);
       bin = ops.getOdfBin(rod);
@@ -227,10 +222,6 @@ public:
   */
   template <typename T> static void CalculateHexODFData(T* e1s, T* e2s, T* e3s, T* weights, T* sigmas, bool normalize, T* odf, size_t numEntries)
   {
-    //  using OrientArrayType = OrientationArray<T>;
-    using OrientArrayTypeD = OrientationArray<double>;
-    // using OrientTransformsType = OrientationTransforms<OrientArrayType, T>;
-    using OrientTransformsTypeD = OrientationTransforms<OrientArrayTypeD, double>;
 
     HexagonalOps hexOps;
     Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins", true);
@@ -245,9 +236,8 @@ public:
     HexagonalOps ops;
     for(size_t i = 0; i < numEntries; i++)
     {
-      OrientArrayTypeD eu(e1s[i], e2s[i], e3s[i]);
-      OrientArrayTypeD rod(4);
-      OrientTransformsTypeD::eu2ro(eu, rod);
+      OrientationF eu(e1s[i], e2s[i], e3s[i]);
+      OrientationD rod = OrientationTransformation::eu2ro<OrientationF, OrientationD>(eu);
 
       rod = ops.getODFFZRod(rod);
       bin = ops.getOdfBin(rod);
@@ -370,9 +360,8 @@ public:
   template <typename T> static void CalculateOrthoRhombicODFData(T* e1s, T* e2s, T* e3s, T* weights, T* sigmas, bool normalize, T* odf, size_t numEntries)
   {
     //  using OrientArrayType = OrientationArray<T>;
-    using OrientArrayTypeD = OrientationArray<double>;
+    using OrientationD = Orientation<double>;
     // using OrientTransformsType = OrientationTransforms<OrientArrayType, T>;
-    using OrientTransformsTypeD = OrientationTransforms<OrientArrayTypeD, double>;
 
     OrthoRhombicOps ops;
     SIMPL_RANDOMNG_NEW()
@@ -387,9 +376,8 @@ public:
     float dist, fraction;
     for(size_t i = 0; i < numEntries; i++)
     {
-      OrientArrayTypeD eu(e1s[i], e2s[i], e3s[i]);
-      OrientArrayTypeD rod(4);
-      OrientTransformsTypeD::eu2ro(eu, rod);
+      OrientationD eu(e1s[i], e2s[i], e3s[i]);
+      OrientationD rod = OrientationTransformation::eu2ro<OrientationD, OrientationD>(eu);
 
       rod = ops.getODFFZRod(rod);
       bin = ops.getOdfBin(rod);
@@ -507,10 +495,6 @@ public:
   template <typename T, class LaueOps>
   static void CalculateMDFData(T* angles, T* axes, T* weights, T* odf, T* mdf, size_t numEntries)
   {
-    // using OrientArrayType = OrientationArray<T>;
-    using OrientArrayTypeD = OrientationArray<double>;
-    // using OrientTransformsType = OrientationTransforms<OrientArrayType, T>;
-    using OrientTransformsTypeD = OrientationTransforms<OrientArrayTypeD, double>;
 
     LaueOps orientationOps;
     const int odfsize = orientationOps.getODFSize();
@@ -535,9 +519,8 @@ public:
     int aSize = static_cast<int>(numEntries);
     for(int i = 0; i < aSize; i++)
     {
-      OrientArrayTypeD ax(axes[3 * i], axes[3 * i + 1], axes[3 * i + 2], angles[i]);
-      OrientArrayTypeD rod(4);
-      OrientTransformsTypeD::ax2ro(ax, rod);
+      OrientationD ax(axes[3 * i], axes[3 * i + 1], axes[3 * i + 2], angles[i]);
+      OrientationD rod = OrientationTransformation::ax2ro<OrientationD, OrientationD>(ax);
 
       rod = orientationOps.getMDFFZRod(rod);
       mbin = orientationOps.getMisoBin(rod);
@@ -570,21 +553,17 @@ public:
         }
       }
 
-      OrientArrayTypeD eu = orientationOps.determineEulerAngles(m_Seed, choose1);
-      OrientArrayTypeD qu(4);
-      OrientTransformsTypeD::eu2qu(eu, qu);
-      typename QuaternionMath<double>::Quaternion q1 = qu.toQuaternion<double>();
+      OrientationD eu = orientationOps.determineEulerAngles(m_Seed, choose1);
+      QuatType q1 = OrientationTransformation::eu2qu<OrientationD, QuatType>(eu);
 
       m_Seed++;
       eu = orientationOps.determineEulerAngles(m_Seed, choose2);
-      OrientTransformsType::eu2qu(eu, qu);
-      typename QuaternionMath<double>::Quaternion q2 = qu.toQuaternion<double>();
+      QuatType q2 = OrientationTransformation::eu2qu<OrientationD, QuatType>(eu);
       double n1 = 0.0, n2 = 0.0, n3 = 0.0;
       double w = orientationOps.getMisoQuat(q1, q2, n1, n2, n3);
 
-      OrientArrayTypeD ax(n1, n2, n3, w);
-      OrientArrayTypeD ro(4);
-      OrientTransformsTypeD::ax2ro(ax, ro);
+      OrientationD ax(n1, n2, n3, w);
+      OrientationD ro = OrientationTransformation::ax2ro<OrientationD, OrientationD>(ax);
 
       ro = orientationOps.getMDFFZRod(ro);
       mbin = orientationOps.getMisoBin(ro);

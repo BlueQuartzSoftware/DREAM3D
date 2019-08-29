@@ -37,7 +37,6 @@
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/Math/QuaternionMath.hpp"
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/LaueOps/LaueOps.h"
@@ -98,31 +97,31 @@ class OrientationLib_EXPORT OrthoRhombicOps : public LaueOps
     double getMisoQuat(QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const override;
     float getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3) const override;
 
-    void getQuatSymOp(int i, QuatType& q) const override;
+    QuatType getQuatSymOp(int i) const override;
     void getRodSymOp(int i, double* r) const override;
 
     void getMatSymOp(int i, double g[3][3]) const override;
     void getMatSymOp(int i, float g[3][3]) const override;
 
-    OrientArrayType getODFFZRod(OrientArrayType rod) const override;
-    OrientArrayType getMDFFZRod(OrientArrayType rod) const override;
+    OrientationType getODFFZRod(const OrientationType& rod) const override;
+    OrientationType getMDFFZRod(const OrientationType& rod) const override;
 
-    void getNearestQuat(QuatType& q1, QuatType& q2) const override;
-    void getNearestQuat(QuatF& q1, QuatF& q2) const override;
+    QuatType getNearestQuat(const QuatType& q1, const QuatType& q2) const override;
+    QuatF getNearestQuat(const QuatF& q1f, const QuatF& q2f) const override;
 
-    void getFZQuat(QuatType& qr) const override;
-    int getMisoBin(OrientArrayType rod) const override;
+    QuatType getFZQuat(const QuatType& qr) const override;
+    int getMisoBin(const OrientationType& rod) const override;
     bool inUnitTriangle(double eta, double chi) const override;
-    OrientArrayType determineEulerAngles(uint64_t seed, int choose) const override;
-    OrientArrayType randomizeEulerAngles(OrientArrayType euler) const override;
-    OrientArrayType determineRodriguesVector(uint64_t seed, int choose) const override;
-    int getOdfBin(OrientArrayType rod) const override;
+    OrientationType determineEulerAngles(uint64_t seed, int choose) const override;
+    OrientationType randomizeEulerAngles(const OrientationType& euler) const override;
+    OrientationType determineRodriguesVector(uint64_t seed, int choose) const override;
+    int getOdfBin(const OrientationType& rod) const override;
     void getSchmidFactorAndSS(double load[3], double& schmidfactor, double angleComps[2], int& slipsys) const override;
     void getSchmidFactorAndSS(double load[3], double plane[3], double direction[3], double& schmidfactor, double angleComps[2], int& slipsys) const override;
-    void getmPrime(QuatType& q1, QuatType& q2, double LD[3], double& mPrime) const override;
-    void getF1(QuatType& q1, QuatType& q2, double LD[3], bool maxSF, double& F1) const override;
-    void getF1spt(QuatType& q1, QuatType& q2, double LD[3], bool maxSF, double& F1spt) const override;
-    void getF7(QuatType& q1, QuatType& q2, double LD[3], bool maxSF, double& F7) const override;
+    double getmPrime(const QuatType& q1, const QuatType& q2, double LD[3]) const override;
+    double getF1(const QuatType& q1, const QuatType& q2, double LD[3], bool maxSF) const override;
+    double getF1spt(const QuatType& q1, const QuatType& q2, double LD[3], bool maxSF) const override;
+    double getF7(const QuatType& q1, const QuatType& q2, double LD[3], bool maxSF) const override;
 
     void generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* c1, FloatArrayType* c2, FloatArrayType* c3) const override;
 

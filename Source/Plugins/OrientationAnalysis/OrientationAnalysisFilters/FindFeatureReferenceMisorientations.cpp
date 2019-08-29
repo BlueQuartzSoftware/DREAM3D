@@ -46,6 +46,10 @@
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "EbsdLib/EbsdConstants.h"
 
@@ -63,8 +67,6 @@ FindFeatureReferenceMisorientations::FindFeatureReferenceMisorientations()
 , m_FeatureReferenceMisorientationsArrayName(SIMPL::CellData::FeatureReferenceMisorientations)
 , m_ReferenceOrientation(0)
 {
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
-
 }
 
 // -----------------------------------------------------------------------------
@@ -285,14 +287,14 @@ void FindFeatureReferenceMisorientations::execute()
     return;
   }
 
+  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
+
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t totalFeatures = m_AvgQuatsPtr.lock()->getNumberOfTuples();
 
-  QuatF q1 = QuaternionMathF::New();
-  QuatF q2 = QuaternionMathF::New();
-  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
-  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+  FloatArrayType::Pointer quatsPtr = m_QuatsPtr.lock();
+  FloatArrayType::Pointer avgQuatsPtr = m_AvgQuatsPtr.lock();
 
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   uint32_t phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
@@ -344,16 +346,17 @@ void FindFeatureReferenceMisorientations::execute()
         point = (plane * xPoints * yPoints) + (row * xPoints) + col;
         if(m_FeatureIds[point] > 0 && m_CellPhases[point] > 0)
         {
-          QuaternionMathF::Copy(quats[point], q1);
+          QuatF q1(quatsPtr->getTuplePointer(point));
+          QuatF q2;
           phase1 = m_CrystalStructures[m_CellPhases[point]];
           if(m_ReferenceOrientation == 0)
           {
-            QuaternionMathF::Copy(avgQuats[m_FeatureIds[point]], q2);
+            q2 = QuatF(avgQuatsPtr->getTuplePointer(m_FeatureIds[point]));
           }
           else if(m_ReferenceOrientation == 1)
           {
             gnum = m_FeatureIds[point];
-            QuaternionMathF::Copy(quats[m_Centers[gnum]], q2);
+            q2 = QuatF(avgQuatsPtr->getTuplePointer(m_Centers[gnum]));
             phase2 = m_CrystalStructures[m_CellPhases[m_Centers[gnum]]];
           }
           m_FeatureReferenceMisorientations[point] = SIMPLib::Constants::k_180OverPi * m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);

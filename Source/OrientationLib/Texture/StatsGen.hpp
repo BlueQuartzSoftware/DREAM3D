@@ -264,7 +264,7 @@ public:
           break;
         }
       }
-      OrientArrayType eu = ops.determineEulerAngles(m_Seed, choose);
+      OrientationD eu = ops.determineEulerAngles(m_Seed, choose);
       eulers[3 * i + 0] = eu[0];
       eulers[3 * i + 1] = eu[1];
       eulers[3 * i + 2] = eu[2];
@@ -311,7 +311,7 @@ public:
           break;
         }
       }
-      OrientArrayType eu = ops.determineEulerAngles(m_Seed, choose);
+      OrientationD eu = ops.determineEulerAngles(m_Seed, choose);
       eulers[3 * i + 0] = eu[0];
       eulers[3 * i + 1] = eu[1];
       eulers[3 * i + 2] = eu[2];
@@ -358,7 +358,7 @@ public:
           break;
         }
       }
-      OrientArrayType eu = ops.determineEulerAngles(m_Seed, choose);
+      OrientationD eu = ops.determineEulerAngles(m_Seed, choose);
       eulers[3 * i + 0] = eu[0];
       eulers[3 * i + 1] = eu[1];
       eulers[3 * i + 2] = eu[2];
@@ -414,7 +414,7 @@ public:
           break;
         }
       }
-      OrientArrayType eu = ops.determineEulerAngles(m_Seed, choose);
+      OrientationD eu = ops.determineEulerAngles(m_Seed, choose);
       eulers[3 * i + 0] = eu[0];
       eulers[3 * i + 1] = eu[1];
       eulers[3 * i + 2] = eu[2];
@@ -470,9 +470,8 @@ public:
           break;
         }
       }
-      OrientArrayType rod = ops.determineRodriguesVector(m_Seed, choose);
-      OrientArrayType ax(4, 0.0);
-      OrientTransformsType::ro2ax(rod, ax);
+      OrientationD rod = ops.determineRodriguesVector(m_Seed, choose);
+      OrientationD ax = OrientationTransformation::ro2ax<OrientationD, OrientationD>(rod);
 
       w = ax[3] * radtodeg;
       yval[int(w / 5.0)]++;
@@ -531,9 +530,8 @@ public:
           break;
         }
       }
-      OrientArrayType rod = ops.determineRodriguesVector(m_Seed, choose);
-      OrientArrayType ax(4, 0.0);
-      OrientTransformsType::ro2ax(rod, ax);
+      OrientationD rod = ops.determineRodriguesVector(m_Seed, choose);
+      OrientationD ax = OrientationTransformation::ro2ax<OrientationD, OrientationD>(rod);
 
       float w = ax[3] * radtodeg;
       size_t index = static_cast<size_t>(w / 5.0f);

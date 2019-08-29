@@ -124,8 +124,7 @@ public:
     converters[5] = HomochoricConverter<float>::New();
     // converters[6] = CubochoricConverter<float>::New();
 
-    typedef OrientationTransforms<FOrientArrayType, float> OrientationTransformType;
-    OrientationTransformType::ResultType result;
+    OrientationTransformation::ResultType result;
     QVector<int> strides = OCType::GetComponentCounts();
 
     for(int t0 = 0; t0 < 1; t0++)

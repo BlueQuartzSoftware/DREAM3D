@@ -50,7 +50,7 @@
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -404,14 +404,15 @@ bool MergeColonies::determineGrouping(int32_t referenceFeature, int32_t neighbor
   double n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   bool colony = false;
 
-  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+  // QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
   if(m_FeatureParentIds[neighborFeature] == -1 && m_FeaturePhases[referenceFeature] > 0 && m_FeaturePhases[neighborFeature] > 0)
   {
     w = std::numeric_limits<double>::max();
-
-    QuatType q1 = QuaternionMathType::FromType<float>(avgQuats[referenceFeature]);
-    QuatType q2 = QuaternionMathType::FromType<float>(avgQuats[neighborFeature]);
+    float* avgQuatPtr = m_AvgQuats + referenceFeature * 4;
+    QuatType q1(avgQuatPtr[0], avgQuatPtr[1], avgQuatPtr[2], avgQuatPtr[3]);
+    avgQuatPtr = m_AvgQuats + neighborFeature * 4;
+    QuatType q2(avgQuatPtr[0], avgQuatPtr[1], avgQuatPtr[2], avgQuatPtr[3]);
 
     uint32_t phase1 = m_CrystalStructures[m_FeaturePhases[referenceFeature]];
     uint32_t phase2 = m_CrystalStructures[m_FeaturePhases[neighborFeature]];
@@ -419,12 +420,10 @@ bool MergeColonies::determineGrouping(int32_t referenceFeature, int32_t neighbor
     {
       w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
 
-      OrientArrayType ax(n1, n2, n3, w);
-      OrientArrayType rod(4);
-      OrientTransformsType::ax2ro(ax, rod);
+      OrientationD ax(n1, n2, n3, w);
+      OrientationD rod = OrientationTransformation::ax2ro<OrientationD, OrientationD>(ax);
       rod = m_OrientationOps[phase1]->getMDFFZRod(rod);
-      OrientTransformsType::ro2ax(rod, ax);
-      ax.toAxisAngle(n1, n2, n3, w);
+      OrientationTransformation::ro2ax<OrientationD, OrientationD>(rod).toAxisAngle(n1, n2, n3, w);
 
       w = w * (180.0f / SIMPLib::Constants::k_Pi);
       float angdiff1 = std::fabs(w - 10.53f);
@@ -503,17 +502,14 @@ bool MergeColonies::check_for_burgers(const QuatType& betaQuat, const QuatType& 
 
   double gBeta[3][3] = {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}};
   double gBetaT[3][3] = {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}};
-  OrientArrayType om(9);
-  OrientTransformsType::qu2om(OrientArrayType(betaQuat), om);
-  om.toGMatrix(gBeta);
+  OrientationTransformation::qu2om<QuatType, OrientationD>(betaQuat).toGMatrix(gBeta);
   // transpose gBeta so the sample direction is the output when
   // gBeta is multiplied by the crystal directions below
   MatrixMath::Transpose3x3(gBeta, gBetaT);
 
   double gAlpha[3][3] = {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}};
   double gAlphaT[3][3] = {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}};
-  OrientTransformsType::qu2om(OrientArrayType(alphaQuat), om);
-  om.toGMatrix(gAlpha);
+  OrientationTransformation::qu2om<QuatType, OrientationD>(alphaQuat).toGMatrix(gAlpha);
   // transpose gBeta so the sample direction is the output when
   // gBeta is multiplied by the crystal directions below
   MatrixMath::Transpose3x3(gAlpha, gAlphaT);

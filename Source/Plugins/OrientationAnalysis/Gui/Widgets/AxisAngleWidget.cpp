@@ -35,13 +35,15 @@
 
 #include "AxisAngleWidget.h"
 
+#include <Eigen/Core>
+#include <Eigen/Dense>
+#include <Eigen/Eigen>
+
 #include <QtGui/QDoubleValidator>
 
 #include "SIMPLib/Math/SIMPLibMath.h"
 
-#include <Eigen/Core>
-#include <Eigen/Dense>
-#include <Eigen/Eigen>
+#include "OrientationLib/Core/OrientationTransformation.hpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -146,7 +148,7 @@ void AxisAngleWidget::valuesUpdated(const QString& text)
 
   emit invalidValues(errorCode, QString::fromStdString(ss.str()));
 
-  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::ax_check(values);
+  OrientationTransformation::ResultType result = OrientationTransformation::ax_check(values);
   errorCode = result.result;
   QString errorMsg = QString::fromStdString(result.msg);
 

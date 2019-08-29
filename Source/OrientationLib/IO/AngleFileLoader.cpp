@@ -43,24 +43,18 @@
 #include <QtCore/QFile>
 #include <QtCore/QByteArray>
 
-#include "SIMPLib/Math/QuaternionMath.hpp"
+#include "SIMPLib/Common/Constants.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
-
-
-
-
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 AngleFileLoader::AngleFileLoader():
-
   m_ErrorMessage(""),
-  m_ErrorCode(0),
   m_InputFile(""),
-  m_FileAnglesInDegrees(false),
-  m_OutputAnglesInDegrees(false),
   m_AngleRepresentation(AngleFileLoader::EulerAngles),
   m_IgnoreMultipleDelimiters(true)
 {
@@ -174,9 +168,9 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
     {
       setDelimiter(" ");
     }
-    tokens = buf.split( *(getDelimiter().toLatin1().data()));
+    tokens = buf.split(*(getDelimiter().toLatin1().data()));
 
-    FOrientArrayType euler(3);
+    OrientationF euler(3);
     if (m_AngleRepresentation == EulerAngles)
     {
       euler[0] = tokens[0].trimmed().toFloat(&ok);
@@ -187,22 +181,22 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
     }
     else if (m_AngleRepresentation == QuaternionAngles)
     {
-      FOrientArrayType quat(4);
+      QuatF quat(4);
       quat[0] = tokens[0].trimmed().toFloat(&ok);
       quat[1] = tokens[1].trimmed().toFloat(&ok);
       quat[2] = tokens[2].trimmed().toFloat(&ok);
       quat[3] = tokens[3].trimmed().toFloat(&ok);
-      FOrientTransformsType::qu2eu(quat, euler);
+      euler = OrientationTransformation::qu2eu<QuatF, OrientationF>(quat);
       weight = tokens[4].trimmed().toFloat(&ok);
       sigma = tokens[5].trimmed().toFloat(&ok);
     }
     else if (m_AngleRepresentation == RodriguezAngles)
     {
-      FOrientArrayType rod(4, 0.0);
+      Orientation<float> rod(4, 0.0);
       rod[0] = tokens[0].trimmed().toFloat(&ok);
       rod[1] = tokens[1].trimmed().toFloat(&ok);
       rod[2] = tokens[2].trimmed().toFloat(&ok);
-      FOrientTransformsType::ro2eu(rod, euler);
+      euler = OrientationTransformation::ro2eu<OrientationF, OrientationF>(rod);
       weight = tokens[3].trimmed().toFloat(&ok);
       sigma = tokens[4].trimmed().toFloat(&ok);
     }

@@ -50,8 +50,12 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/GeometryMath.h"
+#include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
@@ -281,9 +285,7 @@ void RotateSampleRefFrame::preflight()
   float zMin = std::numeric_limits<float>::max();
   float zMax = std::numeric_limits<float>::min();
 
-  FOrientArrayType om(9);
-  FOrientTransformsType::ax2om(FOrientArrayType(m_RotationAxis[0], m_RotationAxis[1], m_RotationAxis[2], rotAngle), om);
-  om.toGMatrix(rotMat);
+  OrientationTransformation::ax2om<OrientationF, OrientationF>(OrientationF(m_RotationAxis[0], m_RotationAxis[1], m_RotationAxis[2], rotAngle)).toGMatrix(rotMat);
   for(int32_t i = 0; i < 8; i++)
   {
     if(i == 0)
@@ -457,9 +459,7 @@ void RotateSampleRefFrame::execute()
   float zMin = std::numeric_limits<float>::max();
   float zMax = std::numeric_limits<float>::min();
 
-  FOrientArrayType om(9);
-  FOrientTransformsType::ax2om(FOrientArrayType(m_RotationAxis[0], m_RotationAxis[1], m_RotationAxis[2], rotAngle), om);
-  om.toGMatrix(rotMat);
+  OrientationTransformation::ax2om<OrientationF, OrientationF>(OrientationF(m_RotationAxis[0], m_RotationAxis[1], m_RotationAxis[2], rotAngle)).toGMatrix(rotMat);
   for(int32_t i = 0; i < 8; i++)
   {
     if(i == 0)

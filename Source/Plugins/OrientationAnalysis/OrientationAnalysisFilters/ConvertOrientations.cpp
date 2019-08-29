@@ -45,7 +45,7 @@
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 #include "OrientationLib/OrientationMath/OrientationConverter.hpp"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -230,8 +230,8 @@ void ConvertOrientations::preflight()
 template <typename T>
 void generateRepresentation(ConvertOrientations* filter, typename DataArray<T>::Pointer inputOrientations, typename DataArray<T>::Pointer outputOrientations)
 {
-  typedef typename DataArray<T>::Pointer ArrayType;
-  typedef OrientationConverter<T> OCType;
+  using ArrayType = typename DataArray<T>::Pointer;
+  using OCType = OrientationConverter<T>;
   QVector<typename OCType::Pointer> converters(7);
 
   converters[0] = EulerConverter<T>::New();

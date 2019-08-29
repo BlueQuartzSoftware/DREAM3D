@@ -60,7 +60,7 @@
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -217,11 +217,8 @@ public:
         g2ea[whichEa] = m_Eulers[3 * feature2 + whichEa];
       }
 
-      FOrientArrayType om(9, 0.0f);
-      FOrientTransformsType::eu2om(FOrientArrayType(g1ea, 3), om);
-      om.toGMatrix(g1);
-      FOrientTransformsType::eu2om(FOrientArrayType(g2ea, 3), om);
-      om.toGMatrix(g2);
+      OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(g1ea, 3)).toGMatrix(g1);
+      OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(g2ea, 3)).toGMatrix(g2);
 
       MatrixMath::Multiply3x3with3x1(g1, normal_lab, normal_grain1);
       MatrixMath::Multiply3x3with3x1(g2, normal_lab, normal_grain2);

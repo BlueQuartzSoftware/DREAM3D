@@ -35,13 +35,15 @@
 
 #pragma once
 
-#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
 
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
 #include "SIMPLib/SIMPLib.h"
+
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
+
 /**
  * @brief The InsertAtoms class. See [Filter documentation](@ref insertatoms) for details.
  */

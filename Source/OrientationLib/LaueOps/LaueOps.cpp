@@ -43,7 +43,7 @@
 #include "SIMPLib/Math/SIMPLibRandom.h"
 #include "SIMPLib/Utilities/ColorTable.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+
 
 #include "OrientationLib/LaueOps/CubicLowOps.h"
 #include "OrientationLib/LaueOps/CubicOps.h"
@@ -86,45 +86,43 @@ LaueOps::LaueOps() = default;
 // -----------------------------------------------------------------------------
 LaueOps::~LaueOps() = default;
 
-void LaueOps::getFZQuat(QuatType& qr) const
+// -----------------------------------------------------------------------------
+QuatType LaueOps::getFZQuat(const QuatType& qr) const
 {
   Q_ASSERT(false);
+  return QuatType();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double LaueOps::_calcMisoQuat(const QuatType quatsym[24], int numsym, QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const
+double LaueOps::_calcMisoQuat(const QuatType quatsym[24], int numsym, const QuatType& q1, const QuatType& q2, double& n1, double& n2, double& n3) const
 {
   double wmin = 9999999.0f; //,na,nb,nc;
-  double w = 0;
+  double w = 0.0;
   double n1min = 0.0f;
   double n2min = 0.0f;
   double n3min = 0.0f;
-  QuatType qr;
+
   QuatType qc;
-  QuatType q2inv;
 
-  QuaternionMathType::Copy(q2, q2inv);
-
-  QuaternionMathType::Conjugate(q2inv);
-  QuaternionMathType::Multiply(q1, q2inv, qr);
+  QuatType q2inv = q2.conjugate();
+  QuatType qr = q1 * q2inv;
   for(int i = 0; i < numsym; i++)
   {
 
-    QuaternionMathType::Multiply(quatsym[i], qr, qc);
-    if(qc.w < -1)
+    qc = quatsym[i] * qr;
+
+    if(qc.w() < -1)
     {
-      qc.w = -1;
+      qc.w() = -1;
     }
-    else if(qc.w > 1)
+    else if(qc.w() > 1)
     {
-      qc.w = 1;
+      qc.w() = 1;
     }
 
-    OrientArrayType ax(4, 0.0f);
-    OrientTransformsType::qu2ax(OrientArrayType(qc.x, qc.y, qc.z, qc.w), ax);
-    ax.toAxisAngle(n1, n2, n3, w);
+    OrientationTransformation::qu2ax<QuatType, OrientationType>(qc).toAxisAngle(n1, n2, n3, w);
 
     if(w > SIMPLib::Constants::k_Pi)
     {
@@ -156,13 +154,14 @@ double LaueOps::_calcMisoQuat(const QuatType quatsym[24], int numsym, QuatType& 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-OrientArrayType LaueOps::_calcRodNearestOrigin(const double rodsym[24][3], int numsym, OrientArrayType rod) const
+OrientationType LaueOps::_calcRodNearestOrigin(const double rodsym[24][3], int numsym, const OrientationType& inRod) const
 {
   double denom = 0.0f, dist = 0.0f;
   double smallestdist = 100000000.0f;
   double rc1 = 0.0f, rc2 = 0.0f, rc3 = 0.0f;
-  OrientArrayType outRod(4, 0.0f);
+  OrientationType outRod(4, 0.0f);
   // Turn into an actual 3 Comp Rodrigues Vector
+  OrientationType rod = inRod;
   rod[0] *= rod[3];
   rod[1] *= rod[3];
   rod[2] *= rod[3];
@@ -199,66 +198,62 @@ OrientArrayType LaueOps::_calcRodNearestOrigin(const double rodsym[24][3], int n
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LaueOps::_calcNearestQuat(const QuatType quatsym[24], int numsym, QuatType& q1, QuatType& q2) const
+QuatType LaueOps::_calcNearestQuat(const QuatType quatsym[24], int numsym, const QuatType& q1, const QuatType& q2) const
 {
-  double dist = 0;
+  QuatType out;
+  double dist = 0.0;
   double smallestdist = 1000000.0f;
-  QuatType qc = QuaternionMath<double>::New();
-  QuatType qmax = QuaternionMath<double>::New();
-
-  QuaternionMathType::Copy(q2, qc);
+  QuatType qmax;
 
   for(int i = 0; i < numsym; i++)
   {
-    QuaternionMathType::Multiply(quatsym[i], q2, qc);
-    if(qc.w < 0)
+    QuatType qc = quatsym[i] * q2;
+    if(qc.w() < 0)
     {
-      qc.x = -qc.x;
-      qc.y = -qc.y;
-      qc.z = -qc.z;
-      qc.w = -qc.w;
+      qc.negate();
     }
-    dist = static_cast<double>(1 - (qc.w * q1.w + qc.x * q1.x + qc.y * q1.y + qc.z * q1.z));
+    dist = static_cast<double>(1 - (qc.w() * q1.w() + qc.x() * q1.x() + qc.y() * q1.y() + qc.z() * q1.z()));
     if(dist < smallestdist)
     {
       smallestdist = dist;
-      QuaternionMathType::Copy(qc, qmax);
+      qmax = qc;
     }
   }
-  QuaternionMathType::Copy(qmax, q2);
-  if(q2.w < 0)
+  out = qmax;
+  if(out.w() < 0)
   {
-    QuaternionMathType::Negate(q2);
+    out.negate();
   }
+  return out;
 }
 
-void LaueOps::_calcQuatNearestOrigin(const QuatType quatsym[24], int numsym, QuatType& qr) const
+QuatType LaueOps::_calcQuatNearestOrigin(const QuatType quatsym[24], int numsym, const QuatType& qr) const
 {
-  double dist = 0;
+  double dist = 0.0;
   double smallestdist = 1000000.0f;
-  QuatType qc = QuaternionMath<double>::New();
-  QuatType qmax = QuaternionMath<double>::New();
-
-  QuaternionMathType::Copy(qr, qc);
+  QuatType qmax;
 
   for(int i = 0; i < numsym; i++)
   {
-    QuaternionMathType::Multiply(quatsym[i], qr, qc);
-    dist = 1 - (qc.w * qc.w);
+    QuatType qc = quatsym[i] * qr;
+
+    dist = 1 - (qc.w() * qc.w());
     if(dist < smallestdist)
     {
       smallestdist = dist;
-      QuaternionMathType::Copy(qc, qmax);
+      qmax = qc;
     }
   }
-  QuaternionMathType::Copy(qmax, qr);
-  if(qr.w < 0)
+  QuatType out = qmax;
+
+  if(out.w() < 0)
   {
-    QuaternionMathType::Negate(qr);
+    out.negate();
   }
+  return out;
 }
 
-int LaueOps::_calcMisoBin(double dim[3], double bins[3], double step[3], const OrientArrayType& ho) const
+int LaueOps::_calcMisoBin(double dim[3], double bins[3], double step[3], const OrientationType& ho) const
 {
   int miso1bin = int((ho[0] + dim[0]) / step[0]);
   int miso2bin = int((ho[1] + dim[1]) / step[1]);
@@ -306,7 +301,7 @@ void LaueOps::_calcDetermineHomochoricValues(uint64_t seed, double init[3], doub
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LaueOps::_calcODFBin(double dim[3], double bins[3], double step[3], OrientArrayType ho) const
+int LaueOps::_calcODFBin(double dim[3], double bins[3], double step[3], const OrientationType& ho) const
 {
   int g1euler1bin;
   int g1euler2bin;

@@ -39,7 +39,6 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 
@@ -163,7 +162,7 @@ protected:
   /**
    * @brief find_shifts Reimplemented from @see AlignSections class
    */
-  virtual void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts);
+  void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts) override;
 
 private:
   DEFINE_DATAARRAY_VARIABLE(float, Quats)
@@ -171,7 +170,6 @@ private:
   DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
   DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
 
   uint64_t m_RandomSeed;
 

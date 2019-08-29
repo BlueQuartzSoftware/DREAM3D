@@ -88,13 +88,13 @@ public:
 
       if(phase < m_NumPhases && calcIPF && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd)
       {
-        QuatType q = QuaternionMathType::New(m_Quats[index], m_Quats[index + 1], m_Quats[index + 2], m_Quats[index + 3]);
+        QuatType q = QuatType(m_Quats[index], m_Quats[index + 1], m_Quats[index + 2], m_Quats[index + 3]);
         int32_t xtal = static_cast<int32_t>(m_CrystalStructures[phase]);
         ops[xtal]->getFZQuat(q);
-        m_FZQuats[index] = q.x;
-        m_FZQuats[index + 1] = q.y;
-        m_FZQuats[index + 2] = q.z;
-        m_FZQuats[index + 3] = q.w;
+        m_FZQuats[index] = q.x();
+        m_FZQuats[index + 1] = q.y();
+        m_FZQuats[index + 2] = q.z();
+        m_FZQuats[index + 3] = q.w();
       }
     }
   }

@@ -47,6 +47,11 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
 
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
+#include "OrientationLib/LaueOps/LaueOps.h"
+
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
 
@@ -75,7 +80,6 @@ MergeTwins::MergeTwins()
 , m_FeatureParentIdsArrayName(SIMPL::FeatureData::ParentIds)
 , m_ActiveArrayName(SIMPL::FeatureData::Active)
 {
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
   initialize();
 }
 
@@ -322,15 +326,15 @@ bool MergeTwins::determineGrouping(int32_t referenceFeature, int32_t neighborFea
   float w = 0.0f;
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   bool twin = false;
-  QuatF q1 = QuaternionMathF::New();
-  QuatF q2 = QuaternionMathF::New();
-  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   if(m_FeatureParentIds[neighborFeature] == -1 && m_FeaturePhases[referenceFeature] > 0 && m_FeaturePhases[neighborFeature] > 0)
   {
-    QuaternionMathF::Copy(avgQuats[referenceFeature], q1);
+    QuatF q1(m_AvgQuats + referenceFeature * 4);
+
     uint32_t phase1 = m_CrystalStructures[m_FeaturePhases[referenceFeature]];
-    QuaternionMathF::Copy(avgQuats[neighborFeature], q2);
+
+    QuatF q2(m_AvgQuats + neighborFeature * 4);
     uint32_t phase2 = m_CrystalStructures[m_FeaturePhases[neighborFeature]];
     if(phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Cubic_High))
     {
