@@ -36,6 +36,8 @@
 #include "FindTwinBoundaries.h"
 
 #include <array>
+#include <cmath>
+
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -178,7 +180,7 @@ public:
               OrientationTransformation::qu2ax<QuatType, OrientationD>(s2_misq).toAxisAngle(n1, n2, n3, w);
 
               w = w * 180.0f / SIMPLib::Constants::k_Pi;
-              axisdiff111 = acosf(std::fabs(n1) * 0.57735f + std::fabs(n2) * 0.57735f + std::fabs(n3) * 0.57735f);
+              axisdiff111 = acos(std::fabs(n1) * 0.57735f + std::fabs(n2) * 0.57735f + std::fabs(n3) * 0.57735f);
               angdiff60 = std::fabs(w - 60.0f);
               if(axisdiff111 < m_AxisTol && angdiff60 < m_AngTol)
               {
@@ -188,7 +190,7 @@ public:
                 m_TwinBoundary[i] = true;
                 if(m_FindCoherence)
                 {
-                  incoherence = 180.0 * std::acosf(GeometryMath::CosThetaBetweenVectors(n, s_xstl_norm.data())) / SIMPLib::Constants::k_Pi;
+                  incoherence = 180.0 * std::acos(GeometryMath::CosThetaBetweenVectors(n, s_xstl_norm.data())) / SIMPLib::Constants::k_Pi;
                   if(incoherence > 90.0)
                   {
                     incoherence = 180.0 - incoherence;
