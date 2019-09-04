@@ -158,12 +158,12 @@ public:
     p.z() = 3.0f;
     p.w() = 1.0f;
 
-    p.conjugate();
+    p = p.conjugate();
     DREAM3D_REQUIRE_EQUAL(p.x(), -1.0)
     DREAM3D_REQUIRE_EQUAL(p.y(), -2.0)
     DREAM3D_REQUIRE_EQUAL(p.z(), -3.0)
     DREAM3D_REQUIRE_EQUAL(p.w(), 1.0)
-    p.conjugate();
+    p = p.conjugate();
     DREAM3D_REQUIRE_EQUAL(p.x(), 1.0)
     DREAM3D_REQUIRE_EQUAL(p.y(), 2.0)
     DREAM3D_REQUIRE_EQUAL(p.z(), 3.0)
@@ -285,7 +285,7 @@ public:
     q.w() = 0.5f;
 
     // Passive Rotation
-    ovec = p.multiplyByVector(vec.data());
+    ovec = q.multiplyByVector(vec.data());
 
     pass = SIMPLibMath::closeEnough(ovec[0], 0.0f, 1.0E-4f);
     DREAM3D_REQUIRE_EQUAL(pass, true);

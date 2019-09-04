@@ -279,8 +279,6 @@ void FindBoundaryStrengths::execute()
   double mPrime_1 = 0.0f, mPrime_2 = 0.0f, F1_1 = 0.0f, F1_2 = 0.0f, F1spt_1 = 0.0f, F1spt_2 = 0.0f, F7_1 = 0.0f, F7_2 = 0.0f;
   int32_t gname1 = 0, gname2 = 0;
 
-  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
-
   double LD[3] = {0.0f, 0.0f, 0.0f};
 
   LD[0] = m_Loading[0];

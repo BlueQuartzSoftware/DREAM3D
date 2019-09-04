@@ -345,10 +345,8 @@ ResultType ro_check(const InputType& ro)
     res.result = -1;
     return res;
   }
-  using OMHelperType = ArrayHelpers<InputType, typename InputType::value_type>;
-  InputType out = OMHelperType::multiply(ro, ro, 3);
-  typename InputType::value_type ttl = OMHelperType::sum(out);
-  ttl = std::sqrt(ttl);
+  typename InputType::value_type ttl = std::sqrt(ro[0] * ro[0] + ro[1] * ro[1] + ro[2] * ro[2]);
+
   if(std::fabs(ttl - 1.0) > eps)
   {
     res.msg = "rotations:ro_check:: Rodrigues-Frank axis vector not normalized";
@@ -369,16 +367,14 @@ ResultType ro_check(const InputType& ro)
  * @date 9/30/14   MDG 1.0 original
  */
 template <typename InputType>
-ResultType ho_check(const InputType& ro)
+ResultType ho_check(const InputType& ho)
 {
   using value_type = typename InputType::value_type;
   ResultType res;
   res.result = 1;
 
-  InputType out(ro.size());
-  std::transform(ro.begin(), ro.end(), ro.begin(), out.begin(), std::multiplies<value_type>());
-  typename InputType::value_type ttl = std::accumulate(out.begin(), out.end(), 0, std::plus<value_type>());
-  typename InputType::value_type r = std::sqrt(ttl);
+  value_type r = std::sqrt(ho[0] * ho[0] + ho[1] * ho[1] + ho[2] * ho[2]);
+
   if(r > static_cast<float>(LPs::R1))
   {
     res.msg = "rotations:ho_check: homochoric vector outside homochoric ball";
@@ -490,11 +486,10 @@ ResultType ax_check(const InputType& ax)
     return res;
   }
   typename InputType::value_type eps = std::numeric_limits<value_type>::epsilon();
-  InputType out(ax.size());
-  std::transform(ax.begin(), ax.end(), ax.begin(), out.begin(), std::multiplies<value_type>());
-  typename InputType::value_type ttl = std::accumulate(out.begin(), out.end(), 0, std::plus<value_type>());
-  typename InputType::value_type r = std::sqrt(ttl);
+
+  typename InputType::value_type r = std::sqrt(ax[0] * ax[0] + ax[1] * ax[1] + ax[2] * ax[2]);
   typename InputType::value_type absv = fabs(r - 1.0);
+
   if(absv > eps)
   {
     res.msg = "rotations:ax_check: axis-angle axis vector must have unit norm";

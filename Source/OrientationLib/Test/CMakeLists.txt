@@ -70,12 +70,9 @@ set(TEST_NAMES
   OrientationTest
   TextureTest
   ODFTest
-
   OrientationConverterTest
   IPFLegendTest
   SO3SamplerTest
-  OrientationTransformsTest
-
 )
 
 # We have some extra header files that need to be listed so that they show up in IDEs
