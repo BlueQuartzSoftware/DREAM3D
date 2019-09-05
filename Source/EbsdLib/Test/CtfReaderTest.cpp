@@ -38,6 +38,8 @@
 
 #include <cstring>
 
+#include <QtCore/QFile>
+
 #include "EbsdLib/HKL/CtfReader.h"
 
 #include "UnitTestSupport.hpp"
@@ -208,7 +210,7 @@ public:
     int err = reader.readFile();
     DREAM3D_REQUIRED(err, ==, 0)
 
-    QString header = reader.getOriginalHeader();
+    // QString header = reader.getOriginalHeader();
 
     float* phi2Ptr = reinterpret_cast<float*>(reader.getPointerByName("Euler3"));
     if(nullptr != phi2Ptr)
@@ -216,12 +218,18 @@ public:
       int total = reader.getXCells() * reader.getYCells() * reader.getZCells();
       for(int i = 0; i < total; i++)
       {
-        phi2Ptr[i] = phi2Ptr[i] + 30.0f;
+        phi2Ptr[i] = phi2Ptr[i] + 30.0F;
       }
     }
 
     QString filePath = QString("%1/%2").arg(UnitTest::TestTempDir).arg("CTF_WriteFile_test.ctf");
-    reader.writeFile(filePath);
+    err = reader.writeFile(filePath);
+    DREAM3D_REQUIRE(err == 0);
+    if(REMOVE_TEST_FILES == 1)
+    {
+      bool removed = QFile::remove(filePath);
+      DREAM3D_REQUIRE(removed == true);
+    }
   }
 
   // -----------------------------------------------------------------------------

@@ -52,12 +52,13 @@
 class OrientationConverterTest
 {
 public:
-  OrientationConverterTest()
-  {
-  }
-  virtual ~OrientationConverterTest()
-  {
-  }
+  OrientationConverterTest() = default;
+  ~OrientationConverterTest() = default;
+
+  OrientationConverterTest(const OrientationConverterTest&) = delete;            // Copy Constructor Not Implemented
+  OrientationConverterTest(OrientationConverterTest&&) = delete;                 // Move Constructor Not Implemented
+  OrientationConverterTest& operator=(const OrientationConverterTest&) = delete; // Copy Assignment Not Implemented
+  OrientationConverterTest& operator=(OrientationConverterTest&&) = delete;      // Move Assignment Not Implemented
 
   // -----------------------------------------------------------------------------
   //
@@ -191,8 +192,4 @@ public:
     DREAM3D_REGISTER_TEST(TestEulerConversion());
     DREAM3D_REGISTER_TEST(TestFilterDesign());
   }
-
-private:
-  OrientationConverterTest(const OrientationConverterTest&); // Copy Constructor Not Implemented
-  void operator=(const OrientationConverterTest&);           // Move assignment Not Implemented
 };

@@ -36,6 +36,7 @@
 #include <iostream>
 #include <limits>
 
+#include <QtCore/QFile>
 #include <QtCore/QString>
 #include <QtCore/QVector>
 
@@ -77,6 +78,8 @@ DREAM.3D Testing
 
 class OrientationTransformationTest
 {
+  bool m_WriteDataFiles = false;
+
 public:
   OrientationTransformationTest() = default;
   ~OrientationTransformationTest() = default;
@@ -88,6 +91,11 @@ public:
 
   QVector<QString> DataSetNames;
   QVector<int> DataSetTypes;
+
+  QString testTempDir()
+  {
+    return UnitTest::TestTempDir;
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -467,18 +475,10 @@ public:
         int err = diffMapFilt->getErrorCode();
         DREAM3D_REQUIRED(err, >=, 0)
 
-        DataContainerWriter::Pointer writer = DataContainerWriter::New();
-        writer->setDataContainerArray(dca);
-        writer->setOutputFile("/tmp/test.dream3d");
-        writer->setWriteXdmfFile(false);
-        writer->execute();
-        err = writer->getErrorCode();
-        DREAM3D_REQUIRED(err, >=, 0)
-
         DataArrayPath daPath(DCName, AMName, diffMapArrayName);
         std::vector<size_t> cDims(1, k_CompDims[cDim]);
         typename DataArray<K>::Pointer diff = dca->getPrereqArrayFromPath<DataArray<K>, AbstractFilter>(diffMapFilt.get(), daPath, cDims);
-#if 1
+
         size_t tuples = diff->getNumberOfTuples();
         // printf("Total Tuples: %lu\n", tuples);
         size_t numErrors = 0;
@@ -520,36 +520,11 @@ public:
                 OrientationPrinters::PrintTuple<K>(data, t);
                 CheckRepresentation<K>(data->getPointer(t), DataSetTypes[q]);
               }
-
-#if 0
-                cDims[0] = k_CompDims[entry[0]];
-                dap = DataArrayPath (DCName, AMName, inputName);
-                diff = dca->getPrereqArrayFromPath<DataArray<K>, AbstractFilter>(diffMapFilt.get(), dap, cDims);
-                OrientationPrinters::PrintTuple<K>(diff, t);
-
-                QString name;
-                QTextStream ss(&name);
-                ss << "0_" << k_InputNames[entry[0]] << "2" << k_InputNames[entry[1]];
-                cDims[0] = k_CompDims[entry[1]];
-                dap = DataArrayPath (DCName, AMName, name);
-                diff = dca->getPrereqArrayFromPath<DataArray<K>, AbstractFilter>(diffMapFilt.get(), dap, cDims);
-                OrientationPrinters::PrintTuple<K>(diff, t);
-
-                cDims[0] = k_CompDims[entry[0]];
-                dap = DataArrayPath (DCName, AMName, outputName);
-                diff = dca->getPrereqArrayFromPath<DataArray<K>, AbstractFilter>(diffMapFilt.get(), dap, cDims);
-                OrientationPrinters::PrintTuple<K>(diff, t);
-
-                std::cout << "------------------------------------------" << std::endl;
-
-#endif
               DREAM3D_REQUIRED(delta, <=, thr)
               break;
             }
           }
         }
-//   printf("numErrors: %llu\n", numErrors)
-#endif
       }
 
       if(euCheck)
@@ -560,13 +535,12 @@ public:
 
       typename DataArray<K>::Pointer junk = DataArray<K>::CreateArray(1, "Junk", true);
       QString typeName = junk->getTypeAsString();
-#if REMOVE_TEST_FILES
+      if(m_WriteDataFiles)
       {
+        DataContainerWriter::Pointer writer = DataContainerWriter::New();
 
-        AbstractFilter::Pointer writer = InstantiateFilter("DataContainerWriter");
-        DREAM3D_REQUIRE_VALID_POINTER(writer.get())
         writer->setDataContainerArray(dca);
-
+        writer->setWriteXdmfFile(false);
         QString outputFile;
         QTextStream out(&outputFile);
 
@@ -581,17 +555,12 @@ public:
           }
         }
         out << typeName << ".dream3d";
-        var.setValue(outputFile);
-        propWasSet = writer->setProperty("OutputFile", var);
-        if(!propWasSet)
-        {
-          qDebug() << "Unable to set property OutputFile";
-        }
+        writer->setOutputFile(outputFile);
+
         writer->execute();
         int err = writer->getErrorCode();
         DREAM3D_REQUIRED(err, >=, 0)
       }
-#endif
 
       {
         ss.str("");
