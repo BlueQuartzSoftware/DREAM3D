@@ -51,7 +51,7 @@
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdHeaderEntry.h"
 
-
+#if 0
 /**
  * @class CtfHeaderEntry CtfHeaderEntry.h EbsdLib/HKL/CtfHeaderEntry.h
  * @brief Header entry that holds an integer or decimal type value
@@ -101,7 +101,7 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
         }
       }
       QTextStream ss(&bytes);
-      ss >> m_value;
+      ss >> m_Value;
     }
 
     /**
@@ -110,24 +110,30 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
      */
     void print(std::ostream& out) override
     {
-      out << m_key.toStdString() << "  " << m_value << std::endl;
+      out << m_key.toStdString() << "  " << m_Value << std::endl;
     }
 
     /**
      * @brief getValue
      * @return
      */
-    T getValue() { return m_value; }
+    T getValue()
+    {
+      return m_Value;
+    }
 
     /**
      * @brief setValue
      * @param value
      */
-    void setValue(T value) { m_value = value;}
+    void setValue(T value)
+    {
+      m_Value = value;
+    }
 
   protected:
     CtfHeaderEntry(QString key)
-    : m_value(0)
+    : m_Value(0)
     , m_key(std::move(key))
     {
     }
@@ -135,7 +141,7 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
     CtfHeaderEntry() = default;
 
   private:
-    T m_value;
+    T m_Value;
     QString m_key;
 
   public:
@@ -144,6 +150,7 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
     CtfHeaderEntry& operator=(const CtfHeaderEntry&) = delete; // Copy Assignment Not Implemented
     CtfHeaderEntry& operator=(CtfHeaderEntry&&) = delete;      // Move Assignment Not Implemented
 };
+#endif
 
 /**
  * @class CtfStringHeaderEntry CtfHeaderEntry.h EbsdLib/HKL/CtfHeaderEntry.h
@@ -158,7 +165,7 @@ class CtfStringHeaderEntry : public EbsdHeaderEntry
     EBSD_SHARED_POINTERS(CtfStringHeaderEntry)
     HEADERENTRY_NEW_SUPERCLASS(CtfStringHeaderEntry, EbsdHeaderEntry)
 
-    ~CtfStringHeaderEntry() = default;
+    ~CtfStringHeaderEntry() override = default;
 
     QString getKey() override
     {
@@ -171,18 +178,21 @@ class CtfStringHeaderEntry : public EbsdHeaderEntry
 
     void parseValue(QByteArray& value) override
     {
-      m_value = QString(value);
+      m_Value = QString(value);
     }
 
     void print(std::ostream& out) override
     {
-      out << m_key.toStdString() << "  " << m_value.toStdString() << std::endl;
+      out << m_key.toStdString() << "  " << m_Value.toStdString() << std::endl;
     }
 
-    QString getValue() { return m_value; }
+    QString getValue()
+    {
+      return m_Value;
+    }
     void setValue(const QString& value)
     {
-      m_value = value;
+      m_Value = value;
     }
 
   protected:
@@ -194,7 +204,7 @@ class CtfStringHeaderEntry : public EbsdHeaderEntry
     CtfStringHeaderEntry() = default;
 
   private:
-    QString m_value;
+    QString m_Value;
     QString m_key;
 
   public:
@@ -204,7 +214,206 @@ class CtfStringHeaderEntry : public EbsdHeaderEntry
     CtfStringHeaderEntry& operator=(CtfStringHeaderEntry&&) = delete;      // Move Assignment Not Implemented
 };
 
+/**
+ * @class CtfInt32HeaderEntry CtfInt32HeaderEntry.h EbsdLib/HKL/CtfInt32HeaderEntry.h
+ * @brief Header entry that holds an integer or decimal type value
+ *
+ * @date Aug 8, 2011
+ * @version 1.0
+ */
 
+class EbsdLib_EXPORT CtfInt32HeaderEntry : public EbsdHeaderEntry
+{
 
+public:
+  EBSD_SHARED_POINTERS(CtfInt32HeaderEntry)
+  HEADERENTRY_NEW_SUPERCLASS(CtfInt32HeaderEntry, EbsdHeaderEntry)
+  EBSD_TYPE_MACRO_SUPER(CtfInt32HeaderEntry, EbsdHeaderEntry)
 
+  ~CtfInt32HeaderEntry() override = default;
 
+  /**
+   * @brief getKey
+   * @return
+   */
+  QString getKey() override
+  {
+    return m_key;
+  }
+
+#if EbsdLib_HDF5_SUPPORT
+  QString getHDFType() override
+  {
+    int32_t value = static_cast<int32_t>(0);
+    return QH5Lite::HDFTypeForPrimitiveAsStr(value);
+  }
+#endif
+  /**
+   * @brief parseValue
+   * @param value
+   */
+  void parseValue(QByteArray& bytes) override
+  {
+    // Simple Naieve filter to remove European style decimals that use a comma
+    for(char& v : bytes)
+    {
+      if(v == ',')
+      {
+        v = '.';
+      }
+    }
+    bool ok = false;
+    m_Value = QString(bytes).toInt(&ok);
+    if(!ok)
+    {
+      m_Value = -1;
+    }
+  }
+
+  /**
+   * @brief print
+   * @param out
+   */
+  void print(std::ostream& out) override
+  {
+    out << m_key.toStdString() << "  " << m_Value << std::endl;
+  }
+
+  /**
+   * @brief getValue
+   * @return
+   */
+  int32_t getValue()
+  {
+    return m_Value;
+  }
+
+  /**
+   * @brief setValue
+   * @param value
+   */
+  void setValue(int32_t value)
+  {
+    m_Value = value;
+  }
+
+protected:
+  CtfInt32HeaderEntry(const QString& key)
+  : m_key(key)
+  {
+  }
+
+  CtfInt32HeaderEntry() = default;
+
+private:
+  int32_t m_Value = 0;
+  QString m_key;
+
+public:
+  CtfInt32HeaderEntry(const CtfInt32HeaderEntry&) = delete;            // Copy Constructor Not Implemented
+  CtfInt32HeaderEntry(CtfInt32HeaderEntry&&) = delete;                 // Move Constructor Not Implemented
+  CtfInt32HeaderEntry& operator=(const CtfInt32HeaderEntry&) = delete; // Copy Assignment Not Implemented
+  CtfInt32HeaderEntry& operator=(CtfInt32HeaderEntry&&) = delete;      // Move Assignment Not Implemented
+};
+
+/**
+ * @class CtfFloatHeaderEntry CtfFloatHeaderEntry.h EbsdLib/HKL/CtfFloatHeaderEntry.h
+ * @brief Header entry that holds an integer or decimal type value
+ *
+ * @date Aug 8, 2011
+ * @version 1.0
+ */
+
+class EbsdLib_EXPORT CtfFloatHeaderEntry : public EbsdHeaderEntry
+{
+
+public:
+  EBSD_SHARED_POINTERS(CtfFloatHeaderEntry)
+  HEADERENTRY_NEW_SUPERCLASS(CtfFloatHeaderEntry, EbsdHeaderEntry)
+  EBSD_TYPE_MACRO_SUPER(CtfFloatHeaderEntry, EbsdHeaderEntry)
+
+  ~CtfFloatHeaderEntry() override = default;
+
+  /**
+   * @brief getKey
+   * @return
+   */
+  QString getKey() override
+  {
+    return m_key;
+  }
+
+#if EbsdLib_HDF5_SUPPORT
+  QString getHDFType() override
+  {
+    float value = static_cast<float>(0);
+    return QH5Lite::HDFTypeForPrimitiveAsStr(value);
+  }
+#endif
+  /**
+   * @brief parseValue
+   * @param value
+   */
+  void parseValue(QByteArray& bytes) override
+  {
+    // Simple Naieve filter to remove European style decimals that use a comma
+    for(char& v : bytes)
+    {
+      if(v == ',')
+      {
+        v = '.';
+      }
+    }
+    bool ok = false;
+    m_Value = QString(bytes).toFloat(&ok);
+    if(!ok)
+    {
+      m_Value = -1.0f;
+    }
+  }
+
+  /**
+   * @brief print
+   * @param out
+   */
+  void print(std::ostream& out) override
+  {
+    out << m_key.toStdString() << "  " << m_Value << std::endl;
+  }
+
+  /**
+   * @brief getValue
+   * @return
+   */
+  float getValue()
+  {
+    return m_Value;
+  }
+
+  /**
+   * @brief setValue
+   * @param value
+   */
+  void setValue(float value)
+  {
+    m_Value = value;
+  }
+
+protected:
+  CtfFloatHeaderEntry(const QString& key)
+  : m_key(key)
+  {
+  }
+
+  CtfFloatHeaderEntry() = default;
+
+private:
+  float m_Value = 0.0f;
+  QString m_key;
+
+public:
+  CtfFloatHeaderEntry(const CtfFloatHeaderEntry&) = delete;            // Copy Constructor Not Implemented
+  CtfFloatHeaderEntry(CtfFloatHeaderEntry&&) = delete;                 // Move Constructor Not Implemented
+  CtfFloatHeaderEntry& operator=(const CtfFloatHeaderEntry&) = delete; // Copy Assignment Not Implemented
+  CtfFloatHeaderEntry& operator=(CtfFloatHeaderEntry&&) = delete;      // Move Assignment Not Implemented
+};

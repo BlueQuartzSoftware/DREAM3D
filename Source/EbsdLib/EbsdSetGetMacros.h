@@ -369,7 +369,7 @@ public:                                                                         
       return p->getValue();                                                                                                                                                                            \
     }                                                                                                                                                                                                  \
     std::cout << "Getting Property '" << #prpty << "': Value for Key: " << key.toStdString() << " was null." << std::endl;                                                                             \
-    return 0;                                                                                                                                                                                          \
+    return {};                                                                                                                                                                                         \
   }
 
 #define EBSDHEADER_INSTANCE_PROPERTY(HeaderType, m_msgType, prpty, key)\
