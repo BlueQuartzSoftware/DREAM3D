@@ -263,22 +263,22 @@ void GradientVariablesInitialization::initialize(EMMPM_Data::Pointer data)
 
   /* Allocate for edge images */
 
-  data->ns = (real_t*)malloc(nsCols * nsRows * sizeof(real_t));
+  data->ns = new real_t[nsCols * nsRows]();
   if(data->ns == nullptr)
   {
     return;
   }
-  data->ew = (real_t*)malloc(ewCols * ewRows * sizeof(real_t));
+  data->ew = new real_t[ewCols * ewRows]();
   if(data->ew == nullptr)
   {
     return;
   }
-  data->sw = (real_t*)malloc(swCols * swRows * sizeof(real_t));
+  data->sw = new real_t[swCols * swRows]();
   if(data->sw == nullptr)
   {
     return;
   }
-  data->nw = (real_t*)malloc(nwCols * nwRows * sizeof(real_t));
+  data->nw = new real_t[nwCols * nwRows]();
   if(data->nw == nullptr)
   {
     return;
@@ -368,7 +368,7 @@ void CurvatureInitialization::initCurvatureVariables(EMMPM_Data::Pointer data)
   int l, lij;
   unsigned int i, j;
 
-  data->ccost = (real_t*)malloc(data->classes * data->rows * data->columns * sizeof(real_t));
+  data->ccost = new real_t[data->classes * data->rows * data->columns]();
   if(data->ccost == nullptr)
   {
     return;

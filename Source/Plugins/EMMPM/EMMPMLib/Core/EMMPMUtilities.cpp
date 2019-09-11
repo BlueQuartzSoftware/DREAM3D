@@ -100,7 +100,7 @@ void EMMPMUtilities::ConvertXtToOutputImage(EMMPM_Data::Pointer data)
   unsigned char* raster;
   int l, ld;
   size_t gtindex = 0;
-  size_t* classCounts = nullptr;
+  std::vector<size_t> classCounts;
   size_t x = 0;
 
   real_t mu = 0.0;
@@ -115,8 +115,8 @@ void EMMPMUtilities::ConvertXtToOutputImage(EMMPM_Data::Pointer data)
   size_t totalPixels = 0;
 
   // Initialize all the counts to Zero
-  classCounts = (size_t*)malloc(data->classes * sizeof(size_t));
-  memset(classCounts, 0, data->classes * sizeof(size_t));
+  classCounts.resize(data->classes);
+  ::memset(classCounts.data(), 0, data->classes * sizeof(size_t));
 
   if(data->outputImage == nullptr)
   {
@@ -163,7 +163,6 @@ void EMMPMUtilities::ConvertXtToOutputImage(EMMPM_Data::Pointer data)
     }
   }
 
-  free(classCounts);
 }
 
 // -----------------------------------------------------------------------------

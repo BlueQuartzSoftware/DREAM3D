@@ -621,7 +621,7 @@ public:
         //             )
         {
           // RunTestCase<float>(entry, 16);
-          RunTestCase<double>(entry, 16);
+          RunTestCase<double>(entry, 36);
         }
       }
     }

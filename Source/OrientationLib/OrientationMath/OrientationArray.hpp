@@ -35,8 +35,8 @@
 
 #pragma once
 
-#include <assert.h>
-#include <string.h>
+#include <cassert>
+#include <cstring>
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
@@ -185,7 +185,7 @@ class OrientationArray
     {
       if(m_Ptr != nullptr && m_Owns == true)
       {
-        free(m_Ptr);
+        delete[](m_Ptr);
       }
       m_Ptr = nullptr;
     }
@@ -199,7 +199,7 @@ class OrientationArray
     {
       if(m_Ptr != nullptr && m_Owns == true)
       {
-        free(m_Ptr);
+        delete[](m_Ptr);
         m_Ptr = nullptr;
 
         m_Size = rhs.size();
@@ -348,7 +348,7 @@ class OrientationArray
       {
         if(m_Ptr != nullptr && m_Owns == true)
         {
-          free(m_Ptr);
+          delete[](m_Ptr);
         }
         m_Ptr = nullptr;
         m_Owns = false;
@@ -366,10 +366,10 @@ class OrientationArray
       if (!dontUseRealloc)
       {
         // Try to reallocate with minimal memory usage and possibly avoid copying.
-        newArray = (T*)realloc(m_Ptr, newSize * sizeof(T));
-        if (!newArray)
+        newArray = new T[newSize]();
+        if(!newArray)
         {
-          free(m_Ptr);
+          delete[](m_Ptr);
           m_Ptr = nullptr;
           m_Owns = false;
           m_Size = 0;
@@ -378,10 +378,10 @@ class OrientationArray
       }
       else
       {
-        newArray = (T*)malloc(newSize * sizeof(T));
+        newArray = new T[newSize]();
         if (!newArray)
         {
-          free(m_Ptr);
+          delete[](m_Ptr);
           m_Ptr = nullptr;
           m_Owns = false;
           m_Size = 0;
@@ -394,7 +394,7 @@ class OrientationArray
           memcpy(newArray, m_Ptr, (newSize < m_Size ? newSize : m_Size) * sizeof(T));
         }
         // Free the old array
-        free(m_Ptr);
+        delete[](m_Ptr);
         m_Ptr = nullptr;
       }
 
@@ -418,7 +418,7 @@ class OrientationArray
 
       if(m_Ptr != nullptr && m_Owns == true)
       {
-        free(m_Ptr);
+        delete[](m_Ptr);
         m_Ptr = nullptr;
       }
       else if(m_Ptr != nullptr && m_Owns == false)
@@ -428,7 +428,7 @@ class OrientationArray
       // If we made it this far the pointer should be nullptr and we can go ahead and allocate our memory
       if(m_Ptr == nullptr)
       {
-        m_Ptr = reinterpret_cast<T*>(malloc(sizeof(T) * m_Size));
+        m_Ptr = new T[m_Size]();
         ::memset(m_Ptr, 0, sizeof(T) * m_Size);
         m_Owns = true;
       }
@@ -445,10 +445,9 @@ class OrientationArray
 /**
  * @brief OrientationArrayF A convenience Typedef for a OrientationArray<float>
  */
-typedef OrientationArray<float> FOrientArrayType;
+using FOrientArrayType = OrientationArray<float>;
 
 /**
  * @brief OrientationArrayD A convenience Typedef for a OrientationArray<double>
  */
-typedef OrientationArray<double> DOrientArrayType;
-
+using DOrientArrayType = OrientationArray<double>;

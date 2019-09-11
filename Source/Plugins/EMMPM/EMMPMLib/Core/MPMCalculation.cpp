@@ -370,7 +370,7 @@ void MPMCalculation::execute()
   memset(msgbuff, 0, 256);
   data->progress++;
 
-  yk = (real_t*)malloc(cols * rows * classes * sizeof(real_t));
+  yk = new real_t[cols * rows * classes]();
 
   sqrt2pi = sqrt(2.0 * M_PI);
 
@@ -508,7 +508,7 @@ void MPMCalculation::execute()
   }
 
   /* Clean Up Memory */
-  free(yk);
+  delete[](yk);
 }
 
 // -----------------------------------------------------------------------------

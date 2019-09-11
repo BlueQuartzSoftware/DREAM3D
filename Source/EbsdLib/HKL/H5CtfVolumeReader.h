@@ -136,12 +136,11 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
     T* allocateArray(size_t numberOfElements)
     {
       T* buffer = nullptr;
-      if(numberOfElements == 0) { return buffer; }
-#if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
-      buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
-#else
-      buffer = static_cast<T*>(malloc(sizeof(T) * numberOfElements));
-#endif
+      if(numberOfElements == 0)
+      {
+        return buffer;
+      }
+      buffer = new T[numberOfElements]();
       return buffer;
     }
 
@@ -155,11 +154,7 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
     {
       if(ptr != nullptr && getManageMemory())
       {
-#if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
-        _mm_free(ptr );
-#else
-       free(ptr);
-#endif
+        delete[](ptr);
         ptr = nullptr;
       }
     }

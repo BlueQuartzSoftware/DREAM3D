@@ -43,9 +43,7 @@
 class EMMPMLib_EXPORT EMMPMUtilities
 {
   public:
-    virtual ~EMMPMUtilities()
-    {
-    }
+    ~EMMPMUtilities() = default;
 
     /**
      * @brief This function will copy the input image into an internal data structure
@@ -58,7 +56,7 @@ class EMMPMLib_EXPORT EMMPMUtilities
     /**
      * @brief This function will copy the internal data structure that represents an
      * segmented image into a possibly newly allocated array. If the outputImage pointer
-     * is nullptr then a 'malloc' type function will allocate a new array. If you let this
+     * is nullptr then a 'new' type function will allocate a new array. If you let this
      * happen for you then YOU need to call @see FreeTiffImageBuffer yourself
      * when the emmpm algorithm is complete. If you preallocate the array then your
      * own memory clean systems will work just fine.
@@ -125,9 +123,7 @@ class EMMPMLib_EXPORT EMMPMUtilities
     static void ComputeEntropy(real_t** *probs, unsigned char** output,
                                unsigned int rows, unsigned int cols, unsigned int classes);
   protected:
-    EMMPMUtilities()
-    {
-    }
+    EMMPMUtilities() = default;
 
   public:
     EMMPMUtilities(const EMMPMUtilities&) = delete; // Copy Constructor Not Implemented

@@ -168,11 +168,7 @@ class EbsdLib_EXPORT EbsdReader
     template<typename T>
     T* allocateArray(size_t numberOfElements)
     {
-#if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
-      T* m_buffer = static_cast<T*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
-#else
-      T* m_buffer = static_cast<T*>(malloc(sizeof(T) * numberOfElements));
-#endif
+      T* m_buffer = new T[numberOfElements]();
       return m_buffer;
     }
 
@@ -186,11 +182,7 @@ class EbsdLib_EXPORT EbsdReader
     {
       if(ptr != nullptr && this->m_ManageMemory)
       {
-#if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
-        _mm_free(ptr );
-#else
-        free(ptr);
-#endif
+        delete[](ptr);
         ptr = nullptr;
       }
     }
