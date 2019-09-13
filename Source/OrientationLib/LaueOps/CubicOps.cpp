@@ -1561,7 +1561,7 @@ bool inUnitTriangleD(double eta, double chi)
   {
     chiMax = sqrt(1.0 / (2.0 + std::tan(eta) * std::tan(eta)));
   }
-  SIMPLibMath::boundD(chiMax, -1.0f, 1.0f);
+  SIMPLibMath::bound(chiMax, -1.0, 1.0);
   chiMax = acos(chiMax);
   return !(eta < 0.0 || eta > (45.0 * SIMPLib::Constants::k_PiOver180) || chi < 0.0 || chi > chiMax);
 }
@@ -1639,10 +1639,8 @@ SIMPL::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, doub
     eta = std::atan2(p[1], p[0]);
     if(!inUnitTriangleD(eta, chi))
     {
-      inUnitTriangleCounter++;
       continue;
     }
-
     break;
   }
   double etaMin = 0.0;
