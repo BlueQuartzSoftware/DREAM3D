@@ -35,13 +35,6 @@
 
 #include "InsertAtoms.h"
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-#include <tbb/blocked_range.h>
-#include <tbb/parallel_for.h>
-#include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
-#endif
-
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/DynamicListArray.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -57,11 +50,21 @@
 #include "SIMPLib/Geometry/VertexGeom.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
 
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
+
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+#include <tbb/blocked_range.h>
+#include <tbb/parallel_for.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
+
+using QuatF = Quaternion<float>;
 
 enum createdPathID : RenameDataPath::DataID_t
 {
@@ -78,15 +81,15 @@ class InsertAtomsImpl
   TriangleGeom::Pointer m_Faces;
   Int32Int32DynamicListArray::Pointer m_FaceIds;
   VertexGeom::Pointer m_FaceBBs;
-  QuatF* m_AvgQuats;
+  float* m_AvgQuats;
   FloatVec3Type m_LatticeConstants;
   uint32_t m_Basis;
   QVector<VertexGeom::Pointer> m_Points;
   QVector<BoolArrayType::Pointer> m_InFeature;
 
 public:
-  InsertAtomsImpl(TriangleGeom::Pointer faces, Int32Int32DynamicListArray::Pointer faceIds, VertexGeom::Pointer faceBBs, QuatF* avgQuats, FloatVec3Type latticeConstants, uint32_t basis,
-                  QVector<VertexGeom::Pointer> points, QVector<BoolArrayType::Pointer> inFeature)
+  InsertAtomsImpl(const TriangleGeom::Pointer& faces, const Int32Int32DynamicListArray::Pointer& faceIds, const VertexGeom::Pointer& faceBBs, float* avgQuats, FloatVec3Type latticeConstants,
+                  uint32_t basis, const QVector<VertexGeom::Pointer>& points, const QVector<BoolArrayType::Pointer>& inFeature)
   : m_Faces(faces)
   , m_FaceIds(faceIds)
   , m_FaceBBs(faceBBs)
@@ -118,9 +121,8 @@ public:
     {
       Int32Int32DynamicListArray::ElementList& faceIds = m_FaceIds->getElementList(iter);
 
-      FOrientArrayType om(9, 0.0);
-      FOrientTransformsType::qu2om(FOrientArrayType(m_AvgQuats[iter]), om);
-      om.toGMatrix(g);
+      QuatF q1(m_AvgQuats + iter * 4);
+      OrientationTransformation::qu2om<QuatF, Orientation<float>>(q1).toGMatrix(g);
 
       // find bounding box for current feature
       GeometryMath::FindBoundingBoxOfFaces(m_Faces.get(), faceIds, ll, ur);
@@ -155,15 +157,14 @@ public:
   }
 #endif
 
-  void generatePoints(size_t iter, QVector<VertexGeom::Pointer> points, QVector<BoolArrayType::Pointer> inFeature, QuatF* m_AvgQuats, FloatVec3Type latticeConstants, uint32_t basis, float* ll,
-                      float* ur) const
+  void generatePoints(size_t iter, QVector<VertexGeom::Pointer> points, QVector<BoolArrayType::Pointer> inFeature, float* m_AvgQuats, FloatVec3Type latticeConstants, uint32_t basis, const float* ll,
+                      const float* ur) const
   {
     float g[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
     float gT[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
 
-    FOrientArrayType om(9, 0.0);
-    FOrientTransformsType::qu2om(FOrientArrayType(m_AvgQuats[iter]), om);
-    om.toGMatrix(g);
+    QuatF q1(m_AvgQuats + iter * 4);
+    OrientationTransformation::qu2om<QuatF, Orientation<float>>(q1).toGMatrix(g);
     MatrixMath::Transpose3x3(g, gT);
 
     float minx = ll[0];
@@ -224,7 +225,7 @@ public:
             points[iter]->setCoords(count, coordsT);
             count++;
           }
-          if(basis == 2||3)
+          if(basis == 2)
           {
             // makes the (0.5,0.5,0) atom
             coords[0] = coords[0] + (0.5f * latticeConstants[0]);
@@ -674,17 +675,16 @@ void InsertAtoms::execute()
     inFeature[i] = BoolArrayType::CreateArray(0, "_INTERNAL_USE_ONLY_inside", true);
   }
 
-  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, numFeatures), InsertAtomsImpl(triangleGeom, faceLists, faceBBs, avgQuats, latticeConstants, m_Basis, points, inFeature), tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, numFeatures), InsertAtomsImpl(triangleGeom, faceLists, faceBBs, m_AvgQuats, latticeConstants, m_Basis, points, inFeature), tbb::auto_partitioner());
   }
   else
 #endif
   {
-    InsertAtomsImpl serial(triangleGeom, faceLists, faceBBs, avgQuats, latticeConstants, m_Basis, points, inFeature);
+    InsertAtomsImpl serial(triangleGeom, faceLists, faceBBs, m_AvgQuats, latticeConstants, m_Basis, points, inFeature);
     serial.checkPoints(0, numFeatures);
   }
 

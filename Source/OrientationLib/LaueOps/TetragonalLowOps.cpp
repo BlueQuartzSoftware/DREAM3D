@@ -50,66 +50,42 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/ColorTable.h"
 
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
-#include "OrientationLib/Utilities/PoleFigureUtilities.h"
+#include "OrientationLib/Core/Orientation.hpp"
+
 #include "OrientationLib/Utilities/ComputeStereographicProjection.h"
+#include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
 namespace Detail
 {
 
-  static const float TetraDim1InitValue = powf((0.75f * ((SIMPLib::Constants::k_Pi) - sinf((SIMPLib::Constants::k_Pi)))), (1.0f / 3.0f));
-  static const float TetraDim2InitValue = powf((0.75f * ((SIMPLib::Constants::k_Pi) - sinf((SIMPLib::Constants::k_Pi)))), (1.0f / 3.0f));
-  static const float TetraDim3InitValue = powf((0.75f * ((SIMPLib::Constants::k_Pi / 4.0f) - sinf((SIMPLib::Constants::k_Pi / 2.0f)))), (1.0f / 3.0f));
-  static const float TetraDim1StepValue = TetraDim1InitValue / 36.0f;
-  static const float TetraDim2StepValue = TetraDim2InitValue / 36.0f;
-  static const float TetraDim3StepValue = TetraDim3InitValue / 9.0f;
-  namespace TetragonalLow
-  {
-    static const int symSize0 = 2;
-    static const int symSize1 = 2;
-    static const int symSize2 = 2;
-  }
-}
-static const QuatF TetraQuatSym[4] = {QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
-                                      QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
-                                      QuaternionMathF::New(0.000000000f, 0.000000000f, SIMPLib::Constants::k_1OverRoot2, -SIMPLib::Constants::k_1OverRoot2),
-                                      QuaternionMathF::New(0.000000000f, 0.000000000f, SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2)
-                                     };
-
-
-static const float TetraRodSym[4][3] = {{0.0f, 0.0f, 0.0f},
-  {0.0f, 0.0f, 10000000000.0f},
-  {0.0f, 0.0f, -1.0f},
-  {0.0f, 0.0f, 1.0f}
-};
-
-static const float TetraMatSym[4][3][3] =
+static const double TetraDim1InitValue = std::pow((0.75f * ((SIMPLib::Constants::k_Pi)-sinf((SIMPLib::Constants::k_Pi)))), (1.0f / 3.0));
+static const double TetraDim2InitValue = std::pow((0.75f * ((SIMPLib::Constants::k_Pi)-sinf((SIMPLib::Constants::k_Pi)))), (1.0f / 3.0));
+static const double TetraDim3InitValue = std::pow((0.75f * ((SIMPLib::Constants::k_PiOver4)-sinf((SIMPLib::Constants::k_PiOver2)))), (1.0f / 3.0));
+static const double TetraDim1StepValue = TetraDim1InitValue / 36.0f;
+static const double TetraDim2StepValue = TetraDim2InitValue / 36.0f;
+static const double TetraDim3StepValue = TetraDim3InitValue / 9.0f;
+namespace TetragonalLow
 {
-  { {1.0, 0.0, 0.0},
-    {0.0, 1.0, 0.0},
-    {0.0, 0.0, 1.0}
-  },
+static const int symSize0 = 2;
+static const int symSize1 = 2;
+static const int symSize2 = 2;
+} // namespace TetragonalLow
+} // namespace Detail
+static const QuatType TetraQuatSym[4] = {QuatType(0.000000000, 0.000000000, 0.000000000, 1.000000000), QuatType(0.000000000, 0.000000000, 1.000000000, 0.000000000),
+                                         QuatType(0.000000000, 0.000000000, SIMPLib::Constants::k_1OverRoot2, -SIMPLib::Constants::k_1OverRoot2),
+                                         QuatType(0.000000000, 0.000000000, SIMPLib::Constants::k_1OverRoot2, SIMPLib::Constants::k_1OverRoot2)};
 
-  { { -1.0,  0.0, 0.0},
-    {0.0, -1.0, 0.0},
-    {0.0,  0.0, 1.0}
-  },
+static const double TetraRodSym[4][3] = {{0.0, 0.0, 0.0}, {0.0, 0.0, 10000000000.0}, {0.0, 0.0, -1.0}, {0.0, 0.0, 1.0}};
 
-  { {0.0, 1.0, 0.0},
-    { -1.0, 0.0, 0.0},
-    {0.0, 0.0, 1.0}
-  },
+static const double TetraMatSym[4][3][3] = {{{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}},
 
-  { {0.0, -1.0, 0.0},
-    {1.0,  0.0, 0.0},
-    {0.0,  0.0, 1.0}
-  }
-};
+                                            {{-1.0, 0.0, 0.0}, {0.0, -1.0, 0.0}, {0.0, 0.0, 1.0}},
 
+                                            {{0.0, 1.0, 0.0}, {-1.0, 0.0, 0.0}, {0.0, 0.0, 1.0}},
 
-//const static float m_OnePointThree = 1.33333333333f;
+                                            {{0.0, -1.0, 0.0}, {1.0, 0.0, 0.0}, {0.0, 0.0, 1.0}}};
 
+// const static double m_OnePointThree = 1.33333333333f;
 
 using namespace Detail;
 
@@ -126,7 +102,7 @@ TetragonalLowOps::~TetragonalLowOps() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool TetragonalLowOps::getHasInversion()
+bool TetragonalLowOps::getHasInversion() const
 {
   return true;
 }
@@ -134,7 +110,7 @@ bool TetragonalLowOps::getHasInversion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TetragonalLowOps::getODFSize()
+int TetragonalLowOps::getODFSize() const
 {
   return k_OdfSize;
 }
@@ -142,7 +118,7 @@ int TetragonalLowOps::getODFSize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TetragonalLowOps::getMDFSize()
+int TetragonalLowOps::getMDFSize() const
 {
   return k_MdfSize;
 }
@@ -150,7 +126,7 @@ int TetragonalLowOps::getMDFSize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TetragonalLowOps::getNumSymOps()
+int TetragonalLowOps::getNumSymOps() const
 {
   return k_NumSymQuats;
 }
@@ -158,7 +134,7 @@ int TetragonalLowOps::getNumSymOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString TetragonalLowOps::getSymmetryName()
+QString TetragonalLowOps::getSymmetryName() const
 {
   return "Tetragonal 4/m";;
 }
@@ -166,38 +142,35 @@ QString TetragonalLowOps::getSymmetryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float TetragonalLowOps::_calcMisoQuat(const QuatF quatsym[8], int numsym,
-                                      QuatF& q1, QuatF& q2,
-                                      float& n1, float& n2, float& n3)
+double TetragonalLowOps::_calcMisoQuat(const QuatType quatsym[8], int numsym, QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const
 {
-  float wmin = 9999999.0f; //,na,nb,nc;
-  float w = 0;
-  float n1min = 0.0f;
-  float n2min = 0.0f;
-  float n3min = 0.0f;
-  QuatF qr;
-  QuatF qc;
-  QuatF q2inv;
+  double wmin = 9999999.0f; //,na,nb,nc;
+  double w = 0.0;
+  double n1min = 0.0f;
+  double n2min = 0.0f;
+  double n3min = 0.0f;
+  QuatType qc;
 
-  QuaternionMathF::Copy(q2, q2inv);
-  QuaternionMathF::Conjugate(q2inv);
+  QuatType qr = q1 * (q2.conjugate());
 
-  QuaternionMathF::Multiply(q1, q2inv, qr);
   for (int i = 0; i < numsym; i++)
   {
-    QuaternionMathF::Multiply(quatsym[i], qr, qc);
-    if (qc.w < -1)
+    qc = quatsym[i] * qr;
+
+    if(qc.w() < -1)
     {
-      qc.w = -1;
+      qc.w() = -1.0;
     }
-    else if (qc.w > 1)
+    else if(qc.w() > 1)
     {
-      qc.w = 1;
+      qc.w() = 1.0;
     }
 
-    FOrientArrayType ax(4, 0.0f);
-    FOrientTransformsType::qu2ax(FOrientArrayType(qc.x, qc.y, qc.z, qc.w), ax);
-    ax.toAxisAngle(n1, n2, n3, w);
+    OrientationType ax = OrientationTransformation::qu2ax<QuatType, OrientationType>(qc);
+    n1 = ax[0];
+    n2 = ax[1];
+    n3 = ax[2];
+    w = ax[3];
 
     if (w > SIMPLib::Constants::k_Pi)
     {
@@ -211,7 +184,7 @@ float TetragonalLowOps::_calcMisoQuat(const QuatF quatsym[8], int numsym,
       n3min = n3;
     }
   }
-  float denom = sqrt((n1min * n1min + n2min * n2min + n3min * n3min));
+  double denom = sqrt((n1min * n1min + n2min * n2min + n3min * n3min));
   n1 = n1min / denom;
   n2 = n2min / denom;
   n3 = n3min / denom;
@@ -226,26 +199,52 @@ float TetragonalLowOps::_calcMisoQuat(const QuatF quatsym[8], int numsym,
   return wmin;
 }
 
-float TetragonalLowOps::getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3)
+double TetragonalLowOps::getMisoQuat(QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const
 {
-  int numsym = 4;
-
-  return _calcMisoQuat(TetraQuatSym, numsym, q1, q2, n1, n2, n3);
+  return _calcMisoQuat(TetraQuatSym, k_NumSymQuats, q1, q2, n1, n2, n3);
 }
 
-void TetragonalLowOps::getQuatSymOp(int i, QuatF& q)
+// -----------------------------------------------------------------------------
+float TetragonalLowOps::getMisoQuat(QuatF& q1f, QuatF& q2f, float& n1f, float& n2f, float& n3f) const
 {
-  QuaternionMathF::Copy(TetraQuatSym[i], q);
+  QuatType q1(q1f[0], q1f[1], q1f[2], q1f[3]);
+  QuatType q2(q2f[0], q2f[1], q2f[2], q2f[3]);
+  double n1 = n1f;
+  double n2 = n2f;
+  double n3 = n3f;
+  float w = static_cast<float>(_calcMisoQuat(TetraQuatSym, k_NumSymQuats, q1, q2, n1, n2, n3));
+  n1f = n1;
+  n2f = n2;
+  n3f = n3;
+  return w;
 }
 
-void TetragonalLowOps::getRodSymOp(int i, float* r)
+QuatType TetragonalLowOps::getQuatSymOp(int32_t i) const
+{
+  return TetraQuatSym[i];
+}
+
+void TetragonalLowOps::getRodSymOp(int i, double* r) const
 {
   r[0] = TetraRodSym[i][0];
   r[1] = TetraRodSym[i][1];
   r[2] = TetraRodSym[i][2];
 }
 
-void TetragonalLowOps::getMatSymOp(int i, float g[3][3])
+void TetragonalLowOps::getMatSymOp(int i, double g[3][3]) const
+{
+  g[0][0] = TetraMatSym[i][0][0];
+  g[0][1] = TetraMatSym[i][0][1];
+  g[0][2] = TetraMatSym[i][0][2];
+  g[1][0] = TetraMatSym[i][1][0];
+  g[1][1] = TetraMatSym[i][1][1];
+  g[1][2] = TetraMatSym[i][1][2];
+  g[2][0] = TetraMatSym[i][2][0];
+  g[2][1] = TetraMatSym[i][2][1];
+  g[2][2] = TetraMatSym[i][2][2];
+}
+
+void TetragonalLowOps::getMatSymOp(int i, float g[3][3]) const
 {
   g[0][0] = TetraMatSym[i][0][0];
   g[0][1] = TetraMatSym[i][0][1];
@@ -261,7 +260,7 @@ void TetragonalLowOps::getMatSymOp(int i, float g[3][3])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType TetragonalLowOps::getODFFZRod(FOrientArrayType rod)
+OrientationType TetragonalLowOps::getODFFZRod(const OrientationType& rod) const
 {
   int  numsym = 4;
   return _calcRodNearestOrigin(TetraRodSym, numsym, rod);
@@ -269,48 +268,47 @@ FOrientArrayType TetragonalLowOps::getODFFZRod(FOrientArrayType rod)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType TetragonalLowOps::getMDFFZRod(FOrientArrayType rod)
+OrientationType TetragonalLowOps::getMDFFZRod(const OrientationType& inRod) const
 {
-  float w, n1, n2, n3;
-  float FZn1, FZn2, FZn3, FZw = 0;
+  double FZn1 = 0.0, FZn2 = 0.0, FZn3 = 0.0, FZw = 0.0;
 
-  rod = _calcRodNearestOrigin(TetraRodSym, 4, rod);
-  FOrientArrayType ax(4, 0.0f);
-  OrientationTransforms<FOrientArrayType, float>::ro2ax(rod, ax);
-  n1 = ax[0];
-  n2 = ax[1], n3 = ax[2], w = ax[3];
+  OrientationType rod = _calcRodNearestOrigin(TetraRodSym, 4, inRod);
+  OrientationType ax = OrientationTransformation::ro2ax<OrientationType, OrientationType>(rod);
 
-  FZn1 = fabs(n1);
-  FZn2 = fabs(n2);
-  FZn3 = fabs(n3);
-  FZw = w;
+  FZn1 = std::fabs(ax[0]);
+  FZn2 = std::fabs(ax[1]);
+  FZn3 = std::fabs(ax[2]);
+  FZw = ax[3];
 
-  ax.fromAxisAngle(FZn1, FZn2, FZn3, FZw);
-  OrientationTransforms<FOrientArrayType, float>::ax2ro(ax, rod);
-  return rod;
+  return OrientationTransformation::ax2ro<OrientationType, OrientationType>(OrientationType(FZn1, FZn2, FZn3, FZw));
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TetragonalLowOps::getNearestQuat(QuatF& q1, QuatF& q2)
+QuatType TetragonalLowOps::getNearestQuat(const QuatType& q1, const QuatType& q2) const
 {
-  int numsym = 4;
-
-  _calcNearestQuat(TetraQuatSym, numsym, q1, q2);
+  return _calcNearestQuat(TetraQuatSym, k_NumSymQuats, q1, q2);
+}
+QuatF TetragonalLowOps::getNearestQuat(const QuatF& q1f, const QuatF& q2f) const
+{
+  QuatType q1(q1f[0], q1f[1], q1f[2], q1f[3]);
+  QuatType q2(q2f[0], q2f[1], q2f[2], q2f[3]);
+  QuatType temp = _calcNearestQuat(TetraQuatSym, k_NumSymQuats, q1, q2);
+  QuatF out(temp.x(), temp.y(), temp.z(), temp.w());
+  return out;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TetragonalLowOps::getMisoBin(FOrientArrayType rod)
+int TetragonalLowOps::getMisoBin(const OrientationType& rod) const
 {
-  float dim[3];
-  float bins[3];
-  float step[3];
+  double dim[3];
+  double bins[3];
+  double step[3];
 
-  FOrientArrayType ho(3);
-  OrientationTransforms<FOrientArrayType, float>::ro2ho(rod, ho);
+  OrientationType ho = OrientationTransformation::ro2ho<OrientationType, OrientationType>(rod);
 
   dim[0] = Detail::TetraDim1InitValue;
   dim[1] = Detail::TetraDim2InitValue;
@@ -328,12 +326,12 @@ int TetragonalLowOps::getMisoBin(FOrientArrayType rod)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType TetragonalLowOps::determineEulerAngles(uint64_t seed, int choose)
+OrientationType TetragonalLowOps::determineEulerAngles(uint64_t seed, int choose) const
 {
-  float init[3];
-  float step[3];
+  double init[3];
+  double step[3];
   int32_t phi[3];
-  float h1, h2, h3;
+  double h1, h2, h3;
 
   init[0] = Detail::TetraDim1InitValue;
   init[1] = Detail::TetraDim2InitValue;
@@ -348,44 +346,33 @@ FOrientArrayType TetragonalLowOps::determineEulerAngles(uint64_t seed, int choos
 
   _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
 
-  FOrientArrayType ho(h1, h2, h3);
-  FOrientArrayType ro(4);
-  OrientationTransforms<FOrientArrayType, float>::ho2ro(ho, ro);
-
+  OrientationType ho(h1, h2, h3);
+  OrientationType ro = OrientationTransformation::ho2ro<OrientationType, OrientationType>(ho);
   ro = getODFFZRod(ro);
-  FOrientArrayType eu(4);
-  OrientationTransforms<FOrientArrayType, float>::ro2eu(ro, eu);
+  OrientationType eu = OrientationTransformation::ro2eu<OrientationType, OrientationType>(ro);
   return eu;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType TetragonalLowOps::randomizeEulerAngles(FOrientArrayType synea)
+OrientationType TetragonalLowOps::randomizeEulerAngles(const OrientationType& synea) const
 {
-  QuatF q;
-  QuatF qc;
   size_t symOp = getRandomSymmetryOperatorIndex(k_NumSymQuats);
-
-  FOrientArrayType quat(4, 0.0f);
-  OrientationTransforms<FOrientArrayType, float>::eu2qu(synea, quat);
-  q = quat.toQuaternion();
-  QuaternionMathF::Multiply(TetraQuatSym[symOp], q, qc);
-
-  quat.fromQuaternion(qc);
-  OrientationTransforms<FOrientArrayType, float>::qu2eu(quat, synea);
-  return synea;
+  QuatType quat = OrientationTransformation::eu2qu<OrientationType, QuatType>(synea);
+  QuatType qc = TetraQuatSym[symOp] * quat;
+  return OrientationTransformation::qu2eu<QuatType, OrientationType>(qc);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType TetragonalLowOps::determineRodriguesVector(uint64_t seed, int choose)
+OrientationType TetragonalLowOps::determineRodriguesVector(uint64_t seed, int choose) const
 {
-  float init[3];
-  float step[3];
+  double init[3];
+  double step[3];
   int32_t phi[3];
-  float h1, h2, h3;
+  double h1, h2, h3;
 
   init[0] = Detail::TetraDim1InitValue;
   init[1] = Detail::TetraDim2InitValue;
@@ -398,9 +385,8 @@ FOrientArrayType TetragonalLowOps::determineRodriguesVector(uint64_t seed, int c
   phi[2] = static_cast<int32_t>(choose / (72 * 72));
 
   _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
-  FOrientArrayType ho(h1, h2, h3);
-  FOrientArrayType ro(4);
-  OrientationTransforms<FOrientArrayType, float>::ho2ro(ho, ro);
+  OrientationType ho(h1, h2, h3);
+  OrientationType ro = OrientationTransformation::ho2ro<OrientationType, OrientationType>(ho);
   ro = getMDFFZRod(ro);
   return ro;
 }
@@ -408,14 +394,13 @@ FOrientArrayType TetragonalLowOps::determineRodriguesVector(uint64_t seed, int c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TetragonalLowOps::getOdfBin(FOrientArrayType rod)
+int TetragonalLowOps::getOdfBin(const OrientationType& rod) const
 {
-  float dim[3];
-  float bins[3];
-  float step[3];
+  double dim[3];
+  double bins[3];
+  double step[3];
 
-  FOrientArrayType ho(3);
-  OrientationTransforms<FOrientArrayType, float>::ro2ho(rod, ho);
+  OrientationType ho = OrientationTransformation::ro2ho<OrientationType, OrientationType>(rod);
 
   dim[0] = Detail::TetraDim1InitValue;
   dim[1] = Detail::TetraDim2InitValue;
@@ -430,13 +415,13 @@ int TetragonalLowOps::getOdfBin(FOrientArrayType rod)
   return _calcODFBin(dim, bins, step, ho);
 }
 
-void TetragonalLowOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, float angleComps[2], int& slipsys)
+void TetragonalLowOps::getSchmidFactorAndSS(double load[3], double& schmidfactor, double angleComps[2], int& slipsys) const
 {
   schmidfactor = 0;
   slipsys = 0;
 }
 
-void TetragonalLowOps::getSchmidFactorAndSS(float load[3], float plane[3], float direction[3], float& schmidfactor, float angleComps[2], int& slipsys)
+void TetragonalLowOps::getSchmidFactorAndSS(double load[3], double plane[3], double direction[3], double& schmidfactor, double angleComps[2], int& slipsys) const
 {
   schmidfactor = 0;
   slipsys = 0;
@@ -444,9 +429,9 @@ void TetragonalLowOps::getSchmidFactorAndSS(float load[3], float plane[3], float
   angleComps[1] = 0;
 
   //compute mags
-  float loadMag = sqrt( load[0] * load[0] + load[1] * load[1] + load[2] * load[2] );
-  float planeMag = sqrt( plane[0] * plane[0] + plane[1] * plane[1] + plane[2] * plane[2] );
-  float directionMag = sqrt( direction[0] * direction[0] + direction[1] * direction[1] + direction[2] * direction[2] );
+  double loadMag = sqrt(load[0] * load[0] + load[1] * load[1] + load[2] * load[2]);
+  double planeMag = sqrt(plane[0] * plane[0] + plane[1] * plane[1] + plane[2] * plane[2]);
+  double directionMag = sqrt(direction[0] * direction[0] + direction[1] * direction[1] + direction[2] * direction[2]);
   planeMag *= loadMag;
   directionMag *= loadMag;
 
@@ -454,7 +439,7 @@ void TetragonalLowOps::getSchmidFactorAndSS(float load[3], float plane[3], float
   for(int i = 0; i < k_NumSymQuats; i++)
   {
     //compute slip system
-    float slipPlane[3] = {0};
+    double slipPlane[3] = {0};
     slipPlane[2] = TetraMatSym[i][2][0] * plane[0] + TetraMatSym[i][2][1] * plane[1] + TetraMatSym[i][2][2] * plane[2];
 
     //dont consider negative z planes (to avoid duplicates)
@@ -463,15 +448,15 @@ void TetragonalLowOps::getSchmidFactorAndSS(float load[3], float plane[3], float
       slipPlane[0] = TetraMatSym[i][0][0] * plane[0] + TetraMatSym[i][0][1] * plane[1] + TetraMatSym[i][0][2] * plane[2];
       slipPlane[1] = TetraMatSym[i][1][0] * plane[0] + TetraMatSym[i][1][1] * plane[1] + TetraMatSym[i][1][2] * plane[2];
 
-      float slipDirection[3] = {0};
+      double slipDirection[3] = {0};
       slipDirection[0] = TetraMatSym[i][0][0] * direction[0] + TetraMatSym[i][0][1] * direction[1] + TetraMatSym[i][0][2] * direction[2];
       slipDirection[1] = TetraMatSym[i][1][0] * direction[0] + TetraMatSym[i][1][1] * direction[1] + TetraMatSym[i][1][2] * direction[2];
       slipDirection[2] = TetraMatSym[i][2][0] * direction[0] + TetraMatSym[i][2][1] * direction[1] + TetraMatSym[i][2][2] * direction[2];
 
-      float cosPhi = fabs( load[0] * slipPlane[0] + load[1] * slipPlane[1] + load[2] * slipPlane[2] ) / planeMag;
-      float cosLambda = fabs( load[0] * slipDirection[0] + load[1] * slipDirection[1] + load[2] * slipDirection[2] ) / directionMag;
+      double cosPhi = fabs(load[0] * slipPlane[0] + load[1] * slipPlane[1] + load[2] * slipPlane[2]) / planeMag;
+      double cosLambda = fabs(load[0] * slipDirection[0] + load[1] * slipDirection[1] + load[2] * slipDirection[2]) / directionMag;
 
-      float schmid = cosPhi * cosLambda;
+      double schmid = cosPhi * cosLambda;
       if(schmid > schmidfactor)
       {
         schmidfactor = schmid;
@@ -483,24 +468,24 @@ void TetragonalLowOps::getSchmidFactorAndSS(float load[3], float plane[3], float
   }
 }
 
-void TetragonalLowOps::getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime)
+double TetragonalLowOps::getmPrime(const QuatType& q1, const QuatType& q2, double LD[3]) const
 {
-  mPrime = 0;
+  return 0.0;
 }
 
-void TetragonalLowOps::getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1)
+double TetragonalLowOps::getF1(const QuatType& q1, const QuatType& q2, double LD[3], bool maxS) const
 {
-  F1 = 0;
+  return 0.0;
 }
 
-void TetragonalLowOps::getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1spt)
+double TetragonalLowOps::getF1spt(const QuatType& q1, const QuatType& q2, double LD[3], bool maxS) const
 {
-  F1spt = 0;
+  return 0.0;
 }
 
-void TetragonalLowOps::getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7)
+double TetragonalLowOps::getF7(const QuatType& q1, const QuatType& q2, double LD[3], bool maxS) const
 {
-  F7 = 0;
+  return 0.0;
 }
 
 // -----------------------------------------------------------------------------
@@ -528,17 +513,15 @@ namespace Detail
 
         void generate(size_t start, size_t end) const
         {
-          float g[3][3];
-          float gTranpose[3][3];
-          float direction[3] = {0.0, 0.0, 0.0};
-
+          double g[3][3];
+          double gTranpose[3][3];
+          double direction[3] = {0.0, 0.0, 0.0};
 
           for(size_t i = start; i < end; ++i)
           {
-            FOrientArrayType eu(m_Eulers->getPointer(i * 3), 3);
-            FOrientArrayType om(9, 0.0);
-            OrientationTransforms<FOrientArrayType, float>::eu2om(eu, om);
-            om.toGMatrix(g);
+            OrientationType eu(m_Eulers->getValue(i * 3), m_Eulers->getValue(i * 3 + 1), m_Eulers->getValue(i * 3 + 2));
+            OrientationTransformation::eu2om<OrientationType, OrientationType>(eu).toGMatrix(g);
+
             MatrixMath::Transpose3x3(g, gTranpose);
 
             // -----------------------------------------------------------------------------
@@ -548,8 +531,7 @@ namespace Detail
             direction[2] = 1.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->getPointer(i * 6));
             MatrixMath::Copy3x1(m_xyz001->getPointer(i * 6), m_xyz001->getPointer(i * 6 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 6 + 3), -1);
-
+            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 6 + 3), -1.0f);
 
             // -----------------------------------------------------------------------------
             // 011 Family
@@ -558,8 +540,7 @@ namespace Detail
             direction[2] = 0.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 6));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 6), m_xyz011->getPointer(i * 6 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 6 + 3), -1);
-
+            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 6 + 3), -1.0f);
 
             // -----------------------------------------------------------------------------
             // 111 Family
@@ -568,7 +549,7 @@ namespace Detail
             direction[2] = 0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 6));
             MatrixMath::Copy3x1(m_xyz111->getPointer(i * 6), m_xyz111->getPointer(i * 6 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 6 + 3), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 6 + 3), -1.0f);
           }
         }
 
@@ -585,7 +566,7 @@ namespace Detail
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TetragonalLowOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* xyz001, FloatArrayType* xyz011, FloatArrayType* xyz111)
+void TetragonalLowOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* xyz001, FloatArrayType* xyz011, FloatArrayType* xyz111) const
 {
   size_t nOrientations = eulers->getNumberOfTuples();
 
@@ -626,7 +607,7 @@ void TetragonalLowOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, Fl
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool TetragonalLowOps::inUnitTriangle(float eta, float chi)
+bool TetragonalLowOps::inUnitTriangle(double eta, double chi) const
 {
   return !(eta < 0 || eta > (90.0 * SIMPLib::Constants::k_PiOver180) || chi < 0 || chi > (90.0 * SIMPLib::Constants::k_PiOver180));
 }
@@ -634,7 +615,7 @@ bool TetragonalLowOps::inUnitTriangle(float eta, float chi)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SIMPL::Rgb TetragonalLowOps::generateIPFColor(double* eulers, double* refDir, bool convertDegrees)
+SIMPL::Rgb TetragonalLowOps::generateIPFColor(double* eulers, double* refDir, bool convertDegrees) const
 {
   return generateIPFColor(eulers[0], eulers[1], eulers[2], refDir[0], refDir[1], refDir[2], convertDegrees);
 }
@@ -642,7 +623,7 @@ SIMPL::Rgb TetragonalLowOps::generateIPFColor(double* eulers, double* refDir, bo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SIMPL::Rgb TetragonalLowOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
+SIMPL::Rgb TetragonalLowOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad) const
 {
   if(degToRad)
   {
@@ -651,30 +632,20 @@ SIMPL::Rgb TetragonalLowOps::generateIPFColor(double phi1, double phi, double ph
     phi2 = phi2 * SIMPLib::Constants::k_DegToRad;
   }
 
-  QuatF qc;
-  QuatF q2;
-  QuatF q1;
-  float g[3][3];
-  float p[3];
-  float refDirection[3];
-  float eta, chi;
-  float _rgb[3] = { 0.0, 0.0, 0.0 };
+  double g[3][3];
+  double p[3];
+  double refDirection[3] = {0.0f, 0.0f, 0.0f};
+  double chi = 0.0f, eta = 0.0f;
+  double _rgb[3] = {0.0, 0.0, 0.0};
 
+  OrientationType eu(phi1, phi, phi2);
+  OrientationType om(9); // Reusable for the loop
+  QuatType q1 = OrientationTransformation::eu2qu<OrientationType, QuatType>(eu);
 
-  FOrientArrayType eu(phi1, phi, phi2);
-  FOrientArrayType qu(4);
-  FOrientArrayType om(9); // Reusable for the loop
-  OrientationTransforms<FOrientArrayType, float>::eu2qu(eu, qu);
-  q1 = qu.toQuaternion();
-
-  for (int j = 0; j < 4; j++)
+  for(int j = 0; j < k_NumSymQuats; j++)
   {
-    getQuatSymOp(j, q2);
-    QuaternionMathF::Multiply(q2, q1, qc);
-
-    qu.fromQuaternion(qc);
-    OrientationTransforms<FOrientArrayType, float>::qu2om(qu, om);
-    om.toGMatrix(g);
+    QuatType qu = getQuatSymOp(j) * q1;
+    OrientationTransformation::qu2om<QuatType, OrientationType>(qu).toGMatrix(g);
 
     refDirection[0] = refDir0;
     refDirection[1] = refDir1;
@@ -690,21 +661,21 @@ SIMPL::Rgb TetragonalLowOps::generateIPFColor(double phi1, double phi, double ph
     {
       p[0] = -p[0], p[1] = -p[1], p[2] = -p[2];
     }
-    chi = acos(p[2]);
-    eta = atan2(p[1], p[0]);
+    chi = std::acos(p[2]);
+    eta = std::atan2(p[1], p[0]);
     if(!inUnitTriangle(eta, chi))
     {
       continue;
     }
 
-      break;
+    break;
   }
 
-  float etaMin = 0.0;
-  float etaMax = 90.0;
-  float chiMax = 90.0;
-  float etaDeg = eta * SIMPLib::Constants::k_180OverPi;
-  float chiDeg = chi * SIMPLib::Constants::k_180OverPi;
+  double etaMin = 0.0;
+  double etaMax = 90.0;
+  double chiMax = 90.0;
+  double etaDeg = eta * SIMPLib::Constants::k_180OverPi;
+  double chiDeg = chi * SIMPLib::Constants::k_180OverPi;
 
   _rgb[0] = 1.0 - chiDeg / chiMax;
   _rgb[2] = fabs(etaDeg - etaMin) / (etaMax - etaMin);
@@ -715,7 +686,7 @@ SIMPL::Rgb TetragonalLowOps::generateIPFColor(double phi1, double phi, double ph
   _rgb[1] = sqrt(_rgb[1]);
   _rgb[2] = sqrt(_rgb[2]);
 
-  float max = _rgb[0];
+  double max = _rgb[0];
   if (_rgb[1] > max)
   {
     max = _rgb[1];
@@ -736,17 +707,17 @@ SIMPL::Rgb TetragonalLowOps::generateIPFColor(double phi1, double phi, double ph
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SIMPL::Rgb TetragonalLowOps::generateRodriguesColor(float r1, float r2, float r3)
+SIMPL::Rgb TetragonalLowOps::generateRodriguesColor(double r1, double r2, double r3) const
 {
-  float range1 = 2.0f * TetraDim1InitValue;
-  float range2 = 2.0f * TetraDim2InitValue;
-  float range3 = 2.0f * TetraDim3InitValue;
-  float max1 = range1 / 2.0f;
-  float max2 = range2 / 2.0f;
-  float max3 = range3 / 2.0f;
-  float red = (r1 + max1) / range1;
-  float green = (r2 + max2) / range2;
-  float blue = (r3 + max3) / range3;
+  double range1 = 2.0f * TetraDim1InitValue;
+  double range2 = 2.0f * TetraDim2InitValue;
+  double range3 = 2.0f * TetraDim3InitValue;
+  double max1 = range1 / 2.0f;
+  double max2 = range2 / 2.0f;
+  double max3 = range3 / 2.0f;
+  double red = (r1 + max1) / range1;
+  double green = (r2 + max2) / range2;
+  double blue = (r3 + max3) / range3;
 
   // Scale values from 0 to 1.0
   red = red / max1;
@@ -760,7 +731,7 @@ SIMPL::Rgb TetragonalLowOps::generateRodriguesColor(float r1, float r2, float r3
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<UInt8ArrayType::Pointer> TetragonalLowOps::generatePoleFigure(PoleFigureConfiguration_t& config)
+QVector<UInt8ArrayType::Pointer> TetragonalLowOps::generatePoleFigure(PoleFigureConfiguration_t& config) const
 {
   QString label0 = QString("<001>");
   QString label1 = QString("<100>");
@@ -915,28 +886,28 @@ QVector<UInt8ArrayType::Pointer> TetragonalLowOps::generatePoleFigure(PoleFigure
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-UInt8ArrayType::Pointer TetragonalLowOps::generateIPFTriangleLegend(int imageDim)
+UInt8ArrayType::Pointer TetragonalLowOps::generateIPFTriangleLegend(int imageDim) const
 {
 
   std::vector<size_t> dims(1, 4);
   UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, dims, getSymmetryName() + " Triangle Legend", true);
   uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
 
-  float xInc = 1.0f / static_cast<float>(imageDim);
-  float yInc = 1.0f / static_cast<float>(imageDim);
-  float rad = 1.0f;
+  double xInc = 1.0f / static_cast<double>(imageDim);
+  double yInc = 1.0f / static_cast<double>(imageDim);
+  double rad = 1.0f;
 
-  float x = 0.0f;
-  float y = 0.0f;
-  float a = 0.0f;
-  float b = 0.0f;
-  float c = 0.0f;
+  double x = 0.0f;
+  double y = 0.0f;
+  double a = 0.0f;
+  double b = 0.0f;
+  double c = 0.0f;
 
-  float val = 0.0f;
-  float x1 = 0.0f;
-  float y1 = 0.0f;
-  float z1 = 0.0f;
-  float denom = 0.0f;
+  double val = 0.0f;
+  double x1 = 0.0f;
+  double y1 = 0.0f;
+  double z1 = 0.0f;
+  double denom = 0.0f;
 
   SIMPL::Rgb color;
   size_t idx = 0;
@@ -953,8 +924,8 @@ UInt8ArrayType::Pointer TetragonalLowOps::generateIPFTriangleLegend(int imageDim
       x = xIndex * xInc;
       y = yIndex * yInc;
 
-      float sumSquares = (x * x) + (y * y);
-      if( sumSquares > 1.0f) // Outside unit circle
+      double sumSquares = (x * x) + (y * y);
+      if(sumSquares > 1.0) // Outside unit circle
       {
         color = 0xFFFFFFFF;
       }
@@ -996,7 +967,7 @@ UInt8ArrayType::Pointer TetragonalLowOps::generateIPFTriangleLegend(int imageDim
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SIMPL::Rgb TetragonalLowOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
+SIMPL::Rgb TetragonalLowOps::generateMisorientationColor(const QuatType& q, const QuatType& refFrame) const
 {
   Q_ASSERT(false);
 

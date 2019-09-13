@@ -44,10 +44,14 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/GeometryMath.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
+
+using QuatF = Quaternion<float>;
 
 // -----------------------------------------------------------------------------
 //
@@ -244,8 +248,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
   avgmisoPtr->initializeWithZeros();
   float* avgmiso = avgmisoPtr->getPointer(0);
 
-  QuatF q1 = QuaternionMathF::New();
-  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+  FloatArrayType::Pointer quatsPtr = m_QuatsPtr.lock();
 
   float w = 0.0f;
   SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
@@ -280,10 +283,8 @@ void FindFeatureReferenceCAxisMisorientations::execute()
         point = (plane * xPoints * yPoints) + (row * xPoints) + col;
         if(m_FeatureIds[point] > 0 && m_CellPhases[point] > 0)
         {
-          QuaternionMathF::Copy(quats[point], q1);
-          FOrientArrayType om(9);
-          FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
-          om.toGMatrix(g1);
+          QuatF q1(quatsPtr->getTuplePointer(point));
+          OrientationTransformation::qu2om<QuatF, Orientation<float>>(q1).toGMatrix(g1);
           // transpose the g matricies so when caxis is multiplied by it
           // it will give the sample direction that the caxis is along
           MatrixMath::Transpose3x3(g1, g1t);
@@ -297,7 +298,7 @@ void FindFeatureReferenceCAxisMisorientations::execute()
           // normalize so that the magnitude is 1
           MatrixMath::Normalize3x1(AvgCAxis);
           w = GeometryMath::CosThetaBetweenVectors(c1, AvgCAxis);
-          SIMPLibMath::boundF(w, -1, 1);
+          SIMPLibMath::bound(w, -1.0f, 1.0f);
           w = acosf(w);
           w = w * SIMPLib::Constants::k_180OverPi;
           if(w > 90.0)

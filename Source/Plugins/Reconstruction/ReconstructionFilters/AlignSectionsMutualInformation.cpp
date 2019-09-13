@@ -441,9 +441,13 @@ void AlignSectionsMutualInformation::form_features_sections()
   bool noseeds = false;
   int32_t featurecount = 1;
   int64_t neighbor = 0;
-  QuatF q1 = QuaternionMathF::New();
-  QuatF q2 = QuaternionMathF::New();
-  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+
+  //  QuatF q1 = QuaternionMathF::New();
+  //  QuatF q2 = QuaternionMathF::New();
+  //  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+
+  FloatArrayType::Pointer quats = m_QuatsPtr.lock();
+
   float w = 0.0f;
   float n1 = 0.0f;
   float n2 = 0.0f;
@@ -529,7 +533,8 @@ void AlignSectionsMutualInformation::form_features_sections()
           int64_t currentpoint = voxelslist[j];
           col = currentpoint % dims[0];
           row = (currentpoint / dims[0]) % dims[1];
-          QuaternionMathF::Copy(quats[currentpoint], q1);
+
+          QuatF q1(quats->getTuplePointer(currentpoint));
           phase1 = m_CrystalStructures[m_CellPhases[currentpoint]];
           for(int32_t i = 0; i < 4; i++)
           {
@@ -554,7 +559,8 @@ void AlignSectionsMutualInformation::form_features_sections()
             if(good && miFeatureIds[neighbor] <= 0 && m_CellPhases[neighbor] > 0)
             {
               w = std::numeric_limits<float>::max();
-              QuaternionMathF::Copy(quats[neighbor], q2);
+
+              QuatF q2(quats->getTuplePointer(neighbor));
               phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
               if(phase1 == phase2)
               {

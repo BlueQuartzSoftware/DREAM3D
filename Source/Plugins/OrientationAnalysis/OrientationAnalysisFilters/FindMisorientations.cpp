@@ -245,9 +245,6 @@ void FindMisorientations::execute()
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   float w = 0.0f;
   size_t tempMisoList = 0;
-  QuatF q1 = QuaternionMathF::New();
-  QuatF q2 = QuaternionMathF::New();
-  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
   uint32_t xtalType1 = 0, xtalType2 = 0;
   int32_t nname = 0;
@@ -255,7 +252,7 @@ void FindMisorientations::execute()
   misorientationlists.resize(totalFeatures);
   for(size_t i = 1; i < totalFeatures; i++)
   {
-    QuaternionMathF::Copy(avgQuats[i], q1);
+    QuatF q1(m_AvgQuats + i * 4);
     xtalType1 = m_CrystalStructures[m_FeaturePhases[i]];
     NeighborList<int32_t>::VectorType& featureNeighborList = neighborlist[i];
 
@@ -265,7 +262,7 @@ void FindMisorientations::execute()
     {
       w = std::numeric_limits<float>::max();
       nname = featureNeighborList[j];
-      QuaternionMathF::Copy(avgQuats[nname], q2);
+      QuatF q2(m_AvgQuats + nname * 4);
       xtalType2 = m_CrystalStructures[m_FeaturePhases[nname]];
       tempMisoList = featureNeighborList.size();
       if(xtalType1 == xtalType2 && static_cast<int64_t>(xtalType1) < static_cast<int64_t>(m_OrientationOps.size()))

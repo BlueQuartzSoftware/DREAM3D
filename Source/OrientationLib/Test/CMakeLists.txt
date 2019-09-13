@@ -65,13 +65,14 @@ set(OrientationLib_Link_Libs Qt5::Core H5Support SIMPLib OrientationLib)
 # be directly included in the main test source file. We list them here so that
 # they will show up in IDEs
 set(TEST_NAMES
+  QuaternionTest
+  OrientationTransformationTest
+  OrientationTest
   TextureTest
   ODFTest
-  OrientationArrayTest
   OrientationConverterTest
   IPFLegendTest
   SO3SamplerTest
-  OrientationTransformsTest
 )
 
 # We have some extra header files that need to be listed so that they show up in IDEs

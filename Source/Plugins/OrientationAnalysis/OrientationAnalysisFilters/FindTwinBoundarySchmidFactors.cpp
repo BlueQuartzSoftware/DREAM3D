@@ -58,7 +58,7 @@
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -96,8 +96,8 @@ public:
     float normal[3] = {0.0f, 0.0f, 0.0f};
     float g1[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
     float schmid1 = 0.0f, schmid2 = 0.0f, schmid3 = 0.0f;
-    QuatF q1 = QuaternionMathF::New();
-    QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+    //    QuatF q1 = QuaternionMathF::New();
+    //    QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
     float n[3] = {0.0f, 0.0f, 0.0f};
     float b[3] = {0.0f, 0.0f, 0.0f};
@@ -122,12 +122,10 @@ public:
         {
           feature = feature2;
         }
+        QuatF q1(m_Quats + feature * 4);
 
-        QuaternionMathF::Copy(quats[feature], q1);
         // calculate crystal direction parallel to normal
-        FOrientArrayType om(9);
-        FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
-        om.toGMatrix(g1);
+        OrientationTransformation::qu2om<QuatF, OrientationF>(q1).toGMatrix(g1);
         MatrixMath::Multiply3x3with3x1(g1, normal, n);
         // calculate crystal direction parallel to loading direction
         MatrixMath::Multiply3x3with3x1(g1, m_LoadDir, crystalLoading);

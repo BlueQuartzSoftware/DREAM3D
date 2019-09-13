@@ -32,25 +32,28 @@
 
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/SIMPLib.h"
+
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
+#include "OrientationLib/LaueOps/LaueOps.h"
+#include "OrientationLib/LaueOps/SO3Sampler.h"
+#include "OrientationLib/Utilities/ModifiedLambertProjection3D.hpp"
+
 #include "UnitTestSupport.hpp"
 
 #include "OrientationLibTestFileLocations.h"
 
-#include "OrientationLib/LaueOps/SO3Sampler.h"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
-#include "OrientationLib/Utilities/ModifiedLambertProjection3D.hpp"
-
 class SO3SamplerTest
 {
 public:
-  SO3SamplerTest()
-  {
-  }
-  virtual ~SO3SamplerTest()
-  {
-  }
+  SO3SamplerTest() = default;
+  virtual ~SO3SamplerTest() = default;
 
-  typedef OrientationTransforms<DOrientArrayType, double> OrientationTransformsType;
+  SO3SamplerTest(const SO3SamplerTest&) = delete;            // Copy Constructor Not Implemented
+  SO3SamplerTest(SO3SamplerTest&&) = delete;                 // Move Constructor Not Implemented
+  SO3SamplerTest& operator=(const SO3SamplerTest&) = delete; // Copy Assignment Not Implemented
+  SO3SamplerTest& operator=(SO3SamplerTest&&) = delete;      // Move Assignment Not Implemented
 
   // -----------------------------------------------------------------------------
   //
@@ -82,15 +85,15 @@ public:
   {
 
     SO3Sampler::Pointer sampler = SO3Sampler::New();
-    DOrientArrayType rod(4);
+    OrientationD rod(4);
 
-    DOrientArrayType cu(-0.3217544095666538, 0.2145029397111025, -0.4290058794222050);
-    OrientationTransformsType::cu2ro(cu, rod);
+    OrientationD cu(-0.3217544095666538, 0.2145029397111025, -0.4290058794222050);
+    rod = OrientationTransformation::cu2ro<OrientationD, OrientationD>(cu);
     bool inside = sampler->insideCubicFZ(rod.data(), 4);
     DREAM3D_REQUIRE_EQUAL(inside, false);
 
-    cu = DOrientArrayType(-0.42900587942220514, -0.21450293971110265, 0.42900587942220514);
-    OrientationTransformsType::cu2ro(cu, rod);
+    cu = OrientationD(-0.42900587942220514, -0.21450293971110265, 0.42900587942220514);
+    rod = OrientationTransformation::cu2ro<OrientationD, OrientationD>(cu);
     inside = sampler->insideCubicFZ(rod.data(), 4);
     DREAM3D_REQUIRE_EQUAL(inside, true);
   }
@@ -101,29 +104,29 @@ public:
   void TestPyramid()
   {
 
-    DOrientArrayType xyz(0, 0, 1);
+    OrientationD xyz(0, 0, 1);
 
-    int pSection = ModifiedLambertProjection3D<DOrientArrayType, double>::GetPyramid(xyz);
+    int pSection = ModifiedLambertProjection3D<OrientationD, double>::GetPyramid(xyz);
     DREAM3D_REQUIRE_EQUAL(pSection, 1)
 
-    xyz = DOrientArrayType(0, 0, -1);
-    pSection = ModifiedLambertProjection3D<DOrientArrayType, double>::GetPyramid(xyz);
+    xyz = OrientationD(0, 0, -1);
+    pSection = ModifiedLambertProjection3D<OrientationD, double>::GetPyramid(xyz);
     DREAM3D_REQUIRE_EQUAL(pSection, 2)
 
-    xyz = DOrientArrayType(1, 0, 0);
-    pSection = ModifiedLambertProjection3D<DOrientArrayType, double>::GetPyramid(xyz);
+    xyz = OrientationD(1, 0, 0);
+    pSection = ModifiedLambertProjection3D<OrientationD, double>::GetPyramid(xyz);
     DREAM3D_REQUIRE_EQUAL(pSection, 3)
 
-    xyz = DOrientArrayType(-1, 0, 0);
-    pSection = ModifiedLambertProjection3D<DOrientArrayType, double>::GetPyramid(xyz);
+    xyz = OrientationD(-1, 0, 0);
+    pSection = ModifiedLambertProjection3D<OrientationD, double>::GetPyramid(xyz);
     DREAM3D_REQUIRE_EQUAL(pSection, 4)
 
-    xyz = DOrientArrayType(0, 1, 0);
-    pSection = ModifiedLambertProjection3D<DOrientArrayType, double>::GetPyramid(xyz);
+    xyz = OrientationD(0, 1, 0);
+    pSection = ModifiedLambertProjection3D<OrientationD, double>::GetPyramid(xyz);
     DREAM3D_REQUIRE_EQUAL(pSection, 5)
 
-    xyz = DOrientArrayType(0, -1, 0);
-    pSection = ModifiedLambertProjection3D<DOrientArrayType, double>::GetPyramid(xyz);
+    xyz = OrientationD(0, -1, 0);
+    pSection = ModifiedLambertProjection3D<OrientationD, double>::GetPyramid(xyz);
     DREAM3D_REQUIRE_EQUAL(pSection, 6)
   }
 
@@ -135,8 +138,4 @@ public:
     DREAM3D_REGISTER_TEST(SO3CountTest())
     DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
-
-private:
-  SO3SamplerTest(const SO3SamplerTest&); // Copy Constructor Not Implemented
-  void operator=(const SO3SamplerTest&); // Move assignment Not Implemented
 };

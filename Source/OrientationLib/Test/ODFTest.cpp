@@ -110,9 +110,7 @@ public:
     float phi2 = 0.0f;
 
     float ga[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-    FOrientArrayType om(9, 0.0);
-    FOrientTransformsType::eu2om(FOrientArrayType(phi1, PHI, phi2), om);
-    om.toGMatrix(ga);
+    OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(phi1, PHI, phi2)).toGMatrix(ga);
 
     float coordsRotated[3] = {0.0f, 0.0f, 0.0f};
     float coords[3] = {0.0f, 0.0f, 0.0f};

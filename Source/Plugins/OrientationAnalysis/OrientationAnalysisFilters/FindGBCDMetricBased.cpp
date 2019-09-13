@@ -60,7 +60,7 @@
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -242,11 +242,8 @@ public:
         g2ea[whichEa] = m_Eulers[3 * feature2 + whichEa];
       }
 
-      FOrientArrayType om(9, 0.0f);
-      FOrientTransformsType::eu2om(FOrientArrayType(g1ea, 3), om);
-      om.toGMatrix(g1);
-      FOrientTransformsType::eu2om(FOrientArrayType(g2ea, 3), om);
-      om.toGMatrix(g2);
+      OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(g1ea, 3)).toGMatrix(g1);
+      OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(g2ea, 3)).toGMatrix(g2);
 
       for(int j = 0; j < nsym; j++)
       {
@@ -883,9 +880,7 @@ void FindGBCDMetricBased::execute()
     float gFixedAngle = static_cast<float>(m_MisorientationRotation.angle * SIMPLib::Constants::k_PiOver180);
     float gFixedAxis[3] = {m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l};
     MatrixMath::Normalize3x1(gFixedAxis);
-    FOrientArrayType om(9);
-    FOrientTransformsType::ax2om(FOrientArrayType(gFixedAxis[0], gFixedAxis[1], gFixedAxis[2], gFixedAngle), om);
-    om.toGMatrix(gFixed);
+    OrientationTransformation::ax2om<OrientationF, OrientationF>(OrientationF(gFixedAxis[0], gFixedAxis[1], gFixedAxis[2], gFixedAngle)).toGMatrix(gFixed);
   }
 
   MatrixMath::Transpose3x3(gFixed, gFixedT);

@@ -37,6 +37,7 @@
 
 #include <QtGui/QDoubleValidator>
 
+#include "OrientationLib/Core/OrientationTransformation.hpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -105,7 +106,7 @@ void CubochoricWidget::updateData(OrientationUtilityCalculator* calculator)
 void CubochoricWidget::valuesUpdated(const QString& text)
 {
   QVector<double> values = getValues();
-  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::cu_check(values);
+  OrientationTransformation::ResultType result = OrientationTransformation::cu_check(values);
   int errorCode = result.result;
   QString errorMsg = QString::fromStdString(result.msg);
 

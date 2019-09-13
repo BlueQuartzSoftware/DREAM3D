@@ -1,37 +1,37 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "AlignSectionsMisorientation.h"
 
@@ -46,6 +46,9 @@
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+
+#include "OrientationLib/Core/Quaternion.hpp"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -63,7 +66,6 @@ AlignSectionsMisorientation::AlignSectionsMisorientation()
 {
   m_RandomSeed = QDateTime::currentMSecsSinceEpoch();
 
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   // only setting up the child parameters because the parent constructor has already been called
 }
@@ -232,8 +234,12 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
   SizeVec3Type udims = m->getGeometryAs<ImageGeom>()->getDimensions();
 
   int64_t dims[3] = {
-      static_cast<int64_t>(udims[0]), static_cast<int64_t>(udims[1]), static_cast<int64_t>(udims[2]),
+      static_cast<int64_t>(udims[0]),
+      static_cast<int64_t>(udims[1]),
+      static_cast<int64_t>(udims[2]),
   };
+
+  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   float disorientation = 0.0f;
   float mindisorientation = std::numeric_limits<float>::max();
@@ -245,11 +251,9 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
   int64_t slice = 0;
   float w = 0.0f;
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
-  QuatF q1 = QuaternionMathF::New();
-  QuatF q2 = QuaternionMathF::New();
+
   int64_t refposition = 0;
   int64_t curposition = 0;
-  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
   uint32_t phase1 = 0, phase2 = 0;
   int64_t progInt = 0;
@@ -316,9 +320,10 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int64_t>& xshifts, std
                     w = std::numeric_limits<float>::max();
                     if(m_CellPhases[refposition] > 0 && m_CellPhases[curposition] > 0)
                     {
-                      QuaternionMathF::Copy(quats[refposition], q1);
+
+                      QuatF q1(m_Quats + refposition * 4); // BEWARE POINTER MATH!!
                       phase1 = m_CrystalStructures[m_CellPhases[refposition]];
-                      QuaternionMathF::Copy(quats[curposition], q2);
+                      QuatF q2(m_Quats + curposition * 4); // BEWARE POINTER MATH!!
                       phase2 = m_CrystalStructures[m_CellPhases[curposition]];
                       if(phase1 == phase2 && phase1 < static_cast<uint32_t>(m_OrientationOps.size()))
                       {

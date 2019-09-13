@@ -36,6 +36,7 @@
 #include "MergeColonies.h"
 
 #include <chrono>
+#include <cmath>
 #include <random>
 
 #include "SIMPLib/Common/Constants.h"
@@ -49,7 +50,7 @@
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -67,34 +68,34 @@ enum createdPathID : RenameDataPath::DataID_t
 
 namespace
 {
-const float unit110 = 1.0 / sqrtf(2.0);
-const float unit111 = 1.0 / sqrtf(3.0);
-const float unit112_1 = 1.0 / sqrtf(6.0);
-const float unit112_2 = 2.0 / sqrtf(6.0);
+const double unit110 = 1.0 / std::sqrt(2.0);
+const double unit111 = 1.0 / std::sqrt(3.0);
+const double unit112_1 = 1.0 / std::sqrt(6.0);
+const double unit112_2 = 2.0 / std::sqrt(6.0);
 
-float crystalDirections[12][3][3] = {{{unit111, unit112_1, unit110}, {-unit111, -unit112_1, unit110}, {unit111, -unit112_2, 0}},
+double crystalDirections[12][3][3] = {{{unit111, unit112_1, unit110}, {-unit111, -unit112_1, unit110}, {unit111, -unit112_2, 0}},
 
-                                     {{-unit111, unit112_1, unit110}, {unit111, -unit112_1, unit110}, {unit111, unit112_2, 0}},
+                                      {{-unit111, unit112_1, unit110}, {unit111, -unit112_1, unit110}, {unit111, unit112_2, 0}},
 
-                                     {{unit111, -unit112_1, unit110}, {unit111, -unit112_1, -unit110}, {unit111, unit112_2, 0}},
+                                      {{unit111, -unit112_1, unit110}, {unit111, -unit112_1, -unit110}, {unit111, unit112_2, 0}},
 
-                                     {{unit111, unit112_1, unit110}, {unit111, unit112_1, -unit110}, {-unit111, unit112_2, 0}},
+                                      {{unit111, unit112_1, unit110}, {unit111, unit112_1, -unit110}, {-unit111, unit112_2, 0}},
 
-                                     {{unit111, unit112_1, unit110}, {unit111, -unit112_2, 0}, {unit111, unit112_1, -unit110}},
+                                      {{unit111, unit112_1, unit110}, {unit111, -unit112_2, 0}, {unit111, unit112_1, -unit110}},
 
-                                     {{unit111, -unit112_1, unit110}, {-unit111, -unit112_2, 0}, {unit111, -unit112_1, -unit110}},
+                                      {{unit111, -unit112_1, unit110}, {-unit111, -unit112_2, 0}, {unit111, -unit112_1, -unit110}},
 
-                                     {{unit111, -unit112_1, unit110}, {unit111, unit112_2, 0}, {-unit111, unit112_1, unit110}},
+                                      {{unit111, -unit112_1, unit110}, {unit111, unit112_2, 0}, {-unit111, unit112_1, unit110}},
 
-                                     {{-unit111, -unit112_1, unit110}, {unit111, -unit112_2, 0}, {unit111, unit112_1, unit110}},
+                                      {{-unit111, -unit112_1, unit110}, {unit111, -unit112_2, 0}, {unit111, unit112_1, unit110}},
 
-                                     {{unit111, -unit112_2, 0}, {unit111, unit112_1, unit110}, {-unit111, -unit112_1, unit110}},
+                                      {{unit111, -unit112_2, 0}, {unit111, unit112_1, unit110}, {-unit111, -unit112_1, unit110}},
 
-                                     {{unit111, unit112_2, 0}, {-unit111, unit112_1, unit110}, {unit111, -unit112_1, unit110}},
+                                      {{unit111, unit112_2, 0}, {-unit111, unit112_1, unit110}, {unit111, -unit112_1, unit110}},
 
-                                     {{unit111, unit112_2, 0}, {unit111, -unit112_1, unit110}, {unit111, -unit112_1, -unit110}},
+                                      {{unit111, unit112_2, 0}, {unit111, -unit112_1, unit110}, {unit111, -unit112_1, -unit110}},
 
-                                     {{-unit111, unit112_2, 0}, {unit111, unit112_1, unit110}, {unit111, unit112_1, -unit110}}};
+                                      {{-unit111, unit112_2, 0}, {unit111, unit112_1, unit110}, {unit111, unit112_1, -unit110}}};
 }
 
 // -----------------------------------------------------------------------------
@@ -399,58 +400,58 @@ int32_t MergeColonies::getSeed(int32_t newFid)
 // -----------------------------------------------------------------------------
 bool MergeColonies::determineGrouping(int32_t referenceFeature, int32_t neighborFeature, int32_t newFid)
 {
-  float w = 0.0f;
-  float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
+  double w = 0.0f;
+  double n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   bool colony = false;
-  QuatF q1 = QuaternionMathF::New();
-  QuatF q2 = QuaternionMathF::New();
-  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+
+  // QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
   if(m_FeatureParentIds[neighborFeature] == -1 && m_FeaturePhases[referenceFeature] > 0 && m_FeaturePhases[neighborFeature] > 0)
   {
-    w = std::numeric_limits<float>::max();
-    QuaternionMathF::Copy(avgQuats[referenceFeature], q1);
+    w = std::numeric_limits<double>::max();
+    float* avgQuatPtr = m_AvgQuats + referenceFeature * 4;
+    QuatType q1(avgQuatPtr[0], avgQuatPtr[1], avgQuatPtr[2], avgQuatPtr[3]);
+    avgQuatPtr = m_AvgQuats + neighborFeature * 4;
+    QuatType q2(avgQuatPtr[0], avgQuatPtr[1], avgQuatPtr[2], avgQuatPtr[3]);
+
     uint32_t phase1 = m_CrystalStructures[m_FeaturePhases[referenceFeature]];
-    QuaternionMathF::Copy(avgQuats[neighborFeature], q2);
     uint32_t phase2 = m_CrystalStructures[m_FeaturePhases[neighborFeature]];
     if(phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High))
     {
       w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
 
-      FOrientArrayType ax(n1, n2, n3, w);
-      FOrientArrayType rod(4);
-      OrientationTransforms<FOrientArrayType, float>::ax2ro(ax, rod);
+      OrientationD ax(n1, n2, n3, w);
+      OrientationD rod = OrientationTransformation::ax2ro<OrientationD, OrientationD>(ax);
       rod = m_OrientationOps[phase1]->getMDFFZRod(rod);
-      OrientationTransforms<FOrientArrayType, float>::ro2ax(rod, ax);
-      ax.toAxisAngle(n1, n2, n3, w);
+      OrientationTransformation::ro2ax<OrientationD, OrientationD>(rod).toAxisAngle(n1, n2, n3, w);
 
       w = w * (180.0f / SIMPLib::Constants::k_Pi);
-      float angdiff1 = fabsf(w - 10.53f);
-      float axisdiff1 = acosf(fabsf(n1) * 0.0000f + fabsf(n2) * 0.0000f + fabsf(n3) * 1.0000f);
+      float angdiff1 = std::fabs(w - 10.53f);
+      float axisdiff1 = std::acos(/*std::fabs(n1) * 0.0000f + std::fabs(n2) * 0.0000f +*/ std::fabs(n3) /* * 1.0000f */);
       if(angdiff1 < m_AngleTolerance && axisdiff1 < m_AxisToleranceRad)
       {
         colony = true;
       }
-      float angdiff2 = fabsf(w - 90.00f);
-      float axisdiff2 = acosf(fabsf(n1) * 0.9958f + fabsf(n2) * 0.0917f + fabsf(n3) * 0.0000f);
+      float angdiff2 = std::fabs(w - 90.00f);
+      float axisdiff2 = std::acos(std::fabs(n1) * 0.9958f + std::fabs(n2) * 0.0917f /* + std::fabs(n3) * 0.0000f */);
       if(angdiff2 < m_AngleTolerance && axisdiff2 < m_AxisToleranceRad)
       {
         colony = true;
       }
-      float angdiff3 = fabsf(w - 60.00f);
-      float axisdiff3 = acosf(fabsf(n1) * 1.0000f + fabsf(n2) * 0.0000f + fabsf(n3) * 0.0000f);
+      float angdiff3 = std::fabs(w - 60.00f);
+      float axisdiff3 = std::acos(std::fabs(n1) /* * 1.0000f + std::fabs(n2) * 0.0000f + std::fabs(n3) * 0.0000f*/);
       if(angdiff3 < m_AngleTolerance && axisdiff3 < m_AxisToleranceRad)
       {
         colony = true;
       }
-      float angdiff4 = fabsf(w - 60.83f);
-      float axisdiff4 = acosf(fabsf(n1) * 0.9834f + fabsf(n2) * 0.0905f + fabsf(n3) * 0.1570f);
+      float angdiff4 = std::fabs(w - 60.83f);
+      float axisdiff4 = std::acos(std::fabs(n1) * 0.9834f + std::fabs(n2) * 0.0905f + std::fabs(n3) * 0.1570f);
       if(angdiff4 < m_AngleTolerance && axisdiff4 < m_AxisToleranceRad)
       {
         colony = true;
       }
-      float angdiff5 = fabsf(w - 63.26f);
-      float axisdiff5 = acosf(fabsf(n1) * 0.9549f + fabsf(n2) * 0.0000f + fabsf(n3) * 0.2969f);
+      float angdiff5 = std::fabs(w - 63.26f);
+      float axisdiff5 = std::acos(std::fabs(n1) * 0.9549f /* + std::fabs(n2) * 0.0000f */+ std::fabs(n3) * 0.2969f);
       if(angdiff5 < m_AngleTolerance && axisdiff5 < m_AxisToleranceRad)
       {
         colony = true;
@@ -493,32 +494,29 @@ void MergeColonies::characterize_colonies()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
+bool MergeColonies::check_for_burgers(const QuatType& betaQuat, const QuatType& alphaQuat) const
 {
-  float dP = 0.0f;
-  float angle = 0.0f;
-  float radToDeg = 180.0f / SIMPLib::Constants::k_Pi;
+  double dP = 0.0;
+  double angle = 0.0;
+  double radToDeg = 180.0 / SIMPLib::Constants::k_Pi;
 
-  float gBeta[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-  float gBetaT[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-  FOrientArrayType om(9);
-  FOrientTransformsType::qu2om(FOrientArrayType(betaQuat), om);
-  om.toGMatrix(gBeta);
+  double gBeta[3][3] = {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}};
+  double gBetaT[3][3] = {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}};
+  OrientationTransformation::qu2om<QuatType, OrientationD>(betaQuat).toGMatrix(gBeta);
   // transpose gBeta so the sample direction is the output when
   // gBeta is multiplied by the crystal directions below
   MatrixMath::Transpose3x3(gBeta, gBetaT);
 
-  float gAlpha[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-  float gAlphaT[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-  FOrientTransformsType::qu2om(FOrientArrayType(alphaQuat), om);
-  om.toGMatrix(gAlpha);
+  double gAlpha[3][3] = {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}};
+  double gAlphaT[3][3] = {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}};
+  OrientationTransformation::qu2om<QuatType, OrientationD>(alphaQuat).toGMatrix(gAlpha);
   // transpose gBeta so the sample direction is the output when
   // gBeta is multiplied by the crystal directions below
   MatrixMath::Transpose3x3(gAlpha, gAlphaT);
 
-  float mat[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-  float a[3] = {0.0f, 0.0f, 0.0f};
-  float b[3] = {0.0f, 0.0f, 0.0f};
+  double mat[3][3] = {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.0}};
+  double a[3] = {0.0, 0.0, 0.0};
+  double b[3] = {0.0, 0.0, 0.0};
   for(int32_t i = 0; i < 12; i++)
   {
     MatrixMath::Multiply3x3with3x3(gBetaT, crystalDirections[i], mat);
@@ -529,7 +527,7 @@ bool MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
     b[1] = gAlphaT[1][2];
     b[2] = gAlphaT[2][2];
     dP = GeometryMath::CosThetaBetweenVectors(a, b);
-    angle = acosf(dP);
+    angle = std::acos(dP);
     if((angle * radToDeg) < m_AngleTolerance || (180.0f - (angle * radToDeg)) < m_AngleTolerance)
     {
       a[0] = mat[0][0];
@@ -539,7 +537,7 @@ bool MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
       b[1] = gAlphaT[1][0];
       b[2] = gAlphaT[2][0];
       dP = GeometryMath::CosThetaBetweenVectors(a, b);
-      angle = acosf(dP);
+      angle = std::acos(dP);
       if((angle * radToDeg) < m_AngleTolerance)
       {
         return true;
@@ -552,7 +550,7 @@ bool MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
       b[1] = -0.5 * gAlphaT[1][0] + 0.866025 * gAlphaT[1][1];
       b[2] = -0.5 * gAlphaT[2][0] + 0.866025 * gAlphaT[2][1];
       dP = GeometryMath::CosThetaBetweenVectors(a, b);
-      angle = acosf(dP);
+      angle = std::acos(dP);
       if((angle * radToDeg) < m_AngleTolerance)
       {
         return true;
@@ -565,7 +563,7 @@ bool MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
       b[1] = -0.5 * gAlphaT[1][0] - 0.866025 * gAlphaT[1][1];
       b[2] = -0.5 * gAlphaT[2][0] - 0.866025 * gAlphaT[2][1];
       dP = GeometryMath::CosThetaBetweenVectors(a, b);
-      angle = acosf(dP);
+      angle = std::acos(dP);
       if((angle * radToDeg) < m_AngleTolerance)
       {
         return true;

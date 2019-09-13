@@ -37,6 +37,7 @@
 
 #include <QtGui/QDoubleValidator>
 
+#include "OrientationLib/Core/OrientationTransformation.hpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -132,7 +133,7 @@ void RodriguesWidget::valuesUpdated(const QString& text)
   ss << values[0] << ", " << values[1] << ", " << values[2] << ", " << values[3];
 
   emit invalidValues(errorCode, QString::fromStdString(ss.str()));
-  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::ro_check(values);
+  OrientationTransformation::ResultType result = OrientationTransformation::ro_check(values);
   errorCode = result.result;
   QString errorMsg = QString::fromStdString(result.msg);
 

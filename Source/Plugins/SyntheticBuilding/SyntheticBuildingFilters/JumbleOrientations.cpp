@@ -46,8 +46,9 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
@@ -253,12 +254,12 @@ void JumbleOrientations::execute()
     m_CellEulerAngles[3 * i + 1] = m_FeatureEulerAngles[3 * (m_FeatureIds[i]) + 1];
     m_CellEulerAngles[3 * i + 2] = m_FeatureEulerAngles[3 * (m_FeatureIds[i]) + 2];
   }
-  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+  // QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+
   for(int32_t i = 1; i < totalFeatures; i++)
   {
-    FOrientArrayType quat(4, 0.0);
-    FOrientTransformsType::eu2qu(FOrientArrayType(&(m_FeatureEulerAngles[3 * i]), 3), quat);
-    QuaternionMathF::Copy(quat.toQuaternion(), avgQuats[i]);
+    QuatF quat(m_AvgQuats + i * 4);
+    quat = OrientationTransformation::eu2qu<OrientationF, QuatF>(OrientationF(m_FeatureEulerAngles + (3 * i), 3));
   }
 
 

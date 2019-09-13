@@ -88,13 +88,13 @@ public:
 
       if(phase < m_NumPhases && calcIPF && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd)
       {
-        QuatF q = QuaternionMathF::New(m_Quats[index], m_Quats[index + 1], m_Quats[index + 2], m_Quats[index + 3]);
+        QuatType q = QuatType(m_Quats[index], m_Quats[index + 1], m_Quats[index + 2], m_Quats[index + 3]);
         int32_t xtal = static_cast<int32_t>(m_CrystalStructures[phase]);
         ops[xtal]->getFZQuat(q);
-        m_FZQuats[index] = q.x;
-        m_FZQuats[index + 1] = q.y;
-        m_FZQuats[index + 2] = q.z;
-        m_FZQuats[index + 3] = q.w;
+        m_FZQuats[index] = q.x();
+        m_FZQuats[index + 1] = q.y();
+        m_FZQuats[index + 2] = q.z();
+        m_FZQuats[index + 3] = q.w();
       }
     }
   }
@@ -108,12 +108,12 @@ public:
 
 private:
   GenerateFZQuaternions* m_Filter = nullptr;
-  float* m_Quats;
-  int32_t* m_CellPhases;
-  unsigned int* m_CrystalStructures;
+  float* m_Quats = nullptr;
+  int32_t* m_CellPhases = nullptr;
+  unsigned int* m_CrystalStructures = nullptr;
   int32_t m_NumPhases = 0;
-  bool* m_GoodVoxels;
-  float* m_FZQuats;
+  bool* m_GoodVoxels = nullptr;
+  float* m_FZQuats = nullptr;
 };
 
 // -----------------------------------------------------------------------------

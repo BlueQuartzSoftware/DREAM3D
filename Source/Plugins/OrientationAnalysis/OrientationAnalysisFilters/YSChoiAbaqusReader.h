@@ -36,8 +36,9 @@
 
 #pragma once
 
-#include <QtCore/QString>
 #include <cstring> // needed for the ::memcpy function below
+
+#include <QtCore/QString>
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/Constants.h"

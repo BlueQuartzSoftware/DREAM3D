@@ -301,15 +301,12 @@ void NeighborOrientationCorrelation::execute()
   neighpoints[5] = static_cast<int64_t>(dims[0] * dims[1]);
 
   float w = std::numeric_limits<float>::max();
-  QuatF q1 = QuaternionMathF::New();
-  QuatF q2 = QuaternionMathF::New();
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   uint32_t phase1 = 0, phase2 = 0;
 
   std::vector<int32_t> neighborDiffCount(totalPoints, 0);
   std::vector<int32_t> neighborSimCount(6, 0);
   std::vector<int64_t> bestNeighbor(totalPoints, -1);
-  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
   const int32_t startLevel = 6;
   for(int32_t currentLevel = startLevel; currentLevel > m_Level; currentLevel--)
@@ -369,10 +366,10 @@ void NeighborOrientationCorrelation::execute()
           if(good)
           {
             phase1 = m_CrystalStructures[m_CellPhases[i]];
-            QuaternionMathF::Copy(quats[i], q1);
+            QuatF q1(m_Quats + i * 4);
 
             phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
-            QuaternionMathF::Copy(quats[neighbor], q2);
+            QuatF q2(m_Quats + neighbor * 4);
 
             if(m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0)
             {
@@ -413,10 +410,10 @@ void NeighborOrientationCorrelation::execute()
               if(good2)
               {
                 phase1 = m_CrystalStructures[m_CellPhases[neighbor2]];
-                QuaternionMathF::Copy(quats[neighbor2], q1);
+                q1 = QuatF(m_Quats + neighbor2 * 4);
 
                 phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
-                QuaternionMathF::Copy(quats[neighbor], q2);
+                q2 = QuatF(m_Quats + neighbor * 4);
                 if(m_CellPhases[neighbor2] == m_CellPhases[neighbor] && m_CellPhases[neighbor2] > 0)
                 {
                   w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);

@@ -42,7 +42,9 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -54,8 +56,6 @@ FindCAxisLocations::FindCAxisLocations()
 : m_QuatsArrayPath("", "", "")
 , m_CAxisLocationsArrayName(SIMPL::CellData::CAxisLocation)
 {
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
-
 }
 
 // -----------------------------------------------------------------------------
@@ -150,10 +150,12 @@ void FindCAxisLocations::execute()
     return;
   }
 
+  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
+
+  FloatArrayType::Pointer quatsPtr = m_QuatsPtr.lock();
+
   size_t totalPoints = m_QuatsPtr.lock()->getNumberOfTuples();
 
-  QuatF q1 = QuaternionMathF::New();
-  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
   float g1[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
   float g1t[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
   float caxis[3] = {0.0f, 0.0f, 1.0f};
@@ -163,10 +165,8 @@ void FindCAxisLocations::execute()
   for(size_t i = 0; i < totalPoints; i++)
   {
     index = 3 * i;
-    QuaternionMathF::Copy(quats[i], q1);
-    FOrientArrayType om(9);
-    FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
-    om.toGMatrix(g1);
+    QuatF q1(quatsPtr->getTuplePointer(i));
+    OrientationTransformation::qu2om<QuatF, Orientation<float>>(q1).toGMatrix(g1);
     // transpose the g matricies so when caxis is multiplied by it
     // it will give the sample direction that the caxis is along
     MatrixMath::Transpose3x3(g1, g1t);
@@ -175,7 +175,7 @@ void FindCAxisLocations::execute()
     MatrixMath::Normalize3x1(c1);
     if(c1[2] < 0)
     {
-      MatrixMath::Multiply3x1withConstant(c1, -1);
+      MatrixMath::Multiply3x1withConstant(c1, -1.0f);
     }
     m_CAxisLocations[index] = c1[0];
     m_CAxisLocations[index + 1] = c1[1];

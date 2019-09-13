@@ -47,7 +47,9 @@
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
 
 #include "ImportExport/ImportExportConstants.h"
 #include "ImportExport/ImportExportVersion.h"
@@ -256,13 +258,13 @@ void VisualizeGBCDGMT::execute()
   gbcdLimits[0] = 0.0f;
   gbcdLimits[1] = 0.0f;
   gbcdLimits[2] = 0.0f;
-  gbcdLimits[3] = -sqrtf(SIMPLib::Constants::k_Pi / 2.0f);
-  gbcdLimits[4] = -sqrtf(SIMPLib::Constants::k_Pi / 2.0f);
+  gbcdLimits[3] = -sqrtf(SIMPLib::Constants::k_PiOver2);
+  gbcdLimits[4] = -sqrtf(SIMPLib::Constants::k_PiOver2);
   gbcdLimits[5] = SIMPLib::Constants::k_Pi / 2.0f;
   gbcdLimits[6] = 1.0f;
   gbcdLimits[7] = SIMPLib::Constants::k_Pi / 2.0f;
-  gbcdLimits[8] = sqrtf(SIMPLib::Constants::k_Pi / 2.0f);
-  gbcdLimits[9] = sqrtf(SIMPLib::Constants::k_Pi / 2.0f);
+  gbcdLimits[8] = sqrtf(SIMPLib::Constants::k_PiOver2);
+  gbcdLimits[9] = sqrtf(SIMPLib::Constants::k_PiOver2);
 
   // get num components of GBCD
   std::vector<size_t> cDims = m_GBCDPtr.lock()->getComponentDimensions();
@@ -297,9 +299,7 @@ void VisualizeGBCDGMT::execute()
   float normAxis[3] = {m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l};
   MatrixMath::Normalize3x1(normAxis);
   // convert axis angle to matrix representation of misorientation
-  FOrientArrayType om(9, 0.0f);
-  FOrientTransformsType::ax2om(FOrientArrayType(normAxis[0], normAxis[1], normAxis[2], misAngle), om);
-  om.toGMatrix(dg);
+  OrientationTransformation::ax2om<OrientationF, OrientationF>(OrientationF(normAxis[0], normAxis[1], normAxis[2], misAngle)).toGMatrix(dg);
 
   // take inverse of misorientation variable to use for switching symmetry
   MatrixMath::Transpose3x3(dg, dgt);
@@ -361,8 +361,9 @@ void VisualizeGBCDGMT::execute()
           MatrixMath::Multiply3x3with3x3(dg, sym2t, dg1);
           MatrixMath::Multiply3x3with3x3(sym1, dg1, dg2);
           // convert to euler angle
-          FOrientArrayType mEuler(mis_euler1, 3);
-          FOrientTransformsType::om2eu(FOrientArrayType(dg2), mEuler);
+          OrientationF mEuler(mis_euler1, 3);
+          mEuler = OrientationTransformation::om2eu<OrientationF, OrientationF>(OrientationF(dg2));
+
           if(mis_euler1[0] < SIMPLib::Constants::k_PiOver2 && mis_euler1[1] < SIMPLib::Constants::k_PiOver2 && mis_euler1[2] < SIMPLib::Constants::k_PiOver2)
           {
             mis_euler1[1] = cosf(mis_euler1[1]);
@@ -395,7 +396,7 @@ void VisualizeGBCDGMT::execute()
           MatrixMath::Multiply3x3with3x3(dgt, sym2, dg1);
           MatrixMath::Multiply3x3with3x3(sym1, dg1, dg2);
           // convert to euler angle
-          FOrientTransformsType::om2eu(FOrientArrayType(dg2), mEuler);
+          mEuler = OrientationTransformation::om2eu<OrientationF, OrientationF>(OrientationF(dg2));
           if(mis_euler1[0] < SIMPLib::Constants::k_PiOver2 && mis_euler1[1] < SIMPLib::Constants::k_PiOver2 && mis_euler1[2] < SIMPLib::Constants::k_PiOver2)
           {
             mis_euler1[1] = cosf(mis_euler1[1]);

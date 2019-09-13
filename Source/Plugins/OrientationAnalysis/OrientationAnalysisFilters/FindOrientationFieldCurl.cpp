@@ -53,13 +53,15 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 
+#include "OrientationLib/Core/Quaternion.hpp"
+
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 class FindMisorientationVectorsImpl
 {
 public:
-  FindMisorientationVectorsImpl(QuatF* quats, float* misoVecs, int64_t* neighbors, int64_t* faceIds)
+  FindMisorientationVectorsImpl(float* quats, float* misoVecs, int64_t* neighbors, int64_t* faceIds)
   : m_Quats(quats)
   , m_MisoVecs(misoVecs)
   , m_Neighbors(neighbors)
@@ -71,22 +73,21 @@ public:
 
   void convert(size_t start, size_t end) const
   {
-    QuatF q1;
-    QuatF q2;
-    QuatF delq;
-    float misoVec[3];
+    using QuaternionType = Quaternion<double>;
+
     for(size_t i = start; i < end; i++)
     {
+      QuaternionType q1(m_Quats[i * 4 + 0], m_Quats[i * 4 + 1], m_Quats[i * 4 + 2], m_Quats[i * 4 + 3]);
       for(int j = 0; j < 3; j++)
       {
-        QuaternionMathF::Copy(m_Quats[i], q1);
         if(m_Neighbors[3 * i + j] > 0)
         {
-          QuaternionMathF::Copy(m_Quats[m_Neighbors[3 * i + j]], q2);
-          QuaternionMathF::Conjugate(q2);
-          QuaternionMathF::Multiply(q1, q2, delq);
-          m_OrientationOps[1]->getFZQuat(delq);
-          QuaternionMathF::GetMisorientationVector(delq, misoVec);
+          size_t idx = m_Neighbors[3 * i + j];
+          QuaternionType q2(m_Quats[idx * 4 + 0], m_Quats[idx * 4 + 1], m_Quats[idx * 4 + 2], m_Quats[idx * 4 + 3]);
+          QuaternionType delq = q1 * (q2.conjugate());
+
+          delq = m_OrientationOps[1]->getFZQuat(delq);
+          std::array<double, 3> misoVec = delq.getMisorientationVector();
           m_MisoVecs[3 * m_FaceIds[3 * i + j] + 0] = misoVec[0];
           m_MisoVecs[3 * m_FaceIds[3 * i + j] + 1] = misoVec[1];
           m_MisoVecs[3 * m_FaceIds[3 * i + j] + 2] = misoVec[2];
@@ -102,10 +103,10 @@ public:
   }
 #endif
 private:
-  QuatF* m_Quats;
-  float* m_MisoVecs;
-  int64_t* m_Neighbors;
-  int64_t* m_FaceIds;
+  float* m_Quats = nullptr;
+  float* m_MisoVecs = nullptr;
+  int64_t* m_Neighbors = nullptr;
+  int64_t* m_FaceIds = nullptr;
   QVector<LaueOps::Pointer> m_OrientationOps;
 };
 
@@ -261,7 +262,7 @@ void FindOrientationFieldCurl::execute()
   size_t yP = m->getGeometryAs<ImageGeom>()->getYPoints();
   size_t zP = m->getGeometryAs<ImageGeom>()->getZPoints();
 
-  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+  // QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
   size_t totalFaces = ((xP + 1) * yP * zP) + ((yP + 1) * xP * zP) + ((zP + 1) * xP * yP);
   std::vector<size_t> tDims(1, totalFaces);
   std::vector<size_t> cDims(1, 3);
@@ -312,12 +313,12 @@ void FindOrientationFieldCurl::execute()
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   if(doParallel)
   {
-    tbb::parallel_for(tbb::blocked_range<size_t>(0, (xP * yP * zP)), FindMisorientationVectorsImpl(quats, misoVecs, neighbors, faceIds), tbb::auto_partitioner());
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, (xP * yP * zP)), FindMisorientationVectorsImpl(m_Quats, misoVecs, neighbors, faceIds), tbb::auto_partitioner());
   }
   else
 #endif
   {
-    FindMisorientationVectorsImpl serial(quats, misoVecs, neighbors, faceIds);
+    FindMisorientationVectorsImpl serial(m_Quats, misoVecs, neighbors, faceIds);
     serial.convert(0, (xP * yP * zP));
   }
 

@@ -49,82 +49,50 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/ColorTable.h"
 
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
-#include "OrientationLib/Utilities/PoleFigureUtilities.h"
+#include "OrientationLib/Core/Orientation.hpp"
+
 #include "OrientationLib/Utilities/ComputeStereographicProjection.h"
+#include "OrientationLib/Utilities/PoleFigureUtilities.h"
 
 namespace Detail
 {
 
-  static const float HexDim1InitValue = powf((0.75f * ((float(SIMPLib::Constants::k_Pi)) - sinf((float(SIMPLib::Constants::k_Pi))))), (1.0f / 3.0f));
-  static const float HexDim2InitValue = powf((0.75f * ((float(SIMPLib::Constants::k_Pi)) - sinf((float(SIMPLib::Constants::k_Pi))))), (1.0f / 3.0f));
-  static const float HexDim3InitValue = powf((0.75f * ((float(SIMPLib::Constants::k_Pi) / 6.0f) - sinf((float(SIMPLib::Constants::k_Pi) / 6.0f)))), (1.0f / 3.0f));
-  static const float HexDim1StepValue = HexDim1InitValue / 36.0f;
-  static const float HexDim2StepValue = HexDim2InitValue / 36.0f;
-  static const float HexDim3StepValue = HexDim3InitValue / 6.0f;
+static const double HexDim1InitValue = std::pow((0.75 * (SIMPLib::Constants::k_Pi - std::sin(SIMPLib::Constants::k_Pi))), (1.0 / 3.0));
+static const double HexDim2InitValue = std::pow((0.75 * (SIMPLib::Constants::k_Pi - std::sin(SIMPLib::Constants::k_Pi))), (1.0 / 3.0));
+static const double HexDim3InitValue = std::pow((0.75 * ((SIMPLib::Constants::k_Pi / 6.0) - std::sin(SIMPLib::Constants::k_Pi / 6.0))), (1.0 / 3.0));
+static const double HexDim1StepValue = HexDim1InitValue / 36.0;
+static const double HexDim2StepValue = HexDim2InitValue / 36.0;
+static const double HexDim3StepValue = HexDim3InitValue / 6.0;
 
-  namespace HexagonalLow
-  {
-    static const int symSize0 = 2;
-    static const int symSize1 = 2;
-    static const int symSize2 = 2;
-  }
+namespace HexagonalLow
+{
+static const int symSize0 = 2;
+static const int symSize1 = 2;
+static const int symSize2 = 2;
+} // namespace HexagonalLow
 }
 
 const int HexagonalLowOps::k_OdfSize = 62208;
 const int HexagonalLowOps::k_MdfSize = 62208;
 const int HexagonalLowOps::k_NumSymQuats = 6;
 
-static const QuatF HexQuatSym[HexagonalLowOps::k_NumSymQuats] = {QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
-                                                                 QuaternionMathF::New(0.000000000f, 0.000000000f, 0.500000000f, 0.866025400f),
-                                                                 QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, 0.500000000f),
-                                                                 QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
-                                                                 QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, -0.50000000f),
-                                                                 QuaternionMathF::New(0.000000000f, 0.000000000f, 0.500000000f, -0.86602540f)
-                                                                };
+static const QuatType HexQuatSym[HexagonalLowOps::k_NumSymQuats] = {QuatType(0.000000000, 0.000000000, 0.000000000, 1.000000000), QuatType(0.000000000, 0.000000000, 0.500000000, 0.866025400),
+                                                                    QuatType(0.000000000, 0.000000000, 0.866025400, 0.500000000), QuatType(0.000000000, 0.000000000, 1.000000000, 0.000000000),
+                                                                    QuatType(0.000000000, 0.000000000, 0.866025400, -0.50000000), QuatType(0.000000000, 0.000000000, 0.500000000, -0.86602540)};
 
+static const double HexRodSym[HexagonalLowOps::k_NumSymQuats][3] = {{0.0, 0.0, 0.0}, {0.0, 0.0, 0.57735}, {0.0, 0.0, 1.73205}, {0.0, 0.0, 1000000000000.0}, {0.0, 0.0, -1.73205}, {0.0, 0.0, -0.57735}};
+static const double HexMatSym[HexagonalLowOps::k_NumSymQuats][3][3] = {
+    {{1.0, 0.0, 0.0}, {0.0, 1.0, 0.0}, {0.0, 0.0, 1.0}},
 
-static const float HexRodSym[HexagonalLowOps::k_NumSymQuats][3] = {{0.0f, 0.0f, 0.0f},
-  {0.0f, 0.0f, 0.57735f},
-  {0.0f, 0.0f, 1.73205f},
-  {0.0f, 0.0f, 1000000000000.0f},
-  {0.0f, 0.0f, -1.73205f},
-  {0.0f, 0.0f, -0.57735f}
-};
-static const float HexMatSym[HexagonalLowOps::k_NumSymQuats][3][3] =
-{
-  { {1.0f, 0.0f, 0.0f},
-    {0.0f, 1.0f, 0.0f},
-    {0.0f, 0.0f, 1.0f}
-  },
+    {{-0.5, static_cast<double>(SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(-SIMPLib::Constants::k_Root3Over2), -0.5, 0.0}, {0.0, 0.0, 1.0}},
 
-  { { -0.5f, static_cast<float>(SIMPLib::Constants::k_Root3Over2),  0.0f},
-    { static_cast<float>(-SIMPLib::Constants::k_Root3Over2), -0.5f, 0.0f},
-    {0.0f, 0.0f,  1.0f}
-  },
+    {{-0.5, static_cast<double>(-SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(SIMPLib::Constants::k_Root3Over2), -0.5, 0.0}, {0.0, 0.0, 1.0}},
 
-  { { -0.5f, static_cast<float>(-SIMPLib::Constants::k_Root3Over2),  0.0f},
-    {static_cast<float>(SIMPLib::Constants::k_Root3Over2), -0.5f, 0.0f},
-    {0.0f, 0.0f,  1.0f}
-  },
+    {{0.0, static_cast<double>(SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(-SIMPLib::Constants::k_Root3Over2), 0.5, 0.0}, {0.0, 0.0, 1.0}},
 
-  { {0.5f, static_cast<float>(SIMPLib::Constants::k_Root3Over2),  0.0f},
-    { static_cast<float>(-SIMPLib::Constants::k_Root3Over2), 0.5f, 0.0f},
-    {0.0f, 0.0f,  1.0f}
-  },
+    {{-1.0, 0.0, 0.0}, {0.0, -1.0, 0.0}, {0.0, 0.0, 1.0}},
 
-  { { -1.0f, 0.0f, 0.0f},
-    {0.0f, -1.0f, 0.0f},
-    {0.0f, 0.0f, 1.0f}
-  },
-
-  { {0.5f, static_cast<float>(-SIMPLib::Constants::k_Root3Over2),  0.0f},
-    {static_cast<float>(SIMPLib::Constants::k_Root3Over2), 0.5f, 0.0f},
-    {0.0f, 0.0f,  1.0f}
-  }
-};
-
+    {{0.5, static_cast<double>(-SIMPLib::Constants::k_Root3Over2), 0.0}, {static_cast<double>(SIMPLib::Constants::k_Root3Over2), 0.5, 0.0}, {0.0, 0.0, 1.0}}};
 
 using namespace Detail;
 
@@ -133,9 +101,9 @@ using namespace Detail;
 // -----------------------------------------------------------------------------
 HexagonalLowOps::HexagonalLowOps()
 {
-  float junk1 =  Detail::HexDim1StepValue * 1.0f;
-  float junk2 = junk1 / Detail::HexDim2StepValue;
-  float junk3 = junk2 / Detail::HexDim3StepValue;
+  double junk1 = Detail::HexDim1StepValue * 1.0;
+  double junk2 = junk1 / Detail::HexDim2StepValue;
+  double junk3 = junk2 / Detail::HexDim3StepValue;
   junk1 = junk3 / junk2;
 }
 
@@ -147,7 +115,7 @@ HexagonalLowOps::~HexagonalLowOps() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool HexagonalLowOps::getHasInversion()
+bool HexagonalLowOps::getHasInversion() const
 {
   return true;
 }
@@ -155,7 +123,7 @@ bool HexagonalLowOps::getHasInversion()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int HexagonalLowOps::getODFSize()
+int HexagonalLowOps::getODFSize() const
 {
   return k_OdfSize;
 }
@@ -163,7 +131,7 @@ int HexagonalLowOps::getODFSize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int HexagonalLowOps::getMDFSize()
+int HexagonalLowOps::getMDFSize() const
 {
   return k_MdfSize;
 }
@@ -171,7 +139,7 @@ int HexagonalLowOps::getMDFSize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int HexagonalLowOps::getNumSymOps()
+int HexagonalLowOps::getNumSymOps() const
 {
   return k_NumSymQuats;
 }
@@ -179,7 +147,7 @@ int HexagonalLowOps::getNumSymOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString HexagonalLowOps::getSymmetryName()
+QString HexagonalLowOps::getSymmetryName() const
 {
   return "Hexagonal 6/m";;
 }
@@ -187,37 +155,35 @@ QString HexagonalLowOps::getSymmetryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float HexagonalLowOps::_calcMisoQuat(const QuatF quatsym[12], int numsym,
-                                     QuatF& q1, QuatF& q2,
-                                     float& n1, float& n2, float& n3)
+double HexagonalLowOps::_calcMisoQuat(const QuatType quatsym[12], int numsym, QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const
 {
-  float wmin = 9999999.0f; //,na,nb,nc;
-  float w = 0;
-  float n1min = 0.0f;
-  float n2min = 0.0f;
-  float n3min = 0.0f;
-  QuatF qr;
-  QuatF qc;
-  QuatF q2inv;
-  QuaternionMathF::Copy(q2, q2inv);
-  QuaternionMathF::Conjugate(q2inv);
+  double wmin = 9999999.0; //,na,nb,nc;
+  double w = 0.0;
+  double n1min = 0.0;
+  double n2min = 0.0;
+  double n3min = 0.0;
+  QuatType qc;
 
-  QuaternionMathF::Multiply(q1, q2inv, qr);
+  QuatType qr = q1 * (q2.conjugate());
+
   for (int i = 0; i < numsym; i++)
   {
-    QuaternionMathF::Multiply(quatsym[i], qr, qc);
-    if (qc.w < -1)
+    qc = quatsym[i] * qr;
+
+    if(qc.w() < -1)
     {
-      qc.w = -1;
+      qc.w() = -1.0;
     }
-    else if (qc.w > 1)
+    else if(qc.w() > 1)
     {
-      qc.w = 1;
+      qc.w() = 1.0;
     }
 
-    FOrientArrayType ax(4, 0.0f);
-    FOrientTransformsType::qu2ax(FOrientArrayType(qc.x, qc.y, qc.z, qc.w), ax);
-    ax.toAxisAngle(n1, n2, n3, w);
+    OrientationType ax = OrientationTransformation::qu2ax<QuatType, OrientationType>(qc);
+    n1 = ax[0];
+    n2 = ax[1];
+    n3 = ax[2];
+    w = ax[3];
 
     if (w > SIMPLib::Constants::k_Pi)
     {
@@ -231,42 +197,71 @@ float HexagonalLowOps::_calcMisoQuat(const QuatF quatsym[12], int numsym,
       n3min = n3;
     }
   }
-  float denom = sqrt((n1min * n1min + n2min * n2min + n3min * n3min));
+  double denom = sqrt((n1min * n1min + n2min * n2min + n3min * n3min));
   n1 = n1min / denom;
   n2 = n2min / denom;
   n3 = n3min / denom;
   if(denom == 0)
   {
-    n1 = 0.0, n2 = 0.0, n3 = 1.0;
+    n1 = 0.0;
+    n2 = 0.0;
+    n3 = 1.0;
   }
   if(wmin == 0)
   {
-    n1 = 0.0, n2 = 0.0, n3 = 1.0;
+    n1 = 0.0;
+    n2 = 0.0;
+    n3 = 1.0;
   }
   return wmin;
 }
 
-float HexagonalLowOps::getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3)
+double HexagonalLowOps::getMisoQuat(QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const
 {
-  int numsym = 6;
-
-  return _calcMisoQuat(HexQuatSym, numsym, q1, q2, n1, n2, n3);
+  return _calcMisoQuat(HexQuatSym, k_NumSymQuats, q1, q2, n1, n2, n3);
 }
 
-void HexagonalLowOps::getQuatSymOp(int i, QuatF& q)
+// -----------------------------------------------------------------------------
+float HexagonalLowOps::getMisoQuat(QuatF& q1f, QuatF& q2f, float& n1f, float& n2f, float& n3f) const
 {
-  QuaternionMathF::Copy(HexQuatSym[i], q);
-
+  QuatType q1(q1f[0], q1f[1], q1f[2], q1f[3]);
+  QuatType q2(q2f[0], q2f[1], q2f[2], q2f[3]);
+  double n1 = n1f;
+  double n2 = n2f;
+  double n3 = n3f;
+  float w = static_cast<float>(_calcMisoQuat(HexQuatSym, k_NumSymQuats, q1, q2, n1, n2, n3));
+  n1f = n1;
+  n2f = n2;
+  n3f = n3;
+  return w;
 }
 
-void HexagonalLowOps::getRodSymOp(int i, float* r)
+QuatType HexagonalLowOps::getQuatSymOp(int32_t i) const
+{
+  return HexQuatSym[i];
+}
+
+void HexagonalLowOps::getRodSymOp(int i, double* r) const
 {
   r[0] = HexRodSym[i][0];
   r[1] = HexRodSym[i][1];
   r[2] = HexRodSym[i][2];
 }
 
-void HexagonalLowOps::getMatSymOp(int i, float g[3][3])
+void HexagonalLowOps::getMatSymOp(int i, double g[3][3]) const
+{
+  g[0][0] = HexMatSym[i][0][0];
+  g[0][1] = HexMatSym[i][0][1];
+  g[0][2] = HexMatSym[i][0][2];
+  g[1][0] = HexMatSym[i][1][0];
+  g[1][1] = HexMatSym[i][1][1];
+  g[1][2] = HexMatSym[i][1][2];
+  g[2][0] = HexMatSym[i][2][0];
+  g[2][1] = HexMatSym[i][2][1];
+  g[2][2] = HexMatSym[i][2][2];
+}
+
+void HexagonalLowOps::getMatSymOp(int i, float g[3][3]) const
 {
   g[0][0] = HexMatSym[i][0][0];
   g[0][1] = HexMatSym[i][0][1];
@@ -282,7 +277,7 @@ void HexagonalLowOps::getMatSymOp(int i, float g[3][3])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType HexagonalLowOps::getODFFZRod(FOrientArrayType rod)
+OrientationType HexagonalLowOps::getODFFZRod(const OrientationType& rod) const
 {
   int numsym = 6;
   return _calcRodNearestOrigin(HexRodSym, numsym, rod);
@@ -291,16 +286,16 @@ FOrientArrayType HexagonalLowOps::getODFFZRod(FOrientArrayType rod)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType HexagonalLowOps::getMDFFZRod(FOrientArrayType rod)
+OrientationType HexagonalLowOps::getMDFFZRod(const OrientationType& inRod) const
 {
-  float w = 0.0f, n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
-  float FZn1 = 0.0f, FZn2 = 0.0f, FZn3 = 0.0f, FZw = 0.0f;
-  float n1n2mag = 0.0f;
+  double w = 0.0, n1 = 0.0, n2 = 0.0, n3 = 0.0;
+  double FZn1 = 0.0, FZn2 = 0.0, FZn3 = 0.0, FZw = 0.0;
+  double n1n2mag = 0.0;
 
-  rod = _calcRodNearestOrigin(HexRodSym, 12, rod);
+  OrientationType rod = _calcRodNearestOrigin(HexRodSym, 12, inRod);
 
-  FOrientArrayType ax(4, 0.0f);
-  OrientationTransforms<FOrientArrayType, float>::ro2ax(rod, ax);
+  OrientationType ax = OrientationTransformation::ro2ax<OrientationType, OrientationType>(rod);
+
   n1 = ax[0];
   n2 = ax[1], n3 = ax[2], w = ax[3];
 
@@ -312,27 +307,27 @@ FOrientArrayType HexagonalLowOps::getMDFFZRod(FOrientArrayType rod)
   {
     n1 = -n1, n2 = -n2, n3 = -n3;
   }
-  float angle = 180.0f * atan2(n2, n1) * SIMPLib::Constants::k_1OverPi;
+  float angle = 180.0 * atan2(n2, n1) * SIMPLib::Constants::k_1OverPi;
   if(angle < 0)
   {
-    angle = angle + 360.0f;
+    angle = angle + 360.0;
   }
   FZn1 = n1;
   FZn2 = n2;
   FZn3 = n3;
-  if(angle > 30.0f)
+  if(angle > 30.0)
   {
     n1n2mag = sqrt(n1 * n1 + n2 * n2);
-    if (int(angle / 30) % 2 == 0)
+    if(int(angle / 30) % 2 == 0)
     {
-      FZw = angle - (30.0f * int(angle / 30.0f));
+      FZw = angle - (30.0 * int(angle / 30.0));
       FZw = FZw * SIMPLib::Constants::k_PiOver180;
       FZn1 = n1n2mag * cosf(FZw);
       FZn2 = n1n2mag * sinf(FZw);
     }
     else
     {
-      FZw = angle - (30.0f * int(angle / 30.0f));
+      FZw = angle - (30.0 * int(angle / 30.0));
       FZw = 30.0f - FZw;
       FZw = FZw * SIMPLib::Constants::k_PiOver180;
       FZn1 = n1n2mag * cosf(FZw);
@@ -340,38 +335,41 @@ FOrientArrayType HexagonalLowOps::getMDFFZRod(FOrientArrayType rod)
     }
   }
 
-  ax.fromAxisAngle(FZn1, FZn2, FZn3, w);
-  OrientationTransforms<FOrientArrayType, float>::ax2ro(ax, rod);
-  return rod;
+  return OrientationTransformation::ax2ro<OrientationType, OrientationType>(OrientationType(FZn1, FZn2, FZn3, w));
 }
 
-void HexagonalLowOps::getNearestQuat(QuatF& q1, QuatF& q2)
+QuatType HexagonalLowOps::getNearestQuat(const QuatType& q1, const QuatType& q2) const
 {
-  int numsym = 6;
-
-  _calcNearestQuat(HexQuatSym, numsym, q1, q2);
+  return _calcNearestQuat(HexQuatSym, k_NumSymQuats, q1, q2);
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void HexagonalLowOps::getFZQuat(QuatF& qr)
+QuatF HexagonalLowOps::getNearestQuat(const QuatF& q1f, const QuatF& q2f) const
 {
-  int numsym = 6;
-  _calcQuatNearestOrigin(HexQuatSym, numsym, qr);
+  QuatType q1(q1f[0], q1f[1], q1f[2], q1f[3]);
+  QuatType q2(q2f[0], q2f[1], q2f[2], q2f[3]);
+  QuatType temp = _calcNearestQuat(HexQuatSym, k_NumSymQuats, q1, q2);
+  QuatF out(temp.x(), temp.y(), temp.z(), temp.w());
+  return out;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int HexagonalLowOps::getMisoBin(FOrientArrayType rod)
+QuatType HexagonalLowOps::getFZQuat(const QuatType& qr) const
 {
-  float dim[3];
-  float bins[3];
-  float step[3];
+  return _calcQuatNearestOrigin(HexQuatSym, k_NumSymQuats, qr);
+}
 
-  FOrientArrayType ho(3);
-  OrientationTransforms<FOrientArrayType, float>::ro2ho(rod, ho);
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int HexagonalLowOps::getMisoBin(const OrientationType& rod) const
+{
+  double dim[3];
+  double bins[3];
+  double step[3];
+
+  OrientationType ho = OrientationTransformation::ro2ho<OrientationType, OrientationType>(rod);
 
   dim[0] = HexDim1InitValue;
   dim[1] = HexDim2InitValue;
@@ -379,9 +377,9 @@ int HexagonalLowOps::getMisoBin(FOrientArrayType rod)
   step[0] = HexDim1StepValue;
   step[1] = HexDim2StepValue;
   step[2] = HexDim3StepValue;
-  bins[0] = 72.0f;
-  bins[1] = 72.0f;
-  bins[2] = 12.0f;
+  bins[0] = 72.0;
+  bins[1] = 72.0;
+  bins[2] = 12.0;
 
   return _calcMisoBin(dim, bins, step, ho);
 }
@@ -389,12 +387,12 @@ int HexagonalLowOps::getMisoBin(FOrientArrayType rod)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType HexagonalLowOps::determineEulerAngles(uint64_t seed, int choose)
+OrientationType HexagonalLowOps::determineEulerAngles(uint64_t seed, int choose) const
 {
-  float init[3];
-  float step[3];
+  double init[3];
+  double step[3];
   int32_t phi[3];
-  float h1, h2, h3;
+  double h1, h2, h3;
 
   init[0] = HexDim1InitValue;
   init[1] = HexDim2InitValue;
@@ -408,44 +406,33 @@ FOrientArrayType HexagonalLowOps::determineEulerAngles(uint64_t seed, int choose
 
   _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
 
-  FOrientArrayType ho(h1, h2, h3);
-  FOrientArrayType ro(4);
-  OrientationTransforms<FOrientArrayType, float>::ho2ro(ho, ro);
-
+  OrientationType ho(h1, h2, h3);
+  OrientationType ro = OrientationTransformation::ho2ro<OrientationType, OrientationType>(ho);
   ro = getODFFZRod(ro);
-  FOrientArrayType eu(4);
-  OrientationTransforms<FOrientArrayType, float>::ro2eu(ro, eu);
+  OrientationType eu = OrientationTransformation::ro2eu<OrientationType, OrientationType>(ro);
   return eu;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType HexagonalLowOps::randomizeEulerAngles(FOrientArrayType synea)
+OrientationType HexagonalLowOps::randomizeEulerAngles(const OrientationType& synea) const
 {
-  QuatF q;
-  QuatF qc;
   size_t symOp = getRandomSymmetryOperatorIndex(k_NumSymQuats);
-
-  FOrientArrayType quat(4, 0.0f);
-  OrientationTransforms<FOrientArrayType, float>::eu2qu(synea, quat);
-  q = quat.toQuaternion();
-  QuaternionMathF::Multiply(HexQuatSym[symOp], q, qc);
-
-  quat.fromQuaternion(qc);
-  OrientationTransforms<FOrientArrayType, float>::qu2eu(quat, synea);
-  return synea;
+  QuatType quat = OrientationTransformation::eu2qu<OrientationType, QuatType>(synea);
+  QuatType qc = HexQuatSym[symOp] * quat;
+  return OrientationTransformation::qu2eu<QuatType, OrientationType>(qc);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-FOrientArrayType HexagonalLowOps::determineRodriguesVector(uint64_t seed, int choose)
+OrientationType HexagonalLowOps::determineRodriguesVector(uint64_t seed, int choose) const
 {
-  float init[3];
-  float step[3];
+  double init[3];
+  double step[3];
   int32_t phi[3];
-  float h1, h2, h3;
+  double h1, h2, h3;
 
   init[0] = HexDim1InitValue;
   init[1] = HexDim2InitValue;
@@ -458,9 +445,8 @@ FOrientArrayType HexagonalLowOps::determineRodriguesVector(uint64_t seed, int ch
   phi[2] = static_cast<int32_t>(choose / (72 * 72));
 
   _calcDetermineHomochoricValues(seed, init, step, phi, choose, h1, h2, h3);
-  FOrientArrayType ho(h1, h2, h3);
-  FOrientArrayType ro(4);
-  OrientationTransforms<FOrientArrayType, float>::ho2ro(ho, ro);
+  OrientationType ho(h1, h2, h3);
+  OrientationType ro = OrientationTransformation::ho2ro<OrientationType, OrientationType>(ho);
   ro = getMDFFZRod(ro);
   return ro;
 }
@@ -468,14 +454,13 @@ FOrientArrayType HexagonalLowOps::determineRodriguesVector(uint64_t seed, int ch
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int HexagonalLowOps::getOdfBin(FOrientArrayType rod)
+int HexagonalLowOps::getOdfBin(const OrientationType& rod) const
 {
-  float dim[3];
-  float bins[3];
-  float step[3];
+  double dim[3];
+  double bins[3];
+  double step[3];
 
-  FOrientArrayType ho(3);
-  OrientationTransforms<FOrientArrayType, float>::ro2ho(rod, ho);
+  OrientationType ho = OrientationTransformation::ro2ho<OrientationType, OrientationType>(rod);
 
   dim[0] = HexDim1InitValue;
   dim[1] = HexDim2InitValue;
@@ -483,112 +468,112 @@ int HexagonalLowOps::getOdfBin(FOrientArrayType rod)
   step[0] = HexDim1StepValue;
   step[1] = HexDim2StepValue;
   step[2] = HexDim3StepValue;
-  bins[0] = 72.0f;
-  bins[1] = 72.0f;
-  bins[2] = 12.0f;
+  bins[0] = 72.0;
+  bins[1] = 72.0;
+  bins[2] = 12.0;
 
   return _calcODFBin(dim, bins, step, ho);
 }
 
-void HexagonalLowOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, float angleComps[2], int& slipsys)
+void HexagonalLowOps::getSchmidFactorAndSS(double load[3], double& schmidfactor, double angleComps[2], int& slipsys) const
 {
-  float theta1, theta2, theta3, theta4, theta5, theta6, theta7, theta8, theta9;
-  float lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10;
-  float schmid1, schmid2, schmid3, schmid4, schmid5, schmid6;
-  float caratio = 1.633f;
-  float ph1sdx1 = 1.0f;
-  float ph1sdy1 = 0.0f;
-  float ph1sdz1 = 0.0f;
-  float ph1sdx2 = 0.0f;
-  float ph1sdy2 = 1.0f;
-  float ph1sdz2 = 0.0f;
-  float ph1sdx3 = -0.707f;
-  float ph1sdy3 = -0.707f;
-  float ph1sdz3 = 0.0f;
-  float ph1sdx4 = 0.0f;
-  float ph1sdy4 = -0.707f;
-  float ph1sdz4 = 0.707f;
-  float ph1sdx5 = -0.57735f;
-  float ph1sdy5 = -0.57735f;
-  float ph1sdz5 = 0.57735f;
-  float ph1sdx6 = 0.707f;
-  float ph1sdy6 = 0.0f;
-  float ph1sdz6 = 0.707f;
-  float ph1sdx7 = 0.57735f;
-  float ph1sdy7 = 0.57735f;
-  float ph1sdz7 = 0.57735f;
-  float ph1sdx8 = 0.0f;
-  float ph1sdy8 = 0.707f;
-  float ph1sdz8 = 0.707f;
-  float ph1sdx9 = -0.707f;
-  float ph1sdy9 = 0.0f;
-  float ph1sdz9 = 0.707f;
-  float ph1spnx1 = 0.0f;
-  float ph1spny1 = 0.0f;
-  float ph1spnz1 = 1.0f;
-  float ph1spnx2 = 0.4472f;
-  float ph1spny2 = 0.8944f;
-  float ph1spnz2 = 0.0f;
-  float ph1spnx3 = 0.8944f;
-  float ph1spny3 = 0.4472f;
-  float ph1spnz3 = 0.0f;
-  float ph1spnx4 = -0.707f;
-  float ph1spny4 = 0.707f;
-  float ph1spnz4 = 0.0f;
-  float ph1spnx5 = 0.4082f;
-  float ph1spny5 = 0.8164f;
-  //  float ph1spnz5 = -0.4082f;
-  float ph1spnx6 = 0.4082f;
-  float ph1spny6 = 0.8164f;
-  //  float ph1spnz6 = 0.4082f;
-  float ph1spnx7 = 0.8164f;
-  float ph1spny7 = 0.4082f;
-  //  float ph1spnz7 = -0.4082f;
-  float ph1spnx8 = 0.8164f;
-  float ph1spny8 = 0.4082f;
-  //  float ph1spnz8 = 0.4082f;
-  float ph1spnx9 = -0.57735f;
-  float ph1spny9 = 0.57735f;
-  //  float ph1spnz9 = -0.57735f;
-  float ph1spnx10 = -0.57735f;
-  float ph1spny10 = 0.57735f;
-  //  float ph1spnz10 = 0.57735f;
+  double theta1, theta2, theta3, theta4, theta5, theta6, theta7, theta8, theta9;
+  double lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10;
+  double schmid1, schmid2, schmid3, schmid4, schmid5, schmid6;
+  double caratio = 1.633;
+  double ph1sdx1 = 1.0;
+  double ph1sdy1 = 0.0;
+  double ph1sdz1 = 0.0;
+  double ph1sdx2 = 0.0;
+  double ph1sdy2 = 1.0;
+  double ph1sdz2 = 0.0;
+  double ph1sdx3 = -0.707;
+  double ph1sdy3 = -0.707;
+  double ph1sdz3 = 0.0;
+  double ph1sdx4 = 0.0;
+  double ph1sdy4 = -0.707;
+  double ph1sdz4 = 0.707;
+  double ph1sdx5 = -0.57735;
+  double ph1sdy5 = -0.57735;
+  double ph1sdz5 = 0.57735;
+  double ph1sdx6 = 0.707;
+  double ph1sdy6 = 0.0;
+  double ph1sdz6 = 0.707;
+  double ph1sdx7 = 0.57735;
+  double ph1sdy7 = 0.57735;
+  double ph1sdz7 = 0.57735;
+  double ph1sdx8 = 0.0;
+  double ph1sdy8 = 0.707;
+  double ph1sdz8 = 0.707;
+  double ph1sdx9 = -0.707;
+  double ph1sdy9 = 0.0;
+  double ph1sdz9 = 0.707;
+  double ph1spnx1 = 0.0;
+  double ph1spny1 = 0.0;
+  double ph1spnz1 = 1.0;
+  double ph1spnx2 = 0.4472;
+  double ph1spny2 = 0.8944;
+  double ph1spnz2 = 0.0;
+  double ph1spnx3 = 0.8944;
+  double ph1spny3 = 0.4472;
+  double ph1spnz3 = 0.0;
+  double ph1spnx4 = -0.707;
+  double ph1spny4 = 0.707;
+  double ph1spnz4 = 0.0;
+  double ph1spnx5 = 0.4082;
+  double ph1spny5 = 0.8164;
+  //  double ph1spnz5 = -0.4082;
+  double ph1spnx6 = 0.4082;
+  double ph1spny6 = 0.8164;
+  //  double ph1spnz6 = 0.4082;
+  double ph1spnx7 = 0.8164;
+  double ph1spny7 = 0.4082;
+  //  double ph1spnz7 = -0.4082;
+  double ph1spnx8 = 0.8164;
+  double ph1spny8 = 0.4082;
+  //  double ph1spnz8 = 0.4082;
+  double ph1spnx9 = -0.57735;
+  double ph1spny9 = 0.57735;
+  //  double ph1spnz9 = -0.57735;
+  double ph1spnx10 = -0.57735;
+  double ph1spny10 = 0.57735;
+  //  double ph1spnz10 = 0.57735;
 
-  float loadx = load[0];
-  float loady = load[1];
-  float loadz = load[2];
+  double loadx = load[0];
+  double loady = load[1];
+  double loadz = load[2];
 
-  float t1x = (0.866025f * ph1sdx1) + (0.0f * ph1sdy1) + (0.0f * ph1sdz1);
-  float t1y = (-0.5f * ph1sdx1) + (1.0f * ph1sdy1) + (0.0f * ph1sdz1);
-  float t1z = (0.0f * ph1sdx1) + (0.0f * ph1sdy1) + (caratio * ph1sdz1);
-  float denomt1 = powf((t1x * t1x + t1y * t1y + t1z * t1z), 0.5f);
+  double t1x = (0.866025 * ph1sdx1) + (0.0 * ph1sdy1) + (0.0 * ph1sdz1);
+  double t1y = (-0.5 * ph1sdx1) + (1.0 * ph1sdy1) + (0.0 * ph1sdz1);
+  double t1z = (0.0 * ph1sdx1) + (0.0 * ph1sdy1) + (caratio * ph1sdz1);
+  double denomt1 = std::pow((t1x * t1x + t1y * t1y + t1z * t1z), 0.5);
   t1x = t1x / denomt1;
   t1y = t1y / denomt1;
   t1z = t1z / denomt1;
   theta1 = ((t1x * loadx) + (t1y * loady) + (t1z * loadz));
   theta1 = fabs(theta1);
-  float t2x = (0.866025f * ph1sdx2) + (0.0f * ph1sdy2) + (0.0f * ph1sdz2);
-  float t2y = (-0.5f * ph1sdx2) + (1.0f * ph1sdy2) + (0.0f * ph1sdz2);
-  float t2z = (0.0f * ph1sdx2) + (0.0f * ph1sdy2) + (caratio * ph1sdz2);
-  float denomt2 = powf((t2x * t2x + t2y * t2y + t2z * t2z), 0.5f);
+  double t2x = (0.866025 * ph1sdx2) + (0.0 * ph1sdy2) + (0.0 * ph1sdz2);
+  double t2y = (-0.5 * ph1sdx2) + (1.0 * ph1sdy2) + (0.0 * ph1sdz2);
+  double t2z = (0.0 * ph1sdx2) + (0.0 * ph1sdy2) + (caratio * ph1sdz2);
+  double denomt2 = std::pow((t2x * t2x + t2y * t2y + t2z * t2z), 0.5);
   t2x = t2x / denomt2;
   t2y = t2y / denomt2;
   t2z = t2z / denomt2;
   theta2 = ((t2x * loadx) + (t2y * loady) + (t2z * loadz));
   theta2 = fabs(theta2);
-  float t3x = (0.866025f * ph1sdx3) + (0.0f * ph1sdy3) + (0.0f * ph1sdz3);
-  float t3y = (-0.5f * ph1sdx3) + (1.0f * ph1sdy3) + (0.0f * ph1sdz3);
-  float t3z = (0.0f * ph1sdx3) + (0.0f * ph1sdy3) + (caratio * ph1sdz3);
-  float denomt3 = powf((t3x * t3x + t3y * t3y + t3z * t3z), 0.5f);
+  double t3x = (0.866025 * ph1sdx3) + (0.0 * ph1sdy3) + (0.0 * ph1sdz3);
+  double t3y = (-0.5 * ph1sdx3) + (1.0 * ph1sdy3) + (0.0 * ph1sdz3);
+  double t3z = (0.0 * ph1sdx3) + (0.0 * ph1sdy3) + (caratio * ph1sdz3);
+  double denomt3 = std::pow((t3x * t3x + t3y * t3y + t3z * t3z), 0.5);
   t3x = t3x / denomt3;
   t3y = t3y / denomt3;
   t3z = t3z / denomt3;
   theta3 = ((t3x * loadx) + (t3y * loady) + (t3z * loadz));
   theta3 = fabs(theta3);
-  float l1nx = (0.866025f * ph1spnx1) + (0.0f * ph1spny1);
-  float l1ny = (-0.5f * ph1spnx1) + (1.0f * ph1spny1);
-  float l1nz = -caratio * ph1spnz1;
-  float denoml1 = powf((l1nx * l1nx + l1ny * l1ny + l1nz * l1nz), 0.5f);
+  double l1nx = (0.866025 * ph1spnx1) + (0.0 * ph1spny1);
+  double l1ny = (-0.5 * ph1spnx1) + (1.0 * ph1spny1);
+  double l1nz = -caratio * ph1spnz1;
+  double denoml1 = std::pow((l1nx * l1nx + l1ny * l1ny + l1nz * l1nz), 0.5);
   l1nx = l1nx / denoml1;
   l1ny = l1ny / denoml1;
   l1nz = l1nz / denoml1;
@@ -597,28 +582,28 @@ void HexagonalLowOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, f
   schmid1 = theta1 * lambda1;
   schmid2 = theta2 * lambda1;
   schmid3 = theta3 * lambda1;
-  float l2nx = (0.866025f * ph1spnx2) + (0.0f * ph1spny2);
-  float l2ny = (-0.5f * ph1spnx2) + (1 * ph1spny2);
-  float l2nz = -caratio * ph1spnz2;
-  float denoml2 = powf((l2nx * l2nx + l2ny * l2ny + l2nz * l2nz), 0.5f);
+  double l2nx = (0.866025 * ph1spnx2) + (0.0 * ph1spny2);
+  double l2ny = (-0.5 * ph1spnx2) + (1 * ph1spny2);
+  double l2nz = -caratio * ph1spnz2;
+  double denoml2 = std::pow((l2nx * l2nx + l2ny * l2ny + l2nz * l2nz), 0.5);
   l2nx = l2nx / denoml2;
   l2ny = l2ny / denoml2;
   l2nz = l2nz / denoml2;
   lambda2 = ((l2nx * loadx) + (l2ny * loady) + (l2nz * loadz));
   lambda2 = fabs(lambda2);
-  float l3nx = (0.866025f * ph1spnx3) + (0.0f * ph1spny3);
-  float l3ny = (-0.5f * ph1spnx3) + (1.0f * ph1spny3);
-  float l3nz = -caratio * ph1spnz3;
-  float denoml3 = powf((l3nx * l3nx + l3ny * l3ny + l3nz * l3nz), 0.5f);
+  double l3nx = (0.866025 * ph1spnx3) + (0.0 * ph1spny3);
+  double l3ny = (-0.5 * ph1spnx3) + (1.0 * ph1spny3);
+  double l3nz = -caratio * ph1spnz3;
+  double denoml3 = std::pow((l3nx * l3nx + l3ny * l3ny + l3nz * l3nz), 0.5);
   l3nx = l3nx / denoml3;
   l3ny = l3ny / denoml3;
   l3nz = l3nz / denoml3;
   lambda3 = ((l3nx * loadx) + (l3ny * loady) + (l3nz * loadz));
   lambda3 = fabs(lambda3);
-  float l4nx = (0.866025f * ph1spnx4) + (0.0f * ph1spny4);
-  float l4ny = (-0.5f * ph1spnx4) + (1 * ph1spny4);
-  float l4nz = -caratio * ph1spnz4;
-  float denoml4 = powf((l4nx * l4nx + l4ny * l4ny + l4nz * l4nz), 0.5f);
+  double l4nx = (0.866025 * ph1spnx4) + (0.0 * ph1spny4);
+  double l4ny = (-0.5 * ph1spnx4) + (1 * ph1spny4);
+  double l4nz = -caratio * ph1spnz4;
+  double denoml4 = std::pow((l4nx * l4nx + l4ny * l4ny + l4nz * l4nz), 0.5);
   l4nx = l4nx / denoml4;
   l4ny = l4ny / denoml4;
   l4nz = l4nz / denoml4;
@@ -627,45 +612,45 @@ void HexagonalLowOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, f
   schmid4 = theta1 * lambda2;
   schmid5 = theta2 * lambda3;
   schmid6 = theta3 * lambda4;
-  float l5nx = (0.866025f * ph1spnx5) + (0.0f * ph1spny5);
-  float l5ny = (-0.5f * ph1spnx5) + (1 * ph1spny5);
-  float l5nz = float((l5nx * -l5nx + l5ny * -l5ny)) / (caratio * 0.8164f);
-  float denoml5 = powf((l5nx * l5nx + l5ny * l5ny + l5nz * l5nz), 0.5f);
+  double l5nx = (0.866025 * ph1spnx5) + (0.0 * ph1spny5);
+  double l5ny = (-0.5 * ph1spnx5) + (1 * ph1spny5);
+  double l5nz = double((l5nx * -l5nx + l5ny * -l5ny)) / (caratio * 0.8164);
+  double denoml5 = std::pow((l5nx * l5nx + l5ny * l5ny + l5nz * l5nz), 0.5);
   l5nx = l5nx / denoml5;
   l5ny = l5ny / denoml5;
   l5nz = l5nz / denoml5;
-  float l6nx = (0.866025f * ph1spnx6) + (0.0f * ph1spny6);
-  float l6ny = (-0.5f * ph1spnx6) + (1.0f * ph1spny6);
-  float l6nz = float(-(l6nx * -l6nx + l6ny * -l6ny)) / (caratio * 0.8164f);
-  float denoml6 = powf((l6nx * l6nx + l6ny * l6ny + l6nz * l6nz), 0.5f);
+  double l6nx = (0.866025 * ph1spnx6) + (0.0 * ph1spny6);
+  double l6ny = (-0.5 * ph1spnx6) + (1.0 * ph1spny6);
+  double l6nz = double(-(l6nx * -l6nx + l6ny * -l6ny)) / (caratio * 0.8164);
+  double denoml6 = std::pow((l6nx * l6nx + l6ny * l6ny + l6nz * l6nz), 0.5);
   l6nx = l6nx / denoml6;
   l6ny = l6ny / denoml6;
   l6nz = l6nz / denoml6;
-  float l7nx = (0.866025f * ph1spnx7) + (0.0f * ph1spny7);
-  float l7ny = (-0.5f * ph1spnx7) + (1.0f * ph1spny7);
-  float l7nz = float((l7nx * -l7nx + l7ny * -l7ny)) / (caratio * 0.8164f);
-  float denoml7 = powf((l7nx * l7nx + l7ny * l7ny + l7nz * l7nz), 0.5f);
+  double l7nx = (0.866025 * ph1spnx7) + (0.0 * ph1spny7);
+  double l7ny = (-0.5 * ph1spnx7) + (1.0 * ph1spny7);
+  double l7nz = double((l7nx * -l7nx + l7ny * -l7ny)) / (caratio * 0.8164);
+  double denoml7 = std::pow((l7nx * l7nx + l7ny * l7ny + l7nz * l7nz), 0.5);
   l7nx = l7nx / denoml7;
   l7ny = l7ny / denoml7;
   l7nz = l7nz / denoml7;
-  float l8nx = (0.866025f * ph1spnx8) + (0 * ph1spny8);
-  float l8ny = (-0.5f * ph1spnx8) + (1.0f * ph1spny8);
-  float l8nz = float(-(l8nx * -l8nx + l8ny * -l8ny)) / (caratio * 0.8164f);
-  float denoml8 = powf((l8nx * l8nx + l8ny * l8ny + l8nz * l8nz), 0.5f);
+  double l8nx = (0.866025 * ph1spnx8) + (0 * ph1spny8);
+  double l8ny = (-0.5 * ph1spnx8) + (1.0 * ph1spny8);
+  double l8nz = double(-(l8nx * -l8nx + l8ny * -l8ny)) / (caratio * 0.8164);
+  double denoml8 = std::pow((l8nx * l8nx + l8ny * l8ny + l8nz * l8nz), 0.5);
   l8nx = l8nx / denoml8;
   l8ny = l8ny / denoml8;
   l8nz = l8nz / denoml8;
-  float l9nx = (0.866025f * ph1spnx9) + (0.0f * ph1spny9);
-  float l9ny = (-0.5f * ph1spnx9) + (1.0f * ph1spny9);
-  float l9nz = float((l9nx * -l9nx + l9ny * -l9ny)) / (caratio * 1.154f);
-  float denoml9 = powf((l9nx * l9nx + l9ny * l9ny + l9nz * l9nz), 0.5f);
+  double l9nx = (0.866025 * ph1spnx9) + (0.0 * ph1spny9);
+  double l9ny = (-0.5 * ph1spnx9) + (1.0 * ph1spny9);
+  double l9nz = double((l9nx * -l9nx + l9ny * -l9ny)) / (caratio * 1.154);
+  double denoml9 = std::pow((l9nx * l9nx + l9ny * l9ny + l9nz * l9nz), 0.5);
   l9nx = l9nx / denoml9;
   l9ny = l9ny / denoml9;
   l9nz = l9nz / denoml9;
-  float l10nx = (0.866025f * ph1spnx10) + (0.0f * ph1spny10);
-  float l10ny = (-0.5f * ph1spnx10) + (1 * ph1spny10);
-  float l10nz = float(-(l10nx * -l10nx + l10ny * -l10ny)) / (caratio * 1.154f);
-  float denoml10 = powf((l10nx * l10nx + l10ny * l10ny + l10nz * l10nz), 0.5f);
+  double l10nx = (0.866025 * ph1spnx10) + (0.0 * ph1spny10);
+  double l10ny = (-0.5 * ph1spnx10) + (1 * ph1spny10);
+  double l10nz = double(-(l10nx * -l10nx + l10ny * -l10ny)) / (caratio * 1.154);
+  double denoml10 = std::pow((l10nx * l10nx + l10ny * l10ny + l10nz * l10nz), 0.5);
   l10nx = l10nx / denoml10;
   l10ny = l10ny / denoml10;
   l10nz = l10nz / denoml10;
@@ -687,55 +672,55 @@ void HexagonalLowOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, f
   //  schmid10 = theta2 * lambda8;
   //  schmid11 = theta3 * lambda9;
   //  schmid12 = theta3 * lambda10;
-  float t4x = (0.866025f * ph1sdx4) + (0.0f * ph1sdy4) + (0.0f * ph1sdz4);
-  float t4y = (-0.5f * ph1sdx4) + (1.0f * ph1sdy4) + (0.0f * ph1sdz4);
-  float t4z = (0.0f * ph1sdx4) + (0.0f * ph1sdy4) + (caratio * ph1sdz4);
-  float denomt4 = powf((t4x * t4x + t4y * t4y + t4z * t4z), 0.5f);
+  double t4x = (0.866025 * ph1sdx4) + (0.0 * ph1sdy4) + (0.0 * ph1sdz4);
+  double t4y = (-0.5 * ph1sdx4) + (1.0 * ph1sdy4) + (0.0 * ph1sdz4);
+  double t4z = (0.0 * ph1sdx4) + (0.0 * ph1sdy4) + (caratio * ph1sdz4);
+  double denomt4 = std::pow((t4x * t4x + t4y * t4y + t4z * t4z), 0.5);
   t4x = t4x / denomt4;
   t4y = t4y / denomt4;
   t4z = t4z / denomt4;
   theta4 = ((t4x * loadx) + (t4y * loady) + (t4z * loadz));
   theta4 = fabs(theta4);
-  float t5x = (0.866025f * ph1sdx5) + (0.0f * ph1sdy5) + (0.0f * ph1sdz5);
-  float t5y = (-0.5f * ph1sdx5) + (1.0f * ph1sdy5) + (0.0f * ph1sdz5);
-  float t5z = (0.0f * ph1sdx5) + (0.0f * ph1sdy5) + (caratio * ph1sdz5);
-  float denomt5 = powf((t5x * t5x + t5y * t5y + t5z * t5z), 0.5f);
+  double t5x = (0.866025 * ph1sdx5) + (0.0 * ph1sdy5) + (0.0 * ph1sdz5);
+  double t5y = (-0.5 * ph1sdx5) + (1.0 * ph1sdy5) + (0.0 * ph1sdz5);
+  double t5z = (0.0 * ph1sdx5) + (0.0 * ph1sdy5) + (caratio * ph1sdz5);
+  double denomt5 = std::pow((t5x * t5x + t5y * t5y + t5z * t5z), 0.5);
   t5x = t5x / denomt5;
   t5y = t5y / denomt5;
   t5z = t5z / denomt5;
   theta5 = ((t5x * loadx) + (t5y * loady) + (t5z * loadz));
   theta5 = fabs(theta5);
-  float t6x = (0.866025f * ph1sdx6) + (0.0f * ph1sdy6) + (0.0f * ph1sdz6);
-  float t6y = (-0.5f * ph1sdx6) + (1.0f * ph1sdy6) + (0.0f * ph1sdz6);
-  float t6z = (0.0f * ph1sdx6) + (0.0f * ph1sdy6) + (caratio * ph1sdz6);
-  float denomt6 = powf((t6x * t6x + t6y * t6y + t6z * t6z), 0.5f);
+  double t6x = (0.866025 * ph1sdx6) + (0.0 * ph1sdy6) + (0.0 * ph1sdz6);
+  double t6y = (-0.5 * ph1sdx6) + (1.0 * ph1sdy6) + (0.0 * ph1sdz6);
+  double t6z = (0.0 * ph1sdx6) + (0.0 * ph1sdy6) + (caratio * ph1sdz6);
+  double denomt6 = std::pow((t6x * t6x + t6y * t6y + t6z * t6z), 0.5);
   t6x = t6x / denomt6;
   t6y = t6y / denomt6;
   t6z = t6z / denomt6;
   theta6 = ((t6x * loadx) + (t6y * loady) + (t6z * loadz));
   theta6 = fabs(theta6);
-  float t7x = (0.866025f * ph1sdx7) + (0.0f * ph1sdy7) + (0.0f * ph1sdz7);
-  float t7y = (-0.5f * ph1sdx7) + (1.0f * ph1sdy7) + (0.0f * ph1sdz7);
-  float t7z = (0.0f * ph1sdx7) + (0.0f * ph1sdy7) + (caratio * ph1sdz7);
-  float denomt7 = powf((t7x * t7x + t7y * t7y + t7z * t7z), 0.5f);
+  double t7x = (0.866025 * ph1sdx7) + (0.0 * ph1sdy7) + (0.0 * ph1sdz7);
+  double t7y = (-0.5 * ph1sdx7) + (1.0 * ph1sdy7) + (0.0 * ph1sdz7);
+  double t7z = (0.0 * ph1sdx7) + (0.0 * ph1sdy7) + (caratio * ph1sdz7);
+  double denomt7 = std::pow((t7x * t7x + t7y * t7y + t7z * t7z), 0.5);
   t7x = t7x / denomt7;
   t7y = t7y / denomt7;
   t7z = t7z / denomt7;
   theta7 = ((t7x * loadx) + (t7y * loady) + (t7z * loadz));
   theta7 = fabs(theta7);
-  float t8x = (0.866025f * ph1sdx8) + (0.0f * ph1sdy8) + (0.0f * ph1sdz8);
-  float t8y = (-0.5f * ph1sdx8) + (1.0f * ph1sdy8) + (0.0f * ph1sdz8);
-  float t8z = (0.0f * ph1sdx8) + (0.0f * ph1sdy8) + (caratio * ph1sdz8);
-  float denomt8 = powf((t8x * t8x + t8y * t8y + t8z * t8z), 0.5f);
+  double t8x = (0.866025 * ph1sdx8) + (0.0 * ph1sdy8) + (0.0 * ph1sdz8);
+  double t8y = (-0.5 * ph1sdx8) + (1.0 * ph1sdy8) + (0.0 * ph1sdz8);
+  double t8z = (0.0 * ph1sdx8) + (0.0 * ph1sdy8) + (caratio * ph1sdz8);
+  double denomt8 = std::pow((t8x * t8x + t8y * t8y + t8z * t8z), 0.5);
   t8x = t8x / denomt8;
   t8y = t8y / denomt8;
   t8z = t8z / denomt8;
   theta8 = ((t8x * loadx) + (t8y * loady) + (t8z * loadz));
   theta8 = fabs(theta8);
-  float t9x = (0.866025f * ph1sdx9) + (0.0f * ph1sdy9) + (0.0f * ph1sdz9);
-  float t9y = (-0.5f * ph1sdx9) + (1 * ph1sdy9) + (0 * ph1sdz9);
-  float t9z = (0.0f * ph1sdx9) + (0.0f * ph1sdy9) + (caratio * ph1sdz9);
-  float denomt9 = powf((t9x * t9x + t9y * t9y + t9z * t9z), 0.5f);
+  double t9x = (0.866025 * ph1sdx9) + (0.0 * ph1sdy9) + (0.0 * ph1sdz9);
+  double t9y = (-0.5 * ph1sdx9) + (1 * ph1sdy9) + (0 * ph1sdz9);
+  double t9z = (0.0 * ph1sdx9) + (0.0 * ph1sdy9) + (caratio * ph1sdz9);
+  double denomt9 = std::pow((t9x * t9x + t9y * t9y + t9z * t9z), 0.5);
   t9x = t9x / denomt9;
   t9y = t9y / denomt9;
   t9z = t9z / denomt9;
@@ -797,7 +782,7 @@ void HexagonalLowOps::getSchmidFactorAndSS(float load[3], float& schmidfactor, f
   //if(schmid24 > schmidfactor) { schmidfactor = schmid24, slipsys = 24; }
 }
 
-void HexagonalLowOps::getSchmidFactorAndSS(float load[3], float plane[3], float direction[3], float& schmidfactor, float angleComps[2], int& slipsys)
+void HexagonalLowOps::getSchmidFactorAndSS(double load[3], double plane[3], double direction[3], double& schmidfactor, double angleComps[2], int& slipsys) const
 {
   schmidfactor = 0;
   slipsys = 0;
@@ -805,9 +790,9 @@ void HexagonalLowOps::getSchmidFactorAndSS(float load[3], float plane[3], float 
   angleComps[1] = 0;
 
   //compute mags
-  float loadMag = sqrt( load[0] * load[0] + load[1] * load[1] + load[2] * load[2] );
-  float planeMag = sqrt( plane[0] * plane[0] + plane[1] * plane[1] + plane[2] * plane[2] );
-  float directionMag = sqrt( direction[0] * direction[0] + direction[1] * direction[1] + direction[2] * direction[2] );
+  double loadMag = sqrt(load[0] * load[0] + load[1] * load[1] + load[2] * load[2]);
+  double planeMag = sqrt(plane[0] * plane[0] + plane[1] * plane[1] + plane[2] * plane[2]);
+  double directionMag = sqrt(direction[0] * direction[0] + direction[1] * direction[1] + direction[2] * direction[2]);
   planeMag *= loadMag;
   directionMag *= loadMag;
 
@@ -815,7 +800,7 @@ void HexagonalLowOps::getSchmidFactorAndSS(float load[3], float plane[3], float 
   for(int i = 0; i < k_NumSymQuats; i++)
   {
     //compute slip system
-    float slipPlane[3] = {0};
+    double slipPlane[3] = {0};
     slipPlane[2] = HexMatSym[i][2][0] * plane[0] + HexMatSym[i][2][1] * plane[1] + HexMatSym[i][2][2] * plane[2];
 
     //dont consider negative z planes (to avoid duplicates)
@@ -824,15 +809,15 @@ void HexagonalLowOps::getSchmidFactorAndSS(float load[3], float plane[3], float 
       slipPlane[0] = HexMatSym[i][0][0] * plane[0] + HexMatSym[i][0][1] * plane[1] + HexMatSym[i][0][2] * plane[2];
       slipPlane[1] = HexMatSym[i][1][0] * plane[0] + HexMatSym[i][1][1] * plane[1] + HexMatSym[i][1][2] * plane[2];
 
-      float slipDirection[3] = {0};
+      double slipDirection[3] = {0};
       slipDirection[0] = HexMatSym[i][0][0] * direction[0] + HexMatSym[i][0][1] * direction[1] + HexMatSym[i][0][2] * direction[2];
       slipDirection[1] = HexMatSym[i][1][0] * direction[0] + HexMatSym[i][1][1] * direction[1] + HexMatSym[i][1][2] * direction[2];
       slipDirection[2] = HexMatSym[i][2][0] * direction[0] + HexMatSym[i][2][1] * direction[1] + HexMatSym[i][2][2] * direction[2];
 
-      float cosPhi = fabs( load[0] * slipPlane[0] + load[1] * slipPlane[1] + load[2] * slipPlane[2] ) / planeMag;
-      float cosLambda = fabs( load[0] * slipDirection[0] + load[1] * slipDirection[1] + load[2] * slipDirection[2] ) / directionMag;
+      double cosPhi = fabs(load[0] * slipPlane[0] + load[1] * slipPlane[1] + load[2] * slipPlane[2]) / planeMag;
+      double cosLambda = fabs(load[0] * slipDirection[0] + load[1] * slipDirection[1] + load[2] * slipDirection[2]) / directionMag;
 
-      float schmid = cosPhi * cosLambda;
+      double schmid = cosPhi * cosLambda;
       if(schmid > schmidfactor)
       {
         schmidfactor = schmid;
@@ -844,19 +829,19 @@ void HexagonalLowOps::getSchmidFactorAndSS(float load[3], float plane[3], float 
   }
 }
 
-void HexagonalLowOps::getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime)
+double HexagonalLowOps::getmPrime(const QuatType& q1, const QuatType& q2, double LD[3]) const
 {
   Q_ASSERT(false);
 #if 0
   /* I am asserting here because this code will simply give junk results and if someone uses it
    * they could unknowningly get really bad results
    */
-  float g1[3][3];
-  float g2[3][3];
-  float h1, k1, l1, u1, v1, w1;
-  float h2, k2, l2, u2, v2, w2;
-  float denomhkl1, denomhkl2, denomuvw1, denomuvw2;
-  float planemisalignment, directionmisalignment;
+  double g1[3][3];
+  double g2[3][3];
+  double h1, k1, l1, u1, v1, w1;
+  double h2, k2, l2, u2, v2, w2;
+  double denomhkl1, denomhkl2, denomuvw1, denomuvw2;
+  double planemisalignment, directionmisalignment;
   QuattoMat(q1, g1);
   QuattoMat(q2, g2);
   // Note the order of multiplication is such that I am actually multiplying by the inverse of g1 and g2
@@ -881,27 +866,29 @@ void HexagonalLowOps::getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime
   directionmisalignment = fabs((u1 * u2 + v1 * v2 + w1 * w2) / (denomuvw1 * denomuvw2));
   mPrime = planemisalignment * directionmisalignment;
 #endif
+return 0.0;
 }
 
-void HexagonalLowOps::getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1)
+double HexagonalLowOps::getF1(const QuatType& q1, const QuatType& q2, double LD[3], bool maxS) const
 {
   Q_ASSERT(false);
+  return 0.0;
 #if 0
   /* I am asserting here because this code will simply give junk results and if someone uses it
    * they could unknowningly get really bad results
    */
-  float g1[3][3];
-  float g2[3][3];
-  //  float hkl1[3], uvw1[3];
-  //  float hkl2[3], uvw2[3];
-  //  float slipDirection[3], slipPlane[3];
-  //  float denomhkl1=0, denomhkl2=0, denomuvw1=0, denomuvw2=0;
-  //  float directionMisalignment=0, totalDirectionMisalignment=0;
-  //  float schmidFactor1=0, schmidFactor2=0;
-  float maxSchmidFactor = 0;
-  //  float directionComponent1=0, planeComponent1=0;
-  //  float directionComponent2=0, planeComponent2=0;
-  //  float maxF1=0;
+  double g1[3][3];
+  double g2[3][3];
+  //  double hkl1[3], uvw1[3];
+  //  double hkl2[3], uvw2[3];
+  //  double slipDirection[3], slipPlane[3];
+  //  double denomhkl1=0, denomhkl2=0, denomuvw1=0, denomuvw2=0;
+  //  double directionMisalignment=0, totalDirectionMisalignment=0;
+  //  double schmidFactor1=0, schmidFactor2=0;
+  double maxSchmidFactor = 0;
+  //  double directionComponent1=0, planeComponent1=0;
+  //  double directionComponent2=0, planeComponent2=0;
+  //  double maxF1=0;
 
   QuattoMat(q1, g1);
   QuattoMat(q2, g2);
@@ -958,22 +945,23 @@ void HexagonalLowOps::getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float
   */
 #endif
 }
-void HexagonalLowOps::getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1spt)
+double HexagonalLowOps::getF1spt(const QuatType& q1, const QuatType& q2, double LD[3], bool maxS) const
 {
   Q_ASSERT(false);
+  return 0.0;
 #if 0
-  float g1[3][3];
-  float g2[3][3];
-  //  float hkl1[3], uvw1[3];
-  //  float hkl2[3], uvw2[3];
-  //  float slipDirection[3], slipPlane[3];
-  //  float directionMisalignment=0, totalDirectionMisalignment=0;
-  //  float planeMisalignment=0, totalPlaneMisalignment=0;
-  //  float schmidFactor1=0, schmidFactor2=0;
-  float maxSchmidFactor = 0;
-  //  float directionComponent1=0, planeComponent1=0;
-  //  float directionComponent2=0, planeComponent2=0;
-  //  float maxF1spt=0;
+  double g1[3][3];
+  double g2[3][3];
+  //  double hkl1[3], uvw1[3];
+  //  double hkl2[3], uvw2[3];
+  //  double slipDirection[3], slipPlane[3];
+  //  double directionMisalignment=0, totalDirectionMisalignment=0;
+  //  double planeMisalignment=0, totalPlaneMisalignment=0;
+  //  double schmidFactor1=0, schmidFactor2=0;
+  double maxSchmidFactor = 0;
+  //  double directionComponent1=0, planeComponent1=0;
+  //  double directionComponent2=0, planeComponent2=0;
+  //  double maxF1spt=0;
 
   QuattoMat(q1, g1);
   QuattoMat(q2, g2);
@@ -1035,20 +1023,21 @@ void HexagonalLowOps::getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, fl
 #endif
 }
 
-void HexagonalLowOps::getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7)
+double HexagonalLowOps::getF7(const QuatType& q1, const QuatType& q2, double LD[3], bool maxS) const
 {
   Q_ASSERT(false);
+  return 0.0;
 #if 0
-  float g1[3][3];
-  float g2[3][3];
-  //  float hkl1[3], uvw1[3];
-  //  float hkl2[3], uvw2[3];
-  //  float slipDirection[3], slipPlane[3];
-  //  float directionMisalignment=0, totalDirectionMisalignment=0;
-  //  float schmidFactor1=0, schmidFactor2=0, maxSchmidFactor=0;
-  //  float directionComponent1=0, planeComponent1=0;
-  //  float directionComponent2=0, planeComponent2=0;
-  //  float maxF7=0;
+  double g1[3][3];
+  double g2[3][3];
+  //  double hkl1[3], uvw1[3];
+  //  double hkl2[3], uvw2[3];
+  //  double slipDirection[3], slipPlane[3];
+  //  double directionMisalignment=0, totalDirectionMisalignment=0;
+  //  double schmidFactor1=0, schmidFactor2=0, maxSchmidFactor=0;
+  //  double directionComponent1=0, planeComponent1=0;
+  //  double directionComponent2=0, planeComponent2=0;
+  //  double maxF7=0;
 
   QuattoMat(q1, g1);
   QuattoMat(q2, g2);
@@ -1127,17 +1116,15 @@ namespace Detail
 
         void generate(size_t start, size_t end) const
         {
-          float g[3][3];
-          float gTranpose[3][3];
-          float direction[3] = {0.0, 0.0, 0.0};
-
+          double g[3][3];
+          double gTranpose[3][3];
+          double direction[3] = {0.0, 0.0, 0.0};
 
           for(size_t i = start; i < end; ++i)
           {
-            FOrientArrayType eu(m_Eulers->getPointer(i * 3), 3);
-            FOrientArrayType om(9, 0.0);
-            OrientationTransforms<FOrientArrayType, float>::eu2om(eu, om);
-            om.toGMatrix(g);
+            OrientationType eu(m_Eulers->getValue(i * 3), m_Eulers->getValue(i * 3 + 1), m_Eulers->getValue(i * 3 + 2));
+            OrientationTransformation::eu2om<OrientationType, OrientationType>(eu).toGMatrix(g);
+
             MatrixMath::Transpose3x3(g, gTranpose);
 
             // -----------------------------------------------------------------------------
@@ -1147,8 +1134,7 @@ namespace Detail
             direction[2] = 1.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->getPointer(i * 6));
             MatrixMath::Copy3x1(m_xyz001->getPointer(i * 6), m_xyz001->getPointer(i * 6 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 6 + 3), -1);
-
+            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i * 6 + 3), -1.0f);
 
             // -----------------------------------------------------------------------------
             // 011 Family
@@ -1157,8 +1143,7 @@ namespace Detail
             direction[2] = 0.0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i * 6));
             MatrixMath::Copy3x1(m_xyz011->getPointer(i * 6), m_xyz011->getPointer(i * 6 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 6 + 3), -1);
-
+            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i * 6 + 3), -1.0f);
 
             // -----------------------------------------------------------------------------
             // 111 Family
@@ -1167,7 +1152,7 @@ namespace Detail
             direction[2] = 0;
             MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i * 6));
             MatrixMath::Copy3x1(m_xyz111->getPointer(i * 6), m_xyz111->getPointer(i * 6 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 6 + 3), -1);
+            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i * 6 + 3), -1.0f);
           }
 
         }
@@ -1185,7 +1170,7 @@ namespace Detail
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void HexagonalLowOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* xyz0001, FloatArrayType* xyz1010, FloatArrayType* xyz1120)
+void HexagonalLowOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* xyz0001, FloatArrayType* xyz1010, FloatArrayType* xyz1120) const
 {
   size_t nOrientations = eulers->getNumberOfTuples();
 
@@ -1227,7 +1212,7 @@ void HexagonalLowOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, Flo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool HexagonalLowOps::inUnitTriangle(float eta, float chi)
+bool HexagonalLowOps::inUnitTriangle(double eta, double chi) const
 {
   return !(eta < 0 || eta > (60.0 * SIMPLib::Constants::k_PiOver180) || chi < 0 || chi > (90.0 * SIMPLib::Constants::k_PiOver180));
 }
@@ -1235,7 +1220,7 @@ bool HexagonalLowOps::inUnitTriangle(float eta, float chi)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SIMPL::Rgb HexagonalLowOps::generateIPFColor(double* eulers, double* refDir, bool convertDegrees)
+SIMPL::Rgb HexagonalLowOps::generateIPFColor(double* eulers, double* refDir, bool convertDegrees) const
 {
   return generateIPFColor(eulers[0], eulers[1], eulers[2], refDir[0], refDir[1], refDir[2], convertDegrees);
 }
@@ -1243,7 +1228,7 @@ SIMPL::Rgb HexagonalLowOps::generateIPFColor(double* eulers, double* refDir, boo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SIMPL::Rgb HexagonalLowOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
+SIMPL::Rgb HexagonalLowOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad) const
 {
   if(degToRad)
   {
@@ -1252,27 +1237,20 @@ SIMPL::Rgb HexagonalLowOps::generateIPFColor(double phi1, double phi, double phi
     phi2 = phi2 * SIMPLib::Constants::k_DegToRad;
   }
 
-  QuatF qc;
-  QuatF q1;
-  float g[3][3];
-  float p[3];
-  float refDirection[3];
-  float eta, chi;
-  float _rgb[3] = { 0.0, 0.0, 0.0 };
+  double g[3][3];
+  double p[3];
+  double refDirection[3] = {0.0f, 0.0f, 0.0f};
+  double chi = 0.0f, eta = 0.0;
+  double _rgb[3] = {0.0, 0.0, 0.0};
 
-  FOrientArrayType eu(phi1, phi, phi2);
-  FOrientArrayType qu(4);
-  FOrientArrayType om(9); // Reusable for the loop
-  OrientationTransforms<FOrientArrayType, float>::eu2qu(eu, qu);
-  q1 = qu.toQuaternion();
+  OrientationType eu(phi1, phi, phi2);
+  OrientationType om(9); // Reusable for the loop
+  QuatType q1 = OrientationTransformation::eu2qu<OrientationType, QuatType>(eu);
 
-  for (int j = 0; j < 6; j++)
+  for(int j = 0; j < k_NumSymQuats; j++)
   {
-    QuaternionMathF::Multiply(HexQuatSym[j], q1, qc);
-
-    qu.fromQuaternion(qc);
-    OrientationTransforms<FOrientArrayType, float>::qu2om(qu, om);
-    om.toGMatrix(g);
+    QuatType qu = getQuatSymOp(j) * q1;
+    OrientationTransformation::qu2om<QuatType, OrientationType>(qu).toGMatrix(g);
 
     refDirection[0] = refDir0;
     refDirection[1] = refDir1;
@@ -1288,21 +1266,21 @@ SIMPL::Rgb HexagonalLowOps::generateIPFColor(double phi1, double phi, double phi
     {
       p[0] = -p[0], p[1] = -p[1], p[2] = -p[2];
     }
-    chi = acos(p[2]);
-    eta = atan2(p[1], p[0]);
+    chi = std::acos(p[2]);
+    eta = std::atan2(p[1], p[0]);
     if(!inUnitTriangle(eta, chi))
     {
       continue;
     }
 
-      break;
+    break;
   }
 
-  float etaMin = 0.0;
-  float etaMax = 60.0;
-  float chiMax = 90.0;
-  float etaDeg = eta * SIMPLib::Constants::k_180OverPi;
-  float chiDeg = chi * SIMPLib::Constants::k_180OverPi;
+  double etaMin = 0.0;
+  double etaMax = 60.0;
+  double chiMax = 90.0;
+  double etaDeg = eta * SIMPLib::Constants::k_180OverPi;
+  double chiDeg = chi * SIMPLib::Constants::k_180OverPi;
 
   _rgb[0] = 1.0 - chiDeg / chiMax;
   _rgb[2] = fabs(etaDeg - etaMin) / (etaMax - etaMin);
@@ -1313,7 +1291,7 @@ SIMPL::Rgb HexagonalLowOps::generateIPFColor(double phi1, double phi, double phi
   _rgb[1] = sqrt(_rgb[1]);
   _rgb[2] = sqrt(_rgb[2]);
 
-  float max = _rgb[0];
+  double max = _rgb[0];
   if (_rgb[1] > max)
   {
     max = _rgb[1];
@@ -1333,17 +1311,17 @@ SIMPL::Rgb HexagonalLowOps::generateIPFColor(double phi1, double phi, double phi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SIMPL::Rgb HexagonalLowOps::generateRodriguesColor(float r1, float r2, float r3)
+SIMPL::Rgb HexagonalLowOps::generateRodriguesColor(double r1, double r2, double r3) const
 {
-  float range1 = 2.0f * HexDim1InitValue;
-  float range2 = 2.0f * HexDim2InitValue;
-  float range3 = 2.0f * HexDim3InitValue;
-  float max1 = range1 / 2.0f;
-  float max2 = range2 / 2.0f;
-  float max3 = range3 / 2.0f;
-  float red = (r1 + max1) / range1;
-  float green = (r2 + max2) / range2;
-  float blue = (r3 + max3) / range3;
+  double range1 = 2.0 * HexDim1InitValue;
+  double range2 = 2.0 * HexDim2InitValue;
+  double range3 = 2.0 * HexDim3InitValue;
+  double max1 = range1 / 2.0;
+  double max2 = range2 / 2.0;
+  double max3 = range3 / 2.0;
+  double red = (r1 + max1) / range1;
+  double green = (r2 + max2) / range2;
+  double blue = (r3 + max3) / range3;
 
   // Scale values from 0 to 1.0
   red = red / max1;
@@ -1356,7 +1334,7 @@ SIMPL::Rgb HexagonalLowOps::generateRodriguesColor(float r1, float r2, float r3)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureConfiguration_t& config)
+QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureConfiguration_t& config) const
 {
   QString label0 = QString("<0001>");
   QString label1 = QString("<11-20>");
@@ -1379,7 +1357,7 @@ QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureC
   // this is size for CUBIC ONLY, <111> Family
   FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Detail::HexagonalLow::symSize2, dims, label2 + QString("xyzCoords"), true);
 
-  config.sphereRadius = 1.0f;
+  config.sphereRadius = 1.0;
 
   // Generate the coords on the sphere **** Parallelized
   generateSphereCoordsFromEulers(config.eulers, xyz001.get(), xyz011.get(), xyz111.get());
@@ -1510,31 +1488,31 @@ QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureC
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-UInt8ArrayType::Pointer HexagonalLowOps::generateIPFTriangleLegend(int imageDim)
+UInt8ArrayType::Pointer HexagonalLowOps::generateIPFTriangleLegend(int imageDim) const
 {
 
   std::vector<size_t> dims(1, 4);
   UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, dims, getSymmetryName() + " Triangle Legend", true);
   uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
 
-  float xInc = 1.0 / static_cast<float>(imageDim);
-  float yInc = 1.0 / static_cast<float>(imageDim);
-  float rad = 1.0f;
+  double xInc = 1.0 / static_cast<double>(imageDim);
+  double yInc = 1.0 / static_cast<double>(imageDim);
+  double rad = 1.0;
 
-  float x = 0.0f;
-  float y = 0.0f;
-  float a = 0.0f;
-  float b = 0.0f;
-  float c = 0.0f;
+  double x = 0.0;
+  double y = 0.0;
+  double a = 0.0;
+  double b = 0.0;
+  double c = 0.0;
 
-  float val = 0.0f;
-  float x1 = 0.0f;
-  float y1 = 0.0f;
-  float z1 = 0.0f;
-  float denom = 0.0f;
+  double val = 0.0;
+  double x1 = 0.0;
+  double y1 = 0.0;
+  double z1 = 0.0;
+  double denom = 0.0;
 
   // Find the slope of the bounding line.
-  static const float m = sinf(60.0 * SIMPLib::Constants::k_PiOver180) / cosf(60.0 * SIMPLib::Constants::k_PiOver180);
+  static const double m = sinf(60.0 * SIMPLib::Constants::k_PiOver180) / cosf(60.0 * SIMPLib::Constants::k_PiOver180);
 
   SIMPL::Rgb color;
   size_t idx = 0;
@@ -1551,10 +1529,10 @@ UInt8ArrayType::Pointer HexagonalLowOps::generateIPFTriangleLegend(int imageDim)
       x = xIndex * xInc;
       y = yIndex * yInc;
 
-      float sumSquares = (x * x) + (y * y);
+      double sumSquares = (x * x) + (y * y);
       if( sumSquares > 1.0f || x < y/m) // Outside unit circle
       {
-        color = 0xFFFFFFFF;
+        color = 0xFFFFFFF;
       }
       else if ( sumSquares > (rad-2*xInc) && sumSquares < (rad+2*xInc)) // Black Border line
       {
@@ -1597,7 +1575,7 @@ UInt8ArrayType::Pointer HexagonalLowOps::generateIPFTriangleLegend(int imageDim)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SIMPL::Rgb HexagonalLowOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
+SIMPL::Rgb HexagonalLowOps::generateMisorientationColor(const QuatType& q, const QuatType& refFrame) const
 {
   SIMPL::Rgb rgb = RgbColor::dRgb(0, 0, 0, 0);
 

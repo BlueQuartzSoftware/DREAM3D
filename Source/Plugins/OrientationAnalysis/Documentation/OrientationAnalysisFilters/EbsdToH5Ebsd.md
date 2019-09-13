@@ -1,5 +1,4 @@
-# Import Orientation File(s) to H5EBSD  #
-
+# Import Orientation File(s) to H5EBSD #
 
 ## Group (Subgroup) ##
 
@@ -30,7 +29,8 @@ Many serial sectioning systems are inherently a series of 2D scans stacked toget
 
 -----
 
-## Orientations, Reference Frames and Coordinate Systems
+## Orientations, Reference Frames and Coordinate Systems ##
+
 DREAM.3D's origin follows the specimen's coordinate system so that the physical location of the 0 row and 0 column voxel should visually appear in the lower left corner of a computer graphics display as shown in the figure below, where the specimen coordinate system (white) overlaid with EBSD coordinate system (yellow).
 
 -----
@@ -51,20 +51,20 @@ Commercial EBSD acquisition systems do not typically follow this convention, and
 
 The user needs to click the _Set Reference Frame_ button to set the proper reference frame for the data set which will be written to the H5EBSD file as meta data. Below are a number of examples showing the differences in the data sets due to the selection of different reference frames.
 
----
+-----
 
 ![No Transform or Unknown Manufacturer or HEDM Data](Images/NoUnknown_HEDM_RefFrame.png)
 
----
+-----
 
 ![TSL or HKL Transform](Images/EDAX_HKL_RefFrame.png)
 
----
+-----
 
 ### Preset Transformations ###
 
 | Manufacturer | Sample Reference Transformation | Euler Transformation |  
-|  ------	| ------	| ------	|  
+|  ------| ------| ------|  
 | TSL | 180 @ <010> | 90 @ <001> |
 | HKL | 180 @ <010> | 0 @ <001> |  
 | HEDM | 0 @ <001> | 0 @ <001>
@@ -82,10 +82,9 @@ The user needs to click the _Set Reference Frame_ button to set the proper refer
 
 Once all the inputs are correct the user can click the **Go** button to start the conversion. Progress will be displayed at the bottom of the DREAM3D user interface during the conversion.
 
-
 ## Parameters ##
 
-See Description 
+See Description
 
 ## Required Geometry ##
 
@@ -99,7 +98,6 @@ None
 
 None
 
-
 ## Example Pipelines ##
 
 + (01) SmallIN100 Archive
@@ -112,5 +110,3 @@ Please see the description file distributed with this **Plugin**
 ## DREAM.3D Mailing Lists ##
 
 If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
-
-

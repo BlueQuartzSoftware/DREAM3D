@@ -35,10 +35,6 @@
 
 #pragma once
 
-#include "OrientationLib/LaueOps/CubicOps.h"
-#include "OrientationLib/LaueOps/HexagonalOps.h"
-#include "OrientationLib/LaueOps/LaueOps.h"
-#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/ShapeType.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
@@ -46,6 +42,8 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/ShapeOps/ShapeOps.h"
 #include "SIMPLib/SIMPLib.h"
+
+class LaueOps;
 
 typedef struct
 {
@@ -305,7 +303,7 @@ protected:
    * @param shapeclass Type of precipitate shape to be generated
    * @param OrthoOps Pointer to LaueOps object
    */
-  void generate_precipitate(int32_t phase, Precip_t* precip, ShapeType::Type shapeclass, LaueOps::Pointer OrthoOps);
+  void generate_precipitate(int32_t phase, Precip_t* precip, ShapeType::Type shapeclass, const LaueOps* OrthoOps);
 
   /**
    * @brief load_precipitates Reads a list of precipitates from a file to be used as the packed volume
@@ -507,7 +505,6 @@ private:
   ShapeOps::Pointer m_CylinderOps;
   ShapeOps::Pointer m_EllipsoidOps;
   ShapeOps::Pointer m_SuperEllipsoidOps;
-  OrthoRhombicOps::Pointer m_OrthoOps;
 
   int64_t* m_Neighbors;
   StatsDataArray::WeakPointer m_StatsDataArray;
