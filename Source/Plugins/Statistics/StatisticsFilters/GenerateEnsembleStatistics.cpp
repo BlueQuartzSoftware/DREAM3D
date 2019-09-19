@@ -52,8 +52,10 @@
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/StatsData/TransformationStatsData.h"
 
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "Statistics/DistributionAnalysisOps/BetaOps.h"
 #include "Statistics/DistributionAnalysisOps/LogNormalOps.h"
@@ -113,8 +115,6 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics()
   m_DistributionAnalysis.push_back(BetaOps::New());
   m_DistributionAnalysis.push_back(LogNormalOps::New());
   m_DistributionAnalysis.push_back(PowerLawOps::New());
-
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   m_NeighborList = NeighborList<int32_t>::NullPointer();
   m_SharedSurfaceAreaList = NeighborList<float>::NullPointer();
@@ -364,9 +364,9 @@ void GenerateEnsembleStatistics::writeFilterParameters(QJsonObject& obj) const
 
   PhaseType::Types data = getPhaseTypeData();
   QJsonArray jsonArray;
-  for(int i = 0; i < data.size(); i++)
+  for(const auto& d : data)
   {
-    jsonArray.push_back(static_cast<int>(data[i]));
+    jsonArray.push_back(static_cast<int>(d));
   }
   obj["PhaseTypeArray"] = jsonArray;
 }
@@ -1021,7 +1021,7 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
 void GenerateEnsembleStatistics::gatherODFStats()
 {
   StatsDataArray& statsDataArray = *(m_StatsDataArray);
-
+  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
   size_t bin = 0;
   size_t numfeatures = m_FeatureEulerAnglesPtr.lock()->getNumberOfTuples();
   size_t numensembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
@@ -1066,9 +1066,9 @@ void GenerateEnsembleStatistics::gatherODFStats()
     if(!m_SurfaceFeatures[i])
     {
       phase = m_CrystalStructures[m_FeaturePhases[i]];
-      FOrientArrayType eu(&(m_FeatureEulerAngles[3 * i]), 3); // Wrap the pointer
-      FOrientArrayType rod(4);
-      OrientationTransforms<FOrientArrayType, float>::eu2ro(eu, rod);
+      Orientation<float> eu(m_AxisEulerAngles[3 * i], m_FeatureEulerAngles[3 * i + 1], m_FeatureEulerAngles[3 * i + 2]);
+
+      Orientation<double> rod = OrientationTransformation::eu2ro<Orientation<float>, Orientation<double>>(eu);
       bin = m_OrientationOps[phase]->getOdfBin(rod);
       eulerodf[m_FeaturePhases[i]]->setValue(bin, (eulerodf[m_FeaturePhases[i]]->getValue(bin) + (m_Volumes[i] / totalvol[m_FeaturePhases[i]])));
     }
@@ -1099,7 +1099,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
 void GenerateEnsembleStatistics::gatherMDFStats()
 {
   StatsDataArray& statsDataArray = *(m_StatsDataArray);
-
+  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
@@ -1110,9 +1110,8 @@ void GenerateEnsembleStatistics::gatherMDFStats()
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   int32_t mbin = 0;
   float w = 0.0f;
-  QuatF q1 = QuaternionMathF::New();
-  QuatF q2 = QuaternionMathF::New();
-  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+
+  // QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
   size_t numfeatures = m_FeaturePhasesPtr.lock()->getNumberOfTuples();
   size_t numensembles = m_PhaseTypesPtr.lock()->getNumberOfTuples();
@@ -1146,13 +1145,15 @@ void GenerateEnsembleStatistics::gatherMDFStats()
   float nsa = 0.0f;
   for(size_t i = 1; i < numfeatures; i++)
   {
-    QuaternionMathF::Copy(avgQuats[i], q1);
+    QuatF q1(m_AvgQuatsPtr.lock()->getTuplePointer(i));
     phase1 = m_CrystalStructures[m_FeaturePhases[i]];
     for(size_t j = 0; j < neighborlist[i].size(); j++)
     {
       w = 10000.0f;
       nname = neighborlist[i][j];
-      QuaternionMathF::Copy(avgQuats[nname], q2);
+
+      QuatF q2(m_AvgQuatsPtr.lock()->getTuplePointer(nname));
+
       phase2 = m_CrystalStructures[m_FeaturePhases[nname]];
       if(phase1 == phase2)
       {
@@ -1160,8 +1161,7 @@ void GenerateEnsembleStatistics::gatherMDFStats()
       }
       if(phase1 == phase2)
       {
-        FOrientArrayType rod(4);
-        FOrientTransformsType::ax2ro(FOrientArrayType(n1, n2, n3, w), rod);
+        Orientation<double> rod = OrientationTransformation::ax2ro<OrientationF, OrientationD>(OrientationF(n1, n2, n3, w));
 
         if((nname > i || m_SurfaceFeatures[nname]))
         {
@@ -1207,7 +1207,7 @@ void GenerateEnsembleStatistics::gatherMDFStats()
 void GenerateEnsembleStatistics::gatherAxisODFStats()
 {
   StatsDataArray& statsDataArray = *(m_StatsDataArray);
-
+  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
   int32_t bin = 0;
   QVector<FloatArrayType::Pointer> axisodf;
   QVector<float> totalaxes;
@@ -1235,8 +1235,10 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
   {
     if(!m_BiasedFeatures[i])
     {
-      FOrientArrayType rod(4);
-      FOrientTransformsType::eu2ro(FOrientArrayType(&(m_AxisEulerAngles[3 * i]), 3), rod);
+
+      Orientation<float> eu(m_AxisEulerAngles + 3 * i, 3); // Wrap the pointer
+      Orientation<double> rod = OrientationTransformation::eu2ro<Orientation<float>, Orientation<double>>(eu);
+
       m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getODFFZRod(rod);
       bin = m_OrientationOps[Ebsd::CrystalStructure::OrthoRhombic]->getOdfBin(rod);
       axisodf[m_FeaturePhases[i]]->setValue(bin, (axisodf[m_FeaturePhases[i]]->getValue(bin) + static_cast<float>((1.0 / totalaxes[m_FeaturePhases[i]]))));
@@ -1384,9 +1386,9 @@ int GenerateEnsembleStatistics::getPhaseCount()
   std::vector<size_t> tupleDims = inputAttrMat->getTupleDimensions();
 
   size_t phaseCount = 1;
-  for(int32_t i = 0; i < tupleDims.size(); i++)
+  for(const auto& tupleDim : tupleDims)
   {
-    phaseCount = phaseCount * tupleDims[i];
+    phaseCount = phaseCount * tupleDim;
   }
   return phaseCount;
 }

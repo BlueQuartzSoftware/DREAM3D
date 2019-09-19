@@ -40,7 +40,6 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -183,7 +182,6 @@ class OrientationAnalysis_EXPORT FindKernelAvgMisorientations : public AbstractF
     void initialize();
 
   private:
-    QVector<LaueOps::Pointer> m_OrientationOps;
 
     DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
     DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)

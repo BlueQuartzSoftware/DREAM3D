@@ -35,7 +35,6 @@
 
 #pragma once
 
-#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
@@ -473,7 +472,6 @@ private:
   ShapeOps::Pointer m_CylinderOps;
   ShapeOps::Pointer m_EllipsoidOps;
   ShapeOps::Pointer m_SuperEllipsoidOps;
-  OrthoRhombicOps::Pointer m_OrthoOps;
 
   std::vector<std::vector<int64_t>> m_ColumnList;
   std::vector<std::vector<int64_t>> m_RowList;

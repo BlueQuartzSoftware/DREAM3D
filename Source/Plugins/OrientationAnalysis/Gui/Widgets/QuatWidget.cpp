@@ -37,7 +37,7 @@
 
 #include <QtGui/QDoubleValidator>
 
-#include "SIMPLib/Math/QuaternionMath.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -111,14 +111,14 @@ void QuatWidget::valuesUpdated(const QString& text)
 {
   QVector<double> values = getValues();
 
-  QuatD quat = QuaternionMathD::New(values[0], values[1], values[2], values[3]);
-  QuaternionMathD::UnitQuaternion(quat);
-  values[0] = quat.x;
-  values[1] = quat.y;
-  values[2] = quat.z;
-  values[3] = quat.w;
+  QuatType quat(values[0], values[1], values[2], values[3]);
+  quat = quat.unitQuaternion();
+  values[0] = quat.x();
+  values[1] = quat.y();
+  values[2] = quat.z();
+  values[3] = quat.w();
 
-  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::qu_check(values);
+  OrientationTransformation::ResultType result = OrientationTransformation::qu_check(values);
   int errorCode = result.result;
   QString errorMsg = QString::fromStdString(result.msg);
 

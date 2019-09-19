@@ -49,12 +49,16 @@
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
-
 #include "EbsdLib/EbsdConstants.h"
+
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
+
+using QuatF = Quaternion<float>;
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -82,7 +86,6 @@ GroupMicroTextureRegions::GroupMicroTextureRegions()
 , m_FeatureParentIdsArrayName(SIMPL::FeatureData::ParentIds)
 , m_ActiveArrayName(SIMPL::FeatureData::Active)
 {
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
   m_AvgCAxes[0] = 0.0f;
   m_AvgCAxes[1] = 0.0f;
   m_AvgCAxes[2] = 0.0f;
@@ -359,9 +362,10 @@ int32_t GroupMicroTextureRegions::getSeed(int32_t newFid)
 
   float c1[3] = {0.0f, 0.0f, 0.0f};
   uint32_t phase1 = 0;
-  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+
+  // QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+
   float caxis[3] = {0.0f, 0.0f, 1.0f};
-  QuatF q1 = QuaternionMathF::New();
   float g1[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
   float g1t[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
 
@@ -396,11 +400,9 @@ int32_t GroupMicroTextureRegions::getSeed(int32_t newFid)
 
     if(m_UseRunningAverage)
     {
-      QuaternionMathF::Copy(avgQuats[seed], q1);
+      QuatF q1(m_AvgQuats + seed * 4);
       phase1 = m_CrystalStructures[m_FeaturePhases[seed]];
-      FOrientArrayType om(9);
-      FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
-      om.toGMatrix(g1);
+      OrientationTransformation::qu2om<QuatF, Orientation<float>>(q1).toGMatrix(g1);
       // transpose the g matrix so when caxis is multiplied by it
       // it will give the sample direction that the caxis is along
       MatrixMath::Transpose3x3(g1, g1t);
@@ -429,19 +431,17 @@ bool GroupMicroTextureRegions::determineGrouping(int32_t referenceFeature, int32
   float c1[3] = {0.0f, 0.0f, 0.0f};
   float c2[3] = {0.0f, 0.0f, 0.0f};
   float caxis[3] = {0.0f, 0.0f, 1.0f};
-  QuatF q1 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
-  QuatF q2 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
-  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+  //  QuatF q1 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
+  //  QuatF q2 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
+  //  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
   if(m_FeatureParentIds[neighborFeature] == -1 && m_FeaturePhases[referenceFeature] > 0 && m_FeaturePhases[neighborFeature] > 0)
   {
     if(!m_UseRunningAverage)
     {
-      QuaternionMathF::Copy(avgQuats[referenceFeature], q1);
+      QuatF q1(m_AvgQuats + referenceFeature * 4);
       phase1 = m_CrystalStructures[m_FeaturePhases[referenceFeature]];
-      FOrientArrayType om(9);
-      FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
-      om.toGMatrix(g1);
+      OrientationTransformation::qu2om<QuatF, Orientation<float>>(q1).toGMatrix(g1);
       // transpose the g matrix so when caxis is multiplied by it
       // it will give the sample direction that the caxis is along
       MatrixMath::Transpose3x3(g1, g1t);
@@ -453,10 +453,9 @@ bool GroupMicroTextureRegions::determineGrouping(int32_t referenceFeature, int32
     phase2 = m_CrystalStructures[m_FeaturePhases[neighborFeature]];
     if(phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High))
     {
-      QuaternionMathF::Copy(avgQuats[neighborFeature], q2);
-      FOrientArrayType om(9);
-      FOrientTransformsType::qu2om(FOrientArrayType(q2), om);
-      om.toGMatrix(g2);
+      QuatF q2(m_AvgQuats + neighborFeature * 4);
+      OrientationTransformation::qu2om<QuatF, Orientation<float>>(q2).toGMatrix(g2);
+
       // transpose the g matrix so when caxis is multiplied by it
       // it will give the sample direction that the caxis is along
       MatrixMath::Transpose3x3(g2, g2t);
@@ -473,7 +472,7 @@ bool GroupMicroTextureRegions::determineGrouping(int32_t referenceFeature, int32
       {
         w = GeometryMath::CosThetaBetweenVectors(c1, c2);
       }
-      SIMPLibMath::boundF(w, -1, 1);
+      SIMPLibMath::bound(w, -1.0f, 1.0f);
       w = acosf(w);
       if(w <= m_CAxisToleranceRad || (SIMPLib::Constants::k_Pi - w) <= m_CAxisToleranceRad)
       {

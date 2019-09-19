@@ -37,9 +37,8 @@
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 
+#include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
-
 
 /**
  * @brief The SO3Sampler class
@@ -56,7 +55,7 @@ class OrientationLib_EXPORT SO3Sampler
     /**
      * @brief OrientationListArrayType
      */
-    typedef std::list<DOrientArrayType> OrientationListArrayType;
+    using OrientationListArrayType = std::list<Orientation<double>>;
 
     // sampler routine
     OrientationListArrayType SampleRFZ(int nsteps,int pgnum);

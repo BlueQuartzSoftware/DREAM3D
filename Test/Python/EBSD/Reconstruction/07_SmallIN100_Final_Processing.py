@@ -16,65 +16,9 @@ def small_in100_final_processing():
     dca = simpl.DataContainerArray.New()
 
     # Read DREAM3D File
-    dcap = simpl.DataContainerArrayProxy()
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "Confidence Index").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "EulerAngles").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "Fit").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "IPFColor").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "Image Quality").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "Mask").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "Phases").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "Quats").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "SEM Signal").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "FeatureIds").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("EBSD Scan Data").getDataArrayProxy(
-        "ParentIds").Flag =2
-
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Phase Data").getDataArrayProxy(
-        "CrystalStructures").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Phase Data").getDataArrayProxy(
-        "LatticeConstants").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Phase Data").getDataArrayProxy(
-        "MaterialName").Flag =2
-
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy("Active").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "AvgEuler").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "AvgQuats").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "EquivalentDiameters").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "NumElements").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "NumNeighbors").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "NumNeighbors2").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "ParentIds").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy("Phases").Flag =2
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("Grain Data").getDataArrayProxy(
-        "Volumes").Flag =2
-
-    dcap.getDataContainerProxy("Small IN100").getAttributeMatrixProxy("NewGrain Data").getDataArrayProxy(
-        "Active").Flag =2
-
-    err = d3d.data_container_reader(dca,
-                                    sd.GetBuildDirectory() +
-                                    "/Data/Output/Reconstruction/06_SmallIN100_Postsegmentation.dream3d",
-                                    False, dcap)
+    err = sc.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + "/Data/Output/Reconstruction/06_SmallIN100_Postsegmentation.dream3d")
     if err < 0:
-        print("DataContainerReader ErrorCondition %d" % err)
+            print("Read DataContainerArray Structure Failed %d" % err)
 
     # Fill Bad Data
     err = processing.fill_bad_data(dca, False, 1000,

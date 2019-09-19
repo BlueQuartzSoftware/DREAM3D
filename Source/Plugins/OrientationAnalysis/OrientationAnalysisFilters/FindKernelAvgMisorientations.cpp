@@ -46,6 +46,10 @@
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "EbsdLib/EbsdConstants.h"
 
@@ -59,8 +63,6 @@ FindKernelAvgMisorientations::FindKernelAvgMisorientations()
 , m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats)
 , m_KernelAverageMisorientationsArrayName(SIMPL::CellData::KernelAverageMisorientations)
 {
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
-
   m_KernelSize[0] = 1;
   m_KernelSize[1] = 1;
   m_KernelSize[2] = 1;
@@ -220,9 +222,8 @@ void FindKernelAvgMisorientations::execute()
 
   DataContainer::Pointer m = getDataContainerArray()->getDataContainer(m_FeatureIdsArrayPath.getDataContainerName());
 
-  QuatF q1 = QuaternionMathF::New();
-  QuatF q2 = QuaternionMathF::New();
-  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  FloatArrayType::Pointer quatPtr = m_QuatsPtr.lock();
 
   int32_t numVoxel = 0; // number of voxels in the feature...
   bool good = false;
@@ -252,7 +253,8 @@ void FindKernelAvgMisorientations::execute()
         {
           totalmisorientation = 0.0f;
           numVoxel = 0;
-          QuaternionMathF::Copy(quats[point], q1);
+          QuatF q1(quatPtr->getTuplePointer(point));
+
           phase1 = m_CrystalStructures[m_CellPhases[point]];
           for(int32_t j = -m_KernelSize[2]; j < m_KernelSize[2] + 1; j++)
           {
@@ -291,7 +293,8 @@ void FindKernelAvgMisorientations::execute()
                 if(good && m_FeatureIds[point] == m_FeatureIds[neighbor])
                 {
                   w = std::numeric_limits<float>::max();
-                  QuaternionMathF::Copy(quats[neighbor], q2);
+
+                  QuatF q2(quatPtr->getTuplePointer(neighbor));
                   phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
                   w = m_OrientationOps[phase1]->getMisoQuat(q1, q2, n1, n2, n3);
                   w = w * (180.0f / SIMPLib::Constants::k_Pi);

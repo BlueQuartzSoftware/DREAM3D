@@ -41,8 +41,6 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
-
 #include "Reconstruction/ReconstructionFilters/SegmentFeatures.h"
 
 #include "Reconstruction/ReconstructionDLLExport.h"
@@ -196,7 +194,6 @@ private:
   DEFINE_DATAARRAY_VARIABLE(bool, Active)
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
 
   std::random_device m_RandomDevice;
   std::mt19937_64 m_Generator;

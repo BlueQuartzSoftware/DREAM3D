@@ -567,7 +567,7 @@ void ModifiedLambertProjection::createStereographicProjection(int dim, DoubleArr
         {
           if(m == 1)
           {
-            MatrixMath::Multiply3x1withConstant(xyz, -1.0);
+            MatrixMath::Multiply3x1withConstant(xyz, -1.0f);
           }
           nhCheck = getSquareCoord(xyz, sqCoord);
           //sqIndex = getSquareIndex(sqCoord);

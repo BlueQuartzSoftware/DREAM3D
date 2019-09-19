@@ -37,6 +37,8 @@
 
 #include <QtGui/QDoubleValidator>
 
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -128,7 +130,7 @@ void OmWidget::updateData(OrientationUtilityCalculator* calculator)
 void OmWidget::valuesUpdated(const QString& text)
 {
   QVector<double> values = getValues();
-  OrientationTransforms<QVector<double>, double>::ResultType result = OrientationTransforms<QVector<double>, double>::om_check(values);
+  OrientationTransformation::ResultType result = OrientationTransformation::om_check(values);
   int errorCode = result.result;
   QString errorMsg = QString::fromStdString(result.msg);
 

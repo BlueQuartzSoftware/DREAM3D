@@ -45,9 +45,11 @@
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+
+#include "OrientationLib/Core/Orientation.hpp"
 
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -83,12 +85,12 @@ class OrientationConverter
     SIMPL_SHARED_POINTERS(OrientationConverter<T> )
     SIMPL_TYPE_MACRO(OrientationConverter<T>)
 
-    virtual ~OrientationConverter() = default;
-    
+    ~OrientationConverter() = default;
+
     /**
-    * @brief getOrientationRepresentation
-    * @return
-    */
+     * @brief getOrientationRepresentation
+     * @return
+     */
     virtual OrientationRepresentation::Type getOrientationRepresentation()
     {
       return OrientationRepresentation::Type::Unknown;
@@ -266,30 +268,33 @@ class OrientationConverter
     static int GetMaxIndex() { return 6; }
     
   protected:
-    OrientationConverter() {}
-    
-  private:
-    OrientationConverter(const OrientationConverter&) = delete; // Copy Constructor Not Implemented
-    void operator=(const OrientationConverter&) = delete;       // Move assignment Not Implemented
-};
+    OrientationConverter() = default;
 
+  public:
+    OrientationConverter(const OrientationConverter&) = delete;            // Copy Constructor Not Implemented
+    OrientationConverter(OrientationConverter&&) = delete;                 // Move Constructor Not Implemented
+    OrientationConverter& operator=(const OrientationConverter&) = delete; // Copy Assignment Not Implemented
+    OrientationConverter& operator=(OrientationConverter&&) = delete;      // Move Assignment Not Implemented
+};
 
 /**
  * @brief This macro is used to create a functor that wraps a paricular conversion
  * method with a functor class so it can be passed to the parallel algorithms
  */
-#define OC_CONVERTOR_FUNCTOR(CLASSNAME, INSTRIDE, OUTSTRIDE, CONVERSION_METHOD)\
-  template<typename T>\
-  class CLASSNAME {\
-  public:\
-  CLASSNAME()  { }\
-  void operator()(T* eu, T* om) { \
-  using OrientationArray_t = OrientationArray<T>;\
-  OrientationArray_t rot(eu, INSTRIDE); \
-  OrientationArray_t res(om, OUTSTRIDE); \
-  OrientationTransforms<OrientationArray_t, T>::CONVERSION_METHOD(rot, res); \
-  }\
-  private:\
+
+#define OC_CONVERTOR_FUNCTOR(CLASSNAME, INSTRIDE, OUTSTRIDE, CONVERSION_METHOD)                                                                                                                        \
+  template <typename InputType>                                                                                                                                                                        \
+  class CLASSNAME                                                                                                                                                                                      \
+  {                                                                                                                                                                                                    \
+  public:                                                                                                                                                                                              \
+    CLASSNAME() = default;                                                                                                                                                                             \
+    void operator()(InputType* input, InputType* output)                                                                                                                                               \
+    {                                                                                                                                                                                                  \
+      using OrientationInputType = Orientation<InputType>;                                                                                                                                             \
+      OrientationInputType inputOrientation(input, INSTRIDE);                                                                                                                                          \
+      OrientationInputType outputOrientation(output, OUTSTRIDE);                                                                                                                                       \
+      outputOrientation = OrientationTransformation::CONVERSION_METHOD<OrientationInputType, OrientationInputType>(inputOrientation);                                                                  \
+    }                                                                                                                                                                                                  \
   };
 
 /**
@@ -499,9 +504,7 @@ class EulerConverter : public OrientationConverter<T>
     SIMPL_TYPE_MACRO_SUPER(EulerConverter<T>, OrientationConverter<T>)
     SIMPL_STATIC_NEW_MACRO(EulerConverter<T>)
 
-    virtual ~EulerConverter()
-    {
-    }
+    virtual ~EulerConverter() = default;
 
     virtual OrientationRepresentation::Type getOrientationRepresentation()
     {
@@ -510,7 +513,7 @@ class EulerConverter : public OrientationConverter<T>
 
     virtual void toEulers()
     {
-      typedef typename DataArray<T>::Pointer PointerType;
+      using PointerType = typename DataArray<T>::Pointer;
       PointerType input = this->getInputData();
       PointerType output = std::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
       this->setOutputData(output);
@@ -558,7 +561,7 @@ class EulerConverter : public OrientationConverter<T>
       bool doParallel = true;
 #endif
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      if(doParallel == true)
+      if(doParallel)
       {
         tbb::parallel_for(tbb::blocked_range<size_t>(0, nTuples), EulerSanityCheck<T>(inPtr, inStride), tbb::auto_partitioner());
       }
@@ -610,11 +613,12 @@ class EulerConverter : public OrientationConverter<T>
     {
       this->setInputData(data);
     }
-    
-  private:
-    
-    EulerConverter(const EulerConverter&) = delete; // Copy Constructor Not Implemented
-    void operator=(const EulerConverter&) = delete; // Move assignment Not Implemented
+
+  public:
+    EulerConverter(const EulerConverter&) = delete;            // Copy Constructor Not Implemented
+    EulerConverter(EulerConverter&&) = delete;                 // Move Constructor Not Implemented
+    EulerConverter& operator=(const EulerConverter&) = delete; // Copy Assignment Not Implemented
+    EulerConverter& operator=(EulerConverter&&) = delete;      // Move Assignment Not Implemented
 };
 
 /* =============================================================================
@@ -634,12 +638,12 @@ class OrientationMatrixSanityCheck
       
       for (size_t i = start; i < end; ++i)
       {
-        typedef OrientationArray<T> OrientationArrayType;
-        typedef typename OrientationTransforms<OrientationArrayType, T>::ResultType ResultType;
-        
-        OrientationArrayType oaType(inPtr, 9);
-        
-        ResultType res = OrientationTransforms<OrientationArrayType, T>::om_check(oaType);
+        using OrientationType = Orientation<T>;
+        using ResultType = OrientationTransformation::ResultType;
+
+        OrientationType oaType(inPtr, 9);
+
+        ResultType res = OrientationTransformation::om_check(oaType);
         if(res.result <= 0)
         {
           std::cout << res.msg << std::endl;
@@ -701,7 +705,7 @@ class OrientationMatrixConverter : public OrientationConverter<T>
     
     virtual void toOrientationMatrix()
     {
-      typedef typename DataArray<T>::Pointer PointerType;
+      using PointerType = typename DataArray<T>::Pointer;
       PointerType input = this->getInputData();
       PointerType output = std::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
       this->setOutputData(output);
@@ -748,7 +752,7 @@ class OrientationMatrixConverter : public OrientationConverter<T>
       bool doParallel = true;
 #endif
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      if(doParallel == true)
+      if(doParallel)
       {
         tbb::parallel_for(tbb::blocked_range<size_t>(0, nTuples), OrientationMatrixSanityCheck<T>(inPtr, inStride), tbb::auto_partitioner());
       }
@@ -799,16 +803,16 @@ class OrientationMatrixConverter : public OrientationConverter<T>
     {}
     explicit OrientationMatrixConverter(typename DataArray<T>::Pointer data) :
       OrientationConverter<T>()
-    { this->setInputData(data); }
-    
-  private:
-    
-    OrientationMatrixConverter(const OrientationMatrixConverter&) = delete; // Copy Constructor Not Implemented
-    void operator=(const OrientationMatrixConverter&) = delete;             // Move assignment Not Implemented
+    {
+      this->setInputData(data);
+    }
+
+  public:
+    OrientationMatrixConverter(const OrientationMatrixConverter&) = delete;            // Copy Constructor Not Implemented
+    OrientationMatrixConverter(OrientationMatrixConverter&&) = delete;                 // Move Constructor Not Implemented
+    OrientationMatrixConverter& operator=(const OrientationMatrixConverter&) = delete; // Copy Assignment Not Implemented
+    OrientationMatrixConverter& operator=(OrientationMatrixConverter&&) = delete;      // Move Assignment Not Implemented
 };
-
-
-
 
 /* =============================================================================
  *
@@ -854,9 +858,7 @@ class QuaternionConverter : public OrientationConverter<T>
     SIMPL_TYPE_MACRO_SUPER(QuaternionConverter<T>, OrientationConverter<T>)
     SIMPL_STATIC_NEW_MACRO(QuaternionConverter<T>)
 
-    virtual ~QuaternionConverter()
-    {
-    }
+    virtual ~QuaternionConverter() = default;
 
     virtual OrientationRepresentation::Type getOrientationRepresentation()
     {
@@ -875,7 +877,7 @@ class QuaternionConverter : public OrientationConverter<T>
     
     virtual void toQuaternion()
     {
-      typedef typename DataArray<T>::Pointer PointerType;
+      using PointerType = typename DataArray<T>::Pointer;
       PointerType input = this->getInputData();
       PointerType output = std::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
       this->setOutputData(output);
@@ -918,7 +920,7 @@ class QuaternionConverter : public OrientationConverter<T>
       bool doParallel = true;
 #endif
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      if(doParallel == true)
+      if(doParallel )
       {
         tbb::parallel_for(tbb::blocked_range<size_t>(0, nTuples), QuaternionSanityCheck<T>(inPtr, inStride), tbb::auto_partitioner());
       }
@@ -967,15 +969,16 @@ class QuaternionConverter : public OrientationConverter<T>
     {}
     explicit QuaternionConverter(typename DataArray<T>::Pointer data) :
       OrientationConverter<T>()
-    { this->setInputData(data); }
-    
-    
-  private:
-    
-    QuaternionConverter(const QuaternionConverter&) = delete; // Copy Constructor Not Implemented
-    void operator=(const QuaternionConverter&) = delete;      // Move assignment Not Implemented
-};
+    {
+      this->setInputData(data);
+    }
 
+  public:
+    QuaternionConverter(const QuaternionConverter&) = delete;            // Copy Constructor Not Implemented
+    QuaternionConverter(QuaternionConverter&&) = delete;                 // Move Constructor Not Implemented
+    QuaternionConverter& operator=(const QuaternionConverter&) = delete; // Copy Assignment Not Implemented
+    QuaternionConverter& operator=(QuaternionConverter&&) = delete;      // Move Assignment Not Implemented
+};
 
 /* =============================================================================
  *
@@ -1019,9 +1022,7 @@ class AxisAngleConverter : public OrientationConverter<T>
     SIMPL_TYPE_MACRO_SUPER(AxisAngleConverter<T>, OrientationConverter<T>)
     SIMPL_STATIC_NEW_MACRO(AxisAngleConverter<T>)
 
-    virtual ~AxisAngleConverter()
-    {
-    }
+    virtual ~AxisAngleConverter() = default;
 
     virtual OrientationRepresentation::Type getOrientationRepresentation()
     {
@@ -1045,7 +1046,7 @@ class AxisAngleConverter : public OrientationConverter<T>
     
     virtual void toAxisAngle()
     {
-      typedef typename DataArray<T>::Pointer PointerType;
+      using PointerType = typename DataArray<T>::Pointer;
       PointerType input = this->getInputData();
       PointerType output = std::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
       this->setOutputData(output);
@@ -1082,7 +1083,7 @@ class AxisAngleConverter : public OrientationConverter<T>
       bool doParallel = true;
 #endif
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      if(doParallel == true)
+      if(doParallel )
       {
         tbb::parallel_for(tbb::blocked_range<size_t>(0, nTuples), AxisAngleSanityCheck<T>(inPtr, inStride), tbb::auto_partitioner());
       }
@@ -1135,11 +1136,12 @@ class AxisAngleConverter : public OrientationConverter<T>
     {
       this->setInputData(data);
     }
-    
-  private:
-    
-    AxisAngleConverter(const AxisAngleConverter&) = delete; // Copy Constructor Not Implemented
-    void operator=(const AxisAngleConverter&) = delete;     // Move assignment Not Implemented
+
+  public:
+    AxisAngleConverter(const AxisAngleConverter&) = delete;            // Copy Constructor Not Implemented
+    AxisAngleConverter(AxisAngleConverter&&) = delete;                 // Move Constructor Not Implemented
+    AxisAngleConverter& operator=(const AxisAngleConverter&) = delete; // Copy Assignment Not Implemented
+    AxisAngleConverter& operator=(AxisAngleConverter&&) = delete;      // Move Assignment Not Implemented
 };
 
 /* =============================================================================
@@ -1185,9 +1187,7 @@ class RodriguesConverter : public OrientationConverter<T>
     SIMPL_TYPE_MACRO_SUPER(RodriguesConverter<T>, OrientationConverter<T>)
     SIMPL_STATIC_NEW_MACRO(RodriguesConverter<T>)
 
-    virtual ~RodriguesConverter()
-    {
-    }
+    virtual ~RodriguesConverter() = default;
 
     virtual OrientationRepresentation::Type getOrientationRepresentation()
     {
@@ -1216,7 +1216,7 @@ class RodriguesConverter : public OrientationConverter<T>
     
     virtual void toRodrigues()
     {
-      typedef typename DataArray<T>::Pointer PointerType;
+      using PointerType = typename DataArray<T>::Pointer;
       PointerType input = this->getInputData();
       PointerType output = std::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
       this->setOutputData(output);
@@ -1249,7 +1249,7 @@ class RodriguesConverter : public OrientationConverter<T>
       bool doParallel = true;
 #endif
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      if(doParallel == true)
+      if(doParallel )
       {
         tbb::parallel_for(tbb::blocked_range<size_t>(0, nTuples), RodriguesSanityCheck<T>(inPtr, inStride), tbb::auto_partitioner());
       }
@@ -1302,13 +1302,13 @@ class RodriguesConverter : public OrientationConverter<T>
     {
       this->setInputData(data);
     }
-    
-  private:
-    
-    RodriguesConverter(const RodriguesConverter&) = delete; // Copy Constructor Not Implemented
-    void operator=(const RodriguesConverter&) = delete;     // Move assignment Not Implemented
-};
 
+  public:
+    RodriguesConverter(const RodriguesConverter&) = delete;            // Copy Constructor Not Implemented
+    RodriguesConverter(RodriguesConverter&&) = delete;                 // Move Constructor Not Implemented
+    RodriguesConverter& operator=(const RodriguesConverter&) = delete; // Copy Assignment Not Implemented
+    RodriguesConverter& operator=(RodriguesConverter&&) = delete;      // Move Assignment Not Implemented
+};
 
 /* =============================================================================
  *
@@ -1387,7 +1387,7 @@ class HomochoricConverter : public OrientationConverter<T>
     
     virtual void toHomochoric()
     {
-      typedef typename DataArray<T>::Pointer PointerType;
+      using PointerType = typename DataArray<T>::Pointer;
       PointerType input = this->getInputData();
       PointerType output = std::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
       this->setOutputData(output);
@@ -1415,7 +1415,7 @@ class HomochoricConverter : public OrientationConverter<T>
       bool doParallel = true;
 #endif
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      if(doParallel == true)
+      if(doParallel )
       {
         tbb::parallel_for(tbb::blocked_range<size_t>(0, nTuples), HomochoricSanityCheck<T>(inPtr, inStride), tbb::auto_partitioner());
       }
@@ -1469,13 +1469,13 @@ class HomochoricConverter : public OrientationConverter<T>
     {
       this->setInputData(data);
     }
-    
-  private:
-    
-    HomochoricConverter(const HomochoricConverter&) = delete; // Copy Constructor Not Implemented
-    void operator=(const HomochoricConverter&) = delete;      // Move assignment Not Implemented
-};
 
+  public:
+    HomochoricConverter(const HomochoricConverter&) = delete;            // Copy Constructor Not Implemented
+    HomochoricConverter(HomochoricConverter&&) = delete;                 // Move Constructor Not Implemented
+    HomochoricConverter& operator=(const HomochoricConverter&) = delete; // Copy Assignment Not Implemented
+    HomochoricConverter& operator=(HomochoricConverter&&) = delete;      // Move Assignment Not Implemented
+};
 
 /* =============================================================================
  *
@@ -1520,9 +1520,7 @@ class CubochoricConverter : public OrientationConverter<T>
     SIMPL_TYPE_MACRO_SUPER(CubochoricConverter<T>, OrientationConverter<T>)
     SIMPL_STATIC_NEW_MACRO(CubochoricConverter<T>)
 
-    virtual ~CubochoricConverter()
-    {
-    }
+    virtual ~CubochoricConverter() = default;
 
     virtual OrientationRepresentation::Type getOrientationRepresentation()
     {
@@ -1561,7 +1559,7 @@ class CubochoricConverter : public OrientationConverter<T>
     
     virtual void toCubochoric()
     {
-      typedef typename DataArray<T>::Pointer PointerType;
+      using PointerType = typename DataArray<T>::Pointer;
       PointerType input = this->getInputData();
       PointerType output = std::dynamic_pointer_cast<DataArray<T> >(input->deepCopy());
       this->setOutputData(output);
@@ -1584,7 +1582,7 @@ class CubochoricConverter : public OrientationConverter<T>
       bool doParallel = true;
 #endif
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-      if(doParallel == true)
+      if(doParallel )
       {
         tbb::parallel_for(tbb::blocked_range<size_t>(0, nTuples), CubochoricSanityCheck<T>(inPtr, inStride), tbb::auto_partitioner());
       }
@@ -1637,10 +1635,10 @@ class CubochoricConverter : public OrientationConverter<T>
     {
       this->setInputData(data);
     }
-    
-  private:
-    
-    CubochoricConverter(const CubochoricConverter&) = delete; // Copy Constructor Not Implemented
-    void operator=(const CubochoricConverter&) = delete;      // Move assignment Not Implemented
-};
 
+  public:
+    CubochoricConverter(const CubochoricConverter&) = delete;            // Copy Constructor Not Implemented
+    CubochoricConverter(CubochoricConverter&&) = delete;                 // Move Constructor Not Implemented
+    CubochoricConverter& operator=(const CubochoricConverter&) = delete; // Copy Assignment Not Implemented
+    CubochoricConverter& operator=(CubochoricConverter&&) = delete;      // Move Assignment Not Implemented
+};

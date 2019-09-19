@@ -40,7 +40,6 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -50,14 +49,16 @@
 class OrientationAnalysis_EXPORT FindFeatureNeighborCAxisMisalignments : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(FindFeatureNeighborCAxisMisalignments SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(bool FindAvgMisals READ getFindAvgMisals WRITE setFindAvgMisals)
-    PYB11_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
-    PYB11_PROPERTY(QString CAxisMisalignmentListArrayName READ getCAxisMisalignmentListArrayName WRITE setCAxisMisalignmentListArrayName)
-    PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
-    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
-    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
-    PYB11_PROPERTY(QString AvgCAxisMisalignmentsArrayName READ getAvgCAxisMisalignmentsArrayName WRITE setAvgCAxisMisalignmentsArrayName)
+
+  PYB11_CREATE_BINDINGS(FindFeatureNeighborCAxisMisalignments SUPERCLASS AbstractFilter)
+  PYB11_PROPERTY(bool FindAvgMisals READ getFindAvgMisals WRITE setFindAvgMisals)
+  PYB11_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
+  PYB11_PROPERTY(QString CAxisMisalignmentListArrayName READ getCAxisMisalignmentListArrayName WRITE setCAxisMisalignmentListArrayName)
+  PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+  PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+  PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  PYB11_PROPERTY(QString AvgCAxisMisalignmentsArrayName READ getAvgCAxisMisalignmentsArrayName WRITE setAvgCAxisMisalignmentsArrayName)
+
 public:
   SIMPL_SHARED_POINTERS(FindFeatureNeighborCAxisMisalignments)
   SIMPL_FILTER_NEW_MACRO(FindFeatureNeighborCAxisMisalignments)
@@ -95,7 +96,7 @@ public:
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
-  */
+   */
   const QString getBrandingString() const override;
 
   /**
@@ -147,8 +148,8 @@ public:
   void execute() override;
 
   /**
-  * @brief preflight Reimplemented from @see AbstractFilter class
-  */
+   * @brief preflight Reimplemented from @see AbstractFilter class
+   */
   void preflight() override;
 
 signals:
@@ -187,8 +188,6 @@ protected:
   void initialize();
 
 private:
-  QVector<LaueOps::Pointer> m_OrientationOps;
-
   DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
   DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
@@ -199,8 +198,8 @@ private:
   NeighborList<float>::WeakPointer m_CAxisMisalignmentList;
 
 public:
-  FindFeatureNeighborCAxisMisalignments(const FindFeatureNeighborCAxisMisalignments&) = delete; // Copy Constructor Not Implemented
-  FindFeatureNeighborCAxisMisalignments(FindFeatureNeighborCAxisMisalignments&&) = delete;      // Move Constructor Not Implemented
+  FindFeatureNeighborCAxisMisalignments(const FindFeatureNeighborCAxisMisalignments&) = delete;            // Copy Constructor Not Implemented
+  FindFeatureNeighborCAxisMisalignments(FindFeatureNeighborCAxisMisalignments&&) = delete;                 // Move Constructor Not Implemented
   FindFeatureNeighborCAxisMisalignments& operator=(const FindFeatureNeighborCAxisMisalignments&) = delete; // Copy Assignment Not Implemented
   FindFeatureNeighborCAxisMisalignments& operator=(FindFeatureNeighborCAxisMisalignments&&) = delete;      // Move Assignment Not Implemented
 };

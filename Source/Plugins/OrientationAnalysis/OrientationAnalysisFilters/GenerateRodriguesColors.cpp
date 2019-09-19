@@ -43,7 +43,8 @@
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Utilities/ColorTable.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
 #include "OrientationLib/LaueOps/CubicLowOps.h"
 #include "OrientationLib/LaueOps/CubicOps.h"
 #include "OrientationLib/LaueOps/HexagonalLowOps.h"
@@ -52,7 +53,6 @@
 #include "OrientationLib/LaueOps/OrthoRhombicOps.h"
 #include "OrientationLib/LaueOps/TetragonalLowOps.h"
 #include "OrientationLib/LaueOps/TetragonalOps.h"
-#include "OrientationLib/LaueOps/TriclinicOps.h"
 #include "OrientationLib/LaueOps/TriclinicOps.h"
 #include "OrientationLib/LaueOps/TrigonalLowOps.h"
 #include "OrientationLib/LaueOps/TrigonalOps.h"
@@ -255,8 +255,7 @@ void GenerateRodriguesColors::execute()
     // Make sure we are using a valid Euler Angles with valid crystal symmetry
     if((missingGoodVoxels || m_GoodVoxels[i]) && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd)
     {
-      FOrientArrayType rod(4);
-      FOrientTransformsType::eu2ro(FOrientArrayType(m_CellEulerAngles + index, 3), rod);
+      OrientationF rod = OrientationTransformation::eu2ro<OrientationF, OrientationF>(OrientationF(m_CellEulerAngles + index, 3));
 
       argb = ops[m_CrystalStructures[phase]]->generateRodriguesColor(rod[0], rod[1], rod[2]);
       m_CellRodriguesColors[index] = RgbColor::dRed(argb);

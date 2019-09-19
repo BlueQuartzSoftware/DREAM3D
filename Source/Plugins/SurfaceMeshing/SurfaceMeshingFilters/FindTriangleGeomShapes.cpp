@@ -43,9 +43,11 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -666,8 +668,8 @@ void FindTriangleGeomShapes::find_axiseulers()
     g[2][2] = n1z;
 
     // check for right-handedness
-    typedef OrientationTransforms<FOrientArrayType, float> OrientationTransformType;
-    OrientationTransformType::ResultType result = FOrientTransformsType::om_check(FOrientArrayType(g));
+
+    OrientationTransformation::ResultType result = OrientationTransformation::om_check(OrientationF(g));
     if(result.result == 0)
     {
       g[2][0] *= -1.0f;
@@ -675,8 +677,7 @@ void FindTriangleGeomShapes::find_axiseulers()
       g[2][2] *= -1.0f;
     }
 
-    FOrientArrayType eu(3, 0.0f);
-    FOrientTransformsType::om2eu(FOrientArrayType(g), eu);
+    OrientationF eu = OrientationTransformation::om2eu<OrientationF, OrientationF>(OrientationF(g));
 
     m_AxisEulerAngles[3 * i] = eu[0];
     m_AxisEulerAngles[3 * i + 1] = eu[1];

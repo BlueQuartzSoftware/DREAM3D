@@ -228,9 +228,7 @@ void BadDataNeighborOrientationCheck::execute()
   neighpoints[5] = static_cast<int64_t>(dims[0] * dims[1]);
 
   float w = 10000.0f;
-  QuatF q1 = QuaternionMathF::New();
-  QuatF q2 = QuaternionMathF::New();
-  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   uint32_t phase1 = 0, phase2 = 0;
 
@@ -274,10 +272,10 @@ void BadDataNeighborOrientationCheck::execute()
         if(good == 1 && m_GoodVoxels[neighbor])
         {
           phase1 = m_CrystalStructures[m_CellPhases[i]];
-          QuaternionMathF::Copy(quats[i], q1);
+          QuatF q1(m_Quats + i * 4); // BEWARE POINTER MATH!!
 
           phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
-          QuaternionMathF::Copy(quats[neighbor], q2);
+          QuatF q2(m_Quats + neighbor * 4); // BEWARE POINTER MATH!!
 
           if(m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0)
           {
@@ -341,10 +339,10 @@ void BadDataNeighborOrientationCheck::execute()
             if(good == 1 && !m_GoodVoxels[neighbor])
             {
               phase1 = m_CrystalStructures[m_CellPhases[i]];
-              QuaternionMathF::Copy(quats[i], q1);
+              QuatF q1(m_Quats + i * 4); // BEWARE POINTER MATH!!
 
               phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
-              QuaternionMathF::Copy(quats[neighbor], q2);
+              QuatF q2(m_Quats + neighbor * 4); // BEWARE POINTER MATH!!
 
               if(m_CellPhases[i] == m_CellPhases[neighbor] && m_CellPhases[i] > 0)
               {

@@ -41,7 +41,6 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "Statistics/DistributionAnalysisOps/DistributionAnalysisOps.h"
 
@@ -383,7 +382,6 @@ private:
   DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
   DEFINE_DATAARRAY_VARIABLE(PhaseType::EnumType, PhaseTypes)
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
 
   NeighborList<int32_t>::WeakPointer m_NeighborList;
   NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;

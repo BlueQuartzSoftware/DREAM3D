@@ -205,7 +205,7 @@ public:
         MatrixMath::Normalize3x1(avgCAxis);
         if(avgCAxis[2] < 0)
         {
-          MatrixMath::Multiply3x1withConstant(avgCAxis, -1);
+          MatrixMath::Multiply3x1withConstant(avgCAxis, -1.0f);
         }
         m_AvgCAxis[3 * iter] = avgCAxis[0];
         m_AvgCAxis[3 * iter + 1] = avgCAxis[1];

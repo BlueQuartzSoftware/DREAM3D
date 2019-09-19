@@ -92,11 +92,7 @@ class Int32Parser : public DataParser
     {
       if(m_Ptr != nullptr && getManageMemory())
       {
-#if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
-        _mm_free(m_Ptr );
-#else
-        free(m_Ptr);
-#endif
+        delete[](m_Ptr);
         m_Ptr = nullptr;
       }
     }
@@ -112,11 +108,7 @@ class Int32Parser : public DataParser
 
     bool allocateArray(size_t numberOfElements) override
     {
-#if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
-      m_Ptr = static_cast<int32_t*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
-#else
-      m_Ptr = static_cast<int32_t*>(malloc(sizeof(int32_t) * numberOfElements));
-#endif
+      m_Ptr = new int32_t[numberOfElements]();
       return (m_Ptr != nullptr);
     }
 
@@ -176,11 +168,7 @@ class FloatParser : public DataParser
     {
       if(m_Ptr != nullptr && getManageMemory())
       {
-#if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
-        _mm_free(m_Ptr );
-#else
-        free(m_Ptr);
-#endif
+        delete[](m_Ptr);
         m_Ptr = nullptr;
       }
     }
@@ -196,11 +184,7 @@ class FloatParser : public DataParser
 
     bool allocateArray(size_t numberOfElements) override
     {
-#if defined ( SIMPL_USE_SSE ) && defined ( __SSE2__ )
-      m_Ptr = static_cast<float*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
-#else
-      m_Ptr = static_cast<float*>(malloc(sizeof(float) * numberOfElements));
-#endif
+      m_Ptr = new float[numberOfElements]();
       return (m_Ptr != nullptr);
     }
 

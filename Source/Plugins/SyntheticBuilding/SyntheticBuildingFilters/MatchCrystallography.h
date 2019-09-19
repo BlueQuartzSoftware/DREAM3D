@@ -262,7 +262,7 @@ protected:
    * @param q1 Quaterions for the Feature
    * @param q2 Quaterions for the Feature neighbor
    */
-  void MC_LoopBody1(int32_t feature, size_t ensem, size_t j, float neighsurfarea, uint32_t sym, QuatF& q1, QuatF& q2);
+  void MC_LoopBody1(int32_t feature, size_t ensem, size_t j, float neighsurfarea, uint32_t sym, const QuatF& q1, const QuatF& q2);
 
   /**
    * @brief MC_LoopBody2 Reinserts the swapped orientation if the swap did not improve the fit

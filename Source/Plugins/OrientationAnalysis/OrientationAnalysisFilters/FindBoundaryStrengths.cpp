@@ -276,13 +276,10 @@ void FindBoundaryStrengths::execute()
 
   size_t numTriangles = m_SurfaceMeshFaceLabelsPtr.lock()->getNumberOfTuples();
 
-  float mPrime_1 = 0.0f, mPrime_2 = 0.0f, F1_1 = 0.0f, F1_2 = 0.0f, F1spt_1 = 0.0f, F1spt_2 = 0.0f, F7_1 = 0.0f, F7_2 = 0.0f;
+  double mPrime_1 = 0.0f, mPrime_2 = 0.0f, F1_1 = 0.0f, F1_2 = 0.0f, F1spt_1 = 0.0f, F1spt_2 = 0.0f, F7_1 = 0.0f, F7_2 = 0.0f;
   int32_t gname1 = 0, gname2 = 0;
-  QuatF q1 = QuaternionMathF::New();
-  QuatF q2 = QuaternionMathF::New();
-  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
-  float LD[3] = {0.0f, 0.0f, 0.0f};
+  double LD[3] = {0.0f, 0.0f, 0.0f};
 
   LD[0] = m_Loading[0];
   LD[1] = m_Loading[1];
@@ -295,18 +292,19 @@ void FindBoundaryStrengths::execute()
     gname2 = m_SurfaceMeshFaceLabels[i * 2 + 1];
     if(gname1 > 0 && gname2 > 0)
     {
-      QuaternionMathF::Copy(avgQuats[gname1], q1);
-      QuaternionMathF::Copy(avgQuats[gname2], q2);
+      QuatType q1(m_AvgQuats[gname1 * 4], m_AvgQuats[gname1 * 4 + 1], m_AvgQuats[gname1 * 4 + 2], m_AvgQuats[gname1 * 4 + 3]);
+      QuatType q2(m_AvgQuats[gname2 * 4], m_AvgQuats[gname2 * 4 + 1], m_AvgQuats[gname2 * 4 + 2], m_AvgQuats[gname2 * 4 + 3]);
+
       if(m_CrystalStructures[m_FeaturePhases[gname1]] == m_CrystalStructures[m_FeaturePhases[gname2]] && m_FeaturePhases[gname1] > 0)
       {
-        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getmPrime(q1, q2, LD, mPrime_1);
-        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getmPrime(q2, q1, LD, mPrime_2);
-        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getF1(q1, q2, LD, true, F1_1);
-        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getF1(q2, q1, LD, true, F1_2);
-        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getF1spt(q1, q2, LD, true, F1spt_1);
-        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getF1spt(q2, q1, LD, true, F1spt_2);
-        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getF7(q1, q2, LD, true, F7_1);
-        m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getF7(q2, q1, LD, true, F7_2);
+        mPrime_1 = m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getmPrime(q1, q2, LD);
+        mPrime_2 = m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getmPrime(q2, q1, LD);
+        F1_1 = m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getF1(q1, q2, LD, true);
+        F1_2 = m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getF1(q2, q1, LD, true);
+        F1spt_1 = m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getF1spt(q1, q2, LD, true);
+        F1spt_2 = m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getF1spt(q2, q1, LD, true);
+        F7_1 = m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getF7(q1, q2, LD, true);
+        F7_2 = m_OrientationOps[m_CrystalStructures[m_FeaturePhases[gname1]]]->getF7(q2, q1, LD, true);
       }
       else
       {

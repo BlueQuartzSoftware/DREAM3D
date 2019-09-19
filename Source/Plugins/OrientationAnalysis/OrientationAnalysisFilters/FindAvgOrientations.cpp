@@ -41,7 +41,10 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -57,15 +60,13 @@ enum createdPathID : RenameDataPath::DataID_t
 //
 // -----------------------------------------------------------------------------
 FindAvgOrientations::FindAvgOrientations()
-: m_FeatureIdsArrayPath("", "", "")
-, m_CellPhasesArrayPath("", "", "")
-, m_QuatsArrayPath("", "", "")
-, m_CrystalStructuresArrayPath("", "", "")
-, m_AvgQuatsArrayPath("", "", "")
-, m_AvgEulerAnglesArrayPath("", "", "")
+: m_FeatureIdsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::FeatureIds)
+, m_CellPhasesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Phases)
+, m_QuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellAttributeMatrixName, SIMPL::CellData::Quats)
+, m_CrystalStructuresArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellEnsembleAttributeMatrixName, SIMPL::EnsembleData::CrystalStructures)
+, m_AvgQuatsArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::FeatureData::AvgQuats)
+, m_AvgEulerAnglesArrayPath(SIMPL::Defaults::ImageDataContainerName, SIMPL::Defaults::CellFeatureAttributeMatrixName, SIMPL::CellData::EulerAngles)
 {
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
-
 }
 
 // -----------------------------------------------------------------------------
@@ -227,6 +228,7 @@ void FindAvgOrientations::execute()
   {
     return;
   }
+  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t totalFeatures = m_AvgQuatsPtr.lock()->getNumberOfTuples();
@@ -234,15 +236,8 @@ void FindAvgOrientations::execute()
   std::vector<float> counts(totalFeatures, 0.0f);
 
   int32_t phase = 0;
-  QuatF voxquat = QuaternionMathF::New();
-  QuatF curavgquat = QuaternionMathF::New();
-  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
-  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
-  for(size_t i = 1; i < totalFeatures; i++)
-  {
-    QuaternionMathF::ElementWiseAssign(avgQuats[i], 0.0);
-  }
+  m_AvgQuatsPtr.lock()->initializeWithZeros();
 
   for(size_t i = 0; i < totalPoints; i++)
   {
@@ -250,30 +245,34 @@ void FindAvgOrientations::execute()
     {
       counts[m_FeatureIds[i]] += 1.0f;
       phase = m_CellPhases[i];
-      QuaternionMathF::Copy(quats[i], voxquat);
-      QuaternionMathF::Copy(avgQuats[m_FeatureIds[i]], curavgquat);
-      QuaternionMathF::ScalarDivide(curavgquat, counts[m_FeatureIds[i]]);
+      QuatF voxquat(m_Quats + i * 4);
+      QuatF curavgquat(m_AvgQuats + m_FeatureIds[i] * 4);
+      curavgquat.scalarDivide(counts[m_FeatureIds[i]]);
 
       if(counts[m_FeatureIds[i]] == 1.0f)
       {
-        QuaternionMathF::Identity(curavgquat);
+        curavgquat.identity();
       }
       m_OrientationOps[m_CrystalStructures[phase]]->getNearestQuat(curavgquat, voxquat);
-      QuaternionMathF::Add(avgQuats[m_FeatureIds[i]], voxquat, avgQuats[m_FeatureIds[i]]);
+
+      QuatF qSum(m_AvgQuats + m_FeatureIds[i] * 4); // Wrap the pointer
+      qSum = qSum + voxquat;
     }
   }
 
   for(size_t i = 1; i < totalFeatures; i++)
   {
+
+    QuatF qAvg = QuatF(m_AvgQuats + i * 4);
     if(counts[i] == 0.0f)
     {
-      QuaternionMathF::Identity(avgQuats[i]);
+      qAvg.identity();
     }
-    QuaternionMathF::ScalarDivide(avgQuats[i], counts[i]);
-    QuaternionMathF::UnitQuaternion(avgQuats[i]);
+    qAvg.scalarDivide(counts[i]);
+    qAvg = qAvg.unitQuaternion();
 
-    FOrientArrayType eu(m_FeatureEulerAngles + (3 * i), 3);
-    FOrientTransformsType::qu2eu(FOrientArrayType(avgQuats[i]), eu);
+    Orientation<float> eu(m_FeatureEulerAngles + (3 * i), 3);                           // Wrap the pointer
+    eu = OrientationTransformation::qu2eu<Quaternion<float>, Orientation<float>>(qAvg); // Exploit the copy assignment that will not reallocate if we are wrapping an existing pointer.
   }
 }
 

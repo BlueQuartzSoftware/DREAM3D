@@ -1,37 +1,4 @@
-# ============================================================================
-# Copyright (c) 2009-2015 BlueQuartz Software, LLC
-#
-# Redistribution and use in source and binary forms, with or without modification,
-# are permitted provided that the following conditions are met:
-#
-# Redistributions of source code must retain the above copyright notice, this
-# list of conditions and the following disclaimer.
-#
-# Redistributions in binary form must reproduce the above copyright notice, this
-# list of conditions and the following disclaimer in the documentation and/or
-# other materials provided with the distribution.
-#
-# Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-# contributors may be used to endorse or promote products derived from this software
-# without specific prior written permission.
-#
-# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-# AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-# DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-# SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-# CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-# OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-# USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
-# The code contained herein was partially funded by the followig contracts:
-#    United States Air Force Prime Contract FA8650-07-D-5800
-#    United States Air Force Prime Contract FA8650-10-D-5210
-#    United States Prime Contract Navy N00173-07-C-2068
-#
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
 # set project's name
 PROJECT(OrientationLib VERSION ${DREAM3DProj_VERSION_MAJOR}.${DREAM3DProj_VERSION_MINOR})
 
@@ -138,9 +105,10 @@ cmp_IDE_GENERATED_PROPERTIES("Generated" "${OrientationLib_Generated_CMP_SRCS}" 
 
 
 #-- Include all the Source Files
+include( ${OrientationLib_SOURCE_DIR}/Core/SourceList.cmake)
+include( ${OrientationLib_SOURCE_DIR}/IO/SourceList.cmake)
 include( ${OrientationLib_SOURCE_DIR}/LaueOps/SourceList.cmake)
 include( ${OrientationLib_SOURCE_DIR}/OrientationMath/SourceList.cmake)
-include( ${OrientationLib_SOURCE_DIR}/IO/SourceList.cmake)
 include( ${OrientationLib_SOURCE_DIR}/Texture/SourceList.cmake)
 include( ${OrientationLib_SOURCE_DIR}/Utilities/SourceList.cmake)
 
@@ -167,6 +135,8 @@ cmp_IDE_SOURCE_PROPERTIES( "" "${OrientationLib_HDRS}" "${OrientationLib_SRCS}" 
 set(OrientationLib_PROJECT_SRCS
     ${OrientationLib_SRCS}
     ${OrientationLib_HDRS}
+    ${OrientationLib_Core_HDRS}
+    ${OrientationLib_Core_SRCS}
     ${OrientationLib_LaueOps_HDRS}
     ${OrientationLib_LaueOps_SRCS}
     ${OrientationLib_OrientationMath_HDRS}
@@ -180,8 +150,6 @@ set(OrientationLib_PROJECT_SRCS
     #-- Our Generated Header Files
     ${OrientationLib_Generated_CMP_SRCS}
 )
-
-
 
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${OrientationLib_PROJECT_SRCS})
 CMP_AddDefinitions(TARGET ${PROJECT_NAME})

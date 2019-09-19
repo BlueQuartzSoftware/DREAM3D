@@ -202,6 +202,7 @@ class EbsdToH5EbsdWidget : public FilterParameterWidget, private Ui::EbsdToH5Ebs
     QAction* m_ShowFileAction = nullptr;
     QString  m_CurrentText = "";
     bool     m_DidCausePreflight = false;
+    bool m_fileExtUsedForTransformInit = false;
 
   public:
     EbsdToH5EbsdWidget(const EbsdToH5EbsdWidget&) = delete; // Copy Constructor Not Implemented

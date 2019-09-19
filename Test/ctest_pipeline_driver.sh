@@ -2,11 +2,11 @@
 
 #set -e
 
-echo "Prebuilt Pipeline Test Starting"
+echo "[D3D_Prebuilt_@test_index@] Prebuilt Pipeline Test Starting"
 echo "    @test@.json"
 
 DEBUG_EXT=""
-if [ "@BUILD_TYPE@" = "Debug" ]; then
+if [ "@CMAKE_BUILD_TYPE@" = "Debug" ]; then
     DEBUG_EXT="@EXE_DEBUG_EXTENSION@"
 fi
 

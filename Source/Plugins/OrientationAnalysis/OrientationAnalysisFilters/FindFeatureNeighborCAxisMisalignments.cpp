@@ -46,12 +46,16 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/GeometryMath.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 #include "EbsdLib/EbsdConstants.h"
+
+using QuatF = Quaternion<float>;
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -72,11 +76,8 @@ FindFeatureNeighborCAxisMisalignments::FindFeatureNeighborCAxisMisalignments()
 , m_CrystalStructuresArrayPath("", "", "")
 , m_AvgCAxisMisalignmentsArrayName(SIMPL::FeatureData::AvgCAxisMisalignments)
 {
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
-
   m_NeighborList = NeighborList<int32_t>::NullPointer();
   m_CAxisMisalignmentList = NeighborList<float>::NullPointer();
-
 }
 
 // -----------------------------------------------------------------------------
@@ -230,6 +231,7 @@ void FindFeatureNeighborCAxisMisalignments::preflight()
 // -----------------------------------------------------------------------------
 void FindFeatureNeighborCAxisMisalignments::execute()
 {
+  using OrientF = Orientation<float>;
   clearErrorCode();
   clearWarningCode();
   dataCheck();
@@ -256,9 +258,10 @@ void FindFeatureNeighborCAxisMisalignments::execute()
   float c2[3] = {0.0f, 0.0f, 0.0f};
   float caxis[3] = {0.0f, 0.0f, 1.0f};
   size_t hexneighborlistsize = 0;
-  QuatF q1 = QuaternionMathF::New();
-  QuatF q2 = QuaternionMathF::New();
-  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+  //  QuatF q1 = QuaternionMathF::New();
+  //  QuatF q2 = QuaternionMathF::New();
+  //  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+  FloatArrayType::Pointer avgQuatsPtr = m_AvgQuatsPtr.lock();
 
   uint32_t phase1 = 0, phase2 = 0;
   size_t nname = 0;
@@ -266,11 +269,10 @@ void FindFeatureNeighborCAxisMisalignments::execute()
 
   for(size_t i = 1; i < totalFeatures; i++)
   {
-    QuaternionMathF::Copy(avgQuats[i], q1);
     phase1 = m_CrystalStructures[m_FeaturePhases[i]];
-    FOrientArrayType om(9);
-    FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
-    om.toGMatrix(g1);
+    QuatF q1(avgQuatsPtr->getTuplePointer(i));
+    OrientationTransformation::qu2om<QuatF, OrientF>(q1).toGMatrix(g1);
+
     // transpose the g matrix so when caxis is multiplied by it
     // it will give the sample direction that the caxis is along
     MatrixMath::Transpose3x3(g1, g1t);
@@ -287,9 +289,9 @@ void FindFeatureNeighborCAxisMisalignments::execute()
       hexneighborlistsize = neighborlist[i].size();
       if(phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High))
       {
-        QuaternionMathF::Copy(avgQuats[nname], q2);
-        FOrientTransformsType::qu2om(FOrientArrayType(q2), om);
-        om.toGMatrix(g2);
+        QuatF q2(avgQuatsPtr->getTuplePointer(nname));
+        OrientationTransformation::qu2om<QuatF, OrientF>(q2).toGMatrix(g2);
+
         // transpose the g matrix so when caxis is multiplied by it
         // it will give the sample direction that the caxis is along
         MatrixMath::Transpose3x3(g2, g2t);
@@ -299,7 +301,7 @@ void FindFeatureNeighborCAxisMisalignments::execute()
         MatrixMath::Normalize3x1(c2);
 
         w = GeometryMath::CosThetaBetweenVectors(c1, c2);
-        SIMPLibMath::boundF(w, -1, 1);
+        SIMPLibMath::bound(w, -1.0f, 1.0f);
         w = acosf(w);
         if(w > (SIMPLib::Constants::k_Pi / 2))
         {

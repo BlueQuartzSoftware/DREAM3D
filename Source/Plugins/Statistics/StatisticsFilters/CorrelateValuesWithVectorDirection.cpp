@@ -301,7 +301,7 @@ int CorrelateValuesWithVectorDirection::determineSquareCoordsandBin(float xyz[3]
   float adjust = -1.0;
   if(xyz[2] < 0.0)
   {
-    MatrixMath::Multiply3x1withConstant(xyz, -1);
+    MatrixMath::Multiply3x1withConstant(xyz, -1.0f);
   }
   if(xyz[0] == 0 && xyz[1] == 0)
   {

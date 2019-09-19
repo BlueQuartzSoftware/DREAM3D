@@ -34,6 +34,7 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include <QtCore/QDir>
+#include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 #include <QtGui/QImage>
 
@@ -61,12 +62,13 @@
 class IPFLegendTest
 {
 public:
-  IPFLegendTest()
-  {
-  }
-  virtual ~IPFLegendTest()
-  {
-  }
+  IPFLegendTest() = default;
+  ~IPFLegendTest() = default;
+
+  IPFLegendTest(const IPFLegendTest&) = delete;            // Copy Constructor Not Implemented
+  IPFLegendTest(IPFLegendTest&&) = delete;                 // Move Constructor Not Implemented
+  IPFLegendTest& operator=(const IPFLegendTest&) = delete; // Copy Assignment Not Implemented
+  IPFLegendTest& operator=(IPFLegendTest&&) = delete;      // Move Assignment Not Implemented
 
   // -----------------------------------------------------------------------------
   //
@@ -74,16 +76,6 @@ public:
   int getImageSize()
   {
     return IMAGE_HEIGHT;
-  }
-
-  // -----------------------------------------------------------------------------
-  //
-  // -----------------------------------------------------------------------------
-  void RemoveTestFiles()
-  {
-#if REMOVE_TEST_FILES
-// QFile::remove();
-#endif
   }
 
   // -----------------------------------------------------------------------------
@@ -117,12 +109,17 @@ public:
 
     bool saved = image.save(outputFile);
     DREAM3D_REQUIRE(saved == true)
+#if REMOVE_TEST_FILES
+    bool removed = QFile::remove(outputFile);
+    DREAM3D_REQUIRE(removed == true)
+#endif
   }
 
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  template <class LaueOpsType> void TestIPFLegend(const QString outputFile)
+  template <class LaueOpsType>
+  void TestIPFLegend(const QString outputFile)
   {
     LaueOpsType ops;
     UInt8ArrayType::Pointer image = ops.generateIPFTriangleLegend(IMAGE_WIDTH);
@@ -146,10 +143,6 @@ public:
     DREAM3D_REGISTER_TEST(TestIPFLegend<TrigonalLowOps>(UnitTest::IPFLegendTest::TrignonalLowFile))
     DREAM3D_REGISTER_TEST(TestIPFLegend<TrigonalOps>(UnitTest::IPFLegendTest::TrignonalHighFile))
 
-    DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
 
-private:
-  IPFLegendTest(const IPFLegendTest&);  // Copy Constructor Not Implemented
-  void operator=(const IPFLegendTest&); // Move assignment Not Implemented
 };

@@ -45,12 +45,13 @@
 #include "SIMPLib/Math/SIMPLibRandom.h"
 #include "SIMPLib/SIMPLib.h"
 
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
 #include "OrientationLib/LaueOps/CubicOps.h"
 #include "OrientationLib/LaueOps/HexagonalOps.h"
 #include "OrientationLib/LaueOps/LaueOps.h"
 #include "OrientationLib/LaueOps/OrthoRhombicOps.h"
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 /**
  * @class Texture Texture.h AIM/Common/Texture.h
@@ -65,9 +66,7 @@
 class Texture
 {
 public:
-  virtual ~Texture()
-  {
-  }
+  virtual ~Texture() = default;
 
   /**
   * @brief This will calculate ODF data based on an array of weights that are
@@ -97,12 +96,11 @@ public:
     int bin1, bin2, bin3;
     int addbin1, addbin2, addbin3;
     float dist, fraction;
-
+    // Use double precision for the calculations
     for(size_t i = 0; i < numEntries; i++)
     {
-      FOrientArrayType eu(e1s[i], e2s[i], e3s[i]);
-      FOrientArrayType rod(4);
-      OrientationTransforms<FOrientArrayType, float>::eu2ro(eu, rod);
+      OrientationF eu(e1s[i], e2s[i], e3s[i]);
+      OrientationD rod = OrientationTransformation::eu2ro<OrientationF, OrientationD>(eu);
 
       rod = ops.getODFFZRod(rod);
       bin = ops.getOdfBin(rod);
@@ -196,7 +194,7 @@ public:
         odf[i] += background;
       }
     }
-    if(normalize == true)
+    if(normalize)
     {
       // Normalize the odf
       for(int i = 0; i < ops.getODFSize(); i++)
@@ -224,6 +222,7 @@ public:
   */
   template <typename T> static void CalculateHexODFData(T* e1s, T* e2s, T* e3s, T* weights, T* sigmas, bool normalize, T* odf, size_t numEntries)
   {
+
     HexagonalOps hexOps;
     Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins", true);
     int32_t* TextureBins = textureBins->getPointer(0);
@@ -237,9 +236,8 @@ public:
     HexagonalOps ops;
     for(size_t i = 0; i < numEntries; i++)
     {
-      FOrientArrayType eu(e1s[i], e2s[i], e3s[i]);
-      FOrientArrayType rod(4);
-      OrientationTransforms<FOrientArrayType, float>::eu2ro(eu, rod);
+      OrientationF eu(e1s[i], e2s[i], e3s[i]);
+      OrientationD rod = OrientationTransformation::eu2ro<OrientationF, OrientationD>(eu);
 
       rod = ops.getODFFZRod(rod);
       bin = ops.getOdfBin(rod);
@@ -333,7 +331,7 @@ public:
         odf[i] += background;
       }
     }
-    if(normalize == true)
+    if(normalize)
     {
       // Normalize the odf
       for(int i = 0; i < ops.getODFSize(); i++)
@@ -361,6 +359,10 @@ public:
   */
   template <typename T> static void CalculateOrthoRhombicODFData(T* e1s, T* e2s, T* e3s, T* weights, T* sigmas, bool normalize, T* odf, size_t numEntries)
   {
+    //  using OrientArrayType = OrientationArray<T>;
+    using OrientationD = Orientation<double>;
+    // using OrientTransformsType = OrientationTransforms<OrientArrayType, T>;
+
     OrthoRhombicOps ops;
     SIMPL_RANDOMNG_NEW()
     Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins", true);
@@ -374,9 +376,8 @@ public:
     float dist, fraction;
     for(size_t i = 0; i < numEntries; i++)
     {
-      FOrientArrayType eu(e1s[i], e2s[i], e3s[i]);
-      FOrientArrayType rod(4);
-      OrientationTransforms<FOrientArrayType, float>::eu2ro(eu, rod);
+      OrientationD eu(e1s[i], e2s[i], e3s[i]);
+      OrientationD rod = OrientationTransformation::eu2ro<OrientationD, OrientationD>(eu);
 
       rod = ops.getODFFZRod(rod);
       bin = ops.getOdfBin(rod);
@@ -470,7 +471,7 @@ public:
         odf[i] += background;
       }
     }
-    if(normalize == true)
+    if(normalize)
     {
       // Normalize the odf
       for(int i = 0; i < ops.getODFSize(); i++)
@@ -491,8 +492,10 @@ public:
    * the value passed here is the minium size of all the arrays. The sizes of the ODF and MDF arrays are
    * determined by calling the getODFSize and getMDFSize functions of the parameterized LaueOps class.
    */
-  template <typename T, class LaueOps> static void CalculateMDFData(T* angles, T* axes, T* weights, T* odf, T* mdf, size_t numEntries)
+  template <typename T, class LaueOps>
+  static void CalculateMDFData(T* angles, T* axes, T* weights, T* odf, T* mdf, size_t numEntries)
   {
+
     LaueOps orientationOps;
     const int odfsize = orientationOps.getODFSize();
     const int mdfsize = orientationOps.getMDFSize();
@@ -501,12 +504,11 @@ public:
     SIMPL_RANDOMNG_NEW_SEEDED(m_Seed);
 
     int mbin;
-    float w = 0;
+
     int choose1, choose2;
-    QuatF q1;
-    QuatF q2;
+
     float totaldensity;
-    float n1, n2, n3;
+
     float random1, random2, density;
 
     for(int i = 0; i < mdfsize; i++)
@@ -517,13 +519,12 @@ public:
     int aSize = static_cast<int>(numEntries);
     for(int i = 0; i < aSize; i++)
     {
-      FOrientArrayType ax(axes[3 * i], axes[3 * i + 1], axes[3 * i + 2], angles[i]);
-      FOrientArrayType rod(4);
-      OrientationTransforms<FOrientArrayType, float>::ax2ro(ax, rod);
+      OrientationD ax(axes[3 * i], axes[3 * i + 1], axes[3 * i + 2], angles[i]);
+      OrientationD rod = OrientationTransformation::ax2ro<OrientationD, OrientationD>(ax);
 
       rod = orientationOps.getMDFFZRod(rod);
       mbin = orientationOps.getMisoBin(rod);
-      mdf[mbin] = -int((weights[i] / float(mdfsize)) * 10000.0);
+      mdf[mbin] = -1 * static_cast<int>((weights[i] / static_cast<float>(mdfsize)) * 10000.0);
       remainingcount = remainingcount + mdf[mbin];
     }
 
@@ -552,20 +553,17 @@ public:
         }
       }
 
-      FOrientArrayType eu = orientationOps.determineEulerAngles(m_Seed, choose1);
-      FOrientArrayType qu(4);
-      OrientationTransforms<FOrientArrayType, float>::eu2qu(eu, qu);
-      q1 = qu.toQuaternion();
+      OrientationD eu = orientationOps.determineEulerAngles(m_Seed, choose1);
+      QuatType q1 = OrientationTransformation::eu2qu<OrientationD, QuatType>(eu);
 
       m_Seed++;
       eu = orientationOps.determineEulerAngles(m_Seed, choose2);
-      OrientationTransforms<FOrientArrayType, float>::eu2qu(eu, qu);
-      q2 = qu.toQuaternion();
-      w = orientationOps.getMisoQuat(q1, q2, n1, n2, n3);
+      QuatType q2 = OrientationTransformation::eu2qu<OrientationD, QuatType>(eu);
+      double n1 = 0.0, n2 = 0.0, n3 = 0.0;
+      double w = orientationOps.getMisoQuat(q1, q2, n1, n2, n3);
 
-      FOrientArrayType ax(n1, n2, n3, w);
-      FOrientArrayType ro(4);
-      OrientationTransforms<FOrientArrayType, float>::ax2ro(ax, ro);
+      OrientationD ax(n1, n2, n3, w);
+      OrientationD ro = OrientationTransformation::ax2ro<OrientationD, OrientationD>(ax);
 
       ro = orientationOps.getMDFFZRod(ro);
       mbin = orientationOps.getMisoBin(ro);
@@ -589,12 +587,11 @@ public:
   }
 
 protected:
-  Texture()
-  {
-  }
+  Texture() = default;
 
-private:
-  Texture(const Texture&);        // Copy Constructor Not Implemented
-  void operator=(const Texture&); // Move assignment Not Implemented
+public:
+  Texture(const Texture&) = delete;            // Copy Constructor Not Implemented
+  Texture(Texture&&) = delete;                 // Move Constructor Not Implemented
+  Texture& operator=(const Texture&) = delete; // Copy Assignment Not Implemented
+  Texture& operator=(Texture&&) = delete;      // Move Assignment Not Implemented
 };
-

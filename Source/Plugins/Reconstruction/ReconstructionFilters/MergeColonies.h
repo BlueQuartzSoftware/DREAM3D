@@ -42,7 +42,6 @@
 #include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
-
 #include "Reconstruction/ReconstructionDLLExport.h"
 
 /**
@@ -206,7 +205,7 @@ protected:
    * @param alphaQuat Alpha quaternion
    * @return Boolean vector check
    */
-  bool check_for_burgers(QuatF betaQuat, QuatF alphaQuat);
+  bool check_for_burgers(const QuatType& betaQuat, const QuatType& alphaQuat) const;
 
   /**
    * @brief characterize_colonies Characterizes colonies; CURRENTLY NOT IMPLEMENTED

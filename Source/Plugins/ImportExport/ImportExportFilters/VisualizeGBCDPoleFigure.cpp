@@ -48,7 +48,7 @@
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+
 
 #include "ImportExport/ImportExportConstants.h"
 #include "ImportExport/ImportExportVersion.h"
@@ -290,9 +290,7 @@ void VisualizeGBCDPoleFigure::execute()
   float normAxis[3] = {m_MisorientationRotation.h, m_MisorientationRotation.k, m_MisorientationRotation.l};
   MatrixMath::Normalize3x1(normAxis);
   // convert axis angle to matrix representation of misorientation
-  FOrientArrayType om(9, 0.0f);
-  FOrientTransformsType::ax2om(FOrientArrayType(normAxis[0], normAxis[1], normAxis[2], misAngle), om);
-  om.toGMatrix(dg);
+  OrientationTransformation::ax2om<OrientationF, OrientationF>(OrientationF(normAxis[0], normAxis[1], normAxis[2], misAngle)).toGMatrix(dg);
 
   // take inverse of misorientation variable to use for switching symmetry
   MatrixMath::Transpose3x3(dg, dgt);
@@ -360,8 +358,8 @@ void VisualizeGBCDPoleFigure::execute()
             MatrixMath::Multiply3x3with3x3(dg, sym2t, dg1);
             MatrixMath::Multiply3x3with3x3(sym1, dg1, dg2);
             // convert to euler angle
-            FOrientArrayType eu(mis_euler1, 3);
-            FOrientTransformsType::om2eu(FOrientArrayType(dg2), eu);
+            OrientationF eu(mis_euler1, 3);
+            eu = OrientationTransformation::om2eu<OrientationF, OrientationF>(OrientationF(dg2));
             if(mis_euler1[0] < SIMPLib::Constants::k_PiOver2 && mis_euler1[1] < SIMPLib::Constants::k_PiOver2 && mis_euler1[2] < SIMPLib::Constants::k_PiOver2)
             {
               mis_euler1[1] = cosf(mis_euler1[1]);
@@ -394,7 +392,7 @@ void VisualizeGBCDPoleFigure::execute()
             MatrixMath::Multiply3x3with3x3(dgt, sym2, dg1);
             MatrixMath::Multiply3x3with3x3(sym1, dg1, dg2);
             // convert to euler angle
-            FOrientTransformsType::om2eu(FOrientArrayType(dg2), eu);
+            eu = OrientationTransformation::om2eu<OrientationF, OrientationF>(OrientationF(dg2));
             if(mis_euler1[0] < SIMPLib::Constants::k_PiOver2 && mis_euler1[1] < SIMPLib::Constants::k_PiOver2 && mis_euler1[2] < SIMPLib::Constants::k_PiOver2)
             {
               mis_euler1[1] = cosf(mis_euler1[1]);

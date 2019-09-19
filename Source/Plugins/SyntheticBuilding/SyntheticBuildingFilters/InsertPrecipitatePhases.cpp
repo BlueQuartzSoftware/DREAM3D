@@ -58,10 +58,20 @@
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
+#include "OrientationLib/LaueOps/CubicOps.h"
+#include "OrientationLib/LaueOps/HexagonalOps.h"
+#include "OrientationLib/LaueOps/LaueOps.h"
+#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
+namespace
+{
+OrthoRhombicOps::Pointer m_OrthoOps;
+}
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -344,7 +354,7 @@ void InsertPrecipitatePhases::initialize()
   m_CylinderOps = ShapeOps::NullPointer();
   m_EllipsoidOps = ShapeOps::NullPointer();
   m_SuperEllipsoidOps = ShapeOps::NullPointer();
-  m_OrthoOps = OrthoRhombicOps::New();
+  ::m_OrthoOps = OrthoRhombicOps::New();
 
   m_Neighbors = nullptr;
   m_StatsDataArray = StatsDataArray::NullPointer();
@@ -944,7 +954,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
       iter++;
       m_Seed++;
       phase = m_PrecipitatePhases[j];
-      generate_precipitate(phase, &precip, static_cast<ShapeType::Type>(m_ShapeTypes[phase]), m_OrthoOps);
+      generate_precipitate(phase, &precip, static_cast<ShapeType::Type>(m_ShapeTypes[phase]), m_OrthoOps.get());
       m_CurrentSizeDistError = check_sizedisterror(&precip);
       change = (m_CurrentSizeDistError) - (m_OldSizeDistError);
       if(change > 0.0f || m_CurrentSizeDistError > (1.0f - (float(iter) * 0.001f)) || curphasevol[j] < (0.75f * factor * curphasetotalvol))
@@ -1549,7 +1559,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void InsertPrecipitatePhases::generate_precipitate(int32_t phase, Precip_t* precip, ShapeType::Type shapeclass, LaueOps::Pointer OrthoOps)
+void InsertPrecipitatePhases::generate_precipitate(int32_t phase, Precip_t* precip, ShapeType::Type shapeclass, const LaueOps* OrthoOps)
 {
   SIMPL_RANDOMNG_NEW_SEEDED(m_Seed)
 
@@ -1638,7 +1648,7 @@ void InsertPrecipitatePhases::generate_precipitate(int32_t phase, Precip_t* prec
       break;
     }
   }
-  FOrientArrayType eulers = OrthoOps->determineEulerAngles(m_Seed, bin);
+  OrientationD eulers = OrthoOps->determineEulerAngles(m_Seed, bin);
   VectorOfFloatArray omega3 = pp->getFeatureSize_Omegas();
   float mf = omega3[0]->getValue(diameter);
   float s = omega3[1]->getValue(diameter);
@@ -2343,9 +2353,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   float radcur2 = (radcur1 * bovera);
   float radcur3 = (radcur1 * covera);
   float ga[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-  FOrientArrayType om(9, 0.0);
-  FOrientTransformsType::eu2om(FOrientArrayType(&(m_AxisEulerAngles[3 * gnum]), 3), om);
-  om.toGMatrix(ga);
+  OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(&(m_AxisEulerAngles[3 * gnum]), 3)).toGMatrix(ga);
 
   xc = m_Centroids[3 * gnum];
   yc = m_Centroids[3 * gnum + 1];
@@ -2478,9 +2486,7 @@ void InsertPrecipitatePhases::assign_voxels()
     float radcur2 = (radcur1 * bovera);
     float radcur3 = (radcur1 * covera);
     float ga[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-    FOrientArrayType om(9, 0.0);
-    FOrientTransformsType::eu2om(FOrientArrayType(&(m_AxisEulerAngles[3 * i]), 3), om);
-    om.toGMatrix(ga);
+    OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(m_AxisEulerAngles + 3 * i, 3)).toGMatrix(ga);
 
     column = static_cast<int64_t>((xc - (spacing[0] / 2.0f)) / spacing[0]);
     row = static_cast<int64_t>((yc - (spacing[1] / 2.0f)) / spacing[1]);

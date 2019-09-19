@@ -36,21 +36,23 @@
 #include <iostream>
 #include <limits>
 
+#include <QtCore/QFile>
 #include <QtCore/QString>
 #include <QtCore/QVector>
 
 #include "SIMPLib/Common/Observer.h"
+#include "SIMPLib/CoreFilters/DataContainerWriter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/QMetaObjectUtilities.h"
-#include "SIMPLib/Math/QuaternionMath.hpp"
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
+
 #include "UnitTestSupport.hpp"
 
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
 #include "OrientationLib/OrientationMath/OrientationConverter.hpp"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "GenerateFunctionList.h"
 #include "OrientationLibTestFileLocations.h"
@@ -59,33 +61,41 @@
 /*
  *
 
- DREAM.3D Testing
+DREAM.3D Testing
 
- | From/To |  e   |  o   |  a   |  r   |  q   |  h   |  c   |
- |  -      |  -   |  -   |  -   |  -   |  -   |  -   |  -   |
- |  e      |  #   |  X   |  X   |  X   |  X   |  X   |      |
- |  o      |  X   |  #   |  X   |  X   |  X   |  X   |      |
- |  a      |  X   |  X   |  #   |  X   |  X   |  X   |      |
- |  r      |  X   |  X   |  X   |  #   |  X   |  X   |      |
- |  q      |  X   |  X   |  X   |  X   |  #   |  X   |      |
- |  h      |  X   |  X   |  X   |  X   |  X   |  #   |      |
- |  c      |      |      |      |      |      |      |  #   |
+    | From/To |  e   |  o   |  a   |  r   |  q   |  h   |  c   |
+    |  -      |  -   |  -   |  -   |  -   |  -   |  -   |  -   |
+    |  e      |  #   |  X   |  X   |  X   |  X   |  X   |      |
+    |  o      |  X   |  #   |  X   |  X   |  X   |  X   |      |
+    |  a      |  X   |  X   |  #   |  X   |  X   |  X   |      |
+    |  r      |  X   |  X   |  X   |  #   |  X   |  X   |      |
+    |  q      |  X   |  X   |  X   |  X   |  #   |  X   |      |
+    |  h      |  X   |  X   |  X   |  X   |  X   |  #   |      |
+    |  c      |      |      |      |      |      |      |  #   |
 
 
- */
+    */
 
-class OrientationTransformsTest
+class OrientationTransformationTest
 {
+  bool m_WriteDataFiles = false;
+
 public:
-  OrientationTransformsTest()
-  {
-  }
-  virtual ~OrientationTransformsTest()
-  {
-  }
+  OrientationTransformationTest() = default;
+  ~OrientationTransformationTest() = default;
+
+  OrientationTransformationTest(const OrientationTransformationTest&) = delete;            // Copy Constructor Not Implemented
+  OrientationTransformationTest(OrientationTransformationTest&&) = delete;                 // Move Constructor Not Implemented
+  OrientationTransformationTest& operator=(const OrientationTransformationTest&) = delete; // Copy Assignment Not Implemented
+  OrientationTransformationTest& operator=(OrientationTransformationTest&&) = delete;      // Move Assignment Not Implemented
 
   QVector<QString> DataSetNames;
   QVector<int> DataSetTypes;
+
+  QString testTempDir()
+  {
+    return UnitTest::TestTempDir;
+  }
 
   // -----------------------------------------------------------------------------
   //
@@ -100,7 +110,7 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  AbstractFilter::Pointer InstantiateFilter(QString filtName)
+  AbstractFilter::Pointer InstantiateFilter(const QString& filtName)
   {
     // Now instantiate the PhWriter Filter from the FilterManager
     FilterManager* fm = FilterManager::Instance();
@@ -118,7 +128,8 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  template <typename T> void GenerateEulers(size_t nSteps, AttributeMatrix::Pointer attrMat)
+  template <typename T>
+  void GenerateEulers(size_t nSteps, const AttributeMatrix::Pointer& attrMat)
   {
     std::vector<size_t> cDims(1, 3);
 
@@ -220,7 +231,7 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  QString ExecuteConvertFilter(DataContainerArray::Pointer dca, GenerateFunctionList::EntryType& entry, int e, QString outputName)
+  QString ExecuteConvertFilter(const DataContainerArray::Pointer& dca, GenerateFunctionList::EntryType& entry, int e, const QString& outputName)
   {
 
     QVariant var;
@@ -263,10 +274,10 @@ public:
       qDebug() << "Unable to set property InputOrientationArrayPath";
     }
 
-    outputName = QString::number(e) + QString("_") + k_InputNames[entry[e]] + QString("2") + k_InputNames[entry[e + 1]];
-    DataSetNames.push_back(outputName);
+    QString outName = QString::number(e) + QString("_") + k_InputNames[entry[e]] + QString("2") + k_InputNames[entry[e + 1]];
+    DataSetNames.push_back(outName);
     DataSetTypes.push_back(entry[e + 1]);
-    var.setValue(outputName);
+    var.setValue(outName);
     propWasSet = convFilt->setProperty("OutputOrientationArrayName", var);
     if(!propWasSet)
     {
@@ -280,41 +291,42 @@ public:
     int err = convFilt->getErrorCode();
     DREAM3D_REQUIRED(err, >=, 0)
 
-    return outputName;
+    return outName;
   }
 
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  template <typename K> void CheckRepresentation(K* data, int repType)
+  template <typename K>
+  void CheckRepresentation(K* data, int repType)
   {
-    typedef OrientationArray<K> OrientationArrayType;
-    typedef OrientationTransforms<OrientationArray<K>, K> OrTr_Type;
-    typename OrTr_Type::ResultType res;
+    using OrientationType = Orientation<K>;
 
-    OrientationArrayType wrapper(data, k_CompDims[repType]);
+    OrientationTransformation::ResultType res;
+
+    OrientationType wrapper(data, k_CompDims[repType]);
     switch(repType)
     {
     case 0:
-      res = OrTr_Type::eu_check(wrapper);
+      res = OrientationTransformation::eu_check(wrapper);
       break;
     case 1:
-      res = OrTr_Type::om_check(wrapper);
+      res = OrientationTransformation::om_check(wrapper);
       break;
     case 2:
-      res = OrTr_Type::qu_check(wrapper);
+      res = OrientationTransformation::qu_check(wrapper);
       break;
     case 3:
-      res = OrTr_Type::ax_check(wrapper);
+      res = OrientationTransformation::ax_check(wrapper);
       break;
     case 4:
-      res = OrTr_Type::ro_check(wrapper);
+      res = OrientationTransformation::ro_check(wrapper);
       break;
     case 5:
-      res = OrTr_Type::ho_check(wrapper);
+      res = OrientationTransformation::ho_check(wrapper);
       break;
     case 6:
-      res = OrTr_Type::cu_check(wrapper);
+      res = OrientationTransformation::cu_check(wrapper);
       break;
     default:
       break;
@@ -329,11 +341,12 @@ public:
   // -----------------------------------------------------------------------------
   //
   // -----------------------------------------------------------------------------
-  template <typename K> void RunTestCase(GenerateFunctionList::EntryType& entryRef, size_t nSteps)
+  template <typename K>
+  void RunTestCase(GenerateFunctionList::EntryType& entryRef, size_t nSteps)
   {
 
-    typedef DataArray<K> DataArrayType;
-    typedef typename DataArrayType::Pointer DataArrayPointerType;
+    using DataArrayType = DataArray<K>;
+    using DataArrayPointerType = typename DataArrayType::Pointer;
 
     try
     {
@@ -341,7 +354,7 @@ public:
       DataSetTypes.clear();
 
       GenerateFunctionList::EntryType entry = entryRef;
-      QVector<QString> funcNames = EulerConverter<K>::GetOrientationTypeStrings();
+      // QVector<QString> funcNames = EulerConverter<K>::GetOrientationTypeStrings();
 
       std::stringstream ss;
       for(int e = 0; e < entry.size() - 1; e++)
@@ -465,7 +478,7 @@ public:
         DataArrayPath daPath(DCName, AMName, diffMapArrayName);
         std::vector<size_t> cDims(1, k_CompDims[cDim]);
         typename DataArray<K>::Pointer diff = dca->getPrereqArrayFromPath<DataArray<K>, AbstractFilter>(diffMapFilt.get(), daPath, cDims);
-#if 1
+
         size_t tuples = diff->getNumberOfTuples();
         // printf("Total Tuples: %lu\n", tuples);
         size_t numErrors = 0;
@@ -507,36 +520,11 @@ public:
                 OrientationPrinters::PrintTuple<K>(data, t);
                 CheckRepresentation<K>(data->getPointer(t), DataSetTypes[q]);
               }
-
-#if 0
-                cDims[0] = k_CompDims[entry[0]];
-                dap = DataArrayPath (DCName, AMName, inputName);
-                diff = dca->getPrereqArrayFromPath<DataArray<K>, AbstractFilter>(diffMapFilt.get(), dap, cDims);
-                OrientationPrinters::PrintTuple<K>(diff, t);
-
-                QString name;
-                QTextStream ss(&name);
-                ss << "0_" << k_InputNames[entry[0]] << "2" << k_InputNames[entry[1]];
-                cDims[0] = k_CompDims[entry[1]];
-                dap = DataArrayPath (DCName, AMName, name);
-                diff = dca->getPrereqArrayFromPath<DataArray<K>, AbstractFilter>(diffMapFilt.get(), dap, cDims);
-                OrientationPrinters::PrintTuple<K>(diff, t);
-
-                cDims[0] = k_CompDims[entry[0]];
-                dap = DataArrayPath (DCName, AMName, outputName);
-                diff = dca->getPrereqArrayFromPath<DataArray<K>, AbstractFilter>(diffMapFilt.get(), dap, cDims);
-                OrientationPrinters::PrintTuple<K>(diff, t);
-
-                std::cout << "------------------------------------------" << std::endl;
-
-#endif
               DREAM3D_REQUIRED(delta, <=, thr)
               break;
             }
           }
         }
-//   printf("numErrors: %llu\n", numErrors)
-#endif
       }
 
       if(euCheck)
@@ -547,17 +535,16 @@ public:
 
       typename DataArray<K>::Pointer junk = DataArray<K>::CreateArray(1, "Junk", true);
       QString typeName = junk->getTypeAsString();
-#if REMOVE_TEST_FILES
+      if(m_WriteDataFiles)
       {
+        DataContainerWriter::Pointer writer = DataContainerWriter::New();
 
-        AbstractFilter::Pointer writer = InstantiateFilter("DataContainerWriter");
-        DREAM3D_REQUIRE_VALID_POINTER(writer.get())
         writer->setDataContainerArray(dca);
-
+        writer->setWriteXdmfFile(false);
         QString outputFile;
         QTextStream out(&outputFile);
 
-        out << UnitTest::TestTempDir << "/OrientationTransformsTest_";
+        out << UnitTest::TestTempDir << "/OrientationTransformationTest_";
 
         for(int e = 0; e < entry.size(); e++)
         {
@@ -568,17 +555,12 @@ public:
           }
         }
         out << typeName << ".dream3d";
-        var.setValue(outputFile);
-        propWasSet = writer->setProperty("OutputFile", var);
-        if(!propWasSet)
-        {
-          qDebug() << "Unable to set property OutputFile";
-        }
+        writer->setOutputFile(outputFile);
+
         writer->execute();
         int err = writer->getErrorCode();
         DREAM3D_REQUIRED(err, >=, 0)
       }
-#endif
 
       {
         ss.str("");
@@ -621,7 +603,7 @@ public:
         //             )
         {
           // RunTestCase<float>(entry, 16);
-          RunTestCase<double>(entry, 16);
+          RunTestCase<double>(entry, 36);
         }
       }
     }
@@ -644,7 +626,7 @@ public:
         //             )
         {
           //  RunTestCase<float>(entry, 16);
-          RunTestCase<double>(entry, 16);
+          RunTestCase<double>(entry, 36);
         }
       }
     }
@@ -658,8 +640,4 @@ public:
 
     DREAM3D_REGISTER_TEST(RemoveTestFiles());
   }
-
-private:
-  OrientationTransformsTest(const OrientationTransformsTest&); // Copy Constructor Not Implemented
-  void operator=(const OrientationTransformsTest&);            // Move assignment Not Implemented
 };

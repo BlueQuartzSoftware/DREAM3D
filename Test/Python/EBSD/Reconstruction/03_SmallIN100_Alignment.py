@@ -16,15 +16,9 @@ def small_in100_alignment():
     # Create Data Container Array
     dca = simpl.DataContainerArray.New()
 
-    # Read H5EBSD File
-    err = orientation_analysis.read_h5_ebsd(dca, "Small IN100", "Phase Data", "EBSD Scan Data",
-                                            sd.GetBuildDirectory() +
-                                            "/Data/Output/Reconstruction/SmallIN100.h5ebsd",
-                                            1, 117, True, sc.AngleRepresentation.Radians,
-                                            simpl.StringSet({"Fit", "Image Quality", "EulerAngles",
-                                                             "SEM Signal", "Confidence Index", "Phases"}))
+    err = sc.ReadDREAM3DFile(dca, sd.GetBuildDirectory() + "/Data/Output/Reconstruction/SmallIN100.dream3d")
     if err < 0:
-        print("ReadH5Ebsd ErrorCondition %d" % err)
+            print("Read DataContainerArray Structure Failed %d" % err)
 
     # Threshold Objects
     # Create the selected thresholds / comparison inputs for MultiThresholdObjects filter

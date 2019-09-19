@@ -51,7 +51,7 @@ EbsdMontageImportFilterParameter::~EbsdMontageImportFilterParameter() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EbsdMontageImportFilterParameter::Pointer EbsdMontageImportFilterParameter::New(const QString& humanLabel, const QString& propertyName, const EbsdMontageListInfo_t& defaultValue,
+EbsdMontageImportFilterParameter::Pointer EbsdMontageImportFilterParameter::New(const QString& humanLabel, const QString& propertyName, const EbsdMontageListInfo& defaultValue,
                                                                                 FilterParameter::Category category, SetterCallbackType setterCallback, GetterCallbackType getterCallback)
 {
 
@@ -85,7 +85,7 @@ void EbsdMontageImportFilterParameter::readJson(const QJsonObject& json)
   if(!jsonValue.isUndefined() && m_SetterCallback)
   {
     QJsonObject jsonObj = jsonValue.toObject();
-    EbsdMontageListInfo_t fileListInfo;
+    EbsdMontageListInfo fileListInfo;
     fileListInfo.readJson(jsonObj);
     m_SetterCallback(fileListInfo);
   }
@@ -98,7 +98,7 @@ void EbsdMontageImportFilterParameter::writeJson(QJsonObject& json)
 {
   if(m_GetterCallback)
   {
-    EbsdMontageListInfo_t fileListInfo = m_GetterCallback();
+    EbsdMontageListInfo fileListInfo = m_GetterCallback();
     QJsonObject jsonObj;
     fileListInfo.writeJson(jsonObj);
     json[getPropertyName()] = jsonObj;

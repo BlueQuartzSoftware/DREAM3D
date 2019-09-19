@@ -1,41 +1,37 @@
 /* ============================================================================
-* Copyright (c) 2009-2016 BlueQuartz Software, LLC
-*
-* Redistribution and use in source and binary forms, with or without modification,
-* are permitted provided that the following conditions are met:
-*
-* Redistributions of source code must retain the above copyright notice, this
-* list of conditions and the following disclaimer.
-*
-* Redistributions in binary form must reproduce the above copyright notice, this
-* list of conditions and the following disclaimer in the documentation and/or
-* other materials provided with the distribution.
-*
-* Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
-* contributors may be used to endorse or promote products derived from this software
-* without specific prior written permission.
-*
-* THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-* AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-* IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-* DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
-* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-* SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
-* CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
-* OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-* USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*
-* The code contained herein was partially funded by the followig contracts:
-*    United States Air Force Prime Contract FA8650-07-D-5800
-*    United States Air Force Prime Contract FA8650-10-D-5210
-*    United States Prime Contract Navy N00173-07-C-2068
-*
-* ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-
-
+ * Copyright (c) 2009-2016 BlueQuartz Software, LLC
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of BlueQuartz Software, the US Air Force, nor the names of its
+ * contributors may be used to endorse or promote products derived from this software
+ * without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ * The code contained herein was partially funded by the followig contracts:
+ *    United States Air Force Prime Contract FA8650-07-D-5800
+ *    United States Air Force Prime Contract FA8650-10-D-5210
+ *    United States Prime Contract Navy N00173-07-C-2068
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "CtfReader.h"
 
@@ -68,23 +64,23 @@ CtfReader::CtfReader() :
   m_HeaderMap[Ebsd::Ctf::Prj] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::Prj);
   m_HeaderMap[Ebsd::Ctf::Author] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::Author);
   m_HeaderMap[Ebsd::Ctf::JobMode] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::JobMode);
-  m_HeaderMap[Ebsd::Ctf::XCells] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::XCells);
-  m_HeaderMap[Ebsd::Ctf::YCells] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::YCells);
-  m_HeaderMap[Ebsd::Ctf::ZCells] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::ZCells);
-  m_HeaderMap[Ebsd::Ctf::XStep] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::XStep);
-  m_HeaderMap[Ebsd::Ctf::YStep] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::YStep);
-  m_HeaderMap[Ebsd::Ctf::ZStep] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::ZStep);
-  m_HeaderMap[Ebsd::Ctf::AcqE1] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::AcqE1);
-  m_HeaderMap[Ebsd::Ctf::AcqE2] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::AcqE2);
-  m_HeaderMap[Ebsd::Ctf::AcqE3] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::AcqE3);
+  m_HeaderMap[Ebsd::Ctf::XCells] = CtfInt32HeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::XCells);
+  m_HeaderMap[Ebsd::Ctf::YCells] = CtfInt32HeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::YCells);
+  m_HeaderMap[Ebsd::Ctf::ZCells] = CtfInt32HeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::ZCells);
+  m_HeaderMap[Ebsd::Ctf::XStep] = CtfFloatHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::XStep);
+  m_HeaderMap[Ebsd::Ctf::YStep] = CtfFloatHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::YStep);
+  m_HeaderMap[Ebsd::Ctf::ZStep] = CtfFloatHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::ZStep);
+  m_HeaderMap[Ebsd::Ctf::AcqE1] = CtfFloatHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::AcqE1);
+  m_HeaderMap[Ebsd::Ctf::AcqE2] = CtfFloatHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::AcqE2);
+  m_HeaderMap[Ebsd::Ctf::AcqE3] = CtfFloatHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::AcqE3);
   m_HeaderMap[Ebsd::Ctf::Euler] = CtfStringHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::Euler);
-  m_HeaderMap[Ebsd::Ctf::Mag] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::Mag);
-  m_HeaderMap[Ebsd::Ctf::Coverage] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::Coverage);
-  m_HeaderMap[Ebsd::Ctf::Device] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::Device);
-  m_HeaderMap[Ebsd::Ctf::KV] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::KV);
-  m_HeaderMap[Ebsd::Ctf::TiltAngle] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::TiltAngle);
-  m_HeaderMap[Ebsd::Ctf::TiltAxis] = CtfHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::TiltAxis);
-  m_HeaderMap[Ebsd::Ctf::NumPhases] = CtfHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Ctf::NumPhases);
+  m_HeaderMap[Ebsd::Ctf::Mag] = CtfInt32HeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::Mag);
+  m_HeaderMap[Ebsd::Ctf::Coverage] = CtfInt32HeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::Coverage);
+  m_HeaderMap[Ebsd::Ctf::Device] = CtfInt32HeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::Device);
+  m_HeaderMap[Ebsd::Ctf::KV] = CtfInt32HeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::KV);
+  m_HeaderMap[Ebsd::Ctf::TiltAngle] = CtfFloatHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::TiltAngle);
+  m_HeaderMap[Ebsd::Ctf::TiltAxis] = CtfFloatHeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::TiltAxis);
+  m_HeaderMap[Ebsd::Ctf::NumPhases] = CtfInt32HeaderEntry::NewEbsdHeaderEntry(Ebsd::Ctf::NumPhases);
 
   setXCells(0);
   setYCells(0);
@@ -264,10 +260,12 @@ int CtfReader::readFile()
   err = getHeaderLines(in, headerLines);
   if (err < 0) { return err;}
   err = parseHeaderLines(headerLines);
-  if (err < 0) { return err;}
+  if(err < 0)
+  {
+    return err;
+  }
 
-
-  if (getXStep() == 0.0 || getYStep() == 0.0f )
+  if(getXStep() == 0.0f || getYStep() == 0.0f)
   {
     setErrorMessage("Either the X Step or Y Step was Zero (0.0) which is NOT allowed. Please update the CTF file header with appropriate values.");
     return -102;
@@ -300,16 +298,38 @@ int CtfReader::readData(QFile& in)
   QString sBuf;
   QTextStream ss(&sBuf);
   // Initialize new pointers
-  size_t yCells = getYCells();
-  size_t xCells = getXCells();
-  int zCells = getZCells();
-  int zStart = 0;
-  int zEnd = zCells;
+  int32_t xCells = getXCells();
+  if(xCells < 0)
+  {
+    setErrorCode(-110);
+    QString msg;
+    QTextStream ss(&msg);
+    ss << "The number of X Cells was reported as " << xCells << ". This value must be larger than ZERO. This error can be caused by "
+       << " a missing X Cells header value, an incorrect  XCells value or a value of X Cells larger than 2^31.\n";
+    setErrorMessage(msg);
+    return -110;
+  }
+  int32_t yCells = getYCells();
+  if(yCells < 0)
+  {
+    setErrorCode(-111);
+    QString msg;
+    QTextStream ss(&msg);
+    ss << "The number of Y Cells was reported as " << yCells << ". This value must be larger than ZERO. This error can be caused by "
+       << " a missing Y Cells header value, an incorrect Y Cells value or a value of Y Cells larger than 2^31.\n";
+    setErrorMessage(msg);
+    return -111;
+  }
+
+  int32_t zCells = getZCells();
+  int32_t zStart = 0;
+  int32_t zEnd = zCells;
+
   if(zCells < 0 || m_SingleSliceRead >= 0)
   {
     zCells = 1;
   }
-  size_t totalScanPoints = yCells * xCells * zCells;
+  size_t totalScanPoints = static_cast<size_t>(yCells * xCells * zCells);
 
   setNumberOfElements(totalScanPoints);
 
@@ -382,9 +402,9 @@ int CtfReader::readData(QFile& in)
   size_t counter = 0;
   for (int slice = zStart; slice < zEnd; ++slice)
   {
-    for (size_t row = 0; row < yCells; ++row)
+    for(int32_t row = 0; row < yCells; ++row)
     {
-      for (size_t col = 0; col < xCells; ++col)
+      for(int32_t col = 0; col < xCells; ++col)
       {
         buf = in.readLine(); // Read the line into a QByteArray including the newline
         buf = buf.trimmed(); // Remove leading and trailing whitespace
@@ -398,7 +418,7 @@ int CtfReader::readData(QFile& in)
             //  ++counter; // We need to make sure this gets incremented before leaving
             break;
           }
-          err = parseDataLine(buf, row, col, counter, xCells, yCells);
+          err = parseDataLine(buf, static_cast<size_t>(row), static_cast<size_t>(col), counter, static_cast<size_t>(xCells), static_cast<size_t>(yCells));
           if (err < 0) { return err; }
           ++counter;
         }
@@ -519,13 +539,17 @@ int CtfReader::parseHeaderLines(QList<QByteArray>& headerLines)
     {
       // We do not really do anything with this entry
     }
+    else if(sLine.startsWith("EMsoft"))
+    {
+      // We do not really do anything with this entry
+    }
     else // This is the generic Catch all
     {
       EbsdHeaderEntry::Pointer p = m_HeaderMap[tabTokens[0]];
       if(nullptr == p.get())
       {
         std::cout << "---------------------------" << std::endl;
-        std::cout << "Could not find header entry for key '" << line[0] << "'" << std::endl;
+        std::cout << "Could not find header entry for line '" << line.toStdString() << "'" << std::endl;
         //        QString upper(line[0]);
         //        std::transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
         //        std::cout << "#define ANG_" << upper << "     \"" << line[0] << "\"" << std::endl;
@@ -739,25 +763,25 @@ QList<QString> CtfReader::getColumnNames()
 void CtfReader::printHeader(std::ostream& out)
 {
   std::cout << "-------------------- CtfReader Header Values --------------------" << std::endl;
-  CTF_PRINT_QSTRING(Channel, out);
-  CTF_PRINT_QSTRING(Prj, out);
-  CTF_PRINT_QSTRING(Author, out);
-  CTF_PRINT_QSTRING(JobMode, out);
-  CTF_PRINT_HEADER_VALUE(XCells, out);
-  CTF_PRINT_HEADER_VALUE(YCells, out);
-  CTF_PRINT_HEADER_VALUE(XStep, out);
-  CTF_PRINT_HEADER_VALUE(YStep, out);
-  CTF_PRINT_HEADER_VALUE(AcqE1, out);
-  CTF_PRINT_HEADER_VALUE(AcqE2, out);
-  CTF_PRINT_HEADER_VALUE(AcqE3, out);
-  CTF_PRINT_QSTRING(Euler, out);
-  CTF_PRINT_HEADER_VALUE(Mag, out);
-  CTF_PRINT_HEADER_VALUE(Coverage, out);
-  CTF_PRINT_HEADER_VALUE(Device, out);
-  CTF_PRINT_HEADER_VALUE(KV, out);
-  CTF_PRINT_HEADER_VALUE(TiltAngle, out);
-  CTF_PRINT_HEADER_VALUE(TiltAxis, out);
-  CTF_PRINT_HEADER_VALUE(NumPhases, out);
+  CTF_PRINT_QSTRING(Channel, out)
+  CTF_PRINT_QSTRING(Prj, out)
+  CTF_PRINT_QSTRING(Author, out)
+  CTF_PRINT_QSTRING(JobMode, out)
+  CTF_PRINT_HEADER_VALUE(XCells, out)
+  CTF_PRINT_HEADER_VALUE(YCells, out)
+  CTF_PRINT_HEADER_VALUE(XStep, out)
+  CTF_PRINT_HEADER_VALUE(YStep, out)
+  CTF_PRINT_HEADER_VALUE(AcqE1, out)
+  CTF_PRINT_HEADER_VALUE(AcqE2, out)
+  CTF_PRINT_HEADER_VALUE(AcqE3, out)
+  CTF_PRINT_QSTRING(Euler, out)
+  CTF_PRINT_HEADER_VALUE(Mag, out)
+  CTF_PRINT_HEADER_VALUE(Coverage, out)
+  CTF_PRINT_HEADER_VALUE(Device, out)
+  CTF_PRINT_HEADER_VALUE(KV, out)
+  CTF_PRINT_HEADER_VALUE(TiltAngle, out)
+  CTF_PRINT_HEADER_VALUE(TiltAxis, out)
+  CTF_PRINT_HEADER_VALUE(NumPhases, out)
   int nPhases = getNumPhases();
   for (int p = 0; p < nPhases; ++p)
   {
@@ -782,7 +806,7 @@ int CtfReader::writeFile(QString filepath)
   }
 
   QByteArray header = getOriginalHeader().toLatin1();
-  fwrite(header.data(), 1, header.count(), f);
+  fwrite(header.data(), 1, static_cast<size_t>(header.count()), f);
   int zStart = 0;
   int zEnd = getZCells();
   int yCells = getYCells();
@@ -790,9 +814,14 @@ int CtfReader::writeFile(QString filepath)
 
   QList<QString> colNames = getColumnNames();
 
-  typedef struct { QString colName; void* ptr; int aType; } ColInfoType;
+  typedef struct
+  {
+    QString colName;
+    void* ptr;
+    int aType;
+  } ColInfoType;
 
-  std::vector<ColInfoType> colInfos(colNames.count());
+  std::vector<ColInfoType> colInfos(static_cast<size_t>(colNames.count()));
 
   QListIterator<QString> iter(colNames);
   while (iter.hasNext())

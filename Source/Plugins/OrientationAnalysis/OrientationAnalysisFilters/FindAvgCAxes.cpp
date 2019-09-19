@@ -42,7 +42,10 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/GeometryMath.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -62,7 +65,6 @@ FindAvgCAxes::FindAvgCAxes()
 , m_FeatureIdsArrayPath("", "", "")
 , m_AvgCAxesArrayPath("", "", "")
 {
-  m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
 }
 
@@ -183,12 +185,11 @@ void FindAvgCAxes::execute()
   {
     return;
   }
+  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
 
   size_t totalPoints = m_FeatureIdsPtr.lock()->getNumberOfTuples();
   size_t totalFeatures = m_AvgCAxesPtr.lock()->getNumberOfTuples();
 
-  QuatF q1 = QuaternionMathF::New();
-  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
   float g1[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
   float g1t[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
   float caxis[3] = {0.0f, 0.0f, 1.0f};
@@ -204,11 +205,9 @@ void FindAvgCAxes::execute()
     if(m_FeatureIds[i] > 0)
     {
       index = 3 * m_FeatureIds[i];
-      QuaternionMathF::Copy(quats[i], q1);
+      Quaternion<float> q1(m_Quats + i * 4); // BEWARE POINTER MATH!!!
+      OrientationTransformation::qu2om<Quaternion<float>, Orientation<float>>(q1).toGMatrix(g1);
 
-      FOrientArrayType om(9);
-      FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
-      om.toGMatrix(g1);
       // transpose the g matricies so when caxis is multiplied by it
       // it will give the sample direction that the caxis is along
       MatrixMath::Transpose3x3(g1, g1t);
@@ -222,7 +221,7 @@ void FindAvgCAxes::execute()
       w = GeometryMath::CosThetaBetweenVectors(c1, curCAxis);
       if(w < 0)
       {
-        MatrixMath::Multiply3x1withConstant(c1, -1);
+        MatrixMath::Multiply3x1withConstant(c1, -1.0f);
       }
       counter[m_FeatureIds[i]]++;
       m_AvgCAxes[index] += c1[0];

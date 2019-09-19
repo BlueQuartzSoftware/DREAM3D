@@ -39,7 +39,6 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -166,7 +165,6 @@ protected:
   void initialize();
 
 private:
-  QVector<LaueOps::Pointer> m_OrientationOps;
 
   DEFINE_DATAARRAY_VARIABLE(float, Quats)
 

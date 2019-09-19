@@ -37,13 +37,6 @@
 
 #include <fstream>
 
-#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
-#include <tbb/blocked_range3d.h>
-#include <tbb/parallel_for.h>
-#include <tbb/partitioner.h>
-#include <tbb/task_scheduler_init.h>
-#endif
-
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
@@ -69,10 +62,26 @@
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
 #include "SIMPLib/Utilities/TimeUtilities.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
+
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
+#include "OrientationLib/LaueOps/OrthoRhombicOps.h"
+
+#ifdef SIMPL_USE_PARALLEL_ALGORITHMS
+#include <tbb/blocked_range3d.h>
+#include <tbb/parallel_for.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#endif
+
+namespace
+{
+OrthoRhombicOps::Pointer m_OrthoOps;
+}
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -310,7 +319,7 @@ void PackPrimaryPhases::initialize()
   m_CylinderOps = ShapeOps::NullPointer();
   m_EllipsoidOps = ShapeOps::NullPointer();
   m_SuperEllipsoidOps = ShapeOps::NullPointer();
-  m_OrthoOps = OrthoRhombicOps::New();
+  ::m_OrthoOps = OrthoRhombicOps::New();
 
   m_ColumnList.clear();
   m_RowList.clear();
@@ -1853,7 +1862,7 @@ void PackPrimaryPhases::generateFeature(int32_t phase, Feature_t* feature, uint3
       break;
     }
   }
-  FOrientArrayType eulers = m_OrthoOps->determineEulerAngles(m_Seed, bin);
+  OrientationD eulers = m_OrthoOps->determineEulerAngles(m_Seed, bin);
   VectorOfFloatArray omega3 = pp->getFeatureSize_Omegas();
   float mf = omega3[0]->getValue(diameter);
   float s = omega3[1]->getValue(diameter);
@@ -2535,9 +2544,7 @@ void PackPrimaryPhases::insertFeature(size_t gnum)
   float PHI = m_AxisEulerAngles[3 * gnum + 1];
   float phi2 = m_AxisEulerAngles[3 * gnum + 2];
   float ga[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-  FOrientArrayType om(9, 0.0);
-  FOrientTransformsType::eu2om(FOrientArrayType(phi1, PHI, phi2), om);
-  om.toGMatrix(ga);
+  OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(phi1, PHI, phi2)).toGMatrix(ga);
 
   xc = m_Centroids[3 * gnum];
   yc = m_Centroids[3 * gnum + 1];
@@ -2706,9 +2713,8 @@ void PackPrimaryPhases::assignVoxels()
     float PHI = m_AxisEulerAngles[3 * i + 1];
     float phi2 = m_AxisEulerAngles[3 * i + 2];
     float ga[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-    FOrientArrayType om(9, 0.0);
-    FOrientTransformsType::eu2om(FOrientArrayType(phi1, PHI, phi2), om);
-    om.toGMatrix(ga);
+    OrientationF om(9, 0.0);
+    OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(phi1, PHI, phi2)).toGMatrix(ga);
     column = static_cast<int64_t>(xc / spacing[0]);
     row = static_cast<int64_t>(yc / spacing[1]);
     plane = static_cast<int64_t>(zc / spacing[2]);

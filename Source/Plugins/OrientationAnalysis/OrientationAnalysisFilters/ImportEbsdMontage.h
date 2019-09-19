@@ -56,7 +56,7 @@ class OrientationAnalysis_EXPORT ImportEbsdMontage : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-  PYB11_PROPERTY(EbsdMontageListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
+  PYB11_PROPERTY(EbsdMontageListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
   PYB11_PROPERTY(bool GenerateIPFColorMap READ getGenerateIPFColorMap WRITE setGenerateIPFColorMap)
   PYB11_PROPERTY(QString CellIPFColorsArrayName READ getCellIPFColorsArrayName WRITE setCellIPFColorsArrayName)
 
@@ -76,8 +76,8 @@ public:
   SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(EbsdMontageListInfo_t, InputFileListInfo)
-  Q_PROPERTY(EbsdMontageListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
+  SIMPL_FILTER_PARAMETER(EbsdMontageListInfo, InputFileListInfo)
+  Q_PROPERTY(EbsdMontageListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
 
   SIMPL_FILTER_PARAMETER(bool, GenerateIPFColorMap)
   Q_PROPERTY(bool GenerateIPFColorMap READ getGenerateIPFColorMap WRITE setGenerateIPFColorMap)

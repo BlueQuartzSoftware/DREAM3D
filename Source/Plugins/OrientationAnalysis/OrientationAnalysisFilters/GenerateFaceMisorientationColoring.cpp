@@ -91,11 +91,10 @@ public:
   void generate(size_t start, size_t end) const
   {
     int32_t feature1 = 0, feature2 = 0, phase1 = 0, phase2 = 0;
-    QuatF q1 = QuaternionMathF::New();
-    QuatF q2 = QuaternionMathF::New();
-    QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+    //    QuatF q1 = QuaternionMathF::New();
+    //    QuatF q2 = QuaternionMathF::New();
+    //    QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
-    float w = 0.0f, n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
     float radToDeg = 180.0f / SIMPLib::Constants::k_Pi;
     for(size_t i = start; i < end; i++)
     {
@@ -117,22 +116,15 @@ public:
       {
         phase2 = 0;
       }
-      if(phase1 > 0)
+      if(phase1 > 0 && phase1 == phase2)
       {
-        if(phase1 == phase2 && m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Cubic_High)
+        if((m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Hexagonal_High) || (m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Cubic_High))
         {
-          QuaternionMathF::Copy(quats[feature1], q1);
-          QuaternionMathF::Copy(quats[feature2], q2);
-          w = m_OrientationOps[m_CrystalStructures[phase1]]->getMisoQuat(q1, q2, n1, n2, n3);
-          w = w * radToDeg;
-          m_Colors[3 * i + 0] = w * n1;
-          m_Colors[3 * i + 1] = w * n2;
-          m_Colors[3 * i + 2] = w * n3;
-        }
-        else if(phase1 == phase2 && m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Hexagonal_High)
-        {
-          QuaternionMathF::Copy(quats[feature1], q1);
-          QuaternionMathF::Copy(quats[feature2], q2);
+          float* quatPtr = m_Quats + feature1 * 4;
+          QuatType q1(quatPtr[0], quatPtr[1], quatPtr[2], quatPtr[3]);
+          quatPtr = m_Quats + feature2 * 4;
+          QuatType q2(quatPtr[0], quatPtr[1], quatPtr[2], quatPtr[3]);
+          double w = 0.0f, n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
           w = m_OrientationOps[m_CrystalStructures[phase1]]->getMisoQuat(q1, q2, n1, n2, n3);
           w = w * radToDeg;
           m_Colors[3 * i + 0] = w * n1;

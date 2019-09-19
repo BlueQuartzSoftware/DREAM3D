@@ -43,8 +43,10 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/SIMPLibVersion.h"
 
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+#include "OrientationLib/Core/Quaternion.hpp"
 #include "OrientationLib/OrientationLibConstants.h"
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -284,7 +286,6 @@ void EMsoftSO3Sampler::execute()
   }
 
   OrientationListArrayType FZlist;
-  typedef OrientationTransforms<DOrientArrayType, double> OrientationTransformsType;
 
   if(getsampleModeSelector() == 0)
   {
@@ -342,9 +343,8 @@ void EMsoftSO3Sampler::execute()
               {
 
                 // convert to Rodrigues representation
-                DOrientArrayType cu(x, y, z);
-                DOrientArrayType rod(4);
-                OrientationTransformsType::cu2ro(cu, rod);
+                OrientationD cu(x, y, z);
+                OrientationD rod = OrientationTransformation::cu2ro<OrientationD, OrientationD>(cu);
 
                 // If insideFZ=true, then add this point to FZlist
                 bool b = IsinsideFZ(rod.data(), FZtype, FZorder);
@@ -387,11 +387,11 @@ void EMsoftSO3Sampler::execute()
     delta = semi / static_cast<double>(getNumsp());
 
     // convert the reference orientation to a 3-component Rodrigues vector sigma
-    DOrientArrayType sigm(4), sigma(3), referenceOrientation(3);
+    OrientationD sigma(3), referenceOrientation(3);
     referenceOrientation[0] = static_cast<double>(getRefOr()[0] * SIMPLib::Constants::k_PiOver180);
     referenceOrientation[1] = static_cast<double>(getRefOr()[1] * SIMPLib::Constants::k_PiOver180);
     referenceOrientation[2] = static_cast<double>(getRefOr()[2] * SIMPLib::Constants::k_PiOver180);
-    OrientationTransformsType::eu2ro(referenceOrientation, sigm);
+    OrientationD sigm = OrientationTransformation::eu2ro<OrientationD, OrientationD>(referenceOrientation);
     sigma[0] = sigm[0] * sigm[3];
     sigma[1] = sigm[1] * sigm[3];
     sigma[2] = sigm[2] * sigm[3];
@@ -414,17 +414,15 @@ void EMsoftSO3Sampler::execute()
           y = static_cast<double>(j) * delta;
           // convert to Rodrigues representation and apply Rodrigues composition formula
           {
-            DOrientArrayType cu(-x, -y, -semi);
-            DOrientArrayType rod(4);
-            OrientationTransformsType::cu2ro(cu, rod);
+            OrientationD cu(-x, -y, -semi);
+            OrientationD rod = OrientationTransformation::cu2ro<OrientationD, OrientationD>(cu);
             RodriguesComposition(sigma, rod);
             FZlist.push_back(rod);
             Dg += 1;
           }
           {
-            DOrientArrayType cu(-x, -y, semi);
-            DOrientArrayType rod(4);
-            OrientationTransformsType::cu2ro(cu, rod);
+            OrientationD cu(-x, -y, semi);
+            OrientationD rod = OrientationTransformation::cu2ro<OrientationD, OrientationD>(cu);
             RodriguesComposition(sigma, rod);
             FZlist.push_back(rod);
             Dg += 1;
@@ -444,17 +442,15 @@ void EMsoftSO3Sampler::execute()
           z = static_cast<double>(k) * delta;
           // convert to Rodrigues representation and apply Rodrigues composition formula
           {
-            DOrientArrayType cu(-semi, -y, -z);
-            DOrientArrayType rod(4);
-            OrientationTransformsType::cu2ro(cu, rod);
+            OrientationD cu(-semi, -y, -z);
+            OrientationD rod = OrientationTransformation::cu2ro<OrientationD, OrientationD>(cu);
             RodriguesComposition(sigma, rod);
             FZlist.push_back(rod);
             Dg += 1;
           }
           {
-            DOrientArrayType cu(semi, -y, -z);
-            DOrientArrayType rod(4);
-            OrientationTransformsType::cu2ro(cu, rod);
+            OrientationD cu(semi, -y, -z);
+            OrientationD rod = OrientationTransformation::cu2ro<OrientationD, OrientationD>(cu);
             RodriguesComposition(sigma, rod);
             FZlist.push_back(rod);
             Dg += 1;
@@ -474,17 +470,15 @@ void EMsoftSO3Sampler::execute()
           z = static_cast<double>(k) * delta;
           // convert to Rodrigues representation and apply Rodrigues composition formula
           {
-            DOrientArrayType cu(-x, -semi, -z);
-            DOrientArrayType rod(4);
-            OrientationTransformsType::cu2ro(cu, rod);
+            OrientationD cu(-x, -semi, -z);
+            OrientationD rod = OrientationTransformation::cu2ro<OrientationD, OrientationD>(cu);
             RodriguesComposition(sigma, rod);
             FZlist.push_back(rod);
             Dg += 1;
           }
           {
-            DOrientArrayType cu(-x, semi, -z);
-            DOrientArrayType rod(4);
-            OrientationTransformsType::cu2ro(cu, rod);
+            OrientationD cu(-x, semi, -z);
+            OrientationD rod = OrientationTransformation::cu2ro<OrientationD, OrientationD>(cu);
             RodriguesComposition(sigma, rod);
             FZlist.push_back(rod);
             Dg += 1;
@@ -524,9 +518,8 @@ void EMsoftSO3Sampler::execute()
             z = static_cast<double>(k) * delta;
             // convert to Rodrigues representation and apply Rodrigues composition formula
             {
-              DOrientArrayType cu(-x, -y, -z);
-              DOrientArrayType rod(4);
-              OrientationTransformsType::cu2ro(cu, rod);
+              OrientationD cu(-x, -y, -z);
+              OrientationD rod = OrientationTransformation::cu2ro<OrientationD, OrientationD>(cu);
               RodriguesComposition(sigma, rod);
               FZlist.push_back(rod);
               Dg += 1;
@@ -552,11 +545,10 @@ void EMsoftSO3Sampler::execute()
 
   // copy the Rodrigues vectors as Euler angles into the m_EulerAngles array; convert doubles to floats along the way
   int j = -1;
-  for(DOrientArrayType rod : FZlist)
+  for(const OrientationD& rod : FZlist)
   {
     j += 1;
-    DOrientArrayType eu(3, 0.0);
-    OrientationTransformsType::ro2eu(rod, eu);
+    OrientationD eu = OrientationTransformation::ro2eu<OrientationD, OrientationD>(rod);
 
     m_EulerAngles[j * 3 + 0] = static_cast<float>(eu[0]);
     m_EulerAngles[j * 3 + 1] = static_cast<float>(eu[1]);
@@ -568,9 +560,9 @@ void EMsoftSO3Sampler::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EMsoftSO3Sampler::RodriguesComposition(DOrientArrayType sigma, DOrientArrayType& rod)
+void EMsoftSO3Sampler::RodriguesComposition(OrientationD sigma, OrientationD& rod)
 {
-  DOrientArrayType rho(3), rhomis(3);
+  OrientationD rho(3), rhomis(3);
   rho[0] = -rod[0] * rod[3];
   rho[1] = -rod[1] * rod[3];
   rho[2] = -rod[2] * rod[3];
@@ -727,18 +719,16 @@ bool EMsoftSO3Sampler::insideCubicFZ(double* rod, int ot)
 {
   bool res = false, c1 = false, c2 = false;
   std::vector<double> r(3);
-  r[0] = rod[0] * rod[3];
-  r[1] = rod[1] * rod[3];
-  r[2] = rod[2] * rod[3];
+  r[0] = std::fabs(rod[0] * rod[3]);
+  r[1] = std::fabs(rod[1] * rod[3]);
+  r[2] = std::fabs(rod[2] * rod[3]);
   const double r1 = 1.0;
 
   // primary cube planes (only needed for octahedral case)
   if(ot == OrientationAnalysisConstants::OctahedralType)
   {
-
-    typedef OrientationTransforms<std::vector<double>, double> OrientationTransformsType;
-
-    c1 = OrientationTransformsType::OMHelperType::maxval(OrientationTransformsType::OMHelperType::absValue(r)) <= LPs::BP[3];
+    double maxValue = *(std::max_element(r.begin(), r.end()));
+    c1 = (maxValue <= LPs::BP[3]);
   }
   else
   {
@@ -746,7 +736,7 @@ bool EMsoftSO3Sampler::insideCubicFZ(double* rod, int ot)
   }
 
   // octahedral truncation planes, both for tetrahedral and octahedral point groups
-  c2 = ((fabs(r[0]) + fabs(r[1]) + fabs(r[2])) <= r1);
+  c2 = ((r[0] + r[1] + r[2]) <= r1);
 
   // if both c1 and c2, then the point is inside
   if(c1 && c2)

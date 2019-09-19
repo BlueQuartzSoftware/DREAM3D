@@ -77,12 +77,12 @@ EbsdToH5EbsdWidget::EbsdToH5EbsdWidget(FilterParameter* parameter, AbstractFilte
   m_SampleTransformation.angle = 0.0f;
   m_SampleTransformation.h = 0.0f;
   m_SampleTransformation.k = 0.0f;
-  m_SampleTransformation.l = 1.0f;
+  m_SampleTransformation.l = 0.0f;
 
   m_EulerTransformation.angle = 0.0f;
   m_EulerTransformation.h = 0.0f;
   m_EulerTransformation.k = 0.0f;
-  m_EulerTransformation.l = 1.0f;
+  m_EulerTransformation.l = 0.0f;
 
   m_Filter = qobject_cast<EbsdToH5Ebsd*>(filter);
   Q_ASSERT_X(nullptr != m_Filter, "EbsdToH5EbsdWidget can ONLY be used with EbsdToH5Ebsd filter", __FILE__);
@@ -430,6 +430,8 @@ void EbsdToH5EbsdWidget::on_m_LineEdit_textChanged(const QString& text)
     m_ShowFileAction->setDisabled(true);
     m_FileListView->clear();
   }
+  m_fileExtUsedForTransformInit = false;
+
   emit parametersChanged();
 }
 
@@ -609,10 +611,36 @@ void EbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
   }
   QString ebsdFileName = (fileList[0]);
 
+  QFileInfo fi(ebsdFileName);
+  if(fi.suffix() == "ctf")
+  {
+  }
+
   identifyRefFrame();
 
   QEbsdReferenceFrameDialog d(ebsdFileName, this);
   d.setEbsdFileName(ebsdFileName);
+
+  if(!m_fileExtUsedForTransformInit)
+  {
+    if(fi.suffix() == "ctf")
+    {
+      m_HKLchecked = true;
+      m_NoTranschecked = false;
+    }
+    if(fi.suffix() == "ang")
+    {
+      m_TSLchecked = true;
+      m_NoTranschecked = false;
+    }
+    if(fi.suffix() == "mic")
+    {
+      m_HEDMchecked = true;
+      m_NoTranschecked = false;
+    }
+    m_fileExtUsedForTransformInit = true;
+  }
+
   d.setTSLDefault(m_TSLchecked);
   d.setHKLDefault(m_HKLchecked);
   d.setHEDMDefault(m_HEDMchecked);
@@ -637,7 +665,7 @@ void EbsdToH5EbsdWidget::identifyRefFrame()
 {
   m_TSLchecked = false;
   m_HKLchecked = false;
-  m_NoTranschecked = false;
+  m_NoTranschecked = true;
   m_HEDMchecked = false;
 
   // TSL/EDAX

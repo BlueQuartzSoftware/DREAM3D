@@ -116,15 +116,16 @@ endif()
 set(PREBUILT_SUPPORT_DIR "${DREAM3D_SUPPORT_DIR}")
 set(test_index  "0")
 foreach(test ${PREBUILT_PIPELINE_NAMES} )
+  math(EXPR test_index "${test_index} + 1")
   set(Example_PIPELINE_FILE "${DREAM3D_SUPPORT_DIR}/${test}.json")
-  FILE(APPEND ${TEST_PIPELINE_LIST_FILE} "${Example_PIPELINE_FILE}\n")
-
+  FILE(APPEND ${TEST_PIPELINE_LIST_FILE} "[${test_index}]    ${Example_PIPELINE_FILE}\n")
+  
   #----------------
   set(SIMPL_CTEST_TEST_DRIVER "${DREAM3DTest_BINARY_DIR}/PrebuiltPipelineTests/${test}.${TEST_SCRIPT_FILE_EXT}")
   configure_file(${DREAM3DTest_SOURCE_DIR}/ctest_pipeline_driver.${TEST_SCRIPT_FILE_EXT} "${SIMPL_CTEST_TEST_DRIVER}" @ONLY)
 
   string(REPLACE "/" "_" test "${test}")
-  math(EXPR test_index "${test_index} + 1")
+  
   add_test(NAME D3D_Prebuilt_${test_index} COMMAND "${SIMPL_CTEST_TEST_DRIVER}" )
 endforeach()
 

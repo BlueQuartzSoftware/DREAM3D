@@ -39,13 +39,11 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
-#include "OrientationLib/LaueOps/LaueOps.h"
-
-#include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
 
 #include "EbsdLib/EbsdConstants.h"
 
 #include "Reconstruction/ReconstructionDLLExport.h"
+#include "Reconstruction/ReconstructionFilters/GroupFeatures.h"
 
 /**
  * @brief The MergeTwins class. See [Filter documentation](@ref mergetwins) for details.
@@ -209,8 +207,6 @@ private:
   DEFINE_DATAARRAY_VARIABLE(bool, Active)
   DEFINE_DATAARRAY_VARIABLE(int32_t, CellParentIds)
   DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureParentIds)
-
-  QVector<LaueOps::Pointer> m_OrientationOps;
 
   float m_AxisToleranceRad = 0.0f;
 
