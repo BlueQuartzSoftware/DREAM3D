@@ -33,17 +33,70 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <array>
+
 #include "UnitTestSupport.hpp"
 
 #include "OrientationLibTestFileLocations.h"
+#include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
-// -----------------------------------------------------------------------------
-//  Use test framework
-// -----------------------------------------------------------------------------
-int main(int argc, char** argv)
+#include "OrientationLib/Core/Orientation.hpp"
+#include "OrientationLib/Core/OrientationMath.h"
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+
+class OrientationMathTest
 {
-  int err = EXIT_SUCCESS;
+public:
+  OrientationMathTest() = default;
+  virtual ~OrientationMathTest() = default;
 
-  PRINT_TEST_SUMMARY();
-  return err;
-}
+  template <typename AxisAngleType, typename CoordinateType>
+  CoordinateType TransformPoint(const AxisAngleType& axisAngle, float deg, const CoordinateType& inCoord)
+  {
+    OrientationF om = OrientationTransformation::ax2om<OrientationF, OrientationF>(axisAngle);
+    return OrientationMath::TransformCoordinate<OrientationF, CoordinateType>(om, inCoord);
+  }
+
+  // -----------------------------------------------------------------------------
+  void Test()
+  {
+
+    using CoordinateType = std::array<float, 3>;
+    float deg = 45.0f;
+    OrientationF axis = {0.0f, 1.0f, 0.0f, 0.0f};    // <001> @ 0 deg
+    axis[3] = deg * SIMPLib::Constants::k_PiOver180; // Convert to Radians
+    CoordinateType inCoord = {10.0f, 0.0f, 0.0f};
+    CoordinateType outCoord = TransformPoint<OrientationF, CoordinateType>(axis, deg, inCoord);
+    printf("%f %f %f\n", outCoord[0], outCoord[1], outCoord[2]);
+
+    /* ====================================================== */
+    OrientationF om = OrientationTransformation::ax2om<OrientationF, OrientationF>(axis);
+    float rotMat[3][3];
+    om.toGMatrix(rotMat);
+
+    MatrixMath::Multiply3x3with3x1(rotMat, inCoord.data(), outCoord.data());
+
+    printf("%f %f %f\n", outCoord[0], outCoord[1], outCoord[2]);
+
+    CoordinateType outCoord2 = OrientationMath::TransformCoordinate<OrientationF, CoordinateType>(om, inCoord);
+
+    printf("%f %f %f\n", outCoord2[0], outCoord2[1], outCoord2[2]);
+
+    std::cout << "" << std::endl;
+  }
+
+  // -----------------------------------------------------------------------------
+  void operator()()
+  {
+    std::cout << "#### OrientationMathTest Starting ####" << std::endl;
+    int err = EXIT_SUCCESS;
+    DREAM3D_REGISTER_TEST(Test());
+  }
+
+public:
+  OrientationMathTest(const OrientationMathTest&) = delete;            // Copy Constructor Not Implemented
+  OrientationMathTest(OrientationMathTest&&) = delete;                 // Move Constructor Not Implemented
+  OrientationMathTest& operator=(const OrientationMathTest&) = delete; // Copy Assignment Not Implemented
+  OrientationMathTest& operator=(OrientationMathTest&&) = delete;      // Move Assignment Not Implemented
+};

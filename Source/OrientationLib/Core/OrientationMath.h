@@ -81,10 +81,10 @@ class OrientationLib_EXPORT OrientationMath
     /**
      * @brief MatrixMisorientation
      * @param g1
-     * @param g2
+     * @param coord
      * @return
      */
-    static float MatrixMisorientation(float g1[3][3], float g2[3][3]);
+    static float MatrixMisorientation(float g1[3][3], float coord[3][3]);
 
     /**
      * @brief MultiplyQuaternionVector Multiplies a Vector by a quaternion putting the result into 'outVec'
@@ -123,11 +123,23 @@ class OrientationLib_EXPORT OrientationMath
     static QuatF ActiveRotation(float angle, float xAxis, float yAxis, float zAxis, float x, float y, float z);
 
 #endif
+    template <typename T, typename K>
+    static K TransformCoordinate(const T& orientationMatrix, const K& coord)
+    {
+      K outCoord = {0, 0, 0};
+
+      outCoord[0] = orientationMatrix[0] * coord[0] + orientationMatrix[1] * coord[1] + orientationMatrix[2] * coord[2];
+      outCoord[1] = orientationMatrix[3] * coord[0] + orientationMatrix[4] * coord[1] + orientationMatrix[5] * coord[2];
+      outCoord[2] = orientationMatrix[6] * coord[0] + orientationMatrix[7] * coord[1] + orientationMatrix[8] * coord[2];
+
+      return outCoord;
+    }
+
     /**
-    * @brief Converts lattice parameters to metric tensor
-    * @param lattive parameters as a, b, c, alpha, beta, gamma
-    * @param Output metric tensor
-    */
+     * @brief Converts lattice parameters to metric tensor
+     * @param lattive parameters as a, b, c, alpha, beta, gamma
+     * @param Output metric tensor
+     */
     static void MetricTensorFromLatticeParameters(float a, float b, float c, float alpha, float beta, float gamma, float mt[3][3]);
 
     /**
