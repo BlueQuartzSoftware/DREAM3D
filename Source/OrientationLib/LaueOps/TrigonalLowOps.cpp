@@ -1041,3 +1041,5 @@ TrigonalLowOps::Pointer TrigonalLowOps::New()
   Pointer sharedPtr(new(TrigonalLowOps));
   return sharedPtr;
 }
+
+

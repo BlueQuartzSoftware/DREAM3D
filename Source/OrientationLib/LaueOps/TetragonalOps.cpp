@@ -1270,3 +1270,5 @@ TetragonalOps::Pointer TetragonalOps::New()
   Pointer sharedPtr(new(TetragonalOps));
   return sharedPtr;
 }
+
+

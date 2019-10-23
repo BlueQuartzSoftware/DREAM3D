@@ -391,7 +391,6 @@ private:
   FloatVec3Type m_SlipPlane = {};
   FloatVec3Type m_SlipDirection = {};
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
 
 public:
   FindSchmids(const FindSchmids&) = delete;            // Copy Constructor Not Implemented

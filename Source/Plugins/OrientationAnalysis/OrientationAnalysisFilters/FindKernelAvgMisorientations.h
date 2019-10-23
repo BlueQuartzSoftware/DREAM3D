@@ -280,7 +280,6 @@ private:
   QString m_KernelAverageMisorientationsArrayName = {};
   IntVec3Type m_KernelSize = {};
 
-  QVector<LaueOps::Pointer> m_OrientationOps;
 
 public:
   FindKernelAvgMisorientations(const FindKernelAvgMisorientations&) = delete;            // Copy Constructor Not Implemented
@@ -288,4 +287,3 @@ public:
   FindKernelAvgMisorientations& operator=(const FindKernelAvgMisorientations&) = delete; // Copy Assignment Not Implemented
   FindKernelAvgMisorientations& operator=(FindKernelAvgMisorientations&&) = delete;      // Move Assignment Not Implemented
 };
-

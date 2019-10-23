@@ -296,7 +296,7 @@ void FindSchmids::execute()
   {
     return;
   }
-  QVector<LaueOps::Pointer> m_OrientationOps = LaueOps::getOrientationOpsQVector();
+  QVector<LaueOps::Pointer> orientationOps = LaueOps::getOrientationOpsQVector();
 
   size_t totalFeatures = m_SchmidsPtr.lock()->getNumberOfTuples();
 
@@ -342,11 +342,11 @@ void FindSchmids::execute()
     {
       if(!m_OverrideSystem)
       {
-        m_OrientationOps[xtal]->getSchmidFactorAndSS(crystalLoading, schmid, angleComps, ss);
+        orientationOps[xtal]->getSchmidFactorAndSS(crystalLoading, schmid, angleComps, ss);
       }
       else
       {
-        m_OrientationOps[xtal]->getSchmidFactorAndSS(crystalLoading, plane, direction, schmid, angleComps, ss);
+        orientationOps[xtal]->getSchmidFactorAndSS(crystalLoading, plane, direction, schmid, angleComps, ss);
       }
 
       m_Schmids[i] = schmid;

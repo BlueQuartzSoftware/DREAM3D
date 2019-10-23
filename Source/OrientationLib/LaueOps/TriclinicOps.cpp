@@ -984,3 +984,5 @@ TriclinicOps::Pointer TriclinicOps::New()
   Pointer sharedPtr(new(TriclinicOps));
   return sharedPtr;
 }
+
+

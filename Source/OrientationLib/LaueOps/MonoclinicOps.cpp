@@ -993,3 +993,4 @@ MonoclinicOps::Pointer MonoclinicOps::New()
   Pointer sharedPtr(new(MonoclinicOps));
   return sharedPtr;
 }
+

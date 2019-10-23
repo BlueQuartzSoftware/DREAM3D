@@ -35,11 +35,9 @@
 
 #include "FindBasalLoadingFactor.h"
 
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
 #include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -49,6 +47,8 @@
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
+
+#include "OrientationLib/Core/OrientationTransformation.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -167,13 +167,10 @@ void FindBasalLoadingFactor::execute()
 
   size_t totalFeatures = m_BasalLoadingFactorPtr.lock()->getNumberOfTuples();
 
-  // int ss = 0;
   QuatF q1;
-  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
+  //  QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
   float sampleLoading[3];
-  // typedef DataArray<unsigned int> XTalType;
-
   float w;
   float g1[3][3];
   float g1t[3][3];
@@ -187,10 +184,8 @@ void FindBasalLoadingFactor::execute()
 
   for(size_t i = 1; i < totalFeatures; i++)
   {
-    QuaternionMathF::Copy(avgQuats[i], q1);
-    FOrientArrayType om(9);
-    FOrientTransformsType::qu2om(FOrientArrayType(q1), om);
-    om.toGMatrix(g1);
+    QuatF q1(m_AvgQuats + i * 4);
+    OrientationTransformation::qu2om<QuatF, OrientationF>(q1).toGMatrix(g1);
     // transpose the g matricies so when caxis is multiplied by it
     // it will give the sample direction that the caxis is along
     MatrixMath::Transpose3x3(g1, g1t);
@@ -199,7 +194,7 @@ void FindBasalLoadingFactor::execute()
     MatrixMath::Normalize3x1(c1);
     if(c1[2] < 0)
     {
-      MatrixMath::Multiply3x1withConstant(c1, -1);
+      MatrixMath::Multiply3x1withConstant(c1, -1.0f);
     }
     w = GeometryMath::CosThetaBetweenVectors(c1, sampleLoading);
     w = acos(w);

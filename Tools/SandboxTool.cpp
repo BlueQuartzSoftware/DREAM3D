@@ -175,9 +175,9 @@ int main(int argc, char* argv[])
 #if 1
   //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPLView/Source"));
   //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPLVtkLib"));
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/Plugins"));
-
-  //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Source"));
+  // dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/Plugins"));
+  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/Plugins/ITKImageProcessing"));
+  // dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Source"));
   //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Test"));
   //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Tools"));
 
@@ -199,7 +199,7 @@ int main(int argc, char* argv[])
 #endif
 
   QStringList filters;
-  // filters.append("*.cpp");
+  filters.append("*.cpp");
   //  filters.append("*.hpp");
   filters.append("*.h");
   // filters.append("*.md");

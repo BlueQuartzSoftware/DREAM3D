@@ -35,6 +35,20 @@
 
 #include "RotateEulerRefFrame.h"
 
+#include <QtCore/QTextStream>
+
+#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisVersion.h"
+
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range.h>
 #include <tbb/blocked_range3d.h>
@@ -42,20 +56,6 @@
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
-
-#include "OrientationLib/OrientationMath/OrientationTransforms.hpp"
-#include <QtCore/QTextStream>
-
-#include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
-
-#include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
-#include "SIMPLib/FilterParameters/FloatFilterParameter.h"
-#include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
-#include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
-
-#include "OrientationAnalysis/OrientationAnalysisConstants.h"
-#include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 /**
  * @brief The RotateEulerRefFrameImpl class implements a threaded algorithm that rotates an array of Euler
@@ -81,9 +81,7 @@ public:
   void convert(size_t start, size_t end) const
   {
     float rotMat[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
-    FOrientArrayType om(9, 0.0f);
-    FOrientTransformsType::ax2om(FOrientArrayType(axis[0], axis[1], axis[2], angle), om);
-    om.toGMatrix(rotMat);
+    OrientationTransformation::ax2om<OrientationF, OrientationF>(OrientationF(axis[0], axis[1], axis[2], angle)).toGMatrix(rotMat);
 
     float ea1 = 0, ea2 = 0, ea3 = 0;
     float g[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
@@ -93,17 +91,15 @@ public:
       ea1 = m_CellEulerAngles[3 * i + 0];
       ea2 = m_CellEulerAngles[3 * i + 1];
       ea3 = m_CellEulerAngles[3 * i + 2];
-      FOrientArrayType om(9);
-      FOrientTransformsType::eu2om(FOrientArrayType(ea1, ea2, ea3), om);
-      om.toGMatrix(g);
+      OrientationTransformation::eu2om<OrientationF, OrientationF>(OrientationF(ea1, ea2, ea3)).toGMatrix(g);
 
       MatrixMath::Multiply3x3with3x3(g, rotMat, gNew);
       MatrixMath::Normalize3x3(gNew);
       // Because we are going to simply wrap the m_CellEulerAngles array, the new
       // Euler angles will be directly written to the m_CellEulerAngles array
       // at the proper spot
-      FOrientArrayType eu(m_CellEulerAngles + (3 * i), 3);
-      FOrientTransformsType::om2eu(FOrientArrayType(gNew), eu);
+      OrientationF eu(m_CellEulerAngles + (3 * i), 3);
+      eu = OrientationTransformation::om2eu<OrientationF, OrientationF>(OrientationF(gNew));
     }
   }
 
@@ -231,7 +227,6 @@ void RotateEulerRefFrame::execute()
     RotateEulerRefFrameImpl serial(m_CellEulerAngles, rotAngle, rotAxis);
     serial.convert(0, totalPoints);
   }
-
 }
 
 // -----------------------------------------------------------------------------

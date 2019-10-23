@@ -1042,3 +1042,5 @@ TrigonalOps::Pointer TrigonalOps::New()
   Pointer sharedPtr(new(TrigonalOps));
   return sharedPtr;
 }
+
+

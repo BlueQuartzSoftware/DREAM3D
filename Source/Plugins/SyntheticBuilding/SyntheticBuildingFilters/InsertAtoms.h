@@ -42,6 +42,7 @@
 #include "SIMPLib/Geometry/VertexGeom.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
+#include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
 
 /**
  * @brief The InsertAtoms class. See [Filter documentation](@ref insertatoms) for details.

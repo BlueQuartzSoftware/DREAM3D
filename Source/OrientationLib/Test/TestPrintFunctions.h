@@ -9,7 +9,7 @@
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/Math/QuaternionMath.hpp"
+
 #include "SIMPLib/DataContainers/DataContainerArray.h"
 
 class DataContainerArray;

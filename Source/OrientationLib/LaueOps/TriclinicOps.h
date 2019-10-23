@@ -35,7 +35,6 @@
 #pragma once
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationLib/OrientationLib.h"
@@ -52,9 +51,24 @@
 class OrientationLib_EXPORT TriclinicOps : public LaueOps
 {
   public:
-    SIMPL_SHARED_POINTERS(TriclinicOps)
-     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(TriclinicOps, LaueOps)
-    SIMPL_STATIC_NEW_MACRO(TriclinicOps)
+    using Self = TriclinicOps;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    /**
+    * @brief Returns the name of the class for TriclinicOps
+    */
+    const QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for TriclinicOps
+    */
+    static QString ClassName();
+
+    static Pointer New();
+
 
     TriclinicOps();
     ~TriclinicOps() override;
@@ -187,6 +201,9 @@ class OrientationLib_EXPORT TriclinicOps : public LaueOps
     TriclinicOps(TriclinicOps&&) = delete;        // Move Constructor Not Implemented
     TriclinicOps& operator=(const TriclinicOps&) = delete; // Copy Assignment Not Implemented
     TriclinicOps& operator=(TriclinicOps&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+
 };
 
 

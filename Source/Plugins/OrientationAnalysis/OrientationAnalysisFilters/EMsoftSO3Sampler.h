@@ -36,7 +36,7 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "OrientationLib/OrientationLib.h"
-#include "OrientationLib/OrientationMath/OrientationArray.hpp"
+#include "OrientationLib/Core/Orientation.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -297,12 +297,12 @@ public:
    * @param sigma
    * @param rod
    */
-  void RodriguesComposition(DOrientArrayType sigma, DOrientArrayType& rod);
+  void RodriguesComposition(OrientationD sigma, OrientationD& rod);
 
   /**
    * @brief OrientationListArrayType
    */
-  typedef std::list<DOrientArrayType> OrientationListArrayType;
+  typedef std::list<OrientationD> OrientationListArrayType;
 
   /**
    * @brief IsinsideFZ

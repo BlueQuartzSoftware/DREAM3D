@@ -496,13 +496,13 @@ QString ImportEbsdMontage::getCellAttributeMatrixName() const
 }
 
 // -----------------------------------------------------------------------------
-void ImportEbsdMontage::setInputFileListInfo(const EbsdMontageListInfo_t& value)
+void ImportEbsdMontage::setInputFileListInfo(const EbsdMontageListInfo& value)
 {
   m_InputFileListInfo = value;
 }
 
 // -----------------------------------------------------------------------------
-EbsdMontageListInfo_t ImportEbsdMontage::getInputFileListInfo() const
+EbsdMontageListInfo ImportEbsdMontage::getInputFileListInfo() const
 {
   return m_InputFileListInfo;
 }

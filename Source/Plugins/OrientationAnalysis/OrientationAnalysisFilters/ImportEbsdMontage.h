@@ -42,6 +42,7 @@
 #include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "OrientationAnalysis/FilterParameters/EbsdMontageImportFilterParameter.h"
+#include "OrientationAnalysis/FilterParameters/EbsdMontageListInfo.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -59,14 +60,14 @@ class OrientationAnalysis_EXPORT ImportEbsdMontage : public AbstractFilter
   PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
   PYB11_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
   PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(EbsdMontageListInfo_t, InputFileListInfo)
+  PYB11_FILTER_PARAMETER(EbsdMontageListInfo, InputFileListInfo)
   PYB11_FILTER_PARAMETER(bool, GenerateIPFColorMap)
   PYB11_FILTER_PARAMETER(QString, CellIPFColorsArrayName)
 
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-  PYB11_PROPERTY(EbsdMontageListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
+  PYB11_PROPERTY(EbsdMontageListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
   PYB11_PROPERTY(bool GenerateIPFColorMap READ getGenerateIPFColorMap WRITE setGenerateIPFColorMap)
   PYB11_PROPERTY(QString CellIPFColorsArrayName READ getCellIPFColorsArrayName WRITE setCellIPFColorsArrayName)
 #endif
@@ -131,13 +132,13 @@ public:
   /**
    * @brief Setter property for InputFileListInfo
    */
-  void setInputFileListInfo(const EbsdMontageListInfo_t& value);
+  void setInputFileListInfo(const EbsdMontageListInfo& value);
   /**
    * @brief Getter property for InputFileListInfo
    * @return Value of InputFileListInfo
    */
-  EbsdMontageListInfo_t getInputFileListInfo() const;
-  Q_PROPERTY(EbsdMontageListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
+  EbsdMontageListInfo getInputFileListInfo() const;
+  Q_PROPERTY(EbsdMontageListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
 
   /**
    * @brief Setter property for GenerateIPFColorMap
@@ -261,7 +262,7 @@ private:
   DataArrayPath m_DataContainerName = {};
   QString m_CellEnsembleAttributeMatrixName = {};
   QString m_CellAttributeMatrixName = {};
-  EbsdMontageListInfo_t m_InputFileListInfo = {};
+  EbsdMontageListInfo m_InputFileListInfo = {};
 
   std::map<QString, AbstractFilter::Pointer> m_FilterCache;
   FloatVec3Type m_ReferenceDir = {0.0f, 0.0f, 1.0f};

@@ -1608,3 +1608,5 @@ HexagonalLowOps::Pointer HexagonalLowOps::New()
   Pointer sharedPtr(new(HexagonalLowOps));
   return sharedPtr;
 }
+
+

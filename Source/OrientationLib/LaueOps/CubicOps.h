@@ -37,7 +37,7 @@
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
-#include "SIMPLib/Math/QuaternionMath.hpp"
+
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/LaueOps/LaueOps.h"
@@ -78,59 +78,66 @@ class OrientationLib_EXPORT CubicOps : public LaueOps
     static const int k_MdfSize = 5832;
     static const int k_NumSymQuats = 24;
 
-
     /**
      * @brief getHasInversion Returns if this Laue class has inversion
      * @return
      */
-    bool getHasInversion() override;
+    bool getHasInversion() const override;
 
     /**
      * @brief getODFSize Returns the number of ODF bins
      * @return
      */
-    int getODFSize() override;
+    int getODFSize() const override;
 
     /**
      * @brief getMDFSize Returns the number of MDF bins
      * @return
      */
-    int getMDFSize() override;
+    int getMDFSize() const override;
 
     /**
      * @brief getNumSymOps Returns the number of symmetry operators
      * @return
      */
-    int getNumSymOps() override;
+    int getNumSymOps() const override;
 
     /**
      * @brief getSymmetryName Returns the name of the Laue class
      * @return
      */
-    QString getSymmetryName() override;
+    QString getSymmetryName() const override;
 
-    float getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3) override;
-    void getQuatSymOp(int i, QuatF& q) override;
-    void getRodSymOp(int i, float* r) override;
-    void getMatSymOp(int i, float g[3][3]) override;
-    FOrientArrayType getODFFZRod(FOrientArrayType rod) override;
-    FOrientArrayType getMDFFZRod(FOrientArrayType rod) override;
-    void getNearestQuat(QuatF& q1, QuatF& q2) override;
-    void getFZQuat(QuatF& qr) override;
-    int getMisoBin(FOrientArrayType rod) override;
-    bool inUnitTriangle(float eta, float chi) override;
-    FOrientArrayType determineEulerAngles(uint64_t seed, int choose) override;
-    FOrientArrayType randomizeEulerAngles(FOrientArrayType euler) override;
-    FOrientArrayType determineRodriguesVector(uint64_t seed, int choose) override;
-    int getOdfBin(FOrientArrayType rod) override;
-    void getSchmidFactorAndSS(float load[3], float& schmidfactor, float angleComps[2], int& slipsys) override;
-    void getSchmidFactorAndSS(float load[3], float plane[3], float direction[3], float& schmidfactor, float angleComps[2], int& slipsys) override;
-    void getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime) override;
-    void getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1) override;
-    void getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1spt) override;
-    void getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7) override;
+    double getMisoQuat(QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const override;
+    float getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3) const override;
 
-    void generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* c1, FloatArrayType* c2, FloatArrayType* c3) override;
+    QuatType getQuatSymOp(int i) const override;
+    void getRodSymOp(int i, double* r) const override;
+
+    void getMatSymOp(int i, double g[3][3]) const override;
+    void getMatSymOp(int i, float g[3][3]) const override;
+
+    OrientationType getODFFZRod(const OrientationType& rod) const override;
+    OrientationType getMDFFZRod(const OrientationType& rod) const override;
+
+    QuatType getNearestQuat(const QuatType& q1, const QuatType& q2) const override;
+    QuatF getNearestQuat(const QuatF& q1f, const QuatF& q2f) const override;
+
+    QuatType getFZQuat(const QuatType& qr) const override;
+    int getMisoBin(const OrientationType& rod) const override;
+    bool inUnitTriangle(double eta, double chi) const override;
+    OrientationType determineEulerAngles(uint64_t seed, int choose) const override;
+    OrientationType randomizeEulerAngles(const OrientationType& euler) const override;
+    OrientationType determineRodriguesVector(uint64_t seed, int choose) const override;
+    int getOdfBin(const OrientationType& rod) const override;
+    void getSchmidFactorAndSS(double load[3], double& schmidfactor, double angleComps[2], int& slipsys) const override;
+    void getSchmidFactorAndSS(double load[3], double plane[3], double direction[3], double& schmidfactor, double angleComps[2], int& slipsys) const override;
+    double getmPrime(const QuatType& q1, const QuatType& q2, double LD[3]) const override;
+    double getF1(const QuatType& q1, const QuatType& q2, double LD[3], bool maxSF) const override;
+    double getF1spt(const QuatType& q1, const QuatType& q2, double LD[3], bool maxSF) const override;
+    double getF7(const QuatType& q1, const QuatType& q2, double LD[3], bool maxSF) const override;
+
+    void generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* c1, FloatArrayType* c2, FloatArrayType* c3) const override;
 
     /**
      * @brief generateIPFColor Generates an RGB Color from a Euler Angle and Reference Direction
@@ -139,7 +146,7 @@ class OrientationLib_EXPORT CubicOps : public LaueOps
      * @param convertDegrees Are the input angles in Degrees
      * @return Returns the ARGB Quadruplet SIMPL::Rgb
      */
-    SIMPL::Rgb generateIPFColor(double* eulers, double* refDir, bool convertDegrees) override;
+    SIMPL::Rgb generateIPFColor(double* eulers, double* refDir, bool convertDegrees) const override;
 
     /**
      * @brief generateIPFColor Generates an RGB Color from a Euler Angle and Reference Direction
@@ -152,7 +159,7 @@ class OrientationLib_EXPORT CubicOps : public LaueOps
      * @param convertDegrees Are the input angles in Degrees
      * @return Returns the ARGB Quadruplet SIMPL::Rgb
      */
-    SIMPL::Rgb generateIPFColor(double e0, double e1, double phi2, double dir0, double dir1, double dir2, bool convertDegrees) override;
+    SIMPL::Rgb generateIPFColor(double e0, double e1, double phi2, double dir0, double dir1, double dir2, bool convertDegrees) const override;
 
     /**
      * @brief generateRodriguesColor Generates an RGB Color from a Rodrigues Vector
@@ -161,7 +168,7 @@ class OrientationLib_EXPORT CubicOps : public LaueOps
      * @param r3 Third component of the Rodrigues Vector
      * @return Returns the ARGB Quadruplet SIMPL::Rgb
      */
-    SIMPL::Rgb generateRodriguesColor(float r1, float r2, float r3) override;
+    SIMPL::Rgb generateRodriguesColor(double r1, double r2, double r3) const override;
 
     /**
      * @brief generateMisorientationColor Generates a color based on the method developed by C. Schuh and S. Patala.
@@ -169,7 +176,7 @@ class OrientationLib_EXPORT CubicOps : public LaueOps
      * @param refDir The sample reference direction
      * @return Returns the ARGB Quadruplet SIMPL::Rgb
      */
-    SIMPL::Rgb generateMisorientationColor(const QuatF& q, const QuatF& refFrame) override;
+    SIMPL::Rgb generateMisorientationColor(const QuatType& q, const QuatType& refFrame) const override;
 
     /**
      * @brief generatePoleFigure This method will generate a number of pole figures for this crystal symmetry and the Euler
@@ -180,13 +187,13 @@ class OrientationLib_EXPORT CubicOps : public LaueOps
      * @return A QVector of UInt8ArrayType pointers where each one represents a 2D RGB array that can be used to initialize
      * an image object from other libraries and written out to disk.
      */
-    QVector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t& config) override;
+    QVector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t& config) const override;
 
     /**
      * @brief generateStandardTriangle Generates an RGBA array that is a color "Standard" IPF Triangle Legend used for IPF Color Maps.
      * @return
      */
-    UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim);
+    UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim) const;
 
     /**
      * @brief generates a misorientation coloring legend
@@ -196,12 +203,11 @@ class OrientationLib_EXPORT CubicOps : public LaueOps
      * @param width of produced image (in pixels)
      * @return
      */
-    UInt8ArrayType::Pointer generateMisorientationTriangleLegend(float, int, int, int);
+    UInt8ArrayType::Pointer generateMisorientationTriangleLegend(double, int, int, int) const;
 
   protected:
-    float _calcMisoQuat(const QuatF quatsym[24], int numsym,
-                        QuatF& q1, QuatF& q2,
-                        float& n1, float& n2, float& n3);
+    double _calcMisoQuat(const QuatType quatsym[12], int numsym, QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const;
+
     /**
      * @brief area preserving projection of volume preserving transformation (for C. Shuch and S. Patala coloring legend generation)
      * @param x
