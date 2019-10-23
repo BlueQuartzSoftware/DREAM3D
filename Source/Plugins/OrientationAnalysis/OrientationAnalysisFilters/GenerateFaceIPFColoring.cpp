@@ -449,7 +449,7 @@ AbstractFilter::Pointer GenerateFaceIPFColoring::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceIPFColoring::getCompiledLibraryName() const
+QString GenerateFaceIPFColoring::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -457,7 +457,7 @@ const QString GenerateFaceIPFColoring::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceIPFColoring::getBrandingString() const
+QString GenerateFaceIPFColoring::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -465,7 +465,7 @@ const QString GenerateFaceIPFColoring::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceIPFColoring::getFilterVersion() const
+QString GenerateFaceIPFColoring::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -475,7 +475,7 @@ const QString GenerateFaceIPFColoring::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceIPFColoring::getGroupName() const
+QString GenerateFaceIPFColoring::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -483,7 +483,7 @@ const QString GenerateFaceIPFColoring::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid GenerateFaceIPFColoring::getUuid()
+QUuid GenerateFaceIPFColoring::getUuid() const
 {
   return QUuid("{0a121e03-3922-5c29-962d-40d88653f4b6}");
 }
@@ -491,7 +491,7 @@ const QUuid GenerateFaceIPFColoring::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceIPFColoring::getSubGroupName() const
+QString GenerateFaceIPFColoring::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -499,7 +499,7 @@ const QString GenerateFaceIPFColoring::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceIPFColoring::getHumanLabel() const
+QString GenerateFaceIPFColoring::getHumanLabel() const
 {
   return "Generate IPF Colors (Face)";
 }
@@ -522,7 +522,7 @@ std::shared_ptr<GenerateFaceIPFColoring> GenerateFaceIPFColoring::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString GenerateFaceIPFColoring::getNameOfClass() const
+QString GenerateFaceIPFColoring::getNameOfClass() const
 {
   return QString("GenerateFaceIPFColoring");
 }

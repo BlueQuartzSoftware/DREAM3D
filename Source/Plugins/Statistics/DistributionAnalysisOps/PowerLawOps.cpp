@@ -130,7 +130,7 @@ PowerLawOps::Pointer PowerLawOps::NullPointer()
 }
 
 // -----------------------------------------------------------------------------
-const QString PowerLawOps::getNameOfClass() const
+QString PowerLawOps::getNameOfClass() const
 {
   return QString("PowerLawOps");
 }

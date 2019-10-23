@@ -365,7 +365,7 @@ AbstractFilter::Pointer ErodeDilateCoordinationNumber::newFilterInstance(bool co
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateCoordinationNumber::getCompiledLibraryName() const
+QString ErodeDilateCoordinationNumber::getCompiledLibraryName() const
 {
   return ProcessingConstants::ProcessingBaseName;
 }
@@ -373,7 +373,7 @@ const QString ErodeDilateCoordinationNumber::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateCoordinationNumber::getBrandingString() const
+QString ErodeDilateCoordinationNumber::getBrandingString() const
 {
   return "Processing";
 }
@@ -381,7 +381,7 @@ const QString ErodeDilateCoordinationNumber::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateCoordinationNumber::getFilterVersion() const
+QString ErodeDilateCoordinationNumber::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -391,7 +391,7 @@ const QString ErodeDilateCoordinationNumber::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateCoordinationNumber::getGroupName() const
+QString ErodeDilateCoordinationNumber::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -399,7 +399,7 @@ const QString ErodeDilateCoordinationNumber::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ErodeDilateCoordinationNumber::getUuid()
+QUuid ErodeDilateCoordinationNumber::getUuid() const
 {
   return QUuid("{d26e85ff-7e52-53ae-b095-b1d969c9e73c}");
 }
@@ -407,7 +407,7 @@ const QUuid ErodeDilateCoordinationNumber::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateCoordinationNumber::getSubGroupName() const
+QString ErodeDilateCoordinationNumber::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CleanupFilters;
 }
@@ -415,7 +415,7 @@ const QString ErodeDilateCoordinationNumber::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateCoordinationNumber::getHumanLabel() const
+QString ErodeDilateCoordinationNumber::getHumanLabel() const
 {
   return "Smooth Bad Data (Coordination Number)";
 }
@@ -438,7 +438,7 @@ std::shared_ptr<ErodeDilateCoordinationNumber> ErodeDilateCoordinationNumber::Ne
 }
 
 // -----------------------------------------------------------------------------
-const QString ErodeDilateCoordinationNumber::getNameOfClass() const
+QString ErodeDilateCoordinationNumber::getNameOfClass() const
 {
   return QString("ErodeDilateCoordinationNumber");
 }

@@ -318,7 +318,7 @@ AbstractFilter::Pointer AlignSectionsFeatureCentroid::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsFeatureCentroid::getCompiledLibraryName() const
+QString AlignSectionsFeatureCentroid::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -326,7 +326,7 @@ const QString AlignSectionsFeatureCentroid::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsFeatureCentroid::getBrandingString() const
+QString AlignSectionsFeatureCentroid::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -334,7 +334,7 @@ const QString AlignSectionsFeatureCentroid::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsFeatureCentroid::getFilterVersion() const
+QString AlignSectionsFeatureCentroid::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -344,7 +344,7 @@ const QString AlignSectionsFeatureCentroid::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsFeatureCentroid::getGroupName() const
+QString AlignSectionsFeatureCentroid::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -352,7 +352,7 @@ const QString AlignSectionsFeatureCentroid::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid AlignSectionsFeatureCentroid::getUuid()
+QUuid AlignSectionsFeatureCentroid::getUuid() const
 {
   return QUuid("{886f8b46-51b6-5682-a289-6febd10b7ef0}");
 }
@@ -360,7 +360,7 @@ const QUuid AlignSectionsFeatureCentroid::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsFeatureCentroid::getSubGroupName() const
+QString AlignSectionsFeatureCentroid::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::AlignmentFilters;
 }
@@ -368,7 +368,7 @@ const QString AlignSectionsFeatureCentroid::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsFeatureCentroid::getHumanLabel() const
+QString AlignSectionsFeatureCentroid::getHumanLabel() const
 {
   return "Align Sections (Feature Centroid)";
 }
@@ -391,7 +391,7 @@ std::shared_ptr<AlignSectionsFeatureCentroid> AlignSectionsFeatureCentroid::New(
 }
 
 // -----------------------------------------------------------------------------
-const QString AlignSectionsFeatureCentroid::getNameOfClass() const
+QString AlignSectionsFeatureCentroid::getNameOfClass() const
 {
   return QString("AlignSectionsFeatureCentroid");
 }

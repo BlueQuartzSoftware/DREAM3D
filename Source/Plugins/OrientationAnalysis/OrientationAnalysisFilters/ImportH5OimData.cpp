@@ -737,7 +737,7 @@ AbstractFilter::Pointer ImportH5OimData::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportH5OimData::getCompiledLibraryName() const
+QString ImportH5OimData::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -745,7 +745,7 @@ const QString ImportH5OimData::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportH5OimData::getBrandingString() const
+QString ImportH5OimData::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -753,7 +753,7 @@ const QString ImportH5OimData::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportH5OimData::getFilterVersion() const
+QString ImportH5OimData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -763,7 +763,7 @@ const QString ImportH5OimData::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportH5OimData::getGroupName() const
+QString ImportH5OimData::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -771,7 +771,7 @@ const QString ImportH5OimData::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ImportH5OimData::getUuid()
+QUuid ImportH5OimData::getUuid() const
 {
   return QUuid("{3ff4701b-3a0c-52e3-910a-fa927aa6584c}");
 }
@@ -779,7 +779,7 @@ const QUuid ImportH5OimData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportH5OimData::getSubGroupName() const
+QString ImportH5OimData::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -787,7 +787,7 @@ const QString ImportH5OimData::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportH5OimData::getHumanLabel() const
+QString ImportH5OimData::getHumanLabel() const
 {
   return "Import EDAX OIMAnalysis Data (.h5)";
 }
@@ -963,7 +963,7 @@ std::shared_ptr<ImportH5OimData> ImportH5OimData::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString ImportH5OimData::getNameOfClass() const
+QString ImportH5OimData::getNameOfClass() const
 {
   return QString("ImportH5OimData");
 }

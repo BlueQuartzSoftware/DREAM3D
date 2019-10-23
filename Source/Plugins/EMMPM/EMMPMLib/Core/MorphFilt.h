@@ -63,7 +63,7 @@ class EMMPMLib_EXPORT MorphFilter : public Observable
     /**
      * @brief Returns the name of the class for MorphFilter;
      */
-    const QString getNameOfClass() const override;
+    QString getNameOfClass() const override;
     /**
      * @brief Returns the name of the class for MorphFilter;
      */
@@ -104,7 +104,7 @@ class EMMPMLib_EXPORT MorphFilter : public Observable
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() const;
+    virtual QString getHumanLabel() const;
 
   protected:
     MorphFilter();

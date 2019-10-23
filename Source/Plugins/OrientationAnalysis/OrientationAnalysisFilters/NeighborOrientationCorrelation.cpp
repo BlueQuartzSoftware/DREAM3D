@@ -576,7 +576,7 @@ AbstractFilter::Pointer NeighborOrientationCorrelation::newFilterInstance(bool c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NeighborOrientationCorrelation::getCompiledLibraryName() const
+QString NeighborOrientationCorrelation::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -584,7 +584,7 @@ const QString NeighborOrientationCorrelation::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NeighborOrientationCorrelation::getBrandingString() const
+QString NeighborOrientationCorrelation::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -592,7 +592,7 @@ const QString NeighborOrientationCorrelation::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NeighborOrientationCorrelation::getFilterVersion() const
+QString NeighborOrientationCorrelation::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -602,7 +602,7 @@ const QString NeighborOrientationCorrelation::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NeighborOrientationCorrelation::getGroupName() const
+QString NeighborOrientationCorrelation::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -610,7 +610,7 @@ const QString NeighborOrientationCorrelation::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid NeighborOrientationCorrelation::getUuid()
+QUuid NeighborOrientationCorrelation::getUuid() const
 {
   return QUuid("{6427cd5e-0ad2-5a24-8847-29f8e0720f4f}");
 }
@@ -618,7 +618,7 @@ const QUuid NeighborOrientationCorrelation::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NeighborOrientationCorrelation::getSubGroupName() const
+QString NeighborOrientationCorrelation::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CleanupFilters;
 }
@@ -626,7 +626,7 @@ const QString NeighborOrientationCorrelation::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NeighborOrientationCorrelation::getHumanLabel() const
+QString NeighborOrientationCorrelation::getHumanLabel() const
 {
   return "Neighbor Orientation Correlation";
 }
@@ -649,7 +649,7 @@ std::shared_ptr<NeighborOrientationCorrelation> NeighborOrientationCorrelation::
 }
 
 // -----------------------------------------------------------------------------
-const QString NeighborOrientationCorrelation::getNameOfClass() const
+QString NeighborOrientationCorrelation::getNameOfClass() const
 {
   return QString("NeighborOrientationCorrelation");
 }

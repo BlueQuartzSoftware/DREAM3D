@@ -379,7 +379,7 @@ AbstractFilter::Pointer FindSchmids::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSchmids::getCompiledLibraryName() const
+QString FindSchmids::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -387,7 +387,7 @@ const QString FindSchmids::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSchmids::getBrandingString() const
+QString FindSchmids::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -395,7 +395,7 @@ const QString FindSchmids::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSchmids::getFilterVersion() const
+QString FindSchmids::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -405,7 +405,7 @@ const QString FindSchmids::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSchmids::getGroupName() const
+QString FindSchmids::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -413,7 +413,7 @@ const QString FindSchmids::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindSchmids::getUuid()
+QUuid FindSchmids::getUuid() const
 {
   return QUuid("{e67ca06a-176f-58fc-a676-d6ee5553511a}");
 }
@@ -421,7 +421,7 @@ const QUuid FindSchmids::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSchmids::getSubGroupName() const
+QString FindSchmids::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -429,7 +429,7 @@ const QString FindSchmids::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSchmids::getHumanLabel() const
+QString FindSchmids::getHumanLabel() const
 {
   return "Find Schmid Factors";
 }
@@ -452,7 +452,7 @@ std::shared_ptr<FindSchmids> FindSchmids::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindSchmids::getNameOfClass() const
+QString FindSchmids::getNameOfClass() const
 {
   return QString("FindSchmids");
 }

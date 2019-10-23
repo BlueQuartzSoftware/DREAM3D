@@ -205,7 +205,7 @@ AbstractFilter::Pointer AddOrientationNoise::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddOrientationNoise::getCompiledLibraryName() const
+QString AddOrientationNoise::getCompiledLibraryName() const
 {
   return SyntheticBuildingConstants::SyntheticBuildingBaseName;
 }
@@ -213,7 +213,7 @@ const QString AddOrientationNoise::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddOrientationNoise::getBrandingString() const
+QString AddOrientationNoise::getBrandingString() const
 {
   return "SyntheticBuilding";
 }
@@ -221,7 +221,7 @@ const QString AddOrientationNoise::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddOrientationNoise::getFilterVersion() const
+QString AddOrientationNoise::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -231,7 +231,7 @@ const QString AddOrientationNoise::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddOrientationNoise::getGroupName() const
+QString AddOrientationNoise::getGroupName() const
 {
   return SIMPL::FilterGroups::SyntheticBuildingFilters;
 }
@@ -239,7 +239,7 @@ const QString AddOrientationNoise::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid AddOrientationNoise::getUuid()
+QUuid AddOrientationNoise::getUuid() const
 {
   return QUuid("{9f392fba-1520-5f8f-988b-0032d7c51811}");
 }
@@ -247,7 +247,7 @@ const QUuid AddOrientationNoise::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddOrientationNoise::getSubGroupName() const
+QString AddOrientationNoise::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -255,7 +255,7 @@ const QString AddOrientationNoise::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddOrientationNoise::getHumanLabel() const
+QString AddOrientationNoise::getHumanLabel() const
 {
   return "Add Orientation Noise";
 }
@@ -278,7 +278,7 @@ std::shared_ptr<AddOrientationNoise> AddOrientationNoise::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString AddOrientationNoise::getNameOfClass() const
+QString AddOrientationNoise::getNameOfClass() const
 {
   return QString("AddOrientationNoise");
 }

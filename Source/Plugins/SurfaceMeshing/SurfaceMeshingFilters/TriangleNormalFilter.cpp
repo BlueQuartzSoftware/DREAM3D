@@ -257,7 +257,7 @@ AbstractFilter::Pointer TriangleNormalFilter::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleNormalFilter::getCompiledLibraryName() const
+QString TriangleNormalFilter::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -265,7 +265,7 @@ const QString TriangleNormalFilter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleNormalFilter::getBrandingString() const
+QString TriangleNormalFilter::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -273,7 +273,7 @@ const QString TriangleNormalFilter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleNormalFilter::getFilterVersion() const
+QString TriangleNormalFilter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -283,7 +283,7 @@ const QString TriangleNormalFilter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleNormalFilter::getGroupName() const
+QString TriangleNormalFilter::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -291,7 +291,7 @@ const QString TriangleNormalFilter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid TriangleNormalFilter::getUuid()
+QUuid TriangleNormalFilter::getUuid() const
 {
   return QUuid("{928154f6-e4bc-5a10-a9dd-1abb6a6c0f6b}");
 }
@@ -299,7 +299,7 @@ const QUuid TriangleNormalFilter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleNormalFilter::getSubGroupName() const
+QString TriangleNormalFilter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MiscFilters;
 }
@@ -307,7 +307,7 @@ const QString TriangleNormalFilter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleNormalFilter::getHumanLabel() const
+QString TriangleNormalFilter::getHumanLabel() const
 {
   return "Generate Triangle Normals";
 }
@@ -330,7 +330,7 @@ std::shared_ptr<TriangleNormalFilter> TriangleNormalFilter::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString TriangleNormalFilter::getNameOfClass() const
+QString TriangleNormalFilter::getNameOfClass() const
 {
   return QString("TriangleNormalFilter");
 }

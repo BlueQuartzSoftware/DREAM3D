@@ -847,7 +847,7 @@ AbstractFilter::Pointer SurfaceMeshToVtk::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToVtk::getCompiledLibraryName() const
+QString SurfaceMeshToVtk::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -855,7 +855,7 @@ const QString SurfaceMeshToVtk::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToVtk::getBrandingString() const
+QString SurfaceMeshToVtk::getBrandingString() const
 {
   return "IO";
 }
@@ -863,7 +863,7 @@ const QString SurfaceMeshToVtk::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToVtk::getFilterVersion() const
+QString SurfaceMeshToVtk::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -874,7 +874,7 @@ const QString SurfaceMeshToVtk::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToVtk::getGroupName() const
+QString SurfaceMeshToVtk::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -882,7 +882,7 @@ const QString SurfaceMeshToVtk::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid SurfaceMeshToVtk::getUuid()
+QUuid SurfaceMeshToVtk::getUuid() const
 {
   return QUuid("{f81b48ba-47a4-5808-bcdb-bd7772bf304b}");
 }
@@ -890,7 +890,7 @@ const QUuid SurfaceMeshToVtk::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToVtk::getSubGroupName() const
+QString SurfaceMeshToVtk::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -898,7 +898,7 @@ const QString SurfaceMeshToVtk::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToVtk::getHumanLabel() const
+QString SurfaceMeshToVtk::getHumanLabel() const
 {
   return "Export Vtk PolyData from Triangle Geometry";
 }
@@ -921,7 +921,7 @@ std::shared_ptr<SurfaceMeshToVtk> SurfaceMeshToVtk::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToVtk::getNameOfClass() const
+QString SurfaceMeshToVtk::getNameOfClass() const
 {
   return QString("SurfaceMeshToVtk");
 }

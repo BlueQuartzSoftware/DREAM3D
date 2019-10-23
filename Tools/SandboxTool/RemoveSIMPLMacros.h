@@ -573,7 +573,7 @@ public:
       QString superClassName = tokens[1].trimmed();
 
       pubCodeOut << "    /**\n    * @brief Returns the name of the class for " << className << "\n    */\n";
-      pubCodeOut << "    const QString getNameOfClass() const override;\n";
+      pubCodeOut << "    QString getNameOfClass() const override;\n";
       pubCodeOut << "    /**\n    * @brief Returns the name of the class for " << className << "\n    */\n";
       pubCodeOut << "    static QString ClassName();\n";
 
@@ -620,7 +620,7 @@ public:
       QString className = tokens[0].trimmed();
 
       pubCodeOut << "    /**\n    * @brief Returns the name of the class for " << className << "\n    */\n";
-      pubCodeOut << "    const QString getNameOfClass() const;\n";
+      pubCodeOut << "    QString getNameOfClass() const;\n";
       pubCodeOut << "    /**\n    * @brief Returns the name of the class for " << className << "\n    */\n";
       pubCodeOut << "    static QString ClassName();\n";
 
@@ -669,7 +669,7 @@ public:
       pubCodeOut << "    /**\n    * @brief Returns the name of the class for " << className << "\n    */\n";
 
       pubCodeOut << "    /**\n    * @brief Returns the name of the class for " << className << "\n    */\n";
-      pubCodeOut << "    const QString getNameOfClass() const\n";
+      pubCodeOut << "    QString getNameOfClass() const\n";
       pubCodeOut << "    {\n";
       pubCodeOut << "      return QString(\"" << className << "\");\n";
       pubCodeOut << "    }\n\n";

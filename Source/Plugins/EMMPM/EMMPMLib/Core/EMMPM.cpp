@@ -319,7 +319,7 @@ void EMMPM::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EMMPM::getHumanLabel() const
+QString EMMPM::getHumanLabel() const
 {
   return "EMMPM";
 }
@@ -338,7 +338,7 @@ EMMPM::Pointer EMMPM::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString EMMPM::getNameOfClass() const
+QString EMMPM::getNameOfClass() const
 {
   return QString("EMMPM");
 }

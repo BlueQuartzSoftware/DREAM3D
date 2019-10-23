@@ -686,7 +686,7 @@ AbstractFilter::Pointer RotateSampleRefFrame::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateSampleRefFrame::getCompiledLibraryName() const
+QString RotateSampleRefFrame::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -694,7 +694,7 @@ const QString RotateSampleRefFrame::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateSampleRefFrame::getBrandingString() const
+QString RotateSampleRefFrame::getBrandingString() const
 {
   return "Sampling";
 }
@@ -702,7 +702,7 @@ const QString RotateSampleRefFrame::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateSampleRefFrame::getFilterVersion() const
+QString RotateSampleRefFrame::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -712,7 +712,7 @@ const QString RotateSampleRefFrame::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateSampleRefFrame::getGroupName() const
+QString RotateSampleRefFrame::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -720,7 +720,7 @@ const QString RotateSampleRefFrame::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid RotateSampleRefFrame::getUuid()
+QUuid RotateSampleRefFrame::getUuid() const
 {
   return QUuid("{e25d9b4c-2b37-578c-b1de-cf7032b5ef19}");
 }
@@ -728,7 +728,7 @@ const QUuid RotateSampleRefFrame::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateSampleRefFrame::getSubGroupName() const
+QString RotateSampleRefFrame::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::RotationTransformationFilters;
 }
@@ -736,7 +736,7 @@ const QString RotateSampleRefFrame::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateSampleRefFrame::getHumanLabel() const
+QString RotateSampleRefFrame::getHumanLabel() const
 {
   return "Rotate Sample Reference Frame";
 }
@@ -759,7 +759,7 @@ std::shared_ptr<RotateSampleRefFrame> RotateSampleRefFrame::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString RotateSampleRefFrame::getNameOfClass() const
+QString RotateSampleRefFrame::getNameOfClass() const
 {
   return QString("RotateSampleRefFrame");
 }

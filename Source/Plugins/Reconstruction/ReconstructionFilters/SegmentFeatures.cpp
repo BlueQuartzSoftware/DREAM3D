@@ -255,7 +255,7 @@ AbstractFilter::Pointer SegmentFeatures::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SegmentFeatures::getCompiledLibraryName() const
+QString SegmentFeatures::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -263,7 +263,7 @@ const QString SegmentFeatures::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SegmentFeatures::getBrandingString() const
+QString SegmentFeatures::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -271,7 +271,7 @@ const QString SegmentFeatures::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SegmentFeatures::getFilterVersion() const
+QString SegmentFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -281,7 +281,7 @@ const QString SegmentFeatures::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SegmentFeatures::getGroupName() const
+QString SegmentFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -289,7 +289,7 @@ const QString SegmentFeatures::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid SegmentFeatures::getUuid()
+QUuid SegmentFeatures::getUuid() const
 {
   return QUuid("{03fd1d06-a376-5b6e-b103-912dc624f867}");
 }
@@ -297,7 +297,7 @@ const QUuid SegmentFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SegmentFeatures::getSubGroupName() const
+QString SegmentFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;
 }
@@ -305,7 +305,7 @@ const QString SegmentFeatures::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SegmentFeatures::getHumanLabel() const
+QString SegmentFeatures::getHumanLabel() const
 {
   return "Segment Features";
 }
@@ -328,7 +328,7 @@ std::shared_ptr<SegmentFeatures> SegmentFeatures::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString SegmentFeatures::getNameOfClass() const
+QString SegmentFeatures::getNameOfClass() const
 {
   return QString("SegmentFeatures");
 }

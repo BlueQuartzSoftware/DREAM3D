@@ -967,7 +967,7 @@ TriclinicOps::Pointer TriclinicOps::NullPointer()
 }
 
 // -----------------------------------------------------------------------------
-const QString TriclinicOps::getNameOfClass() const
+QString TriclinicOps::getNameOfClass() const
 {
   return QString("TriclinicOps");
 }

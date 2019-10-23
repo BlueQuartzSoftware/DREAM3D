@@ -61,7 +61,7 @@ class OrientationLib_EXPORT TetragonalLowOps : public LaueOps
     /**
     * @brief Returns the name of the class for TetragonalLowOps
     */
-    const QString getNameOfClass() const override;
+    QString getNameOfClass() const override;
     /**
     * @brief Returns the name of the class for TetragonalLowOps
     */

@@ -81,7 +81,7 @@ StatsGeneratorFilterParameter::Pointer StatsGeneratorFilterParameter::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString StatsGeneratorFilterParameter::getNameOfClass() const
+QString StatsGeneratorFilterParameter::getNameOfClass() const
 {
   return QString("StatsGeneratorFilterParameter");
 }

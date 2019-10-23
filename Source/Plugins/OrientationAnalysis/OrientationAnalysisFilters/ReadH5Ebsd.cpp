@@ -1023,7 +1023,7 @@ AbstractFilter::Pointer ReadH5Ebsd::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadH5Ebsd::getCompiledLibraryName() const
+QString ReadH5Ebsd::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -1031,7 +1031,7 @@ const QString ReadH5Ebsd::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadH5Ebsd::getBrandingString() const
+QString ReadH5Ebsd::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -1039,7 +1039,7 @@ const QString ReadH5Ebsd::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadH5Ebsd::getFilterVersion() const
+QString ReadH5Ebsd::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -1049,7 +1049,7 @@ const QString ReadH5Ebsd::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadH5Ebsd::getGroupName() const
+QString ReadH5Ebsd::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -1057,7 +1057,7 @@ const QString ReadH5Ebsd::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ReadH5Ebsd::getUuid()
+QUuid ReadH5Ebsd::getUuid() const
 {
   return QUuid("{4ef7f56b-616e-5a80-9e68-1da8f35ad235}");
 }
@@ -1065,7 +1065,7 @@ const QUuid ReadH5Ebsd::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadH5Ebsd::getSubGroupName() const
+QString ReadH5Ebsd::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -1073,7 +1073,7 @@ const QString ReadH5Ebsd::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadH5Ebsd::getHumanLabel() const
+QString ReadH5Ebsd::getHumanLabel() const
 {
   return "Import H5EBSD File";
 }
@@ -1096,7 +1096,7 @@ std::shared_ptr<ReadH5Ebsd> ReadH5Ebsd::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString ReadH5Ebsd::getNameOfClass() const
+QString ReadH5Ebsd::getNameOfClass() const
 {
   return QString("ReadH5Ebsd");
 }

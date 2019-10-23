@@ -1406,7 +1406,7 @@ AbstractFilter::Pointer DetectEllipsoids::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DetectEllipsoids::getCompiledLibraryName() const
+QString DetectEllipsoids::getCompiledLibraryName() const
 {
   return ProcessingConstants::ProcessingBaseName;
 }
@@ -1414,7 +1414,7 @@ const QString DetectEllipsoids::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DetectEllipsoids::getBrandingString() const
+QString DetectEllipsoids::getBrandingString() const
 {
   return "Processing";
 }
@@ -1422,7 +1422,7 @@ const QString DetectEllipsoids::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DetectEllipsoids::getFilterVersion() const
+QString DetectEllipsoids::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -1433,7 +1433,7 @@ const QString DetectEllipsoids::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DetectEllipsoids::getGroupName() const
+QString DetectEllipsoids::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -1441,7 +1441,7 @@ const QString DetectEllipsoids::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid DetectEllipsoids::getUuid()
+QUuid DetectEllipsoids::getUuid() const
 {
   return QUuid("{14a39c35-8558-58c1-9d00-952396e6632b}");
 }
@@ -1449,7 +1449,7 @@ const QUuid DetectEllipsoids::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DetectEllipsoids::getSubGroupName() const
+QString DetectEllipsoids::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GenerationFilters;
 }
@@ -1457,7 +1457,7 @@ const QString DetectEllipsoids::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DetectEllipsoids::getHumanLabel() const
+QString DetectEllipsoids::getHumanLabel() const
 {
   return "Detect 2D Ellipses";
 }
@@ -1480,7 +1480,7 @@ std::shared_ptr<DetectEllipsoids> DetectEllipsoids::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString DetectEllipsoids::getNameOfClass() const
+QString DetectEllipsoids::getNameOfClass() const
 {
   return QString("DetectEllipsoids");
 }

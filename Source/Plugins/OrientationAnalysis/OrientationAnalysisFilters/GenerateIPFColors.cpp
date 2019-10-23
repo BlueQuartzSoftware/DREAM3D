@@ -367,7 +367,7 @@ AbstractFilter::Pointer GenerateIPFColors::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateIPFColors::getCompiledLibraryName() const
+QString GenerateIPFColors::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -375,7 +375,7 @@ const QString GenerateIPFColors::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateIPFColors::getBrandingString() const
+QString GenerateIPFColors::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -383,7 +383,7 @@ const QString GenerateIPFColors::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateIPFColors::getFilterVersion() const
+QString GenerateIPFColors::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -393,7 +393,7 @@ const QString GenerateIPFColors::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateIPFColors::getGroupName() const
+QString GenerateIPFColors::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -401,7 +401,7 @@ const QString GenerateIPFColors::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid GenerateIPFColors::getUuid()
+QUuid GenerateIPFColors::getUuid() const
 {
   return QUuid("{a50e6532-8075-5de5-ab63-945feb0de7f7}");
 }
@@ -409,7 +409,7 @@ const QUuid GenerateIPFColors::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateIPFColors::getSubGroupName() const
+QString GenerateIPFColors::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -417,7 +417,7 @@ const QString GenerateIPFColors::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateIPFColors::getHumanLabel() const
+QString GenerateIPFColors::getHumanLabel() const
 {
   return "Generate IPF Colors";
 }
@@ -440,7 +440,7 @@ std::shared_ptr<GenerateIPFColors> GenerateIPFColors::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString GenerateIPFColors::getNameOfClass() const
+QString GenerateIPFColors::getNameOfClass() const
 {
   return QString("GenerateIPFColors");
 }

@@ -73,7 +73,7 @@ class SurfaceMeshing_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
     /**
      * @brief Returns the name of the class for VerifyTriangleWinding
      */
-    const QString getNameOfClass() const override;
+    QString getNameOfClass() const override;
     /**
      * @brief Returns the name of the class for VerifyTriangleWinding
      */
@@ -120,22 +120,22 @@ class SurfaceMeshing_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
 
     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-    const QString getCompiledLibraryName() const override;
+    QString getCompiledLibraryName() const override;
     AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
-    const QString getGroupName() const override;
-    const QString getSubGroupName() const override;
+    QString getGroupName() const override;
+    QString getSubGroupName() const override;
 
     /**
      * @brief getUuid Return the unique identifier for this filter.
      * @return A QUuid object.
      */
-    const QUuid getUuid() override;
+    QUuid getUuid() const override;
 
     /**
      * @brief This returns a string that is displayed in the GUI. It should be readable
      * and understandable by humans.
      */
-    const QString getHumanLabel() const override;
+    QString getHumanLabel() const override;
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

@@ -246,7 +246,7 @@ AbstractFilter::Pointer ConvertQuaternion::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertQuaternion::getCompiledLibraryName() const
+QString ConvertQuaternion::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -254,7 +254,7 @@ const QString ConvertQuaternion::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertQuaternion::getBrandingString() const
+QString ConvertQuaternion::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -262,7 +262,7 @@ const QString ConvertQuaternion::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertQuaternion::getFilterVersion() const
+QString ConvertQuaternion::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -273,7 +273,7 @@ const QString ConvertQuaternion::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertQuaternion::getGroupName() const
+QString ConvertQuaternion::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -281,7 +281,7 @@ const QString ConvertQuaternion::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertQuaternion::getSubGroupName() const
+QString ConvertQuaternion::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConversionFilters;
 }
@@ -289,7 +289,7 @@ const QString ConvertQuaternion::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertQuaternion::getHumanLabel() const
+QString ConvertQuaternion::getHumanLabel() const
 {
   return "Convert Quaternion Order";
 }
@@ -297,7 +297,7 @@ const QString ConvertQuaternion::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ConvertQuaternion::getUuid()
+QUuid ConvertQuaternion::getUuid() const
 {
   return QUuid("{439e31b7-3198-5d0d-aef6-65a9e9c1a016}");
 }
@@ -320,7 +320,7 @@ std::shared_ptr<ConvertQuaternion> ConvertQuaternion::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString ConvertQuaternion::getNameOfClass() const
+QString ConvertQuaternion::getNameOfClass() const
 {
   return QString("_SUPERConvertQuaternion");
 }

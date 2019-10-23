@@ -204,7 +204,7 @@ AbstractFilter::Pointer FindCAxisLocations::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindCAxisLocations::getCompiledLibraryName() const
+QString FindCAxisLocations::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -212,7 +212,7 @@ const QString FindCAxisLocations::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindCAxisLocations::getBrandingString() const
+QString FindCAxisLocations::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -220,7 +220,7 @@ const QString FindCAxisLocations::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindCAxisLocations::getFilterVersion() const
+QString FindCAxisLocations::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -230,7 +230,7 @@ const QString FindCAxisLocations::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindCAxisLocations::getGroupName() const
+QString FindCAxisLocations::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -238,7 +238,7 @@ const QString FindCAxisLocations::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindCAxisLocations::getUuid()
+QUuid FindCAxisLocations::getUuid() const
 {
   return QUuid("{68ae7b7e-b9f7-5799-9f82-ce21d0ccd55e}");
 }
@@ -246,7 +246,7 @@ const QUuid FindCAxisLocations::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindCAxisLocations::getSubGroupName() const
+QString FindCAxisLocations::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -254,7 +254,7 @@ const QString FindCAxisLocations::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindCAxisLocations::getHumanLabel() const
+QString FindCAxisLocations::getHumanLabel() const
 {
   return "Find C-Axis Locations";
 }
@@ -277,7 +277,7 @@ std::shared_ptr<FindCAxisLocations> FindCAxisLocations::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindCAxisLocations::getNameOfClass() const
+QString FindCAxisLocations::getNameOfClass() const
 {
   return QString("FindCAxisLocations");
 }

@@ -92,7 +92,7 @@ DistributionAnalysisOps::Pointer DistributionAnalysisOps::NullPointer()
 }
 
 // -----------------------------------------------------------------------------
-const QString DistributionAnalysisOps::getNameOfClass() const
+QString DistributionAnalysisOps::getNameOfClass() const
 {
   return QString("DistributionAnalysisOps");
 }

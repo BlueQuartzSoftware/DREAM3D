@@ -768,7 +768,7 @@ AbstractFilter::Pointer EMsoftSO3Sampler::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EMsoftSO3Sampler::getCompiledLibraryName() const
+QString EMsoftSO3Sampler::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -776,7 +776,7 @@ const QString EMsoftSO3Sampler::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EMsoftSO3Sampler::getBrandingString() const
+QString EMsoftSO3Sampler::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -784,7 +784,7 @@ const QString EMsoftSO3Sampler::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EMsoftSO3Sampler::getFilterVersion() const
+QString EMsoftSO3Sampler::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -795,7 +795,7 @@ const QString EMsoftSO3Sampler::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EMsoftSO3Sampler::getGroupName() const
+QString EMsoftSO3Sampler::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -803,7 +803,7 @@ const QString EMsoftSO3Sampler::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid EMsoftSO3Sampler::getUuid()
+QUuid EMsoftSO3Sampler::getUuid() const
 {
   return QUuid("{b78d8825-d3ac-5351-be20-172f07fd2aec}");
 }
@@ -811,7 +811,7 @@ const QUuid EMsoftSO3Sampler::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EMsoftSO3Sampler::getSubGroupName() const
+QString EMsoftSO3Sampler::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -819,7 +819,7 @@ const QString EMsoftSO3Sampler::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EMsoftSO3Sampler::getHumanLabel() const
+QString EMsoftSO3Sampler::getHumanLabel() const
 {
   return "SO3 Angle Sampler";
 }
@@ -842,7 +842,7 @@ std::shared_ptr<EMsoftSO3Sampler> EMsoftSO3Sampler::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString EMsoftSO3Sampler::getNameOfClass() const
+QString EMsoftSO3Sampler::getNameOfClass() const
 {
   return QString("EMsoftSO3Sampler");
 }

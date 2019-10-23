@@ -725,7 +725,7 @@ AbstractFilter::Pointer FindTriangleGeomShapes::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomShapes::getCompiledLibraryName() const
+QString FindTriangleGeomShapes::getCompiledLibraryName() const
 {
 	return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -733,7 +733,7 @@ const QString FindTriangleGeomShapes::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomShapes::getBrandingString() const
+QString FindTriangleGeomShapes::getBrandingString() const
 {
   return "Statistics";
 }
@@ -741,7 +741,7 @@ const QString FindTriangleGeomShapes::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomShapes::getFilterVersion() const
+QString FindTriangleGeomShapes::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -751,7 +751,7 @@ const QString FindTriangleGeomShapes::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomShapes::getGroupName() const
+QString FindTriangleGeomShapes::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -759,7 +759,7 @@ const QString FindTriangleGeomShapes::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindTriangleGeomShapes::getUuid()
+QUuid FindTriangleGeomShapes::getUuid() const
 {
   return QUuid("{26765457-89fb-5686-87f6-878ca549f0df}");
 }
@@ -767,7 +767,7 @@ const QUuid FindTriangleGeomShapes::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomShapes::getSubGroupName() const
+QString FindTriangleGeomShapes::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -775,7 +775,7 @@ const QString FindTriangleGeomShapes::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomShapes::getHumanLabel() const
+QString FindTriangleGeomShapes::getHumanLabel() const
 {
   return "Find Feature Shapes from Triangle Geometry";
 }
@@ -798,7 +798,7 @@ std::shared_ptr<FindTriangleGeomShapes> FindTriangleGeomShapes::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomShapes::getNameOfClass() const
+QString FindTriangleGeomShapes::getNameOfClass() const
 {
   return QString("FindTriangleGeomShapes");
 }

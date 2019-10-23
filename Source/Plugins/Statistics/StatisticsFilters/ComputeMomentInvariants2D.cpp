@@ -316,7 +316,7 @@ AbstractFilter::Pointer ComputeMomentInvariants2D::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeMomentInvariants2D::getCompiledLibraryName() const
+QString ComputeMomentInvariants2D::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -324,7 +324,7 @@ const QString ComputeMomentInvariants2D::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeMomentInvariants2D::getBrandingString() const
+QString ComputeMomentInvariants2D::getBrandingString() const
 {
   return "Statistics";
 }
@@ -332,7 +332,7 @@ const QString ComputeMomentInvariants2D::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeMomentInvariants2D::getFilterVersion() const
+QString ComputeMomentInvariants2D::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -343,7 +343,7 @@ const QString ComputeMomentInvariants2D::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeMomentInvariants2D::getGroupName() const
+QString ComputeMomentInvariants2D::getGroupName() const
 {
   return SIMPL::FilterGroups::Unsupported;
 }
@@ -351,7 +351,7 @@ const QString ComputeMomentInvariants2D::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ComputeMomentInvariants2D::getUuid()
+QUuid ComputeMomentInvariants2D::getUuid() const
 {
   return QUuid("{27a132b2-a592-519a-8cb7-38599a7f28ec}");
 }
@@ -359,7 +359,7 @@ const QUuid ComputeMomentInvariants2D::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeMomentInvariants2D::getSubGroupName() const
+QString ComputeMomentInvariants2D::getSubGroupName() const
 {
   return "Statistics";
 }
@@ -367,7 +367,7 @@ const QString ComputeMomentInvariants2D::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeMomentInvariants2D::getHumanLabel() const
+QString ComputeMomentInvariants2D::getHumanLabel() const
 {
   return "Compute MomentInvariants (2D)";
 }
@@ -390,7 +390,7 @@ std::shared_ptr<ComputeMomentInvariants2D> ComputeMomentInvariants2D::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString ComputeMomentInvariants2D::getNameOfClass() const
+QString ComputeMomentInvariants2D::getNameOfClass() const
 {
   return QString("ComputeMomentInvariants2D");
 }

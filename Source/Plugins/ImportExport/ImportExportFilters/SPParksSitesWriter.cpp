@@ -274,7 +274,7 @@ AbstractFilter::Pointer SPParksSitesWriter::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksSitesWriter::getCompiledLibraryName() const
+QString SPParksSitesWriter::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -282,7 +282,7 @@ const QString SPParksSitesWriter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksSitesWriter::getBrandingString() const
+QString SPParksSitesWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -290,7 +290,7 @@ const QString SPParksSitesWriter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksSitesWriter::getFilterVersion() const
+QString SPParksSitesWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -300,7 +300,7 @@ const QString SPParksSitesWriter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksSitesWriter::getGroupName() const
+QString SPParksSitesWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -308,7 +308,7 @@ const QString SPParksSitesWriter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid SPParksSitesWriter::getUuid()
+QUuid SPParksSitesWriter::getUuid() const
 {
   return QUuid("{bcf2f246-610f-5575-a434-241d04114b9f}");
 }
@@ -316,7 +316,7 @@ const QUuid SPParksSitesWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksSitesWriter::getSubGroupName() const
+QString SPParksSitesWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -324,7 +324,7 @@ const QString SPParksSitesWriter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksSitesWriter::getHumanLabel() const
+QString SPParksSitesWriter::getHumanLabel() const
 {
   return "Export SPParks Sites File";
 }
@@ -347,7 +347,7 @@ std::shared_ptr<SPParksSitesWriter> SPParksSitesWriter::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString SPParksSitesWriter::getNameOfClass() const
+QString SPParksSitesWriter::getNameOfClass() const
 {
   return QString("SPParksSitesWriter");
 }

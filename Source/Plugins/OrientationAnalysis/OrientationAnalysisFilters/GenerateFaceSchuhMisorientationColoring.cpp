@@ -365,7 +365,7 @@ AbstractFilter::Pointer GenerateFaceSchuhMisorientationColoring::newFilterInstan
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceSchuhMisorientationColoring::getCompiledLibraryName() const
+QString GenerateFaceSchuhMisorientationColoring::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -373,7 +373,7 @@ const QString GenerateFaceSchuhMisorientationColoring::getCompiledLibraryName() 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceSchuhMisorientationColoring::getBrandingString() const
+QString GenerateFaceSchuhMisorientationColoring::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -381,7 +381,7 @@ const QString GenerateFaceSchuhMisorientationColoring::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceSchuhMisorientationColoring::getFilterVersion() const
+QString GenerateFaceSchuhMisorientationColoring::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -392,7 +392,7 @@ const QString GenerateFaceSchuhMisorientationColoring::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceSchuhMisorientationColoring::getGroupName() const
+QString GenerateFaceSchuhMisorientationColoring::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -400,7 +400,7 @@ const QString GenerateFaceSchuhMisorientationColoring::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid GenerateFaceSchuhMisorientationColoring::getUuid()
+QUuid GenerateFaceSchuhMisorientationColoring::getUuid() const
 {
   return QUuid("{0850a882-ca6f-52c6-aa0b-885359b84c32}");
 }
@@ -408,7 +408,7 @@ const QUuid GenerateFaceSchuhMisorientationColoring::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceSchuhMisorientationColoring::getSubGroupName() const
+QString GenerateFaceSchuhMisorientationColoring::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -416,7 +416,7 @@ const QString GenerateFaceSchuhMisorientationColoring::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceSchuhMisorientationColoring::getHumanLabel() const
+QString GenerateFaceSchuhMisorientationColoring::getHumanLabel() const
 {
   return "Generate Face Schuh Misorientation Colors";
 }
@@ -439,7 +439,7 @@ std::shared_ptr<GenerateFaceSchuhMisorientationColoring> GenerateFaceSchuhMisori
 }
 
 // -----------------------------------------------------------------------------
-const QString GenerateFaceSchuhMisorientationColoring::getNameOfClass() const
+QString GenerateFaceSchuhMisorientationColoring::getNameOfClass() const
 {
   return QString("GenerateFaceSchuhMisorientationColoring");
 }

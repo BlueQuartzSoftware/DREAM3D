@@ -77,7 +77,7 @@ public:
   /**
    * @brief Returns the name of the class for M3CEntireVolume
    */
-  const QString getNameOfClass() const override;
+  QString getNameOfClass() const override;
   /**
    * @brief Returns the name of the class for M3CEntireVolume
    */

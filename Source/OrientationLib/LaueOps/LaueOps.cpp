@@ -439,7 +439,7 @@ LaueOps::Pointer LaueOps::NullPointer()
 }
 
 // -----------------------------------------------------------------------------
-const QString LaueOps::getNameOfClass() const
+QString LaueOps::getNameOfClass() const
 {
   return QString("LaueOps");
 }

@@ -334,7 +334,7 @@ AbstractFilter::Pointer IdentifySample::newFilterInstance(bool copyFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifySample::getCompiledLibraryName() const
+QString IdentifySample::getCompiledLibraryName() const
 {
   return ProcessingConstants::ProcessingBaseName;
 }
@@ -342,7 +342,7 @@ const QString IdentifySample::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifySample::getBrandingString() const
+QString IdentifySample::getBrandingString() const
 {
   return "Processing";
 }
@@ -350,7 +350,7 @@ const QString IdentifySample::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifySample::getFilterVersion() const
+QString IdentifySample::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -361,7 +361,7 @@ const QString IdentifySample::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifySample::getGroupName() const
+QString IdentifySample::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -369,7 +369,7 @@ const QString IdentifySample::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid IdentifySample::getUuid()
+QUuid IdentifySample::getUuid() const
 {
   return QUuid("{0e8c0818-a3fb-57d4-a5c8-7cb8ae54a40a}");
 }
@@ -377,7 +377,7 @@ const QUuid IdentifySample::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifySample::getSubGroupName() const
+QString IdentifySample::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CleanupFilters;
 }
@@ -385,7 +385,7 @@ const QString IdentifySample::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifySample::getHumanLabel() const
+QString IdentifySample::getHumanLabel() const
 {
   return "Isolate Largest Feature (Identify Sample)";
 }
@@ -408,7 +408,7 @@ std::shared_ptr<IdentifySample> IdentifySample::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString IdentifySample::getNameOfClass() const
+QString IdentifySample::getNameOfClass() const
 {
   return QString("IdentifySample");
 }

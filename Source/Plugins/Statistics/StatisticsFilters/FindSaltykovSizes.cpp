@@ -446,7 +446,7 @@ AbstractFilter::Pointer FindSaltykovSizes::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSaltykovSizes::getCompiledLibraryName() const
+QString FindSaltykovSizes::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -454,7 +454,7 @@ const QString FindSaltykovSizes::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSaltykovSizes::getBrandingString() const
+QString FindSaltykovSizes::getBrandingString() const
 {
   return "Statistics";
 }
@@ -462,7 +462,7 @@ const QString FindSaltykovSizes::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSaltykovSizes::getFilterVersion() const
+QString FindSaltykovSizes::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -473,7 +473,7 @@ const QString FindSaltykovSizes::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSaltykovSizes::getGroupName() const
+QString FindSaltykovSizes::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -481,7 +481,7 @@ const QString FindSaltykovSizes::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindSaltykovSizes::getUuid()
+QUuid FindSaltykovSizes::getUuid() const
 {
   return QUuid("{cc76cffe-81ad-5ece-be2a-ce127c5fa6d7}");
 }
@@ -489,7 +489,7 @@ const QUuid FindSaltykovSizes::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSaltykovSizes::getSubGroupName() const
+QString FindSaltykovSizes::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -497,7 +497,7 @@ const QString FindSaltykovSizes::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSaltykovSizes::getHumanLabel() const
+QString FindSaltykovSizes::getHumanLabel() const
 {
   return "Find Feature Saltykov Sizes";
 }
@@ -520,7 +520,7 @@ std::shared_ptr<FindSaltykovSizes> FindSaltykovSizes::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindSaltykovSizes::getNameOfClass() const
+QString FindSaltykovSizes::getNameOfClass() const
 {
   return QString("FindSaltykovSizes");
 }

@@ -711,7 +711,7 @@ AbstractFilter::Pointer SPParksDumpReader::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksDumpReader::getCompiledLibraryName() const
+QString SPParksDumpReader::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -719,7 +719,7 @@ const QString SPParksDumpReader::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksDumpReader::getBrandingString() const
+QString SPParksDumpReader::getBrandingString() const
 {
   return "IO";
 }
@@ -727,7 +727,7 @@ const QString SPParksDumpReader::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksDumpReader::getFilterVersion() const
+QString SPParksDumpReader::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -737,7 +737,7 @@ const QString SPParksDumpReader::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksDumpReader::getGroupName() const
+QString SPParksDumpReader::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -745,7 +745,7 @@ const QString SPParksDumpReader::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid SPParksDumpReader::getUuid()
+QUuid SPParksDumpReader::getUuid() const
 {
   return QUuid("{48db4da6-19c3-52a4-894f-776f3a57362e}");
 }
@@ -753,7 +753,7 @@ const QUuid SPParksDumpReader::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksDumpReader::getSubGroupName() const
+QString SPParksDumpReader::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -761,7 +761,7 @@ const QString SPParksDumpReader::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksDumpReader::getHumanLabel() const
+QString SPParksDumpReader::getHumanLabel() const
 {
   return "Import SPParks Dump File";
 }
@@ -784,7 +784,7 @@ std::shared_ptr<SPParksDumpReader> SPParksDumpReader::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString SPParksDumpReader::getNameOfClass() const
+QString SPParksDumpReader::getNameOfClass() const
 {
   return QString("SPParksDumpReader");
 }

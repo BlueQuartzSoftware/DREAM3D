@@ -222,7 +222,7 @@ AbstractFilter::Pointer ImportH5EspritData::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportH5EspritData::getFilterVersion() const
+QString ImportH5EspritData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -233,7 +233,7 @@ const QString ImportH5EspritData::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ImportH5EspritData::getUuid()
+QUuid ImportH5EspritData::getUuid() const
 {
   return QUuid("{8abdea7d-f715-5a24-8165-7f946bbc2fe9}");
 }
@@ -241,7 +241,7 @@ const QUuid ImportH5EspritData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportH5EspritData::getHumanLabel() const
+QString ImportH5EspritData::getHumanLabel() const
 {
   return "Import Bruker Nano Esprit Data (.h5)";
 }
@@ -766,7 +766,7 @@ std::shared_ptr<ImportH5EspritData> ImportH5EspritData::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString ImportH5EspritData::getNameOfClass() const
+QString ImportH5EspritData::getNameOfClass() const
 {
   return QString("ImportH5EspritData");
 }

@@ -634,7 +634,7 @@ AbstractFilter::Pointer GeneratePrimaryStatsData::newFilterInstance(bool copyFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrimaryStatsData::getCompiledLibraryName() const
+QString GeneratePrimaryStatsData::getCompiledLibraryName() const
 {
   return SyntheticBuildingConstants::SyntheticBuildingBaseName;
 }
@@ -642,7 +642,7 @@ const QString GeneratePrimaryStatsData::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrimaryStatsData::getBrandingString() const
+QString GeneratePrimaryStatsData::getBrandingString() const
 {
   return "StatsGenerator";
 }
@@ -650,7 +650,7 @@ const QString GeneratePrimaryStatsData::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrimaryStatsData::getFilterVersion() const
+QString GeneratePrimaryStatsData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -661,7 +661,7 @@ const QString GeneratePrimaryStatsData::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrimaryStatsData::getGroupName() const
+QString GeneratePrimaryStatsData::getGroupName() const
 {
   return SIMPL::FilterGroups::Unsupported;
 }
@@ -669,7 +669,7 @@ const QString GeneratePrimaryStatsData::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid GeneratePrimaryStatsData::getUuid()
+QUuid GeneratePrimaryStatsData::getUuid() const
 {
   return QUuid("{383f0e2a-c82e-5f7e-a904-156828b42314}");
 }
@@ -677,7 +677,7 @@ const QUuid GeneratePrimaryStatsData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrimaryStatsData::getSubGroupName() const
+QString GeneratePrimaryStatsData::getSubGroupName() const
 {
   return "StatsGenerator";
 }
@@ -685,7 +685,7 @@ const QString GeneratePrimaryStatsData::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrimaryStatsData::getHumanLabel() const
+QString GeneratePrimaryStatsData::getHumanLabel() const
 {
   return "Generate Primary StatsData";
 }
@@ -708,7 +708,7 @@ std::shared_ptr<GeneratePrimaryStatsData> GeneratePrimaryStatsData::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString GeneratePrimaryStatsData::getNameOfClass() const
+QString GeneratePrimaryStatsData::getNameOfClass() const
 {
   return QString("GeneratePrimaryStatsData");
 }

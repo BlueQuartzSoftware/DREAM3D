@@ -917,7 +917,7 @@ AbstractFilter::Pointer SurfaceMeshToNonconformalVtk::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToNonconformalVtk::getCompiledLibraryName() const
+QString SurfaceMeshToNonconformalVtk::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -925,7 +925,7 @@ const QString SurfaceMeshToNonconformalVtk::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToNonconformalVtk::getBrandingString() const
+QString SurfaceMeshToNonconformalVtk::getBrandingString() const
 {
   return "IO";
 }
@@ -933,7 +933,7 @@ const QString SurfaceMeshToNonconformalVtk::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToNonconformalVtk::getFilterVersion() const
+QString SurfaceMeshToNonconformalVtk::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -944,7 +944,7 @@ const QString SurfaceMeshToNonconformalVtk::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToNonconformalVtk::getGroupName() const
+QString SurfaceMeshToNonconformalVtk::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -952,7 +952,7 @@ const QString SurfaceMeshToNonconformalVtk::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid SurfaceMeshToNonconformalVtk::getUuid()
+QUuid SurfaceMeshToNonconformalVtk::getUuid() const
 {
   return QUuid("{55247df8-612a-5303-ac03-09f18f7fbf2b}");
 }
@@ -960,7 +960,7 @@ const QUuid SurfaceMeshToNonconformalVtk::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToNonconformalVtk::getSubGroupName() const
+QString SurfaceMeshToNonconformalVtk::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -968,7 +968,7 @@ const QString SurfaceMeshToNonconformalVtk::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToNonconformalVtk::getHumanLabel() const
+QString SurfaceMeshToNonconformalVtk::getHumanLabel() const
 {
   return "Export Vtk PolyData (NonConformal) from SurfaceMesh";
 }
@@ -991,7 +991,7 @@ std::shared_ptr<SurfaceMeshToNonconformalVtk> SurfaceMeshToNonconformalVtk::New(
 }
 
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToNonconformalVtk::getNameOfClass() const
+QString SurfaceMeshToNonconformalVtk::getNameOfClass() const
 {
   return QString("SurfaceMeshToNonconformalVtk");
 }

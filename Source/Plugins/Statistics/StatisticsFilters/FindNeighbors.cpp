@@ -458,7 +458,7 @@ AbstractFilter::Pointer FindNeighbors::newFilterInstance(bool copyFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighbors::getCompiledLibraryName() const
+QString FindNeighbors::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -466,7 +466,7 @@ const QString FindNeighbors::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighbors::getBrandingString() const
+QString FindNeighbors::getBrandingString() const
 {
   return "Statistics";
 }
@@ -474,7 +474,7 @@ const QString FindNeighbors::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighbors::getFilterVersion() const
+QString FindNeighbors::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -484,7 +484,7 @@ const QString FindNeighbors::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighbors::getGroupName() const
+QString FindNeighbors::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -492,7 +492,7 @@ const QString FindNeighbors::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindNeighbors::getUuid()
+QUuid FindNeighbors::getUuid() const
 {
   return QUuid("{97cf66f8-7a9b-5ec2-83eb-f8c4c8a17bac}");
 }
@@ -500,7 +500,7 @@ const QUuid FindNeighbors::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighbors::getSubGroupName() const
+QString FindNeighbors::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -508,7 +508,7 @@ const QString FindNeighbors::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighbors::getHumanLabel() const
+QString FindNeighbors::getHumanLabel() const
 {
   return "Find Feature Neighbors";
 }
@@ -531,7 +531,7 @@ std::shared_ptr<FindNeighbors> FindNeighbors::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindNeighbors::getNameOfClass() const
+QString FindNeighbors::getNameOfClass() const
 {
   return QString("FindNeighbors");
 }

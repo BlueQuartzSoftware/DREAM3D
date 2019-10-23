@@ -455,7 +455,7 @@ AbstractFilter::Pointer EnsembleInfoReader::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EnsembleInfoReader::getCompiledLibraryName() const
+QString EnsembleInfoReader::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -463,7 +463,7 @@ const QString EnsembleInfoReader::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EnsembleInfoReader::getBrandingString() const
+QString EnsembleInfoReader::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -471,7 +471,7 @@ const QString EnsembleInfoReader::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EnsembleInfoReader::getFilterVersion() const
+QString EnsembleInfoReader::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -482,7 +482,7 @@ const QString EnsembleInfoReader::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EnsembleInfoReader::getGroupName() const
+QString EnsembleInfoReader::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -490,7 +490,7 @@ const QString EnsembleInfoReader::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid EnsembleInfoReader::getUuid()
+QUuid EnsembleInfoReader::getUuid() const
 {
   return QUuid("{33a37a47-d002-5c18-b270-86025881fe1e}");
 }
@@ -498,7 +498,7 @@ const QUuid EnsembleInfoReader::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EnsembleInfoReader::getSubGroupName() const
+QString EnsembleInfoReader::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -506,7 +506,7 @@ const QString EnsembleInfoReader::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EnsembleInfoReader::getHumanLabel() const
+QString EnsembleInfoReader::getHumanLabel() const
 {
   return "Import Ensemble Info File";
 }
@@ -529,7 +529,7 @@ std::shared_ptr<EnsembleInfoReader> EnsembleInfoReader::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString EnsembleInfoReader::getNameOfClass() const
+QString EnsembleInfoReader::getNameOfClass() const
 {
   return QString("EnsembleInfoReader");
 }

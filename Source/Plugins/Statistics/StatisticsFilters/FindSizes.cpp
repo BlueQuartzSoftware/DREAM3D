@@ -401,7 +401,7 @@ AbstractFilter::Pointer FindSizes::newFilterInstance(bool copyFilterParameters) 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSizes::getCompiledLibraryName() const
+QString FindSizes::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -409,7 +409,7 @@ const QString FindSizes::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSizes::getBrandingString() const
+QString FindSizes::getBrandingString() const
 {
   return "Statistics";
 }
@@ -417,7 +417,7 @@ const QString FindSizes::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSizes::getFilterVersion() const
+QString FindSizes::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -428,7 +428,7 @@ const QString FindSizes::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSizes::getGroupName() const
+QString FindSizes::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -436,7 +436,7 @@ const QString FindSizes::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindSizes::getUuid()
+QUuid FindSizes::getUuid() const
 {
   return QUuid("{656f144c-a120-5c3b-bee5-06deab438588}");
 }
@@ -444,7 +444,7 @@ const QUuid FindSizes::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSizes::getSubGroupName() const
+QString FindSizes::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -452,7 +452,7 @@ const QString FindSizes::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSizes::getHumanLabel() const
+QString FindSizes::getHumanLabel() const
 {
   return "Find Feature Sizes";
 }
@@ -475,7 +475,7 @@ std::shared_ptr<FindSizes> FindSizes::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindSizes::getNameOfClass() const
+QString FindSizes::getNameOfClass() const
 {
   return QString("FindSizes");
 }

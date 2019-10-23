@@ -289,7 +289,7 @@ AbstractFilter::Pointer FindLargestCrossSections::newFilterInstance(bool copyFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindLargestCrossSections::getCompiledLibraryName() const
+QString FindLargestCrossSections::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -297,7 +297,7 @@ const QString FindLargestCrossSections::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindLargestCrossSections::getBrandingString() const
+QString FindLargestCrossSections::getBrandingString() const
 {
   return "Statistics";
 }
@@ -305,7 +305,7 @@ const QString FindLargestCrossSections::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindLargestCrossSections::getFilterVersion() const
+QString FindLargestCrossSections::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -315,7 +315,7 @@ const QString FindLargestCrossSections::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindLargestCrossSections::getGroupName() const
+QString FindLargestCrossSections::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -323,7 +323,7 @@ const QString FindLargestCrossSections::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindLargestCrossSections::getUuid()
+QUuid FindLargestCrossSections::getUuid() const
 {
   return QUuid("{9f77b4a9-6416-5220-a688-115f4e14c90d}");
 }
@@ -331,7 +331,7 @@ const QUuid FindLargestCrossSections::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindLargestCrossSections::getSubGroupName() const
+QString FindLargestCrossSections::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -339,7 +339,7 @@ const QString FindLargestCrossSections::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindLargestCrossSections::getHumanLabel() const
+QString FindLargestCrossSections::getHumanLabel() const
 {
   return "Find Feature Largest Cross-Section Areas";
 }
@@ -362,7 +362,7 @@ std::shared_ptr<FindLargestCrossSections> FindLargestCrossSections::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindLargestCrossSections::getNameOfClass() const
+QString FindLargestCrossSections::getNameOfClass() const
 {
   return QString("FindLargestCrossSections");
 }

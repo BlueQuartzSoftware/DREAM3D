@@ -61,7 +61,7 @@ class OrientationLib_EXPORT OrthoRhombicOps : public LaueOps
     /**
     * @brief Returns the name of the class for OrthoRhombicOps
     */
-    const QString getNameOfClass() const override;
+    QString getNameOfClass() const override;
     /**
     * @brief Returns the name of the class for OrthoRhombicOps
     */

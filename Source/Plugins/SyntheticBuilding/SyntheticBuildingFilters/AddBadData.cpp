@@ -229,7 +229,7 @@ AbstractFilter::Pointer AddBadData::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddBadData::getCompiledLibraryName() const
+QString AddBadData::getCompiledLibraryName() const
 {
   return SyntheticBuildingConstants::SyntheticBuildingBaseName;
 }
@@ -237,7 +237,7 @@ const QString AddBadData::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddBadData::getBrandingString() const
+QString AddBadData::getBrandingString() const
 {
   return "SyntheticBuilding";
 }
@@ -245,7 +245,7 @@ const QString AddBadData::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddBadData::getFilterVersion() const
+QString AddBadData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -255,7 +255,7 @@ const QString AddBadData::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddBadData::getGroupName() const
+QString AddBadData::getGroupName() const
 {
   return SIMPL::FilterGroups::SyntheticBuildingFilters;
 }
@@ -263,7 +263,7 @@ const QString AddBadData::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid AddBadData::getUuid()
+QUuid AddBadData::getUuid() const
 {
   return QUuid("{ac99b706-d1e0-5f78-9246-fbbe1efd93d2}");
 }
@@ -271,7 +271,7 @@ const QUuid AddBadData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddBadData::getSubGroupName() const
+QString AddBadData::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MiscFilters;
 }
@@ -279,7 +279,7 @@ const QString AddBadData::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddBadData::getHumanLabel() const
+QString AddBadData::getHumanLabel() const
 {
   return "Add Bad Data";
 }
@@ -302,7 +302,7 @@ std::shared_ptr<AddBadData> AddBadData::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString AddBadData::getNameOfClass() const
+QString AddBadData::getNameOfClass() const
 {
   return QString("AddBadData");
 }

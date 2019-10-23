@@ -53,7 +53,7 @@ public:
   /**
    * @brief Returns the name of the class for AbstractMessage
    */
-  const QString getNameOfClass() const override
+  QString getNameOfClass() const override
   {
     return QString("GenerateFeatureIds");
   }
@@ -132,11 +132,11 @@ public:
     return m_CellEnsembleAttributeMatrixName;
   }
 
-  const QString getGroupName() const override
+  QString getGroupName() const override
   {
     return "UnitTest";
   }
-  const QString getHumanLabel() const override
+  QString getHumanLabel() const override
   {
     return "Generate Feature Ids";
   }
@@ -264,7 +264,7 @@ public:
   /**
    * @brief Returns the name of the class for AbstractMessage
    */
-  const QString getNameOfClass() const override
+  QString getNameOfClass() const override
   {
     return QString("CreateImageGeomDataContainer");
   }
@@ -331,7 +331,7 @@ public:
    * a different group if you want. The string returned here will be displayed
    * in the GUI for the filter
    */
-  const QString getGroupName() const override
+  QString getGroupName() const override
   {
     return "UnitTest";
   }
@@ -340,7 +340,7 @@ public:
    * @brief This returns a string that is displayed in the GUI. It should be readable
    * and understandable by humans.
    */
-  const QString getHumanLabel() const override
+  QString getHumanLabel() const override
   {
     return "CreateImageGeomDataContainer Filter";
   }

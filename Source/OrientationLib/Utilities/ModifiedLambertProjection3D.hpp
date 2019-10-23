@@ -63,7 +63,7 @@ public:
   /**
    * @brief Returns the name of the class for AbstractMessage
    */
-  const QString getNameOfClass() const
+  QString getNameOfClass() const
   {
     return QString("ModifiedLambertProjection3D<T, K>");
   }

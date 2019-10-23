@@ -407,7 +407,7 @@ AbstractFilter::Pointer RemoveFlaggedFeatures::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RemoveFlaggedFeatures::getCompiledLibraryName() const
+QString RemoveFlaggedFeatures::getCompiledLibraryName() const
 {
   return ProcessingConstants::ProcessingBaseName;
 }
@@ -415,7 +415,7 @@ const QString RemoveFlaggedFeatures::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RemoveFlaggedFeatures::getBrandingString() const
+QString RemoveFlaggedFeatures::getBrandingString() const
 {
   return "Processing";
 }
@@ -423,7 +423,7 @@ const QString RemoveFlaggedFeatures::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RemoveFlaggedFeatures::getFilterVersion() const
+QString RemoveFlaggedFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -433,7 +433,7 @@ const QString RemoveFlaggedFeatures::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RemoveFlaggedFeatures::getGroupName() const
+QString RemoveFlaggedFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -441,7 +441,7 @@ const QString RemoveFlaggedFeatures::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid RemoveFlaggedFeatures::getUuid()
+QUuid RemoveFlaggedFeatures::getUuid() const
 {
   return QUuid("{a8463056-3fa7-530b-847f-7f4cb78b8602}");
 }
@@ -449,7 +449,7 @@ const QUuid RemoveFlaggedFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RemoveFlaggedFeatures::getSubGroupName() const
+QString RemoveFlaggedFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CleanupFilters;
 }
@@ -457,7 +457,7 @@ const QString RemoveFlaggedFeatures::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RemoveFlaggedFeatures::getHumanLabel() const
+QString RemoveFlaggedFeatures::getHumanLabel() const
 {
   return "Remove Flagged Features";
 }
@@ -480,7 +480,7 @@ std::shared_ptr<RemoveFlaggedFeatures> RemoveFlaggedFeatures::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString RemoveFlaggedFeatures::getNameOfClass() const
+QString RemoveFlaggedFeatures::getNameOfClass() const
 {
   return QString("RemoveFlaggedFeatures");
 }

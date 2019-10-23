@@ -50,7 +50,7 @@ class OrientationLib_EXPORT LambertUtilities
     /**
      * @brief Returns the name of the class for LambertUtilities
      */
-    const QString getNameOfClass() const;
+    QString getNameOfClass() const;
     /**
      * @brief Returns the name of the class for LambertUtilities
      */

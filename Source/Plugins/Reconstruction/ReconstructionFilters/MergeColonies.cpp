@@ -715,7 +715,7 @@ AbstractFilter::Pointer MergeColonies::newFilterInstance(bool copyFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MergeColonies::getCompiledLibraryName() const
+QString MergeColonies::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -723,7 +723,7 @@ const QString MergeColonies::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MergeColonies::getBrandingString() const
+QString MergeColonies::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -731,7 +731,7 @@ const QString MergeColonies::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MergeColonies::getFilterVersion() const
+QString MergeColonies::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -741,7 +741,7 @@ const QString MergeColonies::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MergeColonies::getGroupName() const
+QString MergeColonies::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -749,7 +749,7 @@ const QString MergeColonies::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid MergeColonies::getUuid()
+QUuid MergeColonies::getUuid() const
 {
   return QUuid("{2c4a6d83-6a1b-56d8-9f65-9453b28845b9}");
 }
@@ -757,7 +757,7 @@ const QUuid MergeColonies::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MergeColonies::getSubGroupName() const
+QString MergeColonies::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GroupingFilters;
 }
@@ -765,7 +765,7 @@ const QString MergeColonies::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MergeColonies::getHumanLabel() const
+QString MergeColonies::getHumanLabel() const
 {
   return "Merge Colonies";
 }
@@ -788,7 +788,7 @@ std::shared_ptr<MergeColonies> MergeColonies::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString MergeColonies::getNameOfClass() const
+QString MergeColonies::getNameOfClass() const
 {
   return QString("MergeColonies");
 }

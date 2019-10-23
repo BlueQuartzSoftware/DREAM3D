@@ -253,7 +253,7 @@ AbstractFilter::Pointer PhWriter::newFilterInstance(bool copyFilterParameters) c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhWriter::getCompiledLibraryName() const
+QString PhWriter::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -261,7 +261,7 @@ const QString PhWriter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhWriter::getBrandingString() const
+QString PhWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -269,7 +269,7 @@ const QString PhWriter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhWriter::getFilterVersion() const
+QString PhWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -279,7 +279,7 @@ const QString PhWriter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhWriter::getGroupName() const
+QString PhWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -287,7 +287,7 @@ const QString PhWriter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid PhWriter::getUuid()
+QUuid PhWriter::getUuid() const
 {
   return QUuid("{4786a02e-5fe1-58e0-a906-15556b40d5ce}");
 }
@@ -295,7 +295,7 @@ const QUuid PhWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhWriter::getSubGroupName() const
+QString PhWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -303,7 +303,7 @@ const QString PhWriter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhWriter::getHumanLabel() const
+QString PhWriter::getHumanLabel() const
 {
   return "Export Ph File (Feature Ids)";
 }
@@ -326,7 +326,7 @@ std::shared_ptr<PhWriter> PhWriter::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString PhWriter::getNameOfClass() const
+QString PhWriter::getNameOfClass() const
 {
   return QString("PhWriter");
 }

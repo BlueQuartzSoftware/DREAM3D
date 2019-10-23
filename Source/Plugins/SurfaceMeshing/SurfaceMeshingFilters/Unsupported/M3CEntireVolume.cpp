@@ -5233,7 +5233,7 @@ std::shared_ptr<M3CEntireVolume> M3CEntireVolume::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString M3CEntireVolume::getNameOfClass() const
+QString M3CEntireVolume::getNameOfClass() const
 {
   return QString("M3CEntireVolume");
 }

@@ -84,7 +84,7 @@ OrientationUtilityFilterParameter::Pointer OrientationUtilityFilterParameter::Ne
 }
 
 // -----------------------------------------------------------------------------
-const QString OrientationUtilityFilterParameter::getNameOfClass() const
+QString OrientationUtilityFilterParameter::getNameOfClass() const
 {
   return QString("OrientationUtilityFilterParameter");
 }

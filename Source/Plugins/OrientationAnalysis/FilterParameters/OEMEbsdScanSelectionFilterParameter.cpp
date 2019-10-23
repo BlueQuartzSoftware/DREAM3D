@@ -122,7 +122,7 @@ OEMEbsdScanSelectionFilterParameter::Pointer OEMEbsdScanSelectionFilterParameter
 }
 
 // -----------------------------------------------------------------------------
-const QString OEMEbsdScanSelectionFilterParameter::getNameOfClass() const
+QString OEMEbsdScanSelectionFilterParameter::getNameOfClass() const
 {
   return QString("OEMEbsdScanSelectionFilterParameter");
 }

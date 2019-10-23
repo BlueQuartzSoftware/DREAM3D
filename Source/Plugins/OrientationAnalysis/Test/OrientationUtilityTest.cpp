@@ -62,7 +62,7 @@ public:
   /**
    * @brief Returns the name of the class for OrientationUtilityTest
    */
-  const QString getNameOfClass() const
+  QString getNameOfClass() const
   {
     return QString("OrientationUtilityTest");
   }

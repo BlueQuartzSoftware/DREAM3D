@@ -259,7 +259,7 @@ AbstractFilter::Pointer TriangleAreaFilter::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleAreaFilter::getCompiledLibraryName() const
+QString TriangleAreaFilter::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -267,7 +267,7 @@ const QString TriangleAreaFilter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleAreaFilter::getBrandingString() const
+QString TriangleAreaFilter::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -275,7 +275,7 @@ const QString TriangleAreaFilter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleAreaFilter::getFilterVersion() const
+QString TriangleAreaFilter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -285,7 +285,7 @@ const QString TriangleAreaFilter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleAreaFilter::getGroupName() const
+QString TriangleAreaFilter::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -293,7 +293,7 @@ const QString TriangleAreaFilter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid TriangleAreaFilter::getUuid()
+QUuid TriangleAreaFilter::getUuid() const
 {
   return QUuid("{a9900cc3-169e-5a1b-bcf4-7569e1950d41}");
 }
@@ -301,7 +301,7 @@ const QUuid TriangleAreaFilter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleAreaFilter::getSubGroupName() const
+QString TriangleAreaFilter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MiscFilters;
 }
@@ -309,7 +309,7 @@ const QString TriangleAreaFilter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleAreaFilter::getHumanLabel() const
+QString TriangleAreaFilter::getHumanLabel() const
 {
   return "Generate Triangle Areas";
 }
@@ -332,7 +332,7 @@ std::shared_ptr<TriangleAreaFilter> TriangleAreaFilter::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString TriangleAreaFilter::getNameOfClass() const
+QString TriangleAreaFilter::getNameOfClass() const
 {
   return QString("TriangleAreaFilter");
 }

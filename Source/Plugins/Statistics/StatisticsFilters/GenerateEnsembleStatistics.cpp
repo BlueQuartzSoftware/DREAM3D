@@ -1493,7 +1493,7 @@ AbstractFilter::Pointer GenerateEnsembleStatistics::newFilterInstance(bool copyF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEnsembleStatistics::getCompiledLibraryName() const
+QString GenerateEnsembleStatistics::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -1501,7 +1501,7 @@ const QString GenerateEnsembleStatistics::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEnsembleStatistics::getBrandingString() const
+QString GenerateEnsembleStatistics::getBrandingString() const
 {
   return "Statistics";
 }
@@ -1509,7 +1509,7 @@ const QString GenerateEnsembleStatistics::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEnsembleStatistics::getFilterVersion() const
+QString GenerateEnsembleStatistics::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -1519,7 +1519,7 @@ const QString GenerateEnsembleStatistics::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEnsembleStatistics::getGroupName() const
+QString GenerateEnsembleStatistics::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -1527,7 +1527,7 @@ const QString GenerateEnsembleStatistics::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid GenerateEnsembleStatistics::getUuid()
+QUuid GenerateEnsembleStatistics::getUuid() const
 {
   return QUuid("{19a1cb76-6b46-528d-b629-1af5f1d6344c}");
 }
@@ -1535,7 +1535,7 @@ const QUuid GenerateEnsembleStatistics::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEnsembleStatistics::getSubGroupName() const
+QString GenerateEnsembleStatistics::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::EnsembleStatsFilters;
 }
@@ -1543,7 +1543,7 @@ const QString GenerateEnsembleStatistics::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEnsembleStatistics::getHumanLabel() const
+QString GenerateEnsembleStatistics::getHumanLabel() const
 {
   return "Generate Ensemble Statistics";
 }
@@ -1566,7 +1566,7 @@ std::shared_ptr<GenerateEnsembleStatistics> GenerateEnsembleStatistics::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString GenerateEnsembleStatistics::getNameOfClass() const
+QString GenerateEnsembleStatistics::getNameOfClass() const
 {
   return QString("GenerateEnsembleStatistics");
 }

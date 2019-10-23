@@ -187,7 +187,7 @@ AbstractFilter::Pointer FindNumFeatures::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNumFeatures::getCompiledLibraryName() const
+QString FindNumFeatures::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -195,7 +195,7 @@ const QString FindNumFeatures::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNumFeatures::getBrandingString() const
+QString FindNumFeatures::getBrandingString() const
 {
   return "Statistics";
 }
@@ -203,7 +203,7 @@ const QString FindNumFeatures::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNumFeatures::getFilterVersion() const
+QString FindNumFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -213,7 +213,7 @@ const QString FindNumFeatures::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNumFeatures::getGroupName() const
+QString FindNumFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -221,7 +221,7 @@ const QString FindNumFeatures::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindNumFeatures::getUuid()
+QUuid FindNumFeatures::getUuid() const
 {
   return QUuid("{529743cf-d5d5-5d5a-a79f-95c84a5ddbb5}");
 }
@@ -229,7 +229,7 @@ const QUuid FindNumFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNumFeatures::getSubGroupName() const
+QString FindNumFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -237,7 +237,7 @@ const QString FindNumFeatures::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNumFeatures::getHumanLabel() const
+QString FindNumFeatures::getHumanLabel() const
 {
   return "Find Number of Features";
 }
@@ -260,7 +260,7 @@ std::shared_ptr<FindNumFeatures> FindNumFeatures::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindNumFeatures::getNameOfClass() const
+QString FindNumFeatures::getNameOfClass() const
 {
   return QString("FindNumFeatures");
 }

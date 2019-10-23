@@ -404,7 +404,7 @@ InitializationFunction::Pointer InitializationFunction::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString InitializationFunction::getNameOfClass() const
+QString InitializationFunction::getNameOfClass() const
 {
   return QString("InitializationFunction");
 }
@@ -429,7 +429,7 @@ BasicInitialization::Pointer BasicInitialization::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString BasicInitialization::getNameOfClass() const
+QString BasicInitialization::getNameOfClass() const
 {
   return QString("BasicInitialization");
 }
@@ -454,7 +454,7 @@ UserDefinedAreasInitialization::Pointer UserDefinedAreasInitialization::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString UserDefinedAreasInitialization::getNameOfClass() const
+QString UserDefinedAreasInitialization::getNameOfClass() const
 {
   return QString("UserDefinedAreasInitialization");
 }
@@ -479,7 +479,7 @@ XtArrayInitialization::Pointer XtArrayInitialization::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString XtArrayInitialization::getNameOfClass() const
+QString XtArrayInitialization::getNameOfClass() const
 {
   return QString("XtArrayInitialization");
 }
@@ -504,7 +504,7 @@ GradientVariablesInitialization::Pointer GradientVariablesInitialization::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString GradientVariablesInitialization::getNameOfClass() const
+QString GradientVariablesInitialization::getNameOfClass() const
 {
   return QString("GradientVariablesInitialization");
 }
@@ -529,7 +529,7 @@ CurvatureInitialization::Pointer CurvatureInitialization::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString CurvatureInitialization::getNameOfClass() const
+QString CurvatureInitialization::getNameOfClass() const
 {
   return QString("CurvatureInitialization");
 }

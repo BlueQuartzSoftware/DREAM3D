@@ -379,7 +379,7 @@ std::shared_ptr<BinaryNodesTrianglesReader> BinaryNodesTrianglesReader::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString BinaryNodesTrianglesReader::getNameOfClass() const
+QString BinaryNodesTrianglesReader::getNameOfClass() const
 {
   return QString("BinaryNodesTrianglesReader");
 }

@@ -397,7 +397,7 @@ AbstractFilter::Pointer DxWriter::newFilterInstance(bool copyFilterParameters) c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxWriter::getCompiledLibraryName() const
+QString DxWriter::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -405,7 +405,7 @@ const QString DxWriter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxWriter::getBrandingString() const
+QString DxWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -413,7 +413,7 @@ const QString DxWriter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxWriter::getFilterVersion() const
+QString DxWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -423,7 +423,7 @@ const QString DxWriter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxWriter::getGroupName() const
+QString DxWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -431,7 +431,7 @@ const QString DxWriter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid DxWriter::getUuid()
+QUuid DxWriter::getUuid() const
 {
   return QUuid("{9072e51c-632f-5ee5-bf6b-9a90bfac2fcf}");
 }
@@ -439,7 +439,7 @@ const QUuid DxWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxWriter::getSubGroupName() const
+QString DxWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -447,7 +447,7 @@ const QString DxWriter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxWriter::getHumanLabel() const
+QString DxWriter::getHumanLabel() const
 {
   return "Export Dx File (Feature Ids)";
 }
@@ -470,7 +470,7 @@ std::shared_ptr<DxWriter> DxWriter::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString DxWriter::getNameOfClass() const
+QString DxWriter::getNameOfClass() const
 {
   return QString("DxWriter");
 }

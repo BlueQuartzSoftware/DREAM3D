@@ -160,7 +160,7 @@ FindNRingNeighbors::Pointer FindNRingNeighbors::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindNRingNeighbors::getNameOfClass() const
+QString FindNRingNeighbors::getNameOfClass() const
 {
   return QString("FindNRingNeighbors");
 }

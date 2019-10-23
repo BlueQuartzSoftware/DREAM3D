@@ -84,7 +84,7 @@ public:
   /**
    * @brief Returns the name of the class for AngCachingTest
    */
-  const QString getNameOfClass() const
+  QString getNameOfClass() const
   {
     return QString("AngCachingTest");
   }

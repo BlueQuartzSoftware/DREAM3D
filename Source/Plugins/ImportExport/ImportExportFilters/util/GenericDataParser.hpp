@@ -61,7 +61,7 @@ class GenericDataParser
     /**
      * @brief Returns the name of the class for GenericDataParser
      */
-    const QString getNameOfClass() const
+    QString getNameOfClass() const
     {
       return QString("GenericDataParser");
     }
@@ -140,7 +140,7 @@ class GenericInt32Parser : public GenericDataParser
     /**
      * @brief Returns the name of the class for GenericInt32Parser
      */
-    const QString getNameOfClass() const
+    QString getNameOfClass() const
     {
       return QString("GenericInt32Parser");
     }
@@ -221,7 +221,7 @@ class GenericFloatParser : public GenericDataParser
     /**
      * @brief Returns the name of the class for GenericFloatParser
      */
-    const QString getNameOfClass() const
+    QString getNameOfClass() const
     {
       return QString("GenericFloatParser");
     }

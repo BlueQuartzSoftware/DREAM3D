@@ -349,7 +349,7 @@ EMMPM_Data::Pointer EMMPM_Data::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString EMMPM_Data::getNameOfClass() const
+QString EMMPM_Data::getNameOfClass() const
 {
   return QString("EMMPM_Data");
 }

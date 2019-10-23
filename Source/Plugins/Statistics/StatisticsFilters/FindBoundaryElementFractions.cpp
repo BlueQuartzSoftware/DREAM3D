@@ -228,7 +228,7 @@ AbstractFilter::Pointer FindBoundaryElementFractions::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundaryElementFractions::getCompiledLibraryName() const
+QString FindBoundaryElementFractions::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -236,7 +236,7 @@ const QString FindBoundaryElementFractions::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundaryElementFractions::getBrandingString() const
+QString FindBoundaryElementFractions::getBrandingString() const
 {
   return "Statistics";
 }
@@ -244,7 +244,7 @@ const QString FindBoundaryElementFractions::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundaryElementFractions::getFilterVersion() const
+QString FindBoundaryElementFractions::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -254,7 +254,7 @@ const QString FindBoundaryElementFractions::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundaryElementFractions::getGroupName() const
+QString FindBoundaryElementFractions::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -262,7 +262,7 @@ const QString FindBoundaryElementFractions::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindBoundaryElementFractions::getUuid()
+QUuid FindBoundaryElementFractions::getUuid() const
 {
   return QUuid("{6357243e-41a6-52c4-be2d-2f6894c39fcc}");
 }
@@ -270,7 +270,7 @@ const QUuid FindBoundaryElementFractions::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundaryElementFractions::getSubGroupName() const
+QString FindBoundaryElementFractions::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -278,7 +278,7 @@ const QString FindBoundaryElementFractions::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundaryElementFractions::getHumanLabel() const
+QString FindBoundaryElementFractions::getHumanLabel() const
 {
   return "Find Feature Boundary Element Fractions";
 }
@@ -301,7 +301,7 @@ std::shared_ptr<FindBoundaryElementFractions> FindBoundaryElementFractions::New(
 }
 
 // -----------------------------------------------------------------------------
-const QString FindBoundaryElementFractions::getNameOfClass() const
+QString FindBoundaryElementFractions::getNameOfClass() const
 {
   return QString("FindBoundaryElementFractions");
 }

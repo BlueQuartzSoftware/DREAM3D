@@ -245,7 +245,7 @@ AbstractFilter::Pointer RotateEulerRefFrame::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateEulerRefFrame::getCompiledLibraryName() const
+QString RotateEulerRefFrame::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -253,7 +253,7 @@ const QString RotateEulerRefFrame::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateEulerRefFrame::getBrandingString() const
+QString RotateEulerRefFrame::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -261,7 +261,7 @@ const QString RotateEulerRefFrame::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateEulerRefFrame::getFilterVersion() const
+QString RotateEulerRefFrame::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -271,7 +271,7 @@ const QString RotateEulerRefFrame::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateEulerRefFrame::getGroupName() const
+QString RotateEulerRefFrame::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -279,7 +279,7 @@ const QString RotateEulerRefFrame::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid RotateEulerRefFrame::getUuid()
+QUuid RotateEulerRefFrame::getUuid() const
 {
   return QUuid("{ef9420b2-8c46-55f3-8ae4-f53790639de4}");
 }
@@ -287,7 +287,7 @@ const QUuid RotateEulerRefFrame::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateEulerRefFrame::getSubGroupName() const
+QString RotateEulerRefFrame::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConversionFilters;
 }
@@ -295,7 +295,7 @@ const QString RotateEulerRefFrame::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateEulerRefFrame::getHumanLabel() const
+QString RotateEulerRefFrame::getHumanLabel() const
 {
   return "Rotate Euler Reference Frame";
 }
@@ -318,7 +318,7 @@ std::shared_ptr<RotateEulerRefFrame> RotateEulerRefFrame::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString RotateEulerRefFrame::getNameOfClass() const
+QString RotateEulerRefFrame::getNameOfClass() const
 {
   return QString("RotateEulerRefFrame");
 }

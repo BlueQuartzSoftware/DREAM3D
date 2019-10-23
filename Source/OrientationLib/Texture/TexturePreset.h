@@ -69,7 +69,7 @@ class OrientationLib_EXPORT TexturePreset
     /**
      * @brief Returns the name of the class for TexturePreset
      */
-    const QString getNameOfClass() const;
+    QString getNameOfClass() const;
     /**
      * @brief Returns the name of the class for TexturePreset
      */

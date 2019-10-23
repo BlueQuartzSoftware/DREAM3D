@@ -580,7 +580,7 @@ AbstractFilter::Pointer NodesTrianglesToVtk::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToVtk::getCompiledLibraryName() const
+QString NodesTrianglesToVtk::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -588,7 +588,7 @@ const QString NodesTrianglesToVtk::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToVtk::getBrandingString() const
+QString NodesTrianglesToVtk::getBrandingString() const
 {
   return "IO";
 }
@@ -596,7 +596,7 @@ const QString NodesTrianglesToVtk::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToVtk::getFilterVersion() const
+QString NodesTrianglesToVtk::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -607,7 +607,7 @@ const QString NodesTrianglesToVtk::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToVtk::getGroupName() const
+QString NodesTrianglesToVtk::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -615,7 +615,7 @@ const QString NodesTrianglesToVtk::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid NodesTrianglesToVtk::getUuid()
+QUuid NodesTrianglesToVtk::getUuid() const
 {
   return QUuid("{a1d2eddd-6420-53e3-823b-b44d4a5965bb}");
 }
@@ -623,7 +623,7 @@ const QUuid NodesTrianglesToVtk::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToVtk::getSubGroupName() const
+QString NodesTrianglesToVtk::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -631,7 +631,7 @@ const QString NodesTrianglesToVtk::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToVtk::getHumanLabel() const
+QString NodesTrianglesToVtk::getHumanLabel() const
 {
   return "Convert Nodes & Triangles To Vtk";
 }
@@ -654,7 +654,7 @@ std::shared_ptr<NodesTrianglesToVtk> NodesTrianglesToVtk::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToVtk::getNameOfClass() const
+QString NodesTrianglesToVtk::getNameOfClass() const
 {
   return QString("NodesTrianglesToVtk");
 }

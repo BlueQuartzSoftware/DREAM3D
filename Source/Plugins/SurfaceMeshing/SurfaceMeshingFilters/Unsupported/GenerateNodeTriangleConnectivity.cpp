@@ -270,7 +270,7 @@ std::shared_ptr<GenerateNodeTriangleConnectivity> GenerateNodeTriangleConnectivi
 }
 
 // -----------------------------------------------------------------------------
-const QString GenerateNodeTriangleConnectivity::getNameOfClass() const
+QString GenerateNodeTriangleConnectivity::getNameOfClass() const
 {
   return QString("GenerateNodeTriangleConnectivity");
 }

@@ -292,7 +292,7 @@ AbstractFilter::Pointer SharedFeatureFaceFilter::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SharedFeatureFaceFilter::getCompiledLibraryName() const
+QString SharedFeatureFaceFilter::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -300,7 +300,7 @@ const QString SharedFeatureFaceFilter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SharedFeatureFaceFilter::getBrandingString() const
+QString SharedFeatureFaceFilter::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -308,7 +308,7 @@ const QString SharedFeatureFaceFilter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SharedFeatureFaceFilter::getFilterVersion() const
+QString SharedFeatureFaceFilter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -318,7 +318,7 @@ const QString SharedFeatureFaceFilter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SharedFeatureFaceFilter::getGroupName() const
+QString SharedFeatureFaceFilter::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -326,7 +326,7 @@ const QString SharedFeatureFaceFilter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid SharedFeatureFaceFilter::getUuid()
+QUuid SharedFeatureFaceFilter::getUuid() const
 {
   return QUuid("{15c743db-5936-53a2-92cf-edf00526486d}");
 }
@@ -334,7 +334,7 @@ const QUuid SharedFeatureFaceFilter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SharedFeatureFaceFilter::getSubGroupName() const
+QString SharedFeatureFaceFilter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConnectivityArrangementFilters;
 }
@@ -342,7 +342,7 @@ const QString SharedFeatureFaceFilter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SharedFeatureFaceFilter::getHumanLabel() const
+QString SharedFeatureFaceFilter::getHumanLabel() const
 {
   return "Generate Triangle Face Ids";
 }
@@ -365,7 +365,7 @@ std::shared_ptr<SharedFeatureFaceFilter> SharedFeatureFaceFilter::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString SharedFeatureFaceFilter::getNameOfClass() const
+QString SharedFeatureFaceFilter::getNameOfClass() const
 {
   return QString("SharedFeatureFaceFilter");
 }

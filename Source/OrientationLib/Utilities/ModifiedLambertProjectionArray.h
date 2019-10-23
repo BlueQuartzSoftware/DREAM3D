@@ -64,7 +64,7 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
     /**
      * @brief Returns the name of the class for ModifiedLambertProjectionArray
      */
-    const QString getNameOfClass() const override;
+    QString getNameOfClass() const override;
     /**
      * @brief Returns the name of the class for ModifiedLambertProjectionArray
      */

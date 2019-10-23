@@ -752,7 +752,7 @@ ModifiedLambertProjectionArray::Pointer ModifiedLambertProjectionArray::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString ModifiedLambertProjectionArray::getNameOfClass() const
+QString ModifiedLambertProjectionArray::getNameOfClass() const
 {
   return QString("ModifiedLambertProjectionArray");
 }

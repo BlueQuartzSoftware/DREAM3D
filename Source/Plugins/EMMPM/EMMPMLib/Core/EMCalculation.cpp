@@ -313,7 +313,7 @@ void EMCalculation::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EMCalculation::getHumanLabel() const
+QString EMCalculation::getHumanLabel() const
 {
   return "EMCalculation";
 }
@@ -332,7 +332,7 @@ EMCalculation::Pointer EMCalculation::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString EMCalculation::getNameOfClass() const
+QString EMCalculation::getNameOfClass() const
 {
   return QString("EMCalculation");
 }

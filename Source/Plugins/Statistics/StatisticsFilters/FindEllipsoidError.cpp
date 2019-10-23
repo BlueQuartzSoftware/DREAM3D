@@ -387,7 +387,7 @@ AbstractFilter::Pointer FindEllipsoidError::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEllipsoidError::getCompiledLibraryName() const
+QString FindEllipsoidError::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -395,7 +395,7 @@ const QString FindEllipsoidError::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEllipsoidError::getBrandingString() const
+QString FindEllipsoidError::getBrandingString() const
 {
   return "Statistics";
 }
@@ -403,7 +403,7 @@ const QString FindEllipsoidError::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEllipsoidError::getFilterVersion() const
+QString FindEllipsoidError::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -414,7 +414,7 @@ const QString FindEllipsoidError::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEllipsoidError::getGroupName() const
+QString FindEllipsoidError::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -422,7 +422,7 @@ const QString FindEllipsoidError::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindEllipsoidError::getUuid()
+QUuid FindEllipsoidError::getUuid() const
 {
   return QUuid("{583e0789-090a-5de2-b8f6-f3ef5baeab59}");
 }
@@ -430,7 +430,7 @@ const QUuid FindEllipsoidError::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEllipsoidError::getSubGroupName() const
+QString FindEllipsoidError::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -438,7 +438,7 @@ const QString FindEllipsoidError::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEllipsoidError::getHumanLabel() const
+QString FindEllipsoidError::getHumanLabel() const
 {
   return "Find Ellipsoid Error";
 }
@@ -461,7 +461,7 @@ std::shared_ptr<FindEllipsoidError> FindEllipsoidError::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindEllipsoidError::getNameOfClass() const
+QString FindEllipsoidError::getNameOfClass() const
 {
   return QString("FindEllipsoidError");
 }

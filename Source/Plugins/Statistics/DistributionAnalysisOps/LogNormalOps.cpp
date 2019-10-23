@@ -132,7 +132,7 @@ LogNormalOps::Pointer LogNormalOps::NullPointer()
 }
 
 // -----------------------------------------------------------------------------
-const QString LogNormalOps::getNameOfClass() const
+QString LogNormalOps::getNameOfClass() const
 {
   return QString("LogNormalOps");
 }

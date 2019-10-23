@@ -444,7 +444,7 @@ AbstractFilter::Pointer GoldfeatherReader::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GoldfeatherReader::getCompiledLibraryName() const
+QString GoldfeatherReader::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -452,7 +452,7 @@ const QString GoldfeatherReader::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GoldfeatherReader::getBrandingString() const
+QString GoldfeatherReader::getBrandingString() const
 {
   return "IO";
 }
@@ -460,7 +460,7 @@ const QString GoldfeatherReader::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GoldfeatherReader::getFilterVersion() const
+QString GoldfeatherReader::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -471,7 +471,7 @@ const QString GoldfeatherReader::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GoldfeatherReader::getGroupName() const
+QString GoldfeatherReader::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -479,7 +479,7 @@ const QString GoldfeatherReader::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid GoldfeatherReader::getUuid()
+QUuid GoldfeatherReader::getUuid() const
 {
   return QUuid("{0b285734-f268-5c81-aeb0-8bfe7ad73f1f}");
 }
@@ -487,7 +487,7 @@ const QUuid GoldfeatherReader::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GoldfeatherReader::getSubGroupName() const
+QString GoldfeatherReader::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MiscFilters;
 }
@@ -495,7 +495,7 @@ const QString GoldfeatherReader::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GoldfeatherReader::getHumanLabel() const
+QString GoldfeatherReader::getHumanLabel() const
 {
   return "Goldfeather Mesh Importer";
 }
@@ -518,7 +518,7 @@ std::shared_ptr<GoldfeatherReader> GoldfeatherReader::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString GoldfeatherReader::getNameOfClass() const
+QString GoldfeatherReader::getNameOfClass() const
 {
   return QString("GoldfeatherReader");
 }

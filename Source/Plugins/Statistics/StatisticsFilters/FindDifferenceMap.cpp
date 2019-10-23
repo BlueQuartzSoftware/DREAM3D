@@ -324,7 +324,7 @@ AbstractFilter::Pointer FindDifferenceMap::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDifferenceMap::getCompiledLibraryName() const
+QString FindDifferenceMap::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -332,7 +332,7 @@ const QString FindDifferenceMap::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDifferenceMap::getBrandingString() const
+QString FindDifferenceMap::getBrandingString() const
 {
   return "Statistics";
 }
@@ -340,7 +340,7 @@ const QString FindDifferenceMap::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDifferenceMap::getFilterVersion() const
+QString FindDifferenceMap::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -350,7 +350,7 @@ const QString FindDifferenceMap::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDifferenceMap::getGroupName() const
+QString FindDifferenceMap::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -358,7 +358,7 @@ const QString FindDifferenceMap::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDifferenceMap::getHumanLabel() const
+QString FindDifferenceMap::getHumanLabel() const
 {
   return "Find Difference Map";
 }
@@ -366,7 +366,7 @@ const QString FindDifferenceMap::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindDifferenceMap::getUuid()
+QUuid FindDifferenceMap::getUuid() const
 {
   return QUuid("{29086169-20ce-52dc-b13e-824694d759aa}");
 }
@@ -374,7 +374,7 @@ const QUuid FindDifferenceMap::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDifferenceMap::getSubGroupName() const
+QString FindDifferenceMap::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MiscFilters;
 }
@@ -397,7 +397,7 @@ std::shared_ptr<FindDifferenceMap> FindDifferenceMap::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindDifferenceMap::getNameOfClass() const
+QString FindDifferenceMap::getNameOfClass() const
 {
   return QString("FindDifferenceMap");
 }

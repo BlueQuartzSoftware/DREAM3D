@@ -269,7 +269,7 @@ AbstractFilter::Pointer ExtractFlaggedFeatures::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractFlaggedFeatures::getCompiledLibraryName() const
+QString ExtractFlaggedFeatures::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -277,7 +277,7 @@ const QString ExtractFlaggedFeatures::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractFlaggedFeatures::getBrandingString() const
+QString ExtractFlaggedFeatures::getBrandingString() const
 {
   return "Sampling";
 }
@@ -285,7 +285,7 @@ const QString ExtractFlaggedFeatures::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractFlaggedFeatures::getFilterVersion() const
+QString ExtractFlaggedFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -296,7 +296,7 @@ const QString ExtractFlaggedFeatures::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractFlaggedFeatures::getGroupName() const
+QString ExtractFlaggedFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -304,7 +304,7 @@ const QString ExtractFlaggedFeatures::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ExtractFlaggedFeatures::getUuid()
+QUuid ExtractFlaggedFeatures::getUuid() const
 {
   return QUuid("{e0555de5-bdc6-5bea-ba2f-aacfbec0a022}");
 }
@@ -312,7 +312,7 @@ const QUuid ExtractFlaggedFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractFlaggedFeatures::getSubGroupName() const
+QString ExtractFlaggedFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CropCutFilters;
 }
@@ -320,7 +320,7 @@ const QString ExtractFlaggedFeatures::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractFlaggedFeatures::getHumanLabel() const
+QString ExtractFlaggedFeatures::getHumanLabel() const
 {
   return "Extract Flagged Features (Rogues Gallery)";
 }
@@ -343,7 +343,7 @@ std::shared_ptr<ExtractFlaggedFeatures> ExtractFlaggedFeatures::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString ExtractFlaggedFeatures::getNameOfClass() const
+QString ExtractFlaggedFeatures::getNameOfClass() const
 {
   return QString("ExtractFlaggedFeatures");
 }

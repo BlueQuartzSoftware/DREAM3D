@@ -341,7 +341,7 @@ AbstractFilter::Pointer FindKernelAvgMisorientations::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindKernelAvgMisorientations::getCompiledLibraryName() const
+QString FindKernelAvgMisorientations::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -349,7 +349,7 @@ const QString FindKernelAvgMisorientations::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindKernelAvgMisorientations::getBrandingString() const
+QString FindKernelAvgMisorientations::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -357,7 +357,7 @@ const QString FindKernelAvgMisorientations::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindKernelAvgMisorientations::getFilterVersion() const
+QString FindKernelAvgMisorientations::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -367,7 +367,7 @@ const QString FindKernelAvgMisorientations::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindKernelAvgMisorientations::getGroupName() const
+QString FindKernelAvgMisorientations::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -375,7 +375,7 @@ const QString FindKernelAvgMisorientations::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindKernelAvgMisorientations::getUuid()
+QUuid FindKernelAvgMisorientations::getUuid() const
 {
   return QUuid("{88d332c1-cf6c-52d3-a38d-22f6eae19fa6}");
 }
@@ -383,7 +383,7 @@ const QUuid FindKernelAvgMisorientations::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindKernelAvgMisorientations::getSubGroupName() const
+QString FindKernelAvgMisorientations::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -391,7 +391,7 @@ const QString FindKernelAvgMisorientations::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindKernelAvgMisorientations::getHumanLabel() const
+QString FindKernelAvgMisorientations::getHumanLabel() const
 {
   return "Find Kernel Average Misorientations";
 }
@@ -414,7 +414,7 @@ std::shared_ptr<FindKernelAvgMisorientations> FindKernelAvgMisorientations::New(
 }
 
 // -----------------------------------------------------------------------------
-const QString FindKernelAvgMisorientations::getNameOfClass() const
+QString FindKernelAvgMisorientations::getNameOfClass() const
 {
   return QString("FindKernelAvgMisorientations");
 }

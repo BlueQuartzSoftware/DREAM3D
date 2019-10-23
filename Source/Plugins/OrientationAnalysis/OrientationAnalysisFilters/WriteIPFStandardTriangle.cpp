@@ -279,7 +279,7 @@ AbstractFilter::Pointer WriteIPFStandardTriangle::newFilterInstance(bool copyFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteIPFStandardTriangle::getCompiledLibraryName() const
+QString WriteIPFStandardTriangle::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -287,7 +287,7 @@ const QString WriteIPFStandardTriangle::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteIPFStandardTriangle::getBrandingString() const
+QString WriteIPFStandardTriangle::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -295,7 +295,7 @@ const QString WriteIPFStandardTriangle::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteIPFStandardTriangle::getFilterVersion() const
+QString WriteIPFStandardTriangle::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -305,7 +305,7 @@ const QString WriteIPFStandardTriangle::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteIPFStandardTriangle::getGroupName() const
+QString WriteIPFStandardTriangle::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -313,7 +313,7 @@ const QString WriteIPFStandardTriangle::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid WriteIPFStandardTriangle::getUuid()
+QUuid WriteIPFStandardTriangle::getUuid() const
 {
   return QUuid("{0b72aa9a-6b5a-5677-bf6c-743445e75cc8}");
 }
@@ -321,7 +321,7 @@ const QUuid WriteIPFStandardTriangle::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteIPFStandardTriangle::getSubGroupName() const
+QString WriteIPFStandardTriangle::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -329,7 +329,7 @@ const QString WriteIPFStandardTriangle::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteIPFStandardTriangle::getHumanLabel() const
+QString WriteIPFStandardTriangle::getHumanLabel() const
 {
   return "Export IPF Triangle Legend";
 }
@@ -352,7 +352,7 @@ std::shared_ptr<WriteIPFStandardTriangle> WriteIPFStandardTriangle::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString WriteIPFStandardTriangle::getNameOfClass() const
+QString WriteIPFStandardTriangle::getNameOfClass() const
 {
   return QString("WriteIPFStandardTriangle");
 }

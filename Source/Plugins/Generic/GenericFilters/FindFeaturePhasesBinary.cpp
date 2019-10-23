@@ -239,7 +239,7 @@ AbstractFilter::Pointer FindFeaturePhasesBinary::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhasesBinary::getCompiledLibraryName() const
+QString FindFeaturePhasesBinary::getCompiledLibraryName() const
 {
   return GenericConstants::GenericBaseName;
 }
@@ -247,7 +247,7 @@ const QString FindFeaturePhasesBinary::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhasesBinary::getBrandingString() const
+QString FindFeaturePhasesBinary::getBrandingString() const
 {
   return "Generic";
 }
@@ -255,7 +255,7 @@ const QString FindFeaturePhasesBinary::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhasesBinary::getFilterVersion() const
+QString FindFeaturePhasesBinary::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -265,7 +265,7 @@ const QString FindFeaturePhasesBinary::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhasesBinary::getGroupName() const
+QString FindFeaturePhasesBinary::getGroupName() const
 {
   return SIMPL::FilterGroups::Generic;
 }
@@ -273,7 +273,7 @@ const QString FindFeaturePhasesBinary::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindFeaturePhasesBinary::getUuid()
+QUuid FindFeaturePhasesBinary::getUuid() const
 {
   return QUuid("{64d20c7b-697c-5ff1-9d1d-8a27b071f363}");
 }
@@ -281,7 +281,7 @@ const QUuid FindFeaturePhasesBinary::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhasesBinary::getSubGroupName() const
+QString FindFeaturePhasesBinary::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -289,7 +289,7 @@ const QString FindFeaturePhasesBinary::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhasesBinary::getHumanLabel() const
+QString FindFeaturePhasesBinary::getHumanLabel() const
 {
   return "Find Feature Phases Binary";
 }
@@ -312,7 +312,7 @@ std::shared_ptr<FindFeaturePhasesBinary> FindFeaturePhasesBinary::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhasesBinary::getNameOfClass() const
+QString FindFeaturePhasesBinary::getNameOfClass() const
 {
   return QString("FindFeaturePhasesBinary");
 }

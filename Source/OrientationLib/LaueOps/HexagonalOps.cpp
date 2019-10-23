@@ -1858,7 +1858,7 @@ HexagonalOps::Pointer HexagonalOps::NullPointer()
 }
 
 // -----------------------------------------------------------------------------
-const QString HexagonalOps::getNameOfClass() const
+QString HexagonalOps::getNameOfClass() const
 {
   return QString("HexagonalOps");
 }

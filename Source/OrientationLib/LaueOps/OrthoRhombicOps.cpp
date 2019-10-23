@@ -1177,7 +1177,7 @@ OrthoRhombicOps::Pointer OrthoRhombicOps::NullPointer()
 }
 
 // -----------------------------------------------------------------------------
-const QString OrthoRhombicOps::getNameOfClass() const
+QString OrthoRhombicOps::getNameOfClass() const
 {
   return QString("OrthoRhombicOps");
 }

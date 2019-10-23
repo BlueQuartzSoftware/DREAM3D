@@ -136,7 +136,7 @@ public:
   /**
    * @brief Returns the name of the class for FindDifferenceMapTest
    */
-  const QString getNameOfClass() const
+  QString getNameOfClass() const
   {
     return QString("FindDifferenceMapTest");
   }

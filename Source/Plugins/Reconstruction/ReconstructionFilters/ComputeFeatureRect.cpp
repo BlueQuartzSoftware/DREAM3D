@@ -239,7 +239,7 @@ AbstractFilter::Pointer ComputeFeatureRect::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeFeatureRect::getCompiledLibraryName() const
+QString ComputeFeatureRect::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -247,7 +247,7 @@ const QString ComputeFeatureRect::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeFeatureRect::getBrandingString() const
+QString ComputeFeatureRect::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -255,7 +255,7 @@ const QString ComputeFeatureRect::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeFeatureRect::getFilterVersion() const
+QString ComputeFeatureRect::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -266,7 +266,7 @@ const QString ComputeFeatureRect::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeFeatureRect::getGroupName() const
+QString ComputeFeatureRect::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -274,7 +274,7 @@ const QString ComputeFeatureRect::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ComputeFeatureRect::getUuid()
+QUuid ComputeFeatureRect::getUuid() const
 {
   return QUuid("{6eda8dbf-dbd8-562a-ae1a-f2904157c189}");
 }
@@ -282,7 +282,7 @@ const QUuid ComputeFeatureRect::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeFeatureRect::getSubGroupName() const
+QString ComputeFeatureRect::getSubGroupName() const
 {
   return "Reconstruction";
 }
@@ -290,7 +290,7 @@ const QString ComputeFeatureRect::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeFeatureRect::getHumanLabel() const
+QString ComputeFeatureRect::getHumanLabel() const
 {
   return "Compute Feature Corners";
 }
@@ -313,7 +313,7 @@ std::shared_ptr<ComputeFeatureRect> ComputeFeatureRect::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString ComputeFeatureRect::getNameOfClass() const
+QString ComputeFeatureRect::getNameOfClass() const
 {
   return QString("ComputeFeatureRect");
 }

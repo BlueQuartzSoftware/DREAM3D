@@ -465,7 +465,7 @@ AbstractFilter::Pointer EBSDSegmentFeatures::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EBSDSegmentFeatures::getCompiledLibraryName() const
+QString EBSDSegmentFeatures::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -473,7 +473,7 @@ const QString EBSDSegmentFeatures::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EBSDSegmentFeatures::getBrandingString() const
+QString EBSDSegmentFeatures::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -481,7 +481,7 @@ const QString EBSDSegmentFeatures::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EBSDSegmentFeatures::getFilterVersion() const
+QString EBSDSegmentFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -491,7 +491,7 @@ const QString EBSDSegmentFeatures::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EBSDSegmentFeatures::getGroupName() const
+QString EBSDSegmentFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -499,7 +499,7 @@ const QString EBSDSegmentFeatures::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid EBSDSegmentFeatures::getUuid()
+QUuid EBSDSegmentFeatures::getUuid() const
 {
   return QUuid("{7861c691-b821-537b-bd25-dc195578e0ea}");
 }
@@ -507,7 +507,7 @@ const QUuid EBSDSegmentFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EBSDSegmentFeatures::getSubGroupName() const
+QString EBSDSegmentFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;
 }
@@ -515,7 +515,7 @@ const QString EBSDSegmentFeatures::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EBSDSegmentFeatures::getHumanLabel() const
+QString EBSDSegmentFeatures::getHumanLabel() const
 {
   return "Segment Features (Misorientation)";
 }
@@ -538,7 +538,7 @@ std::shared_ptr<EBSDSegmentFeatures> EBSDSegmentFeatures::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString EBSDSegmentFeatures::getNameOfClass() const
+QString EBSDSegmentFeatures::getNameOfClass() const
 {
   return QString("EBSDSegmentFeatures");
 }

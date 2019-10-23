@@ -127,7 +127,7 @@ AbstractMicrostructurePreset::Pointer AbstractMicrostructurePreset::NullPointer(
 }
 
 // -----------------------------------------------------------------------------
-const QString AbstractMicrostructurePreset::getNameOfClass() const
+QString AbstractMicrostructurePreset::getNameOfClass() const
 {
   return QString("AbstractMicrostructurePreset");
 }

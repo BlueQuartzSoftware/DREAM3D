@@ -57,7 +57,7 @@ class OrientationLib_EXPORT SO3Sampler
     /**
      * @brief Returns the name of the class for SO3Sampler
      */
-    const QString getNameOfClass() const;
+    QString getNameOfClass() const;
     /**
      * @brief Returns the name of the class for SO3Sampler
      */

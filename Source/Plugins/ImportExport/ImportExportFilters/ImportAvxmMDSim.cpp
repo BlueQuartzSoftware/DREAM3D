@@ -296,7 +296,7 @@ AbstractFilter::Pointer ImportAvxmMDSim::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportAvxmMDSim::getCompiledLibraryName() const
+QString ImportAvxmMDSim::getCompiledLibraryName() const
 {
   return Core::CoreBaseName;
 }
@@ -304,7 +304,7 @@ const QString ImportAvxmMDSim::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportAvxmMDSim::getBrandingString() const
+QString ImportAvxmMDSim::getBrandingString() const
 {
   return "SIMPLib Core Filter";
 }
@@ -312,7 +312,7 @@ const QString ImportAvxmMDSim::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportAvxmMDSim::getFilterVersion() const
+QString ImportAvxmMDSim::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -323,7 +323,7 @@ const QString ImportAvxmMDSim::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportAvxmMDSim::getGroupName() const
+QString ImportAvxmMDSim::getGroupName() const
 {
   return SIMPL::FilterGroups::CoreFilters;
 }
@@ -331,7 +331,7 @@ const QString ImportAvxmMDSim::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportAvxmMDSim::getSubGroupName() const
+QString ImportAvxmMDSim::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -339,7 +339,7 @@ const QString ImportAvxmMDSim::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportAvxmMDSim::getHumanLabel() const
+QString ImportAvxmMDSim::getHumanLabel() const
 {
   return "ImportAvxmMDSim";
 }
@@ -347,7 +347,7 @@ const QString ImportAvxmMDSim::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ImportAvxmMDSim::getUuid()
+QUuid ImportAvxmMDSim::getUuid() const
 {
   return QUuid("{71e18332-4db1-5554-85e6-ae8db5826587}");
 }
@@ -370,7 +370,7 @@ std::shared_ptr<ImportAvxmMDSim> ImportAvxmMDSim::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString ImportAvxmMDSim::getNameOfClass() const
+QString ImportAvxmMDSim::getNameOfClass() const
 {
   return QString("_SUPERImportAvxmMDSim");
 }

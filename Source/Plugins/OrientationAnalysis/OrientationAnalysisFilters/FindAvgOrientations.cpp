@@ -296,7 +296,7 @@ AbstractFilter::Pointer FindAvgOrientations::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgOrientations::getCompiledLibraryName() const
+QString FindAvgOrientations::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -304,7 +304,7 @@ const QString FindAvgOrientations::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgOrientations::getBrandingString() const
+QString FindAvgOrientations::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -312,7 +312,7 @@ const QString FindAvgOrientations::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgOrientations::getFilterVersion() const
+QString FindAvgOrientations::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -322,7 +322,7 @@ const QString FindAvgOrientations::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgOrientations::getGroupName() const
+QString FindAvgOrientations::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -330,7 +330,7 @@ const QString FindAvgOrientations::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindAvgOrientations::getUuid()
+QUuid FindAvgOrientations::getUuid() const
 {
   return QUuid("{bf7036d8-25bd-540e-b6de-3a5ab0e42c5f}");
 }
@@ -338,7 +338,7 @@ const QUuid FindAvgOrientations::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgOrientations::getSubGroupName() const
+QString FindAvgOrientations::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -346,7 +346,7 @@ const QString FindAvgOrientations::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgOrientations::getHumanLabel() const
+QString FindAvgOrientations::getHumanLabel() const
 {
   return "Find Feature Average Orientations";
 }
@@ -369,7 +369,7 @@ std::shared_ptr<FindAvgOrientations> FindAvgOrientations::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindAvgOrientations::getNameOfClass() const
+QString FindAvgOrientations::getNameOfClass() const
 {
   return QString("FindAvgOrientations");
 }

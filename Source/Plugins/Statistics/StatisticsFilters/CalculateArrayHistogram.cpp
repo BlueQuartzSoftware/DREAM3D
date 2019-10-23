@@ -349,7 +349,7 @@ AbstractFilter::Pointer CalculateArrayHistogram::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateArrayHistogram::getCompiledLibraryName() const
+QString CalculateArrayHistogram::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -357,7 +357,7 @@ const QString CalculateArrayHistogram::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateArrayHistogram::getBrandingString() const
+QString CalculateArrayHistogram::getBrandingString() const
 {
   return "Statistics";
 }
@@ -365,7 +365,7 @@ const QString CalculateArrayHistogram::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateArrayHistogram::getFilterVersion() const
+QString CalculateArrayHistogram::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -375,7 +375,7 @@ const QString CalculateArrayHistogram::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateArrayHistogram::getGroupName() const
+QString CalculateArrayHistogram::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -383,7 +383,7 @@ const QString CalculateArrayHistogram::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid CalculateArrayHistogram::getUuid()
+QUuid CalculateArrayHistogram::getUuid() const
 {
   return QUuid("{289f0d8c-29ab-5fbc-91bd-08aac01e37c5}");
 }
@@ -391,7 +391,7 @@ const QUuid CalculateArrayHistogram::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateArrayHistogram::getSubGroupName() const
+QString CalculateArrayHistogram::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::EnsembleStatsFilters;
 }
@@ -399,7 +399,7 @@ const QString CalculateArrayHistogram::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateArrayHistogram::getHumanLabel() const
+QString CalculateArrayHistogram::getHumanLabel() const
 {
   return "Calculate Frequency Histogram";
 }
@@ -422,7 +422,7 @@ std::shared_ptr<CalculateArrayHistogram> CalculateArrayHistogram::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString CalculateArrayHistogram::getNameOfClass() const
+QString CalculateArrayHistogram::getNameOfClass() const
 {
   return QString("CalculateArrayHistogram");
 }

@@ -1058,7 +1058,7 @@ AbstractFilter::Pointer FindGBCDMetricBased::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCDMetricBased::getCompiledLibraryName() const
+QString FindGBCDMetricBased::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -1066,7 +1066,7 @@ const QString FindGBCDMetricBased::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCDMetricBased::getBrandingString() const
+QString FindGBCDMetricBased::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -1074,7 +1074,7 @@ const QString FindGBCDMetricBased::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCDMetricBased::getFilterVersion() const
+QString FindGBCDMetricBased::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -1085,7 +1085,7 @@ const QString FindGBCDMetricBased::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCDMetricBased::getGroupName() const
+QString FindGBCDMetricBased::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -1093,7 +1093,7 @@ const QString FindGBCDMetricBased::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindGBCDMetricBased::getUuid()
+QUuid FindGBCDMetricBased::getUuid() const
 {
   return QUuid("{d67e9f28-2fe5-5188-b0f8-323a7e603de6}");
 }
@@ -1101,7 +1101,7 @@ const QUuid FindGBCDMetricBased::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCDMetricBased::getSubGroupName() const
+QString FindGBCDMetricBased::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -1109,7 +1109,7 @@ const QString FindGBCDMetricBased::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCDMetricBased::getHumanLabel() const
+QString FindGBCDMetricBased::getHumanLabel() const
 {
   return "Find GBCD (Metric-Based Approach)";
 }
@@ -1132,7 +1132,7 @@ std::shared_ptr<FindGBCDMetricBased> FindGBCDMetricBased::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindGBCDMetricBased::getNameOfClass() const
+QString FindGBCDMetricBased::getNameOfClass() const
 {
   return QString("FindGBCDMetricBased");
 }

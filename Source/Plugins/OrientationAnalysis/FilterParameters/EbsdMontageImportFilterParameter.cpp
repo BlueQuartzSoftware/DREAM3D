@@ -119,7 +119,7 @@ EbsdMontageImportFilterParameter::Pointer EbsdMontageImportFilterParameter::New(
 }
 
 // -----------------------------------------------------------------------------
-const QString EbsdMontageImportFilterParameter::getNameOfClass() const
+QString EbsdMontageImportFilterParameter::getNameOfClass() const
 {
   return QString("EbsdMontageImportFilterParameter");
 }

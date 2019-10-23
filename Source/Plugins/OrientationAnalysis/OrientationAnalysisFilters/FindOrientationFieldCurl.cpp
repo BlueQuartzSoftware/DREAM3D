@@ -494,7 +494,7 @@ AbstractFilter::Pointer FindOrientationFieldCurl::newFilterInstance(bool copyFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindOrientationFieldCurl::getCompiledLibraryName() const
+QString FindOrientationFieldCurl::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -502,7 +502,7 @@ const QString FindOrientationFieldCurl::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindOrientationFieldCurl::getBrandingString() const
+QString FindOrientationFieldCurl::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -510,7 +510,7 @@ const QString FindOrientationFieldCurl::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindOrientationFieldCurl::getFilterVersion() const
+QString FindOrientationFieldCurl::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -521,7 +521,7 @@ const QString FindOrientationFieldCurl::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindOrientationFieldCurl::getGroupName() const
+QString FindOrientationFieldCurl::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -529,7 +529,7 @@ const QString FindOrientationFieldCurl::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindOrientationFieldCurl::getUuid()
+QUuid FindOrientationFieldCurl::getUuid() const
 {
   return QUuid("{d2011845-cae8-549a-88eb-7ecadf51a916}");
 }
@@ -537,7 +537,7 @@ const QUuid FindOrientationFieldCurl::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindOrientationFieldCurl::getSubGroupName() const
+QString FindOrientationFieldCurl::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -545,7 +545,7 @@ const QString FindOrientationFieldCurl::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindOrientationFieldCurl::getHumanLabel() const
+QString FindOrientationFieldCurl::getHumanLabel() const
 {
   return "Find Curl of Orientation Field";
 }
@@ -568,7 +568,7 @@ std::shared_ptr<FindOrientationFieldCurl> FindOrientationFieldCurl::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindOrientationFieldCurl::getNameOfClass() const
+QString FindOrientationFieldCurl::getNameOfClass() const
 {
   return QString("FindOrientationFieldCurl");
 }

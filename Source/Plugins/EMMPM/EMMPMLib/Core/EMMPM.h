@@ -64,7 +64,7 @@ class EMMPMLib_EXPORT EMMPM : public Observable
     /**
      * @brief Returns the name of the class for EMMPM;
      */
-    const QString getNameOfClass() const override;
+    QString getNameOfClass() const override;
     /**
      * @brief Returns the name of the class for EMMPM;
      */
@@ -116,7 +116,7 @@ class EMMPMLib_EXPORT EMMPM : public Observable
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() const;
+    virtual QString getHumanLabel() const;
 
     /**
      * @brief Main entry point for running the EMMPM algorithm. The Inputs and

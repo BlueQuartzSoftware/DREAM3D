@@ -283,7 +283,7 @@ AbstractFilter::Pointer AlignSectionsFeature::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsFeature::getCompiledLibraryName() const
+QString AlignSectionsFeature::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -291,7 +291,7 @@ const QString AlignSectionsFeature::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsFeature::getBrandingString() const
+QString AlignSectionsFeature::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -299,7 +299,7 @@ const QString AlignSectionsFeature::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsFeature::getFilterVersion() const
+QString AlignSectionsFeature::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -309,7 +309,7 @@ const QString AlignSectionsFeature::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsFeature::getGroupName() const
+QString AlignSectionsFeature::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -317,7 +317,7 @@ const QString AlignSectionsFeature::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid AlignSectionsFeature::getUuid()
+QUuid AlignSectionsFeature::getUuid() const
 {
   return QUuid("{2bb76fa9-934a-51df-bff1-b0c866971706}");
 }
@@ -325,7 +325,7 @@ const QUuid AlignSectionsFeature::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsFeature::getSubGroupName() const
+QString AlignSectionsFeature::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::AlignmentFilters;
 }
@@ -333,7 +333,7 @@ const QString AlignSectionsFeature::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsFeature::getHumanLabel() const
+QString AlignSectionsFeature::getHumanLabel() const
 {
   return "Align Sections (Feature)";
 }
@@ -356,7 +356,7 @@ std::shared_ptr<AlignSectionsFeature> AlignSectionsFeature::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString AlignSectionsFeature::getNameOfClass() const
+QString AlignSectionsFeature::getNameOfClass() const
 {
   return QString("AlignSectionsFeature");
 }

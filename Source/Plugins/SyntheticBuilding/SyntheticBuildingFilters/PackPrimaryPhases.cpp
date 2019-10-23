@@ -3546,7 +3546,7 @@ AbstractFilter::Pointer PackPrimaryPhases::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PackPrimaryPhases::getCompiledLibraryName() const
+QString PackPrimaryPhases::getCompiledLibraryName() const
 {
   return SyntheticBuildingConstants::SyntheticBuildingBaseName;
 }
@@ -3554,7 +3554,7 @@ const QString PackPrimaryPhases::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PackPrimaryPhases::getBrandingString() const
+QString PackPrimaryPhases::getBrandingString() const
 {
   return "SyntheticBuilding";
 }
@@ -3562,7 +3562,7 @@ const QString PackPrimaryPhases::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PackPrimaryPhases::getFilterVersion() const
+QString PackPrimaryPhases::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -3572,7 +3572,7 @@ const QString PackPrimaryPhases::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PackPrimaryPhases::getGroupName() const
+QString PackPrimaryPhases::getGroupName() const
 {
   return SIMPL::FilterGroups::SyntheticBuildingFilters;
 }
@@ -3580,7 +3580,7 @@ const QString PackPrimaryPhases::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid PackPrimaryPhases::getUuid()
+QUuid PackPrimaryPhases::getUuid() const
 {
   return QUuid("{84305312-0d10-50ca-b89a-fda17a353cc9}");
 }
@@ -3588,7 +3588,7 @@ const QUuid PackPrimaryPhases::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PackPrimaryPhases::getSubGroupName() const
+QString PackPrimaryPhases::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::PackingFilters;
 }
@@ -3596,7 +3596,7 @@ const QString PackPrimaryPhases::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PackPrimaryPhases::getHumanLabel() const
+QString PackPrimaryPhases::getHumanLabel() const
 {
   return "Pack Primary Phases";
 }
@@ -3619,7 +3619,7 @@ std::shared_ptr<PackPrimaryPhases> PackPrimaryPhases::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString PackPrimaryPhases::getNameOfClass() const
+QString PackPrimaryPhases::getNameOfClass() const
 {
   return QString("PackPrimaryPhases");
 }

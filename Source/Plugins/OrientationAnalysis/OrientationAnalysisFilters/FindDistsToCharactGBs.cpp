@@ -545,7 +545,7 @@ AbstractFilter::Pointer FindDistsToCharactGBs::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDistsToCharactGBs::getCompiledLibraryName() const
+QString FindDistsToCharactGBs::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -553,7 +553,7 @@ const QString FindDistsToCharactGBs::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDistsToCharactGBs::getBrandingString() const
+QString FindDistsToCharactGBs::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -561,7 +561,7 @@ const QString FindDistsToCharactGBs::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDistsToCharactGBs::getFilterVersion() const
+QString FindDistsToCharactGBs::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -572,7 +572,7 @@ const QString FindDistsToCharactGBs::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDistsToCharactGBs::getGroupName() const
+QString FindDistsToCharactGBs::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -580,7 +580,7 @@ const QString FindDistsToCharactGBs::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindDistsToCharactGBs::getUuid()
+QUuid FindDistsToCharactGBs::getUuid() const
 {
   return QUuid("{94f986fc-1295-5e32-9808-752855fa658a}");
 }
@@ -588,7 +588,7 @@ const QUuid FindDistsToCharactGBs::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDistsToCharactGBs::getSubGroupName() const
+QString FindDistsToCharactGBs::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -596,7 +596,7 @@ const QString FindDistsToCharactGBs::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDistsToCharactGBs::getHumanLabel() const
+QString FindDistsToCharactGBs::getHumanLabel() const
 {
   return "Find Distances to Characteristic Grain Boundaries";
 }
@@ -619,7 +619,7 @@ std::shared_ptr<FindDistsToCharactGBs> FindDistsToCharactGBs::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindDistsToCharactGBs::getNameOfClass() const
+QString FindDistsToCharactGBs::getNameOfClass() const
 {
   return QString("FindDistsToCharactGBs");
 }

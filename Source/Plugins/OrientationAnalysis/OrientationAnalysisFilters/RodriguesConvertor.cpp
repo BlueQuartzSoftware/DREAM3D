@@ -249,7 +249,7 @@ AbstractFilter::Pointer RodriguesConvertor::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RodriguesConvertor::getCompiledLibraryName() const
+QString RodriguesConvertor::getCompiledLibraryName() const
 { 
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -257,7 +257,7 @@ const QString RodriguesConvertor::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RodriguesConvertor::getBrandingString() const
+QString RodriguesConvertor::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -265,7 +265,7 @@ const QString RodriguesConvertor::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RodriguesConvertor::getFilterVersion() const
+QString RodriguesConvertor::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -276,7 +276,7 @@ const QString RodriguesConvertor::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RodriguesConvertor::getGroupName() const
+QString RodriguesConvertor::getGroupName() const
 { 
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -284,7 +284,7 @@ const QString RodriguesConvertor::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RodriguesConvertor::getSubGroupName() const
+QString RodriguesConvertor::getSubGroupName() const
 { 
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -292,7 +292,7 @@ const QString RodriguesConvertor::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RodriguesConvertor::getHumanLabel() const
+QString RodriguesConvertor::getHumanLabel() const
 { 
   return "Rodrigues Convertor"; 
 }
@@ -301,7 +301,7 @@ const QString RodriguesConvertor::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid RodriguesConvertor::getUuid()
+QUuid RodriguesConvertor::getUuid() const
 {
   return QUuid("{a2b62395-1a7d-5058-a840-752d8f8e2430}");
 }
@@ -324,7 +324,7 @@ std::shared_ptr<RodriguesConvertor> RodriguesConvertor::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString RodriguesConvertor::getNameOfClass() const
+QString RodriguesConvertor::getNameOfClass() const
 {
   return QString("_SUPERRodriguesConvertor");
 }

@@ -140,7 +140,7 @@ EbsdToH5EbsdFilterParameter::Pointer EbsdToH5EbsdFilterParameter::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString EbsdToH5EbsdFilterParameter::getNameOfClass() const
+QString EbsdToH5EbsdFilterParameter::getNameOfClass() const
 {
   return QString("EbsdToH5EbsdFilterParameter");
 }

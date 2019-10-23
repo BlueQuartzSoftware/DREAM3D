@@ -61,7 +61,7 @@ class EMMPMLib_EXPORT StatsDelegate
     /**
      * @brief Returns the name of the class for StatsDelegate
      */
-    const QString getNameOfClass() const;
+    QString getNameOfClass() const;
     /**
      * @brief Returns the name of the class for StatsDelegate
      */

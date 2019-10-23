@@ -268,7 +268,7 @@ AbstractFilter::Pointer FindBoundaryCells::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundaryCells::getCompiledLibraryName() const
+QString FindBoundaryCells::getCompiledLibraryName() const
 {
   return GenericConstants::GenericBaseName;
 }
@@ -276,7 +276,7 @@ const QString FindBoundaryCells::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundaryCells::getBrandingString() const
+QString FindBoundaryCells::getBrandingString() const
 {
   return "Generic";
 }
@@ -284,7 +284,7 @@ const QString FindBoundaryCells::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundaryCells::getFilterVersion() const
+QString FindBoundaryCells::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -294,7 +294,7 @@ const QString FindBoundaryCells::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundaryCells::getGroupName() const
+QString FindBoundaryCells::getGroupName() const
 {
   return SIMPL::FilterGroups::Generic;
 }
@@ -302,7 +302,7 @@ const QString FindBoundaryCells::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindBoundaryCells::getUuid()
+QUuid FindBoundaryCells::getUuid() const
 {
   return QUuid("{8a1106d4-c67f-5e09-a02a-b2e9b99d031e}");
 }
@@ -310,7 +310,7 @@ const QUuid FindBoundaryCells::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundaryCells::getSubGroupName() const
+QString FindBoundaryCells::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SpatialFilters;
 }
@@ -318,7 +318,7 @@ const QString FindBoundaryCells::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundaryCells::getHumanLabel() const
+QString FindBoundaryCells::getHumanLabel() const
 {
   return "Find Boundary Cells (Image)";
 }
@@ -341,7 +341,7 @@ std::shared_ptr<FindBoundaryCells> FindBoundaryCells::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindBoundaryCells::getNameOfClass() const
+QString FindBoundaryCells::getNameOfClass() const
 {
   return QString("FindBoundaryCells");
 }

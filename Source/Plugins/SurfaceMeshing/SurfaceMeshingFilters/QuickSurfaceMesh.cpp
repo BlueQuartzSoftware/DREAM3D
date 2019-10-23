@@ -1883,7 +1883,7 @@ AbstractFilter::Pointer QuickSurfaceMesh::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuickSurfaceMesh::getCompiledLibraryName() const
+QString QuickSurfaceMesh::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -1891,7 +1891,7 @@ const QString QuickSurfaceMesh::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuickSurfaceMesh::getBrandingString() const
+QString QuickSurfaceMesh::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -1899,7 +1899,7 @@ const QString QuickSurfaceMesh::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuickSurfaceMesh::getFilterVersion() const
+QString QuickSurfaceMesh::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -1909,7 +1909,7 @@ const QString QuickSurfaceMesh::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuickSurfaceMesh::getGroupName() const
+QString QuickSurfaceMesh::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -1917,7 +1917,7 @@ const QString QuickSurfaceMesh::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid QuickSurfaceMesh::getUuid()
+QUuid QuickSurfaceMesh::getUuid() const
 {
   return QUuid("{07b49e30-3900-5c34-862a-f1fb48bad568}");
 }
@@ -1925,7 +1925,7 @@ const QUuid QuickSurfaceMesh::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuickSurfaceMesh::getSubGroupName() const
+QString QuickSurfaceMesh::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GenerationFilters;
 }
@@ -1933,7 +1933,7 @@ const QString QuickSurfaceMesh::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuickSurfaceMesh::getHumanLabel() const
+QString QuickSurfaceMesh::getHumanLabel() const
 {
   return "Quick Surface Mesh";
 }
@@ -1956,7 +1956,7 @@ std::shared_ptr<QuickSurfaceMesh> QuickSurfaceMesh::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString QuickSurfaceMesh::getNameOfClass() const
+QString QuickSurfaceMesh::getNameOfClass() const
 {
   return QString("QuickSurfaceMesh");
 }

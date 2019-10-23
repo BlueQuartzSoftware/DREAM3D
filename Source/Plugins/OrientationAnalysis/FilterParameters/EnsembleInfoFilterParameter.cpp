@@ -154,7 +154,7 @@ EnsembleInfoFilterParameter::Pointer EnsembleInfoFilterParameter::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString EnsembleInfoFilterParameter::getNameOfClass() const
+QString EnsembleInfoFilterParameter::getNameOfClass() const
 {
   return QString("EnsembleInfoFilterParameter");
 }

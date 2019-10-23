@@ -52,7 +52,7 @@ public:
   /**
    * @brief Returns the name of the class for OrientationUtilityFilterParameter
    */
-  const QString getNameOfClass() const;
+  QString getNameOfClass() const;
   /**
    * @brief Returns the name of the class for OrientationUtilityFilterParameter
    */

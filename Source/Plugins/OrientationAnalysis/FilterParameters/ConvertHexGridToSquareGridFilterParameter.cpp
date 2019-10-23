@@ -125,7 +125,7 @@ ConvertHexGridToSquareGridFilterParameter::Pointer ConvertHexGridToSquareGridFil
 }
 
 // -----------------------------------------------------------------------------
-const QString ConvertHexGridToSquareGridFilterParameter::getNameOfClass() const
+QString ConvertHexGridToSquareGridFilterParameter::getNameOfClass() const
 {
   return QString("ConvertHexGridToSquareGridFilterParameter");
 }

@@ -346,7 +346,7 @@ AbstractFilter::Pointer NearestPointFuseRegularGrids::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NearestPointFuseRegularGrids::getCompiledLibraryName() const
+QString NearestPointFuseRegularGrids::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -354,7 +354,7 @@ const QString NearestPointFuseRegularGrids::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NearestPointFuseRegularGrids::getBrandingString() const
+QString NearestPointFuseRegularGrids::getBrandingString() const
 {
   return "Sampling";
 }
@@ -362,7 +362,7 @@ const QString NearestPointFuseRegularGrids::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NearestPointFuseRegularGrids::getFilterVersion() const
+QString NearestPointFuseRegularGrids::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -373,7 +373,7 @@ const QString NearestPointFuseRegularGrids::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NearestPointFuseRegularGrids::getGroupName() const
+QString NearestPointFuseRegularGrids::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -381,7 +381,7 @@ const QString NearestPointFuseRegularGrids::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid NearestPointFuseRegularGrids::getUuid()
+QUuid NearestPointFuseRegularGrids::getUuid() const
 {
   return QUuid("{cbaf9e68-5ded-560c-9440-509289100ea8}");
 }
@@ -389,7 +389,7 @@ const QUuid NearestPointFuseRegularGrids::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NearestPointFuseRegularGrids::getSubGroupName() const
+QString NearestPointFuseRegularGrids::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ResolutionFilters;
 }
@@ -397,7 +397,7 @@ const QString NearestPointFuseRegularGrids::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NearestPointFuseRegularGrids::getHumanLabel() const
+QString NearestPointFuseRegularGrids::getHumanLabel() const
 {
   return "Fuse Regular Grids (Nearest Point)";
 }
@@ -420,7 +420,7 @@ std::shared_ptr<NearestPointFuseRegularGrids> NearestPointFuseRegularGrids::New(
 }
 
 // -----------------------------------------------------------------------------
-const QString NearestPointFuseRegularGrids::getNameOfClass() const
+QString NearestPointFuseRegularGrids::getNameOfClass() const
 {
   return QString("NearestPointFuseRegularGrids");
 }

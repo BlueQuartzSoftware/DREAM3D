@@ -545,7 +545,7 @@ AbstractFilter::Pointer SampleSurfaceMesh::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SampleSurfaceMesh::getCompiledLibraryName() const
+QString SampleSurfaceMesh::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -553,7 +553,7 @@ const QString SampleSurfaceMesh::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SampleSurfaceMesh::getBrandingString() const
+QString SampleSurfaceMesh::getBrandingString() const
 {
   return "Sampling";
 }
@@ -561,7 +561,7 @@ const QString SampleSurfaceMesh::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SampleSurfaceMesh::getFilterVersion() const
+QString SampleSurfaceMesh::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -571,7 +571,7 @@ const QString SampleSurfaceMesh::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SampleSurfaceMesh::getGroupName() const
+QString SampleSurfaceMesh::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -579,7 +579,7 @@ const QString SampleSurfaceMesh::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid SampleSurfaceMesh::getUuid()
+QUuid SampleSurfaceMesh::getUuid() const
 {
   return QUuid("{1fc20816-a312-51ae-b89f-fa25e5042a03}");
 }
@@ -587,7 +587,7 @@ const QUuid SampleSurfaceMesh::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SampleSurfaceMesh::getSubGroupName() const
+QString SampleSurfaceMesh::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ResolutionFilters;
 }
@@ -595,7 +595,7 @@ const QString SampleSurfaceMesh::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SampleSurfaceMesh::getHumanLabel() const
+QString SampleSurfaceMesh::getHumanLabel() const
 {
   return "Sample Triangle Geometry";
 }
@@ -618,7 +618,7 @@ std::shared_ptr<SampleSurfaceMesh> SampleSurfaceMesh::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString SampleSurfaceMesh::getNameOfClass() const
+QString SampleSurfaceMesh::getNameOfClass() const
 {
   return QString("SampleSurfaceMesh");
 }

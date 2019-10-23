@@ -688,7 +688,7 @@ AbstractFilter::Pointer ReadAngData::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadAngData::getCompiledLibraryName() const
+QString ReadAngData::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -696,7 +696,7 @@ const QString ReadAngData::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadAngData::getBrandingString() const
+QString ReadAngData::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -704,7 +704,7 @@ const QString ReadAngData::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadAngData::getFilterVersion() const
+QString ReadAngData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -714,7 +714,7 @@ const QString ReadAngData::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadAngData::getGroupName() const
+QString ReadAngData::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -722,7 +722,7 @@ const QString ReadAngData::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ReadAngData::getUuid()
+QUuid ReadAngData::getUuid() const
 {
   return QUuid("{b8e128a8-c2a3-5e6c-a7ad-e4fb864e5d40}");
 }
@@ -730,7 +730,7 @@ const QUuid ReadAngData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadAngData::getSubGroupName() const
+QString ReadAngData::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -738,7 +738,7 @@ const QString ReadAngData::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadAngData::getHumanLabel() const
+QString ReadAngData::getHumanLabel() const
 {
   return "Import EDAX EBSD Data (.ang)";
 }
@@ -761,7 +761,7 @@ std::shared_ptr<ReadAngData> ReadAngData::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString ReadAngData::getNameOfClass() const
+QString ReadAngData::getNameOfClass() const
 {
   return QString("ReadAngData");
 }

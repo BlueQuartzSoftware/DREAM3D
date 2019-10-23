@@ -61,7 +61,7 @@ class DistributionAnalysisOps
     /**
      * @brief Returns the name of the class for DistributionAnalysisOps
      */
-    const QString getNameOfClass() const;
+    QString getNameOfClass() const;
     /**
      * @brief Returns the name of the class for DistributionAnalysisOps
      */

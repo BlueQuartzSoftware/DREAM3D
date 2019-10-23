@@ -594,7 +594,7 @@ AbstractFilter::Pointer DxReader::newFilterInstance(bool copyFilterParameters) c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxReader::getCompiledLibraryName() const
+QString DxReader::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -602,7 +602,7 @@ const QString DxReader::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxReader::getBrandingString() const
+QString DxReader::getBrandingString() const
 {
   return "IO";
 }
@@ -610,7 +610,7 @@ const QString DxReader::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxReader::getFilterVersion() const
+QString DxReader::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -620,7 +620,7 @@ const QString DxReader::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxReader::getGroupName() const
+QString DxReader::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -628,7 +628,7 @@ const QString DxReader::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid DxReader::getUuid()
+QUuid DxReader::getUuid() const
 {
   return QUuid("{ba2238f8-a20f-5f2f-ac9f-43ed458460f7}");
 }
@@ -636,7 +636,7 @@ const QUuid DxReader::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxReader::getSubGroupName() const
+QString DxReader::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -644,7 +644,7 @@ const QString DxReader::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxReader::getHumanLabel() const
+QString DxReader::getHumanLabel() const
 {
   return "Import Dx File (Feature Ids)";
 }
@@ -667,7 +667,7 @@ std::shared_ptr<DxReader> DxReader::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString DxReader::getNameOfClass() const
+QString DxReader::getNameOfClass() const
 {
   return QString("DxReader");
 }

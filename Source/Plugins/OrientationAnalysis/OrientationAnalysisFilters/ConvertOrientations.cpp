@@ -320,7 +320,7 @@ AbstractFilter::Pointer ConvertOrientations::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertOrientations::getCompiledLibraryName() const
+QString ConvertOrientations::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -328,7 +328,7 @@ const QString ConvertOrientations::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertOrientations::getBrandingString() const
+QString ConvertOrientations::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -336,7 +336,7 @@ const QString ConvertOrientations::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertOrientations::getFilterVersion() const
+QString ConvertOrientations::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -346,7 +346,7 @@ const QString ConvertOrientations::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertOrientations::getGroupName() const
+QString ConvertOrientations::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -354,7 +354,7 @@ const QString ConvertOrientations::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ConvertOrientations::getUuid()
+QUuid ConvertOrientations::getUuid() const
 {
   return QUuid("{e5629880-98c4-5656-82b8-c9fe2b9744de}");
 }
@@ -362,7 +362,7 @@ const QUuid ConvertOrientations::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertOrientations::getSubGroupName() const
+QString ConvertOrientations::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConversionFilters;
 }
@@ -370,7 +370,7 @@ const QString ConvertOrientations::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertOrientations::getHumanLabel() const
+QString ConvertOrientations::getHumanLabel() const
 {
   return "Convert Orientation Representation";
 }
@@ -393,7 +393,7 @@ std::shared_ptr<ConvertOrientations> ConvertOrientations::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString ConvertOrientations::getNameOfClass() const
+QString ConvertOrientations::getNameOfClass() const
 {
   return QString("ConvertOrientations");
 }

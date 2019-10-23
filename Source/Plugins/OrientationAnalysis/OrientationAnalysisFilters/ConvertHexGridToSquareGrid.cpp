@@ -505,7 +505,7 @@ AbstractFilter::Pointer ConvertHexGridToSquareGrid::newFilterInstance(bool copyF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertHexGridToSquareGrid::getCompiledLibraryName() const
+QString ConvertHexGridToSquareGrid::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -513,7 +513,7 @@ const QString ConvertHexGridToSquareGrid::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertHexGridToSquareGrid::getBrandingString() const
+QString ConvertHexGridToSquareGrid::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -521,7 +521,7 @@ const QString ConvertHexGridToSquareGrid::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertHexGridToSquareGrid::getFilterVersion() const
+QString ConvertHexGridToSquareGrid::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -531,7 +531,7 @@ const QString ConvertHexGridToSquareGrid::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertHexGridToSquareGrid::getGroupName() const
+QString ConvertHexGridToSquareGrid::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -539,7 +539,7 @@ const QString ConvertHexGridToSquareGrid::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ConvertHexGridToSquareGrid::getUuid()
+QUuid ConvertHexGridToSquareGrid::getUuid() const
 {
   return QUuid("{e1343abe-e5ad-5eb1-a89d-c209e620e4de}");
 }
@@ -547,7 +547,7 @@ const QUuid ConvertHexGridToSquareGrid::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertHexGridToSquareGrid::getSubGroupName() const
+QString ConvertHexGridToSquareGrid::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ResolutionFilters;
 }
@@ -555,7 +555,7 @@ const QString ConvertHexGridToSquareGrid::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertHexGridToSquareGrid::getHumanLabel() const
+QString ConvertHexGridToSquareGrid::getHumanLabel() const
 {
   return "Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang)";
 }
@@ -578,7 +578,7 @@ std::shared_ptr<ConvertHexGridToSquareGrid> ConvertHexGridToSquareGrid::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString ConvertHexGridToSquareGrid::getNameOfClass() const
+QString ConvertHexGridToSquareGrid::getNameOfClass() const
 {
   return QString("ConvertHexGridToSquareGrid");
 }

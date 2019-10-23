@@ -1214,7 +1214,7 @@ AbstractFilter::Pointer MatchCrystallography::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MatchCrystallography::getCompiledLibraryName() const
+QString MatchCrystallography::getCompiledLibraryName() const
 {
   return SyntheticBuildingConstants::SyntheticBuildingBaseName;
 }
@@ -1222,7 +1222,7 @@ const QString MatchCrystallography::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MatchCrystallography::getBrandingString() const
+QString MatchCrystallography::getBrandingString() const
 {
   return "SyntheticBuilding";
 }
@@ -1230,7 +1230,7 @@ const QString MatchCrystallography::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MatchCrystallography::getFilterVersion() const
+QString MatchCrystallography::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -1240,7 +1240,7 @@ const QString MatchCrystallography::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MatchCrystallography::getGroupName() const
+QString MatchCrystallography::getGroupName() const
 {
   return SIMPL::FilterGroups::SyntheticBuildingFilters;
 }
@@ -1248,7 +1248,7 @@ const QString MatchCrystallography::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid MatchCrystallography::getUuid()
+QUuid MatchCrystallography::getUuid() const
 {
   return QUuid("{7bfb6e4a-6075-56da-8006-b262d99dff30}");
 }
@@ -1256,7 +1256,7 @@ const QUuid MatchCrystallography::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MatchCrystallography::getSubGroupName() const
+QString MatchCrystallography::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -1264,7 +1264,7 @@ const QString MatchCrystallography::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MatchCrystallography::getHumanLabel() const
+QString MatchCrystallography::getHumanLabel() const
 {
   return "Match Crystallography";
 }
@@ -1287,7 +1287,7 @@ std::shared_ptr<MatchCrystallography> MatchCrystallography::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString MatchCrystallography::getNameOfClass() const
+QString MatchCrystallography::getNameOfClass() const
 {
   return QString("MatchCrystallography");
 }

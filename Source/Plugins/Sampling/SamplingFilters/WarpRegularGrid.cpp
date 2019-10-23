@@ -339,7 +339,7 @@ AbstractFilter::Pointer WarpRegularGrid::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WarpRegularGrid::getCompiledLibraryName() const
+QString WarpRegularGrid::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -347,7 +347,7 @@ const QString WarpRegularGrid::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WarpRegularGrid::getBrandingString() const
+QString WarpRegularGrid::getBrandingString() const
 {
   return "Sampling";
 }
@@ -355,7 +355,7 @@ const QString WarpRegularGrid::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WarpRegularGrid::getFilterVersion() const
+QString WarpRegularGrid::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -365,7 +365,7 @@ const QString WarpRegularGrid::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WarpRegularGrid::getGroupName() const
+QString WarpRegularGrid::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -373,7 +373,7 @@ const QString WarpRegularGrid::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid WarpRegularGrid::getUuid()
+QUuid WarpRegularGrid::getUuid() const
 {
   return QUuid("{520fc4c4-9c22-5520-9e75-a64b81a5a38d}");
 }
@@ -381,7 +381,7 @@ const QUuid WarpRegularGrid::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WarpRegularGrid::getSubGroupName() const
+QString WarpRegularGrid::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::WarpingFilters;
 }
@@ -389,7 +389,7 @@ const QString WarpRegularGrid::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WarpRegularGrid::getHumanLabel() const
+QString WarpRegularGrid::getHumanLabel() const
 {
   return "Warp Rectilinear Grid";
 }
@@ -412,7 +412,7 @@ std::shared_ptr<WarpRegularGrid> WarpRegularGrid::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString WarpRegularGrid::getNameOfClass() const
+QString WarpRegularGrid::getNameOfClass() const
 {
   return QString("WarpRegularGrid");
 }

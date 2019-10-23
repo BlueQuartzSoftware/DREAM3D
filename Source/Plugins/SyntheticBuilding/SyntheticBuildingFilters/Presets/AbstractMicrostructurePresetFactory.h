@@ -71,7 +71,7 @@
     {                                                                                                                                                                                                  \
       return Pointer(static_cast<Self*>(nullptr));                                                                                                                                                     \
     }                                                                                                                                                                                                  \
-    const QString getNameOfClass() const override                                                                                                                                                      \
+    QString getNameOfClass() const override                                                                                                                                                            \
     {                                                                                                                                                                                                  \
       return QString(#name);                                                                                                                                                                           \
     }                                                                                                                                                                                                  \
@@ -138,7 +138,7 @@ public:
     return Pointer(static_cast<Self*>(nullptr));
   }
 
-  virtual const QString getNameOfClass() const
+  virtual QString getNameOfClass() const
   {
     return QString("AbstractMicrostructurePresetFactory");
   }

@@ -62,7 +62,7 @@ class OrientationLib_EXPORT HexagonalLowOps : public LaueOps
     /**
     * @brief Returns the name of the class for HexagonalLowOps
     */
-    const QString getNameOfClass() const override;
+    QString getNameOfClass() const override;
     /**
     * @brief Returns the name of the class for HexagonalLowOps
     */

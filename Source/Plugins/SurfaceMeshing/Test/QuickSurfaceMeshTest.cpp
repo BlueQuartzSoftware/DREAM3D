@@ -80,7 +80,7 @@ public:
   /**
    * @brief Returns the name of the class for QuickSurfaceMeshTest
    */
-  const QString getNameOfClass() const
+  QString getNameOfClass() const
   {
     return QString("QuickSurfaceMeshTest");
   }

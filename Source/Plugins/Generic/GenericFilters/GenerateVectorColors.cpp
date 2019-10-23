@@ -305,7 +305,7 @@ AbstractFilter::Pointer GenerateVectorColors::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateVectorColors::getCompiledLibraryName() const
+QString GenerateVectorColors::getCompiledLibraryName() const
 {
   return GenericConstants::GenericBaseName;
 }
@@ -313,7 +313,7 @@ const QString GenerateVectorColors::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateVectorColors::getBrandingString() const
+QString GenerateVectorColors::getBrandingString() const
 {
   return "Generic";
 }
@@ -321,7 +321,7 @@ const QString GenerateVectorColors::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateVectorColors::getFilterVersion() const
+QString GenerateVectorColors::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -331,7 +331,7 @@ const QString GenerateVectorColors::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateVectorColors::getGroupName() const
+QString GenerateVectorColors::getGroupName() const
 {
   return SIMPL::FilterGroups::Generic;
 }
@@ -339,7 +339,7 @@ const QString GenerateVectorColors::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid GenerateVectorColors::getUuid()
+QUuid GenerateVectorColors::getUuid() const
 {
   return QUuid("{ef28de7e-5bdd-57c2-9318-60ba0dfaf7bc}");
 }
@@ -347,7 +347,7 @@ const QUuid GenerateVectorColors::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateVectorColors::getSubGroupName() const
+QString GenerateVectorColors::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -355,7 +355,7 @@ const QString GenerateVectorColors::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateVectorColors::getHumanLabel() const
+QString GenerateVectorColors::getHumanLabel() const
 {
   return "Generate Vector Colors";
 }
@@ -378,7 +378,7 @@ std::shared_ptr<GenerateVectorColors> GenerateVectorColors::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString GenerateVectorColors::getNameOfClass() const
+QString GenerateVectorColors::getNameOfClass() const
 {
   return QString("GenerateVectorColors");
 }

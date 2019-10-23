@@ -531,7 +531,7 @@ AbstractFilter::Pointer EbsdToH5Ebsd::newFilterInstance(bool copyFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EbsdToH5Ebsd::getCompiledLibraryName() const
+QString EbsdToH5Ebsd::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -539,7 +539,7 @@ const QString EbsdToH5Ebsd::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EbsdToH5Ebsd::getBrandingString() const
+QString EbsdToH5Ebsd::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -547,7 +547,7 @@ const QString EbsdToH5Ebsd::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EbsdToH5Ebsd::getFilterVersion() const
+QString EbsdToH5Ebsd::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -557,7 +557,7 @@ const QString EbsdToH5Ebsd::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EbsdToH5Ebsd::getGroupName() const
+QString EbsdToH5Ebsd::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -565,7 +565,7 @@ const QString EbsdToH5Ebsd::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid EbsdToH5Ebsd::getUuid()
+QUuid EbsdToH5Ebsd::getUuid() const
 {
   return QUuid("{6e332fca-0475-5fec-821e-e01f668ec1d3}");
 }
@@ -573,7 +573,7 @@ const QUuid EbsdToH5Ebsd::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EbsdToH5Ebsd::getSubGroupName() const
+QString EbsdToH5Ebsd::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -581,7 +581,7 @@ const QString EbsdToH5Ebsd::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EbsdToH5Ebsd::getHumanLabel() const
+QString EbsdToH5Ebsd::getHumanLabel() const
 {
   return "Import Orientation File(s) to H5EBSD";
 }
@@ -604,7 +604,7 @@ std::shared_ptr<EbsdToH5Ebsd> EbsdToH5Ebsd::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString EbsdToH5Ebsd::getNameOfClass() const
+QString EbsdToH5Ebsd::getNameOfClass() const
 {
   return QString("EbsdToH5Ebsd");
 }

@@ -1213,7 +1213,7 @@ AbstractFilter::Pointer VtkStructuredPointsReader::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VtkStructuredPointsReader::getCompiledLibraryName() const
+QString VtkStructuredPointsReader::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -1221,7 +1221,7 @@ const QString VtkStructuredPointsReader::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VtkStructuredPointsReader::getBrandingString() const
+QString VtkStructuredPointsReader::getBrandingString() const
 {
   return "IO";
 }
@@ -1229,7 +1229,7 @@ const QString VtkStructuredPointsReader::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VtkStructuredPointsReader::getFilterVersion() const
+QString VtkStructuredPointsReader::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -1239,7 +1239,7 @@ const QString VtkStructuredPointsReader::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VtkStructuredPointsReader::getGroupName() const
+QString VtkStructuredPointsReader::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -1247,7 +1247,7 @@ const QString VtkStructuredPointsReader::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid VtkStructuredPointsReader::getUuid()
+QUuid VtkStructuredPointsReader::getUuid() const
 {
   return QUuid("{f2fecbf9-636b-5ef9-89db-5cb57e4c5676}");
 }
@@ -1255,7 +1255,7 @@ const QUuid VtkStructuredPointsReader::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VtkStructuredPointsReader::getSubGroupName() const
+QString VtkStructuredPointsReader::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -1263,7 +1263,7 @@ const QString VtkStructuredPointsReader::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VtkStructuredPointsReader::getHumanLabel() const
+QString VtkStructuredPointsReader::getHumanLabel() const
 {
   return "VTK STRUCTURED_POINTS Importer";
 }
@@ -1286,7 +1286,7 @@ std::shared_ptr<VtkStructuredPointsReader> VtkStructuredPointsReader::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString VtkStructuredPointsReader::getNameOfClass() const
+QString VtkStructuredPointsReader::getNameOfClass() const
 {
   return QString("VtkStructuredPointsReader");
 }

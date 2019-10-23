@@ -2848,7 +2848,7 @@ CubicOps::Pointer CubicOps::NullPointer()
 }
 
 // -----------------------------------------------------------------------------
-const QString CubicOps::getNameOfClass() const
+QString CubicOps::getNameOfClass() const
 {
   return QString("CubicOps");
 }

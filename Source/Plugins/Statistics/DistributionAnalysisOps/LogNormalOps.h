@@ -61,7 +61,7 @@ class LogNormalOps : public DistributionAnalysisOps
     /**
      * @brief Returns the name of the class for LogNormalOps
      */
-    const QString getNameOfClass() const;
+    QString getNameOfClass() const;
     /**
      * @brief Returns the name of the class for LogNormalOps
      */

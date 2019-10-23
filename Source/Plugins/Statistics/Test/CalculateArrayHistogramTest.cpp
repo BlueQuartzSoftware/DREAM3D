@@ -113,7 +113,7 @@ public:
   /**
    * @brief Returns the name of the class for CalculateArrayHistogramTest
    */
-  const QString getNameOfClass() const
+  QString getNameOfClass() const
   {
     return QString("CalculateArrayHistogramTest");
   }

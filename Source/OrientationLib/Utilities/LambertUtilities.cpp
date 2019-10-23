@@ -122,7 +122,7 @@ LambertUtilities::Pointer LambertUtilities::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString LambertUtilities::getNameOfClass() const
+QString LambertUtilities::getNameOfClass() const
 {
   return QString("LambertUtilities");
 }

@@ -65,7 +65,7 @@ class OrientationLib_EXPORT ModifiedLambertProjection
     /**
      * @brief Returns the name of the class for ModifiedLambertProjection
      */
-    const QString getNameOfClass() const;
+    QString getNameOfClass() const;
     /**
      * @brief Returns the name of the class for ModifiedLambertProjection
      */

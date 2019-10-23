@@ -1097,7 +1097,7 @@ AbstractFilter::Pointer MovingFiniteElementSmoothing::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MovingFiniteElementSmoothing::getCompiledLibraryName() const
+QString MovingFiniteElementSmoothing::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -1105,7 +1105,7 @@ const QString MovingFiniteElementSmoothing::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MovingFiniteElementSmoothing::getBrandingString() const
+QString MovingFiniteElementSmoothing::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -1113,7 +1113,7 @@ const QString MovingFiniteElementSmoothing::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MovingFiniteElementSmoothing::getFilterVersion() const
+QString MovingFiniteElementSmoothing::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -1124,7 +1124,7 @@ const QString MovingFiniteElementSmoothing::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MovingFiniteElementSmoothing::getGroupName() const
+QString MovingFiniteElementSmoothing::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -1132,7 +1132,7 @@ const QString MovingFiniteElementSmoothing::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid MovingFiniteElementSmoothing::getUuid()
+QUuid MovingFiniteElementSmoothing::getUuid() const
 {
   return QUuid("{a5a18501-0c48-5c7f-8aa2-1eba209ccbe6}");
 }
@@ -1140,7 +1140,7 @@ const QUuid MovingFiniteElementSmoothing::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MovingFiniteElementSmoothing::getSubGroupName() const
+QString MovingFiniteElementSmoothing::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SmoothingFilters;
 }
@@ -1148,7 +1148,7 @@ const QString MovingFiniteElementSmoothing::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MovingFiniteElementSmoothing::getHumanLabel() const
+QString MovingFiniteElementSmoothing::getHumanLabel() const
 {
   return "Moving Finite Element Smoothing";
 }
@@ -1171,7 +1171,7 @@ std::shared_ptr<MovingFiniteElementSmoothing> MovingFiniteElementSmoothing::New(
 }
 
 // -----------------------------------------------------------------------------
-const QString MovingFiniteElementSmoothing::getNameOfClass() const
+QString MovingFiniteElementSmoothing::getNameOfClass() const
 {
   return QString("MovingFiniteElementSmoothing");
 }

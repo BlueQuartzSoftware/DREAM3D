@@ -247,7 +247,7 @@ AbstractFilter::Pointer FindFeaturePhases::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhases::getCompiledLibraryName() const
+QString FindFeaturePhases::getCompiledLibraryName() const
 {
   return GenericConstants::GenericBaseName;
 }
@@ -255,7 +255,7 @@ const QString FindFeaturePhases::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhases::getBrandingString() const
+QString FindFeaturePhases::getBrandingString() const
 {
   return "Generic";
 }
@@ -263,7 +263,7 @@ const QString FindFeaturePhases::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhases::getFilterVersion() const
+QString FindFeaturePhases::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -273,7 +273,7 @@ const QString FindFeaturePhases::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhases::getGroupName() const
+QString FindFeaturePhases::getGroupName() const
 {
   return SIMPL::FilterGroups::Generic;
 }
@@ -281,7 +281,7 @@ const QString FindFeaturePhases::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindFeaturePhases::getUuid()
+QUuid FindFeaturePhases::getUuid() const
 {
   return QUuid("{6334ce16-cea5-5643-83b5-9573805873fa}");
 }
@@ -289,7 +289,7 @@ const QUuid FindFeaturePhases::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhases::getSubGroupName() const
+QString FindFeaturePhases::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -297,7 +297,7 @@ const QString FindFeaturePhases::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhases::getHumanLabel() const
+QString FindFeaturePhases::getHumanLabel() const
 {
   return "Find Feature Phases";
 }
@@ -320,7 +320,7 @@ std::shared_ptr<FindFeaturePhases> FindFeaturePhases::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhases::getNameOfClass() const
+QString FindFeaturePhases::getNameOfClass() const
 {
   return QString("FindFeaturePhases");
 }

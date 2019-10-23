@@ -68,7 +68,7 @@ public:
   /**
    * @brief Returns the name of the class for VtkStruturedPointsReaderTest
    */
-  const QString getNameOfClass() const
+  QString getNameOfClass() const
   {
     return QString("VtkStruturedPointsReaderTest");
   }

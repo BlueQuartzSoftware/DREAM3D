@@ -270,7 +270,7 @@ AbstractFilter::Pointer LosAlamosFFTWriter::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LosAlamosFFTWriter::getCompiledLibraryName() const
+QString LosAlamosFFTWriter::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -278,7 +278,7 @@ const QString LosAlamosFFTWriter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LosAlamosFFTWriter::getBrandingString() const
+QString LosAlamosFFTWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -286,7 +286,7 @@ const QString LosAlamosFFTWriter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LosAlamosFFTWriter::getFilterVersion() const
+QString LosAlamosFFTWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -296,7 +296,7 @@ const QString LosAlamosFFTWriter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LosAlamosFFTWriter::getGroupName() const
+QString LosAlamosFFTWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -304,7 +304,7 @@ const QString LosAlamosFFTWriter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid LosAlamosFFTWriter::getUuid()
+QUuid LosAlamosFFTWriter::getUuid() const
 {
   return QUuid("{158ebe9e-f772-57e2-ac1b-71ff213cf890}");
 }
@@ -312,7 +312,7 @@ const QUuid LosAlamosFFTWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LosAlamosFFTWriter::getSubGroupName() const
+QString LosAlamosFFTWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -320,7 +320,7 @@ const QString LosAlamosFFTWriter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LosAlamosFFTWriter::getHumanLabel() const
+QString LosAlamosFFTWriter::getHumanLabel() const
 {
   return "Export Los Alamos FFT File";
 }
@@ -343,7 +343,7 @@ std::shared_ptr<LosAlamosFFTWriter> LosAlamosFFTWriter::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString LosAlamosFFTWriter::getNameOfClass() const
+QString LosAlamosFFTWriter::getNameOfClass() const
 {
   return QString("LosAlamosFFTWriter");
 }

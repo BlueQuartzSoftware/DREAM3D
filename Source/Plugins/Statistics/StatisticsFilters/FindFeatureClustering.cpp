@@ -473,7 +473,7 @@ AbstractFilter::Pointer FindFeatureClustering::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureClustering::getCompiledLibraryName() const
+QString FindFeatureClustering::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -481,7 +481,7 @@ const QString FindFeatureClustering::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureClustering::getBrandingString() const
+QString FindFeatureClustering::getBrandingString() const
 {
   return "Statistics";
 }
@@ -489,7 +489,7 @@ const QString FindFeatureClustering::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureClustering::getFilterVersion() const
+QString FindFeatureClustering::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -499,7 +499,7 @@ const QString FindFeatureClustering::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureClustering::getGroupName() const
+QString FindFeatureClustering::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -507,7 +507,7 @@ const QString FindFeatureClustering::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindFeatureClustering::getUuid()
+QUuid FindFeatureClustering::getUuid() const
 {
   return QUuid("{a1e9cf6d-2d1b-573e-98b8-0314c993d2b6}");
 }
@@ -515,7 +515,7 @@ const QUuid FindFeatureClustering::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureClustering::getSubGroupName() const
+QString FindFeatureClustering::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -523,7 +523,7 @@ const QString FindFeatureClustering::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureClustering::getHumanLabel() const
+QString FindFeatureClustering::getHumanLabel() const
 {
   return "Find Feature Clustering";
 }
@@ -546,7 +546,7 @@ std::shared_ptr<FindFeatureClustering> FindFeatureClustering::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindFeatureClustering::getNameOfClass() const
+QString FindFeatureClustering::getNameOfClass() const
 {
   return QString("FindFeatureClustering");
 }

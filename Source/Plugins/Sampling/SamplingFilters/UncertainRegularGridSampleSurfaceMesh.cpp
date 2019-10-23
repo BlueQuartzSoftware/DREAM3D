@@ -283,7 +283,7 @@ AbstractFilter::Pointer UncertainRegularGridSampleSurfaceMesh::newFilterInstance
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString UncertainRegularGridSampleSurfaceMesh::getCompiledLibraryName() const
+QString UncertainRegularGridSampleSurfaceMesh::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -291,7 +291,7 @@ const QString UncertainRegularGridSampleSurfaceMesh::getCompiledLibraryName() co
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString UncertainRegularGridSampleSurfaceMesh::getBrandingString() const
+QString UncertainRegularGridSampleSurfaceMesh::getBrandingString() const
 {
   return "Sampling";
 }
@@ -299,7 +299,7 @@ const QString UncertainRegularGridSampleSurfaceMesh::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString UncertainRegularGridSampleSurfaceMesh::getFilterVersion() const
+QString UncertainRegularGridSampleSurfaceMesh::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -309,7 +309,7 @@ const QString UncertainRegularGridSampleSurfaceMesh::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString UncertainRegularGridSampleSurfaceMesh::getGroupName() const
+QString UncertainRegularGridSampleSurfaceMesh::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -317,7 +317,7 @@ const QString UncertainRegularGridSampleSurfaceMesh::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid UncertainRegularGridSampleSurfaceMesh::getUuid()
+QUuid UncertainRegularGridSampleSurfaceMesh::getUuid() const
 {
   return QUuid("{75cfeb9b-cd4b-5a20-a344-4170b39bbfaf}");
 }
@@ -325,7 +325,7 @@ const QUuid UncertainRegularGridSampleSurfaceMesh::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString UncertainRegularGridSampleSurfaceMesh::getSubGroupName() const
+QString UncertainRegularGridSampleSurfaceMesh::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ResolutionFilters;
 }
@@ -333,7 +333,7 @@ const QString UncertainRegularGridSampleSurfaceMesh::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString UncertainRegularGridSampleSurfaceMesh::getHumanLabel() const
+QString UncertainRegularGridSampleSurfaceMesh::getHumanLabel() const
 {
   return "Sample Triangle Geometry on Uncertain Regular Grid";
 }
@@ -356,7 +356,7 @@ std::shared_ptr<UncertainRegularGridSampleSurfaceMesh> UncertainRegularGridSampl
 }
 
 // -----------------------------------------------------------------------------
-const QString UncertainRegularGridSampleSurfaceMesh::getNameOfClass() const
+QString UncertainRegularGridSampleSurfaceMesh::getNameOfClass() const
 {
   return QString("UncertainRegularGridSampleSurfaceMesh");
 }

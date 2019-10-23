@@ -200,7 +200,7 @@ AbstractFilter::Pointer FindVolFractions::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindVolFractions::getCompiledLibraryName() const
+QString FindVolFractions::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -208,7 +208,7 @@ const QString FindVolFractions::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindVolFractions::getBrandingString() const
+QString FindVolFractions::getBrandingString() const
 {
   return "Statistics";
 }
@@ -216,7 +216,7 @@ const QString FindVolFractions::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindVolFractions::getFilterVersion() const
+QString FindVolFractions::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -226,7 +226,7 @@ const QString FindVolFractions::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindVolFractions::getGroupName() const
+QString FindVolFractions::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -234,7 +234,7 @@ const QString FindVolFractions::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindVolFractions::getUuid()
+QUuid FindVolFractions::getUuid() const
 {
   return QUuid("{68246a67-7f32-5c80-815a-bec82008d7bc}");
 }
@@ -242,7 +242,7 @@ const QUuid FindVolFractions::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindVolFractions::getSubGroupName() const
+QString FindVolFractions::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -250,7 +250,7 @@ const QString FindVolFractions::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindVolFractions::getHumanLabel() const
+QString FindVolFractions::getHumanLabel() const
 {
   return "Find Volume Fractions of Ensembles";
 }
@@ -273,7 +273,7 @@ std::shared_ptr<FindVolFractions> FindVolFractions::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindVolFractions::getNameOfClass() const
+QString FindVolFractions::getNameOfClass() const
 {
   return QString("FindVolFractions");
 }

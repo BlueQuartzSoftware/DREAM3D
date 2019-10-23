@@ -59,7 +59,7 @@ class FindNRingNeighbors
     /**
      * @brief Returns the name of the class for FindNRingNeighbors
      */
-    const QString getNameOfClass() const;
+    QString getNameOfClass() const;
     /**
      * @brief Returns the name of the class for FindNRingNeighbors
      */

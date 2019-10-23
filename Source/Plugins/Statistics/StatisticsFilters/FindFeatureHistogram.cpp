@@ -325,7 +325,7 @@ AbstractFilter::Pointer FindFeatureHistogram::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureHistogram::getCompiledLibraryName() const
+QString FindFeatureHistogram::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -333,7 +333,7 @@ const QString FindFeatureHistogram::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureHistogram::getBrandingString() const
+QString FindFeatureHistogram::getBrandingString() const
 {
   return "Statistics";
 }
@@ -341,7 +341,7 @@ const QString FindFeatureHistogram::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureHistogram::getFilterVersion() const
+QString FindFeatureHistogram::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -352,7 +352,7 @@ const QString FindFeatureHistogram::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureHistogram::getGroupName() const
+QString FindFeatureHistogram::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -360,7 +360,7 @@ const QString FindFeatureHistogram::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindFeatureHistogram::getUuid()
+QUuid FindFeatureHistogram::getUuid() const
 {
   return QUuid("{f1b8354c-0aa7-517e-98c2-5e75ad2b828e}");
 }
@@ -368,7 +368,7 @@ const QUuid FindFeatureHistogram::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureHistogram::getSubGroupName() const
+QString FindFeatureHistogram::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::EnsembleStatsFilters;
 }
@@ -376,7 +376,7 @@ const QString FindFeatureHistogram::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureHistogram::getHumanLabel() const
+QString FindFeatureHistogram::getHumanLabel() const
 {
   return "Find Feature Histogram";
 }
@@ -399,7 +399,7 @@ std::shared_ptr<FindFeatureHistogram> FindFeatureHistogram::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindFeatureHistogram::getNameOfClass() const
+QString FindFeatureHistogram::getNameOfClass() const
 {
   return QString("FindFeatureHistogram");
 }

@@ -167,7 +167,7 @@ EMMPMFilterParameter::Pointer EMMPMFilterParameter::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString EMMPMFilterParameter::getNameOfClass() const
+QString EMMPMFilterParameter::getNameOfClass() const
 {
   return QString("EMMPMFilterParameter");
 }

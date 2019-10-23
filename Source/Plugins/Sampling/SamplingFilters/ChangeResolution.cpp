@@ -450,7 +450,7 @@ AbstractFilter::Pointer ChangeResolution::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeResolution::getCompiledLibraryName() const
+QString ChangeResolution::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -458,7 +458,7 @@ const QString ChangeResolution::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeResolution::getBrandingString() const
+QString ChangeResolution::getBrandingString() const
 {
   return "Sampling";
 }
@@ -466,7 +466,7 @@ const QString ChangeResolution::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeResolution::getFilterVersion() const
+QString ChangeResolution::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -476,7 +476,7 @@ const QString ChangeResolution::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeResolution::getGroupName() const
+QString ChangeResolution::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -484,7 +484,7 @@ const QString ChangeResolution::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ChangeResolution::getUuid()
+QUuid ChangeResolution::getUuid() const
 {
   return QUuid("{1966e540-759c-5798-ae26-0c6a3abc65c0}");
 }
@@ -492,7 +492,7 @@ const QUuid ChangeResolution::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeResolution::getSubGroupName() const
+QString ChangeResolution::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ResolutionFilters;
 }
@@ -500,7 +500,7 @@ const QString ChangeResolution::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeResolution::getHumanLabel() const
+QString ChangeResolution::getHumanLabel() const
 {
   return "Change Spacing";
 }
@@ -523,7 +523,7 @@ std::shared_ptr<ChangeResolution> ChangeResolution::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString ChangeResolution::getNameOfClass() const
+QString ChangeResolution::getNameOfClass() const
 {
   return QString("ChangeResolution");
 }

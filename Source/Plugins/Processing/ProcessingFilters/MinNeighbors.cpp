@@ -508,7 +508,7 @@ AbstractFilter::Pointer MinNeighbors::newFilterInstance(bool copyFilterParameter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MinNeighbors::getCompiledLibraryName() const
+QString MinNeighbors::getCompiledLibraryName() const
 {
   return ProcessingConstants::ProcessingBaseName;
 }
@@ -516,7 +516,7 @@ const QString MinNeighbors::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MinNeighbors::getBrandingString() const
+QString MinNeighbors::getBrandingString() const
 {
   return "Processing";
 }
@@ -524,7 +524,7 @@ const QString MinNeighbors::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MinNeighbors::getFilterVersion() const
+QString MinNeighbors::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -534,7 +534,7 @@ const QString MinNeighbors::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MinNeighbors::getGroupName() const
+QString MinNeighbors::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -542,7 +542,7 @@ const QString MinNeighbors::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid MinNeighbors::getUuid()
+QUuid MinNeighbors::getUuid() const
 {
   return QUuid("{dab5de3c-5f81-5bb5-8490-73521e1183ea}");
 }
@@ -550,7 +550,7 @@ const QUuid MinNeighbors::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MinNeighbors::getSubGroupName() const
+QString MinNeighbors::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CleanupFilters;
 }
@@ -558,7 +558,7 @@ const QString MinNeighbors::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MinNeighbors::getHumanLabel() const
+QString MinNeighbors::getHumanLabel() const
 {
   return "Minimum Number of Neighbors";
 }
@@ -581,7 +581,7 @@ std::shared_ptr<MinNeighbors> MinNeighbors::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString MinNeighbors::getNameOfClass() const
+QString MinNeighbors::getNameOfClass() const
 {
   return QString("MinNeighbors");
 }

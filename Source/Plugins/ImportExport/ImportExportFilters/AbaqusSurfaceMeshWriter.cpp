@@ -372,7 +372,7 @@ AbstractFilter::Pointer AbaqusSurfaceMeshWriter::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusSurfaceMeshWriter::getCompiledLibraryName() const
+QString AbaqusSurfaceMeshWriter::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -380,7 +380,7 @@ const QString AbaqusSurfaceMeshWriter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusSurfaceMeshWriter::getBrandingString() const
+QString AbaqusSurfaceMeshWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -388,7 +388,7 @@ const QString AbaqusSurfaceMeshWriter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusSurfaceMeshWriter::getFilterVersion() const
+QString AbaqusSurfaceMeshWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -398,7 +398,7 @@ const QString AbaqusSurfaceMeshWriter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusSurfaceMeshWriter::getGroupName() const
+QString AbaqusSurfaceMeshWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -406,7 +406,7 @@ const QString AbaqusSurfaceMeshWriter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid AbaqusSurfaceMeshWriter::getUuid()
+QUuid AbaqusSurfaceMeshWriter::getUuid() const
 {
   return QUuid("{abbe2e1e-6fb2-5511-91f3-0637252f0705}");
 }
@@ -414,7 +414,7 @@ const QUuid AbaqusSurfaceMeshWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusSurfaceMeshWriter::getSubGroupName() const
+QString AbaqusSurfaceMeshWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -422,7 +422,7 @@ const QString AbaqusSurfaceMeshWriter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusSurfaceMeshWriter::getHumanLabel() const
+QString AbaqusSurfaceMeshWriter::getHumanLabel() const
 {
   return "Export Abaqus Surface Mesh";
 }
@@ -445,7 +445,7 @@ std::shared_ptr<AbaqusSurfaceMeshWriter> AbaqusSurfaceMeshWriter::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString AbaqusSurfaceMeshWriter::getNameOfClass() const
+QString AbaqusSurfaceMeshWriter::getNameOfClass() const
 {
   return QString("AbaqusSurfaceMeshWriter");
 }

@@ -373,7 +373,7 @@ AbstractFilter::Pointer ErodeDilateBadData::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateBadData::getCompiledLibraryName() const
+QString ErodeDilateBadData::getCompiledLibraryName() const
 {
   return ProcessingConstants::ProcessingBaseName;
 }
@@ -381,7 +381,7 @@ const QString ErodeDilateBadData::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateBadData::getBrandingString() const
+QString ErodeDilateBadData::getBrandingString() const
 {
   return "Processing";
 }
@@ -389,7 +389,7 @@ const QString ErodeDilateBadData::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateBadData::getFilterVersion() const
+QString ErodeDilateBadData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -399,7 +399,7 @@ const QString ErodeDilateBadData::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateBadData::getGroupName() const
+QString ErodeDilateBadData::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -407,7 +407,7 @@ const QString ErodeDilateBadData::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ErodeDilateBadData::getUuid()
+QUuid ErodeDilateBadData::getUuid() const
 {
   return QUuid("{3adfe077-c3c9-5cd0-ad74-cf5f8ff3d254}");
 }
@@ -415,7 +415,7 @@ const QUuid ErodeDilateBadData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateBadData::getSubGroupName() const
+QString ErodeDilateBadData::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CleanupFilters;
 }
@@ -423,7 +423,7 @@ const QString ErodeDilateBadData::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ErodeDilateBadData::getHumanLabel() const
+QString ErodeDilateBadData::getHumanLabel() const
 {
   return "Erode/Dilate Bad Data";
 }
@@ -446,7 +446,7 @@ std::shared_ptr<ErodeDilateBadData> ErodeDilateBadData::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString ErodeDilateBadData::getNameOfClass() const
+QString ErodeDilateBadData::getNameOfClass() const
 {
   return QString("ErodeDilateBadData");
 }

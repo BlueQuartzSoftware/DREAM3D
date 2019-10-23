@@ -704,7 +704,7 @@ AbstractFilter::Pointer ReadCtfData::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadCtfData::getCompiledLibraryName() const
+QString ReadCtfData::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -712,7 +712,7 @@ const QString ReadCtfData::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadCtfData::getBrandingString() const
+QString ReadCtfData::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -720,7 +720,7 @@ const QString ReadCtfData::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadCtfData::getFilterVersion() const
+QString ReadCtfData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -730,7 +730,7 @@ const QString ReadCtfData::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadCtfData::getGroupName() const
+QString ReadCtfData::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -738,7 +738,7 @@ const QString ReadCtfData::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ReadCtfData::getUuid()
+QUuid ReadCtfData::getUuid() const
 {
   return QUuid("{d1df969c-0428-53c3-b61d-99ea2bb6da28}");
 }
@@ -746,7 +746,7 @@ const QUuid ReadCtfData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadCtfData::getSubGroupName() const
+QString ReadCtfData::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -754,7 +754,7 @@ const QString ReadCtfData::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadCtfData::getHumanLabel() const
+QString ReadCtfData::getHumanLabel() const
 {
   return "Import Oxford Instr. EBSD Data (.ctf)";
 }
@@ -777,7 +777,7 @@ std::shared_ptr<ReadCtfData> ReadCtfData::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString ReadCtfData::getNameOfClass() const
+QString ReadCtfData::getNameOfClass() const
 {
   return QString("ReadCtfData");
 }

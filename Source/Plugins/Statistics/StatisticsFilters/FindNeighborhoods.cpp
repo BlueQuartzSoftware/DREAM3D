@@ -445,7 +445,7 @@ AbstractFilter::Pointer FindNeighborhoods::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighborhoods::getCompiledLibraryName() const
+QString FindNeighborhoods::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -453,7 +453,7 @@ const QString FindNeighborhoods::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighborhoods::getBrandingString() const
+QString FindNeighborhoods::getBrandingString() const
 {
   return "Statistics";
 }
@@ -461,7 +461,7 @@ const QString FindNeighborhoods::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighborhoods::getFilterVersion() const
+QString FindNeighborhoods::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -471,7 +471,7 @@ const QString FindNeighborhoods::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighborhoods::getGroupName() const
+QString FindNeighborhoods::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -479,7 +479,7 @@ const QString FindNeighborhoods::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindNeighborhoods::getUuid()
+QUuid FindNeighborhoods::getUuid() const
 {
   return QUuid("{697ed3de-db33-5dd1-a64b-04fb71e7d63e}");
 }
@@ -487,7 +487,7 @@ const QUuid FindNeighborhoods::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighborhoods::getSubGroupName() const
+QString FindNeighborhoods::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -495,7 +495,7 @@ const QString FindNeighborhoods::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighborhoods::getHumanLabel() const
+QString FindNeighborhoods::getHumanLabel() const
 {
   return "Find Feature Neighborhoods";
 }
@@ -518,7 +518,7 @@ std::shared_ptr<FindNeighborhoods> FindNeighborhoods::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindNeighborhoods::getNameOfClass() const
+QString FindNeighborhoods::getNameOfClass() const
 {
   return QString("FindNeighborhoods");
 }

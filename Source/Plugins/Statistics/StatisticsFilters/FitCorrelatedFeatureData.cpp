@@ -489,7 +489,7 @@ AbstractFilter::Pointer FitCorrelatedFeatureData::newFilterInstance(bool copyFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FitCorrelatedFeatureData::getCompiledLibraryName() const
+QString FitCorrelatedFeatureData::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -497,7 +497,7 @@ const QString FitCorrelatedFeatureData::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FitCorrelatedFeatureData::getBrandingString() const
+QString FitCorrelatedFeatureData::getBrandingString() const
 {
   return "Statistics";
 }
@@ -505,7 +505,7 @@ const QString FitCorrelatedFeatureData::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FitCorrelatedFeatureData::getFilterVersion() const
+QString FitCorrelatedFeatureData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -516,7 +516,7 @@ const QString FitCorrelatedFeatureData::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FitCorrelatedFeatureData::getGroupName() const
+QString FitCorrelatedFeatureData::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -524,7 +524,7 @@ const QString FitCorrelatedFeatureData::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FitCorrelatedFeatureData::getUuid()
+QUuid FitCorrelatedFeatureData::getUuid() const
 {
   return QUuid("{d9fb65ac-e75e-581b-8ebc-0129d797b546}");
 }
@@ -532,7 +532,7 @@ const QUuid FitCorrelatedFeatureData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FitCorrelatedFeatureData::getSubGroupName() const
+QString FitCorrelatedFeatureData::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::EnsembleStatsFilters;
 }
@@ -540,7 +540,7 @@ const QString FitCorrelatedFeatureData::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FitCorrelatedFeatureData::getHumanLabel() const
+QString FitCorrelatedFeatureData::getHumanLabel() const
 {
   return "Fit Correlated Distributions To Feature Data";
 }
@@ -563,7 +563,7 @@ std::shared_ptr<FitCorrelatedFeatureData> FitCorrelatedFeatureData::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FitCorrelatedFeatureData::getNameOfClass() const
+QString FitCorrelatedFeatureData::getNameOfClass() const
 {
   return QString("FitCorrelatedFeatureData");
 }

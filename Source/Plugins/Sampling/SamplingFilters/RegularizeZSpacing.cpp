@@ -289,7 +289,7 @@ AbstractFilter::Pointer RegularizeZSpacing::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RegularizeZSpacing::getCompiledLibraryName() const
+QString RegularizeZSpacing::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -297,7 +297,7 @@ const QString RegularizeZSpacing::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RegularizeZSpacing::getBrandingString() const
+QString RegularizeZSpacing::getBrandingString() const
 {
   return "Sampling";
 }
@@ -305,7 +305,7 @@ const QString RegularizeZSpacing::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RegularizeZSpacing::getFilterVersion() const
+QString RegularizeZSpacing::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -315,7 +315,7 @@ const QString RegularizeZSpacing::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RegularizeZSpacing::getGroupName() const
+QString RegularizeZSpacing::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -323,7 +323,7 @@ const QString RegularizeZSpacing::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid RegularizeZSpacing::getUuid()
+QUuid RegularizeZSpacing::getUuid() const
 {
   return QUuid("{bc4952fa-34ca-50bf-a1e9-2b9f7e5d47ce}");
 }
@@ -331,7 +331,7 @@ const QUuid RegularizeZSpacing::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RegularizeZSpacing::getSubGroupName() const
+QString RegularizeZSpacing::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ResolutionFilters;
 }
@@ -339,7 +339,7 @@ const QString RegularizeZSpacing::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RegularizeZSpacing::getHumanLabel() const
+QString RegularizeZSpacing::getHumanLabel() const
 {
   return "Regularize Z Spacing";
 }
@@ -362,7 +362,7 @@ std::shared_ptr<RegularizeZSpacing> RegularizeZSpacing::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString RegularizeZSpacing::getNameOfClass() const
+QString RegularizeZSpacing::getNameOfClass() const
 {
   return QString("RegularizeZSpacing");
 }

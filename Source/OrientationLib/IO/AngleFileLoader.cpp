@@ -244,7 +244,7 @@ AngleFileLoader::Pointer AngleFileLoader::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString AngleFileLoader::getNameOfClass() const
+QString AngleFileLoader::getNameOfClass() const
 {
   return QString("AngleFileLoader");
 }

@@ -65,7 +65,7 @@ class EMMPMLib_EXPORT InitializationFunction
     /**
      * @brief Returns the name of the class for InitializationFunction;
      */
-    virtual const QString getNameOfClass() const;
+    virtual QString getNameOfClass() const;
     /**
      * @brief Returns the name of the class for InitializationFunction;
      */
@@ -107,7 +107,7 @@ class EMMPMLib_EXPORT BasicInitialization : public InitializationFunction
     /**
      * @brief Returns the name of the class for BasicInitialization;
      */
-    const QString getNameOfClass() const override;
+    QString getNameOfClass() const override;
     /**
      * @brief Returns the name of the class for BasicInitialization;
      */
@@ -149,7 +149,7 @@ class EMMPMLib_EXPORT UserDefinedAreasInitialization : public InitializationFunc
     /**
      * @brief Returns the name of the class for UserDefinedAreasInitialization;
      */
-    const QString getNameOfClass() const override;
+    QString getNameOfClass() const override;
     /**
      * @brief Returns the name of the class for UserDefinedAreasInitialization;
      */
@@ -191,7 +191,7 @@ class EMMPMLib_EXPORT XtArrayInitialization : public InitializationFunction
     /**
      * @brief Returns the name of the class for XtArrayInitialization;
      */
-    const QString getNameOfClass() const override;
+    QString getNameOfClass() const override;
     /**
      * @brief Returns the name of the class for XtArrayInitialization;
      */
@@ -233,7 +233,7 @@ class EMMPMLib_EXPORT GradientVariablesInitialization : public InitializationFun
     /**
      * @brief Returns the name of the class for GradientVariablesInitialization;
      */
-    const QString getNameOfClass() const override;
+    QString getNameOfClass() const override;
     /**
      * @brief Returns the name of the class for GradientVariablesInitialization;
      */
@@ -275,7 +275,7 @@ class EMMPMLib_EXPORT CurvatureInitialization : public InitializationFunction
     /**
      * @brief Returns the name of the class for CurvatureInitialization;
      */
-    const QString getNameOfClass() const override;
+    QString getNameOfClass() const override;
     /**
      * @brief Returns the name of the class for CurvatureInitialization;
      */

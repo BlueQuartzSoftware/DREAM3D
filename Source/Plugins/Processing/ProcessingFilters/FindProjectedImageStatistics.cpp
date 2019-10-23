@@ -610,7 +610,7 @@ AbstractFilter::Pointer FindProjectedImageStatistics::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindProjectedImageStatistics::getCompiledLibraryName() const
+QString FindProjectedImageStatistics::getCompiledLibraryName() const
 {
   return ProcessingConstants::ProcessingBaseName;
 }
@@ -618,7 +618,7 @@ const QString FindProjectedImageStatistics::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindProjectedImageStatistics::getBrandingString() const
+QString FindProjectedImageStatistics::getBrandingString() const
 {
   return "Processing";
 }
@@ -626,7 +626,7 @@ const QString FindProjectedImageStatistics::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindProjectedImageStatistics::getFilterVersion() const
+QString FindProjectedImageStatistics::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -637,7 +637,7 @@ const QString FindProjectedImageStatistics::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindProjectedImageStatistics::getGroupName() const
+QString FindProjectedImageStatistics::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -645,7 +645,7 @@ const QString FindProjectedImageStatistics::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindProjectedImageStatistics::getUuid()
+QUuid FindProjectedImageStatistics::getUuid() const
 {
   return QUuid("{577dfdf6-02f8-5284-b45b-e31f5392a191}");
 }
@@ -653,7 +653,7 @@ const QUuid FindProjectedImageStatistics::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindProjectedImageStatistics::getSubGroupName() const
+QString FindProjectedImageStatistics::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ImageFilters;
 }
@@ -661,7 +661,7 @@ const QString FindProjectedImageStatistics::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindProjectedImageStatistics::getHumanLabel() const
+QString FindProjectedImageStatistics::getHumanLabel() const
 {
   return "Find Projected Image Statistics";
 }
@@ -684,7 +684,7 @@ std::shared_ptr<FindProjectedImageStatistics> FindProjectedImageStatistics::New(
 }
 
 // -----------------------------------------------------------------------------
-const QString FindProjectedImageStatistics::getNameOfClass() const
+QString FindProjectedImageStatistics::getNameOfClass() const
 {
   return QString("FindProjectedImageStatistics");
 }

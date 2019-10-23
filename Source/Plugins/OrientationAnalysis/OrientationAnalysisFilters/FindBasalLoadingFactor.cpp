@@ -221,7 +221,7 @@ AbstractFilter::Pointer FindBasalLoadingFactor::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBasalLoadingFactor::getCompiledLibraryName() const
+QString FindBasalLoadingFactor::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -229,7 +229,7 @@ const QString FindBasalLoadingFactor::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBasalLoadingFactor::getBrandingString() const
+QString FindBasalLoadingFactor::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -237,7 +237,7 @@ const QString FindBasalLoadingFactor::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBasalLoadingFactor::getFilterVersion() const
+QString FindBasalLoadingFactor::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -248,7 +248,7 @@ const QString FindBasalLoadingFactor::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBasalLoadingFactor::getGroupName() const
+QString FindBasalLoadingFactor::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -256,7 +256,7 @@ const QString FindBasalLoadingFactor::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindBasalLoadingFactor::getUuid()
+QUuid FindBasalLoadingFactor::getUuid() const
 {
   return QUuid("{4a8cf012-7ce0-5479-970e-3f5e2052396e}");
 }
@@ -264,7 +264,7 @@ const QUuid FindBasalLoadingFactor::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBasalLoadingFactor::getSubGroupName() const
+QString FindBasalLoadingFactor::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -272,7 +272,7 @@ const QString FindBasalLoadingFactor::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBasalLoadingFactor::getHumanLabel() const
+QString FindBasalLoadingFactor::getHumanLabel() const
 {
   return "Find Basal Loading Factors";
 }
@@ -295,7 +295,7 @@ std::shared_ptr<FindBasalLoadingFactor> FindBasalLoadingFactor::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindBasalLoadingFactor::getNameOfClass() const
+QString FindBasalLoadingFactor::getNameOfClass() const
 {
   return QString("FindBasalLoadingFactor");
 }

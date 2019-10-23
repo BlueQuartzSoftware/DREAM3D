@@ -71,7 +71,7 @@ class SurfaceMeshing_EXPORT BinaryNodesTrianglesReader : public SurfaceMeshFilte
     /**
      * @brief Returns the name of the class for BinaryNodesTrianglesReader
      */
-    const QString getNameOfClass() const override;
+    QString getNameOfClass() const override;
     /**
      * @brief Returns the name of the class for BinaryNodesTrianglesReader
      */

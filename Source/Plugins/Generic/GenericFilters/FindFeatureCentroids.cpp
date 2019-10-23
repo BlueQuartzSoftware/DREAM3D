@@ -238,7 +238,7 @@ AbstractFilter::Pointer FindFeatureCentroids::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureCentroids::getCompiledLibraryName() const
+QString FindFeatureCentroids::getCompiledLibraryName() const
 {
   return GenericConstants::GenericBaseName;
 }
@@ -246,7 +246,7 @@ const QString FindFeatureCentroids::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureCentroids::getBrandingString() const
+QString FindFeatureCentroids::getBrandingString() const
 {
   return "Generic";
 }
@@ -254,7 +254,7 @@ const QString FindFeatureCentroids::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureCentroids::getFilterVersion() const
+QString FindFeatureCentroids::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -265,7 +265,7 @@ const QString FindFeatureCentroids::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureCentroids::getGroupName() const
+QString FindFeatureCentroids::getGroupName() const
 {
   return SIMPL::FilterGroups::Generic;
 }
@@ -273,7 +273,7 @@ const QString FindFeatureCentroids::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindFeatureCentroids::getUuid()
+QUuid FindFeatureCentroids::getUuid() const
 {
   return QUuid("{6f8ca36f-2995-5bd3-8672-6b0b80d5b2ca}");
 }
@@ -281,7 +281,7 @@ const QUuid FindFeatureCentroids::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureCentroids::getSubGroupName() const
+QString FindFeatureCentroids::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -289,7 +289,7 @@ const QString FindFeatureCentroids::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureCentroids::getHumanLabel() const
+QString FindFeatureCentroids::getHumanLabel() const
 {
   return "Find Feature Centroids";
 }
@@ -312,7 +312,7 @@ std::shared_ptr<FindFeatureCentroids> FindFeatureCentroids::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindFeatureCentroids::getNameOfClass() const
+QString FindFeatureCentroids::getNameOfClass() const
 {
   return QString("FindFeatureCentroids");
 }

@@ -460,7 +460,7 @@ AbstractFilter::Pointer NodesTrianglesToStl::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToStl::getCompiledLibraryName() const
+QString NodesTrianglesToStl::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -468,7 +468,7 @@ const QString NodesTrianglesToStl::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToStl::getBrandingString() const
+QString NodesTrianglesToStl::getBrandingString() const
 {
   return "IO";
 }
@@ -476,7 +476,7 @@ const QString NodesTrianglesToStl::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToStl::getFilterVersion() const
+QString NodesTrianglesToStl::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -487,7 +487,7 @@ const QString NodesTrianglesToStl::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToStl::getGroupName() const
+QString NodesTrianglesToStl::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -495,7 +495,7 @@ const QString NodesTrianglesToStl::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid NodesTrianglesToStl::getUuid()
+QUuid NodesTrianglesToStl::getUuid() const
 {
   return QUuid("{5c4e21ac-902d-51d6-992b-2ddb89f26b84}");
 }
@@ -503,7 +503,7 @@ const QUuid NodesTrianglesToStl::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToStl::getSubGroupName() const
+QString NodesTrianglesToStl::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -511,7 +511,7 @@ const QString NodesTrianglesToStl::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToStl::getHumanLabel() const
+QString NodesTrianglesToStl::getHumanLabel() const
 {
   return "Convert Nodes & Triangles To STL Files";
 }
@@ -534,7 +534,7 @@ std::shared_ptr<NodesTrianglesToStl> NodesTrianglesToStl::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToStl::getNameOfClass() const
+QString NodesTrianglesToStl::getNameOfClass() const
 {
   return QString("NodesTrianglesToStl");
 }

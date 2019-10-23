@@ -1591,7 +1591,7 @@ HexagonalLowOps::Pointer HexagonalLowOps::NullPointer()
 }
 
 // -----------------------------------------------------------------------------
-const QString HexagonalLowOps::getNameOfClass() const
+QString HexagonalLowOps::getNameOfClass() const
 {
   return QString("HexagonalLowOps");
 }

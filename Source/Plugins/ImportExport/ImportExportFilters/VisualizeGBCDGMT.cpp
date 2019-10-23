@@ -498,7 +498,7 @@ AbstractFilter::Pointer VisualizeGBCDGMT::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDGMT::getCompiledLibraryName() const
+QString VisualizeGBCDGMT::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -506,7 +506,7 @@ const QString VisualizeGBCDGMT::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDGMT::getBrandingString() const
+QString VisualizeGBCDGMT::getBrandingString() const
 {
   return "IO";
 }
@@ -514,7 +514,7 @@ const QString VisualizeGBCDGMT::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDGMT::getFilterVersion() const
+QString VisualizeGBCDGMT::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -524,7 +524,7 @@ const QString VisualizeGBCDGMT::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDGMT::getGroupName() const
+QString VisualizeGBCDGMT::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -532,7 +532,7 @@ const QString VisualizeGBCDGMT::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid VisualizeGBCDGMT::getUuid()
+QUuid VisualizeGBCDGMT::getUuid() const
 {
   return QUuid("{f62065b4-54e9-53b1-bed7-2178a57d3c7a}");
 }
@@ -540,7 +540,7 @@ const QUuid VisualizeGBCDGMT::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDGMT::getSubGroupName() const
+QString VisualizeGBCDGMT::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -548,7 +548,7 @@ const QString VisualizeGBCDGMT::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDGMT::getHumanLabel() const
+QString VisualizeGBCDGMT::getHumanLabel() const
 {
   return "Export GBCD Pole Figure (GMT 5)";
 }
@@ -571,7 +571,7 @@ std::shared_ptr<VisualizeGBCDGMT> VisualizeGBCDGMT::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDGMT::getNameOfClass() const
+QString VisualizeGBCDGMT::getNameOfClass() const
 {
   return QString("VisualizeGBCDGMT");
 }

@@ -374,7 +374,7 @@ AbstractFilter::Pointer ImportEbsdMontage::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportEbsdMontage::getCompiledLibraryName() const
+QString ImportEbsdMontage::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -382,7 +382,7 @@ const QString ImportEbsdMontage::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportEbsdMontage::getBrandingString() const
+QString ImportEbsdMontage::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -390,7 +390,7 @@ const QString ImportEbsdMontage::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportEbsdMontage::getFilterVersion() const
+QString ImportEbsdMontage::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -401,7 +401,7 @@ const QString ImportEbsdMontage::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportEbsdMontage::getGroupName() const
+QString ImportEbsdMontage::getGroupName() const
 {
   return SIMPL::FilterGroups::Unsupported;
 }
@@ -409,7 +409,7 @@ const QString ImportEbsdMontage::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportEbsdMontage::getSubGroupName() const
+QString ImportEbsdMontage::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -417,7 +417,7 @@ const QString ImportEbsdMontage::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportEbsdMontage::getHumanLabel() const
+QString ImportEbsdMontage::getHumanLabel() const
 {
   return "Import EBSD Montage";
 }
@@ -425,7 +425,7 @@ const QString ImportEbsdMontage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ImportEbsdMontage::getUuid()
+QUuid ImportEbsdMontage::getUuid() const
 {
   return QUuid("{179b0c7a-4e62-5070-ba49-ae58d5ccbfe8}");
 }
@@ -448,7 +448,7 @@ std::shared_ptr<ImportEbsdMontage> ImportEbsdMontage::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString ImportEbsdMontage::getNameOfClass() const
+QString ImportEbsdMontage::getNameOfClass() const
 {
   return QString("ImportEbsdMontage");
 }

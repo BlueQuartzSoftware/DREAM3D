@@ -1030,7 +1030,7 @@ AbstractFilter::Pointer WritePoleFigure::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WritePoleFigure::getCompiledLibraryName() const
+QString WritePoleFigure::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -1038,7 +1038,7 @@ const QString WritePoleFigure::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WritePoleFigure::getBrandingString() const
+QString WritePoleFigure::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -1046,7 +1046,7 @@ const QString WritePoleFigure::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WritePoleFigure::getFilterVersion() const
+QString WritePoleFigure::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -1056,7 +1056,7 @@ const QString WritePoleFigure::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WritePoleFigure::getGroupName() const
+QString WritePoleFigure::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -1064,7 +1064,7 @@ const QString WritePoleFigure::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid WritePoleFigure::getUuid()
+QUuid WritePoleFigure::getUuid() const
 {
   return QUuid("{a10bb78e-fcff-553d-97d6-830a43c85385}");
 }
@@ -1072,7 +1072,7 @@ const QUuid WritePoleFigure::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WritePoleFigure::getSubGroupName() const
+QString WritePoleFigure::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -1080,7 +1080,7 @@ const QString WritePoleFigure::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WritePoleFigure::getHumanLabel() const
+QString WritePoleFigure::getHumanLabel() const
 {
   return "Export Pole Figure Images";
 }
@@ -1103,7 +1103,7 @@ std::shared_ptr<WritePoleFigure> WritePoleFigure::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString WritePoleFigure::getNameOfClass() const
+QString WritePoleFigure::getNameOfClass() const
 {
   return QString("WritePoleFigure");
 }

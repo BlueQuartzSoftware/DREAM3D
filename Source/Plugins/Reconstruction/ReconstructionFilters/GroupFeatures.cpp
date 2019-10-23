@@ -289,7 +289,7 @@ AbstractFilter::Pointer GroupFeatures::newFilterInstance(bool copyFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GroupFeatures::getCompiledLibraryName() const
+QString GroupFeatures::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -297,7 +297,7 @@ const QString GroupFeatures::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GroupFeatures::getBrandingString() const
+QString GroupFeatures::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -305,7 +305,7 @@ const QString GroupFeatures::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GroupFeatures::getFilterVersion() const
+QString GroupFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -315,7 +315,7 @@ const QString GroupFeatures::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GroupFeatures::getGroupName() const
+QString GroupFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -323,7 +323,7 @@ const QString GroupFeatures::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid GroupFeatures::getUuid()
+QUuid GroupFeatures::getUuid() const
 {
   return QUuid("{18d3e50e-050f-57f8-a357-103f00ab7b7b}");
 }
@@ -331,7 +331,7 @@ const QUuid GroupFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GroupFeatures::getSubGroupName() const
+QString GroupFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;
 }
@@ -339,7 +339,7 @@ const QString GroupFeatures::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GroupFeatures::getHumanLabel() const
+QString GroupFeatures::getHumanLabel() const
 {
   return "Group Features";
 }
@@ -362,7 +362,7 @@ std::shared_ptr<GroupFeatures> GroupFeatures::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString GroupFeatures::getNameOfClass() const
+QString GroupFeatures::getNameOfClass() const
 {
   return QString("GroupFeatures");
 }

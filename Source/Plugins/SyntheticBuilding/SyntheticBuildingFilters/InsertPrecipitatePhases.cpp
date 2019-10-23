@@ -3072,7 +3072,7 @@ AbstractFilter::Pointer InsertPrecipitatePhases::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertPrecipitatePhases::getCompiledLibraryName() const
+QString InsertPrecipitatePhases::getCompiledLibraryName() const
 {
   return SyntheticBuildingConstants::SyntheticBuildingBaseName;
 }
@@ -3080,7 +3080,7 @@ const QString InsertPrecipitatePhases::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertPrecipitatePhases::getBrandingString() const
+QString InsertPrecipitatePhases::getBrandingString() const
 {
   return "SyntheticBuilding";
 }
@@ -3088,7 +3088,7 @@ const QString InsertPrecipitatePhases::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertPrecipitatePhases::getFilterVersion() const
+QString InsertPrecipitatePhases::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -3098,7 +3098,7 @@ const QString InsertPrecipitatePhases::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertPrecipitatePhases::getGroupName() const
+QString InsertPrecipitatePhases::getGroupName() const
 {
   return SIMPL::FilterGroups::SyntheticBuildingFilters;
 }
@@ -3106,7 +3106,7 @@ const QString InsertPrecipitatePhases::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid InsertPrecipitatePhases::getUuid()
+QUuid InsertPrecipitatePhases::getUuid() const
 {
   return QUuid("{1e552e0c-53bb-5ae1-bd1c-c7a6590f9328}");
 }
@@ -3114,7 +3114,7 @@ const QUuid InsertPrecipitatePhases::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertPrecipitatePhases::getSubGroupName() const
+QString InsertPrecipitatePhases::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::PackingFilters;
 }
@@ -3122,7 +3122,7 @@ const QString InsertPrecipitatePhases::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertPrecipitatePhases::getHumanLabel() const
+QString InsertPrecipitatePhases::getHumanLabel() const
 {
   return "Insert Precipitate Phases";
 }
@@ -3145,7 +3145,7 @@ std::shared_ptr<InsertPrecipitatePhases> InsertPrecipitatePhases::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString InsertPrecipitatePhases::getNameOfClass() const
+QString InsertPrecipitatePhases::getNameOfClass() const
 {
   return QString("InsertPrecipitatePhases");
 }

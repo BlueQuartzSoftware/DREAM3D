@@ -976,7 +976,7 @@ MonoclinicOps::Pointer MonoclinicOps::NullPointer()
 }
 
 // -----------------------------------------------------------------------------
-const QString MonoclinicOps::getNameOfClass() const
+QString MonoclinicOps::getNameOfClass() const
 {
   return QString("MonoclinicOps");
 }

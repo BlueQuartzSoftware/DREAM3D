@@ -691,7 +691,7 @@ AbstractFilter::Pointer FindRelativeMotionBetweenSlices::newFilterInstance(bool 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindRelativeMotionBetweenSlices::getCompiledLibraryName() const
+QString FindRelativeMotionBetweenSlices::getCompiledLibraryName() const
 {
   return ProcessingConstants::ProcessingBaseName;
 }
@@ -699,7 +699,7 @@ const QString FindRelativeMotionBetweenSlices::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindRelativeMotionBetweenSlices::getBrandingString() const
+QString FindRelativeMotionBetweenSlices::getBrandingString() const
 {
   return "Processing";
 }
@@ -707,7 +707,7 @@ const QString FindRelativeMotionBetweenSlices::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindRelativeMotionBetweenSlices::getFilterVersion() const
+QString FindRelativeMotionBetweenSlices::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -718,7 +718,7 @@ const QString FindRelativeMotionBetweenSlices::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindRelativeMotionBetweenSlices::getGroupName() const
+QString FindRelativeMotionBetweenSlices::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -726,7 +726,7 @@ const QString FindRelativeMotionBetweenSlices::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindRelativeMotionBetweenSlices::getUuid()
+QUuid FindRelativeMotionBetweenSlices::getUuid() const
 {
   return QUuid("{801008ce-1dcb-5604-8f16-a86526e28cf9}");
 }
@@ -734,7 +734,7 @@ const QUuid FindRelativeMotionBetweenSlices::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindRelativeMotionBetweenSlices::getSubGroupName() const
+QString FindRelativeMotionBetweenSlices::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ImageFilters;
 }
@@ -742,7 +742,7 @@ const QString FindRelativeMotionBetweenSlices::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindRelativeMotionBetweenSlices::getHumanLabel() const
+QString FindRelativeMotionBetweenSlices::getHumanLabel() const
 {
   return "Find Relative Motion Between Slices";
 }
@@ -765,7 +765,7 @@ std::shared_ptr<FindRelativeMotionBetweenSlices> FindRelativeMotionBetweenSlices
 }
 
 // -----------------------------------------------------------------------------
-const QString FindRelativeMotionBetweenSlices::getNameOfClass() const
+QString FindRelativeMotionBetweenSlices::getNameOfClass() const
 {
   return QString("FindRelativeMotionBetweenSlices");
 }

@@ -666,7 +666,7 @@ AbstractFilter::Pointer AbaqusHexahedronWriter::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getCompiledLibraryName() const
+QString AbaqusHexahedronWriter::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -674,7 +674,7 @@ const QString AbaqusHexahedronWriter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getBrandingString() const
+QString AbaqusHexahedronWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -682,7 +682,7 @@ const QString AbaqusHexahedronWriter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getFilterVersion() const
+QString AbaqusHexahedronWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -692,7 +692,7 @@ const QString AbaqusHexahedronWriter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getGroupName() const
+QString AbaqusHexahedronWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -700,7 +700,7 @@ const QString AbaqusHexahedronWriter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid AbaqusHexahedronWriter::getUuid()
+QUuid AbaqusHexahedronWriter::getUuid() const
 {
   return QUuid("{0559aa37-c5ad-549a-82d4-bff4bfcb6cc6}");
 }
@@ -708,7 +708,7 @@ const QUuid AbaqusHexahedronWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getSubGroupName() const
+QString AbaqusHexahedronWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -716,7 +716,7 @@ const QString AbaqusHexahedronWriter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getHumanLabel() const
+QString AbaqusHexahedronWriter::getHumanLabel() const
 {
   return "Abaqus Hexahedron Exporter";
 }
@@ -739,7 +739,7 @@ std::shared_ptr<AbaqusHexahedronWriter> AbaqusHexahedronWriter::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getNameOfClass() const
+QString AbaqusHexahedronWriter::getNameOfClass() const
 {
   return QString("AbaqusHexahedronWriter");
 }

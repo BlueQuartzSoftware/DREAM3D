@@ -1025,7 +1025,7 @@ TrigonalOps::Pointer TrigonalOps::NullPointer()
 }
 
 // -----------------------------------------------------------------------------
-const QString TrigonalOps::getNameOfClass() const
+QString TrigonalOps::getNameOfClass() const
 {
   return QString("TrigonalOps");
 }

@@ -712,7 +712,7 @@ int CorrelateValuesWithVectorDirection::writeCoords(FILE* f, const char* axis, c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CorrelateValuesWithVectorDirection::getCompiledLibraryName() const
+QString CorrelateValuesWithVectorDirection::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -720,7 +720,7 @@ const QString CorrelateValuesWithVectorDirection::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CorrelateValuesWithVectorDirection::getBrandingString() const
+QString CorrelateValuesWithVectorDirection::getBrandingString() const
 {
   return "Statistics";
 }
@@ -728,7 +728,7 @@ const QString CorrelateValuesWithVectorDirection::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CorrelateValuesWithVectorDirection::getFilterVersion() const
+QString CorrelateValuesWithVectorDirection::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -739,7 +739,7 @@ const QString CorrelateValuesWithVectorDirection::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CorrelateValuesWithVectorDirection::getGroupName() const
+QString CorrelateValuesWithVectorDirection::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -747,7 +747,7 @@ const QString CorrelateValuesWithVectorDirection::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid CorrelateValuesWithVectorDirection::getUuid()
+QUuid CorrelateValuesWithVectorDirection::getUuid() const
 {
   return QUuid("{6c8b16f1-3688-5b29-9e57-d2fd56d9e3da}");
 }
@@ -755,7 +755,7 @@ const QUuid CorrelateValuesWithVectorDirection::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CorrelateValuesWithVectorDirection::getSubGroupName() const
+QString CorrelateValuesWithVectorDirection::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -763,7 +763,7 @@ const QString CorrelateValuesWithVectorDirection::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CorrelateValuesWithVectorDirection::getHumanLabel() const
+QString CorrelateValuesWithVectorDirection::getHumanLabel() const
 {
   return "Correlate Values with Vector Direction";
 }
@@ -786,7 +786,7 @@ std::shared_ptr<CorrelateValuesWithVectorDirection> CorrelateValuesWithVectorDir
 }
 
 // -----------------------------------------------------------------------------
-const QString CorrelateValuesWithVectorDirection::getNameOfClass() const
+QString CorrelateValuesWithVectorDirection::getNameOfClass() const
 {
   return QString("CorrelateValuesWithVectorDirection");
 }

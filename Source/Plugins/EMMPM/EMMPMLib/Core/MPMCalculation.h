@@ -62,7 +62,7 @@ class EMMPMLib_EXPORT MPMCalculation : public Observable
     /**
      * @brief Returns the name of the class for MPMCalculation
      */
-    const QString getNameOfClass() const override;
+    QString getNameOfClass() const override;
     /**
      * @brief Returns the name of the class for MPMCalculation
      */
@@ -104,7 +104,7 @@ class EMMPMLib_EXPORT MPMCalculation : public Observable
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() const;
+    virtual QString getHumanLabel() const;
 
     /**
      * @fn void acvmpm(EMMPM_Data* data, EMMPM_CallbackFunctions* callbacks);

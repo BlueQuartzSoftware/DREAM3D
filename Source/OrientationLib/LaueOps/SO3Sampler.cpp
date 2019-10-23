@@ -481,7 +481,7 @@ SO3Sampler::Pointer SO3Sampler::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString SO3Sampler::getNameOfClass() const
+QString SO3Sampler::getNameOfClass() const
 {
   return QString("SO3Sampler");
 }

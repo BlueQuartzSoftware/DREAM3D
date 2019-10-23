@@ -558,7 +558,7 @@ AbstractFilter::Pointer ReadStlFile::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlFile::getCompiledLibraryName() const
+QString ReadStlFile::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -566,7 +566,7 @@ const QString ReadStlFile::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlFile::getBrandingString() const
+QString ReadStlFile::getBrandingString() const
 {
   return "IO";
 }
@@ -574,7 +574,7 @@ const QString ReadStlFile::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlFile::getFilterVersion() const
+QString ReadStlFile::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -584,7 +584,7 @@ const QString ReadStlFile::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlFile::getGroupName() const
+QString ReadStlFile::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -592,7 +592,7 @@ const QString ReadStlFile::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ReadStlFile::getUuid()
+QUuid ReadStlFile::getUuid() const
 {
   return QUuid("{980c7bfd-20b2-5711-bc3b-0190b9096c34}");
 }
@@ -600,7 +600,7 @@ const QUuid ReadStlFile::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlFile::getSubGroupName() const
+QString ReadStlFile::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -608,7 +608,7 @@ const QString ReadStlFile::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlFile::getHumanLabel() const
+QString ReadStlFile::getHumanLabel() const
 {
   return "Import STL File";
 }
@@ -631,7 +631,7 @@ std::shared_ptr<ReadStlFile> ReadStlFile::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString ReadStlFile::getNameOfClass() const
+QString ReadStlFile::getNameOfClass() const
 {
   return QString("ReadStlFile");
 }

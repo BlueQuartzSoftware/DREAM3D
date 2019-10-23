@@ -544,7 +544,7 @@ AbstractFilter::Pointer LaplacianSmoothing::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LaplacianSmoothing::getCompiledLibraryName() const
+QString LaplacianSmoothing::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -552,7 +552,7 @@ const QString LaplacianSmoothing::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LaplacianSmoothing::getBrandingString() const
+QString LaplacianSmoothing::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -560,7 +560,7 @@ const QString LaplacianSmoothing::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LaplacianSmoothing::getFilterVersion() const
+QString LaplacianSmoothing::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -570,7 +570,7 @@ const QString LaplacianSmoothing::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LaplacianSmoothing::getGroupName() const
+QString LaplacianSmoothing::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -578,7 +578,7 @@ const QString LaplacianSmoothing::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid LaplacianSmoothing::getUuid()
+QUuid LaplacianSmoothing::getUuid() const
 {
   return QUuid("{601c4885-c218-5da6-9fc7-519d85d241ad}");
 }
@@ -586,7 +586,7 @@ const QUuid LaplacianSmoothing::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LaplacianSmoothing::getSubGroupName() const
+QString LaplacianSmoothing::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SmoothingFilters;
 }
@@ -594,7 +594,7 @@ const QString LaplacianSmoothing::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LaplacianSmoothing::getHumanLabel() const
+QString LaplacianSmoothing::getHumanLabel() const
 {
   return "Laplacian Smoothing";
 }
@@ -617,7 +617,7 @@ std::shared_ptr<LaplacianSmoothing> LaplacianSmoothing::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString LaplacianSmoothing::getNameOfClass() const
+QString LaplacianSmoothing::getNameOfClass() const
 {
   return QString("LaplacianSmoothing");
 }

@@ -520,7 +520,7 @@ AbstractFilter::Pointer FindTwinBoundarySchmidFactors::newFilterInstance(bool co
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundarySchmidFactors::getCompiledLibraryName() const
+QString FindTwinBoundarySchmidFactors::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -528,7 +528,7 @@ const QString FindTwinBoundarySchmidFactors::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundarySchmidFactors::getBrandingString() const
+QString FindTwinBoundarySchmidFactors::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -536,7 +536,7 @@ const QString FindTwinBoundarySchmidFactors::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundarySchmidFactors::getFilterVersion() const
+QString FindTwinBoundarySchmidFactors::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -546,7 +546,7 @@ const QString FindTwinBoundarySchmidFactors::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundarySchmidFactors::getGroupName() const
+QString FindTwinBoundarySchmidFactors::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -554,7 +554,7 @@ const QString FindTwinBoundarySchmidFactors::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindTwinBoundarySchmidFactors::getUuid()
+QUuid FindTwinBoundarySchmidFactors::getUuid() const
 {
   return QUuid("{b0e30e6d-912d-5a7e-aeed-750134aba86b}");
 }
@@ -562,7 +562,7 @@ const QUuid FindTwinBoundarySchmidFactors::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundarySchmidFactors::getSubGroupName() const
+QString FindTwinBoundarySchmidFactors::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -570,7 +570,7 @@ const QString FindTwinBoundarySchmidFactors::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundarySchmidFactors::getHumanLabel() const
+QString FindTwinBoundarySchmidFactors::getHumanLabel() const
 {
   return "Find Twin Boundary Schmid Factors";
 }
@@ -593,7 +593,7 @@ std::shared_ptr<FindTwinBoundarySchmidFactors> FindTwinBoundarySchmidFactors::Ne
 }
 
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundarySchmidFactors::getNameOfClass() const
+QString FindTwinBoundarySchmidFactors::getNameOfClass() const
 {
   return QString("FindTwinBoundarySchmidFactors");
 }

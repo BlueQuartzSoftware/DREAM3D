@@ -74,7 +74,7 @@ public:
   /**
    * @brief Returns the name of the class for PhIOTest
    */
-  const QString getNameOfClass() const
+  QString getNameOfClass() const
   {
     return QString("PhIOTest");
   }

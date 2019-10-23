@@ -217,7 +217,7 @@ AbstractFilter::Pointer GenerateQuaternionConjugate::newFilterInstance(bool copy
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateQuaternionConjugate::getCompiledLibraryName() const
+QString GenerateQuaternionConjugate::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -225,7 +225,7 @@ const QString GenerateQuaternionConjugate::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateQuaternionConjugate::getBrandingString() const
+QString GenerateQuaternionConjugate::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -233,7 +233,7 @@ const QString GenerateQuaternionConjugate::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateQuaternionConjugate::getFilterVersion() const
+QString GenerateQuaternionConjugate::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -244,7 +244,7 @@ const QString GenerateQuaternionConjugate::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateQuaternionConjugate::getGroupName() const
+QString GenerateQuaternionConjugate::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -252,7 +252,7 @@ const QString GenerateQuaternionConjugate::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateQuaternionConjugate::getSubGroupName() const
+QString GenerateQuaternionConjugate::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -260,7 +260,7 @@ const QString GenerateQuaternionConjugate::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateQuaternionConjugate::getHumanLabel() const
+QString GenerateQuaternionConjugate::getHumanLabel() const
 {
   return "Generate Quaternion Conjugate";
 }
@@ -268,7 +268,7 @@ const QString GenerateQuaternionConjugate::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid GenerateQuaternionConjugate::getUuid()
+QUuid GenerateQuaternionConjugate::getUuid() const
 {
   return QUuid("{630d7486-75ea-5e04-874c-894460cd7c4d}");
 }
@@ -291,7 +291,7 @@ std::shared_ptr<GenerateQuaternionConjugate> GenerateQuaternionConjugate::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString GenerateQuaternionConjugate::getNameOfClass() const
+QString GenerateQuaternionConjugate::getNameOfClass() const
 {
   return QString("_SUPERGenerateQuaternionConjugate");
 }

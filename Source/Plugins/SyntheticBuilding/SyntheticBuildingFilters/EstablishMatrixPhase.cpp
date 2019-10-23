@@ -463,7 +463,7 @@ AbstractFilter::Pointer EstablishMatrixPhase::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EstablishMatrixPhase::getCompiledLibraryName() const
+QString EstablishMatrixPhase::getCompiledLibraryName() const
 {
   return SyntheticBuildingConstants::SyntheticBuildingBaseName;
 }
@@ -471,7 +471,7 @@ const QString EstablishMatrixPhase::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EstablishMatrixPhase::getBrandingString() const
+QString EstablishMatrixPhase::getBrandingString() const
 {
   return "SyntheticBuilding";
 }
@@ -479,7 +479,7 @@ const QString EstablishMatrixPhase::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EstablishMatrixPhase::getFilterVersion() const
+QString EstablishMatrixPhase::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -489,7 +489,7 @@ const QString EstablishMatrixPhase::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EstablishMatrixPhase::getGroupName() const
+QString EstablishMatrixPhase::getGroupName() const
 {
   return SIMPL::FilterGroups::SyntheticBuildingFilters;
 }
@@ -497,7 +497,7 @@ const QString EstablishMatrixPhase::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid EstablishMatrixPhase::getUuid()
+QUuid EstablishMatrixPhase::getUuid() const
 {
   return QUuid("{28910d1c-4309-500a-9508-e3ef1612e1f8}");
 }
@@ -505,7 +505,7 @@ const QUuid EstablishMatrixPhase::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EstablishMatrixPhase::getSubGroupName() const
+QString EstablishMatrixPhase::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::PackingFilters;
 }
@@ -513,7 +513,7 @@ const QString EstablishMatrixPhase::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EstablishMatrixPhase::getHumanLabel() const
+QString EstablishMatrixPhase::getHumanLabel() const
 {
   return "Establish Matrix Phase";
 }
@@ -536,7 +536,7 @@ std::shared_ptr<EstablishMatrixPhase> EstablishMatrixPhase::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString EstablishMatrixPhase::getNameOfClass() const
+QString EstablishMatrixPhase::getNameOfClass() const
 {
   return QString("EstablishMatrixPhase");
 }

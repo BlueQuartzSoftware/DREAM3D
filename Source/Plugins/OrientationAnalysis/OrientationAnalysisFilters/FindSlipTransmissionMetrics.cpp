@@ -346,7 +346,7 @@ AbstractFilter::Pointer FindSlipTransmissionMetrics::newFilterInstance(bool copy
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSlipTransmissionMetrics::getCompiledLibraryName() const
+QString FindSlipTransmissionMetrics::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -354,7 +354,7 @@ const QString FindSlipTransmissionMetrics::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSlipTransmissionMetrics::getBrandingString() const
+QString FindSlipTransmissionMetrics::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -362,7 +362,7 @@ const QString FindSlipTransmissionMetrics::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSlipTransmissionMetrics::getFilterVersion() const
+QString FindSlipTransmissionMetrics::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -372,7 +372,7 @@ const QString FindSlipTransmissionMetrics::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSlipTransmissionMetrics::getGroupName() const
+QString FindSlipTransmissionMetrics::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -380,7 +380,7 @@ const QString FindSlipTransmissionMetrics::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindSlipTransmissionMetrics::getUuid()
+QUuid FindSlipTransmissionMetrics::getUuid() const
 {
   return QUuid("{97523038-5fb2-5e82-9177-ed3e8b24b4bd}");
 }
@@ -388,7 +388,7 @@ const QUuid FindSlipTransmissionMetrics::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSlipTransmissionMetrics::getSubGroupName() const
+QString FindSlipTransmissionMetrics::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -396,7 +396,7 @@ const QString FindSlipTransmissionMetrics::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSlipTransmissionMetrics::getHumanLabel() const
+QString FindSlipTransmissionMetrics::getHumanLabel() const
 {
   return "Find Neighbor Slip Transmission Metrics";
 }
@@ -419,7 +419,7 @@ std::shared_ptr<FindSlipTransmissionMetrics> FindSlipTransmissionMetrics::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindSlipTransmissionMetrics::getNameOfClass() const
+QString FindSlipTransmissionMetrics::getNameOfClass() const
 {
   return QString("FindSlipTransmissionMetrics");
 }

@@ -227,7 +227,7 @@ AbstractFilter::Pointer GenerateOrientationMatrixTranspose::newFilterInstance(bo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateOrientationMatrixTranspose::getCompiledLibraryName() const
+QString GenerateOrientationMatrixTranspose::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -235,7 +235,7 @@ const QString GenerateOrientationMatrixTranspose::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateOrientationMatrixTranspose::getBrandingString() const
+QString GenerateOrientationMatrixTranspose::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -243,7 +243,7 @@ const QString GenerateOrientationMatrixTranspose::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateOrientationMatrixTranspose::getFilterVersion() const
+QString GenerateOrientationMatrixTranspose::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -254,7 +254,7 @@ const QString GenerateOrientationMatrixTranspose::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateOrientationMatrixTranspose::getGroupName() const
+QString GenerateOrientationMatrixTranspose::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -262,7 +262,7 @@ const QString GenerateOrientationMatrixTranspose::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateOrientationMatrixTranspose::getSubGroupName() const
+QString GenerateOrientationMatrixTranspose::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -270,7 +270,7 @@ const QString GenerateOrientationMatrixTranspose::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateOrientationMatrixTranspose::getHumanLabel() const
+QString GenerateOrientationMatrixTranspose::getHumanLabel() const
 {
   return "Generate Orientation Matrix Transpose";
 }
@@ -278,7 +278,7 @@ const QString GenerateOrientationMatrixTranspose::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid GenerateOrientationMatrixTranspose::getUuid()
+QUuid GenerateOrientationMatrixTranspose::getUuid() const
 {
   return QUuid("{ec58f4fe-8e51-527e-9536-8b6f185684be}");
 }
@@ -301,7 +301,7 @@ std::shared_ptr<GenerateOrientationMatrixTranspose> GenerateOrientationMatrixTra
 }
 
 // -----------------------------------------------------------------------------
-const QString GenerateOrientationMatrixTranspose::getNameOfClass() const
+QString GenerateOrientationMatrixTranspose::getNameOfClass() const
 {
   return QString("_SUPERGenerateOrientationMatrixTranspose");
 }

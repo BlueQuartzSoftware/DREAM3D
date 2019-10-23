@@ -435,7 +435,7 @@ AbstractFilter::Pointer VASPReader::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VASPReader::getCompiledLibraryName() const
+QString VASPReader::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -443,7 +443,7 @@ const QString VASPReader::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VASPReader::getBrandingString() const
+QString VASPReader::getBrandingString() const
 {
   return "IO";
 }
@@ -451,7 +451,7 @@ const QString VASPReader::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VASPReader::getFilterVersion() const
+QString VASPReader::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -462,7 +462,7 @@ const QString VASPReader::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VASPReader::getGroupName() const
+QString VASPReader::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -470,7 +470,7 @@ const QString VASPReader::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid VASPReader::getUuid()
+QUuid VASPReader::getUuid() const
 {
   return QUuid("{24ed1c49-8cd3-5370-b1b2-6035b33a35ee}");
 }
@@ -478,7 +478,7 @@ const QUuid VASPReader::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VASPReader::getSubGroupName() const
+QString VASPReader::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -486,7 +486,7 @@ const QString VASPReader::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VASPReader::getHumanLabel() const
+QString VASPReader::getHumanLabel() const
 {
   return "Import VASP File";
 }
@@ -509,7 +509,7 @@ std::shared_ptr<VASPReader> VASPReader::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString VASPReader::getNameOfClass() const
+QString VASPReader::getNameOfClass() const
 {
   return QString("VASPReader");
 }

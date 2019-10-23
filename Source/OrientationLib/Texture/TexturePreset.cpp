@@ -97,7 +97,7 @@ TexturePreset::Pointer TexturePreset::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString TexturePreset::getNameOfClass() const
+QString TexturePreset::getNameOfClass() const
 {
   return QString("TexturePreset");
 }

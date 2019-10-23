@@ -981,7 +981,7 @@ TetragonalLowOps::Pointer TetragonalLowOps::NullPointer()
 }
 
 // -----------------------------------------------------------------------------
-const QString TetragonalLowOps::getNameOfClass() const
+QString TetragonalLowOps::getNameOfClass() const
 {
   return QString("TetragonalLowOps");
 }

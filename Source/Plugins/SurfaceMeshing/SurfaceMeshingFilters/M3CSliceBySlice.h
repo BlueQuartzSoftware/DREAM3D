@@ -93,7 +93,7 @@ public:
   /**
    * @brief Returns the name of the class for M3CSliceBySlice
    */
-  const QString getNameOfClass() const override;
+  QString getNameOfClass() const override;
   /**
    * @brief Returns the name of the class for M3CSliceBySlice
    */
@@ -183,17 +183,17 @@ public:
 
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
   AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
-  const QString getGroupName() const override;
-  const QString getSubGroupName() const override;
+  QString getGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
-  const QString getHumanLabel() const override;
+  QUuid getUuid() const override;
+  QString getHumanLabel() const override;
 
   void setupFilterParameters() override; /**
                                           *@brief This method will read the options from a file

@@ -1308,7 +1308,7 @@ CubicLowOps::Pointer CubicLowOps::NullPointer()
 }
 
 // -----------------------------------------------------------------------------
-const QString CubicLowOps::getNameOfClass() const
+QString CubicLowOps::getNameOfClass() const
 {
   return QString("CubicLowOps");
 }

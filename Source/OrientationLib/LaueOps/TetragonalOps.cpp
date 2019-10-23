@@ -1253,7 +1253,7 @@ TetragonalOps::Pointer TetragonalOps::NullPointer()
 }
 
 // -----------------------------------------------------------------------------
-const QString TetragonalOps::getNameOfClass() const
+QString TetragonalOps::getNameOfClass() const
 {
   return QString("TetragonalOps");
 }

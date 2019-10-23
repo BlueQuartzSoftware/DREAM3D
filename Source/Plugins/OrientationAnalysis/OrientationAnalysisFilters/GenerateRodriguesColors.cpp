@@ -287,7 +287,7 @@ AbstractFilter::Pointer GenerateRodriguesColors::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateRodriguesColors::getCompiledLibraryName() const
+QString GenerateRodriguesColors::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -295,7 +295,7 @@ const QString GenerateRodriguesColors::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateRodriguesColors::getBrandingString() const
+QString GenerateRodriguesColors::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -303,7 +303,7 @@ const QString GenerateRodriguesColors::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateRodriguesColors::getFilterVersion() const
+QString GenerateRodriguesColors::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -314,7 +314,7 @@ const QString GenerateRodriguesColors::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateRodriguesColors::getGroupName() const
+QString GenerateRodriguesColors::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -322,7 +322,7 @@ const QString GenerateRodriguesColors::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid GenerateRodriguesColors::getUuid()
+QUuid GenerateRodriguesColors::getUuid() const
 {
   return QUuid("{626f6feb-68bc-537a-8f5b-c6062e72236f}");
 }
@@ -330,7 +330,7 @@ const QUuid GenerateRodriguesColors::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateRodriguesColors::getSubGroupName() const
+QString GenerateRodriguesColors::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -338,7 +338,7 @@ const QString GenerateRodriguesColors::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateRodriguesColors::getHumanLabel() const
+QString GenerateRodriguesColors::getHumanLabel() const
 {
   return "Generate Rodrigues Colors";
 }
@@ -361,7 +361,7 @@ std::shared_ptr<GenerateRodriguesColors> GenerateRodriguesColors::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString GenerateRodriguesColors::getNameOfClass() const
+QString GenerateRodriguesColors::getNameOfClass() const
 {
   return QString("GenerateRodriguesColors");
 }

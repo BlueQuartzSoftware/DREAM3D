@@ -485,7 +485,7 @@ AbstractFilter::Pointer FindTwinBoundaries::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundaries::getCompiledLibraryName() const
+QString FindTwinBoundaries::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -493,7 +493,7 @@ const QString FindTwinBoundaries::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundaries::getBrandingString() const
+QString FindTwinBoundaries::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -501,7 +501,7 @@ const QString FindTwinBoundaries::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundaries::getFilterVersion() const
+QString FindTwinBoundaries::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -511,7 +511,7 @@ const QString FindTwinBoundaries::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundaries::getGroupName() const
+QString FindTwinBoundaries::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -519,7 +519,7 @@ const QString FindTwinBoundaries::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindTwinBoundaries::getUuid()
+QUuid FindTwinBoundaries::getUuid() const
 {
   return QUuid("{a10124f3-05d0-5f49-93a0-e93926f5b48b}");
 }
@@ -527,7 +527,7 @@ const QUuid FindTwinBoundaries::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundaries::getSubGroupName() const
+QString FindTwinBoundaries::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -535,7 +535,7 @@ const QString FindTwinBoundaries::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundaries::getHumanLabel() const
+QString FindTwinBoundaries::getHumanLabel() const
 {
   return "Find Twin Boundaries";
 }
@@ -558,7 +558,7 @@ std::shared_ptr<FindTwinBoundaries> FindTwinBoundaries::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundaries::getNameOfClass() const
+QString FindTwinBoundaries::getNameOfClass() const
 {
   return QString("FindTwinBoundaries");
 }

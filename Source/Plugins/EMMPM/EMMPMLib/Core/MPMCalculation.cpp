@@ -515,7 +515,7 @@ void MPMCalculation::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MPMCalculation::getHumanLabel() const
+QString MPMCalculation::getHumanLabel() const
 {
   return "MPMCalculation";
 }
@@ -534,7 +534,7 @@ MPMCalculation::Pointer MPMCalculation::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString MPMCalculation::getNameOfClass() const
+QString MPMCalculation::getNameOfClass() const
 {
   return QString("MPMCalculation");
 }

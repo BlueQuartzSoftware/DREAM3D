@@ -277,7 +277,7 @@ AbstractFilter::Pointer Stereographic3D::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Stereographic3D::getCompiledLibraryName() const
+QString Stereographic3D::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -285,7 +285,7 @@ const QString Stereographic3D::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Stereographic3D::getBrandingString() const
+QString Stereographic3D::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -293,7 +293,7 @@ const QString Stereographic3D::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Stereographic3D::getFilterVersion() const
+QString Stereographic3D::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -304,7 +304,7 @@ const QString Stereographic3D::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Stereographic3D::getGroupName() const
+QString Stereographic3D::getGroupName() const
 {
   return SIMPL::FilterGroups::Utilities;
 }
@@ -312,7 +312,7 @@ const QString Stereographic3D::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid Stereographic3D::getUuid()
+QUuid Stereographic3D::getUuid() const
 {
   return QUuid("{3630623e-724b-5154-a060-a5fca4ecfff5}");
 }
@@ -320,7 +320,7 @@ const QUuid Stereographic3D::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Stereographic3D::getSubGroupName() const
+QString Stereographic3D::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConversionFilters;
 }
@@ -328,7 +328,7 @@ const QString Stereographic3D::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Stereographic3D::getHumanLabel() const
+QString Stereographic3D::getHumanLabel() const
 {
   return "Stereographic 3D Coordinates";
 }
@@ -351,7 +351,7 @@ std::shared_ptr<Stereographic3D> Stereographic3D::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString Stereographic3D::getNameOfClass() const
+QString Stereographic3D::getNameOfClass() const
 {
   return QString("Stereographic3D");
 }

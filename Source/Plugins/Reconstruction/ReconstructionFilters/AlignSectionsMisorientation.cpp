@@ -420,7 +420,7 @@ AbstractFilter::Pointer AlignSectionsMisorientation::newFilterInstance(bool copy
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMisorientation::getCompiledLibraryName() const
+QString AlignSectionsMisorientation::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -428,7 +428,7 @@ const QString AlignSectionsMisorientation::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMisorientation::getBrandingString() const
+QString AlignSectionsMisorientation::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -436,7 +436,7 @@ const QString AlignSectionsMisorientation::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMisorientation::getFilterVersion() const
+QString AlignSectionsMisorientation::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -446,7 +446,7 @@ const QString AlignSectionsMisorientation::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMisorientation::getGroupName() const
+QString AlignSectionsMisorientation::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -454,7 +454,7 @@ const QString AlignSectionsMisorientation::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid AlignSectionsMisorientation::getUuid()
+QUuid AlignSectionsMisorientation::getUuid() const
 {
   return QUuid("{4fb2b9de-3124-534b-b914-dbbbdbc14604}");
 }
@@ -462,7 +462,7 @@ const QUuid AlignSectionsMisorientation::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMisorientation::getSubGroupName() const
+QString AlignSectionsMisorientation::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::AlignmentFilters;
 }
@@ -470,7 +470,7 @@ const QString AlignSectionsMisorientation::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMisorientation::getHumanLabel() const
+QString AlignSectionsMisorientation::getHumanLabel() const
 {
   return "Align Sections (Misorientation)";
 }
@@ -493,7 +493,7 @@ std::shared_ptr<AlignSectionsMisorientation> AlignSectionsMisorientation::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMisorientation::getNameOfClass() const
+QString AlignSectionsMisorientation::getNameOfClass() const
 {
   return QString("AlignSectionsMisorientation");
 }

@@ -54,7 +54,7 @@ public:
   /**
    * @brief Returns the name of the class for ConvertHexGridToSquareGridFilterParameter
    */
-  const QString getNameOfClass() const;
+  QString getNameOfClass() const;
   /**
    * @brief Returns the name of the class for ConvertHexGridToSquareGridFilterParameter
    */

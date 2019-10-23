@@ -136,7 +136,7 @@ BetaOps::Pointer BetaOps::NullPointer()
 }
 
 // -----------------------------------------------------------------------------
-const QString BetaOps::getNameOfClass() const
+QString BetaOps::getNameOfClass() const
 {
   return QString("BetaOps");
 }

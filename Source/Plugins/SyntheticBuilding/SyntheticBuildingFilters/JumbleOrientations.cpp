@@ -284,7 +284,7 @@ AbstractFilter::Pointer JumbleOrientations::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString JumbleOrientations::getCompiledLibraryName() const
+QString JumbleOrientations::getCompiledLibraryName() const
 {
   return SyntheticBuildingConstants::SyntheticBuildingBaseName;
 }
@@ -292,7 +292,7 @@ const QString JumbleOrientations::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString JumbleOrientations::getBrandingString() const
+QString JumbleOrientations::getBrandingString() const
 {
   return "SyntheticBuilding";
 }
@@ -300,7 +300,7 @@ const QString JumbleOrientations::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString JumbleOrientations::getFilterVersion() const
+QString JumbleOrientations::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -310,7 +310,7 @@ const QString JumbleOrientations::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString JumbleOrientations::getGroupName() const
+QString JumbleOrientations::getGroupName() const
 {
   return SIMPL::FilterGroups::SyntheticBuildingFilters;
 }
@@ -318,7 +318,7 @@ const QString JumbleOrientations::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid JumbleOrientations::getUuid()
+QUuid JumbleOrientations::getUuid() const
 {
   return QUuid("{b7301dbf-27d5-5335-b86e-563d573f002b}");
 }
@@ -326,7 +326,7 @@ const QUuid JumbleOrientations::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString JumbleOrientations::getSubGroupName() const
+QString JumbleOrientations::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -334,7 +334,7 @@ const QString JumbleOrientations::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString JumbleOrientations::getHumanLabel() const
+QString JumbleOrientations::getHumanLabel() const
 {
   return "Jumble Orientations";
 }
@@ -357,7 +357,7 @@ std::shared_ptr<JumbleOrientations> JumbleOrientations::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString JumbleOrientations::getNameOfClass() const
+QString JumbleOrientations::getNameOfClass() const
 {
   return QString("JumbleOrientations");
 }

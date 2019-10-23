@@ -218,7 +218,7 @@ AbstractFilter::Pointer FixNonmanifoldVoxels::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FixNonmanifoldVoxels::getCompiledLibraryName() const
+QString FixNonmanifoldVoxels::getCompiledLibraryName() const
 {
   return ProcessingConstants::ProcessingBaseName;
 }
@@ -226,7 +226,7 @@ const QString FixNonmanifoldVoxels::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FixNonmanifoldVoxels::getBrandingString() const
+QString FixNonmanifoldVoxels::getBrandingString() const
 {
   return "Processing";
 }
@@ -234,7 +234,7 @@ const QString FixNonmanifoldVoxels::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FixNonmanifoldVoxels::getFilterVersion() const
+QString FixNonmanifoldVoxels::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -245,7 +245,7 @@ const QString FixNonmanifoldVoxels::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FixNonmanifoldVoxels::getGroupName() const
+QString FixNonmanifoldVoxels::getGroupName() const
 {
   return SIMPL::FilterGroups::Unsupported;
 }
@@ -253,7 +253,7 @@ const QString FixNonmanifoldVoxels::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FixNonmanifoldVoxels::getSubGroupName() const
+QString FixNonmanifoldVoxels::getSubGroupName() const
 {
   return "Processing";
 }
@@ -261,7 +261,7 @@ const QString FixNonmanifoldVoxels::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FixNonmanifoldVoxels::getHumanLabel() const
+QString FixNonmanifoldVoxels::getHumanLabel() const
 {
   return "FixNonmanifoldVoxels";
 }
@@ -269,7 +269,7 @@ const QString FixNonmanifoldVoxels::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FixNonmanifoldVoxels::getUuid()
+QUuid FixNonmanifoldVoxels::getUuid() const
 {
   return QUuid("{1f7f2bec-50d9-5e24-a8d4-8fd291ffed9d}");
 }
@@ -292,7 +292,7 @@ std::shared_ptr<FixNonmanifoldVoxels> FixNonmanifoldVoxels::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FixNonmanifoldVoxels::getNameOfClass() const
+QString FixNonmanifoldVoxels::getNameOfClass() const
 {
   return QString("_SUPERFixNonmanifoldVoxels");
 }

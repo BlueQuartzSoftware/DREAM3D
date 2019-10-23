@@ -452,7 +452,7 @@ AbstractFilter::Pointer QuiltCellData::newFilterInstance(bool copyFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuiltCellData::getCompiledLibraryName() const
+QString QuiltCellData::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -460,7 +460,7 @@ const QString QuiltCellData::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuiltCellData::getBrandingString() const
+QString QuiltCellData::getBrandingString() const
 {
   return "Statistics";
 }
@@ -468,7 +468,7 @@ const QString QuiltCellData::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuiltCellData::getFilterVersion() const
+QString QuiltCellData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -479,7 +479,7 @@ const QString QuiltCellData::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuiltCellData::getGroupName() const
+QString QuiltCellData::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -487,7 +487,7 @@ const QString QuiltCellData::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid QuiltCellData::getUuid()
+QUuid QuiltCellData::getUuid() const
 {
   return QUuid("{bddc673c-d3fa-5e7d-8fb6-5e234dfa9bc5}");
 }
@@ -495,7 +495,7 @@ const QUuid QuiltCellData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuiltCellData::getSubGroupName() const
+QString QuiltCellData::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::EnsembleStatsFilters;
 }
@@ -503,7 +503,7 @@ const QString QuiltCellData::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuiltCellData::getHumanLabel() const
+QString QuiltCellData::getHumanLabel() const
 {
   return "Quilt Cell Data";
 }
@@ -526,7 +526,7 @@ std::shared_ptr<QuiltCellData> QuiltCellData::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString QuiltCellData::getNameOfClass() const
+QString QuiltCellData::getNameOfClass() const
 {
   return QString("QuiltCellData");
 }

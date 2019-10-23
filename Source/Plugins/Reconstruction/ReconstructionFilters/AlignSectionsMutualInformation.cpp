@@ -632,7 +632,7 @@ AbstractFilter::Pointer AlignSectionsMutualInformation::newFilterInstance(bool c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMutualInformation::getCompiledLibraryName() const
+QString AlignSectionsMutualInformation::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -640,7 +640,7 @@ const QString AlignSectionsMutualInformation::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMutualInformation::getBrandingString() const
+QString AlignSectionsMutualInformation::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -648,7 +648,7 @@ const QString AlignSectionsMutualInformation::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMutualInformation::getFilterVersion() const
+QString AlignSectionsMutualInformation::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -658,7 +658,7 @@ const QString AlignSectionsMutualInformation::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMutualInformation::getGroupName() const
+QString AlignSectionsMutualInformation::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -666,7 +666,7 @@ const QString AlignSectionsMutualInformation::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid AlignSectionsMutualInformation::getUuid()
+QUuid AlignSectionsMutualInformation::getUuid() const
 {
   return QUuid("{61c5519b-5561-58b8-a522-2ce1324e244d}");
 }
@@ -674,7 +674,7 @@ const QUuid AlignSectionsMutualInformation::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMutualInformation::getSubGroupName() const
+QString AlignSectionsMutualInformation::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::AlignmentFilters;
 }
@@ -682,7 +682,7 @@ const QString AlignSectionsMutualInformation::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMutualInformation::getHumanLabel() const
+QString AlignSectionsMutualInformation::getHumanLabel() const
 {
   return "Align Sections (Mutual Information)";
 }
@@ -705,7 +705,7 @@ std::shared_ptr<AlignSectionsMutualInformation> AlignSectionsMutualInformation::
 }
 
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMutualInformation::getNameOfClass() const
+QString AlignSectionsMutualInformation::getNameOfClass() const
 {
   return QString("AlignSectionsMutualInformation");
 }

@@ -685,7 +685,7 @@ AbstractFilter::Pointer CreateLambertSphere::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateLambertSphere::getCompiledLibraryName() const
+QString CreateLambertSphere::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -693,7 +693,7 @@ const QString CreateLambertSphere::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateLambertSphere::getBrandingString() const
+QString CreateLambertSphere::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -701,7 +701,7 @@ const QString CreateLambertSphere::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateLambertSphere::getFilterVersion() const
+QString CreateLambertSphere::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -711,7 +711,7 @@ const QString CreateLambertSphere::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateLambertSphere::getGroupName() const
+QString CreateLambertSphere::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -719,7 +719,7 @@ const QString CreateLambertSphere::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid CreateLambertSphere::getUuid()
+QUuid CreateLambertSphere::getUuid() const
 {
   return QUuid("{c4398303-db7d-506e-81ea-08f253895ccb}");
 }
@@ -727,7 +727,7 @@ const QUuid CreateLambertSphere::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateLambertSphere::getSubGroupName() const
+QString CreateLambertSphere::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GenerationFilters;
 }
@@ -735,7 +735,7 @@ const QString CreateLambertSphere::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateLambertSphere::getHumanLabel() const
+QString CreateLambertSphere::getHumanLabel() const
 {
   return "Create Sphere (Lambert Projection Technique)";
 }
@@ -758,7 +758,7 @@ std::shared_ptr<CreateLambertSphere> CreateLambertSphere::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString CreateLambertSphere::getNameOfClass() const
+QString CreateLambertSphere::getNameOfClass() const
 {
   return QString("CreateLambertSphere");
 }

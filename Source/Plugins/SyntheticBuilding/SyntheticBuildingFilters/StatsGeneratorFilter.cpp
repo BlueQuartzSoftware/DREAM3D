@@ -493,7 +493,7 @@ AbstractFilter::Pointer StatsGeneratorFilter::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString StatsGeneratorFilter::getCompiledLibraryName() const
+QString StatsGeneratorFilter::getCompiledLibraryName() const
 {
   return SyntheticBuildingConstants::SyntheticBuildingBaseName;
 }
@@ -501,7 +501,7 @@ const QString StatsGeneratorFilter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString StatsGeneratorFilter::getBrandingString() const
+QString StatsGeneratorFilter::getBrandingString() const
 {
   return "StatsGenerator";
 }
@@ -509,7 +509,7 @@ const QString StatsGeneratorFilter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString StatsGeneratorFilter::getFilterVersion() const
+QString StatsGeneratorFilter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -520,7 +520,7 @@ const QString StatsGeneratorFilter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString StatsGeneratorFilter::getGroupName() const
+QString StatsGeneratorFilter::getGroupName() const
 {
   return SIMPL::FilterGroups::SyntheticBuildingFilters;
 }
@@ -528,7 +528,7 @@ const QString StatsGeneratorFilter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid StatsGeneratorFilter::getUuid()
+QUuid StatsGeneratorFilter::getUuid() const
 {
   return QUuid("{f642e217-4722-5dd8-9df9-cee71e7b26ba}");
 }
@@ -536,7 +536,7 @@ const QUuid StatsGeneratorFilter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString StatsGeneratorFilter::getSubGroupName() const
+QString StatsGeneratorFilter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GenerationFilters;
 }
@@ -544,7 +544,7 @@ const QString StatsGeneratorFilter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString StatsGeneratorFilter::getHumanLabel() const
+QString StatsGeneratorFilter::getHumanLabel() const
 {
   return "StatsGenerator";
 }
@@ -567,7 +567,7 @@ std::shared_ptr<StatsGeneratorFilter> StatsGeneratorFilter::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString StatsGeneratorFilter::getNameOfClass() const
+QString StatsGeneratorFilter::getNameOfClass() const
 {
   return QString("StatsGeneratorFilter");
 }

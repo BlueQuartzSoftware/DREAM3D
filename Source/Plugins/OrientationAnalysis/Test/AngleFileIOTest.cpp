@@ -75,7 +75,7 @@ public:
   /**
    * @brief Returns the name of the class for AngleFileIOTest
    */
-  const QString getNameOfClass() const
+  QString getNameOfClass() const
   {
     return QString("AngleFileIOTest");
   }

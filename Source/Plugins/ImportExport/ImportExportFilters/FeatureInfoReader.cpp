@@ -506,7 +506,7 @@ AbstractFilter::Pointer FeatureInfoReader::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureInfoReader::getCompiledLibraryName() const
+QString FeatureInfoReader::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -514,7 +514,7 @@ const QString FeatureInfoReader::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureInfoReader::getBrandingString() const
+QString FeatureInfoReader::getBrandingString() const
 {
   return "IO";
 }
@@ -522,7 +522,7 @@ const QString FeatureInfoReader::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureInfoReader::getFilterVersion() const
+QString FeatureInfoReader::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -532,7 +532,7 @@ const QString FeatureInfoReader::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureInfoReader::getGroupName() const
+QString FeatureInfoReader::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -540,7 +540,7 @@ const QString FeatureInfoReader::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FeatureInfoReader::getUuid()
+QUuid FeatureInfoReader::getUuid() const
 {
   return QUuid("{38f04ea5-d6cd-5baa-8450-ac963570821b}");
 }
@@ -548,7 +548,7 @@ const QUuid FeatureInfoReader::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureInfoReader::getSubGroupName() const
+QString FeatureInfoReader::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -556,7 +556,7 @@ const QString FeatureInfoReader::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureInfoReader::getHumanLabel() const
+QString FeatureInfoReader::getHumanLabel() const
 {
   return "Import Feature Info File";
 }
@@ -579,7 +579,7 @@ std::shared_ptr<FeatureInfoReader> FeatureInfoReader::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString FeatureInfoReader::getNameOfClass() const
+QString FeatureInfoReader::getNameOfClass() const
 {
   return QString("FeatureInfoReader");
 }

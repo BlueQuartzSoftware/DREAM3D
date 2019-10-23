@@ -711,7 +711,7 @@ AbstractFilter::Pointer InsertAtoms::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertAtoms::getCompiledLibraryName() const
+QString InsertAtoms::getCompiledLibraryName() const
 {
   return SyntheticBuildingConstants::SyntheticBuildingBaseName;
 }
@@ -719,7 +719,7 @@ const QString InsertAtoms::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertAtoms::getBrandingString() const
+QString InsertAtoms::getBrandingString() const
 {
   return "SyntheticBuilding";
 }
@@ -727,7 +727,7 @@ const QString InsertAtoms::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertAtoms::getFilterVersion() const
+QString InsertAtoms::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -737,7 +737,7 @@ const QString InsertAtoms::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertAtoms::getGroupName() const
+QString InsertAtoms::getGroupName() const
 {
   return SIMPL::FilterGroups::SyntheticBuildingFilters;
 }
@@ -745,7 +745,7 @@ const QString InsertAtoms::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid InsertAtoms::getUuid()
+QUuid InsertAtoms::getUuid() const
 {
   return QUuid("{4ee65edd-8d7f-5b0b-a7dd-c4b96e272a87}");
 }
@@ -753,7 +753,7 @@ const QUuid InsertAtoms::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertAtoms::getSubGroupName() const
+QString InsertAtoms::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::PackingFilters;
 }
@@ -761,7 +761,7 @@ const QString InsertAtoms::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertAtoms::getHumanLabel() const
+QString InsertAtoms::getHumanLabel() const
 {
   return "Insert Atoms";
 }
@@ -784,7 +784,7 @@ std::shared_ptr<InsertAtoms> InsertAtoms::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString InsertAtoms::getNameOfClass() const
+QString InsertAtoms::getNameOfClass() const
 {
   return QString("InsertAtoms");
 }

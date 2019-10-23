@@ -408,7 +408,7 @@ AbstractFilter::Pointer AlignSections::newFilterInstance(bool copyFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSections::getCompiledLibraryName() const
+QString AlignSections::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -416,7 +416,7 @@ const QString AlignSections::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSections::getBrandingString() const
+QString AlignSections::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -424,7 +424,7 @@ const QString AlignSections::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSections::getFilterVersion() const
+QString AlignSections::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -434,7 +434,7 @@ const QString AlignSections::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSections::getGroupName() const
+QString AlignSections::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -442,7 +442,7 @@ const QString AlignSections::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid AlignSections::getUuid()
+QUuid AlignSections::getUuid() const
 {
   return QUuid("{fc882470-6aa7-5fd1-8041-ffd14ba8ad9b}");
 }
@@ -450,7 +450,7 @@ const QUuid AlignSections::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSections::getSubGroupName() const
+QString AlignSections::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::AlignmentFilters;
 }
@@ -458,7 +458,7 @@ const QString AlignSections::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSections::getHumanLabel() const
+QString AlignSections::getHumanLabel() const
 {
   return "Align Sections";
 }
@@ -481,7 +481,7 @@ std::shared_ptr<AlignSections> AlignSections::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString AlignSections::getNameOfClass() const
+QString AlignSections::getNameOfClass() const
 {
   return QString("AlignSections");
 }

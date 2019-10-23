@@ -97,7 +97,7 @@ AbstractFilter::Pointer OrientationUtility::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString OrientationUtility::getCompiledLibraryName() const
+QString OrientationUtility::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -105,7 +105,7 @@ const QString OrientationUtility::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString OrientationUtility::getBrandingString() const
+QString OrientationUtility::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -113,7 +113,7 @@ const QString OrientationUtility::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString OrientationUtility::getFilterVersion() const
+QString OrientationUtility::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -123,7 +123,7 @@ const QString OrientationUtility::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString OrientationUtility::getGroupName() const
+QString OrientationUtility::getGroupName() const
 {
   return SIMPL::FilterGroups::Utilities;
 }
@@ -131,7 +131,7 @@ const QString OrientationUtility::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid OrientationUtility::getUuid()
+QUuid OrientationUtility::getUuid() const
 {
   return QUuid("{5af9c1e6-ed6f-5672-9ae0-2b931344d729}");
 }
@@ -139,7 +139,7 @@ const QUuid OrientationUtility::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString OrientationUtility::getSubGroupName() const
+QString OrientationUtility::getSubGroupName() const
 {
   return "OrientationAnalysis";
 }
@@ -147,7 +147,7 @@ const QString OrientationUtility::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString OrientationUtility::getHumanLabel() const
+QString OrientationUtility::getHumanLabel() const
 {
   return "Orientation Utility";
 }
@@ -170,7 +170,7 @@ std::shared_ptr<OrientationUtility> OrientationUtility::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString OrientationUtility::getNameOfClass() const
+QString OrientationUtility::getNameOfClass() const
 {
   return QString("OrientationUtility");
 }

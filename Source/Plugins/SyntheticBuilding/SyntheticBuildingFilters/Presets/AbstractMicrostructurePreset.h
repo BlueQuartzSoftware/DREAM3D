@@ -67,7 +67,7 @@ public:
   /**
    * @brief Returns the name of the class for AbstractMicrostructurePreset
    */
-  const QString getNameOfClass() const;
+  QString getNameOfClass() const;
   /**
    * @brief Returns the name of the class for AbstractMicrostructurePreset
    */

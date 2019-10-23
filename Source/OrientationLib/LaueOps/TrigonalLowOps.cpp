@@ -1024,7 +1024,7 @@ TrigonalLowOps::Pointer TrigonalLowOps::NullPointer()
 }
 
 // -----------------------------------------------------------------------------
-const QString TrigonalLowOps::getNameOfClass() const
+QString TrigonalLowOps::getNameOfClass() const
 {
   return QString("TrigonalLowOps");
 }

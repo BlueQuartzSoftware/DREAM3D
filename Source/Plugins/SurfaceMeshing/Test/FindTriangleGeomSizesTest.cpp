@@ -67,7 +67,7 @@ public:
   /**
    * @brief Returns the name of the class for FindTriangleGeomSizesTest
    */
-  const QString getNameOfClass() const
+  QString getNameOfClass() const
   {
     return QString("FindTriangleGeomSizesTest");
   }

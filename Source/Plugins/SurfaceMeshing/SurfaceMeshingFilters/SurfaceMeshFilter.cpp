@@ -63,7 +63,7 @@ std::shared_ptr<SurfaceMeshFilter> SurfaceMeshFilter::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshFilter::getNameOfClass() const
+QString SurfaceMeshFilter::getNameOfClass() const
 {
   return QString("SurfaceMeshFilter");
 }

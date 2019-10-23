@@ -278,7 +278,7 @@ AbstractFilter::Pointer CreateEnsembleInfo::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateEnsembleInfo::getCompiledLibraryName() const
+QString CreateEnsembleInfo::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -286,7 +286,7 @@ const QString CreateEnsembleInfo::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateEnsembleInfo::getBrandingString() const
+QString CreateEnsembleInfo::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -294,7 +294,7 @@ const QString CreateEnsembleInfo::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateEnsembleInfo::getFilterVersion() const
+QString CreateEnsembleInfo::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -304,7 +304,7 @@ const QString CreateEnsembleInfo::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateEnsembleInfo::getGroupName() const
+QString CreateEnsembleInfo::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -312,7 +312,7 @@ const QString CreateEnsembleInfo::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid CreateEnsembleInfo::getUuid()
+QUuid CreateEnsembleInfo::getUuid() const
 {
   return QUuid("{2a0bfcd3-2517-5117-b164-964dfac8fe22}");
 }
@@ -320,7 +320,7 @@ const QUuid CreateEnsembleInfo::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateEnsembleInfo::getSubGroupName() const
+QString CreateEnsembleInfo::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GenerationFilters;
 }
@@ -328,7 +328,7 @@ const QString CreateEnsembleInfo::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateEnsembleInfo::getHumanLabel() const
+QString CreateEnsembleInfo::getHumanLabel() const
 {
   return "Create Ensemble Info";
 }
@@ -351,7 +351,7 @@ std::shared_ptr<CreateEnsembleInfo> CreateEnsembleInfo::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString CreateEnsembleInfo::getNameOfClass() const
+QString CreateEnsembleInfo::getNameOfClass() const
 {
   return QString("CreateEnsembleInfo");
 }

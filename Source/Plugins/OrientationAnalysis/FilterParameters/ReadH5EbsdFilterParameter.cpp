@@ -131,7 +131,7 @@ ReadH5EbsdFilterParameter::Pointer ReadH5EbsdFilterParameter::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString ReadH5EbsdFilterParameter::getNameOfClass() const
+QString ReadH5EbsdFilterParameter::getNameOfClass() const
 {
   return QString("ReadH5EbsdFilterParameter");
 }

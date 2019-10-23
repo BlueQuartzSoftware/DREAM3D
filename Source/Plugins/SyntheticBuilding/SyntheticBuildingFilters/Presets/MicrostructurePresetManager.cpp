@@ -143,7 +143,7 @@ MicrostructurePresetManager::Pointer MicrostructurePresetManager::NullPointer()
 }
 
 // -----------------------------------------------------------------------------
-const QString MicrostructurePresetManager::getNameOfClass() const
+QString MicrostructurePresetManager::getNameOfClass() const
 {
   return QString("MicrostructurePresetManager");
 }

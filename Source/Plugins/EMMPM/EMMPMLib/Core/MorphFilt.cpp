@@ -241,7 +241,7 @@ void MorphFilter::multiSE(EMMPM_Data* data)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MorphFilter::getHumanLabel() const
+QString MorphFilter::getHumanLabel() const
 {
   return "EMMPM";
 }
@@ -260,7 +260,7 @@ MorphFilter::Pointer MorphFilter::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString MorphFilter::getNameOfClass() const
+QString MorphFilter::getNameOfClass() const
 {
   return QString("MorphFilter");
 }

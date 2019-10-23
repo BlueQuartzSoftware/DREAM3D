@@ -66,7 +66,7 @@ StatsDelegate::Pointer StatsDelegate::New()
 }
 
 // -----------------------------------------------------------------------------
-const QString StatsDelegate::getNameOfClass() const
+QString StatsDelegate::getNameOfClass() const
 {
   return QString("StatsDelegate");
 }
