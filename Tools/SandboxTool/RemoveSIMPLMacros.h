@@ -620,7 +620,7 @@ public:
       QString className = tokens[0].trimmed();
 
       pubCodeOut << "    /**\n    * @brief Returns the name of the class for " << className << "\n    */\n";
-      pubCodeOut << "    QString getNameOfClass() const;\n";
+      pubCodeOut << "    QString getNameOfClass() const override;\n";
       pubCodeOut << "    /**\n    * @brief Returns the name of the class for " << className << "\n    */\n";
       pubCodeOut << "    static QString ClassName();\n";
 

@@ -59,7 +59,7 @@ class FindNRingNeighbors
     /**
      * @brief Returns the name of the class for FindNRingNeighbors
      */
-    QString getNameOfClass() const;
+    virtual QString getNameOfClass() const;
     /**
      * @brief Returns the name of the class for FindNRingNeighbors
      */
@@ -67,7 +67,7 @@ class FindNRingNeighbors
 
     virtual ~FindNRingNeighbors();
 
-    typedef std::set<int64_t> UniqueFaceIds_t;
+    using UniqueFaceIds_t = std::set<int64_t>;
 
     /**
      * @brief Setter property for TriangleId

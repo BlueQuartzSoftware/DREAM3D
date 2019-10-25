@@ -80,7 +80,7 @@ class EMMPMLib_EXPORT EMMPM_Data
     /**
      * @brief Returns the name of the class for EMMPM_Data
      */
-    QString getNameOfClass() const;
+    virtual QString getNameOfClass() const;
     /**
      * @brief Returns the name of the class for EMMPM_Data
      */

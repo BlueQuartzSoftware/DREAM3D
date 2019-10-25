@@ -58,7 +58,7 @@ class OrientationAnalysis_EXPORT RodriguesConvertor : public AbstractFilter
     /**
      * @brief Returns the name of the class for _SUPERRodriguesConvertor
      */
-    QString getNameOfClass() const;
+    QString getNameOfClass() const override;
     /**
      * @brief Returns the name of the class for _SUPERRodriguesConvertor
      */

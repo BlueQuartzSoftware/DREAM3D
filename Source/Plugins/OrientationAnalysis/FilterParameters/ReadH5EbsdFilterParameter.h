@@ -57,7 +57,7 @@ public:
   /**
    * @brief Returns the name of the class for ReadH5EbsdFilterParameter
    */
-  QString getNameOfClass() const;
+  QString getNameOfClass() const override;
   /**
    * @brief Returns the name of the class for ReadH5EbsdFilterParameter
    */

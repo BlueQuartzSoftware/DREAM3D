@@ -60,7 +60,7 @@ class BetaOps : public DistributionAnalysisOps
     /**
      * @brief Returns the name of the class for BetaOps
      */
-    QString getNameOfClass() const;
+    QString getNameOfClass() const override;
     /**
      * @brief Returns the name of the class for BetaOps
      */
@@ -68,11 +68,23 @@ class BetaOps : public DistributionAnalysisOps
 
     static Pointer New();
 
-    virtual ~BetaOps();
+    ~BetaOps() override;
 
+    /**
+     * @brief calculateParameters
+     * @param data
+     * @param outputs
+     * @return
+     */
+    int calculateParameters(std::vector<float>& data, FloatArrayType::Pointer outputs) override;
 
-    int calculateParameters(std::vector<float>& data, FloatArrayType::Pointer outputs);
-    int calculateCorrelatedParameters(std::vector<std::vector<float> >& data, VectorOfFloatArray outputs);
+    /**
+     * @brief calculateCorrelatedParameters
+     * @param data
+     * @param outputs
+     * @return
+     */
+    int calculateCorrelatedParameters(std::vector<std::vector<float>>& data, VectorOfFloatArray outputs) override;
 
   protected:
     BetaOps();

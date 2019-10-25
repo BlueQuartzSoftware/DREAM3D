@@ -72,7 +72,7 @@ class EMMPMLib_EXPORT EMCalculation : public Observable
     /**
      * @brief Returns the name of the class for EMCalculation
      */
-    QString getNameOfClass() const;
+    QString getNameOfClass() const override;
     /**
      * @brief Returns the name of the class for EMCalculation
      */

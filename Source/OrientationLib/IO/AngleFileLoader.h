@@ -66,7 +66,7 @@ class OrientationLib_EXPORT AngleFileLoader
     /**
      * @brief Returns the name of the class for AngleFileLoader
      */
-    QString getNameOfClass() const;
+    virtual QString getNameOfClass() const;
     /**
      * @brief Returns the name of the class for AngleFileLoader
      */

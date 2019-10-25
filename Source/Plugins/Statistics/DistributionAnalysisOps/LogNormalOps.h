@@ -61,7 +61,7 @@ class LogNormalOps : public DistributionAnalysisOps
     /**
      * @brief Returns the name of the class for LogNormalOps
      */
-    QString getNameOfClass() const;
+    QString getNameOfClass() const override;
     /**
      * @brief Returns the name of the class for LogNormalOps
      */
@@ -69,11 +69,23 @@ class LogNormalOps : public DistributionAnalysisOps
 
     static Pointer New();
 
-    virtual ~LogNormalOps();
+    ~LogNormalOps() override;
 
+    /**
+     * @brief calculateParameters
+     * @param data
+     * @param outputs
+     * @return
+     */
+    int calculateParameters(std::vector<float>& data, FloatArrayType::Pointer outputs) override;
 
-    int calculateParameters(std::vector<float>& data, FloatArrayType::Pointer outputs);
-    int calculateCorrelatedParameters(std::vector<std::vector<float> >& data, VectorOfFloatArray outputs);
+    /**
+     * @brief calculateCorrelatedParameters
+     * @param data
+     * @param outputs
+     * @return
+     */
+    int calculateCorrelatedParameters(std::vector<std::vector<float>>& data, VectorOfFloatArray outputs) override;
 
   protected:
     LogNormalOps();
