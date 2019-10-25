@@ -37,6 +37,8 @@
 
 #include <QtCore/QJsonObject>
 
+#include "OrientationAnalysis/OrientationAnalysisFilters/ConvertHexGridToSquareGrid.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -160,13 +162,11 @@ QString ConvertHexGridToSquareGridFilterParameter::getFileType() const
   return m_FileType;
 }
 
-// -----------------------------------------------------------------------------
-void ConvertHexGridToSquareGridFilterParameter::setFilter(ConvertHexGridToSquareGrid* value)
+void ConvertHexGridToSquareGridFilterParameter::setFilter(ConvertHexGridToSquareGrid* filter)
 {
-  m_Filter = value;
+  m_Filter = filter;
 }
 
-// -----------------------------------------------------------------------------
 ConvertHexGridToSquareGrid* ConvertHexGridToSquareGridFilterParameter::getFilter() const
 {
   return m_Filter;

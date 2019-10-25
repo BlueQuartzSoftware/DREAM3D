@@ -37,12 +37,14 @@
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
-#include "OrientationAnalysis/OrientationAnalysisFilters/ReadH5Ebsd.h"
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
+class ReadH5Ebsd;
 
 /**
  * @brief The ReadH5EbsdFilterParameter class
  */
-class ReadH5EbsdFilterParameter : public FilterParameter
+class OrientationAnalysis_EXPORT ReadH5EbsdFilterParameter : public FilterParameter
 {
 public:
   using Self = ReadH5EbsdFilterParameter;
@@ -66,11 +68,8 @@ public:
   static Pointer New(const QString& humanLabel, const QString& propertyName, const QVariant& defaultValue, Category category, ReadH5Ebsd* filter, const QString& fileExtension = QString(""),
                      const QString& fileType = QString(""), int groupIndex = -1);
 
-  virtual ~ReadH5EbsdFilterParameter();
+  ~ReadH5EbsdFilterParameter() override;
 
-  /**
-  *
-  */
   /**
    * @brief Setter property for FileExtension
    */
@@ -82,9 +81,6 @@ public:
   QString getFileExtension() const;
 
   /**
-   *
-   */
-  /**
    * @brief Setter property for FileType
    */
   void setFileType(const QString& value);
@@ -95,18 +91,21 @@ public:
   QString getFileType() const;
 
   /**
-   *
-   */
-  /**
-   * @brief Setter property for Filter
+   * @brief setFilter
+   * @param value
    */
   void setFilter(ReadH5Ebsd* value);
+
   /**
-   * @brief Getter property for Filter
-   * @return Value of Filter
+   * @brief getFilter
+   * @return
    */
   ReadH5Ebsd* getFilter() const;
 
+  /**
+   * @brief getWidgetType
+   * @return
+   */
   QString getWidgetType() const override;
   
   /**

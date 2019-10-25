@@ -37,6 +37,7 @@
 
 #include <QtCore/QJsonArray>
 
+#include "OrientationAnalysis/OrientationAnalysisFilters/ReadH5Ebsd.h"
 
 // -----------------------------------------------------------------------------
 //

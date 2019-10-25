@@ -37,7 +37,9 @@
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
-class OEMEbsdScanSelectionFilterParameter : public FilterParameter
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
+class OrientationAnalysis_EXPORT OEMEbsdScanSelectionFilterParameter : public FilterParameter
 {
 public:
   using Self = OEMEbsdScanSelectionFilterParameter;
