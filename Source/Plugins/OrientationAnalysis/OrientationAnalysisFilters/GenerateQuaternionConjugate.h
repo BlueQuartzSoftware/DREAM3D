@@ -43,11 +43,11 @@ public:
   static std::shared_ptr<GenerateQuaternionConjugate> New();
 
   /**
-   * @brief Returns the name of the class for _SUPERGenerateQuaternionConjugate
+   * @brief Returns the name of the class for GenerateQuaternionConjugate
    */
   QString getNameOfClass() const override;
   /**
-   * @brief Returns the name of the class for _SUPERGenerateQuaternionConjugate
+   * @brief Returns the name of the class for GenerateQuaternionConjugate
    */
   static QString ClassName();
 

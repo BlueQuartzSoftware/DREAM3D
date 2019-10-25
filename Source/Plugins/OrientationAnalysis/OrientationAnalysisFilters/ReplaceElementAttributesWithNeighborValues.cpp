@@ -129,10 +129,10 @@ public:
     return sharedPtr;
   }
   /**
-   * @brief Returns the name of the class for _SUPERGreaterThanComparison<T>
+   * @brief Returns the name of the class for GreaterThanComparison<T>
    */
   /**
-   * @brief Returns the name of the class for _SUPERGreaterThanComparison<T>
+   * @brief Returns the name of the class for GreaterThanComparison<T>
    */
   QString getNameOfClass() const
   {
@@ -140,7 +140,7 @@ public:
   }
 
   /**
-   * @brief Returns the name of the class for _SUPERGreaterThanComparison<T>
+   * @brief Returns the name of the class for GreaterThanComparison<T>
    */
   QString ClassName()
   {

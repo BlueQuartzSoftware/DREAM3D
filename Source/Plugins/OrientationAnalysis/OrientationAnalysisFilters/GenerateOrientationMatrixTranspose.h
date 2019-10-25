@@ -28,11 +28,11 @@ public:
   static std::shared_ptr<GenerateOrientationMatrixTranspose> New();
 
   /**
-   * @brief Returns the name of the class for _SUPERGenerateOrientationMatrixTranspose
+   * @brief Returns the name of the class for GenerateOrientationMatrixTranspose
    */
   QString getNameOfClass() const override;
   /**
-   * @brief Returns the name of the class for _SUPERGenerateOrientationMatrixTranspose
+   * @brief Returns the name of the class for GenerateOrientationMatrixTranspose
    */
   static QString ClassName();
 

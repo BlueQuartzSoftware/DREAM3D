@@ -44,11 +44,11 @@ public:
   static std::shared_ptr<ConvertQuaternion> New();
 
   /**
-   * @brief Returns the name of the class for _SUPERConvertQuaternion
+   * @brief Returns the name of the class for ConvertQuaternion
    */
   QString getNameOfClass() const override;
   /**
-   * @brief Returns the name of the class for _SUPERConvertQuaternion
+   * @brief Returns the name of the class for ConvertQuaternion
    */
   static QString ClassName();
 

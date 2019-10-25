@@ -56,11 +56,11 @@ class OrientationAnalysis_EXPORT RodriguesConvertor : public AbstractFilter
     static std::shared_ptr<RodriguesConvertor> New();
 
     /**
-     * @brief Returns the name of the class for _SUPERRodriguesConvertor
+     * @brief Returns the name of the class for RodriguesConvertor
      */
     QString getNameOfClass() const override;
     /**
-     * @brief Returns the name of the class for _SUPERRodriguesConvertor
+     * @brief Returns the name of the class for RodriguesConvertor
      */
     static QString ClassName();
 

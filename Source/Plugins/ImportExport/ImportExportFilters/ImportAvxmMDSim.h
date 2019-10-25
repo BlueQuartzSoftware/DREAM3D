@@ -28,11 +28,11 @@ public:
   static std::shared_ptr<ImportAvxmMDSim> New();
 
   /**
-   * @brief Returns the name of the class for _SUPERImportAvxmMDSim
+   * @brief Returns the name of the class for ImportAvxmMDSim
    */
   QString getNameOfClass() const override;
   /**
-   * @brief Returns the name of the class for _SUPERImportAvxmMDSim
+   * @brief Returns the name of the class for ImportAvxmMDSim
    */
   static QString ClassName();
 

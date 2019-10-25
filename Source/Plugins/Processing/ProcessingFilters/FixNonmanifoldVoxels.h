@@ -28,11 +28,11 @@ public:
   static std::shared_ptr<FixNonmanifoldVoxels> New();
 
   /**
-   * @brief Returns the name of the class for _SUPERFixNonmanifoldVoxels
+   * @brief Returns the name of the class for FixNonmanifoldVoxels
    */
   QString getNameOfClass() const override;
   /**
-   * @brief Returns the name of the class for _SUPERFixNonmanifoldVoxels
+   * @brief Returns the name of the class for FixNonmanifoldVoxels
    */
   static QString ClassName();
 
