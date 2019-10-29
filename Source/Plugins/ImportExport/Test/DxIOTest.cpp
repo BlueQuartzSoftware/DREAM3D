@@ -275,8 +275,8 @@ public:
         dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName)->getAttributeMatrix("CellData")->getAttributeArray(SIMPL::CellData::FeatureIds);
 
     int size = UnitTest::FeatureIdsTest::XSize * UnitTest::FeatureIdsTest::YSize * UnitTest::FeatureIdsTest::ZSize;
-    int32_t* data = Int32ArrayType::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(mdata.get());
-
+    Int32ArrayType::Pointer dataPtr = std::dynamic_pointer_cast<Int32ArrayType>(mdata);
+    int32_t* data = dataPtr->getTuplePointer(0);
     for(int i = 0; i < size; ++i)
     {
       int32_t file_value = data[i];
