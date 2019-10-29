@@ -35,6 +35,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QJsonObject>
 
 #include "EMMPM/EMMPMFilters/EMMPMFilter.h"

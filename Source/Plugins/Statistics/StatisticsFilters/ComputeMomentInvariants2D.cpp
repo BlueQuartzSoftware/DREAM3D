@@ -2,6 +2,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ComputeMomentInvariants2D.h"
 
 #include <Eigen/Dense>

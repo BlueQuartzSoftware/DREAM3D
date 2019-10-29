@@ -33,6 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #pragma once
+#include <memory>
+
 #include <QtCore/QObject>
 
 #include "SIMPLib/FilterParameters/FilterParameter.h"

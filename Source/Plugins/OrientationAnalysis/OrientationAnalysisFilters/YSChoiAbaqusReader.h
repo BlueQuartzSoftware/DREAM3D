@@ -36,6 +36,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <cstring> // needed for the ::memcpy function below
 
 #include "SIMPLib/Common/Constants.h"

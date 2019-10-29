@@ -37,6 +37,8 @@
 #pragma once
 
 // C Includes
+#include <memory>
+
 #include <cstddef>
 
 // C++ Includes
@@ -52,7 +54,7 @@
 
 using real_t = float;
 
-using CoupleType = struct
+struct CoupleType
 {
   int label_1;
   int label_2;

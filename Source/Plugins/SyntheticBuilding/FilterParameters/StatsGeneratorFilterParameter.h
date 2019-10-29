@@ -33,6 +33,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
 class StatsGeneratorFilterParameter : public FilterParameter

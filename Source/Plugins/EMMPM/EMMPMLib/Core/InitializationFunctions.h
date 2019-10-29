@@ -37,6 +37,8 @@
 #pragma once
 
 //-- SIMPLib Includes
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
 
 

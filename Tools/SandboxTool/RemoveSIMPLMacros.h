@@ -1,4 +1,6 @@
 #pragma once
+#include <memory>
+
 #include <QtCore/QTextStream>
 
 #include <iostream>

@@ -167,16 +167,16 @@ int main(int argc, char* argv[])
 #endif
 
   std::list<QDir> dirs;
-  // dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjParentDir()));
-
-  //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPL/Source/SIMPLib/CoreFilters"));
-  //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../SIMPLView/Source"));
+  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir()));
+  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../DREAM3D_Plugins"));
+  // dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPL/Source/SIMPLib/CoreFilters"));
+  // dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/../SIMPLView/Source"));
 
 #if 1
   //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPLView/Source"));
   //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/SIMPLVtkLib"));
   // dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/Plugins"));
-  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/Plugins/ITKImageProcessing"));
+  // dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/ExternalProjects/Plugins/ITKImageProcessing"));
   // dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Source"));
   //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Test"));
   //  dirs.emplace_back(QDir(D3DTools::GetDREAM3DProjDir() + "/Tools"));
@@ -206,7 +206,7 @@ int main(int argc, char* argv[])
 
   for(auto const& dir : dirs)
   {
-    RecursiveFileSearch<RemoveSIMPLMacros>(dir, filters);
+//    RecursiveFileSearch<UpdateFilterHeaders>(dir, filters);
   }
 
   return 0;

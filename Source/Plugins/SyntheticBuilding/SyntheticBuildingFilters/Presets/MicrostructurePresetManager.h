@@ -36,6 +36,8 @@
 #pragma once
 
 
+#include <memory>
+
 #include "AbstractMicrostructurePreset.h"
 #include "AbstractMicrostructurePresetFactory.h"
 

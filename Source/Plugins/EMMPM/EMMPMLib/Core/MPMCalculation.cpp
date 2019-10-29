@@ -41,6 +41,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /* Heavily modified from the original by Michael A. Jackson for BlueQuartz Software
  * and funded by the Air Force Research Laboratory, Wright-Patterson AFB.
  */
+#include <memory>
+
 #include "MPMCalculation.h"
 
 //-- C Includes

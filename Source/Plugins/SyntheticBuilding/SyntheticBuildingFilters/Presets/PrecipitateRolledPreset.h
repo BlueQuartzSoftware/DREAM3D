@@ -36,6 +36,8 @@
 #pragma once
 
 //-- C++ includes
+#include <memory>
+
 #include <string>
 
 //-- StatsGen Includes

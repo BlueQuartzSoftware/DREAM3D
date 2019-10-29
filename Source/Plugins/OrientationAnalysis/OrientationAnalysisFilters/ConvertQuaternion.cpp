@@ -2,6 +2,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ConvertQuaternion.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS

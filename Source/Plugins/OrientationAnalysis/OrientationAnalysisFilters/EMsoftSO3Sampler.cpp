@@ -28,6 +28,8 @@
  * ###################################################################
  */
 
+#include <memory>
+
 #include "EMsoftSO3Sampler.h"
 
 #include <cmath>

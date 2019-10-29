@@ -36,6 +36,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <vector>
 
 #include "SIMPLib/SIMPLib.h"

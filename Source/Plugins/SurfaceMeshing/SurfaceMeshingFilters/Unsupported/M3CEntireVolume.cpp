@@ -1,4 +1,6 @@
 
+#include <memory>
+
 #include "SIMPLib/Geometry/ImageGeom.h"
 //
 //  This code was written under United States Air Force Contract number

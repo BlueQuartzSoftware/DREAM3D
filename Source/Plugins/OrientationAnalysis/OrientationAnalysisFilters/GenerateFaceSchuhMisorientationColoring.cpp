@@ -33,6 +33,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "GenerateFaceSchuhMisorientationColoring.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS

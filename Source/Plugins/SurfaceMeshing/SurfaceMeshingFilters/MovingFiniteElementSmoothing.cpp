@@ -49,6 +49,8 @@
 //  look for mobility values etc, and perhaps tweak them
 // Integrated into DREAM3D as MovingFiniteElementSmoothing.{cpp|h} by
 // Michael A. Jackson as part of SAIC Prime contract N00173-07-C-2068
+#include <memory>
+
 #include "MovingFiniteElementSmoothing.h"
 
 #include <iomanip>

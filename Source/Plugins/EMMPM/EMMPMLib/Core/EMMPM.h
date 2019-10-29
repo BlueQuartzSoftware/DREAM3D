@@ -36,6 +36,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QString>
 
 #include "SIMPLib/SIMPLib.h"
@@ -52,7 +54,6 @@ class EMMPMLib_EXPORT EMMPM : public Observable
     Q_OBJECT;
   public:
     using Self = EMMPM;
-    ;
     using Pointer = std::shared_ptr<Self>;
     using ConstPointer = std::shared_ptr<const Self>;
     using WeakPointer = std::weak_ptr<Self>;

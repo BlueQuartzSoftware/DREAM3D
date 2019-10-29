@@ -34,6 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
+#include <memory>
+
 #include "TetragonalLowOps.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS

@@ -2,6 +2,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "OrientationUtility.h"
 
 #include <QtCore/QTextStream>
