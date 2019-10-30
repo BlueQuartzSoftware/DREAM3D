@@ -33,6 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "RotateSampleRefFrame.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -42,7 +44,10 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -50,8 +55,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/GeometryMath.h"
-#include "SIMPLib/Math/MatrixMath.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
@@ -683,7 +688,7 @@ AbstractFilter::Pointer RotateSampleRefFrame::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateSampleRefFrame::getCompiledLibraryName() const
+QString RotateSampleRefFrame::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -691,7 +696,7 @@ const QString RotateSampleRefFrame::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateSampleRefFrame::getBrandingString() const
+QString RotateSampleRefFrame::getBrandingString() const
 {
   return "Sampling";
 }
@@ -699,7 +704,7 @@ const QString RotateSampleRefFrame::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateSampleRefFrame::getFilterVersion() const
+QString RotateSampleRefFrame::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -709,7 +714,7 @@ const QString RotateSampleRefFrame::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateSampleRefFrame::getGroupName() const
+QString RotateSampleRefFrame::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -717,7 +722,7 @@ const QString RotateSampleRefFrame::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid RotateSampleRefFrame::getUuid()
+QUuid RotateSampleRefFrame::getUuid() const
 {
   return QUuid("{e25d9b4c-2b37-578c-b1de-cf7032b5ef19}");
 }
@@ -725,7 +730,7 @@ const QUuid RotateSampleRefFrame::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateSampleRefFrame::getSubGroupName() const
+QString RotateSampleRefFrame::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::RotationTransformationFilters;
 }
@@ -733,7 +738,84 @@ const QString RotateSampleRefFrame::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateSampleRefFrame::getHumanLabel() const
+QString RotateSampleRefFrame::getHumanLabel() const
 {
   return "Rotate Sample Reference Frame";
+}
+
+// -----------------------------------------------------------------------------
+RotateSampleRefFrame::Pointer RotateSampleRefFrame::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<RotateSampleRefFrame> RotateSampleRefFrame::New()
+{
+  struct make_shared_enabler : public RotateSampleRefFrame
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString RotateSampleRefFrame::getNameOfClass() const
+{
+  return QString("RotateSampleRefFrame");
+}
+
+// -----------------------------------------------------------------------------
+QString RotateSampleRefFrame::ClassName()
+{
+  return QString("RotateSampleRefFrame");
+}
+
+// -----------------------------------------------------------------------------
+void RotateSampleRefFrame::setCellAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_CellAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath RotateSampleRefFrame::getCellAttributeMatrixPath() const
+{
+  return m_CellAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void RotateSampleRefFrame::setRotationAxis(const FloatVec3Type& value)
+{
+  m_RotationAxis = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type RotateSampleRefFrame::getRotationAxis() const
+{
+  return m_RotationAxis;
+}
+
+// -----------------------------------------------------------------------------
+void RotateSampleRefFrame::setRotationAngle(float value)
+{
+  m_RotationAngle = value;
+}
+
+// -----------------------------------------------------------------------------
+float RotateSampleRefFrame::getRotationAngle() const
+{
+  return m_RotationAngle;
+}
+
+// -----------------------------------------------------------------------------
+void RotateSampleRefFrame::setSliceBySlice(bool value)
+{
+  m_SliceBySlice = value;
+}
+
+// -----------------------------------------------------------------------------
+bool RotateSampleRefFrame::getSliceBySlice() const
+{
+  return m_SliceBySlice;
 }

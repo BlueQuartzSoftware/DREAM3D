@@ -33,12 +33,17 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "CAxisSegmentFeatures.h"
 
 #include <chrono>
 #include <random>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -50,6 +55,8 @@
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/Core/OrientationTransformation.hpp"
 #include "OrientationLib/LaueOps/LaueOps.h"
@@ -487,7 +494,7 @@ AbstractFilter::Pointer CAxisSegmentFeatures::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CAxisSegmentFeatures::getCompiledLibraryName() const
+QString CAxisSegmentFeatures::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -495,7 +502,7 @@ const QString CAxisSegmentFeatures::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CAxisSegmentFeatures::getBrandingString() const
+QString CAxisSegmentFeatures::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -503,7 +510,7 @@ const QString CAxisSegmentFeatures::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CAxisSegmentFeatures::getFilterVersion() const
+QString CAxisSegmentFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -513,7 +520,7 @@ const QString CAxisSegmentFeatures::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CAxisSegmentFeatures::getGroupName() const
+QString CAxisSegmentFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -521,7 +528,7 @@ const QString CAxisSegmentFeatures::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid CAxisSegmentFeatures::getUuid()
+QUuid CAxisSegmentFeatures::getUuid() const
 {
   return QUuid("{bff6be19-1219-5876-8838-1574ad29d965}");
 }
@@ -529,7 +536,7 @@ const QUuid CAxisSegmentFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CAxisSegmentFeatures::getSubGroupName() const
+QString CAxisSegmentFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;
 }
@@ -537,7 +544,156 @@ const QString CAxisSegmentFeatures::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CAxisSegmentFeatures::getHumanLabel() const
+QString CAxisSegmentFeatures::getHumanLabel() const
 {
   return "Segment Features (C-Axis Misalignment)";
+}
+
+// -----------------------------------------------------------------------------
+CAxisSegmentFeatures::Pointer CAxisSegmentFeatures::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<CAxisSegmentFeatures> CAxisSegmentFeatures::New()
+{
+  struct make_shared_enabler : public CAxisSegmentFeatures
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString CAxisSegmentFeatures::getNameOfClass() const
+{
+  return QString("CAxisSegmentFeatures");
+}
+
+// -----------------------------------------------------------------------------
+QString CAxisSegmentFeatures::ClassName()
+{
+  return QString("CAxisSegmentFeatures");
+}
+
+// -----------------------------------------------------------------------------
+void CAxisSegmentFeatures::setCellFeatureAttributeMatrixName(const QString& value)
+{
+  m_CellFeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString CAxisSegmentFeatures::getCellFeatureAttributeMatrixName() const
+{
+  return m_CellFeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void CAxisSegmentFeatures::setMisorientationTolerance(float value)
+{
+  m_MisorientationTolerance = value;
+}
+
+// -----------------------------------------------------------------------------
+float CAxisSegmentFeatures::getMisorientationTolerance() const
+{
+  return m_MisorientationTolerance;
+}
+
+// -----------------------------------------------------------------------------
+void CAxisSegmentFeatures::setRandomizeFeatureIds(bool value)
+{
+  m_RandomizeFeatureIds = value;
+}
+
+// -----------------------------------------------------------------------------
+bool CAxisSegmentFeatures::getRandomizeFeatureIds() const
+{
+  return m_RandomizeFeatureIds;
+}
+
+// -----------------------------------------------------------------------------
+void CAxisSegmentFeatures::setUseGoodVoxels(bool value)
+{
+  m_UseGoodVoxels = value;
+}
+
+// -----------------------------------------------------------------------------
+bool CAxisSegmentFeatures::getUseGoodVoxels() const
+{
+  return m_UseGoodVoxels;
+}
+
+// -----------------------------------------------------------------------------
+void CAxisSegmentFeatures::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath CAxisSegmentFeatures::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void CAxisSegmentFeatures::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath CAxisSegmentFeatures::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void CAxisSegmentFeatures::setQuatsArrayPath(const DataArrayPath& value)
+{
+  m_QuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath CAxisSegmentFeatures::getQuatsArrayPath() const
+{
+  return m_QuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void CAxisSegmentFeatures::setGoodVoxelsArrayPath(const DataArrayPath& value)
+{
+  m_GoodVoxelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath CAxisSegmentFeatures::getGoodVoxelsArrayPath() const
+{
+  return m_GoodVoxelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void CAxisSegmentFeatures::setFeatureIdsArrayName(const QString& value)
+{
+  m_FeatureIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString CAxisSegmentFeatures::getFeatureIdsArrayName() const
+{
+  return m_FeatureIdsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void CAxisSegmentFeatures::setActiveArrayName(const QString& value)
+{
+  m_ActiveArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString CAxisSegmentFeatures::getActiveArrayName() const
+{
+  return m_ActiveArrayName;
 }

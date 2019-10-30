@@ -35,9 +35,11 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
 
@@ -47,52 +49,131 @@
 class SyntheticBuilding_EXPORT AddBadData : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(AddBadData SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath GBEuclideanDistancesArrayPath READ getGBEuclideanDistancesArrayPath WRITE setGBEuclideanDistancesArrayPath)
-    PYB11_PROPERTY(bool PoissonNoise READ getPoissonNoise WRITE setPoissonNoise)
-    PYB11_PROPERTY(float PoissonVolFraction READ getPoissonVolFraction WRITE setPoissonVolFraction)
-    PYB11_PROPERTY(bool BoundaryNoise READ getBoundaryNoise WRITE setBoundaryNoise)
-    PYB11_PROPERTY(float BoundaryVolFraction READ getBoundaryVolFraction WRITE setBoundaryVolFraction)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(AddBadData SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(AddBadData)
+  PYB11_FILTER_NEW_MACRO(AddBadData)
+  PYB11_FILTER_PARAMETER(DataArrayPath, GBEuclideanDistancesArrayPath)
+  PYB11_FILTER_PARAMETER(bool, PoissonNoise)
+  PYB11_FILTER_PARAMETER(float, PoissonVolFraction)
+  PYB11_FILTER_PARAMETER(bool, BoundaryNoise)
+  PYB11_FILTER_PARAMETER(float, BoundaryVolFraction)
+  PYB11_PROPERTY(DataArrayPath GBEuclideanDistancesArrayPath READ getGBEuclideanDistancesArrayPath WRITE setGBEuclideanDistancesArrayPath)
+  PYB11_PROPERTY(bool PoissonNoise READ getPoissonNoise WRITE setPoissonNoise)
+  PYB11_PROPERTY(float PoissonVolFraction READ getPoissonVolFraction WRITE setPoissonVolFraction)
+  PYB11_PROPERTY(bool BoundaryNoise READ getBoundaryNoise WRITE setBoundaryNoise)
+  PYB11_PROPERTY(float BoundaryVolFraction READ getBoundaryVolFraction WRITE setBoundaryVolFraction)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(AddBadData)
-  SIMPL_FILTER_NEW_MACRO(AddBadData)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(AddBadData, AbstractFilter)
+  using Self = AddBadData;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for AddBadData
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for AddBadData
+   */
+  static QString ClassName();
 
   ~AddBadData() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, GBEuclideanDistancesArrayPath)
+  /**
+   * @brief Setter property for GBEuclideanDistancesArrayPath
+   */
+  void setGBEuclideanDistancesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for GBEuclideanDistancesArrayPath
+   * @return Value of GBEuclideanDistancesArrayPath
+   */
+  DataArrayPath getGBEuclideanDistancesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath GBEuclideanDistancesArrayPath READ getGBEuclideanDistancesArrayPath WRITE setGBEuclideanDistancesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(bool, PoissonNoise)
+  /**
+   * @brief Setter property for PoissonNoise
+   */
+  void setPoissonNoise(bool value);
+  /**
+   * @brief Getter property for PoissonNoise
+   * @return Value of PoissonNoise
+   */
+  bool getPoissonNoise() const;
+
   Q_PROPERTY(bool PoissonNoise READ getPoissonNoise WRITE setPoissonNoise)
 
-  SIMPL_FILTER_PARAMETER(float, PoissonVolFraction)
+  /**
+   * @brief Setter property for PoissonVolFraction
+   */
+  void setPoissonVolFraction(float value);
+  /**
+   * @brief Getter property for PoissonVolFraction
+   * @return Value of PoissonVolFraction
+   */
+  float getPoissonVolFraction() const;
+
   Q_PROPERTY(float PoissonVolFraction READ getPoissonVolFraction WRITE setPoissonVolFraction)
 
-  SIMPL_FILTER_PARAMETER(bool, BoundaryNoise)
+  /**
+   * @brief Setter property for BoundaryNoise
+   */
+  void setBoundaryNoise(bool value);
+  /**
+   * @brief Getter property for BoundaryNoise
+   * @return Value of BoundaryNoise
+   */
+  bool getBoundaryNoise() const;
+
   Q_PROPERTY(bool BoundaryNoise READ getBoundaryNoise WRITE setBoundaryNoise)
 
-  SIMPL_FILTER_PARAMETER(float, BoundaryVolFraction)
+  /**
+   * @brief Setter property for BoundaryVolFraction
+   */
+  void setBoundaryVolFraction(float value);
+  /**
+   * @brief Getter property for BoundaryVolFraction
+   * @return Value of BoundaryVolFraction
+   */
+  float getBoundaryVolFraction() const;
+
   Q_PROPERTY(float BoundaryVolFraction READ getBoundaryVolFraction WRITE setBoundaryVolFraction)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -102,23 +183,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -182,7 +263,14 @@ protected:
   void add_noise();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, GBEuclideanDistances)
+  std::weak_ptr<DataArray<int32_t>> m_GBEuclideanDistancesPtr;
+  int32_t* m_GBEuclideanDistances = nullptr;
+
+  DataArrayPath m_GBEuclideanDistancesArrayPath = {};
+  bool m_PoissonNoise = {};
+  float m_PoissonVolFraction = {};
+  bool m_BoundaryNoise = {};
+  float m_BoundaryVolFraction = {};
 
 public:
   AddBadData(const AddBadData&) = delete;            // Copy Constructor Not Implemented

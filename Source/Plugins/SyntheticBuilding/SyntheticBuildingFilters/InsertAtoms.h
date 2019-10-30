@@ -36,11 +36,13 @@
 #pragma once
 
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
 
@@ -50,60 +52,159 @@
 class SyntheticBuilding_EXPORT InsertAtoms : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(InsertAtoms SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
-    PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
-    PYB11_PROPERTY(FloatVec3Type LatticeConstants READ getLatticeConstants WRITE setLatticeConstants)
-    PYB11_PROPERTY(int Basis READ getBasis WRITE setBasis)
-    PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
-    PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
-    PYB11_PROPERTY(QString AtomFeatureLabelsArrayName READ getAtomFeatureLabelsArrayName WRITE setAtomFeatureLabelsArrayName)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(InsertAtoms SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(InsertAtoms)
+  PYB11_FILTER_NEW_MACRO(InsertAtoms)
+  PYB11_FILTER_PARAMETER(DataArrayPath, VertexDataContainerName)
+  PYB11_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, LatticeConstants)
+  PYB11_FILTER_PARAMETER(int, Basis)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, AtomFeatureLabelsArrayName)
+  PYB11_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
+  PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
+  PYB11_PROPERTY(FloatVec3Type LatticeConstants READ getLatticeConstants WRITE setLatticeConstants)
+  PYB11_PROPERTY(int Basis READ getBasis WRITE setBasis)
+  PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+  PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+  PYB11_PROPERTY(QString AtomFeatureLabelsArrayName READ getAtomFeatureLabelsArrayName WRITE setAtomFeatureLabelsArrayName)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(InsertAtoms)
-  SIMPL_FILTER_NEW_MACRO(InsertAtoms)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(InsertAtoms, AbstractFilter)
+  using Self = InsertAtoms;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for InsertAtoms
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for InsertAtoms
+   */
+  static QString ClassName();
 
   ~InsertAtoms() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, VertexDataContainerName)
+  /**
+   * @brief Setter property for VertexDataContainerName
+   */
+  void setVertexDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for VertexDataContainerName
+   * @return Value of VertexDataContainerName
+   */
+  DataArrayPath getVertexDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+  /**
+   * @brief Setter property for VertexAttributeMatrixName
+   */
+  void setVertexAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for VertexAttributeMatrixName
+   * @return Value of VertexAttributeMatrixName
+   */
+  QString getVertexAttributeMatrixName() const;
+
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, LatticeConstants)
+  /**
+   * @brief Setter property for LatticeConstants
+   */
+  void setLatticeConstants(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for LatticeConstants
+   * @return Value of LatticeConstants
+   */
+  FloatVec3Type getLatticeConstants() const;
+
   Q_PROPERTY(FloatVec3Type LatticeConstants READ getLatticeConstants WRITE setLatticeConstants)
 
-  SIMPL_FILTER_PARAMETER(int, Basis)
+  /**
+   * @brief Setter property for Basis
+   */
+  void setBasis(int value);
+  /**
+   * @brief Getter property for Basis
+   * @return Value of Basis
+   */
+  int getBasis() const;
+
   Q_PROPERTY(int Basis READ getBasis WRITE setBasis)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceLabelsArrayPath
+   */
+  void setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceLabelsArrayPath
+   * @return Value of SurfaceMeshFaceLabelsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  /**
+   * @brief Setter property for AvgQuatsArrayPath
+   */
+  void setAvgQuatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for AvgQuatsArrayPath
+   * @return Value of AvgQuatsArrayPath
+   */
+  DataArrayPath getAvgQuatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, AtomFeatureLabelsArrayName)
+  /**
+   * @brief Setter property for AtomFeatureLabelsArrayName
+   */
+  void setAtomFeatureLabelsArrayName(const QString& value);
+  /**
+   * @brief Getter property for AtomFeatureLabelsArrayName
+   * @return Value of AtomFeatureLabelsArrayName
+   */
+  QString getAtomFeatureLabelsArrayName() const;
+
   Q_PROPERTY(QString AtomFeatureLabelsArrayName READ getAtomFeatureLabelsArrayName WRITE setAtomFeatureLabelsArrayName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -113,23 +214,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -199,10 +300,20 @@ protected:
   virtual void updateVertexInstancePointers();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-  DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
+  std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFaceLabelsPtr;
+  int32_t* m_SurfaceMeshFaceLabels = nullptr;
+  std::weak_ptr<DataArray<float>> m_AvgQuatsPtr;
+  float* m_AvgQuats = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_AtomFeatureLabelsPtr;
+  int32_t* m_AtomFeatureLabels = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(int32_t, AtomFeatureLabels)
+  DataArrayPath m_VertexDataContainerName = {};
+  QString m_VertexAttributeMatrixName = {};
+  FloatVec3Type m_LatticeConstants = {};
+  int m_Basis = {};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
+  DataArrayPath m_AvgQuatsArrayPath = {};
+  QString m_AtomFeatureLabelsArrayName = {};
 
 public:
   InsertAtoms(const InsertAtoms&) = delete;            // Copy Constructor Not Implemented

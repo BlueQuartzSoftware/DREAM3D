@@ -35,8 +35,10 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
 #include "SIMPLib/CoreFilters/FileWriter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
@@ -48,40 +50,89 @@
 class ImportExport_EXPORT DxWriter : public FileWriter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(DxWriter SUPERCLASS FileWriter)
+  PYB11_SHARED_POINTERS(DxWriter)
+  PYB11_FILTER_NEW_MACRO(DxWriter)
+  PYB11_FILTER_PARAMETER(bool, AddSurfaceLayer)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
   PYB11_PROPERTY(bool AddSurfaceLayer READ getAddSurfaceLayer WRITE setAddSurfaceLayer)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(DxWriter)
-  SIMPL_FILTER_NEW_MACRO(DxWriter)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(DxWriter, FileWriter)
+  using Self = DxWriter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for DxWriter
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for DxWriter
+   */
+  static QString ClassName();
 
   ~DxWriter() override;
 
-  SIMPL_FILTER_PARAMETER(bool, AddSurfaceLayer)
+  /**
+   * @brief Setter property for AddSurfaceLayer
+   */
+  void setAddSurfaceLayer(bool value);
+  /**
+   * @brief Getter property for AddSurfaceLayer
+   * @return Value of AddSurfaceLayer
+   */
+  bool getAddSurfaceLayer() const;
+
   Q_PROPERTY(bool AddSurfaceLayer READ getAddSurfaceLayer WRITE setAddSurfaceLayer)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
    */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -91,23 +142,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -147,7 +198,11 @@ protected:
   virtual int32_t writeFile();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+
+  bool m_AddSurfaceLayer = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
 
 public:
   DxWriter(const DxWriter&) = delete;            // Copy Constructor Not Implemented

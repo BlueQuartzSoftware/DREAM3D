@@ -35,8 +35,10 @@
 
 #include <QtCore/QFile>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <QtCore/QDebug>
+
 #include "SIMPLib/DataArrays/DataArray.hpp"
+
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
@@ -45,6 +47,9 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+
 #include "UnitTestSupport.hpp"
 
 #include "SurfaceMeshingTestFileLocations.h"
@@ -56,7 +61,25 @@ public:
   FindTriangleGeomCentroidsTest() = default;
   ~FindTriangleGeomCentroidsTest() = default;
 
-  SIMPL_TYPE_MACRO(FindTriangleGeomCentroidsTest)
+  /**
+   * @brief Returns the name of the class for FindTriangleGeomCentroidsTest
+   */
+  /**
+   * @brief Returns the name of the class for FindTriangleGeomCentroidsTest
+   */
+  QString getNameOfClass() const
+  {
+    return QString("FindTriangleGeomCentroidsTest");
+  }
+
+  /**
+   * @brief Returns the name of the class for FindTriangleGeomCentroidsTest
+   */
+  QString ClassName()
+  {
+    return QString("FindTriangleGeomCentroidsTest");
+  }
+
   FindTriangleGeomCentroidsTest(const FindTriangleGeomCentroidsTest&) = delete;            // Copy Constructor Not Implemented
   FindTriangleGeomCentroidsTest(FindTriangleGeomCentroidsTest&&) = delete;                 // Move Constructor Not Implemented
   FindTriangleGeomCentroidsTest& operator=(const FindTriangleGeomCentroidsTest&) = delete; // Copy Assignment Not Implemented
@@ -295,4 +318,6 @@ public:
 
     DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
+
+private:
 };

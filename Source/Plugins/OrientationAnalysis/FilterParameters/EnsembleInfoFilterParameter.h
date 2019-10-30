@@ -35,6 +35,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QJsonObject>
 
 #include "SIMPLib/Common/EnsembleInfo.h"
@@ -64,9 +66,23 @@
 class EnsembleInfoFilterParameter : public FilterParameter
 {
 public:
-  SIMPL_SHARED_POINTERS(EnsembleInfoFilterParameter)
-  SIMPL_STATIC_NEW_MACRO(EnsembleInfoFilterParameter)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(EnsembleInfoFilterParameter, FilterParameter)
+  using Self = EnsembleInfoFilterParameter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for EnsembleInfoFilterParameter
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for EnsembleInfoFilterParameter
+   */
+  static QString ClassName();
 
   typedef std::function<void(EnsembleInfo)> SetterCallbackType;
   typedef std::function<EnsembleInfo(void)> GetterCallbackType;
@@ -94,11 +110,45 @@ public:
 
   virtual ~EnsembleInfoFilterParameter();
 
-  SIMPL_INSTANCE_PROPERTY(QVector<QString>, Choices)
-  SIMPL_INSTANCE_PROPERTY(bool, ShowOperators)
+  /**
+   * @brief Setter property for Choices
+   */
+  void setChoices(const QVector<QString>& value);
+  /**
+   * @brief Getter property for Choices
+   * @return Value of Choices
+   */
+  QVector<QString> getChoices() const;
 
-  SIMPL_INSTANCE_PROPERTY(IGeometry::Types, DefaultGeometryTypes)
-  SIMPL_INSTANCE_PROPERTY(AttributeMatrix::Types, DefaultAttributeMatrixTypes)
+  /**
+   * @brief Setter property for ShowOperators
+   */
+  void setShowOperators(bool value);
+  /**
+   * @brief Getter property for ShowOperators
+   * @return Value of ShowOperators
+   */
+  bool getShowOperators() const;
+
+  /**
+   * @brief Setter property for DefaultGeometryTypes
+   */
+  void setDefaultGeometryTypes(const IGeometry::Types& value);
+  /**
+   * @brief Getter property for DefaultGeometryTypes
+   * @return Value of DefaultGeometryTypes
+   */
+  IGeometry::Types getDefaultGeometryTypes() const;
+
+  /**
+   * @brief Setter property for DefaultAttributeMatrixTypes
+   */
+  void setDefaultAttributeMatrixTypes(const AttributeMatrix::Types& value);
+  /**
+   * @brief Getter property for DefaultAttributeMatrixTypes
+   * @return Value of DefaultAttributeMatrixTypes
+   */
+  AttributeMatrix::Types getDefaultAttributeMatrixTypes() const;
 
   /**
  * @brief getWidgetType Returns the type of widget that displays and controls
@@ -124,14 +174,30 @@ public:
   * that this FilterParameter subclass represents.
   * from the filter parameter.
   */
-  SIMPL_INSTANCE_PROPERTY(SetterCallbackType, SetterCallback)
+  /**
+   * @brief Setter property for SetterCallback
+   */
+  void setSetterCallback(const EnsembleInfoFilterParameter::SetterCallbackType& value);
+  /**
+   * @brief Getter property for SetterCallback
+   * @return Value of SetterCallback
+   */
+  EnsembleInfoFilterParameter::SetterCallbackType getSetterCallback() const;
 
   /**
   * @param GetterCallback The method in the AbstractFilter subclass that <i>gets</i> the value of the property
   * that this FilterParameter subclass represents.
   * @return The GetterCallback
   */
-  SIMPL_INSTANCE_PROPERTY(GetterCallbackType, GetterCallback)
+  /**
+   * @brief Setter property for GetterCallback
+   */
+  void setGetterCallback(const EnsembleInfoFilterParameter::GetterCallbackType& value);
+  /**
+   * @brief Getter property for GetterCallback
+   * @return Value of GetterCallback
+   */
+  EnsembleInfoFilterParameter::GetterCallbackType getGetterCallback() const;
 
 protected:
   /**
@@ -145,5 +211,13 @@ public:
   EnsembleInfoFilterParameter(EnsembleInfoFilterParameter&&) = delete;      // Move Constructor Not Implemented
   EnsembleInfoFilterParameter& operator=(const EnsembleInfoFilterParameter&) = delete; // Copy Assignment Not Implemented
   EnsembleInfoFilterParameter& operator=(EnsembleInfoFilterParameter&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  QVector<QString> m_Choices = {};
+  bool m_ShowOperators = {};
+  IGeometry::Types m_DefaultGeometryTypes = {};
+  AttributeMatrix::Types m_DefaultAttributeMatrixTypes = {};
+  EnsembleInfoFilterParameter::SetterCallbackType m_SetterCallback = {};
+  EnsembleInfoFilterParameter::GetterCallbackType m_GetterCallback = {};
 };
 

@@ -1,4 +1,6 @@
 /* ============================================================================
+
+
  * Copyright (c) 2009-2016 BlueQuartz Software, LLC
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -43,7 +45,7 @@
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidgetUtils.hpp"
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidgetsDialogs.h"
 #include "SVWidgetsLib/Widgets/SVStyle.h"
-
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -383,4 +385,28 @@ EnsembleInfoTableModel* EnsembleInfoCreationWidget::createEnsembleInfoModel()
   ensemblePhasesTableView->setItemDelegate(aid);
 
   return newModel;
+}
+
+// -----------------------------------------------------------------------------
+void EnsembleInfoCreationWidget::setArrayListType(const EnsembleInfoCreationWidget::ArrayListType& value)
+{
+  m_ArrayListType = value;
+}
+
+// -----------------------------------------------------------------------------
+EnsembleInfoCreationWidget::ArrayListType EnsembleInfoCreationWidget::getArrayListType() const
+{
+  return m_ArrayListType;
+}
+
+// -----------------------------------------------------------------------------
+void EnsembleInfoCreationWidget::setShowOperators(bool value)
+{
+  m_ShowOperators = value;
+}
+
+// -----------------------------------------------------------------------------
+bool EnsembleInfoCreationWidget::getShowOperators() const
+{
+  return m_ShowOperators;
 }

@@ -42,8 +42,8 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
 #include <QtCore/QByteArray>
+#include <QtCore/QDebug>
 
-#include "SIMPLib/Common/Constants.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
@@ -228,4 +228,125 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
 
 
   return angles;
+}
+
+// -----------------------------------------------------------------------------
+AngleFileLoader::Pointer AngleFileLoader::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+AngleFileLoader::Pointer AngleFileLoader::New()
+{
+  Pointer sharedPtr(new(AngleFileLoader));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString AngleFileLoader::getNameOfClass() const
+{
+  return QString("AngleFileLoader");
+}
+
+// -----------------------------------------------------------------------------
+QString AngleFileLoader::ClassName()
+{
+  return QString("AngleFileLoader");
+}
+
+// -----------------------------------------------------------------------------
+void AngleFileLoader::setErrorMessage(const QString& value)
+{
+  m_ErrorMessage = value;
+}
+
+// -----------------------------------------------------------------------------
+QString AngleFileLoader::getErrorMessage() const
+{
+  return m_ErrorMessage;
+}
+
+// -----------------------------------------------------------------------------
+void AngleFileLoader::setErrorCode(int value)
+{
+  m_ErrorCode = value;
+}
+
+// -----------------------------------------------------------------------------
+int AngleFileLoader::getErrorCode() const
+{
+  return m_ErrorCode;
+}
+
+// -----------------------------------------------------------------------------
+void AngleFileLoader::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString AngleFileLoader::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void AngleFileLoader::setFileAnglesInDegrees(bool value)
+{
+  m_FileAnglesInDegrees = value;
+}
+
+// -----------------------------------------------------------------------------
+bool AngleFileLoader::getFileAnglesInDegrees() const
+{
+  return m_FileAnglesInDegrees;
+}
+
+// -----------------------------------------------------------------------------
+void AngleFileLoader::setOutputAnglesInDegrees(bool value)
+{
+  m_OutputAnglesInDegrees = value;
+}
+
+// -----------------------------------------------------------------------------
+bool AngleFileLoader::getOutputAnglesInDegrees() const
+{
+  return m_OutputAnglesInDegrees;
+}
+
+// -----------------------------------------------------------------------------
+void AngleFileLoader::setAngleRepresentation(uint32_t value)
+{
+  m_AngleRepresentation = value;
+}
+
+// -----------------------------------------------------------------------------
+uint32_t AngleFileLoader::getAngleRepresentation() const
+{
+  return m_AngleRepresentation;
+}
+
+// -----------------------------------------------------------------------------
+void AngleFileLoader::setDelimiter(const QString& value)
+{
+  m_Delimiter = value;
+}
+
+// -----------------------------------------------------------------------------
+QString AngleFileLoader::getDelimiter() const
+{
+  return m_Delimiter;
+}
+
+// -----------------------------------------------------------------------------
+void AngleFileLoader::setIgnoreMultipleDelimiters(bool value)
+{
+  m_IgnoreMultipleDelimiters = value;
+}
+
+// -----------------------------------------------------------------------------
+bool AngleFileLoader::getIgnoreMultipleDelimiters() const
+{
+  return m_IgnoreMultipleDelimiters;
 }

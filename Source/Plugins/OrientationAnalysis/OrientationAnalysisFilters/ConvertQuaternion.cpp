@@ -2,6 +2,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ConvertQuaternion.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -11,11 +13,15 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -242,7 +248,7 @@ AbstractFilter::Pointer ConvertQuaternion::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertQuaternion::getCompiledLibraryName() const
+QString ConvertQuaternion::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -250,7 +256,7 @@ const QString ConvertQuaternion::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertQuaternion::getBrandingString() const
+QString ConvertQuaternion::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -258,7 +264,7 @@ const QString ConvertQuaternion::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertQuaternion::getFilterVersion() const
+QString ConvertQuaternion::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -269,7 +275,7 @@ const QString ConvertQuaternion::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertQuaternion::getGroupName() const
+QString ConvertQuaternion::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -277,7 +283,7 @@ const QString ConvertQuaternion::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertQuaternion::getSubGroupName() const
+QString ConvertQuaternion::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConversionFilters;
 }
@@ -285,7 +291,7 @@ const QString ConvertQuaternion::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertQuaternion::getHumanLabel() const
+QString ConvertQuaternion::getHumanLabel() const
 {
   return "Convert Quaternion Order";
 }
@@ -293,8 +299,84 @@ const QString ConvertQuaternion::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ConvertQuaternion::getUuid()
+QUuid ConvertQuaternion::getUuid() const
 {
   return QUuid("{439e31b7-3198-5d0d-aef6-65a9e9c1a016}");
 }
 
+// -----------------------------------------------------------------------------
+ConvertQuaternion::Pointer ConvertQuaternion::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ConvertQuaternion> ConvertQuaternion::New()
+{
+  struct make_shared_enabler : public ConvertQuaternion
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ConvertQuaternion::getNameOfClass() const
+{
+  return QString("_SUPERConvertQuaternion");
+}
+
+// -----------------------------------------------------------------------------
+QString ConvertQuaternion::ClassName()
+{
+  return QString("_SUPERConvertQuaternion");
+}
+
+// -----------------------------------------------------------------------------
+void ConvertQuaternion::setQuaternionDataArrayPath(const DataArrayPath& value)
+{
+  m_QuaternionDataArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ConvertQuaternion::getQuaternionDataArrayPath() const
+{
+  return m_QuaternionDataArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertQuaternion::setOutputDataArrayPath(const DataArrayPath& value)
+{
+  m_OutputDataArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ConvertQuaternion::getOutputDataArrayPath() const
+{
+  return m_OutputDataArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertQuaternion::setDeleteOriginalData(bool value)
+{
+  m_DeleteOriginalData = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ConvertQuaternion::getDeleteOriginalData() const
+{
+  return m_DeleteOriginalData;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertQuaternion::setConversionType(int32_t value)
+{
+  m_ConversionType = value;
+}
+
+// -----------------------------------------------------------------------------
+int32_t ConvertQuaternion::getConversionType() const
+{
+  return m_ConversionType;
+}

@@ -35,8 +35,10 @@
 
 #include <QtCore/QFile>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <QtCore/QDebug>
+
 #include "SIMPLib/DataArrays/DataArray.hpp"
+
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
@@ -47,6 +49,9 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+
 #include "UnitTestSupport.hpp"
 
 #include "SurfaceMeshingTestFileLocations.h"
@@ -69,7 +74,24 @@ public:
   QuickSurfaceMeshTest() = default;
   ~QuickSurfaceMeshTest() = default;
 
-  SIMPL_TYPE_MACRO(QuickSurfaceMeshTest)
+  /**
+   * @brief Returns the name of the class for QuickSurfaceMeshTest
+   */
+  /**
+   * @brief Returns the name of the class for QuickSurfaceMeshTest
+   */
+  QString getNameOfClass() const
+  {
+    return QString("QuickSurfaceMeshTest");
+  }
+
+  /**
+   * @brief Returns the name of the class for QuickSurfaceMeshTest
+   */
+  QString ClassName()
+  {
+    return QString("QuickSurfaceMeshTest");
+  }
 
   QuickSurfaceMeshTest(const QuickSurfaceMeshTest&) = delete;            // Copy Constructor Not Implemented
   QuickSurfaceMeshTest(QuickSurfaceMeshTest&&) = delete;                 // Move Constructor Not Implemented
@@ -404,4 +426,6 @@ public:
 
     DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
+
+private:
 };

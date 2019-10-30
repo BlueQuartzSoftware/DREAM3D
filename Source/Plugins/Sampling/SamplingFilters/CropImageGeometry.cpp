@@ -33,9 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "CropImageGeometry.h"
 
+#include <QtCore/QTextStream>
+
+#include <QtCore/QDebug>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
@@ -48,6 +55,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
@@ -734,7 +743,7 @@ AbstractFilter::Pointer CropImageGeometry::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CropImageGeometry::getCompiledLibraryName() const
+QString CropImageGeometry::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -742,7 +751,7 @@ const QString CropImageGeometry::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CropImageGeometry::getBrandingString() const
+QString CropImageGeometry::getBrandingString() const
 {
   return "Sampling";
 }
@@ -750,7 +759,7 @@ const QString CropImageGeometry::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CropImageGeometry::getFilterVersion() const
+QString CropImageGeometry::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -760,7 +769,7 @@ const QString CropImageGeometry::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CropImageGeometry::getGroupName() const
+QString CropImageGeometry::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -768,7 +777,7 @@ const QString CropImageGeometry::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CropImageGeometry::getHumanLabel() const
+QString CropImageGeometry::getHumanLabel() const
 {
   return "Crop Geometry (Image)";
 }
@@ -776,7 +785,7 @@ const QString CropImageGeometry::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid CropImageGeometry::getUuid()
+QUuid CropImageGeometry::getUuid() const
 {
   return QUuid("{baa4b7fe-31e5-5e63-a2cb-0bb9d844cfaf}");
 }
@@ -784,7 +793,192 @@ const QUuid CropImageGeometry::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CropImageGeometry::getSubGroupName() const
+QString CropImageGeometry::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CropCutFilters;
+}
+
+// -----------------------------------------------------------------------------
+CropImageGeometry::Pointer CropImageGeometry::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<CropImageGeometry> CropImageGeometry::New()
+{
+  struct make_shared_enabler : public CropImageGeometry
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString CropImageGeometry::getNameOfClass() const
+{
+  return QString("CropImageGeometry");
+}
+
+// -----------------------------------------------------------------------------
+QString CropImageGeometry::ClassName()
+{
+  return QString("CropImageGeometry");
+}
+
+// -----------------------------------------------------------------------------
+void CropImageGeometry::setNewDataContainerName(const DataArrayPath& value)
+{
+  m_NewDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath CropImageGeometry::getNewDataContainerName() const
+{
+  return m_NewDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void CropImageGeometry::setCellAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_CellAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath CropImageGeometry::getCellAttributeMatrixPath() const
+{
+  return m_CellAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void CropImageGeometry::setCellFeatureAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_CellFeatureAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath CropImageGeometry::getCellFeatureAttributeMatrixPath() const
+{
+  return m_CellFeatureAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void CropImageGeometry::setXMin(int value)
+{
+  m_XMin = value;
+}
+
+// -----------------------------------------------------------------------------
+int CropImageGeometry::getXMin() const
+{
+  return m_XMin;
+}
+
+// -----------------------------------------------------------------------------
+void CropImageGeometry::setYMin(int value)
+{
+  m_YMin = value;
+}
+
+// -----------------------------------------------------------------------------
+int CropImageGeometry::getYMin() const
+{
+  return m_YMin;
+}
+
+// -----------------------------------------------------------------------------
+void CropImageGeometry::setZMin(int value)
+{
+  m_ZMin = value;
+}
+
+// -----------------------------------------------------------------------------
+int CropImageGeometry::getZMin() const
+{
+  return m_ZMin;
+}
+
+// -----------------------------------------------------------------------------
+void CropImageGeometry::setXMax(int value)
+{
+  m_XMax = value;
+}
+
+// -----------------------------------------------------------------------------
+int CropImageGeometry::getXMax() const
+{
+  return m_XMax;
+}
+
+// -----------------------------------------------------------------------------
+void CropImageGeometry::setYMax(int value)
+{
+  m_YMax = value;
+}
+
+// -----------------------------------------------------------------------------
+int CropImageGeometry::getYMax() const
+{
+  return m_YMax;
+}
+
+// -----------------------------------------------------------------------------
+void CropImageGeometry::setZMax(int value)
+{
+  m_ZMax = value;
+}
+
+// -----------------------------------------------------------------------------
+int CropImageGeometry::getZMax() const
+{
+  return m_ZMax;
+}
+
+// -----------------------------------------------------------------------------
+void CropImageGeometry::setRenumberFeatures(bool value)
+{
+  m_RenumberFeatures = value;
+}
+
+// -----------------------------------------------------------------------------
+bool CropImageGeometry::getRenumberFeatures() const
+{
+  return m_RenumberFeatures;
+}
+
+// -----------------------------------------------------------------------------
+void CropImageGeometry::setSaveAsNewDataContainer(bool value)
+{
+  m_SaveAsNewDataContainer = value;
+}
+
+// -----------------------------------------------------------------------------
+bool CropImageGeometry::getSaveAsNewDataContainer() const
+{
+  return m_SaveAsNewDataContainer;
+}
+
+// -----------------------------------------------------------------------------
+void CropImageGeometry::setUpdateOrigin(bool value)
+{
+  m_UpdateOrigin = value;
+}
+
+// -----------------------------------------------------------------------------
+bool CropImageGeometry::getUpdateOrigin() const
+{
+  return m_UpdateOrigin;
+}
+
+// -----------------------------------------------------------------------------
+void CropImageGeometry::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath CropImageGeometry::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
 }

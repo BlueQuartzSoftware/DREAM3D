@@ -63,16 +63,105 @@ public:
   StatsGenWidget(QWidget* parent = nullptr);
   virtual ~StatsGenWidget();
 
-  SIMPL_VIRTUAL_INSTANCE_PROPERTY(PhaseType::Type, PhaseType)
-  SIMPL_VIRTUAL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
-  SIMPL_VIRTUAL_INSTANCE_PROPERTY(int, PhaseIndex)
-  SIMPL_VIRTUAL_INSTANCE_PROPERTY(float, PhaseFraction)
-  SIMPL_VIRTUAL_INSTANCE_PROPERTY(float, TotalPhaseFraction)
-  SIMPL_VIRTUAL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
-  SIMPL_VIRTUAL_INSTANCE_PROPERTY(bool, BulkLoadFailure)
-  SIMPL_VIRTUAL_INSTANCE_PROPERTY(QString, TabTitle)
-  SIMPL_VIRTUAL_INSTANCE_PROPERTY(QString, PhaseName)
-  SIMPL_INSTANCE_PROPERTY(AbstractMicrostructurePreset::Pointer, MicroPreset)
+  /**
+   * @brief Setter property for PhaseType
+   */
+  virtual void setPhaseType(PhaseType::Type value);
+  /**
+   * @brief Getter property for PhaseType
+   * @return Value of PhaseType
+   */
+  virtual PhaseType::Type getPhaseType() const;
+
+  /**
+   * @brief Setter property for CrystalStructure
+   */
+  virtual void setCrystalStructure(unsigned int value);
+  /**
+   * @brief Getter property for CrystalStructure
+   * @return Value of CrystalStructure
+   */
+  virtual unsigned int getCrystalStructure() const;
+
+  /**
+   * @brief Setter property for PhaseIndex
+   */
+  virtual void setPhaseIndex(int value);
+  /**
+   * @brief Getter property for PhaseIndex
+   * @return Value of PhaseIndex
+   */
+  virtual int getPhaseIndex() const;
+
+  /**
+   * @brief Setter property for PhaseFraction
+   */
+  virtual void setPhaseFraction(float value);
+  /**
+   * @brief Getter property for PhaseFraction
+   * @return Value of PhaseFraction
+   */
+  virtual float getPhaseFraction() const;
+
+  /**
+   * @brief Setter property for TotalPhaseFraction
+   */
+  virtual void setTotalPhaseFraction(float value);
+  /**
+   * @brief Getter property for TotalPhaseFraction
+   * @return Value of TotalPhaseFraction
+   */
+  virtual float getTotalPhaseFraction() const;
+
+  /**
+   * @brief Setter property for DataHasBeenGenerated
+   */
+  virtual void setDataHasBeenGenerated(bool value);
+  /**
+   * @brief Getter property for DataHasBeenGenerated
+   * @return Value of DataHasBeenGenerated
+   */
+  virtual bool getDataHasBeenGenerated() const;
+
+  /**
+   * @brief Setter property for BulkLoadFailure
+   */
+  virtual void setBulkLoadFailure(bool value);
+  /**
+   * @brief Getter property for BulkLoadFailure
+   * @return Value of BulkLoadFailure
+   */
+  virtual bool getBulkLoadFailure() const;
+
+  /**
+   * @brief Setter property for TabTitle
+   */
+  virtual void setTabTitle(const QString& value);
+  /**
+   * @brief Getter property for TabTitle
+   * @return Value of TabTitle
+   */
+  virtual QString getTabTitle() const;
+
+  /**
+   * @brief Setter property for PhaseName
+   */
+  virtual void setPhaseName(const QString& value);
+  /**
+   * @brief Getter property for PhaseName
+   * @return Value of PhaseName
+   */
+  virtual QString getPhaseName() const;
+
+  /**
+   * @brief Setter property for MicroPreset
+   */
+  void setMicroPreset(const AbstractMicrostructurePreset::Pointer& value);
+  /**
+   * @brief Getter property for MicroPreset
+   * @return Value of MicroPreset
+   */
+  AbstractMicrostructurePreset::Pointer getMicroPreset() const;
 
   virtual void extractStatsData(AttributeMatrix::Pointer attrMat, int index);
   virtual int gatherStatsData(AttributeMatrix::Pointer attrMat, bool preflight = false);
@@ -110,5 +199,17 @@ public:
   StatsGenWidget(StatsGenWidget&&) = delete;      // Move Constructor Not Implemented
   StatsGenWidget& operator=(const StatsGenWidget&) = delete; // Copy Assignment Not Implemented
   StatsGenWidget& operator=(StatsGenWidget&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  PhaseType::Type m_PhaseType = {};
+  unsigned int m_CrystalStructure = {};
+  int m_PhaseIndex = {};
+  float m_PhaseFraction = {};
+  float m_TotalPhaseFraction = {};
+  bool m_DataHasBeenGenerated = {};
+  bool m_BulkLoadFailure = {};
+  QString m_TabTitle = {};
+  QString m_PhaseName = {};
+  AbstractMicrostructurePreset::Pointer m_MicroPreset = {};
 };
 

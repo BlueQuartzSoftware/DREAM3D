@@ -33,7 +33,11 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindSurfaceFeatures.h"
+
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
 
@@ -42,6 +46,8 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Generic/GenericConstants.h"
 #include "Generic/GenericVersion.h"
@@ -340,7 +346,7 @@ AbstractFilter::Pointer FindSurfaceFeatures::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceFeatures::getCompiledLibraryName() const
+QString FindSurfaceFeatures::getCompiledLibraryName() const
 {
   return GenericConstants::GenericBaseName;
 }
@@ -348,7 +354,7 @@ const QString FindSurfaceFeatures::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceFeatures::getBrandingString() const
+QString FindSurfaceFeatures::getBrandingString() const
 {
   return "Generic";
 }
@@ -356,7 +362,7 @@ const QString FindSurfaceFeatures::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceFeatures::getFilterVersion() const
+QString FindSurfaceFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -366,7 +372,7 @@ const QString FindSurfaceFeatures::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceFeatures::getGroupName() const
+QString FindSurfaceFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::Generic;
 }
@@ -374,7 +380,7 @@ const QString FindSurfaceFeatures::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindSurfaceFeatures::getUuid()
+QUuid FindSurfaceFeatures::getUuid() const
 {
   return QUuid("{d2b0ae3d-686a-5dc0-a844-66bc0dc8f3cb}");
 }
@@ -382,7 +388,7 @@ const QUuid FindSurfaceFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceFeatures::getSubGroupName() const
+QString FindSurfaceFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SpatialFilters;
 }
@@ -390,7 +396,60 @@ const QString FindSurfaceFeatures::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceFeatures::getHumanLabel() const
+QString FindSurfaceFeatures::getHumanLabel() const
 {
   return "Find Surface Features";
+}
+
+// -----------------------------------------------------------------------------
+FindSurfaceFeatures::Pointer FindSurfaceFeatures::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindSurfaceFeatures> FindSurfaceFeatures::New()
+{
+  struct make_shared_enabler : public FindSurfaceFeatures
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindSurfaceFeatures::getNameOfClass() const
+{
+  return QString("FindSurfaceFeatures");
+}
+
+// -----------------------------------------------------------------------------
+QString FindSurfaceFeatures::ClassName()
+{
+  return QString("FindSurfaceFeatures");
+}
+
+// -----------------------------------------------------------------------------
+void FindSurfaceFeatures::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindSurfaceFeatures::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindSurfaceFeatures::setSurfaceFeaturesArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceFeaturesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindSurfaceFeatures::getSurfaceFeaturesArrayPath() const
+{
+  return m_SurfaceFeaturesArrayPath;
 }

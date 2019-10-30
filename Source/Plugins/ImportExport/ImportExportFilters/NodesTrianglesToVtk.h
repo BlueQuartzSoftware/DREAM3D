@@ -35,10 +35,11 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QString>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -57,52 +58,131 @@
 class ImportExport_EXPORT NodesTrianglesToVtk : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(NodesTrianglesToVtk SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(NodesTrianglesToVtk)
+  PYB11_FILTER_NEW_MACRO(NodesTrianglesToVtk)
+  PYB11_FILTER_PARAMETER(QString, NodesFile)
+  PYB11_FILTER_PARAMETER(QString, TrianglesFile)
+  PYB11_FILTER_PARAMETER(QString, OutputVtkFile)
+  PYB11_FILTER_PARAMETER(bool, WriteBinaryFile)
+  PYB11_FILTER_PARAMETER(bool, WriteConformalMesh)
   PYB11_PROPERTY(QString NodesFile READ getNodesFile WRITE setNodesFile)
   PYB11_PROPERTY(QString TrianglesFile READ getTrianglesFile WRITE setTrianglesFile)
   PYB11_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile)
   PYB11_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
   PYB11_PROPERTY(bool WriteConformalMesh READ getWriteConformalMesh WRITE setWriteConformalMesh)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(NodesTrianglesToVtk)
-  SIMPL_FILTER_NEW_MACRO(NodesTrianglesToVtk)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(NodesTrianglesToVtk, AbstractFilter)
+  using Self = NodesTrianglesToVtk;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for NodesTrianglesToVtk
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for NodesTrianglesToVtk
+   */
+  static QString ClassName();
 
   ~NodesTrianglesToVtk() override;
 
-  SIMPL_FILTER_PARAMETER(QString, NodesFile)
+  /**
+   * @brief Setter property for NodesFile
+   */
+  void setNodesFile(const QString& value);
+  /**
+   * @brief Getter property for NodesFile
+   * @return Value of NodesFile
+   */
+  QString getNodesFile() const;
+
   Q_PROPERTY(QString NodesFile READ getNodesFile WRITE setNodesFile)
 
-  SIMPL_FILTER_PARAMETER(QString, TrianglesFile)
+  /**
+   * @brief Setter property for TrianglesFile
+   */
+  void setTrianglesFile(const QString& value);
+  /**
+   * @brief Getter property for TrianglesFile
+   * @return Value of TrianglesFile
+   */
+  QString getTrianglesFile() const;
+
   Q_PROPERTY(QString TrianglesFile READ getTrianglesFile WRITE setTrianglesFile)
 
-  SIMPL_FILTER_PARAMETER(QString, OutputVtkFile)
+  /**
+   * @brief Setter property for OutputVtkFile
+   */
+  void setOutputVtkFile(const QString& value);
+  /**
+   * @brief Getter property for OutputVtkFile
+   * @return Value of OutputVtkFile
+   */
+  QString getOutputVtkFile() const;
+
   Q_PROPERTY(QString OutputVtkFile READ getOutputVtkFile WRITE setOutputVtkFile)
 
-  SIMPL_FILTER_PARAMETER(bool, WriteBinaryFile)
+  /**
+   * @brief Setter property for WriteBinaryFile
+   */
+  void setWriteBinaryFile(bool value);
+  /**
+   * @brief Getter property for WriteBinaryFile
+   * @return Value of WriteBinaryFile
+   */
+  bool getWriteBinaryFile() const;
+
   Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
 
-  SIMPL_FILTER_PARAMETER(bool, WriteConformalMesh)
+  /**
+   * @brief Setter property for WriteConformalMesh
+   */
+  void setWriteConformalMesh(bool value);
+  /**
+   * @brief Getter property for WriteConformalMesh
+   * @return Value of WriteConformalMesh
+   */
+  bool getWriteConformalMesh() const;
+
   Q_PROPERTY(bool WriteConformalMesh READ getWriteConformalMesh WRITE setWriteConformalMesh)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
    */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -112,23 +192,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -192,6 +272,12 @@ protected:
   int writeASCIIPointData(const QString& NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh);
 
 private:
+  QString m_NodesFile = {};
+  QString m_TrianglesFile = {};
+  QString m_OutputVtkFile = {};
+  bool m_WriteBinaryFile = {};
+  bool m_WriteConformalMesh = {};
+
   int8_t* m_NodeKind;
 
 public:

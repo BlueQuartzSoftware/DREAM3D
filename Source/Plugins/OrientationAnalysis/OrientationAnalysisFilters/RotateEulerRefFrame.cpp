@@ -33,16 +33,23 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "RotateEulerRefFrame.h"
 
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
-#include "SIMPLib/Math/MatrixMath.h"
-#include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+
+#include "OrientationLib/Core/OrientationTransformation.hpp"
+
+#include "OrientationAnalysis/OrientationAnalysisConstants.h"
+#include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range.h>
@@ -51,13 +58,6 @@
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
-
-#include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/Core/OrientationTransformation.hpp"
-#include "OrientationLib/Core/Quaternion.hpp"
-
-#include "OrientationAnalysis/OrientationAnalysisConstants.h"
-#include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 /**
  * @brief The RotateEulerRefFrameImpl class implements a threaded algorithm that rotates an array of Euler
@@ -229,7 +229,6 @@ void RotateEulerRefFrame::execute()
     RotateEulerRefFrameImpl serial(m_CellEulerAngles, rotAngle, rotAxis);
     serial.convert(0, totalPoints);
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -248,7 +247,7 @@ AbstractFilter::Pointer RotateEulerRefFrame::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateEulerRefFrame::getCompiledLibraryName() const
+QString RotateEulerRefFrame::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -256,7 +255,7 @@ const QString RotateEulerRefFrame::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateEulerRefFrame::getBrandingString() const
+QString RotateEulerRefFrame::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -264,7 +263,7 @@ const QString RotateEulerRefFrame::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateEulerRefFrame::getFilterVersion() const
+QString RotateEulerRefFrame::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -274,7 +273,7 @@ const QString RotateEulerRefFrame::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateEulerRefFrame::getGroupName() const
+QString RotateEulerRefFrame::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -282,7 +281,7 @@ const QString RotateEulerRefFrame::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid RotateEulerRefFrame::getUuid()
+QUuid RotateEulerRefFrame::getUuid() const
 {
   return QUuid("{ef9420b2-8c46-55f3-8ae4-f53790639de4}");
 }
@@ -290,7 +289,7 @@ const QUuid RotateEulerRefFrame::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateEulerRefFrame::getSubGroupName() const
+QString RotateEulerRefFrame::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConversionFilters;
 }
@@ -298,7 +297,72 @@ const QString RotateEulerRefFrame::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString RotateEulerRefFrame::getHumanLabel() const
+QString RotateEulerRefFrame::getHumanLabel() const
 {
   return "Rotate Euler Reference Frame";
+}
+
+// -----------------------------------------------------------------------------
+RotateEulerRefFrame::Pointer RotateEulerRefFrame::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<RotateEulerRefFrame> RotateEulerRefFrame::New()
+{
+  struct make_shared_enabler : public RotateEulerRefFrame
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString RotateEulerRefFrame::getNameOfClass() const
+{
+  return QString("RotateEulerRefFrame");
+}
+
+// -----------------------------------------------------------------------------
+QString RotateEulerRefFrame::ClassName()
+{
+  return QString("RotateEulerRefFrame");
+}
+
+// -----------------------------------------------------------------------------
+void RotateEulerRefFrame::setRotationAxis(const FloatVec3Type& value)
+{
+  m_RotationAxis = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type RotateEulerRefFrame::getRotationAxis() const
+{
+  return m_RotationAxis;
+}
+
+// -----------------------------------------------------------------------------
+void RotateEulerRefFrame::setRotationAngle(float value)
+{
+  m_RotationAngle = value;
+}
+
+// -----------------------------------------------------------------------------
+float RotateEulerRefFrame::getRotationAngle() const
+{
+  return m_RotationAngle;
+}
+
+// -----------------------------------------------------------------------------
+void RotateEulerRefFrame::setCellEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_CellEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath RotateEulerRefFrame::getCellEulerAnglesArrayPath() const
+{
+  return m_CellEulerAnglesArrayPath;
 }

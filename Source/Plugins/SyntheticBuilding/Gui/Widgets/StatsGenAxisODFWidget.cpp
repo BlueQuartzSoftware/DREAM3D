@@ -629,3 +629,27 @@ void StatsGenAxisODFWidget::on_savePoleFigureImage_clicked()
   QImage image = m_PoleFigureLabel->pixmap()->toImage();
   image.save(file);
 }
+
+// -----------------------------------------------------------------------------
+void StatsGenAxisODFWidget::setEnableAxisDecorations(bool value)
+{
+  m_EnableAxisDecorations = value;
+}
+
+// -----------------------------------------------------------------------------
+bool StatsGenAxisODFWidget::getEnableAxisDecorations() const
+{
+  return m_EnableAxisDecorations;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenAxisODFWidget::setInitializing(bool value)
+{
+  m_Initializing = value;
+}
+
+// -----------------------------------------------------------------------------
+bool StatsGenAxisODFWidget::getInitializing() const
+{
+  return m_Initializing;
+}

@@ -35,9 +35,10 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "Sampling/SamplingDLLExport.h"
 
@@ -47,44 +48,103 @@
 class Sampling_EXPORT AppendImageGeometryZSlice : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(AppendImageGeometryZSlice SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath InputAttributeMatrix READ getInputAttributeMatrix WRITE setInputAttributeMatrix)
-    PYB11_PROPERTY(DataArrayPath DestinationAttributeMatrix READ getDestinationAttributeMatrix WRITE setDestinationAttributeMatrix)
-    PYB11_PROPERTY(bool CheckResolution READ getCheckResolution WRITE setCheckResolution)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(AppendImageGeometryZSlice SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(AppendImageGeometryZSlice)
+  PYB11_FILTER_NEW_MACRO(AppendImageGeometryZSlice)
+  PYB11_FILTER_PARAMETER(DataArrayPath, InputAttributeMatrix)
+  PYB11_FILTER_PARAMETER(DataArrayPath, DestinationAttributeMatrix)
+  PYB11_FILTER_PARAMETER(bool, CheckResolution)
+  PYB11_PROPERTY(DataArrayPath InputAttributeMatrix READ getInputAttributeMatrix WRITE setInputAttributeMatrix)
+  PYB11_PROPERTY(DataArrayPath DestinationAttributeMatrix READ getDestinationAttributeMatrix WRITE setDestinationAttributeMatrix)
+  PYB11_PROPERTY(bool CheckResolution READ getCheckResolution WRITE setCheckResolution)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(AppendImageGeometryZSlice)
-  SIMPL_FILTER_NEW_MACRO(AppendImageGeometryZSlice)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(AppendImageGeometryZSlice, AbstractFilter)
+  using Self = AppendImageGeometryZSlice;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for AppendImageGeometryZSlice
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for AppendImageGeometryZSlice
+   */
+  static QString ClassName();
 
   ~AppendImageGeometryZSlice() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, InputAttributeMatrix)
+  /**
+   * @brief Setter property for InputAttributeMatrix
+   */
+  void setInputAttributeMatrix(const DataArrayPath& value);
+  /**
+   * @brief Getter property for InputAttributeMatrix
+   * @return Value of InputAttributeMatrix
+   */
+  DataArrayPath getInputAttributeMatrix() const;
+
   Q_PROPERTY(DataArrayPath InputAttributeMatrix READ getInputAttributeMatrix WRITE setInputAttributeMatrix)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DestinationAttributeMatrix)
+  /**
+   * @brief Setter property for DestinationAttributeMatrix
+   */
+  void setDestinationAttributeMatrix(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DestinationAttributeMatrix
+   * @return Value of DestinationAttributeMatrix
+   */
+  DataArrayPath getDestinationAttributeMatrix() const;
+
   Q_PROPERTY(DataArrayPath DestinationAttributeMatrix READ getDestinationAttributeMatrix WRITE setDestinationAttributeMatrix)
 
-  SIMPL_FILTER_PARAMETER(bool, CheckResolution)
+  /**
+   * @brief Setter property for CheckResolution
+   */
+  void setCheckResolution(bool value);
+  /**
+   * @brief Getter property for CheckResolution
+   * @return Value of CheckResolution
+   */
+  bool getCheckResolution() const;
+
   Q_PROPERTY(bool CheckResolution READ getCheckResolution WRITE setCheckResolution)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -94,23 +154,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -173,5 +233,10 @@ public:
   AppendImageGeometryZSlice(AppendImageGeometryZSlice&&) = delete;      // Move Constructor Not Implemented
   AppendImageGeometryZSlice& operator=(const AppendImageGeometryZSlice&) = delete; // Copy Assignment Not Implemented
   AppendImageGeometryZSlice& operator=(AppendImageGeometryZSlice&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  DataArrayPath m_InputAttributeMatrix = {};
+  DataArrayPath m_DestinationAttributeMatrix = {};
+  bool m_CheckResolution = {};
 };
 

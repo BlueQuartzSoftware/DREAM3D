@@ -2,13 +2,20 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "FindDifferenceMap.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
@@ -319,7 +326,7 @@ AbstractFilter::Pointer FindDifferenceMap::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDifferenceMap::getCompiledLibraryName() const
+QString FindDifferenceMap::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -327,7 +334,7 @@ const QString FindDifferenceMap::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDifferenceMap::getBrandingString() const
+QString FindDifferenceMap::getBrandingString() const
 {
   return "Statistics";
 }
@@ -335,7 +342,7 @@ const QString FindDifferenceMap::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDifferenceMap::getFilterVersion() const
+QString FindDifferenceMap::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -345,7 +352,7 @@ const QString FindDifferenceMap::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDifferenceMap::getGroupName() const
+QString FindDifferenceMap::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -353,7 +360,7 @@ const QString FindDifferenceMap::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDifferenceMap::getHumanLabel() const
+QString FindDifferenceMap::getHumanLabel() const
 {
   return "Find Difference Map";
 }
@@ -361,7 +368,7 @@ const QString FindDifferenceMap::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindDifferenceMap::getUuid()
+QUuid FindDifferenceMap::getUuid() const
 {
   return QUuid("{29086169-20ce-52dc-b13e-824694d759aa}");
 }
@@ -369,7 +376,72 @@ const QUuid FindDifferenceMap::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindDifferenceMap::getSubGroupName() const
+QString FindDifferenceMap::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MiscFilters;
+}
+
+// -----------------------------------------------------------------------------
+FindDifferenceMap::Pointer FindDifferenceMap::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindDifferenceMap> FindDifferenceMap::New()
+{
+  struct make_shared_enabler : public FindDifferenceMap
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindDifferenceMap::getNameOfClass() const
+{
+  return QString("FindDifferenceMap");
+}
+
+// -----------------------------------------------------------------------------
+QString FindDifferenceMap::ClassName()
+{
+  return QString("FindDifferenceMap");
+}
+
+// -----------------------------------------------------------------------------
+void FindDifferenceMap::setFirstInputArrayPath(const DataArrayPath& value)
+{
+  m_FirstInputArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindDifferenceMap::getFirstInputArrayPath() const
+{
+  return m_FirstInputArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindDifferenceMap::setSecondInputArrayPath(const DataArrayPath& value)
+{
+  m_SecondInputArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindDifferenceMap::getSecondInputArrayPath() const
+{
+  return m_SecondInputArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindDifferenceMap::setDifferenceMapArrayPath(const DataArrayPath& value)
+{
+  m_DifferenceMapArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindDifferenceMap::getDifferenceMapArrayPath() const
+{
+  return m_DifferenceMapArrayPath;
 }

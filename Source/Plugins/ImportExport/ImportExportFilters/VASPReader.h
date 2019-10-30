@@ -35,12 +35,13 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QFile>
 #include <QtCore/QString>
 #include <vector>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/FileReader.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/SIMPLib.h"
@@ -57,52 +58,131 @@
 class ImportExport_EXPORT VASPReader : public FileReader
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(VASPReader SUPERCLASS FileReader)
+  PYB11_SHARED_POINTERS(VASPReader)
+  PYB11_FILTER_NEW_MACRO(VASPReader)
+  PYB11_FILTER_PARAMETER(DataArrayPath, VertexDataContainerName)
+  PYB11_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, InputFile)
+  PYB11_FILTER_PARAMETER(QString, AtomVelocitiesArrayName)
+  PYB11_FILTER_PARAMETER(QString, AtomTypesArrayName)
   PYB11_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
   PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
   PYB11_PROPERTY(QString AtomVelocitiesArrayName READ getAtomVelocitiesArrayName WRITE setAtomVelocitiesArrayName)
   PYB11_PROPERTY(QString AtomTypesArrayName READ getAtomTypesArrayName WRITE setAtomTypesArrayName)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(VASPReader)
-  SIMPL_FILTER_NEW_MACRO(VASPReader)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(VASPReader, FileReader)
+  using Self = VASPReader;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for VASPReader
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for VASPReader
+   */
+  static QString ClassName();
 
   ~VASPReader() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, VertexDataContainerName)
+  /**
+   * @brief Setter property for VertexDataContainerName
+   */
+  void setVertexDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for VertexDataContainerName
+   * @return Value of VertexDataContainerName
+   */
+  DataArrayPath getVertexDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+  /**
+   * @brief Setter property for VertexAttributeMatrixName
+   */
+  void setVertexAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for VertexAttributeMatrixName
+   * @return Value of VertexAttributeMatrixName
+   */
+  QString getVertexAttributeMatrixName() const;
+
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  /**
+   * @brief Setter property for InputFile
+   */
+  void setInputFile(const QString& value);
+  /**
+   * @brief Getter property for InputFile
+   * @return Value of InputFile
+   */
+  QString getInputFile() const;
+
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-  SIMPL_FILTER_PARAMETER(QString, AtomVelocitiesArrayName)
+  /**
+   * @brief Setter property for AtomVelocitiesArrayName
+   */
+  void setAtomVelocitiesArrayName(const QString& value);
+  /**
+   * @brief Getter property for AtomVelocitiesArrayName
+   * @return Value of AtomVelocitiesArrayName
+   */
+  QString getAtomVelocitiesArrayName() const;
+
   Q_PROPERTY(QString AtomVelocitiesArrayName READ getAtomVelocitiesArrayName WRITE setAtomVelocitiesArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, AtomTypesArrayName)
+  /**
+   * @brief Setter property for AtomTypesArrayName
+   */
+  void setAtomTypesArrayName(const QString& value);
+  /**
+   * @brief Getter property for AtomTypesArrayName
+   * @return Value of AtomTypesArrayName
+   */
+  QString getAtomTypesArrayName() const;
+
   Q_PROPERTY(QString AtomTypesArrayName READ getAtomTypesArrayName WRITE setAtomTypesArrayName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
    */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -112,23 +192,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -176,8 +256,17 @@ protected:
   void updateVertexInstancePointers();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(float, AtomVelocities)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, AtomTypes)
+  std::weak_ptr<DataArray<float>> m_AtomVelocitiesPtr;
+  float* m_AtomVelocities = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_AtomTypesPtr;
+  int32_t* m_AtomTypes = nullptr;
+
+  DataArrayPath m_VertexDataContainerName = {};
+  QString m_VertexAttributeMatrixName = {};
+  QString m_InputFile = {};
+  QString m_AtomVelocitiesArrayName = {};
+  QString m_AtomTypesArrayName = {};
+
   QFile m_InStream;
 
   float latticeConstant;

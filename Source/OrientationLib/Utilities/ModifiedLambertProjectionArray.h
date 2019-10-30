@@ -36,27 +36,43 @@
 
 #pragma once
 
+#include <memory>
+
 #include <vector>
 
 #include <QtCore/QString>
-
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <QtCore/QTextStream>
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 
-
+class IDataArray;
+using IDataArrayShPtrType = std::shared_ptr<IDataArray>;
 /**
  * @brief The ModifiedLambertProjectionArray class
  */
 class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
 {
   public:
-    SIMPL_SHARED_POINTERS(ModifiedLambertProjectionArray)
-    SIMPL_STATIC_NEW_MACRO(ModifiedLambertProjectionArray)
-    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ModifiedLambertProjectionArray, IDataArray)
-    SIMPL_CLASS_VERSION(2)
+    using Self = ModifiedLambertProjectionArray;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static Pointer New();
+
+    /**
+     * @brief Returns the name of the class for ModifiedLambertProjectionArray
+     */
+    QString getNameOfClass() const override;
+    /**
+     * @brief Returns the name of the class for ModifiedLambertProjectionArray
+     */
+    static QString ClassName();
+
+    int getClassVersion() const override;
 
     ~ModifiedLambertProjectionArray() override;
 
@@ -74,9 +90,25 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      */
     QString getTypeAsString() const override;
 
-    SIMPL_INSTANCE_PROPERTY(int, Phase)
+    /**
+     * @brief Setter property for Phase
+     */
+    void setPhase(int value);
+    /**
+     * @brief Getter property for Phase
+     * @return Value of Phase
+     */
+    int getPhase() const;
 
-    SIMPL_INSTANCE_PROPERTY(QVector<ModifiedLambertProjection::Pointer>, ModifiedLambertProjectionArray)
+    /**
+     * @brief Setter property for ModifiedLambertProjectionArray
+     */
+    void setModifiedLambertProjectionArray(const QVector<ModifiedLambertProjection::Pointer>& value);
+    /**
+     * @brief Getter property for ModifiedLambertProjectionArray
+     * @return Value of ModifiedLambertProjectionArray
+     */
+    QVector<ModifiedLambertProjection::Pointer> getModifiedLambertProjectionArray() const;
 
     /**
      * @brief createNewArray
@@ -87,7 +119,7 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param allocate
      * @return
      */
-    IDataArray::Pointer createNewArray(size_t numElements, int rank, const size_t* dims, const QString& name, bool allocate = true) const override;
+    IDataArrayShPtrType createNewArray(size_t numElements, int rank, const size_t* dims, const QString& name, bool allocate = true) const override;
 
     /**
      * @brief createNewArray
@@ -97,11 +129,11 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param allocate
      * @return
      */
-    IDataArray::Pointer createNewArray(size_t numElements, const std::vector<size_t>& dims, const QString& name, bool allocate = true) const override;
+    IDataArrayShPtrType createNewArray(size_t numElements, const std::vector<size_t>& dims, const QString& name, bool allocate = true) const override;
 
     /**
-     * @brief
-     */
+    * @brief
+    */
     bool isAllocated() const override;
 
     /**
@@ -263,7 +295,7 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param sourceArray
      * @return
      */
-    bool copyFromArray(size_t destTupleOffset, IDataArray::Pointer sourceArray, size_t srcTupleOffset, size_t totalSrcTuples) override;
+    bool copyFromArray(size_t destTupleOffset, IDataArrayShPtrType sourceArray, size_t srcTupleOffset, size_t totalSrcTuples) override;
 
     /**
      * @brief Splats the same value c across all values in the Tuple
@@ -281,7 +313,7 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @brief deepCopy
      * @return
      */
-    IDataArray::Pointer deepCopy(bool forceNoAllocate = false) const override;
+    IDataArrayShPtrType deepCopy(bool forceNoAllocate = false) const override;
 
     /**
      * @brief Reseizes the internal array
@@ -347,6 +379,9 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
     ModifiedLambertProjectionArray();
 
   private:
+    int m_Phase = {};
+    QVector<ModifiedLambertProjection::Pointer> m_ModifiedLambertProjectionArray = {};
+
     QString m_Name;
     bool m_IsAllocated;
 

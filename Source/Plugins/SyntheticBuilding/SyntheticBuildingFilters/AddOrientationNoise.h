@@ -35,9 +35,11 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
 
@@ -47,40 +49,89 @@
 class SyntheticBuilding_EXPORT AddOrientationNoise : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(AddOrientationNoise SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(float Magnitude READ getMagnitude WRITE setMagnitude)
-    PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(AddOrientationNoise SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(AddOrientationNoise)
+  PYB11_FILTER_NEW_MACRO(AddOrientationNoise)
+  PYB11_FILTER_PARAMETER(float, Magnitude)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+  PYB11_PROPERTY(float Magnitude READ getMagnitude WRITE setMagnitude)
+  PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(AddOrientationNoise)
-  SIMPL_FILTER_NEW_MACRO(AddOrientationNoise)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(AddOrientationNoise, AbstractFilter)
+  using Self = AddOrientationNoise;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for AddOrientationNoise
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for AddOrientationNoise
+   */
+  static QString ClassName();
 
   ~AddOrientationNoise() override;
 
-  SIMPL_FILTER_PARAMETER(float, Magnitude)
+  /**
+   * @brief Setter property for Magnitude
+   */
+  void setMagnitude(float value);
+  /**
+   * @brief Getter property for Magnitude
+   * @return Value of Magnitude
+   */
+  float getMagnitude() const;
+
   Q_PROPERTY(float Magnitude READ getMagnitude WRITE setMagnitude)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+  /**
+   * @brief Setter property for CellEulerAnglesArrayPath
+   */
+  void setCellEulerAnglesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellEulerAnglesArrayPath
+   * @return Value of CellEulerAnglesArrayPath
+   */
+  DataArrayPath getCellEulerAnglesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -90,23 +141,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -170,7 +221,11 @@ protected:
   void add_orientation_noise();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
+  std::weak_ptr<DataArray<float>> m_CellEulerAnglesPtr;
+  float* m_CellEulerAngles = nullptr;
+
+  float m_Magnitude = {};
+  DataArrayPath m_CellEulerAnglesArrayPath = {};
 
 public:
   AddOrientationNoise(const AddOrientationNoise&) = delete; // Copy Constructor Not Implemented

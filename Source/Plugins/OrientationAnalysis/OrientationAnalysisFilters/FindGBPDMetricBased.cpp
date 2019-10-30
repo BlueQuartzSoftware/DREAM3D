@@ -43,11 +43,16 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindGBPDMetricBased.h"
 
 #include <QtCore/QDir>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -58,6 +63,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
@@ -1158,7 +1165,7 @@ AbstractFilter::Pointer FindGBPDMetricBased::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBPDMetricBased::getCompiledLibraryName() const
+QString FindGBPDMetricBased::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -1166,7 +1173,7 @@ const QString FindGBPDMetricBased::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBPDMetricBased::getBrandingString() const
+QString FindGBPDMetricBased::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -1174,7 +1181,7 @@ const QString FindGBPDMetricBased::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBPDMetricBased::getFilterVersion() const
+QString FindGBPDMetricBased::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -1185,7 +1192,7 @@ const QString FindGBPDMetricBased::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBPDMetricBased::getGroupName() const
+QString FindGBPDMetricBased::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -1193,7 +1200,7 @@ const QString FindGBPDMetricBased::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindGBPDMetricBased::getUuid()
+QUuid FindGBPDMetricBased::getUuid() const
 {
   return QUuid("{00d20627-5b88-56ba-ac7a-fc2a4b337903}");
 }
@@ -1201,7 +1208,7 @@ const QUuid FindGBPDMetricBased::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBPDMetricBased::getSubGroupName() const
+QString FindGBPDMetricBased::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -1209,7 +1216,216 @@ const QString FindGBPDMetricBased::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBPDMetricBased::getHumanLabel() const
+QString FindGBPDMetricBased::getHumanLabel() const
 {
   return "Find GBPD (Metric-Based Approach)";
+}
+
+// -----------------------------------------------------------------------------
+FindGBPDMetricBased::Pointer FindGBPDMetricBased::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindGBPDMetricBased> FindGBPDMetricBased::New()
+{
+  struct make_shared_enabler : public FindGBPDMetricBased
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindGBPDMetricBased::getNameOfClass() const
+{
+  return QString("FindGBPDMetricBased");
+}
+
+// -----------------------------------------------------------------------------
+QString FindGBPDMetricBased::ClassName()
+{
+  return QString("FindGBPDMetricBased");
+}
+
+// -----------------------------------------------------------------------------
+void FindGBPDMetricBased::setPhaseOfInterest(int value)
+{
+  m_PhaseOfInterest = value;
+}
+
+// -----------------------------------------------------------------------------
+int FindGBPDMetricBased::getPhaseOfInterest() const
+{
+  return m_PhaseOfInterest;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBPDMetricBased::setLimitDist(float value)
+{
+  m_LimitDist = value;
+}
+
+// -----------------------------------------------------------------------------
+float FindGBPDMetricBased::getLimitDist() const
+{
+  return m_LimitDist;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBPDMetricBased::setNumSamplPts(int value)
+{
+  m_NumSamplPts = value;
+}
+
+// -----------------------------------------------------------------------------
+int FindGBPDMetricBased::getNumSamplPts() const
+{
+  return m_NumSamplPts;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBPDMetricBased::setExcludeTripleLines(bool value)
+{
+  m_ExcludeTripleLines = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindGBPDMetricBased::getExcludeTripleLines() const
+{
+  return m_ExcludeTripleLines;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBPDMetricBased::setDistOutputFile(const QString& value)
+{
+  m_DistOutputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindGBPDMetricBased::getDistOutputFile() const
+{
+  return m_DistOutputFile;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBPDMetricBased::setErrOutputFile(const QString& value)
+{
+  m_ErrOutputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindGBPDMetricBased::getErrOutputFile() const
+{
+  return m_ErrOutputFile;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBPDMetricBased::setSaveRelativeErr(bool value)
+{
+  m_SaveRelativeErr = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindGBPDMetricBased::getSaveRelativeErr() const
+{
+  return m_SaveRelativeErr;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBPDMetricBased::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindGBPDMetricBased::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBPDMetricBased::setFeatureEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_FeatureEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindGBPDMetricBased::getFeatureEulerAnglesArrayPath() const
+{
+  return m_FeatureEulerAnglesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBPDMetricBased::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindGBPDMetricBased::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBPDMetricBased::setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindGBPDMetricBased::getSurfaceMeshFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFaceLabelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBPDMetricBased::setSurfaceMeshFaceNormalsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceNormalsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindGBPDMetricBased::getSurfaceMeshFaceNormalsArrayPath() const
+{
+  return m_SurfaceMeshFaceNormalsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBPDMetricBased::setSurfaceMeshFaceAreasArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceAreasArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindGBPDMetricBased::getSurfaceMeshFaceAreasArrayPath() const
+{
+  return m_SurfaceMeshFaceAreasArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBPDMetricBased::setSurfaceMeshFeatureFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFeatureFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindGBPDMetricBased::getSurfaceMeshFeatureFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFeatureFaceLabelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBPDMetricBased::setNodeTypesArrayPath(const DataArrayPath& value)
+{
+  m_NodeTypesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindGBPDMetricBased::getNodeTypesArrayPath() const
+{
+  return m_NodeTypesArrayPath;
 }

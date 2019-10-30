@@ -35,11 +35,13 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/CoreFilters/FileWriter.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -49,7 +51,17 @@
 class OrientationAnalysis_EXPORT INLWriter : public FileWriter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(INLWriter SUPERCLASS FileWriter)
+  PYB11_SHARED_POINTERS(INLWriter)
+  PYB11_FILTER_NEW_MACRO(INLWriter)
+  PYB11_FILTER_PARAMETER(DataArrayPath, MaterialNameArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, NumFeaturesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
   PYB11_PROPERTY(DataArrayPath MaterialNameArrayPath READ getMaterialNameArrayPath WRITE setMaterialNameArrayPath)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
@@ -57,51 +69,138 @@ class OrientationAnalysis_EXPORT INLWriter : public FileWriter
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
   PYB11_PROPERTY(DataArrayPath NumFeaturesArrayPath READ getNumFeaturesArrayPath WRITE setNumFeaturesArrayPath)
   PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(INLWriter)
-  SIMPL_FILTER_NEW_MACRO(INLWriter)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(INLWriter, FileWriter)
+  using Self = INLWriter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for INLWriter
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for INLWriter
+   */
+  static QString ClassName();
 
   virtual ~INLWriter();
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, MaterialNameArrayPath)
+  /**
+   * @brief Setter property for MaterialNameArrayPath
+   */
+  void setMaterialNameArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for MaterialNameArrayPath
+   * @return Value of MaterialNameArrayPath
+   */
+  DataArrayPath getMaterialNameArrayPath() const;
+
   Q_PROPERTY(DataArrayPath MaterialNameArrayPath READ getMaterialNameArrayPath WRITE setMaterialNameArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  /**
+   * @brief Setter property for CellPhasesArrayPath
+   */
+  void setCellPhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellPhasesArrayPath
+   * @return Value of CellPhasesArrayPath
+   */
+  DataArrayPath getCellPhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NumFeaturesArrayPath)
+  /**
+   * @brief Setter property for NumFeaturesArrayPath
+   */
+  void setNumFeaturesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NumFeaturesArrayPath
+   * @return Value of NumFeaturesArrayPath
+   */
+  DataArrayPath getNumFeaturesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath NumFeaturesArrayPath READ getNumFeaturesArrayPath WRITE setNumFeaturesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+  /**
+   * @brief Setter property for CellEulerAnglesArrayPath
+   */
+  void setCellEulerAnglesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellEulerAnglesArrayPath
+   * @return Value of CellEulerAnglesArrayPath
+   */
+  DataArrayPath getCellEulerAnglesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
-  SIMPL_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
+  /**
+   * @brief Setter property for MaterialNameArrayName
+   */
+  void setMaterialNameArrayName(const QString& value);
+  /**
+   * @brief Getter property for MaterialNameArrayName
+   * @return Value of MaterialNameArrayName
+   */
+  QString getMaterialNameArrayName() const;
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -111,23 +210,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -167,11 +266,24 @@ protected:
   virtual int32_t writeFile();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-  DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
-  DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeatures)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+  int32_t* m_CellPhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_CellEulerAnglesPtr;
+  float* m_CellEulerAngles = nullptr;
+  std::weak_ptr<DataArray<unsigned int>> m_CrystalStructuresPtr;
+  unsigned int* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_NumFeaturesPtr;
+  int32_t* m_NumFeatures = nullptr;
+
+  DataArrayPath m_MaterialNameArrayPath = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_CellPhasesArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+  DataArrayPath m_NumFeaturesArrayPath = {};
+  DataArrayPath m_CellEulerAnglesArrayPath = {};
+  QString m_MaterialNameArrayName = {};
 
   StringDataArray::WeakPointer m_MaterialNamePtr;
 

@@ -36,7 +36,6 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/DataContainerWriter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
@@ -47,6 +46,9 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+
 #include "UnitTestSupport.hpp"
 
 #include "StatisticsTestFileLocations.h"
@@ -62,7 +64,24 @@ public:
   virtual ~FindEuclideanDistMapTest()
   {
   }
-  SIMPL_TYPE_MACRO(FindEuclideanDistMapTest)
+  /**
+   * @brief Returns the name of the class for FindEuclideanDistMapTest
+   */
+  /**
+   * @brief Returns the name of the class for FindEuclideanDistMapTest
+   */
+  QString getNameOfClass() const
+  {
+    return QString("FindEuclideanDistMapTest");
+  }
+
+  /**
+   * @brief Returns the name of the class for FindEuclideanDistMapTest
+   */
+  QString ClassName()
+  {
+    return QString("FindEuclideanDistMapTest");
+  }
 
   // -----------------------------------------------------------------------------
   //

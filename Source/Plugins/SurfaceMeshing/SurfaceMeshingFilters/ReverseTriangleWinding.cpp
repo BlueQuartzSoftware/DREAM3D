@@ -33,12 +33,19 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "ReverseTriangleWinding.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range.h>
@@ -209,7 +216,7 @@ AbstractFilter::Pointer ReverseTriangleWinding::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReverseTriangleWinding::getCompiledLibraryName() const
+QString ReverseTriangleWinding::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -217,7 +224,7 @@ const QString ReverseTriangleWinding::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReverseTriangleWinding::getBrandingString() const
+QString ReverseTriangleWinding::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -225,7 +232,7 @@ const QString ReverseTriangleWinding::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReverseTriangleWinding::getFilterVersion() const
+QString ReverseTriangleWinding::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -235,7 +242,7 @@ const QString ReverseTriangleWinding::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReverseTriangleWinding::getGroupName() const
+QString ReverseTriangleWinding::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -243,7 +250,7 @@ const QString ReverseTriangleWinding::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ReverseTriangleWinding::getUuid()
+QUuid ReverseTriangleWinding::getUuid() const
 {
   return QUuid("{9b9fb9e1-074d-54b6-a6ce-0be21ab4496d}");
 }
@@ -251,7 +258,7 @@ const QUuid ReverseTriangleWinding::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReverseTriangleWinding::getSubGroupName() const
+QString ReverseTriangleWinding::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConnectivityArrangementFilters;
 }
@@ -259,7 +266,48 @@ const QString ReverseTriangleWinding::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReverseTriangleWinding::getHumanLabel() const
+QString ReverseTriangleWinding::getHumanLabel() const
 {
   return "Reverse Triangle Winding";
+}
+
+// -----------------------------------------------------------------------------
+ReverseTriangleWinding::Pointer ReverseTriangleWinding::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ReverseTriangleWinding> ReverseTriangleWinding::New()
+{
+  struct make_shared_enabler : public ReverseTriangleWinding
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ReverseTriangleWinding::getNameOfClass() const
+{
+  return QString("ReverseTriangleWinding");
+}
+
+// -----------------------------------------------------------------------------
+QString ReverseTriangleWinding::ClassName()
+{
+  return QString("ReverseTriangleWinding");
+}
+
+// -----------------------------------------------------------------------------
+void ReverseTriangleWinding::setSurfaceDataContainerName(const DataArrayPath& value)
+{
+  m_SurfaceDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ReverseTriangleWinding::getSurfaceDataContainerName() const
+{
+  return m_SurfaceDataContainerName;
 }

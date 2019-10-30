@@ -30,6 +30,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "ImportEbsdMontage.h"
 
 #include <QtCore/QFileInfo>
@@ -39,13 +41,18 @@
 #include "EbsdLib/TSL/AngFields.h"
 #include "EbsdLib/TSL/AngReader.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationAnalysis/FilterParameters/EbsdMontageImportFilterParameter.h"
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
@@ -369,7 +376,7 @@ AbstractFilter::Pointer ImportEbsdMontage::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportEbsdMontage::getCompiledLibraryName() const
+QString ImportEbsdMontage::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -377,7 +384,7 @@ const QString ImportEbsdMontage::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportEbsdMontage::getBrandingString() const
+QString ImportEbsdMontage::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -385,7 +392,7 @@ const QString ImportEbsdMontage::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportEbsdMontage::getFilterVersion() const
+QString ImportEbsdMontage::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -396,7 +403,7 @@ const QString ImportEbsdMontage::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportEbsdMontage::getGroupName() const
+QString ImportEbsdMontage::getGroupName() const
 {
   return SIMPL::FilterGroups::Unsupported;
 }
@@ -404,7 +411,7 @@ const QString ImportEbsdMontage::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportEbsdMontage::getSubGroupName() const
+QString ImportEbsdMontage::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -412,7 +419,7 @@ const QString ImportEbsdMontage::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportEbsdMontage::getHumanLabel() const
+QString ImportEbsdMontage::getHumanLabel() const
 {
   return "Import EBSD Montage";
 }
@@ -420,7 +427,107 @@ const QString ImportEbsdMontage::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ImportEbsdMontage::getUuid()
+QUuid ImportEbsdMontage::getUuid() const
 {
   return QUuid("{179b0c7a-4e62-5070-ba49-ae58d5ccbfe8}");
+}
+
+// -----------------------------------------------------------------------------
+ImportEbsdMontage::Pointer ImportEbsdMontage::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ImportEbsdMontage> ImportEbsdMontage::New()
+{
+  struct make_shared_enabler : public ImportEbsdMontage
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportEbsdMontage::getNameOfClass() const
+{
+  return QString("ImportEbsdMontage");
+}
+
+// -----------------------------------------------------------------------------
+QString ImportEbsdMontage::ClassName()
+{
+  return QString("ImportEbsdMontage");
+}
+
+// -----------------------------------------------------------------------------
+void ImportEbsdMontage::setDataContainerName(const DataArrayPath& value)
+{
+  m_DataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ImportEbsdMontage::getDataContainerName() const
+{
+  return m_DataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void ImportEbsdMontage::setCellEnsembleAttributeMatrixName(const QString& value)
+{
+  m_CellEnsembleAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportEbsdMontage::getCellEnsembleAttributeMatrixName() const
+{
+  return m_CellEnsembleAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ImportEbsdMontage::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportEbsdMontage::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ImportEbsdMontage::setInputFileListInfo(const EbsdMontageListInfo& value)
+{
+  m_InputFileListInfo = value;
+}
+
+// -----------------------------------------------------------------------------
+EbsdMontageListInfo ImportEbsdMontage::getInputFileListInfo() const
+{
+  return m_InputFileListInfo;
+}
+
+// -----------------------------------------------------------------------------
+void ImportEbsdMontage::setGenerateIPFColorMap(bool value)
+{
+  m_GenerateIPFColorMap = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ImportEbsdMontage::getGenerateIPFColorMap() const
+{
+  return m_GenerateIPFColorMap;
+}
+// -----------------------------------------------------------------------------
+void ImportEbsdMontage::setCellIPFColorsArrayName(const QString& value)
+{
+  m_CellIPFColorsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportEbsdMontage::getCellIPFColorsArrayName() const
+{
+  return m_CellIPFColorsArrayName;
 }

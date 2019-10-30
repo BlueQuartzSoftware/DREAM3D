@@ -35,10 +35,13 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include <memory>
 
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -48,60 +51,159 @@
 class OrientationAnalysis_EXPORT FindFeatureReferenceCAxisMisorientations : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(FindFeatureReferenceCAxisMisorientations SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
-    PYB11_PROPERTY(DataArrayPath AvgCAxesArrayPath READ getAvgCAxesArrayPath WRITE setAvgCAxesArrayPath)
-    PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
-    PYB11_PROPERTY(QString FeatureAvgCAxisMisorientationsArrayName READ getFeatureAvgCAxisMisorientationsArrayName WRITE setFeatureAvgCAxisMisorientationsArrayName)
-    PYB11_PROPERTY(QString FeatureStdevCAxisMisorientationsArrayName READ getFeatureStdevCAxisMisorientationsArrayName WRITE setFeatureStdevCAxisMisorientationsArrayName)
-    PYB11_PROPERTY(QString FeatureReferenceCAxisMisorientationsArrayName READ getFeatureReferenceCAxisMisorientationsArrayName WRITE setFeatureReferenceCAxisMisorientationsArrayName)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(FindFeatureReferenceCAxisMisorientations SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindFeatureReferenceCAxisMisorientations)
+  PYB11_FILTER_NEW_MACRO(FindFeatureReferenceCAxisMisorientations)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, AvgCAxesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, FeatureAvgCAxisMisorientationsArrayName)
+  PYB11_FILTER_PARAMETER(QString, FeatureStdevCAxisMisorientationsArrayName)
+  PYB11_FILTER_PARAMETER(QString, FeatureReferenceCAxisMisorientationsArrayName)
+  PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+  PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+  PYB11_PROPERTY(DataArrayPath AvgCAxesArrayPath READ getAvgCAxesArrayPath WRITE setAvgCAxesArrayPath)
+  PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
+  PYB11_PROPERTY(QString FeatureAvgCAxisMisorientationsArrayName READ getFeatureAvgCAxisMisorientationsArrayName WRITE setFeatureAvgCAxisMisorientationsArrayName)
+  PYB11_PROPERTY(QString FeatureStdevCAxisMisorientationsArrayName READ getFeatureStdevCAxisMisorientationsArrayName WRITE setFeatureStdevCAxisMisorientationsArrayName)
+  PYB11_PROPERTY(QString FeatureReferenceCAxisMisorientationsArrayName READ getFeatureReferenceCAxisMisorientationsArrayName WRITE setFeatureReferenceCAxisMisorientationsArrayName)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(FindFeatureReferenceCAxisMisorientations)
-  SIMPL_FILTER_NEW_MACRO(FindFeatureReferenceCAxisMisorientations)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindFeatureReferenceCAxisMisorientations, AbstractFilter)
+  using Self = FindFeatureReferenceCAxisMisorientations;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for FindFeatureReferenceCAxisMisorientations
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindFeatureReferenceCAxisMisorientations
+   */
+  static QString ClassName();
 
   ~FindFeatureReferenceCAxisMisorientations() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  /**
+   * @brief Setter property for CellPhasesArrayPath
+   */
+  void setCellPhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellPhasesArrayPath
+   * @return Value of CellPhasesArrayPath
+   */
+  DataArrayPath getCellPhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, AvgCAxesArrayPath)
+  /**
+   * @brief Setter property for AvgCAxesArrayPath
+   */
+  void setAvgCAxesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for AvgCAxesArrayPath
+   * @return Value of AvgCAxesArrayPath
+   */
+  DataArrayPath getAvgCAxesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath AvgCAxesArrayPath READ getAvgCAxesArrayPath WRITE setAvgCAxesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+  /**
+   * @brief Setter property for QuatsArrayPath
+   */
+  void setQuatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for QuatsArrayPath
+   * @return Value of QuatsArrayPath
+   */
+  DataArrayPath getQuatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, FeatureAvgCAxisMisorientationsArrayName)
+  /**
+   * @brief Setter property for FeatureAvgCAxisMisorientationsArrayName
+   */
+  void setFeatureAvgCAxisMisorientationsArrayName(const QString& value);
+  /**
+   * @brief Getter property for FeatureAvgCAxisMisorientationsArrayName
+   * @return Value of FeatureAvgCAxisMisorientationsArrayName
+   */
+  QString getFeatureAvgCAxisMisorientationsArrayName() const;
+
   Q_PROPERTY(QString FeatureAvgCAxisMisorientationsArrayName READ getFeatureAvgCAxisMisorientationsArrayName WRITE setFeatureAvgCAxisMisorientationsArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, FeatureStdevCAxisMisorientationsArrayName)
+  /**
+   * @brief Setter property for FeatureStdevCAxisMisorientationsArrayName
+   */
+  void setFeatureStdevCAxisMisorientationsArrayName(const QString& value);
+  /**
+   * @brief Getter property for FeatureStdevCAxisMisorientationsArrayName
+   * @return Value of FeatureStdevCAxisMisorientationsArrayName
+   */
+  QString getFeatureStdevCAxisMisorientationsArrayName() const;
+
   Q_PROPERTY(QString FeatureStdevCAxisMisorientationsArrayName READ getFeatureStdevCAxisMisorientationsArrayName WRITE setFeatureStdevCAxisMisorientationsArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, FeatureReferenceCAxisMisorientationsArrayName)
+  /**
+   * @brief Setter property for FeatureReferenceCAxisMisorientationsArrayName
+   */
+  void setFeatureReferenceCAxisMisorientationsArrayName(const QString& value);
+  /**
+   * @brief Getter property for FeatureReferenceCAxisMisorientationsArrayName
+   * @return Value of FeatureReferenceCAxisMisorientationsArrayName
+   */
+  QString getFeatureReferenceCAxisMisorientationsArrayName() const;
+
   Q_PROPERTY(QString FeatureReferenceCAxisMisorientationsArrayName READ getFeatureReferenceCAxisMisorientationsArrayName WRITE setFeatureReferenceCAxisMisorientationsArrayName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -111,23 +213,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -185,15 +287,30 @@ protected:
   void initialize();
 
 private:
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+  int32_t* m_CellPhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_QuatsPtr;
+  float* m_Quats = nullptr;
+  std::weak_ptr<DataArray<float>> m_AvgCAxesPtr;
+  float* m_AvgCAxes = nullptr;
+  std::weak_ptr<DataArray<float>> m_FeatureReferenceCAxisMisorientationsPtr;
+  float* m_FeatureReferenceCAxisMisorientations = nullptr;
+  std::weak_ptr<DataArray<float>> m_FeatureAvgCAxisMisorientationsPtr;
+  float* m_FeatureAvgCAxisMisorientations = nullptr;
+  std::weak_ptr<DataArray<float>> m_FeatureStdevCAxisMisorientationsPtr;
+  float* m_FeatureStdevCAxisMisorientations = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-  DEFINE_DATAARRAY_VARIABLE(float, Quats)
-  DEFINE_DATAARRAY_VARIABLE(float, AvgCAxes)
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_CellPhasesArrayPath = {};
+  DataArrayPath m_AvgCAxesArrayPath = {};
+  DataArrayPath m_QuatsArrayPath = {};
+  QString m_FeatureAvgCAxisMisorientationsArrayName = {};
+  QString m_FeatureStdevCAxisMisorientationsArrayName = {};
+  QString m_FeatureReferenceCAxisMisorientationsArrayName = {};
 
-  DEFINE_DATAARRAY_VARIABLE(float, FeatureReferenceCAxisMisorientations)
-  DEFINE_DATAARRAY_VARIABLE(float, FeatureAvgCAxisMisorientations)
-  DEFINE_DATAARRAY_VARIABLE(float, FeatureStdevCAxisMisorientations)
+  QVector<LaueOps::Pointer> m_OrientationOps;
 
 public:
   FindFeatureReferenceCAxisMisorientations(const FindFeatureReferenceCAxisMisorientations&) = delete; // Copy Constructor Not Implemented

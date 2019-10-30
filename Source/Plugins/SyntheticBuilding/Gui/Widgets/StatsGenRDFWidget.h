@@ -38,7 +38,7 @@
 #include <QtWidgets/QWidget>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+
 #include "SIMPLib/Math/RadialDistributionFunction.h"
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"

@@ -35,9 +35,11 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -49,36 +51,75 @@
 class SurfaceMeshing_EXPORT TriangleDihedralAngleFilter : public SurfaceMeshFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(TriangleDihedralAngleFilter SUPERCLASS SurfaceMeshFilter)
-    PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleDihedralAnglesArrayPath READ getSurfaceMeshTriangleDihedralAnglesArrayPath WRITE setSurfaceMeshTriangleDihedralAnglesArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(TriangleDihedralAngleFilter SUPERCLASS SurfaceMeshFilter)
+  PYB11_SHARED_POINTERS(TriangleDihedralAngleFilter)
+  PYB11_FILTER_NEW_MACRO(TriangleDihedralAngleFilter)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleDihedralAnglesArrayPath)
+  PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleDihedralAnglesArrayPath READ getSurfaceMeshTriangleDihedralAnglesArrayPath WRITE setSurfaceMeshTriangleDihedralAnglesArrayPath)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(TriangleDihedralAngleFilter)
-  SIMPL_FILTER_NEW_MACRO(TriangleDihedralAngleFilter)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(TriangleDihedralAngleFilter, SurfaceMeshFilter)
+  using Self = TriangleDihedralAngleFilter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for TriangleDihedralAngleFilter
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for TriangleDihedralAngleFilter
+   */
+  static QString ClassName();
 
   ~TriangleDihedralAngleFilter() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleDihedralAnglesArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshTriangleDihedralAnglesArrayPath
+   */
+  void setSurfaceMeshTriangleDihedralAnglesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshTriangleDihedralAnglesArrayPath
+   * @return Value of SurfaceMeshTriangleDihedralAnglesArrayPath
+   */
+  DataArrayPath getSurfaceMeshTriangleDihedralAnglesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshTriangleDihedralAnglesArrayPath READ getSurfaceMeshTriangleDihedralAnglesArrayPath WRITE setSurfaceMeshTriangleDihedralAnglesArrayPath)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -88,23 +129,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -139,7 +180,10 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleDihedralAngles)
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshTriangleDihedralAnglesPtr;
+  double* m_SurfaceMeshTriangleDihedralAngles = nullptr;
+
+  DataArrayPath m_SurfaceMeshTriangleDihedralAnglesArrayPath = {};
 
 public:
   TriangleDihedralAngleFilter(const TriangleDihedralAngleFilter&) = delete; // Copy Constructor Not Implemented

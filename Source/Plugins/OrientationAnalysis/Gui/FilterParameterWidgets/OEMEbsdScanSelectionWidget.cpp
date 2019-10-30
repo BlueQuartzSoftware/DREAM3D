@@ -35,6 +35,7 @@
 
 #include "OEMEbsdScanSelectionWidget.h"
 
+#include <QtCore/QDebug>
 
 #include "SIMPLib/Common/Constants.h"
 

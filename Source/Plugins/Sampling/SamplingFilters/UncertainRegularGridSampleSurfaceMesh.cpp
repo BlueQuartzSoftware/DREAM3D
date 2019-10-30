@@ -33,9 +33,14 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "UncertainRegularGridSampleSurfaceMesh.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/DataArrays/DynamicListArray.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
@@ -48,6 +53,8 @@
 #include "SIMPLib/Geometry/VertexGeom.h"
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
@@ -278,7 +285,7 @@ AbstractFilter::Pointer UncertainRegularGridSampleSurfaceMesh::newFilterInstance
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString UncertainRegularGridSampleSurfaceMesh::getCompiledLibraryName() const
+QString UncertainRegularGridSampleSurfaceMesh::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -286,7 +293,7 @@ const QString UncertainRegularGridSampleSurfaceMesh::getCompiledLibraryName() co
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString UncertainRegularGridSampleSurfaceMesh::getBrandingString() const
+QString UncertainRegularGridSampleSurfaceMesh::getBrandingString() const
 {
   return "Sampling";
 }
@@ -294,7 +301,7 @@ const QString UncertainRegularGridSampleSurfaceMesh::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString UncertainRegularGridSampleSurfaceMesh::getFilterVersion() const
+QString UncertainRegularGridSampleSurfaceMesh::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -304,7 +311,7 @@ const QString UncertainRegularGridSampleSurfaceMesh::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString UncertainRegularGridSampleSurfaceMesh::getGroupName() const
+QString UncertainRegularGridSampleSurfaceMesh::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -312,7 +319,7 @@ const QString UncertainRegularGridSampleSurfaceMesh::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid UncertainRegularGridSampleSurfaceMesh::getUuid()
+QUuid UncertainRegularGridSampleSurfaceMesh::getUuid() const
 {
   return QUuid("{75cfeb9b-cd4b-5a20-a344-4170b39bbfaf}");
 }
@@ -320,7 +327,7 @@ const QUuid UncertainRegularGridSampleSurfaceMesh::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString UncertainRegularGridSampleSurfaceMesh::getSubGroupName() const
+QString UncertainRegularGridSampleSurfaceMesh::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ResolutionFilters;
 }
@@ -328,7 +335,144 @@ const QString UncertainRegularGridSampleSurfaceMesh::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString UncertainRegularGridSampleSurfaceMesh::getHumanLabel() const
+QString UncertainRegularGridSampleSurfaceMesh::getHumanLabel() const
 {
   return "Sample Triangle Geometry on Uncertain Regular Grid";
+}
+
+// -----------------------------------------------------------------------------
+UncertainRegularGridSampleSurfaceMesh::Pointer UncertainRegularGridSampleSurfaceMesh::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<UncertainRegularGridSampleSurfaceMesh> UncertainRegularGridSampleSurfaceMesh::New()
+{
+  struct make_shared_enabler : public UncertainRegularGridSampleSurfaceMesh
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString UncertainRegularGridSampleSurfaceMesh::getNameOfClass() const
+{
+  return QString("UncertainRegularGridSampleSurfaceMesh");
+}
+
+// -----------------------------------------------------------------------------
+QString UncertainRegularGridSampleSurfaceMesh::ClassName()
+{
+  return QString("UncertainRegularGridSampleSurfaceMesh");
+}
+
+// -----------------------------------------------------------------------------
+void UncertainRegularGridSampleSurfaceMesh::setDataContainerName(const DataArrayPath& value)
+{
+  m_DataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath UncertainRegularGridSampleSurfaceMesh::getDataContainerName() const
+{
+  return m_DataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void UncertainRegularGridSampleSurfaceMesh::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString UncertainRegularGridSampleSurfaceMesh::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void UncertainRegularGridSampleSurfaceMesh::setXPoints(int value)
+{
+  m_XPoints = value;
+}
+
+// -----------------------------------------------------------------------------
+int UncertainRegularGridSampleSurfaceMesh::getXPoints() const
+{
+  return m_XPoints;
+}
+
+// -----------------------------------------------------------------------------
+void UncertainRegularGridSampleSurfaceMesh::setYPoints(int value)
+{
+  m_YPoints = value;
+}
+
+// -----------------------------------------------------------------------------
+int UncertainRegularGridSampleSurfaceMesh::getYPoints() const
+{
+  return m_YPoints;
+}
+
+// -----------------------------------------------------------------------------
+void UncertainRegularGridSampleSurfaceMesh::setZPoints(int value)
+{
+  m_ZPoints = value;
+}
+
+// -----------------------------------------------------------------------------
+int UncertainRegularGridSampleSurfaceMesh::getZPoints() const
+{
+  return m_ZPoints;
+}
+
+// -----------------------------------------------------------------------------
+void UncertainRegularGridSampleSurfaceMesh::setSpacing(const FloatVec3Type& value)
+{
+  m_Spacing = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type UncertainRegularGridSampleSurfaceMesh::getSpacing() const
+{
+  return m_Spacing;
+}
+
+// -----------------------------------------------------------------------------
+void UncertainRegularGridSampleSurfaceMesh::setOrigin(const FloatVec3Type& value)
+{
+  m_Origin = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type UncertainRegularGridSampleSurfaceMesh::getOrigin() const
+{
+  return m_Origin;
+}
+
+// -----------------------------------------------------------------------------
+void UncertainRegularGridSampleSurfaceMesh::setUncertainty(const FloatVec3Type& value)
+{
+  m_Uncertainty = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type UncertainRegularGridSampleSurfaceMesh::getUncertainty() const
+{
+  return m_Uncertainty;
+}
+
+// -----------------------------------------------------------------------------
+void UncertainRegularGridSampleSurfaceMesh::setFeatureIdsArrayName(const QString& value)
+{
+  m_FeatureIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString UncertainRegularGridSampleSurfaceMesh::getFeatureIdsArrayName() const
+{
+  return m_FeatureIdsArrayName;
 }

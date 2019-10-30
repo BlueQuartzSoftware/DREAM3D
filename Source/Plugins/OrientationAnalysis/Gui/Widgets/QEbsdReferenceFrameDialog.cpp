@@ -49,7 +49,10 @@
 #include "EbsdLib/HKL/CtfConstants.h"
 #include "EbsdLib/TSL/AngConstants.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/CoreFilters/GenerateColorTable.h"
+
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
@@ -57,6 +60,7 @@
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "SVWidgetsLib/QtSupport/QtSHelpUrlGenerator.h"
 

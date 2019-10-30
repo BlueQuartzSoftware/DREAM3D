@@ -1,13 +1,21 @@
 #pragma once
 
+#include <memory>
+
 #include <cstdio>
 
 #include <iostream>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+
+class DataContainerArray;
+using DataContainerArrayShPtrType = std::shared_ptr<DataContainerArray>;
 
 static const QString DCName("Orientation Transforms Test");
 static const QString AMName("Angles");
@@ -99,7 +107,8 @@ template <typename T> void Print_CU(const T& om)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename K> void PrintTuple(DataContainerArray::Pointer dca, size_t t)
+template <typename K>
+void PrintTuple(DataContainerArrayShPtrType dca, size_t t)
 {
   for(int i = 0; i < 7; i++)
   {

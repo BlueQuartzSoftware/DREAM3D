@@ -33,17 +33,23 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "GenerateEulerColors.h"
 
 #include <limits>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -259,7 +265,7 @@ AbstractFilter::Pointer GenerateEulerColors::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEulerColors::getCompiledLibraryName() const
+QString GenerateEulerColors::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -267,7 +273,7 @@ const QString GenerateEulerColors::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEulerColors::getBrandingString() const
+QString GenerateEulerColors::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -275,7 +281,7 @@ const QString GenerateEulerColors::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEulerColors::getFilterVersion() const
+QString GenerateEulerColors::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -286,7 +292,7 @@ const QString GenerateEulerColors::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEulerColors::getGroupName() const
+QString GenerateEulerColors::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -294,7 +300,7 @@ const QString GenerateEulerColors::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid GenerateEulerColors::getUuid()
+QUuid GenerateEulerColors::getUuid() const
 {
   return QUuid("{6e112372-7b16-53ba-ab68-80dff0c9b50b}");
 }
@@ -302,7 +308,7 @@ const QUuid GenerateEulerColors::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEulerColors::getSubGroupName() const
+QString GenerateEulerColors::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MiscFilters;
 }
@@ -310,7 +316,108 @@ const QString GenerateEulerColors::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateEulerColors::getHumanLabel() const
+QString GenerateEulerColors::getHumanLabel() const
 {
   return "Generate Euler Colors";
+}
+
+// -----------------------------------------------------------------------------
+GenerateEulerColors::Pointer GenerateEulerColors::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<GenerateEulerColors> GenerateEulerColors::New()
+{
+  struct make_shared_enabler : public GenerateEulerColors
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateEulerColors::getNameOfClass() const
+{
+  return QString("GenerateEulerColors");
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateEulerColors::ClassName()
+{
+  return QString("GenerateEulerColors");
+}
+
+// -----------------------------------------------------------------------------
+void GenerateEulerColors::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateEulerColors::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateEulerColors::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateEulerColors::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateEulerColors::setCellEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_CellEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateEulerColors::getCellEulerAnglesArrayPath() const
+{
+  return m_CellEulerAnglesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateEulerColors::setGoodVoxelsArrayPath(const DataArrayPath& value)
+{
+  m_GoodVoxelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateEulerColors::getGoodVoxelsArrayPath() const
+{
+  return m_GoodVoxelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateEulerColors::setCellEulerColorsArrayName(const QString& value)
+{
+  m_CellEulerColorsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateEulerColors::getCellEulerColorsArrayName() const
+{
+  return m_CellEulerColorsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateEulerColors::setUseGoodVoxels(bool value)
+{
+  m_UseGoodVoxels = value;
+}
+
+// -----------------------------------------------------------------------------
+bool GenerateEulerColors::getUseGoodVoxels() const
+{
+  return m_UseGoodVoxels;
 }

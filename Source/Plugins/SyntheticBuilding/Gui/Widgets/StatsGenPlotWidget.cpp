@@ -35,6 +35,8 @@
 
 #include "StatsGenPlotWidget.h"
 
+#include <QtCore/QDebug>
+
 #include "SIMPLib/Math/SIMPLibMath.h"
 
 //-- C++ Includes
@@ -778,4 +780,88 @@ void StatsGenPlotWidget::setBins(QVector<float>& binNumbers)
 SGAbstractTableModel* StatsGenPlotWidget::tableModel()
 {
   return m_TableModel;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenPlotWidget::setMu(float value)
+{
+  m_Mu = value;
+}
+
+// -----------------------------------------------------------------------------
+float StatsGenPlotWidget::getMu() const
+{
+  return m_Mu;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenPlotWidget::setSigma(float value)
+{
+  m_Sigma = value;
+}
+
+// -----------------------------------------------------------------------------
+float StatsGenPlotWidget::getSigma() const
+{
+  return m_Sigma;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenPlotWidget::setMinCutOff(float value)
+{
+  m_MinCutOff = value;
+}
+
+// -----------------------------------------------------------------------------
+float StatsGenPlotWidget::getMinCutOff() const
+{
+  return m_MinCutOff;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenPlotWidget::setMaxCutOff(float value)
+{
+  m_MaxCutOff = value;
+}
+
+// -----------------------------------------------------------------------------
+float StatsGenPlotWidget::getMaxCutOff() const
+{
+  return m_MaxCutOff;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenPlotWidget::setBinStep(float value)
+{
+  m_BinStep = value;
+}
+
+// -----------------------------------------------------------------------------
+float StatsGenPlotWidget::getBinStep() const
+{
+  return m_BinStep;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenPlotWidget::setPhaseIndex(int value)
+{
+  m_PhaseIndex = value;
+}
+
+// -----------------------------------------------------------------------------
+int StatsGenPlotWidget::getPhaseIndex() const
+{
+  return m_PhaseIndex;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenPlotWidget::setCrystalStructure(unsigned int value)
+{
+  m_CrystalStructure = value;
+}
+
+// -----------------------------------------------------------------------------
+unsigned int StatsGenPlotWidget::getCrystalStructure() const
+{
+  return m_CrystalStructure;
 }

@@ -33,13 +33,20 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FeatureInfoReader.h"
 
 #include <QtCore/QFileInfo>
 #include <fstream>
 #include <thread>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
@@ -501,7 +508,7 @@ AbstractFilter::Pointer FeatureInfoReader::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureInfoReader::getCompiledLibraryName() const
+QString FeatureInfoReader::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -509,7 +516,7 @@ const QString FeatureInfoReader::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureInfoReader::getBrandingString() const
+QString FeatureInfoReader::getBrandingString() const
 {
   return "IO";
 }
@@ -517,7 +524,7 @@ const QString FeatureInfoReader::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureInfoReader::getFilterVersion() const
+QString FeatureInfoReader::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -527,7 +534,7 @@ const QString FeatureInfoReader::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureInfoReader::getGroupName() const
+QString FeatureInfoReader::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -535,7 +542,7 @@ const QString FeatureInfoReader::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FeatureInfoReader::getUuid()
+QUuid FeatureInfoReader::getUuid() const
 {
   return QUuid("{38f04ea5-d6cd-5baa-8450-ac963570821b}");
 }
@@ -543,7 +550,7 @@ const QUuid FeatureInfoReader::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureInfoReader::getSubGroupName() const
+QString FeatureInfoReader::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -551,7 +558,168 @@ const QString FeatureInfoReader::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureInfoReader::getHumanLabel() const
+QString FeatureInfoReader::getHumanLabel() const
 {
   return "Import Feature Info File";
+}
+
+// -----------------------------------------------------------------------------
+FeatureInfoReader::Pointer FeatureInfoReader::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FeatureInfoReader> FeatureInfoReader::New()
+{
+  struct make_shared_enabler : public FeatureInfoReader
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FeatureInfoReader::getNameOfClass() const
+{
+  return QString("FeatureInfoReader");
+}
+
+// -----------------------------------------------------------------------------
+QString FeatureInfoReader::ClassName()
+{
+  return QString("FeatureInfoReader");
+}
+
+// -----------------------------------------------------------------------------
+void FeatureInfoReader::setCellAttributeMatrixName(const DataArrayPath& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FeatureInfoReader::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureInfoReader::setCellFeatureAttributeMatrixName(const QString& value)
+{
+  m_CellFeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FeatureInfoReader::getCellFeatureAttributeMatrixName() const
+{
+  return m_CellFeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureInfoReader::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FeatureInfoReader::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureInfoReader::setCreateCellLevelArrays(bool value)
+{
+  m_CreateCellLevelArrays = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FeatureInfoReader::getCreateCellLevelArrays() const
+{
+  return m_CreateCellLevelArrays;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureInfoReader::setRenumberFeatures(bool value)
+{
+  m_RenumberFeatures = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FeatureInfoReader::getRenumberFeatures() const
+{
+  return m_RenumberFeatures;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureInfoReader::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FeatureInfoReader::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureInfoReader::setCellPhasesArrayName(const QString& value)
+{
+  m_CellPhasesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FeatureInfoReader::getCellPhasesArrayName() const
+{
+  return m_CellPhasesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureInfoReader::setCellEulerAnglesArrayName(const QString& value)
+{
+  m_CellEulerAnglesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FeatureInfoReader::getCellEulerAnglesArrayName() const
+{
+  return m_CellEulerAnglesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureInfoReader::setFeaturePhasesArrayName(const QString& value)
+{
+  m_FeaturePhasesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FeatureInfoReader::getFeaturePhasesArrayName() const
+{
+  return m_FeaturePhasesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureInfoReader::setFeatureEulerAnglesArrayName(const QString& value)
+{
+  m_FeatureEulerAnglesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FeatureInfoReader::getFeatureEulerAnglesArrayName() const
+{
+  return m_FeatureEulerAnglesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureInfoReader::setDelimiter(int value)
+{
+  m_Delimiter = value;
+}
+
+// -----------------------------------------------------------------------------
+int FeatureInfoReader::getDelimiter() const
+{
+  return m_Delimiter;
 }

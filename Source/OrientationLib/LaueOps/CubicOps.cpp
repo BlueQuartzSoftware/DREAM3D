@@ -33,6 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "CubicOps.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -2046,7 +2048,7 @@ SIMPL::Rgb CubicOps::generateMisorientationColor(const QuatType& q, const QuatTy
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(double angle, int n1, int n2, int imageDim)
+UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(double angle, int n1, int n2, int imageDim) const
 {
   std::vector<size_t> dims(1, 4);
   UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, dims, "Cubic High Misorientation Triangle Legend", true);
@@ -2841,3 +2843,27 @@ std::vector< std::pair<double, double> > CubicOps::rodri2pair(std::vector<double
   return result;
 }
 
+// -----------------------------------------------------------------------------
+CubicOps::Pointer CubicOps::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+QString CubicOps::getNameOfClass() const
+{
+  return QString("CubicOps");
+}
+
+// -----------------------------------------------------------------------------
+QString CubicOps::ClassName()
+{
+  return QString("CubicOps");
+}
+
+// -----------------------------------------------------------------------------
+CubicOps::Pointer CubicOps::New()
+{
+  Pointer sharedPtr(new(CubicOps));
+  return sharedPtr;
+}

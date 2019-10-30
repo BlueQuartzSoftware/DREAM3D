@@ -52,6 +52,8 @@
 #include "SIMPLib/VTKUtils/VTKWriterMacros.h"
 
 #include "SIMPLib/IOFilters/DataContainerReader.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 typedef struct
 {

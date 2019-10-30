@@ -33,12 +33,19 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "PhWriter.h"
 #include <fstream>
 
 #include <QtCore/QDir>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
@@ -248,7 +255,7 @@ AbstractFilter::Pointer PhWriter::newFilterInstance(bool copyFilterParameters) c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhWriter::getCompiledLibraryName() const
+QString PhWriter::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -256,7 +263,7 @@ const QString PhWriter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhWriter::getBrandingString() const
+QString PhWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -264,7 +271,7 @@ const QString PhWriter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhWriter::getFilterVersion() const
+QString PhWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -274,7 +281,7 @@ const QString PhWriter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhWriter::getGroupName() const
+QString PhWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -282,7 +289,7 @@ const QString PhWriter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid PhWriter::getUuid()
+QUuid PhWriter::getUuid() const
 {
   return QUuid("{4786a02e-5fe1-58e0-a906-15556b40d5ce}");
 }
@@ -290,7 +297,7 @@ const QUuid PhWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhWriter::getSubGroupName() const
+QString PhWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -298,7 +305,48 @@ const QString PhWriter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhWriter::getHumanLabel() const
+QString PhWriter::getHumanLabel() const
 {
   return "Export Ph File (Feature Ids)";
+}
+
+// -----------------------------------------------------------------------------
+PhWriter::Pointer PhWriter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<PhWriter> PhWriter::New()
+{
+  struct make_shared_enabler : public PhWriter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString PhWriter::getNameOfClass() const
+{
+  return QString("PhWriter");
+}
+
+// -----------------------------------------------------------------------------
+QString PhWriter::ClassName()
+{
+  return QString("PhWriter");
+}
+
+// -----------------------------------------------------------------------------
+void PhWriter::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath PhWriter::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
 }

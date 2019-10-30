@@ -35,13 +35,15 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QString>
 #include <set>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -58,57 +60,146 @@
 class Statistics_EXPORT QuiltCellData : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(QuiltCellData SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
-    PYB11_PROPERTY(IntVec3Type QuiltStep READ getQuiltStep WRITE setQuiltStep)
-    PYB11_PROPERTY(IntVec3Type PatchSize READ getPatchSize WRITE setPatchSize)
-    PYB11_PROPERTY(DataArrayPath OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName)
-    PYB11_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
-    PYB11_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(QuiltCellData SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(QuiltCellData)
+  PYB11_FILTER_NEW_MACRO(QuiltCellData)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
+  PYB11_FILTER_PARAMETER(IntVec3Type, QuiltStep)
+  PYB11_FILTER_PARAMETER(IntVec3Type, PatchSize)
+  PYB11_FILTER_PARAMETER(DataArrayPath, OutputDataContainerName)
+  PYB11_FILTER_PARAMETER(QString, OutputAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, OutputArrayName)
+  PYB11_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
+  PYB11_PROPERTY(IntVec3Type QuiltStep READ getQuiltStep WRITE setQuiltStep)
+  PYB11_PROPERTY(IntVec3Type PatchSize READ getPatchSize WRITE setPatchSize)
+  PYB11_PROPERTY(DataArrayPath OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName)
+  PYB11_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
+  PYB11_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(QuiltCellData)
-  SIMPL_FILTER_NEW_MACRO(QuiltCellData)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(QuiltCellData, AbstractFilter)
+  using Self = QuiltCellData;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for QuiltCellData
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for QuiltCellData
+   */
+  static QString ClassName();
 
   ~QuiltCellData() override;
 
   // What Cell Array do they want to work on
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedCellArrayPath)
+  /**
+   * @brief Setter property for SelectedCellArrayPath
+   */
+  void setSelectedCellArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SelectedCellArrayPath
+   * @return Value of SelectedCellArrayPath
+   */
+  DataArrayPath getSelectedCellArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SelectedCellArrayPath READ getSelectedCellArrayPath WRITE setSelectedCellArrayPath)
 
-  SIMPL_FILTER_PARAMETER(IntVec3Type, QuiltStep)
+  /**
+   * @brief Setter property for QuiltStep
+   */
+  void setQuiltStep(const IntVec3Type& value);
+  /**
+   * @brief Getter property for QuiltStep
+   * @return Value of QuiltStep
+   */
+  IntVec3Type getQuiltStep() const;
+
   Q_PROPERTY(IntVec3Type QuiltStep READ getQuiltStep WRITE setQuiltStep)
-  SIMPL_FILTER_PARAMETER(IntVec3Type, PatchSize)
+  /**
+   * @brief Setter property for PatchSize
+   */
+  void setPatchSize(const IntVec3Type& value);
+  /**
+   * @brief Getter property for PatchSize
+   * @return Value of PatchSize
+   */
+  IntVec3Type getPatchSize() const;
+
   Q_PROPERTY(IntVec3Type PatchSize READ getPatchSize WRITE setPatchSize)
 
   // The user selects a new DataContainerName
-  SIMPL_FILTER_PARAMETER(DataArrayPath, OutputDataContainerName)
+  /**
+   * @brief Setter property for OutputDataContainerName
+   */
+  void setOutputDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for OutputDataContainerName
+   * @return Value of OutputDataContainerName
+   */
+  DataArrayPath getOutputDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath OutputDataContainerName READ getOutputDataContainerName WRITE setOutputDataContainerName)
   // Name the new AttributeMatrix that will get created
-  SIMPL_FILTER_PARAMETER(QString, OutputAttributeMatrixName)
+  /**
+   * @brief Setter property for OutputAttributeMatrixName
+   */
+  void setOutputAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for OutputAttributeMatrixName
+   * @return Value of OutputAttributeMatrixName
+   */
+  QString getOutputAttributeMatrixName() const;
+
   Q_PROPERTY(QString OutputAttributeMatrixName READ getOutputAttributeMatrixName WRITE setOutputAttributeMatrixName)
   // Give the created data array a name
-  SIMPL_FILTER_PARAMETER(QString, OutputArrayName)
+  /**
+   * @brief Setter property for OutputArrayName
+   */
+  void setOutputArrayName(const QString& value);
+  /**
+   * @brief Getter property for OutputArrayName
+   * @return Value of OutputArrayName
+   */
+  QString getOutputArrayName() const;
+
   Q_PROPERTY(QString OutputArrayName READ getOutputArrayName WRITE setOutputArrayName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -118,23 +209,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -193,7 +284,15 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(float, OutputArray)
+  std::weak_ptr<DataArray<float>> m_OutputArrayPtr;
+  float* m_OutputArray = nullptr;
+
+  DataArrayPath m_SelectedCellArrayPath = {};
+  IntVec3Type m_QuiltStep = {};
+  IntVec3Type m_PatchSize = {};
+  DataArrayPath m_OutputDataContainerName = {};
+  QString m_OutputAttributeMatrixName = {};
+  QString m_OutputArrayName = {};
 
 public:
   QuiltCellData(const QuiltCellData&) = delete;  // Copy Constructor Not Implemented

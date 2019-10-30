@@ -33,14 +33,21 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "SharedFeatureFaceFilter.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -287,7 +294,7 @@ AbstractFilter::Pointer SharedFeatureFaceFilter::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SharedFeatureFaceFilter::getCompiledLibraryName() const
+QString SharedFeatureFaceFilter::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -295,7 +302,7 @@ const QString SharedFeatureFaceFilter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SharedFeatureFaceFilter::getBrandingString() const
+QString SharedFeatureFaceFilter::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -303,7 +310,7 @@ const QString SharedFeatureFaceFilter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SharedFeatureFaceFilter::getFilterVersion() const
+QString SharedFeatureFaceFilter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -313,7 +320,7 @@ const QString SharedFeatureFaceFilter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SharedFeatureFaceFilter::getGroupName() const
+QString SharedFeatureFaceFilter::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -321,7 +328,7 @@ const QString SharedFeatureFaceFilter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid SharedFeatureFaceFilter::getUuid()
+QUuid SharedFeatureFaceFilter::getUuid() const
 {
   return QUuid("{15c743db-5936-53a2-92cf-edf00526486d}");
 }
@@ -329,7 +336,7 @@ const QUuid SharedFeatureFaceFilter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SharedFeatureFaceFilter::getSubGroupName() const
+QString SharedFeatureFaceFilter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConnectivityArrangementFilters;
 }
@@ -337,7 +344,96 @@ const QString SharedFeatureFaceFilter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SharedFeatureFaceFilter::getHumanLabel() const
+QString SharedFeatureFaceFilter::getHumanLabel() const
 {
   return "Generate Triangle Face Ids";
+}
+
+// -----------------------------------------------------------------------------
+SharedFeatureFaceFilter::Pointer SharedFeatureFaceFilter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<SharedFeatureFaceFilter> SharedFeatureFaceFilter::New()
+{
+  struct make_shared_enabler : public SharedFeatureFaceFilter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString SharedFeatureFaceFilter::getNameOfClass() const
+{
+  return QString("SharedFeatureFaceFilter");
+}
+
+// -----------------------------------------------------------------------------
+QString SharedFeatureFaceFilter::ClassName()
+{
+  return QString("SharedFeatureFaceFilter");
+}
+
+// -----------------------------------------------------------------------------
+void SharedFeatureFaceFilter::setFaceFeatureAttributeMatrixName(const QString& value)
+{
+  m_FaceFeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString SharedFeatureFaceFilter::getFaceFeatureAttributeMatrixName() const
+{
+  return m_FaceFeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void SharedFeatureFaceFilter::setSurfaceMeshFeatureFaceIdsArrayName(const QString& value)
+{
+  m_SurfaceMeshFeatureFaceIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString SharedFeatureFaceFilter::getSurfaceMeshFeatureFaceIdsArrayName() const
+{
+  return m_SurfaceMeshFeatureFaceIdsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void SharedFeatureFaceFilter::setSurfaceMeshFeatureFaceLabelsArrayName(const QString& value)
+{
+  m_SurfaceMeshFeatureFaceLabelsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString SharedFeatureFaceFilter::getSurfaceMeshFeatureFaceLabelsArrayName() const
+{
+  return m_SurfaceMeshFeatureFaceLabelsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void SharedFeatureFaceFilter::setSurfaceMeshFeatureFaceNumTrianglesArrayName(const QString& value)
+{
+  m_SurfaceMeshFeatureFaceNumTrianglesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString SharedFeatureFaceFilter::getSurfaceMeshFeatureFaceNumTrianglesArrayName() const
+{
+  return m_SurfaceMeshFeatureFaceNumTrianglesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void SharedFeatureFaceFilter::setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath SharedFeatureFaceFilter::getSurfaceMeshFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFaceLabelsArrayPath;
 }

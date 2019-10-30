@@ -35,14 +35,16 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QString>
 #include <vector>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -59,67 +61,186 @@
 class Statistics_EXPORT FindEllipsoidError : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(FindEllipsoidError SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
-    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-    PYB11_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
-    PYB11_PROPERTY(DataArrayPath NumCellsArrayPath READ getNumCellsArrayPath WRITE setNumCellsArrayPath)
-    PYB11_PROPERTY(DataArrayPath AxisLengthsArrayPath READ getAxisLengthsArrayPath WRITE setAxisLengthsArrayPath)
-    PYB11_PROPERTY(DataArrayPath AxisEulerAnglesArrayPath READ getAxisEulerAnglesArrayPath WRITE setAxisEulerAnglesArrayPath)
-    PYB11_PROPERTY(QString IdealFeatureIdsArrayName READ getIdealFeatureIdsArrayName WRITE setIdealFeatureIdsArrayName)
-    PYB11_PROPERTY(QString EllipsoidErrorArrayName READ getEllipsoidErrorArrayName WRITE setEllipsoidErrorArrayName)
-    PYB11_PROPERTY(bool WriteIdealEllipseFeatureIds READ getWriteIdealEllipseFeatureIds WRITE setWriteIdealEllipseFeatureIds)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(FindEllipsoidError SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindEllipsoidError)
+  PYB11_FILTER_NEW_MACRO(FindEllipsoidError)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, NumCellsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, AxisLengthsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, AxisEulerAnglesArrayPath)
+  PYB11_FILTER_PARAMETER(QString, IdealFeatureIdsArrayName)
+  PYB11_FILTER_PARAMETER(QString, EllipsoidErrorArrayName)
+  PYB11_FILTER_PARAMETER(bool, WriteIdealEllipseFeatureIds)
+  PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
+  PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+  PYB11_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
+  PYB11_PROPERTY(DataArrayPath NumCellsArrayPath READ getNumCellsArrayPath WRITE setNumCellsArrayPath)
+  PYB11_PROPERTY(DataArrayPath AxisLengthsArrayPath READ getAxisLengthsArrayPath WRITE setAxisLengthsArrayPath)
+  PYB11_PROPERTY(DataArrayPath AxisEulerAnglesArrayPath READ getAxisEulerAnglesArrayPath WRITE setAxisEulerAnglesArrayPath)
+  PYB11_PROPERTY(QString IdealFeatureIdsArrayName READ getIdealFeatureIdsArrayName WRITE setIdealFeatureIdsArrayName)
+  PYB11_PROPERTY(QString EllipsoidErrorArrayName READ getEllipsoidErrorArrayName WRITE setEllipsoidErrorArrayName)
+  PYB11_PROPERTY(bool WriteIdealEllipseFeatureIds READ getWriteIdealEllipseFeatureIds WRITE setWriteIdealEllipseFeatureIds)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(FindEllipsoidError)
-  SIMPL_FILTER_NEW_MACRO(FindEllipsoidError)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindEllipsoidError, AbstractFilter)
+  using Self = FindEllipsoidError;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for FindEllipsoidError
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindEllipsoidError
+   */
+  static QString ClassName();
 
   ~FindEllipsoidError() override;
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
+  /**
+   * @brief Setter property for CellFeatureAttributeMatrixName
+   */
+  void setCellFeatureAttributeMatrixName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellFeatureAttributeMatrixName
+   * @return Value of CellFeatureAttributeMatrixName
+   */
+  DataArrayPath getCellFeatureAttributeMatrixName() const;
+
   Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
+  /**
+   * @brief Setter property for CentroidsArrayPath
+   */
+  void setCentroidsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CentroidsArrayPath
+   * @return Value of CentroidsArrayPath
+   */
+  DataArrayPath getCentroidsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NumCellsArrayPath)
+  /**
+   * @brief Setter property for NumCellsArrayPath
+   */
+  void setNumCellsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NumCellsArrayPath
+   * @return Value of NumCellsArrayPath
+   */
+  DataArrayPath getNumCellsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath NumCellsArrayPath READ getNumCellsArrayPath WRITE setNumCellsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, AxisLengthsArrayPath)
+  /**
+   * @brief Setter property for AxisLengthsArrayPath
+   */
+  void setAxisLengthsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for AxisLengthsArrayPath
+   * @return Value of AxisLengthsArrayPath
+   */
+  DataArrayPath getAxisLengthsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath AxisLengthsArrayPath READ getAxisLengthsArrayPath WRITE setAxisLengthsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, AxisEulerAnglesArrayPath)
+  /**
+   * @brief Setter property for AxisEulerAnglesArrayPath
+   */
+  void setAxisEulerAnglesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for AxisEulerAnglesArrayPath
+   * @return Value of AxisEulerAnglesArrayPath
+   */
+  DataArrayPath getAxisEulerAnglesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath AxisEulerAnglesArrayPath READ getAxisEulerAnglesArrayPath WRITE setAxisEulerAnglesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, IdealFeatureIdsArrayName)
+  /**
+   * @brief Setter property for IdealFeatureIdsArrayName
+   */
+  void setIdealFeatureIdsArrayName(const QString& value);
+  /**
+   * @brief Getter property for IdealFeatureIdsArrayName
+   * @return Value of IdealFeatureIdsArrayName
+   */
+  QString getIdealFeatureIdsArrayName() const;
+
   Q_PROPERTY(QString IdealFeatureIdsArrayName READ getIdealFeatureIdsArrayName WRITE setIdealFeatureIdsArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, EllipsoidErrorArrayName)
+  /**
+   * @brief Setter property for EllipsoidErrorArrayName
+   */
+  void setEllipsoidErrorArrayName(const QString& value);
+  /**
+   * @brief Getter property for EllipsoidErrorArrayName
+   * @return Value of EllipsoidErrorArrayName
+   */
+  QString getEllipsoidErrorArrayName() const;
+
   Q_PROPERTY(QString EllipsoidErrorArrayName READ getEllipsoidErrorArrayName WRITE setEllipsoidErrorArrayName)
 
-  SIMPL_FILTER_PARAMETER(bool, WriteIdealEllipseFeatureIds)
+  /**
+   * @brief Setter property for WriteIdealEllipseFeatureIds
+   */
+  void setWriteIdealEllipseFeatureIds(bool value);
+  /**
+   * @brief Getter property for WriteIdealEllipseFeatureIds
+   * @return Value of WriteIdealEllipseFeatureIds
+   */
+  bool getWriteIdealEllipseFeatureIds() const;
+
   Q_PROPERTY(bool WriteIdealEllipseFeatureIds READ getWriteIdealEllipseFeatureIds WRITE setWriteIdealEllipseFeatureIds)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -129,23 +250,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -205,13 +326,30 @@ protected:
   void find_error2D();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(float, AxisEulerAngles)
-  DEFINE_DATAARRAY_VARIABLE(float, Centroids)
-  DEFINE_DATAARRAY_VARIABLE(float, AxisLengths)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, NumCells)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, IdealFeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(float, EllipsoidError)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<float>> m_AxisEulerAnglesPtr;
+  float* m_AxisEulerAngles = nullptr;
+  std::weak_ptr<DataArray<float>> m_CentroidsPtr;
+  float* m_Centroids = nullptr;
+  std::weak_ptr<DataArray<float>> m_AxisLengthsPtr;
+  float* m_AxisLengths = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_NumCellsPtr;
+  int32_t* m_NumCells = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_IdealFeatureIdsPtr;
+  int32_t* m_IdealFeatureIds = nullptr;
+  std::weak_ptr<DataArray<float>> m_EllipsoidErrorPtr;
+  float* m_EllipsoidError = nullptr;
+
+  DataArrayPath m_CellFeatureAttributeMatrixName = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_CentroidsArrayPath = {};
+  DataArrayPath m_NumCellsArrayPath = {};
+  DataArrayPath m_AxisLengthsArrayPath = {};
+  DataArrayPath m_AxisEulerAnglesArrayPath = {};
+  QString m_IdealFeatureIdsArrayName = {};
+  QString m_EllipsoidErrorArrayName = {};
+  bool m_WriteIdealEllipseFeatureIds = {};
 
   double m_ScaleFator;
 

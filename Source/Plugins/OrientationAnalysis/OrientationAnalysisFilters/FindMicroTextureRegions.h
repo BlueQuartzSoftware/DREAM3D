@@ -35,16 +35,19 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QString>
 #include <vector>
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+
 /**
  * @class FindMicroTextureRegions FindMicroTextureRegions.h DREAM3DLib/GenericFilters/FindMicroTextureRegions.h
  * @brief
@@ -55,47 +58,116 @@
 class OrientationAnalysis_EXPORT FindMicroTextureRegions : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(FindMicroTextureRegions SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
-    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-    PYB11_PROPERTY(QString MicroTextureRegionNumCellsArrayName READ getMicroTextureRegionNumCellsArrayName WRITE setMicroTextureRegionNumCellsArrayName)
-    PYB11_PROPERTY(QString MicroTextureRegionFractionOccupiedArrayName READ getMicroTextureRegionFractionOccupiedArrayName WRITE setMicroTextureRegionFractionOccupiedArrayName)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(FindMicroTextureRegions SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindMicroTextureRegions)
+  PYB11_FILTER_NEW_MACRO(FindMicroTextureRegions)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, MicroTextureRegionNumCellsArrayName)
+  PYB11_FILTER_PARAMETER(QString, MicroTextureRegionFractionOccupiedArrayName)
+  PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
+  PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+  PYB11_PROPERTY(QString MicroTextureRegionNumCellsArrayName READ getMicroTextureRegionNumCellsArrayName WRITE setMicroTextureRegionNumCellsArrayName)
+  PYB11_PROPERTY(QString MicroTextureRegionFractionOccupiedArrayName READ getMicroTextureRegionFractionOccupiedArrayName WRITE setMicroTextureRegionFractionOccupiedArrayName)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(FindMicroTextureRegions)
-  SIMPL_FILTER_NEW_MACRO(FindMicroTextureRegions)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindMicroTextureRegions, AbstractFilter)
+  using Self = FindMicroTextureRegions;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for FindMicroTextureRegions
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindMicroTextureRegions
+   */
+  static QString ClassName();
 
   ~FindMicroTextureRegions() override;
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixName)
+  /**
+   * @brief Setter property for CellFeatureAttributeMatrixName
+   */
+  void setCellFeatureAttributeMatrixName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellFeatureAttributeMatrixName
+   * @return Value of CellFeatureAttributeMatrixName
+   */
+  DataArrayPath getCellFeatureAttributeMatrixName() const;
+
   Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, MicroTextureRegionNumCellsArrayName)
+  /**
+   * @brief Setter property for MicroTextureRegionNumCellsArrayName
+   */
+  void setMicroTextureRegionNumCellsArrayName(const QString& value);
+  /**
+   * @brief Getter property for MicroTextureRegionNumCellsArrayName
+   * @return Value of MicroTextureRegionNumCellsArrayName
+   */
+  QString getMicroTextureRegionNumCellsArrayName() const;
+
   Q_PROPERTY(QString MicroTextureRegionNumCellsArrayName READ getMicroTextureRegionNumCellsArrayName WRITE setMicroTextureRegionNumCellsArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, MicroTextureRegionFractionOccupiedArrayName)
+  /**
+   * @brief Setter property for MicroTextureRegionFractionOccupiedArrayName
+   */
+  void setMicroTextureRegionFractionOccupiedArrayName(const QString& value);
+  /**
+   * @brief Getter property for MicroTextureRegionFractionOccupiedArrayName
+   * @return Value of MicroTextureRegionFractionOccupiedArrayName
+   */
+  QString getMicroTextureRegionFractionOccupiedArrayName() const;
+
   Q_PROPERTY(QString MicroTextureRegionFractionOccupiedArrayName READ getMicroTextureRegionFractionOccupiedArrayName WRITE setMicroTextureRegionFractionOccupiedArrayName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -105,23 +177,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -181,9 +253,17 @@ protected:
   void find_microtextureregions();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, MicroTextureRegionNumCells)
-  DEFINE_DATAARRAY_VARIABLE(float, MicroTextureRegionFractionOccupied)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  std::weak_ptr<DataArray<int32_t>> m_MicroTextureRegionNumCellsPtr;
+  int32_t* m_MicroTextureRegionNumCells = nullptr;
+  std::weak_ptr<DataArray<float>> m_MicroTextureRegionFractionOccupiedPtr;
+  float* m_MicroTextureRegionFractionOccupied = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+
+  DataArrayPath m_CellFeatureAttributeMatrixName = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  QString m_MicroTextureRegionNumCellsArrayName = {};
+  QString m_MicroTextureRegionFractionOccupiedArrayName = {};
 
 public:
   FindMicroTextureRegions(const FindMicroTextureRegions&) = delete; // Copy Constructor Not Implemented

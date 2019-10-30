@@ -34,6 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
+#include <memory>
+
 #include "OrthoRhombicOps.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -1169,4 +1171,30 @@ SIMPL::Rgb OrthoRhombicOps::generateMisorientationColor(const QuatType& q, const
 
   return rgb;
 }
+
+// -----------------------------------------------------------------------------
+OrthoRhombicOps::Pointer OrthoRhombicOps::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+QString OrthoRhombicOps::getNameOfClass() const
+{
+  return QString("OrthoRhombicOps");
+}
+
+// -----------------------------------------------------------------------------
+QString OrthoRhombicOps::ClassName()
+{
+  return QString("OrthoRhombicOps");
+}
+
+// -----------------------------------------------------------------------------
+OrthoRhombicOps::Pointer OrthoRhombicOps::New()
+{
+  Pointer sharedPtr(new(OrthoRhombicOps));
+  return sharedPtr;
+}
+
 

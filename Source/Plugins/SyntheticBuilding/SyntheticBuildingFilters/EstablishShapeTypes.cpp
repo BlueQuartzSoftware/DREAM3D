@@ -33,15 +33,22 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "EstablishShapeTypes.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/ShapeTypeSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
@@ -230,7 +237,7 @@ AbstractFilter::Pointer EstablishShapeTypes::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EstablishShapeTypes::getCompiledLibraryName() const
+QString EstablishShapeTypes::getCompiledLibraryName() const
 {
   return SyntheticBuildingConstants::SyntheticBuildingBaseName;
 }
@@ -238,7 +245,7 @@ const QString EstablishShapeTypes::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EstablishShapeTypes::getBrandingString() const
+QString EstablishShapeTypes::getBrandingString() const
 {
   return "SyntheticBuilding";
 }
@@ -246,7 +253,7 @@ const QString EstablishShapeTypes::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EstablishShapeTypes::getFilterVersion() const
+QString EstablishShapeTypes::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -256,7 +263,7 @@ const QString EstablishShapeTypes::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EstablishShapeTypes::getGroupName() const
+QString EstablishShapeTypes::getGroupName() const
 {
   return SIMPL::FilterGroups::SyntheticBuildingFilters;
 }
@@ -264,7 +271,7 @@ const QString EstablishShapeTypes::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid EstablishShapeTypes::getUuid()
+QUuid EstablishShapeTypes::getUuid() const
 {
   return QUuid("{4edbbd35-a96b-5ff1-984a-153d733e2abb}");
 }
@@ -272,7 +279,7 @@ const QUuid EstablishShapeTypes::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EstablishShapeTypes::getSubGroupName() const
+QString EstablishShapeTypes::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GenerationFilters;
 }
@@ -280,7 +287,72 @@ const QString EstablishShapeTypes::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EstablishShapeTypes::getHumanLabel() const
+QString EstablishShapeTypes::getHumanLabel() const
 {
   return "Establish Shape Types";
+}
+
+// -----------------------------------------------------------------------------
+EstablishShapeTypes::Pointer EstablishShapeTypes::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<EstablishShapeTypes> EstablishShapeTypes::New()
+{
+  struct make_shared_enabler : public EstablishShapeTypes
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString EstablishShapeTypes::getNameOfClass() const
+{
+  return QString("EstablishShapeTypes");
+}
+
+// -----------------------------------------------------------------------------
+QString EstablishShapeTypes::ClassName()
+{
+  return QString("EstablishShapeTypes");
+}
+
+// -----------------------------------------------------------------------------
+void EstablishShapeTypes::setInputPhaseTypesArrayPath(const DataArrayPath& value)
+{
+  m_InputPhaseTypesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath EstablishShapeTypes::getInputPhaseTypesArrayPath() const
+{
+  return m_InputPhaseTypesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void EstablishShapeTypes::setShapeTypesArrayName(const QString& value)
+{
+  m_ShapeTypesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EstablishShapeTypes::getShapeTypesArrayName() const
+{
+  return m_ShapeTypesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void EstablishShapeTypes::setShapeTypeData(const ShapeType::Types& value)
+{
+  m_ShapeTypeData = value;
+}
+
+// -----------------------------------------------------------------------------
+ShapeType::Types EstablishShapeTypes::getShapeTypeData() const
+{
+  return m_ShapeTypeData;
 }

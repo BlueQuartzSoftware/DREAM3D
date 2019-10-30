@@ -1,4 +1,6 @@
 
+#include <memory>
+
 #include "SIMPLib/Geometry/ImageGeom.h"
 //
 //  This code was written under United States Air Force Contract number
@@ -5214,3 +5216,68 @@ void M3CEntireVolume::get_output(node* v, segment* fe, isegment* ie, patch* t, i
 }
 
 #endif
+
+// -----------------------------------------------------------------------------
+M3CEntireVolume::Pointer M3CEntireVolume::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<M3CEntireVolume> M3CEntireVolume::New()
+{
+  struct make_shared_enabler : public M3CEntireVolume
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString M3CEntireVolume::getNameOfClass() const
+{
+  return QString("M3CEntireVolume");
+}
+
+// -----------------------------------------------------------------------------
+QString M3CEntireVolume::ClassName()
+{
+  return QString("M3CEntireVolume");
+}
+
+// -----------------------------------------------------------------------------
+void M3CEntireVolume::setSurfaceMeshEdgesArrayName(const QString& value)
+{
+  m_SurfaceMeshEdgesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString M3CEntireVolume::getSurfaceMeshEdgesArrayName() const
+{
+  return m_SurfaceMeshEdgesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void M3CEntireVolume::setSurfaceMeshInternalEdgesArrayName(const QString& value)
+{
+  m_SurfaceMeshInternalEdgesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString M3CEntireVolume::getSurfaceMeshInternalEdgesArrayName() const
+{
+  return m_SurfaceMeshInternalEdgesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void M3CEntireVolume::setAddSurfaceLayer(bool value)
+{
+  m_AddSurfaceLayer = value;
+}
+
+// -----------------------------------------------------------------------------
+bool M3CEntireVolume::getAddSurfaceLayer() const
+{
+  return m_AddSurfaceLayer;
+}

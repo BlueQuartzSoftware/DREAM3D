@@ -33,12 +33,17 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "MergeTwins.h"
 
 #include <chrono>
 #include <random>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -46,6 +51,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
@@ -469,7 +476,7 @@ AbstractFilter::Pointer MergeTwins::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MergeTwins::getCompiledLibraryName() const
+QString MergeTwins::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -477,7 +484,7 @@ const QString MergeTwins::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MergeTwins::getBrandingString() const
+QString MergeTwins::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -485,7 +492,7 @@ const QString MergeTwins::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MergeTwins::getFilterVersion() const
+QString MergeTwins::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -495,7 +502,7 @@ const QString MergeTwins::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MergeTwins::getGroupName() const
+QString MergeTwins::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -503,7 +510,7 @@ const QString MergeTwins::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid MergeTwins::getUuid()
+QUuid MergeTwins::getUuid() const
 {
   return QUuid("{c9af506e-9ea1-5ff5-a882-fa561def5f52}");
 }
@@ -511,7 +518,7 @@ const QUuid MergeTwins::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MergeTwins::getSubGroupName() const
+QString MergeTwins::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GroupingFilters;
 }
@@ -519,7 +526,168 @@ const QString MergeTwins::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MergeTwins::getHumanLabel() const
+QString MergeTwins::getHumanLabel() const
 {
   return "Merge Twins";
+}
+
+// -----------------------------------------------------------------------------
+MergeTwins::Pointer MergeTwins::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<MergeTwins> MergeTwins::New()
+{
+  struct make_shared_enabler : public MergeTwins
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString MergeTwins::getNameOfClass() const
+{
+  return QString("MergeTwins");
+}
+
+// -----------------------------------------------------------------------------
+QString MergeTwins::ClassName()
+{
+  return QString("MergeTwins");
+}
+
+// -----------------------------------------------------------------------------
+void MergeTwins::setNewCellFeatureAttributeMatrixName(const QString& value)
+{
+  m_NewCellFeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString MergeTwins::getNewCellFeatureAttributeMatrixName() const
+{
+  return m_NewCellFeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void MergeTwins::setAxisTolerance(float value)
+{
+  m_AxisTolerance = value;
+}
+
+// -----------------------------------------------------------------------------
+float MergeTwins::getAxisTolerance() const
+{
+  return m_AxisTolerance;
+}
+
+// -----------------------------------------------------------------------------
+void MergeTwins::setAngleTolerance(float value)
+{
+  m_AngleTolerance = value;
+}
+
+// -----------------------------------------------------------------------------
+float MergeTwins::getAngleTolerance() const
+{
+  return m_AngleTolerance;
+}
+
+// -----------------------------------------------------------------------------
+void MergeTwins::setRandomizeParentIds(bool value)
+{
+  m_RandomizeParentIds = value;
+}
+
+// -----------------------------------------------------------------------------
+bool MergeTwins::getRandomizeParentIds() const
+{
+  return m_RandomizeParentIds;
+}
+
+// -----------------------------------------------------------------------------
+void MergeTwins::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MergeTwins::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MergeTwins::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MergeTwins::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MergeTwins::setAvgQuatsArrayPath(const DataArrayPath& value)
+{
+  m_AvgQuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MergeTwins::getAvgQuatsArrayPath() const
+{
+  return m_AvgQuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MergeTwins::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MergeTwins::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MergeTwins::setCellParentIdsArrayName(const QString& value)
+{
+  m_CellParentIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString MergeTwins::getCellParentIdsArrayName() const
+{
+  return m_CellParentIdsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void MergeTwins::setFeatureParentIdsArrayName(const QString& value)
+{
+  m_FeatureParentIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString MergeTwins::getFeatureParentIdsArrayName() const
+{
+  return m_FeatureParentIdsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void MergeTwins::setActiveArrayName(const QString& value)
+{
+  m_ActiveArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString MergeTwins::getActiveArrayName() const
+{
+  return m_ActiveArrayName;
 }

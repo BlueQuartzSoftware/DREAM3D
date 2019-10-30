@@ -2,11 +2,17 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ImportAvxmMDSim.h"
 
 #include <QtCore/QFileInfo>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
@@ -292,7 +298,7 @@ AbstractFilter::Pointer ImportAvxmMDSim::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportAvxmMDSim::getCompiledLibraryName() const
+QString ImportAvxmMDSim::getCompiledLibraryName() const
 {
   return Core::CoreBaseName;
 }
@@ -300,7 +306,7 @@ const QString ImportAvxmMDSim::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportAvxmMDSim::getBrandingString() const
+QString ImportAvxmMDSim::getBrandingString() const
 {
   return "SIMPLib Core Filter";
 }
@@ -308,7 +314,7 @@ const QString ImportAvxmMDSim::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportAvxmMDSim::getFilterVersion() const
+QString ImportAvxmMDSim::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -319,7 +325,7 @@ const QString ImportAvxmMDSim::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportAvxmMDSim::getGroupName() const
+QString ImportAvxmMDSim::getGroupName() const
 {
   return SIMPL::FilterGroups::CoreFilters;
 }
@@ -327,7 +333,7 @@ const QString ImportAvxmMDSim::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportAvxmMDSim::getSubGroupName() const
+QString ImportAvxmMDSim::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -335,7 +341,7 @@ const QString ImportAvxmMDSim::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportAvxmMDSim::getHumanLabel() const
+QString ImportAvxmMDSim::getHumanLabel() const
 {
   return "ImportAvxmMDSim";
 }
@@ -343,7 +349,60 @@ const QString ImportAvxmMDSim::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ImportAvxmMDSim::getUuid()
+QUuid ImportAvxmMDSim::getUuid() const
 {
   return QUuid("{71e18332-4db1-5554-85e6-ae8db5826587}");
+}
+
+// -----------------------------------------------------------------------------
+ImportAvxmMDSim::Pointer ImportAvxmMDSim::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ImportAvxmMDSim> ImportAvxmMDSim::New()
+{
+  struct make_shared_enabler : public ImportAvxmMDSim
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportAvxmMDSim::getNameOfClass() const
+{
+  return QString("_SUPERImportAvxmMDSim");
+}
+
+// -----------------------------------------------------------------------------
+QString ImportAvxmMDSim::ClassName()
+{
+  return QString("_SUPERImportAvxmMDSim");
+}
+
+// -----------------------------------------------------------------------------
+void ImportAvxmMDSim::setInputFileListInfo(const FileListInfo_t& value)
+{
+  m_InputFileListInfo = value;
+}
+
+// -----------------------------------------------------------------------------
+FileListInfo_t ImportAvxmMDSim::getInputFileListInfo() const
+{
+  return m_InputFileListInfo;
+}
+
+// -----------------------------------------------------------------------------
+void ImportAvxmMDSim::setSeparatorChoice(int value)
+{
+  m_SeparatorChoice = value;
+}
+
+// -----------------------------------------------------------------------------
+int ImportAvxmMDSim::getSeparatorChoice() const
+{
+  return m_SeparatorChoice;
 }

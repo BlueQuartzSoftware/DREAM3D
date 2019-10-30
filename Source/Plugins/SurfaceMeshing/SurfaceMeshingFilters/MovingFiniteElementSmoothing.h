@@ -35,10 +35,13 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QString>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
@@ -70,99 +73,175 @@ class SurfaceMeshing_EXPORT MovingFiniteElementSmoothing : public SurfaceMeshFil
     // PYB11_PROPERTY(bool SmoothTripleLines READ getSmoothTripleLines WRITE setSmoothTripleLines)
     // PYB11_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
   public:
-    SIMPL_SHARED_POINTERS(MovingFiniteElementSmoothing)
-    SIMPL_FILTER_NEW_MACRO(MovingFiniteElementSmoothing)
-     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(MovingFiniteElementSmoothing, SurfaceMeshFilter)
+    using Self = MovingFiniteElementSmoothing;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
 
-     ~MovingFiniteElementSmoothing() override;
+    static std::shared_ptr<MovingFiniteElementSmoothing> New();
 
-     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-     SIMPL_FILTER_PARAMETER(int, IterationSteps)
-     Q_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps)
-     SIMPL_FILTER_PARAMETER(bool, NodeConstraints)
-     Q_PROPERTY(bool NodeConstraints READ getNodeConstraints WRITE setNodeConstraints)
-     SIMPL_FILTER_PARAMETER(bool, ConstrainSurfaceNodes)
-     Q_PROPERTY(bool ConstrainSurfaceNodes READ getConstrainSurfaceNodes WRITE setConstrainSurfaceNodes)
-     SIMPL_FILTER_PARAMETER(bool, ConstrainQuadPoints)
-     Q_PROPERTY(bool ConstrainQuadPoints READ getConstrainQuadPoints WRITE setConstrainQuadPoints)
-     SIMPL_FILTER_PARAMETER(bool, SmoothTripleLines)
-     Q_PROPERTY(bool SmoothTripleLines READ getSmoothTripleLines WRITE setSmoothTripleLines)
+    /**
+     * @brief Returns the name of the class for MovingFiniteElementSmoothing
+     */
+    QString getNameOfClass() const override;
+    /**
+     * @brief Returns the name of the class for MovingFiniteElementSmoothing
+     */
+    static QString ClassName();
 
-     /**
-      * @brief This returns the group that the filter belonds to. You can select
-      * a different group if you want. The string returned here will be displayed
-      * in the GUI for the filter
-      */
-     SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshNodeTypeArrayPath)
-     Q_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
+    ~MovingFiniteElementSmoothing() override;
 
-     const QString getCompiledLibraryName() const override;
-     AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
-     const QString getGroupName() const override;
-     const QString getSubGroupName() const override;
+    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+    /**
+     * @brief Setter property for IterationSteps
+     */
+    void setIterationSteps(int value);
+    /**
+     * @brief Getter property for IterationSteps
+     * @return Value of IterationSteps
+     */
+    int getIterationSteps() const;
 
-     /**
-      * @brief getUuid Return the unique identifier for this filter.
-      * @return A QUuid object.
-      */
-     const QUuid getUuid() override;
+    Q_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps)
+    /**
+     * @brief Setter property for NodeConstraints
+     */
+    void setNodeConstraints(bool value);
+    /**
+     * @brief Getter property for NodeConstraints
+     * @return Value of NodeConstraints
+     */
+    bool getNodeConstraints() const;
 
-     /**
-      * @brief This returns a string that is displayed in the GUI. It should be readable
-      * and understandable by humans.
-      */
-     const QString getHumanLabel() const override;
+    Q_PROPERTY(bool NodeConstraints READ getNodeConstraints WRITE setNodeConstraints)
+    /**
+     * @brief Setter property for ConstrainSurfaceNodes
+     */
+    void setConstrainSurfaceNodes(bool value);
+    /**
+     * @brief Getter property for ConstrainSurfaceNodes
+     * @return Value of ConstrainSurfaceNodes
+     */
+    bool getConstrainSurfaceNodes() const;
 
-     /**
-      * @brief This method will instantiate all the end user settable options/parameters
-      * for this filter
-      */
-     void setupFilterParameters() override;
+    Q_PROPERTY(bool ConstrainSurfaceNodes READ getConstrainSurfaceNodes WRITE setConstrainSurfaceNodes)
+    /**
+     * @brief Setter property for ConstrainQuadPoints
+     */
+    void setConstrainQuadPoints(bool value);
+    /**
+     * @brief Getter property for ConstrainQuadPoints
+     * @return Value of ConstrainQuadPoints
+     */
+    bool getConstrainQuadPoints() const;
 
-     /**
-      * @brief This method will read the options from a file
-      * @param reader The reader that is used to read the options from a file
-      */
-     void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+    Q_PROPERTY(bool ConstrainQuadPoints READ getConstrainQuadPoints WRITE setConstrainQuadPoints)
+    /**
+     * @brief Setter property for SmoothTripleLines
+     */
+    void setSmoothTripleLines(bool value);
+    /**
+     * @brief Getter property for SmoothTripleLines
+     * @return Value of SmoothTripleLines
+     */
+    bool getSmoothTripleLines() const;
 
-     /**
-      * @brief Reimplemented from @see AbstractFilter class
-      */
-     void execute() override;
+    Q_PROPERTY(bool SmoothTripleLines READ getSmoothTripleLines WRITE setSmoothTripleLines)
 
-     /**
-      * @brief This function runs some sanity checks on the DataContainer and inputs
-      * in an attempt to ensure the filter can process the inputs.
-      */
-     void preflight() override;
+    /**
+     * @brief This returns the group that the filter belonds to. You can select
+     * a different group if you want. The string returned here will be displayed
+     * in the GUI for the filter
+     */
+    /**
+     * @brief Setter property for SurfaceMeshNodeTypeArrayPath
+     */
+    void setSurfaceMeshNodeTypeArrayPath(const DataArrayPath& value);
+    /**
+     * @brief Getter property for SurfaceMeshNodeTypeArrayPath
+     * @return Value of SurfaceMeshNodeTypeArrayPath
+     */
+    DataArrayPath getSurfaceMeshNodeTypeArrayPath() const;
 
-   signals:
-     void updateFilterParameters(AbstractFilter* filter);
-     void parametersChanged();
-     void preflightAboutToExecute();
-     void preflightExecuted();
+    Q_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
 
-   protected:
-     MovingFiniteElementSmoothing();
+    QString getCompiledLibraryName() const override;
+    AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+    QString getGroupName() const override;
+    QString getSubGroupName() const override;
 
-     /**
-      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-      */
-     void dataCheck();
+    /**
+     * @brief getUuid Return the unique identifier for this filter.
+     * @return A QUuid object.
+     */
+    QUuid getUuid() const override;
 
-     /**
-      * @brief Initializes all the private instance variables.
-      */
-     void initialize();
+    /**
+     * @brief This returns a string that is displayed in the GUI. It should be readable
+     * and understandable by humans.
+     */
+    QString getHumanLabel() const override;
 
-   private:
-     DEFINE_DATAARRAY_VARIABLE(int8_t, SurfaceMeshNodeType)
+    /**
+     * @brief This method will instantiate all the end user settable options/parameters
+     * for this filter
+     */
+    void setupFilterParameters() override;
 
-   public:
-     MovingFiniteElementSmoothing(const MovingFiniteElementSmoothing&) = delete;            // Copy Constructor Not Implemented
-     MovingFiniteElementSmoothing(MovingFiniteElementSmoothing&&) = delete;                 // Move Constructor Not Implemented
-     MovingFiniteElementSmoothing& operator=(const MovingFiniteElementSmoothing&) = delete; // Copy Assignment Not Implemented
-     MovingFiniteElementSmoothing& operator=(MovingFiniteElementSmoothing&&) = delete;      // Move Assignment Not Implemented
+    /**
+     * @brief This method will read the options from a file
+     * @param reader The reader that is used to read the options from a file
+     */
+    void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
+    void execute() override;
+
+    /**
+     * @brief This function runs some sanity checks on the DataContainer and inputs
+     * in an attempt to ensure the filter can process the inputs.
+     */
+    void preflight() override;
+
+  signals:
+    void updateFilterParameters(AbstractFilter* filter);
+    void parametersChanged();
+    void preflightAboutToExecute();
+    void preflightExecuted();
+
+  protected:
+    MovingFiniteElementSmoothing();
+
+    /**
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+     */
+    void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
+  private:
+    std::weak_ptr<DataArray<int8_t>> m_SurfaceMeshNodeTypePtr;
+    int8_t* m_SurfaceMeshNodeType = nullptr;
+
+    int m_IterationSteps = {};
+    bool m_NodeConstraints = {};
+    bool m_ConstrainSurfaceNodes = {};
+    bool m_ConstrainQuadPoints = {};
+    bool m_SmoothTripleLines = {};
+    DataArrayPath m_SurfaceMeshNodeTypeArrayPath = {};
+
+  public:
+    MovingFiniteElementSmoothing(const MovingFiniteElementSmoothing&) = delete;            // Copy Constructor Not Implemented
+    MovingFiniteElementSmoothing(MovingFiniteElementSmoothing&&) = delete;                 // Move Constructor Not Implemented
+    MovingFiniteElementSmoothing& operator=(const MovingFiniteElementSmoothing&) = delete; // Copy Assignment Not Implemented
+    MovingFiniteElementSmoothing& operator=(MovingFiniteElementSmoothing&&) = delete;      // Move Assignment Not Implemented
 };
 
 

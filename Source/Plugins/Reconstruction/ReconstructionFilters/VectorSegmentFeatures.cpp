@@ -33,12 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "VectorSegmentFeatures.h"
 
 #include <chrono>
 
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -48,6 +52,8 @@
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -436,7 +442,7 @@ AbstractFilter::Pointer VectorSegmentFeatures::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VectorSegmentFeatures::getCompiledLibraryName() const
+QString VectorSegmentFeatures::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -444,7 +450,7 @@ const QString VectorSegmentFeatures::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VectorSegmentFeatures::getBrandingString() const
+QString VectorSegmentFeatures::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -452,7 +458,7 @@ const QString VectorSegmentFeatures::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VectorSegmentFeatures::getFilterVersion() const
+QString VectorSegmentFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -462,7 +468,7 @@ const QString VectorSegmentFeatures::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VectorSegmentFeatures::getGroupName() const
+QString VectorSegmentFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -470,7 +476,7 @@ const QString VectorSegmentFeatures::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid VectorSegmentFeatures::getUuid()
+QUuid VectorSegmentFeatures::getUuid() const
 {
   return QUuid("{c438af53-631e-581e-8b2d-1a23dcdc6f32}");
 }
@@ -478,7 +484,7 @@ const QUuid VectorSegmentFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VectorSegmentFeatures::getSubGroupName() const
+QString VectorSegmentFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;
 }
@@ -486,7 +492,132 @@ const QString VectorSegmentFeatures::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VectorSegmentFeatures::getHumanLabel() const
+QString VectorSegmentFeatures::getHumanLabel() const
 {
   return "Segment Features (Vector)";
+}
+
+// -----------------------------------------------------------------------------
+VectorSegmentFeatures::Pointer VectorSegmentFeatures::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<VectorSegmentFeatures> VectorSegmentFeatures::New()
+{
+  struct make_shared_enabler : public VectorSegmentFeatures
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString VectorSegmentFeatures::getNameOfClass() const
+{
+  return QString("VectorSegmentFeatures");
+}
+
+// -----------------------------------------------------------------------------
+QString VectorSegmentFeatures::ClassName()
+{
+  return QString("VectorSegmentFeatures");
+}
+
+// -----------------------------------------------------------------------------
+void VectorSegmentFeatures::setCellFeatureAttributeMatrixName(const QString& value)
+{
+  m_CellFeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VectorSegmentFeatures::getCellFeatureAttributeMatrixName() const
+{
+  return m_CellFeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void VectorSegmentFeatures::setSelectedVectorArrayPath(const DataArrayPath& value)
+{
+  m_SelectedVectorArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath VectorSegmentFeatures::getSelectedVectorArrayPath() const
+{
+  return m_SelectedVectorArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void VectorSegmentFeatures::setAngleTolerance(float value)
+{
+  m_AngleTolerance = value;
+}
+
+// -----------------------------------------------------------------------------
+float VectorSegmentFeatures::getAngleTolerance() const
+{
+  return m_AngleTolerance;
+}
+
+// -----------------------------------------------------------------------------
+void VectorSegmentFeatures::setRandomizeFeatureIds(bool value)
+{
+  m_RandomizeFeatureIds = value;
+}
+
+// -----------------------------------------------------------------------------
+bool VectorSegmentFeatures::getRandomizeFeatureIds() const
+{
+  return m_RandomizeFeatureIds;
+}
+
+// -----------------------------------------------------------------------------
+void VectorSegmentFeatures::setUseGoodVoxels(bool value)
+{
+  m_UseGoodVoxels = value;
+}
+
+// -----------------------------------------------------------------------------
+bool VectorSegmentFeatures::getUseGoodVoxels() const
+{
+  return m_UseGoodVoxels;
+}
+
+// -----------------------------------------------------------------------------
+void VectorSegmentFeatures::setGoodVoxelsArrayPath(const DataArrayPath& value)
+{
+  m_GoodVoxelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath VectorSegmentFeatures::getGoodVoxelsArrayPath() const
+{
+  return m_GoodVoxelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void VectorSegmentFeatures::setFeatureIdsArrayName(const QString& value)
+{
+  m_FeatureIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VectorSegmentFeatures::getFeatureIdsArrayName() const
+{
+  return m_FeatureIdsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void VectorSegmentFeatures::setActiveArrayName(const QString& value)
+{
+  m_ActiveArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VectorSegmentFeatures::getActiveArrayName() const
+{
+  return m_ActiveArrayName;
 }

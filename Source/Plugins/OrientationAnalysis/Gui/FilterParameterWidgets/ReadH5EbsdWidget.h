@@ -41,7 +41,6 @@
 // Needed for AxisAngle_t
 #include "EbsdLib/EbsdConstants.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
 #include "SVWidgetsLib/SVWidgetsLib.h"
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"

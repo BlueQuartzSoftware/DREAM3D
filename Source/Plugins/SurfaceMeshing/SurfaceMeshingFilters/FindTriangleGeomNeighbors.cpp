@@ -33,11 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindTriangleGeomNeighbors.h"
 
 #include <QtCore/QDateTime>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -45,6 +50,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -316,7 +323,7 @@ AbstractFilter::Pointer FindTriangleGeomNeighbors::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomNeighbors::getCompiledLibraryName() const
+QString FindTriangleGeomNeighbors::getCompiledLibraryName() const
 {
 	return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -324,7 +331,7 @@ const QString FindTriangleGeomNeighbors::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomNeighbors::getBrandingString() const
+QString FindTriangleGeomNeighbors::getBrandingString() const
 {
   return "Statistics";
 }
@@ -332,7 +339,7 @@ const QString FindTriangleGeomNeighbors::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomNeighbors::getFilterVersion() const
+QString FindTriangleGeomNeighbors::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -342,7 +349,7 @@ const QString FindTriangleGeomNeighbors::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomNeighbors::getGroupName() const
+QString FindTriangleGeomNeighbors::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -350,7 +357,7 @@ const QString FindTriangleGeomNeighbors::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindTriangleGeomNeighbors::getUuid()
+QUuid FindTriangleGeomNeighbors::getUuid() const
 {
   return QUuid("{749dc8ae-a402-5ee7-bbca-28d5734c60df}");
 }
@@ -358,7 +365,7 @@ const QUuid FindTriangleGeomNeighbors::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomNeighbors::getSubGroupName() const
+QString FindTriangleGeomNeighbors::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -366,7 +373,84 @@ const QString FindTriangleGeomNeighbors::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomNeighbors::getHumanLabel() const
+QString FindTriangleGeomNeighbors::getHumanLabel() const
 {
   return "Find Feature Neighbors from Triangle Geometry";
+}
+
+// -----------------------------------------------------------------------------
+FindTriangleGeomNeighbors::Pointer FindTriangleGeomNeighbors::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindTriangleGeomNeighbors> FindTriangleGeomNeighbors::New()
+{
+  struct make_shared_enabler : public FindTriangleGeomNeighbors
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindTriangleGeomNeighbors::getNameOfClass() const
+{
+  return QString("FindTriangleGeomNeighbors");
+}
+
+// -----------------------------------------------------------------------------
+QString FindTriangleGeomNeighbors::ClassName()
+{
+  return QString("FindTriangleGeomNeighbors");
+}
+
+// -----------------------------------------------------------------------------
+void FindTriangleGeomNeighbors::setFeatureAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_FeatureAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindTriangleGeomNeighbors::getFeatureAttributeMatrixPath() const
+{
+  return m_FeatureAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindTriangleGeomNeighbors::setNeighborListArrayName(const QString& value)
+{
+  m_NeighborListArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindTriangleGeomNeighbors::getNeighborListArrayName() const
+{
+  return m_NeighborListArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindTriangleGeomNeighbors::setFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_FaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindTriangleGeomNeighbors::getFaceLabelsArrayPath() const
+{
+  return m_FaceLabelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindTriangleGeomNeighbors::setNumNeighborsArrayName(const QString& value)
+{
+  m_NumNeighborsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindTriangleGeomNeighbors::getNumNeighborsArrayName() const
+{
+  return m_NumNeighborsArrayName;
 }

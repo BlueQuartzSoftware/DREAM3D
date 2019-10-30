@@ -35,8 +35,10 @@
 
 #include <QtCore/QFile>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <QtCore/QDebug>
+
 #include "SIMPLib/DataArrays/DataArray.hpp"
+
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
@@ -46,6 +48,9 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+
 #include "UnitTestSupport.hpp"
 
 #include "SurfaceMeshingTestFileLocations.h"
@@ -56,7 +61,25 @@ class FindTriangleGeomNeighborsTest
 public:
   FindTriangleGeomNeighborsTest() = default;
   ~FindTriangleGeomNeighborsTest() = default;
-  SIMPL_TYPE_MACRO(FindTriangleGeomNeighborsTest)
+  /**
+   * @brief Returns the name of the class for FindTriangleGeomNeighborsTest
+   */
+  /**
+   * @brief Returns the name of the class for FindTriangleGeomNeighborsTest
+   */
+  QString getNameOfClass() const
+  {
+    return QString("FindTriangleGeomNeighborsTest");
+  }
+
+  /**
+   * @brief Returns the name of the class for FindTriangleGeomNeighborsTest
+   */
+  QString ClassName()
+  {
+    return QString("FindTriangleGeomNeighborsTest");
+  }
+
   FindTriangleGeomNeighborsTest(const FindTriangleGeomNeighborsTest&) = delete;            // Copy Constructor Not Implemented
   FindTriangleGeomNeighborsTest(FindTriangleGeomNeighborsTest&&) = delete;                 // Move Constructor Not Implemented
   FindTriangleGeomNeighborsTest& operator=(const FindTriangleGeomNeighborsTest&) = delete; // Copy Assignment Not Implemented
@@ -483,4 +506,5 @@ public:
     DREAM3D_REGISTER_TEST(RemoveTestFiles())
   }
 
+private:
 };

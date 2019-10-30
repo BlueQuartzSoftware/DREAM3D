@@ -34,8 +34,9 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #pragma once
 
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationLib/OrientationLib.h"
@@ -53,9 +54,24 @@
 class OrientationLib_EXPORT HexagonalLowOps : public LaueOps
 {
   public:
-    SIMPL_SHARED_POINTERS(HexagonalLowOps)
-     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(HexagonalLowOps, LaueOps)
-    SIMPL_STATIC_NEW_MACRO(HexagonalLowOps)
+    using Self = HexagonalLowOps;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    /**
+    * @brief Returns the name of the class for HexagonalLowOps
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for HexagonalLowOps
+    */
+    static QString ClassName();
+
+    static Pointer New();
+
 
     HexagonalLowOps();
     ~HexagonalLowOps() override;
@@ -189,6 +205,9 @@ class OrientationLib_EXPORT HexagonalLowOps : public LaueOps
     HexagonalLowOps(HexagonalLowOps&&) = delete;      // Move Constructor Not Implemented
     HexagonalLowOps& operator=(const HexagonalLowOps&) = delete; // Copy Assignment Not Implemented
     HexagonalLowOps& operator=(HexagonalLowOps&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+
 };
 
 

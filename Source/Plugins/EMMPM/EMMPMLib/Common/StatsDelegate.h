@@ -36,8 +36,11 @@
 
 #pragma once
 
+#include <memory>
+
+#include <QtCore/QString>
+
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 
 #include "EMMPMLib/EMMPMLib.h"
@@ -48,9 +51,23 @@
 class EMMPMLib_EXPORT StatsDelegate
 {
   public:
-    SIMPL_SHARED_POINTERS(StatsDelegate)
-    SIMPL_STATIC_NEW_MACRO(StatsDelegate)
-    SIMPL_TYPE_MACRO(StatsDelegate)
+    using Self = StatsDelegate;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static Pointer New();
+
+    /**
+     * @brief Returns the name of the class for StatsDelegate
+     */
+    virtual QString getNameOfClass() const;
+    /**
+     * @brief Returns the name of the class for StatsDelegate
+     */
+    static QString ClassName();
 
     virtual ~StatsDelegate();
 
@@ -65,5 +82,7 @@ class EMMPMLib_EXPORT StatsDelegate
     StatsDelegate(StatsDelegate&&) = delete;       // Move Constructor Not Implemented
     StatsDelegate& operator=(const StatsDelegate&) = delete; // Copy Assignment Not Implemented
     StatsDelegate& operator=(StatsDelegate&&) = delete;      // Move Assignment Not Implemented
+
+  private:
 };
 

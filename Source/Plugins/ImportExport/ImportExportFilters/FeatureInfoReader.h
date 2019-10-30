@@ -35,8 +35,10 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
 #include "SIMPLib/CoreFilters/FileReader.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
@@ -48,7 +50,22 @@
 class ImportExport_EXPORT FeatureInfoReader : public FileReader
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FeatureInfoReader SUPERCLASS FileReader)
+  PYB11_SHARED_POINTERS(FeatureInfoReader)
+  PYB11_FILTER_NEW_MACRO(FeatureInfoReader)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, InputFile)
+  PYB11_FILTER_PARAMETER(bool, CreateCellLevelArrays)
+  PYB11_FILTER_PARAMETER(bool, RenumberFeatures)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, CellPhasesArrayName)
+  PYB11_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
+  PYB11_FILTER_PARAMETER(QString, FeaturePhasesArrayName)
+  PYB11_FILTER_PARAMETER(QString, FeatureEulerAnglesArrayName)
+  PYB11_FILTER_PARAMETER(int, Delimiter)
   PYB11_PROPERTY(DataArrayPath CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
@@ -59,65 +76,189 @@ class ImportExport_EXPORT FeatureInfoReader : public FileReader
   PYB11_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
   PYB11_PROPERTY(QString FeaturePhasesArrayName READ getFeaturePhasesArrayName WRITE setFeaturePhasesArrayName)
   PYB11_PROPERTY(QString FeatureEulerAnglesArrayName READ getFeatureEulerAnglesArrayName WRITE setFeatureEulerAnglesArrayName)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(FeatureInfoReader)
-  SIMPL_FILTER_NEW_MACRO(FeatureInfoReader)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FeatureInfoReader, FileReader)
+  using Self = FeatureInfoReader;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for FeatureInfoReader
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FeatureInfoReader
+   */
+  static QString ClassName();
 
   ~FeatureInfoReader() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixName)
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  DataArrayPath getCellAttributeMatrixName() const;
+
   Q_PROPERTY(DataArrayPath CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
+  /**
+   * @brief Setter property for CellFeatureAttributeMatrixName
+   */
+  void setCellFeatureAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellFeatureAttributeMatrixName
+   * @return Value of CellFeatureAttributeMatrixName
+   */
+  QString getCellFeatureAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
   /* Input Parameters */
-  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  /**
+   * @brief Setter property for InputFile
+   */
+  void setInputFile(const QString& value);
+  /**
+   * @brief Getter property for InputFile
+   * @return Value of InputFile
+   */
+  QString getInputFile() const;
+
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-  SIMPL_FILTER_PARAMETER(bool, CreateCellLevelArrays)
+  /**
+   * @brief Setter property for CreateCellLevelArrays
+   */
+  void setCreateCellLevelArrays(bool value);
+  /**
+   * @brief Getter property for CreateCellLevelArrays
+   * @return Value of CreateCellLevelArrays
+   */
+  bool getCreateCellLevelArrays() const;
+
   Q_PROPERTY(bool CreateCellLevelArrays READ getCreateCellLevelArrays WRITE setCreateCellLevelArrays)
 
-  SIMPL_FILTER_PARAMETER(bool, RenumberFeatures)
+  /**
+   * @brief Setter property for RenumberFeatures
+   */
+  void setRenumberFeatures(bool value);
+  /**
+   * @brief Getter property for RenumberFeatures
+   * @return Value of RenumberFeatures
+   */
+  bool getRenumberFeatures() const;
+
   Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, CellPhasesArrayName)
+  /**
+   * @brief Setter property for CellPhasesArrayName
+   */
+  void setCellPhasesArrayName(const QString& value);
+  /**
+   * @brief Getter property for CellPhasesArrayName
+   * @return Value of CellPhasesArrayName
+   */
+  QString getCellPhasesArrayName() const;
+
   Q_PROPERTY(QString CellPhasesArrayName READ getCellPhasesArrayName WRITE setCellPhasesArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
+  /**
+   * @brief Setter property for CellEulerAnglesArrayName
+   */
+  void setCellEulerAnglesArrayName(const QString& value);
+  /**
+   * @brief Getter property for CellEulerAnglesArrayName
+   * @return Value of CellEulerAnglesArrayName
+   */
+  QString getCellEulerAnglesArrayName() const;
+
   Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, FeaturePhasesArrayName)
+  /**
+   * @brief Setter property for FeaturePhasesArrayName
+   */
+  void setFeaturePhasesArrayName(const QString& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayName
+   * @return Value of FeaturePhasesArrayName
+   */
+  QString getFeaturePhasesArrayName() const;
+
   Q_PROPERTY(QString FeaturePhasesArrayName READ getFeaturePhasesArrayName WRITE setFeaturePhasesArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, FeatureEulerAnglesArrayName)
+  /**
+   * @brief Setter property for FeatureEulerAnglesArrayName
+   */
+  void setFeatureEulerAnglesArrayName(const QString& value);
+  /**
+   * @brief Getter property for FeatureEulerAnglesArrayName
+   * @return Value of FeatureEulerAnglesArrayName
+   */
+  QString getFeatureEulerAnglesArrayName() const;
+
   Q_PROPERTY(QString FeatureEulerAnglesArrayName READ getFeatureEulerAnglesArrayName WRITE setFeatureEulerAnglesArrayName)
 
-  SIMPL_FILTER_PARAMETER(int, Delimiter)
+  /**
+   * @brief Setter property for Delimiter
+   */
+  void setDelimiter(int value);
+  /**
+   * @brief Getter property for Delimiter
+   * @return Value of Delimiter
+   */
+  int getDelimiter() const;
+
   Q_PROPERTY(int Delimiter READ getDelimiter WRITE setDelimiter)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
    */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -127,23 +268,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -189,12 +330,28 @@ protected:
   void updateFeatureInstancePointers();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+  int32_t* m_CellPhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_CellEulerAnglesPtr;
+  float* m_CellEulerAngles = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_FeatureEulerAnglesPtr;
+  float* m_FeatureEulerAngles = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-  DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-  DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
+  DataArrayPath m_CellAttributeMatrixName = {};
+  QString m_CellFeatureAttributeMatrixName = {};
+  QString m_InputFile = {};
+  bool m_CreateCellLevelArrays = {};
+  bool m_RenumberFeatures = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  QString m_CellPhasesArrayName = {};
+  QString m_CellEulerAnglesArrayName = {};
+  QString m_FeaturePhasesArrayName = {};
+  QString m_FeatureEulerAnglesArrayName = {};
+  int m_Delimiter = {};
 
 public:
   FeatureInfoReader(const FeatureInfoReader&) = delete;            // Copy Constructor Not Implemented

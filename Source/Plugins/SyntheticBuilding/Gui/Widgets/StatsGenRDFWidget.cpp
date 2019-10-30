@@ -200,11 +200,11 @@ void StatsGenRDFWidget::on_generateRDFBtn_clicked()
   float maxDist = loc.toFloat(ui->maxDistLE->text(), &ok);
   int numBins = ui->numBinsLE->text().toInt(&ok);
 
-  std::vector<float> boxDims(3);
+  std::array<float, 3> boxDims;
   boxDims[0] = loc.toFloat(ui->BoxSizeXLE->text(), &ok);
   boxDims[1] = loc.toFloat(ui->BoxSizeYLE->text(), &ok);
   boxDims[2] = loc.toFloat(ui->BoxSizeZLE->text(), &ok);
-  std::vector<float> boxRes(3);
+  std::array<float, 3> boxRes;
   boxRes[0] = 0.1f;
   boxRes[1] = 0.1f;
   boxRes[2] = 0.1f;
@@ -376,15 +376,12 @@ void StatsGenRDFWidget::extractStatsData(int index, StatsData* statsData, PhaseT
     RdfData::Pointer rdf = pp->getRadialDistFunction();
     if(nullptr != rdf.get())
     {
-      float boxDim[3];
-      rdf->getBoxSize(boxDim);
+      std::array<float, 3> boxDim = rdf->getBoxSize();
       ui->BoxSizeXLE->setText(QString::number(boxDim[0]));
       ui->BoxSizeYLE->setText(QString::number(boxDim[1]));
       ui->BoxSizeZLE->setText(QString::number(boxDim[2]));
 
-      float boxRes[3];
-      rdf->getBoxResolution(boxRes);
-
+      std::array<float, 3> boxRes = rdf->getBoxResolution();
       ui->minDistLE->setText(QString::number(rdf->getMinDistance()));
       ui->maxDistLE->setText(QString::number(rdf->getMaxDistance()));
       ui->numBinsLE->setText(QString::number(rdf->getNumberOfBins()));
@@ -409,17 +406,17 @@ RdfData::Pointer StatsGenRDFWidget::getStatisticsData()
   rdf->setNumberOfBins(ui->numBinsLE->text().toInt(&ok));
 
   QLocale loc = QLocale::system();
-  std::vector<float> boxDims(3);
+  std::array<float, 3> boxDims;
   boxDims[0] = loc.toFloat(ui->BoxSizeXLE->text(), &ok);
   boxDims[1] = loc.toFloat(ui->BoxSizeYLE->text(), &ok);
   boxDims[2] = loc.toFloat(ui->BoxSizeZLE->text(), &ok);
-  rdf->setBoxSize(boxDims.data());
+  rdf->setBoxSize(boxDims);
 
-  std::vector<float> boxRes(3);
+  std::array<float, 3> boxRes;
   boxRes[0] = 0.1f;
   boxRes[1] = 0.1f;
   boxRes[2] = 0.1f;
-  rdf->setBoxResolution(boxRes.data());
+  rdf->setBoxResolution(boxRes);
 
   float minDist = loc.toFloat(ui->minDistLE->text(), &ok);
   float maxDist = loc.toFloat(ui->maxDistLE->text(), &ok);

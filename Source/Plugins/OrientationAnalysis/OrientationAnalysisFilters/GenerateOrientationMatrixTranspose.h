@@ -4,9 +4,11 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -18,39 +20,89 @@ class OrientationAnalysis_EXPORT GenerateOrientationMatrixTranspose : public Abs
   Q_OBJECT
 
 public:
-  SIMPL_SHARED_POINTERS(GenerateOrientationMatrixTranspose)
-  SIMPL_FILTER_NEW_MACRO(GenerateOrientationMatrixTranspose)
-  SIMPL_TYPE_MACRO_SUPER(GenerateOrientationMatrixTranspose, AbstractFilter)
+  using Self = GenerateOrientationMatrixTranspose;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for GenerateOrientationMatrixTranspose
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for GenerateOrientationMatrixTranspose
+   */
+  static QString ClassName();
 
   ~GenerateOrientationMatrixTranspose() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, OrientationMatrixDataArrayPath)
+  /**
+   * @brief Setter property for OrientationMatrixDataArrayPath
+   */
+  void setOrientationMatrixDataArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for OrientationMatrixDataArrayPath
+   * @return Value of OrientationMatrixDataArrayPath
+   */
+  DataArrayPath getOrientationMatrixDataArrayPath() const;
+
   Q_PROPERTY(DataArrayPath OrientationMatrixDataArrayPath READ getOrientationMatrixDataArrayPath WRITE setOrientationMatrixDataArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, OutputDataArrayPath)
+  /**
+   * @brief Setter property for OutputDataArrayPath
+   */
+  void setOutputDataArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for OutputDataArrayPath
+   * @return Value of OutputDataArrayPath
+   */
+  DataArrayPath getOutputDataArrayPath() const;
+
   Q_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)
 
-  SIMPL_FILTER_PARAMETER(bool, DeleteOriginalData)
+  /**
+   * @brief Setter property for DeleteOriginalData
+   */
+  void setDeleteOriginalData(bool value);
+  /**
+   * @brief Getter property for DeleteOriginalData
+   * @return Value of DeleteOriginalData
+   */
+  bool getDeleteOriginalData() const;
+
   Q_PROPERTY(bool DeleteOriginalData READ getDeleteOriginalData WRITE setDeleteOriginalData)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
    */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -60,23 +112,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -130,8 +182,14 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(float, OrientationMatrix)
-  DEFINE_DATAARRAY_VARIABLE(float, OutputOrientationMatrix)
+  std::weak_ptr<DataArray<float>> m_OrientationMatrixPtr;
+  float* m_OrientationMatrix = nullptr;
+  std::weak_ptr<DataArray<float>> m_OutputOrientationMatrixPtr;
+  float* m_OutputOrientationMatrix = nullptr;
+
+  DataArrayPath m_OrientationMatrixDataArrayPath = {};
+  DataArrayPath m_OutputDataArrayPath = {};
+  bool m_DeleteOriginalData = {};
 
 public:
   /* Rule of 5: All special member functions should be defined if any are defined.

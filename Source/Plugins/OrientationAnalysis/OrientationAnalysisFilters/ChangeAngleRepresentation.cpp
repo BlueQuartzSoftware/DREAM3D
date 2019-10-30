@@ -33,6 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "ChangeAngleRepresentation.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -42,12 +44,18 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include <QtCore/QTextStream>
+
+#include <QtCore/QDebug>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -241,7 +249,7 @@ AbstractFilter::Pointer ChangeAngleRepresentation::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeAngleRepresentation::getCompiledLibraryName() const
+QString ChangeAngleRepresentation::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -249,7 +257,7 @@ const QString ChangeAngleRepresentation::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeAngleRepresentation::getBrandingString() const
+QString ChangeAngleRepresentation::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -257,7 +265,7 @@ const QString ChangeAngleRepresentation::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeAngleRepresentation::getFilterVersion() const
+QString ChangeAngleRepresentation::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -267,7 +275,7 @@ const QString ChangeAngleRepresentation::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeAngleRepresentation::getGroupName() const
+QString ChangeAngleRepresentation::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -275,7 +283,7 @@ const QString ChangeAngleRepresentation::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ChangeAngleRepresentation::getUuid()
+QUuid ChangeAngleRepresentation::getUuid() const
 {
   return QUuid("{f7bc0e1e-0f50-5fe0-a9e7-510b6ed83792}");
 }
@@ -283,7 +291,7 @@ const QUuid ChangeAngleRepresentation::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeAngleRepresentation::getSubGroupName() const
+QString ChangeAngleRepresentation::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConversionFilters;
 }
@@ -291,7 +299,60 @@ const QString ChangeAngleRepresentation::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeAngleRepresentation::getHumanLabel() const
+QString ChangeAngleRepresentation::getHumanLabel() const
 {
   return "Convert Angles to Degrees or Radians";
+}
+
+// -----------------------------------------------------------------------------
+ChangeAngleRepresentation::Pointer ChangeAngleRepresentation::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ChangeAngleRepresentation> ChangeAngleRepresentation::New()
+{
+  struct make_shared_enabler : public ChangeAngleRepresentation
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ChangeAngleRepresentation::getNameOfClass() const
+{
+  return QString("ChangeAngleRepresentation");
+}
+
+// -----------------------------------------------------------------------------
+QString ChangeAngleRepresentation::ClassName()
+{
+  return QString("ChangeAngleRepresentation");
+}
+
+// -----------------------------------------------------------------------------
+void ChangeAngleRepresentation::setConversionType(int value)
+{
+  m_ConversionType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ChangeAngleRepresentation::getConversionType() const
+{
+  return m_ConversionType;
+}
+
+// -----------------------------------------------------------------------------
+void ChangeAngleRepresentation::setCellEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_CellEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ChangeAngleRepresentation::getCellEulerAnglesArrayPath() const
+{
+  return m_CellEulerAnglesArrayPath;
 }

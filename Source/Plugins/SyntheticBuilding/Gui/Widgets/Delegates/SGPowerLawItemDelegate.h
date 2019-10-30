@@ -56,7 +56,7 @@ class SGPowerLawItemDelegate : public QStyledItemDelegate
   Q_OBJECT
 
 public:
-  explicit SGPowerLawItemDelegate(QObject* parent = 0);
+  explicit SGPowerLawItemDelegate(QObject* parent = nullptr);
 
   /**
    * @brief paint

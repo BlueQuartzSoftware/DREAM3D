@@ -66,3 +66,28 @@ QString StatsGeneratorFilterParameter::getWidgetType() const
 {
   return QString("StatsGeneratorWidget");
 }
+
+// -----------------------------------------------------------------------------
+StatsGeneratorFilterParameter::Pointer StatsGeneratorFilterParameter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+StatsGeneratorFilterParameter::Pointer StatsGeneratorFilterParameter::New()
+{
+  Pointer sharedPtr(new(StatsGeneratorFilterParameter));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString StatsGeneratorFilterParameter::getNameOfClass() const
+{
+  return QString("StatsGeneratorFilterParameter");
+}
+
+// -----------------------------------------------------------------------------
+QString StatsGeneratorFilterParameter::ClassName()
+{
+  return QString("StatsGeneratorFilterParameter");
+}

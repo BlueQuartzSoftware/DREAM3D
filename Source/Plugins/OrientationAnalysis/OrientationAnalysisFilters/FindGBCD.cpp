@@ -33,12 +33,17 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindGBCD.h"
 #include <utility>
 
 #include <QtCore/QDateTime>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
@@ -47,6 +52,8 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Utilities/TimeUtilities.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range.h>
@@ -807,7 +814,7 @@ AbstractFilter::Pointer FindGBCD::newFilterInstance(bool copyFilterParameters) c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCD::getCompiledLibraryName() const
+QString FindGBCD::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -815,7 +822,7 @@ const QString FindGBCD::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCD::getBrandingString() const
+QString FindGBCD::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -823,7 +830,7 @@ const QString FindGBCD::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCD::getFilterVersion() const
+QString FindGBCD::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -833,7 +840,7 @@ const QString FindGBCD::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCD::getGroupName() const
+QString FindGBCD::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -841,7 +848,7 @@ const QString FindGBCD::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindGBCD::getUuid()
+QUuid FindGBCD::getUuid() const
 {
   return QUuid("{6e97ff50-48bf-5403-a049-1d271bd72df9}");
 }
@@ -849,7 +856,7 @@ const QUuid FindGBCD::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCD::getSubGroupName() const
+QString FindGBCD::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -857,7 +864,156 @@ const QString FindGBCD::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindGBCD::getHumanLabel() const
+QString FindGBCD::getHumanLabel() const
 {
   return "Find GBCD";
+}
+
+// -----------------------------------------------------------------------------
+FindGBCD::Pointer FindGBCD::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindGBCD> FindGBCD::New()
+{
+  struct make_shared_enabler : public FindGBCD
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindGBCD::getNameOfClass() const
+{
+  return QString("FindGBCD");
+}
+
+// -----------------------------------------------------------------------------
+QString FindGBCD::ClassName()
+{
+  return QString("FindGBCD");
+}
+
+// -----------------------------------------------------------------------------
+void FindGBCD::setFaceEnsembleAttributeMatrixName(const QString& value)
+{
+  m_FaceEnsembleAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindGBCD::getFaceEnsembleAttributeMatrixName() const
+{
+  return m_FaceEnsembleAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBCD::setGBCDRes(float value)
+{
+  m_GBCDRes = value;
+}
+
+// -----------------------------------------------------------------------------
+float FindGBCD::getGBCDRes() const
+{
+  return m_GBCDRes;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBCD::setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindGBCD::getSurfaceMeshFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFaceLabelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBCD::setSurfaceMeshFaceNormalsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceNormalsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindGBCD::getSurfaceMeshFaceNormalsArrayPath() const
+{
+  return m_SurfaceMeshFaceNormalsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBCD::setSurfaceMeshFaceAreasArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceAreasArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindGBCD::getSurfaceMeshFaceAreasArrayPath() const
+{
+  return m_SurfaceMeshFaceAreasArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBCD::setFeatureEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_FeatureEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindGBCD::getFeatureEulerAnglesArrayPath() const
+{
+  return m_FeatureEulerAnglesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBCD::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindGBCD::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBCD::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindGBCD::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBCD::setGBCDArrayName(const QString& value)
+{
+  m_GBCDArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindGBCD::getGBCDArrayName() const
+{
+  return m_GBCDArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindGBCD::setGBCDArrayNames(const QVector<ComparisonInput_t>& value)
+{
+  m_GBCDArrayNames = value;
+}
+
+// -----------------------------------------------------------------------------
+QVector<ComparisonInput_t> FindGBCD::getGBCDArrayNames() const
+{
+  return m_GBCDArrayNames;
 }

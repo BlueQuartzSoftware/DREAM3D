@@ -35,8 +35,10 @@
 
 #include <QtCore/QFile>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/DataArrays/DataArray.hpp"
+
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
@@ -50,6 +52,8 @@
 #include "SIMPLib/CoreFilters/CreateDataContainer.h"
 #include "SIMPLib/CoreFilters/CreateGeometry.h"
 #include "SIMPLib/CoreFilters/DataContainerWriter.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "UnitTestSupport.hpp"
 
@@ -64,7 +68,24 @@ public:
   virtual ~FeatureInfoReaderTest()
   {
   }
-  SIMPL_TYPE_MACRO(FeatureInfoReaderTest)
+  /**
+   * @brief Returns the name of the class for FeatureInfoReaderTest
+   */
+  /**
+   * @brief Returns the name of the class for FeatureInfoReaderTest
+   */
+  QString getNameOfClass() const
+  {
+    return QString("FeatureInfoReaderTest");
+  }
+
+  /**
+   * @brief Returns the name of the class for FeatureInfoReaderTest
+   */
+  QString ClassName()
+  {
+    return QString("FeatureInfoReaderTest");
+  }
 
   // -----------------------------------------------------------------------------
   //

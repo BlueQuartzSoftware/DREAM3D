@@ -33,9 +33,14 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "QuiltCellData.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
@@ -45,6 +50,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 enum createdPathID : RenameDataPath::DataID_t
 {
@@ -447,7 +454,7 @@ AbstractFilter::Pointer QuiltCellData::newFilterInstance(bool copyFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuiltCellData::getCompiledLibraryName() const
+QString QuiltCellData::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -455,7 +462,7 @@ const QString QuiltCellData::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuiltCellData::getBrandingString() const
+QString QuiltCellData::getBrandingString() const
 {
   return "Statistics";
 }
@@ -463,7 +470,7 @@ const QString QuiltCellData::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuiltCellData::getFilterVersion() const
+QString QuiltCellData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -474,7 +481,7 @@ const QString QuiltCellData::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuiltCellData::getGroupName() const
+QString QuiltCellData::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -482,7 +489,7 @@ const QString QuiltCellData::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid QuiltCellData::getUuid()
+QUuid QuiltCellData::getUuid() const
 {
   return QUuid("{bddc673c-d3fa-5e7d-8fb6-5e234dfa9bc5}");
 }
@@ -490,7 +497,7 @@ const QUuid QuiltCellData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuiltCellData::getSubGroupName() const
+QString QuiltCellData::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::EnsembleStatsFilters;
 }
@@ -498,7 +505,108 @@ const QString QuiltCellData::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString QuiltCellData::getHumanLabel() const
+QString QuiltCellData::getHumanLabel() const
 {
   return "Quilt Cell Data";
+}
+
+// -----------------------------------------------------------------------------
+QuiltCellData::Pointer QuiltCellData::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<QuiltCellData> QuiltCellData::New()
+{
+  struct make_shared_enabler : public QuiltCellData
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString QuiltCellData::getNameOfClass() const
+{
+  return QString("QuiltCellData");
+}
+
+// -----------------------------------------------------------------------------
+QString QuiltCellData::ClassName()
+{
+  return QString("QuiltCellData");
+}
+
+// -----------------------------------------------------------------------------
+void QuiltCellData::setSelectedCellArrayPath(const DataArrayPath& value)
+{
+  m_SelectedCellArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath QuiltCellData::getSelectedCellArrayPath() const
+{
+  return m_SelectedCellArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void QuiltCellData::setQuiltStep(const IntVec3Type& value)
+{
+  m_QuiltStep = value;
+}
+
+// -----------------------------------------------------------------------------
+IntVec3Type QuiltCellData::getQuiltStep() const
+{
+  return m_QuiltStep;
+}
+
+// -----------------------------------------------------------------------------
+void QuiltCellData::setPatchSize(const IntVec3Type& value)
+{
+  m_PatchSize = value;
+}
+
+// -----------------------------------------------------------------------------
+IntVec3Type QuiltCellData::getPatchSize() const
+{
+  return m_PatchSize;
+}
+
+// -----------------------------------------------------------------------------
+void QuiltCellData::setOutputDataContainerName(const DataArrayPath& value)
+{
+  m_OutputDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath QuiltCellData::getOutputDataContainerName() const
+{
+  return m_OutputDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void QuiltCellData::setOutputAttributeMatrixName(const QString& value)
+{
+  m_OutputAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString QuiltCellData::getOutputAttributeMatrixName() const
+{
+  return m_OutputAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void QuiltCellData::setOutputArrayName(const QString& value)
+{
+  m_OutputArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString QuiltCellData::getOutputArrayName() const
+{
+  return m_OutputArrayName;
 }

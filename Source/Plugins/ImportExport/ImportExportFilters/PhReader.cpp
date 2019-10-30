@@ -33,12 +33,19 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "PhReader.h"
 
 #include <QtCore/QDateTime>
 #include <QtCore/QFileInfo>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -116,11 +123,46 @@ PhReader::PhReader()
 PhReader::~PhReader() = default;
 
 // -----------------------------------------------------------------------------
-//
+void PhReader::setDims(const std::vector<size_t>& value)
+{
+  Q_D(PhReader);
+  d->m_Dims = value;
+}
+
 // -----------------------------------------------------------------------------
-SIMPL_PIMPL_PROPERTY_DEF(PhReader, std::vector<size_t>, Dims)
-SIMPL_PIMPL_PROPERTY_DEF(PhReader, QString, InputFile_Cache)
-SIMPL_PIMPL_PROPERTY_DEF(PhReader, QDateTime, LastRead)
+std::vector<size_t> PhReader::getDims() const
+{
+  Q_D(const PhReader);
+  return d->m_Dims;
+}
+
+// -----------------------------------------------------------------------------
+void PhReader::setInputFile_Cache(const QString& value)
+{
+  Q_D(PhReader);
+  d->m_InputFile_Cache = value;
+}
+
+// -----------------------------------------------------------------------------
+QString PhReader::getInputFile_Cache() const
+{
+  Q_D(const PhReader);
+  return d->m_InputFile_Cache;
+}
+
+// -----------------------------------------------------------------------------
+void PhReader::setLastRead(const QDateTime& value)
+{
+  Q_D(PhReader);
+  d->m_LastRead = value;
+}
+
+// -----------------------------------------------------------------------------
+QDateTime PhReader::getLastRead() const
+{
+  Q_D(const PhReader);
+  return d->m_LastRead;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -423,7 +465,7 @@ AbstractFilter::Pointer PhReader::newFilterInstance(bool copyFilterParameters) c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhReader::getCompiledLibraryName() const
+QString PhReader::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -431,7 +473,7 @@ const QString PhReader::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhReader::getBrandingString() const
+QString PhReader::getBrandingString() const
 {
   return "IO";
 }
@@ -439,7 +481,7 @@ const QString PhReader::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhReader::getFilterVersion() const
+QString PhReader::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -449,7 +491,7 @@ const QString PhReader::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhReader::getGroupName() const
+QString PhReader::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -457,7 +499,7 @@ const QString PhReader::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid PhReader::getUuid()
+QUuid PhReader::getUuid() const
 {
   return QUuid("{c923176f-39c9-5521-9786-624f88d2b2c0}");
 }
@@ -465,7 +507,7 @@ const QUuid PhReader::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhReader::getSubGroupName() const
+QString PhReader::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -473,7 +515,120 @@ const QString PhReader::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString PhReader::getHumanLabel() const
+QString PhReader::getHumanLabel() const
 {
   return "Import Ph File (Feature Ids)";
+}
+
+// -----------------------------------------------------------------------------
+PhReader::Pointer PhReader::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<PhReader> PhReader::New()
+{
+  struct make_shared_enabler : public PhReader
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString PhReader::getNameOfClass() const
+{
+  return QString("PhReader");
+}
+
+// -----------------------------------------------------------------------------
+QString PhReader::ClassName()
+{
+  return QString("PhReader");
+}
+
+// -----------------------------------------------------------------------------
+void PhReader::setVolumeDataContainerName(const DataArrayPath& value)
+{
+  m_VolumeDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath PhReader::getVolumeDataContainerName() const
+{
+  return m_VolumeDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void PhReader::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString PhReader::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void PhReader::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString PhReader::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void PhReader::setOrigin(const FloatVec3Type& value)
+{
+  m_Origin = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type PhReader::getOrigin() const
+{
+  return m_Origin;
+}
+
+// -----------------------------------------------------------------------------
+void PhReader::setSpacing(const FloatVec3Type& value)
+{
+  m_Spacing = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type PhReader::getSpacing() const
+{
+  return m_Spacing;
+}
+
+// -----------------------------------------------------------------------------
+void PhReader::setFileWasRead(bool value)
+{
+  m_FileWasRead = value;
+}
+
+// -----------------------------------------------------------------------------
+bool PhReader::getFileWasRead() const
+{
+  return m_FileWasRead;
+}
+
+// -----------------------------------------------------------------------------
+void PhReader::setFeatureIdsArrayName(const QString& value)
+{
+  m_FeatureIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString PhReader::getFeatureIdsArrayName() const
+{
+  return m_FeatureIdsArrayName;
 }

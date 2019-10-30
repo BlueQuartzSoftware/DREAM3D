@@ -389,3 +389,153 @@ void CurvatureInitialization::initCurvatureVariables(EMMPM_Data::Pointer data)
     }
   }
 }
+
+// -----------------------------------------------------------------------------
+InitializationFunction::Pointer InitializationFunction::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+InitializationFunction::Pointer InitializationFunction::New()
+{
+  Pointer sharedPtr(new(InitializationFunction));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString InitializationFunction::getNameOfClass() const
+{
+  return QString("InitializationFunction");
+}
+
+// -----------------------------------------------------------------------------
+QString InitializationFunction::ClassName()
+{
+  return QString("InitializationFunction");
+}
+
+// -----------------------------------------------------------------------------
+BasicInitialization::Pointer BasicInitialization::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+BasicInitialization::Pointer BasicInitialization::New()
+{
+  Pointer sharedPtr(new(BasicInitialization));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString BasicInitialization::getNameOfClass() const
+{
+  return QString("BasicInitialization");
+}
+
+// -----------------------------------------------------------------------------
+QString BasicInitialization::ClassName()
+{
+  return QString("BasicInitialization");
+}
+
+// -----------------------------------------------------------------------------
+UserDefinedAreasInitialization::Pointer UserDefinedAreasInitialization::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+UserDefinedAreasInitialization::Pointer UserDefinedAreasInitialization::New()
+{
+  Pointer sharedPtr(new(UserDefinedAreasInitialization));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString UserDefinedAreasInitialization::getNameOfClass() const
+{
+  return QString("UserDefinedAreasInitialization");
+}
+
+// -----------------------------------------------------------------------------
+QString UserDefinedAreasInitialization::ClassName()
+{
+  return QString("UserDefinedAreasInitialization");
+}
+
+// -----------------------------------------------------------------------------
+XtArrayInitialization::Pointer XtArrayInitialization::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+XtArrayInitialization::Pointer XtArrayInitialization::New()
+{
+  Pointer sharedPtr(new(XtArrayInitialization));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString XtArrayInitialization::getNameOfClass() const
+{
+  return QString("XtArrayInitialization");
+}
+
+// -----------------------------------------------------------------------------
+QString XtArrayInitialization::ClassName()
+{
+  return QString("XtArrayInitialization");
+}
+
+// -----------------------------------------------------------------------------
+GradientVariablesInitialization::Pointer GradientVariablesInitialization::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+GradientVariablesInitialization::Pointer GradientVariablesInitialization::New()
+{
+  Pointer sharedPtr(new(GradientVariablesInitialization));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString GradientVariablesInitialization::getNameOfClass() const
+{
+  return QString("GradientVariablesInitialization");
+}
+
+// -----------------------------------------------------------------------------
+QString GradientVariablesInitialization::ClassName()
+{
+  return QString("GradientVariablesInitialization");
+}
+
+// -----------------------------------------------------------------------------
+CurvatureInitialization::Pointer CurvatureInitialization::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+CurvatureInitialization::Pointer CurvatureInitialization::New()
+{
+  Pointer sharedPtr(new(CurvatureInitialization));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString CurvatureInitialization::getNameOfClass() const
+{
+  return QString("CurvatureInitialization");
+}
+
+// -----------------------------------------------------------------------------
+QString CurvatureInitialization::ClassName()
+{
+  return QString("CurvatureInitialization");
+}

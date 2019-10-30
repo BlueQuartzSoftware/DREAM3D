@@ -35,11 +35,15 @@
 
 #pragma once
 
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "EbsdLib/H5EbsdVolumeReader.h"
 
@@ -53,90 +57,303 @@ class H5EbsdVolumeReader;
 class OrientationAnalysis_EXPORT ReadH5Ebsd : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(ReadH5Ebsd SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
-    PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
-    PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-    PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
-    PYB11_PROPERTY(int ZStartIndex READ getZStartIndex WRITE setZStartIndex)
-    PYB11_PROPERTY(int ZEndIndex READ getZEndIndex WRITE setZEndIndex)
-    PYB11_PROPERTY(bool UseTransformations READ getUseTransformations WRITE setUseTransformations)
-    PYB11_PROPERTY(int AngleRepresentation READ getAngleRepresentation WRITE setAngleRepresentation)
-    PYB11_PROPERTY(QSet<QString> SelectedArrayNames READ getSelectedArrayNames WRITE setSelectedArrayNames)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(ReadH5Ebsd SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(ReadH5Ebsd)
+  PYB11_FILTER_NEW_MACRO(ReadH5Ebsd)
+  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  PYB11_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, InputFile)
+  PYB11_FILTER_PARAMETER(int, ZStartIndex)
+  PYB11_FILTER_PARAMETER(int, ZEndIndex)
+  PYB11_FILTER_PARAMETER(bool, UseTransformations)
+  PYB11_FILTER_PARAMETER(int, AngleRepresentation)
+  PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+  PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+  PYB11_PROPERTY(int ZStartIndex READ getZStartIndex WRITE setZStartIndex)
+  PYB11_PROPERTY(int ZEndIndex READ getZEndIndex WRITE setZEndIndex)
+  PYB11_PROPERTY(bool UseTransformations READ getUseTransformations WRITE setUseTransformations)
+  PYB11_PROPERTY(int AngleRepresentation READ getAngleRepresentation WRITE setAngleRepresentation)
+  PYB11_PROPERTY(QSet<QString> SelectedArrayNames READ getSelectedArrayNames WRITE setSelectedArrayNames)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(ReadH5Ebsd)
-  SIMPL_FILTER_NEW_MACRO(ReadH5Ebsd)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ReadH5Ebsd, AbstractFilter)
+  using Self = ReadH5Ebsd;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for ReadH5Ebsd
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ReadH5Ebsd
+   */
+  static QString ClassName();
 
   ~ReadH5Ebsd() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  DataArrayPath getDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+  /**
+   * @brief Setter property for CellEnsembleAttributeMatrixName
+   */
+  void setCellEnsembleAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellEnsembleAttributeMatrixName
+   * @return Value of CellEnsembleAttributeMatrixName
+   */
+  QString getCellEnsembleAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  QString getCellAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
+  /**
+   * @brief Setter property for PhaseNameArrayName
+   */
+  void setPhaseNameArrayName(const QString& value);
+  /**
+   * @brief Getter property for PhaseNameArrayName
+   * @return Value of PhaseNameArrayName
+   */
+  QString getPhaseNameArrayName() const;
 
-  SIMPL_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
+  /**
+   * @brief Setter property for MaterialNameArrayName
+   */
+  void setMaterialNameArrayName(const QString& value);
+  /**
+   * @brief Getter property for MaterialNameArrayName
+   * @return Value of MaterialNameArrayName
+   */
+  QString getMaterialNameArrayName() const;
 
-  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  /**
+   * @brief Setter property for InputFile
+   */
+  void setInputFile(const QString& value);
+  /**
+   * @brief Getter property for InputFile
+   * @return Value of InputFile
+   */
+  QString getInputFile() const;
+
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-  SIMPL_FILTER_PARAMETER(int, ZStartIndex)
+  /**
+   * @brief Setter property for ZStartIndex
+   */
+  void setZStartIndex(int value);
+  /**
+   * @brief Getter property for ZStartIndex
+   * @return Value of ZStartIndex
+   */
+  int getZStartIndex() const;
+
   Q_PROPERTY(int ZStartIndex READ getZStartIndex WRITE setZStartIndex)
 
-  SIMPL_FILTER_PARAMETER(int, ZEndIndex)
+  /**
+   * @brief Setter property for ZEndIndex
+   */
+  void setZEndIndex(int value);
+  /**
+   * @brief Getter property for ZEndIndex
+   * @return Value of ZEndIndex
+   */
+  int getZEndIndex() const;
+
   Q_PROPERTY(int ZEndIndex READ getZEndIndex WRITE setZEndIndex)
 
-  SIMPL_FILTER_PARAMETER(bool, UseTransformations)
+  /**
+   * @brief Setter property for UseTransformations
+   */
+  void setUseTransformations(bool value);
+  /**
+   * @brief Getter property for UseTransformations
+   * @return Value of UseTransformations
+   */
+  bool getUseTransformations() const;
+
   Q_PROPERTY(bool UseTransformations READ getUseTransformations WRITE setUseTransformations)
 
-  SIMPL_INSTANCE_PROPERTY(QSet<QString>, SelectedArrayNames)
+  /**
+   * @brief Setter property for SelectedArrayNames
+   */
+  void setSelectedArrayNames(const QSet<QString>& value);
+  /**
+   * @brief Getter property for SelectedArrayNames
+   * @return Value of SelectedArrayNames
+   */
+  QSet<QString> getSelectedArrayNames() const;
+
   Q_PROPERTY(QSet<QString> SelectedArrayNames READ getSelectedArrayNames WRITE setSelectedArrayNames)
 
-  SIMPL_INSTANCE_PROPERTY(QSet<QString>, DataArrayNames) // These are for reading the names of the arrays during a preflight
+  /**
+   * @brief Setter property for DataArrayNames
+   */
+  void setDataArrayNames(const QSet<QString>& value);
+  /**
+   * @brief Getter property for DataArrayNames
+   * @return Value of DataArrayNames
+   */
+  QSet<QString> getDataArrayNames() const;
+
   Q_PROPERTY(QSet<QString> DataArrayNames READ getDataArrayNames WRITE setDataArrayNames)
 
-  SIMPL_FILTER_PARAMETER(int, AngleRepresentation)
+  /**
+   * @brief Setter property for AngleRepresentation
+   */
+  void setAngleRepresentation(int value);
+  /**
+   * @brief Getter property for AngleRepresentation
+   * @return Value of AngleRepresentation
+   */
+  int getAngleRepresentation() const;
+
   Q_PROPERTY(int AngleRepresentation READ getAngleRepresentation WRITE setAngleRepresentation)
 
   //-------------------------------------------------------
   // Not sure why these are here. We would be reading all of these from the file
   //
-  SIMPL_INSTANCE_PROPERTY(uint32_t, RefFrameZDir)
-  SIMPL_INSTANCE_PROPERTY(Ebsd::OEM, Manufacturer)
-  SIMPL_INSTANCE_PROPERTY(AxisAngleInput_t, SampleTransformation)
-  SIMPL_INSTANCE_PROPERTY(AxisAngleInput_t, EulerTransformation)
+  /**
+   * @brief Setter property for RefFrameZDir
+   */
+  void setRefFrameZDir(uint32_t value);
+  /**
+   * @brief Getter property for RefFrameZDir
+   * @return Value of RefFrameZDir
+   */
+  uint32_t getRefFrameZDir() const;
+
+  /**
+   * @brief Setter property for Manufacturer
+   */
+  void setManufacturer(const Ebsd::OEM& value);
+  /**
+   * @brief Getter property for Manufacturer
+   * @return Value of Manufacturer
+   */
+  Ebsd::OEM getManufacturer() const;
+
+  /**
+   * @brief Setter property for SampleTransformation
+   */
+  void setSampleTransformation(const AxisAngleInput_t& value);
+  /**
+   * @brief Getter property for SampleTransformation
+   * @return Value of SampleTransformation
+   */
+  AxisAngleInput_t getSampleTransformation() const;
+
+  /**
+   * @brief Setter property for EulerTransformation
+   */
+  void setEulerTransformation(const AxisAngleInput_t& value);
+  /**
+   * @brief Getter property for EulerTransformation
+   * @return Value of EulerTransformation
+   */
+  AxisAngleInput_t getEulerTransformation() const;
+
   //-------------------------------------------------------
 
-  SIMPL_INSTANCE_PROPERTY(QString, CrystalStructuresArrayName)
-  SIMPL_INSTANCE_PROPERTY(QString, LatticeConstantsArrayName)
-  SIMPL_INSTANCE_PROPERTY(QString, CellPhasesArrayName)
-  SIMPL_INSTANCE_PROPERTY(QString, CellEulerAnglesArrayName)
+  /**
+   * @brief Setter property for CrystalStructuresArrayName
+   */
+  void setCrystalStructuresArrayName(const QString& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayName
+   * @return Value of CrystalStructuresArrayName
+   */
+  QString getCrystalStructuresArrayName() const;
+
+  /**
+   * @brief Setter property for LatticeConstantsArrayName
+   */
+  void setLatticeConstantsArrayName(const QString& value);
+  /**
+   * @brief Getter property for LatticeConstantsArrayName
+   * @return Value of LatticeConstantsArrayName
+   */
+  QString getLatticeConstantsArrayName() const;
+
+  /**
+   * @brief Setter property for CellPhasesArrayName
+   */
+  void setCellPhasesArrayName(const QString& value);
+  /**
+   * @brief Getter property for CellPhasesArrayName
+   * @return Value of CellPhasesArrayName
+   */
+  QString getCellPhasesArrayName() const;
+
+  /**
+   * @brief Setter property for CellEulerAnglesArrayName
+   */
+  void setCellEulerAnglesArrayName(const QString& value);
+  /**
+   * @brief Getter property for CellEulerAnglesArrayName
+   * @return Value of CellEulerAnglesArrayName
+   */
+  QString getCellEulerAnglesArrayName() const;
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
-  */
-  const QString getBrandingString() const override;
+   */
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -146,23 +363,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -180,8 +397,8 @@ public:
   void execute() override;
 
   /**
-  * @brief preflight Reimplemented from @see AbstractFilter class
-  */
+   * @brief preflight Reimplemented from @see AbstractFilter class
+   */
   void preflight() override;
 
 signals:
@@ -225,7 +442,7 @@ protected:
    * @param m DataContainer instance pointer
    * @return Integer error value
    */
-  int32_t initDataContainerDimsRes(int64_t dims[3], DataContainer::Pointer m);
+  int32_t initDataContainerDimsRes(int64_t dims[3], const DataContainer::Pointer& m);
 
   /**
    * @brief readVolumeInfo Reads the dimension information
@@ -333,10 +550,35 @@ protected:
   }
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-  DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
-  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-  DEFINE_DATAARRAY_VARIABLE(float, LatticeConstants)
+  std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+  int32_t* m_CellPhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_CellEulerAnglesPtr;
+  float* m_CellEulerAngles = nullptr;
+  std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
+  uint32_t* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<float>> m_LatticeConstantsPtr;
+  float* m_LatticeConstants = nullptr;
+
+  DataArrayPath m_DataContainerName = {};
+  QString m_CellEnsembleAttributeMatrixName = {};
+  QString m_CellAttributeMatrixName = {};
+  QString m_PhaseNameArrayName = {};
+  QString m_MaterialNameArrayName = {};
+  QString m_InputFile = {};
+  int m_ZStartIndex = {};
+  int m_ZEndIndex = {};
+  bool m_UseTransformations = {};
+  QSet<QString> m_SelectedArrayNames = {};
+  QSet<QString> m_DataArrayNames = {};
+  int m_AngleRepresentation = {};
+  uint32_t m_RefFrameZDir = {};
+  Ebsd::OEM m_Manufacturer = {};
+  AxisAngleInput_t m_SampleTransformation = {};
+  AxisAngleInput_t m_EulerTransformation = {};
+  QString m_CrystalStructuresArrayName = {};
+  QString m_LatticeConstantsArrayName = {};
+  QString m_CellPhasesArrayName = {};
+  QString m_CellEulerAnglesArrayName = {};
 
   StringDataArray::WeakPointer m_MaterialNamesPtr;
 

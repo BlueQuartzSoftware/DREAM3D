@@ -37,8 +37,9 @@
 #pragma once
 
 //-- SIMPLib Includes
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 
 //-- EM/MPM Lib Includes
@@ -53,9 +54,25 @@
 class EMMPMLib_EXPORT InitializationFunction
 {
   public:
-    SIMPL_SHARED_POINTERS(InitializationFunction);
-    SIMPL_STATIC_NEW_MACRO(InitializationFunction);
-    SIMPL_TYPE_MACRO(InitializationFunction);
+    using Self = InitializationFunction;
+    ;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static Pointer New();
+
+    /**
+     * @brief Returns the name of the class for InitializationFunction;
+     */
+    virtual QString getNameOfClass() const;
+    /**
+     * @brief Returns the name of the class for InitializationFunction;
+     */
+    static QString ClassName();
+
     virtual ~InitializationFunction();
 
     virtual void initialize(EMMPM_Data::Pointer data);
@@ -63,11 +80,12 @@ class EMMPMLib_EXPORT InitializationFunction
   protected:
     InitializationFunction();
 
-  private:
-    InitializationFunction(const InitializationFunction&) = delete; // Copy Constructor Not Implemented
-    void operator=(const InitializationFunction&) = delete;         // Move assignment Not Implemented
+  public:
+    InitializationFunction(const InitializationFunction&) = delete;            // Copy Constructor Not Implemented
+    InitializationFunction(InitializationFunction&&) = delete;                 // Move Constructor Not Implemented
+    InitializationFunction& operator=(const InitializationFunction&) = delete; // Copy Assignment Not Implemented
+    InitializationFunction& operator=(InitializationFunction&&) = delete;      // Move Assignment Not Implemented
 };
-
 
 /**
  * @brief The standard EM/MPM initialization functions
@@ -78,20 +96,37 @@ class EMMPMLib_EXPORT BasicInitialization : public InitializationFunction
 {
 
   public:
-    SIMPL_SHARED_POINTERS(BasicInitialization);
-    SIMPL_STATIC_NEW_MACRO(BasicInitialization);
-    SIMPL_TYPE_MACRO(BasicInitialization);
+    using Self = BasicInitialization;
+    ;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
 
-    virtual ~BasicInitialization();
+    static Pointer New();
 
-    void initialize(EMMPM_Data::Pointer data);
+    /**
+     * @brief Returns the name of the class for BasicInitialization;
+     */
+    QString getNameOfClass() const override;
+    /**
+     * @brief Returns the name of the class for BasicInitialization;
+     */
+    static QString ClassName();
+
+    ~BasicInitialization() override;
+
+    void initialize(EMMPM_Data::Pointer data) override;
 
   protected:
     BasicInitialization();
 
-  private:
-    BasicInitialization(const BasicInitialization&) = delete; // Copy Constructor Not Implemented
-    void operator=(const BasicInitialization&) = delete;      // Move assignment Not Implemented
+  public:
+    BasicInitialization(const BasicInitialization&) = delete;            // Copy Constructor Not Implemented
+    BasicInitialization(BasicInitialization&&) = delete;                 // Move Constructor Not Implemented
+    BasicInitialization& operator=(const BasicInitialization&) = delete; // Copy Assignment Not Implemented
+    BasicInitialization& operator=(BasicInitialization&&) = delete;      // Move Assignment Not Implemented
 };
 
 /**
@@ -103,22 +138,38 @@ class EMMPMLib_EXPORT UserDefinedAreasInitialization : public InitializationFunc
 {
 
   public:
-    SIMPL_SHARED_POINTERS(UserDefinedAreasInitialization);
-    SIMPL_STATIC_NEW_MACRO(UserDefinedAreasInitialization);
-    SIMPL_TYPE_MACRO(UserDefinedAreasInitialization);
+    using Self = UserDefinedAreasInitialization;
+    ;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
 
-    virtual ~UserDefinedAreasInitialization();
+    static Pointer New();
 
-    void initialize(EMMPM_Data::Pointer data);
+    /**
+     * @brief Returns the name of the class for UserDefinedAreasInitialization;
+     */
+    QString getNameOfClass() const override;
+    /**
+     * @brief Returns the name of the class for UserDefinedAreasInitialization;
+     */
+    static QString ClassName();
+
+    ~UserDefinedAreasInitialization() override;
+
+    void initialize(EMMPM_Data::Pointer data) override;
 
   protected:
     UserDefinedAreasInitialization();
 
-  private:
-    UserDefinedAreasInitialization(const UserDefinedAreasInitialization&) = delete; // Copy Constructor Not Implemented
-    void operator=(const UserDefinedAreasInitialization&) = delete;                 // Move assignment Not Implemented
+  public:
+    UserDefinedAreasInitialization(const UserDefinedAreasInitialization&) = delete;            // Copy Constructor Not Implemented
+    UserDefinedAreasInitialization(UserDefinedAreasInitialization&&) = delete;                 // Move Constructor Not Implemented
+    UserDefinedAreasInitialization& operator=(const UserDefinedAreasInitialization&) = delete; // Copy Assignment Not Implemented
+    UserDefinedAreasInitialization& operator=(UserDefinedAreasInitialization&&) = delete;      // Move Assignment Not Implemented
 };
-
 
 /**
  * @brief Initializes the XT (Label Map) array
@@ -129,20 +180,37 @@ class EMMPMLib_EXPORT XtArrayInitialization : public InitializationFunction
 {
 
   public:
-    SIMPL_SHARED_POINTERS(XtArrayInitialization);
-    SIMPL_STATIC_NEW_MACRO(XtArrayInitialization);
-    SIMPL_TYPE_MACRO(XtArrayInitialization);
+    using Self = XtArrayInitialization;
+    ;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
 
-    virtual ~XtArrayInitialization();
+    static Pointer New();
 
-    void initialize(EMMPM_Data::Pointer data);
+    /**
+     * @brief Returns the name of the class for XtArrayInitialization;
+     */
+    QString getNameOfClass() const override;
+    /**
+     * @brief Returns the name of the class for XtArrayInitialization;
+     */
+    static QString ClassName();
+
+    ~XtArrayInitialization() override;
+
+    void initialize(EMMPM_Data::Pointer data) override;
 
   protected:
     XtArrayInitialization();
 
-  private:
-    XtArrayInitialization(const XtArrayInitialization&) = delete; // Copy Constructor Not Implemented
-    void operator=(const XtArrayInitialization&) = delete;        // Move assignment Not Implemented
+  public:
+    XtArrayInitialization(const XtArrayInitialization&) = delete;            // Copy Constructor Not Implemented
+    XtArrayInitialization(XtArrayInitialization&&) = delete;                 // Move Constructor Not Implemented
+    XtArrayInitialization& operator=(const XtArrayInitialization&) = delete; // Copy Assignment Not Implemented
+    XtArrayInitialization& operator=(XtArrayInitialization&&) = delete;      // Move Assignment Not Implemented
 };
 
 /**
@@ -154,20 +222,37 @@ class EMMPMLib_EXPORT GradientVariablesInitialization : public InitializationFun
 {
 
   public:
-    SIMPL_SHARED_POINTERS(GradientVariablesInitialization);
-    SIMPL_STATIC_NEW_MACRO(GradientVariablesInitialization);
-    SIMPL_TYPE_MACRO(GradientVariablesInitialization);
+    using Self = GradientVariablesInitialization;
+    ;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
 
-    virtual ~GradientVariablesInitialization();
+    static Pointer New();
 
-    void initialize(EMMPM_Data::Pointer data);
+    /**
+     * @brief Returns the name of the class for GradientVariablesInitialization;
+     */
+    QString getNameOfClass() const override;
+    /**
+     * @brief Returns the name of the class for GradientVariablesInitialization;
+     */
+    static QString ClassName();
+
+    ~GradientVariablesInitialization() override;
+
+    void initialize(EMMPM_Data::Pointer data) override;
 
   protected:
     GradientVariablesInitialization();
 
-  private:
-    GradientVariablesInitialization(const GradientVariablesInitialization&) = delete; // Copy Constructor Not Implemented
-    void operator=(const GradientVariablesInitialization&) = delete;                  // Move assignment Not Implemented
+  public:
+    GradientVariablesInitialization(const GradientVariablesInitialization&) = delete;            // Copy Constructor Not Implemented
+    GradientVariablesInitialization(GradientVariablesInitialization&&) = delete;                 // Move Constructor Not Implemented
+    GradientVariablesInitialization& operator=(const GradientVariablesInitialization&) = delete; // Copy Assignment Not Implemented
+    GradientVariablesInitialization& operator=(GradientVariablesInitialization&&) = delete;      // Move Assignment Not Implemented
 };
 
 /**
@@ -179,13 +264,28 @@ class EMMPMLib_EXPORT CurvatureInitialization : public InitializationFunction
 {
 
   public:
-    SIMPL_SHARED_POINTERS(CurvatureInitialization);
-    SIMPL_STATIC_NEW_MACRO(CurvatureInitialization);
-    SIMPL_TYPE_MACRO(CurvatureInitialization);
+    using Self = CurvatureInitialization;
+    ;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
 
-    virtual ~CurvatureInitialization();
+    static Pointer New();
 
-    void initialize(EMMPM_Data::Pointer data);
+    /**
+     * @brief Returns the name of the class for CurvatureInitialization;
+     */
+    QString getNameOfClass() const override;
+    /**
+     * @brief Returns the name of the class for CurvatureInitialization;
+     */
+    static QString ClassName();
+
+    ~CurvatureInitialization() override;
+
+    void initialize(EMMPM_Data::Pointer data) override;
 
     /**
      * @brief Initialize the Curvature Penalty variables
@@ -197,11 +297,9 @@ class EMMPMLib_EXPORT CurvatureInitialization : public InitializationFunction
     CurvatureInitialization();
 
   private:
-    CurvatureInitialization(const CurvatureInitialization&) = delete; // Copy Constructor Not Implemented
-    void operator=(const CurvatureInitialization&) = delete;          // Move assignment Not Implemented
+  public:
+    CurvatureInitialization(const CurvatureInitialization&) = delete;            // Copy Constructor Not Implemented
+    CurvatureInitialization(CurvatureInitialization&&) = delete;                 // Move Constructor Not Implemented
+    CurvatureInitialization& operator=(const CurvatureInitialization&) = delete; // Copy Assignment Not Implemented
+    CurvatureInitialization& operator=(CurvatureInitialization&&) = delete;      // Move Assignment Not Implemented
 };
-
-
-
-
-

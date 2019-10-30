@@ -40,6 +40,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cstdlib>
 #include <cstring>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Messages/AbstractMessageHandler.h"
 #include "SIMPLib/Messages/GenericProgressMessage.h"
@@ -311,7 +313,68 @@ void EMCalculation::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EMCalculation::getHumanLabel() const
+QString EMCalculation::getHumanLabel() const
 {
   return "EMCalculation";
+}
+
+// -----------------------------------------------------------------------------
+EMCalculation::Pointer EMCalculation::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+EMCalculation::Pointer EMCalculation::New()
+{
+  Pointer sharedPtr(new(EMCalculation));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString EMCalculation::getNameOfClass() const
+{
+  return QString("EMCalculation");
+}
+
+// -----------------------------------------------------------------------------
+QString EMCalculation::ClassName()
+{
+  return QString("EMCalculation");
+}
+
+// -----------------------------------------------------------------------------
+void EMCalculation::setData(const EMMPM_Data::Pointer& value)
+{
+  m_Data = value;
+}
+
+// -----------------------------------------------------------------------------
+EMMPM_Data::Pointer EMCalculation::getData() const
+{
+  return m_Data;
+}
+
+// -----------------------------------------------------------------------------
+void EMCalculation::setErrorCode(int value)
+{
+  m_ErrorCode = value;
+}
+
+// -----------------------------------------------------------------------------
+int EMCalculation::getErrorCode() const
+{
+  return m_ErrorCode;
+}
+
+// -----------------------------------------------------------------------------
+void EMCalculation::setStatsDelegate(StatsDelegate* value)
+{
+  m_StatsDelegate = value;
+}
+
+// -----------------------------------------------------------------------------
+StatsDelegate* EMCalculation::getStatsDelegate() const
+{
+  return m_StatsDelegate;
 }

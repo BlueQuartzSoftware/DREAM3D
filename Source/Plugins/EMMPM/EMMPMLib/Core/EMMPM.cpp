@@ -319,7 +319,80 @@ void EMMPM::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EMMPM::getHumanLabel() const
+QString EMMPM::getHumanLabel() const
 {
   return "EMMPM";
+}
+
+// -----------------------------------------------------------------------------
+EMMPM::Pointer EMMPM::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+EMMPM::Pointer EMMPM::New()
+{
+  Pointer sharedPtr(new(EMMPM));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString EMMPM::getNameOfClass() const
+{
+  return QString("EMMPM");
+}
+
+// -----------------------------------------------------------------------------
+QString EMMPM::ClassName()
+{
+  return QString("EMMPM");
+}
+
+// -----------------------------------------------------------------------------
+void EMMPM::setData(const EMMPM_Data::Pointer& value)
+{
+  m_Data = value;
+}
+
+// -----------------------------------------------------------------------------
+EMMPM_Data::Pointer EMMPM::getData() const
+{
+  return m_Data;
+}
+
+// -----------------------------------------------------------------------------
+void EMMPM::setInitializationFunction(const InitializationFunction::Pointer& value)
+{
+  m_InitializationFunction = value;
+}
+
+// -----------------------------------------------------------------------------
+InitializationFunction::Pointer EMMPM::getInitializationFunction() const
+{
+  return m_InitializationFunction;
+}
+
+// -----------------------------------------------------------------------------
+void EMMPM::setErrorCode(int value)
+{
+  m_ErrorCode = value;
+}
+
+// -----------------------------------------------------------------------------
+int EMMPM::getErrorCode() const
+{
+  return m_ErrorCode;
+}
+
+// -----------------------------------------------------------------------------
+void EMMPM::setStatsDelegate(StatsDelegate* value)
+{
+  m_StatsDelegate = value;
+}
+
+// -----------------------------------------------------------------------------
+StatsDelegate* EMMPM::getStatsDelegate() const
+{
+  return m_StatsDelegate;
 }

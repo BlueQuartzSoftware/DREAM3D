@@ -34,11 +34,13 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/IGeometryGrid.h"
-#include "SIMPLib/SIMPLib.h"
-
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/Geometry/IGeometry.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -50,67 +52,186 @@
 class SurfaceMeshing_EXPORT QuickSurfaceMesh : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(QuickSurfaceMesh SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
-    PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
-    PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
-    PYB11_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
-    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-    PYB11_PROPERTY(QString FaceLabelsArrayName READ getFaceLabelsArrayName WRITE setFaceLabelsArrayName)
-    PYB11_PROPERTY(QString NodeTypesArrayName READ getNodeTypesArrayName WRITE setNodeTypesArrayName)
-    PYB11_PROPERTY(QString FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(QuickSurfaceMesh SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(QuickSurfaceMesh)
+  PYB11_FILTER_NEW_MACRO(QuickSurfaceMesh)
+  PYB11_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedDataArrayPaths)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceDataContainerName)
+  PYB11_FILTER_PARAMETER(DataArrayPath, TripleLineDataContainerName)
+  PYB11_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, FaceLabelsArrayName)
+  PYB11_FILTER_PARAMETER(QString, NodeTypesArrayName)
+  PYB11_FILTER_PARAMETER(QString, FeatureAttributeMatrixName)
+  PYB11_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
+  PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+  PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
+  PYB11_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
+  PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+  PYB11_PROPERTY(QString FaceLabelsArrayName READ getFaceLabelsArrayName WRITE setFaceLabelsArrayName)
+  PYB11_PROPERTY(QString NodeTypesArrayName READ getNodeTypesArrayName WRITE setNodeTypesArrayName)
+  PYB11_PROPERTY(QString FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(QuickSurfaceMesh)
-  SIMPL_FILTER_NEW_MACRO(QuickSurfaceMesh)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(QuickSurfaceMesh, AbstractFilter)
+  using Self = QuickSurfaceMesh;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for QuickSurfaceMesh
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for QuickSurfaceMesh
+   */
+  static QString ClassName();
 
   ~QuickSurfaceMesh() override;
 
-  SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, SelectedDataArrayPaths)
+  /**
+   * @brief Setter property for SelectedDataArrayPaths
+   */
+  void setSelectedDataArrayPaths(const QVector<DataArrayPath>& value);
+  /**
+   * @brief Getter property for SelectedDataArrayPaths
+   * @return Value of SelectedDataArrayPaths
+   */
+  QVector<DataArrayPath> getSelectedDataArrayPaths() const;
+
   Q_PROPERTY(QVector<DataArrayPath> SelectedDataArrayPaths READ getSelectedDataArrayPaths WRITE setSelectedDataArrayPaths)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceDataContainerName)
+  /**
+   * @brief Setter property for SurfaceDataContainerName
+   */
+  void setSurfaceDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceDataContainerName
+   * @return Value of SurfaceDataContainerName
+   */
+  DataArrayPath getSurfaceDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, TripleLineDataContainerName)
+  /**
+   * @brief Setter property for TripleLineDataContainerName
+   */
+  void setTripleLineDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for TripleLineDataContainerName
+   * @return Value of TripleLineDataContainerName
+   */
+  DataArrayPath getTripleLineDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath TripleLineDataContainerName READ getTripleLineDataContainerName WRITE setTripleLineDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+  /**
+   * @brief Setter property for VertexAttributeMatrixName
+   */
+  void setVertexAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for VertexAttributeMatrixName
+   * @return Value of VertexAttributeMatrixName
+   */
+  QString getVertexAttributeMatrixName() const;
+
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
+  /**
+   * @brief Setter property for FaceAttributeMatrixName
+   */
+  void setFaceAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for FaceAttributeMatrixName
+   * @return Value of FaceAttributeMatrixName
+   */
+  QString getFaceAttributeMatrixName() const;
+
   Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, FaceLabelsArrayName)
+  /**
+   * @brief Setter property for FaceLabelsArrayName
+   */
+  void setFaceLabelsArrayName(const QString& value);
+  /**
+   * @brief Getter property for FaceLabelsArrayName
+   * @return Value of FaceLabelsArrayName
+   */
+  QString getFaceLabelsArrayName() const;
+
   Q_PROPERTY(QString FaceLabelsArrayName READ getFaceLabelsArrayName WRITE setFaceLabelsArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, NodeTypesArrayName)
+  /**
+   * @brief Setter property for NodeTypesArrayName
+   */
+  void setNodeTypesArrayName(const QString& value);
+  /**
+   * @brief Getter property for NodeTypesArrayName
+   * @return Value of NodeTypesArrayName
+   */
+  QString getNodeTypesArrayName() const;
+
   Q_PROPERTY(QString NodeTypesArrayName READ getNodeTypesArrayName WRITE setNodeTypesArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, FeatureAttributeMatrixName)
+  /**
+   * @brief Setter property for FeatureAttributeMatrixName
+   */
+  void setFeatureAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for FeatureAttributeMatrixName
+   * @return Value of FeatureAttributeMatrixName
+   */
+  QString getFeatureAttributeMatrixName() const;
+
   Q_PROPERTY(QString FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -120,23 +241,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -194,9 +315,22 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FaceLabels)
-  DEFINE_DATAARRAY_VARIABLE(int8_t, NodeTypes)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FaceLabelsPtr;
+  int32_t* m_FaceLabels = nullptr;
+  std::weak_ptr<DataArray<int8_t>> m_NodeTypesPtr;
+  int8_t* m_NodeTypes = nullptr;
+
+  QVector<DataArrayPath> m_SelectedDataArrayPaths = {};
+  DataArrayPath m_SurfaceDataContainerName = {};
+  DataArrayPath m_TripleLineDataContainerName = {};
+  QString m_VertexAttributeMatrixName = {};
+  QString m_FaceAttributeMatrixName = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  QString m_FaceLabelsArrayName = {};
+  QString m_NodeTypesArrayName = {};
+  QString m_FeatureAttributeMatrixName = {};
 
   std::vector<IDataArray::WeakPointer> m_SelectedWeakPtrVector;
   std::vector<IDataArray::WeakPointer> m_CreatedWeakPtrVector;

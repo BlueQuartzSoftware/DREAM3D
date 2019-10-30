@@ -35,10 +35,12 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -48,36 +50,125 @@
 class Statistics_EXPORT FindNeighborhoods : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindNeighborhoods SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindNeighborhoods)
+  PYB11_FILTER_NEW_MACRO(FindNeighborhoods)
+  PYB11_FILTER_PARAMETER(QString, NeighborhoodListArrayName)
+  PYB11_FILTER_PARAMETER(float, MultiplesOfAverage)
+  PYB11_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, NeighborhoodsArrayName)
   PYB11_PROPERTY(QString NeighborhoodListArrayName READ getNeighborhoodListArrayName WRITE setNeighborhoodListArrayName)
   PYB11_PROPERTY(float MultiplesOfAverage READ getMultiplesOfAverage WRITE setMultiplesOfAverage)
   PYB11_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
   PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
   PYB11_PROPERTY(QString NeighborhoodsArrayName READ getNeighborhoodsArrayName WRITE setNeighborhoodsArrayName)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(FindNeighborhoods)
-  SIMPL_FILTER_NEW_MACRO(FindNeighborhoods)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindNeighborhoods, AbstractFilter)
+  using Self = FindNeighborhoods;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for FindNeighborhoods
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindNeighborhoods
+   */
+  static QString ClassName();
 
   ~FindNeighborhoods() override;
 
-  SIMPL_FILTER_PARAMETER(QString, NeighborhoodListArrayName)
+  /**
+   * @brief Setter property for NeighborhoodListArrayName
+   */
+  void setNeighborhoodListArrayName(const QString& value);
+  /**
+   * @brief Getter property for NeighborhoodListArrayName
+   * @return Value of NeighborhoodListArrayName
+   */
+  QString getNeighborhoodListArrayName() const;
+
   Q_PROPERTY(QString NeighborhoodListArrayName READ getNeighborhoodListArrayName WRITE setNeighborhoodListArrayName)
 
-  SIMPL_FILTER_PARAMETER(float, MultiplesOfAverage)
+  /**
+   * @brief Setter property for MultiplesOfAverage
+   */
+  void setMultiplesOfAverage(float value);
+  /**
+   * @brief Getter property for MultiplesOfAverage
+   * @return Value of MultiplesOfAverage
+   */
+  float getMultiplesOfAverage() const;
+
   Q_PROPERTY(float MultiplesOfAverage READ getMultiplesOfAverage WRITE setMultiplesOfAverage)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
+  /**
+   * @brief Setter property for EquivalentDiametersArrayPath
+   */
+  void setEquivalentDiametersArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for EquivalentDiametersArrayPath
+   * @return Value of EquivalentDiametersArrayPath
+   */
+  DataArrayPath getEquivalentDiametersArrayPath() const;
+
   Q_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  /**
+   * @brief Setter property for FeaturePhasesArrayPath
+   */
+  void setFeaturePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayPath
+   * @return Value of FeaturePhasesArrayPath
+   */
+  DataArrayPath getFeaturePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CentroidsArrayPath)
+  /**
+   * @brief Setter property for CentroidsArrayPath
+   */
+  void setCentroidsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CentroidsArrayPath
+   * @return Value of CentroidsArrayPath
+   */
+  DataArrayPath getCentroidsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CentroidsArrayPath READ getCentroidsArrayPath WRITE setCentroidsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, NeighborhoodsArrayName)
+  /**
+   * @brief Setter property for NeighborhoodsArrayName
+   */
+  void setNeighborhoodsArrayName(const QString& value);
+  /**
+   * @brief Getter property for NeighborhoodsArrayName
+   * @return Value of NeighborhoodsArrayName
+   */
+  QString getNeighborhoodsArrayName() const;
+
   Q_PROPERTY(QString NeighborhoodsArrayName READ getNeighborhoodsArrayName WRITE setNeighborhoodsArrayName)
 
   void updateNeighborHood(size_t sourceIndex, size_t targetIndex);
@@ -86,21 +177,21 @@ public:
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
    */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -110,23 +201,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -189,11 +280,21 @@ protected:
   void find_neighborhoods();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-  DEFINE_DATAARRAY_VARIABLE(float, Centroids)
-  DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_CentroidsPtr;
+  float* m_Centroids = nullptr;
+  std::weak_ptr<DataArray<float>> m_EquivalentDiametersPtr;
+  float* m_EquivalentDiameters = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_NeighborhoodsPtr;
+  int32_t* m_Neighborhoods = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(int32_t, Neighborhoods)
+  QString m_NeighborhoodListArrayName = {};
+  float m_MultiplesOfAverage = {};
+  DataArrayPath m_EquivalentDiametersArrayPath = {};
+  DataArrayPath m_FeaturePhasesArrayPath = {};
+  DataArrayPath m_CentroidsArrayPath = {};
+  QString m_NeighborhoodsArrayName = {};
 
   NeighborList<int32_t>::WeakPointer m_NeighborhoodList;
   std::vector<std::vector<int32_t>> m_LocalNeighborhoodList;

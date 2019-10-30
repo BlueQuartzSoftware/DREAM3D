@@ -33,11 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindNeighbors.h"
 
 #include <QtCore/QDateTime>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -46,6 +51,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -453,7 +460,7 @@ AbstractFilter::Pointer FindNeighbors::newFilterInstance(bool copyFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighbors::getCompiledLibraryName() const
+QString FindNeighbors::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -461,7 +468,7 @@ const QString FindNeighbors::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighbors::getBrandingString() const
+QString FindNeighbors::getBrandingString() const
 {
   return "Statistics";
 }
@@ -469,7 +476,7 @@ const QString FindNeighbors::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighbors::getFilterVersion() const
+QString FindNeighbors::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -479,7 +486,7 @@ const QString FindNeighbors::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighbors::getGroupName() const
+QString FindNeighbors::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -487,7 +494,7 @@ const QString FindNeighbors::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindNeighbors::getUuid()
+QUuid FindNeighbors::getUuid() const
 {
   return QUuid("{97cf66f8-7a9b-5ec2-83eb-f8c4c8a17bac}");
 }
@@ -495,7 +502,7 @@ const QUuid FindNeighbors::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighbors::getSubGroupName() const
+QString FindNeighbors::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -503,7 +510,144 @@ const QString FindNeighbors::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighbors::getHumanLabel() const
+QString FindNeighbors::getHumanLabel() const
 {
   return "Find Feature Neighbors";
+}
+
+// -----------------------------------------------------------------------------
+FindNeighbors::Pointer FindNeighbors::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindNeighbors> FindNeighbors::New()
+{
+  struct make_shared_enabler : public FindNeighbors
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindNeighbors::getNameOfClass() const
+{
+  return QString("FindNeighbors");
+}
+
+// -----------------------------------------------------------------------------
+QString FindNeighbors::ClassName()
+{
+  return QString("FindNeighbors");
+}
+
+// -----------------------------------------------------------------------------
+void FindNeighbors::setCellFeatureAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_CellFeatureAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindNeighbors::getCellFeatureAttributeMatrixPath() const
+{
+  return m_CellFeatureAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindNeighbors::setSharedSurfaceAreaListArrayName(const QString& value)
+{
+  m_SharedSurfaceAreaListArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindNeighbors::getSharedSurfaceAreaListArrayName() const
+{
+  return m_SharedSurfaceAreaListArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindNeighbors::setNeighborListArrayName(const QString& value)
+{
+  m_NeighborListArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindNeighbors::getNeighborListArrayName() const
+{
+  return m_NeighborListArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindNeighbors::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindNeighbors::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindNeighbors::setBoundaryCellsArrayName(const QString& value)
+{
+  m_BoundaryCellsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindNeighbors::getBoundaryCellsArrayName() const
+{
+  return m_BoundaryCellsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindNeighbors::setNumNeighborsArrayName(const QString& value)
+{
+  m_NumNeighborsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindNeighbors::getNumNeighborsArrayName() const
+{
+  return m_NumNeighborsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindNeighbors::setSurfaceFeaturesArrayName(const QString& value)
+{
+  m_SurfaceFeaturesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindNeighbors::getSurfaceFeaturesArrayName() const
+{
+  return m_SurfaceFeaturesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindNeighbors::setStoreBoundaryCells(bool value)
+{
+  m_StoreBoundaryCells = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindNeighbors::getStoreBoundaryCells() const
+{
+  return m_StoreBoundaryCells;
+}
+
+// -----------------------------------------------------------------------------
+void FindNeighbors::setStoreSurfaceFeatures(bool value)
+{
+  m_StoreSurfaceFeatures = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindNeighbors::getStoreSurfaceFeatures() const
+{
+  return m_StoreSurfaceFeatures;
 }

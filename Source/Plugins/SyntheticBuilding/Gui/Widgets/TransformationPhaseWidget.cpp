@@ -45,7 +45,10 @@
 // Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/EbsdConstants.h"
 
+#include <QtCore/QDebug>
+
 #include "SIMPLib/DataArrays/StatsDataArray.h"
+
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
@@ -425,7 +428,7 @@ void TransformationPhaseWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TransformationPhaseWidget::setPhaseIndex(const int& index)
+void TransformationPhaseWidget::setPhaseIndex(int index)
 {
   m_PhaseIndex = index;
   m_Omega3Plot->setPhaseIndex(m_PhaseIndex);
@@ -446,7 +449,7 @@ int TransformationPhaseWidget::getPhaseIndex() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TransformationPhaseWidget::setCrystalStructure(const unsigned int& xtal)
+void TransformationPhaseWidget::setCrystalStructure(unsigned int xtal)
 {
   m_CrystalStructure = xtal;
   m_Omega3Plot->setCrystalStructure(xtal);
@@ -755,4 +758,40 @@ void TransformationPhaseWidget::extractStatsData(AttributeMatrix::Pointer attrMa
   // Enable all the tabs
   setTabsPlotTabsEnabled(true);
   setDataHasBeenGenerated(true);
+}
+
+// -----------------------------------------------------------------------------
+void TransformationPhaseWidget::setParentPhase(unsigned int value)
+{
+  m_ParentPhase = value;
+}
+
+// -----------------------------------------------------------------------------
+unsigned int TransformationPhaseWidget::getParentPhase() const
+{
+  return m_ParentPhase;
+}
+
+// -----------------------------------------------------------------------------
+void TransformationPhaseWidget::setPhaseType(PhaseType::Type value)
+{
+  m_PhaseType = value;
+}
+
+// -----------------------------------------------------------------------------
+PhaseType::Type TransformationPhaseWidget::getPhaseType() const
+{
+  return m_PhaseType;
+}
+
+// -----------------------------------------------------------------------------
+void TransformationPhaseWidget::setSGPlotWidgets(const QList<StatsGenPlotWidget*>& value)
+{
+  m_SGPlotWidgets = value;
+}
+
+// -----------------------------------------------------------------------------
+QList<StatsGenPlotWidget*> TransformationPhaseWidget::getSGPlotWidgets() const
+{
+  return m_SGPlotWidgets;
 }

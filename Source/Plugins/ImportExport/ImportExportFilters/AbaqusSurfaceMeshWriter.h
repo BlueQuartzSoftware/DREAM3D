@@ -35,7 +35,9 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
@@ -47,40 +49,89 @@
 class ImportExport_EXPORT AbaqusSurfaceMeshWriter : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(AbaqusSurfaceMeshWriter SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(AbaqusSurfaceMeshWriter)
+  PYB11_FILTER_NEW_MACRO(AbaqusSurfaceMeshWriter)
+  PYB11_FILTER_PARAMETER(QString, OutputFile)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(AbaqusSurfaceMeshWriter)
-  SIMPL_FILTER_NEW_MACRO(AbaqusSurfaceMeshWriter)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(AbaqusSurfaceMeshWriter, AbstractFilter)
+  using Self = AbaqusSurfaceMeshWriter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for AbaqusSurfaceMeshWriter
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for AbaqusSurfaceMeshWriter
+   */
+  static QString ClassName();
 
   ~AbaqusSurfaceMeshWriter() override;
 
-  SIMPL_FILTER_PARAMETER(QString, OutputFile)
+  /**
+   * @brief Setter property for OutputFile
+   */
+  void setOutputFile(const QString& value);
+  /**
+   * @brief Getter property for OutputFile
+   * @return Value of OutputFile
+   */
+  QString getOutputFile() const;
+
   Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceLabelsArrayPath
+   */
+  void setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceLabelsArrayPath
+   * @return Value of SurfaceMeshFaceLabelsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
    */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -90,23 +141,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -164,7 +215,11 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+  std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFaceLabelsPtr;
+  int32_t* m_SurfaceMeshFaceLabels = nullptr;
+
+  QString m_OutputFile = {};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
 
   /**
    * @brief writeHeader Writes the header of the .inp file

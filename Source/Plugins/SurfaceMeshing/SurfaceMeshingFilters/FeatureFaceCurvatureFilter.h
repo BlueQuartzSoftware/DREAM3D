@@ -35,13 +35,15 @@
 
 #pragma once
 
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+
 #include "Plugins/SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
-
 #include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
 
 /**
@@ -49,151 +51,321 @@
  */
 class SurfaceMeshing_EXPORT FeatureFaceCurvatureFilter : public SurfaceMeshFilter
 {
-    Q_OBJECT
-    // PYB11_CREATE_BINDINGS(FeatureFaceCurvatureFilter SUPERCLASS SurfaceMeshFilter)
-    // PYB11_PROPERTY(DataArrayPath FaceAttributeMatrixPath READ getFaceAttributeMatrixPath WRITE setFaceAttributeMatrixPath)
-    // PYB11_PROPERTY(QString SurfaceMeshPrincipalCurvature1sArrayName READ getSurfaceMeshPrincipalCurvature1sArrayName WRITE setSurfaceMeshPrincipalCurvature1sArrayName)
-    // PYB11_PROPERTY(QString SurfaceMeshPrincipalCurvature2sArrayName READ getSurfaceMeshPrincipalCurvature2sArrayName WRITE setSurfaceMeshPrincipalCurvature2sArrayName)
-    // PYB11_PROPERTY(QString SurfaceMeshPrincipalDirection1sArrayName READ getSurfaceMeshPrincipalDirection1sArrayName WRITE setSurfaceMeshPrincipalDirection1sArrayName)
-    // PYB11_PROPERTY(QString SurfaceMeshPrincipalDirection2sArrayName READ getSurfaceMeshPrincipalDirection2sArrayName WRITE setSurfaceMeshPrincipalDirection2sArrayName)
-    // PYB11_PROPERTY(QString SurfaceMeshGaussianCurvaturesArrayName READ getSurfaceMeshGaussianCurvaturesArrayName WRITE setSurfaceMeshGaussianCurvaturesArrayName)
-    // PYB11_PROPERTY(QString SurfaceMeshMeanCurvaturesArrayName READ getSurfaceMeshMeanCurvaturesArrayName WRITE setSurfaceMeshMeanCurvaturesArrayName)
-    // PYB11_PROPERTY(int NRing READ getNRing WRITE setNRing)
-    // PYB11_PROPERTY(bool ComputePrincipalDirectionVectors READ getComputePrincipalDirectionVectors WRITE setComputePrincipalDirectionVectors)
-    // PYB11_PROPERTY(bool ComputeMeanCurvature READ getComputeMeanCurvature WRITE setComputeMeanCurvature)
-    // PYB11_PROPERTY(bool ComputeGaussianCurvature READ getComputeGaussianCurvature WRITE setComputeGaussianCurvature)
-    // PYB11_PROPERTY(bool UseNormalsForCurveFitting READ getUseNormalsForCurveFitting WRITE setUseNormalsForCurveFitting)
-    // PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
-    // PYB11_PROPERTY(DataArrayPath SurfaceMeshFeatureFaceIdsArrayPath READ getSurfaceMeshFeatureFaceIdsArrayPath WRITE setSurfaceMeshFeatureFaceIdsArrayPath)
-    // PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
-    // PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleCentroidsArrayPath READ getSurfaceMeshTriangleCentroidsArrayPath WRITE setSurfaceMeshTriangleCentroidsArrayPath)
-  public:
-    SIMPL_SHARED_POINTERS(FeatureFaceCurvatureFilter)
-    SIMPL_FILTER_NEW_MACRO(FeatureFaceCurvatureFilter)
-     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FeatureFaceCurvatureFilter, SurfaceMeshFilter)
+  Q_OBJECT
+#ifdef SIMPL_ENABLE_PYTHON
+  // PYB11_CREATE_BINDINGS(FeatureFaceCurvatureFilter SUPERCLASS SurfaceMeshFilter)
+  // PYB11_PROPERTY(DataArrayPath FaceAttributeMatrixPath READ getFaceAttributeMatrixPath WRITE setFaceAttributeMatrixPath)
+  // PYB11_PROPERTY(QString SurfaceMeshPrincipalCurvature1sArrayName READ getSurfaceMeshPrincipalCurvature1sArrayName WRITE setSurfaceMeshPrincipalCurvature1sArrayName)
+  // PYB11_PROPERTY(QString SurfaceMeshPrincipalCurvature2sArrayName READ getSurfaceMeshPrincipalCurvature2sArrayName WRITE setSurfaceMeshPrincipalCurvature2sArrayName)
+  // PYB11_PROPERTY(QString SurfaceMeshPrincipalDirection1sArrayName READ getSurfaceMeshPrincipalDirection1sArrayName WRITE setSurfaceMeshPrincipalDirection1sArrayName)
+  // PYB11_PROPERTY(QString SurfaceMeshPrincipalDirection2sArrayName READ getSurfaceMeshPrincipalDirection2sArrayName WRITE setSurfaceMeshPrincipalDirection2sArrayName)
+  // PYB11_PROPERTY(QString SurfaceMeshGaussianCurvaturesArrayName READ getSurfaceMeshGaussianCurvaturesArrayName WRITE setSurfaceMeshGaussianCurvaturesArrayName)
+  // PYB11_PROPERTY(QString SurfaceMeshMeanCurvaturesArrayName READ getSurfaceMeshMeanCurvaturesArrayName WRITE setSurfaceMeshMeanCurvaturesArrayName)
+  // PYB11_PROPERTY(int NRing READ getNRing WRITE setNRing)
+  // PYB11_PROPERTY(bool ComputePrincipalDirectionVectors READ getComputePrincipalDirectionVectors WRITE setComputePrincipalDirectionVectors)
+  // PYB11_PROPERTY(bool ComputeMeanCurvature READ getComputeMeanCurvature WRITE setComputeMeanCurvature)
+  // PYB11_PROPERTY(bool ComputeGaussianCurvature READ getComputeGaussianCurvature WRITE setComputeGaussianCurvature)
+  // PYB11_PROPERTY(bool UseNormalsForCurveFitting READ getUseNormalsForCurveFitting WRITE setUseNormalsForCurveFitting)
+  // PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+  // PYB11_PROPERTY(DataArrayPath SurfaceMeshFeatureFaceIdsArrayPath READ getSurfaceMeshFeatureFaceIdsArrayPath WRITE setSurfaceMeshFeatureFaceIdsArrayPath)
+  // PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
+  // PYB11_PROPERTY(DataArrayPath SurfaceMeshTriangleCentroidsArrayPath READ getSurfaceMeshTriangleCentroidsArrayPath WRITE setSurfaceMeshTriangleCentroidsArrayPath)
+#endif
 
-     ~FeatureFaceCurvatureFilter() override;
+public:
+  using Self = FeatureFaceCurvatureFilter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
 
-     typedef std::vector<int64_t> FaceIds_t;
-     typedef std::map<int32_t, FaceIds_t> SharedFeatureFaces_t;
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
 
-     SIMPL_FILTER_PARAMETER(DataArrayPath, FaceAttributeMatrixPath)
-     Q_PROPERTY(DataArrayPath FaceAttributeMatrixPath READ getFaceAttributeMatrixPath WRITE setFaceAttributeMatrixPath)
+  /**
+   * @brief Returns the name of the class for FeatureFaceCurvatureFilter
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FeatureFaceCurvatureFilter
+   */
+  static QString ClassName();
 
-     SIMPL_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature1sArrayName)
-     Q_PROPERTY(QString SurfaceMeshPrincipalCurvature1sArrayName READ getSurfaceMeshPrincipalCurvature1sArrayName WRITE setSurfaceMeshPrincipalCurvature1sArrayName)
+  ~FeatureFaceCurvatureFilter() override;
 
-     SIMPL_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature2sArrayName)
-     Q_PROPERTY(QString SurfaceMeshPrincipalCurvature2sArrayName READ getSurfaceMeshPrincipalCurvature2sArrayName WRITE setSurfaceMeshPrincipalCurvature2sArrayName)
+  typedef std::vector<int64_t> FaceIds_t;
+  typedef std::map<int32_t, FaceIds_t> SharedFeatureFaces_t;
 
-     SIMPL_FILTER_PARAMETER(QString, SurfaceMeshPrincipalDirection1sArrayName)
-     Q_PROPERTY(QString SurfaceMeshPrincipalDirection1sArrayName READ getSurfaceMeshPrincipalDirection1sArrayName WRITE setSurfaceMeshPrincipalDirection1sArrayName)
+  /**
+   * @brief Setter property for FaceAttributeMatrixPath
+   */
+  void setFaceAttributeMatrixPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FaceAttributeMatrixPath
+   * @return Value of FaceAttributeMatrixPath
+   */
+  DataArrayPath getFaceAttributeMatrixPath() const;
 
-     SIMPL_FILTER_PARAMETER(QString, SurfaceMeshPrincipalDirection2sArrayName)
-     Q_PROPERTY(QString SurfaceMeshPrincipalDirection2sArrayName READ getSurfaceMeshPrincipalDirection2sArrayName WRITE setSurfaceMeshPrincipalDirection2sArrayName)
+  Q_PROPERTY(DataArrayPath FaceAttributeMatrixPath READ getFaceAttributeMatrixPath WRITE setFaceAttributeMatrixPath)
 
-     SIMPL_FILTER_PARAMETER(QString, SurfaceMeshGaussianCurvaturesArrayName)
-     Q_PROPERTY(QString SurfaceMeshGaussianCurvaturesArrayName READ getSurfaceMeshGaussianCurvaturesArrayName WRITE setSurfaceMeshGaussianCurvaturesArrayName)
+  /**
+   * @brief Setter property for SurfaceMeshPrincipalCurvature1sArrayName
+   */
+  void setSurfaceMeshPrincipalCurvature1sArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshPrincipalCurvature1sArrayName
+   * @return Value of SurfaceMeshPrincipalCurvature1sArrayName
+   */
+  QString getSurfaceMeshPrincipalCurvature1sArrayName() const;
 
-     SIMPL_FILTER_PARAMETER(QString, SurfaceMeshMeanCurvaturesArrayName)
-     Q_PROPERTY(QString SurfaceMeshMeanCurvaturesArrayName READ getSurfaceMeshMeanCurvaturesArrayName WRITE setSurfaceMeshMeanCurvaturesArrayName)
+  Q_PROPERTY(QString SurfaceMeshPrincipalCurvature1sArrayName READ getSurfaceMeshPrincipalCurvature1sArrayName WRITE setSurfaceMeshPrincipalCurvature1sArrayName)
 
-     SIMPL_FILTER_PARAMETER(int, NRing)
-     Q_PROPERTY(int NRing READ getNRing WRITE setNRing)
+  /**
+   * @brief Setter property for SurfaceMeshPrincipalCurvature2sArrayName
+   */
+  void setSurfaceMeshPrincipalCurvature2sArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshPrincipalCurvature2sArrayName
+   * @return Value of SurfaceMeshPrincipalCurvature2sArrayName
+   */
+  QString getSurfaceMeshPrincipalCurvature2sArrayName() const;
 
-     SIMPL_FILTER_PARAMETER(bool, ComputePrincipalDirectionVectors)
-     Q_PROPERTY(bool ComputePrincipalDirectionVectors READ getComputePrincipalDirectionVectors WRITE setComputePrincipalDirectionVectors)
+  Q_PROPERTY(QString SurfaceMeshPrincipalCurvature2sArrayName READ getSurfaceMeshPrincipalCurvature2sArrayName WRITE setSurfaceMeshPrincipalCurvature2sArrayName)
 
-     SIMPL_FILTER_PARAMETER(bool, ComputeMeanCurvature)
-     Q_PROPERTY(bool ComputeMeanCurvature READ getComputeMeanCurvature WRITE setComputeMeanCurvature)
+  /**
+   * @brief Setter property for SurfaceMeshPrincipalDirection1sArrayName
+   */
+  void setSurfaceMeshPrincipalDirection1sArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshPrincipalDirection1sArrayName
+   * @return Value of SurfaceMeshPrincipalDirection1sArrayName
+   */
+  QString getSurfaceMeshPrincipalDirection1sArrayName() const;
 
-     SIMPL_FILTER_PARAMETER(bool, ComputeGaussianCurvature)
-     Q_PROPERTY(bool ComputeGaussianCurvature READ getComputeGaussianCurvature WRITE setComputeGaussianCurvature)
+  Q_PROPERTY(QString SurfaceMeshPrincipalDirection1sArrayName READ getSurfaceMeshPrincipalDirection1sArrayName WRITE setSurfaceMeshPrincipalDirection1sArrayName)
 
-     SIMPL_FILTER_PARAMETER(bool, UseNormalsForCurveFitting)
-     Q_PROPERTY(bool UseNormalsForCurveFitting READ getUseNormalsForCurveFitting WRITE setUseNormalsForCurveFitting)
+  /**
+   * @brief Setter property for SurfaceMeshPrincipalDirection2sArrayName
+   */
+  void setSurfaceMeshPrincipalDirection2sArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshPrincipalDirection2sArrayName
+   * @return Value of SurfaceMeshPrincipalDirection2sArrayName
+   */
+  QString getSurfaceMeshPrincipalDirection2sArrayName() const;
 
-     /**
-      * @brief This returns the group that the filter belonds to. You can select
-      * a different group if you want. The string returned here will be displayed
-      * in the GUI for the filter
-      */
-     SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
-     Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+  Q_PROPERTY(QString SurfaceMeshPrincipalDirection2sArrayName READ getSurfaceMeshPrincipalDirection2sArrayName WRITE setSurfaceMeshPrincipalDirection2sArrayName)
 
-     SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFeatureFaceIdsArrayPath)
-     Q_PROPERTY(DataArrayPath SurfaceMeshFeatureFaceIdsArrayPath READ getSurfaceMeshFeatureFaceIdsArrayPath WRITE setSurfaceMeshFeatureFaceIdsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshGaussianCurvaturesArrayName
+   */
+  void setSurfaceMeshGaussianCurvaturesArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshGaussianCurvaturesArrayName
+   * @return Value of SurfaceMeshGaussianCurvaturesArrayName
+   */
+  QString getSurfaceMeshGaussianCurvaturesArrayName() const;
 
-     SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
-     Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
+  Q_PROPERTY(QString SurfaceMeshGaussianCurvaturesArrayName READ getSurfaceMeshGaussianCurvaturesArrayName WRITE setSurfaceMeshGaussianCurvaturesArrayName)
 
-     SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTriangleCentroidsArrayPath)
-     Q_PROPERTY(DataArrayPath SurfaceMeshTriangleCentroidsArrayPath READ getSurfaceMeshTriangleCentroidsArrayPath WRITE setSurfaceMeshTriangleCentroidsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshMeanCurvaturesArrayName
+   */
+  void setSurfaceMeshMeanCurvaturesArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshMeanCurvaturesArrayName
+   * @return Value of SurfaceMeshMeanCurvaturesArrayName
+   */
+  QString getSurfaceMeshMeanCurvaturesArrayName() const;
 
-     /**
-      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-      */
-     const QString getCompiledLibraryName() const override;
+  Q_PROPERTY(QString SurfaceMeshMeanCurvaturesArrayName READ getSurfaceMeshMeanCurvaturesArrayName WRITE setSurfaceMeshMeanCurvaturesArrayName)
 
-     /**
-      * @brief getBrandingString Returns the branding string for the filter, which is a tag
-      * used to denote the filter's association with specific plugins
-      * @return Branding string
-      */
-     const QString getBrandingString() const override;
+  /**
+   * @brief Setter property for NRing
+   */
+  void setNRing(int value);
+  /**
+   * @brief Getter property for NRing
+   * @return Value of NRing
+   */
+  int getNRing() const;
 
-     /**
-      * @brief getFilterVersion Returns a version string for this filter. Default
-      * value is an empty string.
-      * @return
-      */
-     const QString getFilterVersion() const override;
+  Q_PROPERTY(int NRing READ getNRing WRITE setNRing)
 
-     /**
-      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-      */
-     AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+  /**
+   * @brief Setter property for ComputePrincipalDirectionVectors
+   */
+  void setComputePrincipalDirectionVectors(bool value);
+  /**
+   * @brief Getter property for ComputePrincipalDirectionVectors
+   * @return Value of ComputePrincipalDirectionVectors
+   */
+  bool getComputePrincipalDirectionVectors() const;
 
-     /**
-      * @brief getGroupName Reimplemented from @see AbstractFilter class
-      */
-     const QString getGroupName() const override;
+  Q_PROPERTY(bool ComputePrincipalDirectionVectors READ getComputePrincipalDirectionVectors WRITE setComputePrincipalDirectionVectors)
 
-     /**
-      * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-      */
-     const QString getSubGroupName() const override;
+  /**
+   * @brief Setter property for ComputeMeanCurvature
+   */
+  void setComputeMeanCurvature(bool value);
+  /**
+   * @brief Getter property for ComputeMeanCurvature
+   * @return Value of ComputeMeanCurvature
+   */
+  bool getComputeMeanCurvature() const;
 
-     /**
-      * @brief getUuid Return the unique identifier for this filter.
-      * @return A QUuid object.
-      */
-     const QUuid getUuid() override;
+  Q_PROPERTY(bool ComputeMeanCurvature READ getComputeMeanCurvature WRITE setComputeMeanCurvature)
 
-     /**
-      * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-      */
-     const QString getHumanLabel() const override;
+  /**
+   * @brief Setter property for ComputeGaussianCurvature
+   */
+  void setComputeGaussianCurvature(bool value);
+  /**
+   * @brief Getter property for ComputeGaussianCurvature
+   * @return Value of ComputeGaussianCurvature
+   */
+  bool getComputeGaussianCurvature() const;
 
-     /**
-      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-      */
-     void setupFilterParameters() override;
+  Q_PROPERTY(bool ComputeGaussianCurvature READ getComputeGaussianCurvature WRITE setComputeGaussianCurvature)
 
-     /**
-      * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-      */
-     void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  /**
+   * @brief Setter property for UseNormalsForCurveFitting
+   */
+  void setUseNormalsForCurveFitting(bool value);
+  /**
+   * @brief Getter property for UseNormalsForCurveFitting
+   * @return Value of UseNormalsForCurveFitting
+   */
+  bool getUseNormalsForCurveFitting() const;
 
-     /**
-      * @brief execute Reimplemented from @see AbstractFilter class
-      */
-     void execute() override;
+  Q_PROPERTY(bool UseNormalsForCurveFitting READ getUseNormalsForCurveFitting WRITE setUseNormalsForCurveFitting)
 
-     /**
-      * @brief preflight Reimplemented from @see AbstractFilter class
-      */
-     void preflight() override;
+  /**
+   * @brief This returns the group that the filter belonds to. You can select
+   * a different group if you want. The string returned here will be displayed
+   * in the GUI for the filter
+   */
+  /**
+   * @brief Setter property for SurfaceMeshFaceLabelsArrayPath
+   */
+  void setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceLabelsArrayPath
+   * @return Value of SurfaceMeshFaceLabelsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
+
+  Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+
+  /**
+   * @brief Setter property for SurfaceMeshFeatureFaceIdsArrayPath
+   */
+  void setSurfaceMeshFeatureFaceIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFeatureFaceIdsArrayPath
+   * @return Value of SurfaceMeshFeatureFaceIdsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFeatureFaceIdsArrayPath() const;
+
+  Q_PROPERTY(DataArrayPath SurfaceMeshFeatureFaceIdsArrayPath READ getSurfaceMeshFeatureFaceIdsArrayPath WRITE setSurfaceMeshFeatureFaceIdsArrayPath)
+
+  /**
+   * @brief Setter property for SurfaceMeshFaceNormalsArrayPath
+   */
+  void setSurfaceMeshFaceNormalsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceNormalsArrayPath
+   * @return Value of SurfaceMeshFaceNormalsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceNormalsArrayPath() const;
+
+  Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
+
+  /**
+   * @brief Setter property for SurfaceMeshTriangleCentroidsArrayPath
+   */
+  void setSurfaceMeshTriangleCentroidsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshTriangleCentroidsArrayPath
+   * @return Value of SurfaceMeshTriangleCentroidsArrayPath
+   */
+  DataArrayPath getSurfaceMeshTriangleCentroidsArrayPath() const;
+
+  Q_PROPERTY(DataArrayPath SurfaceMeshTriangleCentroidsArrayPath READ getSurfaceMeshTriangleCentroidsArrayPath WRITE setSurfaceMeshTriangleCentroidsArrayPath)
+
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  QString getCompiledLibraryName() const override;
+
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+   */
+  QString getBrandingString() const override;
+
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  QString getFilterVersion() const override;
+
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  QString getGroupName() const override;
+
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  QString getSubGroupName() const override;
+
+  /**
+   * @brief getUuid Return the unique identifier for this filter.
+   * @return A QUuid object.
+   */
+  QUuid getUuid() const override;
+
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  QString getHumanLabel() const override;
+
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  void setupFilterParameters() override;
+
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  void execute() override;
+
+  /**
+   * @brief preflight Reimplemented from @see AbstractFilter class
+   */
+  void preflight() override;
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
     virtual void tbbTaskProgress();
@@ -213,17 +385,45 @@ class SurfaceMeshing_EXPORT FeatureFaceCurvatureFilter : public SurfaceMeshFilte
 
 
   private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshTriangleCentroids)
-    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceIds)
+    std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFaceLabelsPtr;
+    int32_t* m_SurfaceMeshFaceLabels = nullptr;
+    std::weak_ptr<DataArray<double>> m_SurfaceMeshTriangleCentroidsPtr;
+    double* m_SurfaceMeshTriangleCentroids = nullptr;
+    std::weak_ptr<DataArray<double>> m_SurfaceMeshFaceNormalsPtr;
+    double* m_SurfaceMeshFaceNormals = nullptr;
+    std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFeatureFaceIdsPtr;
+    int32_t* m_SurfaceMeshFeatureFaceIds = nullptr;
+    std::weak_ptr<DataArray<double>> m_SurfaceMeshPrincipalCurvature1sPtr;
+    double* m_SurfaceMeshPrincipalCurvature1s = nullptr;
+    std::weak_ptr<DataArray<double>> m_SurfaceMeshPrincipalCurvature2sPtr;
+    double* m_SurfaceMeshPrincipalCurvature2s = nullptr;
+    std::weak_ptr<DataArray<double>> m_SurfaceMeshPrincipalDirection1sPtr;
+    double* m_SurfaceMeshPrincipalDirection1s = nullptr;
+    std::weak_ptr<DataArray<double>> m_SurfaceMeshPrincipalDirection2sPtr;
+    double* m_SurfaceMeshPrincipalDirection2s = nullptr;
+    std::weak_ptr<DataArray<double>> m_SurfaceMeshGaussianCurvaturesPtr;
+    double* m_SurfaceMeshGaussianCurvatures = nullptr;
+    std::weak_ptr<DataArray<double>> m_SurfaceMeshMeanCurvaturesPtr;
+    double* m_SurfaceMeshMeanCurvatures = nullptr;
+
+    DataArrayPath m_FaceAttributeMatrixPath = {};
+    QString m_SurfaceMeshPrincipalCurvature1sArrayName = {};
+    QString m_SurfaceMeshPrincipalCurvature2sArrayName = {};
+    QString m_SurfaceMeshPrincipalDirection1sArrayName = {};
+    QString m_SurfaceMeshPrincipalDirection2sArrayName = {};
+    QString m_SurfaceMeshGaussianCurvaturesArrayName = {};
+    QString m_SurfaceMeshMeanCurvaturesArrayName = {};
+    int m_NRing = {};
+    bool m_ComputePrincipalDirectionVectors = {};
+    bool m_ComputeMeanCurvature = {};
+    bool m_ComputeGaussianCurvature = {};
+    bool m_UseNormalsForCurveFitting = {};
+    DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
+    DataArrayPath m_SurfaceMeshFeatureFaceIdsArrayPath = {};
+    DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {};
+    DataArrayPath m_SurfaceMeshTriangleCentroidsArrayPath = {};
+
     DataArray<int32_t>::WeakPointer m_SurfaceMeshUniqueEdgesPtr;
-    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalCurvature1s)
-    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalCurvature2s)
-    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalDirection1s)
-    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalDirection2s)
-    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshGaussianCurvatures)
-    DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshMeanCurvatures)
 
     int32_t* m_SurfaceMeshFaceEdges;
     int32_t  m_TotalFeatureFaces;
@@ -235,4 +435,3 @@ class SurfaceMeshing_EXPORT FeatureFaceCurvatureFilter : public SurfaceMeshFilte
     FeatureFaceCurvatureFilter& operator=(const FeatureFaceCurvatureFilter&) = delete; // Copy Assignment Not Implemented
     FeatureFaceCurvatureFilter& operator=(FeatureFaceCurvatureFilter&&) = delete;      // Move Assignment Not Implemented
 };
-

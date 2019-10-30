@@ -33,9 +33,14 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindEllipsoidError.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -44,6 +49,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -382,7 +389,7 @@ AbstractFilter::Pointer FindEllipsoidError::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEllipsoidError::getCompiledLibraryName() const
+QString FindEllipsoidError::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -390,7 +397,7 @@ const QString FindEllipsoidError::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEllipsoidError::getBrandingString() const
+QString FindEllipsoidError::getBrandingString() const
 {
   return "Statistics";
 }
@@ -398,7 +405,7 @@ const QString FindEllipsoidError::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEllipsoidError::getFilterVersion() const
+QString FindEllipsoidError::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -409,7 +416,7 @@ const QString FindEllipsoidError::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEllipsoidError::getGroupName() const
+QString FindEllipsoidError::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -417,7 +424,7 @@ const QString FindEllipsoidError::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindEllipsoidError::getUuid()
+QUuid FindEllipsoidError::getUuid() const
 {
   return QUuid("{583e0789-090a-5de2-b8f6-f3ef5baeab59}");
 }
@@ -425,7 +432,7 @@ const QUuid FindEllipsoidError::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEllipsoidError::getSubGroupName() const
+QString FindEllipsoidError::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -433,7 +440,144 @@ const QString FindEllipsoidError::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindEllipsoidError::getHumanLabel() const
+QString FindEllipsoidError::getHumanLabel() const
 {
   return "Find Ellipsoid Error";
+}
+
+// -----------------------------------------------------------------------------
+FindEllipsoidError::Pointer FindEllipsoidError::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindEllipsoidError> FindEllipsoidError::New()
+{
+  struct make_shared_enabler : public FindEllipsoidError
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindEllipsoidError::getNameOfClass() const
+{
+  return QString("FindEllipsoidError");
+}
+
+// -----------------------------------------------------------------------------
+QString FindEllipsoidError::ClassName()
+{
+  return QString("FindEllipsoidError");
+}
+
+// -----------------------------------------------------------------------------
+void FindEllipsoidError::setCellFeatureAttributeMatrixName(const DataArrayPath& value)
+{
+  m_CellFeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindEllipsoidError::getCellFeatureAttributeMatrixName() const
+{
+  return m_CellFeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void FindEllipsoidError::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindEllipsoidError::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindEllipsoidError::setCentroidsArrayPath(const DataArrayPath& value)
+{
+  m_CentroidsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindEllipsoidError::getCentroidsArrayPath() const
+{
+  return m_CentroidsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindEllipsoidError::setNumCellsArrayPath(const DataArrayPath& value)
+{
+  m_NumCellsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindEllipsoidError::getNumCellsArrayPath() const
+{
+  return m_NumCellsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindEllipsoidError::setAxisLengthsArrayPath(const DataArrayPath& value)
+{
+  m_AxisLengthsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindEllipsoidError::getAxisLengthsArrayPath() const
+{
+  return m_AxisLengthsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindEllipsoidError::setAxisEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_AxisEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindEllipsoidError::getAxisEulerAnglesArrayPath() const
+{
+  return m_AxisEulerAnglesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindEllipsoidError::setIdealFeatureIdsArrayName(const QString& value)
+{
+  m_IdealFeatureIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindEllipsoidError::getIdealFeatureIdsArrayName() const
+{
+  return m_IdealFeatureIdsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindEllipsoidError::setEllipsoidErrorArrayName(const QString& value)
+{
+  m_EllipsoidErrorArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindEllipsoidError::getEllipsoidErrorArrayName() const
+{
+  return m_EllipsoidErrorArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindEllipsoidError::setWriteIdealEllipseFeatureIds(bool value)
+{
+  m_WriteIdealEllipseFeatureIds = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindEllipsoidError::getWriteIdealEllipseFeatureIds() const
+{
+  return m_WriteIdealEllipseFeatureIds;
 }

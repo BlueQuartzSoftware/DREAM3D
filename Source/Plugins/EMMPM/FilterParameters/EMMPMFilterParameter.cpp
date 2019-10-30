@@ -153,3 +153,39 @@ void EMMPMFilterParameter::writeJson(QJsonObject &json)
   }
 }
 
+// -----------------------------------------------------------------------------
+EMMPMFilterParameter::Pointer EMMPMFilterParameter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+EMMPMFilterParameter::Pointer EMMPMFilterParameter::New()
+{
+  Pointer sharedPtr(new(EMMPMFilterParameter));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString EMMPMFilterParameter::getNameOfClass() const
+{
+  return QString("EMMPMFilterParameter");
+}
+
+// -----------------------------------------------------------------------------
+QString EMMPMFilterParameter::ClassName()
+{
+  return QString("EMMPMFilterParameter");
+}
+
+// -----------------------------------------------------------------------------
+void EMMPMFilterParameter::setFilter(EMMPMFilter* value)
+{
+  m_Filter = value;
+}
+
+// -----------------------------------------------------------------------------
+EMMPMFilter* EMMPMFilterParameter::getFilter() const
+{
+  return m_Filter;
+}

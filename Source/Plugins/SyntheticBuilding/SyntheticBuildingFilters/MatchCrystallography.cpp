@@ -33,9 +33,12 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "MatchCrystallography.h"
 
 #include <cmath>
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -49,6 +52,8 @@
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
 #include "SIMPLib/Utilities/TimeUtilities.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/LaueOps/CubicOps.h"
 #include "OrientationLib/LaueOps/HexagonalOps.h"
@@ -1211,7 +1216,7 @@ AbstractFilter::Pointer MatchCrystallography::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MatchCrystallography::getCompiledLibraryName() const
+QString MatchCrystallography::getCompiledLibraryName() const
 {
   return SyntheticBuildingConstants::SyntheticBuildingBaseName;
 }
@@ -1219,7 +1224,7 @@ const QString MatchCrystallography::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MatchCrystallography::getBrandingString() const
+QString MatchCrystallography::getBrandingString() const
 {
   return "SyntheticBuilding";
 }
@@ -1227,7 +1232,7 @@ const QString MatchCrystallography::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MatchCrystallography::getFilterVersion() const
+QString MatchCrystallography::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -1237,7 +1242,7 @@ const QString MatchCrystallography::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MatchCrystallography::getGroupName() const
+QString MatchCrystallography::getGroupName() const
 {
   return SIMPL::FilterGroups::SyntheticBuildingFilters;
 }
@@ -1245,7 +1250,7 @@ const QString MatchCrystallography::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid MatchCrystallography::getUuid()
+QUuid MatchCrystallography::getUuid() const
 {
   return QUuid("{7bfb6e4a-6075-56da-8006-b262d99dff30}");
 }
@@ -1253,7 +1258,7 @@ const QUuid MatchCrystallography::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MatchCrystallography::getSubGroupName() const
+QString MatchCrystallography::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -1261,7 +1266,204 @@ const QString MatchCrystallography::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MatchCrystallography::getHumanLabel() const
+QString MatchCrystallography::getHumanLabel() const
 {
   return "Match Crystallography";
+}
+
+// -----------------------------------------------------------------------------
+MatchCrystallography::Pointer MatchCrystallography::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<MatchCrystallography> MatchCrystallography::New()
+{
+  struct make_shared_enabler : public MatchCrystallography
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString MatchCrystallography::getNameOfClass() const
+{
+  return QString("MatchCrystallography");
+}
+
+// -----------------------------------------------------------------------------
+QString MatchCrystallography::ClassName()
+{
+  return QString("MatchCrystallography");
+}
+
+// -----------------------------------------------------------------------------
+void MatchCrystallography::setInputStatsArrayPath(const DataArrayPath& value)
+{
+  m_InputStatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MatchCrystallography::getInputStatsArrayPath() const
+{
+  return m_InputStatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MatchCrystallography::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MatchCrystallography::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MatchCrystallography::setPhaseTypesArrayPath(const DataArrayPath& value)
+{
+  m_PhaseTypesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MatchCrystallography::getPhaseTypesArrayPath() const
+{
+  return m_PhaseTypesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MatchCrystallography::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MatchCrystallography::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MatchCrystallography::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MatchCrystallography::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MatchCrystallography::setSurfaceFeaturesArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceFeaturesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MatchCrystallography::getSurfaceFeaturesArrayPath() const
+{
+  return m_SurfaceFeaturesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MatchCrystallography::setNeighborListArrayPath(const DataArrayPath& value)
+{
+  m_NeighborListArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MatchCrystallography::getNeighborListArrayPath() const
+{
+  return m_NeighborListArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MatchCrystallography::setSharedSurfaceAreaListArrayPath(const DataArrayPath& value)
+{
+  m_SharedSurfaceAreaListArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MatchCrystallography::getSharedSurfaceAreaListArrayPath() const
+{
+  return m_SharedSurfaceAreaListArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MatchCrystallography::setNumFeaturesArrayPath(const DataArrayPath& value)
+{
+  m_NumFeaturesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath MatchCrystallography::getNumFeaturesArrayPath() const
+{
+  return m_NumFeaturesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void MatchCrystallography::setCellEulerAnglesArrayName(const QString& value)
+{
+  m_CellEulerAnglesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString MatchCrystallography::getCellEulerAnglesArrayName() const
+{
+  return m_CellEulerAnglesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void MatchCrystallography::setVolumesArrayName(const QString& value)
+{
+  m_VolumesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString MatchCrystallography::getVolumesArrayName() const
+{
+  return m_VolumesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void MatchCrystallography::setFeatureEulerAnglesArrayName(const QString& value)
+{
+  m_FeatureEulerAnglesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString MatchCrystallography::getFeatureEulerAnglesArrayName() const
+{
+  return m_FeatureEulerAnglesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void MatchCrystallography::setAvgQuatsArrayName(const QString& value)
+{
+  m_AvgQuatsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString MatchCrystallography::getAvgQuatsArrayName() const
+{
+  return m_AvgQuatsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void MatchCrystallography::setMaxIterations(int value)
+{
+  m_MaxIterations = value;
+}
+
+// -----------------------------------------------------------------------------
+int MatchCrystallography::getMaxIterations() const
+{
+  return m_MaxIterations;
 }

@@ -35,10 +35,12 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -48,68 +50,187 @@
 class Statistics_EXPORT FindNeighbors : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(FindNeighbors SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
-    PYB11_PROPERTY(QString SharedSurfaceAreaListArrayName READ getSharedSurfaceAreaListArrayName WRITE setSharedSurfaceAreaListArrayName)
-    PYB11_PROPERTY(QString NeighborListArrayName READ getNeighborListArrayName WRITE setNeighborListArrayName)
-    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-    PYB11_PROPERTY(QString BoundaryCellsArrayName READ getBoundaryCellsArrayName WRITE setBoundaryCellsArrayName)
-    PYB11_PROPERTY(QString NumNeighborsArrayName READ getNumNeighborsArrayName WRITE setNumNeighborsArrayName)
-    PYB11_PROPERTY(QString SurfaceFeaturesArrayName READ getSurfaceFeaturesArrayName WRITE setSurfaceFeaturesArrayName)
-    PYB11_PROPERTY(bool StoreBoundaryCells READ getStoreBoundaryCells WRITE setStoreBoundaryCells)
-    PYB11_PROPERTY(bool StoreSurfaceFeatures READ getStoreSurfaceFeatures WRITE setStoreSurfaceFeatures)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(FindNeighbors SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindNeighbors)
+  PYB11_FILTER_NEW_MACRO(FindNeighbors)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
+  PYB11_FILTER_PARAMETER(QString, SharedSurfaceAreaListArrayName)
+  PYB11_FILTER_PARAMETER(QString, NeighborListArrayName)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, BoundaryCellsArrayName)
+  PYB11_FILTER_PARAMETER(QString, NumNeighborsArrayName)
+  PYB11_FILTER_PARAMETER(QString, SurfaceFeaturesArrayName)
+  PYB11_FILTER_PARAMETER(bool, StoreBoundaryCells)
+  PYB11_FILTER_PARAMETER(bool, StoreSurfaceFeatures)
+  PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
+  PYB11_PROPERTY(QString SharedSurfaceAreaListArrayName READ getSharedSurfaceAreaListArrayName WRITE setSharedSurfaceAreaListArrayName)
+  PYB11_PROPERTY(QString NeighborListArrayName READ getNeighborListArrayName WRITE setNeighborListArrayName)
+  PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+  PYB11_PROPERTY(QString BoundaryCellsArrayName READ getBoundaryCellsArrayName WRITE setBoundaryCellsArrayName)
+  PYB11_PROPERTY(QString NumNeighborsArrayName READ getNumNeighborsArrayName WRITE setNumNeighborsArrayName)
+  PYB11_PROPERTY(QString SurfaceFeaturesArrayName READ getSurfaceFeaturesArrayName WRITE setSurfaceFeaturesArrayName)
+  PYB11_PROPERTY(bool StoreBoundaryCells READ getStoreBoundaryCells WRITE setStoreBoundaryCells)
+  PYB11_PROPERTY(bool StoreSurfaceFeatures READ getStoreSurfaceFeatures WRITE setStoreSurfaceFeatures)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(FindNeighbors)
-  SIMPL_FILTER_NEW_MACRO(FindNeighbors)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindNeighbors, AbstractFilter)
+  using Self = FindNeighbors;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for FindNeighbors
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindNeighbors
+   */
+  static QString ClassName();
 
   ~FindNeighbors() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
+  /**
+   * @brief Setter property for CellFeatureAttributeMatrixPath
+   */
+  void setCellFeatureAttributeMatrixPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellFeatureAttributeMatrixPath
+   * @return Value of CellFeatureAttributeMatrixPath
+   */
+  DataArrayPath getCellFeatureAttributeMatrixPath() const;
+
   Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
 
-  SIMPL_FILTER_PARAMETER(QString, SharedSurfaceAreaListArrayName)
+  /**
+   * @brief Setter property for SharedSurfaceAreaListArrayName
+   */
+  void setSharedSurfaceAreaListArrayName(const QString& value);
+  /**
+   * @brief Getter property for SharedSurfaceAreaListArrayName
+   * @return Value of SharedSurfaceAreaListArrayName
+   */
+  QString getSharedSurfaceAreaListArrayName() const;
+
   Q_PROPERTY(QString SharedSurfaceAreaListArrayName READ getSharedSurfaceAreaListArrayName WRITE setSharedSurfaceAreaListArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, NeighborListArrayName)
+  /**
+   * @brief Setter property for NeighborListArrayName
+   */
+  void setNeighborListArrayName(const QString& value);
+  /**
+   * @brief Getter property for NeighborListArrayName
+   * @return Value of NeighborListArrayName
+   */
+  QString getNeighborListArrayName() const;
+
   Q_PROPERTY(QString NeighborListArrayName READ getNeighborListArrayName WRITE setNeighborListArrayName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, BoundaryCellsArrayName)
+  /**
+   * @brief Setter property for BoundaryCellsArrayName
+   */
+  void setBoundaryCellsArrayName(const QString& value);
+  /**
+   * @brief Getter property for BoundaryCellsArrayName
+   * @return Value of BoundaryCellsArrayName
+   */
+  QString getBoundaryCellsArrayName() const;
+
   Q_PROPERTY(QString BoundaryCellsArrayName READ getBoundaryCellsArrayName WRITE setBoundaryCellsArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, NumNeighborsArrayName)
+  /**
+   * @brief Setter property for NumNeighborsArrayName
+   */
+  void setNumNeighborsArrayName(const QString& value);
+  /**
+   * @brief Getter property for NumNeighborsArrayName
+   * @return Value of NumNeighborsArrayName
+   */
+  QString getNumNeighborsArrayName() const;
+
   Q_PROPERTY(QString NumNeighborsArrayName READ getNumNeighborsArrayName WRITE setNumNeighborsArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, SurfaceFeaturesArrayName)
+  /**
+   * @brief Setter property for SurfaceFeaturesArrayName
+   */
+  void setSurfaceFeaturesArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceFeaturesArrayName
+   * @return Value of SurfaceFeaturesArrayName
+   */
+  QString getSurfaceFeaturesArrayName() const;
+
   Q_PROPERTY(QString SurfaceFeaturesArrayName READ getSurfaceFeaturesArrayName WRITE setSurfaceFeaturesArrayName)
 
-  SIMPL_FILTER_PARAMETER(bool, StoreBoundaryCells)
+  /**
+   * @brief Setter property for StoreBoundaryCells
+   */
+  void setStoreBoundaryCells(bool value);
+  /**
+   * @brief Getter property for StoreBoundaryCells
+   * @return Value of StoreBoundaryCells
+   */
+  bool getStoreBoundaryCells() const;
+
   Q_PROPERTY(bool StoreBoundaryCells READ getStoreBoundaryCells WRITE setStoreBoundaryCells)
 
-  SIMPL_FILTER_PARAMETER(bool, StoreSurfaceFeatures)
+  /**
+   * @brief Setter property for StoreSurfaceFeatures
+   */
+  void setStoreSurfaceFeatures(bool value);
+  /**
+   * @brief Getter property for StoreSurfaceFeatures
+   * @return Value of StoreSurfaceFeatures
+   */
+  bool getStoreSurfaceFeatures() const;
+
   Q_PROPERTY(bool StoreSurfaceFeatures READ getStoreSurfaceFeatures WRITE setStoreSurfaceFeatures)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -119,23 +240,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -193,11 +314,24 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<int8_t>> m_BoundaryCellsPtr;
+  int8_t* m_BoundaryCells = nullptr;
+  std::weak_ptr<DataArray<bool>> m_SurfaceFeaturesPtr;
+  bool* m_SurfaceFeatures = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_NumNeighborsPtr;
+  int32_t* m_NumNeighbors = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(int8_t, BoundaryCells)
-  DEFINE_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, NumNeighbors)
+  DataArrayPath m_CellFeatureAttributeMatrixPath = {};
+  QString m_SharedSurfaceAreaListArrayName = {};
+  QString m_NeighborListArrayName = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  QString m_BoundaryCellsArrayName = {};
+  QString m_NumNeighborsArrayName = {};
+  QString m_SurfaceFeaturesArrayName = {};
+  bool m_StoreBoundaryCells = {};
+  bool m_StoreSurfaceFeatures = {};
 
   NeighborList<int32_t>::WeakPointer m_NeighborList;
   NeighborList<float>::WeakPointer m_SharedSurfaceAreaList;

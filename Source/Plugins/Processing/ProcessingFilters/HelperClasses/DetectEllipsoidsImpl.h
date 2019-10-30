@@ -39,6 +39,7 @@
 
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Processing/ProcessingFilters/DetectEllipsoids.h"
 

@@ -32,6 +32,8 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include <memory>
+
 #include "MultiEmmpmFilter.h"
 
 #include "EMMPM/EMMPMConstants.h"
@@ -44,7 +46,10 @@
 #include "EMMPM/EMMPMLib/Core/InitializationFunctions.h"
 #include "EMMPM/EMMPMLib/EMMPMLib.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -55,6 +60,7 @@
 #include "SIMPLib/Messages/GenericStatusMessage.h"
 #include "SIMPLib/Messages/GenericErrorMessage.h"
 #include "SIMPLib/Messages/GenericWarningMessage.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "EMMPM/EMMPMVersion.h"
 
@@ -403,19 +409,19 @@ AbstractFilter::Pointer MultiEmmpmFilter::newFilterInstance(bool copyFilterParam
   MultiEmmpmFilter::Pointer filter = MultiEmmpmFilter::New();
   if(copyFilterParameters)
   {
-    SIMPL_COPY_INSTANCEVAR(InputDataArrayVector)
-    SIMPL_COPY_INSTANCEVAR(NumClasses)
-    SIMPL_COPY_INSTANCEVAR(ExchangeEnergy)
-    SIMPL_COPY_INSTANCEVAR(HistogramLoops)
-    SIMPL_COPY_INSTANCEVAR(SegmentationLoops)
-    SIMPL_COPY_INSTANCEVAR(UseSimulatedAnnealing)
-    SIMPL_COPY_INSTANCEVAR(UseGradientPenalty)
-    SIMPL_COPY_INSTANCEVAR(GradientBetaE)
-    SIMPL_COPY_INSTANCEVAR(UseCurvaturePenalty)
-    SIMPL_COPY_INSTANCEVAR(CurvatureBetaC)
-    SIMPL_COPY_INSTANCEVAR(CurvatureRMax)
-    SIMPL_COPY_INSTANCEVAR(CurvatureEMLoopDelay)
-    SIMPL_COPY_INSTANCEVAR(OutputAttributeMatrixName)
+    filter->setInputDataArrayVector(getInputDataArrayVector());
+    filter->setNumClasses(getNumClasses());
+    filter->setExchangeEnergy(getExchangeEnergy());
+    filter->setHistogramLoops(getHistogramLoops());
+    filter->setSegmentationLoops(getSegmentationLoops());
+    filter->setUseSimulatedAnnealing(getUseSimulatedAnnealing());
+    filter->setUseGradientPenalty(getUseGradientPenalty());
+    filter->setGradientBetaE(getGradientBetaE());
+    filter->setUseCurvaturePenalty(getUseCurvaturePenalty());
+    filter->setCurvatureBetaC(getCurvatureBetaC());
+    filter->setCurvatureRMax(getCurvatureRMax());
+    filter->setCurvatureEMLoopDelay(getCurvatureEMLoopDelay());
+    filter->setOutputAttributeMatrixName(getOutputAttributeMatrixName());
   }
   return filter;
 }
@@ -423,7 +429,7 @@ AbstractFilter::Pointer MultiEmmpmFilter::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MultiEmmpmFilter::getCompiledLibraryName() const
+QString MultiEmmpmFilter::getCompiledLibraryName() const
 {
   return EMMPMConstants::EMMPMBaseName;
 }
@@ -431,7 +437,7 @@ const QString MultiEmmpmFilter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MultiEmmpmFilter::getBrandingString() const
+QString MultiEmmpmFilter::getBrandingString() const
 {
   return "EMMPM";
 }
@@ -439,7 +445,7 @@ const QString MultiEmmpmFilter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MultiEmmpmFilter::getFilterVersion() const
+QString MultiEmmpmFilter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -449,7 +455,7 @@ const QString MultiEmmpmFilter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MultiEmmpmFilter::getGroupName() const
+QString MultiEmmpmFilter::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -457,7 +463,7 @@ const QString MultiEmmpmFilter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid MultiEmmpmFilter::getUuid()
+QUuid MultiEmmpmFilter::getUuid() const
 {
   return QUuid("{b2847755-dd39-5989-b624-98b1fdc9db5b}");
 }
@@ -465,7 +471,7 @@ const QUuid MultiEmmpmFilter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MultiEmmpmFilter::getSubGroupName() const
+QString MultiEmmpmFilter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;
 }
@@ -473,7 +479,84 @@ const QString MultiEmmpmFilter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MultiEmmpmFilter::getHumanLabel() const
+QString MultiEmmpmFilter::getHumanLabel() const
 {
   return "Segment Features (EM/MPM Multi-Array)";
+}
+
+// -----------------------------------------------------------------------------
+MultiEmmpmFilter::Pointer MultiEmmpmFilter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<MultiEmmpmFilter> MultiEmmpmFilter::New()
+{
+  struct make_shared_enabler : public MultiEmmpmFilter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString MultiEmmpmFilter::getNameOfClass() const
+{
+  return QString("MultiEmmpmFilter");
+}
+
+// -----------------------------------------------------------------------------
+QString MultiEmmpmFilter::ClassName()
+{
+  return QString("MultiEmmpmFilter");
+}
+
+// -----------------------------------------------------------------------------
+void MultiEmmpmFilter::setInputDataArrayVector(const QVector<DataArrayPath>& value)
+{
+  m_InputDataArrayVector = value;
+}
+
+// -----------------------------------------------------------------------------
+QVector<DataArrayPath> MultiEmmpmFilter::getInputDataArrayVector() const
+{
+  return m_InputDataArrayVector;
+}
+
+// -----------------------------------------------------------------------------
+void MultiEmmpmFilter::setOutputAttributeMatrixName(const QString& value)
+{
+  m_OutputAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString MultiEmmpmFilter::getOutputAttributeMatrixName() const
+{
+  return m_OutputAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void MultiEmmpmFilter::setOutputArrayPrefix(const QString& value)
+{
+  m_OutputArrayPrefix = value;
+}
+
+// -----------------------------------------------------------------------------
+QString MultiEmmpmFilter::getOutputArrayPrefix() const
+{
+  return m_OutputArrayPrefix;
+}
+
+// -----------------------------------------------------------------------------
+void MultiEmmpmFilter::setUsePreviousMuSigma(bool value)
+{
+  m_UsePreviousMuSigma = value;
+}
+
+// -----------------------------------------------------------------------------
+bool MultiEmmpmFilter::getUsePreviousMuSigma() const
+{
+  return m_UsePreviousMuSigma;
 }

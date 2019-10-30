@@ -33,6 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "SampleSurfaceMesh.h"
 
 #include <mutex>
@@ -48,7 +50,10 @@
 #include <tbb/tbb_machine.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/DataArrays/DynamicListArray.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -58,6 +63,8 @@
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
 #include "SIMPLib/Utilities/TimeUtilities.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
@@ -540,7 +547,7 @@ AbstractFilter::Pointer SampleSurfaceMesh::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SampleSurfaceMesh::getCompiledLibraryName() const
+QString SampleSurfaceMesh::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -548,7 +555,7 @@ const QString SampleSurfaceMesh::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SampleSurfaceMesh::getBrandingString() const
+QString SampleSurfaceMesh::getBrandingString() const
 {
   return "Sampling";
 }
@@ -556,7 +563,7 @@ const QString SampleSurfaceMesh::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SampleSurfaceMesh::getFilterVersion() const
+QString SampleSurfaceMesh::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -566,7 +573,7 @@ const QString SampleSurfaceMesh::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SampleSurfaceMesh::getGroupName() const
+QString SampleSurfaceMesh::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -574,7 +581,7 @@ const QString SampleSurfaceMesh::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid SampleSurfaceMesh::getUuid()
+QUuid SampleSurfaceMesh::getUuid() const
 {
   return QUuid("{1fc20816-a312-51ae-b89f-fa25e5042a03}");
 }
@@ -582,7 +589,7 @@ const QUuid SampleSurfaceMesh::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SampleSurfaceMesh::getSubGroupName() const
+QString SampleSurfaceMesh::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ResolutionFilters;
 }
@@ -590,7 +597,48 @@ const QString SampleSurfaceMesh::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SampleSurfaceMesh::getHumanLabel() const
+QString SampleSurfaceMesh::getHumanLabel() const
 {
   return "Sample Triangle Geometry";
+}
+
+// -----------------------------------------------------------------------------
+SampleSurfaceMesh::Pointer SampleSurfaceMesh::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<SampleSurfaceMesh> SampleSurfaceMesh::New()
+{
+  struct make_shared_enabler : public SampleSurfaceMesh
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString SampleSurfaceMesh::getNameOfClass() const
+{
+  return QString("SampleSurfaceMesh");
+}
+
+// -----------------------------------------------------------------------------
+QString SampleSurfaceMesh::ClassName()
+{
+  return QString("SampleSurfaceMesh");
+}
+
+// -----------------------------------------------------------------------------
+void SampleSurfaceMesh::setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath SampleSurfaceMesh::getSurfaceMeshFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFaceLabelsArrayPath;
 }

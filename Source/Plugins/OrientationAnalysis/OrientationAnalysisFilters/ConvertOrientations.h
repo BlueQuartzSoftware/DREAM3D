@@ -35,10 +35,11 @@
 
 #pragma once
 
-#include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/Constants.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
@@ -50,48 +51,117 @@
 class OrientationAnalysis_EXPORT ConvertOrientations : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(ConvertOrientations SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(int InputType READ getInputType WRITE setInputType)
-    PYB11_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
-    PYB11_PROPERTY(DataArrayPath InputOrientationArrayPath READ getInputOrientationArrayPath WRITE setInputOrientationArrayPath)
-    PYB11_PROPERTY(QString OutputOrientationArrayName READ getOutputOrientationArrayName WRITE setOutputOrientationArrayName)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(ConvertOrientations SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(ConvertOrientations)
+  PYB11_FILTER_NEW_MACRO(ConvertOrientations)
+  PYB11_FILTER_PARAMETER(int, InputType)
+  PYB11_FILTER_PARAMETER(int, OutputType)
+  PYB11_FILTER_PARAMETER(DataArrayPath, InputOrientationArrayPath)
+  PYB11_FILTER_PARAMETER(QString, OutputOrientationArrayName)
+  PYB11_PROPERTY(int InputType READ getInputType WRITE setInputType)
+  PYB11_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
+  PYB11_PROPERTY(DataArrayPath InputOrientationArrayPath READ getInputOrientationArrayPath WRITE setInputOrientationArrayPath)
+  PYB11_PROPERTY(QString OutputOrientationArrayName READ getOutputOrientationArrayName WRITE setOutputOrientationArrayName)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(ConvertOrientations)
-  SIMPL_FILTER_NEW_MACRO(ConvertOrientations)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ConvertOrientations, AbstractFilter)
+  using Self = ConvertOrientations;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for ConvertOrientations
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ConvertOrientations
+   */
+  static QString ClassName();
 
   ~ConvertOrientations() override;
 
-  SIMPL_FILTER_PARAMETER(int, InputType)
+  /**
+   * @brief Setter property for InputType
+   */
+  void setInputType(int value);
+  /**
+   * @brief Getter property for InputType
+   * @return Value of InputType
+   */
+  int getInputType() const;
+
   Q_PROPERTY(int InputType READ getInputType WRITE setInputType)
 
-  SIMPL_FILTER_PARAMETER(int, OutputType)
+  /**
+   * @brief Setter property for OutputType
+   */
+  void setOutputType(int value);
+  /**
+   * @brief Getter property for OutputType
+   * @return Value of OutputType
+   */
+  int getOutputType() const;
+
   Q_PROPERTY(int OutputType READ getOutputType WRITE setOutputType)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, InputOrientationArrayPath)
+  /**
+   * @brief Setter property for InputOrientationArrayPath
+   */
+  void setInputOrientationArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for InputOrientationArrayPath
+   * @return Value of InputOrientationArrayPath
+   */
+  DataArrayPath getInputOrientationArrayPath() const;
+
   Q_PROPERTY(DataArrayPath InputOrientationArrayPath READ getInputOrientationArrayPath WRITE setInputOrientationArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, OutputOrientationArrayName)
+  /**
+   * @brief Setter property for OutputOrientationArrayName
+   */
+  void setOutputOrientationArrayName(const QString& value);
+  /**
+   * @brief Getter property for OutputOrientationArrayName
+   * @return Value of OutputOrientationArrayName
+   */
+  QString getOutputOrientationArrayName() const;
+
   Q_PROPERTY(QString OutputOrientationArrayName READ getOutputOrientationArrayName WRITE setOutputOrientationArrayName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -101,23 +171,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -180,5 +250,11 @@ public:
   ConvertOrientations(ConvertOrientations&&) = delete;      // Move Constructor Not Implemented
   ConvertOrientations& operator=(const ConvertOrientations&) = delete; // Copy Assignment Not Implemented
   ConvertOrientations& operator=(ConvertOrientations&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  int m_InputType = {};
+  int m_OutputType = {};
+  DataArrayPath m_InputOrientationArrayPath = {};
+  QString m_OutputOrientationArrayName = {};
 };
 

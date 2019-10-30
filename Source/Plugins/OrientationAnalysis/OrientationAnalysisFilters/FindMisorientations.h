@@ -35,10 +35,12 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
@@ -50,60 +52,159 @@
 class OrientationAnalysis_EXPORT FindMisorientations : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(FindMisorientations SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
-    PYB11_PROPERTY(QString MisorientationListArrayName READ getMisorientationListArrayName WRITE setMisorientationListArrayName)
-    PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
-    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
-    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
-    PYB11_PROPERTY(QString AvgMisorientationsArrayName READ getAvgMisorientationsArrayName WRITE setAvgMisorientationsArrayName)
-    PYB11_PROPERTY(bool FindAvgMisors READ getFindAvgMisors WRITE setFindAvgMisors)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(FindMisorientations SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindMisorientations)
+  PYB11_FILTER_NEW_MACRO(FindMisorientations)
+  PYB11_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
+  PYB11_FILTER_PARAMETER(QString, MisorientationListArrayName)
+  PYB11_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(QString, AvgMisorientationsArrayName)
+  PYB11_FILTER_PARAMETER(bool, FindAvgMisors)
+  PYB11_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
+  PYB11_PROPERTY(QString MisorientationListArrayName READ getMisorientationListArrayName WRITE setMisorientationListArrayName)
+  PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+  PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+  PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  PYB11_PROPERTY(QString AvgMisorientationsArrayName READ getAvgMisorientationsArrayName WRITE setAvgMisorientationsArrayName)
+  PYB11_PROPERTY(bool FindAvgMisors READ getFindAvgMisors WRITE setFindAvgMisors)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(FindMisorientations)
-  SIMPL_FILTER_NEW_MACRO(FindMisorientations)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindMisorientations, AbstractFilter)
+  using Self = FindMisorientations;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for FindMisorientations
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindMisorientations
+   */
+  static QString ClassName();
 
   ~FindMisorientations() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
+  /**
+   * @brief Setter property for NeighborListArrayPath
+   */
+  void setNeighborListArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NeighborListArrayPath
+   * @return Value of NeighborListArrayPath
+   */
+  DataArrayPath getNeighborListArrayPath() const;
+
   Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, MisorientationListArrayName)
+  /**
+   * @brief Setter property for MisorientationListArrayName
+   */
+  void setMisorientationListArrayName(const QString& value);
+  /**
+   * @brief Getter property for MisorientationListArrayName
+   * @return Value of MisorientationListArrayName
+   */
+  QString getMisorientationListArrayName() const;
+
   Q_PROPERTY(QString MisorientationListArrayName READ getMisorientationListArrayName WRITE setMisorientationListArrayName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  /**
+   * @brief Setter property for AvgQuatsArrayPath
+   */
+  void setAvgQuatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for AvgQuatsArrayPath
+   * @return Value of AvgQuatsArrayPath
+   */
+  DataArrayPath getAvgQuatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  /**
+   * @brief Setter property for FeaturePhasesArrayPath
+   */
+  void setFeaturePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayPath
+   * @return Value of FeaturePhasesArrayPath
+   */
+  DataArrayPath getFeaturePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, AvgMisorientationsArrayName)
+  /**
+   * @brief Setter property for AvgMisorientationsArrayName
+   */
+  void setAvgMisorientationsArrayName(const QString& value);
+  /**
+   * @brief Getter property for AvgMisorientationsArrayName
+   * @return Value of AvgMisorientationsArrayName
+   */
+  QString getAvgMisorientationsArrayName() const;
+
   Q_PROPERTY(QString AvgMisorientationsArrayName READ getAvgMisorientationsArrayName WRITE setAvgMisorientationsArrayName)
 
-  SIMPL_FILTER_PARAMETER(bool, FindAvgMisors)
+  /**
+   * @brief Setter property for FindAvgMisors
+   */
+  void setFindAvgMisors(bool value);
+  /**
+   * @brief Getter property for FindAvgMisors
+   * @return Value of FindAvgMisors
+   */
+  bool getFindAvgMisors() const;
+
   Q_PROPERTY(bool FindAvgMisors READ getFindAvgMisors WRITE setFindAvgMisors)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -113,23 +214,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -187,13 +288,24 @@ protected:
   void initialize();
 
 private:
+  std::weak_ptr<DataArray<float>> m_AvgQuatsPtr;
+  float* m_AvgQuats = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+  std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
+  uint32_t* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<float>> m_AvgMisorientationsPtr;
+  float* m_AvgMisorientations = nullptr;
+
+  DataArrayPath m_NeighborListArrayPath = {};
+  QString m_MisorientationListArrayName = {};
+  DataArrayPath m_AvgQuatsArrayPath = {};
+  DataArrayPath m_FeaturePhasesArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+  QString m_AvgMisorientationsArrayName = {};
+  bool m_FindAvgMisors = {};
+
   QVector<LaueOps::Pointer> m_OrientationOps;
-
-  DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-
-  DEFINE_DATAARRAY_VARIABLE(float, AvgMisorientations)
 
   NeighborList<int32_t>::WeakPointer m_NeighborList;
   NeighborList<float>::WeakPointer m_MisorientationList;

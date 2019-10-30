@@ -33,12 +33,19 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "AbaqusHexahedronWriter.h"
 
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
@@ -661,7 +668,7 @@ AbstractFilter::Pointer AbaqusHexahedronWriter::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getCompiledLibraryName() const
+QString AbaqusHexahedronWriter::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -669,7 +676,7 @@ const QString AbaqusHexahedronWriter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getBrandingString() const
+QString AbaqusHexahedronWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -677,7 +684,7 @@ const QString AbaqusHexahedronWriter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getFilterVersion() const
+QString AbaqusHexahedronWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -687,7 +694,7 @@ const QString AbaqusHexahedronWriter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getGroupName() const
+QString AbaqusHexahedronWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -695,7 +702,7 @@ const QString AbaqusHexahedronWriter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid AbaqusHexahedronWriter::getUuid()
+QUuid AbaqusHexahedronWriter::getUuid() const
 {
   return QUuid("{0559aa37-c5ad-549a-82d4-bff4bfcb6cc6}");
 }
@@ -703,7 +710,7 @@ const QUuid AbaqusHexahedronWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getSubGroupName() const
+QString AbaqusHexahedronWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -711,7 +718,96 @@ const QString AbaqusHexahedronWriter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusHexahedronWriter::getHumanLabel() const
+QString AbaqusHexahedronWriter::getHumanLabel() const
 {
   return "Abaqus Hexahedron Exporter";
+}
+
+// -----------------------------------------------------------------------------
+AbaqusHexahedronWriter::Pointer AbaqusHexahedronWriter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<AbaqusHexahedronWriter> AbaqusHexahedronWriter::New()
+{
+  struct make_shared_enabler : public AbaqusHexahedronWriter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString AbaqusHexahedronWriter::getNameOfClass() const
+{
+  return QString("AbaqusHexahedronWriter");
+}
+
+// -----------------------------------------------------------------------------
+QString AbaqusHexahedronWriter::ClassName()
+{
+  return QString("AbaqusHexahedronWriter");
+}
+
+// -----------------------------------------------------------------------------
+void AbaqusHexahedronWriter::setOutputPath(const QString& value)
+{
+  m_OutputPath = value;
+}
+
+// -----------------------------------------------------------------------------
+QString AbaqusHexahedronWriter::getOutputPath() const
+{
+  return m_OutputPath;
+}
+
+// -----------------------------------------------------------------------------
+void AbaqusHexahedronWriter::setFilePrefix(const QString& value)
+{
+  m_FilePrefix = value;
+}
+
+// -----------------------------------------------------------------------------
+QString AbaqusHexahedronWriter::getFilePrefix() const
+{
+  return m_FilePrefix;
+}
+
+// -----------------------------------------------------------------------------
+void AbaqusHexahedronWriter::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AbaqusHexahedronWriter::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void AbaqusHexahedronWriter::setHourglassStiffness(int value)
+{
+  m_HourglassStiffness = value;
+}
+
+// -----------------------------------------------------------------------------
+int AbaqusHexahedronWriter::getHourglassStiffness() const
+{
+  return m_HourglassStiffness;
+}
+
+// -----------------------------------------------------------------------------
+void AbaqusHexahedronWriter::setJobName(const QString& value)
+{
+  m_JobName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString AbaqusHexahedronWriter::getJobName() const
+{
+  return m_JobName;
 }

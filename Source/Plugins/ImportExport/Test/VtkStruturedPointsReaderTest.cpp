@@ -35,7 +35,7 @@
 
 #include <QtCore/QFile>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
@@ -43,6 +43,7 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
+
 #include "UnitTestSupport.hpp"
 
 #include "ImportExportTestFileLocations.h"
@@ -61,7 +62,24 @@ public:
   virtual ~VtkStruturedPointsReaderTest()
   {
   }
-  SIMPL_TYPE_MACRO(VtkStruturedPointsReaderTest)
+  /**
+   * @brief Returns the name of the class for VtkStruturedPointsReaderTest
+   */
+  /**
+   * @brief Returns the name of the class for VtkStruturedPointsReaderTest
+   */
+  QString getNameOfClass() const
+  {
+    return QString("VtkStruturedPointsReaderTest");
+  }
+
+  /**
+   * @brief Returns the name of the class for VtkStruturedPointsReaderTest
+   */
+  QString ClassName()
+  {
+    return QString("VtkStruturedPointsReaderTest");
+  }
 
   // -----------------------------------------------------------------------------
   //

@@ -44,7 +44,10 @@
 // Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/EbsdConstants.h"
 
+#include <QtCore/QDebug>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
@@ -948,4 +951,40 @@ float StatsGenFeatureSizeWidget::getBinStep()
     f = std::numeric_limits<float>::quiet_NaN();
   }
   return f;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenFeatureSizeWidget::setPhaseIndex(int value)
+{
+  m_PhaseIndex = value;
+}
+
+// -----------------------------------------------------------------------------
+int StatsGenFeatureSizeWidget::getPhaseIndex() const
+{
+  return m_PhaseIndex;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenFeatureSizeWidget::setCrystalStructure(unsigned int value)
+{
+  m_CrystalStructure = value;
+}
+
+// -----------------------------------------------------------------------------
+unsigned int StatsGenFeatureSizeWidget::getCrystalStructure() const
+{
+  return m_CrystalStructure;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenFeatureSizeWidget::setBinSizes(const QwtArray<float>& value)
+{
+  m_BinSizes = value;
+}
+
+// -----------------------------------------------------------------------------
+QwtArray<float> StatsGenFeatureSizeWidget::getBinSizes() const
+{
+  return m_BinSizes;
 }

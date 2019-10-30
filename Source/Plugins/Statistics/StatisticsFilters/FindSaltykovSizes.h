@@ -35,13 +35,15 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QString>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -55,40 +57,89 @@
 class Statistics_EXPORT FindSaltykovSizes : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(FindSaltykovSizes SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
-    PYB11_PROPERTY(DataArrayPath SaltykovEquivalentDiametersArrayPath READ getSaltykovEquivalentDiametersArrayPath WRITE setSaltykovEquivalentDiametersArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(FindSaltykovSizes SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindSaltykovSizes)
+  PYB11_FILTER_NEW_MACRO(FindSaltykovSizes)
+  PYB11_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SaltykovEquivalentDiametersArrayPath)
+  PYB11_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
+  PYB11_PROPERTY(DataArrayPath SaltykovEquivalentDiametersArrayPath READ getSaltykovEquivalentDiametersArrayPath WRITE setSaltykovEquivalentDiametersArrayPath)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(FindSaltykovSizes)
-  SIMPL_FILTER_NEW_MACRO(FindSaltykovSizes)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindSaltykovSizes, AbstractFilter)
+  using Self = FindSaltykovSizes;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for FindSaltykovSizes
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindSaltykovSizes
+   */
+  static QString ClassName();
 
   ~FindSaltykovSizes() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
+  /**
+   * @brief Setter property for EquivalentDiametersArrayPath
+   */
+  void setEquivalentDiametersArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for EquivalentDiametersArrayPath
+   * @return Value of EquivalentDiametersArrayPath
+   */
+  DataArrayPath getEquivalentDiametersArrayPath() const;
+
   Q_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SaltykovEquivalentDiametersArrayPath)
+  /**
+   * @brief Setter property for SaltykovEquivalentDiametersArrayPath
+   */
+  void setSaltykovEquivalentDiametersArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SaltykovEquivalentDiametersArrayPath
+   * @return Value of SaltykovEquivalentDiametersArrayPath
+   */
+  DataArrayPath getSaltykovEquivalentDiametersArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SaltykovEquivalentDiametersArrayPath READ getSaltykovEquivalentDiametersArrayPath WRITE setSaltykovEquivalentDiametersArrayPath)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -98,23 +149,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -204,8 +255,13 @@ protected:
   template <class T> int round_to_nearest_int(T x);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
-  DEFINE_DATAARRAY_VARIABLE(float, SaltykovEquivalentDiameters)
+  std::weak_ptr<DataArray<float>> m_EquivalentDiametersPtr;
+  float* m_EquivalentDiameters = nullptr;
+  std::weak_ptr<DataArray<float>> m_SaltykovEquivalentDiametersPtr;
+  float* m_SaltykovEquivalentDiameters = nullptr;
+
+  DataArrayPath m_EquivalentDiametersArrayPath = {};
+  DataArrayPath m_SaltykovEquivalentDiametersArrayPath = {};
 
 public:
   FindSaltykovSizes(const FindSaltykovSizes&) = delete; // Copy Constructor Not Implemented

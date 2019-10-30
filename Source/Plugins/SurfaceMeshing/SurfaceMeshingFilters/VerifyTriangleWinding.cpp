@@ -33,6 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "VerifyTriangleWinding.h"
 
 #include <QtCore/QString>
@@ -51,8 +53,14 @@
 #define STDEXT __gnu_cxx
 #endif
 
+#include <QtCore/QDebug>
+
 #include "SIMPLib/Geometry/TriangleGeom.h"
+
 #include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+
 #include "SurfaceMeshing/SurfaceMeshingFilters/ReverseTriangleWinding.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/Plane.h"
 #include "SurfaceMeshing/SurfaceMeshingFilters/util/TriangleOps.h"
@@ -64,8 +72,19 @@
 class Mesh
 {
 public:
-  SIMPL_SHARED_POINTERS(Mesh)
-  SIMPL_STATIC_NEW_MACRO(Mesh)
+  using Self = Mesh;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+  Pointer NullPointer()
+  {
+    return Pointer(static_cast<Self*>(nullptr));
+  }
+
+    static Pointer New();
+
   virtual ~Mesh()
   {
   }
@@ -113,7 +132,17 @@ public:
   typedef FaceArray::Face_t FaceType;
   typedef QVector<int32_t> FaceListType;
 
-  SIMPL_SHARED_POINTERS(LabelVisitorInfo)
+  using Self = LabelVisitorInfo;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+  Pointer NullPointer()
+  {
+    return Pointer(static_cast<Self*>(nullptr));
+  }
+
   static Pointer New(int32_t label, size_t tIndex)
   {
     Pointer sharedPtr(new LabelVisitorInfo(label, tIndex));
@@ -137,10 +166,53 @@ public:
     return m_Label;
   }
 
-  SIMPL_INSTANCE_PROPERTY(size_t, StartIndex)
-  SIMPL_INSTANCE_PROPERTY(bool, Primed)
-  SIMPL_INSTANCE_PROPERTY(int32_t, NewLabel)
-  SIMPL_INSTANCE_PROPERTY(bool, Relabeled)
+  // -----------------------------------------------------------------------------
+  void setStartIndex(const size_t& value)
+  {
+    m_StartIndex = value;
+  }
+
+  // -----------------------------------------------------------------------------
+  size_t getStartIndex() const
+  {
+    return m_StartIndex;
+  }
+
+  // -----------------------------------------------------------------------------
+  void setPrimed(bool value)
+  {
+    m_Primed = value;
+  }
+
+  // -----------------------------------------------------------------------------
+  bool getPrimed() const
+  {
+    return m_Primed;
+  }
+
+  // -----------------------------------------------------------------------------
+  void setNewLabel(int32_t value)
+  {
+    m_NewLabel = value;
+  }
+
+  // -----------------------------------------------------------------------------
+  int32_t getNewLabel() const
+  {
+    return m_NewLabel;
+  }
+
+  // -----------------------------------------------------------------------------
+  void setRelabeled(bool value)
+  {
+    m_Relabeled = value;
+  }
+
+  // -----------------------------------------------------------------------------
+  bool getRelabeled() const
+  {
+    return m_Relabeled;
+  }
 
   QSet<int32_t> m_Faces;
   QSet<int32_t> m_OriginalFaceList;
@@ -228,6 +300,12 @@ protected:
   }
 
 private:
+
+  size_t m_StartIndex = {};
+  bool m_Primed = {};
+  int32_t m_NewLabel = {};
+  bool m_Relabeled = {};
+
   LabelVisitorInfo(const LabelVisitorInfo&); // Copy Constructor Not Implemented
   void operator=(const LabelVisitorInfo&);   // Operator '=' Not Implemented
 };
@@ -815,7 +893,7 @@ AbstractFilter::Pointer VerifyTriangleWinding::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VerifyTriangleWinding::getCompiledLibraryName() const
+QString VerifyTriangleWinding::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -823,7 +901,7 @@ const QString VerifyTriangleWinding::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VerifyTriangleWinding::getGroupName() const
+QString VerifyTriangleWinding::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -831,7 +909,7 @@ const QString VerifyTriangleWinding::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid VerifyTriangleWinding::getUuid()
+QUuid VerifyTriangleWinding::getUuid() const
 {
   return QUuid("{3524c2dc-df60-5f90-b54b-e04946628a38}");
 }
@@ -839,7 +917,7 @@ const QUuid VerifyTriangleWinding::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VerifyTriangleWinding::getSubGroupName() const
+QString VerifyTriangleWinding::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConnectivityArrangementFilters;
 }
@@ -847,7 +925,72 @@ const QString VerifyTriangleWinding::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VerifyTriangleWinding::getHumanLabel() const
+QString VerifyTriangleWinding::getHumanLabel() const
 {
   return "Verify Triangle Winding";
+}
+
+// -----------------------------------------------------------------------------
+VerifyTriangleWinding::Pointer VerifyTriangleWinding::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<VerifyTriangleWinding> VerifyTriangleWinding::New()
+{
+  struct make_shared_enabler : public VerifyTriangleWinding
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString VerifyTriangleWinding::getNameOfClass() const
+{
+  return QString("VerifyTriangleWinding");
+}
+
+// -----------------------------------------------------------------------------
+QString VerifyTriangleWinding::ClassName()
+{
+  return QString("VerifyTriangleWinding");
+}
+
+// -----------------------------------------------------------------------------
+void VerifyTriangleWinding::setSurfaceDataContainerName(const QString& value)
+{
+  m_SurfaceDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VerifyTriangleWinding::getSurfaceDataContainerName() const
+{
+  return m_SurfaceDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void VerifyTriangleWinding::setSurfaceMeshNodeFacesArrayName(const QString& value)
+{
+  m_SurfaceMeshNodeFacesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VerifyTriangleWinding::getSurfaceMeshNodeFacesArrayName() const
+{
+  return m_SurfaceMeshNodeFacesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void VerifyTriangleWinding::setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath VerifyTriangleWinding::getSurfaceMeshFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFaceLabelsArrayPath;
 }

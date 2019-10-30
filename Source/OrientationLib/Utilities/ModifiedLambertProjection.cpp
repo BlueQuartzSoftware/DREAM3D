@@ -602,3 +602,58 @@ DoubleArrayType::Pointer ModifiedLambertProjection::createStereographicProjectio
   createStereographicProjection(dim, stereoIntensity.get());
   return stereoIntensity;
 }
+
+// -----------------------------------------------------------------------------
+ModifiedLambertProjection::Pointer ModifiedLambertProjection::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+ModifiedLambertProjection::Pointer ModifiedLambertProjection::New()
+{
+  Pointer sharedPtr(new(ModifiedLambertProjection));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString ModifiedLambertProjection::getNameOfClass() const
+{
+  return QString("ModifiedLambertProjection");
+}
+
+// -----------------------------------------------------------------------------
+QString ModifiedLambertProjection::ClassName()
+{
+  return QString("ModifiedLambertProjection");
+}
+
+// -----------------------------------------------------------------------------
+int ModifiedLambertProjection::getDimension() const
+{
+  return m_Dimension;
+}
+
+// -----------------------------------------------------------------------------
+float ModifiedLambertProjection::getStepSize() const
+{
+  return m_StepSize;
+}
+
+// -----------------------------------------------------------------------------
+float ModifiedLambertProjection::getSphereRadius() const
+{
+  return m_SphereRadius;
+}
+
+// -----------------------------------------------------------------------------
+DoubleArrayType::Pointer ModifiedLambertProjection::getNorthSquare() const
+{
+  return m_NorthSquare;
+}
+
+// -----------------------------------------------------------------------------
+DoubleArrayType::Pointer ModifiedLambertProjection::getSouthSquare() const
+{
+  return m_SouthSquare;
+}

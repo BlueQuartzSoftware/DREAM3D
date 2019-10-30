@@ -35,8 +35,6 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 #include "SVWidgetsLib/SVWidgetsLib.h"
 

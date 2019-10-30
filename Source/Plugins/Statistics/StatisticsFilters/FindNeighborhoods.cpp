@@ -33,12 +33,16 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindNeighborhoods.h"
 
 #include <mutex>
 
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -47,6 +51,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -441,7 +447,7 @@ AbstractFilter::Pointer FindNeighborhoods::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighborhoods::getCompiledLibraryName() const
+QString FindNeighborhoods::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -449,7 +455,7 @@ const QString FindNeighborhoods::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighborhoods::getBrandingString() const
+QString FindNeighborhoods::getBrandingString() const
 {
   return "Statistics";
 }
@@ -457,7 +463,7 @@ const QString FindNeighborhoods::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighborhoods::getFilterVersion() const
+QString FindNeighborhoods::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -467,7 +473,7 @@ const QString FindNeighborhoods::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighborhoods::getGroupName() const
+QString FindNeighborhoods::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -475,7 +481,7 @@ const QString FindNeighborhoods::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindNeighborhoods::getUuid()
+QUuid FindNeighborhoods::getUuid() const
 {
   return QUuid("{697ed3de-db33-5dd1-a64b-04fb71e7d63e}");
 }
@@ -483,7 +489,7 @@ const QUuid FindNeighborhoods::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighborhoods::getSubGroupName() const
+QString FindNeighborhoods::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -491,7 +497,108 @@ const QString FindNeighborhoods::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindNeighborhoods::getHumanLabel() const
+QString FindNeighborhoods::getHumanLabel() const
 {
   return "Find Feature Neighborhoods";
+}
+
+// -----------------------------------------------------------------------------
+FindNeighborhoods::Pointer FindNeighborhoods::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindNeighborhoods> FindNeighborhoods::New()
+{
+  struct make_shared_enabler : public FindNeighborhoods
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindNeighborhoods::getNameOfClass() const
+{
+  return QString("FindNeighborhoods");
+}
+
+// -----------------------------------------------------------------------------
+QString FindNeighborhoods::ClassName()
+{
+  return QString("FindNeighborhoods");
+}
+
+// -----------------------------------------------------------------------------
+void FindNeighborhoods::setNeighborhoodListArrayName(const QString& value)
+{
+  m_NeighborhoodListArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindNeighborhoods::getNeighborhoodListArrayName() const
+{
+  return m_NeighborhoodListArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindNeighborhoods::setMultiplesOfAverage(float value)
+{
+  m_MultiplesOfAverage = value;
+}
+
+// -----------------------------------------------------------------------------
+float FindNeighborhoods::getMultiplesOfAverage() const
+{
+  return m_MultiplesOfAverage;
+}
+
+// -----------------------------------------------------------------------------
+void FindNeighborhoods::setEquivalentDiametersArrayPath(const DataArrayPath& value)
+{
+  m_EquivalentDiametersArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindNeighborhoods::getEquivalentDiametersArrayPath() const
+{
+  return m_EquivalentDiametersArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindNeighborhoods::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindNeighborhoods::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindNeighborhoods::setCentroidsArrayPath(const DataArrayPath& value)
+{
+  m_CentroidsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindNeighborhoods::getCentroidsArrayPath() const
+{
+  return m_CentroidsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindNeighborhoods::setNeighborhoodsArrayName(const QString& value)
+{
+  m_NeighborhoodsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindNeighborhoods::getNeighborhoodsArrayName() const
+{
+  return m_NeighborhoodsArrayName;
 }

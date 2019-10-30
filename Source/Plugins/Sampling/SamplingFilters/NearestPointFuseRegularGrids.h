@@ -35,9 +35,10 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "Sampling/SamplingDLLExport.h"
 
@@ -47,40 +48,89 @@
 class Sampling_EXPORT NearestPointFuseRegularGrids : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(NearestPointFuseRegularGrids SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath ReferenceCellAttributeMatrixPath READ getReferenceCellAttributeMatrixPath WRITE setReferenceCellAttributeMatrixPath)
-    PYB11_PROPERTY(DataArrayPath SamplingCellAttributeMatrixPath READ getSamplingCellAttributeMatrixPath WRITE setSamplingCellAttributeMatrixPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(NearestPointFuseRegularGrids SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(NearestPointFuseRegularGrids)
+  PYB11_FILTER_NEW_MACRO(NearestPointFuseRegularGrids)
+  PYB11_FILTER_PARAMETER(DataArrayPath, ReferenceCellAttributeMatrixPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SamplingCellAttributeMatrixPath)
+  PYB11_PROPERTY(DataArrayPath ReferenceCellAttributeMatrixPath READ getReferenceCellAttributeMatrixPath WRITE setReferenceCellAttributeMatrixPath)
+  PYB11_PROPERTY(DataArrayPath SamplingCellAttributeMatrixPath READ getSamplingCellAttributeMatrixPath WRITE setSamplingCellAttributeMatrixPath)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(NearestPointFuseRegularGrids)
-  SIMPL_FILTER_NEW_MACRO(NearestPointFuseRegularGrids)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(NearestPointFuseRegularGrids, AbstractFilter)
+  using Self = NearestPointFuseRegularGrids;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for NearestPointFuseRegularGrids
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for NearestPointFuseRegularGrids
+   */
+  static QString ClassName();
 
   ~NearestPointFuseRegularGrids() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, ReferenceCellAttributeMatrixPath)
+  /**
+   * @brief Setter property for ReferenceCellAttributeMatrixPath
+   */
+  void setReferenceCellAttributeMatrixPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for ReferenceCellAttributeMatrixPath
+   * @return Value of ReferenceCellAttributeMatrixPath
+   */
+  DataArrayPath getReferenceCellAttributeMatrixPath() const;
+
   Q_PROPERTY(DataArrayPath ReferenceCellAttributeMatrixPath READ getReferenceCellAttributeMatrixPath WRITE setReferenceCellAttributeMatrixPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SamplingCellAttributeMatrixPath)
+  /**
+   * @brief Setter property for SamplingCellAttributeMatrixPath
+   */
+  void setSamplingCellAttributeMatrixPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SamplingCellAttributeMatrixPath
+   * @return Value of SamplingCellAttributeMatrixPath
+   */
+  DataArrayPath getSamplingCellAttributeMatrixPath() const;
+
   Q_PROPERTY(DataArrayPath SamplingCellAttributeMatrixPath READ getSamplingCellAttributeMatrixPath WRITE setSamplingCellAttributeMatrixPath)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -90,23 +140,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -168,5 +218,9 @@ public:
   NearestPointFuseRegularGrids(NearestPointFuseRegularGrids&&) = delete;      // Move Constructor Not Implemented
   NearestPointFuseRegularGrids& operator=(const NearestPointFuseRegularGrids&) = delete; // Copy Assignment Not Implemented
   NearestPointFuseRegularGrids& operator=(NearestPointFuseRegularGrids&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  DataArrayPath m_ReferenceCellAttributeMatrixPath = {};
+  DataArrayPath m_SamplingCellAttributeMatrixPath = {};
 };
 

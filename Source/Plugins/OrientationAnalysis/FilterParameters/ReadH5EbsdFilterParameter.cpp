@@ -37,6 +37,7 @@
 
 #include <QtCore/QJsonArray>
 
+#include "OrientationAnalysis/OrientationAnalysisFilters/ReadH5Ebsd.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -115,4 +116,65 @@ void ReadH5EbsdFilterParameter::writeJson(QJsonObject& json)
     selectedArrayNamesObj.push_back(selectedArrayName);
   }
   json["SelectedArrayNames"] = selectedArrayNamesObj;
+}
+
+// -----------------------------------------------------------------------------
+ReadH5EbsdFilterParameter::Pointer ReadH5EbsdFilterParameter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+ReadH5EbsdFilterParameter::Pointer ReadH5EbsdFilterParameter::New()
+{
+  Pointer sharedPtr(new(ReadH5EbsdFilterParameter));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadH5EbsdFilterParameter::getNameOfClass() const
+{
+  return QString("ReadH5EbsdFilterParameter");
+}
+
+// -----------------------------------------------------------------------------
+QString ReadH5EbsdFilterParameter::ClassName()
+{
+  return QString("ReadH5EbsdFilterParameter");
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5EbsdFilterParameter::setFileExtension(const QString& value)
+{
+  m_FileExtension = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadH5EbsdFilterParameter::getFileExtension() const
+{
+  return m_FileExtension;
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5EbsdFilterParameter::setFileType(const QString& value)
+{
+  m_FileType = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadH5EbsdFilterParameter::getFileType() const
+{
+  return m_FileType;
+}
+
+// -----------------------------------------------------------------------------
+void ReadH5EbsdFilterParameter::setFilter(ReadH5Ebsd* value)
+{
+  m_Filter = value;
+}
+
+// -----------------------------------------------------------------------------
+ReadH5Ebsd* ReadH5EbsdFilterParameter::getFilter() const
+{
+  return m_Filter;
 }

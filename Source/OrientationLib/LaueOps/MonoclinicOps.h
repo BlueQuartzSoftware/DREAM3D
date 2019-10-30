@@ -35,8 +35,9 @@
 #pragma once
 
 
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationLib/OrientationLib.h"
@@ -53,9 +54,24 @@
 class OrientationLib_EXPORT MonoclinicOps : public LaueOps
 {
   public:
-    SIMPL_SHARED_POINTERS(MonoclinicOps)
-     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(MonoclinicOps, LaueOps)
-    SIMPL_STATIC_NEW_MACRO(MonoclinicOps)
+    using Self = MonoclinicOps;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    /**
+    * @brief Returns the name of the class for MonoclinicOps
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for MonoclinicOps
+    */
+    static QString ClassName();
+
+    static Pointer New();
+
 
     MonoclinicOps();
     ~MonoclinicOps() override;
@@ -188,6 +204,9 @@ class OrientationLib_EXPORT MonoclinicOps : public LaueOps
     MonoclinicOps(MonoclinicOps&&) = delete;       // Move Constructor Not Implemented
     MonoclinicOps& operator=(const MonoclinicOps&) = delete; // Copy Assignment Not Implemented
     MonoclinicOps& operator=(MonoclinicOps&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+
 };
 
 

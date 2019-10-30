@@ -65,7 +65,10 @@ void ModifiedLambertProjectionArray::getXdmfTypeAndSize(QString& xdmfTypeName, i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString ModifiedLambertProjectionArray::getTypeAsString() const { return "ModifiedLambertProjectionArray"; }
+QString ModifiedLambertProjectionArray::getTypeAsString() const
+{
+  return "ModifiedLambertProjectionArray";
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -90,7 +93,6 @@ bool ModifiedLambertProjectionArray::isAllocated() const
 {
   return m_IsAllocated;
 }
-
 
 // -----------------------------------------------------------------------------
 //
@@ -687,8 +689,7 @@ int ModifiedLambertProjectionArray::readH5Data(hid_t parentId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ModifiedLambertProjectionArray::writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName,
-                                                       const QString& groupPath, const QString& labelb) const
+int ModifiedLambertProjectionArray::writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName, const QString& groupPath, const QString& labelb) const
 {
   out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
   return -1;
@@ -736,4 +737,59 @@ QString ModifiedLambertProjectionArray::getInfoString(SIMPL::InfoStringFormat fo
 
   }
   return info;
+}
+
+// -----------------------------------------------------------------------------
+ModifiedLambertProjectionArray::Pointer ModifiedLambertProjectionArray::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+ModifiedLambertProjectionArray::Pointer ModifiedLambertProjectionArray::New()
+{
+  Pointer sharedPtr(new(ModifiedLambertProjectionArray));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString ModifiedLambertProjectionArray::getNameOfClass() const
+{
+  return QString("ModifiedLambertProjectionArray");
+}
+
+// -----------------------------------------------------------------------------
+QString ModifiedLambertProjectionArray::ClassName()
+{
+  return QString("ModifiedLambertProjectionArray");
+}
+
+// -----------------------------------------------------------------------------
+void ModifiedLambertProjectionArray::setPhase(int value)
+{
+  m_Phase = value;
+}
+
+// -----------------------------------------------------------------------------
+int ModifiedLambertProjectionArray::getPhase() const
+{
+  return m_Phase;
+}
+
+// -----------------------------------------------------------------------------
+void ModifiedLambertProjectionArray::setModifiedLambertProjectionArray(const QVector<ModifiedLambertProjection::Pointer>& value)
+{
+  m_ModifiedLambertProjectionArray = value;
+}
+
+// -----------------------------------------------------------------------------
+QVector<ModifiedLambertProjection::Pointer> ModifiedLambertProjectionArray::getModifiedLambertProjectionArray() const
+{
+  return m_ModifiedLambertProjectionArray;
+}
+
+// -----------------------------------------------------------------------------
+int ModifiedLambertProjectionArray::getClassVersion() const
+{
+  return 2;
 }

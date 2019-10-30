@@ -35,9 +35,11 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Generic/GenericDLLExport.h"
 
@@ -47,48 +49,117 @@
 class Generic_EXPORT FindFeaturePhasesBinary : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(FindFeaturePhasesBinary SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
-    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
-    PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(FindFeaturePhasesBinary SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindFeaturePhasesBinary)
+  PYB11_FILTER_NEW_MACRO(FindFeaturePhasesBinary)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  PYB11_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+  PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+  PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+  PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+  PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(FindFeaturePhasesBinary)
-  SIMPL_FILTER_NEW_MACRO(FindFeaturePhasesBinary)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindFeaturePhasesBinary, AbstractFilter)
+  using Self = FindFeaturePhasesBinary;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for FindFeaturePhasesBinary
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindFeaturePhasesBinary
+   */
+  static QString ClassName();
 
   ~FindFeaturePhasesBinary() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  /**
+   * @brief Setter property for GoodVoxelsArrayPath
+   */
+  void setGoodVoxelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for GoodVoxelsArrayPath
+   * @return Value of GoodVoxelsArrayPath
+   */
+  DataArrayPath getGoodVoxelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  /**
+   * @brief Setter property for FeaturePhasesArrayPath
+   */
+  void setFeaturePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayPath
+   * @return Value of FeaturePhasesArrayPath
+   */
+  DataArrayPath getFeaturePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+  /**
+   * @brief Setter property for CellEnsembleAttributeMatrixName
+   */
+  void setCellEnsembleAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellEnsembleAttributeMatrixName
+   * @return Value of CellEnsembleAttributeMatrixName
+   */
+  QString getCellEnsembleAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -98,23 +169,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -172,9 +243,17 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<bool>> m_GoodVoxelsPtr;
+  bool* m_GoodVoxels = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_GoodVoxelsArrayPath = {};
+  DataArrayPath m_FeaturePhasesArrayPath = {};
+  QString m_CellEnsembleAttributeMatrixName = {};
 
 public:
   FindFeaturePhasesBinary(const FindFeaturePhasesBinary&) = delete; // Copy Constructor Not Implemented

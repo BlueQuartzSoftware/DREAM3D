@@ -33,12 +33,19 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "AbaqusSurfaceMeshWriter.h"
 
 #include <QtCore/QDir>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
@@ -367,7 +374,7 @@ AbstractFilter::Pointer AbaqusSurfaceMeshWriter::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusSurfaceMeshWriter::getCompiledLibraryName() const
+QString AbaqusSurfaceMeshWriter::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -375,7 +382,7 @@ const QString AbaqusSurfaceMeshWriter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusSurfaceMeshWriter::getBrandingString() const
+QString AbaqusSurfaceMeshWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -383,7 +390,7 @@ const QString AbaqusSurfaceMeshWriter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusSurfaceMeshWriter::getFilterVersion() const
+QString AbaqusSurfaceMeshWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -393,7 +400,7 @@ const QString AbaqusSurfaceMeshWriter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusSurfaceMeshWriter::getGroupName() const
+QString AbaqusSurfaceMeshWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -401,7 +408,7 @@ const QString AbaqusSurfaceMeshWriter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid AbaqusSurfaceMeshWriter::getUuid()
+QUuid AbaqusSurfaceMeshWriter::getUuid() const
 {
   return QUuid("{abbe2e1e-6fb2-5511-91f3-0637252f0705}");
 }
@@ -409,7 +416,7 @@ const QUuid AbaqusSurfaceMeshWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusSurfaceMeshWriter::getSubGroupName() const
+QString AbaqusSurfaceMeshWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -417,7 +424,60 @@ const QString AbaqusSurfaceMeshWriter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AbaqusSurfaceMeshWriter::getHumanLabel() const
+QString AbaqusSurfaceMeshWriter::getHumanLabel() const
 {
   return "Export Abaqus Surface Mesh";
+}
+
+// -----------------------------------------------------------------------------
+AbaqusSurfaceMeshWriter::Pointer AbaqusSurfaceMeshWriter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<AbaqusSurfaceMeshWriter> AbaqusSurfaceMeshWriter::New()
+{
+  struct make_shared_enabler : public AbaqusSurfaceMeshWriter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString AbaqusSurfaceMeshWriter::getNameOfClass() const
+{
+  return QString("AbaqusSurfaceMeshWriter");
+}
+
+// -----------------------------------------------------------------------------
+QString AbaqusSurfaceMeshWriter::ClassName()
+{
+  return QString("AbaqusSurfaceMeshWriter");
+}
+
+// -----------------------------------------------------------------------------
+void AbaqusSurfaceMeshWriter::setOutputFile(const QString& value)
+{
+  m_OutputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString AbaqusSurfaceMeshWriter::getOutputFile() const
+{
+  return m_OutputFile;
+}
+
+// -----------------------------------------------------------------------------
+void AbaqusSurfaceMeshWriter::setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AbaqusSurfaceMeshWriter::getSurfaceMeshFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFaceLabelsArrayPath;
 }

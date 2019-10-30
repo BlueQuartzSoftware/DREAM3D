@@ -33,9 +33,14 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindSurfaceAreaToVolume.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -44,6 +49,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -344,7 +351,7 @@ AbstractFilter::Pointer FindSurfaceAreaToVolume::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceAreaToVolume::getCompiledLibraryName() const
+QString FindSurfaceAreaToVolume::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -352,7 +359,7 @@ const QString FindSurfaceAreaToVolume::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceAreaToVolume::getBrandingString() const
+QString FindSurfaceAreaToVolume::getBrandingString() const
 {
   return "Statistics";
 }
@@ -360,7 +367,7 @@ const QString FindSurfaceAreaToVolume::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceAreaToVolume::getFilterVersion() const
+QString FindSurfaceAreaToVolume::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -370,7 +377,7 @@ const QString FindSurfaceAreaToVolume::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceAreaToVolume::getGroupName() const
+QString FindSurfaceAreaToVolume::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -378,7 +385,7 @@ const QString FindSurfaceAreaToVolume::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindSurfaceAreaToVolume::getUuid()
+QUuid FindSurfaceAreaToVolume::getUuid() const
 {
   return QUuid("{5d586366-6b59-566e-8de1-57aa9ae8a91c}");
 }
@@ -386,7 +393,7 @@ const QUuid FindSurfaceAreaToVolume::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceAreaToVolume::getSubGroupName() const
+QString FindSurfaceAreaToVolume::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -394,7 +401,96 @@ const QString FindSurfaceAreaToVolume::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSurfaceAreaToVolume::getHumanLabel() const
+QString FindSurfaceAreaToVolume::getHumanLabel() const
 {
   return "Find Surface Area to Volume & Sphericity";
+}
+
+// -----------------------------------------------------------------------------
+FindSurfaceAreaToVolume::Pointer FindSurfaceAreaToVolume::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindSurfaceAreaToVolume> FindSurfaceAreaToVolume::New()
+{
+  struct make_shared_enabler : public FindSurfaceAreaToVolume
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindSurfaceAreaToVolume::getNameOfClass() const
+{
+  return QString("FindSurfaceAreaToVolume");
+}
+
+// -----------------------------------------------------------------------------
+QString FindSurfaceAreaToVolume::ClassName()
+{
+  return QString("FindSurfaceAreaToVolume");
+}
+
+// -----------------------------------------------------------------------------
+void FindSurfaceAreaToVolume::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindSurfaceAreaToVolume::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindSurfaceAreaToVolume::setNumCellsArrayPath(const DataArrayPath& value)
+{
+  m_NumCellsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindSurfaceAreaToVolume::getNumCellsArrayPath() const
+{
+  return m_NumCellsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindSurfaceAreaToVolume::setSurfaceAreaVolumeRatioArrayName(const QString& value)
+{
+  m_SurfaceAreaVolumeRatioArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindSurfaceAreaToVolume::getSurfaceAreaVolumeRatioArrayName() const
+{
+  return m_SurfaceAreaVolumeRatioArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindSurfaceAreaToVolume::setSphericityArrayName(const QString& value)
+{
+  m_SphericityArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindSurfaceAreaToVolume::getSphericityArrayName() const
+{
+  return m_SphericityArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindSurfaceAreaToVolume::setCalculateSphericity(bool value)
+{
+  m_CalculateSphericity = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindSurfaceAreaToVolume::getCalculateSphericity() const
+{
+  return m_CalculateSphericity;
 }

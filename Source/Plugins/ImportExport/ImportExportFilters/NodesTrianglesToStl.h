@@ -35,10 +35,11 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QString>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
@@ -56,48 +57,117 @@
 class ImportExport_EXPORT NodesTrianglesToStl : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(NodesTrianglesToStl SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(NodesTrianglesToStl)
+  PYB11_FILTER_NEW_MACRO(NodesTrianglesToStl)
+  PYB11_FILTER_PARAMETER(QString, NodesFile)
+  PYB11_FILTER_PARAMETER(QString, TrianglesFile)
+  PYB11_FILTER_PARAMETER(QString, OutputStlDirectory)
+  PYB11_FILTER_PARAMETER(QString, OutputStlPrefix)
   PYB11_PROPERTY(QString NodesFile READ getNodesFile WRITE setNodesFile)
   PYB11_PROPERTY(QString TrianglesFile READ getTrianglesFile WRITE setTrianglesFile)
   PYB11_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory)
   PYB11_PROPERTY(QString OutputStlPrefix READ getOutputStlPrefix WRITE setOutputStlPrefix)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(NodesTrianglesToStl)
-  SIMPL_FILTER_NEW_MACRO(NodesTrianglesToStl)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(NodesTrianglesToStl, AbstractFilter)
+  using Self = NodesTrianglesToStl;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for NodesTrianglesToStl
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for NodesTrianglesToStl
+   */
+  static QString ClassName();
 
   ~NodesTrianglesToStl() override;
 
-  SIMPL_FILTER_PARAMETER(QString, NodesFile)
+  /**
+   * @brief Setter property for NodesFile
+   */
+  void setNodesFile(const QString& value);
+  /**
+   * @brief Getter property for NodesFile
+   * @return Value of NodesFile
+   */
+  QString getNodesFile() const;
+
   Q_PROPERTY(QString NodesFile READ getNodesFile WRITE setNodesFile)
 
-  SIMPL_FILTER_PARAMETER(QString, TrianglesFile)
+  /**
+   * @brief Setter property for TrianglesFile
+   */
+  void setTrianglesFile(const QString& value);
+  /**
+   * @brief Getter property for TrianglesFile
+   * @return Value of TrianglesFile
+   */
+  QString getTrianglesFile() const;
+
   Q_PROPERTY(QString TrianglesFile READ getTrianglesFile WRITE setTrianglesFile)
 
-  SIMPL_FILTER_PARAMETER(QString, OutputStlDirectory)
+  /**
+   * @brief Setter property for OutputStlDirectory
+   */
+  void setOutputStlDirectory(const QString& value);
+  /**
+   * @brief Getter property for OutputStlDirectory
+   * @return Value of OutputStlDirectory
+   */
+  QString getOutputStlDirectory() const;
+
   Q_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory)
 
-  SIMPL_FILTER_PARAMETER(QString, OutputStlPrefix)
+  /**
+   * @brief Setter property for OutputStlPrefix
+   */
+  void setOutputStlPrefix(const QString& value);
+  /**
+   * @brief Getter property for OutputStlPrefix
+   * @return Value of OutputStlPrefix
+   */
+  QString getOutputStlPrefix() const;
+
   Q_PROPERTY(QString OutputStlPrefix READ getOutputStlPrefix WRITE setOutputStlPrefix)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
    */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -107,23 +177,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -187,6 +257,11 @@ protected:
   int writeASCIIPointData(const QString& NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh);
 
 private:
+  QString m_NodesFile = {};
+  QString m_TrianglesFile = {};
+  QString m_OutputStlDirectory = {};
+  QString m_OutputStlPrefix = {};
+
   int writeHeader(FILE* f, const QString& header, int triCount);
   int writeNumTrianglesToFile(const QString& filename, int triCount);
 

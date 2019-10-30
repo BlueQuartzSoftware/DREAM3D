@@ -36,13 +36,18 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "InsertPrecipitatePhases.h"
 
 #include <fstream>
 
 #include <QtCore/QDir>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
@@ -57,6 +62,8 @@
 #include "SIMPLib/Math/SIMPLibRandom.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
@@ -1318,12 +1325,10 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     This is true for both m_rdfRandom and m_rdfCurrentDist.*/
 
     // initialize boxdims and boxres vectors
-    std::vector<float> boxdims(3);
-    boxdims[0] = m_SizeX;
-    boxdims[1] = m_SizeY;
-    boxdims[2] = m_SizeZ;
+    std::array<float, 3> boxdims = {m_SizeX, m_SizeY, m_SizeZ};
 
-    std::vector<float> boxres = m->getGeometryAs<ImageGeom>()->getSpacing().toContainer<std::vector<float>>();
+    FloatVec3Type vec3 = m->getGeometryAs<ImageGeom>()->getSpacing();
+    std::array<float, 3> boxres = {vec3[0], vec3[1], vec3[1]};
 
     float max_box_distance = sqrtf((m_SizeX * m_SizeX) + (m_SizeY * m_SizeY) + (m_SizeZ * m_SizeZ));
 
@@ -3069,7 +3074,7 @@ AbstractFilter::Pointer InsertPrecipitatePhases::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertPrecipitatePhases::getCompiledLibraryName() const
+QString InsertPrecipitatePhases::getCompiledLibraryName() const
 {
   return SyntheticBuildingConstants::SyntheticBuildingBaseName;
 }
@@ -3077,7 +3082,7 @@ const QString InsertPrecipitatePhases::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertPrecipitatePhases::getBrandingString() const
+QString InsertPrecipitatePhases::getBrandingString() const
 {
   return "SyntheticBuilding";
 }
@@ -3085,7 +3090,7 @@ const QString InsertPrecipitatePhases::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertPrecipitatePhases::getFilterVersion() const
+QString InsertPrecipitatePhases::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -3095,7 +3100,7 @@ const QString InsertPrecipitatePhases::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertPrecipitatePhases::getGroupName() const
+QString InsertPrecipitatePhases::getGroupName() const
 {
   return SIMPL::FilterGroups::SyntheticBuildingFilters;
 }
@@ -3103,7 +3108,7 @@ const QString InsertPrecipitatePhases::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid InsertPrecipitatePhases::getUuid()
+QUuid InsertPrecipitatePhases::getUuid() const
 {
   return QUuid("{1e552e0c-53bb-5ae1-bd1c-c7a6590f9328}");
 }
@@ -3111,7 +3116,7 @@ const QUuid InsertPrecipitatePhases::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertPrecipitatePhases::getSubGroupName() const
+QString InsertPrecipitatePhases::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::PackingFilters;
 }
@@ -3119,7 +3124,372 @@ const QString InsertPrecipitatePhases::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString InsertPrecipitatePhases::getHumanLabel() const
+QString InsertPrecipitatePhases::getHumanLabel() const
 {
   return "Insert Precipitate Phases";
+}
+
+// -----------------------------------------------------------------------------
+InsertPrecipitatePhases::Pointer InsertPrecipitatePhases::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<InsertPrecipitatePhases> InsertPrecipitatePhases::New()
+{
+  struct make_shared_enabler : public InsertPrecipitatePhases
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString InsertPrecipitatePhases::getNameOfClass() const
+{
+  return QString("InsertPrecipitatePhases");
+}
+
+// -----------------------------------------------------------------------------
+QString InsertPrecipitatePhases::ClassName()
+{
+  return QString("InsertPrecipitatePhases");
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setClusteringListArrayName(const QString& value)
+{
+  m_ClusteringListArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString InsertPrecipitatePhases::getClusteringListArrayName() const
+{
+  return m_ClusteringListArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setErrorOutputFile(const QString& value)
+{
+  m_ErrorOutputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString InsertPrecipitatePhases::getErrorOutputFile() const
+{
+  return m_ErrorOutputFile;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setCsvOutputFile(const QString& value)
+{
+  m_CsvOutputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString InsertPrecipitatePhases::getCsvOutputFile() const
+{
+  return m_CsvOutputFile;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setMaskArrayPath(const DataArrayPath& value)
+{
+  m_MaskArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath InsertPrecipitatePhases::getMaskArrayPath() const
+{
+  return m_MaskArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setUseMask(bool value)
+{
+  m_UseMask = value;
+}
+
+// -----------------------------------------------------------------------------
+bool InsertPrecipitatePhases::getUseMask() const
+{
+  return m_UseMask;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setFeatureGeneration(int value)
+{
+  m_FeatureGeneration = value;
+}
+
+// -----------------------------------------------------------------------------
+int InsertPrecipitatePhases::getFeatureGeneration() const
+{
+  return m_FeatureGeneration;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setPrecipInputFile(const QString& value)
+{
+  m_PrecipInputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString InsertPrecipitatePhases::getPrecipInputFile() const
+{
+  return m_PrecipInputFile;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setPeriodicBoundaries(bool value)
+{
+  m_PeriodicBoundaries = value;
+}
+
+// -----------------------------------------------------------------------------
+bool InsertPrecipitatePhases::getPeriodicBoundaries() const
+{
+  return m_PeriodicBoundaries;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setMatchRDF(bool value)
+{
+  m_MatchRDF = value;
+}
+
+// -----------------------------------------------------------------------------
+bool InsertPrecipitatePhases::getMatchRDF() const
+{
+  return m_MatchRDF;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setWriteGoalAttributes(bool value)
+{
+  m_WriteGoalAttributes = value;
+}
+
+// -----------------------------------------------------------------------------
+bool InsertPrecipitatePhases::getWriteGoalAttributes() const
+{
+  return m_WriteGoalAttributes;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setInputStatsArrayPath(const DataArrayPath& value)
+{
+  m_InputStatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath InsertPrecipitatePhases::getInputStatsArrayPath() const
+{
+  return m_InputStatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setInputPhaseTypesArrayPath(const DataArrayPath& value)
+{
+  m_InputPhaseTypesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath InsertPrecipitatePhases::getInputPhaseTypesArrayPath() const
+{
+  return m_InputPhaseTypesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setInputShapeTypesArrayPath(const DataArrayPath& value)
+{
+  m_InputShapeTypesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath InsertPrecipitatePhases::getInputShapeTypesArrayPath() const
+{
+  return m_InputShapeTypesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath InsertPrecipitatePhases::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath InsertPrecipitatePhases::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setBoundaryCellsArrayPath(const DataArrayPath& value)
+{
+  m_BoundaryCellsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath InsertPrecipitatePhases::getBoundaryCellsArrayPath() const
+{
+  return m_BoundaryCellsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath InsertPrecipitatePhases::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setNumCellsArrayName(const QString& value)
+{
+  m_NumCellsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString InsertPrecipitatePhases::getNumCellsArrayName() const
+{
+  return m_NumCellsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setEquivalentDiametersArrayName(const QString& value)
+{
+  m_EquivalentDiametersArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString InsertPrecipitatePhases::getEquivalentDiametersArrayName() const
+{
+  return m_EquivalentDiametersArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setVolumesArrayName(const QString& value)
+{
+  m_VolumesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString InsertPrecipitatePhases::getVolumesArrayName() const
+{
+  return m_VolumesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setOmega3sArrayName(const QString& value)
+{
+  m_Omega3sArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString InsertPrecipitatePhases::getOmega3sArrayName() const
+{
+  return m_Omega3sArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setCentroidsArrayName(const QString& value)
+{
+  m_CentroidsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString InsertPrecipitatePhases::getCentroidsArrayName() const
+{
+  return m_CentroidsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setAxisEulerAnglesArrayName(const QString& value)
+{
+  m_AxisEulerAnglesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString InsertPrecipitatePhases::getAxisEulerAnglesArrayName() const
+{
+  return m_AxisEulerAnglesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setAxisLengthsArrayName(const QString& value)
+{
+  m_AxisLengthsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString InsertPrecipitatePhases::getAxisLengthsArrayName() const
+{
+  return m_AxisLengthsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setNumFeaturesArrayPath(const DataArrayPath& value)
+{
+  m_NumFeaturesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath InsertPrecipitatePhases::getNumFeaturesArrayPath() const
+{
+  return m_NumFeaturesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setSaveGeometricDescriptions(int value)
+{
+  m_SaveGeometricDescriptions = value;
+}
+
+// -----------------------------------------------------------------------------
+int InsertPrecipitatePhases::getSaveGeometricDescriptions() const
+{
+  return m_SaveGeometricDescriptions;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setNewAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_NewAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath InsertPrecipitatePhases::getNewAttributeMatrixPath() const
+{
+  return m_NewAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void InsertPrecipitatePhases::setSelectedAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_SelectedAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath InsertPrecipitatePhases::getSelectedAttributeMatrixPath() const
+{
+  return m_SelectedAttributeMatrixPath;
 }

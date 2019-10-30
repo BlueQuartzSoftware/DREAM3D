@@ -33,12 +33,19 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "LaplacianSmoothing.h"
 
 #include <cstdio>
 #include <sstream>
 
+#include <QtCore/QTextStream>
+
+#include <QtCore/QDebug>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
@@ -46,6 +53,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -537,7 +546,7 @@ AbstractFilter::Pointer LaplacianSmoothing::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LaplacianSmoothing::getCompiledLibraryName() const
+QString LaplacianSmoothing::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -545,7 +554,7 @@ const QString LaplacianSmoothing::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LaplacianSmoothing::getBrandingString() const
+QString LaplacianSmoothing::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -553,7 +562,7 @@ const QString LaplacianSmoothing::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LaplacianSmoothing::getFilterVersion() const
+QString LaplacianSmoothing::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -563,7 +572,7 @@ const QString LaplacianSmoothing::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LaplacianSmoothing::getGroupName() const
+QString LaplacianSmoothing::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -571,7 +580,7 @@ const QString LaplacianSmoothing::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid LaplacianSmoothing::getUuid()
+QUuid LaplacianSmoothing::getUuid() const
 {
   return QUuid("{601c4885-c218-5da6-9fc7-519d85d241ad}");
 }
@@ -579,7 +588,7 @@ const QUuid LaplacianSmoothing::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LaplacianSmoothing::getSubGroupName() const
+QString LaplacianSmoothing::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SmoothingFilters;
 }
@@ -587,7 +596,192 @@ const QString LaplacianSmoothing::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LaplacianSmoothing::getHumanLabel() const
+QString LaplacianSmoothing::getHumanLabel() const
 {
   return "Laplacian Smoothing";
+}
+
+// -----------------------------------------------------------------------------
+LaplacianSmoothing::Pointer LaplacianSmoothing::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<LaplacianSmoothing> LaplacianSmoothing::New()
+{
+  struct make_shared_enabler : public LaplacianSmoothing
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString LaplacianSmoothing::getNameOfClass() const
+{
+  return QString("LaplacianSmoothing");
+}
+
+// -----------------------------------------------------------------------------
+QString LaplacianSmoothing::ClassName()
+{
+  return QString("LaplacianSmoothing");
+}
+
+// -----------------------------------------------------------------------------
+void LaplacianSmoothing::setSurfaceDataContainerName(const DataArrayPath& value)
+{
+  m_SurfaceDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath LaplacianSmoothing::getSurfaceDataContainerName() const
+{
+  return m_SurfaceDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void LaplacianSmoothing::setSurfaceMeshNodeTypeArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshNodeTypeArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath LaplacianSmoothing::getSurfaceMeshNodeTypeArrayPath() const
+{
+  return m_SurfaceMeshNodeTypeArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void LaplacianSmoothing::setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath LaplacianSmoothing::getSurfaceMeshFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFaceLabelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void LaplacianSmoothing::setIterationSteps(int value)
+{
+  m_IterationSteps = value;
+}
+
+// -----------------------------------------------------------------------------
+int LaplacianSmoothing::getIterationSteps() const
+{
+  return m_IterationSteps;
+}
+
+// -----------------------------------------------------------------------------
+void LaplacianSmoothing::setLambda(float value)
+{
+  m_Lambda = value;
+}
+
+// -----------------------------------------------------------------------------
+float LaplacianSmoothing::getLambda() const
+{
+  return m_Lambda;
+}
+
+// -----------------------------------------------------------------------------
+void LaplacianSmoothing::setSurfacePointLambda(float value)
+{
+  m_SurfacePointLambda = value;
+}
+
+// -----------------------------------------------------------------------------
+float LaplacianSmoothing::getSurfacePointLambda() const
+{
+  return m_SurfacePointLambda;
+}
+
+// -----------------------------------------------------------------------------
+void LaplacianSmoothing::setTripleLineLambda(float value)
+{
+  m_TripleLineLambda = value;
+}
+
+// -----------------------------------------------------------------------------
+float LaplacianSmoothing::getTripleLineLambda() const
+{
+  return m_TripleLineLambda;
+}
+
+// -----------------------------------------------------------------------------
+void LaplacianSmoothing::setQuadPointLambda(float value)
+{
+  m_QuadPointLambda = value;
+}
+
+// -----------------------------------------------------------------------------
+float LaplacianSmoothing::getQuadPointLambda() const
+{
+  return m_QuadPointLambda;
+}
+
+// -----------------------------------------------------------------------------
+void LaplacianSmoothing::setSurfaceTripleLineLambda(float value)
+{
+  m_SurfaceTripleLineLambda = value;
+}
+
+// -----------------------------------------------------------------------------
+float LaplacianSmoothing::getSurfaceTripleLineLambda() const
+{
+  return m_SurfaceTripleLineLambda;
+}
+
+// -----------------------------------------------------------------------------
+void LaplacianSmoothing::setSurfaceQuadPointLambda(float value)
+{
+  m_SurfaceQuadPointLambda = value;
+}
+
+// -----------------------------------------------------------------------------
+float LaplacianSmoothing::getSurfaceQuadPointLambda() const
+{
+  return m_SurfaceQuadPointLambda;
+}
+
+// -----------------------------------------------------------------------------
+void LaplacianSmoothing::setUseTaubinSmoothing(bool value)
+{
+  m_UseTaubinSmoothing = value;
+}
+
+// -----------------------------------------------------------------------------
+bool LaplacianSmoothing::getUseTaubinSmoothing() const
+{
+  return m_UseTaubinSmoothing;
+}
+
+// -----------------------------------------------------------------------------
+void LaplacianSmoothing::setMuFactor(float value)
+{
+  m_MuFactor = value;
+}
+
+// -----------------------------------------------------------------------------
+float LaplacianSmoothing::getMuFactor() const
+{
+  return m_MuFactor;
+}
+
+// -----------------------------------------------------------------------------
+void LaplacianSmoothing::setLambdaArray(const DataArray<float>::Pointer& value)
+{
+  m_LambdaArray = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArray<float>::Pointer LaplacianSmoothing::getLambdaArray() const
+{
+  return m_LambdaArray;
 }

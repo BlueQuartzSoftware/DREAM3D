@@ -33,10 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "M3CSliceBySlice.h"
 
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
+#include <QtCore/QTextStream>
+
+#include <QtCore/QDebug>
+
 #include "SIMPLib/Math/SIMPLibMath.h"
 
 // C Includes
@@ -56,6 +62,9 @@
 #include "SIMPLib/Common/PipelineMessage.h"
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+
 #include "SurfaceMeshing/SurfaceMeshingFilters/BinaryNodesTrianglesReader.h"
 
 #define WRITE_BINARY_TEMP_FILES 1
@@ -107,8 +116,19 @@ int nsTable_2d[20][8] = {{-1, -1, -1, -1, -1, -1, -1, -1},
 class SMTempFile
 {
 public:
-  SIMPL_SHARED_POINTERS(SMTempFile)
-  SIMPL_STATIC_NEW_MACRO(SMTempFile)
+  using Self = SMTempFile;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+  Pointer NullPointer()
+  {
+    return Pointer(static_cast<Self*>(nullptr));
+  }
+
+    static Pointer New();
+
   virtual ~SMTempFile()
   {
     if(m_AutoDelete == true)
@@ -118,8 +138,29 @@ public:
     }
   }
 
-  SIMPL_INSTANCE_STRING_PROPERTY(FilePath)
-  SIMPL_INSTANCE_PROPERTY(bool, AutoDelete)
+  // -----------------------------------------------------------------------------
+  void M3CSliceBySlice::setFilePath(const QString& value)
+  {
+    m_FilePath = value;
+  }
+
+  // -----------------------------------------------------------------------------
+  QString M3CSliceBySlice::getFilePath() const
+  {
+    return m_FilePath;
+  }
+
+  // -----------------------------------------------------------------------------
+  void setAutoDelete(bool value)
+  {
+    m_AutoDelete = value;
+  }
+
+  // -----------------------------------------------------------------------------
+  bool getAutoDelete() const
+  {
+    return m_AutoDelete;
+  }
 
 protected:
   SMTempFile()
@@ -134,8 +175,19 @@ private:
 class FeatureChecker
 {
 public:
-  SIMPL_SHARED_POINTERS(FeatureChecker)
-  SIMPL_STATIC_NEW_MACRO(FeatureChecker)
+  using Self = FeatureChecker;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+  Pointer NullPointer()
+  {
+    return Pointer(static_cast<Self*>(nullptr));
+  }
+
+    static Pointer New();
+
   virtual ~FeatureChecker()
   {
   }
@@ -288,6 +340,11 @@ protected:
   }
 
 private:
+
+  QString m_FilePath = {};
+
+  bool m_AutoDelete = {};
+
   QVector<MapType> featureMaps;
   QVector<MapType> tCounts;
 
@@ -3099,7 +3156,7 @@ AbstractFilter::Pointer M3CSliceBySlice::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString M3CSliceBySlice::getCompiledLibraryName() const
+QString M3CSliceBySlice::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -3107,7 +3164,7 @@ const QString M3CSliceBySlice::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString M3CSliceBySlice::getBrandingString() const
+QString M3CSliceBySlice::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -3115,7 +3172,7 @@ const QString M3CSliceBySlice::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString M3CSliceBySlice::getFilterVersion() const
+QString M3CSliceBySlice::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -3126,7 +3183,7 @@ const QString M3CSliceBySlice::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString M3CSliceBySlice::getGroupName() const
+QString M3CSliceBySlice::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -3134,7 +3191,7 @@ const QString M3CSliceBySlice::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid M3CSliceBySlice::getUuid()
+QUuid M3CSliceBySlice::getUuid() const
 {
   return QUuid("{86d77279-5a18-5b75-a411-c4e0c50bc4a4}");
 }
@@ -3142,7 +3199,7 @@ const QUuid M3CSliceBySlice::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString M3CSliceBySlice::getSubGroupName() const
+QString M3CSliceBySlice::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GenerationFilters;
 }
@@ -3150,7 +3207,120 @@ const QString M3CSliceBySlice::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString M3CSliceBySlice::getHumanLabel() const
+QString M3CSliceBySlice::getHumanLabel() const
 {
   return "M3C Surface Meshing (Slice at a time)";
+}
+
+// -----------------------------------------------------------------------------
+M3CSliceBySlice::Pointer M3CSliceBySlice::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<M3CSliceBySlice> M3CSliceBySlice::New()
+{
+  struct make_shared_enabler : public M3CSliceBySlice
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString M3CSliceBySlice::getNameOfClass() const
+{
+  return QString("M3CSliceBySlice");
+}
+
+// -----------------------------------------------------------------------------
+QString M3CSliceBySlice::ClassName()
+{
+  return QString("M3CSliceBySlice");
+}
+
+// -----------------------------------------------------------------------------
+void M3CSliceBySlice::setSurfaceDataContainerName(const DataArrayPath& value)
+{
+  m_SurfaceDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath M3CSliceBySlice::getSurfaceDataContainerName() const
+{
+  return m_SurfaceDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void M3CSliceBySlice::setVertexAttributeMatrixName(const QString& value)
+{
+  m_VertexAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString M3CSliceBySlice::getVertexAttributeMatrixName() const
+{
+  return m_VertexAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void M3CSliceBySlice::setFaceAttributeMatrixName(const QString& value)
+{
+  m_FaceAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString M3CSliceBySlice::getFaceAttributeMatrixName() const
+{
+  return m_FaceAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void M3CSliceBySlice::setFaceLabelsArrayName(const QString& value)
+{
+  m_FaceLabelsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString M3CSliceBySlice::getFaceLabelsArrayName() const
+{
+  return m_FaceLabelsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void M3CSliceBySlice::setSurfaceMeshNodeTypesArrayName(const QString& value)
+{
+  m_SurfaceMeshNodeTypesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString M3CSliceBySlice::getSurfaceMeshNodeTypesArrayName() const
+{
+  return m_SurfaceMeshNodeTypesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void M3CSliceBySlice::setDeleteTempFiles(bool value)
+{
+  m_DeleteTempFiles = value;
+}
+
+// -----------------------------------------------------------------------------
+bool M3CSliceBySlice::getDeleteTempFiles() const
+{
+  return m_DeleteTempFiles;
+}
+
+// -----------------------------------------------------------------------------
+void M3CSliceBySlice::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath M3CSliceBySlice::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
 }

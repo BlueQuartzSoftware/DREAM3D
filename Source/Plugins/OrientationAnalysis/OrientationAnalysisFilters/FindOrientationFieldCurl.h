@@ -35,16 +35,18 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QString>
 #include <vector>
 
 #include "OrientationLib/LaueOps/LaueOps.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -58,147 +60,235 @@
 class OrientationAnalysis_EXPORT FindOrientationFieldCurl : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(FindOrientationFieldCurl SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
-    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
-    PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
-    PYB11_PROPERTY(QString DislocationTensorsArrayName READ getDislocationTensorsArrayName WRITE setDislocationTensorsArrayName)
-    PYB11_PROPERTY(IntVec3Type CurlSize READ getCurlSize WRITE setCurlSize)
-  public:
-    SIMPL_SHARED_POINTERS(FindOrientationFieldCurl)
-    SIMPL_FILTER_NEW_MACRO(FindOrientationFieldCurl)
-    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindOrientationFieldCurl, AbstractFilter)
 
-    ~FindOrientationFieldCurl() override;
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(FindOrientationFieldCurl SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindOrientationFieldCurl)
+  PYB11_FILTER_NEW_MACRO(FindOrientationFieldCurl)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, DislocationTensorsArrayName)
+  PYB11_FILTER_PARAMETER(IntVec3Type, CurlSize)
+  PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+  PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
+  PYB11_PROPERTY(QString DislocationTensorsArrayName READ getDislocationTensorsArrayName WRITE setDislocationTensorsArrayName)
+  PYB11_PROPERTY(IntVec3Type CurlSize READ getCurlSize WRITE setCurlSize)
+#endif
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-    Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+public:
+  using Self = FindOrientationFieldCurl;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-    Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
-    Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
+  /**
+   * @brief Returns the name of the class for FindOrientationFieldCurl
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindOrientationFieldCurl
+   */
+  static QString ClassName();
 
-    SIMPL_FILTER_PARAMETER(QString, DislocationTensorsArrayName)
-    Q_PROPERTY(QString DislocationTensorsArrayName READ getDislocationTensorsArrayName WRITE setDislocationTensorsArrayName)
+  ~FindOrientationFieldCurl() override;
 
-    SIMPL_FILTER_PARAMETER(IntVec3Type, CurlSize)
-    Q_PROPERTY(IntVec3Type CurlSize READ getCurlSize WRITE setCurlSize)
+  /**
+   * @brief Setter property for CellPhasesArrayPath
+   */
+  void setCellPhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellPhasesArrayPath
+   * @return Value of CellPhasesArrayPath
+   */
+  DataArrayPath getCellPhasesArrayPath() const;
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    const QString getCompiledLibraryName() const override;
+  Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-     */
-    const QString getBrandingString() const override;
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    const QString getFilterVersion() const override;
+  Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+  /**
+   * @brief Setter property for QuatsArrayPath
+   */
+  void setQuatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for QuatsArrayPath
+   * @return Value of QuatsArrayPath
+   */
+  DataArrayPath getQuatsArrayPath() const;
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    const QString getGroupName() const override;
+  Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    const QString getSubGroupName() const override;
+  /**
+   * @brief Setter property for DislocationTensorsArrayName
+   */
+  void setDislocationTensorsArrayName(const QString& value);
+  /**
+   * @brief Getter property for DislocationTensorsArrayName
+   * @return Value of DislocationTensorsArrayName
+   */
+  QString getDislocationTensorsArrayName() const;
 
-    /**
-     * @brief getUuid Return the unique identifier for this filter.
-     * @return A QUuid object.
-     */
-    const QUuid getUuid() override;
+  Q_PROPERTY(QString DislocationTensorsArrayName READ getDislocationTensorsArrayName WRITE setDislocationTensorsArrayName)
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    const QString getHumanLabel() const override;
+  /**
+   * @brief Setter property for CurlSize
+   */
+  void setCurlSize(const IntVec3Type& value);
+  /**
+   * @brief Getter property for CurlSize
+   * @return Value of CurlSize
+   */
+  IntVec3Type getCurlSize() const;
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    void setupFilterParameters() override;
+  Q_PROPERTY(IntVec3Type CurlSize READ getCurlSize WRITE setCurlSize)
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  QString getCompiledLibraryName() const override;
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    void execute() override;
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+   */
+  QString getBrandingString() const override;
 
-    /**
-     * @brief preflight Reimplemented from @see AbstractFilter class
-     */
-    void preflight() override;
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  QString getFilterVersion() const override;
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  QString getGroupName() const override;
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  QString getSubGroupName() const override;
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief getUuid Return the unique identifier for this filter.
+   * @return A QUuid object.
+   */
+  QUuid getUuid() const override;
 
-  protected:
-    FindOrientationFieldCurl();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  QString getHumanLabel() const override;
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  void setupFilterParameters() override;
 
-  private:
-    QVector<LaueOps::Pointer> m_OrientationOps;
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
-    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_DATAARRAY_VARIABLE(float, DislocationTensors)
-    DEFINE_DATAARRAY_VARIABLE(float, Quats)
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  void execute() override;
 
-    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+  /**
+   * @brief preflight Reimplemented from @see AbstractFilter class
+   */
+  void preflight() override;
 
-  public:
-    FindOrientationFieldCurl(const FindOrientationFieldCurl&) = delete;            // Copy Constructor Not Implemented
-    FindOrientationFieldCurl(FindOrientationFieldCurl&&) = delete;                 // Move Constructor Not Implemented
-    FindOrientationFieldCurl& operator=(const FindOrientationFieldCurl&) = delete; // Copy Assignment Not Implemented
-    FindOrientationFieldCurl& operator=(FindOrientationFieldCurl&&) = delete;      // Move Assignment Not Implemented
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
+
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
+
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
+
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
+
+protected:
+  FindOrientationFieldCurl();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
+
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
+
+private:
+  std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+  int32_t* m_CellPhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_DislocationTensorsPtr;
+  float* m_DislocationTensors = nullptr;
+  std::weak_ptr<DataArray<float>> m_QuatsPtr;
+  float* m_Quats = nullptr;
+  std::weak_ptr<DataArray<unsigned int>> m_CrystalStructuresPtr;
+  unsigned int* m_CrystalStructures = nullptr;
+
+  DataArrayPath m_CellPhasesArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+  DataArrayPath m_QuatsArrayPath = {};
+  QString m_DislocationTensorsArrayName = {};
+  IntVec3Type m_CurlSize = {};
+
+  QVector<LaueOps::Pointer> m_OrientationOps;
+
+public:
+  FindOrientationFieldCurl(const FindOrientationFieldCurl&) = delete;            // Copy Constructor Not Implemented
+  FindOrientationFieldCurl(FindOrientationFieldCurl&&) = delete;                 // Move Constructor Not Implemented
+  FindOrientationFieldCurl& operator=(const FindOrientationFieldCurl&) = delete; // Copy Assignment Not Implemented
+  FindOrientationFieldCurl& operator=(FindOrientationFieldCurl&&) = delete;      // Move Assignment Not Implemented
 };
 

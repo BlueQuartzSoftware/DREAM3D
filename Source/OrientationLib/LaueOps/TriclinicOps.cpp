@@ -33,6 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "TriclinicOps.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -959,4 +961,30 @@ SIMPL::Rgb TriclinicOps::generateMisorientationColor(const QuatType& q, const Qu
 
   return rgb;
 }
+
+// -----------------------------------------------------------------------------
+TriclinicOps::Pointer TriclinicOps::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+QString TriclinicOps::getNameOfClass() const
+{
+  return QString("TriclinicOps");
+}
+
+// -----------------------------------------------------------------------------
+QString TriclinicOps::ClassName()
+{
+  return QString("TriclinicOps");
+}
+
+// -----------------------------------------------------------------------------
+TriclinicOps::Pointer TriclinicOps::New()
+{
+  Pointer sharedPtr(new(TriclinicOps));
+  return sharedPtr;
+}
+
 

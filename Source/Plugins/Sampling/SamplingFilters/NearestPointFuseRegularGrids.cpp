@@ -33,14 +33,21 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "NearestPointFuseRegularGrids.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
@@ -341,7 +348,7 @@ AbstractFilter::Pointer NearestPointFuseRegularGrids::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NearestPointFuseRegularGrids::getCompiledLibraryName() const
+QString NearestPointFuseRegularGrids::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -349,7 +356,7 @@ const QString NearestPointFuseRegularGrids::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NearestPointFuseRegularGrids::getBrandingString() const
+QString NearestPointFuseRegularGrids::getBrandingString() const
 {
   return "Sampling";
 }
@@ -357,7 +364,7 @@ const QString NearestPointFuseRegularGrids::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NearestPointFuseRegularGrids::getFilterVersion() const
+QString NearestPointFuseRegularGrids::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -368,7 +375,7 @@ const QString NearestPointFuseRegularGrids::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NearestPointFuseRegularGrids::getGroupName() const
+QString NearestPointFuseRegularGrids::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -376,7 +383,7 @@ const QString NearestPointFuseRegularGrids::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid NearestPointFuseRegularGrids::getUuid()
+QUuid NearestPointFuseRegularGrids::getUuid() const
 {
   return QUuid("{cbaf9e68-5ded-560c-9440-509289100ea8}");
 }
@@ -384,7 +391,7 @@ const QUuid NearestPointFuseRegularGrids::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NearestPointFuseRegularGrids::getSubGroupName() const
+QString NearestPointFuseRegularGrids::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ResolutionFilters;
 }
@@ -392,7 +399,60 @@ const QString NearestPointFuseRegularGrids::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NearestPointFuseRegularGrids::getHumanLabel() const
+QString NearestPointFuseRegularGrids::getHumanLabel() const
 {
   return "Fuse Regular Grids (Nearest Point)";
+}
+
+// -----------------------------------------------------------------------------
+NearestPointFuseRegularGrids::Pointer NearestPointFuseRegularGrids::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<NearestPointFuseRegularGrids> NearestPointFuseRegularGrids::New()
+{
+  struct make_shared_enabler : public NearestPointFuseRegularGrids
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString NearestPointFuseRegularGrids::getNameOfClass() const
+{
+  return QString("NearestPointFuseRegularGrids");
+}
+
+// -----------------------------------------------------------------------------
+QString NearestPointFuseRegularGrids::ClassName()
+{
+  return QString("NearestPointFuseRegularGrids");
+}
+
+// -----------------------------------------------------------------------------
+void NearestPointFuseRegularGrids::setReferenceCellAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_ReferenceCellAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath NearestPointFuseRegularGrids::getReferenceCellAttributeMatrixPath() const
+{
+  return m_ReferenceCellAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void NearestPointFuseRegularGrids::setSamplingCellAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_SamplingCellAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath NearestPointFuseRegularGrids::getSamplingCellAttributeMatrixPath() const
+{
+  return m_SamplingCellAttributeMatrixPath;
 }

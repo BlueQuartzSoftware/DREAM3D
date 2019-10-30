@@ -234,3 +234,40 @@ unsigned int PrecipitateRolledPreset::getDistributionType(const QString& distTyp
   }
   return SIMPL::DistributionType::UnknownDistributionType;
 }
+
+// -----------------------------------------------------------------------------
+PrecipitateRolledPreset::Pointer PrecipitateRolledPreset::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+PrecipitateRolledPreset::Pointer PrecipitateRolledPreset::New()
+{
+  Pointer sharedPtr(new(PrecipitateRolledPreset));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+void PrecipitateRolledPreset::setAspectRatio1(float value)
+{
+  m_AspectRatio1 = value;
+}
+
+// -----------------------------------------------------------------------------
+float PrecipitateRolledPreset::getAspectRatio1() const
+{
+  return m_AspectRatio1;
+}
+
+// -----------------------------------------------------------------------------
+void PrecipitateRolledPreset::setAspectRatio2(float value)
+{
+  m_AspectRatio2 = value;
+}
+
+// -----------------------------------------------------------------------------
+float PrecipitateRolledPreset::getAspectRatio2() const
+{
+  return m_AspectRatio2;
+}

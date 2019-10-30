@@ -44,7 +44,10 @@
 #include <QtCore/QMetaProperty>
 #include <QtCore/QString>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Observer.h"
+
 #include "SIMPLib/FilterParameters/JsonFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/JsonFilterParametersWriter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -55,6 +58,8 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+
 #include "UnitTestSupport.hpp"
 
 #include "DREAM3DTestFileLocations.h"

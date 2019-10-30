@@ -35,8 +35,10 @@
 
 #include <QtCore/QFile>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <QtCore/QDebug>
+
 #include "SIMPLib/Common/TemplateHelpers.h"
+
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
@@ -45,6 +47,9 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+
 #include "UnitTestSupport.hpp"
 
 #include "StatisticsTestFileLocations.h"
@@ -125,7 +130,24 @@ public:
   virtual ~FindDifferenceMapTest()
   {
   }
-  SIMPL_TYPE_MACRO(FindDifferenceMapTest)
+  /**
+   * @brief Returns the name of the class for FindDifferenceMapTest
+   */
+  /**
+   * @brief Returns the name of the class for FindDifferenceMapTest
+   */
+  QString getNameOfClass() const
+  {
+    return QString("FindDifferenceMapTest");
+  }
+
+  /**
+   * @brief Returns the name of the class for FindDifferenceMapTest
+   */
+  QString ClassName()
+  {
+    return QString("FindDifferenceMapTest");
+  }
 
   // -----------------------------------------------------------------------------
   //

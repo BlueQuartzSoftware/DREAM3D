@@ -35,8 +35,10 @@
 
 #include <QtCore/QFile>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <QtCore/QDebug>
+
 #include "SIMPLib/DataArrays/DataArray.hpp"
+
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
@@ -51,6 +53,9 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+
 #include "UnitTestSupport.hpp"
 
 #include "StatisticsTestFileLocations.h"
@@ -81,7 +86,24 @@ public:
   virtual ~FindSizesTest()
   {
   }
-  SIMPL_TYPE_MACRO(FindSizesTest)
+  /**
+   * @brief Returns the name of the class for FindSizesTest
+   */
+  /**
+   * @brief Returns the name of the class for FindSizesTest
+   */
+  QString getNameOfClass() const
+  {
+    return QString("FindSizesTest");
+  }
+
+  /**
+   * @brief Returns the name of the class for FindSizesTest
+   */
+  QString ClassName()
+  {
+    return QString("FindSizesTest");
+  }
 
   // -----------------------------------------------------------------------------
   //

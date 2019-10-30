@@ -35,12 +35,14 @@
 #pragma once
 
 
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/LaueOps/LaueOps.h"
+
 
 /**
  * @class CubicLowOps CubicLowOps.h DREAM3DLib/Common/LaueOps/CubicLowOps.h
@@ -54,9 +56,23 @@
 class OrientationLib_EXPORT CubicLowOps : public LaueOps
 {
   public:
-    SIMPL_SHARED_POINTERS(CubicLowOps)
-     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CubicLowOps, LaueOps)
-    SIMPL_STATIC_NEW_MACRO(CubicLowOps)
+    using Self = CubicLowOps;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    /**
+     * @brief Returns the name of the class for CubicLowOps
+     */
+    QString getNameOfClass() const override;
+    /**
+     * @brief Returns the name of the class for CubicLowOps
+     */
+    static QString ClassName();
+
+    static Pointer New();
 
     CubicLowOps();
     ~CubicLowOps() override;
@@ -64,7 +80,6 @@ class OrientationLib_EXPORT CubicLowOps : public LaueOps
     static const int k_OdfSize = 46656;
     static const int k_MdfSize = 46656;
     static const int k_NumSymQuats = 12;
-
     /**
      * @brief getHasInversion Returns if this Laue class has inversion
      * @return
@@ -165,12 +180,6 @@ class OrientationLib_EXPORT CubicLowOps : public LaueOps
     SIMPL::Rgb generateMisorientationColor(const QuatType& q, const QuatType& refFrame) const override;
 
     /**
-     * @brief generateStandardTriangle Generates an RGBA array that is a color "Standard" IPF Triangle Legend used for IPF Color Maps.
-     * @return
-     */
-    UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim) const;
-
-    /**
      * @brief generatePoleFigure This method will generate a number of pole figures for this crystal symmetry and the Euler
      * angles that are passed in.
      * @param eulers The Euler Angles to generate the pole figure from.
@@ -181,14 +190,22 @@ class OrientationLib_EXPORT CubicLowOps : public LaueOps
      */
     QVector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t& config) const override;
 
+    /**
+     * @brief generateStandardTriangle Generates an RGBA array that is a color "Standard" IPF Triangle Legend used for IPF Color Maps.
+     * @return
+     */
+    UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim) const;
+
   protected:
-    double _calcMisoQuat(const QuatType quatsym[24], int numsym, QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const;
+    double _calcMisoQuat(const QuatType quatsym[12], int numsym, QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const;
 
   public:
     CubicLowOps(const CubicLowOps&) = delete;    // Copy Constructor Not Implemented
     CubicLowOps(CubicLowOps&&) = delete;         // Move Constructor Not Implemented
     CubicLowOps& operator=(const CubicLowOps&) = delete; // Copy Assignment Not Implemented
     CubicLowOps& operator=(CubicLowOps&&) = delete;      // Move Assignment Not Implemented
+
+  private:
 };
 
 

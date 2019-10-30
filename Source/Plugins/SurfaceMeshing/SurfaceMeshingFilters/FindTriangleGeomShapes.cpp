@@ -33,9 +33,14 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindTriangleGeomShapes.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -45,6 +50,8 @@
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
@@ -720,7 +727,7 @@ AbstractFilter::Pointer FindTriangleGeomShapes::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomShapes::getCompiledLibraryName() const
+QString FindTriangleGeomShapes::getCompiledLibraryName() const
 {
 	return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -728,7 +735,7 @@ const QString FindTriangleGeomShapes::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomShapes::getBrandingString() const
+QString FindTriangleGeomShapes::getBrandingString() const
 {
   return "Statistics";
 }
@@ -736,7 +743,7 @@ const QString FindTriangleGeomShapes::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomShapes::getFilterVersion() const
+QString FindTriangleGeomShapes::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -746,7 +753,7 @@ const QString FindTriangleGeomShapes::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomShapes::getGroupName() const
+QString FindTriangleGeomShapes::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -754,7 +761,7 @@ const QString FindTriangleGeomShapes::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindTriangleGeomShapes::getUuid()
+QUuid FindTriangleGeomShapes::getUuid() const
 {
   return QUuid("{26765457-89fb-5686-87f6-878ca549f0df}");
 }
@@ -762,7 +769,7 @@ const QUuid FindTriangleGeomShapes::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomShapes::getSubGroupName() const
+QString FindTriangleGeomShapes::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -770,7 +777,156 @@ const QString FindTriangleGeomShapes::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomShapes::getHumanLabel() const
+QString FindTriangleGeomShapes::getHumanLabel() const
 {
   return "Find Feature Shapes from Triangle Geometry";
+}
+
+// -----------------------------------------------------------------------------
+FindTriangleGeomShapes::Pointer FindTriangleGeomShapes::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindTriangleGeomShapes> FindTriangleGeomShapes::New()
+{
+  struct make_shared_enabler : public FindTriangleGeomShapes
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindTriangleGeomShapes::getNameOfClass() const
+{
+  return QString("FindTriangleGeomShapes");
+}
+
+// -----------------------------------------------------------------------------
+QString FindTriangleGeomShapes::ClassName()
+{
+  return QString("FindTriangleGeomShapes");
+}
+
+// -----------------------------------------------------------------------------
+void FindTriangleGeomShapes::setFeatureAttributeMatrixName(const DataArrayPath& value)
+{
+  m_FeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindTriangleGeomShapes::getFeatureAttributeMatrixName() const
+{
+  return m_FeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void FindTriangleGeomShapes::setFeatureMoments(const std::shared_ptr<DataArray<double>>& value)
+{
+  m_FeatureMoments = value;
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<DataArray<double>> FindTriangleGeomShapes::getFeatureMoments() const
+{
+  return m_FeatureMoments;
+}
+
+// -----------------------------------------------------------------------------
+void FindTriangleGeomShapes::setFeatureEigenVals(const std::shared_ptr<DataArray<double>>& value)
+{
+  m_FeatureEigenVals = value;
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<DataArray<double>> FindTriangleGeomShapes::getFeatureEigenVals() const
+{
+  return m_FeatureEigenVals;
+}
+
+// -----------------------------------------------------------------------------
+void FindTriangleGeomShapes::setFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_FaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindTriangleGeomShapes::getFaceLabelsArrayPath() const
+{
+  return m_FaceLabelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindTriangleGeomShapes::setCentroidsArrayPath(const DataArrayPath& value)
+{
+  m_CentroidsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindTriangleGeomShapes::getCentroidsArrayPath() const
+{
+  return m_CentroidsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindTriangleGeomShapes::setVolumesArrayPath(const DataArrayPath& value)
+{
+  m_VolumesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindTriangleGeomShapes::getVolumesArrayPath() const
+{
+  return m_VolumesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindTriangleGeomShapes::setOmega3sArrayName(const QString& value)
+{
+  m_Omega3sArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindTriangleGeomShapes::getOmega3sArrayName() const
+{
+  return m_Omega3sArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindTriangleGeomShapes::setAxisLengthsArrayName(const QString& value)
+{
+  m_AxisLengthsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindTriangleGeomShapes::getAxisLengthsArrayName() const
+{
+  return m_AxisLengthsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindTriangleGeomShapes::setAxisEulerAnglesArrayName(const QString& value)
+{
+  m_AxisEulerAnglesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindTriangleGeomShapes::getAxisEulerAnglesArrayName() const
+{
+  return m_AxisEulerAnglesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindTriangleGeomShapes::setAspectRatiosArrayName(const QString& value)
+{
+  m_AspectRatiosArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindTriangleGeomShapes::getAspectRatiosArrayName() const
+{
+  return m_AspectRatiosArrayName;
 }

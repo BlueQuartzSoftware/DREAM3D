@@ -33,11 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "SineParamsSegmentFeatures.h"
 
 #include <chrono>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
@@ -47,6 +52,8 @@
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 /* Create Enumerations to allow the created Attribute Arrays to take part in renaming */
 enum createdPathID : RenameDataPath::DataID_t
@@ -425,7 +432,7 @@ AbstractFilter::Pointer SineParamsSegmentFeatures::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SineParamsSegmentFeatures::getCompiledLibraryName() const
+QString SineParamsSegmentFeatures::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -433,7 +440,7 @@ const QString SineParamsSegmentFeatures::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SineParamsSegmentFeatures::getBrandingString() const
+QString SineParamsSegmentFeatures::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -441,7 +448,7 @@ const QString SineParamsSegmentFeatures::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SineParamsSegmentFeatures::getFilterVersion() const
+QString SineParamsSegmentFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -452,7 +459,7 @@ const QString SineParamsSegmentFeatures::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SineParamsSegmentFeatures::getGroupName() const
+QString SineParamsSegmentFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -460,7 +467,7 @@ const QString SineParamsSegmentFeatures::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid SineParamsSegmentFeatures::getUuid()
+QUuid SineParamsSegmentFeatures::getUuid() const
 {
   return QUuid("{2d05beff-cfda-5f38-afae-727bfc529585}");
 }
@@ -468,7 +475,7 @@ const QUuid SineParamsSegmentFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SineParamsSegmentFeatures::getSubGroupName() const
+QString SineParamsSegmentFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;
 }
@@ -476,7 +483,120 @@ const QString SineParamsSegmentFeatures::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SineParamsSegmentFeatures::getHumanLabel() const
+QString SineParamsSegmentFeatures::getHumanLabel() const
 {
   return "Segment Features (Sine Parameters)";
+}
+
+// -----------------------------------------------------------------------------
+SineParamsSegmentFeatures::Pointer SineParamsSegmentFeatures::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<SineParamsSegmentFeatures> SineParamsSegmentFeatures::New()
+{
+  struct make_shared_enabler : public SineParamsSegmentFeatures
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString SineParamsSegmentFeatures::getNameOfClass() const
+{
+  return QString("SineParamsSegmentFeatures");
+}
+
+// -----------------------------------------------------------------------------
+QString SineParamsSegmentFeatures::ClassName()
+{
+  return QString("SineParamsSegmentFeatures");
+}
+
+// -----------------------------------------------------------------------------
+void SineParamsSegmentFeatures::setCellFeatureAttributeMatrixName(const QString& value)
+{
+  m_CellFeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString SineParamsSegmentFeatures::getCellFeatureAttributeMatrixName() const
+{
+  return m_CellFeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void SineParamsSegmentFeatures::setSineParamsArrayPath(const DataArrayPath& value)
+{
+  m_SineParamsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath SineParamsSegmentFeatures::getSineParamsArrayPath() const
+{
+  return m_SineParamsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void SineParamsSegmentFeatures::setRandomizeFeatureIds(bool value)
+{
+  m_RandomizeFeatureIds = value;
+}
+
+// -----------------------------------------------------------------------------
+bool SineParamsSegmentFeatures::getRandomizeFeatureIds() const
+{
+  return m_RandomizeFeatureIds;
+}
+
+// -----------------------------------------------------------------------------
+void SineParamsSegmentFeatures::setUseGoodVoxels(bool value)
+{
+  m_UseGoodVoxels = value;
+}
+
+// -----------------------------------------------------------------------------
+bool SineParamsSegmentFeatures::getUseGoodVoxels() const
+{
+  return m_UseGoodVoxels;
+}
+
+// -----------------------------------------------------------------------------
+void SineParamsSegmentFeatures::setGoodVoxelsArrayPath(const DataArrayPath& value)
+{
+  m_GoodVoxelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath SineParamsSegmentFeatures::getGoodVoxelsArrayPath() const
+{
+  return m_GoodVoxelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void SineParamsSegmentFeatures::setFeatureIdsArrayName(const QString& value)
+{
+  m_FeatureIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString SineParamsSegmentFeatures::getFeatureIdsArrayName() const
+{
+  return m_FeatureIdsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void SineParamsSegmentFeatures::setActiveArrayName(const QString& value)
+{
+  m_ActiveArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString SineParamsSegmentFeatures::getActiveArrayName() const
+{
+  return m_ActiveArrayName;
 }

@@ -35,11 +35,13 @@
 
 #pragma once
 
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/PhaseType.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/FileReader.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -49,52 +51,131 @@
 class OrientationAnalysis_EXPORT EnsembleInfoReader : public FileReader
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(EnsembleInfoReader SUPERCLASS FileReader)
-    PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
-    PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
-    PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
-    PYB11_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
-    PYB11_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(EnsembleInfoReader SUPERCLASS FileReader)
+  PYB11_SHARED_POINTERS(EnsembleInfoReader)
+  PYB11_FILTER_NEW_MACRO(EnsembleInfoReader)
+  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  PYB11_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, InputFile)
+  PYB11_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
+  PYB11_FILTER_PARAMETER(QString, PhaseTypesArrayName)
+  PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+  PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+  PYB11_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
+  PYB11_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(EnsembleInfoReader)
-  SIMPL_FILTER_NEW_MACRO(EnsembleInfoReader)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(EnsembleInfoReader, FileReader)
+  using Self = EnsembleInfoReader;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for EnsembleInfoReader
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for EnsembleInfoReader
+   */
+  static QString ClassName();
 
   virtual ~EnsembleInfoReader();
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  DataArrayPath getDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+  /**
+   * @brief Setter property for CellEnsembleAttributeMatrixName
+   */
+  void setCellEnsembleAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellEnsembleAttributeMatrixName
+   * @return Value of CellEnsembleAttributeMatrixName
+   */
+  QString getCellEnsembleAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  /**
+   * @brief Setter property for InputFile
+   */
+  void setInputFile(const QString& value);
+  /**
+   * @brief Getter property for InputFile
+   * @return Value of InputFile
+   */
+  QString getInputFile() const;
+
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-  SIMPL_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
+  /**
+   * @brief Setter property for CrystalStructuresArrayName
+   */
+  void setCrystalStructuresArrayName(const QString& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayName
+   * @return Value of CrystalStructuresArrayName
+   */
+  QString getCrystalStructuresArrayName() const;
+
   Q_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, PhaseTypesArrayName)
+  /**
+   * @brief Setter property for PhaseTypesArrayName
+   */
+  void setPhaseTypesArrayName(const QString& value);
+  /**
+   * @brief Getter property for PhaseTypesArrayName
+   * @return Value of PhaseTypesArrayName
+   */
+  QString getPhaseTypesArrayName() const;
+
   Q_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -104,23 +185,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -172,8 +253,16 @@ protected:
   void ensembleLookup(QStringList values);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-  DEFINE_DATAARRAY_VARIABLE(PhaseType::EnumType, PhaseTypes)
+  std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
+  uint32_t* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<PhaseType::EnumType>> m_PhaseTypesPtr;
+  PhaseType::EnumType* m_PhaseTypes = nullptr;
+
+  DataArrayPath m_DataContainerName = {};
+  QString m_CellEnsembleAttributeMatrixName = {};
+  QString m_InputFile = {};
+  QString m_CrystalStructuresArrayName = {};
+  QString m_PhaseTypesArrayName = {};
 
   PhaseType::Type m_ptype;
   uint32_t m_crystruct;

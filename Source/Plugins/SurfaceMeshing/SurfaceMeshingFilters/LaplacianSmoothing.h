@@ -35,9 +35,11 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -51,167 +53,339 @@
 class SurfaceMeshing_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(LaplacianSmoothing SUPERCLASS SurfaceMeshFilter)
-    PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
-    PYB11_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
-    PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
-    PYB11_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps)
-    PYB11_PROPERTY(float Lambda READ getLambda WRITE setLambda)
-    PYB11_PROPERTY(float SurfacePointLambda READ getSurfacePointLambda WRITE setSurfacePointLambda)
-    PYB11_PROPERTY(float TripleLineLambda READ getTripleLineLambda WRITE setTripleLineLambda)
-    PYB11_PROPERTY(float QuadPointLambda READ getQuadPointLambda WRITE setQuadPointLambda)
-    PYB11_PROPERTY(float SurfaceTripleLineLambda READ getSurfaceTripleLineLambda WRITE setSurfaceTripleLineLambda)
-    PYB11_PROPERTY(float SurfaceQuadPointLambda READ getSurfaceQuadPointLambda WRITE setSurfaceQuadPointLambda)
-    PYB11_PROPERTY(bool UseTaubinSmoothing READ getUseTaubinSmoothing WRITE setUseTaubinSmoothing)
-    PYB11_PROPERTY(float MuFactor READ getMuFactor WRITE setMuFactor)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(LaplacianSmoothing SUPERCLASS SurfaceMeshFilter)
+  PYB11_SHARED_POINTERS(LaplacianSmoothing)
+  PYB11_FILTER_NEW_MACRO(LaplacianSmoothing)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceDataContainerName)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshNodeTypeArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  PYB11_FILTER_PARAMETER(int, IterationSteps)
+  PYB11_FILTER_PARAMETER(float, Lambda)
+  PYB11_FILTER_PARAMETER(float, SurfacePointLambda)
+  PYB11_FILTER_PARAMETER(float, TripleLineLambda)
+  PYB11_FILTER_PARAMETER(float, QuadPointLambda)
+  PYB11_FILTER_PARAMETER(float, SurfaceTripleLineLambda)
+  PYB11_FILTER_PARAMETER(float, SurfaceQuadPointLambda)
+  PYB11_FILTER_PARAMETER(bool, UseTaubinSmoothing)
+  PYB11_FILTER_PARAMETER(float, MuFactor)
+  PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+  PYB11_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
+  PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+  PYB11_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps)
+  PYB11_PROPERTY(float Lambda READ getLambda WRITE setLambda)
+  PYB11_PROPERTY(float SurfacePointLambda READ getSurfacePointLambda WRITE setSurfacePointLambda)
+  PYB11_PROPERTY(float TripleLineLambda READ getTripleLineLambda WRITE setTripleLineLambda)
+  PYB11_PROPERTY(float QuadPointLambda READ getQuadPointLambda WRITE setQuadPointLambda)
+  PYB11_PROPERTY(float SurfaceTripleLineLambda READ getSurfaceTripleLineLambda WRITE setSurfaceTripleLineLambda)
+  PYB11_PROPERTY(float SurfaceQuadPointLambda READ getSurfaceQuadPointLambda WRITE setSurfaceQuadPointLambda)
+  PYB11_PROPERTY(bool UseTaubinSmoothing READ getUseTaubinSmoothing WRITE setUseTaubinSmoothing)
+  PYB11_PROPERTY(float MuFactor READ getMuFactor WRITE setMuFactor)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(LaplacianSmoothing)
-  SIMPL_FILTER_NEW_MACRO(LaplacianSmoothing)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(LaplacianSmoothing, SurfaceMeshFilter)
+  using Self = LaplacianSmoothing;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
 
-   ~LaplacianSmoothing() override;
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
 
-   SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceDataContainerName)
-   Q_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+  /**
+   * @brief Returns the name of the class for LaplacianSmoothing
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for LaplacianSmoothing
+   */
+  static QString ClassName();
 
-   SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshNodeTypeArrayPath)
-   Q_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
+  ~LaplacianSmoothing() override;
 
-   SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
-   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+  /**
+   * @brief Setter property for SurfaceDataContainerName
+   */
+  void setSurfaceDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceDataContainerName
+   * @return Value of SurfaceDataContainerName
+   */
+  DataArrayPath getSurfaceDataContainerName() const;
 
-   SIMPL_FILTER_PARAMETER(int, IterationSteps)
-   Q_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps)
+  Q_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
-   SIMPL_FILTER_PARAMETER(float, Lambda)
-   Q_PROPERTY(float Lambda READ getLambda WRITE setLambda)
+  /**
+   * @brief Setter property for SurfaceMeshNodeTypeArrayPath
+   */
+  void setSurfaceMeshNodeTypeArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshNodeTypeArrayPath
+   * @return Value of SurfaceMeshNodeTypeArrayPath
+   */
+  DataArrayPath getSurfaceMeshNodeTypeArrayPath() const;
 
-   SIMPL_FILTER_PARAMETER(float, SurfacePointLambda)
-   Q_PROPERTY(float SurfacePointLambda READ getSurfacePointLambda WRITE setSurfacePointLambda)
+  Q_PROPERTY(DataArrayPath SurfaceMeshNodeTypeArrayPath READ getSurfaceMeshNodeTypeArrayPath WRITE setSurfaceMeshNodeTypeArrayPath)
 
-   SIMPL_FILTER_PARAMETER(float, TripleLineLambda)
-   Q_PROPERTY(float TripleLineLambda READ getTripleLineLambda WRITE setTripleLineLambda)
+  /**
+   * @brief Setter property for SurfaceMeshFaceLabelsArrayPath
+   */
+  void setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceLabelsArrayPath
+   * @return Value of SurfaceMeshFaceLabelsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
 
-   SIMPL_FILTER_PARAMETER(float, QuadPointLambda)
-   Q_PROPERTY(float QuadPointLambda READ getQuadPointLambda WRITE setQuadPointLambda)
+  Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-   SIMPL_FILTER_PARAMETER(float, SurfaceTripleLineLambda)
-   Q_PROPERTY(float SurfaceTripleLineLambda READ getSurfaceTripleLineLambda WRITE setSurfaceTripleLineLambda)
+  /**
+   * @brief Setter property for IterationSteps
+   */
+  void setIterationSteps(int value);
+  /**
+   * @brief Getter property for IterationSteps
+   * @return Value of IterationSteps
+   */
+  int getIterationSteps() const;
 
-   SIMPL_FILTER_PARAMETER(float, SurfaceQuadPointLambda)
-   Q_PROPERTY(float SurfaceQuadPointLambda READ getSurfaceQuadPointLambda WRITE setSurfaceQuadPointLambda)
+  Q_PROPERTY(int IterationSteps READ getIterationSteps WRITE setIterationSteps)
 
-   SIMPL_FILTER_PARAMETER(bool, UseTaubinSmoothing)
-   Q_PROPERTY(bool UseTaubinSmoothing READ getUseTaubinSmoothing WRITE setUseTaubinSmoothing)
+  /**
+   * @brief Setter property for Lambda
+   */
+  void setLambda(float value);
+  /**
+   * @brief Getter property for Lambda
+   * @return Value of Lambda
+   */
+  float getLambda() const;
 
-   SIMPL_FILTER_PARAMETER(float, MuFactor)
-   Q_PROPERTY(float MuFactor READ getMuFactor WRITE setMuFactor)
+  Q_PROPERTY(float Lambda READ getLambda WRITE setLambda)
 
-   /* This class is designed to be subclassed so that thoes subclasses can add
-    * more functionality such as constrained surface nodes or Triple Lines. We use
-    * this array to assign each vertex a specific Lambda value. Subclasses can set
-    * this array then simply call the 'smooth' protected method to actually run the
-    * smoothing iterations
-    */
-   SIMPL_VIRTUAL_INSTANCE_PROPERTY(DataArray<float>::Pointer, LambdaArray)
+  /**
+   * @brief Setter property for SurfacePointLambda
+   */
+  void setSurfacePointLambda(float value);
+  /**
+   * @brief Getter property for SurfacePointLambda
+   * @return Value of SurfacePointLambda
+   */
+  float getSurfacePointLambda() const;
 
-   /**
-    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-    */
-   const QString getCompiledLibraryName() const override;
+  Q_PROPERTY(float SurfacePointLambda READ getSurfacePointLambda WRITE setSurfacePointLambda)
 
-   /**
-    * @brief getBrandingString Returns the branding string for the filter, which is a tag
-    * used to denote the filter's association with specific plugins
-    * @return Branding string
-    */
-   const QString getBrandingString() const override;
+  /**
+   * @brief Setter property for TripleLineLambda
+   */
+  void setTripleLineLambda(float value);
+  /**
+   * @brief Getter property for TripleLineLambda
+   * @return Value of TripleLineLambda
+   */
+  float getTripleLineLambda() const;
 
-   /**
-    * @brief getFilterVersion Returns a version string for this filter. Default
-    * value is an empty string.
-    * @return
-    */
-   const QString getFilterVersion() const override;
+  Q_PROPERTY(float TripleLineLambda READ getTripleLineLambda WRITE setTripleLineLambda)
 
-   /**
-    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-    */
-   AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+  /**
+   * @brief Setter property for QuadPointLambda
+   */
+  void setQuadPointLambda(float value);
+  /**
+   * @brief Getter property for QuadPointLambda
+   * @return Value of QuadPointLambda
+   */
+  float getQuadPointLambda() const;
 
-   /**
-    * @brief getGroupName Reimplemented from @see AbstractFilter class
-    */
-   const QString getGroupName() const override;
+  Q_PROPERTY(float QuadPointLambda READ getQuadPointLambda WRITE setQuadPointLambda)
 
-   /**
-    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-    */
-   const QString getSubGroupName() const override;
+  /**
+   * @brief Setter property for SurfaceTripleLineLambda
+   */
+  void setSurfaceTripleLineLambda(float value);
+  /**
+   * @brief Getter property for SurfaceTripleLineLambda
+   * @return Value of SurfaceTripleLineLambda
+   */
+  float getSurfaceTripleLineLambda() const;
 
-   /**
-    * @brief getUuid Return the unique identifier for this filter.
-    * @return A QUuid object.
-    */
-   const QUuid getUuid() override;
+  Q_PROPERTY(float SurfaceTripleLineLambda READ getSurfaceTripleLineLambda WRITE setSurfaceTripleLineLambda)
 
-   /**
-    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-    */
-   const QString getHumanLabel() const override;
+  /**
+   * @brief Setter property for SurfaceQuadPointLambda
+   */
+  void setSurfaceQuadPointLambda(float value);
+  /**
+   * @brief Getter property for SurfaceQuadPointLambda
+   * @return Value of SurfaceQuadPointLambda
+   */
+  float getSurfaceQuadPointLambda() const;
 
-   /**
-    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-    */
-   void setupFilterParameters() override;
+  Q_PROPERTY(float SurfaceQuadPointLambda READ getSurfaceQuadPointLambda WRITE setSurfaceQuadPointLambda)
 
-   /**
-    * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-    */
-   void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  /**
+   * @brief Setter property for UseTaubinSmoothing
+   */
+  void setUseTaubinSmoothing(bool value);
+  /**
+   * @brief Getter property for UseTaubinSmoothing
+   * @return Value of UseTaubinSmoothing
+   */
+  bool getUseTaubinSmoothing() const;
 
-   /**
-    * @brief execute Reimplemented from @see AbstractFilter class
-    */
-   void execute() override;
+  Q_PROPERTY(bool UseTaubinSmoothing READ getUseTaubinSmoothing WRITE setUseTaubinSmoothing)
 
-   /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-   void preflight() override;
+  /**
+   * @brief Setter property for MuFactor
+   */
+  void setMuFactor(float value);
+  /**
+   * @brief Getter property for MuFactor
+   * @return Value of MuFactor
+   */
+  float getMuFactor() const;
 
- protected:
-   LaplacianSmoothing();
-   /**
-    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-    */
-   void dataCheck();
+  Q_PROPERTY(float MuFactor READ getMuFactor WRITE setMuFactor)
 
-   /**
-    * @brief Initializes all the private instance variables.
-    */
-   void initialize();
+  /* This class is designed to be subclassed so that thoes subclasses can add
+   * more functionality such as constrained surface nodes or Triple Lines. We use
+   * this array to assign each vertex a specific Lambda value. Subclasses can set
+   * this array then simply call the 'smooth' protected method to actually run the
+   * smoothing iterations
+   */
+  /**
+   * @brief Setter property for LambdaArray
+   */
+  virtual void setLambdaArray(const DataArray<float>::Pointer& value);
+  /**
+   * @brief Getter property for LambdaArray
+   * @return Value of LambdaArray
+   */
+  virtual DataArray<float>::Pointer getLambdaArray() const;
 
-   /**
-    * @brief generateLambdaArray Generates the Lambda array that will be use during the smoothing
-    * @return Integer error code
-    */
-   virtual int32_t generateLambdaArray();
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  QString getCompiledLibraryName() const override;
 
-   /**
-    * @brief edgeBasedSmoothing Version of the smoothing algorithm uses Edge->Vertex connectivity information for its algorithm
-    * @return Integer error code
-    */
-   virtual int32_t edgeBasedSmoothing();
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+   */
+  QString getBrandingString() const override;
 
- private:
-   DEFINE_DATAARRAY_VARIABLE(int8_t, SurfaceMeshNodeType)
-   DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  QString getFilterVersion() const override;
 
- public:
-   LaplacianSmoothing(const LaplacianSmoothing&) = delete;            // Copy Constructor Not Implemented
-   LaplacianSmoothing(LaplacianSmoothing&&) = delete;                 // Move Constructor Not Implemented
-   LaplacianSmoothing& operator=(const LaplacianSmoothing&) = delete; // Copy Assignment Not Implemented
-   LaplacianSmoothing& operator=(LaplacianSmoothing&&) = delete;      // Move assignment Not Implemented
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  QString getGroupName() const override;
+
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  QString getSubGroupName() const override;
+
+  /**
+   * @brief getUuid Return the unique identifier for this filter.
+   * @return A QUuid object.
+   */
+  QUuid getUuid() const override;
+
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  QString getHumanLabel() const override;
+
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  void setupFilterParameters() override;
+
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  void execute() override;
+
+  /**
+   * @brief preflight Reimplemented from @see AbstractFilter class
+   */
+  void preflight() override;
+
+protected:
+  LaplacianSmoothing();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
+
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
+
+  /**
+   * @brief generateLambdaArray Generates the Lambda array that will be use during the smoothing
+   * @return Integer error code
+   */
+  virtual int32_t generateLambdaArray();
+
+  /**
+   * @brief edgeBasedSmoothing Version of the smoothing algorithm uses Edge->Vertex connectivity information for its algorithm
+   * @return Integer error code
+   */
+  virtual int32_t edgeBasedSmoothing();
+
+private:
+  DataArrayPath m_SurfaceDataContainerName = {};
+  DataArrayPath m_SurfaceMeshNodeTypeArrayPath = {};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
+  int m_IterationSteps = {};
+  float m_Lambda = {};
+  float m_SurfacePointLambda = {};
+  float m_TripleLineLambda = {};
+  float m_QuadPointLambda = {};
+  float m_SurfaceTripleLineLambda = {};
+  float m_SurfaceQuadPointLambda = {};
+  bool m_UseTaubinSmoothing = {};
+  float m_MuFactor = {};
+  DataArray<float>::Pointer m_LambdaArray = {};
+  std::weak_ptr<DataArray<int8_t>> m_SurfaceMeshNodeTypePtr;
+  int8_t* m_SurfaceMeshNodeType = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFaceLabelsPtr;
+  int32_t* m_SurfaceMeshFaceLabels = nullptr;
+
+public:
+  LaplacianSmoothing(const LaplacianSmoothing&) = delete;            // Copy Constructor Not Implemented
+  LaplacianSmoothing(LaplacianSmoothing&&) = delete;                 // Move Constructor Not Implemented
+  LaplacianSmoothing& operator=(const LaplacianSmoothing&) = delete; // Copy Assignment Not Implemented
+  LaplacianSmoothing& operator=(LaplacianSmoothing&&) = delete;      // Move assignment Not Implemented
 };
 

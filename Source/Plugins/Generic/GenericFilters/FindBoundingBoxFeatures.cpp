@@ -33,7 +33,11 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindBoundingBoxFeatures.h"
+
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
 
@@ -44,6 +48,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Generic/GenericConstants.h"
 #include "Generic/GenericVersion.h"
@@ -489,7 +495,7 @@ AbstractFilter::Pointer FindBoundingBoxFeatures::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundingBoxFeatures::getCompiledLibraryName() const
+QString FindBoundingBoxFeatures::getCompiledLibraryName() const
 {
   return GenericConstants::GenericBaseName;
 }
@@ -497,7 +503,7 @@ const QString FindBoundingBoxFeatures::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundingBoxFeatures::getBrandingString() const
+QString FindBoundingBoxFeatures::getBrandingString() const
 {
   return "Generic";
 }
@@ -505,7 +511,7 @@ const QString FindBoundingBoxFeatures::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundingBoxFeatures::getFilterVersion() const
+QString FindBoundingBoxFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -516,7 +522,7 @@ const QString FindBoundingBoxFeatures::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundingBoxFeatures::getGroupName() const
+QString FindBoundingBoxFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::Generic;
 }
@@ -524,7 +530,7 @@ const QString FindBoundingBoxFeatures::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindBoundingBoxFeatures::getUuid()
+QUuid FindBoundingBoxFeatures::getUuid() const
 {
   return QUuid("{450c2f00-9ddf-56e1-b4c1-0e74e7ad2349}");
 }
@@ -532,7 +538,7 @@ const QUuid FindBoundingBoxFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundingBoxFeatures::getSubGroupName() const
+QString FindBoundingBoxFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SpatialFilters;
 }
@@ -540,7 +546,96 @@ const QString FindBoundingBoxFeatures::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindBoundingBoxFeatures::getHumanLabel() const
+QString FindBoundingBoxFeatures::getHumanLabel() const
 {
   return "Find Biased Features (Bounding Box)";
+}
+
+// -----------------------------------------------------------------------------
+FindBoundingBoxFeatures::Pointer FindBoundingBoxFeatures::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindBoundingBoxFeatures> FindBoundingBoxFeatures::New()
+{
+  struct make_shared_enabler : public FindBoundingBoxFeatures
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindBoundingBoxFeatures::getNameOfClass() const
+{
+  return QString("FindBoundingBoxFeatures");
+}
+
+// -----------------------------------------------------------------------------
+QString FindBoundingBoxFeatures::ClassName()
+{
+  return QString("FindBoundingBoxFeatures");
+}
+
+// -----------------------------------------------------------------------------
+void FindBoundingBoxFeatures::setCalcByPhase(bool value)
+{
+  m_CalcByPhase = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindBoundingBoxFeatures::getCalcByPhase() const
+{
+  return m_CalcByPhase;
+}
+
+// -----------------------------------------------------------------------------
+void FindBoundingBoxFeatures::setCentroidsArrayPath(const DataArrayPath& value)
+{
+  m_CentroidsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindBoundingBoxFeatures::getCentroidsArrayPath() const
+{
+  return m_CentroidsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindBoundingBoxFeatures::setPhasesArrayPath(const DataArrayPath& value)
+{
+  m_PhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindBoundingBoxFeatures::getPhasesArrayPath() const
+{
+  return m_PhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindBoundingBoxFeatures::setSurfaceFeaturesArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceFeaturesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindBoundingBoxFeatures::getSurfaceFeaturesArrayPath() const
+{
+  return m_SurfaceFeaturesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindBoundingBoxFeatures::setBiasedFeaturesArrayName(const QString& value)
+{
+  m_BiasedFeaturesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindBoundingBoxFeatures::getBiasedFeaturesArrayName() const
+{
+  return m_BiasedFeaturesArrayName;
 }

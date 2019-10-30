@@ -33,10 +33,15 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindLocalAverageCAxisMisalignments.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -46,6 +51,7 @@
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -343,7 +349,7 @@ AbstractFilter::Pointer FindLocalAverageCAxisMisalignments::newFilterInstance(bo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindLocalAverageCAxisMisalignments::getCompiledLibraryName() const
+QString FindLocalAverageCAxisMisalignments::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -351,7 +357,7 @@ const QString FindLocalAverageCAxisMisalignments::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindLocalAverageCAxisMisalignments::getBrandingString() const
+QString FindLocalAverageCAxisMisalignments::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -359,7 +365,7 @@ const QString FindLocalAverageCAxisMisalignments::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindLocalAverageCAxisMisalignments::getFilterVersion() const
+QString FindLocalAverageCAxisMisalignments::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -370,7 +376,7 @@ const QString FindLocalAverageCAxisMisalignments::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindLocalAverageCAxisMisalignments::getGroupName() const
+QString FindLocalAverageCAxisMisalignments::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -378,7 +384,7 @@ const QString FindLocalAverageCAxisMisalignments::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindLocalAverageCAxisMisalignments::getUuid()
+QUuid FindLocalAverageCAxisMisalignments::getUuid() const
 {
   return QUuid("{49b2dd47-bb29-50d4-a051-5bad9b6b9f80}");
 }
@@ -386,7 +392,7 @@ const QUuid FindLocalAverageCAxisMisalignments::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindLocalAverageCAxisMisalignments::getSubGroupName() const
+QString FindLocalAverageCAxisMisalignments::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -394,7 +400,192 @@ const QString FindLocalAverageCAxisMisalignments::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindLocalAverageCAxisMisalignments::getHumanLabel() const
+QString FindLocalAverageCAxisMisalignments::getHumanLabel() const
 {
   return "Find Local Average C-Axis Misalignments";
+}
+
+// -----------------------------------------------------------------------------
+FindLocalAverageCAxisMisalignments::Pointer FindLocalAverageCAxisMisalignments::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindLocalAverageCAxisMisalignments> FindLocalAverageCAxisMisalignments::New()
+{
+  struct make_shared_enabler : public FindLocalAverageCAxisMisalignments
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindLocalAverageCAxisMisalignments::getNameOfClass() const
+{
+  return QString("FindLocalAverageCAxisMisalignments");
+}
+
+// -----------------------------------------------------------------------------
+QString FindLocalAverageCAxisMisalignments::ClassName()
+{
+  return QString("FindLocalAverageCAxisMisalignments");
+}
+
+// -----------------------------------------------------------------------------
+void FindLocalAverageCAxisMisalignments::setNewCellFeatureAttributeMatrixName(const DataArrayPath& value)
+{
+  m_NewCellFeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindLocalAverageCAxisMisalignments::getNewCellFeatureAttributeMatrixName() const
+{
+  return m_NewCellFeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void FindLocalAverageCAxisMisalignments::setCalcUnbiasedAvg(bool value)
+{
+  m_CalcUnbiasedAvg = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindLocalAverageCAxisMisalignments::getCalcUnbiasedAvg() const
+{
+  return m_CalcUnbiasedAvg;
+}
+
+// -----------------------------------------------------------------------------
+void FindLocalAverageCAxisMisalignments::setCalcBiasedAvg(bool value)
+{
+  m_CalcBiasedAvg = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindLocalAverageCAxisMisalignments::getCalcBiasedAvg() const
+{
+  return m_CalcBiasedAvg;
+}
+
+// -----------------------------------------------------------------------------
+void FindLocalAverageCAxisMisalignments::setNeighborListArrayPath(const DataArrayPath& value)
+{
+  m_NeighborListArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindLocalAverageCAxisMisalignments::getNeighborListArrayPath() const
+{
+  return m_NeighborListArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindLocalAverageCAxisMisalignments::setCAxisMisalignmentListArrayPath(const DataArrayPath& value)
+{
+  m_CAxisMisalignmentListArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindLocalAverageCAxisMisalignments::getCAxisMisalignmentListArrayPath() const
+{
+  return m_CAxisMisalignmentListArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindLocalAverageCAxisMisalignments::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindLocalAverageCAxisMisalignments::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindLocalAverageCAxisMisalignments::setCellParentIdsArrayPath(const DataArrayPath& value)
+{
+  m_CellParentIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindLocalAverageCAxisMisalignments::getCellParentIdsArrayPath() const
+{
+  return m_CellParentIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindLocalAverageCAxisMisalignments::setAvgCAxisMisalignmentsArrayPath(const DataArrayPath& value)
+{
+  m_AvgCAxisMisalignmentsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindLocalAverageCAxisMisalignments::getAvgCAxisMisalignmentsArrayPath() const
+{
+  return m_AvgCAxisMisalignmentsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindLocalAverageCAxisMisalignments::setFeatureParentIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureParentIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindLocalAverageCAxisMisalignments::getFeatureParentIdsArrayPath() const
+{
+  return m_FeatureParentIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindLocalAverageCAxisMisalignments::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindLocalAverageCAxisMisalignments::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindLocalAverageCAxisMisalignments::setUnbiasedLocalCAxisMisalignmentsArrayName(const QString& value)
+{
+  m_UnbiasedLocalCAxisMisalignmentsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindLocalAverageCAxisMisalignments::getUnbiasedLocalCAxisMisalignmentsArrayName() const
+{
+  return m_UnbiasedLocalCAxisMisalignmentsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindLocalAverageCAxisMisalignments::setLocalCAxisMisalignmentsArrayName(const QString& value)
+{
+  m_LocalCAxisMisalignmentsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindLocalAverageCAxisMisalignments::getLocalCAxisMisalignmentsArrayName() const
+{
+  return m_LocalCAxisMisalignmentsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindLocalAverageCAxisMisalignments::setNumFeaturesPerParentArrayName(const QString& value)
+{
+  m_NumFeaturesPerParentArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindLocalAverageCAxisMisalignments::getNumFeaturesPerParentArrayName() const
+{
+  return m_NumFeaturesPerParentArrayName;
 }

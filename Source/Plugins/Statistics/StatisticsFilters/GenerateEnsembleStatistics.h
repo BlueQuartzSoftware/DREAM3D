@@ -35,11 +35,13 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 
 #include "Statistics/DistributionAnalysisOps/DistributionAnalysisOps.h"
@@ -52,180 +54,567 @@
 class Statistics_EXPORT GenerateEnsembleStatistics : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(GenerateEnsembleStatistics SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixPath READ getCellEnsembleAttributeMatrixPath WRITE setCellEnsembleAttributeMatrixPath)
-    PYB11_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
-    PYB11_PROPERTY(PhaseType::Types PhaseTypeArray READ getPhaseTypeArray WRITE setPhaseTypeArray)
-    PYB11_PROPERTY(PhaseType::Types PhaseTypeData READ getPhaseTypeData WRITE setPhaseTypeData)
-    PYB11_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
-    PYB11_PROPERTY(DataArrayPath SharedSurfaceAreaListArrayPath READ getSharedSurfaceAreaListArrayPath WRITE setSharedSurfaceAreaListArrayPath)
-    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
-    PYB11_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
-    PYB11_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
-    PYB11_PROPERTY(DataArrayPath NeighborhoodsArrayPath READ getNeighborhoodsArrayPath WRITE setNeighborhoodsArrayPath)
-    PYB11_PROPERTY(DataArrayPath AspectRatiosArrayPath READ getAspectRatiosArrayPath WRITE setAspectRatiosArrayPath)
-    PYB11_PROPERTY(DataArrayPath Omega3sArrayPath READ getOmega3sArrayPath WRITE setOmega3sArrayPath)
-    PYB11_PROPERTY(DataArrayPath AxisEulerAnglesArrayPath READ getAxisEulerAnglesArrayPath WRITE setAxisEulerAnglesArrayPath)
-    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
-    PYB11_PROPERTY(DataArrayPath SurfaceFeaturesArrayPath READ getSurfaceFeaturesArrayPath WRITE setSurfaceFeaturesArrayPath)
-    PYB11_PROPERTY(DataArrayPath VolumesArrayPath READ getVolumesArrayPath WRITE setVolumesArrayPath)
-    PYB11_PROPERTY(DataArrayPath RDFArrayPath READ getRDFArrayPath WRITE setRDFArrayPath)
-    PYB11_PROPERTY(DataArrayPath MaxMinRDFArrayPath READ getMaxMinRDFArrayPath WRITE setMaxMinRDFArrayPath)
-    PYB11_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
-    PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
-    PYB11_PROPERTY(QString StatisticsArrayName READ getStatisticsArrayName WRITE setStatisticsArrayName)
-    PYB11_PROPERTY(bool IncludeRadialDistFunc READ getIncludeRadialDistFunc WRITE setIncludeRadialDistFunc)
-    PYB11_PROPERTY(bool CalculateMorphologicalStats READ getCalculateMorphologicalStats WRITE setCalculateMorphologicalStats)
-    PYB11_PROPERTY(int SizeDistributionFitType READ getSizeDistributionFitType WRITE setSizeDistributionFitType)
-    PYB11_PROPERTY(bool ComputeAspectRatioDistribution READ getComputeAspectRatioDistribution WRITE setComputeAspectRatioDistribution)
-    PYB11_PROPERTY(int AspectRatioDistributionFitType READ getAspectRatioDistributionFitType WRITE setAspectRatioDistributionFitType)
-    PYB11_PROPERTY(bool ComputeOmega3Distribution READ getComputeOmega3Distribution WRITE setComputeOmega3Distribution)
-    PYB11_PROPERTY(int Omega3DistributionFitType READ getOmega3DistributionFitType WRITE setOmega3DistributionFitType)
-    PYB11_PROPERTY(bool ComputeNeighborhoodDistribution READ getComputeNeighborhoodDistribution WRITE setComputeNeighborhoodDistribution)
-    PYB11_PROPERTY(int NeighborhoodDistributionFitType READ getNeighborhoodDistributionFitType WRITE setNeighborhoodDistributionFitType)
-    PYB11_PROPERTY(bool CalculateCrystallographicStats READ getCalculateCrystallographicStats WRITE setCalculateCrystallographicStats)
-    PYB11_PROPERTY(bool CalculateODF READ getCalculateODF WRITE setCalculateODF)
-    PYB11_PROPERTY(bool CalculateMDF READ getCalculateMDF WRITE setCalculateMDF)
-    PYB11_PROPERTY(bool CalculateAxisODF READ getCalculateAxisODF WRITE setCalculateAxisODF)
-    PYB11_PROPERTY(float SizeCorrelationResolution READ getSizeCorrelationResolution WRITE setSizeCorrelationResolution)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(GenerateEnsembleStatistics SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(GenerateEnsembleStatistics)
+  PYB11_FILTER_NEW_MACRO(GenerateEnsembleStatistics)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixPath)
+  PYB11_FILTER_PARAMETER(QString, PhaseTypesArrayName)
+  PYB11_FILTER_PARAMETER(PhaseType::Types, PhaseTypeArray)
+  PYB11_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SharedSurfaceAreaListArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, NeighborhoodsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, AspectRatiosArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, Omega3sArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, AxisEulerAnglesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceFeaturesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, VolumesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, RDFArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, MaxMinRDFArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, StatisticsArrayName)
+  PYB11_FILTER_PARAMETER(bool, IncludeRadialDistFunc)
+  PYB11_FILTER_PARAMETER(bool, CalculateMorphologicalStats)
+  PYB11_FILTER_PARAMETER(int, SizeDistributionFitType)
+  PYB11_FILTER_PARAMETER(bool, ComputeAspectRatioDistribution)
+  PYB11_FILTER_PARAMETER(int, AspectRatioDistributionFitType)
+  PYB11_FILTER_PARAMETER(bool, ComputeOmega3Distribution)
+  PYB11_FILTER_PARAMETER(int, Omega3DistributionFitType)
+  PYB11_FILTER_PARAMETER(bool, ComputeNeighborhoodDistribution)
+  PYB11_FILTER_PARAMETER(int, NeighborhoodDistributionFitType)
+  PYB11_FILTER_PARAMETER(bool, CalculateCrystallographicStats)
+  PYB11_FILTER_PARAMETER(bool, CalculateODF)
+  PYB11_FILTER_PARAMETER(bool, CalculateMDF)
+  PYB11_FILTER_PARAMETER(bool, CalculateAxisODF)
+  PYB11_FILTER_PARAMETER(float, SizeCorrelationResolution)
+  PYB11_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixPath READ getCellEnsembleAttributeMatrixPath WRITE setCellEnsembleAttributeMatrixPath)
+  PYB11_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
+  PYB11_PROPERTY(PhaseType::Types PhaseTypeArray READ getPhaseTypeArray WRITE setPhaseTypeArray)
+  PYB11_PROPERTY(PhaseType::Types PhaseTypeData READ getPhaseTypeData WRITE setPhaseTypeData)
+  PYB11_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
+  PYB11_PROPERTY(DataArrayPath SharedSurfaceAreaListArrayPath READ getSharedSurfaceAreaListArrayPath WRITE setSharedSurfaceAreaListArrayPath)
+  PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+  PYB11_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
+  PYB11_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
+  PYB11_PROPERTY(DataArrayPath NeighborhoodsArrayPath READ getNeighborhoodsArrayPath WRITE setNeighborhoodsArrayPath)
+  PYB11_PROPERTY(DataArrayPath AspectRatiosArrayPath READ getAspectRatiosArrayPath WRITE setAspectRatiosArrayPath)
+  PYB11_PROPERTY(DataArrayPath Omega3sArrayPath READ getOmega3sArrayPath WRITE setOmega3sArrayPath)
+  PYB11_PROPERTY(DataArrayPath AxisEulerAnglesArrayPath READ getAxisEulerAnglesArrayPath WRITE setAxisEulerAnglesArrayPath)
+  PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  PYB11_PROPERTY(DataArrayPath SurfaceFeaturesArrayPath READ getSurfaceFeaturesArrayPath WRITE setSurfaceFeaturesArrayPath)
+  PYB11_PROPERTY(DataArrayPath VolumesArrayPath READ getVolumesArrayPath WRITE setVolumesArrayPath)
+  PYB11_PROPERTY(DataArrayPath RDFArrayPath READ getRDFArrayPath WRITE setRDFArrayPath)
+  PYB11_PROPERTY(DataArrayPath MaxMinRDFArrayPath READ getMaxMinRDFArrayPath WRITE setMaxMinRDFArrayPath)
+  PYB11_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
+  PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+  PYB11_PROPERTY(QString StatisticsArrayName READ getStatisticsArrayName WRITE setStatisticsArrayName)
+  PYB11_PROPERTY(bool IncludeRadialDistFunc READ getIncludeRadialDistFunc WRITE setIncludeRadialDistFunc)
+  PYB11_PROPERTY(bool CalculateMorphologicalStats READ getCalculateMorphologicalStats WRITE setCalculateMorphologicalStats)
+  PYB11_PROPERTY(int SizeDistributionFitType READ getSizeDistributionFitType WRITE setSizeDistributionFitType)
+  PYB11_PROPERTY(bool ComputeAspectRatioDistribution READ getComputeAspectRatioDistribution WRITE setComputeAspectRatioDistribution)
+  PYB11_PROPERTY(int AspectRatioDistributionFitType READ getAspectRatioDistributionFitType WRITE setAspectRatioDistributionFitType)
+  PYB11_PROPERTY(bool ComputeOmega3Distribution READ getComputeOmega3Distribution WRITE setComputeOmega3Distribution)
+  PYB11_PROPERTY(int Omega3DistributionFitType READ getOmega3DistributionFitType WRITE setOmega3DistributionFitType)
+  PYB11_PROPERTY(bool ComputeNeighborhoodDistribution READ getComputeNeighborhoodDistribution WRITE setComputeNeighborhoodDistribution)
+  PYB11_PROPERTY(int NeighborhoodDistributionFitType READ getNeighborhoodDistributionFitType WRITE setNeighborhoodDistributionFitType)
+  PYB11_PROPERTY(bool CalculateCrystallographicStats READ getCalculateCrystallographicStats WRITE setCalculateCrystallographicStats)
+  PYB11_PROPERTY(bool CalculateODF READ getCalculateODF WRITE setCalculateODF)
+  PYB11_PROPERTY(bool CalculateMDF READ getCalculateMDF WRITE setCalculateMDF)
+  PYB11_PROPERTY(bool CalculateAxisODF READ getCalculateAxisODF WRITE setCalculateAxisODF)
+  PYB11_PROPERTY(float SizeCorrelationResolution READ getSizeCorrelationResolution WRITE setSizeCorrelationResolution)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(GenerateEnsembleStatistics)
-  SIMPL_FILTER_NEW_MACRO(GenerateEnsembleStatistics)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GenerateEnsembleStatistics, AbstractFilter)
+  using Self = GenerateEnsembleStatistics;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for GenerateEnsembleStatistics
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for GenerateEnsembleStatistics
+   */
+  static QString ClassName();
 
   ~GenerateEnsembleStatistics() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellEnsembleAttributeMatrixPath)
+  /**
+   * @brief Setter property for CellEnsembleAttributeMatrixPath
+   */
+  void setCellEnsembleAttributeMatrixPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellEnsembleAttributeMatrixPath
+   * @return Value of CellEnsembleAttributeMatrixPath
+   */
+  DataArrayPath getCellEnsembleAttributeMatrixPath() const;
+
   Q_PROPERTY(DataArrayPath CellEnsembleAttributeMatrixPath READ getCellEnsembleAttributeMatrixPath WRITE setCellEnsembleAttributeMatrixPath)
 
-  SIMPL_FILTER_PARAMETER(QString, PhaseTypesArrayName)
+  /**
+   * @brief Setter property for PhaseTypesArrayName
+   */
+  void setPhaseTypesArrayName(const QString& value);
+  /**
+   * @brief Getter property for PhaseTypesArrayName
+   * @return Value of PhaseTypesArrayName
+   */
+  QString getPhaseTypesArrayName() const;
+
   Q_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
 
-  SIMPL_FILTER_PARAMETER(PhaseType::Types, PhaseTypeArray)
+  /**
+   * @brief Setter property for PhaseTypeArray
+   */
+  void setPhaseTypeArray(const PhaseType::Types& value);
+  /**
+   * @brief Getter property for PhaseTypeArray
+   * @return Value of PhaseTypeArray
+   */
+  PhaseType::Types getPhaseTypeArray() const;
+
   Q_PROPERTY(PhaseType::Types PhaseTypeArray READ getPhaseTypeArray WRITE setPhaseTypeArray)
 
-  SIMPL_INSTANCE_PROPERTY(PhaseType::Types, PhaseTypeData)
+  /**
+   * @brief Setter property for PhaseTypeData
+   */
+  void setPhaseTypeData(const PhaseType::Types& value);
+  /**
+   * @brief Getter property for PhaseTypeData
+   * @return Value of PhaseTypeData
+   */
+  PhaseType::Types getPhaseTypeData() const;
+
   Q_PROPERTY(PhaseType::Types PhaseTypeData READ getPhaseTypeData WRITE setPhaseTypeData)
 
   int getPhaseCount();
   Q_PROPERTY(int PhaseCount READ getPhaseCount)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
+  /**
+   * @brief Setter property for NeighborListArrayPath
+   */
+  void setNeighborListArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NeighborListArrayPath
+   * @return Value of NeighborListArrayPath
+   */
+  DataArrayPath getNeighborListArrayPath() const;
+
   Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SharedSurfaceAreaListArrayPath)
+  /**
+   * @brief Setter property for SharedSurfaceAreaListArrayPath
+   */
+  void setSharedSurfaceAreaListArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SharedSurfaceAreaListArrayPath
+   * @return Value of SharedSurfaceAreaListArrayPath
+   */
+  DataArrayPath getSharedSurfaceAreaListArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SharedSurfaceAreaListArrayPath READ getSharedSurfaceAreaListArrayPath WRITE setSharedSurfaceAreaListArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  /**
+   * @brief Setter property for FeaturePhasesArrayPath
+   */
+  void setFeaturePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayPath
+   * @return Value of FeaturePhasesArrayPath
+   */
+  DataArrayPath getFeaturePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, BiasedFeaturesArrayPath)
+  /**
+   * @brief Setter property for BiasedFeaturesArrayPath
+   */
+  void setBiasedFeaturesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for BiasedFeaturesArrayPath
+   * @return Value of BiasedFeaturesArrayPath
+   */
+  DataArrayPath getBiasedFeaturesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath BiasedFeaturesArrayPath READ getBiasedFeaturesArrayPath WRITE setBiasedFeaturesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, EquivalentDiametersArrayPath)
+  /**
+   * @brief Setter property for EquivalentDiametersArrayPath
+   */
+  void setEquivalentDiametersArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for EquivalentDiametersArrayPath
+   * @return Value of EquivalentDiametersArrayPath
+   */
+  DataArrayPath getEquivalentDiametersArrayPath() const;
+
   Q_PROPERTY(DataArrayPath EquivalentDiametersArrayPath READ getEquivalentDiametersArrayPath WRITE setEquivalentDiametersArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NeighborhoodsArrayPath)
+  /**
+   * @brief Setter property for NeighborhoodsArrayPath
+   */
+  void setNeighborhoodsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NeighborhoodsArrayPath
+   * @return Value of NeighborhoodsArrayPath
+   */
+  DataArrayPath getNeighborhoodsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath NeighborhoodsArrayPath READ getNeighborhoodsArrayPath WRITE setNeighborhoodsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, AspectRatiosArrayPath)
+  /**
+   * @brief Setter property for AspectRatiosArrayPath
+   */
+  void setAspectRatiosArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for AspectRatiosArrayPath
+   * @return Value of AspectRatiosArrayPath
+   */
+  DataArrayPath getAspectRatiosArrayPath() const;
+
   Q_PROPERTY(DataArrayPath AspectRatiosArrayPath READ getAspectRatiosArrayPath WRITE setAspectRatiosArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, Omega3sArrayPath)
+  /**
+   * @brief Setter property for Omega3sArrayPath
+   */
+  void setOmega3sArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for Omega3sArrayPath
+   * @return Value of Omega3sArrayPath
+   */
+  DataArrayPath getOmega3sArrayPath() const;
+
   Q_PROPERTY(DataArrayPath Omega3sArrayPath READ getOmega3sArrayPath WRITE setOmega3sArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, AxisEulerAnglesArrayPath)
+  /**
+   * @brief Setter property for AxisEulerAnglesArrayPath
+   */
+  void setAxisEulerAnglesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for AxisEulerAnglesArrayPath
+   * @return Value of AxisEulerAnglesArrayPath
+   */
+  DataArrayPath getAxisEulerAnglesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath AxisEulerAnglesArrayPath READ getAxisEulerAnglesArrayPath WRITE setAxisEulerAnglesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceFeaturesArrayPath)
+  /**
+   * @brief Setter property for SurfaceFeaturesArrayPath
+   */
+  void setSurfaceFeaturesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceFeaturesArrayPath
+   * @return Value of SurfaceFeaturesArrayPath
+   */
+  DataArrayPath getSurfaceFeaturesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceFeaturesArrayPath READ getSurfaceFeaturesArrayPath WRITE setSurfaceFeaturesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, VolumesArrayPath)
+  /**
+   * @brief Setter property for VolumesArrayPath
+   */
+  void setVolumesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for VolumesArrayPath
+   * @return Value of VolumesArrayPath
+   */
+  DataArrayPath getVolumesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath VolumesArrayPath READ getVolumesArrayPath WRITE setVolumesArrayPath)
 
   // These filter parameters are tied to RDF data, but the filter that can calculate them (FindFeatureClustering)
   // is not slated for public release yet, so turning these off for now
-  SIMPL_FILTER_PARAMETER(DataArrayPath, RDFArrayPath)
+  /**
+   * @brief Setter property for RDFArrayPath
+   */
+  void setRDFArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for RDFArrayPath
+   * @return Value of RDFArrayPath
+   */
+  DataArrayPath getRDFArrayPath() const;
+
   Q_PROPERTY(DataArrayPath RDFArrayPath READ getRDFArrayPath WRITE setRDFArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, MaxMinRDFArrayPath)
+  /**
+   * @brief Setter property for MaxMinRDFArrayPath
+   */
+  void setMaxMinRDFArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for MaxMinRDFArrayPath
+   * @return Value of MaxMinRDFArrayPath
+   */
+  DataArrayPath getMaxMinRDFArrayPath() const;
+
   Q_PROPERTY(DataArrayPath MaxMinRDFArrayPath READ getMaxMinRDFArrayPath WRITE setMaxMinRDFArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
+  /**
+   * @brief Setter property for FeatureEulerAnglesArrayPath
+   */
+  void setFeatureEulerAnglesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureEulerAnglesArrayPath
+   * @return Value of FeatureEulerAnglesArrayPath
+   */
+  DataArrayPath getFeatureEulerAnglesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  /**
+   * @brief Setter property for AvgQuatsArrayPath
+   */
+  void setAvgQuatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for AvgQuatsArrayPath
+   * @return Value of AvgQuatsArrayPath
+   */
+  DataArrayPath getAvgQuatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, StatisticsArrayName)
+  /**
+   * @brief Setter property for StatisticsArrayName
+   */
+  void setStatisticsArrayName(const QString& value);
+  /**
+   * @brief Getter property for StatisticsArrayName
+   * @return Value of StatisticsArrayName
+   */
+  QString getStatisticsArrayName() const;
+
   Q_PROPERTY(QString StatisticsArrayName READ getStatisticsArrayName WRITE setStatisticsArrayName)
 
-  SIMPL_FILTER_PARAMETER(bool, IncludeRadialDistFunc)
+  /**
+   * @brief Setter property for IncludeRadialDistFunc
+   */
+  void setIncludeRadialDistFunc(bool value);
+  /**
+   * @brief Getter property for IncludeRadialDistFunc
+   * @return Value of IncludeRadialDistFunc
+   */
+  bool getIncludeRadialDistFunc() const;
+
   Q_PROPERTY(bool IncludeRadialDistFunc READ getIncludeRadialDistFunc WRITE setIncludeRadialDistFunc)
 
-  SIMPL_FILTER_PARAMETER(bool, CalculateMorphologicalStats)
+  /**
+   * @brief Setter property for CalculateMorphologicalStats
+   */
+  void setCalculateMorphologicalStats(bool value);
+  /**
+   * @brief Getter property for CalculateMorphologicalStats
+   * @return Value of CalculateMorphologicalStats
+   */
+  bool getCalculateMorphologicalStats() const;
+
   Q_PROPERTY(bool CalculateMorphologicalStats READ getCalculateMorphologicalStats WRITE setCalculateMorphologicalStats)
 
-  SIMPL_INSTANCE_PROPERTY(bool, ComputeSizeDistribution)
+  /**
+   * @brief Setter property for ComputeSizeDistribution
+   */
+  void setComputeSizeDistribution(bool value);
+  /**
+   * @brief Getter property for ComputeSizeDistribution
+   * @return Value of ComputeSizeDistribution
+   */
+  bool getComputeSizeDistribution() const;
+
   // Q_PROPERTY(bool ComputeSizeDistribution READ getComputeSizeDistribution WRITE setComputeSizeDistribution)
 
-  SIMPL_FILTER_PARAMETER(int, SizeDistributionFitType)
+  /**
+   * @brief Setter property for SizeDistributionFitType
+   */
+  void setSizeDistributionFitType(int value);
+  /**
+   * @brief Getter property for SizeDistributionFitType
+   * @return Value of SizeDistributionFitType
+   */
+  int getSizeDistributionFitType() const;
+
   Q_PROPERTY(int SizeDistributionFitType READ getSizeDistributionFitType WRITE setSizeDistributionFitType)
 
-  SIMPL_FILTER_PARAMETER(bool, ComputeAspectRatioDistribution)
+  /**
+   * @brief Setter property for ComputeAspectRatioDistribution
+   */
+  void setComputeAspectRatioDistribution(bool value);
+  /**
+   * @brief Getter property for ComputeAspectRatioDistribution
+   * @return Value of ComputeAspectRatioDistribution
+   */
+  bool getComputeAspectRatioDistribution() const;
+
   // Q_PROPERTY(bool ComputeAspectRatioDistribution READ getComputeAspectRatioDistribution WRITE setComputeAspectRatioDistribution)
 
-  SIMPL_FILTER_PARAMETER(int, AspectRatioDistributionFitType)
+  /**
+   * @brief Setter property for AspectRatioDistributionFitType
+   */
+  void setAspectRatioDistributionFitType(int value);
+  /**
+   * @brief Getter property for AspectRatioDistributionFitType
+   * @return Value of AspectRatioDistributionFitType
+   */
+  int getAspectRatioDistributionFitType() const;
+
   Q_PROPERTY(int AspectRatioDistributionFitType READ getAspectRatioDistributionFitType WRITE setAspectRatioDistributionFitType)
 
-  SIMPL_FILTER_PARAMETER(bool, ComputeOmega3Distribution)
+  /**
+   * @brief Setter property for ComputeOmega3Distribution
+   */
+  void setComputeOmega3Distribution(bool value);
+  /**
+   * @brief Getter property for ComputeOmega3Distribution
+   * @return Value of ComputeOmega3Distribution
+   */
+  bool getComputeOmega3Distribution() const;
+
   // Q_PROPERTY(bool ComputeOmega3Distribution READ getComputeOmega3Distribution WRITE setComputeOmega3Distribution)
 
-  SIMPL_FILTER_PARAMETER(int, Omega3DistributionFitType)
+  /**
+   * @brief Setter property for Omega3DistributionFitType
+   */
+  void setOmega3DistributionFitType(int value);
+  /**
+   * @brief Getter property for Omega3DistributionFitType
+   * @return Value of Omega3DistributionFitType
+   */
+  int getOmega3DistributionFitType() const;
+
   Q_PROPERTY(int Omega3DistributionFitType READ getOmega3DistributionFitType WRITE setOmega3DistributionFitType)
 
-  SIMPL_FILTER_PARAMETER(bool, ComputeNeighborhoodDistribution)
+  /**
+   * @brief Setter property for ComputeNeighborhoodDistribution
+   */
+  void setComputeNeighborhoodDistribution(bool value);
+  /**
+   * @brief Getter property for ComputeNeighborhoodDistribution
+   * @return Value of ComputeNeighborhoodDistribution
+   */
+  bool getComputeNeighborhoodDistribution() const;
+
   // Q_PROPERTY(bool ComputeNeighborhoodDistribution READ getComputeNeighborhoodDistribution WRITE setComputeNeighborhoodDistribution)
 
-  SIMPL_FILTER_PARAMETER(int, NeighborhoodDistributionFitType)
+  /**
+   * @brief Setter property for NeighborhoodDistributionFitType
+   */
+  void setNeighborhoodDistributionFitType(int value);
+  /**
+   * @brief Getter property for NeighborhoodDistributionFitType
+   * @return Value of NeighborhoodDistributionFitType
+   */
+  int getNeighborhoodDistributionFitType() const;
+
   Q_PROPERTY(int NeighborhoodDistributionFitType READ getNeighborhoodDistributionFitType WRITE setNeighborhoodDistributionFitType)
 
-  SIMPL_FILTER_PARAMETER(bool, CalculateCrystallographicStats)
+  /**
+   * @brief Setter property for CalculateCrystallographicStats
+   */
+  void setCalculateCrystallographicStats(bool value);
+  /**
+   * @brief Getter property for CalculateCrystallographicStats
+   * @return Value of CalculateCrystallographicStats
+   */
+  bool getCalculateCrystallographicStats() const;
+
   Q_PROPERTY(bool CalculateCrystallographicStats READ getCalculateCrystallographicStats WRITE setCalculateCrystallographicStats)
 
-  SIMPL_FILTER_PARAMETER(bool, CalculateODF)
+  /**
+   * @brief Setter property for CalculateODF
+   */
+  void setCalculateODF(bool value);
+  /**
+   * @brief Getter property for CalculateODF
+   * @return Value of CalculateODF
+   */
+  bool getCalculateODF() const;
+
   // Q_PROPERTY(bool CalculateODF READ getCalculateODF WRITE setCalculateODF)
 
-  SIMPL_FILTER_PARAMETER(bool, CalculateMDF)
+  /**
+   * @brief Setter property for CalculateMDF
+   */
+  void setCalculateMDF(bool value);
+  /**
+   * @brief Getter property for CalculateMDF
+   * @return Value of CalculateMDF
+   */
+  bool getCalculateMDF() const;
+
   // Q_PROPERTY(bool CalculateMDF READ getCalculateMDF WRITE setCalculateMDF)
 
-  SIMPL_FILTER_PARAMETER(bool, CalculateAxisODF)
+  /**
+   * @brief Setter property for CalculateAxisODF
+   */
+  void setCalculateAxisODF(bool value);
+  /**
+   * @brief Getter property for CalculateAxisODF
+   * @return Value of CalculateAxisODF
+   */
+  bool getCalculateAxisODF() const;
+
   // Q_PROPERTY(bool CalculateAxisODF READ getCalculateAxisODF WRITE setCalculateAxisODF)
 
-  SIMPL_FILTER_PARAMETER(float, SizeCorrelationResolution)
+  /**
+   * @brief Setter property for SizeCorrelationResolution
+   */
+  void setSizeCorrelationResolution(float value);
+  /**
+   * @brief Getter property for SizeCorrelationResolution
+   * @return Value of SizeCorrelationResolution
+   */
+  float getSizeCorrelationResolution() const;
+
   Q_PROPERTY(float SizeCorrelationResolution READ getSizeCorrelationResolution WRITE setSizeCorrelationResolution)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -235,23 +624,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -366,21 +755,73 @@ protected:
   void calculatePPTBoundaryFrac();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
-  DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
-  DEFINE_DATAARRAY_VARIABLE(float, Volumes)
-  DEFINE_DATAARRAY_VARIABLE(bool, BiasedFeatures)
-  DEFINE_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-  DEFINE_DATAARRAY_VARIABLE(float, AxisEulerAngles)
-  DEFINE_DATAARRAY_VARIABLE(float, RadialDistFunc)
-  DEFINE_DATAARRAY_VARIABLE(float, MaxMinRadialDistFunc)
-  DEFINE_DATAARRAY_VARIABLE(float, Omega3s)
-  DEFINE_DATAARRAY_VARIABLE(float, AspectRatios)
-  DEFINE_DATAARRAY_VARIABLE(float, EquivalentDiameters)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, Neighborhoods)
-  DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-  DEFINE_DATAARRAY_VARIABLE(PhaseType::EnumType, PhaseTypes)
+  std::weak_ptr<DataArray<float>> m_AvgQuatsPtr;
+  float* m_AvgQuats = nullptr;
+  std::weak_ptr<DataArray<float>> m_FeatureEulerAnglesPtr;
+  float* m_FeatureEulerAngles = nullptr;
+  std::weak_ptr<DataArray<float>> m_VolumesPtr;
+  float* m_Volumes = nullptr;
+  std::weak_ptr<DataArray<bool>> m_BiasedFeaturesPtr;
+  bool* m_BiasedFeatures = nullptr;
+  std::weak_ptr<DataArray<bool>> m_SurfaceFeaturesPtr;
+  bool* m_SurfaceFeatures = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_AxisEulerAnglesPtr;
+  float* m_AxisEulerAngles = nullptr;
+  std::weak_ptr<DataArray<float>> m_RadialDistFuncPtr;
+  float* m_RadialDistFunc = nullptr;
+  std::weak_ptr<DataArray<float>> m_MaxMinRadialDistFuncPtr;
+  float* m_MaxMinRadialDistFunc = nullptr;
+  std::weak_ptr<DataArray<float>> m_Omega3sPtr;
+  float* m_Omega3s = nullptr;
+  std::weak_ptr<DataArray<float>> m_AspectRatiosPtr;
+  float* m_AspectRatios = nullptr;
+  std::weak_ptr<DataArray<float>> m_EquivalentDiametersPtr;
+  float* m_EquivalentDiameters = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_NeighborhoodsPtr;
+  int32_t* m_Neighborhoods = nullptr;
+  std::weak_ptr<DataArray<unsigned int>> m_CrystalStructuresPtr;
+  unsigned int* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<PhaseType::EnumType>> m_PhaseTypesPtr;
+  PhaseType::EnumType* m_PhaseTypes = nullptr;
+
+  DataArrayPath m_CellEnsembleAttributeMatrixPath = {};
+  QString m_PhaseTypesArrayName = {};
+  PhaseType::Types m_PhaseTypeArray = {};
+  PhaseType::Types m_PhaseTypeData = {};
+  DataArrayPath m_NeighborListArrayPath = {};
+  DataArrayPath m_SharedSurfaceAreaListArrayPath = {};
+  DataArrayPath m_FeaturePhasesArrayPath = {};
+  DataArrayPath m_BiasedFeaturesArrayPath = {};
+  DataArrayPath m_EquivalentDiametersArrayPath = {};
+  DataArrayPath m_NeighborhoodsArrayPath = {};
+  DataArrayPath m_AspectRatiosArrayPath = {};
+  DataArrayPath m_Omega3sArrayPath = {};
+  DataArrayPath m_AxisEulerAnglesArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+  DataArrayPath m_SurfaceFeaturesArrayPath = {};
+  DataArrayPath m_VolumesArrayPath = {};
+  DataArrayPath m_RDFArrayPath = {};
+  DataArrayPath m_MaxMinRDFArrayPath = {};
+  DataArrayPath m_FeatureEulerAnglesArrayPath = {};
+  DataArrayPath m_AvgQuatsArrayPath = {};
+  QString m_StatisticsArrayName = {};
+  bool m_IncludeRadialDistFunc = {};
+  bool m_CalculateMorphologicalStats = {};
+  bool m_ComputeSizeDistribution = {};
+  int m_SizeDistributionFitType = {};
+  bool m_ComputeAspectRatioDistribution = {};
+  int m_AspectRatioDistributionFitType = {};
+  bool m_ComputeOmega3Distribution = {};
+  int m_Omega3DistributionFitType = {};
+  bool m_ComputeNeighborhoodDistribution = {};
+  int m_NeighborhoodDistributionFitType = {};
+  bool m_CalculateCrystallographicStats = {};
+  bool m_CalculateODF = {};
+  bool m_CalculateMDF = {};
+  bool m_CalculateAxisODF = {};
+  float m_SizeCorrelationResolution = {};
 
 
   NeighborList<int32_t>::WeakPointer m_NeighborList;

@@ -334,3 +334,28 @@ void EMMPM_Data::calculateBetaMatrix(double default_beta)
   }
 #endif
 }
+
+// -----------------------------------------------------------------------------
+EMMPM_Data::Pointer EMMPM_Data::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+EMMPM_Data::Pointer EMMPM_Data::New()
+{
+  Pointer sharedPtr(new(EMMPM_Data));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString EMMPM_Data::getNameOfClass() const
+{
+  return QString("EMMPM_Data");
+}
+
+// -----------------------------------------------------------------------------
+QString EMMPM_Data::ClassName()
+{
+  return QString("EMMPM_Data");
+}

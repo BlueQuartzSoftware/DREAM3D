@@ -33,6 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "IdentifyMicroTextureRegions.h"
 
 #include <chrono>
@@ -47,7 +49,10 @@
 #include <tbb/tick_count.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -55,6 +60,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/GeometryMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
@@ -759,7 +766,7 @@ AbstractFilter::Pointer IdentifyMicroTextureRegions::newFilterInstance(bool copy
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifyMicroTextureRegions::getCompiledLibraryName() const
+QString IdentifyMicroTextureRegions::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -767,7 +774,7 @@ const QString IdentifyMicroTextureRegions::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifyMicroTextureRegions::getBrandingString() const
+QString IdentifyMicroTextureRegions::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -775,7 +782,7 @@ const QString IdentifyMicroTextureRegions::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifyMicroTextureRegions::getFilterVersion() const
+QString IdentifyMicroTextureRegions::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -785,7 +792,7 @@ const QString IdentifyMicroTextureRegions::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifyMicroTextureRegions::getGroupName() const
+QString IdentifyMicroTextureRegions::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -793,7 +800,7 @@ const QString IdentifyMicroTextureRegions::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid IdentifyMicroTextureRegions::getUuid()
+QUuid IdentifyMicroTextureRegions::getUuid() const
 {
   return QUuid("{00717d6b-004e-5e1f-9acc-ee2920ddc29b}");
 }
@@ -801,7 +808,7 @@ const QUuid IdentifyMicroTextureRegions::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifyMicroTextureRegions::getSubGroupName() const
+QString IdentifyMicroTextureRegions::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GroupingFilters;
 }
@@ -809,7 +816,156 @@ const QString IdentifyMicroTextureRegions::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString IdentifyMicroTextureRegions::getHumanLabel() const
+QString IdentifyMicroTextureRegions::getHumanLabel() const
 {
   return "Identify MicroTexture Patches (C-Axis Misalignment)";
+}
+
+// -----------------------------------------------------------------------------
+IdentifyMicroTextureRegions::Pointer IdentifyMicroTextureRegions::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<IdentifyMicroTextureRegions> IdentifyMicroTextureRegions::New()
+{
+  struct make_shared_enabler : public IdentifyMicroTextureRegions
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString IdentifyMicroTextureRegions::getNameOfClass() const
+{
+  return QString("IdentifyMicroTextureRegions");
+}
+
+// -----------------------------------------------------------------------------
+QString IdentifyMicroTextureRegions::ClassName()
+{
+  return QString("IdentifyMicroTextureRegions");
+}
+
+// -----------------------------------------------------------------------------
+void IdentifyMicroTextureRegions::setNewCellFeatureAttributeMatrixName(const QString& value)
+{
+  m_NewCellFeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString IdentifyMicroTextureRegions::getNewCellFeatureAttributeMatrixName() const
+{
+  return m_NewCellFeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void IdentifyMicroTextureRegions::setCAxisTolerance(float value)
+{
+  m_CAxisTolerance = value;
+}
+
+// -----------------------------------------------------------------------------
+float IdentifyMicroTextureRegions::getCAxisTolerance() const
+{
+  return m_CAxisTolerance;
+}
+
+// -----------------------------------------------------------------------------
+void IdentifyMicroTextureRegions::setMinMTRSize(float value)
+{
+  m_MinMTRSize = value;
+}
+
+// -----------------------------------------------------------------------------
+float IdentifyMicroTextureRegions::getMinMTRSize() const
+{
+  return m_MinMTRSize;
+}
+
+// -----------------------------------------------------------------------------
+void IdentifyMicroTextureRegions::setMinVolFrac(float value)
+{
+  m_MinVolFrac = value;
+}
+
+// -----------------------------------------------------------------------------
+float IdentifyMicroTextureRegions::getMinVolFrac() const
+{
+  return m_MinVolFrac;
+}
+
+// -----------------------------------------------------------------------------
+void IdentifyMicroTextureRegions::setRandomizeMTRIds(bool value)
+{
+  m_RandomizeMTRIds = value;
+}
+
+// -----------------------------------------------------------------------------
+bool IdentifyMicroTextureRegions::getRandomizeMTRIds() const
+{
+  return m_RandomizeMTRIds;
+}
+
+// -----------------------------------------------------------------------------
+void IdentifyMicroTextureRegions::setCAxisLocationsArrayPath(const DataArrayPath& value)
+{
+  m_CAxisLocationsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath IdentifyMicroTextureRegions::getCAxisLocationsArrayPath() const
+{
+  return m_CAxisLocationsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void IdentifyMicroTextureRegions::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath IdentifyMicroTextureRegions::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void IdentifyMicroTextureRegions::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath IdentifyMicroTextureRegions::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void IdentifyMicroTextureRegions::setMTRIdsArrayName(const QString& value)
+{
+  m_MTRIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString IdentifyMicroTextureRegions::getMTRIdsArrayName() const
+{
+  return m_MTRIdsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void IdentifyMicroTextureRegions::setActiveArrayName(const QString& value)
+{
+  m_ActiveArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString IdentifyMicroTextureRegions::getActiveArrayName() const
+{
+  return m_ActiveArrayName;
 }

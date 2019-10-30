@@ -2,9 +2,11 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "GeneratePrecipitateStatsData.h"
 
-#include "EbsdLib/EbsdConstants.h"
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
@@ -26,12 +28,15 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/RadialDistributionFunction.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+
+#include "EbsdLib/EbsdConstants.h"
 
 #include "OrientationLib/Texture/StatsGen.hpp"
 
 #include "SyntheticBuilding/SyntheticBuildingConstants.h"
 #include "SyntheticBuilding/SyntheticBuildingVersion.h"
-
 #include "SyntheticBuilding/SyntheticBuildingFilters/Presets/AbstractMicrostructurePreset.h"
 #include "SyntheticBuilding/SyntheticBuildingFilters/Presets/PrimaryEquiaxedPreset.h"
 #include "SyntheticBuilding/SyntheticBuildingFilters/Presets/PrimaryRecrystallizedPreset.h"
@@ -612,14 +617,8 @@ void GeneratePrecipitateStatsData::execute()
   notifyStatusMessage(msg);
 
   {
-    std::vector<float> boxDims(3);
-    boxDims[0] = m_RdfBoxSize[0];
-    boxDims[1] = m_RdfBoxSize[1];
-    boxDims[2] = m_RdfBoxSize[2];
-    std::vector<float> boxRes(3);
-    boxRes[0] = 0.1f;
-    boxRes[1] = 0.1f;
-    boxRes[2] = 0.1f;
+    std::array<float, 3> boxDims = {m_RdfBoxSize[0], m_RdfBoxSize[1], m_RdfBoxSize[2]};
+    std::array<float, 3> boxRes = {0.1f, 0.1f, 0.1f};
 
     // Generate the RDF Frequencies
     std::vector<float> rdfFrequencies = RadialDistributionFunction::GenerateRandomDistribution(m_RdfMinMaxDistance[0], m_RdfMinMaxDistance[1], m_RdfNumBins, boxDims, boxRes);
@@ -681,7 +680,7 @@ AbstractFilter::Pointer GeneratePrecipitateStatsData::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrecipitateStatsData::getCompiledLibraryName() const
+QString GeneratePrecipitateStatsData::getCompiledLibraryName() const
 {
   return SyntheticBuildingConstants::SyntheticBuildingBaseName;
 }
@@ -689,7 +688,7 @@ const QString GeneratePrecipitateStatsData::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrecipitateStatsData::getBrandingString() const
+QString GeneratePrecipitateStatsData::getBrandingString() const
 {
   return "StatsGenerator";
 }
@@ -697,7 +696,7 @@ const QString GeneratePrecipitateStatsData::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrecipitateStatsData::getFilterVersion() const
+QString GeneratePrecipitateStatsData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -708,7 +707,7 @@ const QString GeneratePrecipitateStatsData::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrecipitateStatsData::getGroupName() const
+QString GeneratePrecipitateStatsData::getGroupName() const
 {
   return SIMPL::FilterGroups::Unsupported;
 }
@@ -716,7 +715,7 @@ const QString GeneratePrecipitateStatsData::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid GeneratePrecipitateStatsData::getUuid()
+QUuid GeneratePrecipitateStatsData::getUuid() const
 {
   return QUuid("{16659766-5c53-5ada-a7b7-8a95c29ea674}");
 }
@@ -724,7 +723,7 @@ const QUuid GeneratePrecipitateStatsData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrecipitateStatsData::getSubGroupName() const
+QString GeneratePrecipitateStatsData::getSubGroupName() const
 {
   return "StatsGenerator";
 }
@@ -732,7 +731,288 @@ const QString GeneratePrecipitateStatsData::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GeneratePrecipitateStatsData::getHumanLabel() const
+QString GeneratePrecipitateStatsData::getHumanLabel() const
 {
   return "Generate Precipitate StatsData";
+}
+
+// -----------------------------------------------------------------------------
+GeneratePrecipitateStatsData::Pointer GeneratePrecipitateStatsData::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<GeneratePrecipitateStatsData> GeneratePrecipitateStatsData::New()
+{
+  struct make_shared_enabler : public GeneratePrecipitateStatsData
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString GeneratePrecipitateStatsData::getNameOfClass() const
+{
+  return QString("GeneratePrecipitateStatsData");
+}
+
+// -----------------------------------------------------------------------------
+QString GeneratePrecipitateStatsData::ClassName()
+{
+  return QString("GeneratePrecipitateStatsData");
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrecipitateStatsData::setPhaseName(const QString& value)
+{
+  m_PhaseName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GeneratePrecipitateStatsData::getPhaseName() const
+{
+  return m_PhaseName;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrecipitateStatsData::setPhaseIndex(int value)
+{
+  m_PhaseIndex = value;
+}
+
+// -----------------------------------------------------------------------------
+int GeneratePrecipitateStatsData::getPhaseIndex() const
+{
+  return m_PhaseIndex;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrecipitateStatsData::setCrystalSymmetry(int value)
+{
+  m_CrystalSymmetry = value;
+}
+
+// -----------------------------------------------------------------------------
+int GeneratePrecipitateStatsData::getCrystalSymmetry() const
+{
+  return m_CrystalSymmetry;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrecipitateStatsData::setMicroPresetModel(int value)
+{
+  m_MicroPresetModel = value;
+}
+
+// -----------------------------------------------------------------------------
+int GeneratePrecipitateStatsData::getMicroPresetModel() const
+{
+  return m_MicroPresetModel;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrecipitateStatsData::setPhaseFraction(double value)
+{
+  m_PhaseFraction = value;
+}
+
+// -----------------------------------------------------------------------------
+double GeneratePrecipitateStatsData::getPhaseFraction() const
+{
+  return m_PhaseFraction;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrecipitateStatsData::setMu(double value)
+{
+  m_Mu = value;
+}
+
+// -----------------------------------------------------------------------------
+double GeneratePrecipitateStatsData::getMu() const
+{
+  return m_Mu;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrecipitateStatsData::setSigma(double value)
+{
+  m_Sigma = value;
+}
+
+// -----------------------------------------------------------------------------
+double GeneratePrecipitateStatsData::getSigma() const
+{
+  return m_Sigma;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrecipitateStatsData::setMinCutOff(double value)
+{
+  m_MinCutOff = value;
+}
+
+// -----------------------------------------------------------------------------
+double GeneratePrecipitateStatsData::getMinCutOff() const
+{
+  return m_MinCutOff;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrecipitateStatsData::setMaxCutOff(double value)
+{
+  m_MaxCutOff = value;
+}
+
+// -----------------------------------------------------------------------------
+double GeneratePrecipitateStatsData::getMaxCutOff() const
+{
+  return m_MaxCutOff;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrecipitateStatsData::setBinStepSize(double value)
+{
+  m_BinStepSize = value;
+}
+
+// -----------------------------------------------------------------------------
+double GeneratePrecipitateStatsData::getBinStepSize() const
+{
+  return m_BinStepSize;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrecipitateStatsData::setCreateEnsembleAttributeMatrix(bool value)
+{
+  m_CreateEnsembleAttributeMatrix = value;
+}
+
+// -----------------------------------------------------------------------------
+bool GeneratePrecipitateStatsData::getCreateEnsembleAttributeMatrix() const
+{
+  return m_CreateEnsembleAttributeMatrix;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrecipitateStatsData::setDataContainerName(const DataArrayPath& value)
+{
+  m_DataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GeneratePrecipitateStatsData::getDataContainerName() const
+{
+  return m_DataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrecipitateStatsData::setCellEnsembleAttributeMatrixName(const QString& value)
+{
+  m_CellEnsembleAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GeneratePrecipitateStatsData::getCellEnsembleAttributeMatrixName() const
+{
+  return m_CellEnsembleAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrecipitateStatsData::setAppendToExistingAttributeMatrix(bool value)
+{
+  m_AppendToExistingAttributeMatrix = value;
+}
+
+// -----------------------------------------------------------------------------
+bool GeneratePrecipitateStatsData::getAppendToExistingAttributeMatrix() const
+{
+  return m_AppendToExistingAttributeMatrix;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrecipitateStatsData::setSelectedEnsembleAttributeMatrix(const DataArrayPath& value)
+{
+  m_SelectedEnsembleAttributeMatrix = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GeneratePrecipitateStatsData::getSelectedEnsembleAttributeMatrix() const
+{
+  return m_SelectedEnsembleAttributeMatrix;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrecipitateStatsData::setOdfData(const DynamicTableData& value)
+{
+  m_OdfData = value;
+}
+
+// -----------------------------------------------------------------------------
+DynamicTableData GeneratePrecipitateStatsData::getOdfData() const
+{
+  return m_OdfData;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrecipitateStatsData::setMdfData(const DynamicTableData& value)
+{
+  m_MdfData = value;
+}
+
+// -----------------------------------------------------------------------------
+DynamicTableData GeneratePrecipitateStatsData::getMdfData() const
+{
+  return m_MdfData;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrecipitateStatsData::setAxisOdfData(const DynamicTableData& value)
+{
+  m_AxisOdfData = value;
+}
+
+// -----------------------------------------------------------------------------
+DynamicTableData GeneratePrecipitateStatsData::getAxisOdfData() const
+{
+  return m_AxisOdfData;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrecipitateStatsData::setRdfMinMaxDistance(const FloatVec2Type& value)
+{
+  m_RdfMinMaxDistance = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec2Type GeneratePrecipitateStatsData::getRdfMinMaxDistance() const
+{
+  return m_RdfMinMaxDistance;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrecipitateStatsData::setRdfNumBins(int value)
+{
+  m_RdfNumBins = value;
+}
+
+// -----------------------------------------------------------------------------
+int GeneratePrecipitateStatsData::getRdfNumBins() const
+{
+  return m_RdfNumBins;
+}
+
+// -----------------------------------------------------------------------------
+void GeneratePrecipitateStatsData::setRdfBoxSize(const FloatVec3Type& value)
+{
+  m_RdfBoxSize = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type GeneratePrecipitateStatsData::getRdfBoxSize() const
+{
+  return m_RdfBoxSize;
 }

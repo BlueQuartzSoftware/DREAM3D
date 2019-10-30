@@ -119,3 +119,21 @@ void AbstractMicrostructurePreset::initializeMDFTableModel(QMap<QString, QVector
   data[kAngles] = axis;
   data[kWeight] = weights;
 }
+
+// -----------------------------------------------------------------------------
+AbstractMicrostructurePreset::Pointer AbstractMicrostructurePreset::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+QString AbstractMicrostructurePreset::getNameOfClass() const
+{
+  return QString("AbstractMicrostructurePreset");
+}
+
+// -----------------------------------------------------------------------------
+QString AbstractMicrostructurePreset::ClassName()
+{
+  return QString("AbstractMicrostructurePreset");
+}

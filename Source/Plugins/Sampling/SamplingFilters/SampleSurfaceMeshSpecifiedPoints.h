@@ -35,10 +35,12 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 
@@ -50,40 +52,89 @@
 class Sampling_EXPORT SampleSurfaceMeshSpecifiedPoints : public SampleSurfaceMesh
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(SampleSurfaceMeshSpecifiedPoints SUPERCLASS SampleSurfaceMesh)
-    PYB11_PROPERTY(QString InputFilePath READ getInputFilePath WRITE setInputFilePath)
-    PYB11_PROPERTY(QString OutputFilePath READ getOutputFilePath WRITE setOutputFilePath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(SampleSurfaceMeshSpecifiedPoints SUPERCLASS SampleSurfaceMesh)
+  PYB11_SHARED_POINTERS(SampleSurfaceMeshSpecifiedPoints)
+  PYB11_FILTER_NEW_MACRO(SampleSurfaceMeshSpecifiedPoints)
+  PYB11_FILTER_PARAMETER(QString, InputFilePath)
+  PYB11_FILTER_PARAMETER(QString, OutputFilePath)
+  PYB11_PROPERTY(QString InputFilePath READ getInputFilePath WRITE setInputFilePath)
+  PYB11_PROPERTY(QString OutputFilePath READ getOutputFilePath WRITE setOutputFilePath)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(SampleSurfaceMeshSpecifiedPoints)
-  SIMPL_FILTER_NEW_MACRO(SampleSurfaceMeshSpecifiedPoints)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(SampleSurfaceMeshSpecifiedPoints, AbstractFilter)
+  using Self = SampleSurfaceMeshSpecifiedPoints;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for SampleSurfaceMeshSpecifiedPoints
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for SampleSurfaceMeshSpecifiedPoints
+   */
+  static QString ClassName();
 
   virtual ~SampleSurfaceMeshSpecifiedPoints();
 
-  SIMPL_FILTER_PARAMETER(QString, InputFilePath)
+  /**
+   * @brief Setter property for InputFilePath
+   */
+  void setInputFilePath(const QString& value);
+  /**
+   * @brief Getter property for InputFilePath
+   * @return Value of InputFilePath
+   */
+  QString getInputFilePath() const;
+
   Q_PROPERTY(QString InputFilePath READ getInputFilePath WRITE setInputFilePath)
 
-  SIMPL_FILTER_PARAMETER(QString, OutputFilePath)
+  /**
+   * @brief Setter property for OutputFilePath
+   */
+  void setOutputFilePath(const QString& value);
+  /**
+   * @brief Getter property for OutputFilePath
+   * @return Value of OutputFilePath
+   */
+  QString getOutputFilePath() const;
+
   Q_PROPERTY(QString OutputFilePath READ getOutputFilePath WRITE setOutputFilePath)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -93,23 +144,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -156,7 +207,11 @@ protected:
   virtual void assign_points(Int32ArrayType::Pointer iArray);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+
+  QString m_InputFilePath = {};
+  QString m_OutputFilePath = {};
 
   // number of specified points
   int64_t m_NumPoints;

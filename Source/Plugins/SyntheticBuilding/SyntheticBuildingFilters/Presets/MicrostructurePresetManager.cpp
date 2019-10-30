@@ -135,3 +135,21 @@ AbstractMicrostructurePresetFactory::Pointer MicrostructurePresetManager::getFac
   AbstractMicrostructurePresetFactory::Pointer nullPointer;
   return nullPointer;
 }
+
+// -----------------------------------------------------------------------------
+MicrostructurePresetManager::Pointer MicrostructurePresetManager::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+QString MicrostructurePresetManager::getNameOfClass() const
+{
+  return QString("MicrostructurePresetManager");
+}
+
+// -----------------------------------------------------------------------------
+QString MicrostructurePresetManager::ClassName()
+{
+  return QString("MicrostructurePresetManager");
+}

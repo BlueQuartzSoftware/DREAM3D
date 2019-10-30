@@ -37,8 +37,14 @@
 #include <QtCore/QFile>
 #include <QtCore/QTime>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <QtCore/QTextStream>
+
+#include <QtCore/QDebug>
+
 #include "SIMPLib/DataArrays/DataArray.hpp"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
@@ -47,6 +53,7 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
+
 #include "UnitTestSupport.hpp"
 
 #include "ImportExportTestFileLocations.h"
@@ -56,13 +63,13 @@
 class DxIOTest
 {
 public:
-  DxIOTest()
+  DxIOTest() = default;
+  virtual ~DxIOTest() = default;
+
+  QString getNameOfClass()
   {
+    return QString("DxIOTest");
   }
-  virtual ~DxIOTest()
-  {
-  }
-  SIMPL_TYPE_MACRO(DxIOTest)
 
   // -----------------------------------------------------------------------------
   //
@@ -268,8 +275,8 @@ public:
         dxReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName)->getAttributeMatrix("CellData")->getAttributeArray(SIMPL::CellData::FeatureIds);
 
     int size = UnitTest::FeatureIdsTest::XSize * UnitTest::FeatureIdsTest::YSize * UnitTest::FeatureIdsTest::ZSize;
-    int32_t* data = Int32ArrayType::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(mdata.get());
-
+    Int32ArrayType::Pointer dataPtr = std::dynamic_pointer_cast<Int32ArrayType>(mdata);
+    int32_t* data = dataPtr->getTuplePointer(0);
     for(int i = 0; i < size; ++i)
     {
       int32_t file_value = data[i];

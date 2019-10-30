@@ -33,12 +33,19 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "SPParksSitesWriter.h"
 #include <fstream>
 
 #include <QtCore/QDateTime>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
@@ -269,7 +276,7 @@ AbstractFilter::Pointer SPParksSitesWriter::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksSitesWriter::getCompiledLibraryName() const
+QString SPParksSitesWriter::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -277,7 +284,7 @@ const QString SPParksSitesWriter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksSitesWriter::getBrandingString() const
+QString SPParksSitesWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -285,7 +292,7 @@ const QString SPParksSitesWriter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksSitesWriter::getFilterVersion() const
+QString SPParksSitesWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -295,7 +302,7 @@ const QString SPParksSitesWriter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksSitesWriter::getGroupName() const
+QString SPParksSitesWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -303,7 +310,7 @@ const QString SPParksSitesWriter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid SPParksSitesWriter::getUuid()
+QUuid SPParksSitesWriter::getUuid() const
 {
   return QUuid("{bcf2f246-610f-5575-a434-241d04114b9f}");
 }
@@ -311,7 +318,7 @@ const QUuid SPParksSitesWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksSitesWriter::getSubGroupName() const
+QString SPParksSitesWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -319,7 +326,48 @@ const QString SPParksSitesWriter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SPParksSitesWriter::getHumanLabel() const
+QString SPParksSitesWriter::getHumanLabel() const
 {
   return "Export SPParks Sites File";
+}
+
+// -----------------------------------------------------------------------------
+SPParksSitesWriter::Pointer SPParksSitesWriter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<SPParksSitesWriter> SPParksSitesWriter::New()
+{
+  struct make_shared_enabler : public SPParksSitesWriter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString SPParksSitesWriter::getNameOfClass() const
+{
+  return QString("SPParksSitesWriter");
+}
+
+// -----------------------------------------------------------------------------
+QString SPParksSitesWriter::ClassName()
+{
+  return QString("SPParksSitesWriter");
+}
+
+// -----------------------------------------------------------------------------
+void SPParksSitesWriter::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath SPParksSitesWriter::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
 }

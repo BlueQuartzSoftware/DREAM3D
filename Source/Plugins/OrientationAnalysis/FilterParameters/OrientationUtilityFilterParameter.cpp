@@ -69,3 +69,28 @@ QString OrientationUtilityFilterParameter::getWidgetType() const
 {
   return QString("OrientationUtilityWidget");
 }
+
+// -----------------------------------------------------------------------------
+OrientationUtilityFilterParameter::Pointer OrientationUtilityFilterParameter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+OrientationUtilityFilterParameter::Pointer OrientationUtilityFilterParameter::New()
+{
+  Pointer sharedPtr(new(OrientationUtilityFilterParameter));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString OrientationUtilityFilterParameter::getNameOfClass() const
+{
+  return QString("OrientationUtilityFilterParameter");
+}
+
+// -----------------------------------------------------------------------------
+QString OrientationUtilityFilterParameter::ClassName()
+{
+  return QString("OrientationUtilityFilterParameter");
+}

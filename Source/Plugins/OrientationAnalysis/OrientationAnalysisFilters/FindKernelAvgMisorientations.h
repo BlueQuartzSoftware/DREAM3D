@@ -35,10 +35,12 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
@@ -49,151 +51,250 @@
 class OrientationAnalysis_EXPORT FindKernelAvgMisorientations : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(FindKernelAvgMisorientations SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
-    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
-    PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
-    PYB11_PROPERTY(QString KernelAverageMisorientationsArrayName READ getKernelAverageMisorientationsArrayName WRITE setKernelAverageMisorientationsArrayName)
-    PYB11_PROPERTY(IntVec3Type KernelSize READ getKernelSize WRITE setKernelSize)
-  public:
-    SIMPL_SHARED_POINTERS(FindKernelAvgMisorientations)
-    SIMPL_FILTER_NEW_MACRO(FindKernelAvgMisorientations)
-    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindKernelAvgMisorientations, AbstractFilter)
 
-    ~FindKernelAvgMisorientations() override;
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(FindKernelAvgMisorientations SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindKernelAvgMisorientations)
+  PYB11_FILTER_NEW_MACRO(FindKernelAvgMisorientations)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, KernelAverageMisorientationsArrayName)
+  PYB11_FILTER_PARAMETER(IntVec3Type, KernelSize)
+  PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+  PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+  PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
+  PYB11_PROPERTY(QString KernelAverageMisorientationsArrayName READ getKernelAverageMisorientationsArrayName WRITE setKernelAverageMisorientationsArrayName)
+  PYB11_PROPERTY(IntVec3Type KernelSize READ getKernelSize WRITE setKernelSize)
+#endif
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
-    Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+public:
+  using Self = FindKernelAvgMisorientations;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
-    Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
-    Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  /**
+   * @brief Returns the name of the class for FindKernelAvgMisorientations
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindKernelAvgMisorientations
+   */
+  static QString ClassName();
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
-    Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
+  ~FindKernelAvgMisorientations() override;
 
-    SIMPL_FILTER_PARAMETER(QString, KernelAverageMisorientationsArrayName)
-    Q_PROPERTY(QString KernelAverageMisorientationsArrayName READ getKernelAverageMisorientationsArrayName WRITE setKernelAverageMisorientationsArrayName)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
 
-    SIMPL_FILTER_PARAMETER(IntVec3Type, KernelSize)
-    Q_PROPERTY(IntVec3Type KernelSize READ getKernelSize WRITE setKernelSize)
+  Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-    /**
-     * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-     */
-    const QString getCompiledLibraryName() const override;
+  /**
+   * @brief Setter property for CellPhasesArrayPath
+   */
+  void setCellPhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellPhasesArrayPath
+   * @return Value of CellPhasesArrayPath
+   */
+  DataArrayPath getCellPhasesArrayPath() const;
 
-    /**
-     * @brief getBrandingString Returns the branding string for the filter, which is a tag
-     * used to denote the filter's association with specific plugins
-     * @return Branding string
-     */
-    const QString getBrandingString() const override;
+  Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    /**
-     * @brief getFilterVersion Returns a version string for this filter. Default
-     * value is an empty string.
-     * @return
-     */
-    const QString getFilterVersion() const override;
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
 
-    /**
-     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-     */
-    AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+  Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    /**
-     * @brief getGroupName Reimplemented from @see AbstractFilter class
-     */
-    const QString getGroupName() const override;
+  /**
+   * @brief Setter property for QuatsArrayPath
+   */
+  void setQuatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for QuatsArrayPath
+   * @return Value of QuatsArrayPath
+   */
+  DataArrayPath getQuatsArrayPath() const;
 
-    /**
-     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-     */
-    const QString getSubGroupName() const override;
+  Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
-    /**
-     * @brief getUuid Return the unique identifier for this filter.
-     * @return A QUuid object.
-     */
-    const QUuid getUuid() override;
+  /**
+   * @brief Setter property for KernelAverageMisorientationsArrayName
+   */
+  void setKernelAverageMisorientationsArrayName(const QString& value);
+  /**
+   * @brief Getter property for KernelAverageMisorientationsArrayName
+   * @return Value of KernelAverageMisorientationsArrayName
+   */
+  QString getKernelAverageMisorientationsArrayName() const;
 
-    /**
-     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-     */
-    const QString getHumanLabel() const override;
+  Q_PROPERTY(QString KernelAverageMisorientationsArrayName READ getKernelAverageMisorientationsArrayName WRITE setKernelAverageMisorientationsArrayName)
 
-    /**
-     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    void setupFilterParameters() override;
+  /**
+   * @brief Setter property for KernelSize
+   */
+  void setKernelSize(const IntVec3Type& value);
+  /**
+   * @brief Getter property for KernelSize
+   * @return Value of KernelSize
+   */
+  IntVec3Type getKernelSize() const;
 
-    /**
-     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-     */
-    void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  Q_PROPERTY(IntVec3Type KernelSize READ getKernelSize WRITE setKernelSize)
 
-    /**
-     * @brief execute Reimplemented from @see AbstractFilter class
-     */
-    void execute() override;
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  QString getCompiledLibraryName() const override;
 
-    /**
-     * @brief preflight Reimplemented from @see AbstractFilter class
-     */
-    void preflight() override;
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+   */
+  QString getBrandingString() const override;
 
-  signals:
-    /**
-     * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
-     * be pushed from a user-facing control (such as a widget)
-     * @param filter Filter instance pointer
-     */
-    void updateFilterParameters(AbstractFilter* filter);
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  QString getFilterVersion() const override;
 
-    /**
-     * @brief parametersChanged Emitted when any Filter parameter is changed internally
-     */
-    void parametersChanged();
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
-    /**
-     * @brief preflightAboutToExecute Emitted just before calling dataCheck()
-     */
-    void preflightAboutToExecute();
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  QString getGroupName() const override;
 
-    /**
-     * @brief preflightExecuted Emitted just after calling dataCheck()
-     */
-    void preflightExecuted();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  QString getSubGroupName() const override;
 
-  protected:
-    FindKernelAvgMisorientations();
-    /**
-     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-     */
-    void dataCheck();
+  /**
+   * @brief getUuid Return the unique identifier for this filter.
+   * @return A QUuid object.
+   */
+  QUuid getUuid() const override;
 
-    /**
-     * @brief Initializes all the private instance variables.
-     */
-    void initialize();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  QString getHumanLabel() const override;
 
-  private:
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  void setupFilterParameters() override;
 
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_DATAARRAY_VARIABLE(float, Quats)
-    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
-    DEFINE_DATAARRAY_VARIABLE(float, KernelAverageMisorientations)
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  void execute() override;
 
-  public:
-    FindKernelAvgMisorientations(const FindKernelAvgMisorientations&) = delete;            // Copy Constructor Not Implemented
-    FindKernelAvgMisorientations(FindKernelAvgMisorientations&&) = delete;                 // Move Constructor Not Implemented
-    FindKernelAvgMisorientations& operator=(const FindKernelAvgMisorientations&) = delete; // Copy Assignment Not Implemented
-    FindKernelAvgMisorientations& operator=(FindKernelAvgMisorientations&&) = delete;      // Move Assignment Not Implemented
+  /**
+   * @brief preflight Reimplemented from @see AbstractFilter class
+   */
+  void preflight() override;
+
+signals:
+  /**
+   * @brief updateFilterParameters Emitted when the Filter requests all the latest Filter parameters
+   * be pushed from a user-facing control (such as a widget)
+   * @param filter Filter instance pointer
+   */
+  void updateFilterParameters(AbstractFilter* filter);
+
+  /**
+   * @brief parametersChanged Emitted when any Filter parameter is changed internally
+   */
+  void parametersChanged();
+
+  /**
+   * @brief preflightAboutToExecute Emitted just before calling dataCheck()
+   */
+  void preflightAboutToExecute();
+
+  /**
+   * @brief preflightExecuted Emitted just after calling dataCheck()
+   */
+  void preflightExecuted();
+
+protected:
+  FindKernelAvgMisorientations();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
+
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
+
+private:
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+  int32_t* m_CellPhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_QuatsPtr;
+  float* m_Quats = nullptr;
+  std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
+  uint32_t* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<float>> m_KernelAverageMisorientationsPtr;
+  float* m_KernelAverageMisorientations = nullptr;
+
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_CellPhasesArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+  DataArrayPath m_QuatsArrayPath = {};
+  QString m_KernelAverageMisorientationsArrayName = {};
+  IntVec3Type m_KernelSize = {};
+
+
+public:
+  FindKernelAvgMisorientations(const FindKernelAvgMisorientations&) = delete;            // Copy Constructor Not Implemented
+  FindKernelAvgMisorientations(FindKernelAvgMisorientations&&) = delete;                 // Move Constructor Not Implemented
+  FindKernelAvgMisorientations& operator=(const FindKernelAvgMisorientations&) = delete; // Copy Assignment Not Implemented
+  FindKernelAvgMisorientations& operator=(FindKernelAvgMisorientations&&) = delete;      // Move Assignment Not Implemented
 };
-

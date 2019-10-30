@@ -33,9 +33,14 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "ChangeResolution.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -45,6 +50,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
@@ -445,7 +452,7 @@ AbstractFilter::Pointer ChangeResolution::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeResolution::getCompiledLibraryName() const
+QString ChangeResolution::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -453,7 +460,7 @@ const QString ChangeResolution::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeResolution::getBrandingString() const
+QString ChangeResolution::getBrandingString() const
 {
   return "Sampling";
 }
@@ -461,7 +468,7 @@ const QString ChangeResolution::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeResolution::getFilterVersion() const
+QString ChangeResolution::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -471,7 +478,7 @@ const QString ChangeResolution::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeResolution::getGroupName() const
+QString ChangeResolution::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -479,7 +486,7 @@ const QString ChangeResolution::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ChangeResolution::getUuid()
+QUuid ChangeResolution::getUuid() const
 {
   return QUuid("{1966e540-759c-5798-ae26-0c6a3abc65c0}");
 }
@@ -487,7 +494,7 @@ const QUuid ChangeResolution::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeResolution::getSubGroupName() const
+QString ChangeResolution::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ResolutionFilters;
 }
@@ -495,7 +502,120 @@ const QString ChangeResolution::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ChangeResolution::getHumanLabel() const
+QString ChangeResolution::getHumanLabel() const
 {
   return "Change Spacing";
+}
+
+// -----------------------------------------------------------------------------
+ChangeResolution::Pointer ChangeResolution::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ChangeResolution> ChangeResolution::New()
+{
+  struct make_shared_enabler : public ChangeResolution
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ChangeResolution::getNameOfClass() const
+{
+  return QString("ChangeResolution");
+}
+
+// -----------------------------------------------------------------------------
+QString ChangeResolution::ClassName()
+{
+  return QString("ChangeResolution");
+}
+
+// -----------------------------------------------------------------------------
+void ChangeResolution::setNewDataContainerName(const DataArrayPath& value)
+{
+  m_NewDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ChangeResolution::getNewDataContainerName() const
+{
+  return m_NewDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void ChangeResolution::setCellAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_CellAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ChangeResolution::getCellAttributeMatrixPath() const
+{
+  return m_CellAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void ChangeResolution::setCellFeatureAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_CellFeatureAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ChangeResolution::getCellFeatureAttributeMatrixPath() const
+{
+  return m_CellFeatureAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void ChangeResolution::setSpacing(const FloatVec3Type& value)
+{
+  m_Spacing = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ChangeResolution::getSpacing() const
+{
+  return m_Spacing;
+}
+
+// -----------------------------------------------------------------------------
+void ChangeResolution::setRenumberFeatures(bool value)
+{
+  m_RenumberFeatures = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ChangeResolution::getRenumberFeatures() const
+{
+  return m_RenumberFeatures;
+}
+
+// -----------------------------------------------------------------------------
+void ChangeResolution::setSaveAsNewDataContainer(bool value)
+{
+  m_SaveAsNewDataContainer = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ChangeResolution::getSaveAsNewDataContainer() const
+{
+  return m_SaveAsNewDataContainer;
+}
+
+// -----------------------------------------------------------------------------
+void ChangeResolution::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ChangeResolution::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
 }

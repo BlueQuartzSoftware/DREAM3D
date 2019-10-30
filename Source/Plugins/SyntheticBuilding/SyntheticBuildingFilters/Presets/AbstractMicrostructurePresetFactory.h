@@ -35,10 +35,11 @@
 
 #pragma once
 
+#include <memory>
+
 #include <string>
 #include <vector>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 #include "AbstractMicrostructurePreset.h"
 
@@ -63,44 +64,56 @@
   class name : public AbstractMicrostructurePresetFactory                                                                                                                                              \
   {                                                                                                                                                                                                    \
   public:                                                                                                                                                                                              \
-    SIMPL_SHARED_POINTERS(name)                                                                                                                                                                        \
-    SIMPL_TYPE_MACRO(name)                                                                                                                                                                             \
-    SIMPL_STATIC_NEW_MACRO(name)                                                                                                                                                                       \
-    SIMPL_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePresetFactory, name)                                                                                                                             \
-    virtual ~name()                                                                                                                                                                                    \
+    using Self = name;                                                                                                                                                                                 \
+    using Pointer = std::shared_ptr<Self>;                                                                                                                                                             \
+    using ConstPointer = std::shared_ptr<const Self>;                                                                                                                                                  \
+    using WeakPointer = std::weak_ptr<Self>;                                                                                                                                                           \
+    using ConstWeakPointer = std::weak_ptr<Self>;                                                                                                                                                      \
+    static Pointer NullPointer()                                                                                                                                                                       \
     {                                                                                                                                                                                                  \
+      return Pointer(static_cast<Self*>(nullptr));                                                                                                                                                     \
     }                                                                                                                                                                                                  \
-    AbstractMicrostructurePreset::Pointer newMicrostructurePreset()                                                                                                                                    \
+    QString getNameOfClass() const override                                                                                                                                                            \
+    {                                                                                                                                                                                                  \
+      return QString(#name);                                                                                                                                                                           \
+    }                                                                                                                                                                                                  \
+    static QString ClassName()                                                                                                                                                                         \
+    {                                                                                                                                                                                                  \
+      return QString(#name);                                                                                                                                                                           \
+    }                                                                                                                                                                                                  \
+    static Pointer New()                                                                                                                                                                               \
+    {                                                                                                                                                                                                  \
+      Pointer sharedPtr(new(Self));                                                                                                                                                                    \
+      return sharedPtr;                                                                                                                                                                                \
+    }                                                                                                                                                                                                  \
+    virtual ~name() override = default;                                                                                                                                                                \
+    AbstractMicrostructurePreset::Pointer newMicrostructurePreset() override                                                                                                                           \
     {                                                                                                                                                                                                  \
       return m_msgType::New();                                                                                                                                                                         \
     }                                                                                                                                                                                                  \
-    virtual bool canCreateClass(const QString& name)                                                                                                                                                   \
+    bool canCreateClass(const QString& name) override                                                                                                                                                  \
     {                                                                                                                                                                                                  \
       QString cn = this->className();                                                                                                                                                                  \
       QString dn = this->displayName();                                                                                                                                                                \
-      if(cn.compare(name) == 0 || dn.compare(name) == 0)                                                                                                                                               \
-      {                                                                                                                                                                                                \
-        return true;                                                                                                                                                                                   \
-      }                                                                                                                                                                                                \
-      return false;                                                                                                                                                                                    \
+      return (cn.compare(name) == 0 || dn.compare(name) == 0);                                                                                                                                         \
     }                                                                                                                                                                                                  \
-    const QString className()                                                                                                                                                                          \
+    const QString className() override                                                                                                                                                                 \
     {                                                                                                                                                                                                  \
       return QString(#m_msgType);                                                                                                                                                                      \
     }                                                                                                                                                                                                  \
-    const QString displayName()                                                                                                                                                                        \
+    const QString displayName() override                                                                                                                                                               \
     {                                                                                                                                                                                                  \
       return QString(display);                                                                                                                                                                         \
     }                                                                                                                                                                                                  \
                                                                                                                                                                                                        \
   protected:                                                                                                                                                                                           \
-    name()                                                                                                                                                                                             \
-    {                                                                                                                                                                                                  \
-    }                                                                                                                                                                                                  \
+    name() = default;                                                                                                                                                                                  \
                                                                                                                                                                                                        \
-  private:                                                                                                                                                                                             \
-    name(const name&);                                                                                                                                                                                 \
-    void operator=(const name&);                                                                                                                                                                       \
+  public:                                                                                                                                                                                              \
+    name(const name&) = delete;                                                                                                                                                                        \
+    name(name&&) = delete;                                                                                                                                                                             \
+    name& operator=(const name&) = delete;                                                                                                                                                             \
+    name& operator=(name&&) = delete;                                                                                                                                                                  \
   };
 
 /**
@@ -117,13 +130,28 @@
 class AbstractMicrostructurePresetFactory
 {
 public:
-  SIMPL_SHARED_POINTERS(AbstractMicrostructurePresetFactory)
-  SIMPL_TYPE_MACRO(AbstractMicrostructurePresetFactory)
-
-  typedef QVector<Pointer> Collection;
-  virtual ~AbstractMicrostructurePresetFactory()
+  using Self = AbstractMicrostructurePresetFactory;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer()
   {
+    return Pointer(static_cast<Self*>(nullptr));
   }
+
+  virtual QString getNameOfClass() const
+  {
+    return QString("AbstractMicrostructurePresetFactory");
+  }
+  static QString ClassName()
+  {
+    return QString("AbstractMicrostructurePresetFactory");
+  }
+
+  using Collection = QVector<Pointer>;
+
+  virtual ~AbstractMicrostructurePresetFactory() = default;
 
   /**
    * @brief Creates a new AbstractMicrostructurePreset based on a class name
@@ -154,9 +182,7 @@ public:
   virtual const QString displayName() = 0;
 
 protected:
-  AbstractMicrostructurePresetFactory()
-  {
-  }
+  AbstractMicrostructurePresetFactory() = default;
 
 public:
   AbstractMicrostructurePresetFactory(const AbstractMicrostructurePresetFactory&) = delete;            // Copy Constructor Not Implemented

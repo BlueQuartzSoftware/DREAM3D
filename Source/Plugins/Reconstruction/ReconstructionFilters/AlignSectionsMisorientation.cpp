@@ -33,19 +33,26 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "AlignSectionsMisorientation.h"
 
 #include <fstream>
 
 #include <QtCore/QDateTime>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/Core/Quaternion.hpp"
 #include "OrientationLib/LaueOps/LaueOps.h"
@@ -415,7 +422,7 @@ AbstractFilter::Pointer AlignSectionsMisorientation::newFilterInstance(bool copy
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMisorientation::getCompiledLibraryName() const
+QString AlignSectionsMisorientation::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -423,7 +430,7 @@ const QString AlignSectionsMisorientation::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMisorientation::getBrandingString() const
+QString AlignSectionsMisorientation::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -431,7 +438,7 @@ const QString AlignSectionsMisorientation::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMisorientation::getFilterVersion() const
+QString AlignSectionsMisorientation::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -441,7 +448,7 @@ const QString AlignSectionsMisorientation::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMisorientation::getGroupName() const
+QString AlignSectionsMisorientation::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -449,7 +456,7 @@ const QString AlignSectionsMisorientation::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid AlignSectionsMisorientation::getUuid()
+QUuid AlignSectionsMisorientation::getUuid() const
 {
   return QUuid("{4fb2b9de-3124-534b-b914-dbbbdbc14604}");
 }
@@ -457,7 +464,7 @@ const QUuid AlignSectionsMisorientation::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMisorientation::getSubGroupName() const
+QString AlignSectionsMisorientation::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::AlignmentFilters;
 }
@@ -465,7 +472,108 @@ const QString AlignSectionsMisorientation::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMisorientation::getHumanLabel() const
+QString AlignSectionsMisorientation::getHumanLabel() const
 {
   return "Align Sections (Misorientation)";
+}
+
+// -----------------------------------------------------------------------------
+AlignSectionsMisorientation::Pointer AlignSectionsMisorientation::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<AlignSectionsMisorientation> AlignSectionsMisorientation::New()
+{
+  struct make_shared_enabler : public AlignSectionsMisorientation
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString AlignSectionsMisorientation::getNameOfClass() const
+{
+  return QString("AlignSectionsMisorientation");
+}
+
+// -----------------------------------------------------------------------------
+QString AlignSectionsMisorientation::ClassName()
+{
+  return QString("AlignSectionsMisorientation");
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsMisorientation::setMisorientationTolerance(float value)
+{
+  m_MisorientationTolerance = value;
+}
+
+// -----------------------------------------------------------------------------
+float AlignSectionsMisorientation::getMisorientationTolerance() const
+{
+  return m_MisorientationTolerance;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsMisorientation::setUseGoodVoxels(bool value)
+{
+  m_UseGoodVoxels = value;
+}
+
+// -----------------------------------------------------------------------------
+bool AlignSectionsMisorientation::getUseGoodVoxels() const
+{
+  return m_UseGoodVoxels;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsMisorientation::setQuatsArrayPath(const DataArrayPath& value)
+{
+  m_QuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AlignSectionsMisorientation::getQuatsArrayPath() const
+{
+  return m_QuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsMisorientation::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AlignSectionsMisorientation::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsMisorientation::setGoodVoxelsArrayPath(const DataArrayPath& value)
+{
+  m_GoodVoxelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AlignSectionsMisorientation::getGoodVoxelsArrayPath() const
+{
+  return m_GoodVoxelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsMisorientation::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AlignSectionsMisorientation::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
 }

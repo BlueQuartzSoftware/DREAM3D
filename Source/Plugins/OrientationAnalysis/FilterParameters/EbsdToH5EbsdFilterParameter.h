@@ -35,6 +35,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/EbsdToH5Ebsd.h"
@@ -42,9 +44,23 @@
 class EbsdToH5EbsdFilterParameter : public FilterParameter
 {
 public:
-  SIMPL_SHARED_POINTERS(EbsdToH5EbsdFilterParameter)
-    SIMPL_STATIC_NEW_MACRO(EbsdToH5EbsdFilterParameter)
-    SIMPL_TYPE_MACRO(EbsdToH5EbsdFilterParameter)
+  using Self = EbsdToH5EbsdFilterParameter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for EbsdToH5EbsdFilterParameter
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for EbsdToH5EbsdFilterParameter
+   */
+  static QString ClassName();
 
   static Pointer New(const QString& humanLabel, const QString& propertyName,
                      const QVariant& defaultValue, Category category, EbsdToH5Ebsd* filter,
@@ -54,10 +70,35 @@ public:
 
   virtual ~EbsdToH5EbsdFilterParameter();
 
-  SIMPL_INSTANCE_STRING_PROPERTY(FileExtension)
-    SIMPL_INSTANCE_STRING_PROPERTY(FileType)
+  /**
+   * @brief Setter property for FileExtension
+   */
+  void setFileExtension(const QString& value);
+  /**
+   * @brief Getter property for FileExtension
+   * @return Value of FileExtension
+   */
+  QString getFileExtension() const;
 
-  SIMPL_POINTER_PROPERTY(EbsdToH5Ebsd, Filter)
+  /**
+   * @brief Setter property for FileType
+   */
+  void setFileType(const QString& value);
+  /**
+   * @brief Getter property for FileType
+   * @return Value of FileType
+   */
+  QString getFileType() const;
+
+  /**
+   * @brief Setter property for Filter
+   */
+  void setFilter(EbsdToH5Ebsd* value);
+  /**
+   * @brief Getter property for Filter
+   * @return Value of Filter
+   */
+  EbsdToH5Ebsd* getFilter() const;
 
   QString getWidgetType() const override;
 
@@ -81,5 +122,11 @@ public:
   EbsdToH5EbsdFilterParameter(EbsdToH5EbsdFilterParameter&&) = delete;      // Move Constructor Not Implemented
   EbsdToH5EbsdFilterParameter& operator=(const EbsdToH5EbsdFilterParameter&) = delete; // Copy Assignment Not Implemented
   EbsdToH5EbsdFilterParameter& operator=(EbsdToH5EbsdFilterParameter&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  EbsdToH5Ebsd* m_Filter = nullptr;
+
+  QString m_FileExtension = {};
+  QString m_FileType = {};
 };
 

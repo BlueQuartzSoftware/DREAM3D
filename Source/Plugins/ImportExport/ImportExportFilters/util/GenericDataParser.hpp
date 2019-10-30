@@ -38,20 +38,68 @@
 #include <QtCore/QString>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
 class GenericDataParser
 {
   public:
-    SIMPL_SHARED_POINTERS(GenericDataParser)
-    SIMPL_TYPE_MACRO(GenericDataParser)
+    using Self = GenericDataParser;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+    Pointer NullPointer()
+    {
+      return Pointer(static_cast<Self*>(nullptr));
+    }
+
+    /**
+     * @brief Returns the name of the class for GenericDataParser
+     */
+    /**
+     * @brief Returns the name of the class for GenericDataParser
+     */
+    QString getNameOfClass() const
+    {
+      return QString("GenericDataParser");
+    }
+
+    /**
+     * @brief Returns the name of the class for GenericDataParser
+     */
+    QString ClassName()
+    {
+      return QString("GenericDataParser");
+    }
 
     virtual ~GenericDataParser() = default;
 
-    SIMPL_INSTANCE_STRING_PROPERTY(ColumnName)
-    SIMPL_INSTANCE_PROPERTY(int, ColumnIndex)
-    
+    // -----------------------------------------------------------------------------
+    void GenericDataParser::setColumnName(const QString& value)
+    {
+      m_ColumnName = value;
+    }
+
+    // -----------------------------------------------------------------------------
+    QString GenericDataParser::getColumnName() const
+    {
+      return m_ColumnName;
+    }
+
+    // -----------------------------------------------------------------------------
+    void setColumnIndex(int value)
+    {
+      m_ColumnIndex = value;
+    }
+
+    // -----------------------------------------------------------------------------
+    int getColumnIndex() const
+    {
+      return m_ColumnIndex;
+    }
+
     virtual void setDataArray(IDataArray::Pointer value) { m_DataArray = value; }
     virtual IDataArray::Pointer getDataArray() { return m_DataArray; }
     
@@ -75,8 +123,36 @@ class GenericDataParser
 class GenericInt32Parser : public GenericDataParser
 {
   public:
-    SIMPL_SHARED_POINTERS(GenericInt32Parser)
-    SIMPL_TYPE_MACRO(GenericInt32Parser)
+    using Self = GenericInt32Parser;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+    Pointer NullPointer()
+    {
+      return Pointer(static_cast<Self*>(nullptr));
+    }
+
+    /**
+     * @brief Returns the name of the class for GenericInt32Parser
+     */
+    /**
+     * @brief Returns the name of the class for GenericInt32Parser
+     */
+    QString getNameOfClass() const
+    {
+      return QString("GenericInt32Parser");
+    }
+
+    /**
+     * @brief Returns the name of the class for GenericInt32Parser
+     */
+    QString ClassName()
+    {
+      return QString("GenericInt32Parser");
+    }
+
     static Pointer New(Int32ArrayType::Pointer ptr, const QString& name, int colIndex)
     {
       Pointer sharedPtr (new GenericInt32Parser(ptr, name, colIndex));
@@ -128,8 +204,36 @@ class GenericInt32Parser : public GenericDataParser
 class GenericFloatParser : public GenericDataParser
 {
   public:
-    SIMPL_SHARED_POINTERS(GenericFloatParser)
-    SIMPL_TYPE_MACRO(GenericFloatParser)
+    using Self = GenericFloatParser;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+    Pointer NullPointer()
+    {
+      return Pointer(static_cast<Self*>(nullptr));
+    }
+
+    /**
+     * @brief Returns the name of the class for GenericFloatParser
+     */
+    /**
+     * @brief Returns the name of the class for GenericFloatParser
+     */
+    QString getNameOfClass() const
+    {
+      return QString("GenericFloatParser");
+    }
+
+    /**
+     * @brief Returns the name of the class for GenericFloatParser
+     */
+    QString ClassName()
+    {
+      return QString("GenericFloatParser");
+    }
+
     static Pointer New(FloatArrayType::Pointer ptr, const QString& name, int colIndex)
     {
       Pointer sharedPtr (new GenericFloatParser(ptr, name, colIndex));
@@ -171,6 +275,10 @@ class GenericFloatParser : public GenericDataParser
     }
 
   private:
+    QString m_ColumnName = {};
+
+    int m_ColumnIndex = {};
+
     FloatArrayType::Pointer m_Ptr;
 
     GenericFloatParser(const GenericFloatParser&); // Copy Constructor Not Implemented

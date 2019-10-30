@@ -34,10 +34,14 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include <QtCore/QCoreApplication>
+#include <QtCore/QDebug>
 #include <QtCore/QFile>
+#include <QtCore/QTextStream>
+#include <QtCore/QTime>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
@@ -46,6 +50,7 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
+
 #include "UnitTestSupport.hpp"
 
 #include "ImportExportTestFileLocations.h"
@@ -55,13 +60,26 @@
 class PhIOTest
 {
 public:
-  PhIOTest()
+  PhIOTest() = default;
+  virtual ~PhIOTest() = default;
+  /**
+   * @brief Returns the name of the class for PhIOTest
+   */
+  /**
+   * @brief Returns the name of the class for PhIOTest
+   */
+  QString getNameOfClass() const
   {
+    return QString("PhIOTest");
   }
-  virtual ~PhIOTest()
+
+  /**
+   * @brief Returns the name of the class for PhIOTest
+   */
+  QString ClassName()
   {
+    return QString("PhIOTest");
   }
-  SIMPL_TYPE_MACRO(PhIOTest)
 
   // -----------------------------------------------------------------------------
   //
@@ -266,8 +284,8 @@ public:
         phReader->getDataContainerArray()->getDataContainer(SIMPL::Defaults::ImageDataContainerName)->getAttributeMatrix("CellData")->getAttributeArray(SIMPL::CellData::FeatureIds);
 
     int size = UnitTest::FeatureIdsTest::XSize * UnitTest::FeatureIdsTest::YSize * UnitTest::FeatureIdsTest::ZSize;
-    int32_t* data = Int32ArrayType::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(mdata.get());
-
+    Int32ArrayType::Pointer dataPtr = std::dynamic_pointer_cast<Int32ArrayType>(mdata);
+    int32_t* data = dataPtr->getTuplePointer(0);
     for(int i = 0; i < size; ++i)
     {
       int32_t file_value = data[i];
@@ -505,6 +523,6 @@ public:
   }
 
 private:
-  PhIOTest(const PhIOTest&);       // Copy Constructor Not Implemented
-  void operator=(const PhIOTest&); // Move assignment Not Implemented
+  PhIOTest(const PhIOTest&) = delete;       // Copy Constructor Not Implemented
+  void operator=(const PhIOTest&) = delete; // Move assignment Not Implemented
 };

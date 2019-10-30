@@ -35,10 +35,11 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "Sampling/SamplingDLLExport.h"
 
@@ -48,49 +49,118 @@
 class Sampling_EXPORT RotateSampleRefFrame : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(RotateSampleRefFrame SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
-    PYB11_PROPERTY(FloatVec3Type RotationAxis READ getRotationAxis WRITE setRotationAxis)
-    PYB11_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle)
-    PYB11_PROPERTY(bool SliceBySlice READ getSliceBySlice WRITE setSliceBySlice)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(RotateSampleRefFrame SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(RotateSampleRefFrame)
+  PYB11_FILTER_NEW_MACRO(RotateSampleRefFrame)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, RotationAxis)
+  PYB11_FILTER_PARAMETER(float, RotationAngle)
+  PYB11_FILTER_PARAMETER(bool, SliceBySlice)
+  PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
+  PYB11_PROPERTY(FloatVec3Type RotationAxis READ getRotationAxis WRITE setRotationAxis)
+  PYB11_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle)
+  PYB11_PROPERTY(bool SliceBySlice READ getSliceBySlice WRITE setSliceBySlice)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(RotateSampleRefFrame)
-  SIMPL_FILTER_NEW_MACRO(RotateSampleRefFrame)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(RotateSampleRefFrame, AbstractFilter)
+  using Self = RotateSampleRefFrame;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for RotateSampleRefFrame
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for RotateSampleRefFrame
+   */
+  static QString ClassName();
 
   ~RotateSampleRefFrame() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
+  /**
+   * @brief Setter property for CellAttributeMatrixPath
+   */
+  void setCellAttributeMatrixPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixPath
+   * @return Value of CellAttributeMatrixPath
+   */
+  DataArrayPath getCellAttributeMatrixPath() const;
+
   Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, RotationAxis)
+  /**
+   * @brief Setter property for RotationAxis
+   */
+  void setRotationAxis(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for RotationAxis
+   * @return Value of RotationAxis
+   */
+  FloatVec3Type getRotationAxis() const;
+
   Q_PROPERTY(FloatVec3Type RotationAxis READ getRotationAxis WRITE setRotationAxis)
 
-  SIMPL_FILTER_PARAMETER(float, RotationAngle)
+  /**
+   * @brief Setter property for RotationAngle
+   */
+  void setRotationAngle(float value);
+  /**
+   * @brief Getter property for RotationAngle
+   * @return Value of RotationAngle
+   */
+  float getRotationAngle() const;
+
   Q_PROPERTY(float RotationAngle READ getRotationAngle WRITE setRotationAngle)
 
   // This is getting exposed because other filters that are calling this filter needs to set this value
-  SIMPL_FILTER_PARAMETER(bool, SliceBySlice)
+  /**
+   * @brief Setter property for SliceBySlice
+   */
+  void setSliceBySlice(bool value);
+  /**
+   * @brief Getter property for SliceBySlice
+   * @return Value of SliceBySlice
+   */
+  bool getSliceBySlice() const;
+
   Q_PROPERTY(bool SliceBySlice READ getSliceBySlice WRITE setSliceBySlice)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -100,23 +170,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -178,5 +248,11 @@ public:
   RotateSampleRefFrame(RotateSampleRefFrame&&) = delete;      // Move Constructor Not Implemented
   RotateSampleRefFrame& operator=(const RotateSampleRefFrame&) = delete; // Copy Assignment Not Implemented
   RotateSampleRefFrame& operator=(RotateSampleRefFrame&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  DataArrayPath m_CellAttributeMatrixPath = {};
+  FloatVec3Type m_RotationAxis = {};
+  float m_RotationAngle = {};
+  bool m_SliceBySlice = {};
 };
 

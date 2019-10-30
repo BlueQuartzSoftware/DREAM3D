@@ -122,3 +122,28 @@ int PowerLawOps::calculateCorrelatedParameters(std::vector<std::vector<float>>& 
   }
   return err;
 }
+
+// -----------------------------------------------------------------------------
+PowerLawOps::Pointer PowerLawOps::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+QString PowerLawOps::getNameOfClass() const
+{
+  return QString("PowerLawOps");
+}
+
+// -----------------------------------------------------------------------------
+QString PowerLawOps::ClassName()
+{
+  return QString("PowerLawOps");
+}
+
+// -----------------------------------------------------------------------------
+PowerLawOps::Pointer PowerLawOps::New()
+{
+  Pointer sharedPtr(new(PowerLawOps));
+  return sharedPtr;
+}

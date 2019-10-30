@@ -33,14 +33,20 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindVolFractions.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -196,7 +202,7 @@ AbstractFilter::Pointer FindVolFractions::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindVolFractions::getCompiledLibraryName() const
+QString FindVolFractions::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -204,7 +210,7 @@ const QString FindVolFractions::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindVolFractions::getBrandingString() const
+QString FindVolFractions::getBrandingString() const
 {
   return "Statistics";
 }
@@ -212,7 +218,7 @@ const QString FindVolFractions::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindVolFractions::getFilterVersion() const
+QString FindVolFractions::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -222,7 +228,7 @@ const QString FindVolFractions::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindVolFractions::getGroupName() const
+QString FindVolFractions::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -230,7 +236,7 @@ const QString FindVolFractions::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindVolFractions::getUuid()
+QUuid FindVolFractions::getUuid() const
 {
   return QUuid("{68246a67-7f32-5c80-815a-bec82008d7bc}");
 }
@@ -238,7 +244,7 @@ const QUuid FindVolFractions::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindVolFractions::getSubGroupName() const
+QString FindVolFractions::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -246,7 +252,60 @@ const QString FindVolFractions::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindVolFractions::getHumanLabel() const
+QString FindVolFractions::getHumanLabel() const
 {
   return "Find Volume Fractions of Ensembles";
+}
+
+// -----------------------------------------------------------------------------
+FindVolFractions::Pointer FindVolFractions::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindVolFractions> FindVolFractions::New()
+{
+  struct make_shared_enabler : public FindVolFractions
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindVolFractions::getNameOfClass() const
+{
+  return QString("FindVolFractions");
+}
+
+// -----------------------------------------------------------------------------
+QString FindVolFractions::ClassName()
+{
+  return QString("FindVolFractions");
+}
+
+// -----------------------------------------------------------------------------
+void FindVolFractions::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindVolFractions::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindVolFractions::setVolFractionsArrayPath(const DataArrayPath& value)
+{
+  m_VolFractionsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindVolFractions::getVolFractionsArrayPath() const
+{
+  return m_VolFractionsArrayPath;
 }

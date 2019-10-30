@@ -158,3 +158,15 @@ void TextureDialog::getODFEntry(float& e1, float& e2, float& e3, float& w, float
   w = loc.toFloat(weight->text(), &ok);
   s = sigma->value();
 }
+
+// -----------------------------------------------------------------------------
+void TextureDialog::setCrystalStructure(unsigned int value)
+{
+  m_CrystalStructure = value;
+}
+
+// -----------------------------------------------------------------------------
+unsigned int TextureDialog::getCrystalStructure() const
+{
+  return m_CrystalStructure;
+}

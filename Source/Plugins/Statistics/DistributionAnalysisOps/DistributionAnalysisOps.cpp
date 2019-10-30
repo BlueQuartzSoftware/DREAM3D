@@ -84,3 +84,21 @@ void DistributionAnalysisOps::determineBinNumbers(float& max, float& min, float&
     current = (float(iter * stepsize) + min);
   }
 }
+
+// -----------------------------------------------------------------------------
+DistributionAnalysisOps::Pointer DistributionAnalysisOps::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+QString DistributionAnalysisOps::getNameOfClass() const
+{
+  return QString("DistributionAnalysisOps");
+}
+
+// -----------------------------------------------------------------------------
+QString DistributionAnalysisOps::ClassName()
+{
+  return QString("DistributionAnalysisOps");
+}

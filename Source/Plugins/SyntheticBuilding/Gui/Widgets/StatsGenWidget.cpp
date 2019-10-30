@@ -98,3 +98,123 @@ void StatsGenWidget::generateDefaultData()
 //{
 //  Q_ASSERT(false);
 //}
+
+// -----------------------------------------------------------------------------
+void StatsGenWidget::setPhaseType(PhaseType::Type value)
+{
+  m_PhaseType = value;
+}
+
+// -----------------------------------------------------------------------------
+PhaseType::Type StatsGenWidget::getPhaseType() const
+{
+  return m_PhaseType;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenWidget::setCrystalStructure(unsigned int value)
+{
+  m_CrystalStructure = value;
+}
+
+// -----------------------------------------------------------------------------
+unsigned int StatsGenWidget::getCrystalStructure() const
+{
+  return m_CrystalStructure;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenWidget::setPhaseIndex(int value)
+{
+  m_PhaseIndex = value;
+}
+
+// -----------------------------------------------------------------------------
+int StatsGenWidget::getPhaseIndex() const
+{
+  return m_PhaseIndex;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenWidget::setPhaseFraction(float value)
+{
+  m_PhaseFraction = value;
+}
+
+// -----------------------------------------------------------------------------
+float StatsGenWidget::getPhaseFraction() const
+{
+  return m_PhaseFraction;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenWidget::setTotalPhaseFraction(float value)
+{
+  m_TotalPhaseFraction = value;
+}
+
+// -----------------------------------------------------------------------------
+float StatsGenWidget::getTotalPhaseFraction() const
+{
+  return m_TotalPhaseFraction;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenWidget::setDataHasBeenGenerated(bool value)
+{
+  m_DataHasBeenGenerated = value;
+}
+
+// -----------------------------------------------------------------------------
+bool StatsGenWidget::getDataHasBeenGenerated() const
+{
+  return m_DataHasBeenGenerated;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenWidget::setBulkLoadFailure(bool value)
+{
+  m_BulkLoadFailure = value;
+}
+
+// -----------------------------------------------------------------------------
+bool StatsGenWidget::getBulkLoadFailure() const
+{
+  return m_BulkLoadFailure;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenWidget::setTabTitle(const QString& value)
+{
+  m_TabTitle = value;
+}
+
+// -----------------------------------------------------------------------------
+QString StatsGenWidget::getTabTitle() const
+{
+  return m_TabTitle;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenWidget::setPhaseName(const QString& value)
+{
+  m_PhaseName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString StatsGenWidget::getPhaseName() const
+{
+  return m_PhaseName;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenWidget::setMicroPreset(const AbstractMicrostructurePreset::Pointer& value)
+{
+  m_MicroPreset = value;
+}
+
+// -----------------------------------------------------------------------------
+AbstractMicrostructurePreset::Pointer StatsGenWidget::getMicroPreset() const
+{
+  return m_MicroPreset;
+}

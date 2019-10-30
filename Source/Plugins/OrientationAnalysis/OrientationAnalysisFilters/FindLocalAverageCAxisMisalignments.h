@@ -36,13 +36,15 @@
 #pragma once
 
 
+#include <memory>
+
 #include "OrientationLib/LaueOps/LaueOps.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -56,84 +58,243 @@
 class OrientationAnalysis_EXPORT FindLocalAverageCAxisMisalignments : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(FindLocalAverageCAxisMisalignments SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
-    PYB11_PROPERTY(bool CalcUnbiasedAvg READ getCalcUnbiasedAvg WRITE setCalcUnbiasedAvg)
-    PYB11_PROPERTY(bool CalcBiasedAvg READ getCalcBiasedAvg WRITE setCalcBiasedAvg)
-    PYB11_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
-    PYB11_PROPERTY(DataArrayPath CAxisMisalignmentListArrayPath READ getCAxisMisalignmentListArrayPath WRITE setCAxisMisalignmentListArrayPath)
-    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-    PYB11_PROPERTY(DataArrayPath CellParentIdsArrayPath READ getCellParentIdsArrayPath WRITE setCellParentIdsArrayPath)
-    PYB11_PROPERTY(DataArrayPath AvgCAxisMisalignmentsArrayPath READ getAvgCAxisMisalignmentsArrayPath WRITE setAvgCAxisMisalignmentsArrayPath)
-    PYB11_PROPERTY(DataArrayPath FeatureParentIdsArrayPath READ getFeatureParentIdsArrayPath WRITE setFeatureParentIdsArrayPath)
-    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
-    PYB11_PROPERTY(QString UnbiasedLocalCAxisMisalignmentsArrayName READ getUnbiasedLocalCAxisMisalignmentsArrayName WRITE setUnbiasedLocalCAxisMisalignmentsArrayName)
-    PYB11_PROPERTY(QString LocalCAxisMisalignmentsArrayName READ getLocalCAxisMisalignmentsArrayName WRITE setLocalCAxisMisalignmentsArrayName)
-    PYB11_PROPERTY(QString NumFeaturesPerParentArrayName READ getNumFeaturesPerParentArrayName WRITE setNumFeaturesPerParentArrayName)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(FindLocalAverageCAxisMisalignments SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindLocalAverageCAxisMisalignments)
+  PYB11_FILTER_NEW_MACRO(FindLocalAverageCAxisMisalignments)
+  PYB11_FILTER_PARAMETER(DataArrayPath, NewCellFeatureAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(bool, CalcUnbiasedAvg)
+  PYB11_FILTER_PARAMETER(bool, CalcBiasedAvg)
+  PYB11_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CAxisMisalignmentListArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellParentIdsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, AvgCAxisMisalignmentsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureParentIdsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(QString, UnbiasedLocalCAxisMisalignmentsArrayName)
+  PYB11_FILTER_PARAMETER(QString, LocalCAxisMisalignmentsArrayName)
+  PYB11_FILTER_PARAMETER(QString, NumFeaturesPerParentArrayName)
+  PYB11_PROPERTY(DataArrayPath NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
+  PYB11_PROPERTY(bool CalcUnbiasedAvg READ getCalcUnbiasedAvg WRITE setCalcUnbiasedAvg)
+  PYB11_PROPERTY(bool CalcBiasedAvg READ getCalcBiasedAvg WRITE setCalcBiasedAvg)
+  PYB11_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
+  PYB11_PROPERTY(DataArrayPath CAxisMisalignmentListArrayPath READ getCAxisMisalignmentListArrayPath WRITE setCAxisMisalignmentListArrayPath)
+  PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+  PYB11_PROPERTY(DataArrayPath CellParentIdsArrayPath READ getCellParentIdsArrayPath WRITE setCellParentIdsArrayPath)
+  PYB11_PROPERTY(DataArrayPath AvgCAxisMisalignmentsArrayPath READ getAvgCAxisMisalignmentsArrayPath WRITE setAvgCAxisMisalignmentsArrayPath)
+  PYB11_PROPERTY(DataArrayPath FeatureParentIdsArrayPath READ getFeatureParentIdsArrayPath WRITE setFeatureParentIdsArrayPath)
+  PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  PYB11_PROPERTY(QString UnbiasedLocalCAxisMisalignmentsArrayName READ getUnbiasedLocalCAxisMisalignmentsArrayName WRITE setUnbiasedLocalCAxisMisalignmentsArrayName)
+  PYB11_PROPERTY(QString LocalCAxisMisalignmentsArrayName READ getLocalCAxisMisalignmentsArrayName WRITE setLocalCAxisMisalignmentsArrayName)
+  PYB11_PROPERTY(QString NumFeaturesPerParentArrayName READ getNumFeaturesPerParentArrayName WRITE setNumFeaturesPerParentArrayName)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(FindLocalAverageCAxisMisalignments)
-  SIMPL_FILTER_NEW_MACRO(FindLocalAverageCAxisMisalignments)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindLocalAverageCAxisMisalignments, AbstractFilter)
+  using Self = FindLocalAverageCAxisMisalignments;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for FindLocalAverageCAxisMisalignments
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindLocalAverageCAxisMisalignments
+   */
+  static QString ClassName();
 
   ~FindLocalAverageCAxisMisalignments() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NewCellFeatureAttributeMatrixName)
+  /**
+   * @brief Setter property for NewCellFeatureAttributeMatrixName
+   */
+  void setNewCellFeatureAttributeMatrixName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NewCellFeatureAttributeMatrixName
+   * @return Value of NewCellFeatureAttributeMatrixName
+   */
+  DataArrayPath getNewCellFeatureAttributeMatrixName() const;
+
   Q_PROPERTY(DataArrayPath NewCellFeatureAttributeMatrixName READ getNewCellFeatureAttributeMatrixName WRITE setNewCellFeatureAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(bool, CalcUnbiasedAvg)
+  /**
+   * @brief Setter property for CalcUnbiasedAvg
+   */
+  void setCalcUnbiasedAvg(bool value);
+  /**
+   * @brief Getter property for CalcUnbiasedAvg
+   * @return Value of CalcUnbiasedAvg
+   */
+  bool getCalcUnbiasedAvg() const;
+
   Q_PROPERTY(bool CalcUnbiasedAvg READ getCalcUnbiasedAvg WRITE setCalcUnbiasedAvg)
 
-  SIMPL_FILTER_PARAMETER(bool, CalcBiasedAvg)
+  /**
+   * @brief Setter property for CalcBiasedAvg
+   */
+  void setCalcBiasedAvg(bool value);
+  /**
+   * @brief Getter property for CalcBiasedAvg
+   * @return Value of CalcBiasedAvg
+   */
+  bool getCalcBiasedAvg() const;
+
   Q_PROPERTY(bool CalcBiasedAvg READ getCalcBiasedAvg WRITE setCalcBiasedAvg)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NeighborListArrayPath)
+  /**
+   * @brief Setter property for NeighborListArrayPath
+   */
+  void setNeighborListArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NeighborListArrayPath
+   * @return Value of NeighborListArrayPath
+   */
+  DataArrayPath getNeighborListArrayPath() const;
+
   Q_PROPERTY(DataArrayPath NeighborListArrayPath READ getNeighborListArrayPath WRITE setNeighborListArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CAxisMisalignmentListArrayPath)
+  /**
+   * @brief Setter property for CAxisMisalignmentListArrayPath
+   */
+  void setCAxisMisalignmentListArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CAxisMisalignmentListArrayPath
+   * @return Value of CAxisMisalignmentListArrayPath
+   */
+  DataArrayPath getCAxisMisalignmentListArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CAxisMisalignmentListArrayPath READ getCAxisMisalignmentListArrayPath WRITE setCAxisMisalignmentListArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellParentIdsArrayPath)
+  /**
+   * @brief Setter property for CellParentIdsArrayPath
+   */
+  void setCellParentIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellParentIdsArrayPath
+   * @return Value of CellParentIdsArrayPath
+   */
+  DataArrayPath getCellParentIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellParentIdsArrayPath READ getCellParentIdsArrayPath WRITE setCellParentIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, AvgCAxisMisalignmentsArrayPath)
+  /**
+   * @brief Setter property for AvgCAxisMisalignmentsArrayPath
+   */
+  void setAvgCAxisMisalignmentsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for AvgCAxisMisalignmentsArrayPath
+   * @return Value of AvgCAxisMisalignmentsArrayPath
+   */
+  DataArrayPath getAvgCAxisMisalignmentsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath AvgCAxisMisalignmentsArrayPath READ getAvgCAxisMisalignmentsArrayPath WRITE setAvgCAxisMisalignmentsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureParentIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureParentIdsArrayPath
+   */
+  void setFeatureParentIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureParentIdsArrayPath
+   * @return Value of FeatureParentIdsArrayPath
+   */
+  DataArrayPath getFeatureParentIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureParentIdsArrayPath READ getFeatureParentIdsArrayPath WRITE setFeatureParentIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, UnbiasedLocalCAxisMisalignmentsArrayName)
+  /**
+   * @brief Setter property for UnbiasedLocalCAxisMisalignmentsArrayName
+   */
+  void setUnbiasedLocalCAxisMisalignmentsArrayName(const QString& value);
+  /**
+   * @brief Getter property for UnbiasedLocalCAxisMisalignmentsArrayName
+   * @return Value of UnbiasedLocalCAxisMisalignmentsArrayName
+   */
+  QString getUnbiasedLocalCAxisMisalignmentsArrayName() const;
+
   Q_PROPERTY(QString UnbiasedLocalCAxisMisalignmentsArrayName READ getUnbiasedLocalCAxisMisalignmentsArrayName WRITE setUnbiasedLocalCAxisMisalignmentsArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, LocalCAxisMisalignmentsArrayName)
+  /**
+   * @brief Setter property for LocalCAxisMisalignmentsArrayName
+   */
+  void setLocalCAxisMisalignmentsArrayName(const QString& value);
+  /**
+   * @brief Getter property for LocalCAxisMisalignmentsArrayName
+   * @return Value of LocalCAxisMisalignmentsArrayName
+   */
+  QString getLocalCAxisMisalignmentsArrayName() const;
+
   Q_PROPERTY(QString LocalCAxisMisalignmentsArrayName READ getLocalCAxisMisalignmentsArrayName WRITE setLocalCAxisMisalignmentsArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, NumFeaturesPerParentArrayName)
+  /**
+   * @brief Setter property for NumFeaturesPerParentArrayName
+   */
+  void setNumFeaturesPerParentArrayName(const QString& value);
+  /**
+   * @brief Getter property for NumFeaturesPerParentArrayName
+   * @return Value of NumFeaturesPerParentArrayName
+   */
+  QString getNumFeaturesPerParentArrayName() const;
+
   Q_PROPERTY(QString NumFeaturesPerParentArrayName READ getNumFeaturesPerParentArrayName WRITE setNumFeaturesPerParentArrayName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -143,23 +304,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -217,16 +378,38 @@ protected:
   void initialize();
 
 private:
-  QVector<LaueOps::Pointer> m_OrientationOps;
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_CellParentIdsPtr;
+  int32_t* m_CellParentIds = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeatureParentIdsPtr;
+  int32_t* m_FeatureParentIds = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_NumFeaturesPerParentPtr;
+  int32_t* m_NumFeaturesPerParent = nullptr;
+  std::weak_ptr<DataArray<float>> m_AvgCAxisMisalignmentsPtr;
+  float* m_AvgCAxisMisalignments = nullptr;
+  std::weak_ptr<DataArray<float>> m_LocalCAxisMisalignmentsPtr;
+  float* m_LocalCAxisMisalignments = nullptr;
+  std::weak_ptr<DataArray<float>> m_UnbiasedLocalCAxisMisalignmentsPtr;
+  float* m_UnbiasedLocalCAxisMisalignments = nullptr;
+  std::weak_ptr<DataArray<unsigned int>> m_CrystalStructuresPtr;
+  unsigned int* m_CrystalStructures = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, CellParentIds)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureParentIds)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, NumFeaturesPerParent)
-  DEFINE_DATAARRAY_VARIABLE(float, AvgCAxisMisalignments)
-  DEFINE_DATAARRAY_VARIABLE(float, LocalCAxisMisalignments)
-  DEFINE_DATAARRAY_VARIABLE(float, UnbiasedLocalCAxisMisalignments)
-  DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+  DataArrayPath m_NewCellFeatureAttributeMatrixName = {};
+  bool m_CalcUnbiasedAvg = {};
+  bool m_CalcBiasedAvg = {};
+  DataArrayPath m_NeighborListArrayPath = {};
+  DataArrayPath m_CAxisMisalignmentListArrayPath = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_CellParentIdsArrayPath = {};
+  DataArrayPath m_AvgCAxisMisalignmentsArrayPath = {};
+  DataArrayPath m_FeatureParentIdsArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+  QString m_UnbiasedLocalCAxisMisalignmentsArrayName = {};
+  QString m_LocalCAxisMisalignmentsArrayName = {};
+  QString m_NumFeaturesPerParentArrayName = {};
+
+  QVector<LaueOps::Pointer> m_OrientationOps;
 
   NeighborList<int>::WeakPointer m_NeighborList;
   NeighborList<float>::WeakPointer m_CAxisMisalignmentList;

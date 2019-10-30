@@ -34,8 +34,9 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #pragma once
 
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationLib/OrientationLib.h"
@@ -52,9 +53,24 @@
 class OrientationLib_EXPORT TetragonalLowOps : public LaueOps
 {
   public:
-    SIMPL_SHARED_POINTERS(TetragonalLowOps)
-     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(TetragonalLowOps, LaueOps)
-    SIMPL_STATIC_NEW_MACRO(TetragonalLowOps)
+    using Self = TetragonalLowOps;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    /**
+    * @brief Returns the name of the class for TetragonalLowOps
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for TetragonalLowOps
+    */
+    static QString ClassName();
+
+    static Pointer New();
+
 
 
     TetragonalLowOps();
@@ -188,6 +204,9 @@ class OrientationLib_EXPORT TetragonalLowOps : public LaueOps
     TetragonalLowOps(TetragonalLowOps&&) = delete;      // Move Constructor Not Implemented
     TetragonalLowOps& operator=(const TetragonalLowOps&) = delete; // Copy Assignment Not Implemented
     TetragonalLowOps& operator=(TetragonalLowOps&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+
 };
 
 

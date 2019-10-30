@@ -35,12 +35,14 @@
 
 #pragma once
 
+#include <memory>
+
 #include <stdio.h>
 
 #include <QtCore/QString>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -58,55 +60,132 @@
 class ImportExport_EXPORT AvizoRectilinearCoordinateWriter : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(AvizoRectilinearCoordinateWriter SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(AvizoRectilinearCoordinateWriter)
+  PYB11_FILTER_NEW_MACRO(AvizoRectilinearCoordinateWriter)
+  PYB11_FILTER_PARAMETER(QString, OutputFile)
+  PYB11_FILTER_PARAMETER(bool, WriteBinaryFile)
+  PYB11_FILTER_PARAMETER(QString, Units)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
   PYB11_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
   PYB11_PROPERTY(QString Units READ getUnits WRITE setUnits)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(AvizoRectilinearCoordinateWriter)
-  SIMPL_FILTER_NEW_MACRO(AvizoRectilinearCoordinateWriter)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(AvizoRectilinearCoordinateWriter, AbstractFilter)
+  using Self = AvizoRectilinearCoordinateWriter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for AvizoRectilinearCoordinateWriter
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for AvizoRectilinearCoordinateWriter
+   */
+  static QString ClassName();
 
   ~AvizoRectilinearCoordinateWriter() override;
 
-  SIMPL_FILTER_PARAMETER(QString, OutputFile)
+  /**
+   * @brief Setter property for OutputFile
+   */
+  void setOutputFile(const QString& value);
+  /**
+   * @brief Getter property for OutputFile
+   * @return Value of OutputFile
+   */
+  QString getOutputFile() const;
+
   Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-  SIMPL_FILTER_PARAMETER(bool, WriteBinaryFile)
+  /**
+   * @brief Setter property for WriteBinaryFile
+   */
+  void setWriteBinaryFile(bool value);
+  /**
+   * @brief Getter property for WriteBinaryFile
+   * @return Value of WriteBinaryFile
+   */
+  bool getWriteBinaryFile() const;
+
   Q_PROPERTY(bool WriteBinaryFile READ getWriteBinaryFile WRITE setWriteBinaryFile)
 
-  SIMPL_FILTER_PARAMETER(QString, Units)
+  /**
+   * @brief Setter property for Units
+   */
+  void setUnits(const QString& value);
+  /**
+   * @brief Getter property for Units
+   * @return Value of Units
+   */
+  QString getUnits() const;
+
   Q_PROPERTY(QString Units READ getUnits WRITE setUnits)
 
-  SIMPL_INSTANCE_PROPERTY(bool, WriteFeatureIds)
+  /**
+   * @brief Setter property for WriteFeatureIds
+   */
+  void setWriteFeatureIds(bool value);
+  /**
+   * @brief Getter property for WriteFeatureIds
+   * @return Value of WriteFeatureIds
+   */
+  bool getWriteFeatureIds() const;
 
   /**
    * @brief This returns the group that the filter belonds to. You can select
    * a different group if you want. The string returned here will be displayed
    * in the GUI for the filter
    */
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
    */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -116,23 +195,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -203,7 +282,14 @@ protected:
   int writeData(FILE* f);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+
+  QString m_OutputFile = {};
+  bool m_WriteBinaryFile = {};
+  QString m_Units = {};
+  bool m_WriteFeatureIds = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
 
 public:
   AvizoRectilinearCoordinateWriter(const AvizoRectilinearCoordinateWriter&) = delete;            // Copy Constructor Not Implemented

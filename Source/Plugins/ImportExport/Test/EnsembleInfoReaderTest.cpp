@@ -38,9 +38,10 @@
 #include <QtCore/QFile>
 #include <QtCore/QString>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataContainers/DataArrayPath.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
@@ -56,13 +57,12 @@
 class EnsembleInfoReaderTest
 {
 public:
-  EnsembleInfoReaderTest()
+  EnsembleInfoReaderTest() = default;
+  virtual ~EnsembleInfoReaderTest() = default;
+  QString getNameOfClass()
   {
+    return QString("EnsembleInfoReaderTest");
   }
-  virtual ~EnsembleInfoReaderTest()
-  {
-  }
-  SIMPL_TYPE_MACRO(EnsembleInfoReaderTest)
 
   // -----------------------------------------------------------------------------
   //

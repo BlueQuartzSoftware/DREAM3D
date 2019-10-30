@@ -35,10 +35,11 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QString>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -57,40 +58,89 @@
 class ImportExport_EXPORT LammpsFileWriter : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(LammpsFileWriter SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(LammpsFileWriter)
+  PYB11_FILTER_NEW_MACRO(LammpsFileWriter)
+  PYB11_FILTER_PARAMETER(DataArrayPath, VertexDataContainerName)
+  PYB11_FILTER_PARAMETER(QString, LammpsFile)
   PYB11_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
   PYB11_PROPERTY(QString LammpsFile READ getLammpsFile WRITE setLammpsFile)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(LammpsFileWriter)
-  SIMPL_FILTER_NEW_MACRO(LammpsFileWriter)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(LammpsFileWriter, AbstractFilter)
+  using Self = LammpsFileWriter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for LammpsFileWriter
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for LammpsFileWriter
+   */
+  static QString ClassName();
 
   ~LammpsFileWriter() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, VertexDataContainerName)
+  /**
+   * @brief Setter property for VertexDataContainerName
+   */
+  void setVertexDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for VertexDataContainerName
+   * @return Value of VertexDataContainerName
+   */
+  DataArrayPath getVertexDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath VertexDataContainerName READ getVertexDataContainerName WRITE setVertexDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, LammpsFile)
+  /**
+   * @brief Setter property for LammpsFile
+   */
+  void setLammpsFile(const QString& value);
+  /**
+   * @brief Getter property for LammpsFile
+   * @return Value of LammpsFile
+   */
+  QString getLammpsFile() const;
+
   Q_PROPERTY(QString LammpsFile READ getLammpsFile WRITE setLammpsFile)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
    */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -100,23 +150,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -179,4 +229,8 @@ public:
   LammpsFileWriter(LammpsFileWriter&&) = delete;                 // Move Constructor Not Implemented
   LammpsFileWriter& operator=(const LammpsFileWriter&) = delete; // Copy Assignment Not Implemented
   LammpsFileWriter& operator=(LammpsFileWriter&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  DataArrayPath m_VertexDataContainerName = {};
+  QString m_LammpsFile = {};
 };

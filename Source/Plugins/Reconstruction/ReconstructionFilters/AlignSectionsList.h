@@ -35,9 +35,10 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 
@@ -49,40 +50,89 @@
 class Reconstruction_EXPORT AlignSectionsList : public AlignSections
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(AlignSectionsList SUPERCLASS AlignSections)
-    PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
-    PYB11_PROPERTY(bool DREAM3DAlignmentFile READ getDREAM3DAlignmentFile WRITE setDREAM3DAlignmentFile)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(AlignSectionsList SUPERCLASS AlignSections)
+  PYB11_SHARED_POINTERS(AlignSectionsList)
+  PYB11_FILTER_NEW_MACRO(AlignSectionsList)
+  PYB11_FILTER_PARAMETER(QString, InputFile)
+  PYB11_FILTER_PARAMETER(bool, DREAM3DAlignmentFile)
+  PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+  PYB11_PROPERTY(bool DREAM3DAlignmentFile READ getDREAM3DAlignmentFile WRITE setDREAM3DAlignmentFile)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(AlignSectionsList)
-  SIMPL_FILTER_NEW_MACRO(AlignSectionsList)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(AlignSectionsList, AlignSections)
+  using Self = AlignSectionsList;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for AlignSectionsList
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for AlignSectionsList
+   */
+  static QString ClassName();
 
   virtual ~AlignSectionsList();
 
-  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  /**
+   * @brief Setter property for InputFile
+   */
+  void setInputFile(const QString& value);
+  /**
+   * @brief Getter property for InputFile
+   * @return Value of InputFile
+   */
+  QString getInputFile() const;
+
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-  SIMPL_FILTER_PARAMETER(bool, DREAM3DAlignmentFile)
+  /**
+   * @brief Setter property for DREAM3DAlignmentFile
+   */
+  void setDREAM3DAlignmentFile(bool value);
+  /**
+   * @brief Getter property for DREAM3DAlignmentFile
+   * @return Value of DREAM3DAlignmentFile
+   */
+  bool getDREAM3DAlignmentFile() const;
+
   Q_PROPERTY(bool DREAM3DAlignmentFile READ getDREAM3DAlignmentFile WRITE setDREAM3DAlignmentFile)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -92,23 +142,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -152,5 +202,9 @@ public:
   AlignSectionsList(AlignSectionsList&&) = delete;      // Move Constructor Not Implemented
   AlignSectionsList& operator=(const AlignSectionsList&) = delete; // Copy Assignment Not Implemented
   AlignSectionsList& operator=(AlignSectionsList&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  QString m_InputFile = {};
+  bool m_DREAM3DAlignmentFile = {};
 };
 

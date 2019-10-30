@@ -35,9 +35,11 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -47,40 +49,89 @@
 class Statistics_EXPORT FindVolFractions : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(FindVolFractions SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
-    PYB11_PROPERTY(DataArrayPath VolFractionsArrayPath READ getVolFractionsArrayPath WRITE setVolFractionsArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(FindVolFractions SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindVolFractions)
+  PYB11_FILTER_NEW_MACRO(FindVolFractions)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, VolFractionsArrayPath)
+  PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+  PYB11_PROPERTY(DataArrayPath VolFractionsArrayPath READ getVolFractionsArrayPath WRITE setVolFractionsArrayPath)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(FindVolFractions)
-  SIMPL_FILTER_NEW_MACRO(FindVolFractions)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindVolFractions, AbstractFilter)
+  using Self = FindVolFractions;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for FindVolFractions
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindVolFractions
+   */
+  static QString ClassName();
 
   ~FindVolFractions() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  /**
+   * @brief Setter property for CellPhasesArrayPath
+   */
+  void setCellPhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellPhasesArrayPath
+   * @return Value of CellPhasesArrayPath
+   */
+  DataArrayPath getCellPhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, VolFractionsArrayPath)
+  /**
+   * @brief Setter property for VolFractionsArrayPath
+   */
+  void setVolFractionsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for VolFractionsArrayPath
+   * @return Value of VolFractionsArrayPath
+   */
+  DataArrayPath getVolFractionsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath VolFractionsArrayPath READ getVolFractionsArrayPath WRITE setVolFractionsArrayPath)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -90,23 +141,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -164,9 +215,13 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
+  std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+  int32_t* m_CellPhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_VolFractionsPtr;
+  float* m_VolFractions = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(float, VolFractions)
+  DataArrayPath m_CellPhasesArrayPath = {};
+  DataArrayPath m_VolFractionsArrayPath = {};
 
 public:
   FindVolFractions(const FindVolFractions&) = delete; // Copy Constructor Not Implemented

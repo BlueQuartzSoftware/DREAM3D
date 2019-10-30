@@ -33,9 +33,14 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindFeatureReferenceCAxisMisorientations.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
@@ -43,6 +48,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/GeometryMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
@@ -366,7 +373,7 @@ AbstractFilter::Pointer FindFeatureReferenceCAxisMisorientations::newFilterInsta
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureReferenceCAxisMisorientations::getCompiledLibraryName() const
+QString FindFeatureReferenceCAxisMisorientations::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -374,7 +381,7 @@ const QString FindFeatureReferenceCAxisMisorientations::getCompiledLibraryName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureReferenceCAxisMisorientations::getBrandingString() const
+QString FindFeatureReferenceCAxisMisorientations::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -382,7 +389,7 @@ const QString FindFeatureReferenceCAxisMisorientations::getBrandingString() cons
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureReferenceCAxisMisorientations::getFilterVersion() const
+QString FindFeatureReferenceCAxisMisorientations::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -392,7 +399,7 @@ const QString FindFeatureReferenceCAxisMisorientations::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureReferenceCAxisMisorientations::getGroupName() const
+QString FindFeatureReferenceCAxisMisorientations::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -400,7 +407,7 @@ const QString FindFeatureReferenceCAxisMisorientations::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindFeatureReferenceCAxisMisorientations::getUuid()
+QUuid FindFeatureReferenceCAxisMisorientations::getUuid() const
 {
   return QUuid("{1a0848da-2edd-52c0-b111-62a4dc6d2886}");
 }
@@ -408,7 +415,7 @@ const QUuid FindFeatureReferenceCAxisMisorientations::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureReferenceCAxisMisorientations::getSubGroupName() const
+QString FindFeatureReferenceCAxisMisorientations::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -416,7 +423,120 @@ const QString FindFeatureReferenceCAxisMisorientations::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureReferenceCAxisMisorientations::getHumanLabel() const
+QString FindFeatureReferenceCAxisMisorientations::getHumanLabel() const
 {
   return "Find Feature Reference C-Axis Misalignments";
+}
+
+// -----------------------------------------------------------------------------
+FindFeatureReferenceCAxisMisorientations::Pointer FindFeatureReferenceCAxisMisorientations::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindFeatureReferenceCAxisMisorientations> FindFeatureReferenceCAxisMisorientations::New()
+{
+  struct make_shared_enabler : public FindFeatureReferenceCAxisMisorientations
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindFeatureReferenceCAxisMisorientations::getNameOfClass() const
+{
+  return QString("FindFeatureReferenceCAxisMisorientations");
+}
+
+// -----------------------------------------------------------------------------
+QString FindFeatureReferenceCAxisMisorientations::ClassName()
+{
+  return QString("FindFeatureReferenceCAxisMisorientations");
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureReferenceCAxisMisorientations::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeatureReferenceCAxisMisorientations::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureReferenceCAxisMisorientations::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeatureReferenceCAxisMisorientations::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureReferenceCAxisMisorientations::setAvgCAxesArrayPath(const DataArrayPath& value)
+{
+  m_AvgCAxesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeatureReferenceCAxisMisorientations::getAvgCAxesArrayPath() const
+{
+  return m_AvgCAxesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureReferenceCAxisMisorientations::setQuatsArrayPath(const DataArrayPath& value)
+{
+  m_QuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeatureReferenceCAxisMisorientations::getQuatsArrayPath() const
+{
+  return m_QuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureReferenceCAxisMisorientations::setFeatureAvgCAxisMisorientationsArrayName(const QString& value)
+{
+  m_FeatureAvgCAxisMisorientationsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindFeatureReferenceCAxisMisorientations::getFeatureAvgCAxisMisorientationsArrayName() const
+{
+  return m_FeatureAvgCAxisMisorientationsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureReferenceCAxisMisorientations::setFeatureStdevCAxisMisorientationsArrayName(const QString& value)
+{
+  m_FeatureStdevCAxisMisorientationsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindFeatureReferenceCAxisMisorientations::getFeatureStdevCAxisMisorientationsArrayName() const
+{
+  return m_FeatureStdevCAxisMisorientationsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureReferenceCAxisMisorientations::setFeatureReferenceCAxisMisorientationsArrayName(const QString& value)
+{
+  m_FeatureReferenceCAxisMisorientationsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindFeatureReferenceCAxisMisorientations::getFeatureReferenceCAxisMisorientationsArrayName() const
+{
+  return m_FeatureReferenceCAxisMisorientationsArrayName;
 }

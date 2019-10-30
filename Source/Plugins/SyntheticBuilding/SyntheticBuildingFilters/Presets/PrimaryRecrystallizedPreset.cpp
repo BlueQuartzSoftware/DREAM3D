@@ -197,3 +197,28 @@ unsigned int PrimaryRecrystallizedPreset::getDistributionType(const QString& dis
   }
   return SIMPL::DistributionType::UnknownDistributionType;
 }
+
+// -----------------------------------------------------------------------------
+PrimaryRecrystallizedPreset::Pointer PrimaryRecrystallizedPreset::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+PrimaryRecrystallizedPreset::Pointer PrimaryRecrystallizedPreset::New()
+{
+  Pointer sharedPtr(new(PrimaryRecrystallizedPreset));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+void PrimaryRecrystallizedPreset::setPercentRecrystallized(float value)
+{
+  m_PercentRecrystallized = value;
+}
+
+// -----------------------------------------------------------------------------
+float PrimaryRecrystallizedPreset::getPercentRecrystallized() const
+{
+  return m_PercentRecrystallized;
+}

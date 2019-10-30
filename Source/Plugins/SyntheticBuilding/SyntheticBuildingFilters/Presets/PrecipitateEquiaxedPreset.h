@@ -36,10 +36,11 @@
 #pragma once
 
 //-- C++ includes
+#include <memory>
+
 #include <string>
 
 //-- SIMPLib Includes
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 //-- StatsGen Includes
 #include "AbstractMicrostructurePreset.h"
@@ -57,13 +58,24 @@
 class SyntheticBuilding_EXPORT PrecipitateEquiaxedPreset : public AbstractMicrostructurePreset
 {
 public:
-  SIMPL_SHARED_POINTERS(PrecipitateEquiaxedPreset)
-  SIMPL_STATIC_NEW_MACRO(PrecipitateEquiaxedPreset)
-  SIMPL_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, PrecipitateEquiaxedPreset)
+  using Self = PrecipitateEquiaxedPreset;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
 
-  virtual ~PrecipitateEquiaxedPreset();
+  static Pointer New();
 
-  virtual QString getName();
+  static AbstractMicrostructurePreset::Pointer NewAbstractMicrostructurePreset()
+  {
+    PrecipitateEquiaxedPreset* ptr = new PrecipitateEquiaxedPreset();
+    AbstractMicrostructurePreset::Pointer shared_ptr(dynamic_cast<AbstractMicrostructurePreset*>(ptr));
+    return shared_ptr;
+  }
+  ~PrecipitateEquiaxedPreset() override;
+
+  QString getName() override;
 
   void initializeOmega3TableModel(QMap<QString, QVector<float>>& data) override;
   void initializeBOverATableModel(QMap<QString, QVector<float>>& data) override;
@@ -77,10 +89,12 @@ protected:
   PrecipitateEquiaxedPreset();
 
 public:
-  PrecipitateEquiaxedPreset(const PrecipitateEquiaxedPreset&) = delete; // Copy Constructor Not Implemented
-  PrecipitateEquiaxedPreset(PrecipitateEquiaxedPreset&&) = delete;      // Move Constructor Not Implemented
+  PrecipitateEquiaxedPreset(const PrecipitateEquiaxedPreset&) = delete;            // Copy Constructor Not Implemented
+  PrecipitateEquiaxedPreset(PrecipitateEquiaxedPreset&&) = delete;                 // Move Constructor Not Implemented
   PrecipitateEquiaxedPreset& operator=(const PrecipitateEquiaxedPreset&) = delete; // Copy Assignment Not Implemented
   PrecipitateEquiaxedPreset& operator=(PrecipitateEquiaxedPreset&&) = delete;      // Move Assignment Not Implemented
+
+private:
 };
 
 DECLARE_FACTORY_CLASS(PrecipitateEquiaxedPresetFactory, PrecipitateEquiaxedPreset, "Precipitate Equiaxed")

@@ -35,10 +35,11 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/NeighborList.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "Plugins/Reconstruction/ReconstructionConstants.h"
 
@@ -51,48 +52,117 @@
 class Reconstruction_EXPORT GroupFeatures : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(GroupFeatures SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath ContiguousNeighborListArrayPath READ getContiguousNeighborListArrayPath WRITE setContiguousNeighborListArrayPath)
-    PYB11_PROPERTY(DataArrayPath NonContiguousNeighborListArrayPath READ getNonContiguousNeighborListArrayPath WRITE setNonContiguousNeighborListArrayPath)
-    PYB11_PROPERTY(bool UseNonContiguousNeighbors READ getUseNonContiguousNeighbors WRITE setUseNonContiguousNeighbors)
-    PYB11_PROPERTY(bool PatchGrouping READ getPatchGrouping WRITE setPatchGrouping)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(GroupFeatures SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(GroupFeatures)
+  PYB11_FILTER_NEW_MACRO(GroupFeatures)
+  PYB11_FILTER_PARAMETER(DataArrayPath, ContiguousNeighborListArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, NonContiguousNeighborListArrayPath)
+  PYB11_FILTER_PARAMETER(bool, UseNonContiguousNeighbors)
+  PYB11_FILTER_PARAMETER(bool, PatchGrouping)
+  PYB11_PROPERTY(DataArrayPath ContiguousNeighborListArrayPath READ getContiguousNeighborListArrayPath WRITE setContiguousNeighborListArrayPath)
+  PYB11_PROPERTY(DataArrayPath NonContiguousNeighborListArrayPath READ getNonContiguousNeighborListArrayPath WRITE setNonContiguousNeighborListArrayPath)
+  PYB11_PROPERTY(bool UseNonContiguousNeighbors READ getUseNonContiguousNeighbors WRITE setUseNonContiguousNeighbors)
+  PYB11_PROPERTY(bool PatchGrouping READ getPatchGrouping WRITE setPatchGrouping)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(GroupFeatures)
-  SIMPL_FILTER_NEW_MACRO(GroupFeatures)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GroupFeatures, AbstractFilter)
+  using Self = GroupFeatures;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for GroupFeatures
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for GroupFeatures
+   */
+  static QString ClassName();
 
   ~GroupFeatures() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, ContiguousNeighborListArrayPath)
+  /**
+   * @brief Setter property for ContiguousNeighborListArrayPath
+   */
+  void setContiguousNeighborListArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for ContiguousNeighborListArrayPath
+   * @return Value of ContiguousNeighborListArrayPath
+   */
+  DataArrayPath getContiguousNeighborListArrayPath() const;
+
   Q_PROPERTY(DataArrayPath ContiguousNeighborListArrayPath READ getContiguousNeighborListArrayPath WRITE setContiguousNeighborListArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NonContiguousNeighborListArrayPath)
+  /**
+   * @brief Setter property for NonContiguousNeighborListArrayPath
+   */
+  void setNonContiguousNeighborListArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NonContiguousNeighborListArrayPath
+   * @return Value of NonContiguousNeighborListArrayPath
+   */
+  DataArrayPath getNonContiguousNeighborListArrayPath() const;
+
   Q_PROPERTY(DataArrayPath NonContiguousNeighborListArrayPath READ getNonContiguousNeighborListArrayPath WRITE setNonContiguousNeighborListArrayPath)
 
-  SIMPL_FILTER_PARAMETER(bool, UseNonContiguousNeighbors)
+  /**
+   * @brief Setter property for UseNonContiguousNeighbors
+   */
+  void setUseNonContiguousNeighbors(bool value);
+  /**
+   * @brief Getter property for UseNonContiguousNeighbors
+   * @return Value of UseNonContiguousNeighbors
+   */
+  bool getUseNonContiguousNeighbors() const;
+
   Q_PROPERTY(float UseNonContiguousNeighbors READ getUseNonContiguousNeighbors WRITE setUseNonContiguousNeighbors)
 
-  SIMPL_FILTER_PARAMETER(bool, PatchGrouping)
+  /**
+   * @brief Setter property for PatchGrouping
+   */
+  void setPatchGrouping(bool value);
+  /**
+   * @brief Getter property for PatchGrouping
+   * @return Value of PatchGrouping
+   */
+  bool getPatchGrouping() const;
+
   Q_PROPERTY(float PatchGrouping READ getPatchGrouping WRITE setPatchGrouping)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -102,23 +172,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -208,6 +278,11 @@ protected:
   virtual bool growGrouping(int32_t referenceFeature, int32_t neighborFeature, int32_t newFid);
 
 private:
+  DataArrayPath m_ContiguousNeighborListArrayPath = {};
+  DataArrayPath m_NonContiguousNeighborListArrayPath = {};
+  bool m_UseNonContiguousNeighbors = {};
+  bool m_PatchGrouping = {};
+
   NeighborList<int32_t>::WeakPointer m_ContiguousNeighborList;
   NeighborList<int32_t>::WeakPointer m_NonContiguousNeighborList;
 

@@ -17,10 +17,11 @@ public:
     QString contents;
     QFileInfo fi(hFile);
 
-    //     if (fi.baseName().compare("IObserver") != 0)
-    //     {
-    //       return;
-    //     }
+    QString fName = fi.fileName();
+    //    if(fi.baseName() != "DataArrayPathDisplay")
+    //    {
+    //      return;
+    //    }
 
     {
       // Read the Source File
@@ -30,149 +31,79 @@ public:
       source.close();
     }
 
-    bool didReplace = false;
-    bool isFilter = false;
-    // QString searchString = "virtual const QString getSubGroupName() override;";
-
+    // qDebug() << hFile;
     QVector<QString> outLines;
     QStringList list = contents.split(QRegExp("\\n"));
     QStringListIterator sourceLines(list);
 
-    QString baseName = fi.baseName();
-    QString cpyCtr = QString("%1(const %1&) = delete;").arg(baseName);
-    int32_t cpyCtrLine = 0;
-
-    QString mvCtr = QString("%1(%1&&) = delete;").arg(baseName);
-    int32_t mvCtrLine = 0;
-
-    QString cpyAssign = QString("%1& operator=(const %1&) = delete;").arg(baseName);
-    int32_t cpyAssignLine = 0;
-
-    QString mvAssign = QString("%1& operator=(%1&&) = delete;").arg(baseName);
-    int32_t mvAssignLine = 0;
-
-    QString cpyAssignOld = QString("void operator=(const %1&)").arg(baseName);
-    int32_t cpyAssignOldLine = 0;
-
-    QString cpyAssignRepl = QString("    %1& operator=(const %1&) = delete; // Copy Assignment Not Implemented").arg(baseName);
-    QString mvAssign1 = QString("void operator=(const %1&);").arg(baseName);
-
     int32_t lineIndex = 0;
 
-    // First Pass is to analyze the header file
+    bool hasSearchString = false;
+    QString memoryInclude = "#include <memory>";
+    int memoryIncludeIndex = 0;
+
+    QString firstSIMPLInclude("#include ");
+    int32_t firstSIMPLIncludeIndex = 0;
+
+    QString sharedPtr = "std::shared_ptr<";
+    bool sharedPtrUsed = false;
+
     while(sourceLines.hasNext())
     {
       QString line = sourceLines.next();
-      if(line.contains(cpyCtr))
+
+      if(line.startsWith(firstSIMPLInclude) && firstSIMPLIncludeIndex == 0)
       {
-        if(!outLines.last().contains("public:"))
-        {
-          outLines.push_back("  public:");
-          lineIndex++;
-          didReplace = true;
-        }
-        cpyCtrLine = lineIndex;
+        firstSIMPLIncludeIndex = lineIndex;
       }
-      else if(line.contains(mvCtr))
+
+      if(line.trimmed() == memoryInclude)
       {
-        mvCtrLine = lineIndex;
+        memoryIncludeIndex = lineIndex;
       }
-      else if(line.contains(cpyAssign))
+
+      if(line.contains(sharedPtr))
       {
-        cpyAssignLine = lineIndex;
+        sharedPtrUsed = true;
       }
-      else if(line.contains(mvAssign))
-      {
-        mvAssignLine = lineIndex;
-      }
-      else if(line.contains(cpyAssignOld))
-      {
-        cpyAssignOldLine = lineIndex;
-      }
-      else if(line.contains("virtual ~") && !isFilter)
-      {
-        QString replaceString = line;
-        replaceString = replaceString.replace("virtual ", "");
-        // replaceString = replaceString.replace(";", " override;");
-        // outLines.push_back(replaceString);
-        didReplace = true;
-      }
-      else if(line.contains(": public AbstractFilter"))
-      {
-        // std::cout << "isFilter = True" << std::endl;
-        isFilter = true;
-        // outLines.push_back(line);
-      }
-      else
-      {
-        // outLines.push_back(line);
-      }
-      outLines.push_back(line);
+
       lineIndex++;
+      outLines.push_back(line);
     }
 
-    if(cpyCtrLine == 0)
+    if(sharedPtrUsed && memoryIncludeIndex == 0)
     {
-      std::cout << "#### " << hFile.toStdString() << std::endl;
-      return;
+      QString line = outLines[firstSIMPLIncludeIndex];
+      line = "#include <memory>\n\n" + line;
+      outLines[firstSIMPLIncludeIndex] = line;
+      hasSearchString = true;
     }
 
-    if(mvCtrLine == 0)
-    {
-      QString line = outLines[cpyCtrLine];
-      line = line + "\n" + "    " + mvCtr + " // Move Constructor Not Implemented";
-      outLines[cpyCtrLine] = line;
-      mvCtrLine = cpyCtrLine;
-      didReplace = true;
-    }
-    if(cpyAssignLine == 0)
-    {
-      QString line = outLines[mvCtrLine];
-      line = line + "\n" + "    " + cpyAssign + " // Copy Assignment Not Implemented";
-      outLines[mvCtrLine] = line;
-      cpyAssignLine = cpyCtrLine;
-      didReplace = true;
-    }
-    if(mvAssignLine == 0)
-    {
-      QString line = outLines[cpyAssignLine];
-      line = line + "\n" + "    " + mvAssign + " // Move Assignment Not Implemented";
-      outLines[cpyAssignLine] = line;
-      mvAssignLine = cpyCtrLine;
-      didReplace = true;
-    }
-    if(cpyAssignOldLine != 0)
-    {
-      outLines[cpyAssignOldLine] = "";
-      didReplace = true;
-    }
+    writeOutput(hasSearchString, outLines, hFile);
 
-    // didReplace = false;
-    writeOutput(didReplace, outLines, hFile);
+    //    if(hasSearchString && hFile.endsWith(".h"))
+    //    {
+    //      /*  *************************************** */
+    //      // Update the .cpp file
+    //      QString cppFile = hFile;
+    //      cppFile.replace(".h", ".cpp");
+    //      QFileInfo cppFi(cppFile);
+    //      if(cppFi.exists())
+    //      {
+    //        {
+    //          // Read the Source File
+    //          QFile source(cppFile);
+    //          source.open(QFile::ReadOnly);
+    //          contents = source.readAll();
+    //          source.close();
+    //        }
+    //        contents = contents + "\n" + definitionCode;
+    //        outLines.clear();
+    //        outLines.push_back(contents);
+    //        outLines.push_back(QString("JUNK"));
 
-    if(didReplace)
-    {
-      // std::cout << hFile.toStdString() << std::endl;
-      if(cpyCtrLine != 0)
-      {
-        std::cout << "  cpyCtrLine: " << cpyCtrLine << std::endl;
-      }
-      if(mvCtrLine != 0)
-      {
-        std::cout << "  mvCtrLine: " << mvCtrLine << std::endl;
-      }
-      if(cpyAssignLine != 0)
-      {
-        std::cout << "  cpyAssignLine: " << cpyAssignLine << std::endl;
-      }
-      if(mvAssignLine != 0)
-      {
-        std::cout << "  mvAssignLine: " << mvAssignLine << std::endl;
-      }
-      if(cpyAssignOldLine != 0)
-      {
-        std::cout << "  cpyAssignOldLine: " << cpyAssignOldLine << std::endl;
-      }
-    }
+    //        writeOutput(hasSearchString, outLines, cppFile);
+    //      }
+    //    }
   }
 };

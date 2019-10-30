@@ -33,6 +33,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "TrigonalOps.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -1017,4 +1019,30 @@ SIMPL::Rgb TrigonalOps::generateMisorientationColor(const QuatType& q, const Qua
 
   return rgb;
 }
+
+// -----------------------------------------------------------------------------
+TrigonalOps::Pointer TrigonalOps::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+QString TrigonalOps::getNameOfClass() const
+{
+  return QString("TrigonalOps");
+}
+
+// -----------------------------------------------------------------------------
+QString TrigonalOps::ClassName()
+{
+  return QString("TrigonalOps");
+}
+
+// -----------------------------------------------------------------------------
+TrigonalOps::Pointer TrigonalOps::New()
+{
+  Pointer sharedPtr(new(TrigonalOps));
+  return sharedPtr;
+}
+
 

@@ -39,7 +39,6 @@
 #include <QtWidgets/QWidget>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/StatsData/PrecipitateStatsData.h"
 #include "SIMPLib/StatsData/PrimaryStatsData.h"
@@ -69,9 +68,35 @@ public:
   void setupGui();
   void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
 
-  SIMPL_INSTANCE_PROPERTY(int, PhaseIndex)
-  SIMPL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
-  SIMPL_POINTER_PROPERTY(SGODFTableModel, ODFTableModel)
+  /**
+   * @brief Setter property for PhaseIndex
+   */
+  void setPhaseIndex(int value);
+  /**
+   * @brief Getter property for PhaseIndex
+   * @return Value of PhaseIndex
+   */
+  int getPhaseIndex() const;
+
+  /**
+   * @brief Setter property for CrystalStructure
+   */
+  void setCrystalStructure(unsigned int value);
+  /**
+   * @brief Getter property for CrystalStructure
+   * @return Value of CrystalStructure
+   */
+  unsigned int getCrystalStructure() const;
+
+  /**
+   * @brief Setter property for ODFTableModel
+   */
+  void setODFTableModel(SGODFTableModel* value);
+  /**
+   * @brief Getter property for ODFTableModel
+   * @return Value of ODFTableModel
+   */
+  SGODFTableModel* getODFTableModel() const;
 
   int getMisorientationData(StatsData* statsData, PhaseType::Type phaseType, bool preflight = false);
   void extractStatsData(int index, StatsData* statsData, PhaseType::Type phaseType);
@@ -97,6 +122,11 @@ protected:
   void updateMDFPlot(QVector<float>& odf);
 
 private:
+  SGODFTableModel* m_ODFTableModel = nullptr;
+
+  int m_PhaseIndex = {};
+  unsigned int m_CrystalStructure = {};
+
   SGMDFTableModel* m_MDFTableModel = nullptr;
   QwtPlotCurve* m_PlotCurve = nullptr;
 

@@ -33,6 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindOrientationFieldCurl.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -44,7 +46,10 @@
 #include <tbb/tick_count.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
@@ -52,6 +57,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/Core/Quaternion.hpp"
 
@@ -489,7 +496,7 @@ AbstractFilter::Pointer FindOrientationFieldCurl::newFilterInstance(bool copyFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindOrientationFieldCurl::getCompiledLibraryName() const
+QString FindOrientationFieldCurl::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -497,7 +504,7 @@ const QString FindOrientationFieldCurl::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindOrientationFieldCurl::getBrandingString() const
+QString FindOrientationFieldCurl::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -505,7 +512,7 @@ const QString FindOrientationFieldCurl::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindOrientationFieldCurl::getFilterVersion() const
+QString FindOrientationFieldCurl::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -516,7 +523,7 @@ const QString FindOrientationFieldCurl::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindOrientationFieldCurl::getGroupName() const
+QString FindOrientationFieldCurl::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -524,7 +531,7 @@ const QString FindOrientationFieldCurl::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindOrientationFieldCurl::getUuid()
+QUuid FindOrientationFieldCurl::getUuid() const
 {
   return QUuid("{d2011845-cae8-549a-88eb-7ecadf51a916}");
 }
@@ -532,7 +539,7 @@ const QUuid FindOrientationFieldCurl::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindOrientationFieldCurl::getSubGroupName() const
+QString FindOrientationFieldCurl::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -540,7 +547,96 @@ const QString FindOrientationFieldCurl::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindOrientationFieldCurl::getHumanLabel() const
+QString FindOrientationFieldCurl::getHumanLabel() const
 {
   return "Find Curl of Orientation Field";
+}
+
+// -----------------------------------------------------------------------------
+FindOrientationFieldCurl::Pointer FindOrientationFieldCurl::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindOrientationFieldCurl> FindOrientationFieldCurl::New()
+{
+  struct make_shared_enabler : public FindOrientationFieldCurl
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindOrientationFieldCurl::getNameOfClass() const
+{
+  return QString("FindOrientationFieldCurl");
+}
+
+// -----------------------------------------------------------------------------
+QString FindOrientationFieldCurl::ClassName()
+{
+  return QString("FindOrientationFieldCurl");
+}
+
+// -----------------------------------------------------------------------------
+void FindOrientationFieldCurl::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindOrientationFieldCurl::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindOrientationFieldCurl::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindOrientationFieldCurl::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindOrientationFieldCurl::setQuatsArrayPath(const DataArrayPath& value)
+{
+  m_QuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindOrientationFieldCurl::getQuatsArrayPath() const
+{
+  return m_QuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindOrientationFieldCurl::setDislocationTensorsArrayName(const QString& value)
+{
+  m_DislocationTensorsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindOrientationFieldCurl::getDislocationTensorsArrayName() const
+{
+  return m_DislocationTensorsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindOrientationFieldCurl::setCurlSize(const IntVec3Type& value)
+{
+  m_CurlSize = value;
+}
+
+// -----------------------------------------------------------------------------
+IntVec3Type FindOrientationFieldCurl::getCurlSize() const
+{
+  return m_CurlSize;
 }

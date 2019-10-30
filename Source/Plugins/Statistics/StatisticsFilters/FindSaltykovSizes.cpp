@@ -33,9 +33,14 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindSaltykovSizes.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -43,6 +48,8 @@
 #include "SIMPLib/Math/SIMPLibMath.h"
 
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
 
@@ -441,7 +448,7 @@ AbstractFilter::Pointer FindSaltykovSizes::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSaltykovSizes::getCompiledLibraryName() const
+QString FindSaltykovSizes::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -449,7 +456,7 @@ const QString FindSaltykovSizes::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSaltykovSizes::getBrandingString() const
+QString FindSaltykovSizes::getBrandingString() const
 {
   return "Statistics";
 }
@@ -457,7 +464,7 @@ const QString FindSaltykovSizes::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSaltykovSizes::getFilterVersion() const
+QString FindSaltykovSizes::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -468,7 +475,7 @@ const QString FindSaltykovSizes::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSaltykovSizes::getGroupName() const
+QString FindSaltykovSizes::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -476,7 +483,7 @@ const QString FindSaltykovSizes::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindSaltykovSizes::getUuid()
+QUuid FindSaltykovSizes::getUuid() const
 {
   return QUuid("{cc76cffe-81ad-5ece-be2a-ce127c5fa6d7}");
 }
@@ -484,7 +491,7 @@ const QUuid FindSaltykovSizes::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSaltykovSizes::getSubGroupName() const
+QString FindSaltykovSizes::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -492,7 +499,60 @@ const QString FindSaltykovSizes::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSaltykovSizes::getHumanLabel() const
+QString FindSaltykovSizes::getHumanLabel() const
 {
   return "Find Feature Saltykov Sizes";
+}
+
+// -----------------------------------------------------------------------------
+FindSaltykovSizes::Pointer FindSaltykovSizes::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindSaltykovSizes> FindSaltykovSizes::New()
+{
+  struct make_shared_enabler : public FindSaltykovSizes
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindSaltykovSizes::getNameOfClass() const
+{
+  return QString("FindSaltykovSizes");
+}
+
+// -----------------------------------------------------------------------------
+QString FindSaltykovSizes::ClassName()
+{
+  return QString("FindSaltykovSizes");
+}
+
+// -----------------------------------------------------------------------------
+void FindSaltykovSizes::setEquivalentDiametersArrayPath(const DataArrayPath& value)
+{
+  m_EquivalentDiametersArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindSaltykovSizes::getEquivalentDiametersArrayPath() const
+{
+  return m_EquivalentDiametersArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindSaltykovSizes::setSaltykovEquivalentDiametersArrayPath(const DataArrayPath& value)
+{
+  m_SaltykovEquivalentDiametersArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindSaltykovSizes::getSaltykovEquivalentDiametersArrayPath() const
+{
+  return m_SaltykovEquivalentDiametersArrayPath;
 }

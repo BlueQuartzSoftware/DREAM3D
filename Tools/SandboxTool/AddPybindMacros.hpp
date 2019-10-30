@@ -1,6 +1,9 @@
 #pragma once
 
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 #include <QtCore/QString>
+#include <QtCore/QTextStream>
 
 #include "Sandbox.h"
 
@@ -10,133 +13,149 @@ class AddPybindMacros : public Sandbox
 public:
   AddPybindMacros() = default;
 
-  void operator()(const QString& absPath)
+  void operator()(const QString& hFile)
   {
-    QString filterName;
+    QString msg;
+    QTextStream out(&msg);
+    out << hFile;
+
     QString contents;
-    
-    // Read the Source File
-    QFileInfo fi(absPath);
-    //      if(fi.baseName().compare("DataContainerReader") != 0)
-    //      {
-    //        return;
-    //      }
-    if(!fi.exists())
+    QFileInfo fi(hFile);
+
+    if(fi.absoluteFilePath().contains("Wrapping"))
     {
       return;
     }
-    QDir d(absPath);
-    d.cdUp();
-    qDebug() << d.dirName();
-    if(!d.dirName().endsWith("Filters"))
+    if(fi.baseName() == ("SIMPLibSetGetMacros"))
     {
       return;
     }
-      
+    if(fi.baseName() == ("RemoveSIMPLMacros"))
+    {
+      return;
+    }
+    {
+      // Read the Source File
+      QFile source(hFile);
+      source.open(QFile::ReadOnly);
+      contents = source.readAll();
+      source.close();
+    }
 
-    filterName = fi.baseName();
-    QFile source(absPath);
-    source.open(QFile::ReadOnly);
-    contents = source.readAll();
-    source.close();
+    QString simplibInclude("#include \"SIMPLib/SIMPLib.h\"");
+    int32_t simplibIncludeIndex = 0;
 
-    QStringList names;
-    bool didReplace = false;
+    QString pybindStart("PYB11_CREATE_BINDINGS");
+    int32_t pybindStartIndex = 0;
 
-    QVector<int> lines(0);
-    QList<QString> pybindLines;
+    int32_t lastPybindMacroIndex = 0;
 
-    int qObjectMacroLine = 0;
-    int currentLine = 0;
-    QString searchString = "SIMPL_FILTER_PARAMETER";
-    QString instanceString = "SIMPL_INSTANCE_PROPERTY";
-    QStringList cppCodeLines;
+    QString _SIMPL_STATIC_NEW_MACRO("SIMPL_STATIC_NEW_MACRO");
+    int32_t _SIMPL_STATIC_NEW_MACRO_Idx = 0;
+
+    QString _SIMPL_FILTER_NEW_MACRO("SIMPL_FILTER_NEW_MACRO");
+    int32_t _SIMPL_FILTER_NEW_MACRO_Idx = 0;
+
+    QString _SIMPL_SHARED_POINTERS("SIMPL_SHARED_POINTERS");
+    int32_t _SIMPL_SHARED_POINTERS_Idx = 0;
+
+    QString _SIMPL_FILTER_PARAMETER("SIMPL_FILTER_PARAMETER");
+    int32_t _SIMPL_FILTER_PARAMETER_Idx = 0;
+    QString pybindGuard("#ifdef SIMPL_ENABLE_PYTHON");
+    int32_t pybindGuardIndex = 0;
+
+    bool hasSearchString = false;
+
+    QString firstSIMPLInclude("#include \"SIMPLib/");
+    int32_t firstSIMPLIncludeIndex = 1820966689;
+
     QVector<QString> outLines;
-    #ifdef Q_OS_WIN
-        QStringList list = contents.split(QRegExp("\\r\\n"));
-    #else
-        QStringList list = contents.split(QRegExp("\\n"));
-    #endif
-    
+    QStringList list = contents.split(QRegExp("\\n"));
     QStringListIterator sourceLines(list);
-    QStringList includes;
 
-    int classDeclLine = -1;
-    QString classDeclStr = QString("class %1 : public").arg(filterName, 1);
-    
-    
+    int32_t lineIndex = 0;
+
     while(sourceLines.hasNext())
     {
       QString line = sourceLines.next();
-      QString line2 = line;
+      QString compareLine = line.trimmed();
 
-      if(line.contains(searchString))
+      if(compareLine == simplibInclude)
       {
-        line = line.trimmed();
-        QStringList tokens = line.split("(");
-        tokens = tokens[1].replace(")", "").trimmed().split(",");
-        QString paramType = tokens[0].trimmed();
-        QString paramVarName = tokens[1].trimmed();
-        QString pybindMacro;
-        QTextStream out(&pybindMacro);
-       // out << "    PYB11_PROPERTY(" << paramType << " " << paramVarName << " READ get" << paramVarName << " WRITE set" << paramVarName << ")";
-        pybindLines.append(pybindMacro);
-       // qDebug() << pybindMacro;
-        didReplace = true;
+        simplibIncludeIndex = lineIndex;
       }
 
-      if(line.contains("Q_OBJECT"))
+      if(compareLine.startsWith(pybindStart))
       {
-        qObjectMacroLine = currentLine + 1;
-        QString str;
-        QTextStream out(&str);
-       // out << "    PYB11_CREATE_BINDINGS(" << fi.baseName() << " SUPERCLASS AbstractFilter)";
-        pybindLines.append(str);
+        pybindStartIndex = lineIndex;
+      }
+      if(compareLine.startsWith(pybindGuard))
+      {
+        pybindGuardIndex = lineIndex;
       }
 
-      if(line.contains(classDeclStr))
+      if(compareLine.startsWith("PYB11_"))
       {
-        classDeclLine = currentLine;
+        lastPybindMacroIndex = lineIndex;
       }
 
-      outLines.push_back(line2);
-      currentLine++;
+      if(compareLine.startsWith(_SIMPL_STATIC_NEW_MACRO))
+      {
+        _SIMPL_STATIC_NEW_MACRO_Idx = lineIndex;
+        compareLine = compareLine.replace("SIMPL_STATIC_NEW_MACRO", "  PYB11_STATIC_NEW_MACRO");
+        outLines[pybindStartIndex] = outLines[pybindStartIndex] + "\n" + compareLine;
+      }
+      if(compareLine.startsWith(_SIMPL_FILTER_NEW_MACRO))
+      {
+        _SIMPL_FILTER_NEW_MACRO_Idx = lineIndex;
+        compareLine = compareLine.replace("SIMPL_FILTER_NEW_MACRO", "  PYB11_FILTER_NEW_MACRO");
+        outLines[pybindStartIndex] = outLines[pybindStartIndex] + "\n" + compareLine;
+      }
+      if(compareLine.startsWith(_SIMPL_SHARED_POINTERS))
+      {
+        _SIMPL_SHARED_POINTERS_Idx = lineIndex;
+        compareLine = compareLine.replace("SIMPL_SHARED_POINTERS", "  PYB11_SHARED_POINTERS");
+        outLines[pybindStartIndex] = outLines[pybindStartIndex] + "\n" + compareLine;
+      }
+      if(compareLine.startsWith(_SIMPL_FILTER_PARAMETER))
+      {
+        _SIMPL_FILTER_PARAMETER_Idx = lineIndex;
+        compareLine = compareLine.replace("SIMPL_FILTER_PARAMETER", "  PYB11_FILTER_PARAMETER");
+        outLines[pybindStartIndex] = outLines[pybindStartIndex] + "\n" + compareLine;
+      }
+
+      if(compareLine.startsWith(firstSIMPLInclude) && lineIndex < firstSIMPLIncludeIndex)
+      {
+        firstSIMPLIncludeIndex = lineIndex;
+      }
+
+      lineIndex++;
+      outLines.push_back(line);
     }
 
-    if(classDeclLine > 0)
+    if(pybindGuardIndex == 0 && pybindStartIndex > 0 && lastPybindMacroIndex > 0)
     {
-      QDir d(absPath);
-      d.cdUp();
-      d.cdUp();
-      if(d.dirName().endsWith("Filters"))
-      {
-        return;
-      }
-      //qDebug() << d.dirName() << "_EXPORT";
-      QString replace = QString("class %1_EXPORT %2 : public").arg(d.dirName(), 1).arg(filterName, 2);
-      QString orig = outLines[classDeclLine];
-      orig = orig.replace(classDeclStr, replace);
-      qDebug() << orig;
-      outLines[classDeclLine] = orig;
-      didReplace = true;
-      
-      int includeLine = classDeclLine--;
-      while(includeLine > -1)
-      {
-        QString outLine = outLines[includeLine];
-        // Work backwards until you find the first blank line
-        if(outLine.size() == 0)
-        {
-          outLine = QString("\n\n#include \"%1/%2DLLExport.h\"\n\n").arg(d.dirName(), 1).arg(d.dirName(), 2);
-          qDebug() << "Add DLL Export Header at Line " << includeLine;
-          outLines[includeLine] = outLine;
-          includeLine = -1;
-        }
-        includeLine--;
-      }
+
+      QString line;
+      QTextStream out(&line);
+      out << "\n"
+          << "#ifdef SIMPL_ENABLE_PYTHON\n"
+          << outLines.at(pybindStartIndex);
+
+      // outLines[pybindStartIndex] = line;
+
+      line.clear();
+      out << outLines.at(lastPybindMacroIndex) << "\n"
+          << "#endif\n\n";
+      // outLines[lastPybindMacroIndex] = line;
+      hasSearchString = true;
+
+      line.clear();
+      // out << simplibInclude << "\n" << outLines[firstSIMPLIncludeIndex];
+      // outLines[firstSIMPLIncludeIndex] = line;
+      // outLines.remove(simplibIncludeIndex);
     }
 
-    //outLines.insert(qObjectMacroLine, pybindLines.join("\n"));
-    writeOutput(didReplace, outLines, absPath);
+    writeOutput(hasSearchString, outLines, hFile);
   }
 };

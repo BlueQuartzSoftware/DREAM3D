@@ -32,9 +32,14 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include <memory>
+
 #include "FindShapes.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -43,6 +48,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
@@ -923,7 +930,7 @@ AbstractFilter::Pointer FindShapes::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindShapes::getCompiledLibraryName() const
+QString FindShapes::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -931,7 +938,7 @@ const QString FindShapes::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindShapes::getBrandingString() const
+QString FindShapes::getBrandingString() const
 {
   return "Statistics";
 }
@@ -939,7 +946,7 @@ const QString FindShapes::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindShapes::getFilterVersion() const
+QString FindShapes::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -949,7 +956,7 @@ const QString FindShapes::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindShapes::getGroupName() const
+QString FindShapes::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -957,7 +964,7 @@ const QString FindShapes::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindShapes::getUuid()
+QUuid FindShapes::getUuid() const
 {
   return QUuid("{3b0ababf-9c8d-538d-96af-e40775c4f0ab}");
 }
@@ -965,7 +972,7 @@ const QUuid FindShapes::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindShapes::getSubGroupName() const
+QString FindShapes::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -973,7 +980,156 @@ const QString FindShapes::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindShapes::getHumanLabel() const
+QString FindShapes::getHumanLabel() const
 {
   return "Find Feature Shapes";
+}
+
+// -----------------------------------------------------------------------------
+FindShapes::Pointer FindShapes::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindShapes> FindShapes::New()
+{
+  struct make_shared_enabler : public FindShapes
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindShapes::getNameOfClass() const
+{
+  return QString("FindShapes");
+}
+
+// -----------------------------------------------------------------------------
+QString FindShapes::ClassName()
+{
+  return QString("FindShapes");
+}
+
+// -----------------------------------------------------------------------------
+void FindShapes::setCellFeatureAttributeMatrixName(const DataArrayPath& value)
+{
+  m_CellFeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindShapes::getCellFeatureAttributeMatrixName() const
+{
+  return m_CellFeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void FindShapes::setFeatureMomentsPtr(const std::shared_ptr<DataArray<double>>& value)
+{
+  m_FeatureMomentsPtr = value;
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<DataArray<double>> FindShapes::getFeatureMomentsPtr() const
+{
+  return m_FeatureMomentsPtr;
+}
+
+// -----------------------------------------------------------------------------
+void FindShapes::setFeatureEigenValsPtr(const std::shared_ptr<DataArray<double>>& value)
+{
+  m_FeatureEigenValsPtr = value;
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<DataArray<double>> FindShapes::getFeatureEigenValsPtr() const
+{
+  return m_FeatureEigenValsPtr;
+}
+
+// -----------------------------------------------------------------------------
+void FindShapes::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindShapes::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindShapes::setCentroidsArrayPath(const DataArrayPath& value)
+{
+  m_CentroidsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindShapes::getCentroidsArrayPath() const
+{
+  return m_CentroidsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindShapes::setOmega3sArrayName(const QString& value)
+{
+  m_Omega3sArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindShapes::getOmega3sArrayName() const
+{
+  return m_Omega3sArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindShapes::setVolumesArrayName(const QString& value)
+{
+  m_VolumesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindShapes::getVolumesArrayName() const
+{
+  return m_VolumesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindShapes::setAxisLengthsArrayName(const QString& value)
+{
+  m_AxisLengthsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindShapes::getAxisLengthsArrayName() const
+{
+  return m_AxisLengthsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindShapes::setAxisEulerAnglesArrayName(const QString& value)
+{
+  m_AxisEulerAnglesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindShapes::getAxisEulerAnglesArrayName() const
+{
+  return m_AxisEulerAnglesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindShapes::setAspectRatiosArrayName(const QString& value)
+{
+  m_AspectRatiosArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindShapes::getAspectRatiosArrayName() const
+{
+  return m_AspectRatiosArrayName;
 }

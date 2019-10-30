@@ -33,6 +33,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "ReadStlFile.h"
 
 #include <QtCore/QFileInfo>
@@ -44,7 +46,12 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
@@ -553,7 +560,7 @@ AbstractFilter::Pointer ReadStlFile::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlFile::getCompiledLibraryName() const
+QString ReadStlFile::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -561,7 +568,7 @@ const QString ReadStlFile::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlFile::getBrandingString() const
+QString ReadStlFile::getBrandingString() const
 {
   return "IO";
 }
@@ -569,7 +576,7 @@ const QString ReadStlFile::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlFile::getFilterVersion() const
+QString ReadStlFile::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -579,7 +586,7 @@ const QString ReadStlFile::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlFile::getGroupName() const
+QString ReadStlFile::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -587,7 +594,7 @@ const QString ReadStlFile::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ReadStlFile::getUuid()
+QUuid ReadStlFile::getUuid() const
 {
   return QUuid("{980c7bfd-20b2-5711-bc3b-0190b9096c34}");
 }
@@ -595,7 +602,7 @@ const QUuid ReadStlFile::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlFile::getSubGroupName() const
+QString ReadStlFile::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -603,7 +610,84 @@ const QString ReadStlFile::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ReadStlFile::getHumanLabel() const
+QString ReadStlFile::getHumanLabel() const
 {
   return "Import STL File";
+}
+
+// -----------------------------------------------------------------------------
+ReadStlFile::Pointer ReadStlFile::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ReadStlFile> ReadStlFile::New()
+{
+  struct make_shared_enabler : public ReadStlFile
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadStlFile::getNameOfClass() const
+{
+  return QString("ReadStlFile");
+}
+
+// -----------------------------------------------------------------------------
+QString ReadStlFile::ClassName()
+{
+  return QString("ReadStlFile");
+}
+
+// -----------------------------------------------------------------------------
+void ReadStlFile::setSurfaceMeshDataContainerName(const DataArrayPath& value)
+{
+  m_SurfaceMeshDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ReadStlFile::getSurfaceMeshDataContainerName() const
+{
+  return m_SurfaceMeshDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadStlFile::setFaceAttributeMatrixName(const QString& value)
+{
+  m_FaceAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadStlFile::getFaceAttributeMatrixName() const
+{
+  return m_FaceAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ReadStlFile::setStlFilePath(const QString& value)
+{
+  m_StlFilePath = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadStlFile::getStlFilePath() const
+{
+  return m_StlFilePath;
+}
+
+// -----------------------------------------------------------------------------
+void ReadStlFile::setFaceNormalsArrayName(const QString& value)
+{
+  m_FaceNormalsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ReadStlFile::getFaceNormalsArrayName() const
+{
+  return m_FaceNormalsArrayName;
 }

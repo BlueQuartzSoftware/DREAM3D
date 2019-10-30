@@ -125,3 +125,64 @@ void EbsdToH5EbsdFilterParameter::writeJson(QJsonObject& json)
   euler.writeJson(eulerObj);
   json["EulerTransformation"] = eulerObj;
 }
+
+// -----------------------------------------------------------------------------
+EbsdToH5EbsdFilterParameter::Pointer EbsdToH5EbsdFilterParameter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+EbsdToH5EbsdFilterParameter::Pointer EbsdToH5EbsdFilterParameter::New()
+{
+  Pointer sharedPtr(new(EbsdToH5EbsdFilterParameter));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString EbsdToH5EbsdFilterParameter::getNameOfClass() const
+{
+  return QString("EbsdToH5EbsdFilterParameter");
+}
+
+// -----------------------------------------------------------------------------
+QString EbsdToH5EbsdFilterParameter::ClassName()
+{
+  return QString("EbsdToH5EbsdFilterParameter");
+}
+
+// -----------------------------------------------------------------------------
+void EbsdToH5EbsdFilterParameter::setFileExtension(const QString& value)
+{
+  m_FileExtension = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EbsdToH5EbsdFilterParameter::getFileExtension() const
+{
+  return m_FileExtension;
+}
+
+// -----------------------------------------------------------------------------
+void EbsdToH5EbsdFilterParameter::setFileType(const QString& value)
+{
+  m_FileType = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EbsdToH5EbsdFilterParameter::getFileType() const
+{
+  return m_FileType;
+}
+
+// -----------------------------------------------------------------------------
+void EbsdToH5EbsdFilterParameter::setFilter(EbsdToH5Ebsd* value)
+{
+  m_Filter = value;
+}
+
+// -----------------------------------------------------------------------------
+EbsdToH5Ebsd* EbsdToH5EbsdFilterParameter::getFilter() const
+{
+  return m_Filter;
+}
