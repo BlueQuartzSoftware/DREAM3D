@@ -649,7 +649,7 @@ int H5EspritReader::readData(hid_t parId)
     err = QH5Lite::getDatasetInfo(gid, Ebsd::H5Esprit::RawPatterns, dims, type_class, type_size);
     if(err >= 0) // Only read the pattern data if the pattern data is available.
     {
-      totalDataRows = std::accumulate(dims.begin(), dims.end(), 1, std::multiplies<size_t>());
+      totalDataRows = std::accumulate(dims.begin(), dims.end(), static_cast<size_t>(1), std::multiplies<size_t>());
 
       // Set the pattern dimensions
       m_PatternDims[0] = dims[1];

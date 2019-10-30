@@ -3083,7 +3083,7 @@ void PackPrimaryPhases::cleanupFeatures()
   }
 
   FloatVec3Type spacing = m->getGeometryAs<ImageGeom>()->getSpacing();
-  float resConst = std::accumulate(spacing.begin(), spacing.end(), 1, std::multiplies<float>());
+  float resConst = std::accumulate(spacing.begin(), spacing.end(), 1.0f, std::multiplies<float>());
 
   const double k_PiOver6 = M_PI / 6.0;
   for(size_t i = 0; i < totalPoints; i++)
