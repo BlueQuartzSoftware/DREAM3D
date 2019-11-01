@@ -52,7 +52,7 @@ public:
     ColumnCount
   };
 
-  SGRDFTableModel(QObject* parent = 0);
+  SGRDFTableModel(QObject* parent = nullptr);
   virtual ~SGRDFTableModel();
 
   /**

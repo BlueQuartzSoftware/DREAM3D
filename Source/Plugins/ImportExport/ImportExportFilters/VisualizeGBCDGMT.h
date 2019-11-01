@@ -35,7 +35,9 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
@@ -50,52 +52,131 @@
 class ImportExport_EXPORT VisualizeGBCDGMT : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(VisualizeGBCDGMT SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(VisualizeGBCDGMT)
+  PYB11_FILTER_NEW_MACRO(VisualizeGBCDGMT)
+  PYB11_FILTER_PARAMETER(QString, OutputFile)
+  PYB11_FILTER_PARAMETER(int, PhaseOfInterest)
+  PYB11_FILTER_PARAMETER(AxisAngleInput_t, MisorientationRotation)
+  PYB11_FILTER_PARAMETER(DataArrayPath, GBCDArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
   PYB11_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
   PYB11_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
   PYB11_PROPERTY(DataArrayPath GBCDArrayPath READ getGBCDArrayPath WRITE setGBCDArrayPath)
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(VisualizeGBCDGMT)
-  SIMPL_FILTER_NEW_MACRO(VisualizeGBCDGMT)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(VisualizeGBCDGMT, AbstractFilter)
+  using Self = VisualizeGBCDGMT;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for VisualizeGBCDGMT
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for VisualizeGBCDGMT
+   */
+  static QString ClassName();
 
   ~VisualizeGBCDGMT() override;
 
-  SIMPL_FILTER_PARAMETER(QString, OutputFile)
+  /**
+   * @brief Setter property for OutputFile
+   */
+  void setOutputFile(const QString& value);
+  /**
+   * @brief Getter property for OutputFile
+   * @return Value of OutputFile
+   */
+  QString getOutputFile() const;
+
   Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-  SIMPL_FILTER_PARAMETER(int, PhaseOfInterest)
+  /**
+   * @brief Setter property for PhaseOfInterest
+   */
+  void setPhaseOfInterest(int value);
+  /**
+   * @brief Getter property for PhaseOfInterest
+   * @return Value of PhaseOfInterest
+   */
+  int getPhaseOfInterest() const;
+
   Q_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
 
-  SIMPL_FILTER_PARAMETER(AxisAngleInput_t, MisorientationRotation)
+  /**
+   * @brief Setter property for MisorientationRotation
+   */
+  void setMisorientationRotation(const AxisAngleInput_t& value);
+  /**
+   * @brief Getter property for MisorientationRotation
+   * @return Value of MisorientationRotation
+   */
+  AxisAngleInput_t getMisorientationRotation() const;
+
   Q_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, GBCDArrayPath)
+  /**
+   * @brief Setter property for GBCDArrayPath
+   */
+  void setGBCDArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for GBCDArrayPath
+   * @return Value of GBCDArrayPath
+   */
+  DataArrayPath getGBCDArrayPath() const;
+
   Q_PROPERTY(DataArrayPath GBCDArrayPath READ getGBCDArrayPath WRITE setGBCDArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
    */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -105,23 +186,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -187,8 +268,16 @@ protected:
   bool getSquareCoord(float* xstl1_norm1, float* sqCoord);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(double, GBCD)
-  DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+  std::weak_ptr<DataArray<double>> m_GBCDPtr;
+  double* m_GBCD = nullptr;
+  std::weak_ptr<DataArray<unsigned int>> m_CrystalStructuresPtr;
+  unsigned int* m_CrystalStructures = nullptr;
+
+  QString m_OutputFile = {};
+  int m_PhaseOfInterest = {};
+  AxisAngleInput_t m_MisorientationRotation = {};
+  DataArrayPath m_GBCDArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
 
   QVector<LaueOps::Pointer> m_OrientationOps;
   QVector<float> gmtValues;

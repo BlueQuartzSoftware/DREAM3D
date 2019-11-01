@@ -35,9 +35,11 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -47,52 +49,131 @@
 class Statistics_EXPORT FindSurfaceAreaToVolume : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindSurfaceAreaToVolume SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindSurfaceAreaToVolume)
+  PYB11_FILTER_NEW_MACRO(FindSurfaceAreaToVolume)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, NumCellsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, SurfaceAreaVolumeRatioArrayName)
+  PYB11_FILTER_PARAMETER(QString, SphericityArrayName)
+  PYB11_FILTER_PARAMETER(bool, CalculateSphericity)
   PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
   PYB11_PROPERTY(DataArrayPath NumCellsArrayPath READ getNumCellsArrayPath WRITE setNumCellsArrayPath)
   PYB11_PROPERTY(QString SurfaceAreaVolumeRatioArrayName READ getSurfaceAreaVolumeRatioArrayName WRITE setSurfaceAreaVolumeRatioArrayName)
   PYB11_PROPERTY(QString SphericityArrayName READ getSphericityArrayName WRITE setSphericityArrayName)
   PYB11_PROPERTY(bool CalculateSphericity READ getCalculateSphericity WRITE setCalculateSphericity)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(FindSurfaceAreaToVolume)
-  SIMPL_FILTER_NEW_MACRO(FindSurfaceAreaToVolume)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindSurfaceAreaToVolume, AbstractFilter)
+  using Self = FindSurfaceAreaToVolume;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for FindSurfaceAreaToVolume
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindSurfaceAreaToVolume
+   */
+  static QString ClassName();
 
   ~FindSurfaceAreaToVolume() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NumCellsArrayPath)
+  /**
+   * @brief Setter property for NumCellsArrayPath
+   */
+  void setNumCellsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NumCellsArrayPath
+   * @return Value of NumCellsArrayPath
+   */
+  DataArrayPath getNumCellsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath NumCellsArrayPath READ getNumCellsArrayPath WRITE setNumCellsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, SurfaceAreaVolumeRatioArrayName)
+  /**
+   * @brief Setter property for SurfaceAreaVolumeRatioArrayName
+   */
+  void setSurfaceAreaVolumeRatioArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceAreaVolumeRatioArrayName
+   * @return Value of SurfaceAreaVolumeRatioArrayName
+   */
+  QString getSurfaceAreaVolumeRatioArrayName() const;
+
   Q_PROPERTY(QString SurfaceAreaVolumeRatioArrayName READ getSurfaceAreaVolumeRatioArrayName WRITE setSurfaceAreaVolumeRatioArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, SphericityArrayName)
+  /**
+   * @brief Setter property for SphericityArrayName
+   */
+  void setSphericityArrayName(const QString& value);
+  /**
+   * @brief Getter property for SphericityArrayName
+   * @return Value of SphericityArrayName
+   */
+  QString getSphericityArrayName() const;
+
   Q_PROPERTY(QString SphericityArrayName READ getSphericityArrayName WRITE setSphericityArrayName)
 
-  SIMPL_FILTER_PARAMETER(bool, CalculateSphericity)
+  /**
+   * @brief Setter property for CalculateSphericity
+   */
+  void setCalculateSphericity(bool value);
+  /**
+   * @brief Getter property for CalculateSphericity
+   * @return Value of CalculateSphericity
+   */
+  bool getCalculateSphericity() const;
+
   Q_PROPERTY(bool CalculateSphericity READ getCalculateSphericity WRITE setCalculateSphericity)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -102,23 +183,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -176,10 +257,20 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, NumCells)
-  DEFINE_DATAARRAY_VARIABLE(float, SurfaceAreaVolumeRatio)
-  DEFINE_DATAARRAY_VARIABLE(float, Sphericity)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_NumCellsPtr;
+  int32_t* m_NumCells = nullptr;
+  std::weak_ptr<DataArray<float>> m_SurfaceAreaVolumeRatioPtr;
+  float* m_SurfaceAreaVolumeRatio = nullptr;
+  std::weak_ptr<DataArray<float>> m_SphericityPtr;
+  float* m_Sphericity = nullptr;
+
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_NumCellsArrayPath = {};
+  QString m_SurfaceAreaVolumeRatioArrayName = {};
+  QString m_SphericityArrayName = {};
+  bool m_CalculateSphericity = {};
 
 public:
   FindSurfaceAreaToVolume(const FindSurfaceAreaToVolume&) = delete; // Copy Constructor Not Implemented

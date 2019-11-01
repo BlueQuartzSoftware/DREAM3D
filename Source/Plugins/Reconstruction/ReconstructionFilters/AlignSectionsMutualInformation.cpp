@@ -32,11 +32,16 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include <memory>
+
 #include "AlignSectionsMutualInformation.h"
 
 #include <fstream>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -44,6 +49,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -627,7 +634,7 @@ AbstractFilter::Pointer AlignSectionsMutualInformation::newFilterInstance(bool c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMutualInformation::getCompiledLibraryName() const
+QString AlignSectionsMutualInformation::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -635,7 +642,7 @@ const QString AlignSectionsMutualInformation::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMutualInformation::getBrandingString() const
+QString AlignSectionsMutualInformation::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -643,7 +650,7 @@ const QString AlignSectionsMutualInformation::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMutualInformation::getFilterVersion() const
+QString AlignSectionsMutualInformation::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -653,7 +660,7 @@ const QString AlignSectionsMutualInformation::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMutualInformation::getGroupName() const
+QString AlignSectionsMutualInformation::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -661,7 +668,7 @@ const QString AlignSectionsMutualInformation::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid AlignSectionsMutualInformation::getUuid()
+QUuid AlignSectionsMutualInformation::getUuid() const
 {
   return QUuid("{61c5519b-5561-58b8-a522-2ce1324e244d}");
 }
@@ -669,7 +676,7 @@ const QUuid AlignSectionsMutualInformation::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMutualInformation::getSubGroupName() const
+QString AlignSectionsMutualInformation::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::AlignmentFilters;
 }
@@ -677,7 +684,120 @@ const QString AlignSectionsMutualInformation::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsMutualInformation::getHumanLabel() const
+QString AlignSectionsMutualInformation::getHumanLabel() const
 {
   return "Align Sections (Mutual Information)";
+}
+
+// -----------------------------------------------------------------------------
+AlignSectionsMutualInformation::Pointer AlignSectionsMutualInformation::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<AlignSectionsMutualInformation> AlignSectionsMutualInformation::New()
+{
+  struct make_shared_enabler : public AlignSectionsMutualInformation
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString AlignSectionsMutualInformation::getNameOfClass() const
+{
+  return QString("AlignSectionsMutualInformation");
+}
+
+// -----------------------------------------------------------------------------
+QString AlignSectionsMutualInformation::ClassName()
+{
+  return QString("AlignSectionsMutualInformation");
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsMutualInformation::setMisorientationTolerance(float value)
+{
+  m_MisorientationTolerance = value;
+}
+
+// -----------------------------------------------------------------------------
+float AlignSectionsMutualInformation::getMisorientationTolerance() const
+{
+  return m_MisorientationTolerance;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsMutualInformation::setUseGoodVoxels(bool value)
+{
+  m_UseGoodVoxels = value;
+}
+
+// -----------------------------------------------------------------------------
+bool AlignSectionsMutualInformation::getUseGoodVoxels() const
+{
+  return m_UseGoodVoxels;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsMutualInformation::setQuatsArrayPath(const DataArrayPath& value)
+{
+  m_QuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AlignSectionsMutualInformation::getQuatsArrayPath() const
+{
+  return m_QuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsMutualInformation::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AlignSectionsMutualInformation::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsMutualInformation::setGoodVoxelsArrayPath(const DataArrayPath& value)
+{
+  m_GoodVoxelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AlignSectionsMutualInformation::getGoodVoxelsArrayPath() const
+{
+  return m_GoodVoxelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsMutualInformation::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AlignSectionsMutualInformation::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsMutualInformation::setFeatureCounts(const std::shared_ptr<DataArray<int32_t>>& value)
+{
+  m_FeatureCounts = value;
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<DataArray<int32_t>> AlignSectionsMutualInformation::getFeatureCounts() const
+{
+  return m_FeatureCounts;
 }

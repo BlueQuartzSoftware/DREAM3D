@@ -34,6 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #pragma once
 
+#include <memory>
+
 #include <vector>
 
 
@@ -42,7 +44,6 @@
 
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationLib/Core/Orientation.hpp"
@@ -58,8 +59,21 @@
 class OrientationLib_EXPORT LaueOps
 {
   public:
-    SIMPL_SHARED_POINTERS(LaueOps)
-    SIMPL_TYPE_MACRO(LaueOps)
+    using Self = LaueOps;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    /**
+     * @brief Returns the name of the class for LaueOps
+     */
+    virtual QString getNameOfClass() const;
+    /**
+     * @brief Returns the name of the class for LaueOps
+     */
+    static QString ClassName();
 
     virtual ~LaueOps();
 
@@ -242,6 +256,8 @@ class OrientationLib_EXPORT LaueOps
     LaueOps(LaueOps&&) = delete;             // Move Constructor Not Implemented
     LaueOps& operator=(const LaueOps&) = delete; // Copy Assignment Not Implemented
     LaueOps& operator=(LaueOps&&) = delete;      // Move Assignment Not Implemented
+
+  private:
 };
 
 

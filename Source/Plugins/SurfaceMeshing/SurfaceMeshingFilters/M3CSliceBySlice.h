@@ -35,14 +35,16 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QString>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/StructArray.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/MeshStructs.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -81,42 +83,128 @@ class SurfaceMeshing_EXPORT M3CSliceBySlice : public AbstractFilter
   // PYB11_PROPERTY(bool DeleteTempFiles READ getDeleteTempFiles WRITE setDeleteTempFiles)
   // PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 public:
-  SIMPL_SHARED_POINTERS(M3CSliceBySlice)
-  SIMPL_FILTER_NEW_MACRO(M3CSliceBySlice)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(M3CSliceBySlice, AbstractFilter)
+  using Self = M3CSliceBySlice;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for M3CSliceBySlice
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for M3CSliceBySlice
+   */
+  static QString ClassName();
 
   ~M3CSliceBySlice() override;
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceDataContainerName)
+  /**
+   * @brief Setter property for SurfaceDataContainerName
+   */
+  void setSurfaceDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceDataContainerName
+   * @return Value of SurfaceDataContainerName
+   */
+  DataArrayPath getSurfaceDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
-  SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+  /**
+   * @brief Setter property for VertexAttributeMatrixName
+   */
+  void setVertexAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for VertexAttributeMatrixName
+   * @return Value of VertexAttributeMatrixName
+   */
+  QString getVertexAttributeMatrixName() const;
+
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
-  SIMPL_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
+  /**
+   * @brief Setter property for FaceAttributeMatrixName
+   */
+  void setFaceAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for FaceAttributeMatrixName
+   * @return Value of FaceAttributeMatrixName
+   */
+  QString getFaceAttributeMatrixName() const;
+
   Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, FaceLabelsArrayName)
+  /**
+   * @brief Setter property for FaceLabelsArrayName
+   */
+  void setFaceLabelsArrayName(const QString& value);
+  /**
+   * @brief Getter property for FaceLabelsArrayName
+   * @return Value of FaceLabelsArrayName
+   */
+  QString getFaceLabelsArrayName() const;
+
   Q_PROPERTY(QString FaceLabelsArrayName READ getFaceLabelsArrayName WRITE setFaceLabelsArrayName)
-  SIMPL_FILTER_PARAMETER(QString, SurfaceMeshNodeTypesArrayName)
+  /**
+   * @brief Setter property for SurfaceMeshNodeTypesArrayName
+   */
+  void setSurfaceMeshNodeTypesArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshNodeTypesArrayName
+   * @return Value of SurfaceMeshNodeTypesArrayName
+   */
+  QString getSurfaceMeshNodeTypesArrayName() const;
+
   Q_PROPERTY(QString SurfaceMeshNodeTypesArrayName READ getSurfaceMeshNodeTypesArrayName WRITE setSurfaceMeshNodeTypesArrayName)
 
-  SIMPL_FILTER_PARAMETER(bool, DeleteTempFiles)
+  /**
+   * @brief Setter property for DeleteTempFiles
+   */
+  void setDeleteTempFiles(bool value);
+  /**
+   * @brief Getter property for DeleteTempFiles
+   * @return Value of DeleteTempFiles
+   */
+  bool getDeleteTempFiles() const;
+
   Q_PROPERTY(bool DeleteTempFiles READ getDeleteTempFiles WRITE setDeleteTempFiles)
 
   void preflight() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
   AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
-  const QString getGroupName() const override;
-  const QString getSubGroupName() const override;
+  QString getGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
-  const QString getHumanLabel() const override;
+  QUuid getUuid() const override;
+  QString getHumanLabel() const override;
 
   void setupFilterParameters() override; /**
                                           *@brief This method will read the options from a file
@@ -348,7 +436,16 @@ protected:
   // QVector<int> findAdjacentTriangles(Triangle *triangle, int label);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+
+  DataArrayPath m_SurfaceDataContainerName = {};
+  QString m_VertexAttributeMatrixName = {};
+  QString m_FaceAttributeMatrixName = {};
+  QString m_FaceLabelsArrayName = {};
+  QString m_SurfaceMeshNodeTypesArrayName = {};
+  bool m_DeleteTempFiles = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
 
   int numfeatures;
 

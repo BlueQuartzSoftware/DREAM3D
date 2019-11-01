@@ -2,13 +2,18 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ComputeFeatureRect.h"
+
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
 
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -236,7 +241,7 @@ AbstractFilter::Pointer ComputeFeatureRect::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeFeatureRect::getCompiledLibraryName() const
+QString ComputeFeatureRect::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -244,7 +249,7 @@ const QString ComputeFeatureRect::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeFeatureRect::getBrandingString() const
+QString ComputeFeatureRect::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -252,7 +257,7 @@ const QString ComputeFeatureRect::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeFeatureRect::getFilterVersion() const
+QString ComputeFeatureRect::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -263,7 +268,7 @@ const QString ComputeFeatureRect::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeFeatureRect::getGroupName() const
+QString ComputeFeatureRect::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -271,7 +276,7 @@ const QString ComputeFeatureRect::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ComputeFeatureRect::getUuid()
+QUuid ComputeFeatureRect::getUuid() const
 {
   return QUuid("{6eda8dbf-dbd8-562a-ae1a-f2904157c189}");
 }
@@ -279,7 +284,7 @@ const QUuid ComputeFeatureRect::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeFeatureRect::getSubGroupName() const
+QString ComputeFeatureRect::getSubGroupName() const
 {
   return "Reconstruction";
 }
@@ -287,7 +292,60 @@ const QString ComputeFeatureRect::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeFeatureRect::getHumanLabel() const
+QString ComputeFeatureRect::getHumanLabel() const
 {
   return "Compute Feature Corners";
+}
+
+// -----------------------------------------------------------------------------
+ComputeFeatureRect::Pointer ComputeFeatureRect::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ComputeFeatureRect> ComputeFeatureRect::New()
+{
+  struct make_shared_enabler : public ComputeFeatureRect
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ComputeFeatureRect::getNameOfClass() const
+{
+  return QString("ComputeFeatureRect");
+}
+
+// -----------------------------------------------------------------------------
+QString ComputeFeatureRect::ClassName()
+{
+  return QString("ComputeFeatureRect");
+}
+
+// -----------------------------------------------------------------------------
+void ComputeFeatureRect::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ComputeFeatureRect::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ComputeFeatureRect::setFeatureRectArrayPath(const DataArrayPath& value)
+{
+  m_FeatureRectArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ComputeFeatureRect::getFeatureRectArrayPath() const
+{
+  return m_FeatureRectArrayPath;
 }

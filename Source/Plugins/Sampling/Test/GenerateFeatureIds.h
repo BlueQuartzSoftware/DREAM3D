@@ -1,8 +1,11 @@
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/DataContainers/AttributeMatrix.h"
 
 #include "TestFileLocations.h"
 
@@ -13,18 +16,76 @@ class GenerateFeatureIds : public AbstractFilter
 {
   Q_OBJECT
 public:
-  SIMPL_SHARED_POINTERS(GenerateFeatureIds)
-  SIMPL_FILTER_NEW_MACRO(GenerateFeatureIds)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GenerateFeatureIds, AbstractFilter)
+  using Self = GenerateFeatureIds;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for GenerateFeatureIds
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for GenerateFeatureIds
+   */
+  static QString ClassName();
 
   ~GenerateFeatureIds()
   {
   }
-  SIMPL_INSTANCE_STRING_PROPERTY(DataContainerName)
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const QString& value);
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  QString getDataContainerName() const;
+
   //------ Created Cell Data
-  SIMPL_INSTANCE_STRING_PROPERTY(CellAttributeMatrixName)
-  SIMPL_INSTANCE_STRING_PROPERTY(CellFeatureAttributeMatrixName)
-  SIMPL_INSTANCE_STRING_PROPERTY(CellEnsembleAttributeMatrixName)
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  QString getCellAttributeMatrixName() const;
+
+  /**
+   * @brief Setter property for CellFeatureAttributeMatrixName
+   */
+  void setCellFeatureAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellFeatureAttributeMatrixName
+   * @return Value of CellFeatureAttributeMatrixName
+   */
+  QString getCellFeatureAttributeMatrixName() const;
+
+  /**
+   * @brief Setter property for CellEnsembleAttributeMatrixName
+   */
+  void setCellEnsembleAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellEnsembleAttributeMatrixName
+   * @return Value of CellEnsembleAttributeMatrixName
+   */
+  QString getCellEnsembleAttributeMatrixName() const;
 
   virtual const QString getGroupName()
   {
@@ -89,7 +150,13 @@ protected:
   }
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+
+  QString m_DataContainerName = {};
+  QString m_CellAttributeMatrixName = {};
+  QString m_CellFeatureAttributeMatrixName = {};
+  QString m_CellEnsembleAttributeMatrixName = {};
 
   void dataCheck()
   {
@@ -133,9 +200,32 @@ class CreateDataContainer : public AbstractFilter
 {
   Q_OBJECT
 public:
-  SIMPL_SHARED_POINTERS(CreateDataContainer)
-  SIMPL_FILTER_NEW_MACRO(CreateDataContainer)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CreateDataContainer, AbstractFilter)
+  using Self = CreateDataContainer;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for CreateDataContainer
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for CreateDataContainer
+   */
+  static QString ClassName();
 
   ~CreateDataContainer()
   {

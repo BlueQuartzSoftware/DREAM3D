@@ -35,9 +35,11 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Processing/ProcessingDLLExport.h"
 
@@ -47,47 +49,116 @@
 class Processing_EXPORT ErodeDilateCoordinationNumber : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(ErodeDilateCoordinationNumber SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(bool Loop READ getLoop WRITE setLoop)
-    PYB11_PROPERTY(int CoordinationNumber READ getCoordinationNumber WRITE setCoordinationNumber)
-    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(ErodeDilateCoordinationNumber SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(ErodeDilateCoordinationNumber)
+  PYB11_FILTER_NEW_MACRO(ErodeDilateCoordinationNumber)
+  PYB11_FILTER_PARAMETER(bool, Loop)
+  PYB11_FILTER_PARAMETER(int, CoordinationNumber)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(QVector<DataArrayPath>, IgnoredDataArrayPaths)
+  PYB11_PROPERTY(bool Loop READ getLoop WRITE setLoop)
+  PYB11_PROPERTY(int CoordinationNumber READ getCoordinationNumber WRITE setCoordinationNumber)
+  PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(ErodeDilateCoordinationNumber)
-  SIMPL_FILTER_NEW_MACRO(ErodeDilateCoordinationNumber)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ErodeDilateCoordinationNumber, AbstractFilter)
+  using Self = ErodeDilateCoordinationNumber;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for ErodeDilateCoordinationNumber
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ErodeDilateCoordinationNumber
+   */
+  static QString ClassName();
 
   ~ErodeDilateCoordinationNumber() override;
 
-  SIMPL_FILTER_PARAMETER(bool, Loop)
+  /**
+   * @brief Setter property for Loop
+   */
+  void setLoop(bool value);
+  /**
+   * @brief Getter property for Loop
+   * @return Value of Loop
+   */
+  bool getLoop() const;
+
   Q_PROPERTY(bool Loop READ getLoop WRITE setLoop)
 
-  SIMPL_FILTER_PARAMETER(int, CoordinationNumber)
+  /**
+   * @brief Setter property for CoordinationNumber
+   */
+  void setCoordinationNumber(int value);
+  /**
+   * @brief Getter property for CoordinationNumber
+   * @return Value of CoordinationNumber
+   */
+  int getCoordinationNumber() const;
+
   Q_PROPERTY(int CoordinationNumber READ getCoordinationNumber WRITE setCoordinationNumber)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QVector<DataArrayPath>, IgnoredDataArrayPaths)
+  /**
+   * @brief Setter property for IgnoredDataArrayPaths
+   */
+  void setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value);
+  /**
+   * @brief Getter property for IgnoredDataArrayPaths
+   * @return Value of IgnoredDataArrayPaths
+   */
+  QVector<DataArrayPath> getIgnoredDataArrayPaths() const;
+
   Q_PROPERTY(QVector<DataArrayPath> IgnoredDataArrayPaths READ getIgnoredDataArrayPaths WRITE setIgnoredDataArrayPaths)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -97,23 +168,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -171,9 +242,15 @@ protected:
   void initialize();
 
 private:
-  int32_t* m_Neighbors;
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  bool m_Loop = {};
+  int m_CoordinationNumber = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  QVector<DataArrayPath> m_IgnoredDataArrayPaths = {};
+
+  int32_t* m_Neighbors;
 
 public:
   ErodeDilateCoordinationNumber(const ErodeDilateCoordinationNumber&) = delete; // Copy Constructor Not Implemented

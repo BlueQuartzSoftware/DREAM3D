@@ -35,10 +35,12 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QString>
 
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
@@ -55,7 +57,22 @@
 class ImportExport_EXPORT GoldfeatherReader : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(GoldfeatherReader SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(GoldfeatherReader)
+  PYB11_FILTER_NEW_MACRO(GoldfeatherReader)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceDataContainerName)
+  PYB11_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature1sArrayName)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature2sArrayName)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshPrincipalDirection1sArrayName)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshPrincipalDirection2sArrayName)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshNodeNormalsArrayName)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshFaceLabelsArrayName)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshFaceNormalsArrayName)
+  PYB11_FILTER_PARAMETER(QString, InputFile)
   PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
   PYB11_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
   PYB11_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
@@ -67,56 +84,180 @@ class ImportExport_EXPORT GoldfeatherReader : public AbstractFilter
   PYB11_PROPERTY(QString SurfaceMeshFaceLabelsArrayName READ getSurfaceMeshFaceLabelsArrayName WRITE setSurfaceMeshFaceLabelsArrayName)
   PYB11_PROPERTY(QString SurfaceMeshFaceNormalsArrayName READ getSurfaceMeshFaceNormalsArrayName WRITE setSurfaceMeshFaceNormalsArrayName)
   PYB11_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(GoldfeatherReader)
-  SIMPL_FILTER_NEW_MACRO(GoldfeatherReader)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GoldfeatherReader, AbstractFilter)
+  using Self = GoldfeatherReader;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for GoldfeatherReader
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for GoldfeatherReader
+   */
+  static QString ClassName();
 
   ~GoldfeatherReader() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceDataContainerName)
+  /**
+   * @brief Setter property for SurfaceDataContainerName
+   */
+  void setSurfaceDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceDataContainerName
+   * @return Value of SurfaceDataContainerName
+   */
+  DataArrayPath getSurfaceDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
-  SIMPL_FILTER_PARAMETER(QString, VertexAttributeMatrixName)
+  /**
+   * @brief Setter property for VertexAttributeMatrixName
+   */
+  void setVertexAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for VertexAttributeMatrixName
+   * @return Value of VertexAttributeMatrixName
+   */
+  QString getVertexAttributeMatrixName() const;
+
   Q_PROPERTY(QString VertexAttributeMatrixName READ getVertexAttributeMatrixName WRITE setVertexAttributeMatrixName)
-  SIMPL_FILTER_PARAMETER(QString, FaceAttributeMatrixName)
+  /**
+   * @brief Setter property for FaceAttributeMatrixName
+   */
+  void setFaceAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for FaceAttributeMatrixName
+   * @return Value of FaceAttributeMatrixName
+   */
+  QString getFaceAttributeMatrixName() const;
+
   Q_PROPERTY(QString FaceAttributeMatrixName READ getFaceAttributeMatrixName WRITE setFaceAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature1sArrayName)
+  /**
+   * @brief Setter property for SurfaceMeshPrincipalCurvature1sArrayName
+   */
+  void setSurfaceMeshPrincipalCurvature1sArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshPrincipalCurvature1sArrayName
+   * @return Value of SurfaceMeshPrincipalCurvature1sArrayName
+   */
+  QString getSurfaceMeshPrincipalCurvature1sArrayName() const;
+
   Q_PROPERTY(QString SurfaceMeshPrincipalCurvature1sArrayName READ getSurfaceMeshPrincipalCurvature1sArrayName WRITE setSurfaceMeshPrincipalCurvature1sArrayName)
-  SIMPL_FILTER_PARAMETER(QString, SurfaceMeshPrincipalCurvature2sArrayName)
+  /**
+   * @brief Setter property for SurfaceMeshPrincipalCurvature2sArrayName
+   */
+  void setSurfaceMeshPrincipalCurvature2sArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshPrincipalCurvature2sArrayName
+   * @return Value of SurfaceMeshPrincipalCurvature2sArrayName
+   */
+  QString getSurfaceMeshPrincipalCurvature2sArrayName() const;
+
   Q_PROPERTY(QString SurfaceMeshPrincipalCurvature2sArrayName READ getSurfaceMeshPrincipalCurvature2sArrayName WRITE setSurfaceMeshPrincipalCurvature2sArrayName)
-  SIMPL_FILTER_PARAMETER(QString, SurfaceMeshPrincipalDirection1sArrayName)
+  /**
+   * @brief Setter property for SurfaceMeshPrincipalDirection1sArrayName
+   */
+  void setSurfaceMeshPrincipalDirection1sArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshPrincipalDirection1sArrayName
+   * @return Value of SurfaceMeshPrincipalDirection1sArrayName
+   */
+  QString getSurfaceMeshPrincipalDirection1sArrayName() const;
+
   Q_PROPERTY(QString SurfaceMeshPrincipalDirection1sArrayName READ getSurfaceMeshPrincipalDirection1sArrayName WRITE setSurfaceMeshPrincipalDirection1sArrayName)
-  SIMPL_FILTER_PARAMETER(QString, SurfaceMeshPrincipalDirection2sArrayName)
+  /**
+   * @brief Setter property for SurfaceMeshPrincipalDirection2sArrayName
+   */
+  void setSurfaceMeshPrincipalDirection2sArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshPrincipalDirection2sArrayName
+   * @return Value of SurfaceMeshPrincipalDirection2sArrayName
+   */
+  QString getSurfaceMeshPrincipalDirection2sArrayName() const;
+
   Q_PROPERTY(QString SurfaceMeshPrincipalDirection2sArrayName READ getSurfaceMeshPrincipalDirection2sArrayName WRITE setSurfaceMeshPrincipalDirection2sArrayName)
-  SIMPL_FILTER_PARAMETER(QString, SurfaceMeshNodeNormalsArrayName)
+  /**
+   * @brief Setter property for SurfaceMeshNodeNormalsArrayName
+   */
+  void setSurfaceMeshNodeNormalsArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshNodeNormalsArrayName
+   * @return Value of SurfaceMeshNodeNormalsArrayName
+   */
+  QString getSurfaceMeshNodeNormalsArrayName() const;
+
   Q_PROPERTY(QString SurfaceMeshNodeNormalsArrayName READ getSurfaceMeshNodeNormalsArrayName WRITE setSurfaceMeshNodeNormalsArrayName)
-  SIMPL_FILTER_PARAMETER(QString, SurfaceMeshFaceLabelsArrayName)
+  /**
+   * @brief Setter property for SurfaceMeshFaceLabelsArrayName
+   */
+  void setSurfaceMeshFaceLabelsArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceLabelsArrayName
+   * @return Value of SurfaceMeshFaceLabelsArrayName
+   */
+  QString getSurfaceMeshFaceLabelsArrayName() const;
+
   Q_PROPERTY(QString SurfaceMeshFaceLabelsArrayName READ getSurfaceMeshFaceLabelsArrayName WRITE setSurfaceMeshFaceLabelsArrayName)
-  SIMPL_FILTER_PARAMETER(QString, SurfaceMeshFaceNormalsArrayName)
+  /**
+   * @brief Setter property for SurfaceMeshFaceNormalsArrayName
+   */
+  void setSurfaceMeshFaceNormalsArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceNormalsArrayName
+   * @return Value of SurfaceMeshFaceNormalsArrayName
+   */
+  QString getSurfaceMeshFaceNormalsArrayName() const;
+
   Q_PROPERTY(QString SurfaceMeshFaceNormalsArrayName READ getSurfaceMeshFaceNormalsArrayName WRITE setSurfaceMeshFaceNormalsArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, InputFile)
+  /**
+   * @brief Setter property for InputFile
+   */
+  void setInputFile(const QString& value);
+  /**
+   * @brief Getter property for InputFile
+   * @return Value of InputFile
+   */
+  QString getInputFile() const;
+
   Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
    */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -126,23 +267,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -203,13 +344,32 @@ protected:
   void updateFaceInstancePointers();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalCurvature1s)
-  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalCurvature2s)
-  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalDirection1s)
-  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshPrincipalDirection2s)
-  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshNodeNormals)
-  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshPrincipalCurvature1sPtr;
+  double* m_SurfaceMeshPrincipalCurvature1s = nullptr;
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshPrincipalCurvature2sPtr;
+  double* m_SurfaceMeshPrincipalCurvature2s = nullptr;
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshPrincipalDirection1sPtr;
+  double* m_SurfaceMeshPrincipalDirection1s = nullptr;
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshPrincipalDirection2sPtr;
+  double* m_SurfaceMeshPrincipalDirection2s = nullptr;
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshNodeNormalsPtr;
+  double* m_SurfaceMeshNodeNormals = nullptr;
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshFaceNormalsPtr;
+  double* m_SurfaceMeshFaceNormals = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFaceLabelsPtr;
+  int32_t* m_SurfaceMeshFaceLabels = nullptr;
+
+  DataArrayPath m_SurfaceDataContainerName = {};
+  QString m_VertexAttributeMatrixName = {};
+  QString m_FaceAttributeMatrixName = {};
+  QString m_SurfaceMeshPrincipalCurvature1sArrayName = {};
+  QString m_SurfaceMeshPrincipalCurvature2sArrayName = {};
+  QString m_SurfaceMeshPrincipalDirection1sArrayName = {};
+  QString m_SurfaceMeshPrincipalDirection2sArrayName = {};
+  QString m_SurfaceMeshNodeNormalsArrayName = {};
+  QString m_SurfaceMeshFaceLabelsArrayName = {};
+  QString m_SurfaceMeshFaceNormalsArrayName = {};
+  QString m_InputFile = {};
 
 public:
   GoldfeatherReader(const GoldfeatherReader&) = delete;            // Copy Constructor Not Implemented

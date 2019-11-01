@@ -51,3 +51,28 @@ StatsDelegate::~StatsDelegate() = default;
 void StatsDelegate::reportProgress(EMMPM_Data::Pointer data)
 {
 }
+
+// -----------------------------------------------------------------------------
+StatsDelegate::Pointer StatsDelegate::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+StatsDelegate::Pointer StatsDelegate::New()
+{
+  Pointer sharedPtr(new(StatsDelegate));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString StatsDelegate::getNameOfClass() const
+{
+  return QString("StatsDelegate");
+}
+
+// -----------------------------------------------------------------------------
+QString StatsDelegate::ClassName()
+{
+  return QString("StatsDelegate");
+}

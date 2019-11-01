@@ -36,10 +36,11 @@
 #pragma once
 
 //-- C++ includes
+#include <memory>
+
 #include <string>
 
 //-- SIMPLib Includes
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 //-- StatsGen Includes
 #include "AbstractMicrostructurePreset.h"
@@ -57,10 +58,21 @@
 class SyntheticBuilding_EXPORT PrimaryRolledPreset : public AbstractMicrostructurePreset
 {
 public:
-  SIMPL_SHARED_POINTERS(PrimaryRolledPreset)
-  SIMPL_STATIC_NEW_MACRO(PrimaryRolledPreset)
-  SIMPL_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, PrimaryRolledPreset)
+  using Self = PrimaryRolledPreset;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
 
+  static Pointer New();
+
+  static AbstractMicrostructurePreset::Pointer NewAbstractMicrostructurePreset()
+  {
+    PrimaryRolledPreset* ptr = new PrimaryRolledPreset();
+    AbstractMicrostructurePreset::Pointer shared_ptr(dynamic_cast<AbstractMicrostructurePreset*>(ptr));
+    return shared_ptr;
+  }
   ~PrimaryRolledPreset() override;
 
   QString getName() override;
@@ -75,8 +87,25 @@ public:
 
   void initializeAxisODFTableModel(QMap<QString, QVector<float>>& data) override;
 
-  SIMPL_INSTANCE_PROPERTY(float, AspectRatio1)
-  SIMPL_INSTANCE_PROPERTY(float, AspectRatio2)
+  /**
+   * @brief Setter property for AspectRatio1
+   */
+  void setAspectRatio1(float value);
+  /**
+   * @brief Getter property for AspectRatio1
+   * @return Value of AspectRatio1
+   */
+  float getAspectRatio1() const;
+
+  /**
+   * @brief Setter property for AspectRatio2
+   */
+  void setAspectRatio2(float value);
+  /**
+   * @brief Getter property for AspectRatio2
+   * @return Value of AspectRatio2
+   */
+  float getAspectRatio2() const;
 
 protected:
   PrimaryRolledPreset();
@@ -86,6 +115,10 @@ public:
   PrimaryRolledPreset(PrimaryRolledPreset&&) = delete;      // Move Constructor Not Implemented
   PrimaryRolledPreset& operator=(const PrimaryRolledPreset&) = delete; // Copy Assignment Not Implemented
   PrimaryRolledPreset& operator=(PrimaryRolledPreset&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  float m_AspectRatio1 = {};
+  float m_AspectRatio2 = {};
 };
 
 DECLARE_FACTORY_CLASS(PrimaryRolledPresetFactory, PrimaryRolledPreset, "Primary Rolled")

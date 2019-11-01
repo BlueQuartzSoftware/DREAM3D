@@ -33,12 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "EBSDSegmentFeatures.h"
 
 #include <chrono>
 
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -47,6 +51,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
@@ -461,7 +467,7 @@ AbstractFilter::Pointer EBSDSegmentFeatures::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EBSDSegmentFeatures::getCompiledLibraryName() const
+QString EBSDSegmentFeatures::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -469,7 +475,7 @@ const QString EBSDSegmentFeatures::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EBSDSegmentFeatures::getBrandingString() const
+QString EBSDSegmentFeatures::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -477,7 +483,7 @@ const QString EBSDSegmentFeatures::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EBSDSegmentFeatures::getFilterVersion() const
+QString EBSDSegmentFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -487,7 +493,7 @@ const QString EBSDSegmentFeatures::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EBSDSegmentFeatures::getGroupName() const
+QString EBSDSegmentFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -495,7 +501,7 @@ const QString EBSDSegmentFeatures::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid EBSDSegmentFeatures::getUuid()
+QUuid EBSDSegmentFeatures::getUuid() const
 {
   return QUuid("{7861c691-b821-537b-bd25-dc195578e0ea}");
 }
@@ -503,7 +509,7 @@ const QUuid EBSDSegmentFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EBSDSegmentFeatures::getSubGroupName() const
+QString EBSDSegmentFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;
 }
@@ -511,7 +517,156 @@ const QString EBSDSegmentFeatures::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString EBSDSegmentFeatures::getHumanLabel() const
+QString EBSDSegmentFeatures::getHumanLabel() const
 {
   return "Segment Features (Misorientation)";
+}
+
+// -----------------------------------------------------------------------------
+EBSDSegmentFeatures::Pointer EBSDSegmentFeatures::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<EBSDSegmentFeatures> EBSDSegmentFeatures::New()
+{
+  struct make_shared_enabler : public EBSDSegmentFeatures
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString EBSDSegmentFeatures::getNameOfClass() const
+{
+  return QString("EBSDSegmentFeatures");
+}
+
+// -----------------------------------------------------------------------------
+QString EBSDSegmentFeatures::ClassName()
+{
+  return QString("EBSDSegmentFeatures");
+}
+
+// -----------------------------------------------------------------------------
+void EBSDSegmentFeatures::setCellFeatureAttributeMatrixName(const QString& value)
+{
+  m_CellFeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EBSDSegmentFeatures::getCellFeatureAttributeMatrixName() const
+{
+  return m_CellFeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void EBSDSegmentFeatures::setMisorientationTolerance(float value)
+{
+  m_MisorientationTolerance = value;
+}
+
+// -----------------------------------------------------------------------------
+float EBSDSegmentFeatures::getMisorientationTolerance() const
+{
+  return m_MisorientationTolerance;
+}
+
+// -----------------------------------------------------------------------------
+void EBSDSegmentFeatures::setRandomizeFeatureIds(bool value)
+{
+  m_RandomizeFeatureIds = value;
+}
+
+// -----------------------------------------------------------------------------
+bool EBSDSegmentFeatures::getRandomizeFeatureIds() const
+{
+  return m_RandomizeFeatureIds;
+}
+
+// -----------------------------------------------------------------------------
+void EBSDSegmentFeatures::setUseGoodVoxels(bool value)
+{
+  m_UseGoodVoxels = value;
+}
+
+// -----------------------------------------------------------------------------
+bool EBSDSegmentFeatures::getUseGoodVoxels() const
+{
+  return m_UseGoodVoxels;
+}
+
+// -----------------------------------------------------------------------------
+void EBSDSegmentFeatures::setGoodVoxelsArrayPath(const DataArrayPath& value)
+{
+  m_GoodVoxelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath EBSDSegmentFeatures::getGoodVoxelsArrayPath() const
+{
+  return m_GoodVoxelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void EBSDSegmentFeatures::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath EBSDSegmentFeatures::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void EBSDSegmentFeatures::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath EBSDSegmentFeatures::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void EBSDSegmentFeatures::setQuatsArrayPath(const DataArrayPath& value)
+{
+  m_QuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath EBSDSegmentFeatures::getQuatsArrayPath() const
+{
+  return m_QuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void EBSDSegmentFeatures::setFeatureIdsArrayName(const QString& value)
+{
+  m_FeatureIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EBSDSegmentFeatures::getFeatureIdsArrayName() const
+{
+  return m_FeatureIdsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void EBSDSegmentFeatures::setActiveArrayName(const QString& value)
+{
+  m_ActiveArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString EBSDSegmentFeatures::getActiveArrayName() const
+{
+  return m_ActiveArrayName;
 }

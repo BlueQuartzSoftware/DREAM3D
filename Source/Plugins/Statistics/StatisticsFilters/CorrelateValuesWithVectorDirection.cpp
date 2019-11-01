@@ -33,15 +33,23 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "CorrelateValuesWithVectorDirection.h"
 
+#include <QtCore/QTextStream>
+
+#include <QtCore/QDebug>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/Math/MatrixMath.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -706,7 +714,7 @@ int CorrelateValuesWithVectorDirection::writeCoords(FILE* f, const char* axis, c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CorrelateValuesWithVectorDirection::getCompiledLibraryName() const
+QString CorrelateValuesWithVectorDirection::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -714,7 +722,7 @@ const QString CorrelateValuesWithVectorDirection::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CorrelateValuesWithVectorDirection::getBrandingString() const
+QString CorrelateValuesWithVectorDirection::getBrandingString() const
 {
   return "Statistics";
 }
@@ -722,7 +730,7 @@ const QString CorrelateValuesWithVectorDirection::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CorrelateValuesWithVectorDirection::getFilterVersion() const
+QString CorrelateValuesWithVectorDirection::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -733,7 +741,7 @@ const QString CorrelateValuesWithVectorDirection::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CorrelateValuesWithVectorDirection::getGroupName() const
+QString CorrelateValuesWithVectorDirection::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -741,7 +749,7 @@ const QString CorrelateValuesWithVectorDirection::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid CorrelateValuesWithVectorDirection::getUuid()
+QUuid CorrelateValuesWithVectorDirection::getUuid() const
 {
   return QUuid("{6c8b16f1-3688-5b29-9e57-d2fd56d9e3da}");
 }
@@ -749,7 +757,7 @@ const QUuid CorrelateValuesWithVectorDirection::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CorrelateValuesWithVectorDirection::getSubGroupName() const
+QString CorrelateValuesWithVectorDirection::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -757,7 +765,72 @@ const QString CorrelateValuesWithVectorDirection::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CorrelateValuesWithVectorDirection::getHumanLabel() const
+QString CorrelateValuesWithVectorDirection::getHumanLabel() const
 {
   return "Correlate Values with Vector Direction";
+}
+
+// -----------------------------------------------------------------------------
+CorrelateValuesWithVectorDirection::Pointer CorrelateValuesWithVectorDirection::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<CorrelateValuesWithVectorDirection> CorrelateValuesWithVectorDirection::New()
+{
+  struct make_shared_enabler : public CorrelateValuesWithVectorDirection
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString CorrelateValuesWithVectorDirection::getNameOfClass() const
+{
+  return QString("CorrelateValuesWithVectorDirection");
+}
+
+// -----------------------------------------------------------------------------
+QString CorrelateValuesWithVectorDirection::ClassName()
+{
+  return QString("CorrelateValuesWithVectorDirection");
+}
+
+// -----------------------------------------------------------------------------
+void CorrelateValuesWithVectorDirection::setCorrelatedDataArrayPath(const DataArrayPath& value)
+{
+  m_CorrelatedDataArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath CorrelateValuesWithVectorDirection::getCorrelatedDataArrayPath() const
+{
+  return m_CorrelatedDataArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void CorrelateValuesWithVectorDirection::setVectorDataArrayPath(const DataArrayPath& value)
+{
+  m_VectorDataArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath CorrelateValuesWithVectorDirection::getVectorDataArrayPath() const
+{
+  return m_VectorDataArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void CorrelateValuesWithVectorDirection::setLogfile(const QString& value)
+{
+  m_Logfile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString CorrelateValuesWithVectorDirection::getLogfile() const
+{
+  return m_Logfile;
 }

@@ -35,9 +35,11 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -47,56 +49,145 @@
 class OrientationAnalysis_EXPORT GenerateFaceIPFColoring : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(GenerateFaceIPFColoring SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(GenerateFaceIPFColoring)
+  PYB11_FILTER_NEW_MACRO(GenerateFaceIPFColoring)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshFaceIPFColorsArrayName)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
   PYB11_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
   PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
   PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
   PYB11_PROPERTY(QString SurfaceMeshFaceIPFColorsArrayName READ getSurfaceMeshFaceIPFColorsArrayName WRITE setSurfaceMeshFaceIPFColorsArrayName)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(GenerateFaceIPFColoring)
-  SIMPL_FILTER_NEW_MACRO(GenerateFaceIPFColoring)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GenerateFaceIPFColoring, AbstractFilter)
+  using Self = GenerateFaceIPFColoring;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for GenerateFaceIPFColoring
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for GenerateFaceIPFColoring
+   */
+  static QString ClassName();
 
   ~GenerateFaceIPFColoring() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceLabelsArrayPath
+   */
+  void setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceLabelsArrayPath
+   * @return Value of SurfaceMeshFaceLabelsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceNormalsArrayPath
+   */
+  void setSurfaceMeshFaceNormalsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceNormalsArrayPath
+   * @return Value of SurfaceMeshFaceNormalsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceNormalsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
+  /**
+   * @brief Setter property for FeatureEulerAnglesArrayPath
+   */
+  void setFeatureEulerAnglesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureEulerAnglesArrayPath
+   * @return Value of FeatureEulerAnglesArrayPath
+   */
+  DataArrayPath getFeatureEulerAnglesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  /**
+   * @brief Setter property for FeaturePhasesArrayPath
+   */
+  void setFeaturePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayPath
+   * @return Value of FeaturePhasesArrayPath
+   */
+  DataArrayPath getFeaturePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, SurfaceMeshFaceIPFColorsArrayName)
+  /**
+   * @brief Setter property for SurfaceMeshFaceIPFColorsArrayName
+   */
+  void setSurfaceMeshFaceIPFColorsArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceIPFColorsArrayName
+   * @return Value of SurfaceMeshFaceIPFColorsArrayName
+   */
+  QString getSurfaceMeshFaceIPFColorsArrayName() const;
+
   Q_PROPERTY(QString SurfaceMeshFaceIPFColorsArrayName READ getSurfaceMeshFaceIPFColorsArrayName WRITE setSurfaceMeshFaceIPFColorsArrayName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
    */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -106,23 +197,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -181,13 +272,25 @@ protected:
   void dataCheckVoxel();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
-  DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-  DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+  std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFaceLabelsPtr;
+  int32_t* m_SurfaceMeshFaceLabels = nullptr;
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshFaceNormalsPtr;
+  double* m_SurfaceMeshFaceNormals = nullptr;
+  std::weak_ptr<DataArray<float>> m_FeatureEulerAnglesPtr;
+  float* m_FeatureEulerAngles = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+  std::weak_ptr<DataArray<unsigned int>> m_CrystalStructuresPtr;
+  unsigned int* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<uint8_t>> m_SurfaceMeshFaceIPFColorsPtr;
+  uint8_t* m_SurfaceMeshFaceIPFColors = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(uint8_t, SurfaceMeshFaceIPFColors)
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
+  DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {};
+  DataArrayPath m_FeatureEulerAnglesArrayPath = {};
+  DataArrayPath m_FeaturePhasesArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+  QString m_SurfaceMeshFaceIPFColorsArrayName = {};
 
 public:
   GenerateFaceIPFColoring(const GenerateFaceIPFColoring&) = delete;            // Copy Constructor Not Implemented

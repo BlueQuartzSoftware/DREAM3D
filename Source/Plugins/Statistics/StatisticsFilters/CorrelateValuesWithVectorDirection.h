@@ -35,16 +35,19 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QString>
 #include <vector>
 
 #include "OrientationLib/LaueOps/LaueOps.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Utilities/SIMPLibEndian.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Statistics/StatisticsDLLExport.h"
 
@@ -60,41 +63,98 @@
 class Statistics_EXPORT CorrelateValuesWithVectorDirection : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(CorrelateValuesWithVectorDirection SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath CorrelatedDataArrayPath READ getCorrelatedDataArrayPath WRITE setCorrelatedDataArrayPath)
-    PYB11_PROPERTY(DataArrayPath VectorDataArrayPath READ getVectorDataArrayPath WRITE setVectorDataArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(CorrelateValuesWithVectorDirection SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(CorrelateValuesWithVectorDirection)
+  PYB11_FILTER_NEW_MACRO(CorrelateValuesWithVectorDirection)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CorrelatedDataArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, VectorDataArrayPath)
+  PYB11_PROPERTY(DataArrayPath CorrelatedDataArrayPath READ getCorrelatedDataArrayPath WRITE setCorrelatedDataArrayPath)
+  PYB11_PROPERTY(DataArrayPath VectorDataArrayPath READ getVectorDataArrayPath WRITE setVectorDataArrayPath)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(CorrelateValuesWithVectorDirection)
-  SIMPL_FILTER_NEW_MACRO(CorrelateValuesWithVectorDirection)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CorrelateValuesWithVectorDirection, AbstractFilter)
+  using Self = CorrelateValuesWithVectorDirection;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for CorrelateValuesWithVectorDirection
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for CorrelateValuesWithVectorDirection
+   */
+  static QString ClassName();
 
   ~CorrelateValuesWithVectorDirection() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CorrelatedDataArrayPath)
+  /**
+   * @brief Setter property for CorrelatedDataArrayPath
+   */
+  void setCorrelatedDataArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CorrelatedDataArrayPath
+   * @return Value of CorrelatedDataArrayPath
+   */
+  DataArrayPath getCorrelatedDataArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CorrelatedDataArrayPath READ getCorrelatedDataArrayPath WRITE setCorrelatedDataArrayPath)
-  SIMPL_FILTER_PARAMETER(DataArrayPath, VectorDataArrayPath)
+  /**
+   * @brief Setter property for VectorDataArrayPath
+   */
+  void setVectorDataArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for VectorDataArrayPath
+   * @return Value of VectorDataArrayPath
+   */
+  DataArrayPath getVectorDataArrayPath() const;
+
   Q_PROPERTY(DataArrayPath VectorDataArrayPath READ getVectorDataArrayPath WRITE setVectorDataArrayPath)
 
-  SIMPL_INSTANCE_STRING_PROPERTY(Logfile)
+  /**
+   * @brief Setter property for Logfile
+   */
+  void setLogfile(const QString& value);
+  /**
+   * @brief Getter property for Logfile
+   * @return Value of Logfile
+   */
+  QString getLogfile() const;
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -104,23 +164,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -185,7 +245,12 @@ protected:
   void createSterographicProjections(size_t numComps);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(float, VectorData)
+  std::weak_ptr<DataArray<float>> m_VectorDataPtr;
+  float* m_VectorData = nullptr;
+
+  DataArrayPath m_CorrelatedDataArrayPath = {};
+  DataArrayPath m_VectorDataArrayPath = {};
+  QString m_Logfile = {};
 
   DoubleArrayType::Pointer m_LambertProj;
 

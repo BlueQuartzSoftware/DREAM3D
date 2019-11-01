@@ -33,13 +33,22 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "SurfaceMeshToNonconformalVtk.h"
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 
+#include <QtCore/QTextStream>
+
+#include <QtCore/QDebug>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
@@ -910,7 +919,7 @@ AbstractFilter::Pointer SurfaceMeshToNonconformalVtk::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToNonconformalVtk::getCompiledLibraryName() const
+QString SurfaceMeshToNonconformalVtk::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -918,7 +927,7 @@ const QString SurfaceMeshToNonconformalVtk::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToNonconformalVtk::getBrandingString() const
+QString SurfaceMeshToNonconformalVtk::getBrandingString() const
 {
   return "IO";
 }
@@ -926,7 +935,7 @@ const QString SurfaceMeshToNonconformalVtk::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToNonconformalVtk::getFilterVersion() const
+QString SurfaceMeshToNonconformalVtk::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -937,7 +946,7 @@ const QString SurfaceMeshToNonconformalVtk::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToNonconformalVtk::getGroupName() const
+QString SurfaceMeshToNonconformalVtk::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -945,7 +954,7 @@ const QString SurfaceMeshToNonconformalVtk::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid SurfaceMeshToNonconformalVtk::getUuid()
+QUuid SurfaceMeshToNonconformalVtk::getUuid() const
 {
   return QUuid("{55247df8-612a-5303-ac03-09f18f7fbf2b}");
 }
@@ -953,7 +962,7 @@ const QUuid SurfaceMeshToNonconformalVtk::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToNonconformalVtk::getSubGroupName() const
+QString SurfaceMeshToNonconformalVtk::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -961,7 +970,84 @@ const QString SurfaceMeshToNonconformalVtk::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToNonconformalVtk::getHumanLabel() const
+QString SurfaceMeshToNonconformalVtk::getHumanLabel() const
 {
   return "Export Vtk PolyData (NonConformal) from SurfaceMesh";
+}
+
+// -----------------------------------------------------------------------------
+SurfaceMeshToNonconformalVtk::Pointer SurfaceMeshToNonconformalVtk::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<SurfaceMeshToNonconformalVtk> SurfaceMeshToNonconformalVtk::New()
+{
+  struct make_shared_enabler : public SurfaceMeshToNonconformalVtk
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString SurfaceMeshToNonconformalVtk::getNameOfClass() const
+{
+  return QString("SurfaceMeshToNonconformalVtk");
+}
+
+// -----------------------------------------------------------------------------
+QString SurfaceMeshToNonconformalVtk::ClassName()
+{
+  return QString("SurfaceMeshToNonconformalVtk");
+}
+
+// -----------------------------------------------------------------------------
+void SurfaceMeshToNonconformalVtk::setOutputVtkFile(const QString& value)
+{
+  m_OutputVtkFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString SurfaceMeshToNonconformalVtk::getOutputVtkFile() const
+{
+  return m_OutputVtkFile;
+}
+
+// -----------------------------------------------------------------------------
+void SurfaceMeshToNonconformalVtk::setWriteBinaryFile(bool value)
+{
+  m_WriteBinaryFile = value;
+}
+
+// -----------------------------------------------------------------------------
+bool SurfaceMeshToNonconformalVtk::getWriteBinaryFile() const
+{
+  return m_WriteBinaryFile;
+}
+
+// -----------------------------------------------------------------------------
+void SurfaceMeshToNonconformalVtk::setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath SurfaceMeshToNonconformalVtk::getSurfaceMeshFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFaceLabelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void SurfaceMeshToNonconformalVtk::setSurfaceMeshNodeTypeArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshNodeTypeArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath SurfaceMeshToNonconformalVtk::getSurfaceMeshNodeTypeArrayPath() const
+{
+  return m_SurfaceMeshNodeTypeArrayPath;
 }

@@ -33,11 +33,18 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "LosAlamosFFTWriter.h"
 
 #include <QtCore/QDir>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
@@ -265,7 +272,7 @@ AbstractFilter::Pointer LosAlamosFFTWriter::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LosAlamosFFTWriter::getCompiledLibraryName() const
+QString LosAlamosFFTWriter::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -273,7 +280,7 @@ const QString LosAlamosFFTWriter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LosAlamosFFTWriter::getBrandingString() const
+QString LosAlamosFFTWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -281,7 +288,7 @@ const QString LosAlamosFFTWriter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LosAlamosFFTWriter::getFilterVersion() const
+QString LosAlamosFFTWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -291,7 +298,7 @@ const QString LosAlamosFFTWriter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LosAlamosFFTWriter::getGroupName() const
+QString LosAlamosFFTWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -299,7 +306,7 @@ const QString LosAlamosFFTWriter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid LosAlamosFFTWriter::getUuid()
+QUuid LosAlamosFFTWriter::getUuid() const
 {
   return QUuid("{158ebe9e-f772-57e2-ac1b-71ff213cf890}");
 }
@@ -307,7 +314,7 @@ const QUuid LosAlamosFFTWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LosAlamosFFTWriter::getSubGroupName() const
+QString LosAlamosFFTWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -315,7 +322,72 @@ const QString LosAlamosFFTWriter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LosAlamosFFTWriter::getHumanLabel() const
+QString LosAlamosFFTWriter::getHumanLabel() const
 {
   return "Export Los Alamos FFT File";
+}
+
+// -----------------------------------------------------------------------------
+LosAlamosFFTWriter::Pointer LosAlamosFFTWriter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<LosAlamosFFTWriter> LosAlamosFFTWriter::New()
+{
+  struct make_shared_enabler : public LosAlamosFFTWriter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString LosAlamosFFTWriter::getNameOfClass() const
+{
+  return QString("LosAlamosFFTWriter");
+}
+
+// -----------------------------------------------------------------------------
+QString LosAlamosFFTWriter::ClassName()
+{
+  return QString("LosAlamosFFTWriter");
+}
+
+// -----------------------------------------------------------------------------
+void LosAlamosFFTWriter::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath LosAlamosFFTWriter::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void LosAlamosFFTWriter::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath LosAlamosFFTWriter::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void LosAlamosFFTWriter::setCellEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_CellEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath LosAlamosFFTWriter::getCellEulerAnglesArrayPath() const
+{
+  return m_CellEulerAnglesArrayPath;
 }

@@ -35,11 +35,13 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Sampling/SamplingFilters/SampleSurfaceMesh.h"
 
@@ -51,68 +53,187 @@
 class Sampling_EXPORT UncertainRegularGridSampleSurfaceMesh : public SampleSurfaceMesh
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(UncertainRegularGridSampleSurfaceMesh SUPERCLASS SampleSurfaceMesh)
-    PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
-    PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-    PYB11_PROPERTY(int XPoints READ getXPoints WRITE setXPoints)
-    PYB11_PROPERTY(int YPoints READ getYPoints WRITE setYPoints)
-    PYB11_PROPERTY(int ZPoints READ getZPoints WRITE setZPoints)
-    PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
-    PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
-    PYB11_PROPERTY(FloatVec3Type Uncertainty READ getUncertainty WRITE setUncertainty)
-    PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(UncertainRegularGridSampleSurfaceMesh SUPERCLASS SampleSurfaceMesh)
+  PYB11_SHARED_POINTERS(UncertainRegularGridSampleSurfaceMesh)
+  PYB11_FILTER_NEW_MACRO(UncertainRegularGridSampleSurfaceMesh)
+  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(int, XPoints)
+  PYB11_FILTER_PARAMETER(int, YPoints)
+  PYB11_FILTER_PARAMETER(int, ZPoints)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, Uncertainty)
+  PYB11_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+  PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  PYB11_PROPERTY(int XPoints READ getXPoints WRITE setXPoints)
+  PYB11_PROPERTY(int YPoints READ getYPoints WRITE setYPoints)
+  PYB11_PROPERTY(int ZPoints READ getZPoints WRITE setZPoints)
+  PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
+  PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
+  PYB11_PROPERTY(FloatVec3Type Uncertainty READ getUncertainty WRITE setUncertainty)
+  PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(UncertainRegularGridSampleSurfaceMesh)
-  SIMPL_FILTER_NEW_MACRO(UncertainRegularGridSampleSurfaceMesh)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(UncertainRegularGridSampleSurfaceMesh, AbstractFilter)
+  using Self = UncertainRegularGridSampleSurfaceMesh;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for UncertainRegularGridSampleSurfaceMesh
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for UncertainRegularGridSampleSurfaceMesh
+   */
+  static QString ClassName();
 
   virtual ~UncertainRegularGridSampleSurfaceMesh();
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  DataArrayPath getDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  QString getCellAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(int, XPoints)
+  /**
+   * @brief Setter property for XPoints
+   */
+  void setXPoints(int value);
+  /**
+   * @brief Getter property for XPoints
+   * @return Value of XPoints
+   */
+  int getXPoints() const;
+
   Q_PROPERTY(int XPoints READ getXPoints WRITE setXPoints)
 
-  SIMPL_FILTER_PARAMETER(int, YPoints)
+  /**
+   * @brief Setter property for YPoints
+   */
+  void setYPoints(int value);
+  /**
+   * @brief Getter property for YPoints
+   * @return Value of YPoints
+   */
+  int getYPoints() const;
+
   Q_PROPERTY(int YPoints READ getYPoints WRITE setYPoints)
 
-  SIMPL_FILTER_PARAMETER(int, ZPoints)
+  /**
+   * @brief Setter property for ZPoints
+   */
+  void setZPoints(int value);
+  /**
+   * @brief Getter property for ZPoints
+   * @return Value of ZPoints
+   */
+  int getZPoints() const;
+
   Q_PROPERTY(int ZPoints READ getZPoints WRITE setZPoints)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  /**
+   * @brief Setter property for Spacing
+   */
+  void setSpacing(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Spacing
+   * @return Value of Spacing
+   */
+  FloatVec3Type getSpacing() const;
+
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Origin)
+  /**
+   * @brief Setter property for Origin
+   */
+  void setOrigin(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Origin
+   * @return Value of Origin
+   */
+  FloatVec3Type getOrigin() const;
+
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Uncertainty)
+  /**
+   * @brief Setter property for Uncertainty
+   */
+  void setUncertainty(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Uncertainty
+   * @return Value of Uncertainty
+   */
+  FloatVec3Type getUncertainty() const;
+
   Q_PROPERTY(FloatVec3Type Uncertainty READ getUncertainty WRITE setUncertainty)
 
-  SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+  /**
+   * @brief Setter property for FeatureIdsArrayName
+   */
+  void setFeatureIdsArrayName(const QString& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayName
+   * @return Value of FeatureIdsArrayName
+   */
+  QString getFeatureIdsArrayName() const;
+
   Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -122,23 +243,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -185,7 +306,18 @@ protected:
   virtual void assign_points(Int32ArrayType::Pointer iArray);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+
+  DataArrayPath m_DataContainerName = {};
+  QString m_CellAttributeMatrixName = {};
+  int m_XPoints = {};
+  int m_YPoints = {};
+  int m_ZPoints = {};
+  FloatVec3Type m_Spacing = {};
+  FloatVec3Type m_Origin = {};
+  FloatVec3Type m_Uncertainty = {};
+  QString m_FeatureIdsArrayName = {};
 
 public:
   UncertainRegularGridSampleSurfaceMesh(const UncertainRegularGridSampleSurfaceMesh&) = delete; // Copy Constructor Not Implemented

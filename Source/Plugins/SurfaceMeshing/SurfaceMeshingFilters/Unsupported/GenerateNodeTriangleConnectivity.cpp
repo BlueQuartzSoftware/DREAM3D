@@ -33,6 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "GenerateNodeTriangleConnectivity.h"
 
 #include "SIMPLib/Common/ManagedPointerArray.hpp"
@@ -250,4 +252,45 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
 
   getSurfaceMeshDataContainer()->addCellData(nodeTriangleArray->getName(), nodeTriangleArray);
   return;
+}
+
+// -----------------------------------------------------------------------------
+GenerateNodeTriangleConnectivity::Pointer GenerateNodeTriangleConnectivity::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<GenerateNodeTriangleConnectivity> GenerateNodeTriangleConnectivity::New()
+{
+  struct make_shared_enabler : public GenerateNodeTriangleConnectivity
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateNodeTriangleConnectivity::getNameOfClass() const
+{
+  return QString("GenerateNodeTriangleConnectivity");
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateNodeTriangleConnectivity::ClassName()
+{
+  return QString("GenerateNodeTriangleConnectivity");
+}
+
+// -----------------------------------------------------------------------------
+void GenerateNodeTriangleConnectivity::setSurfaceMeshUniqueEdgesArrayName(const QString& value)
+{
+  m_SurfaceMeshUniqueEdgesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateNodeTriangleConnectivity::getSurfaceMeshUniqueEdgesArrayName() const
+{
+  return m_SurfaceMeshUniqueEdgesArrayName;
 }

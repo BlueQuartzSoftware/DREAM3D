@@ -35,11 +35,12 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "SyntheticBuilding/SyntheticBuildingDLLExport.h"
 
@@ -49,58 +50,197 @@
 class SyntheticBuilding_EXPORT InitializeSyntheticVolume : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(InitializeSyntheticVolume SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
-    PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
-    PYB11_PROPERTY(QString EnsembleAttributeMatrixName READ getEnsembleAttributeMatrixName WRITE setEnsembleAttributeMatrixName)
-    PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
-    PYB11_PROPERTY(IntVec3Type Dimensions READ getDimensions WRITE setDimensions)
-    PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
-    PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
-    PYB11_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
-    PYB11_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
-    PYB11_PROPERTY(DataArrayPath InputPhaseNamesArrayPath READ getInputPhaseNamesArrayPath WRITE setInputPhaseNamesArrayPath)
-    PYB11_PROPERTY(bool EstimateNumberOfFeatures READ getEstimateNumberOfFeatures WRITE setEstimateNumberOfFeatures)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(InitializeSyntheticVolume SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(InitializeSyntheticVolume)
+  PYB11_FILTER_NEW_MACRO(InitializeSyntheticVolume)
+  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, EnsembleAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(int32_t, LengthUnit)
+  PYB11_FILTER_PARAMETER(IntVec3Type, Dimensions)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, Origin)
+  PYB11_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, InputPhaseNamesArrayPath)
+  PYB11_FILTER_PARAMETER(bool, EstimateNumberOfFeatures)
+  PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
+  PYB11_PROPERTY(QString EnsembleAttributeMatrixName READ getEnsembleAttributeMatrixName WRITE setEnsembleAttributeMatrixName)
+  PYB11_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
+  PYB11_PROPERTY(IntVec3Type Dimensions READ getDimensions WRITE setDimensions)
+  PYB11_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
+  PYB11_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
+  PYB11_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
+  PYB11_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
+  PYB11_PROPERTY(DataArrayPath InputPhaseNamesArrayPath READ getInputPhaseNamesArrayPath WRITE setInputPhaseNamesArrayPath)
+  PYB11_PROPERTY(bool EstimateNumberOfFeatures READ getEstimateNumberOfFeatures WRITE setEstimateNumberOfFeatures)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(InitializeSyntheticVolume)
-  SIMPL_FILTER_NEW_MACRO(InitializeSyntheticVolume)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(InitializeSyntheticVolume, AbstractFilter)
+  using Self = InitializeSyntheticVolume;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for InitializeSyntheticVolume
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for InitializeSyntheticVolume
+   */
+  static QString ClassName();
 
   ~InitializeSyntheticVolume() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  DataArrayPath getDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+  /**
+   * @brief Setter property for CellAttributeMatrixName
+   */
+  void setCellAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixName
+   * @return Value of CellAttributeMatrixName
+   */
+  QString getCellAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(QString, EnsembleAttributeMatrixName)
+  /**
+   * @brief Setter property for EnsembleAttributeMatrixName
+   */
+  void setEnsembleAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for EnsembleAttributeMatrixName
+   * @return Value of EnsembleAttributeMatrixName
+   */
+  QString getEnsembleAttributeMatrixName() const;
+
   Q_PROPERTY(QString EnsembleAttributeMatrixName READ getEnsembleAttributeMatrixName WRITE setEnsembleAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(int32_t, LengthUnit)
+  /**
+   * @brief Setter property for LengthUnit
+   */
+  void setLengthUnit(int32_t value);
+  /**
+   * @brief Getter property for LengthUnit
+   * @return Value of LengthUnit
+   */
+  int32_t getLengthUnit() const;
+
   Q_PROPERTY(int32_t LengthUnit READ getLengthUnit WRITE setLengthUnit)
 
-  SIMPL_FILTER_PARAMETER(IntVec3Type, Dimensions)
+  /**
+   * @brief Setter property for Dimensions
+   */
+  void setDimensions(const IntVec3Type& value);
+  /**
+   * @brief Getter property for Dimensions
+   * @return Value of Dimensions
+   */
+  IntVec3Type getDimensions() const;
+
   Q_PROPERTY(IntVec3Type Dimensions READ getDimensions WRITE setDimensions)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Spacing)
+  /**
+   * @brief Setter property for Spacing
+   */
+  void setSpacing(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Spacing
+   * @return Value of Spacing
+   */
+  FloatVec3Type getSpacing() const;
+
   Q_PROPERTY(FloatVec3Type Spacing READ getSpacing WRITE setSpacing)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, Origin)
+  /**
+   * @brief Setter property for Origin
+   */
+  void setOrigin(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for Origin
+   * @return Value of Origin
+   */
+  FloatVec3Type getOrigin() const;
+
   Q_PROPERTY(FloatVec3Type Origin READ getOrigin WRITE setOrigin)
 
   // These are for estimating the number of features that will be generated farther down the line.
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, InputStatsArrayPath)
+  /**
+   * @brief Setter property for InputStatsArrayPath
+   */
+  void setInputStatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for InputStatsArrayPath
+   * @return Value of InputStatsArrayPath
+   */
+  DataArrayPath getInputStatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath InputStatsArrayPath READ getInputStatsArrayPath WRITE setInputStatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, InputPhaseTypesArrayPath)
+  /**
+   * @brief Setter property for InputPhaseTypesArrayPath
+   */
+  void setInputPhaseTypesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for InputPhaseTypesArrayPath
+   * @return Value of InputPhaseTypesArrayPath
+   */
+  DataArrayPath getInputPhaseTypesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath InputPhaseTypesArrayPath READ getInputPhaseTypesArrayPath WRITE setInputPhaseTypesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, InputPhaseNamesArrayPath)
+  /**
+   * @brief Setter property for InputPhaseNamesArrayPath
+   */
+  void setInputPhaseNamesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for InputPhaseNamesArrayPath
+   * @return Value of InputPhaseNamesArrayPath
+   */
+  DataArrayPath getInputPhaseNamesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath InputPhaseNamesArrayPath READ getInputPhaseNamesArrayPath WRITE setInputPhaseNamesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(bool, EstimateNumberOfFeatures)
+  /**
+   * @brief Setter property for EstimateNumberOfFeatures
+   */
+  void setEstimateNumberOfFeatures(bool value);
+  /**
+   * @brief Getter property for EstimateNumberOfFeatures
+   * @return Value of EstimateNumberOfFeatures
+   */
+  bool getEstimateNumberOfFeatures() const;
+
   Q_PROPERTY(bool EstimateNumberOfFeatures READ getEstimateNumberOfFeatures WRITE setEstimateNumberOfFeatures)
 
   QString getEstimatedPrimaryFeatures();
@@ -112,21 +252,21 @@ public:
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -136,23 +276,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -219,6 +359,18 @@ protected:
   QString estimateNumFeatures(IntVec3Type dimensions, FloatVec3Type res);
 
 private:
+  DataArrayPath m_DataContainerName = {};
+  QString m_CellAttributeMatrixName = {};
+  QString m_EnsembleAttributeMatrixName = {};
+  int32_t m_LengthUnit = {};
+  IntVec3Type m_Dimensions = {};
+  FloatVec3Type m_Spacing = {};
+  FloatVec3Type m_Origin = {};
+  DataArrayPath m_InputStatsArrayPath = {};
+  DataArrayPath m_InputPhaseTypesArrayPath = {};
+  DataArrayPath m_InputPhaseNamesArrayPath = {};
+  bool m_EstimateNumberOfFeatures = {};
+
   QString m_EstimatedPrimaryFeatures;
 
 public:

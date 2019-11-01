@@ -36,27 +36,43 @@
 
 #pragma once
 
+#include <memory>
+
 #include <vector>
 
 #include <QtCore/QString>
-
-#include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <QtCore/QTextStream>
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/Utilities/ModifiedLambertProjection.h"
 
-
+class IDataArray;
+using IDataArrayShPtrType = std::shared_ptr<IDataArray>;
 /**
  * @brief The ModifiedLambertProjectionArray class
  */
 class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
 {
   public:
-    SIMPL_SHARED_POINTERS(ModifiedLambertProjectionArray)
-    SIMPL_STATIC_NEW_MACRO(ModifiedLambertProjectionArray)
-    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ModifiedLambertProjectionArray, IDataArray)
-    SIMPL_CLASS_VERSION(2)
+    using Self = ModifiedLambertProjectionArray;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static Pointer New();
+
+    /**
+     * @brief Returns the name of the class for ModifiedLambertProjectionArray
+     */
+    QString getNameOfClass() const override;
+    /**
+     * @brief Returns the name of the class for ModifiedLambertProjectionArray
+     */
+    static QString ClassName();
+
+    int getClassVersion() const override;
 
     ~ModifiedLambertProjectionArray() override;
 
@@ -65,18 +81,34 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param xdmfTypeName
      * @param precision
      */
-    void getXdmfTypeAndSize(QString& xdmfTypeName, int& precision) override;
+    void getXdmfTypeAndSize(QString& xdmfTypeName, int& precision) const override;
 
     /**
      * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    QString getTypeAsString() override;
+    QString getTypeAsString() const override;
 
-    SIMPL_INSTANCE_PROPERTY(int, Phase)
+    /**
+     * @brief Setter property for Phase
+     */
+    void setPhase(int value);
+    /**
+     * @brief Getter property for Phase
+     * @return Value of Phase
+     */
+    int getPhase() const;
 
-    SIMPL_INSTANCE_PROPERTY(QVector<ModifiedLambertProjection::Pointer>, ModifiedLambertProjectionArray)
+    /**
+     * @brief Setter property for ModifiedLambertProjectionArray
+     */
+    void setModifiedLambertProjectionArray(const QVector<ModifiedLambertProjection::Pointer>& value);
+    /**
+     * @brief Getter property for ModifiedLambertProjectionArray
+     * @return Value of ModifiedLambertProjectionArray
+     */
+    QVector<ModifiedLambertProjection::Pointer> getModifiedLambertProjectionArray() const;
 
     /**
      * @brief createNewArray
@@ -87,7 +119,7 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param allocate
      * @return
      */
-    IDataArray::Pointer createNewArray(size_t numElements, int rank, const size_t* dims, const QString& name, bool allocate = true) override;
+    IDataArrayShPtrType createNewArray(size_t numElements, int rank, const size_t* dims, const QString& name, bool allocate = true) const override;
 
     /**
      * @brief createNewArray
@@ -97,12 +129,12 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param allocate
      * @return
      */
-    IDataArray::Pointer createNewArray(size_t numElements, const std::vector<size_t>& dims, const QString& name, bool allocate = true) override;
+    IDataArrayShPtrType createNewArray(size_t numElements, const std::vector<size_t>& dims, const QString& name, bool allocate = true) const override;
 
     /**
-     * @brief
-     */
-    bool isAllocated() override;
+    * @brief
+    */
+    bool isAllocated() const override;
 
     /**
      * @brief clearAll
@@ -149,7 +181,7 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @brief getName
      * @return
      */
-    QString getName();
+    QString getName() const;
 
     /**
      * @brief Makes this class responsible for freeing the memory.
@@ -175,13 +207,13 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
     /**
      * @brief Returns the number of Tuples in the array.
      */
-    size_t getNumberOfTuples() override;
+    size_t getNumberOfTuples() const override;
 
     /**
      * @brief Return the number of elements in the array
      * @return
      */
-    size_t getSize() override;
+    size_t getSize() const override;
 
     /**
      * @brief SetNumberOfComponents
@@ -193,13 +225,13 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @brief getNumberOfComponents
      * @return
      */
-    int getNumberOfComponents() override;
+    int getNumberOfComponents() const override;
 
     /**
      * @brief getComponentDimensions
      * @return
      */
-    std::vector<size_t> getComponentDimensions() override;
+    std::vector<size_t> getComponentDimensions() const override;
 
     /**
      * @brief SetRank
@@ -211,7 +243,7 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @brief getRank
      * @return
      */
-    virtual int getRank();
+    virtual int getRank() const;
 
     /**
      * @brief Returns the number of bytes that make up the data type.
@@ -220,7 +252,7 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * 4 = 32 bit integer/Float
      * 8 = 64 bit integer/Double
      */
-    size_t getTypeSize() override;
+    size_t getTypeSize() const override;
 
     /**
      * @brief Removes Tuples from the Array. If the size of the vector is Zero nothing is done. If the size of the
@@ -263,7 +295,7 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param sourceArray
      * @return
      */
-    bool copyFromArray(size_t destTupleOffset, IDataArray::Pointer sourceArray, size_t srcTupleOffset, size_t totalSrcTuples) override;
+    bool copyFromArray(size_t destTupleOffset, IDataArrayShPtrType sourceArray, size_t srcTupleOffset, size_t totalSrcTuples) override;
 
     /**
      * @brief Splats the same value c across all values in the Tuple
@@ -281,7 +313,7 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @brief deepCopy
      * @return
      */
-    IDataArray::Pointer deepCopy(bool forceNoAllocate = false) override;
+    IDataArrayShPtrType deepCopy(bool forceNoAllocate = false) const override;
 
     /**
      * @brief Reseizes the internal array
@@ -302,7 +334,7 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param i
      * @param delimiter
      */
-    void printTuple(QTextStream& out, size_t i, char delimiter = ',') override;
+    void printTuple(QTextStream& out, size_t i, char delimiter = ',') const override;
 
     /**
      * @brief printComponent
@@ -310,14 +342,14 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param i
      * @param j
      */
-    void printComponent(QTextStream& out, size_t i, int j) override;
+    void printComponent(QTextStream& out, size_t i, int j) const override;
 
     /**
      *
      * @param parentId
      * @return
      */
-    int writeH5Data(hid_t parentId, std::vector<size_t> tDims) override;
+    int writeH5Data(hid_t parentId, std::vector<size_t> tDims) const override;
 
     /**
      * @brief readH5Data
@@ -334,19 +366,22 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param groupPath
      * @return
      */
-    int writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName, const QString& groupPath, const QString& labelb) override;
+    int writeXdmfAttribute(QTextStream& out, int64_t* volDims, const QString& hdfFileName, const QString& groupPath, const QString& labelb) const override;
 
     /**
      * @brief getInfoString
      * @return Returns a formatted string that contains general infomation about
      * the instance of the object.
      */
-    QString getInfoString(SIMPL::InfoStringFormat format) override;
+    QString getInfoString(SIMPL::InfoStringFormat format) const override;
 
   protected:
     ModifiedLambertProjectionArray();
 
   private:
+    int m_Phase = {};
+    QVector<ModifiedLambertProjection::Pointer> m_ModifiedLambertProjectionArray = {};
+
     QString m_Name;
     bool m_IsAllocated;
 

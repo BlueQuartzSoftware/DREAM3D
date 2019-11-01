@@ -56,7 +56,7 @@ public:
     ColumnCount
   };
 
-  SGODFTableModel(QObject* parent = 0);
+  SGODFTableModel(QObject* parent = nullptr);
   virtual ~SGODFTableModel();
 
   /**

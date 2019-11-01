@@ -33,9 +33,13 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindTriangleGeomSizes.h"
 
 #include <set>
+
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
 
@@ -46,6 +50,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -247,19 +252,19 @@ AbstractFilter::Pointer FindTriangleGeomSizes::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomSizes::getCompiledLibraryName() const
+QString FindTriangleGeomSizes::getCompiledLibraryName() const
 { return SurfaceMeshingConstants::SurfaceMeshingBaseName; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomSizes::getBrandingString() const
+QString FindTriangleGeomSizes::getBrandingString() const
 { return "SurfaceMeshing"; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomSizes::getFilterVersion() const
+QString FindTriangleGeomSizes::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -270,13 +275,13 @@ const QString FindTriangleGeomSizes::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomSizes::getGroupName() const
+QString FindTriangleGeomSizes::getGroupName() const
 { return SIMPL::FilterGroups::StatisticsFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindTriangleGeomSizes::getUuid()
+QUuid FindTriangleGeomSizes::getUuid() const
 {
   return QUuid("{9157ef1c-7cbc-5840-b6e7-26089c0b0f88}");
 }
@@ -284,12 +289,76 @@ const QUuid FindTriangleGeomSizes::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomSizes::getSubGroupName() const
+QString FindTriangleGeomSizes::getSubGroupName() const
 { return SIMPL::FilterSubGroups::MorphologicalFilters; }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTriangleGeomSizes::getHumanLabel() const
+QString FindTriangleGeomSizes::getHumanLabel() const
 { return "Find Feature Volumes from Triangle Geometry"; }
 
+// -----------------------------------------------------------------------------
+FindTriangleGeomSizes::Pointer FindTriangleGeomSizes::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindTriangleGeomSizes> FindTriangleGeomSizes::New()
+{
+  struct make_shared_enabler : public FindTriangleGeomSizes
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindTriangleGeomSizes::getNameOfClass() const
+{
+  return QString("FindTriangleGeomSizes");
+}
+
+// -----------------------------------------------------------------------------
+QString FindTriangleGeomSizes::ClassName()
+{
+  return QString("FindTriangleGeomSizes");
+}
+
+// -----------------------------------------------------------------------------
+void FindTriangleGeomSizes::setFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_FaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindTriangleGeomSizes::getFaceLabelsArrayPath() const
+{
+  return m_FaceLabelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindTriangleGeomSizes::setFeatureAttributeMatrixName(const DataArrayPath& value)
+{
+  m_FeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindTriangleGeomSizes::getFeatureAttributeMatrixName() const
+{
+  return m_FeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void FindTriangleGeomSizes::setVolumesArrayName(const QString& value)
+{
+  m_VolumesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindTriangleGeomSizes::getVolumesArrayName() const
+{
+  return m_VolumesArrayName;
+}

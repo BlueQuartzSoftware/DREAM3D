@@ -33,6 +33,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "GenerateFaceMisorientationColoring.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -41,13 +43,17 @@
 #include <tbb/partitioner.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationLib/LaueOps/CubicLowOps.h"
 #include "OrientationLib/LaueOps/CubicOps.h"
@@ -378,7 +384,7 @@ AbstractFilter::Pointer GenerateFaceMisorientationColoring::newFilterInstance(bo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceMisorientationColoring::getCompiledLibraryName() const
+QString GenerateFaceMisorientationColoring::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -386,7 +392,7 @@ const QString GenerateFaceMisorientationColoring::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceMisorientationColoring::getBrandingString() const
+QString GenerateFaceMisorientationColoring::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -394,7 +400,7 @@ const QString GenerateFaceMisorientationColoring::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceMisorientationColoring::getFilterVersion() const
+QString GenerateFaceMisorientationColoring::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -404,7 +410,7 @@ const QString GenerateFaceMisorientationColoring::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceMisorientationColoring::getGroupName() const
+QString GenerateFaceMisorientationColoring::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -412,7 +418,7 @@ const QString GenerateFaceMisorientationColoring::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid GenerateFaceMisorientationColoring::getUuid()
+QUuid GenerateFaceMisorientationColoring::getUuid() const
 {
   return QUuid("{7cd30864-7bcf-5c10-aea7-d107373e2d40}");
 }
@@ -420,7 +426,7 @@ const QUuid GenerateFaceMisorientationColoring::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceMisorientationColoring::getSubGroupName() const
+QString GenerateFaceMisorientationColoring::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -428,7 +434,96 @@ const QString GenerateFaceMisorientationColoring::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceMisorientationColoring::getHumanLabel() const
+QString GenerateFaceMisorientationColoring::getHumanLabel() const
 {
   return "Generate Misorientation Colors (Face)";
+}
+
+// -----------------------------------------------------------------------------
+GenerateFaceMisorientationColoring::Pointer GenerateFaceMisorientationColoring::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<GenerateFaceMisorientationColoring> GenerateFaceMisorientationColoring::New()
+{
+  struct make_shared_enabler : public GenerateFaceMisorientationColoring
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateFaceMisorientationColoring::getNameOfClass() const
+{
+  return QString("GenerateFaceMisorientationColoring");
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateFaceMisorientationColoring::ClassName()
+{
+  return QString("GenerateFaceMisorientationColoring");
+}
+
+// -----------------------------------------------------------------------------
+void GenerateFaceMisorientationColoring::setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateFaceMisorientationColoring::getSurfaceMeshFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFaceLabelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateFaceMisorientationColoring::setAvgQuatsArrayPath(const DataArrayPath& value)
+{
+  m_AvgQuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateFaceMisorientationColoring::getAvgQuatsArrayPath() const
+{
+  return m_AvgQuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateFaceMisorientationColoring::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateFaceMisorientationColoring::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateFaceMisorientationColoring::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateFaceMisorientationColoring::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateFaceMisorientationColoring::setSurfaceMeshFaceMisorientationColorsArrayName(const QString& value)
+{
+  m_SurfaceMeshFaceMisorientationColorsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateFaceMisorientationColoring::getSurfaceMeshFaceMisorientationColorsArrayName() const
+{
+  return m_SurfaceMeshFaceMisorientationColorsArrayName;
 }

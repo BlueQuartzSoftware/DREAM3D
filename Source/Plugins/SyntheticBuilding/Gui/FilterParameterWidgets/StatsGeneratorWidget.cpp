@@ -60,6 +60,7 @@
 #include "SIMPLib/CoreFilters/DataContainerReader.h"
 #include "SIMPLib/CoreFilters/DataContainerWriter.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "SVWidgetsLib/Widgets/SVStyle.h"
 

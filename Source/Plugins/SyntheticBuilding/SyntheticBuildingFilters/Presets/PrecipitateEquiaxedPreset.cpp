@@ -199,3 +199,16 @@ unsigned int PrecipitateEquiaxedPreset::getDistributionType(const QString& distT
   }
   return SIMPL::DistributionType::UnknownDistributionType;
 }
+
+// -----------------------------------------------------------------------------
+PrecipitateEquiaxedPreset::Pointer PrecipitateEquiaxedPreset::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+PrecipitateEquiaxedPreset::Pointer PrecipitateEquiaxedPreset::New()
+{
+  Pointer sharedPtr(new(PrecipitateEquiaxedPreset));
+  return sharedPtr;
+}

@@ -63,7 +63,7 @@ public:
     ColumnCount
   };
 
-  SGPowerLawTableModel(QObject* parent = 0);
+  SGPowerLawTableModel(QObject* parent = nullptr);
   virtual ~SGPowerLawTableModel();
 
   Qt::ItemFlags flags(const QModelIndex& index) const;

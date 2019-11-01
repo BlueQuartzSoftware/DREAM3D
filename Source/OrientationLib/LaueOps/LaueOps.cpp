@@ -431,3 +431,21 @@ size_t LaueOps::getRandomSymmetryOperatorIndex(int numSymOps) const
   size_t symOp = distribution(generator); // Random remaining position.
   return symOp;
 }
+
+// -----------------------------------------------------------------------------
+LaueOps::Pointer LaueOps::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+QString LaueOps::getNameOfClass() const
+{
+  return QString("LaueOps");
+}
+
+// -----------------------------------------------------------------------------
+QString LaueOps::ClassName()
+{
+  return QString("LaueOps");
+}

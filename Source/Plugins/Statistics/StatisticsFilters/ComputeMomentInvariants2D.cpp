@@ -2,11 +2,16 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "ComputeMomentInvariants2D.h"
 
 #include <Eigen/Dense>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
@@ -14,6 +19,7 @@
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsFilters/util/MomentInvariants2D.h"
@@ -312,7 +318,7 @@ AbstractFilter::Pointer ComputeMomentInvariants2D::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeMomentInvariants2D::getCompiledLibraryName() const
+QString ComputeMomentInvariants2D::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -320,7 +326,7 @@ const QString ComputeMomentInvariants2D::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeMomentInvariants2D::getBrandingString() const
+QString ComputeMomentInvariants2D::getBrandingString() const
 {
   return "Statistics";
 }
@@ -328,7 +334,7 @@ const QString ComputeMomentInvariants2D::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeMomentInvariants2D::getFilterVersion() const
+QString ComputeMomentInvariants2D::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -339,7 +345,7 @@ const QString ComputeMomentInvariants2D::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeMomentInvariants2D::getGroupName() const
+QString ComputeMomentInvariants2D::getGroupName() const
 {
   return SIMPL::FilterGroups::Unsupported;
 }
@@ -347,7 +353,7 @@ const QString ComputeMomentInvariants2D::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ComputeMomentInvariants2D::getUuid()
+QUuid ComputeMomentInvariants2D::getUuid() const
 {
   return QUuid("{27a132b2-a592-519a-8cb7-38599a7f28ec}");
 }
@@ -355,7 +361,7 @@ const QUuid ComputeMomentInvariants2D::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeMomentInvariants2D::getSubGroupName() const
+QString ComputeMomentInvariants2D::getSubGroupName() const
 {
   return "Statistics";
 }
@@ -363,7 +369,120 @@ const QString ComputeMomentInvariants2D::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ComputeMomentInvariants2D::getHumanLabel() const
+QString ComputeMomentInvariants2D::getHumanLabel() const
 {
   return "Compute MomentInvariants (2D)";
+}
+
+// -----------------------------------------------------------------------------
+ComputeMomentInvariants2D::Pointer ComputeMomentInvariants2D::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ComputeMomentInvariants2D> ComputeMomentInvariants2D::New()
+{
+  struct make_shared_enabler : public ComputeMomentInvariants2D
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ComputeMomentInvariants2D::getNameOfClass() const
+{
+  return QString("ComputeMomentInvariants2D");
+}
+
+// -----------------------------------------------------------------------------
+QString ComputeMomentInvariants2D::ClassName()
+{
+  return QString("ComputeMomentInvariants2D");
+}
+
+// -----------------------------------------------------------------------------
+void ComputeMomentInvariants2D::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ComputeMomentInvariants2D::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ComputeMomentInvariants2D::setFeatureRectArrayPath(const DataArrayPath& value)
+{
+  m_FeatureRectArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ComputeMomentInvariants2D::getFeatureRectArrayPath() const
+{
+  return m_FeatureRectArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ComputeMomentInvariants2D::setNormalizeMomentInvariants(bool value)
+{
+  m_NormalizeMomentInvariants = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ComputeMomentInvariants2D::getNormalizeMomentInvariants() const
+{
+  return m_NormalizeMomentInvariants;
+}
+
+// -----------------------------------------------------------------------------
+void ComputeMomentInvariants2D::setOmega1ArrayPath(const DataArrayPath& value)
+{
+  m_Omega1ArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ComputeMomentInvariants2D::getOmega1ArrayPath() const
+{
+  return m_Omega1ArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ComputeMomentInvariants2D::setOmega2ArrayPath(const DataArrayPath& value)
+{
+  m_Omega2ArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ComputeMomentInvariants2D::getOmega2ArrayPath() const
+{
+  return m_Omega2ArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ComputeMomentInvariants2D::setSaveCentralMoments(bool value)
+{
+  m_SaveCentralMoments = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ComputeMomentInvariants2D::getSaveCentralMoments() const
+{
+  return m_SaveCentralMoments;
+}
+
+// -----------------------------------------------------------------------------
+void ComputeMomentInvariants2D::setCentralMomentsArrayPath(const DataArrayPath& value)
+{
+  m_CentralMomentsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ComputeMomentInvariants2D::getCentralMomentsArrayPath() const
+{
+  return m_CentralMomentsArrayPath;
 }

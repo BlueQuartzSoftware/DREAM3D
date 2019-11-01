@@ -33,6 +33,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "AvizoUniformCoordinateWriter.h"
 
 #include <QtCore/QDateTime>
@@ -43,7 +45,12 @@
 #include "ImportExport/ImportExportConstants.h"
 #include "ImportExport/ImportExportVersion.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
@@ -298,7 +305,7 @@ AbstractFilter::Pointer AvizoUniformCoordinateWriter::newFilterInstance(bool cop
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AvizoUniformCoordinateWriter::getCompiledLibraryName() const
+QString AvizoUniformCoordinateWriter::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -306,7 +313,7 @@ const QString AvizoUniformCoordinateWriter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AvizoUniformCoordinateWriter::getBrandingString() const
+QString AvizoUniformCoordinateWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -314,7 +321,7 @@ const QString AvizoUniformCoordinateWriter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AvizoUniformCoordinateWriter::getFilterVersion() const
+QString AvizoUniformCoordinateWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -325,7 +332,7 @@ const QString AvizoUniformCoordinateWriter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AvizoUniformCoordinateWriter::getGroupName() const
+QString AvizoUniformCoordinateWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -333,7 +340,7 @@ const QString AvizoUniformCoordinateWriter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid AvizoUniformCoordinateWriter::getUuid()
+QUuid AvizoUniformCoordinateWriter::getUuid() const
 {
   return QUuid("{339f1349-9236-5023-9a56-c82fb8eafd12}");
 }
@@ -341,7 +348,7 @@ const QUuid AvizoUniformCoordinateWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AvizoUniformCoordinateWriter::getSubGroupName() const
+QString AvizoUniformCoordinateWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -349,7 +356,96 @@ const QString AvizoUniformCoordinateWriter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AvizoUniformCoordinateWriter::getHumanLabel() const
+QString AvizoUniformCoordinateWriter::getHumanLabel() const
 {
   return "Avizo Uniform Coordinate Exporter";
+}
+
+// -----------------------------------------------------------------------------
+AvizoUniformCoordinateWriter::Pointer AvizoUniformCoordinateWriter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<AvizoUniformCoordinateWriter> AvizoUniformCoordinateWriter::New()
+{
+  struct make_shared_enabler : public AvizoUniformCoordinateWriter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString AvizoUniformCoordinateWriter::getNameOfClass() const
+{
+  return QString("AvizoUniformCoordinateWriter");
+}
+
+// -----------------------------------------------------------------------------
+QString AvizoUniformCoordinateWriter::ClassName()
+{
+  return QString("AvizoUniformCoordinateWriter");
+}
+
+// -----------------------------------------------------------------------------
+void AvizoUniformCoordinateWriter::setOutputFile(const QString& value)
+{
+  m_OutputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString AvizoUniformCoordinateWriter::getOutputFile() const
+{
+  return m_OutputFile;
+}
+
+// -----------------------------------------------------------------------------
+void AvizoUniformCoordinateWriter::setWriteBinaryFile(bool value)
+{
+  m_WriteBinaryFile = value;
+}
+
+// -----------------------------------------------------------------------------
+bool AvizoUniformCoordinateWriter::getWriteBinaryFile() const
+{
+  return m_WriteBinaryFile;
+}
+
+// -----------------------------------------------------------------------------
+void AvizoUniformCoordinateWriter::setUnits(const QString& value)
+{
+  m_Units = value;
+}
+
+// -----------------------------------------------------------------------------
+QString AvizoUniformCoordinateWriter::getUnits() const
+{
+  return m_Units;
+}
+
+// -----------------------------------------------------------------------------
+void AvizoUniformCoordinateWriter::setWriteFeatureIds(bool value)
+{
+  m_WriteFeatureIds = value;
+}
+
+// -----------------------------------------------------------------------------
+bool AvizoUniformCoordinateWriter::getWriteFeatureIds() const
+{
+  return m_WriteFeatureIds;
+}
+
+// -----------------------------------------------------------------------------
+void AvizoUniformCoordinateWriter::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AvizoUniformCoordinateWriter::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
 }

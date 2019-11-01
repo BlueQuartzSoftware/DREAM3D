@@ -33,13 +33,20 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "ExtractFlaggedFeatures.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingFilters/CropImageGeometry.h"
@@ -264,7 +271,7 @@ AbstractFilter::Pointer ExtractFlaggedFeatures::newFilterInstance(bool copyFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractFlaggedFeatures::getCompiledLibraryName() const
+QString ExtractFlaggedFeatures::getCompiledLibraryName() const
 {
   return SamplingConstants::SamplingBaseName;
 }
@@ -272,7 +279,7 @@ const QString ExtractFlaggedFeatures::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractFlaggedFeatures::getBrandingString() const
+QString ExtractFlaggedFeatures::getBrandingString() const
 {
   return "Sampling";
 }
@@ -280,7 +287,7 @@ const QString ExtractFlaggedFeatures::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractFlaggedFeatures::getFilterVersion() const
+QString ExtractFlaggedFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -291,7 +298,7 @@ const QString ExtractFlaggedFeatures::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractFlaggedFeatures::getGroupName() const
+QString ExtractFlaggedFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::SamplingFilters;
 }
@@ -299,7 +306,7 @@ const QString ExtractFlaggedFeatures::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ExtractFlaggedFeatures::getUuid()
+QUuid ExtractFlaggedFeatures::getUuid() const
 {
   return QUuid("{e0555de5-bdc6-5bea-ba2f-aacfbec0a022}");
 }
@@ -307,7 +314,7 @@ const QUuid ExtractFlaggedFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractFlaggedFeatures::getSubGroupName() const
+QString ExtractFlaggedFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CropCutFilters;
 }
@@ -315,7 +322,60 @@ const QString ExtractFlaggedFeatures::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ExtractFlaggedFeatures::getHumanLabel() const
+QString ExtractFlaggedFeatures::getHumanLabel() const
 {
   return "Extract Flagged Features (Rogues Gallery)";
+}
+
+// -----------------------------------------------------------------------------
+ExtractFlaggedFeatures::Pointer ExtractFlaggedFeatures::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ExtractFlaggedFeatures> ExtractFlaggedFeatures::New()
+{
+  struct make_shared_enabler : public ExtractFlaggedFeatures
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ExtractFlaggedFeatures::getNameOfClass() const
+{
+  return QString("ExtractFlaggedFeatures");
+}
+
+// -----------------------------------------------------------------------------
+QString ExtractFlaggedFeatures::ClassName()
+{
+  return QString("ExtractFlaggedFeatures");
+}
+
+// -----------------------------------------------------------------------------
+void ExtractFlaggedFeatures::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ExtractFlaggedFeatures::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ExtractFlaggedFeatures::setFlaggedFeaturesArrayPath(const DataArrayPath& value)
+{
+  m_FlaggedFeaturesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ExtractFlaggedFeatures::getFlaggedFeaturesArrayPath() const
+{
+  return m_FlaggedFeaturesArrayPath;
 }

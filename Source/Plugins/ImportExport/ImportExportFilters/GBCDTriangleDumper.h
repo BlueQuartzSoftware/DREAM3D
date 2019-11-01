@@ -35,7 +35,9 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
@@ -47,52 +49,131 @@
 class ImportExport_EXPORT GBCDTriangleDumper : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(GBCDTriangleDumper SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(GBCDTriangleDumper)
+  PYB11_FILTER_NEW_MACRO(GBCDTriangleDumper)
+  PYB11_FILTER_PARAMETER(QString, OutputFile)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceAreasArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
   PYB11_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceAreasArrayPath READ getSurfaceMeshFaceAreasArrayPath WRITE setSurfaceMeshFaceAreasArrayPath)
   PYB11_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(GBCDTriangleDumper)
-  SIMPL_FILTER_NEW_MACRO(GBCDTriangleDumper)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GBCDTriangleDumper, AbstractFilter)
+  using Self = GBCDTriangleDumper;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for GBCDTriangleDumper
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for GBCDTriangleDumper
+   */
+  static QString ClassName();
 
   ~GBCDTriangleDumper() override;
 
-  SIMPL_FILTER_PARAMETER(QString, OutputFile)
+  /**
+   * @brief Setter property for OutputFile
+   */
+  void setOutputFile(const QString& value);
+  /**
+   * @brief Getter property for OutputFile
+   * @return Value of OutputFile
+   */
+  QString getOutputFile() const;
+
   Q_PROPERTY(QString OutputFile READ getOutputFile WRITE setOutputFile)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceLabelsArrayPath
+   */
+  void setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceLabelsArrayPath
+   * @return Value of SurfaceMeshFaceLabelsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceNormalsArrayPath
+   */
+  void setSurfaceMeshFaceNormalsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceNormalsArrayPath
+   * @return Value of SurfaceMeshFaceNormalsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceNormalsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceAreasArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceAreasArrayPath
+   */
+  void setSurfaceMeshFaceAreasArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceAreasArrayPath
+   * @return Value of SurfaceMeshFaceAreasArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceAreasArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceAreasArrayPath READ getSurfaceMeshFaceAreasArrayPath WRITE setSurfaceMeshFaceAreasArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
+  /**
+   * @brief Setter property for FeatureEulerAnglesArrayPath
+   */
+  void setFeatureEulerAnglesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureEulerAnglesArrayPath
+   * @return Value of FeatureEulerAnglesArrayPath
+   */
+  DataArrayPath getFeatureEulerAnglesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
    */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -102,23 +183,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -177,10 +258,20 @@ protected:
   void dataCheckVoxel();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceAreas)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
-  DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshFaceAreasPtr;
+  double* m_SurfaceMeshFaceAreas = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFaceLabelsPtr;
+  int32_t* m_SurfaceMeshFaceLabels = nullptr;
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshFaceNormalsPtr;
+  double* m_SurfaceMeshFaceNormals = nullptr;
+  std::weak_ptr<DataArray<float>> m_FeatureEulerAnglesPtr;
+  float* m_FeatureEulerAngles = nullptr;
+
+  QString m_OutputFile = {};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
+  DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {};
+  DataArrayPath m_SurfaceMeshFaceAreasArrayPath = {};
+  DataArrayPath m_FeatureEulerAnglesArrayPath = {};
 
 public:
   GBCDTriangleDumper(const GBCDTriangleDumper&) = delete;            // Copy Constructor Not Implemented

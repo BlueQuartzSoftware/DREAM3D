@@ -33,6 +33,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "VASPReader.h"
 
 #include <QtCore/QtDebug>
@@ -40,7 +42,12 @@
 
 #include <QtCore/QFileInfo>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/DataContainerCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -430,7 +437,7 @@ AbstractFilter::Pointer VASPReader::newFilterInstance(bool copyFilterParameters)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VASPReader::getCompiledLibraryName() const
+QString VASPReader::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -438,7 +445,7 @@ const QString VASPReader::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VASPReader::getBrandingString() const
+QString VASPReader::getBrandingString() const
 {
   return "IO";
 }
@@ -446,7 +453,7 @@ const QString VASPReader::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VASPReader::getFilterVersion() const
+QString VASPReader::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -457,7 +464,7 @@ const QString VASPReader::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VASPReader::getGroupName() const
+QString VASPReader::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -465,7 +472,7 @@ const QString VASPReader::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid VASPReader::getUuid()
+QUuid VASPReader::getUuid() const
 {
   return QUuid("{24ed1c49-8cd3-5370-b1b2-6035b33a35ee}");
 }
@@ -473,7 +480,7 @@ const QUuid VASPReader::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VASPReader::getSubGroupName() const
+QString VASPReader::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -481,7 +488,96 @@ const QString VASPReader::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VASPReader::getHumanLabel() const
+QString VASPReader::getHumanLabel() const
 {
   return "Import VASP File";
+}
+
+// -----------------------------------------------------------------------------
+VASPReader::Pointer VASPReader::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<VASPReader> VASPReader::New()
+{
+  struct make_shared_enabler : public VASPReader
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString VASPReader::getNameOfClass() const
+{
+  return QString("VASPReader");
+}
+
+// -----------------------------------------------------------------------------
+QString VASPReader::ClassName()
+{
+  return QString("VASPReader");
+}
+
+// -----------------------------------------------------------------------------
+void VASPReader::setVertexDataContainerName(const DataArrayPath& value)
+{
+  m_VertexDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath VASPReader::getVertexDataContainerName() const
+{
+  return m_VertexDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void VASPReader::setVertexAttributeMatrixName(const QString& value)
+{
+  m_VertexAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VASPReader::getVertexAttributeMatrixName() const
+{
+  return m_VertexAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void VASPReader::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VASPReader::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void VASPReader::setAtomVelocitiesArrayName(const QString& value)
+{
+  m_AtomVelocitiesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VASPReader::getAtomVelocitiesArrayName() const
+{
+  return m_AtomVelocitiesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void VASPReader::setAtomTypesArrayName(const QString& value)
+{
+  m_AtomTypesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VASPReader::getAtomTypesArrayName() const
+{
+  return m_AtomTypesArrayName;
 }

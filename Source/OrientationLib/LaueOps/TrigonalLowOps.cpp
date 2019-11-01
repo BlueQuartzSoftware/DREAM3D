@@ -33,6 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "TrigonalLowOps.h"
 
 #include <cmath>
@@ -1016,4 +1018,30 @@ SIMPL::Rgb TrigonalLowOps::generateMisorientationColor(const QuatType& q, const 
 
   return rgb;
 }
+
+// -----------------------------------------------------------------------------
+TrigonalLowOps::Pointer TrigonalLowOps::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+QString TrigonalLowOps::getNameOfClass() const
+{
+  return QString("TrigonalLowOps");
+}
+
+// -----------------------------------------------------------------------------
+QString TrigonalLowOps::ClassName()
+{
+  return QString("TrigonalLowOps");
+}
+
+// -----------------------------------------------------------------------------
+TrigonalLowOps::Pointer TrigonalLowOps::New()
+{
+  Pointer sharedPtr(new(TrigonalLowOps));
+  return sharedPtr;
+}
+
 

@@ -36,10 +36,11 @@
 
 #pragma once
 
+#include <memory>
+
 #include <vector>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/StatsData/StatsData.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
@@ -52,9 +53,22 @@
 class DistributionAnalysisOps
 {
   public:
-    SIMPL_SHARED_POINTERS(DistributionAnalysisOps)
-    SIMPL_TYPE_MACRO(DistributionAnalysisOps)
-//   SIMPL_STATIC_NEW_MACRO(DistributionAnalysisOps)
+    using Self = DistributionAnalysisOps;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    /**
+     * @brief Returns the name of the class for DistributionAnalysisOps
+     */
+    virtual QString getNameOfClass() const;
+    /**
+     * @brief Returns the name of the class for DistributionAnalysisOps
+     */
+    static QString ClassName();
+
     virtual ~DistributionAnalysisOps();
 
     virtual int calculateParameters(std::vector<float>& data, FloatArrayType::Pointer outputs) = 0;
@@ -71,6 +85,8 @@ class DistributionAnalysisOps
     DistributionAnalysisOps(DistributionAnalysisOps&&) = delete;      // Move Constructor Not Implemented
     DistributionAnalysisOps& operator=(const DistributionAnalysisOps&) = delete; // Copy Assignment Not Implemented
     DistributionAnalysisOps& operator=(DistributionAnalysisOps&&) = delete;      // Move Assignment Not Implemented
+
+  private:
 };
 
 

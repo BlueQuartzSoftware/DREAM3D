@@ -33,6 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "WriteStatsGenOdfAngleFile.h"
 
 #include <cstdio>
@@ -46,8 +48,10 @@
 #include <QtCore/QString>
 #include <QtCore/QString>
 
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -58,6 +62,7 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -412,7 +417,7 @@ AbstractFilter::Pointer WriteStatsGenOdfAngleFile::newFilterInstance(bool copyFi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteStatsGenOdfAngleFile::getCompiledLibraryName() const
+QString WriteStatsGenOdfAngleFile::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -420,7 +425,7 @@ const QString WriteStatsGenOdfAngleFile::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteStatsGenOdfAngleFile::getBrandingString() const
+QString WriteStatsGenOdfAngleFile::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -428,7 +433,7 @@ const QString WriteStatsGenOdfAngleFile::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteStatsGenOdfAngleFile::getFilterVersion() const
+QString WriteStatsGenOdfAngleFile::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -439,7 +444,7 @@ const QString WriteStatsGenOdfAngleFile::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteStatsGenOdfAngleFile::getGroupName() const
+QString WriteStatsGenOdfAngleFile::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -447,7 +452,7 @@ const QString WriteStatsGenOdfAngleFile::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid WriteStatsGenOdfAngleFile::getUuid()
+QUuid WriteStatsGenOdfAngleFile::getUuid() const
 {
   return QUuid("{a4952f40-22dd-54ec-8c38-69c3fcd0e6f7}");
 }
@@ -455,7 +460,7 @@ const QUuid WriteStatsGenOdfAngleFile::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteStatsGenOdfAngleFile::getSubGroupName() const
+QString WriteStatsGenOdfAngleFile::getSubGroupName() const
 {
   return "Output";
 }
@@ -463,7 +468,144 @@ const QString WriteStatsGenOdfAngleFile::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString WriteStatsGenOdfAngleFile::getHumanLabel() const
+QString WriteStatsGenOdfAngleFile::getHumanLabel() const
 {
   return "Export StatsGenerator ODF Angle File";
+}
+
+// -----------------------------------------------------------------------------
+WriteStatsGenOdfAngleFile::Pointer WriteStatsGenOdfAngleFile::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<WriteStatsGenOdfAngleFile> WriteStatsGenOdfAngleFile::New()
+{
+  struct make_shared_enabler : public WriteStatsGenOdfAngleFile
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString WriteStatsGenOdfAngleFile::getNameOfClass() const
+{
+  return QString("WriteStatsGenOdfAngleFile");
+}
+
+// -----------------------------------------------------------------------------
+QString WriteStatsGenOdfAngleFile::ClassName()
+{
+  return QString("WriteStatsGenOdfAngleFile");
+}
+
+// -----------------------------------------------------------------------------
+void WriteStatsGenOdfAngleFile::setOutputFile(const QString& value)
+{
+  m_OutputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString WriteStatsGenOdfAngleFile::getOutputFile() const
+{
+  return m_OutputFile;
+}
+
+// -----------------------------------------------------------------------------
+void WriteStatsGenOdfAngleFile::setWeight(float value)
+{
+  m_Weight = value;
+}
+
+// -----------------------------------------------------------------------------
+float WriteStatsGenOdfAngleFile::getWeight() const
+{
+  return m_Weight;
+}
+
+// -----------------------------------------------------------------------------
+void WriteStatsGenOdfAngleFile::setSigma(int value)
+{
+  m_Sigma = value;
+}
+
+// -----------------------------------------------------------------------------
+int WriteStatsGenOdfAngleFile::getSigma() const
+{
+  return m_Sigma;
+}
+
+// -----------------------------------------------------------------------------
+void WriteStatsGenOdfAngleFile::setDelimiter(int value)
+{
+  m_Delimiter = value;
+}
+
+// -----------------------------------------------------------------------------
+int WriteStatsGenOdfAngleFile::getDelimiter() const
+{
+  return m_Delimiter;
+}
+
+// -----------------------------------------------------------------------------
+void WriteStatsGenOdfAngleFile::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath WriteStatsGenOdfAngleFile::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void WriteStatsGenOdfAngleFile::setCellEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_CellEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath WriteStatsGenOdfAngleFile::getCellEulerAnglesArrayPath() const
+{
+  return m_CellEulerAnglesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void WriteStatsGenOdfAngleFile::setGoodVoxelsArrayPath(const DataArrayPath& value)
+{
+  m_GoodVoxelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath WriteStatsGenOdfAngleFile::getGoodVoxelsArrayPath() const
+{
+  return m_GoodVoxelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void WriteStatsGenOdfAngleFile::setConvertToDegrees(bool value)
+{
+  m_ConvertToDegrees = value;
+}
+
+// -----------------------------------------------------------------------------
+bool WriteStatsGenOdfAngleFile::getConvertToDegrees() const
+{
+  return m_ConvertToDegrees;
+}
+
+// -----------------------------------------------------------------------------
+void WriteStatsGenOdfAngleFile::setUseGoodVoxels(bool value)
+{
+  m_UseGoodVoxels = value;
+}
+
+// -----------------------------------------------------------------------------
+bool WriteStatsGenOdfAngleFile::getUseGoodVoxels() const
+{
+  return m_UseGoodVoxels;
 }

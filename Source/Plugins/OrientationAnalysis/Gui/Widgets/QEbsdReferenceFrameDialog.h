@@ -35,6 +35,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QString>
 
 class QGraphicsPixmapItem;
@@ -42,9 +44,13 @@ class DataArrayPath;
 
 #include "ui_QEbsdReferenceFrameDialog.h"
 
-#include "SIMPLib/DataArrays/IDataArray.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
+class DataContainerArray;
+
+class IDataArray;
+using IDataArrayShPtrType = std::shared_ptr<IDataArray>;
+
+using DataContainerArrayShPtrType = std::shared_ptr<DataContainerArray>;
 
 #include "SVWidgetsLib/Widgets/SVControlWidgets.h"
 
@@ -109,10 +115,10 @@ protected slots:
 protected:
   void setupGui();
 
-  int createIpfColors(DataContainerArray::Pointer dca, DataArrayPath cellPhasesArrayPath, DataArrayPath cellEulerAnglesArrayPath, DataArrayPath crystalStructuresArrayPath, QString& outputArrayName);
-  int createArrayColors(DataContainerArray::Pointer dca, DataArrayPath dataArrayPath, QString outputArrayName);
+  int createIpfColors(DataContainerArrayShPtrType dca, DataArrayPath cellPhasesArrayPath, DataArrayPath cellEulerAnglesArrayPath, DataArrayPath crystalStructuresArrayPath, QString& outputArrayName);
+  int createArrayColors(DataContainerArrayShPtrType dca, DataArrayPath dataArrayPath, QString outputArrayName);
 
-  void generateImageRGB(IDataArray::Pointer dataArray, size_t dims[3]);
+  void generateImageRGB(IDataArrayShPtrType dataArray, size_t dims[3]);
 
 private:
   QString m_EbsdFileName;

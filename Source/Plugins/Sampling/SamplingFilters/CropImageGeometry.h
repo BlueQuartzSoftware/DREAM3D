@@ -35,11 +35,13 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/FilterParameters/IntVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Sampling/SamplingDLLExport.h"
 
@@ -49,34 +51,103 @@
 class Sampling_EXPORT CropImageGeometry : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(CropImageGeometry SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
-    PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
-    PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
-    PYB11_PROPERTY(int XMin READ getXMin WRITE setXMin)
-    PYB11_PROPERTY(int YMin READ getYMin WRITE setYMin)
-    PYB11_PROPERTY(int ZMin READ getZMin WRITE setZMin)
-    PYB11_PROPERTY(int XMax READ getXMax WRITE setXMax)
-    PYB11_PROPERTY(int YMax READ getYMax WRITE setYMax)
-    PYB11_PROPERTY(int ZMax READ getZMax WRITE setZMax)
-    PYB11_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
-    PYB11_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
-    PYB11_PROPERTY(bool UpdateOrigin READ getUpdateOrigin WRITE setUpdateOrigin)
-    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(CropImageGeometry SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(CropImageGeometry)
+  PYB11_FILTER_NEW_MACRO(CropImageGeometry)
+  PYB11_FILTER_PARAMETER(DataArrayPath, NewDataContainerName)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
+  PYB11_FILTER_PARAMETER(int, XMin)
+  PYB11_FILTER_PARAMETER(int, YMin)
+  PYB11_FILTER_PARAMETER(int, ZMin)
+  PYB11_FILTER_PARAMETER(int, XMax)
+  PYB11_FILTER_PARAMETER(int, YMax)
+  PYB11_FILTER_PARAMETER(int, ZMax)
+  PYB11_FILTER_PARAMETER(bool, RenumberFeatures)
+  PYB11_FILTER_PARAMETER(bool, SaveAsNewDataContainer)
+  PYB11_FILTER_PARAMETER(bool, UpdateOrigin)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+  PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
+  PYB11_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
+  PYB11_PROPERTY(int XMin READ getXMin WRITE setXMin)
+  PYB11_PROPERTY(int YMin READ getYMin WRITE setYMin)
+  PYB11_PROPERTY(int ZMin READ getZMin WRITE setZMin)
+  PYB11_PROPERTY(int XMax READ getXMax WRITE setXMax)
+  PYB11_PROPERTY(int YMax READ getYMax WRITE setYMax)
+  PYB11_PROPERTY(int ZMax READ getZMax WRITE setZMax)
+  PYB11_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
+  PYB11_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
+  PYB11_PROPERTY(bool UpdateOrigin READ getUpdateOrigin WRITE setUpdateOrigin)
+  PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(CropImageGeometry)
-  SIMPL_FILTER_NEW_MACRO(CropImageGeometry)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CropImageGeometry, AbstractFilter)
+  using Self = CropImageGeometry;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for CropImageGeometry
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for CropImageGeometry
+   */
+  static QString ClassName();
 
   ~CropImageGeometry() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NewDataContainerName)
+  /**
+   * @brief Setter property for NewDataContainerName
+   */
+  void setNewDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NewDataContainerName
+   * @return Value of NewDataContainerName
+   */
+  DataArrayPath getNewDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
+  /**
+   * @brief Setter property for CellAttributeMatrixPath
+   */
+  void setCellAttributeMatrixPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixPath
+   * @return Value of CellAttributeMatrixPath
+   */
+  DataArrayPath getCellAttributeMatrixPath() const;
+
   Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellFeatureAttributeMatrixPath)
+  /**
+   * @brief Setter property for CellFeatureAttributeMatrixPath
+   */
+  void setCellFeatureAttributeMatrixPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellFeatureAttributeMatrixPath
+   * @return Value of CellFeatureAttributeMatrixPath
+   */
+  DataArrayPath getCellFeatureAttributeMatrixPath() const;
+
   Q_PROPERTY(DataArrayPath CellFeatureAttributeMatrixPath READ getCellFeatureAttributeMatrixPath WRITE setCellFeatureAttributeMatrixPath)
 
   IntVec3Type getCurrentVolumeDataContainerDimensions();
@@ -85,34 +156,124 @@ public:
   FloatVec3Type getCurrentVolumeDataContainerResolutions();
   Q_PROPERTY(FloatVec3Type CurrentVolumeDataContainerResolutions READ getCurrentVolumeDataContainerResolutions)
 
-  SIMPL_FILTER_PARAMETER(int, XMin)
+  /**
+   * @brief Setter property for XMin
+   */
+  void setXMin(int value);
+  /**
+   * @brief Getter property for XMin
+   * @return Value of XMin
+   */
+  int getXMin() const;
+
   Q_PROPERTY(int XMin READ getXMin WRITE setXMin)
 
-  SIMPL_FILTER_PARAMETER(int, YMin)
+  /**
+   * @brief Setter property for YMin
+   */
+  void setYMin(int value);
+  /**
+   * @brief Getter property for YMin
+   * @return Value of YMin
+   */
+  int getYMin() const;
+
   Q_PROPERTY(int YMin READ getYMin WRITE setYMin)
 
-  SIMPL_FILTER_PARAMETER(int, ZMin)
+  /**
+   * @brief Setter property for ZMin
+   */
+  void setZMin(int value);
+  /**
+   * @brief Getter property for ZMin
+   * @return Value of ZMin
+   */
+  int getZMin() const;
+
   Q_PROPERTY(int ZMin READ getZMin WRITE setZMin)
 
-  SIMPL_FILTER_PARAMETER(int, XMax)
+  /**
+   * @brief Setter property for XMax
+   */
+  void setXMax(int value);
+  /**
+   * @brief Getter property for XMax
+   * @return Value of XMax
+   */
+  int getXMax() const;
+
   Q_PROPERTY(int XMax READ getXMax WRITE setXMax)
 
-  SIMPL_FILTER_PARAMETER(int, YMax)
+  /**
+   * @brief Setter property for YMax
+   */
+  void setYMax(int value);
+  /**
+   * @brief Getter property for YMax
+   * @return Value of YMax
+   */
+  int getYMax() const;
+
   Q_PROPERTY(int YMax READ getYMax WRITE setYMax)
 
-  SIMPL_FILTER_PARAMETER(int, ZMax)
+  /**
+   * @brief Setter property for ZMax
+   */
+  void setZMax(int value);
+  /**
+   * @brief Getter property for ZMax
+   * @return Value of ZMax
+   */
+  int getZMax() const;
+
   Q_PROPERTY(int ZMax READ getZMax WRITE setZMax)
 
-  SIMPL_FILTER_PARAMETER(bool, RenumberFeatures)
+  /**
+   * @brief Setter property for RenumberFeatures
+   */
+  void setRenumberFeatures(bool value);
+  /**
+   * @brief Getter property for RenumberFeatures
+   * @return Value of RenumberFeatures
+   */
+  bool getRenumberFeatures() const;
+
   Q_PROPERTY(bool RenumberFeatures READ getRenumberFeatures WRITE setRenumberFeatures)
 
-  SIMPL_FILTER_PARAMETER(bool, SaveAsNewDataContainer)
+  /**
+   * @brief Setter property for SaveAsNewDataContainer
+   */
+  void setSaveAsNewDataContainer(bool value);
+  /**
+   * @brief Getter property for SaveAsNewDataContainer
+   * @return Value of SaveAsNewDataContainer
+   */
+  bool getSaveAsNewDataContainer() const;
+
   Q_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
 
-  SIMPL_FILTER_PARAMETER(bool, UpdateOrigin)
+  /**
+   * @brief Setter property for UpdateOrigin
+   */
+  void setUpdateOrigin(bool value);
+  /**
+   * @brief Getter property for UpdateOrigin
+   * @return Value of UpdateOrigin
+   */
+  bool getUpdateOrigin() const;
+
   Q_PROPERTY(bool UpdateOrigin READ getUpdateOrigin WRITE setUpdateOrigin)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
   QString getOldBoxDimensions();
@@ -124,21 +285,21 @@ public:
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -148,23 +309,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -223,7 +384,22 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+
+  DataArrayPath m_NewDataContainerName = {};
+  DataArrayPath m_CellAttributeMatrixPath = {};
+  DataArrayPath m_CellFeatureAttributeMatrixPath = {};
+  int m_XMin = {};
+  int m_YMin = {};
+  int m_ZMin = {};
+  int m_XMax = {};
+  int m_YMax = {};
+  int m_ZMax = {};
+  bool m_RenumberFeatures = {};
+  bool m_SaveAsNewDataContainer = {};
+  bool m_UpdateOrigin = {};
+  DataArrayPath m_FeatureIdsArrayPath = {};
 
   IntVec3Type m_OldDimensions;
   FloatVec3Type m_OldResolution;

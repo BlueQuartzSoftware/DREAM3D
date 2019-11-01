@@ -35,12 +35,14 @@
 
 #pragma once
 
-#include "SIMPLib/Common/EnsembleInfo.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Common/EnsembleInfo.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "SIMPLib/DataArrays/StringDataArray.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -50,56 +52,145 @@
 class OrientationAnalysis_EXPORT CreateEnsembleInfo : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(CreateEnsembleInfo SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
-    PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
-    PYB11_PROPERTY(EnsembleInfo Ensemble READ getEnsemble WRITE setEnsemble)
-    PYB11_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
-    PYB11_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
-    PYB11_PROPERTY(QString PhaseNamesArrayName READ getPhaseNamesArrayName WRITE setPhaseNamesArrayName)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(CreateEnsembleInfo SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(CreateEnsembleInfo)
+  PYB11_FILTER_NEW_MACRO(CreateEnsembleInfo)
+  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  PYB11_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(EnsembleInfo, Ensemble)
+  PYB11_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
+  PYB11_FILTER_PARAMETER(QString, PhaseTypesArrayName)
+  PYB11_FILTER_PARAMETER(QString, PhaseNamesArrayName)
+  PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+  PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
+  PYB11_PROPERTY(EnsembleInfo Ensemble READ getEnsemble WRITE setEnsemble)
+  PYB11_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
+  PYB11_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
+  PYB11_PROPERTY(QString PhaseNamesArrayName READ getPhaseNamesArrayName WRITE setPhaseNamesArrayName)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(CreateEnsembleInfo)
-  SIMPL_FILTER_NEW_MACRO(CreateEnsembleInfo)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CreateEnsembleInfo, AbstractFilter)
+  using Self = CreateEnsembleInfo;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for CreateEnsembleInfo
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for CreateEnsembleInfo
+   */
+  static QString ClassName();
 
   ~CreateEnsembleInfo() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+  /**
+   * @brief Setter property for DataContainerName
+   */
+  void setDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for DataContainerName
+   * @return Value of DataContainerName
+   */
+  DataArrayPath getDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+  /**
+   * @brief Setter property for CellEnsembleAttributeMatrixName
+   */
+  void setCellEnsembleAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for CellEnsembleAttributeMatrixName
+   * @return Value of CellEnsembleAttributeMatrixName
+   */
+  QString getCellEnsembleAttributeMatrixName() const;
+
   Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(EnsembleInfo, Ensemble)
+  /**
+   * @brief Setter property for Ensemble
+   */
+  void setEnsemble(const EnsembleInfo& value);
+  /**
+   * @brief Getter property for Ensemble
+   * @return Value of Ensemble
+   */
+  EnsembleInfo getEnsemble() const;
+
   Q_PROPERTY(EnsembleInfo Ensemble READ getEnsemble WRITE setEnsemble)
 
-  SIMPL_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
+  /**
+   * @brief Setter property for CrystalStructuresArrayName
+   */
+  void setCrystalStructuresArrayName(const QString& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayName
+   * @return Value of CrystalStructuresArrayName
+   */
+  QString getCrystalStructuresArrayName() const;
+
   Q_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, PhaseTypesArrayName)
+  /**
+   * @brief Setter property for PhaseTypesArrayName
+   */
+  void setPhaseTypesArrayName(const QString& value);
+  /**
+   * @brief Getter property for PhaseTypesArrayName
+   * @return Value of PhaseTypesArrayName
+   */
+  QString getPhaseTypesArrayName() const;
+
   Q_PROPERTY(QString PhaseTypesArrayName READ getPhaseTypesArrayName WRITE setPhaseTypesArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, PhaseNamesArrayName)
+  /**
+   * @brief Setter property for PhaseNamesArrayName
+   */
+  void setPhaseNamesArrayName(const QString& value);
+  /**
+   * @brief Getter property for PhaseNamesArrayName
+   * @return Value of PhaseNamesArrayName
+   */
+  QString getPhaseNamesArrayName() const;
+
   Q_PROPERTY(QString PhaseNamesArrayName READ getPhaseNamesArrayName WRITE setPhaseNamesArrayName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -109,23 +200,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -183,13 +274,23 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-  DEFINE_DATAARRAY_VARIABLE(PhaseType::EnumType, PhaseTypes)
-  DEFINE_STRINGARRAY_VARIABLE(PhaseNames)
+  std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
+  uint32_t* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<PhaseType::EnumType>> m_PhaseTypesPtr;
+  PhaseType::EnumType* m_PhaseTypes = nullptr;
+
+  DataArrayPath m_DataContainerName = {};
+  QString m_CellEnsembleAttributeMatrixName = {};
+  EnsembleInfo m_Ensemble = {};
+  QString m_CrystalStructuresArrayName = {};
+  QString m_PhaseTypesArrayName = {};
+  QString m_PhaseNamesArrayName = {};
+
+  StringDataArray::WeakPointer m_PhaseNamesPtr;
 
 public:
-  CreateEnsembleInfo(const CreateEnsembleInfo&) = delete; // Copy Constructor Not Implemented
-  CreateEnsembleInfo(CreateEnsembleInfo&&) = delete;      // Move Constructor Not Implemented
+  CreateEnsembleInfo(const CreateEnsembleInfo&) = delete;            // Copy Constructor Not Implemented
+  CreateEnsembleInfo(CreateEnsembleInfo&&) = delete;                 // Move Constructor Not Implemented
   CreateEnsembleInfo& operator=(const CreateEnsembleInfo&) = delete; // Copy Assignment Not Implemented
   CreateEnsembleInfo& operator=(CreateEnsembleInfo&&) = delete;      // Move Assignment Not Implemented
 };

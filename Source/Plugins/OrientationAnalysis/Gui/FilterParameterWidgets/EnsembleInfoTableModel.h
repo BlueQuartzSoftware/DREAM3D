@@ -61,7 +61,7 @@ public:
     ColumnCount
   };
 
-  EnsembleInfoTableModel(bool showOperators, QObject* parent = 0);
+  EnsembleInfoTableModel(bool showOperators, QObject* parent = nullptr);
 
   virtual ~EnsembleInfoTableModel();
 

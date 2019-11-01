@@ -33,18 +33,21 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "BinaryNodesTrianglesReader.h"
 
 #include <QtCore/QString>
 #include <QtCore/QtDebug>
 #include <sstream>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/Geometry/MeshStructs.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "BinaryNodesTrianglesReader.h"
 
@@ -358,4 +361,117 @@ int BinaryNodesTrianglesReader::read()
   // The ScopedFileMonitor classes will take care of closing the files
 
   return getErrorCode();
+}
+
+// -----------------------------------------------------------------------------
+BinaryNodesTrianglesReader::Pointer BinaryNodesTrianglesReader::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<BinaryNodesTrianglesReader> BinaryNodesTrianglesReader::New()
+{
+  struct make_shared_enabler : public BinaryNodesTrianglesReader
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString BinaryNodesTrianglesReader::getNameOfClass() const
+{
+  return QString("BinaryNodesTrianglesReader");
+}
+
+// -----------------------------------------------------------------------------
+QString BinaryNodesTrianglesReader::ClassName()
+{
+  return QString("BinaryNodesTrianglesReader");
+}
+
+// -----------------------------------------------------------------------------
+void BinaryNodesTrianglesReader::setSurfaceDataContainerName(const QString& value)
+{
+  m_SurfaceDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString BinaryNodesTrianglesReader::getSurfaceDataContainerName() const
+{
+  return m_SurfaceDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void BinaryNodesTrianglesReader::setVertexAttributeMatrixName(const QString& value)
+{
+  m_VertexAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString BinaryNodesTrianglesReader::getVertexAttributeMatrixName() const
+{
+  return m_VertexAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void BinaryNodesTrianglesReader::setFaceAttributeMatrixName(const QString& value)
+{
+  m_FaceAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString BinaryNodesTrianglesReader::getFaceAttributeMatrixName() const
+{
+  return m_FaceAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void BinaryNodesTrianglesReader::setFaceLabelsArrayName(const QString& value)
+{
+  m_FaceLabelsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString BinaryNodesTrianglesReader::getFaceLabelsArrayName() const
+{
+  return m_FaceLabelsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void BinaryNodesTrianglesReader::setSurfaceMeshNodeTypesArrayName(const QString& value)
+{
+  m_SurfaceMeshNodeTypesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString BinaryNodesTrianglesReader::getSurfaceMeshNodeTypesArrayName() const
+{
+  return m_SurfaceMeshNodeTypesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void BinaryNodesTrianglesReader::setBinaryNodesFile(const QString& value)
+{
+  m_BinaryNodesFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString BinaryNodesTrianglesReader::getBinaryNodesFile() const
+{
+  return m_BinaryNodesFile;
+}
+
+// -----------------------------------------------------------------------------
+void BinaryNodesTrianglesReader::setBinaryTrianglesFile(const QString& value)
+{
+  m_BinaryTrianglesFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString BinaryNodesTrianglesReader::getBinaryTrianglesFile() const
+{
+  return m_BinaryTrianglesFile;
 }

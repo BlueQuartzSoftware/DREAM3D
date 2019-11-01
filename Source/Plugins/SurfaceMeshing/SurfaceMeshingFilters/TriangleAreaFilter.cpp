@@ -33,6 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "TriangleAreaFilter.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -42,11 +44,16 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Math/MatrixMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "SurfaceMeshing/SurfaceMeshingConstants.h"
 #include "SurfaceMeshing/SurfaceMeshingVersion.h"
@@ -254,7 +261,7 @@ AbstractFilter::Pointer TriangleAreaFilter::newFilterInstance(bool copyFilterPar
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleAreaFilter::getCompiledLibraryName() const
+QString TriangleAreaFilter::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -262,7 +269,7 @@ const QString TriangleAreaFilter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleAreaFilter::getBrandingString() const
+QString TriangleAreaFilter::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -270,7 +277,7 @@ const QString TriangleAreaFilter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleAreaFilter::getFilterVersion() const
+QString TriangleAreaFilter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -280,7 +287,7 @@ const QString TriangleAreaFilter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleAreaFilter::getGroupName() const
+QString TriangleAreaFilter::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -288,7 +295,7 @@ const QString TriangleAreaFilter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid TriangleAreaFilter::getUuid()
+QUuid TriangleAreaFilter::getUuid() const
 {
   return QUuid("{a9900cc3-169e-5a1b-bcf4-7569e1950d41}");
 }
@@ -296,7 +303,7 @@ const QUuid TriangleAreaFilter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleAreaFilter::getSubGroupName() const
+QString TriangleAreaFilter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MiscFilters;
 }
@@ -304,7 +311,48 @@ const QString TriangleAreaFilter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString TriangleAreaFilter::getHumanLabel() const
+QString TriangleAreaFilter::getHumanLabel() const
 {
   return "Generate Triangle Areas";
+}
+
+// -----------------------------------------------------------------------------
+TriangleAreaFilter::Pointer TriangleAreaFilter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<TriangleAreaFilter> TriangleAreaFilter::New()
+{
+  struct make_shared_enabler : public TriangleAreaFilter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString TriangleAreaFilter::getNameOfClass() const
+{
+  return QString("TriangleAreaFilter");
+}
+
+// -----------------------------------------------------------------------------
+QString TriangleAreaFilter::ClassName()
+{
+  return QString("TriangleAreaFilter");
+}
+
+// -----------------------------------------------------------------------------
+void TriangleAreaFilter::setSurfaceMeshTriangleAreasArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshTriangleAreasArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath TriangleAreaFilter::getSurfaceMeshTriangleAreasArrayPath() const
+{
+  return m_SurfaceMeshTriangleAreasArrayPath;
 }

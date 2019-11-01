@@ -33,11 +33,18 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "VisualizeGBCDGMT.h"
 
 #include <QtCore/QDir>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AxisAngleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -493,7 +500,7 @@ AbstractFilter::Pointer VisualizeGBCDGMT::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDGMT::getCompiledLibraryName() const
+QString VisualizeGBCDGMT::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -501,7 +508,7 @@ const QString VisualizeGBCDGMT::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDGMT::getBrandingString() const
+QString VisualizeGBCDGMT::getBrandingString() const
 {
   return "IO";
 }
@@ -509,7 +516,7 @@ const QString VisualizeGBCDGMT::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDGMT::getFilterVersion() const
+QString VisualizeGBCDGMT::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -519,7 +526,7 @@ const QString VisualizeGBCDGMT::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDGMT::getGroupName() const
+QString VisualizeGBCDGMT::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -527,7 +534,7 @@ const QString VisualizeGBCDGMT::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid VisualizeGBCDGMT::getUuid()
+QUuid VisualizeGBCDGMT::getUuid() const
 {
   return QUuid("{f62065b4-54e9-53b1-bed7-2178a57d3c7a}");
 }
@@ -535,7 +542,7 @@ const QUuid VisualizeGBCDGMT::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDGMT::getSubGroupName() const
+QString VisualizeGBCDGMT::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -543,7 +550,96 @@ const QString VisualizeGBCDGMT::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDGMT::getHumanLabel() const
+QString VisualizeGBCDGMT::getHumanLabel() const
 {
   return "Export GBCD Pole Figure (GMT 5)";
+}
+
+// -----------------------------------------------------------------------------
+VisualizeGBCDGMT::Pointer VisualizeGBCDGMT::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<VisualizeGBCDGMT> VisualizeGBCDGMT::New()
+{
+  struct make_shared_enabler : public VisualizeGBCDGMT
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString VisualizeGBCDGMT::getNameOfClass() const
+{
+  return QString("VisualizeGBCDGMT");
+}
+
+// -----------------------------------------------------------------------------
+QString VisualizeGBCDGMT::ClassName()
+{
+  return QString("VisualizeGBCDGMT");
+}
+
+// -----------------------------------------------------------------------------
+void VisualizeGBCDGMT::setOutputFile(const QString& value)
+{
+  m_OutputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VisualizeGBCDGMT::getOutputFile() const
+{
+  return m_OutputFile;
+}
+
+// -----------------------------------------------------------------------------
+void VisualizeGBCDGMT::setPhaseOfInterest(int value)
+{
+  m_PhaseOfInterest = value;
+}
+
+// -----------------------------------------------------------------------------
+int VisualizeGBCDGMT::getPhaseOfInterest() const
+{
+  return m_PhaseOfInterest;
+}
+
+// -----------------------------------------------------------------------------
+void VisualizeGBCDGMT::setMisorientationRotation(const AxisAngleInput_t& value)
+{
+  m_MisorientationRotation = value;
+}
+
+// -----------------------------------------------------------------------------
+AxisAngleInput_t VisualizeGBCDGMT::getMisorientationRotation() const
+{
+  return m_MisorientationRotation;
+}
+
+// -----------------------------------------------------------------------------
+void VisualizeGBCDGMT::setGBCDArrayPath(const DataArrayPath& value)
+{
+  m_GBCDArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath VisualizeGBCDGMT::getGBCDArrayPath() const
+{
+  return m_GBCDArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void VisualizeGBCDGMT::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath VisualizeGBCDGMT::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
 }

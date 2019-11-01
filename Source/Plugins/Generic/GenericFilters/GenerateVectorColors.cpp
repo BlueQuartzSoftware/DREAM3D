@@ -32,11 +32,15 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include <memory>
+
 #include "GenerateVectorColors.h"
 
 #include <Eigen/Core>
 #include <Eigen/Dense>
 #include <Eigen/Eigen>
+
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
 
@@ -48,6 +52,7 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Utilities/ColorTable.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "Generic/GenericConstants.h"
 #include "Generic/GenericVersion.h"
@@ -302,7 +307,7 @@ AbstractFilter::Pointer GenerateVectorColors::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateVectorColors::getCompiledLibraryName() const
+QString GenerateVectorColors::getCompiledLibraryName() const
 {
   return GenericConstants::GenericBaseName;
 }
@@ -310,7 +315,7 @@ const QString GenerateVectorColors::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateVectorColors::getBrandingString() const
+QString GenerateVectorColors::getBrandingString() const
 {
   return "Generic";
 }
@@ -318,7 +323,7 @@ const QString GenerateVectorColors::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateVectorColors::getFilterVersion() const
+QString GenerateVectorColors::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -328,7 +333,7 @@ const QString GenerateVectorColors::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateVectorColors::getGroupName() const
+QString GenerateVectorColors::getGroupName() const
 {
   return SIMPL::FilterGroups::Generic;
 }
@@ -336,7 +341,7 @@ const QString GenerateVectorColors::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid GenerateVectorColors::getUuid()
+QUuid GenerateVectorColors::getUuid() const
 {
   return QUuid("{ef28de7e-5bdd-57c2-9318-60ba0dfaf7bc}");
 }
@@ -344,7 +349,7 @@ const QUuid GenerateVectorColors::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateVectorColors::getSubGroupName() const
+QString GenerateVectorColors::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -352,7 +357,84 @@ const QString GenerateVectorColors::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateVectorColors::getHumanLabel() const
+QString GenerateVectorColors::getHumanLabel() const
 {
   return "Generate Vector Colors";
+}
+
+// -----------------------------------------------------------------------------
+GenerateVectorColors::Pointer GenerateVectorColors::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<GenerateVectorColors> GenerateVectorColors::New()
+{
+  struct make_shared_enabler : public GenerateVectorColors
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateVectorColors::getNameOfClass() const
+{
+  return QString("GenerateVectorColors");
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateVectorColors::ClassName()
+{
+  return QString("GenerateVectorColors");
+}
+
+// -----------------------------------------------------------------------------
+void GenerateVectorColors::setVectorsArrayPath(const DataArrayPath& value)
+{
+  m_VectorsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateVectorColors::getVectorsArrayPath() const
+{
+  return m_VectorsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateVectorColors::setGoodVoxelsArrayPath(const DataArrayPath& value)
+{
+  m_GoodVoxelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateVectorColors::getGoodVoxelsArrayPath() const
+{
+  return m_GoodVoxelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateVectorColors::setCellVectorColorsArrayName(const QString& value)
+{
+  m_CellVectorColorsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateVectorColors::getCellVectorColorsArrayName() const
+{
+  return m_CellVectorColorsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateVectorColors::setUseGoodVoxels(bool value)
+{
+  m_UseGoodVoxels = value;
+}
+
+// -----------------------------------------------------------------------------
+bool GenerateVectorColors::getUseGoodVoxels() const
+{
+  return m_UseGoodVoxels;
 }

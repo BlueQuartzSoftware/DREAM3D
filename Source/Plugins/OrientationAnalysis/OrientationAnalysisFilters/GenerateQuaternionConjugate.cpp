@@ -2,6 +2,8 @@
  * Your License or Copyright can go here
  */
 
+#include <memory>
+
 #include "GenerateQuaternionConjugate.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -11,10 +13,14 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -213,7 +219,7 @@ AbstractFilter::Pointer GenerateQuaternionConjugate::newFilterInstance(bool copy
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateQuaternionConjugate::getCompiledLibraryName() const
+QString GenerateQuaternionConjugate::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -221,7 +227,7 @@ const QString GenerateQuaternionConjugate::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateQuaternionConjugate::getBrandingString() const
+QString GenerateQuaternionConjugate::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -229,7 +235,7 @@ const QString GenerateQuaternionConjugate::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateQuaternionConjugate::getFilterVersion() const
+QString GenerateQuaternionConjugate::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -240,7 +246,7 @@ const QString GenerateQuaternionConjugate::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateQuaternionConjugate::getGroupName() const
+QString GenerateQuaternionConjugate::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -248,7 +254,7 @@ const QString GenerateQuaternionConjugate::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateQuaternionConjugate::getSubGroupName() const
+QString GenerateQuaternionConjugate::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -256,7 +262,7 @@ const QString GenerateQuaternionConjugate::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateQuaternionConjugate::getHumanLabel() const
+QString GenerateQuaternionConjugate::getHumanLabel() const
 {
   return "Generate Quaternion Conjugate";
 }
@@ -264,7 +270,72 @@ const QString GenerateQuaternionConjugate::getHumanLabel() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid GenerateQuaternionConjugate::getUuid()
+QUuid GenerateQuaternionConjugate::getUuid() const
 {
   return QUuid("{630d7486-75ea-5e04-874c-894460cd7c4d}");
+}
+
+// -----------------------------------------------------------------------------
+GenerateQuaternionConjugate::Pointer GenerateQuaternionConjugate::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<GenerateQuaternionConjugate> GenerateQuaternionConjugate::New()
+{
+  struct make_shared_enabler : public GenerateQuaternionConjugate
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateQuaternionConjugate::getNameOfClass() const
+{
+  return QString("_SUPERGenerateQuaternionConjugate");
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateQuaternionConjugate::ClassName()
+{
+  return QString("_SUPERGenerateQuaternionConjugate");
+}
+
+// -----------------------------------------------------------------------------
+void GenerateQuaternionConjugate::setQuaternionDataArrayPath(const DataArrayPath& value)
+{
+  m_QuaternionDataArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateQuaternionConjugate::getQuaternionDataArrayPath() const
+{
+  return m_QuaternionDataArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateQuaternionConjugate::setOutputDataArrayPath(const DataArrayPath& value)
+{
+  m_OutputDataArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateQuaternionConjugate::getOutputDataArrayPath() const
+{
+  return m_OutputDataArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateQuaternionConjugate::setDeleteOriginalData(bool value)
+{
+  m_DeleteOriginalData = value;
+}
+
+// -----------------------------------------------------------------------------
+bool GenerateQuaternionConjugate::getDeleteOriginalData() const
+{
+  return m_DeleteOriginalData;
 }

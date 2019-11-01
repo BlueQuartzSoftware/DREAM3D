@@ -36,6 +36,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QVector>
 #include <QtCore/QString>
 
@@ -44,7 +46,6 @@
 
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/Constants.h"
 
 #include "OrientationLib/OrientationLib.h"
@@ -56,11 +57,26 @@
 class OrientationLib_EXPORT TexturePreset
 {
   public:
-    SIMPL_SHARED_POINTERS(TexturePreset)
-    typedef QVector<Pointer> Container;
+    using Self = TexturePreset;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
 
-    SIMPL_STATIC_NEW_MACRO(TexturePreset)
-    SIMPL_TYPE_MACRO(TexturePreset)
+    using Container = QVector<Pointer>;
+
+    static Pointer New();
+
+    /**
+     * @brief Returns the name of the class for TexturePreset
+     */
+    virtual QString getNameOfClass() const;
+    /**
+     * @brief Returns the name of the class for TexturePreset
+     */
+    static QString ClassName();
+
     static Pointer New(unsigned int xtal,
                        const QString& name,
                        double e1, double e2, double e3)
@@ -76,11 +92,55 @@ class OrientationLib_EXPORT TexturePreset
 
     virtual ~TexturePreset();
 
-    SIMPL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
-    SIMPL_INSTANCE_STRING_PROPERTY(Name)
-    SIMPL_INSTANCE_PROPERTY(double, Euler1)
-    SIMPL_INSTANCE_PROPERTY(double, Euler2)
-    SIMPL_INSTANCE_PROPERTY(double, Euler3)
+    /**
+     * @brief Setter property for CrystalStructure
+     */
+    void setCrystalStructure(unsigned int value);
+    /**
+     * @brief Getter property for CrystalStructure
+     * @return Value of CrystalStructure
+     */
+    unsigned int getCrystalStructure() const;
+
+    /**
+     * @brief Setter property for Name
+     */
+    void setName(const QString& value);
+    /**
+     * @brief Getter property for Name
+     * @return Value of Name
+     */
+    QString getName() const;
+
+    /**
+     * @brief Setter property for Euler1
+     */
+    void setEuler1(double value);
+    /**
+     * @brief Getter property for Euler1
+     * @return Value of Euler1
+     */
+    double getEuler1() const;
+
+    /**
+     * @brief Setter property for Euler2
+     */
+    void setEuler2(double value);
+    /**
+     * @brief Getter property for Euler2
+     * @return Value of Euler2
+     */
+    double getEuler2() const;
+
+    /**
+     * @brief Setter property for Euler3
+     */
+    void setEuler3(double value);
+    /**
+     * @brief Getter property for Euler3
+     * @return Value of Euler3
+     */
+    double getEuler3() const;
 
   protected:
     TexturePreset();
@@ -90,6 +150,13 @@ class OrientationLib_EXPORT TexturePreset
     TexturePreset(TexturePreset&&) = delete;       // Move Constructor Not Implemented
     TexturePreset& operator=(const TexturePreset&) = delete; // Copy Assignment Not Implemented
     TexturePreset& operator=(TexturePreset&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    unsigned int m_CrystalStructure = {};
+    QString m_Name = {};
+    double m_Euler1 = {};
+    double m_Euler2 = {};
+    double m_Euler3 = {};
 };
 
 
@@ -105,9 +172,11 @@ class OrientationLib_EXPORT CubicTexturePresets
   protected:
     CubicTexturePresets();
 
-  private:
-    CubicTexturePresets(const CubicTexturePresets&) = delete; // Copy Constructor Not Implemented
-    void operator=(const CubicTexturePresets&) = delete;      // Move assignment Not Implemented
+  public:
+    CubicTexturePresets(const CubicTexturePresets&) = delete;            // Copy Constructor Not Implemented
+    CubicTexturePresets(CubicTexturePresets&&) = delete;                 // Move Constructor Not Implemented
+    CubicTexturePresets& operator=(const CubicTexturePresets&) = delete; // Copy Assignment Not Implemented
+    CubicTexturePresets& operator=(CubicTexturePresets&&) = delete;      // Move Assignment Not Implemented
 };
 
 /**
@@ -122,9 +191,9 @@ class OrientationLib_EXPORT HexTexturePresets
   protected:
     HexTexturePresets();
 
-  private:
-    HexTexturePresets(const HexTexturePresets&) = delete; // Copy Constructor Not Implemented
-    void operator=(const HexTexturePresets&) = delete;    // Move assignment Not Implemented
+  public:
+    HexTexturePresets(const HexTexturePresets&) = delete;            // Copy Constructor Not Implemented
+    HexTexturePresets(HexTexturePresets&&) = delete;                 // Move Constructor Not Implemented
+    HexTexturePresets& operator=(const HexTexturePresets&) = delete; // Copy Assignment Not Implemented
+    HexTexturePresets& operator=(HexTexturePresets&&) = delete;      // Move Assignment Not Implemented
 };
-
-

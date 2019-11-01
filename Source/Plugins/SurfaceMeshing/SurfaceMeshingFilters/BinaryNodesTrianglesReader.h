@@ -36,9 +36,12 @@
 #pragma once
 
 
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 
@@ -58,68 +61,152 @@ class SurfaceMeshing_EXPORT BinaryNodesTrianglesReader : public SurfaceMeshFilte
 {
     Q_OBJECT
   public:
-    SIMPL_SHARED_POINTERS(BinaryNodesTrianglesReader)
-    SIMPL_FILTER_NEW_MACRO(BinaryNodesTrianglesReader)
-     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(BinaryNodesTrianglesReader, SurfaceMeshFilter)
+    using Self = BinaryNodesTrianglesReader;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
 
-     ~BinaryNodesTrianglesReader() override;
+    static std::shared_ptr<BinaryNodesTrianglesReader> New();
 
-     SIMPL_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
-     SIMPL_INSTANCE_STRING_PROPERTY(VertexAttributeMatrixName)
-     SIMPL_INSTANCE_STRING_PROPERTY(FaceAttributeMatrixName)
+    /**
+     * @brief Returns the name of the class for BinaryNodesTrianglesReader
+     */
+    QString getNameOfClass() const override;
+    /**
+     * @brief Returns the name of the class for BinaryNodesTrianglesReader
+     */
+    static QString ClassName();
 
-     SIMPL_INSTANCE_STRING_PROPERTY(FaceLabelsArrayName)
-     SIMPL_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypesArrayName)
+    ~BinaryNodesTrianglesReader() override;
 
-     SIMPL_INSTANCE_STRING_PROPERTY(BinaryNodesFile)
-     SIMPL_INSTANCE_STRING_PROPERTY(BinaryTrianglesFile)
+    /**
+     * @brief Setter property for SurfaceDataContainerName
+     */
+    void setSurfaceDataContainerName(const QString& value);
+    /**
+     * @brief Getter property for SurfaceDataContainerName
+     * @return Value of SurfaceDataContainerName
+     */
+    QString getSurfaceDataContainerName() const;
 
-     /**
-      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-      */
-     void setupFilterParameters() override;
+    /**
+     * @brief Setter property for VertexAttributeMatrixName
+     */
+    void setVertexAttributeMatrixName(const QString& value);
+    /**
+     * @brief Getter property for VertexAttributeMatrixName
+     * @return Value of VertexAttributeMatrixName
+     */
+    QString getVertexAttributeMatrixName() const;
 
-     /**
-      * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-      */
-     void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+    /**
+     * @brief Setter property for FaceAttributeMatrixName
+     */
+    void setFaceAttributeMatrixName(const QString& value);
+    /**
+     * @brief Getter property for FaceAttributeMatrixName
+     * @return Value of FaceAttributeMatrixName
+     */
+    QString getFaceAttributeMatrixName() const;
 
-     /**
-      * @brief execute Reimplemented from @see AbstractFilter class
-      */
-     void execute() override;
+    /**
+     * @brief Setter property for FaceLabelsArrayName
+     */
+    void setFaceLabelsArrayName(const QString& value);
+    /**
+     * @brief Getter property for FaceLabelsArrayName
+     * @return Value of FaceLabelsArrayName
+     */
+    QString getFaceLabelsArrayName() const;
 
-     /**
-      * @brief preflight Reimplemented from @see AbstractFilter class
-      */
-     void preflight() override;
+    /**
+     * @brief Setter property for SurfaceMeshNodeTypesArrayName
+     */
+    void setSurfaceMeshNodeTypesArrayName(const QString& value);
+    /**
+     * @brief Getter property for SurfaceMeshNodeTypesArrayName
+     * @return Value of SurfaceMeshNodeTypesArrayName
+     */
+    QString getSurfaceMeshNodeTypesArrayName() const;
 
-   protected:
-     BinaryNodesTrianglesReader();
-     /**
-      * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-      */
-     void dataCheck();
+    /**
+     * @brief Setter property for BinaryNodesFile
+     */
+    void setBinaryNodesFile(const QString& value);
+    /**
+     * @brief Getter property for BinaryNodesFile
+     * @return Value of BinaryNodesFile
+     */
+    QString getBinaryNodesFile() const;
 
-     /**
-      * @brief Initializes all the private instance variables.
-      */
-     void initialize();
+    /**
+     * @brief Setter property for BinaryTrianglesFile
+     */
+    void setBinaryTrianglesFile(const QString& value);
+    /**
+     * @brief Getter property for BinaryTrianglesFile
+     * @return Value of BinaryTrianglesFile
+     */
+    QString getBinaryTrianglesFile() const;
 
-     void updateVertexInstancePointers();
+    /**
+     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+     */
+    void setupFilterParameters() override;
 
-     void updateFaceInstancePointers();
+    /**
+     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+     */
+    void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
-     int read();
+    /**
+     * @brief execute Reimplemented from @see AbstractFilter class
+     */
+    void execute() override;
 
-   private:
-     DEFINE_DATAARRAY_VARIABLE(int8_t, SurfaceMeshNodeTypes)
-     DEFINE_DATAARRAY_VARIABLE(int32_t, FaceLabels)
+    /**
+     * @brief preflight Reimplemented from @see AbstractFilter class
+     */
+    void preflight() override;
 
-   public:
-     BinaryNodesTrianglesReader(const BinaryNodesTrianglesReader&) = delete;            // Copy Constructor Not Implemented
-     BinaryNodesTrianglesReader(BinaryNodesTrianglesReader&&) = delete;                 // Move Constructor Not Implemented
-     BinaryNodesTrianglesReader& operator=(const BinaryNodesTrianglesReader&) = delete; // Copy Assignment Not Implemented
-     BinaryNodesTrianglesReader& operator=(BinaryNodesTrianglesReader&&) = delete;      // Move Assignment Not Implemented
+  protected:
+    BinaryNodesTrianglesReader();
+    /**
+     * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+     */
+    void dataCheck();
+
+    /**
+     * @brief Initializes all the private instance variables.
+     */
+    void initialize();
+
+    void updateVertexInstancePointers();
+
+    void updateFaceInstancePointers();
+
+    int read();
+
+  private:
+    std::weak_ptr<DataArray<int8_t>> m_SurfaceMeshNodeTypesPtr;
+    int8_t* m_SurfaceMeshNodeTypes = nullptr;
+    std::weak_ptr<DataArray<int32_t>> m_FaceLabelsPtr;
+    int32_t* m_FaceLabels = nullptr;
+
+    QString m_SurfaceDataContainerName = {};
+    QString m_VertexAttributeMatrixName = {};
+    QString m_FaceAttributeMatrixName = {};
+    QString m_FaceLabelsArrayName = {};
+    QString m_SurfaceMeshNodeTypesArrayName = {};
+    QString m_BinaryNodesFile = {};
+    QString m_BinaryTrianglesFile = {};
+
+  public:
+    BinaryNodesTrianglesReader(const BinaryNodesTrianglesReader&) = delete;            // Copy Constructor Not Implemented
+    BinaryNodesTrianglesReader(BinaryNodesTrianglesReader&&) = delete;                 // Move Constructor Not Implemented
+    BinaryNodesTrianglesReader& operator=(const BinaryNodesTrianglesReader&) = delete; // Copy Assignment Not Implemented
+    BinaryNodesTrianglesReader& operator=(BinaryNodesTrianglesReader&&) = delete;      // Move Assignment Not Implemented
 };
 

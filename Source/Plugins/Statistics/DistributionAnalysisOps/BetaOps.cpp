@@ -128,3 +128,28 @@ int BetaOps::calculateCorrelatedParameters(std::vector<std::vector<float>>& data
   }
   return err;
 }
+
+// -----------------------------------------------------------------------------
+BetaOps::Pointer BetaOps::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+QString BetaOps::getNameOfClass() const
+{
+  return QString("BetaOps");
+}
+
+// -----------------------------------------------------------------------------
+QString BetaOps::ClassName()
+{
+  return QString("BetaOps");
+}
+
+// -----------------------------------------------------------------------------
+BetaOps::Pointer BetaOps::New()
+{
+  Pointer sharedPtr(new(BetaOps));
+  return sharedPtr;
+}

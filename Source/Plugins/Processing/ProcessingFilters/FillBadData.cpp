@@ -33,9 +33,14 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FillBadData.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -44,6 +49,8 @@
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Processing/ProcessingConstants.h"
 #include "Processing/ProcessingVersion.h"
@@ -456,7 +463,7 @@ AbstractFilter::Pointer FillBadData::newFilterInstance(bool copyFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FillBadData::getCompiledLibraryName() const
+QString FillBadData::getCompiledLibraryName() const
 {
   return ProcessingConstants::ProcessingBaseName;
 }
@@ -464,7 +471,7 @@ const QString FillBadData::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FillBadData::getBrandingString() const
+QString FillBadData::getBrandingString() const
 {
   return "Processing";
 }
@@ -472,7 +479,7 @@ const QString FillBadData::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FillBadData::getFilterVersion() const
+QString FillBadData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -482,7 +489,7 @@ const QString FillBadData::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FillBadData::getGroupName() const
+QString FillBadData::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -490,7 +497,7 @@ const QString FillBadData::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FillBadData::getUuid()
+QUuid FillBadData::getUuid() const
 {
   return QUuid("{30ae0a1e-3d94-5dab-b279-c5727ab5d7ff}");
 }
@@ -498,7 +505,7 @@ const QUuid FillBadData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FillBadData::getSubGroupName() const
+QString FillBadData::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CleanupFilters;
 }
@@ -506,7 +513,96 @@ const QString FillBadData::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FillBadData::getHumanLabel() const
+QString FillBadData::getHumanLabel() const
 {
   return "Fill Bad Data";
+}
+
+// -----------------------------------------------------------------------------
+FillBadData::Pointer FillBadData::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FillBadData> FillBadData::New()
+{
+  struct make_shared_enabler : public FillBadData
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FillBadData::getNameOfClass() const
+{
+  return QString("FillBadData");
+}
+
+// -----------------------------------------------------------------------------
+QString FillBadData::ClassName()
+{
+  return QString("FillBadData");
+}
+
+// -----------------------------------------------------------------------------
+void FillBadData::setStoreAsNewPhase(bool value)
+{
+  m_StoreAsNewPhase = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FillBadData::getStoreAsNewPhase() const
+{
+  return m_StoreAsNewPhase;
+}
+
+// -----------------------------------------------------------------------------
+void FillBadData::setMinAllowedDefectSize(int value)
+{
+  m_MinAllowedDefectSize = value;
+}
+
+// -----------------------------------------------------------------------------
+int FillBadData::getMinAllowedDefectSize() const
+{
+  return m_MinAllowedDefectSize;
+}
+
+// -----------------------------------------------------------------------------
+void FillBadData::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FillBadData::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FillBadData::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FillBadData::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FillBadData::setIgnoredDataArrayPaths(const QVector<DataArrayPath>& value)
+{
+  m_IgnoredDataArrayPaths = value;
+}
+
+// -----------------------------------------------------------------------------
+QVector<DataArrayPath> FillBadData::getIgnoredDataArrayPaths() const
+{
+  return m_IgnoredDataArrayPaths;
 }

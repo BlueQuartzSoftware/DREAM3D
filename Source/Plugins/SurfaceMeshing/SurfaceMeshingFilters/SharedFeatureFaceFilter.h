@@ -35,9 +35,11 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -49,125 +51,213 @@
 class SurfaceMeshing_EXPORT SharedFeatureFaceFilter : public SurfaceMeshFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(SharedFeatureFaceFilter SUPERCLASS SurfaceMeshFilter)
-    PYB11_PROPERTY(QString FaceFeatureAttributeMatrixName READ getFaceFeatureAttributeMatrixName WRITE setFaceFeatureAttributeMatrixName)
-    PYB11_PROPERTY(QString SurfaceMeshFeatureFaceIdsArrayName READ getSurfaceMeshFeatureFaceIdsArrayName WRITE setSurfaceMeshFeatureFaceIdsArrayName)
-    PYB11_PROPERTY(QString SurfaceMeshFeatureFaceLabelsArrayName READ getSurfaceMeshFeatureFaceLabelsArrayName WRITE setSurfaceMeshFeatureFaceLabelsArrayName)
-    PYB11_PROPERTY(QString SurfaceMeshFeatureFaceNumTrianglesArrayName READ getSurfaceMeshFeatureFaceNumTrianglesArrayName WRITE setSurfaceMeshFeatureFaceNumTrianglesArrayName)
-    PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(SharedFeatureFaceFilter SUPERCLASS SurfaceMeshFilter)
+  PYB11_SHARED_POINTERS(SharedFeatureFaceFilter)
+  PYB11_FILTER_NEW_MACRO(SharedFeatureFaceFilter)
+  PYB11_FILTER_PARAMETER(QString, FaceFeatureAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceIdsArrayName)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceLabelsArrayName)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceNumTrianglesArrayName)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  PYB11_PROPERTY(QString FaceFeatureAttributeMatrixName READ getFaceFeatureAttributeMatrixName WRITE setFaceFeatureAttributeMatrixName)
+  PYB11_PROPERTY(QString SurfaceMeshFeatureFaceIdsArrayName READ getSurfaceMeshFeatureFaceIdsArrayName WRITE setSurfaceMeshFeatureFaceIdsArrayName)
+  PYB11_PROPERTY(QString SurfaceMeshFeatureFaceLabelsArrayName READ getSurfaceMeshFeatureFaceLabelsArrayName WRITE setSurfaceMeshFeatureFaceLabelsArrayName)
+  PYB11_PROPERTY(QString SurfaceMeshFeatureFaceNumTrianglesArrayName READ getSurfaceMeshFeatureFaceNumTrianglesArrayName WRITE setSurfaceMeshFeatureFaceNumTrianglesArrayName)
+  PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(SharedFeatureFaceFilter)
-  SIMPL_FILTER_NEW_MACRO(SharedFeatureFaceFilter)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(SharedFeatureFaceFilter, SurfaceMeshFilter)
+  using Self = SharedFeatureFaceFilter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
 
-   ~SharedFeatureFaceFilter() override;
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
 
-   typedef QVector<int32_t> FaceIds_t;
-   typedef QMap<int32_t, FaceIds_t> SharedFeatureFaces_t;
+  /**
+   * @brief Returns the name of the class for SharedFeatureFaceFilter
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for SharedFeatureFaceFilter
+   */
+  static QString ClassName();
 
-   SIMPL_FILTER_PARAMETER(QString, FaceFeatureAttributeMatrixName)
-   Q_PROPERTY(QString FaceFeatureAttributeMatrixName READ getFaceFeatureAttributeMatrixName WRITE setFaceFeatureAttributeMatrixName)
+  ~SharedFeatureFaceFilter() override;
 
-   SIMPL_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceIdsArrayName)
-   Q_PROPERTY(QString SurfaceMeshFeatureFaceIdsArrayName READ getSurfaceMeshFeatureFaceIdsArrayName WRITE setSurfaceMeshFeatureFaceIdsArrayName)
+  typedef QVector<int32_t> FaceIds_t;
+  typedef QMap<int32_t, FaceIds_t> SharedFeatureFaces_t;
 
-   SIMPL_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceLabelsArrayName)
-   Q_PROPERTY(QString SurfaceMeshFeatureFaceLabelsArrayName READ getSurfaceMeshFeatureFaceLabelsArrayName WRITE setSurfaceMeshFeatureFaceLabelsArrayName)
+  /**
+   * @brief Setter property for FaceFeatureAttributeMatrixName
+   */
+  void setFaceFeatureAttributeMatrixName(const QString& value);
+  /**
+   * @brief Getter property for FaceFeatureAttributeMatrixName
+   * @return Value of FaceFeatureAttributeMatrixName
+   */
+  QString getFaceFeatureAttributeMatrixName() const;
 
-   SIMPL_FILTER_PARAMETER(QString, SurfaceMeshFeatureFaceNumTrianglesArrayName)
-   Q_PROPERTY(QString SurfaceMeshFeatureFaceNumTrianglesArrayName READ getSurfaceMeshFeatureFaceNumTrianglesArrayName WRITE setSurfaceMeshFeatureFaceNumTrianglesArrayName)
+  Q_PROPERTY(QString FaceFeatureAttributeMatrixName READ getFaceFeatureAttributeMatrixName WRITE setFaceFeatureAttributeMatrixName)
 
-   SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
-   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFeatureFaceIdsArrayName
+   */
+  void setSurfaceMeshFeatureFaceIdsArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshFeatureFaceIdsArrayName
+   * @return Value of SurfaceMeshFeatureFaceIdsArrayName
+   */
+  QString getSurfaceMeshFeatureFaceIdsArrayName() const;
 
-   /**
-    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-    */
-   const QString getCompiledLibraryName() const override;
+  Q_PROPERTY(QString SurfaceMeshFeatureFaceIdsArrayName READ getSurfaceMeshFeatureFaceIdsArrayName WRITE setSurfaceMeshFeatureFaceIdsArrayName)
 
-   /**
-    * @brief getBrandingString Returns the branding string for the filter, which is a tag
-    * used to denote the filter's association with specific plugins
-    * @return Branding string
-    */
-   const QString getBrandingString() const override;
+  /**
+   * @brief Setter property for SurfaceMeshFeatureFaceLabelsArrayName
+   */
+  void setSurfaceMeshFeatureFaceLabelsArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshFeatureFaceLabelsArrayName
+   * @return Value of SurfaceMeshFeatureFaceLabelsArrayName
+   */
+  QString getSurfaceMeshFeatureFaceLabelsArrayName() const;
 
-   /**
-    * @brief getFilterVersion Returns a version string for this filter. Default
-    * value is an empty string.
-    * @return
-    */
-   const QString getFilterVersion() const override;
+  Q_PROPERTY(QString SurfaceMeshFeatureFaceLabelsArrayName READ getSurfaceMeshFeatureFaceLabelsArrayName WRITE setSurfaceMeshFeatureFaceLabelsArrayName)
 
-   /**
-    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-    */
-   AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+  /**
+   * @brief Setter property for SurfaceMeshFeatureFaceNumTrianglesArrayName
+   */
+  void setSurfaceMeshFeatureFaceNumTrianglesArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshFeatureFaceNumTrianglesArrayName
+   * @return Value of SurfaceMeshFeatureFaceNumTrianglesArrayName
+   */
+  QString getSurfaceMeshFeatureFaceNumTrianglesArrayName() const;
 
-   /**
-    * @brief getGroupName Reimplemented from @see AbstractFilter class
-    */
-   const QString getGroupName() const override;
+  Q_PROPERTY(QString SurfaceMeshFeatureFaceNumTrianglesArrayName READ getSurfaceMeshFeatureFaceNumTrianglesArrayName WRITE setSurfaceMeshFeatureFaceNumTrianglesArrayName)
 
-   /**
-    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-    */
-   const QString getSubGroupName() const override;
+  /**
+   * @brief Setter property for SurfaceMeshFaceLabelsArrayPath
+   */
+  void setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceLabelsArrayPath
+   * @return Value of SurfaceMeshFaceLabelsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
 
-   /**
-    * @brief getUuid Return the unique identifier for this filter.
-    * @return A QUuid object.
-    */
-   const QUuid getUuid() override;
+  Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-   /**
-    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-    */
-   const QString getHumanLabel() const override;
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  QString getCompiledLibraryName() const override;
 
-   /**
-    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-    */
-   void setupFilterParameters() override;
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+   */
+  QString getBrandingString() const override;
 
-   /**
-    * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-    */
-   void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  QString getFilterVersion() const override;
 
-   /**
-    * @brief execute Reimplemented from @see AbstractFilter class
-    */
-   void execute() override;
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
-   /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-   void preflight() override;
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  QString getGroupName() const override;
 
- protected:
-   SharedFeatureFaceFilter();
-   /**
-    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-    */
-   void dataCheck();
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  QString getSubGroupName() const override;
 
-   /**
-    * @brief Initializes all the private instance variables.
-    */
-   void initialize();
+  /**
+   * @brief getUuid Return the unique identifier for this filter.
+   * @return A QUuid object.
+   */
+  QUuid getUuid() const override;
 
- private:
-   DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  QString getHumanLabel() const override;
 
-   DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceIds)
-   DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceLabels)
-   DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceNumTriangles)
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  void setupFilterParameters() override;
 
- public:
-   SharedFeatureFaceFilter(const SharedFeatureFaceFilter&) = delete;            // Copy Constructor Not Implemented
-   SharedFeatureFaceFilter(SharedFeatureFaceFilter&&) = delete;                 // Move Constructor Not Implemented
-   SharedFeatureFaceFilter& operator=(const SharedFeatureFaceFilter&) = delete; // Copy Assignment Not Implemented
-   SharedFeatureFaceFilter& operator=(SharedFeatureFaceFilter&&) = delete;      //           // Move assignment Not Implemented
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  void execute() override;
+
+  /**
+   * @brief preflight Reimplemented from @see AbstractFilter class
+   */
+  void preflight() override;
+
+protected:
+  SharedFeatureFaceFilter();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
+
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
+
+private:
+  std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFaceLabelsPtr;
+  int32_t* m_SurfaceMeshFaceLabels = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFeatureFaceIdsPtr;
+  int32_t* m_SurfaceMeshFeatureFaceIds = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFeatureFaceLabelsPtr;
+  int32_t* m_SurfaceMeshFeatureFaceLabels = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFeatureFaceNumTrianglesPtr;
+  int32_t* m_SurfaceMeshFeatureFaceNumTriangles = nullptr;
+
+  QString m_FaceFeatureAttributeMatrixName = {};
+  QString m_SurfaceMeshFeatureFaceIdsArrayName = {};
+  QString m_SurfaceMeshFeatureFaceLabelsArrayName = {};
+  QString m_SurfaceMeshFeatureFaceNumTrianglesArrayName = {};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
+
+public:
+  SharedFeatureFaceFilter(const SharedFeatureFaceFilter&) = delete;            // Copy Constructor Not Implemented
+  SharedFeatureFaceFilter(SharedFeatureFaceFilter&&) = delete;                 // Move Constructor Not Implemented
+  SharedFeatureFaceFilter& operator=(const SharedFeatureFaceFilter&) = delete; // Copy Assignment Not Implemented
+  SharedFeatureFaceFilter& operator=(SharedFeatureFaceFilter&&) = delete;      //           // Move assignment Not Implemented
 };
 

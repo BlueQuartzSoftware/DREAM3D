@@ -81,8 +81,25 @@ public:
     FaceListType,
   };
 
-  SIMPL_INSTANCE_PROPERTY(ArrayListType, ArrayListType)
-  SIMPL_INSTANCE_PROPERTY(bool, ShowOperators)
+  /**
+   * @brief Setter property for ArrayListType
+   */
+  void setArrayListType(const ArrayListType& value);
+  /**
+   * @brief Getter property for ArrayListType
+   * @return Value of ArrayListType
+   */
+  ArrayListType getArrayListType() const;
+
+  /**
+   * @brief Setter property for ShowOperators
+   */
+  void setShowOperators(bool value);
+  /**
+   * @brief Getter property for ShowOperators
+   * @return Value of ShowOperators
+   */
+  bool getShowOperators() const;
 
   /**
    * @brief setupGui Initializes some of the GUI elements with selections or other GUI related items
@@ -160,6 +177,9 @@ protected slots:
   void widgetChanged(const QString& text);
 
 private:
+  ArrayListType m_ArrayListType = {};
+  bool m_ShowOperators = {};
+
   DataContainerArrayProxy m_DcaProxy;
 
   bool m_DidCausePreflight;

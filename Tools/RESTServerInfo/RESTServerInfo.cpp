@@ -1,4 +1,5 @@
 
+#include <iostream>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDate>
@@ -7,6 +8,7 @@
 #include <QtCore/QJsonArray>
 #include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
+#include <QtCore/QDebug>
 
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/QMetaObjectUtilities.h"

@@ -33,8 +33,12 @@
 #include <QtCore/QFile>
 #include <QtCore/QThread>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <QtCore/QTextStream>
+
+#include <QtCore/QDebug>
+
 #include "SIMPLib/DataArrays/DataArray.hpp"
+
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
@@ -42,6 +46,8 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+
 #include "UnitTestSupport.hpp"
 
 #include "Plugins/OrientationAnalysis/OrientationAnalysisFilters/ReadAngData.h"
@@ -72,7 +78,24 @@ public:
   virtual ~AngCachingTest()
   {
   }
-  SIMPL_TYPE_MACRO(AngCachingTest)
+  /**
+   * @brief Returns the name of the class for AngCachingTest
+   */
+  /**
+   * @brief Returns the name of the class for AngCachingTest
+   */
+  QString getNameOfClass() const
+  {
+    return QString("AngCachingTest");
+  }
+
+  /**
+   * @brief Returns the name of the class for AngCachingTest
+   */
+  QString ClassName()
+  {
+    return QString("AngCachingTest");
+  }
 
   // -----------------------------------------------------------------------------
   //

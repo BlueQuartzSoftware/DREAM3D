@@ -32,13 +32,11 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
 #pragma once
+#include <memory>
 
+#include <QtCore/QObject>
 
-
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 
@@ -49,7 +47,8 @@
 
 class QComboBox;
 class InitializeSyntheticVolume;
-
+class DataContainer;
+using DataContainerShPtrType = std::shared_ptr<DataContainer>;
 
 /**
  * @brief The InitializeSyntheticVolumeWidget class
@@ -60,12 +59,13 @@ class InitializeSyntheticVolumeWidget : public FilterParameterWidget, private Ui
 
   public:
     InitializeSyntheticVolumeWidget(FilterParameter* parameter, AbstractFilter* filter = nullptr, QWidget* parent = nullptr);
-    virtual ~InitializeSyntheticVolumeWidget();
+
+    ~InitializeSyntheticVolumeWidget() override;
 
     /**
      * @brief Initializes some of the GUI elements with selections or other GUI related items
      */
-    virtual void setupGui();
+    void setupGui() override;
 
     void setFilter(AbstractFilter* value);
     AbstractFilter* getFilter() const;
@@ -150,7 +150,7 @@ class InitializeSyntheticVolumeWidget : public FilterParameterWidget, private Ui
     bool                             m_DidCausePreflight;
     bool                             m_NewFileLoaded;
 
-    DataContainer::Pointer      m_DataContainer;
+    DataContainerShPtrType m_DataContainer;
     QList<QLabel*>                    m_ShapeTypeLabels;
     QList<QComboBox*>                 m_ShapeTypeCombos;
 

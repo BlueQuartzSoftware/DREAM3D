@@ -33,15 +33,22 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "AlignSectionsFeature.h"
 
 #include <fstream>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -278,7 +285,7 @@ AbstractFilter::Pointer AlignSectionsFeature::newFilterInstance(bool copyFilterP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsFeature::getCompiledLibraryName() const
+QString AlignSectionsFeature::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -286,7 +293,7 @@ const QString AlignSectionsFeature::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsFeature::getBrandingString() const
+QString AlignSectionsFeature::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -294,7 +301,7 @@ const QString AlignSectionsFeature::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsFeature::getFilterVersion() const
+QString AlignSectionsFeature::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -304,7 +311,7 @@ const QString AlignSectionsFeature::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsFeature::getGroupName() const
+QString AlignSectionsFeature::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -312,7 +319,7 @@ const QString AlignSectionsFeature::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid AlignSectionsFeature::getUuid()
+QUuid AlignSectionsFeature::getUuid() const
 {
   return QUuid("{2bb76fa9-934a-51df-bff1-b0c866971706}");
 }
@@ -320,7 +327,7 @@ const QUuid AlignSectionsFeature::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsFeature::getSubGroupName() const
+QString AlignSectionsFeature::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::AlignmentFilters;
 }
@@ -328,7 +335,48 @@ const QString AlignSectionsFeature::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsFeature::getHumanLabel() const
+QString AlignSectionsFeature::getHumanLabel() const
 {
   return "Align Sections (Feature)";
+}
+
+// -----------------------------------------------------------------------------
+AlignSectionsFeature::Pointer AlignSectionsFeature::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<AlignSectionsFeature> AlignSectionsFeature::New()
+{
+  struct make_shared_enabler : public AlignSectionsFeature
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString AlignSectionsFeature::getNameOfClass() const
+{
+  return QString("AlignSectionsFeature");
+}
+
+// -----------------------------------------------------------------------------
+QString AlignSectionsFeature::ClassName()
+{
+  return QString("AlignSectionsFeature");
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsFeature::setGoodVoxelsArrayPath(const DataArrayPath& value)
+{
+  m_GoodVoxelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AlignSectionsFeature::getGoodVoxelsArrayPath() const
+{
+  return m_GoodVoxelsArrayPath;
 }

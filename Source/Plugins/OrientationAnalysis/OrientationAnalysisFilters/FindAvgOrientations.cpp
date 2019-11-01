@@ -33,13 +33,19 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindAvgOrientations.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
@@ -292,7 +298,7 @@ AbstractFilter::Pointer FindAvgOrientations::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgOrientations::getCompiledLibraryName() const
+QString FindAvgOrientations::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -300,7 +306,7 @@ const QString FindAvgOrientations::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgOrientations::getBrandingString() const
+QString FindAvgOrientations::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -308,7 +314,7 @@ const QString FindAvgOrientations::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgOrientations::getFilterVersion() const
+QString FindAvgOrientations::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -318,7 +324,7 @@ const QString FindAvgOrientations::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgOrientations::getGroupName() const
+QString FindAvgOrientations::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -326,7 +332,7 @@ const QString FindAvgOrientations::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindAvgOrientations::getUuid()
+QUuid FindAvgOrientations::getUuid() const
 {
   return QUuid("{bf7036d8-25bd-540e-b6de-3a5ab0e42c5f}");
 }
@@ -334,7 +340,7 @@ const QUuid FindAvgOrientations::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgOrientations::getSubGroupName() const
+QString FindAvgOrientations::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -342,7 +348,108 @@ const QString FindAvgOrientations::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindAvgOrientations::getHumanLabel() const
+QString FindAvgOrientations::getHumanLabel() const
 {
   return "Find Feature Average Orientations";
+}
+
+// -----------------------------------------------------------------------------
+FindAvgOrientations::Pointer FindAvgOrientations::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindAvgOrientations> FindAvgOrientations::New()
+{
+  struct make_shared_enabler : public FindAvgOrientations
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindAvgOrientations::getNameOfClass() const
+{
+  return QString("FindAvgOrientations");
+}
+
+// -----------------------------------------------------------------------------
+QString FindAvgOrientations::ClassName()
+{
+  return QString("FindAvgOrientations");
+}
+
+// -----------------------------------------------------------------------------
+void FindAvgOrientations::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindAvgOrientations::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindAvgOrientations::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindAvgOrientations::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindAvgOrientations::setQuatsArrayPath(const DataArrayPath& value)
+{
+  m_QuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindAvgOrientations::getQuatsArrayPath() const
+{
+  return m_QuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindAvgOrientations::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindAvgOrientations::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindAvgOrientations::setAvgQuatsArrayPath(const DataArrayPath& value)
+{
+  m_AvgQuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindAvgOrientations::getAvgQuatsArrayPath() const
+{
+  return m_AvgQuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindAvgOrientations::setAvgEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_AvgEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindAvgOrientations::getAvgEulerAnglesArrayPath() const
+{
+  return m_AvgEulerAnglesArrayPath;
 }

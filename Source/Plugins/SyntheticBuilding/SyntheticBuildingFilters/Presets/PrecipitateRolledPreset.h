@@ -36,10 +36,9 @@
 #pragma once
 
 //-- C++ includes
-#include <string>
+#include <memory>
 
-//-- SIMPLib Includes
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <string>
 
 //-- StatsGen Includes
 #include "AbstractMicrostructurePreset.h"
@@ -57,12 +56,25 @@
 class SyntheticBuilding_EXPORT PrecipitateRolledPreset : public AbstractMicrostructurePreset
 {
 public:
-  SIMPL_SHARED_POINTERS(PrecipitateRolledPreset)
-  SIMPL_STATIC_NEW_MACRO(PrecipitateRolledPreset)
-  SIMPL_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, PrecipitateRolledPreset)
-  virtual ~PrecipitateRolledPreset();
+  using Self = PrecipitateRolledPreset;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
 
-  virtual QString getName();
+  static Pointer New();
+
+  static AbstractMicrostructurePreset::Pointer NewAbstractMicrostructurePreset()
+  {
+    PrecipitateRolledPreset* ptr = new PrecipitateRolledPreset();
+    AbstractMicrostructurePreset::Pointer shared_ptr(dynamic_cast<AbstractMicrostructurePreset*>(ptr));
+    return shared_ptr;
+  }
+
+  ~PrecipitateRolledPreset() override;
+
+  QString getName() override;
 
   void initializeOmega3TableModel(QMap<QString, QVector<float>>& data) override;
   void initializeBOverATableModel(QMap<QString, QVector<float>>& data) override;
@@ -72,10 +84,27 @@ public:
 
   unsigned int getDistributionType(const QString& distType) override;
 
-  void initializeAxisODFTableModel(QMap<QString, QVector<float>>& data);
+  void initializeAxisODFTableModel(QMap<QString, QVector<float>>& data) override;
 
-  SIMPL_INSTANCE_PROPERTY(float, AspectRatio1)
-  SIMPL_INSTANCE_PROPERTY(float, AspectRatio2)
+  /**
+   * @brief Setter property for AspectRatio1
+   */
+  void setAspectRatio1(float value);
+  /**
+   * @brief Getter property for AspectRatio1
+   * @return Value of AspectRatio1
+   */
+  float getAspectRatio1() const;
+
+  /**
+   * @brief Setter property for AspectRatio2
+   */
+  void setAspectRatio2(float value);
+  /**
+   * @brief Getter property for AspectRatio2
+   * @return Value of AspectRatio2
+   */
+  float getAspectRatio2() const;
 
 protected:
   PrecipitateRolledPreset();
@@ -85,6 +114,10 @@ public:
   PrecipitateRolledPreset(PrecipitateRolledPreset&&) = delete;      // Move Constructor Not Implemented
   PrecipitateRolledPreset& operator=(const PrecipitateRolledPreset&) = delete; // Copy Assignment Not Implemented
   PrecipitateRolledPreset& operator=(PrecipitateRolledPreset&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  float m_AspectRatio1 = {};
+  float m_AspectRatio2 = {};
 };
 
 DECLARE_FACTORY_CLASS(PrecipitateRolledPresetFactory, PrecipitateRolledPreset, "Precipitate Rolled")

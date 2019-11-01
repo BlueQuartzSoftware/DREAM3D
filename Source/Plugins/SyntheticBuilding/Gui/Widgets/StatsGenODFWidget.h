@@ -81,7 +81,15 @@ public:
 
   void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
 
-  SIMPL_INSTANCE_PROPERTY(bool, EnableAxisDecorations)
+  /**
+   * @brief Setter property for EnableAxisDecorations
+   */
+  void setEnableAxisDecorations(bool value);
+  /**
+   * @brief Getter property for EnableAxisDecorations
+   * @return Value of EnableAxisDecorations
+   */
+  bool getEnableAxisDecorations() const;
 
   void setPhaseIndex(int value);
   int getPhaseIndex();
@@ -98,7 +106,15 @@ public:
 
   void drawODFPlotGrid(QwtPlot* plot);
 
-  SIMPL_INSTANCE_PROPERTY(bool, Initializing)
+  /**
+   * @brief Setter property for Initializing
+   */
+  void setInitializing(bool value);
+  /**
+   * @brief Getter property for Initializing
+   * @return Value of Initializing
+   */
+  bool getInitializing() const;
 
 protected slots:
   void on_m_CalculateODFBtn_clicked();
@@ -133,6 +149,9 @@ protected:
   void calculateODF();
 
 private:
+  bool m_EnableAxisDecorations = {};
+  bool m_Initializing = {};
+
   int m_PhaseIndex;
   unsigned int m_CrystalStructure;
   SGODFTableModel* m_ODFTableModel = nullptr;

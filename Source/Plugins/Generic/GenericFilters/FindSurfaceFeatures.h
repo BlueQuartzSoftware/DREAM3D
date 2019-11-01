@@ -35,9 +35,11 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Generic/GenericDLLExport.h"
 
@@ -47,40 +49,89 @@
 class Generic_EXPORT FindSurfaceFeatures : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(FindSurfaceFeatures SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
-    PYB11_PROPERTY(DataArrayPath SurfaceFeaturesArrayPath READ getSurfaceFeaturesArrayPath WRITE setSurfaceFeaturesArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(FindSurfaceFeatures SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindSurfaceFeatures)
+  PYB11_FILTER_NEW_MACRO(FindSurfaceFeatures)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceFeaturesArrayPath)
+  PYB11_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
+  PYB11_PROPERTY(DataArrayPath SurfaceFeaturesArrayPath READ getSurfaceFeaturesArrayPath WRITE setSurfaceFeaturesArrayPath)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(FindSurfaceFeatures)
-  SIMPL_FILTER_NEW_MACRO(FindSurfaceFeatures)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindSurfaceFeatures, AbstractFilter)
+  using Self = FindSurfaceFeatures;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for FindSurfaceFeatures
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindSurfaceFeatures
+   */
+  static QString ClassName();
 
   ~FindSurfaceFeatures() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureIdsArrayPath)
+  /**
+   * @brief Setter property for FeatureIdsArrayPath
+   */
+  void setFeatureIdsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureIdsArrayPath
+   * @return Value of FeatureIdsArrayPath
+   */
+  DataArrayPath getFeatureIdsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureIdsArrayPath READ getFeatureIdsArrayPath WRITE setFeatureIdsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceFeaturesArrayPath)
+  /**
+   * @brief Setter property for SurfaceFeaturesArrayPath
+   */
+  void setSurfaceFeaturesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceFeaturesArrayPath
+   * @return Value of SurfaceFeaturesArrayPath
+   */
+  DataArrayPath getSurfaceFeaturesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceFeaturesArrayPath READ getSurfaceFeaturesArrayPath WRITE setSurfaceFeaturesArrayPath)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -90,23 +141,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -174,8 +225,13 @@ protected:
   void find_surfacefeatures2D();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-  DEFINE_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
+  std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+  int32_t* m_FeatureIds = nullptr;
+  std::weak_ptr<DataArray<bool>> m_SurfaceFeaturesPtr;
+  bool* m_SurfaceFeatures = nullptr;
+
+  DataArrayPath m_FeatureIdsArrayPath = {};
+  DataArrayPath m_SurfaceFeaturesArrayPath = {};
 
 public:
   FindSurfaceFeatures(const FindSurfaceFeatures&) = delete; // Copy Constructor Not Implemented

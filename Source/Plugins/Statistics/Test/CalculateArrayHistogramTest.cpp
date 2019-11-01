@@ -35,7 +35,6 @@
 
 #include <QtCore/QString>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/DataContainerWriter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
@@ -45,6 +44,9 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+
 #include "UnitTestSupport.hpp"
 
 #include "StatisticsTestFileLocations.h"
@@ -105,7 +107,24 @@ public:
   virtual ~CalculateArrayHistogramTest()
   {
   }
-  SIMPL_TYPE_MACRO(CalculateArrayHistogramTest)
+  /**
+   * @brief Returns the name of the class for CalculateArrayHistogramTest
+   */
+  /**
+   * @brief Returns the name of the class for CalculateArrayHistogramTest
+   */
+  QString getNameOfClass() const
+  {
+    return QString("CalculateArrayHistogramTest");
+  }
+
+  /**
+   * @brief Returns the name of the class for CalculateArrayHistogramTest
+   */
+  QString ClassName()
+  {
+    return QString("CalculateArrayHistogramTest");
+  }
 
   // -----------------------------------------------------------------------------
   //

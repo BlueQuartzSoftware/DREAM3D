@@ -35,14 +35,30 @@
 
 #pragma once
 
+#include <memory>
+
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
 class OrientationUtilityFilterParameter : public FilterParameter
 {
 public:
-  SIMPL_SHARED_POINTERS(OrientationUtilityFilterParameter)
-    SIMPL_STATIC_NEW_MACRO(OrientationUtilityFilterParameter)
-    SIMPL_TYPE_MACRO(OrientationUtilityFilterParameter)
+  using Self = OrientationUtilityFilterParameter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for OrientationUtilityFilterParameter
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for OrientationUtilityFilterParameter
+   */
+  static QString ClassName();
 
   static Pointer New(const QString& humanLabel, const QString& propertyName,
                      const QVariant& defaultValue, Category category,
@@ -60,5 +76,7 @@ public:
   OrientationUtilityFilterParameter(OrientationUtilityFilterParameter&&) = delete;      // Move Constructor Not Implemented
   OrientationUtilityFilterParameter& operator=(const OrientationUtilityFilterParameter&) = delete; // Copy Assignment Not Implemented
   OrientationUtilityFilterParameter& operator=(OrientationUtilityFilterParameter&&) = delete;      // Move Assignment Not Implemented
+
+private:
 };
 

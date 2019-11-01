@@ -35,10 +35,13 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include <memory>
 
+#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+
+#include "OrientationLib/LaueOps/LaueOps.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -48,40 +51,89 @@
 class OrientationAnalysis_EXPORT FindCAxisLocations : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(FindCAxisLocations SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
-    PYB11_PROPERTY(QString CAxisLocationsArrayName READ getCAxisLocationsArrayName WRITE setCAxisLocationsArrayName)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(FindCAxisLocations SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindCAxisLocations)
+  PYB11_FILTER_NEW_MACRO(FindCAxisLocations)
+  PYB11_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, CAxisLocationsArrayName)
+  PYB11_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
+  PYB11_PROPERTY(QString CAxisLocationsArrayName READ getCAxisLocationsArrayName WRITE setCAxisLocationsArrayName)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(FindCAxisLocations)
-  SIMPL_FILTER_NEW_MACRO(FindCAxisLocations)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindCAxisLocations, AbstractFilter)
+  using Self = FindCAxisLocations;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for FindCAxisLocations
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindCAxisLocations
+   */
+  static QString ClassName();
 
   ~FindCAxisLocations() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, QuatsArrayPath)
+  /**
+   * @brief Setter property for QuatsArrayPath
+   */
+  void setQuatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for QuatsArrayPath
+   * @return Value of QuatsArrayPath
+   */
+  DataArrayPath getQuatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath QuatsArrayPath READ getQuatsArrayPath WRITE setQuatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, CAxisLocationsArrayName)
+  /**
+   * @brief Setter property for CAxisLocationsArrayName
+   */
+  void setCAxisLocationsArrayName(const QString& value);
+  /**
+   * @brief Getter property for CAxisLocationsArrayName
+   * @return Value of CAxisLocationsArrayName
+   */
+  QString getCAxisLocationsArrayName() const;
+
   Q_PROPERTY(QString CAxisLocationsArrayName READ getCAxisLocationsArrayName WRITE setCAxisLocationsArrayName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -91,23 +143,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -165,10 +217,15 @@ protected:
   void initialize();
 
 private:
+  std::weak_ptr<DataArray<float>> m_QuatsPtr;
+  float* m_Quats = nullptr;
+  std::weak_ptr<DataArray<float>> m_CAxisLocationsPtr;
+  float* m_CAxisLocations = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(float, Quats)
+  DataArrayPath m_QuatsArrayPath = {};
+  QString m_CAxisLocationsArrayName = {};
 
-  DEFINE_DATAARRAY_VARIABLE(float, CAxisLocations)
+  QVector<LaueOps::Pointer> m_OrientationOps;
 
 public:
   FindCAxisLocations(const FindCAxisLocations&) = delete; // Copy Constructor Not Implemented

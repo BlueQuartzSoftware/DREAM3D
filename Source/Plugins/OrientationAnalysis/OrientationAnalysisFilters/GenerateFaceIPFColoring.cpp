@@ -33,6 +33,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "GenerateFaceIPFColoring.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -41,7 +43,10 @@
 #include <tbb/partitioner.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
@@ -49,6 +54,7 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Utilities/ColorTable.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationLib/LaueOps/CubicLowOps.h"
 #include "OrientationLib/LaueOps/CubicOps.h"
@@ -445,7 +451,7 @@ AbstractFilter::Pointer GenerateFaceIPFColoring::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceIPFColoring::getCompiledLibraryName() const
+QString GenerateFaceIPFColoring::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -453,7 +459,7 @@ const QString GenerateFaceIPFColoring::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceIPFColoring::getBrandingString() const
+QString GenerateFaceIPFColoring::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -461,7 +467,7 @@ const QString GenerateFaceIPFColoring::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceIPFColoring::getFilterVersion() const
+QString GenerateFaceIPFColoring::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -471,7 +477,7 @@ const QString GenerateFaceIPFColoring::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceIPFColoring::getGroupName() const
+QString GenerateFaceIPFColoring::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -479,7 +485,7 @@ const QString GenerateFaceIPFColoring::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid GenerateFaceIPFColoring::getUuid()
+QUuid GenerateFaceIPFColoring::getUuid() const
 {
   return QUuid("{0a121e03-3922-5c29-962d-40d88653f4b6}");
 }
@@ -487,7 +493,7 @@ const QUuid GenerateFaceIPFColoring::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceIPFColoring::getSubGroupName() const
+QString GenerateFaceIPFColoring::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -495,7 +501,108 @@ const QString GenerateFaceIPFColoring::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString GenerateFaceIPFColoring::getHumanLabel() const
+QString GenerateFaceIPFColoring::getHumanLabel() const
 {
   return "Generate IPF Colors (Face)";
+}
+
+// -----------------------------------------------------------------------------
+GenerateFaceIPFColoring::Pointer GenerateFaceIPFColoring::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<GenerateFaceIPFColoring> GenerateFaceIPFColoring::New()
+{
+  struct make_shared_enabler : public GenerateFaceIPFColoring
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateFaceIPFColoring::getNameOfClass() const
+{
+  return QString("GenerateFaceIPFColoring");
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateFaceIPFColoring::ClassName()
+{
+  return QString("GenerateFaceIPFColoring");
+}
+
+// -----------------------------------------------------------------------------
+void GenerateFaceIPFColoring::setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateFaceIPFColoring::getSurfaceMeshFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFaceLabelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateFaceIPFColoring::setSurfaceMeshFaceNormalsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceNormalsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateFaceIPFColoring::getSurfaceMeshFaceNormalsArrayPath() const
+{
+  return m_SurfaceMeshFaceNormalsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateFaceIPFColoring::setFeatureEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_FeatureEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateFaceIPFColoring::getFeatureEulerAnglesArrayPath() const
+{
+  return m_FeatureEulerAnglesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateFaceIPFColoring::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateFaceIPFColoring::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateFaceIPFColoring::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath GenerateFaceIPFColoring::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void GenerateFaceIPFColoring::setSurfaceMeshFaceIPFColorsArrayName(const QString& value)
+{
+  m_SurfaceMeshFaceIPFColorsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString GenerateFaceIPFColoring::getSurfaceMeshFaceIPFColorsArrayName() const
+{
+  return m_SurfaceMeshFaceIPFColorsArrayName;
 }

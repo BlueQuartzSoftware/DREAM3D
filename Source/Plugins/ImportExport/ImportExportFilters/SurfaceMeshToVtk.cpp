@@ -33,13 +33,20 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "SurfaceMeshToVtk.h"
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
@@ -842,7 +849,7 @@ AbstractFilter::Pointer SurfaceMeshToVtk::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToVtk::getCompiledLibraryName() const
+QString SurfaceMeshToVtk::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -850,7 +857,7 @@ const QString SurfaceMeshToVtk::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToVtk::getBrandingString() const
+QString SurfaceMeshToVtk::getBrandingString() const
 {
   return "IO";
 }
@@ -858,7 +865,7 @@ const QString SurfaceMeshToVtk::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToVtk::getFilterVersion() const
+QString SurfaceMeshToVtk::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -869,7 +876,7 @@ const QString SurfaceMeshToVtk::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToVtk::getGroupName() const
+QString SurfaceMeshToVtk::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -877,7 +884,7 @@ const QString SurfaceMeshToVtk::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid SurfaceMeshToVtk::getUuid()
+QUuid SurfaceMeshToVtk::getUuid() const
 {
   return QUuid("{f81b48ba-47a4-5808-bcdb-bd7772bf304b}");
 }
@@ -885,7 +892,7 @@ const QUuid SurfaceMeshToVtk::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToVtk::getSubGroupName() const
+QString SurfaceMeshToVtk::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -893,7 +900,120 @@ const QString SurfaceMeshToVtk::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString SurfaceMeshToVtk::getHumanLabel() const
+QString SurfaceMeshToVtk::getHumanLabel() const
 {
   return "Export Vtk PolyData from Triangle Geometry";
+}
+
+// -----------------------------------------------------------------------------
+SurfaceMeshToVtk::Pointer SurfaceMeshToVtk::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<SurfaceMeshToVtk> SurfaceMeshToVtk::New()
+{
+  struct make_shared_enabler : public SurfaceMeshToVtk
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString SurfaceMeshToVtk::getNameOfClass() const
+{
+  return QString("SurfaceMeshToVtk");
+}
+
+// -----------------------------------------------------------------------------
+QString SurfaceMeshToVtk::ClassName()
+{
+  return QString("SurfaceMeshToVtk");
+}
+
+// -----------------------------------------------------------------------------
+void SurfaceMeshToVtk::setOutputVtkFile(const QString& value)
+{
+  m_OutputVtkFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString SurfaceMeshToVtk::getOutputVtkFile() const
+{
+  return m_OutputVtkFile;
+}
+
+// -----------------------------------------------------------------------------
+void SurfaceMeshToVtk::setWriteBinaryFile(bool value)
+{
+  m_WriteBinaryFile = value;
+}
+
+// -----------------------------------------------------------------------------
+bool SurfaceMeshToVtk::getWriteBinaryFile() const
+{
+  return m_WriteBinaryFile;
+}
+
+// -----------------------------------------------------------------------------
+void SurfaceMeshToVtk::setWriteConformalMesh(bool value)
+{
+  m_WriteConformalMesh = value;
+}
+
+// -----------------------------------------------------------------------------
+bool SurfaceMeshToVtk::getWriteConformalMesh() const
+{
+  return m_WriteConformalMesh;
+}
+
+// -----------------------------------------------------------------------------
+void SurfaceMeshToVtk::setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath SurfaceMeshToVtk::getSurfaceMeshFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFaceLabelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void SurfaceMeshToVtk::setSurfaceMeshNodeTypeArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshNodeTypeArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath SurfaceMeshToVtk::getSurfaceMeshNodeTypeArrayPath() const
+{
+  return m_SurfaceMeshNodeTypeArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void SurfaceMeshToVtk::setSelectedFaceArrays(const QVector<DataArrayPath>& value)
+{
+  m_SelectedFaceArrays = value;
+}
+
+// -----------------------------------------------------------------------------
+QVector<DataArrayPath> SurfaceMeshToVtk::getSelectedFaceArrays() const
+{
+  return m_SelectedFaceArrays;
+}
+
+// -----------------------------------------------------------------------------
+void SurfaceMeshToVtk::setSelectedVertexArrays(const QVector<DataArrayPath>& value)
+{
+  m_SelectedVertexArrays = value;
+}
+
+// -----------------------------------------------------------------------------
+QVector<DataArrayPath> SurfaceMeshToVtk::getSelectedVertexArrays() const
+{
+  return m_SelectedVertexArrays;
 }

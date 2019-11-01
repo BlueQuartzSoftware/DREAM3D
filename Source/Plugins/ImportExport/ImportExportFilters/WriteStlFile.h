@@ -35,7 +35,9 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
@@ -47,53 +49,132 @@
 class ImportExport_EXPORT WriteStlFile : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(WriteStlFile SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(WriteStlFile)
+  PYB11_FILTER_NEW_MACRO(WriteStlFile)
+  PYB11_FILTER_PARAMETER(QString, OutputStlDirectory)
+  PYB11_FILTER_PARAMETER(QString, OutputStlPrefix)
+  PYB11_FILTER_PARAMETER(bool, GroupByPhase)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFacePhasesArrayPath)
   PYB11_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory)
   PYB11_PROPERTY(QString OutputStlPrefix READ getOutputStlPrefix WRITE setOutputStlPrefix)
   PYB11_PROPERTY(bool GroupByPhase READ getGroupByPhase WRITE setGroupByPhase)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFacePhasesArrayPath READ getSurfaceMeshFacePhasesArrayPath WRITE setSurfaceMeshFacePhasesArrayPath)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(WriteStlFile)
-  SIMPL_FILTER_NEW_MACRO(WriteStlFile)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(WriteStlFile, AbstractFilter)
+  using Self = WriteStlFile;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for WriteStlFile
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for WriteStlFile
+   */
+  static QString ClassName();
 
   ~WriteStlFile() override;
 
   /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-  SIMPL_FILTER_PARAMETER(QString, OutputStlDirectory)
+  /**
+   * @brief Setter property for OutputStlDirectory
+   */
+  void setOutputStlDirectory(const QString& value);
+  /**
+   * @brief Getter property for OutputStlDirectory
+   * @return Value of OutputStlDirectory
+   */
+  QString getOutputStlDirectory() const;
+
   Q_PROPERTY(QString OutputStlDirectory READ getOutputStlDirectory WRITE setOutputStlDirectory)
 
-  SIMPL_FILTER_PARAMETER(QString, OutputStlPrefix)
+  /**
+   * @brief Setter property for OutputStlPrefix
+   */
+  void setOutputStlPrefix(const QString& value);
+  /**
+   * @brief Getter property for OutputStlPrefix
+   * @return Value of OutputStlPrefix
+   */
+  QString getOutputStlPrefix() const;
+
   Q_PROPERTY(QString OutputStlPrefix READ getOutputStlPrefix WRITE setOutputStlPrefix)
 
-  SIMPL_FILTER_PARAMETER(bool, GroupByPhase)
+  /**
+   * @brief Setter property for GroupByPhase
+   */
+  void setGroupByPhase(bool value);
+  /**
+   * @brief Getter property for GroupByPhase
+   * @return Value of GroupByPhase
+   */
+  bool getGroupByPhase() const;
+
   Q_PROPERTY(bool GroupByPhase READ getGroupByPhase WRITE setGroupByPhase)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceLabelsArrayPath
+   */
+  void setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceLabelsArrayPath
+   * @return Value of SurfaceMeshFaceLabelsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFacePhasesArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFacePhasesArrayPath
+   */
+  void setSurfaceMeshFacePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFacePhasesArrayPath
+   * @return Value of SurfaceMeshFacePhasesArrayPath
+   */
+  DataArrayPath getSurfaceMeshFacePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFacePhasesArrayPath READ getSurfaceMeshFacePhasesArrayPath WRITE setSurfaceMeshFacePhasesArrayPath)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
    */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -103,23 +184,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -189,8 +270,16 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFacePhases)
+  std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFaceLabelsPtr;
+  int32_t* m_SurfaceMeshFaceLabels = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFacePhasesPtr;
+  int32_t* m_SurfaceMeshFacePhases = nullptr;
+
+  QString m_OutputStlDirectory = {};
+  QString m_OutputStlPrefix = {};
+  bool m_GroupByPhase = {};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
+  DataArrayPath m_SurfaceMeshFacePhasesArrayPath = {};
 
   /**
    * @brief writeHeader Writes the header of the STL file

@@ -33,14 +33,20 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindSlipTransmissionMetrics.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
@@ -342,7 +348,7 @@ AbstractFilter::Pointer FindSlipTransmissionMetrics::newFilterInstance(bool copy
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSlipTransmissionMetrics::getCompiledLibraryName() const
+QString FindSlipTransmissionMetrics::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -350,7 +356,7 @@ const QString FindSlipTransmissionMetrics::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSlipTransmissionMetrics::getBrandingString() const
+QString FindSlipTransmissionMetrics::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -358,7 +364,7 @@ const QString FindSlipTransmissionMetrics::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSlipTransmissionMetrics::getFilterVersion() const
+QString FindSlipTransmissionMetrics::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -368,7 +374,7 @@ const QString FindSlipTransmissionMetrics::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSlipTransmissionMetrics::getGroupName() const
+QString FindSlipTransmissionMetrics::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -376,7 +382,7 @@ const QString FindSlipTransmissionMetrics::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindSlipTransmissionMetrics::getUuid()
+QUuid FindSlipTransmissionMetrics::getUuid() const
 {
   return QUuid("{97523038-5fb2-5e82-9177-ed3e8b24b4bd}");
 }
@@ -384,7 +390,7 @@ const QUuid FindSlipTransmissionMetrics::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSlipTransmissionMetrics::getSubGroupName() const
+QString FindSlipTransmissionMetrics::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -392,7 +398,132 @@ const QString FindSlipTransmissionMetrics::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindSlipTransmissionMetrics::getHumanLabel() const
+QString FindSlipTransmissionMetrics::getHumanLabel() const
 {
   return "Find Neighbor Slip Transmission Metrics";
+}
+
+// -----------------------------------------------------------------------------
+FindSlipTransmissionMetrics::Pointer FindSlipTransmissionMetrics::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindSlipTransmissionMetrics> FindSlipTransmissionMetrics::New()
+{
+  struct make_shared_enabler : public FindSlipTransmissionMetrics
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindSlipTransmissionMetrics::getNameOfClass() const
+{
+  return QString("FindSlipTransmissionMetrics");
+}
+
+// -----------------------------------------------------------------------------
+QString FindSlipTransmissionMetrics::ClassName()
+{
+  return QString("FindSlipTransmissionMetrics");
+}
+
+// -----------------------------------------------------------------------------
+void FindSlipTransmissionMetrics::setNeighborListArrayPath(const DataArrayPath& value)
+{
+  m_NeighborListArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindSlipTransmissionMetrics::getNeighborListArrayPath() const
+{
+  return m_NeighborListArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindSlipTransmissionMetrics::setF1ListArrayName(const QString& value)
+{
+  m_F1ListArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindSlipTransmissionMetrics::getF1ListArrayName() const
+{
+  return m_F1ListArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindSlipTransmissionMetrics::setF1sptListArrayName(const QString& value)
+{
+  m_F1sptListArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindSlipTransmissionMetrics::getF1sptListArrayName() const
+{
+  return m_F1sptListArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindSlipTransmissionMetrics::setF7ListArrayName(const QString& value)
+{
+  m_F7ListArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindSlipTransmissionMetrics::getF7ListArrayName() const
+{
+  return m_F7ListArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindSlipTransmissionMetrics::setmPrimeListArrayName(const QString& value)
+{
+  m_mPrimeListArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindSlipTransmissionMetrics::getmPrimeListArrayName() const
+{
+  return m_mPrimeListArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindSlipTransmissionMetrics::setAvgQuatsArrayPath(const DataArrayPath& value)
+{
+  m_AvgQuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindSlipTransmissionMetrics::getAvgQuatsArrayPath() const
+{
+  return m_AvgQuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindSlipTransmissionMetrics::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindSlipTransmissionMetrics::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindSlipTransmissionMetrics::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindSlipTransmissionMetrics::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
 }

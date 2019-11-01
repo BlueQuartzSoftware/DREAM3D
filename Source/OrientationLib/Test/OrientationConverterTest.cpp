@@ -113,7 +113,7 @@ public:
     eulers->setComponent(0, 1, phi);
     eulers->setComponent(0, 2, phi2);
 
-    typedef OrientationConverter<float> OCType;
+    using OCType = OrientationConverter<float>;
     QVector<OrientationRepresentation::Type> ocTypes = OCType::GetOrientationTypes();
     QVector<QString> tStrings = OCType::GetOrientationTypeStrings();
     QVector<OCType::Pointer> converters(6);

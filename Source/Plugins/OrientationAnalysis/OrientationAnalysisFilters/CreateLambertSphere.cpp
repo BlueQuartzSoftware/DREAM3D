@@ -28,10 +28,14 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "CreateLambertSphere.h"
 
 #include <cassert>
 #include <cmath>
+
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -46,6 +50,8 @@
 #include "SIMPLib/Geometry/QuadGeom.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/Utilities/LambertUtilities.h"
 
@@ -681,7 +687,7 @@ AbstractFilter::Pointer CreateLambertSphere::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateLambertSphere::getCompiledLibraryName() const
+QString CreateLambertSphere::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -689,7 +695,7 @@ const QString CreateLambertSphere::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateLambertSphere::getBrandingString() const
+QString CreateLambertSphere::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -697,7 +703,7 @@ const QString CreateLambertSphere::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateLambertSphere::getFilterVersion() const
+QString CreateLambertSphere::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -707,7 +713,7 @@ const QString CreateLambertSphere::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateLambertSphere::getGroupName() const
+QString CreateLambertSphere::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -715,7 +721,7 @@ const QString CreateLambertSphere::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid CreateLambertSphere::getUuid()
+QUuid CreateLambertSphere::getUuid() const
 {
   return QUuid("{c4398303-db7d-506e-81ea-08f253895ccb}");
 }
@@ -723,7 +729,7 @@ const QUuid CreateLambertSphere::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateLambertSphere::getSubGroupName() const
+QString CreateLambertSphere::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::GenerationFilters;
 }
@@ -731,7 +737,204 @@ const QString CreateLambertSphere::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CreateLambertSphere::getHumanLabel() const
+QString CreateLambertSphere::getHumanLabel() const
 {
   return "Create Sphere (Lambert Projection Technique)";
+}
+
+// -----------------------------------------------------------------------------
+CreateLambertSphere::Pointer CreateLambertSphere::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<CreateLambertSphere> CreateLambertSphere::New()
+{
+  struct make_shared_enabler : public CreateLambertSphere
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString CreateLambertSphere::getNameOfClass() const
+{
+  return QString("CreateLambertSphere");
+}
+
+// -----------------------------------------------------------------------------
+QString CreateLambertSphere::ClassName()
+{
+  return QString("CreateLambertSphere");
+}
+
+// -----------------------------------------------------------------------------
+void CreateLambertSphere::setHemisphere(int value)
+{
+  m_Hemisphere = value;
+}
+
+// -----------------------------------------------------------------------------
+int CreateLambertSphere::getHemisphere() const
+{
+  return m_Hemisphere;
+}
+
+// -----------------------------------------------------------------------------
+void CreateLambertSphere::setImageDataArrayPath(const DataArrayPath& value)
+{
+  m_ImageDataArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath CreateLambertSphere::getImageDataArrayPath() const
+{
+  return m_ImageDataArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void CreateLambertSphere::setQuadDataContainerName(const DataArrayPath& value)
+{
+  m_QuadDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath CreateLambertSphere::getQuadDataContainerName() const
+{
+  return m_QuadDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void CreateLambertSphere::setTriangleDataContainerName(const DataArrayPath& value)
+{
+  m_TriangleDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath CreateLambertSphere::getTriangleDataContainerName() const
+{
+  return m_TriangleDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void CreateLambertSphere::setEdgeDataContainerName(const DataArrayPath& value)
+{
+  m_EdgeDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath CreateLambertSphere::getEdgeDataContainerName() const
+{
+  return m_EdgeDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void CreateLambertSphere::setVertexDataContainerName(const DataArrayPath& value)
+{
+  m_VertexDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath CreateLambertSphere::getVertexDataContainerName() const
+{
+  return m_VertexDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void CreateLambertSphere::setVertexAttributeMatrixName(const QString& value)
+{
+  m_VertexAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString CreateLambertSphere::getVertexAttributeMatrixName() const
+{
+  return m_VertexAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void CreateLambertSphere::setEdgeAttributeMatrixName(const QString& value)
+{
+  m_EdgeAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString CreateLambertSphere::getEdgeAttributeMatrixName() const
+{
+  return m_EdgeAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void CreateLambertSphere::setFaceAttributeMatrixName(const QString& value)
+{
+  m_FaceAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString CreateLambertSphere::getFaceAttributeMatrixName() const
+{
+  return m_FaceAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void CreateLambertSphere::setCreateVertexGeometry(bool value)
+{
+  m_CreateVertexGeometry = value;
+}
+
+// -----------------------------------------------------------------------------
+bool CreateLambertSphere::getCreateVertexGeometry() const
+{
+  return m_CreateVertexGeometry;
+}
+
+// -----------------------------------------------------------------------------
+void CreateLambertSphere::setCreateEdgeGeometry(bool value)
+{
+  m_CreateEdgeGeometry = value;
+}
+
+// -----------------------------------------------------------------------------
+bool CreateLambertSphere::getCreateEdgeGeometry() const
+{
+  return m_CreateEdgeGeometry;
+}
+
+// -----------------------------------------------------------------------------
+void CreateLambertSphere::setCreateTriangleGeometry(bool value)
+{
+  m_CreateTriangleGeometry = value;
+}
+
+// -----------------------------------------------------------------------------
+bool CreateLambertSphere::getCreateTriangleGeometry() const
+{
+  return m_CreateTriangleGeometry;
+}
+
+// -----------------------------------------------------------------------------
+void CreateLambertSphere::setCreateQuadGeometry(bool value)
+{
+  m_CreateQuadGeometry = value;
+}
+
+// -----------------------------------------------------------------------------
+bool CreateLambertSphere::getCreateQuadGeometry() const
+{
+  return m_CreateQuadGeometry;
+}
+
+// -----------------------------------------------------------------------------
+void CreateLambertSphere::setUseExistingImage(bool value)
+{
+  m_UseExistingImage = value;
+}
+
+// -----------------------------------------------------------------------------
+bool CreateLambertSphere::getUseExistingImage() const
+{
+  return m_UseExistingImage;
 }

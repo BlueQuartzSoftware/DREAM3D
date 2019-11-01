@@ -33,10 +33,16 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "LammpsFileWriter.h"
 
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
 #include "SIMPLib/Geometry/VertexGeom.h"
@@ -261,7 +267,7 @@ AbstractFilter::Pointer LammpsFileWriter::newFilterInstance(bool copyFilterParam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LammpsFileWriter::getCompiledLibraryName() const
+QString LammpsFileWriter::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -269,7 +275,7 @@ const QString LammpsFileWriter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LammpsFileWriter::getBrandingString() const
+QString LammpsFileWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -277,7 +283,7 @@ const QString LammpsFileWriter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LammpsFileWriter::getFilterVersion() const
+QString LammpsFileWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -288,7 +294,7 @@ const QString LammpsFileWriter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LammpsFileWriter::getGroupName() const
+QString LammpsFileWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -296,7 +302,7 @@ const QString LammpsFileWriter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid LammpsFileWriter::getUuid()
+QUuid LammpsFileWriter::getUuid() const
 {
   return QUuid("{01364630-cd73-5ad8-b882-17d34ec900f2}");
 }
@@ -304,7 +310,7 @@ const QUuid LammpsFileWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LammpsFileWriter::getSubGroupName() const
+QString LammpsFileWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -312,7 +318,60 @@ const QString LammpsFileWriter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString LammpsFileWriter::getHumanLabel() const
+QString LammpsFileWriter::getHumanLabel() const
 {
   return "Export Lammps File";
+}
+
+// -----------------------------------------------------------------------------
+LammpsFileWriter::Pointer LammpsFileWriter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<LammpsFileWriter> LammpsFileWriter::New()
+{
+  struct make_shared_enabler : public LammpsFileWriter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString LammpsFileWriter::getNameOfClass() const
+{
+  return QString("LammpsFileWriter");
+}
+
+// -----------------------------------------------------------------------------
+QString LammpsFileWriter::ClassName()
+{
+  return QString("LammpsFileWriter");
+}
+
+// -----------------------------------------------------------------------------
+void LammpsFileWriter::setVertexDataContainerName(const DataArrayPath& value)
+{
+  m_VertexDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath LammpsFileWriter::getVertexDataContainerName() const
+{
+  return m_VertexDataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void LammpsFileWriter::setLammpsFile(const QString& value)
+{
+  m_LammpsFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString LammpsFileWriter::getLammpsFile() const
+{
+  return m_LammpsFile;
 }

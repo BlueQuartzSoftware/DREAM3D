@@ -35,9 +35,14 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
+
+class IDataArray;
+using IDataArrayWkPtrType = std::weak_ptr<IDataArray>;
 
 #include "Processing/ProcessingDLLExport.h"
 
@@ -47,60 +52,159 @@
 class Processing_EXPORT FindProjectedImageStatistics : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(FindProjectedImageStatistics SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
-    PYB11_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
-    PYB11_PROPERTY(QString ProjectedImageMinArrayName READ getProjectedImageMinArrayName WRITE setProjectedImageMinArrayName)
-    PYB11_PROPERTY(QString ProjectedImageMaxArrayName READ getProjectedImageMaxArrayName WRITE setProjectedImageMaxArrayName)
-    PYB11_PROPERTY(QString ProjectedImageAvgArrayName READ getProjectedImageAvgArrayName WRITE setProjectedImageAvgArrayName)
-    PYB11_PROPERTY(QString ProjectedImageStdArrayName READ getProjectedImageStdArrayName WRITE setProjectedImageStdArrayName)
-    PYB11_PROPERTY(QString ProjectedImageVarArrayName READ getProjectedImageVarArrayName WRITE setProjectedImageVarArrayName)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(FindProjectedImageStatistics SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindProjectedImageStatistics)
+  PYB11_FILTER_NEW_MACRO(FindProjectedImageStatistics)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
+  PYB11_FILTER_PARAMETER(unsigned int, Plane)
+  PYB11_FILTER_PARAMETER(QString, ProjectedImageMinArrayName)
+  PYB11_FILTER_PARAMETER(QString, ProjectedImageMaxArrayName)
+  PYB11_FILTER_PARAMETER(QString, ProjectedImageAvgArrayName)
+  PYB11_FILTER_PARAMETER(QString, ProjectedImageStdArrayName)
+  PYB11_FILTER_PARAMETER(QString, ProjectedImageVarArrayName)
+  PYB11_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
+  PYB11_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
+  PYB11_PROPERTY(QString ProjectedImageMinArrayName READ getProjectedImageMinArrayName WRITE setProjectedImageMinArrayName)
+  PYB11_PROPERTY(QString ProjectedImageMaxArrayName READ getProjectedImageMaxArrayName WRITE setProjectedImageMaxArrayName)
+  PYB11_PROPERTY(QString ProjectedImageAvgArrayName READ getProjectedImageAvgArrayName WRITE setProjectedImageAvgArrayName)
+  PYB11_PROPERTY(QString ProjectedImageStdArrayName READ getProjectedImageStdArrayName WRITE setProjectedImageStdArrayName)
+  PYB11_PROPERTY(QString ProjectedImageVarArrayName READ getProjectedImageVarArrayName WRITE setProjectedImageVarArrayName)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(FindProjectedImageStatistics)
-  SIMPL_FILTER_NEW_MACRO(FindProjectedImageStatistics)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindProjectedImageStatistics, AbstractFilter)
+  using Self = FindProjectedImageStatistics;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for FindProjectedImageStatistics
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindProjectedImageStatistics
+   */
+  static QString ClassName();
 
   ~FindProjectedImageStatistics() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SelectedArrayPath)
+  /**
+   * @brief Setter property for SelectedArrayPath
+   */
+  void setSelectedArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SelectedArrayPath
+   * @return Value of SelectedArrayPath
+   */
+  DataArrayPath getSelectedArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SelectedArrayPath READ getSelectedArrayPath WRITE setSelectedArrayPath)
 
-  SIMPL_FILTER_PARAMETER(unsigned int, Plane)
+  /**
+   * @brief Setter property for Plane
+   */
+  void setPlane(unsigned int value);
+  /**
+   * @brief Getter property for Plane
+   * @return Value of Plane
+   */
+  unsigned int getPlane() const;
+
   Q_PROPERTY(unsigned int Plane READ getPlane WRITE setPlane)
 
-  SIMPL_FILTER_PARAMETER(QString, ProjectedImageMinArrayName)
+  /**
+   * @brief Setter property for ProjectedImageMinArrayName
+   */
+  void setProjectedImageMinArrayName(const QString& value);
+  /**
+   * @brief Getter property for ProjectedImageMinArrayName
+   * @return Value of ProjectedImageMinArrayName
+   */
+  QString getProjectedImageMinArrayName() const;
+
   Q_PROPERTY(QString ProjectedImageMinArrayName READ getProjectedImageMinArrayName WRITE setProjectedImageMinArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, ProjectedImageMaxArrayName)
+  /**
+   * @brief Setter property for ProjectedImageMaxArrayName
+   */
+  void setProjectedImageMaxArrayName(const QString& value);
+  /**
+   * @brief Getter property for ProjectedImageMaxArrayName
+   * @return Value of ProjectedImageMaxArrayName
+   */
+  QString getProjectedImageMaxArrayName() const;
+
   Q_PROPERTY(QString ProjectedImageMaxArrayName READ getProjectedImageMaxArrayName WRITE setProjectedImageMaxArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, ProjectedImageAvgArrayName)
+  /**
+   * @brief Setter property for ProjectedImageAvgArrayName
+   */
+  void setProjectedImageAvgArrayName(const QString& value);
+  /**
+   * @brief Getter property for ProjectedImageAvgArrayName
+   * @return Value of ProjectedImageAvgArrayName
+   */
+  QString getProjectedImageAvgArrayName() const;
+
   Q_PROPERTY(QString ProjectedImageAvgArrayName READ getProjectedImageAvgArrayName WRITE setProjectedImageAvgArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, ProjectedImageStdArrayName)
+  /**
+   * @brief Setter property for ProjectedImageStdArrayName
+   */
+  void setProjectedImageStdArrayName(const QString& value);
+  /**
+   * @brief Getter property for ProjectedImageStdArrayName
+   * @return Value of ProjectedImageStdArrayName
+   */
+  QString getProjectedImageStdArrayName() const;
+
   Q_PROPERTY(QString ProjectedImageStdArrayName READ getProjectedImageStdArrayName WRITE setProjectedImageStdArrayName)
 
-  SIMPL_FILTER_PARAMETER(QString, ProjectedImageVarArrayName)
+  /**
+   * @brief Setter property for ProjectedImageVarArrayName
+   */
+  void setProjectedImageVarArrayName(const QString& value);
+  /**
+   * @brief Getter property for ProjectedImageVarArrayName
+   * @return Value of ProjectedImageVarArrayName
+   */
+  QString getProjectedImageVarArrayName() const;
+
   Q_PROPERTY(QString ProjectedImageVarArrayName READ getProjectedImageVarArrayName WRITE setProjectedImageVarArrayName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -110,23 +214,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -184,13 +288,27 @@ protected:
   void initialize();
 
 private:
-  DEFINE_IDATAARRAY_VARIABLE(InData)
+  IDataArrayWkPtrType m_InDataPtr;
+  void* m_InData = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(float, ProjectedImageMin)
-  DEFINE_DATAARRAY_VARIABLE(float, ProjectedImageMax)
-  DEFINE_DATAARRAY_VARIABLE(float, ProjectedImageAvg)
-  DEFINE_DATAARRAY_VARIABLE(float, ProjectedImageStd)
-  DEFINE_DATAARRAY_VARIABLE(float, ProjectedImageVar)
+  std::weak_ptr<DataArray<float>> m_ProjectedImageMinPtr;
+  float* m_ProjectedImageMin = nullptr;
+  std::weak_ptr<DataArray<float>> m_ProjectedImageMaxPtr;
+  float* m_ProjectedImageMax = nullptr;
+  std::weak_ptr<DataArray<float>> m_ProjectedImageAvgPtr;
+  float* m_ProjectedImageAvg = nullptr;
+  std::weak_ptr<DataArray<float>> m_ProjectedImageStdPtr;
+  float* m_ProjectedImageStd = nullptr;
+  std::weak_ptr<DataArray<float>> m_ProjectedImageVarPtr;
+  float* m_ProjectedImageVar = nullptr;
+
+  DataArrayPath m_SelectedArrayPath = {};
+  unsigned int m_Plane = {};
+  QString m_ProjectedImageMinArrayName = {};
+  QString m_ProjectedImageMaxArrayName = {};
+  QString m_ProjectedImageAvgArrayName = {};
+  QString m_ProjectedImageStdArrayName = {};
+  QString m_ProjectedImageVarArrayName = {};
 
 public:
   FindProjectedImageStatistics(const FindProjectedImageStatistics&) = delete; // Copy Constructor Not Implemented

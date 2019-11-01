@@ -36,13 +36,11 @@
 
 #pragma once
 
+#include <memory>
+
 #include <cstring> // needed for the ::memcpy function below
 
-#include <QtCore/QString>
-
-#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/FileReader.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
@@ -52,7 +50,24 @@
 class OrientationAnalysis_EXPORT YSChoiAbaqusReader : public FileReader
 {
     Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
     PYB11_CREATE_BINDINGS(YSChoiAbaqusReader SUPERCLASS FileReader)
+    PYB11_SHARED_POINTERS(YSChoiAbaqusReader)
+    PYB11_FILTER_NEW_MACRO(YSChoiAbaqusReader)
+    PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+    PYB11_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+    PYB11_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
+    PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    PYB11_FILTER_PARAMETER(QString, InputFile)
+    PYB11_FILTER_PARAMETER(QString, InputFeatureInfoFile)
+    PYB11_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
+    PYB11_FILTER_PARAMETER(QString, QuatsArrayName)
+    PYB11_FILTER_PARAMETER(QString, AvgQuatsArrayName)
+    PYB11_FILTER_PARAMETER(QString, CellPhasesArrayName)
+    PYB11_FILTER_PARAMETER(QString, SurfaceFeaturesArrayName)
+    PYB11_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+    PYB11_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
     PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
     PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
     PYB11_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
@@ -66,70 +81,203 @@ class OrientationAnalysis_EXPORT YSChoiAbaqusReader : public FileReader
     PYB11_PROPERTY(QString SurfaceFeaturesArrayName READ getSurfaceFeaturesArrayName WRITE setSurfaceFeaturesArrayName)
     PYB11_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
     PYB11_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
+#endif
+
   public:
-    SIMPL_SHARED_POINTERS(YSChoiAbaqusReader)
-    SIMPL_FILTER_NEW_MACRO(YSChoiAbaqusReader)
-    SIMPL_TYPE_MACRO_SUPER_OVERRIDE(YSChoiAbaqusReader, FileReader)
+    using Self = YSChoiAbaqusReader;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static std::shared_ptr<YSChoiAbaqusReader> New();
+
+    /**
+     * @brief Returns the name of the class for YSChoiAbaqusReader
+     */
+    QString getNameOfClass() const override;
+    /**
+     * @brief Returns the name of the class for YSChoiAbaqusReader
+     */
+    static QString ClassName();
 
     ~YSChoiAbaqusReader() override;
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
+    /**
+     * @brief Setter property for DataContainerName
+     */
+    void setDataContainerName(const DataArrayPath& value);
+    /**
+     * @brief Getter property for DataContainerName
+     * @return Value of DataContainerName
+     */
+    DataArrayPath getDataContainerName() const;
+
     Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
 
-    SIMPL_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
+    /**
+     * @brief Setter property for CellEnsembleAttributeMatrixName
+     */
+    void setCellEnsembleAttributeMatrixName(const QString& value);
+    /**
+     * @brief Getter property for CellEnsembleAttributeMatrixName
+     * @return Value of CellEnsembleAttributeMatrixName
+     */
+    QString getCellEnsembleAttributeMatrixName() const;
+
     Q_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(QString, CellFeatureAttributeMatrixName)
+    /**
+     * @brief Setter property for CellFeatureAttributeMatrixName
+     */
+    void setCellFeatureAttributeMatrixName(const QString& value);
+    /**
+     * @brief Getter property for CellFeatureAttributeMatrixName
+     * @return Value of CellFeatureAttributeMatrixName
+     */
+    QString getCellFeatureAttributeMatrixName() const;
+
     Q_PROPERTY(QString CellFeatureAttributeMatrixName READ getCellFeatureAttributeMatrixName WRITE setCellFeatureAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(QString, CellAttributeMatrixName)
+    /**
+     * @brief Setter property for CellAttributeMatrixName
+     */
+    void setCellAttributeMatrixName(const QString& value);
+    /**
+     * @brief Getter property for CellAttributeMatrixName
+     * @return Value of CellAttributeMatrixName
+     */
+    QString getCellAttributeMatrixName() const;
+
     Q_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
 
-    SIMPL_FILTER_PARAMETER(QString, InputFile)
+    /**
+     * @brief Setter property for InputFile
+     */
+    void setInputFile(const QString& value);
+    /**
+     * @brief Getter property for InputFile
+     * @return Value of InputFile
+     */
+    QString getInputFile() const;
+
     Q_PROPERTY(QString InputFile READ getInputFile WRITE setInputFile)
 
-    SIMPL_FILTER_PARAMETER(QString, InputFeatureInfoFile)
+    /**
+     * @brief Setter property for InputFeatureInfoFile
+     */
+    void setInputFeatureInfoFile(const QString& value);
+    /**
+     * @brief Getter property for InputFeatureInfoFile
+     * @return Value of InputFeatureInfoFile
+     */
+    QString getInputFeatureInfoFile() const;
+
     Q_PROPERTY(QString InputFeatureInfoFile READ getInputFeatureInfoFile WRITE setInputFeatureInfoFile)
 
-    SIMPL_FILTER_PARAMETER(QString, CellEulerAnglesArrayName)
+    /**
+     * @brief Setter property for CellEulerAnglesArrayName
+     */
+    void setCellEulerAnglesArrayName(const QString& value);
+    /**
+     * @brief Getter property for CellEulerAnglesArrayName
+     * @return Value of CellEulerAnglesArrayName
+     */
+    QString getCellEulerAnglesArrayName() const;
+
     Q_PROPERTY(QString CellEulerAnglesArrayName READ getCellEulerAnglesArrayName WRITE setCellEulerAnglesArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, QuatsArrayName)
+    /**
+     * @brief Setter property for QuatsArrayName
+     */
+    void setQuatsArrayName(const QString& value);
+    /**
+     * @brief Getter property for QuatsArrayName
+     * @return Value of QuatsArrayName
+     */
+    QString getQuatsArrayName() const;
+
     Q_PROPERTY(QString QuatsArrayName READ getQuatsArrayName WRITE setQuatsArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, AvgQuatsArrayName)
+    /**
+     * @brief Setter property for AvgQuatsArrayName
+     */
+    void setAvgQuatsArrayName(const QString& value);
+    /**
+     * @brief Getter property for AvgQuatsArrayName
+     * @return Value of AvgQuatsArrayName
+     */
+    QString getAvgQuatsArrayName() const;
+
     Q_PROPERTY(QString AvgQuatsArrayName READ getAvgQuatsArrayName WRITE setAvgQuatsArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, CellPhasesArrayName)
+    /**
+     * @brief Setter property for CellPhasesArrayName
+     */
+    void setCellPhasesArrayName(const QString& value);
+    /**
+     * @brief Getter property for CellPhasesArrayName
+     * @return Value of CellPhasesArrayName
+     */
+    QString getCellPhasesArrayName() const;
+
     Q_PROPERTY(QString CellPhasesArrayName READ getCellPhasesArrayName WRITE setCellPhasesArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, SurfaceFeaturesArrayName)
+    /**
+     * @brief Setter property for SurfaceFeaturesArrayName
+     */
+    void setSurfaceFeaturesArrayName(const QString& value);
+    /**
+     * @brief Getter property for SurfaceFeaturesArrayName
+     * @return Value of SurfaceFeaturesArrayName
+     */
+    QString getSurfaceFeaturesArrayName() const;
+
     Q_PROPERTY(QString SurfaceFeaturesArrayName READ getSurfaceFeaturesArrayName WRITE setSurfaceFeaturesArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, FeatureIdsArrayName)
+    /**
+     * @brief Setter property for FeatureIdsArrayName
+     */
+    void setFeatureIdsArrayName(const QString& value);
+    /**
+     * @brief Getter property for FeatureIdsArrayName
+     * @return Value of FeatureIdsArrayName
+     */
+    QString getFeatureIdsArrayName() const;
+
     Q_PROPERTY(QString FeatureIdsArrayName READ getFeatureIdsArrayName WRITE setFeatureIdsArrayName)
 
-    SIMPL_FILTER_PARAMETER(QString, CrystalStructuresArrayName)
+    /**
+     * @brief Setter property for CrystalStructuresArrayName
+     */
+    void setCrystalStructuresArrayName(const QString& value);
+    /**
+     * @brief Getter property for CrystalStructuresArrayName
+     * @return Value of CrystalStructuresArrayName
+     */
+    QString getCrystalStructuresArrayName() const;
+
     Q_PROPERTY(QString CrystalStructuresArrayName READ getCrystalStructuresArrayName WRITE setCrystalStructuresArrayName)
 
     /**
      * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
      */
-    const QString getCompiledLibraryName() const override;
+    QString getCompiledLibraryName() const override;
 
     /**
      * @brief getBrandingString Returns the branding string for the filter, which is a tag
      * used to denote the filter's association with specific plugins
      * @return Branding string
     */
-    const QString getBrandingString() const override;
+    QString getBrandingString() const override;
 
     /**
      * @brief getFilterVersion Returns a version string for this filter. Default
      * value is an empty string.
      * @return
      */
-    const QString getFilterVersion() const override;
+    QString getFilterVersion() const override;
 
     /**
      * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -139,23 +287,23 @@ class OrientationAnalysis_EXPORT YSChoiAbaqusReader : public FileReader
     /**
      * @brief getGroupName Reimplemented from @see AbstractFilter class
      */
-    const QString getGroupName() const override;
+    QString getGroupName() const override;
 
     /**
      * @brief getSubGroupName Reimplemented from @see AbstractFilter class
      */
-    const QString getSubGroupName() const override;
+    QString getSubGroupName() const override;
 
     /**
      * @brief getUuid Return the unique identifier for this filter.
      * @return A QUuid object.
      */
-    const QUuid getUuid() override;
+    QUuid getUuid() const override;
 
     /**
      * @brief getHumanLabel Reimplemented from @see AbstractFilter class
      */
-    const QString getHumanLabel() const override;
+    QString getHumanLabel() const override;
 
     /**
      * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -191,13 +339,34 @@ class OrientationAnalysis_EXPORT YSChoiAbaqusReader : public FileReader
     void initialize();
 
   private:
-    DEFINE_DATAARRAY_VARIABLE(int32_t, FeatureIds)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_DATAARRAY_VARIABLE(bool, SurfaceFeatures)
-    DEFINE_DATAARRAY_VARIABLE(float, Quats)
-    DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
-    DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
+    std::weak_ptr<DataArray<int32_t>> m_FeatureIdsPtr;
+    int32_t* m_FeatureIds = nullptr;
+    std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+    int32_t* m_CellPhases = nullptr;
+    std::weak_ptr<DataArray<bool>> m_SurfaceFeaturesPtr;
+    bool* m_SurfaceFeatures = nullptr;
+    std::weak_ptr<DataArray<float>> m_QuatsPtr;
+    float* m_Quats = nullptr;
+    std::weak_ptr<DataArray<float>> m_AvgQuatsPtr;
+    float* m_AvgQuats = nullptr;
+    std::weak_ptr<DataArray<float>> m_CellEulerAnglesPtr;
+    float* m_CellEulerAngles = nullptr;
+    std::weak_ptr<DataArray<unsigned int>> m_CrystalStructuresPtr;
+    unsigned int* m_CrystalStructures = nullptr;
+
+    DataArrayPath m_DataContainerName = {};
+    QString m_CellEnsembleAttributeMatrixName = {};
+    QString m_CellFeatureAttributeMatrixName = {};
+    QString m_CellAttributeMatrixName = {};
+    QString m_InputFile = {};
+    QString m_InputFeatureInfoFile = {};
+    QString m_CellEulerAnglesArrayName = {};
+    QString m_QuatsArrayName = {};
+    QString m_AvgQuatsArrayName = {};
+    QString m_CellPhasesArrayName = {};
+    QString m_SurfaceFeaturesArrayName = {};
+    QString m_FeatureIdsArrayName = {};
+    QString m_CrystalStructuresArrayName = {};
 
     void updateCellInstancePointers();
 

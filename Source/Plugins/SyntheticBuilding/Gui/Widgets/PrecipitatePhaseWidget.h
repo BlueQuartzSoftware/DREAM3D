@@ -66,11 +66,19 @@ public:
 
   void updatePlots();
 
-  void setCrystalStructure(const unsigned int& xtal) override;
+  void setCrystalStructure(unsigned int xtal) override;
 
-  void setPhaseIndex(const int& index) override;
+  void setPhaseIndex(int index) override;
 
-  SIMPL_INSTANCE_PROPERTY(float, PptFraction)
+  /**
+   * @brief Setter property for PptFraction
+   */
+  void setPptFraction(float value);
+  /**
+   * @brief Getter property for PptFraction
+   * @return Value of PptFraction
+   */
+  float getPptFraction() const;
 
   void extractStatsData(AttributeMatrix::Pointer attrMat, int index) override;
 
@@ -94,6 +102,8 @@ protected:
   void setupGui();
 
 private:
+  float m_PptFraction = {};
+
   QList<QWidget*> m_WidgetList;
 
   StatsGenRDFWidget* m_RdfPlot = nullptr;

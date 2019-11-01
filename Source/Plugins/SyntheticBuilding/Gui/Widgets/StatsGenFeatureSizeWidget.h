@@ -55,10 +55,35 @@ public:
   float getMaxCutOff();
   float getBinStep();
 
-  SIMPL_INSTANCE_PROPERTY(int, PhaseIndex)
-  SIMPL_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
+  /**
+   * @brief Setter property for PhaseIndex
+   */
+  void setPhaseIndex(int value);
+  /**
+   * @brief Getter property for PhaseIndex
+   * @return Value of PhaseIndex
+   */
+  int getPhaseIndex() const;
 
-  SIMPL_INSTANCE_PROPERTY(QwtArray<float>, BinSizes)
+  /**
+   * @brief Setter property for CrystalStructure
+   */
+  void setCrystalStructure(unsigned int value);
+  /**
+   * @brief Getter property for CrystalStructure
+   * @return Value of CrystalStructure
+   */
+  unsigned int getCrystalStructure() const;
+
+  /**
+   * @brief Setter property for BinSizes
+   */
+  void setBinSizes(const QwtArray<float>& value);
+  /**
+   * @brief Getter property for BinSizes
+   * @return Value of BinSizes
+   */
+  QwtArray<float> getBinSizes() const;
 
   /**
    * @brief plotSizeDistribution
@@ -250,6 +275,10 @@ protected:
   void initQwtPlot(const QString& title, const QString& xAxisName, const QString& yAxisName, QwtPlot* plot);
 
 private:
+  int m_PhaseIndex = {};
+  unsigned int m_CrystalStructure = {};
+  QwtArray<float> m_BinSizes = {};
+
   QwtPlotCurve* m_SizeDistributionCurve = nullptr;
   QwtPlotCurve* m_SizeDistCenterPointCurve = nullptr;
   QwtPlotMarker* m_CutOffMin = nullptr;

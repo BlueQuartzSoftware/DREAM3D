@@ -36,6 +36,8 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QString>
 
 #include "SIMPLib/Common/Observable.h"
@@ -60,23 +62,63 @@ class EMMPMLib_EXPORT EMCalculation : public Observable
     Q_OBJECT
 
   public:
-    SIMPL_SHARED_POINTERS(EMCalculation)
-    SIMPL_STATIC_NEW_MACRO(EMCalculation)
-    SIMPL_TYPE_MACRO(EMCalculation)
+    using Self = EMCalculation;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static Pointer New();
+
+    /**
+     * @brief Returns the name of the class for EMCalculation
+     */
+    QString getNameOfClass() const override;
+    /**
+     * @brief Returns the name of the class for EMCalculation
+     */
+    static QString ClassName();
 
     virtual ~EMCalculation();
 
     friend EMCalculationMessageHandler;
 
-    SIMPL_INSTANCE_PROPERTY(EMMPM_Data::Pointer, Data)
-    SIMPL_POINTER_PROPERTY(StatsDelegate, StatsDelegate)
-    SIMPL_INSTANCE_PROPERTY(int, ErrorCode)
+    /**
+     * @brief Setter property for Data
+     */
+    void setData(const EMMPM_Data::Pointer& value);
+    /**
+     * @brief Getter property for Data
+     * @return Value of Data
+     */
+    EMMPM_Data::Pointer getData() const;
+
+    /**
+     * @brief Setter property for StatsDelegate
+     */
+    void setStatsDelegate(StatsDelegate* value);
+    /**
+     * @brief Getter property for StatsDelegate
+     * @return Value of StatsDelegate
+     */
+    StatsDelegate* getStatsDelegate() const;
+
+    /**
+     * @brief Setter property for ErrorCode
+     */
+    void setErrorCode(int value);
+    /**
+     * @brief Getter property for ErrorCode
+     * @return Value of ErrorCode
+     */
+    int getErrorCode() const;
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() const;
+    virtual QString getHumanLabel() const;
 
     /**
      * @fn void EMMPM_CurvatureEMLoops(EMMPM_Data* data, EMMPM_CallbackFunctions* callbacks)
@@ -94,5 +136,11 @@ class EMMPMLib_EXPORT EMCalculation : public Observable
     EMCalculation(EMCalculation&&) = delete;       // Move Constructor Not Implemented
     EMCalculation& operator=(const EMCalculation&) = delete; // Copy Assignment Not Implemented
     EMCalculation& operator=(EMCalculation&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    StatsDelegate* m_StatsDelegate = nullptr;
+
+    EMMPM_Data::Pointer m_Data = {};
+    int m_ErrorCode = {};
 };
 

@@ -36,8 +36,10 @@
 
 #pragma once
 
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationLib/OrientationLib.h"
@@ -53,9 +55,23 @@
 class OrientationLib_EXPORT ModifiedLambertProjection
 {
   public:
-    SIMPL_SHARED_POINTERS(ModifiedLambertProjection)
-    SIMPL_STATIC_NEW_MACRO(ModifiedLambertProjection)
-    SIMPL_TYPE_MACRO(ModifiedLambertProjection)
+    using Self = ModifiedLambertProjection;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static Pointer New();
+
+    /**
+     * @brief Returns the name of the class for ModifiedLambertProjection
+     */
+    QString getNameOfClass() const;
+    /**
+     * @brief Returns the name of the class for ModifiedLambertProjection
+     */
+    static QString ClassName();
 
     virtual ~ModifiedLambertProjection();
 
@@ -77,12 +93,35 @@ class OrientationLib_EXPORT ModifiedLambertProjection
      */
     static Pointer LambertBallToSquare(FloatArrayType* coords, int dimension, float sphereRadius);
 
-    SIMPL_GET_PROPERTY(int, Dimension)
-    SIMPL_GET_PROPERTY(float, StepSize)
-    SIMPL_GET_PROPERTY(float, SphereRadius)
+    /**
+     * @brief Getter property for Dimension
+     * @return Value of Dimension
+     */
+    int getDimension() const;
 
-    SIMPL_GET_PROPERTY(DoubleArrayType::Pointer, NorthSquare)
-    SIMPL_GET_PROPERTY(DoubleArrayType::Pointer, SouthSquare)
+    /**
+     * @brief Getter property for StepSize
+     * @return Value of StepSize
+     */
+    float getStepSize() const;
+
+    /**
+     * @brief Getter property for SphereRadius
+     * @return Value of SphereRadius
+     */
+    float getSphereRadius() const;
+
+    /**
+     * @brief Getter property for NorthSquare
+     * @return Value of NorthSquare
+     */
+    DoubleArrayType::Pointer getNorthSquare() const;
+
+    /**
+     * @brief Getter property for SouthSquare
+     * @return Value of SouthSquare
+     */
+    DoubleArrayType::Pointer getSouthSquare() const;
 
     /**
      * @brief initializeSquares

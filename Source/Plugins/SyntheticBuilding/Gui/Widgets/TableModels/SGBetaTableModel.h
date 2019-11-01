@@ -62,7 +62,7 @@ public:
     ColumnCount
   };
 
-  SGBetaTableModel(QObject* parent = 0);
+  SGBetaTableModel(QObject* parent = nullptr);
   virtual ~SGBetaTableModel();
 
   Qt::ItemFlags flags(const QModelIndex& index) const;

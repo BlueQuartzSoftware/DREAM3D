@@ -35,14 +35,32 @@
 
 #pragma once
 
+#include <memory>
+
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 
-class OEMEbsdScanSelectionFilterParameter : public FilterParameter
+#include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
+
+class OrientationAnalysis_EXPORT OEMEbsdScanSelectionFilterParameter : public FilterParameter
 {
 public:
-  SIMPL_SHARED_POINTERS(OEMEbsdScanSelectionFilterParameter)
-  SIMPL_STATIC_NEW_MACRO(OEMEbsdScanSelectionFilterParameter)
-  SIMPL_TYPE_MACRO(OEMEbsdScanSelectionFilterParameter)
+  using Self = OEMEbsdScanSelectionFilterParameter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
+
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for OEMEbsdScanSelectionFilterParameter
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for OEMEbsdScanSelectionFilterParameter
+   */
+  static QString ClassName();
 
   using SetterCallbackType = std::function<void(QStringList)>;
   using GetterCallbackType = std::function<QStringList(void)>;
@@ -66,10 +84,35 @@ public:
    */
   void writeJson(QJsonObject& json) override;
 
-  SIMPL_INSTANCE_PROPERTY(SetterCallbackType, SetterCallback)
-  SIMPL_INSTANCE_PROPERTY(GetterCallbackType, GetterCallback)
+  /**
+   * @brief Setter property for SetterCallback
+   */
+  void setSetterCallback(const OEMEbsdScanSelectionFilterParameter::SetterCallbackType& value);
+  /**
+   * @brief Getter property for SetterCallback
+   * @return Value of SetterCallback
+   */
+  OEMEbsdScanSelectionFilterParameter::SetterCallbackType getSetterCallback() const;
 
-  SIMPL_INSTANCE_PROPERTY(QString, ListProperty)
+  /**
+   * @brief Setter property for GetterCallback
+   */
+  void setGetterCallback(const OEMEbsdScanSelectionFilterParameter::GetterCallbackType& value);
+  /**
+   * @brief Getter property for GetterCallback
+   * @return Value of GetterCallback
+   */
+  OEMEbsdScanSelectionFilterParameter::GetterCallbackType getGetterCallback() const;
+
+  /**
+   * @brief Setter property for ListProperty
+   */
+  void setListProperty(const QString& value);
+  /**
+   * @brief Getter property for ListProperty
+   * @return Value of ListProperty
+   */
+  QString getListProperty() const;
 
 protected:
   OEMEbsdScanSelectionFilterParameter();
@@ -79,4 +122,9 @@ public:
   OEMEbsdScanSelectionFilterParameter(OEMEbsdScanSelectionFilterParameter&&) = delete;                 // Move Constructor Not Implemented
   OEMEbsdScanSelectionFilterParameter& operator=(const OEMEbsdScanSelectionFilterParameter&) = delete; // Copy Assignment Not Implemented
   OEMEbsdScanSelectionFilterParameter& operator=(OEMEbsdScanSelectionFilterParameter&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  OEMEbsdScanSelectionFilterParameter::SetterCallbackType m_SetterCallback = {};
+  OEMEbsdScanSelectionFilterParameter::GetterCallbackType m_GetterCallback = {};
+  QString m_ListProperty = {};
 };

@@ -33,12 +33,17 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "NodesTrianglesToStl.h"
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputPathFilterParameter.h"
@@ -457,7 +462,7 @@ AbstractFilter::Pointer NodesTrianglesToStl::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToStl::getCompiledLibraryName() const
+QString NodesTrianglesToStl::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -465,7 +470,7 @@ const QString NodesTrianglesToStl::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToStl::getBrandingString() const
+QString NodesTrianglesToStl::getBrandingString() const
 {
   return "IO";
 }
@@ -473,7 +478,7 @@ const QString NodesTrianglesToStl::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToStl::getFilterVersion() const
+QString NodesTrianglesToStl::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -484,7 +489,7 @@ const QString NodesTrianglesToStl::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToStl::getGroupName() const
+QString NodesTrianglesToStl::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -492,7 +497,7 @@ const QString NodesTrianglesToStl::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid NodesTrianglesToStl::getUuid()
+QUuid NodesTrianglesToStl::getUuid() const
 {
   return QUuid("{5c4e21ac-902d-51d6-992b-2ddb89f26b84}");
 }
@@ -500,7 +505,7 @@ const QUuid NodesTrianglesToStl::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToStl::getSubGroupName() const
+QString NodesTrianglesToStl::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -508,7 +513,84 @@ const QString NodesTrianglesToStl::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToStl::getHumanLabel() const
+QString NodesTrianglesToStl::getHumanLabel() const
 {
   return "Convert Nodes & Triangles To STL Files";
+}
+
+// -----------------------------------------------------------------------------
+NodesTrianglesToStl::Pointer NodesTrianglesToStl::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<NodesTrianglesToStl> NodesTrianglesToStl::New()
+{
+  struct make_shared_enabler : public NodesTrianglesToStl
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString NodesTrianglesToStl::getNameOfClass() const
+{
+  return QString("NodesTrianglesToStl");
+}
+
+// -----------------------------------------------------------------------------
+QString NodesTrianglesToStl::ClassName()
+{
+  return QString("NodesTrianglesToStl");
+}
+
+// -----------------------------------------------------------------------------
+void NodesTrianglesToStl::setNodesFile(const QString& value)
+{
+  m_NodesFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString NodesTrianglesToStl::getNodesFile() const
+{
+  return m_NodesFile;
+}
+
+// -----------------------------------------------------------------------------
+void NodesTrianglesToStl::setTrianglesFile(const QString& value)
+{
+  m_TrianglesFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString NodesTrianglesToStl::getTrianglesFile() const
+{
+  return m_TrianglesFile;
+}
+
+// -----------------------------------------------------------------------------
+void NodesTrianglesToStl::setOutputStlDirectory(const QString& value)
+{
+  m_OutputStlDirectory = value;
+}
+
+// -----------------------------------------------------------------------------
+QString NodesTrianglesToStl::getOutputStlDirectory() const
+{
+  return m_OutputStlDirectory;
+}
+
+// -----------------------------------------------------------------------------
+void NodesTrianglesToStl::setOutputStlPrefix(const QString& value)
+{
+  m_OutputStlPrefix = value;
+}
+
+// -----------------------------------------------------------------------------
+QString NodesTrianglesToStl::getOutputStlPrefix() const
+{
+  return m_OutputStlPrefix;
 }

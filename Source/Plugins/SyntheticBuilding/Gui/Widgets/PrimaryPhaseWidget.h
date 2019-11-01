@@ -44,12 +44,28 @@ public:
 
   void updatePlots();
 
-  SIMPL_INSTANCE_PROPERTY(PhaseType::Type, PhaseType)
+  /**
+   * @brief Setter property for PhaseType
+   */
+  void setPhaseType(PhaseType::Type value) override;
+  /**
+   * @brief Getter property for PhaseType
+   * @return Value of PhaseType
+   */
+  PhaseType::Type getPhaseType() const override;
 
-  void setCrystalStructure(const unsigned int& xtal) override;
-  void setPhaseIndex(const int& index) override;
+  void setCrystalStructure(unsigned int xtal) override;
+  void setPhaseIndex(int index) override;
 
-  SIMPL_INSTANCE_PROPERTY(QList<StatsGenPlotWidget*>, SGPlotWidgets)
+  /**
+   * @brief Setter property for SGPlotWidgets
+   */
+  void setSGPlotWidgets(const QList<StatsGenPlotWidget*>& value);
+  /**
+   * @brief Getter property for SGPlotWidgets
+   * @return Value of SGPlotWidgets
+   */
+  QList<StatsGenPlotWidget*> getSGPlotWidgets() const;
 
   void setOmega3PlotWidget(StatsGenPlotWidget* w);
   StatsGenPlotWidget* getOmega3PlotWidget();
@@ -125,6 +141,9 @@ protected:
   void setTabsPlotTabsEnabled(bool b);
 
 private:
+  PhaseType::Type m_PhaseType = {};
+  QList<StatsGenPlotWidget*> m_SGPlotWidgets = {};
+
   QList<QWidget*> m_WidgetList;
   bool m_ResetData = false;
 

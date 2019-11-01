@@ -33,9 +33,14 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindMicroTextureRegions.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -43,6 +48,8 @@
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -308,7 +315,7 @@ AbstractFilter::Pointer FindMicroTextureRegions::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindMicroTextureRegions::getCompiledLibraryName() const
+QString FindMicroTextureRegions::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -316,7 +323,7 @@ const QString FindMicroTextureRegions::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindMicroTextureRegions::getBrandingString() const
+QString FindMicroTextureRegions::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -324,7 +331,7 @@ const QString FindMicroTextureRegions::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindMicroTextureRegions::getFilterVersion() const
+QString FindMicroTextureRegions::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -335,7 +342,7 @@ const QString FindMicroTextureRegions::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindMicroTextureRegions::getGroupName() const
+QString FindMicroTextureRegions::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -343,7 +350,7 @@ const QString FindMicroTextureRegions::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindMicroTextureRegions::getUuid()
+QUuid FindMicroTextureRegions::getUuid() const
 {
   return QUuid("{90f8e3b1-2460-5862-95a1-a9e06f5ee75e}");
 }
@@ -351,7 +358,7 @@ const QUuid FindMicroTextureRegions::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindMicroTextureRegions::getSubGroupName() const
+QString FindMicroTextureRegions::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -359,7 +366,84 @@ const QString FindMicroTextureRegions::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindMicroTextureRegions::getHumanLabel() const
+QString FindMicroTextureRegions::getHumanLabel() const
 {
   return "Find MicroTexture Regions";
+}
+
+// -----------------------------------------------------------------------------
+FindMicroTextureRegions::Pointer FindMicroTextureRegions::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindMicroTextureRegions> FindMicroTextureRegions::New()
+{
+  struct make_shared_enabler : public FindMicroTextureRegions
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindMicroTextureRegions::getNameOfClass() const
+{
+  return QString("FindMicroTextureRegions");
+}
+
+// -----------------------------------------------------------------------------
+QString FindMicroTextureRegions::ClassName()
+{
+  return QString("FindMicroTextureRegions");
+}
+
+// -----------------------------------------------------------------------------
+void FindMicroTextureRegions::setCellFeatureAttributeMatrixName(const DataArrayPath& value)
+{
+  m_CellFeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindMicroTextureRegions::getCellFeatureAttributeMatrixName() const
+{
+  return m_CellFeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void FindMicroTextureRegions::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindMicroTextureRegions::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindMicroTextureRegions::setMicroTextureRegionNumCellsArrayName(const QString& value)
+{
+  m_MicroTextureRegionNumCellsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindMicroTextureRegions::getMicroTextureRegionNumCellsArrayName() const
+{
+  return m_MicroTextureRegionNumCellsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindMicroTextureRegions::setMicroTextureRegionFractionOccupiedArrayName(const QString& value)
+{
+  m_MicroTextureRegionFractionOccupiedArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindMicroTextureRegions::getMicroTextureRegionFractionOccupiedArrayName() const
+{
+  return m_MicroTextureRegionFractionOccupiedArrayName;
 }

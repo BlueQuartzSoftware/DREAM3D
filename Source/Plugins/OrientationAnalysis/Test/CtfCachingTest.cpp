@@ -33,8 +33,12 @@
 #include <QtCore/QFile>
 #include <QtCore/QThread>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <QtCore/QTextStream>
+
+#include <QtCore/QDebug>
+
 #include "SIMPLib/DataArrays/DataArray.hpp"
+
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
@@ -42,6 +46,8 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+
 #include "UnitTestSupport.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisFilters/ReadCtfData.h"
@@ -72,7 +78,24 @@ public:
   virtual ~CtfCachingTest()
   {
   }
-  SIMPL_TYPE_MACRO(CtfCachingTest)
+  /**
+   * @brief Returns the name of the class for CtfCachingTest
+   */
+  /**
+   * @brief Returns the name of the class for CtfCachingTest
+   */
+  QString getNameOfClass() const
+  {
+    return QString("CtfCachingTest");
+  }
+
+  /**
+   * @brief Returns the name of the class for CtfCachingTest
+   */
+  QString ClassName()
+  {
+    return QString("CtfCachingTest");
+  }
 
   // -----------------------------------------------------------------------------
   //

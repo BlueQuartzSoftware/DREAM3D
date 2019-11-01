@@ -236,3 +236,40 @@ unsigned int PrimaryRolledPreset::getDistributionType(const QString& distType)
   }
   return SIMPL::DistributionType::UnknownDistributionType;
 }
+
+// -----------------------------------------------------------------------------
+PrimaryRolledPreset::Pointer PrimaryRolledPreset::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+PrimaryRolledPreset::Pointer PrimaryRolledPreset::New()
+{
+  Pointer sharedPtr(new(PrimaryRolledPreset));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+void PrimaryRolledPreset::setAspectRatio1(float value)
+{
+  m_AspectRatio1 = value;
+}
+
+// -----------------------------------------------------------------------------
+float PrimaryRolledPreset::getAspectRatio1() const
+{
+  return m_AspectRatio1;
+}
+
+// -----------------------------------------------------------------------------
+void PrimaryRolledPreset::setAspectRatio2(float value)
+{
+  m_AspectRatio2 = value;
+}
+
+// -----------------------------------------------------------------------------
+float PrimaryRolledPreset::getAspectRatio2() const
+{
+  return m_AspectRatio2;
+}

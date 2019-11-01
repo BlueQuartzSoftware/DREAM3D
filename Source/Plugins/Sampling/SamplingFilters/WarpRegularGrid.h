@@ -35,12 +35,13 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/FilterParameters/FourthOrderPolynomialFilterParameter.h"
 #include "SIMPLib/FilterParameters/SecondOrderPolynomialFilterParameter.h"
 #include "SIMPLib/FilterParameters/ThirdOrderPolynomialFilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
 
 #include "Sampling/SamplingDLLExport.h"
 
@@ -50,72 +51,201 @@
 class Sampling_EXPORT WarpRegularGrid : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(WarpRegularGrid SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
-    PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
-    PYB11_PROPERTY(int PolyOrder READ getPolyOrder WRITE setPolyOrder)
-    PYB11_PROPERTY(Float2ndOrderPoly_t SecondOrderACoeff READ getSecondOrderACoeff WRITE setSecondOrderACoeff)
-    PYB11_PROPERTY(Float2ndOrderPoly_t SecondOrderBCoeff READ getSecondOrderBCoeff WRITE setSecondOrderBCoeff)
-    PYB11_PROPERTY(Float3rdOrderPoly_t ThirdOrderACoeff READ getThirdOrderACoeff WRITE setThirdOrderACoeff)
-    PYB11_PROPERTY(Float3rdOrderPoly_t ThirdOrderBCoeff READ getThirdOrderBCoeff WRITE setThirdOrderBCoeff)
-    PYB11_PROPERTY(Float4thOrderPoly_t FourthOrderACoeff READ getFourthOrderACoeff WRITE setFourthOrderACoeff)
-    PYB11_PROPERTY(Float4thOrderPoly_t FourthOrderBCoeff READ getFourthOrderBCoeff WRITE setFourthOrderBCoeff)
-    PYB11_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(WarpRegularGrid SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(WarpRegularGrid)
+  PYB11_FILTER_NEW_MACRO(WarpRegularGrid)
+  PYB11_FILTER_PARAMETER(DataArrayPath, NewDataContainerName)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
+  PYB11_FILTER_PARAMETER(int, PolyOrder)
+  PYB11_FILTER_PARAMETER(Float2ndOrderPoly_t, SecondOrderACoeff)
+  PYB11_FILTER_PARAMETER(Float2ndOrderPoly_t, SecondOrderBCoeff)
+  PYB11_FILTER_PARAMETER(Float3rdOrderPoly_t, ThirdOrderACoeff)
+  PYB11_FILTER_PARAMETER(Float3rdOrderPoly_t, ThirdOrderBCoeff)
+  PYB11_FILTER_PARAMETER(Float4thOrderPoly_t, FourthOrderACoeff)
+  PYB11_FILTER_PARAMETER(Float4thOrderPoly_t, FourthOrderBCoeff)
+  PYB11_FILTER_PARAMETER(bool, SaveAsNewDataContainer)
+  PYB11_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
+  PYB11_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
+  PYB11_PROPERTY(int PolyOrder READ getPolyOrder WRITE setPolyOrder)
+  PYB11_PROPERTY(Float2ndOrderPoly_t SecondOrderACoeff READ getSecondOrderACoeff WRITE setSecondOrderACoeff)
+  PYB11_PROPERTY(Float2ndOrderPoly_t SecondOrderBCoeff READ getSecondOrderBCoeff WRITE setSecondOrderBCoeff)
+  PYB11_PROPERTY(Float3rdOrderPoly_t ThirdOrderACoeff READ getThirdOrderACoeff WRITE setThirdOrderACoeff)
+  PYB11_PROPERTY(Float3rdOrderPoly_t ThirdOrderBCoeff READ getThirdOrderBCoeff WRITE setThirdOrderBCoeff)
+  PYB11_PROPERTY(Float4thOrderPoly_t FourthOrderACoeff READ getFourthOrderACoeff WRITE setFourthOrderACoeff)
+  PYB11_PROPERTY(Float4thOrderPoly_t FourthOrderBCoeff READ getFourthOrderBCoeff WRITE setFourthOrderBCoeff)
+  PYB11_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(WarpRegularGrid)
-  SIMPL_FILTER_NEW_MACRO(WarpRegularGrid)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(WarpRegularGrid, AbstractFilter)
+  using Self = WarpRegularGrid;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for WarpRegularGrid
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for WarpRegularGrid
+   */
+  static QString ClassName();
 
   ~WarpRegularGrid() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NewDataContainerName)
+  /**
+   * @brief Setter property for NewDataContainerName
+   */
+  void setNewDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NewDataContainerName
+   * @return Value of NewDataContainerName
+   */
+  DataArrayPath getNewDataContainerName() const;
+
   Q_PROPERTY(DataArrayPath NewDataContainerName READ getNewDataContainerName WRITE setNewDataContainerName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellAttributeMatrixPath)
+  /**
+   * @brief Setter property for CellAttributeMatrixPath
+   */
+  void setCellAttributeMatrixPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellAttributeMatrixPath
+   * @return Value of CellAttributeMatrixPath
+   */
+  DataArrayPath getCellAttributeMatrixPath() const;
+
   Q_PROPERTY(DataArrayPath CellAttributeMatrixPath READ getCellAttributeMatrixPath WRITE setCellAttributeMatrixPath)
 
-  SIMPL_FILTER_PARAMETER(int, PolyOrder)
+  /**
+   * @brief Setter property for PolyOrder
+   */
+  void setPolyOrder(int value);
+  /**
+   * @brief Getter property for PolyOrder
+   * @return Value of PolyOrder
+   */
+  int getPolyOrder() const;
+
   Q_PROPERTY(int PolyOrder READ getPolyOrder WRITE setPolyOrder)
 
-  SIMPL_FILTER_PARAMETER(Float2ndOrderPoly_t, SecondOrderACoeff)
+  /**
+   * @brief Setter property for SecondOrderACoeff
+   */
+  void setSecondOrderACoeff(const Float2ndOrderPoly_t& value);
+  /**
+   * @brief Getter property for SecondOrderACoeff
+   * @return Value of SecondOrderACoeff
+   */
+  Float2ndOrderPoly_t getSecondOrderACoeff() const;
+
   Q_PROPERTY(Float2ndOrderPoly_t SecondOrderACoeff READ getSecondOrderACoeff WRITE setSecondOrderACoeff)
 
-  SIMPL_FILTER_PARAMETER(Float2ndOrderPoly_t, SecondOrderBCoeff)
+  /**
+   * @brief Setter property for SecondOrderBCoeff
+   */
+  void setSecondOrderBCoeff(const Float2ndOrderPoly_t& value);
+  /**
+   * @brief Getter property for SecondOrderBCoeff
+   * @return Value of SecondOrderBCoeff
+   */
+  Float2ndOrderPoly_t getSecondOrderBCoeff() const;
+
   Q_PROPERTY(Float2ndOrderPoly_t SecondOrderBCoeff READ getSecondOrderBCoeff WRITE setSecondOrderBCoeff)
 
-  SIMPL_FILTER_PARAMETER(Float3rdOrderPoly_t, ThirdOrderACoeff)
+  /**
+   * @brief Setter property for ThirdOrderACoeff
+   */
+  void setThirdOrderACoeff(const Float3rdOrderPoly_t& value);
+  /**
+   * @brief Getter property for ThirdOrderACoeff
+   * @return Value of ThirdOrderACoeff
+   */
+  Float3rdOrderPoly_t getThirdOrderACoeff() const;
+
   Q_PROPERTY(Float3rdOrderPoly_t ThirdOrderACoeff READ getThirdOrderACoeff WRITE setThirdOrderACoeff)
 
-  SIMPL_FILTER_PARAMETER(Float3rdOrderPoly_t, ThirdOrderBCoeff)
+  /**
+   * @brief Setter property for ThirdOrderBCoeff
+   */
+  void setThirdOrderBCoeff(const Float3rdOrderPoly_t& value);
+  /**
+   * @brief Getter property for ThirdOrderBCoeff
+   * @return Value of ThirdOrderBCoeff
+   */
+  Float3rdOrderPoly_t getThirdOrderBCoeff() const;
+
   Q_PROPERTY(Float3rdOrderPoly_t ThirdOrderBCoeff READ getThirdOrderBCoeff WRITE setThirdOrderBCoeff)
 
-  SIMPL_FILTER_PARAMETER(Float4thOrderPoly_t, FourthOrderACoeff)
+  /**
+   * @brief Setter property for FourthOrderACoeff
+   */
+  void setFourthOrderACoeff(const Float4thOrderPoly_t& value);
+  /**
+   * @brief Getter property for FourthOrderACoeff
+   * @return Value of FourthOrderACoeff
+   */
+  Float4thOrderPoly_t getFourthOrderACoeff() const;
+
   Q_PROPERTY(Float4thOrderPoly_t FourthOrderACoeff READ getFourthOrderACoeff WRITE setFourthOrderACoeff)
 
-  SIMPL_FILTER_PARAMETER(Float4thOrderPoly_t, FourthOrderBCoeff)
+  /**
+   * @brief Setter property for FourthOrderBCoeff
+   */
+  void setFourthOrderBCoeff(const Float4thOrderPoly_t& value);
+  /**
+   * @brief Getter property for FourthOrderBCoeff
+   * @return Value of FourthOrderBCoeff
+   */
+  Float4thOrderPoly_t getFourthOrderBCoeff() const;
+
   Q_PROPERTY(Float4thOrderPoly_t FourthOrderBCoeff READ getFourthOrderBCoeff WRITE setFourthOrderBCoeff)
 
-  SIMPL_FILTER_PARAMETER(bool, SaveAsNewDataContainer)
+  /**
+   * @brief Setter property for SaveAsNewDataContainer
+   */
+  void setSaveAsNewDataContainer(bool value);
+  /**
+   * @brief Getter property for SaveAsNewDataContainer
+   * @return Value of SaveAsNewDataContainer
+   */
+  bool getSaveAsNewDataContainer() const;
+
   Q_PROPERTY(bool SaveAsNewDataContainer READ getSaveAsNewDataContainer WRITE setSaveAsNewDataContainer)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -125,23 +255,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -212,5 +342,17 @@ public:
   WarpRegularGrid(WarpRegularGrid&&) = delete;      // Move Constructor Not Implemented
   WarpRegularGrid& operator=(const WarpRegularGrid&) = delete; // Copy Assignment Not Implemented
   WarpRegularGrid& operator=(WarpRegularGrid&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  DataArrayPath m_NewDataContainerName = {};
+  DataArrayPath m_CellAttributeMatrixPath = {};
+  int m_PolyOrder = {};
+  Float2ndOrderPoly_t m_SecondOrderACoeff = {};
+  Float2ndOrderPoly_t m_SecondOrderBCoeff = {};
+  Float3rdOrderPoly_t m_ThirdOrderACoeff = {};
+  Float3rdOrderPoly_t m_ThirdOrderBCoeff = {};
+  Float4thOrderPoly_t m_FourthOrderACoeff = {};
+  Float4thOrderPoly_t m_FourthOrderBCoeff = {};
+  bool m_SaveAsNewDataContainer = {};
 };
 

@@ -35,9 +35,10 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
 
 #include "SurfaceMeshing/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
@@ -49,107 +50,171 @@
 class SurfaceMeshing_EXPORT GenerateGeometryConnectivity : public SurfaceMeshFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(GenerateGeometryConnectivity SUPERCLASS SurfaceMeshFilter)
-    PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
-    PYB11_PROPERTY(bool GenerateVertexTriangleLists READ getGenerateVertexTriangleLists WRITE setGenerateVertexTriangleLists)
-    PYB11_PROPERTY(bool GenerateTriangleNeighbors READ getGenerateTriangleNeighbors WRITE setGenerateTriangleNeighbors)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(GenerateGeometryConnectivity SUPERCLASS SurfaceMeshFilter)
+  PYB11_SHARED_POINTERS(GenerateGeometryConnectivity)
+  PYB11_FILTER_NEW_MACRO(GenerateGeometryConnectivity)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceDataContainerName)
+  PYB11_FILTER_PARAMETER(bool, GenerateVertexTriangleLists)
+  PYB11_FILTER_PARAMETER(bool, GenerateTriangleNeighbors)
+  PYB11_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+  PYB11_PROPERTY(bool GenerateVertexTriangleLists READ getGenerateVertexTriangleLists WRITE setGenerateVertexTriangleLists)
+  PYB11_PROPERTY(bool GenerateTriangleNeighbors READ getGenerateTriangleNeighbors WRITE setGenerateTriangleNeighbors)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(GenerateGeometryConnectivity)
-  SIMPL_FILTER_NEW_MACRO(GenerateGeometryConnectivity)
-   SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GenerateGeometryConnectivity, SurfaceMeshFilter)
+  using Self = GenerateGeometryConnectivity;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
 
-   ~GenerateGeometryConnectivity() override;
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
 
-   SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceDataContainerName)
-   Q_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
+  /**
+   * @brief Returns the name of the class for GenerateGeometryConnectivity
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for GenerateGeometryConnectivity
+   */
+  static QString ClassName();
 
-   SIMPL_FILTER_PARAMETER(bool, GenerateVertexTriangleLists)
-   Q_PROPERTY(bool GenerateVertexTriangleLists READ getGenerateVertexTriangleLists WRITE setGenerateVertexTriangleLists)
+  ~GenerateGeometryConnectivity() override;
 
-   SIMPL_FILTER_PARAMETER(bool, GenerateTriangleNeighbors)
-   Q_PROPERTY(bool GenerateTriangleNeighbors READ getGenerateTriangleNeighbors WRITE setGenerateTriangleNeighbors)
+  /**
+   * @brief Setter property for SurfaceDataContainerName
+   */
+  void setSurfaceDataContainerName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceDataContainerName
+   * @return Value of SurfaceDataContainerName
+   */
+  DataArrayPath getSurfaceDataContainerName() const;
 
-   /**
-    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
-    */
-   const QString getCompiledLibraryName() const override;
+  Q_PROPERTY(DataArrayPath SurfaceDataContainerName READ getSurfaceDataContainerName WRITE setSurfaceDataContainerName)
 
-   /**
-    * @brief getBrandingString Returns the branding string for the filter, which is a tag
-    * used to denote the filter's association with specific plugins
-    * @return Branding string
-    */
-   const QString getBrandingString() const override;
+  /**
+   * @brief Setter property for GenerateVertexTriangleLists
+   */
+  void setGenerateVertexTriangleLists(bool value);
+  /**
+   * @brief Getter property for GenerateVertexTriangleLists
+   * @return Value of GenerateVertexTriangleLists
+   */
+  bool getGenerateVertexTriangleLists() const;
 
-   /**
-    * @brief getFilterVersion Returns a version string for this filter. Default
-    * value is an empty string.
-    * @return
-    */
-   const QString getFilterVersion() const override;
+  Q_PROPERTY(bool GenerateVertexTriangleLists READ getGenerateVertexTriangleLists WRITE setGenerateVertexTriangleLists)
 
-   /**
-    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-    */
-   AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+  /**
+   * @brief Setter property for GenerateTriangleNeighbors
+   */
+  void setGenerateTriangleNeighbors(bool value);
+  /**
+   * @brief Getter property for GenerateTriangleNeighbors
+   * @return Value of GenerateTriangleNeighbors
+   */
+  bool getGenerateTriangleNeighbors() const;
 
-   /**
-    * @brief getGroupName Reimplemented from @see AbstractFilter class
-    */
-   const QString getGroupName() const override;
+  Q_PROPERTY(bool GenerateTriangleNeighbors READ getGenerateTriangleNeighbors WRITE setGenerateTriangleNeighbors)
 
-   /**
-    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-    */
-   const QString getSubGroupName() const override;
+  /**
+   * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
+   */
+  QString getCompiledLibraryName() const override;
 
-   /**
-    * @brief getUuid Return the unique identifier for this filter.
-    * @return A QUuid object.
-    */
-   const QUuid getUuid() override;
+  /**
+   * @brief getBrandingString Returns the branding string for the filter, which is a tag
+   * used to denote the filter's association with specific plugins
+   * @return Branding string
+   */
+  QString getBrandingString() const override;
 
-   /**
-    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-    */
-   const QString getHumanLabel() const override;
+  /**
+   * @brief getFilterVersion Returns a version string for this filter. Default
+   * value is an empty string.
+   * @return
+   */
+  QString getFilterVersion() const override;
 
-   /**
-    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-    */
-   void setupFilterParameters() override;
+  /**
+   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+   */
+  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
-   /**
-    * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-    */
-   void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+  /**
+   * @brief getGroupName Reimplemented from @see AbstractFilter class
+   */
+  QString getGroupName() const override;
 
-   /**
-    * @brief execute Reimplemented from @see AbstractFilter class
-    */
-   void execute() override;
+  /**
+   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+   */
+  QString getSubGroupName() const override;
 
-   /**
-    * @brief preflight Reimplemented from @see AbstractFilter class
-    */
-   void preflight() override;
+  /**
+   * @brief getUuid Return the unique identifier for this filter.
+   * @return A QUuid object.
+   */
+  QUuid getUuid() const override;
 
- protected:
-   GenerateGeometryConnectivity();
-   /**
-    * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
-    */
-   void dataCheck();
+  /**
+   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+   */
+  QString getHumanLabel() const override;
 
-   /**
-    * @brief Initializes all the private instance variables.
-    */
-   void initialize();
+  /**
+   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  void setupFilterParameters() override;
 
- public:
-   GenerateGeometryConnectivity(const GenerateGeometryConnectivity&) = delete;            // Copy Constructor Not Implemented
-   GenerateGeometryConnectivity(GenerateGeometryConnectivity&&) = delete;                 // Move Constructor Not Implemented
-   GenerateGeometryConnectivity& operator=(const GenerateGeometryConnectivity&) = delete; // Copy Assignment Not Implemented
-   GenerateGeometryConnectivity& operator=(GenerateGeometryConnectivity&&) = delete;      // Move assignment Not Implemented
+  /**
+   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+   */
+  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+
+  /**
+   * @brief execute Reimplemented from @see AbstractFilter class
+   */
+  void execute() override;
+
+  /**
+   * @brief preflight Reimplemented from @see AbstractFilter class
+   */
+  void preflight() override;
+
+protected:
+  GenerateGeometryConnectivity();
+  /**
+   * @brief dataCheck Checks for the appropriate parameter values and availability of arrays
+   */
+  void dataCheck();
+
+  /**
+   * @brief Initializes all the private instance variables.
+   */
+  void initialize();
+
+public:
+  GenerateGeometryConnectivity(const GenerateGeometryConnectivity&) = delete;            // Copy Constructor Not Implemented
+  GenerateGeometryConnectivity(GenerateGeometryConnectivity&&) = delete;                 // Move Constructor Not Implemented
+  GenerateGeometryConnectivity& operator=(const GenerateGeometryConnectivity&) = delete; // Copy Assignment Not Implemented
+  GenerateGeometryConnectivity& operator=(GenerateGeometryConnectivity&&) = delete;      // Move assignment Not Implemented
+
+private:
+  DataArrayPath m_SurfaceDataContainerName = {};
+  bool m_GenerateVertexTriangleLists = {};
+  bool m_GenerateTriangleNeighbors = {};
 };
 

@@ -107,3 +107,64 @@ void OEMEbsdScanSelectionFilterParameter::writeJson(QJsonObject& json)
 
   json["SelectedScanNames"] = scanNamesArray;
 }
+
+// -----------------------------------------------------------------------------
+OEMEbsdScanSelectionFilterParameter::Pointer OEMEbsdScanSelectionFilterParameter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+OEMEbsdScanSelectionFilterParameter::Pointer OEMEbsdScanSelectionFilterParameter::New()
+{
+  Pointer sharedPtr(new(OEMEbsdScanSelectionFilterParameter));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString OEMEbsdScanSelectionFilterParameter::getNameOfClass() const
+{
+  return QString("OEMEbsdScanSelectionFilterParameter");
+}
+
+// -----------------------------------------------------------------------------
+QString OEMEbsdScanSelectionFilterParameter::ClassName()
+{
+  return QString("OEMEbsdScanSelectionFilterParameter");
+}
+
+// -----------------------------------------------------------------------------
+void OEMEbsdScanSelectionFilterParameter::setSetterCallback(const OEMEbsdScanSelectionFilterParameter::SetterCallbackType& value)
+{
+  m_SetterCallback = value;
+}
+
+// -----------------------------------------------------------------------------
+OEMEbsdScanSelectionFilterParameter::SetterCallbackType OEMEbsdScanSelectionFilterParameter::getSetterCallback() const
+{
+  return m_SetterCallback;
+}
+
+// -----------------------------------------------------------------------------
+void OEMEbsdScanSelectionFilterParameter::setGetterCallback(const OEMEbsdScanSelectionFilterParameter::GetterCallbackType& value)
+{
+  m_GetterCallback = value;
+}
+
+// -----------------------------------------------------------------------------
+OEMEbsdScanSelectionFilterParameter::GetterCallbackType OEMEbsdScanSelectionFilterParameter::getGetterCallback() const
+{
+  return m_GetterCallback;
+}
+
+// -----------------------------------------------------------------------------
+void OEMEbsdScanSelectionFilterParameter::setListProperty(const QString& value)
+{
+  m_ListProperty = value;
+}
+
+// -----------------------------------------------------------------------------
+QString OEMEbsdScanSelectionFilterParameter::getListProperty() const
+{
+  return m_ListProperty;
+}

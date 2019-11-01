@@ -33,6 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindTwinBoundarySchmidFactors.h"
 
 #include <fstream>
@@ -44,7 +46,10 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
@@ -57,6 +62,7 @@
 #include "SIMPLib/Geometry/TriangleGeom.h"
 #include "SIMPLib/Math/GeometryMath.h"
 #include "SIMPLib/Utilities/FileSystemPathHelper.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 
 
@@ -516,7 +522,7 @@ AbstractFilter::Pointer FindTwinBoundarySchmidFactors::newFilterInstance(bool co
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundarySchmidFactors::getCompiledLibraryName() const
+QString FindTwinBoundarySchmidFactors::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -524,7 +530,7 @@ const QString FindTwinBoundarySchmidFactors::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundarySchmidFactors::getBrandingString() const
+QString FindTwinBoundarySchmidFactors::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -532,7 +538,7 @@ const QString FindTwinBoundarySchmidFactors::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundarySchmidFactors::getFilterVersion() const
+QString FindTwinBoundarySchmidFactors::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -542,7 +548,7 @@ const QString FindTwinBoundarySchmidFactors::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundarySchmidFactors::getGroupName() const
+QString FindTwinBoundarySchmidFactors::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -550,7 +556,7 @@ const QString FindTwinBoundarySchmidFactors::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindTwinBoundarySchmidFactors::getUuid()
+QUuid FindTwinBoundarySchmidFactors::getUuid() const
 {
   return QUuid("{b0e30e6d-912d-5a7e-aeed-750134aba86b}");
 }
@@ -558,7 +564,7 @@ const QUuid FindTwinBoundarySchmidFactors::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundarySchmidFactors::getSubGroupName() const
+QString FindTwinBoundarySchmidFactors::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -566,7 +572,156 @@ const QString FindTwinBoundarySchmidFactors::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindTwinBoundarySchmidFactors::getHumanLabel() const
+QString FindTwinBoundarySchmidFactors::getHumanLabel() const
 {
   return "Find Twin Boundary Schmid Factors";
+}
+
+// -----------------------------------------------------------------------------
+FindTwinBoundarySchmidFactors::Pointer FindTwinBoundarySchmidFactors::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindTwinBoundarySchmidFactors> FindTwinBoundarySchmidFactors::New()
+{
+  struct make_shared_enabler : public FindTwinBoundarySchmidFactors
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindTwinBoundarySchmidFactors::getNameOfClass() const
+{
+  return QString("FindTwinBoundarySchmidFactors");
+}
+
+// -----------------------------------------------------------------------------
+QString FindTwinBoundarySchmidFactors::ClassName()
+{
+  return QString("FindTwinBoundarySchmidFactors");
+}
+
+// -----------------------------------------------------------------------------
+void FindTwinBoundarySchmidFactors::setWriteFile(bool value)
+{
+  m_WriteFile = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindTwinBoundarySchmidFactors::getWriteFile() const
+{
+  return m_WriteFile;
+}
+
+// -----------------------------------------------------------------------------
+void FindTwinBoundarySchmidFactors::setTwinBoundarySchmidFactorsFile(const QString& value)
+{
+  m_TwinBoundarySchmidFactorsFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindTwinBoundarySchmidFactors::getTwinBoundarySchmidFactorsFile() const
+{
+  return m_TwinBoundarySchmidFactorsFile;
+}
+
+// -----------------------------------------------------------------------------
+void FindTwinBoundarySchmidFactors::setLoadingDir(const FloatVec3Type& value)
+{
+  m_LoadingDir = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type FindTwinBoundarySchmidFactors::getLoadingDir() const
+{
+  return m_LoadingDir;
+}
+
+// -----------------------------------------------------------------------------
+void FindTwinBoundarySchmidFactors::setAvgQuatsArrayPath(const DataArrayPath& value)
+{
+  m_AvgQuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindTwinBoundarySchmidFactors::getAvgQuatsArrayPath() const
+{
+  return m_AvgQuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindTwinBoundarySchmidFactors::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindTwinBoundarySchmidFactors::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindTwinBoundarySchmidFactors::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindTwinBoundarySchmidFactors::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindTwinBoundarySchmidFactors::setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindTwinBoundarySchmidFactors::getSurfaceMeshFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFaceLabelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindTwinBoundarySchmidFactors::setSurfaceMeshFaceNormalsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceNormalsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindTwinBoundarySchmidFactors::getSurfaceMeshFaceNormalsArrayPath() const
+{
+  return m_SurfaceMeshFaceNormalsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindTwinBoundarySchmidFactors::setSurfaceMeshTwinBoundaryArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshTwinBoundaryArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindTwinBoundarySchmidFactors::getSurfaceMeshTwinBoundaryArrayPath() const
+{
+  return m_SurfaceMeshTwinBoundaryArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindTwinBoundarySchmidFactors::setSurfaceMeshTwinBoundarySchmidFactorsArrayName(const QString& value)
+{
+  m_SurfaceMeshTwinBoundarySchmidFactorsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindTwinBoundarySchmidFactors::getSurfaceMeshTwinBoundarySchmidFactorsArrayName() const
+{
+  return m_SurfaceMeshTwinBoundarySchmidFactorsArrayName;
 }

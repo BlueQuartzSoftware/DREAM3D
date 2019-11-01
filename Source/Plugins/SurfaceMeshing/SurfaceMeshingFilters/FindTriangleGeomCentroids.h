@@ -35,9 +35,11 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "SurfaceMeshing/SurfaceMeshingDLLExport.h"
 
@@ -47,45 +49,103 @@
 class SurfaceMeshing_EXPORT FindTriangleGeomCentroids : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(FindTriangleGeomCentroids SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
-    PYB11_PROPERTY(DataArrayPath FaceLabelsArrayPath READ getFaceLabelsArrayPath WRITE setFaceLabelsArrayPath)
-    PYB11_PROPERTY(QString CentroidsArrayName READ getCentroidsArrayName WRITE setCentroidsArrayName)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(FindTriangleGeomCentroids SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindTriangleGeomCentroids)
+  PYB11_FILTER_NEW_MACRO(FindTriangleGeomCentroids)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureAttributeMatrixName)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FaceLabelsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, CentroidsArrayName)
+  PYB11_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
+  PYB11_PROPERTY(DataArrayPath FaceLabelsArrayPath READ getFaceLabelsArrayPath WRITE setFaceLabelsArrayPath)
+  PYB11_PROPERTY(QString CentroidsArrayName READ getCentroidsArrayName WRITE setCentroidsArrayName)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindTriangleGeomCentroids)
-  SIMPL_FILTER_NEW_MACRO(FindTriangleGeomCentroids)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindTriangleGeomCentroids, AbstractFilter)
+  using Self = FindTriangleGeomCentroids;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for FindTriangleGeomCentroids
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindTriangleGeomCentroids
+   */
+  static QString ClassName();
 
   ~FindTriangleGeomCentroids() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureAttributeMatrixName)
+  /**
+   * @brief Setter property for FeatureAttributeMatrixName
+   */
+  void setFeatureAttributeMatrixName(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureAttributeMatrixName
+   * @return Value of FeatureAttributeMatrixName
+   */
+  DataArrayPath getFeatureAttributeMatrixName() const;
+
   Q_PROPERTY(DataArrayPath FeatureAttributeMatrixName READ getFeatureAttributeMatrixName WRITE setFeatureAttributeMatrixName)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FaceLabelsArrayPath)
+  /**
+   * @brief Setter property for FaceLabelsArrayPath
+   */
+  void setFaceLabelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FaceLabelsArrayPath
+   * @return Value of FaceLabelsArrayPath
+   */
+  DataArrayPath getFaceLabelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FaceLabelsArrayPath READ getFaceLabelsArrayPath WRITE setFaceLabelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, CentroidsArrayName)
+  /**
+   * @brief Setter property for CentroidsArrayName
+   */
+  void setCentroidsArrayName(const QString& value);
+  /**
+   * @brief Getter property for CentroidsArrayName
+   * @return Value of CentroidsArrayName
+   */
+  QString getCentroidsArrayName() const;
+
   Q_PROPERTY(QString CentroidsArrayName READ getCentroidsArrayName WRITE setCentroidsArrayName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -95,23 +155,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -165,8 +225,14 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FaceLabels)
-  DEFINE_DATAARRAY_VARIABLE(float, Centroids)
+  std::weak_ptr<DataArray<int32_t>> m_FaceLabelsPtr;
+  int32_t* m_FaceLabels = nullptr;
+  std::weak_ptr<DataArray<float>> m_CentroidsPtr;
+  float* m_Centroids = nullptr;
+
+  DataArrayPath m_FeatureAttributeMatrixName = {};
+  DataArrayPath m_FaceLabelsArrayPath = {};
+  QString m_CentroidsArrayName = {};
 
 public:
   FindTriangleGeomCentroids(const FindTriangleGeomCentroids&) = delete; // Copy Constructor Not Implemented

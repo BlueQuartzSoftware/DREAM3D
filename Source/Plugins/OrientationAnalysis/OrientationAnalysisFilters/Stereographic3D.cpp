@@ -30,6 +30,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "Stereographic3D.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -39,12 +41,16 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -273,7 +279,7 @@ AbstractFilter::Pointer Stereographic3D::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Stereographic3D::getCompiledLibraryName() const
+QString Stereographic3D::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -281,7 +287,7 @@ const QString Stereographic3D::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Stereographic3D::getBrandingString() const
+QString Stereographic3D::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -289,7 +295,7 @@ const QString Stereographic3D::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Stereographic3D::getFilterVersion() const
+QString Stereographic3D::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -300,7 +306,7 @@ const QString Stereographic3D::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Stereographic3D::getGroupName() const
+QString Stereographic3D::getGroupName() const
 {
   return SIMPL::FilterGroups::Utilities;
 }
@@ -308,7 +314,7 @@ const QString Stereographic3D::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid Stereographic3D::getUuid()
+QUuid Stereographic3D::getUuid() const
 {
   return QUuid("{3630623e-724b-5154-a060-a5fca4ecfff5}");
 }
@@ -316,7 +322,7 @@ const QUuid Stereographic3D::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Stereographic3D::getSubGroupName() const
+QString Stereographic3D::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConversionFilters;
 }
@@ -324,7 +330,60 @@ const QString Stereographic3D::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString Stereographic3D::getHumanLabel() const
+QString Stereographic3D::getHumanLabel() const
 {
   return "Stereographic 3D Coordinates";
+}
+
+// -----------------------------------------------------------------------------
+Stereographic3D::Pointer Stereographic3D::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<Stereographic3D> Stereographic3D::New()
+{
+  struct make_shared_enabler : public Stereographic3D
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString Stereographic3D::getNameOfClass() const
+{
+  return QString("Stereographic3D");
+}
+
+// -----------------------------------------------------------------------------
+QString Stereographic3D::ClassName()
+{
+  return QString("Stereographic3D");
+}
+
+// -----------------------------------------------------------------------------
+void Stereographic3D::setQuatsArrayPath(const DataArrayPath& value)
+{
+  m_QuatsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath Stereographic3D::getQuatsArrayPath() const
+{
+  return m_QuatsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void Stereographic3D::setCoordinatesArrayName(const QString& value)
+{
+  m_CoordinatesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString Stereographic3D::getCoordinatesArrayName() const
+{
+  return m_CoordinatesArrayName;
 }

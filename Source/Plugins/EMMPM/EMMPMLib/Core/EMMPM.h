@@ -36,10 +36,11 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QString>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/Observable.h"
 
 #include "EMMPMLib/EMMPMLib.h"
@@ -48,28 +49,75 @@
 #include "EMMPMLib/Common/StatsDelegate.h"
 
 
-
 class EMMPMLib_EXPORT EMMPM : public Observable
 {
     Q_OBJECT;
   public:
-    SIMPL_SHARED_POINTERS(EMMPM);
-    SIMPL_STATIC_NEW_MACRO(EMMPM);
-    SIMPL_TYPE_MACRO(EMMPM);
+    using Self = EMMPM;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
 
-    virtual ~EMMPM();
+    static Pointer New();
 
+    /**
+     * @brief Returns the name of the class for EMMPM;
+     */
+    QString getNameOfClass() const override;
+    /**
+     * @brief Returns the name of the class for EMMPM;
+     */
+    static QString ClassName();
 
-    SIMPL_INSTANCE_PROPERTY(EMMPM_Data::Pointer, Data);
-    SIMPL_INSTANCE_PROPERTY(InitializationFunction::Pointer, InitializationFunction)
-    SIMPL_POINTER_PROPERTY(StatsDelegate, StatsDelegate)
-    SIMPL_INSTANCE_PROPERTY(int, ErrorCode)
+    ~EMMPM() override;
+
+    /**
+     * @brief Setter property for Data;
+     */
+    void setData(const EMMPM_Data::Pointer& value);
+    /**
+     * @brief Getter property for Data;
+     * @return Value of Data;
+     */
+    EMMPM_Data::Pointer getData() const;
+
+    /**
+     * @brief Setter property for InitializationFunction
+     */
+    void setInitializationFunction(const InitializationFunction::Pointer& value);
+    /**
+     * @brief Getter property for InitializationFunction
+     * @return Value of InitializationFunction
+     */
+    InitializationFunction::Pointer getInitializationFunction() const;
+
+    /**
+     * @brief Setter property for StatsDelegate
+     */
+    void setStatsDelegate(StatsDelegate* value);
+    /**
+     * @brief Getter property for StatsDelegate
+     * @return Value of StatsDelegate
+     */
+    StatsDelegate* getStatsDelegate() const;
+
+    /**
+     * @brief Setter property for ErrorCode
+     */
+    void setErrorCode(int value);
+    /**
+     * @brief Getter property for ErrorCode
+     * @return Value of ErrorCode
+     */
+    int getErrorCode() const;
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() const;
+    virtual QString getHumanLabel() const;
 
     /**
      * @brief Main entry point for running the EMMPM algorithm. The Inputs and
@@ -92,6 +140,13 @@ class EMMPMLib_EXPORT EMMPM : public Observable
     EMMPM(EMMPM&&) = delete;               // Move Constructor Not Implemented
     EMMPM& operator=(const EMMPM&) = delete; // Copy Assignment Not Implemented
     EMMPM& operator=(EMMPM&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    StatsDelegate* m_StatsDelegate = nullptr;
+
+    EMMPM_Data::Pointer m_Data = {};
+    InitializationFunction::Pointer m_InitializationFunction = {};
+    int m_ErrorCode = {};
 };
 
 

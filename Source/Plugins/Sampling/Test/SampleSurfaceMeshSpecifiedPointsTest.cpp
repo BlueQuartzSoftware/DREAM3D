@@ -35,7 +35,6 @@
 
 #include <QtCore/QFile>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
@@ -51,13 +50,27 @@
 class SampleSurfaceMeshSpecifiedPointsTest
 {
 public:
-  SampleSurfaceMeshSpecifiedPointsTest()
+  SampleSurfaceMeshSpecifiedPointsTest() = default;
+  virtual ~SampleSurfaceMeshSpecifiedPointsTest() = default;
+
+  /**
+   * @brief Returns the name of the class for SampleSurfaceMeshSpecifiedPointsTest
+   */
+  /**
+   * @brief Returns the name of the class for SampleSurfaceMeshSpecifiedPointsTest
+   */
+  QString getNameOfClass() const
   {
+    return QString("SampleSurfaceMeshSpecifiedPointsTest");
   }
-  virtual ~SampleSurfaceMeshSpecifiedPointsTest()
+
+  /**
+   * @brief Returns the name of the class for SampleSurfaceMeshSpecifiedPointsTest
+   */
+  QString ClassName()
   {
+    return QString("SampleSurfaceMeshSpecifiedPointsTest");
   }
-  SIMPL_TYPE_MACRO(SampleSurfaceMeshSpecifiedPointsTest)
 
   // -----------------------------------------------------------------------------
   //

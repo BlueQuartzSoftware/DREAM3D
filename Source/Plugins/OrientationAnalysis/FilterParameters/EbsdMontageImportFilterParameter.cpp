@@ -104,3 +104,52 @@ void EbsdMontageImportFilterParameter::writeJson(QJsonObject& json)
     json[getPropertyName()] = jsonObj;
   }
 }
+
+// -----------------------------------------------------------------------------
+EbsdMontageImportFilterParameter::Pointer EbsdMontageImportFilterParameter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+EbsdMontageImportFilterParameter::Pointer EbsdMontageImportFilterParameter::New()
+{
+  Pointer sharedPtr(new(EbsdMontageImportFilterParameter));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString EbsdMontageImportFilterParameter::getNameOfClass() const
+{
+  return QString("EbsdMontageImportFilterParameter");
+}
+
+// -----------------------------------------------------------------------------
+QString EbsdMontageImportFilterParameter::ClassName()
+{
+  return QString("EbsdMontageImportFilterParameter");
+}
+
+// -----------------------------------------------------------------------------
+void EbsdMontageImportFilterParameter::setSetterCallback(const EbsdMontageImportFilterParameter::SetterCallbackType& value)
+{
+  m_SetterCallback = value;
+}
+
+// -----------------------------------------------------------------------------
+EbsdMontageImportFilterParameter::SetterCallbackType EbsdMontageImportFilterParameter::getSetterCallback() const
+{
+  return m_SetterCallback;
+}
+
+// -----------------------------------------------------------------------------
+void EbsdMontageImportFilterParameter::setGetterCallback(const EbsdMontageImportFilterParameter::GetterCallbackType& value)
+{
+  m_GetterCallback = value;
+}
+
+// -----------------------------------------------------------------------------
+EbsdMontageImportFilterParameter::GetterCallbackType EbsdMontageImportFilterParameter::getGetterCallback() const
+{
+  return m_GetterCallback;
+}

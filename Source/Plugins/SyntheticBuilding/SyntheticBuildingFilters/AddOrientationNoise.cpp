@@ -33,7 +33,11 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "AddOrientationNoise.h"
+
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -43,6 +47,8 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
 #include "SIMPLib/Math/SIMPLibRandom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationLib/Core/Orientation.hpp"
 #include "OrientationLib/Core/OrientationTransformation.hpp"
@@ -201,7 +207,7 @@ AbstractFilter::Pointer AddOrientationNoise::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddOrientationNoise::getCompiledLibraryName() const
+QString AddOrientationNoise::getCompiledLibraryName() const
 {
   return SyntheticBuildingConstants::SyntheticBuildingBaseName;
 }
@@ -209,7 +215,7 @@ const QString AddOrientationNoise::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddOrientationNoise::getBrandingString() const
+QString AddOrientationNoise::getBrandingString() const
 {
   return "SyntheticBuilding";
 }
@@ -217,7 +223,7 @@ const QString AddOrientationNoise::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddOrientationNoise::getFilterVersion() const
+QString AddOrientationNoise::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -227,7 +233,7 @@ const QString AddOrientationNoise::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddOrientationNoise::getGroupName() const
+QString AddOrientationNoise::getGroupName() const
 {
   return SIMPL::FilterGroups::SyntheticBuildingFilters;
 }
@@ -235,7 +241,7 @@ const QString AddOrientationNoise::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid AddOrientationNoise::getUuid()
+QUuid AddOrientationNoise::getUuid() const
 {
   return QUuid("{9f392fba-1520-5f8f-988b-0032d7c51811}");
 }
@@ -243,7 +249,7 @@ const QUuid AddOrientationNoise::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddOrientationNoise::getSubGroupName() const
+QString AddOrientationNoise::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CrystallographyFilters;
 }
@@ -251,7 +257,60 @@ const QString AddOrientationNoise::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AddOrientationNoise::getHumanLabel() const
+QString AddOrientationNoise::getHumanLabel() const
 {
   return "Add Orientation Noise";
+}
+
+// -----------------------------------------------------------------------------
+AddOrientationNoise::Pointer AddOrientationNoise::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<AddOrientationNoise> AddOrientationNoise::New()
+{
+  struct make_shared_enabler : public AddOrientationNoise
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString AddOrientationNoise::getNameOfClass() const
+{
+  return QString("AddOrientationNoise");
+}
+
+// -----------------------------------------------------------------------------
+QString AddOrientationNoise::ClassName()
+{
+  return QString("AddOrientationNoise");
+}
+
+// -----------------------------------------------------------------------------
+void AddOrientationNoise::setMagnitude(float value)
+{
+  m_Magnitude = value;
+}
+
+// -----------------------------------------------------------------------------
+float AddOrientationNoise::getMagnitude() const
+{
+  return m_Magnitude;
+}
+
+// -----------------------------------------------------------------------------
+void AddOrientationNoise::setCellEulerAnglesArrayPath(const DataArrayPath& value)
+{
+  m_CellEulerAnglesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath AddOrientationNoise::getCellEulerAnglesArrayPath() const
+{
+  return m_CellEulerAnglesArrayPath;
 }

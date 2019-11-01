@@ -33,12 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "ScalarSegmentFeatures.h"
 
 #include <chrono>
 
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatFilterParameter.h"
@@ -47,6 +51,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -571,7 +577,7 @@ AbstractFilter::Pointer ScalarSegmentFeatures::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ScalarSegmentFeatures::getCompiledLibraryName() const
+QString ScalarSegmentFeatures::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -579,7 +585,7 @@ const QString ScalarSegmentFeatures::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ScalarSegmentFeatures::getBrandingString() const
+QString ScalarSegmentFeatures::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -587,7 +593,7 @@ const QString ScalarSegmentFeatures::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ScalarSegmentFeatures::getFilterVersion() const
+QString ScalarSegmentFeatures::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -597,7 +603,7 @@ const QString ScalarSegmentFeatures::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ScalarSegmentFeatures::getGroupName() const
+QString ScalarSegmentFeatures::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -605,7 +611,7 @@ const QString ScalarSegmentFeatures::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ScalarSegmentFeatures::getUuid()
+QUuid ScalarSegmentFeatures::getUuid() const
 {
   return QUuid("{2c5edebf-95d8-511f-b787-90ee2adf485c}");
 }
@@ -613,7 +619,7 @@ const QUuid ScalarSegmentFeatures::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ScalarSegmentFeatures::getSubGroupName() const
+QString ScalarSegmentFeatures::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::SegmentationFilters;
 }
@@ -621,7 +627,132 @@ const QString ScalarSegmentFeatures::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ScalarSegmentFeatures::getHumanLabel() const
+QString ScalarSegmentFeatures::getHumanLabel() const
 {
   return "Segment Features (Scalar)";
+}
+
+// -----------------------------------------------------------------------------
+ScalarSegmentFeatures::Pointer ScalarSegmentFeatures::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ScalarSegmentFeatures> ScalarSegmentFeatures::New()
+{
+  struct make_shared_enabler : public ScalarSegmentFeatures
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ScalarSegmentFeatures::getNameOfClass() const
+{
+  return QString("ScalarSegmentFeatures");
+}
+
+// -----------------------------------------------------------------------------
+QString ScalarSegmentFeatures::ClassName()
+{
+  return QString("ScalarSegmentFeatures");
+}
+
+// -----------------------------------------------------------------------------
+void ScalarSegmentFeatures::setCellFeatureAttributeMatrixName(const QString& value)
+{
+  m_CellFeatureAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ScalarSegmentFeatures::getCellFeatureAttributeMatrixName() const
+{
+  return m_CellFeatureAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ScalarSegmentFeatures::setScalarArrayPath(const DataArrayPath& value)
+{
+  m_ScalarArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ScalarSegmentFeatures::getScalarArrayPath() const
+{
+  return m_ScalarArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ScalarSegmentFeatures::setScalarTolerance(float value)
+{
+  m_ScalarTolerance = value;
+}
+
+// -----------------------------------------------------------------------------
+float ScalarSegmentFeatures::getScalarTolerance() const
+{
+  return m_ScalarTolerance;
+}
+
+// -----------------------------------------------------------------------------
+void ScalarSegmentFeatures::setRandomizeFeatureIds(bool value)
+{
+  m_RandomizeFeatureIds = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ScalarSegmentFeatures::getRandomizeFeatureIds() const
+{
+  return m_RandomizeFeatureIds;
+}
+
+// -----------------------------------------------------------------------------
+void ScalarSegmentFeatures::setUseGoodVoxels(bool value)
+{
+  m_UseGoodVoxels = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ScalarSegmentFeatures::getUseGoodVoxels() const
+{
+  return m_UseGoodVoxels;
+}
+
+// -----------------------------------------------------------------------------
+void ScalarSegmentFeatures::setGoodVoxelsArrayPath(const DataArrayPath& value)
+{
+  m_GoodVoxelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ScalarSegmentFeatures::getGoodVoxelsArrayPath() const
+{
+  return m_GoodVoxelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ScalarSegmentFeatures::setFeatureIdsArrayName(const QString& value)
+{
+  m_FeatureIdsArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ScalarSegmentFeatures::getFeatureIdsArrayName() const
+{
+  return m_FeatureIdsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void ScalarSegmentFeatures::setActiveArrayName(const QString& value)
+{
+  m_ActiveArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ScalarSegmentFeatures::getActiveArrayName() const
+{
+  return m_ActiveArrayName;
 }

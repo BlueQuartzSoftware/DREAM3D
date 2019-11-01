@@ -34,6 +34,8 @@
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
+#include <memory>
+
 #include "TetragonalOps.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -1245,4 +1247,30 @@ SIMPL::Rgb TetragonalOps::generateMisorientationColor(const QuatType& q, const Q
 
   return rgb;
 }
+
+// -----------------------------------------------------------------------------
+TetragonalOps::Pointer TetragonalOps::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+QString TetragonalOps::getNameOfClass() const
+{
+  return QString("TetragonalOps");
+}
+
+// -----------------------------------------------------------------------------
+QString TetragonalOps::ClassName()
+{
+  return QString("TetragonalOps");
+}
+
+// -----------------------------------------------------------------------------
+TetragonalOps::Pointer TetragonalOps::New()
+{
+  Pointer sharedPtr(new(TetragonalOps));
+  return sharedPtr;
+}
+
 

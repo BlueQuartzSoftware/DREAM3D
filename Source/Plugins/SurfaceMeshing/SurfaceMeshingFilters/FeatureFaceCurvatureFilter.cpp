@@ -32,6 +32,8 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include <memory>
+
 #include "FeatureFaceCurvatureFilter.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -40,7 +42,10 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/IntFilterParameter.h"
@@ -49,6 +54,8 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "CalculateTriangleGroupCurvatures.h"
 
@@ -65,22 +72,11 @@ FeatureFaceCurvatureFilter::FeatureFaceCurvatureFilter()
 , m_SurfaceMeshMeanCurvaturesArrayName(SIMPL::FaceData::SurfaceMeshMeanCurvatures)
 , m_NRing(3)
 , m_ComputePrincipalDirectionVectors(true)
-, m_ComputeMeanCurvature(false)
-, m_ComputeGaussianCurvature(false)
 , m_UseNormalsForCurveFitting(true)
 , m_SurfaceMeshFaceLabelsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceLabels)
 , m_SurfaceMeshFeatureFaceIdsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFeatureFaceId)
 , m_SurfaceMeshFaceNormalsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceNormals)
 , m_SurfaceMeshTriangleCentroidsArrayPath(SIMPL::Defaults::TriangleDataContainerName, SIMPL::Defaults::FaceAttributeMatrixName, SIMPL::FaceData::SurfaceMeshFaceCentroids)
-, m_SurfaceMeshFaceLabels(nullptr)
-, m_SurfaceMeshTriangleCentroids(nullptr)
-, m_SurfaceMeshFaceNormals(nullptr)
-, m_SurfaceMeshPrincipalCurvature1s(nullptr)
-, m_SurfaceMeshPrincipalCurvature2s(nullptr)
-, m_SurfaceMeshPrincipalDirection1s(nullptr)
-, m_SurfaceMeshPrincipalDirection2s(nullptr)
-, m_SurfaceMeshGaussianCurvatures(nullptr)
-, m_SurfaceMeshMeanCurvatures(nullptr)
 {
 }
 
@@ -235,7 +231,7 @@ void FeatureFaceCurvatureFilter::dataCheck()
     m_SurfaceMeshPrincipalCurvature2s = m_SurfaceMeshPrincipalCurvature2sPtr.lock()->getPointer(0);
   } /* Now assign the raw pointer to data from the DataArray<T> object */
 
-  if(m_ComputeGaussianCurvature == true)
+  if(m_ComputeGaussianCurvature)
   {
     tempPath.setDataArrayName(getSurfaceMeshGaussianCurvaturesArrayName());
     m_SurfaceMeshGaussianCurvaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
@@ -246,7 +242,7 @@ void FeatureFaceCurvatureFilter::dataCheck()
     } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
-  if(m_ComputeMeanCurvature == true)
+  if(m_ComputeMeanCurvature)
   {
     tempPath.setDataArrayName(getSurfaceMeshMeanCurvaturesArrayName());
     m_SurfaceMeshMeanCurvaturesPtr = getDataContainerArray()->createNonPrereqArrayFromPath<DataArray<double>, AbstractFilter, double>(
@@ -257,7 +253,7 @@ void FeatureFaceCurvatureFilter::dataCheck()
     } /* Now assign the raw pointer to data from the DataArray<T> object */
   }
 
-  if(m_ComputePrincipalDirectionVectors == true)
+  if(m_ComputePrincipalDirectionVectors)
   {
     cDims[0] = 3;
     tempPath.setDataArrayName(getSurfaceMeshPrincipalDirection1sArrayName());
@@ -481,7 +477,7 @@ AbstractFilter::Pointer FeatureFaceCurvatureFilter::newFilterInstance(bool copyF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureFaceCurvatureFilter::getCompiledLibraryName() const
+QString FeatureFaceCurvatureFilter::getCompiledLibraryName() const
 {
   return SurfaceMeshingConstants::SurfaceMeshingBaseName;
 }
@@ -489,7 +485,7 @@ const QString FeatureFaceCurvatureFilter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureFaceCurvatureFilter::getBrandingString() const
+QString FeatureFaceCurvatureFilter::getBrandingString() const
 {
   return "SurfaceMeshing";
 }
@@ -497,7 +493,7 @@ const QString FeatureFaceCurvatureFilter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureFaceCurvatureFilter::getFilterVersion() const
+QString FeatureFaceCurvatureFilter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -507,7 +503,7 @@ const QString FeatureFaceCurvatureFilter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureFaceCurvatureFilter::getGroupName() const
+QString FeatureFaceCurvatureFilter::getGroupName() const
 {
   return SIMPL::FilterGroups::SurfaceMeshingFilters;
 }
@@ -515,7 +511,7 @@ const QString FeatureFaceCurvatureFilter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FeatureFaceCurvatureFilter::getUuid()
+QUuid FeatureFaceCurvatureFilter::getUuid() const
 {
   return QUuid("{a69d8d43-5be9-59a0-b997-81773a635673}");
 }
@@ -523,7 +519,7 @@ const QUuid FeatureFaceCurvatureFilter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureFaceCurvatureFilter::getSubGroupName() const
+QString FeatureFaceCurvatureFilter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::CurvatureFilters;
 }
@@ -531,7 +527,228 @@ const QString FeatureFaceCurvatureFilter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FeatureFaceCurvatureFilter::getHumanLabel() const
+QString FeatureFaceCurvatureFilter::getHumanLabel() const
 {
   return "Find Feature Face Curvature";
+}
+
+// -----------------------------------------------------------------------------
+FeatureFaceCurvatureFilter::Pointer FeatureFaceCurvatureFilter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FeatureFaceCurvatureFilter> FeatureFaceCurvatureFilter::New()
+{
+  struct make_shared_enabler : public FeatureFaceCurvatureFilter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FeatureFaceCurvatureFilter::getNameOfClass() const
+{
+  return QString("FeatureFaceCurvatureFilter");
+}
+
+// -----------------------------------------------------------------------------
+QString FeatureFaceCurvatureFilter::ClassName()
+{
+  return QString("FeatureFaceCurvatureFilter");
+}
+
+// -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::setFaceAttributeMatrixPath(const DataArrayPath& value)
+{
+  m_FaceAttributeMatrixPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FeatureFaceCurvatureFilter::getFaceAttributeMatrixPath() const
+{
+  return m_FaceAttributeMatrixPath;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::setSurfaceMeshPrincipalCurvature1sArrayName(const QString& value)
+{
+  m_SurfaceMeshPrincipalCurvature1sArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FeatureFaceCurvatureFilter::getSurfaceMeshPrincipalCurvature1sArrayName() const
+{
+  return m_SurfaceMeshPrincipalCurvature1sArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::setSurfaceMeshPrincipalCurvature2sArrayName(const QString& value)
+{
+  m_SurfaceMeshPrincipalCurvature2sArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FeatureFaceCurvatureFilter::getSurfaceMeshPrincipalCurvature2sArrayName() const
+{
+  return m_SurfaceMeshPrincipalCurvature2sArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::setSurfaceMeshPrincipalDirection1sArrayName(const QString& value)
+{
+  m_SurfaceMeshPrincipalDirection1sArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FeatureFaceCurvatureFilter::getSurfaceMeshPrincipalDirection1sArrayName() const
+{
+  return m_SurfaceMeshPrincipalDirection1sArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::setSurfaceMeshPrincipalDirection2sArrayName(const QString& value)
+{
+  m_SurfaceMeshPrincipalDirection2sArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FeatureFaceCurvatureFilter::getSurfaceMeshPrincipalDirection2sArrayName() const
+{
+  return m_SurfaceMeshPrincipalDirection2sArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::setSurfaceMeshGaussianCurvaturesArrayName(const QString& value)
+{
+  m_SurfaceMeshGaussianCurvaturesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FeatureFaceCurvatureFilter::getSurfaceMeshGaussianCurvaturesArrayName() const
+{
+  return m_SurfaceMeshGaussianCurvaturesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::setSurfaceMeshMeanCurvaturesArrayName(const QString& value)
+{
+  m_SurfaceMeshMeanCurvaturesArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FeatureFaceCurvatureFilter::getSurfaceMeshMeanCurvaturesArrayName() const
+{
+  return m_SurfaceMeshMeanCurvaturesArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::setNRing(int value)
+{
+  m_NRing = value;
+}
+
+// -----------------------------------------------------------------------------
+int FeatureFaceCurvatureFilter::getNRing() const
+{
+  return m_NRing;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::setComputePrincipalDirectionVectors(bool value)
+{
+  m_ComputePrincipalDirectionVectors = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FeatureFaceCurvatureFilter::getComputePrincipalDirectionVectors() const
+{
+  return m_ComputePrincipalDirectionVectors;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::setComputeMeanCurvature(bool value)
+{
+  m_ComputeMeanCurvature = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FeatureFaceCurvatureFilter::getComputeMeanCurvature() const
+{
+  return m_ComputeMeanCurvature;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::setComputeGaussianCurvature(bool value)
+{
+  m_ComputeGaussianCurvature = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FeatureFaceCurvatureFilter::getComputeGaussianCurvature() const
+{
+  return m_ComputeGaussianCurvature;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::setUseNormalsForCurveFitting(bool value)
+{
+  m_UseNormalsForCurveFitting = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FeatureFaceCurvatureFilter::getUseNormalsForCurveFitting() const
+{
+  return m_UseNormalsForCurveFitting;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceLabelsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FeatureFaceCurvatureFilter::getSurfaceMeshFaceLabelsArrayPath() const
+{
+  return m_SurfaceMeshFaceLabelsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::setSurfaceMeshFeatureFaceIdsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFeatureFaceIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FeatureFaceCurvatureFilter::getSurfaceMeshFeatureFaceIdsArrayPath() const
+{
+  return m_SurfaceMeshFeatureFaceIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::setSurfaceMeshFaceNormalsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshFaceNormalsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FeatureFaceCurvatureFilter::getSurfaceMeshFaceNormalsArrayPath() const
+{
+  return m_SurfaceMeshFaceNormalsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FeatureFaceCurvatureFilter::setSurfaceMeshTriangleCentroidsArrayPath(const DataArrayPath& value)
+{
+  m_SurfaceMeshTriangleCentroidsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FeatureFaceCurvatureFilter::getSurfaceMeshTriangleCentroidsArrayPath() const
+{
+  return m_SurfaceMeshTriangleCentroidsArrayPath;
 }

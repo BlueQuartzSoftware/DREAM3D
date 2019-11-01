@@ -44,7 +44,10 @@
 // Needed for AxisAngle_t and Crystal Symmetry constants
 #include "EbsdLib/EbsdConstants.h"
 
+#include <QtCore/QDebug>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/DataArrays/StatsDataArray.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
@@ -449,7 +452,7 @@ void PrimaryPhaseWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::setPhaseIndex(const int& index)
+void PrimaryPhaseWidget::setPhaseIndex(int index)
 {
   StatsGenWidget::setPhaseIndex(index);
   m_Omega3Plot->setPhaseIndex(index);
@@ -468,7 +471,7 @@ void PrimaryPhaseWidget::setPhaseIndex(const int& index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrimaryPhaseWidget::setCrystalStructure(const unsigned int& xtal)
+void PrimaryPhaseWidget::setCrystalStructure(unsigned int xtal)
 {
   StatsGenWidget::setCrystalStructure(xtal);
   m_Omega3Plot->setCrystalStructure(xtal);
@@ -890,4 +893,28 @@ QIcon PrimaryPhaseWidget::getPhaseIcon()
   icon.addFile(QStringLiteral(":/StatsGenerator/icons/Primary.png"), QSize(), QIcon::Normal, QIcon::Off);
   icon.addFile(QStringLiteral(":/StatsGenerator/icons/Primary_Selected.png"), QSize(), QIcon::Normal, QIcon::On);
   return icon;
+}
+
+// -----------------------------------------------------------------------------
+void PrimaryPhaseWidget::setPhaseType(PhaseType::Type value)
+{
+  m_PhaseType = value;
+}
+
+// -----------------------------------------------------------------------------
+PhaseType::Type PrimaryPhaseWidget::getPhaseType() const
+{
+  return m_PhaseType;
+}
+
+// -----------------------------------------------------------------------------
+void PrimaryPhaseWidget::setSGPlotWidgets(const QList<StatsGenPlotWidget*>& value)
+{
+  m_SGPlotWidgets = value;
+}
+
+// -----------------------------------------------------------------------------
+QList<StatsGenPlotWidget*> PrimaryPhaseWidget::getSGPlotWidgets() const
+{
+  return m_SGPlotWidgets;
 }

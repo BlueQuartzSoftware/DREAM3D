@@ -35,8 +35,9 @@
 #pragma once
 
 
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationLib/Core/Orientation.hpp"
@@ -54,9 +55,24 @@
 class OrientationLib_EXPORT TrigonalLowOps : public LaueOps
 {
   public:
-    SIMPL_SHARED_POINTERS(TrigonalLowOps)
-     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(TrigonalLowOps, LaueOps)
-    SIMPL_STATIC_NEW_MACRO(TrigonalLowOps)
+    using Self = TrigonalLowOps;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    /**
+    * @brief Returns the name of the class for TrigonalLowOps
+    */
+    QString getNameOfClass() const override;
+    /**
+    * @brief Returns the name of the class for TrigonalLowOps
+    */
+    static QString ClassName();
+
+    static Pointer New();
+
 
     TrigonalLowOps();
     ~TrigonalLowOps() override;
@@ -189,6 +205,9 @@ class OrientationLib_EXPORT TrigonalLowOps : public LaueOps
     TrigonalLowOps(TrigonalLowOps&&) = delete;      // Move Constructor Not Implemented
     TrigonalLowOps& operator=(const TrigonalLowOps&) = delete; // Copy Assignment Not Implemented
     TrigonalLowOps& operator=(TrigonalLowOps&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+
 };
 
 

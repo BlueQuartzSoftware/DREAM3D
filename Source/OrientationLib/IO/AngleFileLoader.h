@@ -37,11 +37,12 @@
 
 
 
+#include <memory>
+
 #include <vector>
 
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationLib/OrientationLib.h"
@@ -55,9 +56,23 @@
 class OrientationLib_EXPORT AngleFileLoader
 {
   public:
-    SIMPL_SHARED_POINTERS(AngleFileLoader)
-    SIMPL_STATIC_NEW_MACRO(AngleFileLoader)
-    SIMPL_TYPE_MACRO(AngleFileLoader)
+    using Self = AngleFileLoader;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static Pointer New();
+
+    /**
+     * @brief Returns the name of the class for AngleFileLoader
+     */
+    virtual QString getNameOfClass() const;
+    /**
+     * @brief Returns the name of the class for AngleFileLoader
+     */
+    static QString ClassName();
 
     virtual ~AngleFileLoader();
 
@@ -68,16 +83,85 @@ class OrientationLib_EXPORT AngleFileLoader
       RodriguezAngles
     };
 
-    SIMPL_INSTANCE_STRING_PROPERTY(ErrorMessage)
-    SIMPL_INSTANCE_PROPERTY(int, ErrorCode)
+    /**
+     * @brief Setter property for ErrorMessage
+     */
+    void setErrorMessage(const QString& value);
+    /**
+     * @brief Getter property for ErrorMessage
+     * @return Value of ErrorMessage
+     */
+    QString getErrorMessage() const;
 
-    SIMPL_INSTANCE_STRING_PROPERTY(InputFile)
-    SIMPL_INSTANCE_PROPERTY(bool, FileAnglesInDegrees)
-    SIMPL_INSTANCE_PROPERTY(bool, OutputAnglesInDegrees)
-    SIMPL_INSTANCE_PROPERTY(uint32_t, AngleRepresentation)
-    SIMPL_INSTANCE_STRING_PROPERTY(Delimiter)
-    SIMPL_INSTANCE_PROPERTY(bool, IgnoreMultipleDelimiters)
+    /**
+     * @brief Setter property for ErrorCode
+     */
+    void setErrorCode(int value);
+    /**
+     * @brief Getter property for ErrorCode
+     * @return Value of ErrorCode
+     */
+    int getErrorCode() const;
 
+    /**
+     * @brief Setter property for InputFile
+     */
+    void setInputFile(const QString& value);
+    /**
+     * @brief Getter property for InputFile
+     * @return Value of InputFile
+     */
+    QString getInputFile() const;
+
+    /**
+     * @brief Setter property for FileAnglesInDegrees
+     */
+    void setFileAnglesInDegrees(bool value);
+    /**
+     * @brief Getter property for FileAnglesInDegrees
+     * @return Value of FileAnglesInDegrees
+     */
+    bool getFileAnglesInDegrees() const;
+
+    /**
+     * @brief Setter property for OutputAnglesInDegrees
+     */
+    void setOutputAnglesInDegrees(bool value);
+    /**
+     * @brief Getter property for OutputAnglesInDegrees
+     * @return Value of OutputAnglesInDegrees
+     */
+    bool getOutputAnglesInDegrees() const;
+
+    /**
+     * @brief Setter property for AngleRepresentation
+     */
+    void setAngleRepresentation(uint32_t value);
+    /**
+     * @brief Getter property for AngleRepresentation
+     * @return Value of AngleRepresentation
+     */
+    uint32_t getAngleRepresentation() const;
+
+    /**
+     * @brief Setter property for Delimiter
+     */
+    void setDelimiter(const QString& value);
+    /**
+     * @brief Getter property for Delimiter
+     * @return Value of Delimiter
+     */
+    QString getDelimiter() const;
+
+    /**
+     * @brief Setter property for IgnoreMultipleDelimiters
+     */
+    void setIgnoreMultipleDelimiters(bool value);
+    /**
+     * @brief Getter property for IgnoreMultipleDelimiters
+     * @return Value of IgnoreMultipleDelimiters
+     */
+    bool getIgnoreMultipleDelimiters() const;
 
     FloatArrayType::Pointer loadData();
 
@@ -91,6 +175,16 @@ class OrientationLib_EXPORT AngleFileLoader
     AngleFileLoader(AngleFileLoader&&) = delete;      // Move Constructor Not Implemented
     AngleFileLoader& operator=(const AngleFileLoader&) = delete; // Copy Assignment Not Implemented
     AngleFileLoader& operator=(AngleFileLoader&&) = delete;      // Move Assignment Not Implemented
+
+  private:
+    QString m_ErrorMessage = {};
+    int m_ErrorCode = {};
+    QString m_InputFile = {};
+    bool m_FileAnglesInDegrees = {};
+    bool m_OutputAnglesInDegrees = {};
+    uint32_t m_AngleRepresentation = {};
+    QString m_Delimiter = {};
+    bool m_IgnoreMultipleDelimiters = {};
 };
 
 

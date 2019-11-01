@@ -58,7 +58,7 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
   Q_OBJECT
 
 public:
-  explicit SGLogNormalItemDelegate(QObject* parent = 0)
+  explicit SGLogNormalItemDelegate(QObject* parent = nullptr)
   : QStyledItemDelegate(parent)
   {
   }

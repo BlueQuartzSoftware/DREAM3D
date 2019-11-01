@@ -33,12 +33,17 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "NodesTrianglesToVtk.h"
 
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/FilterParameters/OutputFileFilterParameter.h"
@@ -577,7 +582,7 @@ AbstractFilter::Pointer NodesTrianglesToVtk::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToVtk::getCompiledLibraryName() const
+QString NodesTrianglesToVtk::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -585,7 +590,7 @@ const QString NodesTrianglesToVtk::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToVtk::getBrandingString() const
+QString NodesTrianglesToVtk::getBrandingString() const
 {
   return "IO";
 }
@@ -593,7 +598,7 @@ const QString NodesTrianglesToVtk::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToVtk::getFilterVersion() const
+QString NodesTrianglesToVtk::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -604,7 +609,7 @@ const QString NodesTrianglesToVtk::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToVtk::getGroupName() const
+QString NodesTrianglesToVtk::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -612,7 +617,7 @@ const QString NodesTrianglesToVtk::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid NodesTrianglesToVtk::getUuid()
+QUuid NodesTrianglesToVtk::getUuid() const
 {
   return QUuid("{a1d2eddd-6420-53e3-823b-b44d4a5965bb}");
 }
@@ -620,7 +625,7 @@ const QUuid NodesTrianglesToVtk::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToVtk::getSubGroupName() const
+QString NodesTrianglesToVtk::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -628,7 +633,96 @@ const QString NodesTrianglesToVtk::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString NodesTrianglesToVtk::getHumanLabel() const
+QString NodesTrianglesToVtk::getHumanLabel() const
 {
   return "Convert Nodes & Triangles To Vtk";
+}
+
+// -----------------------------------------------------------------------------
+NodesTrianglesToVtk::Pointer NodesTrianglesToVtk::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<NodesTrianglesToVtk> NodesTrianglesToVtk::New()
+{
+  struct make_shared_enabler : public NodesTrianglesToVtk
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString NodesTrianglesToVtk::getNameOfClass() const
+{
+  return QString("NodesTrianglesToVtk");
+}
+
+// -----------------------------------------------------------------------------
+QString NodesTrianglesToVtk::ClassName()
+{
+  return QString("NodesTrianglesToVtk");
+}
+
+// -----------------------------------------------------------------------------
+void NodesTrianglesToVtk::setNodesFile(const QString& value)
+{
+  m_NodesFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString NodesTrianglesToVtk::getNodesFile() const
+{
+  return m_NodesFile;
+}
+
+// -----------------------------------------------------------------------------
+void NodesTrianglesToVtk::setTrianglesFile(const QString& value)
+{
+  m_TrianglesFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString NodesTrianglesToVtk::getTrianglesFile() const
+{
+  return m_TrianglesFile;
+}
+
+// -----------------------------------------------------------------------------
+void NodesTrianglesToVtk::setOutputVtkFile(const QString& value)
+{
+  m_OutputVtkFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString NodesTrianglesToVtk::getOutputVtkFile() const
+{
+  return m_OutputVtkFile;
+}
+
+// -----------------------------------------------------------------------------
+void NodesTrianglesToVtk::setWriteBinaryFile(bool value)
+{
+  m_WriteBinaryFile = value;
+}
+
+// -----------------------------------------------------------------------------
+bool NodesTrianglesToVtk::getWriteBinaryFile() const
+{
+  return m_WriteBinaryFile;
+}
+
+// -----------------------------------------------------------------------------
+void NodesTrianglesToVtk::setWriteConformalMesh(bool value)
+{
+  m_WriteConformalMesh = value;
+}
+
+// -----------------------------------------------------------------------------
+bool NodesTrianglesToVtk::getWriteConformalMesh() const
+{
+  return m_WriteConformalMesh;
 }

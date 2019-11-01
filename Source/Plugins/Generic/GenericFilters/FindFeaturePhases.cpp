@@ -33,7 +33,11 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindFeaturePhases.h"
+
+#include <QtCore/QTextStream>
 
 #include "SIMPLib/Common/Constants.h"
 
@@ -41,6 +45,7 @@
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "Generic/GenericConstants.h"
 #include "Generic/GenericVersion.h"
@@ -244,7 +249,7 @@ AbstractFilter::Pointer FindFeaturePhases::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhases::getCompiledLibraryName() const
+QString FindFeaturePhases::getCompiledLibraryName() const
 {
   return GenericConstants::GenericBaseName;
 }
@@ -252,7 +257,7 @@ const QString FindFeaturePhases::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhases::getBrandingString() const
+QString FindFeaturePhases::getBrandingString() const
 {
   return "Generic";
 }
@@ -260,7 +265,7 @@ const QString FindFeaturePhases::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhases::getFilterVersion() const
+QString FindFeaturePhases::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -270,7 +275,7 @@ const QString FindFeaturePhases::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhases::getGroupName() const
+QString FindFeaturePhases::getGroupName() const
 {
   return SIMPL::FilterGroups::Generic;
 }
@@ -278,7 +283,7 @@ const QString FindFeaturePhases::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindFeaturePhases::getUuid()
+QUuid FindFeaturePhases::getUuid() const
 {
   return QUuid("{6334ce16-cea5-5643-83b5-9573805873fa}");
 }
@@ -286,7 +291,7 @@ const QUuid FindFeaturePhases::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhases::getSubGroupName() const
+QString FindFeaturePhases::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -294,7 +299,72 @@ const QString FindFeaturePhases::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeaturePhases::getHumanLabel() const
+QString FindFeaturePhases::getHumanLabel() const
 {
   return "Find Feature Phases";
+}
+
+// -----------------------------------------------------------------------------
+FindFeaturePhases::Pointer FindFeaturePhases::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindFeaturePhases> FindFeaturePhases::New()
+{
+  struct make_shared_enabler : public FindFeaturePhases
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindFeaturePhases::getNameOfClass() const
+{
+  return QString("FindFeaturePhases");
+}
+
+// -----------------------------------------------------------------------------
+QString FindFeaturePhases::ClassName()
+{
+  return QString("FindFeaturePhases");
+}
+
+// -----------------------------------------------------------------------------
+void FindFeaturePhases::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeaturePhases::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeaturePhases::setCellPhasesArrayPath(const DataArrayPath& value)
+{
+  m_CellPhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeaturePhases::getCellPhasesArrayPath() const
+{
+  return m_CellPhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeaturePhases::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeaturePhases::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
 }

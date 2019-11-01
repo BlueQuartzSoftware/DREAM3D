@@ -33,11 +33,18 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "DxWriter.h"
 
 #include <QtCore/QDir>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -392,7 +399,7 @@ AbstractFilter::Pointer DxWriter::newFilterInstance(bool copyFilterParameters) c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxWriter::getCompiledLibraryName() const
+QString DxWriter::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -400,7 +407,7 @@ const QString DxWriter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxWriter::getBrandingString() const
+QString DxWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -408,7 +415,7 @@ const QString DxWriter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxWriter::getFilterVersion() const
+QString DxWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -418,7 +425,7 @@ const QString DxWriter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxWriter::getGroupName() const
+QString DxWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -426,7 +433,7 @@ const QString DxWriter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid DxWriter::getUuid()
+QUuid DxWriter::getUuid() const
 {
   return QUuid("{9072e51c-632f-5ee5-bf6b-9a90bfac2fcf}");
 }
@@ -434,7 +441,7 @@ const QUuid DxWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxWriter::getSubGroupName() const
+QString DxWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -442,7 +449,60 @@ const QString DxWriter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString DxWriter::getHumanLabel() const
+QString DxWriter::getHumanLabel() const
 {
   return "Export Dx File (Feature Ids)";
+}
+
+// -----------------------------------------------------------------------------
+DxWriter::Pointer DxWriter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<DxWriter> DxWriter::New()
+{
+  struct make_shared_enabler : public DxWriter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString DxWriter::getNameOfClass() const
+{
+  return QString("DxWriter");
+}
+
+// -----------------------------------------------------------------------------
+QString DxWriter::ClassName()
+{
+  return QString("DxWriter");
+}
+
+// -----------------------------------------------------------------------------
+void DxWriter::setAddSurfaceLayer(bool value)
+{
+  m_AddSurfaceLayer = value;
+}
+
+// -----------------------------------------------------------------------------
+bool DxWriter::getAddSurfaceLayer() const
+{
+  return m_AddSurfaceLayer;
+}
+
+// -----------------------------------------------------------------------------
+void DxWriter::setFeatureIdsArrayPath(const DataArrayPath& value)
+{
+  m_FeatureIdsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath DxWriter::getFeatureIdsArrayPath() const
+{
+  return m_FeatureIdsArrayPath;
 }

@@ -33,6 +33,8 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "CubicLowOps.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -1301,5 +1303,27 @@ SIMPL::Rgb CubicLowOps::generateMisorientationColor(const QuatType& q, const Qua
   return rgb;
 }
 
+// -----------------------------------------------------------------------------
+CubicLowOps::Pointer CubicLowOps::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
 
+// -----------------------------------------------------------------------------
+QString CubicLowOps::getNameOfClass() const
+{
+  return QString("CubicLowOps");
+}
 
+// -----------------------------------------------------------------------------
+QString CubicLowOps::ClassName()
+{
+  return QString("CubicLowOps");
+}
+
+// -----------------------------------------------------------------------------
+CubicLowOps::Pointer CubicLowOps::New()
+{
+  Pointer sharedPtr(new(CubicLowOps));
+  return sharedPtr;
+}

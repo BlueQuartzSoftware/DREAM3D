@@ -33,9 +33,14 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "CalculateArrayHistogram.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -46,6 +51,8 @@
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -344,7 +351,7 @@ AbstractFilter::Pointer CalculateArrayHistogram::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateArrayHistogram::getCompiledLibraryName() const
+QString CalculateArrayHistogram::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -352,7 +359,7 @@ const QString CalculateArrayHistogram::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateArrayHistogram::getBrandingString() const
+QString CalculateArrayHistogram::getBrandingString() const
 {
   return "Statistics";
 }
@@ -360,7 +367,7 @@ const QString CalculateArrayHistogram::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateArrayHistogram::getFilterVersion() const
+QString CalculateArrayHistogram::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -370,7 +377,7 @@ const QString CalculateArrayHistogram::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateArrayHistogram::getGroupName() const
+QString CalculateArrayHistogram::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -378,7 +385,7 @@ const QString CalculateArrayHistogram::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid CalculateArrayHistogram::getUuid()
+QUuid CalculateArrayHistogram::getUuid() const
 {
   return QUuid("{289f0d8c-29ab-5fbc-91bd-08aac01e37c5}");
 }
@@ -386,7 +393,7 @@ const QUuid CalculateArrayHistogram::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateArrayHistogram::getSubGroupName() const
+QString CalculateArrayHistogram::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::EnsembleStatsFilters;
 }
@@ -394,7 +401,156 @@ const QString CalculateArrayHistogram::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString CalculateArrayHistogram::getHumanLabel() const
+QString CalculateArrayHistogram::getHumanLabel() const
 {
   return "Calculate Frequency Histogram";
+}
+
+// -----------------------------------------------------------------------------
+CalculateArrayHistogram::Pointer CalculateArrayHistogram::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<CalculateArrayHistogram> CalculateArrayHistogram::New()
+{
+  struct make_shared_enabler : public CalculateArrayHistogram
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString CalculateArrayHistogram::getNameOfClass() const
+{
+  return QString("CalculateArrayHistogram");
+}
+
+// -----------------------------------------------------------------------------
+QString CalculateArrayHistogram::ClassName()
+{
+  return QString("CalculateArrayHistogram");
+}
+
+// -----------------------------------------------------------------------------
+void CalculateArrayHistogram::setSelectedArrayPath(const DataArrayPath& value)
+{
+  m_SelectedArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath CalculateArrayHistogram::getSelectedArrayPath() const
+{
+  return m_SelectedArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void CalculateArrayHistogram::setNumberOfBins(int value)
+{
+  m_NumberOfBins = value;
+}
+
+// -----------------------------------------------------------------------------
+int CalculateArrayHistogram::getNumberOfBins() const
+{
+  return m_NumberOfBins;
+}
+
+// -----------------------------------------------------------------------------
+void CalculateArrayHistogram::setMinRange(double value)
+{
+  m_MinRange = value;
+}
+
+// -----------------------------------------------------------------------------
+double CalculateArrayHistogram::getMinRange() const
+{
+  return m_MinRange;
+}
+
+// -----------------------------------------------------------------------------
+void CalculateArrayHistogram::setMaxRange(double value)
+{
+  m_MaxRange = value;
+}
+
+// -----------------------------------------------------------------------------
+double CalculateArrayHistogram::getMaxRange() const
+{
+  return m_MaxRange;
+}
+
+// -----------------------------------------------------------------------------
+void CalculateArrayHistogram::setUserDefinedRange(bool value)
+{
+  m_UserDefinedRange = value;
+}
+
+// -----------------------------------------------------------------------------
+bool CalculateArrayHistogram::getUserDefinedRange() const
+{
+  return m_UserDefinedRange;
+}
+
+// -----------------------------------------------------------------------------
+void CalculateArrayHistogram::setNormalize(bool value)
+{
+  m_Normalize = value;
+}
+
+// -----------------------------------------------------------------------------
+bool CalculateArrayHistogram::getNormalize() const
+{
+  return m_Normalize;
+}
+
+// -----------------------------------------------------------------------------
+void CalculateArrayHistogram::setNewAttributeMatrixName(const QString& value)
+{
+  m_NewAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString CalculateArrayHistogram::getNewAttributeMatrixName() const
+{
+  return m_NewAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void CalculateArrayHistogram::setNewDataArrayName(const QString& value)
+{
+  m_NewDataArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString CalculateArrayHistogram::getNewDataArrayName() const
+{
+  return m_NewDataArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void CalculateArrayHistogram::setNewDataContainer(bool value)
+{
+  m_NewDataContainer = value;
+}
+
+// -----------------------------------------------------------------------------
+bool CalculateArrayHistogram::getNewDataContainer() const
+{
+  return m_NewDataContainer;
+}
+
+// -----------------------------------------------------------------------------
+void CalculateArrayHistogram::setNewDataContainerName(const DataArrayPath& value)
+{
+  m_NewDataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath CalculateArrayHistogram::getNewDataContainerName() const
+{
+  return m_NewDataContainerName;
 }

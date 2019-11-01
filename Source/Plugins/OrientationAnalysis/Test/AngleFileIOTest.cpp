@@ -33,7 +33,10 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 
+#include <QtCore/QDebug>
+
 #include "SIMPLib/DataArrays/DataArray.hpp"
+
 #include "SIMPLib/DataContainers/AttributeMatrix.h"
 #include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
@@ -66,7 +69,24 @@ public:
   virtual ~AngleFileIOTest()
   {
   }
-  SIMPL_TYPE_MACRO(AngleFileIOTest)
+  /**
+   * @brief Returns the name of the class for AngleFileIOTest
+   */
+  /**
+   * @brief Returns the name of the class for AngleFileIOTest
+   */
+  QString getNameOfClass() const
+  {
+    return QString("AngleFileIOTest");
+  }
+
+  /**
+   * @brief Returns the name of the class for AngleFileIOTest
+   */
+  QString ClassName()
+  {
+    return QString("AngleFileIOTest");
+  }
 
   DataContainerArray::Pointer InitializeDataContainerArray()
   {

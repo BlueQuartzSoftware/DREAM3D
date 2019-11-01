@@ -999,3 +999,27 @@ void StatsGenODFWidget::on_savePoleFigureImage_clicked()
   QImage image = m_PoleFigureLabel->pixmap()->toImage();
   image.save(file);
 }
+
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::setEnableAxisDecorations(bool value)
+{
+  m_EnableAxisDecorations = value;
+}
+
+// -----------------------------------------------------------------------------
+bool StatsGenODFWidget::getEnableAxisDecorations() const
+{
+  return m_EnableAxisDecorations;
+}
+
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::setInitializing(bool value)
+{
+  m_Initializing = value;
+}
+
+// -----------------------------------------------------------------------------
+bool StatsGenODFWidget::getInitializing() const
+{
+  return m_Initializing;
+}

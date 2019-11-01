@@ -35,10 +35,12 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationLib/LaueOps/LaueOps.h"
 
@@ -50,72 +52,201 @@
 class OrientationAnalysis_EXPORT FindTwinBoundarySchmidFactors : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(FindTwinBoundarySchmidFactors SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(bool WriteFile READ getWriteFile WRITE setWriteFile)
-    PYB11_PROPERTY(QString TwinBoundarySchmidFactorsFile READ getTwinBoundarySchmidFactorsFile WRITE setTwinBoundarySchmidFactorsFile)
-    PYB11_PROPERTY(FloatVec3Type LoadingDir READ getLoadingDir WRITE setLoadingDir)
-    PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
-    PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
-    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
-    PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
-    PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
-    PYB11_PROPERTY(DataArrayPath SurfaceMeshTwinBoundaryArrayPath READ getSurfaceMeshTwinBoundaryArrayPath WRITE setSurfaceMeshTwinBoundaryArrayPath)
-    PYB11_PROPERTY(QString SurfaceMeshTwinBoundarySchmidFactorsArrayName READ getSurfaceMeshTwinBoundarySchmidFactorsArrayName WRITE setSurfaceMeshTwinBoundarySchmidFactorsArrayName)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(FindTwinBoundarySchmidFactors SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindTwinBoundarySchmidFactors)
+  PYB11_FILTER_NEW_MACRO(FindTwinBoundarySchmidFactors)
+  PYB11_FILTER_PARAMETER(bool, WriteFile)
+  PYB11_FILTER_PARAMETER(QString, TwinBoundarySchmidFactorsFile)
+  PYB11_FILTER_PARAMETER(FloatVec3Type, LoadingDir)
+  PYB11_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTwinBoundaryArrayPath)
+  PYB11_FILTER_PARAMETER(QString, SurfaceMeshTwinBoundarySchmidFactorsArrayName)
+  PYB11_PROPERTY(bool WriteFile READ getWriteFile WRITE setWriteFile)
+  PYB11_PROPERTY(QString TwinBoundarySchmidFactorsFile READ getTwinBoundarySchmidFactorsFile WRITE setTwinBoundarySchmidFactorsFile)
+  PYB11_PROPERTY(FloatVec3Type LoadingDir READ getLoadingDir WRITE setLoadingDir)
+  PYB11_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
+  PYB11_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
+  PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
+  PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
+  PYB11_PROPERTY(DataArrayPath SurfaceMeshTwinBoundaryArrayPath READ getSurfaceMeshTwinBoundaryArrayPath WRITE setSurfaceMeshTwinBoundaryArrayPath)
+  PYB11_PROPERTY(QString SurfaceMeshTwinBoundarySchmidFactorsArrayName READ getSurfaceMeshTwinBoundarySchmidFactorsArrayName WRITE setSurfaceMeshTwinBoundarySchmidFactorsArrayName)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(FindTwinBoundarySchmidFactors)
-  SIMPL_FILTER_NEW_MACRO(FindTwinBoundarySchmidFactors)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindTwinBoundarySchmidFactors, AbstractFilter)
+  using Self = FindTwinBoundarySchmidFactors;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for FindTwinBoundarySchmidFactors
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindTwinBoundarySchmidFactors
+   */
+  static QString ClassName();
 
   ~FindTwinBoundarySchmidFactors() override;
 
-  SIMPL_FILTER_PARAMETER(bool, WriteFile)
+  /**
+   * @brief Setter property for WriteFile
+   */
+  void setWriteFile(bool value);
+  /**
+   * @brief Getter property for WriteFile
+   * @return Value of WriteFile
+   */
+  bool getWriteFile() const;
+
   Q_PROPERTY(bool WriteFile READ getWriteFile WRITE setWriteFile)
 
-  SIMPL_FILTER_PARAMETER(QString, TwinBoundarySchmidFactorsFile)
+  /**
+   * @brief Setter property for TwinBoundarySchmidFactorsFile
+   */
+  void setTwinBoundarySchmidFactorsFile(const QString& value);
+  /**
+   * @brief Getter property for TwinBoundarySchmidFactorsFile
+   * @return Value of TwinBoundarySchmidFactorsFile
+   */
+  QString getTwinBoundarySchmidFactorsFile() const;
+
   Q_PROPERTY(QString TwinBoundarySchmidFactorsFile READ getTwinBoundarySchmidFactorsFile WRITE setTwinBoundarySchmidFactorsFile)
 
-  SIMPL_FILTER_PARAMETER(FloatVec3Type, LoadingDir)
+  /**
+   * @brief Setter property for LoadingDir
+   */
+  void setLoadingDir(const FloatVec3Type& value);
+  /**
+   * @brief Getter property for LoadingDir
+   * @return Value of LoadingDir
+   */
+  FloatVec3Type getLoadingDir() const;
+
   Q_PROPERTY(FloatVec3Type LoadingDir READ getLoadingDir WRITE setLoadingDir)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, AvgQuatsArrayPath)
+  /**
+   * @brief Setter property for AvgQuatsArrayPath
+   */
+  void setAvgQuatsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for AvgQuatsArrayPath
+   * @return Value of AvgQuatsArrayPath
+   */
+  DataArrayPath getAvgQuatsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath AvgQuatsArrayPath READ getAvgQuatsArrayPath WRITE setAvgQuatsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  /**
+   * @brief Setter property for FeaturePhasesArrayPath
+   */
+  void setFeaturePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayPath
+   * @return Value of FeaturePhasesArrayPath
+   */
+  DataArrayPath getFeaturePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceLabelsArrayPath
+   */
+  void setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceLabelsArrayPath
+   * @return Value of SurfaceMeshFaceLabelsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceNormalsArrayPath
+   */
+  void setSurfaceMeshFaceNormalsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceNormalsArrayPath
+   * @return Value of SurfaceMeshFaceNormalsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceNormalsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshTwinBoundaryArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshTwinBoundaryArrayPath
+   */
+  void setSurfaceMeshTwinBoundaryArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshTwinBoundaryArrayPath
+   * @return Value of SurfaceMeshTwinBoundaryArrayPath
+   */
+  DataArrayPath getSurfaceMeshTwinBoundaryArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshTwinBoundaryArrayPath READ getSurfaceMeshTwinBoundaryArrayPath WRITE setSurfaceMeshTwinBoundaryArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, SurfaceMeshTwinBoundarySchmidFactorsArrayName)
+  /**
+   * @brief Setter property for SurfaceMeshTwinBoundarySchmidFactorsArrayName
+   */
+  void setSurfaceMeshTwinBoundarySchmidFactorsArrayName(const QString& value);
+  /**
+   * @brief Getter property for SurfaceMeshTwinBoundarySchmidFactorsArrayName
+   * @return Value of SurfaceMeshTwinBoundarySchmidFactorsArrayName
+   */
+  QString getSurfaceMeshTwinBoundarySchmidFactorsArrayName() const;
+
   Q_PROPERTY(QString SurfaceMeshTwinBoundarySchmidFactorsArrayName READ getSurfaceMeshTwinBoundarySchmidFactorsArrayName WRITE setSurfaceMeshTwinBoundarySchmidFactorsArrayName)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -125,23 +256,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -190,16 +321,33 @@ protected:
   FindTwinBoundarySchmidFactors();
 
 private:
+  std::weak_ptr<DataArray<float>> m_AvgQuatsPtr;
+  float* m_AvgQuats = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+  std::weak_ptr<DataArray<unsigned int>> m_CrystalStructuresPtr;
+  unsigned int* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFaceLabelsPtr;
+  int32_t* m_SurfaceMeshFaceLabels = nullptr;
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshFaceNormalsPtr;
+  double* m_SurfaceMeshFaceNormals = nullptr;
+  std::weak_ptr<DataArray<bool>> m_SurfaceMeshTwinBoundaryPtr;
+  bool* m_SurfaceMeshTwinBoundary = nullptr;
+  std::weak_ptr<DataArray<float>> m_SurfaceMeshTwinBoundarySchmidFactorsPtr;
+  float* m_SurfaceMeshTwinBoundarySchmidFactors = nullptr;
+
+  bool m_WriteFile = {};
+  QString m_TwinBoundarySchmidFactorsFile = {};
+  FloatVec3Type m_LoadingDir = {};
+  DataArrayPath m_AvgQuatsArrayPath = {};
+  DataArrayPath m_FeaturePhasesArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
+  DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {};
+  DataArrayPath m_SurfaceMeshTwinBoundaryArrayPath = {};
+  QString m_SurfaceMeshTwinBoundarySchmidFactorsArrayName = {};
+
   QVector<LaueOps::Pointer> m_OrientationOps;
-
-  DEFINE_DATAARRAY_VARIABLE(float, AvgQuats)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-  DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
-  DEFINE_DATAARRAY_VARIABLE(bool, SurfaceMeshTwinBoundary)
-
-  DEFINE_DATAARRAY_VARIABLE(float, SurfaceMeshTwinBoundarySchmidFactors)
 
   /**
    * @brief dataCheckVoxel Checks for the appropriate parameter values and availability of arrays

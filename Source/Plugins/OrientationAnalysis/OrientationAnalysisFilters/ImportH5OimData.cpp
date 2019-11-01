@@ -33,6 +33,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "ImportH5OimData.h"
 
 #include <QtCore/QDateTime>
@@ -47,6 +49,8 @@
 #include "EbsdLib/TSL/AngFields.h"
 #include "EbsdLib/TSL/H5OIMReader.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
@@ -58,9 +62,10 @@
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "OrientationAnalysis/FilterParameters/OEMEbsdScanSelectionFilterParameter.h"
-
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
 
 enum createdPathID : RenameDataPath::DataID_t
@@ -112,13 +117,10 @@ ImportH5OimDataPrivate::ImportH5OimDataPrivate(ImportH5OimData* ptr)
 // -----------------------------------------------------------------------------
 ImportH5OimData::ImportH5OimData()
 : m_InputFile("")
-, m_NumberOfScans(0)
 , m_ZSpacing(1.0f)
 , m_DataContainerName("EBSD Data")
 , m_CellEnsembleAttributeMatrixName("Phase Data")
 , m_CellAttributeMatrixName("Scan Data")
-, m_ReadPatternData(false)
-, m_FileWasRead(false)
 , m_PhaseNameArrayName(SIMPL::CellData::Phases)
 , m_MaterialNameArrayName(SIMPL::EnsembleData::MaterialName)
 , m_RefFrameZDir(SIMPL::RefFrameZDir::UnknownRefFrameZDirection)
@@ -142,11 +144,75 @@ ImportH5OimData::~ImportH5OimData() = default;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SIMPL_PIMPL_PROPERTY_DEF(ImportH5OimData, Ang_Private_Data, Data)
-SIMPL_PIMPL_PROPERTY_DEF(ImportH5OimData, QStringList, FileScanNames)
-SIMPL_PIMPL_PROPERTY_DEF(ImportH5OimData, QVector<int32_t>, PatternDims)
-SIMPL_PIMPL_PROPERTY_DEF(ImportH5OimData, QString, InputFile_Cache)
-SIMPL_PIMPL_PROPERTY_DEF(ImportH5OimData, QDateTime, TimeStamp_Cache)
+// -----------------------------------------------------------------------------
+void ImportH5OimData::setData(const Ang_Private_Data& value)
+{
+  Q_D(ImportH5OimData);
+  d->m_Data = value;
+}
+
+// -----------------------------------------------------------------------------
+Ang_Private_Data ImportH5OimData::getData() const
+{
+  Q_D(const ImportH5OimData);
+  return d->m_Data;
+}
+
+// -----------------------------------------------------------------------------
+void ImportH5OimData::setFileScanNames(const QStringList& value)
+{
+  Q_D(ImportH5OimData);
+  d->m_FileScanNames = value;
+}
+
+// -----------------------------------------------------------------------------
+QStringList ImportH5OimData::getFileScanNames() const
+{
+  Q_D(const ImportH5OimData);
+  return d->m_FileScanNames;
+}
+
+// -----------------------------------------------------------------------------
+void ImportH5OimData::setPatternDims(const QVector<int32_t>& value)
+{
+  Q_D(ImportH5OimData);
+  d->m_PatternDims = value;
+}
+
+// -----------------------------------------------------------------------------
+QVector<int32_t> ImportH5OimData::getPatternDims() const
+{
+  Q_D(const ImportH5OimData);
+  return d->m_PatternDims;
+}
+
+// -----------------------------------------------------------------------------
+void ImportH5OimData::setInputFile_Cache(const QString& value)
+{
+  Q_D(ImportH5OimData);
+  d->m_InputFile_Cache = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportH5OimData::getInputFile_Cache() const
+{
+  Q_D(const ImportH5OimData);
+  return d->m_InputFile_Cache;
+}
+
+// -----------------------------------------------------------------------------
+void ImportH5OimData::setTimeStamp_Cache(const QDateTime& value)
+{
+  Q_D(ImportH5OimData);
+  d->m_TimeStamp_Cache = value;
+}
+
+// -----------------------------------------------------------------------------
+QDateTime ImportH5OimData::getTimeStamp_Cache() const
+{
+  Q_D(const ImportH5OimData);
+  return d->m_TimeStamp_Cache;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -673,7 +739,7 @@ AbstractFilter::Pointer ImportH5OimData::newFilterInstance(bool copyFilterParame
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportH5OimData::getCompiledLibraryName() const
+QString ImportH5OimData::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -681,7 +747,7 @@ const QString ImportH5OimData::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportH5OimData::getBrandingString() const
+QString ImportH5OimData::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -689,7 +755,7 @@ const QString ImportH5OimData::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportH5OimData::getFilterVersion() const
+QString ImportH5OimData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -699,7 +765,7 @@ const QString ImportH5OimData::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportH5OimData::getGroupName() const
+QString ImportH5OimData::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -707,7 +773,7 @@ const QString ImportH5OimData::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ImportH5OimData::getUuid()
+QUuid ImportH5OimData::getUuid() const
 {
   return QUuid("{3ff4701b-3a0c-52e3-910a-fa927aa6584c}");
 }
@@ -715,7 +781,7 @@ const QUuid ImportH5OimData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportH5OimData::getSubGroupName() const
+QString ImportH5OimData::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::InputFilters;
 }
@@ -723,7 +789,7 @@ const QString ImportH5OimData::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ImportH5OimData::getHumanLabel() const
+QString ImportH5OimData::getHumanLabel() const
 {
   return "Import EDAX OIMAnalysis Data (.h5)";
 }
@@ -879,4 +945,213 @@ void ImportH5OimData::dataCheckOEM()
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(cellEnsembleAttrMat->getNumberOfTuples(), SIMPL::EnsembleData::MaterialName, true);
   cellEnsembleAttrMat->insertOrAssign(materialNames);
   m_EbsdArrayMap.insert(SIMPL::EnsembleData::MaterialName, materialNames);
+}
+
+// -----------------------------------------------------------------------------
+ImportH5OimData::Pointer ImportH5OimData::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ImportH5OimData> ImportH5OimData::New()
+{
+  struct make_shared_enabler : public ImportH5OimData
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportH5OimData::getNameOfClass() const
+{
+  return QString("ImportH5OimData");
+}
+
+// -----------------------------------------------------------------------------
+QString ImportH5OimData::ClassName()
+{
+  return QString("ImportH5OimData");
+}
+
+// -----------------------------------------------------------------------------
+void ImportH5OimData::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportH5OimData::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void ImportH5OimData::setSelectedScanNames(const QStringList& value)
+{
+  m_SelectedScanNames = value;
+}
+
+// -----------------------------------------------------------------------------
+QStringList ImportH5OimData::getSelectedScanNames() const
+{
+  return m_SelectedScanNames;
+}
+
+// -----------------------------------------------------------------------------
+void ImportH5OimData::setNumberOfScans(int value)
+{
+  m_NumberOfScans = value;
+}
+
+// -----------------------------------------------------------------------------
+int ImportH5OimData::getNumberOfScans() const
+{
+  return m_NumberOfScans;
+}
+
+// -----------------------------------------------------------------------------
+void ImportH5OimData::setZSpacing(double value)
+{
+  m_ZSpacing = value;
+}
+
+// -----------------------------------------------------------------------------
+double ImportH5OimData::getZSpacing() const
+{
+  return m_ZSpacing;
+}
+
+// -----------------------------------------------------------------------------
+void ImportH5OimData::setOrigin(const FloatVec3Type& value)
+{
+  m_Origin = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec3Type ImportH5OimData::getOrigin() const
+{
+  return m_Origin;
+}
+
+// -----------------------------------------------------------------------------
+void ImportH5OimData::setDataContainerName(const DataArrayPath& value)
+{
+  m_DataContainerName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ImportH5OimData::getDataContainerName() const
+{
+  return m_DataContainerName;
+}
+
+// -----------------------------------------------------------------------------
+void ImportH5OimData::setCellEnsembleAttributeMatrixName(const QString& value)
+{
+  m_CellEnsembleAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportH5OimData::getCellEnsembleAttributeMatrixName() const
+{
+  return m_CellEnsembleAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ImportH5OimData::setCellAttributeMatrixName(const QString& value)
+{
+  m_CellAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportH5OimData::getCellAttributeMatrixName() const
+{
+  return m_CellAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void ImportH5OimData::setReadPatternData(bool value)
+{
+  m_ReadPatternData = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ImportH5OimData::getReadPatternData() const
+{
+  return m_ReadPatternData;
+}
+
+// -----------------------------------------------------------------------------
+void ImportH5OimData::setFileWasRead(bool value)
+{
+  m_FileWasRead = value;
+}
+
+// -----------------------------------------------------------------------------
+bool ImportH5OimData::getFileWasRead() const
+{
+  return m_FileWasRead;
+}
+
+// -----------------------------------------------------------------------------
+void ImportH5OimData::setPhaseNameArrayName(const QString& value)
+{
+  m_PhaseNameArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportH5OimData::getPhaseNameArrayName() const
+{
+  return m_PhaseNameArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void ImportH5OimData::setMaterialNameArrayName(const QString& value)
+{
+  m_MaterialNameArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportH5OimData::getMaterialNameArrayName() const
+{
+  return m_MaterialNameArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void ImportH5OimData::setRefFrameZDir(uint32_t value)
+{
+  m_RefFrameZDir = value;
+}
+
+// -----------------------------------------------------------------------------
+uint32_t ImportH5OimData::getRefFrameZDir() const
+{
+  return m_RefFrameZDir;
+}
+
+// -----------------------------------------------------------------------------
+void ImportH5OimData::setManufacturer(const Ebsd::OEM& value)
+{
+  m_Manufacturer = value;
+}
+
+// -----------------------------------------------------------------------------
+Ebsd::OEM ImportH5OimData::getManufacturer() const
+{
+  return m_Manufacturer;
+}
+
+// -----------------------------------------------------------------------------
+void ImportH5OimData::setEbsdArrayMap(const IDataArrayMap& value)
+{
+  m_EbsdArrayMap = value;
+}
+
+// -----------------------------------------------------------------------------
+ImportH5OimData::IDataArrayMap ImportH5OimData::getEbsdArrayMap() const
+{
+  return m_EbsdArrayMap;
 }

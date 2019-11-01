@@ -37,28 +37,29 @@
 #pragma once
 
 // C Includes
-#include <stddef.h>
+#include <memory>
+
+#include <cstddef>
 
 // C++ Includes
 #include <vector>
 
+#include <QtCore/QString>
+
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 // emmpm includes
 #include "EMMPMLib/EMMPMLib.h"
 #include "EMMPMLib/Core/EMMPM_Constants.h"
 
+using real_t = float;
 
-typedef float real_t;
-
-
-typedef struct
+struct CoupleType
 {
   int label_1;
   int label_2;
   real_t beta;
-} CoupleType;
+};
 
 /**
  * @struct EMMPM_Data emmpm/public/EMMPM_Structures.h EMMPM_Structures.h
@@ -69,9 +70,23 @@ typedef struct
 class EMMPMLib_EXPORT EMMPM_Data
 {
   public:
-    SIMPL_SHARED_POINTERS(EMMPM_Data)
-    SIMPL_STATIC_NEW_MACRO(EMMPM_Data)
-    SIMPL_TYPE_MACRO(EMMPM_Data)
+    using Self = EMMPM_Data;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static Pointer New();
+
+    /**
+     * @brief Returns the name of the class for EMMPM_Data
+     */
+    virtual QString getNameOfClass() const;
+    /**
+     * @brief Returns the name of the class for EMMPM_Data
+     */
+    static QString ClassName();
 
     virtual ~EMMPM_Data();
 
@@ -194,5 +209,7 @@ class EMMPMLib_EXPORT EMMPM_Data
     EMMPM_Data(EMMPM_Data&&) = delete;          // Move Constructor Not Implemented
     EMMPM_Data& operator=(const EMMPM_Data&) = delete; // Copy Assignment Not Implemented
     EMMPM_Data& operator=(EMMPM_Data&&) = delete;      // Move Assignment Not Implemented
+
+  private:
 };
 

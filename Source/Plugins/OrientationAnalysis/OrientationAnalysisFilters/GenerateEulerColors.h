@@ -35,13 +35,15 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QString>
 
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Common/Constants.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/IDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -55,56 +57,145 @@
 class OrientationAnalysis_EXPORT GenerateEulerColors : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(GenerateEulerColors SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
-    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
-    PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
-    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
-    PYB11_PROPERTY(QString CellEulerColorsArrayName READ getCellEulerColorsArrayName WRITE setCellEulerColorsArrayName)
-    PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(GenerateEulerColors SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(GenerateEulerColors)
+  PYB11_FILTER_NEW_MACRO(GenerateEulerColors)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  PYB11_FILTER_PARAMETER(QString, CellEulerColorsArrayName)
+  PYB11_FILTER_PARAMETER(bool, UseGoodVoxels)
+  PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+  PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+  PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+  PYB11_PROPERTY(QString CellEulerColorsArrayName READ getCellEulerColorsArrayName WRITE setCellEulerColorsArrayName)
+  PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(GenerateEulerColors)
-  SIMPL_FILTER_NEW_MACRO(GenerateEulerColors)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(GenerateEulerColors, AbstractFilter)
+  using Self = GenerateEulerColors;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for GenerateEulerColors
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for GenerateEulerColors
+   */
+  static QString ClassName();
 
   ~GenerateEulerColors() override;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  /**
+   * @brief Setter property for CellPhasesArrayPath
+   */
+  void setCellPhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellPhasesArrayPath
+   * @return Value of CellPhasesArrayPath
+   */
+  DataArrayPath getCellPhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+  /**
+   * @brief Setter property for CellEulerAnglesArrayPath
+   */
+  void setCellEulerAnglesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CellEulerAnglesArrayPath
+   * @return Value of CellEulerAnglesArrayPath
+   */
+  DataArrayPath getCellEulerAnglesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  /**
+   * @brief Setter property for GoodVoxelsArrayPath
+   */
+  void setGoodVoxelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for GoodVoxelsArrayPath
+   * @return Value of GoodVoxelsArrayPath
+   */
+  DataArrayPath getGoodVoxelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(QString, CellEulerColorsArrayName)
+  /**
+   * @brief Setter property for CellEulerColorsArrayName
+   */
+  void setCellEulerColorsArrayName(const QString& value);
+  /**
+   * @brief Getter property for CellEulerColorsArrayName
+   * @return Value of CellEulerColorsArrayName
+   */
+  QString getCellEulerColorsArrayName() const;
+
   Q_PROPERTY(QString CellEulerColorsArrayName READ getCellEulerColorsArrayName WRITE setCellEulerColorsArrayName)
 
-  SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
+  /**
+   * @brief Setter property for UseGoodVoxels
+   */
+  void setUseGoodVoxels(bool value);
+  /**
+   * @brief Getter property for UseGoodVoxels
+   * @return Value of UseGoodVoxels
+   */
+  bool getUseGoodVoxels() const;
+
   Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -114,23 +205,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -188,11 +279,23 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-  DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
-  DEFINE_DATAARRAY_VARIABLE(uint8_t, CellEulerColors)
-  DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-  DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
+  std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+  int32_t* m_CellPhases = nullptr;
+  std::weak_ptr<DataArray<float>> m_CellEulerAnglesPtr;
+  float* m_CellEulerAngles = nullptr;
+  std::weak_ptr<DataArray<uint8_t>> m_CellEulerColorsPtr;
+  uint8_t* m_CellEulerColors = nullptr;
+  std::weak_ptr<DataArray<unsigned int>> m_CrystalStructuresPtr;
+  unsigned int* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<bool>> m_GoodVoxelsPtr;
+  bool* m_GoodVoxels = nullptr;
+
+  DataArrayPath m_CellPhasesArrayPath = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+  DataArrayPath m_CellEulerAnglesArrayPath = {};
+  DataArrayPath m_GoodVoxelsArrayPath = {};
+  QString m_CellEulerColorsArrayName = {};
+  bool m_UseGoodVoxels = {};
 
 public:
   GenerateEulerColors(const GenerateEulerColors&) = delete; // Copy Constructor Not Implemented

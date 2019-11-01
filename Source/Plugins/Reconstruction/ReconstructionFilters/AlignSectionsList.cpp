@@ -33,18 +33,25 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "AlignSectionsList.h"
 
 #include <fstream>
 
 #include <QtCore/QFileInfo>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataContainerSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/InputFileFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Reconstruction/ReconstructionConstants.h"
 #include "Reconstruction/ReconstructionVersion.h"
@@ -232,7 +239,7 @@ AbstractFilter::Pointer AlignSectionsList::newFilterInstance(bool copyFilterPara
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsList::getCompiledLibraryName() const
+QString AlignSectionsList::getCompiledLibraryName() const
 {
   return ReconstructionConstants::ReconstructionBaseName;
 }
@@ -240,7 +247,7 @@ const QString AlignSectionsList::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsList::getBrandingString() const
+QString AlignSectionsList::getBrandingString() const
 {
   return "Reconstruction";
 }
@@ -248,7 +255,7 @@ const QString AlignSectionsList::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsList::getFilterVersion() const
+QString AlignSectionsList::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -258,7 +265,7 @@ const QString AlignSectionsList::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsList::getGroupName() const
+QString AlignSectionsList::getGroupName() const
 {
   return SIMPL::FilterGroups::ReconstructionFilters;
 }
@@ -266,7 +273,7 @@ const QString AlignSectionsList::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid AlignSectionsList::getUuid()
+QUuid AlignSectionsList::getUuid() const
 {
   return QUuid("{accf8f6c-0551-5da3-9a3d-e4be41c3985c}");
 }
@@ -274,7 +281,7 @@ const QUuid AlignSectionsList::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsList::getSubGroupName() const
+QString AlignSectionsList::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::AlignmentFilters;
 }
@@ -282,7 +289,60 @@ const QString AlignSectionsList::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString AlignSectionsList::getHumanLabel() const
+QString AlignSectionsList::getHumanLabel() const
 {
   return "Align Sections (List)";
+}
+
+// -----------------------------------------------------------------------------
+AlignSectionsList::Pointer AlignSectionsList::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<AlignSectionsList> AlignSectionsList::New()
+{
+  struct make_shared_enabler : public AlignSectionsList
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString AlignSectionsList::getNameOfClass() const
+{
+  return QString("AlignSectionsList");
+}
+
+// -----------------------------------------------------------------------------
+QString AlignSectionsList::ClassName()
+{
+  return QString("AlignSectionsList");
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsList::setInputFile(const QString& value)
+{
+  m_InputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString AlignSectionsList::getInputFile() const
+{
+  return m_InputFile;
+}
+
+// -----------------------------------------------------------------------------
+void AlignSectionsList::setDREAM3DAlignmentFile(bool value)
+{
+  m_DREAM3DAlignmentFile = value;
+}
+
+// -----------------------------------------------------------------------------
+bool AlignSectionsList::getDREAM3DAlignmentFile() const
+{
+  return m_DREAM3DAlignmentFile;
 }

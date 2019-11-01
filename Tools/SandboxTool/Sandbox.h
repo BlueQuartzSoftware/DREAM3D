@@ -8,7 +8,7 @@
 #include <QtCore/QStringList>
 #include <QtCore/QTextStream>
 
-#define OVERWRITE_SOURCE_FILE 0
+#define OVERWRITE_SOURCE_FILE 1
 
 class Sandbox
 {
@@ -33,21 +33,19 @@ public:
     QFileInfo fi(filename);
     if(didReplace)
     {
+      QFileInfo fi(filename);
 #if OVERWRITE_SOURCE_FILE
-
+      QString filePath = filename;
 #else
-      finalOutPath = QDir::homePath() + "/tmp/" + fi.fileName();
+      QString filePath = "/tmp/" + fi.fileName();
+      fi = QFileInfo(filePath);
 #endif
-      QFile hOut(finalOutPath);
-
-      QFileInfo fi2(finalOutPath);
-
+      QFile hOut(filePath);
       hOut.open(QFile::WriteOnly);
       QTextStream stream(&hOut);
       stream << outLines.join("\n");
       hOut.close();
-
-      qDebug() << "Saved File " << fi2.absoluteFilePath();
+      qDebug() << "Saved File " << fi.absoluteFilePath();
     }
   }
 
@@ -63,14 +61,14 @@ public:
     QFileInfo fi(filename);
     if(didReplace)
     {
+      QFileInfo fi(filename);
 #if OVERWRITE_SOURCE_FILE
-
+      QString filePath = filename;
 #else
-      finalOutPath = QDir::homePath() + "/tmp/" + fi.fileName();
+      QString filePath = "/tmp/" + fi.fileName();
+      fi = QFileInfo(filePath);
 #endif
-      QFile hOut(finalOutPath);
-
-      QFileInfo fi2(finalOutPath);
+      QFile hOut(filePath);
       hOut.open(QFile::WriteOnly);
       QTextStream stream(&hOut);
       for(qint32 i = 0; i < outLines.size() - 1; i++)
@@ -79,7 +77,7 @@ public:
       }
       hOut.close();
 
-      qDebug() << "Saved File " << fi2.absoluteFilePath();
+      qDebug() << "Saved File " << fi.absoluteFilePath();
     }
   }
 };

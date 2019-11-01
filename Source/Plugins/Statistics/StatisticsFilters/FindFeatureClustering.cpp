@@ -33,11 +33,16 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FindFeatureClustering.h"
 
 #include <fstream>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -49,6 +54,8 @@
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Math/RadialDistributionFunction.h"
 #include "SIMPLib/Math/SIMPLibMath.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 
 #include "Statistics/StatisticsConstants.h"
 #include "Statistics/StatisticsVersion.h"
@@ -286,12 +293,10 @@ void FindFeatureClustering::find_clustering()
   totalpoints = static_cast<float>(dims[0] * dims[1] * dims[2]);
 
   // initialize boxdims and boxres vectors
-  std::vector<float> boxdims(3);
-  boxdims[0] = sizex;
-  boxdims[1] = sizey;
-  boxdims[2] = sizez;
+  std::array<float, 3> boxdims = {sizex, sizey, sizez};
 
-  std::vector<float> boxres = m->getGeometryAs<ImageGeom>()->getSpacing().toContainer<std::vector<float>>();
+  FloatVec3Type vec3 = m->getGeometryAs<ImageGeom>()->getSpacing();
+  std::array<float, 3> boxres = {vec3[0], vec3[1], vec3[2]};
 
   for(size_t i = 1; i < totalFeatures; i++)
   {
@@ -470,7 +475,7 @@ AbstractFilter::Pointer FindFeatureClustering::newFilterInstance(bool copyFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureClustering::getCompiledLibraryName() const
+QString FindFeatureClustering::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -478,7 +483,7 @@ const QString FindFeatureClustering::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureClustering::getBrandingString() const
+QString FindFeatureClustering::getBrandingString() const
 {
   return "Statistics";
 }
@@ -486,7 +491,7 @@ const QString FindFeatureClustering::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureClustering::getFilterVersion() const
+QString FindFeatureClustering::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -496,7 +501,7 @@ const QString FindFeatureClustering::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureClustering::getGroupName() const
+QString FindFeatureClustering::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -504,7 +509,7 @@ const QString FindFeatureClustering::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FindFeatureClustering::getUuid()
+QUuid FindFeatureClustering::getUuid() const
 {
   return QUuid("{a1e9cf6d-2d1b-573e-98b8-0314c993d2b6}");
 }
@@ -512,7 +517,7 @@ const QUuid FindFeatureClustering::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureClustering::getSubGroupName() const
+QString FindFeatureClustering::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::MorphologicalFilters;
 }
@@ -520,7 +525,180 @@ const QString FindFeatureClustering::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FindFeatureClustering::getHumanLabel() const
+QString FindFeatureClustering::getHumanLabel() const
 {
   return "Find Feature Clustering";
+}
+
+// -----------------------------------------------------------------------------
+FindFeatureClustering::Pointer FindFeatureClustering::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FindFeatureClustering> FindFeatureClustering::New()
+{
+  struct make_shared_enabler : public FindFeatureClustering
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FindFeatureClustering::getNameOfClass() const
+{
+  return QString("FindFeatureClustering");
+}
+
+// -----------------------------------------------------------------------------
+QString FindFeatureClustering::ClassName()
+{
+  return QString("FindFeatureClustering");
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureClustering::setErrorOutputFile(const QString& value)
+{
+  m_ErrorOutputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindFeatureClustering::getErrorOutputFile() const
+{
+  return m_ErrorOutputFile;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureClustering::setNumberOfBins(int value)
+{
+  m_NumberOfBins = value;
+}
+
+// -----------------------------------------------------------------------------
+int FindFeatureClustering::getNumberOfBins() const
+{
+  return m_NumberOfBins;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureClustering::setPhaseNumber(int value)
+{
+  m_PhaseNumber = value;
+}
+
+// -----------------------------------------------------------------------------
+int FindFeatureClustering::getPhaseNumber() const
+{
+  return m_PhaseNumber;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureClustering::setCellEnsembleAttributeMatrixName(const DataArrayPath& value)
+{
+  m_CellEnsembleAttributeMatrixName = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeatureClustering::getCellEnsembleAttributeMatrixName() const
+{
+  return m_CellEnsembleAttributeMatrixName;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureClustering::setRemoveBiasedFeatures(bool value)
+{
+  m_RemoveBiasedFeatures = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindFeatureClustering::getRemoveBiasedFeatures() const
+{
+  return m_RemoveBiasedFeatures;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureClustering::setBiasedFeaturesArrayPath(const DataArrayPath& value)
+{
+  m_BiasedFeaturesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeatureClustering::getBiasedFeaturesArrayPath() const
+{
+  return m_BiasedFeaturesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureClustering::setEquivalentDiametersArrayPath(const DataArrayPath& value)
+{
+  m_EquivalentDiametersArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeatureClustering::getEquivalentDiametersArrayPath() const
+{
+  return m_EquivalentDiametersArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureClustering::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeatureClustering::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureClustering::setCentroidsArrayPath(const DataArrayPath& value)
+{
+  m_CentroidsArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FindFeatureClustering::getCentroidsArrayPath() const
+{
+  return m_CentroidsArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureClustering::setClusteringListArrayName(const QString& value)
+{
+  m_ClusteringListArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindFeatureClustering::getClusteringListArrayName() const
+{
+  return m_ClusteringListArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureClustering::setNewEnsembleArrayArrayName(const QString& value)
+{
+  m_NewEnsembleArrayArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindFeatureClustering::getNewEnsembleArrayArrayName() const
+{
+  return m_NewEnsembleArrayArrayName;
+}
+
+// -----------------------------------------------------------------------------
+void FindFeatureClustering::setMaxMinArrayName(const QString& value)
+{
+  m_MaxMinArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString FindFeatureClustering::getMaxMinArrayName() const
+{
+  return m_MaxMinArrayName;
 }

@@ -33,11 +33,17 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "VisualizeGBCDPoleFigure.h"
 
 #include <QtCore/QDir>
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AxisAngleFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
@@ -553,7 +559,7 @@ AbstractFilter::Pointer VisualizeGBCDPoleFigure::newFilterInstance(bool copyFilt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDPoleFigure::getCompiledLibraryName() const
+QString VisualizeGBCDPoleFigure::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -561,7 +567,7 @@ const QString VisualizeGBCDPoleFigure::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDPoleFigure::getBrandingString() const
+QString VisualizeGBCDPoleFigure::getBrandingString() const
 {
   return "IO";
 }
@@ -569,7 +575,7 @@ const QString VisualizeGBCDPoleFigure::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDPoleFigure::getFilterVersion() const
+QString VisualizeGBCDPoleFigure::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -579,7 +585,7 @@ const QString VisualizeGBCDPoleFigure::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDPoleFigure::getGroupName() const
+QString VisualizeGBCDPoleFigure::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -587,7 +593,7 @@ const QString VisualizeGBCDPoleFigure::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid VisualizeGBCDPoleFigure::getUuid()
+QUuid VisualizeGBCDPoleFigure::getUuid() const
 {
   return QUuid("{85900eba-3da9-5985-ac71-1d9d290a5d31}");
 }
@@ -595,7 +601,7 @@ const QUuid VisualizeGBCDPoleFigure::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDPoleFigure::getSubGroupName() const
+QString VisualizeGBCDPoleFigure::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -603,7 +609,96 @@ const QString VisualizeGBCDPoleFigure::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VisualizeGBCDPoleFigure::getHumanLabel() const
+QString VisualizeGBCDPoleFigure::getHumanLabel() const
 {
   return "Export GBCD Pole Figure (VTK)";
+}
+
+// -----------------------------------------------------------------------------
+VisualizeGBCDPoleFigure::Pointer VisualizeGBCDPoleFigure::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<VisualizeGBCDPoleFigure> VisualizeGBCDPoleFigure::New()
+{
+  struct make_shared_enabler : public VisualizeGBCDPoleFigure
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString VisualizeGBCDPoleFigure::getNameOfClass() const
+{
+  return QString("VisualizeGBCDPoleFigure");
+}
+
+// -----------------------------------------------------------------------------
+QString VisualizeGBCDPoleFigure::ClassName()
+{
+  return QString("VisualizeGBCDPoleFigure");
+}
+
+// -----------------------------------------------------------------------------
+void VisualizeGBCDPoleFigure::setOutputFile(const QString& value)
+{
+  m_OutputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VisualizeGBCDPoleFigure::getOutputFile() const
+{
+  return m_OutputFile;
+}
+
+// -----------------------------------------------------------------------------
+void VisualizeGBCDPoleFigure::setPhaseOfInterest(int value)
+{
+  m_PhaseOfInterest = value;
+}
+
+// -----------------------------------------------------------------------------
+int VisualizeGBCDPoleFigure::getPhaseOfInterest() const
+{
+  return m_PhaseOfInterest;
+}
+
+// -----------------------------------------------------------------------------
+void VisualizeGBCDPoleFigure::setMisorientationRotation(const AxisAngleInput_t& value)
+{
+  m_MisorientationRotation = value;
+}
+
+// -----------------------------------------------------------------------------
+AxisAngleInput_t VisualizeGBCDPoleFigure::getMisorientationRotation() const
+{
+  return m_MisorientationRotation;
+}
+
+// -----------------------------------------------------------------------------
+void VisualizeGBCDPoleFigure::setGBCDArrayPath(const DataArrayPath& value)
+{
+  m_GBCDArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath VisualizeGBCDPoleFigure::getGBCDArrayPath() const
+{
+  return m_GBCDArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void VisualizeGBCDPoleFigure::setCrystalStructuresArrayPath(const DataArrayPath& value)
+{
+  m_CrystalStructuresArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath VisualizeGBCDPoleFigure::getCrystalStructuresArrayPath() const
+{
+  return m_CrystalStructuresArrayPath;
 }

@@ -35,9 +35,11 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Processing/ProcessingDLLExport.h"
 
@@ -47,56 +49,145 @@
 class Processing_EXPORT ErodeDilateMask : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(ErodeDilateMask SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)
-    PYB11_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations)
-    PYB11_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn)
-    PYB11_PROPERTY(bool YDirOn READ getYDirOn WRITE setYDirOn)
-    PYB11_PROPERTY(bool ZDirOn READ getZDirOn WRITE setZDirOn)
-    PYB11_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(ErodeDilateMask SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(ErodeDilateMask)
+  PYB11_FILTER_NEW_MACRO(ErodeDilateMask)
+  PYB11_FILTER_PARAMETER(unsigned int, Direction)
+  PYB11_FILTER_PARAMETER(int, NumIterations)
+  PYB11_FILTER_PARAMETER(bool, XDirOn)
+  PYB11_FILTER_PARAMETER(bool, YDirOn)
+  PYB11_FILTER_PARAMETER(bool, ZDirOn)
+  PYB11_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
+  PYB11_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)
+  PYB11_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations)
+  PYB11_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn)
+  PYB11_PROPERTY(bool YDirOn READ getYDirOn WRITE setYDirOn)
+  PYB11_PROPERTY(bool ZDirOn READ getZDirOn WRITE setZDirOn)
+  PYB11_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(ErodeDilateMask)
-  SIMPL_FILTER_NEW_MACRO(ErodeDilateMask)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(ErodeDilateMask, AbstractFilter)
+  using Self = ErodeDilateMask;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for ErodeDilateMask
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for ErodeDilateMask
+   */
+  static QString ClassName();
 
   ~ErodeDilateMask() override;
 
-  SIMPL_FILTER_PARAMETER(unsigned int, Direction)
+  /**
+   * @brief Setter property for Direction
+   */
+  void setDirection(unsigned int value);
+  /**
+   * @brief Getter property for Direction
+   * @return Value of Direction
+   */
+  unsigned int getDirection() const;
+
   Q_PROPERTY(unsigned int Direction READ getDirection WRITE setDirection)
 
-  SIMPL_FILTER_PARAMETER(int, NumIterations)
+  /**
+   * @brief Setter property for NumIterations
+   */
+  void setNumIterations(int value);
+  /**
+   * @brief Getter property for NumIterations
+   * @return Value of NumIterations
+   */
+  int getNumIterations() const;
+
   Q_PROPERTY(int NumIterations READ getNumIterations WRITE setNumIterations)
 
-  SIMPL_FILTER_PARAMETER(bool, XDirOn)
+  /**
+   * @brief Setter property for XDirOn
+   */
+  void setXDirOn(bool value);
+  /**
+   * @brief Getter property for XDirOn
+   * @return Value of XDirOn
+   */
+  bool getXDirOn() const;
+
   Q_PROPERTY(bool XDirOn READ getXDirOn WRITE setXDirOn)
 
-  SIMPL_FILTER_PARAMETER(bool, YDirOn)
+  /**
+   * @brief Setter property for YDirOn
+   */
+  void setYDirOn(bool value);
+  /**
+   * @brief Getter property for YDirOn
+   * @return Value of YDirOn
+   */
+  bool getYDirOn() const;
+
   Q_PROPERTY(bool YDirOn READ getYDirOn WRITE setYDirOn)
 
-  SIMPL_FILTER_PARAMETER(bool, ZDirOn)
+  /**
+   * @brief Setter property for ZDirOn
+   */
+  void setZDirOn(bool value);
+  /**
+   * @brief Getter property for ZDirOn
+   * @return Value of ZDirOn
+   */
+  bool getZDirOn() const;
+
   Q_PROPERTY(bool ZDirOn READ getZDirOn WRITE setZDirOn)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, MaskArrayPath)
+  /**
+   * @brief Setter property for MaskArrayPath
+   */
+  void setMaskArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for MaskArrayPath
+   * @return Value of MaskArrayPath
+   */
+  DataArrayPath getMaskArrayPath() const;
+
   Q_PROPERTY(DataArrayPath MaskArrayPath READ getMaskArrayPath WRITE setMaskArrayPath)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -106,23 +197,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -180,9 +271,17 @@ protected:
   void initialize();
 
 private:
-  bool* m_MaskCopy;
+  std::weak_ptr<DataArray<bool>> m_MaskPtr;
+  bool* m_Mask = nullptr;
 
-  DEFINE_DATAARRAY_VARIABLE(bool, Mask)
+  unsigned int m_Direction = {};
+  int m_NumIterations = {};
+  bool m_XDirOn = {};
+  bool m_YDirOn = {};
+  bool m_ZDirOn = {};
+  DataArrayPath m_MaskArrayPath = {};
+
+  bool* m_MaskCopy;
 
 public:
   ErodeDilateMask(const ErodeDilateMask&) = delete; // Copy Constructor Not Implemented

@@ -35,11 +35,11 @@
 
 #include <QtCore/QDir>
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/CoreFilters/DataContainerReader.h"
 #include "SIMPLib/CoreFilters/DataContainerWriter.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
 #include "SIMPLib/Filtering/FilterManager.h"
 #include "SIMPLib/Filtering/FilterPipeline.h"
@@ -47,6 +47,7 @@
 #include "SIMPLib/Plugin/ISIMPLibPlugin.h"
 #include "SIMPLib/Plugin/SIMPLibPluginLoader.h"
 #include "SIMPLib/SIMPLib.h"
+
 #include "UnitTestSupport.hpp"
 
 #include "ImportExportTestFileLocations.h"
@@ -54,13 +55,8 @@
 class ExportDataTest
 {
 public:
-  ExportDataTest()
-  {
-  }
-  virtual ~ExportDataTest()
-  {
-  }
-  SIMPL_TYPE_MACRO(ExportDataTest)
+  ExportDataTest() = default;
+  virtual ~ExportDataTest() = default;
 
   enum ErrorCodes
   {
@@ -140,11 +136,11 @@ public:
       {
         if(i % 2 == 0)
         {
-          boolArray->setValue(i, 0);
+          boolArray->setValue(i, false);
         }
         else
         {
-          boolArray->setValue(i, 1);
+          boolArray->setValue(i, true);
         }
       }
       attrMatrix->insertOrAssign(boolArray);
@@ -306,7 +302,7 @@ public:
   void operator()()
   {
     int err = EXIT_SUCCESS;
-    std::cout << "<===== Start " << getNameOfClass().toStdString() << std::endl;
+    std::cout << "<===== Start ExportDataTest " << std::endl;
     DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
     DREAM3D_REGISTER_TEST(TestExportDataWriter())

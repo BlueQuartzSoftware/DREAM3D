@@ -37,9 +37,6 @@
 
 #include <QtCore/QString>
 
-
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-
 #include "SVWidgetsLib/FilterParameterWidgets/FilterParameterWidget.h"
 #include "SVWidgetsLib/QtSupport/QtSPluginFrame.h"
 

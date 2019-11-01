@@ -36,10 +36,11 @@
 
 #pragma once
 
+#include <memory>
+
 #include <QtCore/QString>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Common/Observable.h"
 
 #include "EMMPMLib/Core/EMMPM_Constants.h"
@@ -51,10 +52,26 @@ class EMMPMLib_EXPORT MorphFilter : public Observable
     Q_OBJECT;
 
   public:
-    SIMPL_SHARED_POINTERS(MorphFilter);
-    SIMPL_STATIC_NEW_MACRO(MorphFilter);
-    SIMPL_TYPE_MACRO(MorphFilter);
-    virtual ~MorphFilter();
+    using Self = MorphFilter;
+    ;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static Pointer New();
+
+    /**
+     * @brief Returns the name of the class for MorphFilter;
+     */
+    QString getNameOfClass() const override;
+    /**
+     * @brief Returns the name of the class for MorphFilter;
+     */
+    static QString ClassName();
+
+    ~MorphFilter() override;
 
     unsigned int maxi(int a, int b);
 
@@ -75,19 +92,31 @@ class EMMPMLib_EXPORT MorphFilter : public Observable
      */
     void multiSE(EMMPM_Data* data);
 
-    SIMPL_INSTANCE_PROPERTY(int, ErrorCode)
+    /**
+     * @brief Setter property for ErrorCode
+     */
+    void setErrorCode(int value);
+    /**
+     * @brief Getter property for ErrorCode
+     * @return Value of ErrorCode
+     */
+    int getErrorCode() const;
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() const;
+    virtual QString getHumanLabel() const;
 
   protected:
     MorphFilter();
 
   private:
-    MorphFilter(const MorphFilter&) = delete;    // Copy Constructor Not Implemented
-    void operator=(const MorphFilter&) = delete; // Move assignment Not Implemented
-};
+    int m_ErrorCode = 0;
 
+  public:
+    MorphFilter(const MorphFilter&) = delete;            // Copy Constructor Not Implemented
+    MorphFilter(MorphFilter&&) = delete;                 // Move Constructor Not Implemented
+    MorphFilter& operator=(const MorphFilter&) = delete; // Copy Assignment Not Implemented
+    MorphFilter& operator=(MorphFilter&&) = delete;      // Move Assignment Not Implemented
+};

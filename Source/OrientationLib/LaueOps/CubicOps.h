@@ -35,9 +35,11 @@
 #pragma once
 
 
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
+
 
 #include "OrientationLib/OrientationLib.h"
 #include "OrientationLib/LaueOps/LaueOps.h"
@@ -53,9 +55,23 @@
 class OrientationLib_EXPORT CubicOps : public LaueOps
 {
   public:
-    SIMPL_SHARED_POINTERS(CubicOps)
-     SIMPL_TYPE_MACRO_SUPER_OVERRIDE(CubicOps, LaueOps)
-    SIMPL_STATIC_NEW_MACRO(CubicOps)
+    using Self = CubicOps;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    /**
+     * @brief Returns the name of the class for CubicOps
+     */
+    QString getNameOfClass() const override;
+    /**
+     * @brief Returns the name of the class for CubicOps
+     */
+    static QString ClassName();
+
+    static Pointer New();
 
     CubicOps();
     ~CubicOps() override;
@@ -63,7 +79,6 @@ class OrientationLib_EXPORT CubicOps : public LaueOps
     static const int k_OdfSize = 5832;
     static const int k_MdfSize = 5832;
     static const int k_NumSymQuats = 24;
-
 
     /**
      * @brief getHasInversion Returns if this Laue class has inversion
@@ -190,10 +205,11 @@ class OrientationLib_EXPORT CubicOps : public LaueOps
      * @param width of produced image (in pixels)
      * @return
      */
-    virtual UInt8ArrayType::Pointer generateMisorientationTriangleLegend(double, int, int, int);
+    UInt8ArrayType::Pointer generateMisorientationTriangleLegend(double, int, int, int) const;
 
   protected:
-    double _calcMisoQuat(const QuatType quatsym[24], int numsym, QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const;
+    double _calcMisoQuat(const QuatType quatsym[12], int numsym, QuatType& q1, QuatType& q2, double& n1, double& n2, double& n3) const;
+
     /**
      * @brief area preserving projection of volume preserving transformation (for C. Shuch and S. Patala coloring legend generation)
      * @param x
@@ -208,6 +224,8 @@ class OrientationLib_EXPORT CubicOps : public LaueOps
     CubicOps(CubicOps&&) = delete;            // Move Constructor Not Implemented
     CubicOps& operator=(const CubicOps&) = delete; // Copy Assignment Not Implemented
     CubicOps& operator=(CubicOps&&) = delete;      // Move Assignment Not Implemented
+
+  private:
 };
 
 

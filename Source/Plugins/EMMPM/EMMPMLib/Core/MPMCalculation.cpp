@@ -41,6 +41,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 /* Heavily modified from the original by Michael A. Jackson for BlueQuartz Software
  * and funded by the Air Force Research Laboratory, Wright-Patterson AFB.
  */
+#include <memory>
+
 #include "MPMCalculation.h"
 
 //-- C Includes
@@ -48,6 +50,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <sstream>
 
 //-- C++ includes
 #include <random>
@@ -514,7 +517,68 @@ void MPMCalculation::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString MPMCalculation::getHumanLabel() const
+QString MPMCalculation::getHumanLabel() const
 {
   return "MPMCalculation";
+}
+
+// -----------------------------------------------------------------------------
+MPMCalculation::Pointer MPMCalculation::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+MPMCalculation::Pointer MPMCalculation::New()
+{
+  Pointer sharedPtr(new(MPMCalculation));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString MPMCalculation::getNameOfClass() const
+{
+  return QString("MPMCalculation");
+}
+
+// -----------------------------------------------------------------------------
+QString MPMCalculation::ClassName()
+{
+  return QString("MPMCalculation");
+}
+
+// -----------------------------------------------------------------------------
+void MPMCalculation::setData(const EMMPM_Data::Pointer& value)
+{
+  m_Data = value;
+}
+
+// -----------------------------------------------------------------------------
+EMMPM_Data::Pointer MPMCalculation::getData() const
+{
+  return m_Data;
+}
+
+// -----------------------------------------------------------------------------
+void MPMCalculation::setErrorCode(int value)
+{
+  m_ErrorCode = value;
+}
+
+// -----------------------------------------------------------------------------
+int MPMCalculation::getErrorCode() const
+{
+  return m_ErrorCode;
+}
+
+// -----------------------------------------------------------------------------
+void MPMCalculation::setStatsDelegate(StatsDelegate* value)
+{
+  m_StatsDelegate = value;
+}
+
+// -----------------------------------------------------------------------------
+StatsDelegate* MPMCalculation::getStatsDelegate() const
+{
+  return m_StatsDelegate;
 }

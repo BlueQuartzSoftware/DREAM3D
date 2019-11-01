@@ -36,10 +36,11 @@
 #pragma once
 
 //-- C++ includes
+#include <memory>
+
 #include <string>
 
 //-- SIMPLib Includes
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 //-- StatsGen Includes
 #include "AbstractMicrostructurePreset.h"
@@ -57,10 +58,21 @@
 class SyntheticBuilding_EXPORT PrimaryEquiaxedPreset : public AbstractMicrostructurePreset
 {
 public:
-  SIMPL_SHARED_POINTERS(PrimaryEquiaxedPreset)
-  SIMPL_STATIC_NEW_MACRO(PrimaryEquiaxedPreset)
-  SIMPL_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, PrimaryEquiaxedPreset)
+  using Self = PrimaryEquiaxedPreset;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
 
+  static Pointer New();
+
+  static AbstractMicrostructurePreset::Pointer NewAbstractMicrostructurePreset()
+  {
+    PrimaryEquiaxedPreset* ptr = new PrimaryEquiaxedPreset();
+    AbstractMicrostructurePreset::Pointer shared_ptr(dynamic_cast<AbstractMicrostructurePreset*>(ptr));
+    return shared_ptr;
+  }
   ~PrimaryEquiaxedPreset() override;
 
   QString getName() override;
@@ -81,6 +93,8 @@ public:
   PrimaryEquiaxedPreset(PrimaryEquiaxedPreset&&) = delete;      // Move Constructor Not Implemented
   PrimaryEquiaxedPreset& operator=(const PrimaryEquiaxedPreset&) = delete; // Copy Assignment Not Implemented
   PrimaryEquiaxedPreset& operator=(PrimaryEquiaxedPreset&&) = delete;      // Move Assignment Not Implemented
+
+private:
 };
 
 DECLARE_FACTORY_CLASS(PrimaryEquiaxedPresetFactory, PrimaryEquiaxedPreset, "Primary Equiaxed")

@@ -36,10 +36,11 @@
 #pragma once
 
 //-- C++ includes
+#include <memory>
+
 #include <string>
 
 //-- SIMPLib Includes
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 
 //-- StatsGen Includes
 #include "AbstractMicrostructurePreset.h"
@@ -57,10 +58,21 @@
 class SyntheticBuilding_EXPORT PrimaryRecrystallizedPreset : public AbstractMicrostructurePreset
 {
 public:
-  SIMPL_SHARED_POINTERS(PrimaryRecrystallizedPreset)
-  SIMPL_STATIC_NEW_MACRO(PrimaryRecrystallizedPreset)
-  SIMPL_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, PrimaryRecrystallizedPreset)
+  using Self = PrimaryRecrystallizedPreset;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  static Pointer NullPointer();
 
+  static Pointer New();
+
+  static AbstractMicrostructurePreset::Pointer NewAbstractMicrostructurePreset()
+  {
+    PrimaryRecrystallizedPreset* ptr = new PrimaryRecrystallizedPreset();
+    AbstractMicrostructurePreset::Pointer shared_ptr(dynamic_cast<AbstractMicrostructurePreset*>(ptr));
+    return shared_ptr;
+  }
   virtual ~PrimaryRecrystallizedPreset();
 
   virtual QString getName();
@@ -73,7 +85,15 @@ public:
 
   unsigned int getDistributionType(const QString& distType) override;
 
-  SIMPL_INSTANCE_PROPERTY(float, PercentRecrystallized)
+  /**
+   * @brief Setter property for PercentRecrystallized
+   */
+  void setPercentRecrystallized(float value);
+  /**
+   * @brief Getter property for PercentRecrystallized
+   * @return Value of PercentRecrystallized
+   */
+  float getPercentRecrystallized() const;
 
 protected:
   PrimaryRecrystallizedPreset();
@@ -83,6 +103,9 @@ public:
   PrimaryRecrystallizedPreset(PrimaryRecrystallizedPreset&&) = delete;      // Move Constructor Not Implemented
   PrimaryRecrystallizedPreset& operator=(const PrimaryRecrystallizedPreset&) = delete; // Copy Assignment Not Implemented
   PrimaryRecrystallizedPreset& operator=(PrimaryRecrystallizedPreset&&) = delete;      // Move Assignment Not Implemented
+
+private:
+  float m_PercentRecrystallized = {};
 };
 
 DECLARE_FACTORY_CLASS(PrimaryRecrystallizedPresetFactory, PrimaryRecrystallizedPreset, "Recrystallized")

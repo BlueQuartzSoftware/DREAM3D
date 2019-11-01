@@ -32,6 +32,8 @@
  *    United States Prime Contract Navy N00173-07-C-2068
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include <memory>
+
 #include "VtkRectilinearGridWriter.h"
 
 #include <sstream>
@@ -40,8 +42,16 @@
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
 
+#include <QtCore/QTextStream>
+
+#include <QtCore/QDebug>
+
 #include "SIMPLib/Common/ScopedFileMonitor.hpp"
+
 #include "SIMPLib/Common/TemplateHelpers.h"
+#include "SIMPLib/DataArrays/IDataArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/MultiDataArraySelectionFilterParameter.h"
@@ -451,7 +461,7 @@ AbstractFilter::Pointer VtkRectilinearGridWriter::newFilterInstance(bool copyFil
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VtkRectilinearGridWriter::getCompiledLibraryName() const
+QString VtkRectilinearGridWriter::getCompiledLibraryName() const
 {
   return ImportExportConstants::ImportExportBaseName;
 }
@@ -459,7 +469,7 @@ const QString VtkRectilinearGridWriter::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VtkRectilinearGridWriter::getBrandingString() const
+QString VtkRectilinearGridWriter::getBrandingString() const
 {
   return "IO";
 }
@@ -467,7 +477,7 @@ const QString VtkRectilinearGridWriter::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VtkRectilinearGridWriter::getFilterVersion() const
+QString VtkRectilinearGridWriter::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -478,7 +488,7 @@ const QString VtkRectilinearGridWriter::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VtkRectilinearGridWriter::getGroupName() const
+QString VtkRectilinearGridWriter::getGroupName() const
 {
   return SIMPL::FilterGroups::IOFilters;
 }
@@ -486,7 +496,7 @@ const QString VtkRectilinearGridWriter::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid VtkRectilinearGridWriter::getUuid()
+QUuid VtkRectilinearGridWriter::getUuid() const
 {
   return QUuid("{a043bd66-2681-5126-82e1-5fdc46694bf4}");
 }
@@ -494,7 +504,7 @@ const QUuid VtkRectilinearGridWriter::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VtkRectilinearGridWriter::getSubGroupName() const
+QString VtkRectilinearGridWriter::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::OutputFilters;
 }
@@ -502,7 +512,72 @@ const QString VtkRectilinearGridWriter::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString VtkRectilinearGridWriter::getHumanLabel() const
+QString VtkRectilinearGridWriter::getHumanLabel() const
 {
   return "Vtk Rectilinear Grid Exporter";
+}
+
+// -----------------------------------------------------------------------------
+VtkRectilinearGridWriter::Pointer VtkRectilinearGridWriter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<VtkRectilinearGridWriter> VtkRectilinearGridWriter::New()
+{
+  struct make_shared_enabler : public VtkRectilinearGridWriter
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString VtkRectilinearGridWriter::getNameOfClass() const
+{
+  return QString("VtkRectilinearGridWriter");
+}
+
+// -----------------------------------------------------------------------------
+QString VtkRectilinearGridWriter::ClassName()
+{
+  return QString("VtkRectilinearGridWriter");
+}
+
+// -----------------------------------------------------------------------------
+void VtkRectilinearGridWriter::setOutputFile(const QString& value)
+{
+  m_OutputFile = value;
+}
+
+// -----------------------------------------------------------------------------
+QString VtkRectilinearGridWriter::getOutputFile() const
+{
+  return m_OutputFile;
+}
+
+// -----------------------------------------------------------------------------
+void VtkRectilinearGridWriter::setWriteBinaryFile(bool value)
+{
+  m_WriteBinaryFile = value;
+}
+
+// -----------------------------------------------------------------------------
+bool VtkRectilinearGridWriter::getWriteBinaryFile() const
+{
+  return m_WriteBinaryFile;
+}
+
+// -----------------------------------------------------------------------------
+void VtkRectilinearGridWriter::setSelectedDataArrayPaths(const QVector<DataArrayPath>& value)
+{
+  m_SelectedDataArrayPaths = value;
+}
+
+// -----------------------------------------------------------------------------
+QVector<DataArrayPath> VtkRectilinearGridWriter::getSelectedDataArrayPaths() const
+{
+  return m_SelectedDataArrayPaths;
 }

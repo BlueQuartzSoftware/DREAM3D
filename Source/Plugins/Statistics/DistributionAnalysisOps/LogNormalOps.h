@@ -37,10 +37,11 @@
 
 
 
+#include <memory>
+
 #include <vector>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/StatsData/StatsData.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 
@@ -52,14 +53,41 @@
 class LogNormalOps : public DistributionAnalysisOps
 {
   public:
-    SIMPL_SHARED_POINTERS(LogNormalOps)
-    SIMPL_TYPE_MACRO(LogNormalOps)
-    SIMPL_STATIC_NEW_MACRO(LogNormalOps)
-    virtual ~LogNormalOps();
+    using Self = LogNormalOps;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
 
+    /**
+     * @brief Returns the name of the class for LogNormalOps
+     */
+    QString getNameOfClass() const override;
+    /**
+     * @brief Returns the name of the class for LogNormalOps
+     */
+    static QString ClassName();
 
-    int calculateParameters(std::vector<float>& data, FloatArrayType::Pointer outputs);
-    int calculateCorrelatedParameters(std::vector<std::vector<float> >& data, VectorOfFloatArray outputs);
+    static Pointer New();
+
+    ~LogNormalOps() override;
+
+    /**
+     * @brief calculateParameters
+     * @param data
+     * @param outputs
+     * @return
+     */
+    int calculateParameters(std::vector<float>& data, FloatArrayType::Pointer outputs) override;
+
+    /**
+     * @brief calculateCorrelatedParameters
+     * @param data
+     * @param outputs
+     * @return
+     */
+    int calculateCorrelatedParameters(std::vector<std::vector<float>>& data, VectorOfFloatArray outputs) override;
 
   protected:
     LogNormalOps();
@@ -69,6 +97,8 @@ class LogNormalOps : public DistributionAnalysisOps
     LogNormalOps(LogNormalOps&&) = delete;        // Move Constructor Not Implemented
     LogNormalOps& operator=(const LogNormalOps&) = delete; // Copy Assignment Not Implemented
     LogNormalOps& operator=(LogNormalOps&&) = delete;      // Move Assignment Not Implemented
+
+  private:
 };
 
 

@@ -33,14 +33,20 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "ConvertOrientations.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
+
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedPathCreationFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "OrientationAnalysis/OrientationAnalysisConstants.h"
 #include "OrientationAnalysis/OrientationAnalysisVersion.h"
@@ -316,7 +322,7 @@ AbstractFilter::Pointer ConvertOrientations::newFilterInstance(bool copyFilterPa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertOrientations::getCompiledLibraryName() const
+QString ConvertOrientations::getCompiledLibraryName() const
 {
   return OrientationAnalysisConstants::OrientationAnalysisBaseName;
 }
@@ -324,7 +330,7 @@ const QString ConvertOrientations::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertOrientations::getBrandingString() const
+QString ConvertOrientations::getBrandingString() const
 {
   return "OrientationAnalysis";
 }
@@ -332,7 +338,7 @@ const QString ConvertOrientations::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertOrientations::getFilterVersion() const
+QString ConvertOrientations::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -342,7 +348,7 @@ const QString ConvertOrientations::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertOrientations::getGroupName() const
+QString ConvertOrientations::getGroupName() const
 {
   return SIMPL::FilterGroups::ProcessingFilters;
 }
@@ -350,7 +356,7 @@ const QString ConvertOrientations::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid ConvertOrientations::getUuid()
+QUuid ConvertOrientations::getUuid() const
 {
   return QUuid("{e5629880-98c4-5656-82b8-c9fe2b9744de}");
 }
@@ -358,7 +364,7 @@ const QUuid ConvertOrientations::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertOrientations::getSubGroupName() const
+QString ConvertOrientations::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::ConversionFilters;
 }
@@ -366,7 +372,84 @@ const QString ConvertOrientations::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString ConvertOrientations::getHumanLabel() const
+QString ConvertOrientations::getHumanLabel() const
 {
   return "Convert Orientation Representation";
+}
+
+// -----------------------------------------------------------------------------
+ConvertOrientations::Pointer ConvertOrientations::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<ConvertOrientations> ConvertOrientations::New()
+{
+  struct make_shared_enabler : public ConvertOrientations
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString ConvertOrientations::getNameOfClass() const
+{
+  return QString("ConvertOrientations");
+}
+
+// -----------------------------------------------------------------------------
+QString ConvertOrientations::ClassName()
+{
+  return QString("ConvertOrientations");
+}
+
+// -----------------------------------------------------------------------------
+void ConvertOrientations::setInputType(int value)
+{
+  m_InputType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ConvertOrientations::getInputType() const
+{
+  return m_InputType;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertOrientations::setOutputType(int value)
+{
+  m_OutputType = value;
+}
+
+// -----------------------------------------------------------------------------
+int ConvertOrientations::getOutputType() const
+{
+  return m_OutputType;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertOrientations::setInputOrientationArrayPath(const DataArrayPath& value)
+{
+  m_InputOrientationArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath ConvertOrientations::getInputOrientationArrayPath() const
+{
+  return m_InputOrientationArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertOrientations::setOutputOrientationArrayName(const QString& value)
+{
+  m_OutputOrientationArrayName = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ConvertOrientations::getOutputOrientationArrayName() const
+{
+  return m_OutputOrientationArrayName;
 }

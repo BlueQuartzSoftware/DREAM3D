@@ -1,5 +1,4 @@
 /* ============================================================================
-#include "SIMPLib/Geometry/TriangleGeom.h"
 * Copyright (c) 2009-2016 BlueQuartz Software, LLC
 *
 * Redistribution and use in source and binary forms, with or without modification,
@@ -33,8 +32,11 @@
 *    United States Prime Contract Navy N00173-07-C-2068
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
 #include "FindNRingNeighbors.h"
+
+#include <QtCore/QDebug>
+
+#include "SIMPLib/Geometry/TriangleGeom.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -142,4 +144,101 @@ int32_t FindNRingNeighbors::generate(TriangleGeom::Pointer triangleGeom, int32_t
     }
   }
   return err;
+}
+
+// -----------------------------------------------------------------------------
+FindNRingNeighbors::Pointer FindNRingNeighbors::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+FindNRingNeighbors::Pointer FindNRingNeighbors::New()
+{
+  Pointer sharedPtr(new(FindNRingNeighbors));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString FindNRingNeighbors::getNameOfClass() const
+{
+  return QString("FindNRingNeighbors");
+}
+
+// -----------------------------------------------------------------------------
+QString FindNRingNeighbors::ClassName()
+{
+  return QString("FindNRingNeighbors");
+}
+
+// -----------------------------------------------------------------------------
+void FindNRingNeighbors::setTriangleId(int64_t value)
+{
+  m_TriangleId = value;
+}
+
+// -----------------------------------------------------------------------------
+int64_t FindNRingNeighbors::getTriangleId() const
+{
+  return m_TriangleId;
+}
+
+// -----------------------------------------------------------------------------
+void FindNRingNeighbors::setRegionId0(int32_t value)
+{
+  m_RegionId0 = value;
+}
+
+// -----------------------------------------------------------------------------
+int32_t FindNRingNeighbors::getRegionId0() const
+{
+  return m_RegionId0;
+}
+
+// -----------------------------------------------------------------------------
+void FindNRingNeighbors::setRegionId1(int32_t value)
+{
+  m_RegionId1 = value;
+}
+
+// -----------------------------------------------------------------------------
+int32_t FindNRingNeighbors::getRegionId1() const
+{
+  return m_RegionId1;
+}
+
+// -----------------------------------------------------------------------------
+void FindNRingNeighbors::setRing(int64_t value)
+{
+  m_Ring = value;
+}
+
+// -----------------------------------------------------------------------------
+int64_t FindNRingNeighbors::getRing() const
+{
+  return m_Ring;
+}
+
+// -----------------------------------------------------------------------------
+void FindNRingNeighbors::setWriteBinaryFile(bool value)
+{
+  m_WriteBinaryFile = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindNRingNeighbors::getWriteBinaryFile() const
+{
+  return m_WriteBinaryFile;
+}
+
+// -----------------------------------------------------------------------------
+void FindNRingNeighbors::setWriteConformalMesh(bool value)
+{
+  m_WriteConformalMesh = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FindNRingNeighbors::getWriteConformalMesh() const
+{
+  return m_WriteConformalMesh;
 }

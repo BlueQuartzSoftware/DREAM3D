@@ -35,6 +35,8 @@
 
 #include "MeshFunctions.h"
 
+#include <QtCore/QDebug>
+
 #include "SIMPLib/Common/DREAM3DMath.h"
 
 // -----------------------------------------------------------------------------

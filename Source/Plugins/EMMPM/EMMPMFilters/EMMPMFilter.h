@@ -35,10 +35,12 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/FilterParameters/DynamicTableData.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "EMMPM/EMMPMLib/Core/EMMPM_Data.h"
 #include "EMMPMLib/Core/EMMPM_Constants.h"
@@ -53,97 +55,283 @@ class EMMPMFilterMessageHandler;
 class EMMPM_EXPORT EMMPMFilter : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(EMMPMFilter SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(DataArrayPath InputDataArrayPath READ getInputDataArrayPath WRITE setInputDataArrayPath)
-    PYB11_PROPERTY(bool UseOneBasedValues READ getUseOneBasedValues WRITE setUseOneBasedValues)
-    PYB11_PROPERTY(int NumClasses READ getNumClasses WRITE setNumClasses)
-    PYB11_PROPERTY(float ExchangeEnergy READ getExchangeEnergy WRITE setExchangeEnergy)
-    PYB11_PROPERTY(int HistogramLoops READ getHistogramLoops WRITE setHistogramLoops)
-    PYB11_PROPERTY(int SegmentationLoops READ getSegmentationLoops WRITE setSegmentationLoops)
-    PYB11_PROPERTY(DynamicTableData EMMPMTableData READ getEMMPMTableData WRITE setEMMPMTableData)
-    PYB11_PROPERTY(bool UseSimulatedAnnealing READ getUseSimulatedAnnealing WRITE setUseSimulatedAnnealing)
-    PYB11_PROPERTY(bool UseGradientPenalty READ getUseGradientPenalty WRITE setUseGradientPenalty)
-    PYB11_PROPERTY(double GradientBetaE READ getGradientBetaE WRITE setGradientBetaE)
-    PYB11_PROPERTY(bool UseCurvaturePenalty READ getUseCurvaturePenalty WRITE setUseCurvaturePenalty)
-    PYB11_PROPERTY(double CurvatureBetaC READ getCurvatureBetaC WRITE setCurvatureBetaC)
-    PYB11_PROPERTY(double CurvatureRMax READ getCurvatureRMax WRITE setCurvatureRMax)
-    PYB11_PROPERTY(int CurvatureEMLoopDelay READ getCurvatureEMLoopDelay WRITE setCurvatureEMLoopDelay)
-    PYB11_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(EMMPMFilter SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(EMMPMFilter)
+  PYB11_FILTER_NEW_MACRO(EMMPMFilter)
+  PYB11_FILTER_PARAMETER(DataArrayPath, InputDataArrayPath)
+  PYB11_FILTER_PARAMETER(bool, UseOneBasedValues)
+  PYB11_FILTER_PARAMETER(int, NumClasses)
+  PYB11_FILTER_PARAMETER(float, ExchangeEnergy)
+  PYB11_FILTER_PARAMETER(int, HistogramLoops)
+  PYB11_FILTER_PARAMETER(int, SegmentationLoops)
+  PYB11_FILTER_PARAMETER(DynamicTableData, EMMPMTableData)
+  PYB11_FILTER_PARAMETER(bool, UseSimulatedAnnealing)
+  PYB11_FILTER_PARAMETER(bool, UseGradientPenalty)
+  PYB11_FILTER_PARAMETER(double, GradientBetaE)
+  PYB11_FILTER_PARAMETER(bool, UseCurvaturePenalty)
+  PYB11_FILTER_PARAMETER(double, CurvatureBetaC)
+  PYB11_FILTER_PARAMETER(double, CurvatureRMax)
+  PYB11_FILTER_PARAMETER(int, CurvatureEMLoopDelay)
+  PYB11_FILTER_PARAMETER(DataArrayPath, OutputDataArrayPath)
+  PYB11_PROPERTY(DataArrayPath InputDataArrayPath READ getInputDataArrayPath WRITE setInputDataArrayPath)
+  PYB11_PROPERTY(bool UseOneBasedValues READ getUseOneBasedValues WRITE setUseOneBasedValues)
+  PYB11_PROPERTY(int NumClasses READ getNumClasses WRITE setNumClasses)
+  PYB11_PROPERTY(float ExchangeEnergy READ getExchangeEnergy WRITE setExchangeEnergy)
+  PYB11_PROPERTY(int HistogramLoops READ getHistogramLoops WRITE setHistogramLoops)
+  PYB11_PROPERTY(int SegmentationLoops READ getSegmentationLoops WRITE setSegmentationLoops)
+  PYB11_PROPERTY(DynamicTableData EMMPMTableData READ getEMMPMTableData WRITE setEMMPMTableData)
+  PYB11_PROPERTY(bool UseSimulatedAnnealing READ getUseSimulatedAnnealing WRITE setUseSimulatedAnnealing)
+  PYB11_PROPERTY(bool UseGradientPenalty READ getUseGradientPenalty WRITE setUseGradientPenalty)
+  PYB11_PROPERTY(double GradientBetaE READ getGradientBetaE WRITE setGradientBetaE)
+  PYB11_PROPERTY(bool UseCurvaturePenalty READ getUseCurvaturePenalty WRITE setUseCurvaturePenalty)
+  PYB11_PROPERTY(double CurvatureBetaC READ getCurvatureBetaC WRITE setCurvatureBetaC)
+  PYB11_PROPERTY(double CurvatureRMax READ getCurvatureRMax WRITE setCurvatureRMax)
+  PYB11_PROPERTY(int CurvatureEMLoopDelay READ getCurvatureEMLoopDelay WRITE setCurvatureEMLoopDelay)
+  PYB11_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(EMMPMFilter)
-  SIMPL_FILTER_NEW_MACRO(EMMPMFilter)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(EMMPMFilter, AbstractFilter)
+  using Self = EMMPMFilter;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for EMMPMFilter
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for EMMPMFilter
+   */
+  static QString ClassName();
 
   ~EMMPMFilter() override;
 
   friend EMMPMFilterMessageHandler;
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, InputDataArrayPath)
+  /**
+   * @brief Setter property for InputDataArrayPath
+   */
+  void setInputDataArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for InputDataArrayPath
+   * @return Value of InputDataArrayPath
+   */
+  DataArrayPath getInputDataArrayPath() const;
+
   Q_PROPERTY(DataArrayPath InputDataArrayPath READ getInputDataArrayPath WRITE setInputDataArrayPath)
 
-  SIMPL_FILTER_PARAMETER(bool, UseOneBasedValues)
+  /**
+   * @brief Setter property for UseOneBasedValues
+   */
+  void setUseOneBasedValues(bool value);
+  /**
+   * @brief Getter property for UseOneBasedValues
+   * @return Value of UseOneBasedValues
+   */
+  bool getUseOneBasedValues() const;
+
   Q_PROPERTY(bool UseOneBasedValues READ getUseOneBasedValues WRITE setUseOneBasedValues)
 
-  SIMPL_FILTER_PARAMETER(int, NumClasses)
+  /**
+   * @brief Setter property for NumClasses
+   */
+  void setNumClasses(int value);
+  /**
+   * @brief Getter property for NumClasses
+   * @return Value of NumClasses
+   */
+  int getNumClasses() const;
+
   Q_PROPERTY(int NumClasses READ getNumClasses WRITE setNumClasses)
 
-  SIMPL_FILTER_PARAMETER(float, ExchangeEnergy)
+  /**
+   * @brief Setter property for ExchangeEnergy
+   */
+  void setExchangeEnergy(float value);
+  /**
+   * @brief Getter property for ExchangeEnergy
+   * @return Value of ExchangeEnergy
+   */
+  float getExchangeEnergy() const;
+
   Q_PROPERTY(float ExchangeEnergy READ getExchangeEnergy WRITE setExchangeEnergy)
 
-  SIMPL_FILTER_PARAMETER(int, HistogramLoops)
+  /**
+   * @brief Setter property for HistogramLoops
+   */
+  void setHistogramLoops(int value);
+  /**
+   * @brief Getter property for HistogramLoops
+   * @return Value of HistogramLoops
+   */
+  int getHistogramLoops() const;
+
   Q_PROPERTY(int HistogramLoops READ getHistogramLoops WRITE setHistogramLoops)
 
-  SIMPL_FILTER_PARAMETER(int, SegmentationLoops)
+  /**
+   * @brief Setter property for SegmentationLoops
+   */
+  void setSegmentationLoops(int value);
+  /**
+   * @brief Getter property for SegmentationLoops
+   * @return Value of SegmentationLoops
+   */
+  int getSegmentationLoops() const;
+
   Q_PROPERTY(int SegmentationLoops READ getSegmentationLoops WRITE setSegmentationLoops)
 
-  SIMPL_FILTER_PARAMETER(DynamicTableData, EMMPMTableData)
+  /**
+   * @brief Setter property for EMMPMTableData
+   */
+  void setEMMPMTableData(const DynamicTableData& value);
+  /**
+   * @brief Getter property for EMMPMTableData
+   * @return Value of EMMPMTableData
+   */
+  DynamicTableData getEMMPMTableData() const;
+
   Q_PROPERTY(DynamicTableData EMMPMTableData READ getEMMPMTableData WRITE setEMMPMTableData)
 
-  SIMPL_FILTER_PARAMETER(bool, UseSimulatedAnnealing)
+  /**
+   * @brief Setter property for UseSimulatedAnnealing
+   */
+  void setUseSimulatedAnnealing(bool value);
+  /**
+   * @brief Getter property for UseSimulatedAnnealing
+   * @return Value of UseSimulatedAnnealing
+   */
+  bool getUseSimulatedAnnealing() const;
+
   Q_PROPERTY(bool UseSimulatedAnnealing READ getUseSimulatedAnnealing WRITE setUseSimulatedAnnealing)
 
-  SIMPL_FILTER_PARAMETER(bool, UseGradientPenalty)
+  /**
+   * @brief Setter property for UseGradientPenalty
+   */
+  void setUseGradientPenalty(bool value);
+  /**
+   * @brief Getter property for UseGradientPenalty
+   * @return Value of UseGradientPenalty
+   */
+  bool getUseGradientPenalty() const;
+
   Q_PROPERTY(bool UseGradientPenalty READ getUseGradientPenalty WRITE setUseGradientPenalty)
 
-  SIMPL_FILTER_PARAMETER(double, GradientBetaE)
+  /**
+   * @brief Setter property for GradientBetaE
+   */
+  void setGradientBetaE(double value);
+  /**
+   * @brief Getter property for GradientBetaE
+   * @return Value of GradientBetaE
+   */
+  double getGradientBetaE() const;
+
   Q_PROPERTY(double GradientBetaE READ getGradientBetaE WRITE setGradientBetaE)
 
-  SIMPL_FILTER_PARAMETER(bool, UseCurvaturePenalty)
+  /**
+   * @brief Setter property for UseCurvaturePenalty
+   */
+  void setUseCurvaturePenalty(bool value);
+  /**
+   * @brief Getter property for UseCurvaturePenalty
+   * @return Value of UseCurvaturePenalty
+   */
+  bool getUseCurvaturePenalty() const;
+
   Q_PROPERTY(bool UseCurvaturePenalty READ getUseCurvaturePenalty WRITE setUseCurvaturePenalty)
 
-  SIMPL_FILTER_PARAMETER(double, CurvatureBetaC)
+  /**
+   * @brief Setter property for CurvatureBetaC
+   */
+  void setCurvatureBetaC(double value);
+  /**
+   * @brief Getter property for CurvatureBetaC
+   * @return Value of CurvatureBetaC
+   */
+  double getCurvatureBetaC() const;
+
   Q_PROPERTY(double CurvatureBetaC READ getCurvatureBetaC WRITE setCurvatureBetaC)
 
-  SIMPL_FILTER_PARAMETER(double, CurvatureRMax)
+  /**
+   * @brief Setter property for CurvatureRMax
+   */
+  void setCurvatureRMax(double value);
+  /**
+   * @brief Getter property for CurvatureRMax
+   * @return Value of CurvatureRMax
+   */
+  double getCurvatureRMax() const;
+
   Q_PROPERTY(double CurvatureRMax READ getCurvatureRMax WRITE setCurvatureRMax)
 
-  SIMPL_FILTER_PARAMETER(int, CurvatureEMLoopDelay)
+  /**
+   * @brief Setter property for CurvatureEMLoopDelay
+   */
+  void setCurvatureEMLoopDelay(int value);
+  /**
+   * @brief Getter property for CurvatureEMLoopDelay
+   * @return Value of CurvatureEMLoopDelay
+   */
+  int getCurvatureEMLoopDelay() const;
+
   Q_PROPERTY(int CurvatureEMLoopDelay READ getCurvatureEMLoopDelay WRITE setCurvatureEMLoopDelay)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, OutputDataArrayPath)
+  /**
+   * @brief Setter property for OutputDataArrayPath
+   */
+  void setOutputDataArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for OutputDataArrayPath
+   * @return Value of OutputDataArrayPath
+   */
+  DataArrayPath getOutputDataArrayPath() const;
+
   Q_PROPERTY(DataArrayPath OutputDataArrayPath READ getOutputDataArrayPath WRITE setOutputDataArrayPath)
 
-  SIMPL_INSTANCE_PROPERTY(EMMPM_InitializationType, EmmpmInitType)
+  /**
+   * @brief Setter property for EmmpmInitType
+   */
+  void setEmmpmInitType(const EMMPM_InitializationType& value);
+  /**
+   * @brief Getter property for EmmpmInitType
+   * @return Value of EmmpmInitType
+   */
+  EMMPM_InitializationType getEmmpmInitType() const;
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -153,23 +341,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -263,8 +451,27 @@ protected:
   virtual void handleEmmpmMessage(const AbstractMessage::Pointer &msg);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(uint8_t, InputImage)
-  DEFINE_DATAARRAY_VARIABLE(uint8_t, OutputImage)
+  std::weak_ptr<DataArray<uint8_t>> m_InputImagePtr;
+  uint8_t* m_InputImage = nullptr;
+  std::weak_ptr<DataArray<uint8_t>> m_OutputImagePtr;
+  uint8_t* m_OutputImage = nullptr;
+
+  DataArrayPath m_InputDataArrayPath = {};
+  bool m_UseOneBasedValues = {};
+  int m_NumClasses = {};
+  float m_ExchangeEnergy = {};
+  int m_HistogramLoops = {};
+  int m_SegmentationLoops = {};
+  DynamicTableData m_EMMPMTableData = {};
+  bool m_UseSimulatedAnnealing = {};
+  bool m_UseGradientPenalty = {};
+  double m_GradientBetaE = {};
+  bool m_UseCurvaturePenalty = {};
+  double m_CurvatureBetaC = {};
+  double m_CurvatureRMax = {};
+  int m_CurvatureEMLoopDelay = {};
+  DataArrayPath m_OutputDataArrayPath = {};
+  EMMPM_InitializationType m_EmmpmInitType = {};
 
   std::vector<float> m_PreviousMu;
   std::vector<float> m_PreviousSigma;

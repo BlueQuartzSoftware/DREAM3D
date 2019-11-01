@@ -37,6 +37,8 @@
 
 #include <QtCore/QJsonObject>
 
+#include "OrientationAnalysis/OrientationAnalysisFilters/ConvertHexGridToSquareGrid.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -109,4 +111,63 @@ void ConvertHexGridToSquareGridFilterParameter::writeJson(QJsonObject& json)
   json["YResolution"] = static_cast<double>(m_Filter->getYResolution());
   json["ZEndIndex"] = QString::number(m_Filter->getZEndIndex());
   json["ZStartIndex"] = QString::number(m_Filter->getZStartIndex());
+}
+
+// -----------------------------------------------------------------------------
+ConvertHexGridToSquareGridFilterParameter::Pointer ConvertHexGridToSquareGridFilterParameter::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+ConvertHexGridToSquareGridFilterParameter::Pointer ConvertHexGridToSquareGridFilterParameter::New()
+{
+  Pointer sharedPtr(new(ConvertHexGridToSquareGridFilterParameter));
+  return sharedPtr;
+}
+
+// -----------------------------------------------------------------------------
+QString ConvertHexGridToSquareGridFilterParameter::getNameOfClass() const
+{
+  return QString("ConvertHexGridToSquareGridFilterParameter");
+}
+
+// -----------------------------------------------------------------------------
+QString ConvertHexGridToSquareGridFilterParameter::ClassName()
+{
+  return QString("ConvertHexGridToSquareGridFilterParameter");
+}
+
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGridFilterParameter::setFileExtension(const QString& value)
+{
+  m_FileExtension = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ConvertHexGridToSquareGridFilterParameter::getFileExtension() const
+{
+  return m_FileExtension;
+}
+
+// -----------------------------------------------------------------------------
+void ConvertHexGridToSquareGridFilterParameter::setFileType(const QString& value)
+{
+  m_FileType = value;
+}
+
+// -----------------------------------------------------------------------------
+QString ConvertHexGridToSquareGridFilterParameter::getFileType() const
+{
+  return m_FileType;
+}
+
+void ConvertHexGridToSquareGridFilterParameter::setFilter(ConvertHexGridToSquareGrid* filter)
+{
+  m_Filter = filter;
+}
+
+ConvertHexGridToSquareGrid* ConvertHexGridToSquareGridFilterParameter::getFilter() const
+{
+  return m_Filter;
 }

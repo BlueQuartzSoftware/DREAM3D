@@ -35,9 +35,11 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
-#include "SIMPLib/Filtering/AbstractFilter.h"
+#include <memory>
+
 #include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "Reconstruction/ReconstructionFilters/AlignSections.h"
 
@@ -49,44 +51,103 @@
 class Reconstruction_EXPORT AlignSectionsFeatureCentroid : public AlignSections
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(AlignSectionsFeatureCentroid SUPERCLASS AlignSections)
-    PYB11_PROPERTY(int ReferenceSlice READ getReferenceSlice WRITE setReferenceSlice)
-    PYB11_PROPERTY(bool UseReferenceSlice READ getUseReferenceSlice WRITE setUseReferenceSlice)
-    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(AlignSectionsFeatureCentroid SUPERCLASS AlignSections)
+  PYB11_SHARED_POINTERS(AlignSectionsFeatureCentroid)
+  PYB11_FILTER_NEW_MACRO(AlignSectionsFeatureCentroid)
+  PYB11_FILTER_PARAMETER(int, ReferenceSlice)
+  PYB11_FILTER_PARAMETER(bool, UseReferenceSlice)
+  PYB11_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  PYB11_PROPERTY(int ReferenceSlice READ getReferenceSlice WRITE setReferenceSlice)
+  PYB11_PROPERTY(bool UseReferenceSlice READ getUseReferenceSlice WRITE setUseReferenceSlice)
+  PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+#endif
+
 public:
-  SIMPL_SHARED_POINTERS(AlignSectionsFeatureCentroid)
-  SIMPL_FILTER_NEW_MACRO(AlignSectionsFeatureCentroid)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(AlignSectionsFeatureCentroid, AlignSections)
+  using Self = AlignSectionsFeatureCentroid;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for AlignSectionsFeatureCentroid
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for AlignSectionsFeatureCentroid
+   */
+  static QString ClassName();
 
   virtual ~AlignSectionsFeatureCentroid();
 
-  SIMPL_FILTER_PARAMETER(int, ReferenceSlice)
+  /**
+   * @brief Setter property for ReferenceSlice
+   */
+  void setReferenceSlice(int value);
+  /**
+   * @brief Getter property for ReferenceSlice
+   * @return Value of ReferenceSlice
+   */
+  int getReferenceSlice() const;
+
   Q_PROPERTY(int ReferenceSlice READ getReferenceSlice WRITE setReferenceSlice)
 
-  SIMPL_FILTER_PARAMETER(bool, UseReferenceSlice)
+  /**
+   * @brief Setter property for UseReferenceSlice
+   */
+  void setUseReferenceSlice(bool value);
+  /**
+   * @brief Getter property for UseReferenceSlice
+   * @return Value of UseReferenceSlice
+   */
+  bool getUseReferenceSlice() const;
+
   Q_PROPERTY(bool UseReferenceSlice READ getUseReferenceSlice WRITE setUseReferenceSlice)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  /**
+   * @brief Setter property for GoodVoxelsArrayPath
+   */
+  void setGoodVoxelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for GoodVoxelsArrayPath
+   * @return Value of GoodVoxelsArrayPath
+   */
+  DataArrayPath getGoodVoxelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
   */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -96,23 +157,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -152,7 +213,12 @@ protected:
   virtual void find_shifts(std::vector<int64_t>& xshifts, std::vector<int64_t>& yshifts);
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
+  std::weak_ptr<DataArray<bool>> m_GoodVoxelsPtr;
+  bool* m_GoodVoxels = nullptr;
+
+  int m_ReferenceSlice = {};
+  bool m_UseReferenceSlice = {};
+  DataArrayPath m_GoodVoxelsArrayPath = {};
 
 public:
   AlignSectionsFeatureCentroid(const AlignSectionsFeatureCentroid&) = delete; // Copy Constructor Not Implemented

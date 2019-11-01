@@ -57,7 +57,7 @@ class SGMDFItemDelegate : public QStyledItemDelegate
   Q_OBJECT
 
 public:
-  explicit SGMDFItemDelegate(QObject* parent = 0)
+  explicit SGMDFItemDelegate(QObject* parent = nullptr)
   : QStyledItemDelegate(parent)
   {
   }

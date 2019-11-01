@@ -33,9 +33,14 @@
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "FitFeatureData.h"
 
+#include <QtCore/QTextStream>
+
 #include "SIMPLib/Common/Constants.h"
+
 #include "SIMPLib/Common/TemplateHelpers.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/ChoiceFilterParameter.h"
@@ -43,6 +48,7 @@
 #include "SIMPLib/FilterParameters/DataArraySelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
+#include "SIMPLib/DataContainers/DataContainerArray.h"
 
 #include "Statistics/DistributionAnalysisOps/BetaOps.h"
 #include "Statistics/DistributionAnalysisOps/LogNormalOps.h"
@@ -304,7 +310,7 @@ AbstractFilter::Pointer FitFeatureData::newFilterInstance(bool copyFilterParamet
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FitFeatureData::getCompiledLibraryName() const
+QString FitFeatureData::getCompiledLibraryName() const
 {
   return StatisticsConstants::StatisticsBaseName;
 }
@@ -312,7 +318,7 @@ const QString FitFeatureData::getCompiledLibraryName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FitFeatureData::getBrandingString() const
+QString FitFeatureData::getBrandingString() const
 {
   return "Statistics";
 }
@@ -320,7 +326,7 @@ const QString FitFeatureData::getBrandingString() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FitFeatureData::getFilterVersion() const
+QString FitFeatureData::getFilterVersion() const
 {
   QString version;
   QTextStream vStream(&version);
@@ -330,7 +336,7 @@ const QString FitFeatureData::getFilterVersion() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FitFeatureData::getGroupName() const
+QString FitFeatureData::getGroupName() const
 {
   return SIMPL::FilterGroups::StatisticsFilters;
 }
@@ -338,7 +344,7 @@ const QString FitFeatureData::getGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QUuid FitFeatureData::getUuid()
+QUuid FitFeatureData::getUuid() const
 {
   return QUuid("{6c255fc4-1692-57cf-be55-71dc4e05ec83}");
 }
@@ -346,7 +352,7 @@ const QUuid FitFeatureData::getUuid()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FitFeatureData::getSubGroupName() const
+QString FitFeatureData::getSubGroupName() const
 {
   return SIMPL::FilterSubGroups::EnsembleStatsFilters;
 }
@@ -354,7 +360,108 @@ const QString FitFeatureData::getSubGroupName() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-const QString FitFeatureData::getHumanLabel() const
+QString FitFeatureData::getHumanLabel() const
 {
   return "Fit Distribution to Feature Data";
+}
+
+// -----------------------------------------------------------------------------
+FitFeatureData::Pointer FitFeatureData::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+std::shared_ptr<FitFeatureData> FitFeatureData::New()
+{
+  struct make_shared_enabler : public FitFeatureData
+  {
+  };
+  std::shared_ptr<make_shared_enabler> val = std::make_shared<make_shared_enabler>();
+  val->setupFilterParameters();
+  return val;
+}
+
+// -----------------------------------------------------------------------------
+QString FitFeatureData::getNameOfClass() const
+{
+  return QString("FitFeatureData");
+}
+
+// -----------------------------------------------------------------------------
+QString FitFeatureData::ClassName()
+{
+  return QString("FitFeatureData");
+}
+
+// -----------------------------------------------------------------------------
+void FitFeatureData::setSelectedFeatureArrayPath(const DataArrayPath& value)
+{
+  m_SelectedFeatureArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FitFeatureData::getSelectedFeatureArrayPath() const
+{
+  return m_SelectedFeatureArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FitFeatureData::setDistributionType(unsigned int value)
+{
+  m_DistributionType = value;
+}
+
+// -----------------------------------------------------------------------------
+unsigned int FitFeatureData::getDistributionType() const
+{
+  return m_DistributionType;
+}
+
+// -----------------------------------------------------------------------------
+void FitFeatureData::setRemoveBiasedFeatures(bool value)
+{
+  m_RemoveBiasedFeatures = value;
+}
+
+// -----------------------------------------------------------------------------
+bool FitFeatureData::getRemoveBiasedFeatures() const
+{
+  return m_RemoveBiasedFeatures;
+}
+
+// -----------------------------------------------------------------------------
+void FitFeatureData::setFeaturePhasesArrayPath(const DataArrayPath& value)
+{
+  m_FeaturePhasesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FitFeatureData::getFeaturePhasesArrayPath() const
+{
+  return m_FeaturePhasesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FitFeatureData::setBiasedFeaturesArrayPath(const DataArrayPath& value)
+{
+  m_BiasedFeaturesArrayPath = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FitFeatureData::getBiasedFeaturesArrayPath() const
+{
+  return m_BiasedFeaturesArrayPath;
+}
+
+// -----------------------------------------------------------------------------
+void FitFeatureData::setNewEnsembleArrayArray(const DataArrayPath& value)
+{
+  m_NewEnsembleArrayArray = value;
+}
+
+// -----------------------------------------------------------------------------
+DataArrayPath FitFeatureData::getNewEnsembleArrayArray() const
+{
+  return m_NewEnsembleArrayArray;
 }

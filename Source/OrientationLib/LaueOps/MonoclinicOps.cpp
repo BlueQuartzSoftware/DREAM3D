@@ -33,6 +33,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include <memory>
+
 #include "MonoclinicOps.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
@@ -967,5 +969,30 @@ SIMPL::Rgb MonoclinicOps::generateMisorientationColor(const QuatType& q, const Q
 {
   Q_ASSERT(false);
   return RgbColor::dRgb(0, 0, 0, 0);
+}
+
+// -----------------------------------------------------------------------------
+MonoclinicOps::Pointer MonoclinicOps::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+QString MonoclinicOps::getNameOfClass() const
+{
+  return QString("MonoclinicOps");
+}
+
+// -----------------------------------------------------------------------------
+QString MonoclinicOps::ClassName()
+{
+  return QString("MonoclinicOps");
+}
+
+// -----------------------------------------------------------------------------
+MonoclinicOps::Pointer MonoclinicOps::New()
+{
+  Pointer sharedPtr(new(MonoclinicOps));
+  return sharedPtr;
 }
 

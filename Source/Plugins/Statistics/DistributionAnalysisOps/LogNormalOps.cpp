@@ -124,3 +124,28 @@ int LogNormalOps::calculateCorrelatedParameters(std::vector<std::vector<float>>&
   }
   return err;
 }
+
+// -----------------------------------------------------------------------------
+LogNormalOps::Pointer LogNormalOps::NullPointer()
+{
+  return Pointer(static_cast<Self*>(nullptr));
+}
+
+// -----------------------------------------------------------------------------
+QString LogNormalOps::getNameOfClass() const
+{
+  return QString("LogNormalOps");
+}
+
+// -----------------------------------------------------------------------------
+QString LogNormalOps::ClassName()
+{
+  return QString("LogNormalOps");
+}
+
+// -----------------------------------------------------------------------------
+LogNormalOps::Pointer LogNormalOps::New()
+{
+  Pointer sharedPtr(new(LogNormalOps));
+  return sharedPtr;
+}

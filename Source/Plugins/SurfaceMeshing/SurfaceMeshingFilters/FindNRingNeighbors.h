@@ -36,10 +36,11 @@
 
 #pragma once
 
+#include <memory>
+
 #include <set>
 
 #include "SIMPLib/SIMPLib.h"
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
 #include "SIMPLib/Geometry/TriangleGeom.h"
 
 /**
@@ -48,25 +49,63 @@
 class FindNRingNeighbors
 {
   public:
-    SIMPL_SHARED_POINTERS(FindNRingNeighbors)
-    SIMPL_STATIC_NEW_MACRO(FindNRingNeighbors)
-    SIMPL_TYPE_MACRO(FindNRingNeighbors)
+    using Self = FindNRingNeighbors;
+    using Pointer = std::shared_ptr<Self>;
+    using ConstPointer = std::shared_ptr<const Self>;
+    using WeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<Self>;
+    static Pointer NullPointer();
+
+    static Pointer New();
+
+    /**
+     * @brief Returns the name of the class for FindNRingNeighbors
+     */
+    virtual QString getNameOfClass() const;
+    /**
+     * @brief Returns the name of the class for FindNRingNeighbors
+     */
+    static QString ClassName();
 
     virtual ~FindNRingNeighbors();
 
-    typedef std::set<int64_t> UniqueFaceIds_t;
+    using UniqueFaceIds_t = std::set<int64_t>;
 
-    SIMPL_INSTANCE_PROPERTY(int64_t, TriangleId)
+    /**
+     * @brief Setter property for TriangleId
+     */
+    void setTriangleId(int64_t value);
+    /**
+     * @brief Getter property for TriangleId
+     * @return Value of TriangleId
+     */
+    int64_t getTriangleId() const;
 
     /**
      * @brief This sets the region id (Feature Id) that we are interested in.
      */
-    SIMPL_INSTANCE_PROPERTY(int32_t, RegionId0)
+    /**
+     * @brief Setter property for RegionId0
+     */
+    void setRegionId0(int32_t value);
+    /**
+     * @brief Getter property for RegionId0
+     * @return Value of RegionId0
+     */
+    int32_t getRegionId0() const;
 
     /**
      * @brief This sets the region id (Feature Id) that we are interested in.
      */
-    SIMPL_INSTANCE_PROPERTY(int32_t, RegionId1)
+    /**
+     * @brief Setter property for RegionId1
+     */
+    void setRegionId1(int32_t value);
+    /**
+     * @brief Getter property for RegionId1
+     * @return Value of RegionId1
+     */
+    int32_t getRegionId1() const;
 
     /**
      * @brief setRegionIds Sets the local variables for region Ids
@@ -78,7 +117,15 @@ class FindNRingNeighbors
     /**
      * @brief This is the number of rings to find
      **/
-    SIMPL_INSTANCE_PROPERTY(int64_t, Ring)
+    /**
+     * @brief Setter property for Ring
+     */
+    void setRing(int64_t value);
+    /**
+     * @brief Getter property for Ring
+     * @return Value of Ring
+     */
+    int64_t getRing() const;
 
     /**
      * @brief getNRingTriangles Returns the N ring set
@@ -94,13 +141,37 @@ class FindNRingNeighbors
      */
     int32_t generate(TriangleGeom::Pointer triangleGeom, int32_t* faceLabels);
 
-    SIMPL_INSTANCE_PROPERTY(bool, WriteBinaryFile)
-    SIMPL_INSTANCE_PROPERTY(bool, WriteConformalMesh)
+    /**
+     * @brief Setter property for WriteBinaryFile
+     */
+    void setWriteBinaryFile(bool value);
+    /**
+     * @brief Getter property for WriteBinaryFile
+     * @return Value of WriteBinaryFile
+     */
+    bool getWriteBinaryFile() const;
+
+    /**
+     * @brief Setter property for WriteConformalMesh
+     */
+    void setWriteConformalMesh(bool value);
+    /**
+     * @brief Getter property for WriteConformalMesh
+     * @return Value of WriteConformalMesh
+     */
+    bool getWriteConformalMesh() const;
 
   protected:
     FindNRingNeighbors();
 
   private:
+    int64_t m_TriangleId = {};
+    int32_t m_RegionId0 = {};
+    int32_t m_RegionId1 = {};
+    int64_t m_Ring = {};
+    bool m_WriteBinaryFile = {};
+    bool m_WriteConformalMesh = {};
+
     UniqueFaceIds_t  m_NRingTriangles;
 
   public:

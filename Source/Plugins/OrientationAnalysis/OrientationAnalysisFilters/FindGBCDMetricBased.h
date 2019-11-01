@@ -46,12 +46,14 @@
 #pragma once
 
 // Needed for AxisAngle_t
+#include <memory>
+
 #include "EbsdLib/EbsdConstants.h"
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/FilterParameters/AxisAngleInput.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -61,7 +63,27 @@
 class OrientationAnalysis_EXPORT FindGBCDMetricBased : public AbstractFilter
 {
   Q_OBJECT
+
+#ifdef SIMPL_ENABLE_PYTHON
   PYB11_CREATE_BINDINGS(FindGBCDMetricBased SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(FindGBCDMetricBased)
+  PYB11_FILTER_NEW_MACRO(FindGBCDMetricBased)
+  PYB11_FILTER_PARAMETER(int, PhaseOfInterest)
+  PYB11_FILTER_PARAMETER(AxisAngleInput_t, MisorientationRotation)
+  PYB11_FILTER_PARAMETER(int, ChosenLimitDists)
+  PYB11_FILTER_PARAMETER(int, NumSamplPts)
+  PYB11_FILTER_PARAMETER(bool, ExcludeTripleLines)
+  PYB11_FILTER_PARAMETER(QString, DistOutputFile)
+  PYB11_FILTER_PARAMETER(QString, ErrOutputFile)
+  PYB11_FILTER_PARAMETER(bool, SaveRelativeErr)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceAreasArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFeatureFaceLabelsArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, NodeTypesArrayPath)
   PYB11_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
   PYB11_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
   PYB11_PROPERTY(int ChosenLimitDists READ getChosenLimitDists WRITE setChosenLimitDists)
@@ -78,80 +100,248 @@ class OrientationAnalysis_EXPORT FindGBCDMetricBased : public AbstractFilter
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFaceAreasArrayPath READ getSurfaceMeshFaceAreasArrayPath WRITE setSurfaceMeshFaceAreasArrayPath)
   PYB11_PROPERTY(DataArrayPath SurfaceMeshFeatureFaceLabelsArrayPath READ getSurfaceMeshFeatureFaceLabelsArrayPath WRITE setSurfaceMeshFeatureFaceLabelsArrayPath)
   PYB11_PROPERTY(DataArrayPath NodeTypesArrayPath READ getNodeTypesArrayPath WRITE setNodeTypesArrayPath)
+#endif
 
 public:
-  SIMPL_SHARED_POINTERS(FindGBCDMetricBased)
-  SIMPL_FILTER_NEW_MACRO(FindGBCDMetricBased)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(FindGBCDMetricBased, AbstractFilter)
+  using Self = FindGBCDMetricBased;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for FindGBCDMetricBased
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for FindGBCDMetricBased
+   */
+  static QString ClassName();
 
   ~FindGBCDMetricBased() override;
 
-  SIMPL_FILTER_PARAMETER(int, PhaseOfInterest)
+  /**
+   * @brief Setter property for PhaseOfInterest
+   */
+  void setPhaseOfInterest(int value);
+  /**
+   * @brief Getter property for PhaseOfInterest
+   * @return Value of PhaseOfInterest
+   */
+  int getPhaseOfInterest() const;
+
   Q_PROPERTY(int PhaseOfInterest READ getPhaseOfInterest WRITE setPhaseOfInterest)
 
-  SIMPL_FILTER_PARAMETER(AxisAngleInput_t, MisorientationRotation)
+  /**
+   * @brief Setter property for MisorientationRotation
+   */
+  void setMisorientationRotation(const AxisAngleInput_t& value);
+  /**
+   * @brief Getter property for MisorientationRotation
+   * @return Value of MisorientationRotation
+   */
+  AxisAngleInput_t getMisorientationRotation() const;
+
   Q_PROPERTY(AxisAngleInput_t MisorientationRotation READ getMisorientationRotation WRITE setMisorientationRotation)
 
-  SIMPL_FILTER_PARAMETER(int, ChosenLimitDists)
+  /**
+   * @brief Setter property for ChosenLimitDists
+   */
+  void setChosenLimitDists(int value);
+  /**
+   * @brief Getter property for ChosenLimitDists
+   * @return Value of ChosenLimitDists
+   */
+  int getChosenLimitDists() const;
+
   Q_PROPERTY(int ChosenLimitDists READ getChosenLimitDists WRITE setChosenLimitDists)
 
-  SIMPL_FILTER_PARAMETER(int, NumSamplPts)
+  /**
+   * @brief Setter property for NumSamplPts
+   */
+  void setNumSamplPts(int value);
+  /**
+   * @brief Getter property for NumSamplPts
+   * @return Value of NumSamplPts
+   */
+  int getNumSamplPts() const;
+
   Q_PROPERTY(int NumSamplPts READ getNumSamplPts WRITE setNumSamplPts)
 
-  SIMPL_FILTER_PARAMETER(bool, ExcludeTripleLines)
+  /**
+   * @brief Setter property for ExcludeTripleLines
+   */
+  void setExcludeTripleLines(bool value);
+  /**
+   * @brief Getter property for ExcludeTripleLines
+   * @return Value of ExcludeTripleLines
+   */
+  bool getExcludeTripleLines() const;
+
   Q_PROPERTY(bool ExcludeTripleLines READ getExcludeTripleLines WRITE setExcludeTripleLines)
 
-  SIMPL_FILTER_PARAMETER(QString, DistOutputFile)
+  /**
+   * @brief Setter property for DistOutputFile
+   */
+  void setDistOutputFile(const QString& value);
+  /**
+   * @brief Getter property for DistOutputFile
+   * @return Value of DistOutputFile
+   */
+  QString getDistOutputFile() const;
+
   Q_PROPERTY(QString DistOutputFile READ getDistOutputFile WRITE setDistOutputFile)
 
-  SIMPL_FILTER_PARAMETER(QString, ErrOutputFile)
+  /**
+   * @brief Setter property for ErrOutputFile
+   */
+  void setErrOutputFile(const QString& value);
+  /**
+   * @brief Getter property for ErrOutputFile
+   * @return Value of ErrOutputFile
+   */
+  QString getErrOutputFile() const;
+
   Q_PROPERTY(QString ErrOutputFile READ getErrOutputFile WRITE setErrOutputFile)
 
-  SIMPL_FILTER_PARAMETER(bool, SaveRelativeErr)
+  /**
+   * @brief Setter property for SaveRelativeErr
+   */
+  void setSaveRelativeErr(bool value);
+  /**
+   * @brief Getter property for SaveRelativeErr
+   * @return Value of SaveRelativeErr
+   */
+  bool getSaveRelativeErr() const;
+
   Q_PROPERTY(bool SaveRelativeErr READ getSaveRelativeErr WRITE setSaveRelativeErr)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  /**
+   * @brief Setter property for CrystalStructuresArrayPath
+   */
+  void setCrystalStructuresArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for CrystalStructuresArrayPath
+   * @return Value of CrystalStructuresArrayPath
+   */
+  DataArrayPath getCrystalStructuresArrayPath() const;
+
   Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeatureEulerAnglesArrayPath)
+  /**
+   * @brief Setter property for FeatureEulerAnglesArrayPath
+   */
+  void setFeatureEulerAnglesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeatureEulerAnglesArrayPath
+   * @return Value of FeatureEulerAnglesArrayPath
+   */
+  DataArrayPath getFeatureEulerAnglesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeatureEulerAnglesArrayPath READ getFeatureEulerAnglesArrayPath WRITE setFeatureEulerAnglesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, FeaturePhasesArrayPath)
+  /**
+   * @brief Setter property for FeaturePhasesArrayPath
+   */
+  void setFeaturePhasesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for FeaturePhasesArrayPath
+   * @return Value of FeaturePhasesArrayPath
+   */
+  DataArrayPath getFeaturePhasesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath FeaturePhasesArrayPath READ getFeaturePhasesArrayPath WRITE setFeaturePhasesArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceLabelsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceLabelsArrayPath
+   */
+  void setSurfaceMeshFaceLabelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceLabelsArrayPath
+   * @return Value of SurfaceMeshFaceLabelsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceLabelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceLabelsArrayPath READ getSurfaceMeshFaceLabelsArrayPath WRITE setSurfaceMeshFaceLabelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceNormalsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceNormalsArrayPath
+   */
+  void setSurfaceMeshFaceNormalsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceNormalsArrayPath
+   * @return Value of SurfaceMeshFaceNormalsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceNormalsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceNormalsArrayPath READ getSurfaceMeshFaceNormalsArrayPath WRITE setSurfaceMeshFaceNormalsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFaceAreasArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFaceAreasArrayPath
+   */
+  void setSurfaceMeshFaceAreasArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFaceAreasArrayPath
+   * @return Value of SurfaceMeshFaceAreasArrayPath
+   */
+  DataArrayPath getSurfaceMeshFaceAreasArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFaceAreasArrayPath READ getSurfaceMeshFaceAreasArrayPath WRITE setSurfaceMeshFaceAreasArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, SurfaceMeshFeatureFaceLabelsArrayPath)
+  /**
+   * @brief Setter property for SurfaceMeshFeatureFaceLabelsArrayPath
+   */
+  void setSurfaceMeshFeatureFaceLabelsArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for SurfaceMeshFeatureFaceLabelsArrayPath
+   * @return Value of SurfaceMeshFeatureFaceLabelsArrayPath
+   */
+  DataArrayPath getSurfaceMeshFeatureFaceLabelsArrayPath() const;
+
   Q_PROPERTY(DataArrayPath SurfaceMeshFeatureFaceLabelsArrayPath READ getSurfaceMeshFeatureFaceLabelsArrayPath WRITE setSurfaceMeshFeatureFaceLabelsArrayPath)
 
-  SIMPL_FILTER_PARAMETER(DataArrayPath, NodeTypesArrayPath)
+  /**
+   * @brief Setter property for NodeTypesArrayPath
+   */
+  void setNodeTypesArrayPath(const DataArrayPath& value);
+  /**
+   * @brief Getter property for NodeTypesArrayPath
+   * @return Value of NodeTypesArrayPath
+   */
+  DataArrayPath getNodeTypesArrayPath() const;
+
   Q_PROPERTY(DataArrayPath NodeTypesArrayPath READ getNodeTypesArrayPath WRITE setNodeTypesArrayPath)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+  QString getCompiledLibraryName() const override;
 
   /**
    * @brief getBrandingString Returns the branding string for the filter, which is a tag
    * used to denote the filter's association with specific plugins
    * @return Branding string
    */
-  const QString getBrandingString() const override;
+  QString getBrandingString() const override;
 
   /**
    * @brief getFilterVersion Returns a version string for this filter. Default
    * value is an empty string.
    * @return
    */
-  const QString getFilterVersion() const override;
+  QString getFilterVersion() const override;
 
   /**
    * @brief newFilterInstance Reimplemented from @see AbstractFilter class
@@ -161,23 +351,23 @@ public:
   /**
    * @brief getGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getGroupName() const override;
+  QString getGroupName() const override;
 
   /**
    * @brief getSubGroupName Reimplemented from @see AbstractFilter class
    */
-  const QString getSubGroupName() const override;
+  QString getSubGroupName() const override;
 
   /**
    * @brief getUuid Return the unique identifier for this filter.
    * @return A QUuid object.
    */
-  const QUuid getUuid() override;
+  QUuid getUuid() const override;
 
   /**
    * @brief getHumanLabel Reimplemented from @see AbstractFilter class
    */
-  const QString getHumanLabel() const override;
+  QString getHumanLabel() const override;
 
   /**
    * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
@@ -236,14 +426,39 @@ protected:
   void initialize();
 
 private:
-  DEFINE_DATAARRAY_VARIABLE(unsigned int, CrystalStructures)
-  DEFINE_DATAARRAY_VARIABLE(float, FeatureEulerAngles)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, FeaturePhases)
-  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceAreas)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFaceLabels)
-  DEFINE_DATAARRAY_VARIABLE(double, SurfaceMeshFaceNormals)
-  DEFINE_DATAARRAY_VARIABLE(int32_t, SurfaceMeshFeatureFaceLabels)
-  DEFINE_DATAARRAY_VARIABLE(int8_t, NodeTypes)
+  std::weak_ptr<DataArray<unsigned int>> m_CrystalStructuresPtr;
+  unsigned int* m_CrystalStructures = nullptr;
+  std::weak_ptr<DataArray<float>> m_FeatureEulerAnglesPtr;
+  float* m_FeatureEulerAngles = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_FeaturePhasesPtr;
+  int32_t* m_FeaturePhases = nullptr;
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshFaceAreasPtr;
+  double* m_SurfaceMeshFaceAreas = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFaceLabelsPtr;
+  int32_t* m_SurfaceMeshFaceLabels = nullptr;
+  std::weak_ptr<DataArray<double>> m_SurfaceMeshFaceNormalsPtr;
+  double* m_SurfaceMeshFaceNormals = nullptr;
+  std::weak_ptr<DataArray<int32_t>> m_SurfaceMeshFeatureFaceLabelsPtr;
+  int32_t* m_SurfaceMeshFeatureFaceLabels = nullptr;
+  std::weak_ptr<DataArray<int8_t>> m_NodeTypesPtr;
+  int8_t* m_NodeTypes = nullptr;
+
+  int m_PhaseOfInterest = {};
+  AxisAngleInput_t m_MisorientationRotation = {};
+  int m_ChosenLimitDists = {};
+  int m_NumSamplPts = {};
+  bool m_ExcludeTripleLines = {};
+  QString m_DistOutputFile = {};
+  QString m_ErrOutputFile = {};
+  bool m_SaveRelativeErr = {};
+  DataArrayPath m_CrystalStructuresArrayPath = {};
+  DataArrayPath m_FeatureEulerAnglesArrayPath = {};
+  DataArrayPath m_FeaturePhasesArrayPath = {};
+  DataArrayPath m_SurfaceMeshFaceLabelsArrayPath = {};
+  DataArrayPath m_SurfaceMeshFaceNormalsArrayPath = {};
+  DataArrayPath m_SurfaceMeshFaceAreasArrayPath = {};
+  DataArrayPath m_SurfaceMeshFeatureFaceLabelsArrayPath = {};
+  DataArrayPath m_NodeTypesArrayPath = {};
 
   static const int k_NumberResolutionChoices = 7;
   static const int k_DefaultResolutionChoice = 2;

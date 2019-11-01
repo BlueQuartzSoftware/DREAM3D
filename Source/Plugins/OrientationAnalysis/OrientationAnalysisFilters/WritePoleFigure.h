@@ -35,10 +35,12 @@
 
 #pragma once
 
-#include "SIMPLib/Common/SIMPLibSetGetMacros.h"
+#include <memory>
+
+#include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
-#include "SIMPLib/SIMPLib.h"
+#include "SIMPLib/DataArrays/DataArray.hpp"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -48,26 +50,70 @@
 class OrientationAnalysis_EXPORT WritePoleFigure : public AbstractFilter
 {
   Q_OBJECT
-    PYB11_CREATE_BINDINGS(WritePoleFigure SUPERCLASS AbstractFilter)
-    PYB11_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
-    PYB11_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
-    PYB11_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
-    PYB11_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
-    PYB11_PROPERTY(int LambertSize READ getLambertSize WRITE setLambertSize)
-    PYB11_PROPERTY(int NumColors READ getNumColors WRITE setNumColors)
-    PYB11_PROPERTY(int ImageLayout READ getImageLayout WRITE setImageLayout)
-    PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
-    PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
-    PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
-    PYB11_PROPERTY(DataArrayPath MaterialNameArrayPath READ getMaterialNameArrayPath WRITE setMaterialNameArrayPath)
-    PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
-    PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
-    PYB11_PROPERTY(int GenerationAlgorithm READ getGenerationAlgorithm WRITE setGenerationAlgorithm)
-    //  PYB11_PROPERTY(bool UseDiscreteHeatMap READ getUseDiscreteHeatMap WRITE setUseDiscreteHeatMap)
+
+#ifdef SIMPL_ENABLE_PYTHON
+  PYB11_CREATE_BINDINGS(WritePoleFigure SUPERCLASS AbstractFilter)
+  PYB11_SHARED_POINTERS(WritePoleFigure)
+  PYB11_FILTER_NEW_MACRO(WritePoleFigure)
+  PYB11_FILTER_PARAMETER(QString, ImagePrefix)
+  PYB11_FILTER_PARAMETER(QString, OutputPath)
+  PYB11_FILTER_PARAMETER(int, ImageFormat)
+  PYB11_FILTER_PARAMETER(int, ImageSize)
+  PYB11_FILTER_PARAMETER(int, LambertSize)
+  PYB11_FILTER_PARAMETER(int, NumColors)
+  PYB11_FILTER_PARAMETER(int, ImageLayout)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+  PYB11_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+  PYB11_FILTER_PARAMETER(bool, UseGoodVoxels)
+  PYB11_FILTER_PARAMETER(int, GenerationAlgorithm)
+  PYB11_FILTER_PARAMETER(QString, Title)
+  PYB11_FILTER_PARAMETER(DataArrayPath, MaterialNameArrayPath)
+  PYB11_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
+  PYB11_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
+  PYB11_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
+  PYB11_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
+  PYB11_PROPERTY(int LambertSize READ getLambertSize WRITE setLambertSize)
+  PYB11_PROPERTY(int NumColors READ getNumColors WRITE setNumColors)
+  PYB11_PROPERTY(int ImageLayout READ getImageLayout WRITE setImageLayout)
+  PYB11_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
+  PYB11_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
+  PYB11_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
+  PYB11_PROPERTY(DataArrayPath MaterialNameArrayPath READ getMaterialNameArrayPath WRITE setMaterialNameArrayPath)
+  PYB11_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
+  PYB11_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
+  PYB11_PROPERTY(int GenerationAlgorithm READ getGenerationAlgorithm WRITE setGenerationAlgorithm)
+#endif
+
+  //  PYB11_PROPERTY(bool UseDiscreteHeatMap READ getUseDiscreteHeatMap WRITE setUseDiscreteHeatMap)
 public:
-  SIMPL_SHARED_POINTERS(WritePoleFigure)
-  SIMPL_FILTER_NEW_MACRO(WritePoleFigure)
-  SIMPL_TYPE_MACRO_SUPER_OVERRIDE(WritePoleFigure, AbstractFilter)
+  using Self = WritePoleFigure;
+  using Pointer = std::shared_ptr<Self>;
+  using ConstPointer = std::shared_ptr<const Self>;
+  using WeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<Self>;
+  
+  /**
+   * @brief Returns a NullPointer wrapped by a shared_ptr<>
+   * @return
+   */
+  static Pointer NullPointer();
+
+  /**
+   * @brief Creates a new object wrapped in a shared_ptr<>
+   * @return
+   */
+  static Pointer New();
+
+  /**
+   * @brief Returns the name of the class for WritePoleFigure
+   */
+  QString getNameOfClass() const override;
+  /**
+   * @brief Returns the name of the class for WritePoleFigure
+   */
+  static QString ClassName();
 
   ~WritePoleFigure() override;
 
@@ -89,50 +135,184 @@ public:
       Unknown = 2,           //!
     };
 
-    SIMPL_FILTER_PARAMETER(QString, ImagePrefix)
+    /**
+     * @brief Setter property for ImagePrefix
+     */
+    void setImagePrefix(const QString& value);
+    /**
+     * @brief Getter property for ImagePrefix
+     * @return Value of ImagePrefix
+     */
+    QString getImagePrefix() const;
+
     Q_PROPERTY(QString ImagePrefix READ getImagePrefix WRITE setImagePrefix)
 
-    SIMPL_FILTER_PARAMETER(QString, OutputPath)
+    /**
+     * @brief Setter property for OutputPath
+     */
+    void setOutputPath(const QString& value);
+    /**
+     * @brief Getter property for OutputPath
+     * @return Value of OutputPath
+     */
+    QString getOutputPath() const;
+
     Q_PROPERTY(QString OutputPath READ getOutputPath WRITE setOutputPath)
 
-    SIMPL_FILTER_PARAMETER(int, ImageFormat)
+    /**
+     * @brief Setter property for ImageFormat
+     */
+    void setImageFormat(int value);
+    /**
+     * @brief Getter property for ImageFormat
+     * @return Value of ImageFormat
+     */
+    int getImageFormat() const;
+
     Q_PROPERTY(int ImageFormat READ getImageFormat WRITE setImageFormat)
 
-    SIMPL_FILTER_PARAMETER(int, ImageSize)
+    /**
+     * @brief Setter property for ImageSize
+     */
+    void setImageSize(int value);
+    /**
+     * @brief Getter property for ImageSize
+     * @return Value of ImageSize
+     */
+    int getImageSize() const;
+
     Q_PROPERTY(int ImageSize READ getImageSize WRITE setImageSize)
 
-    SIMPL_FILTER_PARAMETER(int, LambertSize)
+    /**
+     * @brief Setter property for LambertSize
+     */
+    void setLambertSize(int value);
+    /**
+     * @brief Getter property for LambertSize
+     * @return Value of LambertSize
+     */
+    int getLambertSize() const;
+
     Q_PROPERTY(int LambertSize READ getLambertSize WRITE setLambertSize)
 
-    SIMPL_FILTER_PARAMETER(int, NumColors)
+    /**
+     * @brief Setter property for NumColors
+     */
+    void setNumColors(int value);
+    /**
+     * @brief Getter property for NumColors
+     * @return Value of NumColors
+     */
+    int getNumColors() const;
+
     Q_PROPERTY(int NumColors READ getNumColors WRITE setNumColors)
 
-    SIMPL_FILTER_PARAMETER(int, ImageLayout)
+    /**
+     * @brief Setter property for ImageLayout
+     */
+    void setImageLayout(int value);
+    /**
+     * @brief Getter property for ImageLayout
+     * @return Value of ImageLayout
+     */
+    int getImageLayout() const;
+
     Q_PROPERTY(int ImageLayout READ getImageLayout WRITE setImageLayout)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CellEulerAnglesArrayPath)
+    /**
+     * @brief Setter property for CellEulerAnglesArrayPath
+     */
+    void setCellEulerAnglesArrayPath(const DataArrayPath& value);
+    /**
+     * @brief Getter property for CellEulerAnglesArrayPath
+     * @return Value of CellEulerAnglesArrayPath
+     */
+    DataArrayPath getCellEulerAnglesArrayPath() const;
+
     Q_PROPERTY(DataArrayPath CellEulerAnglesArrayPath READ getCellEulerAnglesArrayPath WRITE setCellEulerAnglesArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CellPhasesArrayPath)
+    /**
+     * @brief Setter property for CellPhasesArrayPath
+     */
+    void setCellPhasesArrayPath(const DataArrayPath& value);
+    /**
+     * @brief Getter property for CellPhasesArrayPath
+     * @return Value of CellPhasesArrayPath
+     */
+    DataArrayPath getCellPhasesArrayPath() const;
+
     Q_PROPERTY(DataArrayPath CellPhasesArrayPath READ getCellPhasesArrayPath WRITE setCellPhasesArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, CrystalStructuresArrayPath)
+    /**
+     * @brief Setter property for CrystalStructuresArrayPath
+     */
+    void setCrystalStructuresArrayPath(const DataArrayPath& value);
+    /**
+     * @brief Getter property for CrystalStructuresArrayPath
+     * @return Value of CrystalStructuresArrayPath
+     */
+    DataArrayPath getCrystalStructuresArrayPath() const;
+
     Q_PROPERTY(DataArrayPath CrystalStructuresArrayPath READ getCrystalStructuresArrayPath WRITE setCrystalStructuresArrayPath)
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, GoodVoxelsArrayPath)
+    /**
+     * @brief Setter property for GoodVoxelsArrayPath
+     */
+    void setGoodVoxelsArrayPath(const DataArrayPath& value);
+    /**
+     * @brief Getter property for GoodVoxelsArrayPath
+     * @return Value of GoodVoxelsArrayPath
+     */
+    DataArrayPath getGoodVoxelsArrayPath() const;
+
     Q_PROPERTY(DataArrayPath GoodVoxelsArrayPath READ getGoodVoxelsArrayPath WRITE setGoodVoxelsArrayPath)
 
-    SIMPL_FILTER_PARAMETER(bool, UseGoodVoxels)
+    /**
+     * @brief Setter property for UseGoodVoxels
+     */
+    void setUseGoodVoxels(bool value);
+    /**
+     * @brief Getter property for UseGoodVoxels
+     * @return Value of UseGoodVoxels
+     */
+    bool getUseGoodVoxels() const;
+
     Q_PROPERTY(bool UseGoodVoxels READ getUseGoodVoxels WRITE setUseGoodVoxels)
 
-    SIMPL_FILTER_PARAMETER(int, GenerationAlgorithm)
+    /**
+     * @brief Setter property for GenerationAlgorithm
+     */
+    void setGenerationAlgorithm(int value);
+    /**
+     * @brief Getter property for GenerationAlgorithm
+     * @return Value of GenerationAlgorithm
+     */
+    int getGenerationAlgorithm() const;
+
     Q_PROPERTY(int GenerationAlgorithm READ getGenerationAlgorithm WRITE setGenerationAlgorithm)
 
-    SIMPL_FILTER_PARAMETER(QString, Title)
-    Q_PROPERTY(QString Title READ getTitle WRITE setTitle)
-        
+    /**
+     * @brief Setter property for Title
+     */
+    void setTitle(const QString& value);
+    /**
+     * @brief Getter property for Title
+     * @return Value of Title
+     */
+    QString getTitle() const;
 
-    SIMPL_FILTER_PARAMETER(DataArrayPath, MaterialNameArrayPath)
+    Q_PROPERTY(QString Title READ getTitle WRITE setTitle)
+
+    /**
+     * @brief Setter property for MaterialNameArrayPath
+     */
+    void setMaterialNameArrayPath(const DataArrayPath& value);
+    /**
+     * @brief Getter property for MaterialNameArrayPath
+     * @return Value of MaterialNameArrayPath
+     */
+    DataArrayPath getMaterialNameArrayPath() const;
+
     Q_PROPERTY(DataArrayPath MaterialNameArrayPath READ getMaterialNameArrayPath WRITE setMaterialNameArrayPath)
         
     //  SIMPL_FILTER_PARAMETER(bool, UseDiscreteHeatMap)
@@ -141,67 +321,67 @@ public:
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
    */
-  const QString getCompiledLibraryName() const override;
+    QString getCompiledLibraryName() const override;
 
-  /**
-   * @brief getBrandingString Returns the branding string for the filter, which is a tag
-   * used to denote the filter's association with specific plugins
-   * @return Branding string
-  */
-  const QString getBrandingString() const override;
+    /**
+     * @brief getBrandingString Returns the branding string for the filter, which is a tag
+     * used to denote the filter's association with specific plugins
+     * @return Branding string
+     */
+    QString getBrandingString() const override;
 
-  /**
-   * @brief getFilterVersion Returns a version string for this filter. Default
-   * value is an empty string.
-   * @return
-   */
-  const QString getFilterVersion() const override;
+    /**
+     * @brief getFilterVersion Returns a version string for this filter. Default
+     * value is an empty string.
+     * @return
+     */
+    QString getFilterVersion() const override;
 
-  /**
-   * @brief newFilterInstance Reimplemented from @see AbstractFilter class
-   */
-  AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
+    /**
+     * @brief newFilterInstance Reimplemented from @see AbstractFilter class
+     */
+    AbstractFilter::Pointer newFilterInstance(bool copyFilterParameters) const override;
 
-  /**
-   * @brief getGroupName Reimplemented from @see AbstractFilter class
-   */
-  const QString getGroupName() const override;
+    /**
+     * @brief getGroupName Reimplemented from @see AbstractFilter class
+     */
+    QString getGroupName() const override;
 
-  /**
-   * @brief getSubGroupName Reimplemented from @see AbstractFilter class
-   */
-  const QString getSubGroupName() const override;
+    /**
+     * @brief getSubGroupName Reimplemented from @see AbstractFilter class
+     */
+    QString getSubGroupName() const override;
 
-  /**
-   * @brief getUuid Return the unique identifier for this filter.
-   * @return A QUuid object.
-   */
-  const QUuid getUuid() override;
+    /**
+     * @brief getUuid Return the unique identifier for this filter.
+     * @return A QUuid object.
+     */
+    QUuid getUuid() const override;
 
-  /**
-   * @brief getHumanLabel Reimplemented from @see AbstractFilter class
-   */
-  const QString getHumanLabel() const override;
+    /**
+     * @brief getHumanLabel Reimplemented from @see AbstractFilter class
+     */
+    QString getHumanLabel() const override;
 
-  /**
-   * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
-   */
-  void setupFilterParameters() override;
+    /**
+     * @brief setupFilterParameters Reimplemented from @see AbstractFilter class
+     */
+    void setupFilterParameters() override;
 
-  /**
-   * @brief readFilterParameters Reimplemented from @see AbstractFilter class
-   */
-  void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
+    /**
+     * @brief readFilterParameters Reimplemented from @see AbstractFilter class
+     */
+    void readFilterParameters(AbstractFilterParametersReader* reader, int index) override;
 
-  /**
-   * @brief execute Reimplemented from @see AbstractFilter class
-   */
-  void execute() override;
+    /**
+     * @brief execute Reimplemented from @see AbstractFilter class
+     */
+    void execute() override;
 
-  /**
-  * @brief preflight Reimplemented from @see AbstractFilter class
-  */
-  void preflight() override;
+    /**
+     * @brief preflight Reimplemented from @see AbstractFilter class
+     */
+    void preflight() override;
 
   signals:
     /**
@@ -253,12 +433,33 @@ public:
     //void writeImage(QImage image, QString label);
 
   private:
+    std::weak_ptr<DataArray<float>> m_CellEulerAnglesPtr;
+    float* m_CellEulerAngles = nullptr;
+    std::weak_ptr<DataArray<int32_t>> m_CellPhasesPtr;
+    int32_t* m_CellPhases = nullptr;
+    std::weak_ptr<DataArray<uint32_t>> m_CrystalStructuresPtr;
+    uint32_t* m_CrystalStructures = nullptr;
+    std::weak_ptr<DataArray<bool>> m_GoodVoxelsPtr;
+    bool* m_GoodVoxels = nullptr;
+
+    QString m_ImagePrefix = {};
+    QString m_OutputPath = {};
+    int m_ImageFormat = {};
+    int m_ImageSize = {};
+    int m_LambertSize = {};
+    int m_NumColors = {};
+    int m_ImageLayout = {};
+    DataArrayPath m_CellEulerAnglesArrayPath = {};
+    DataArrayPath m_CellPhasesArrayPath = {};
+    DataArrayPath m_CrystalStructuresArrayPath = {};
+    DataArrayPath m_GoodVoxelsArrayPath = {};
+    bool m_UseGoodVoxels = {};
+    int m_GenerationAlgorithm = {};
+    QString m_Title = {};
+    DataArrayPath m_MaterialNameArrayPath = {};
+
     bool m_UseDiscreteHeatMap = false;
-    DEFINE_DATAARRAY_VARIABLE(float, CellEulerAngles)
-    DEFINE_DATAARRAY_VARIABLE(int32_t, CellPhases)
-    DEFINE_DATAARRAY_VARIABLE(uint32_t, CrystalStructures)
-    DEFINE_DATAARRAY_VARIABLE(bool, GoodVoxels)
-    
+
     StringDataArray::Pointer m_MaterialNames;
 
 public:
