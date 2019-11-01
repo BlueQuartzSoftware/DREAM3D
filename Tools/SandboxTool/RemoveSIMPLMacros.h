@@ -424,7 +424,7 @@ public:
       pubCodeOut << "    using Pointer = std::shared_ptr<Self>;\n";
       pubCodeOut << "    using ConstPointer = std::shared_ptr<const Self>;\n";
       pubCodeOut << "    using WeakPointer = std::weak_ptr<Self>;\n";
-      pubCodeOut << "    using ConstWeakPointer = std::weak_ptr<Self>;\n";
+      pubCodeOut << "    using ConstWeakPointer = std::weak_ptr<const Self>;\n";
       pubCodeOut << "    static Pointer NullPointer();\n";
 
       definitionCodeOut << "// -----------------------------------------------------------------------------\n";
@@ -728,7 +728,7 @@ public:
       definitionCodeOut << "" << varType << "* " << fi.baseName() << "::get" << varName << "() const\n";
       definitionCodeOut << "{\n";
       definitionCodeOut << "  return m_" << varName << ";\n";
-      definitionCodeOut << "}\n";
+      definitionCodeOut << "}";
 
       line = pubCode;
     }
