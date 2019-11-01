@@ -381,7 +381,7 @@ void StatsGenRDFWidget::extractStatsData(int index, StatsData* statsData, PhaseT
       ui->BoxSizeYLE->setText(QString::number(boxDim[1]));
       ui->BoxSizeZLE->setText(QString::number(boxDim[2]));
 
-      std::array<float, 3> boxRes = rdf->getBoxResolution();
+      //  std::array<float, 3> boxRes = rdf->getBoxResolution();
       ui->minDistLE->setText(QString::number(rdf->getMinDistance()));
       ui->maxDistLE->setText(QString::number(rdf->getMaxDistance()));
       ui->numBinsLE->setText(QString::number(rdf->getNumberOfBins()));

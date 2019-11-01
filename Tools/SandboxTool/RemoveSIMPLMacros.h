@@ -464,7 +464,8 @@ public:
       pubCodeOut << "    using Pointer = std::shared_ptr<Self>;\n";
       pubCodeOut << "    using ConstPointer = std::shared_ptr<const Self>;\n";
       pubCodeOut << "    using WeakPointer = std::weak_ptr<Self>;\n";
-      pubCodeOut << "    using ConstWeakPointer = std::weak_ptr<Self>;\n";
+      pubCodeOut << "    using ConstWeakPointer = std::weak_ptr<Self>;\n\n\n";
+
       pubCodeOut << "    static Pointer NullPointer();\n";
 
       pubCodeOut << "    Pointer NullPointer()\n";
@@ -582,7 +583,7 @@ public:
       // pubCodeOut << "    /**\n    * @brief Getter property for " << varName << "\n    * @return Value of " << varName << "\n    */\n";
 
       definitionCodeOut << "// -----------------------------------------------------------------------------\n";
-      definitionCodeOut << "const QString " << fi.baseName() << "::getNameOfClass() const\n";
+      definitionCodeOut << "QString " << fi.baseName() << "::getNameOfClass() const\n";
       definitionCodeOut << "{\n";
       definitionCodeOut << "  return QString(\"" << className << "\");\n";
       definitionCodeOut << "}\n\n";
@@ -629,7 +630,7 @@ public:
       // pubCodeOut << "    /**\n    * @brief Getter property for " << varName << "\n    * @return Value of " << varName << "\n    */\n";
 
       definitionCodeOut << "// -----------------------------------------------------------------------------\n";
-      definitionCodeOut << "const QString " << fi.baseName() << "::getNameOfClass() const\n";
+      definitionCodeOut << "QString " << fi.baseName() << "::getNameOfClass() const\n";
       definitionCodeOut << "{\n";
       definitionCodeOut << "  return QString(\"" << className << "\");\n";
       definitionCodeOut << "}\n\n";
@@ -667,8 +668,6 @@ public:
       QStringList tokens = line.split(",");
 
       QString className = tokens[0].trimmed();
-
-      pubCodeOut << "    /**\n    * @brief Returns the name of the class for " << className << "\n    */\n";
 
       pubCodeOut << "    /**\n    * @brief Returns the name of the class for " << className << "\n    */\n";
       pubCodeOut << "    QString getNameOfClass() const\n";
