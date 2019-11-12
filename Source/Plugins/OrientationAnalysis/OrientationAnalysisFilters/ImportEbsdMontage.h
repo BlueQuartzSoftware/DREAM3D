@@ -79,7 +79,15 @@ public:
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<Self>;
-  
+
+  using EnumType = int32_t;
+  enum class OverlapType : EnumType
+  {
+    None = 0,    //!<
+    Pixels = 1,  //!<
+    Percent = 2, //!<
+  };
+
   /**
    * @brief Returns a NullPointer wrapped by a shared_ptr<>
    * @return
@@ -175,6 +183,28 @@ public:
    */
   QString getCellIPFColorsArrayName() const;
   Q_PROPERTY(QString CellIPFColorsArrayName READ getCellIPFColorsArrayName WRITE setCellIPFColorsArrayName)
+
+  /**
+   * @brief Setter property for DefineScanOverlap
+   */
+  void setDefineScanOverlap(int32_t value);
+  /**
+   * @brief Getter property for DefineScanOverlap
+   * @return Value of DefineScanOverlap
+   */
+  int32_t getDefineScanOverlap() const;
+  Q_PROPERTY(int32_t DefineScanOverlap READ getDefineScanOverlap WRITE setDefineScanOverlap)
+
+  /**
+   * @brief Setter property for ScanOverlap
+   */
+  void setScanOverlap(const FloatVec2Type& value);
+  /**
+   * @brief Getter property for ScanOverlap
+   * @return Value of ScanOverlap
+   */
+  FloatVec2Type getScanOverlap() const;
+  Q_PROPERTY(FloatVec2Type ScanOverlap READ getScanOverlap WRITE setScanOverlap)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -274,9 +304,14 @@ protected:
 
 private:
   DataArrayPath m_DataContainerName = {};
-  QString m_CellEnsembleAttributeMatrixName = {};
-  QString m_CellAttributeMatrixName = {};
+  QString m_MontageName = {"Montage"};
+  DataArrayPath m_DataContainerName = {"EBSD", "", ""};
+  QString m_CellEnsembleAttributeMatrixName = {"Phase Data"};
+  QString m_CellAttributeMatrixName = {"Scan Data"};
+
   EbsdMontageListInfo m_InputFileListInfo = {};
+  OverlapType m_DefineScanOverlap = OverlapType::None;
+  FloatVec2Type m_ScanOverlap = {0.0f, 0.0f};
 
   std::map<QString, AbstractFilter::Pointer> m_FilterCache;
   FloatVec3Type m_ReferenceDir = {0.0f, 0.0f, 1.0f};

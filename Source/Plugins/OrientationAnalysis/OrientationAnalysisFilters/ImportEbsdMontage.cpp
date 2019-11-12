@@ -47,6 +47,8 @@
 #include "SIMPLib/DataContainers/GridMontage.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
+#include "SIMPLib/FilterParameters/FloatVec2FilterParameter.h"
+#include "SIMPLib/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
 #include "SIMPLib/Montages/GridMontage.h"
 #include "SIMPLib/Utilities/FilePathGenerator.h"
@@ -105,11 +107,23 @@ void ImportEbsdMontage::setupFilterParameters()
   parameters.push_back(SIMPL_NEW_STRING_FP("Montage", MontageName, FilterParameter::CreatedArray, ImportEbsdMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Attribute Matrix", CellAttributeMatrixName, FilterParameter::CreatedArray, ImportEbsdMontage));
   parameters.push_back(SIMPL_NEW_STRING_FP("Cell Ensemble Attribute Matrix", CellEnsembleAttributeMatrixName, FilterParameter::CreatedArray, ImportEbsdMontage));
+  {
+    QVector<QString> choices = {"None", "Pixel Overlap" /*, "Percent Overlap"*/};
+    QStringList linkedProps = {"ScanOverlap"};
+    LinkedChoicesFilterParameter::Pointer linkedChoices =
+        LinkedChoicesFilterParameter::New("Define Scan Overlap", "DefineScanOverlap", 0, FilterParameter::Parameter, SIMPL_BIND_SETTER(ImportEbsdMontage, this, DefineScanOverlap),
+                                          SIMPL_BIND_GETTER(ImportEbsdMontage, this, DefineScanOverlap), choices, linkedProps);
+    parameters.push_back(linkedChoices);
 
-  QStringList linkedProps("CellIPFColorsArrayName");
-  parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Generate IPF Color Map", GenerateIPFColorMap, FilterParameter::Parameter, ImportEbsdMontage, linkedProps));
-  parameters.push_back(SIMPL_NEW_STRING_FP("IPF Colors", CellIPFColorsArrayName, FilterParameter::CreatedArray, ImportEbsdMontage));
+    parameters.push_back(SIMPL_NEW_FLOAT_VEC2_FP("Overlap Value (X, Y)", ScanOverlap, FilterParameter::Parameter, ImportEbsdMontage, 1));
+    //   parameters.push_back(SIMPL_NEW_FLOAT_VEC2_FP("Overlap Value (X, Y)", ScanOverlap, FilterParameter::Parameter, ImportEbsdMontage, 2));
+  }
 
+  {
+    QStringList linkedProps("CellIPFColorsArrayName");
+    parameters.push_back(SIMPL_NEW_LINKED_BOOL_FP("Generate IPF Color Map", GenerateIPFColorMap, FilterParameter::Parameter, ImportEbsdMontage, linkedProps));
+    parameters.push_back(SIMPL_NEW_STRING_FP("IPF Colors", CellIPFColorsArrayName, FilterParameter::CreatedArray, ImportEbsdMontage));
+  }
   setFilterParameters(parameters);
 }
 
@@ -175,6 +189,13 @@ void ImportEbsdMontage::dataCheck()
   DataArrayPath tempPath;
   QString ss;
 
+  if(m_DefineScanOverlap != OverlapType::None && m_DefineScanOverlap != OverlapType::Pixels)
+  {
+    ss = QObject::tr("The OverLap type must either be 0 (None) or 1 (Pixels).");
+    setErrorCondition(-12, ss);
+    return;
+  }
+
   if(m_InputFileListInfo.InputPath.isEmpty())
   {
     ss = QObject::tr("The input directory must be set");
@@ -183,7 +204,7 @@ void ImportEbsdMontage::dataCheck()
   }
   bool hasMissingFiles = false;
   // Now generate all the file names the user is asking for and populate the table
-  FilePathGenerator::TileRCIncexLayout2D tileLayout2d = FilePathGenerator::GenerateRCIndexMontageFileList(
+  FilePathGenerator::TileRCIndexLayout2D tileLayout2d = FilePathGenerator::GenerateRCIndexMontageFileList(
       m_InputFileListInfo.RowStart, m_InputFileListInfo.RowEnd, m_InputFileListInfo.ColStart, m_InputFileListInfo.ColEnd, hasMissingFiles, (m_InputFileListInfo.Ordering == 0),
       m_InputFileListInfo.InputPath, m_InputFileListInfo.FilePrefix, m_InputFileListInfo.FileSuffix, m_InputFileListInfo.FileExtension, m_InputFileListInfo.PaddingDigits);
   if(tileLayout2d.empty())
@@ -269,8 +290,21 @@ void ImportEbsdMontage::dataCheck()
         imageGeom->setOrigin(origin);
 
         // Now update the globalTileOrigin values
-        globalTileOrigin[0] += origin[0] + (dims[0] * spacing[0]);
-        tileHeight = (dims[1] * spacing[1]);
+        switch(m_DefineScanOverlap)
+        {
+        case OverlapType::None:
+          globalTileOrigin[0] = origin[0] + (dims[0] * spacing[0]);
+          tileHeight = (dims[1] * spacing[1]);
+          break;
+        case OverlapType::Pixels:
+          globalTileOrigin[0] = origin[0] + ((dims[0] - m_ScanOverlap[0]) * spacing[0]);
+          tileHeight = ((dims[1] - m_ScanOverlap[1]) * spacing[1]);
+          break;
+        case OverlapType::Percent:
+          //          globalTileOrigin[0] = origin[0] + (dims[0] * spacing[0]) - (dims[0] * m_ScanOverlap[0]);
+          //          tileHeight = ((dims[1] - m_ScanOverlap[1]) * spacing[1]);
+          break;
+        }
 
         // Set the montage's DataContainer for the current index
         gridMontage->setDataContainer(gridIndex, dc);
@@ -540,4 +574,40 @@ void ImportEbsdMontage::setCellIPFColorsArrayName(const QString& value)
 QString ImportEbsdMontage::getCellIPFColorsArrayName() const
 {
   return m_CellIPFColorsArrayName;
+}
+
+// -----------------------------------------------------------------------------
+QString ImportEbsdMontage::getMontageName() const
+{
+  return m_MontageName;
+}
+
+// -----------------------------------------------------------------------------
+void ImportEbsdMontage::setMontageName(const QString& value)
+{
+  m_MontageName = value;
+}
+
+// -----------------------------------------------------------------------------
+void ImportEbsdMontage::setDefineScanOverlap(int32_t value)
+{
+  m_DefineScanOverlap = static_cast<OverlapType>(value);
+}
+
+// -----------------------------------------------------------------------------
+int32_t ImportEbsdMontage::getDefineScanOverlap() const
+{
+  return static_cast<int32_t>(m_DefineScanOverlap);
+}
+
+// -----------------------------------------------------------------------------
+void ImportEbsdMontage::setScanOverlap(const FloatVec2Type& value)
+{
+  m_ScanOverlap = value;
+}
+
+// -----------------------------------------------------------------------------
+FloatVec2Type ImportEbsdMontage::getScanOverlap() const
+{
+  return m_ScanOverlap;
 }
