@@ -1328,7 +1328,7 @@ void InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer exclusi
     std::array<float, 3> boxdims = {m_SizeX, m_SizeY, m_SizeZ};
 
     FloatVec3Type vec3 = m->getGeometryAs<ImageGeom>()->getSpacing();
-    std::array<float, 3> boxres = {vec3[0], vec3[1], vec3[1]};
+    std::array<float, 3> boxres = {vec3[0], vec3[1], vec3[2]};
 
     float max_box_distance = sqrtf((m_SizeX * m_SizeX) + (m_SizeY * m_SizeY) + (m_SizeZ * m_SizeZ));
 
