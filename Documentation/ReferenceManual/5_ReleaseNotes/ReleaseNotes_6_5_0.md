@@ -10,6 +10,20 @@ The developers of DREAM.3D maintain a pair of Google Groups for discussions on t
 
 [DREAM.3D Developers List](https://groups.google.com/forum/?hl=en#!forum/dream3d-developers)
 
+## Version 6.5.131 ##
+
+### 6.5.131 New Filters & Features ###
+
++ None
+
+### 6.5.131 Fixed DREAM3D Issues ###
+
++ Crash when trying to match on RDF in InsertPrecipitates #922
+
+### 6.5.131 Fixed SIMPL Issues ###
+
++ None
+
 ## Version 6.5.128 ##
 
 ### 6.5.128 New Filters & Features ###
