@@ -58,19 +58,16 @@ class OrientationAnalysis_EXPORT ImportEbsdMontage : public AbstractFilter
   PYB11_CREATE_BINDINGS(ImportEbsdMontage SUPERCLASS AbstractFilter)
   PYB11_SHARED_POINTERS(ImportEbsdMontage)
   PYB11_FILTER_NEW_MACRO(ImportEbsdMontage)
-  PYB11_FILTER_PARAMETER(DataArrayPath, DataContainerName)
-  PYB11_FILTER_PARAMETER(QString, CellEnsembleAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(QString, CellAttributeMatrixName)
-  PYB11_FILTER_PARAMETER(EbsdMontageListInfo, InputFileListInfo)
-  PYB11_FILTER_PARAMETER(bool, GenerateIPFColorMap)
-  PYB11_FILTER_PARAMETER(QString, CellIPFColorsArrayName)
 
+  PYB11_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
   PYB11_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
   PYB11_PROPERTY(QString CellEnsembleAttributeMatrixName READ getCellEnsembleAttributeMatrixName WRITE setCellEnsembleAttributeMatrixName)
   PYB11_PROPERTY(QString CellAttributeMatrixName READ getCellAttributeMatrixName WRITE setCellAttributeMatrixName)
   PYB11_PROPERTY(EbsdMontageListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
   PYB11_PROPERTY(bool GenerateIPFColorMap READ getGenerateIPFColorMap WRITE setGenerateIPFColorMap)
   PYB11_PROPERTY(QString CellIPFColorsArrayName READ getCellIPFColorsArrayName WRITE setCellIPFColorsArrayName)
+  PYB11_PROPERTY(int32_t DefineScanOverlap READ getDefineScanOverlap WRITE setDefineScanOverlap)
+  PYB11_PROPERTY(FloatVec2Type ScanOverlapPercent READ getScanOverlapPercent WRITE setScanOverlapPercent)
 #endif
 
 public:
@@ -198,13 +195,24 @@ public:
   /**
    * @brief Setter property for ScanOverlap
    */
-  void setScanOverlap(const FloatVec2Type& value);
+  void setScanOverlapPercent(const FloatVec2Type& value);
   /**
    * @brief Getter property for ScanOverlap
    * @return Value of ScanOverlap
    */
-  FloatVec2Type getScanOverlap() const;
-  Q_PROPERTY(FloatVec2Type ScanOverlap READ getScanOverlap WRITE setScanOverlap)
+  FloatVec2Type getScanOverlapPercent() const;
+  Q_PROPERTY(FloatVec2Type ScanOverlapPercent READ getScanOverlapPercent WRITE setScanOverlapPercent)
+
+  /**
+   * @brief Setter property for ScanOverlap
+   */
+  void setScanOverlapPixel(const IntVec2Type& value);
+  /**
+   * @brief Getter property for ScanOverlap
+   * @return Value of ScanOverlap
+   */
+  IntVec2Type getScanOverlapPixel() const;
+  Q_PROPERTY(IntVec2Type ScanOverlapPixel READ getScanOverlapPixel WRITE setScanOverlapPixel)
 
   /**
    * @brief getCompiledLibraryName Reimplemented from @see AbstractFilter class
@@ -311,7 +319,8 @@ private:
 
   EbsdMontageListInfo m_InputFileListInfo = {};
   OverlapType m_DefineScanOverlap = OverlapType::None;
-  FloatVec2Type m_ScanOverlap = {0.0f, 0.0f};
+  FloatVec2Type m_ScanOverlapPercent = {0.0f, 0.0f};
+  IntVec2Type m_ScanOverlapPixel = {0, 0};
 
   std::map<QString, AbstractFilter::Pointer> m_FilterCache;
   FloatVec3Type m_ReferenceDir = {0.0f, 0.0f, 1.0f};
