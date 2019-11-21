@@ -447,7 +447,7 @@ public:
     cropVolume->preflight();
     // Fails because getPrereqGeometryFromDataContainer catches the nullptr DataContainer
     // Error code should be -999
-    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -999)
+    DREAM3D_REQUIRE_EQUAL(cropVolume->getErrorCode(), -301000)
     resetTest(cropVolume, s_OriginalX, s_OriginalY, s_OriginalZ, 3);
 
     // Test Source Attribute Matrix Does Not Exist
