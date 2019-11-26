@@ -278,7 +278,7 @@ void EbsdMontageImportWidget::getGuiParametersFromFilter()
 {
   blockSignals(true);
 
-  EbsdMontageListInfo data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<EbsdMontageListInfo>();
+  MontageFileListInfo data = getFilter()->property(PROPERTY_NAME_AS_CHAR).value<MontageFileListInfo>();
 
   m_Ui->inputDir->setText(data.InputPath);
   setValidFilePath(data.InputPath);
@@ -437,7 +437,7 @@ void EbsdMontageImportWidget::filterNeedsInputParameters(AbstractFilter* filter)
   SIMPLDataPathValidator* validator = SIMPLDataPathValidator::Instance();
   QString inputPath = validator->convertToAbsolutePath(m_Ui->inputDir->text());
 
-  EbsdMontageListInfo data;
+  MontageFileListInfo data;
   data.IncrementIndex = m_Ui->increment->value();
   data.RowStart = m_Ui->rowStart->value();
   data.RowEnd = m_Ui->rowEnd->value() + 1;

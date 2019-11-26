@@ -42,9 +42,9 @@
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/FilterParameters/MontageFileListInfo.h"
 
 #include "OrientationAnalysis/FilterParameters/EbsdMontageImportFilterParameter.h"
-#include "OrientationAnalysis/FilterParameters/EbsdMontageListInfo.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -143,13 +143,13 @@ public:
   /**
    * @brief Setter property for InputFileListInfo
    */
-  void setInputFileListInfo(const EbsdMontageListInfo& value);
+  void setInputFileListInfo(const MontageFileListInfo& value);
   /**
    * @brief Getter property for InputFileListInfo
    * @return Value of InputFileListInfo
    */
-  EbsdMontageListInfo getInputFileListInfo() const;
-  Q_PROPERTY(EbsdMontageListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
+  MontageFileListInfo getInputFileListInfo() const;
+  Q_PROPERTY(MontageFileListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
 
   /**
    * @brief Setter property for GenerateIPFColorMap
@@ -273,7 +273,7 @@ private:
   DataArrayPath m_DataContainerName = {};
   QString m_CellEnsembleAttributeMatrixName = {};
   QString m_CellAttributeMatrixName = {};
-  EbsdMontageListInfo m_InputFileListInfo = {};
+  MontageFileListInfo m_InputFileListInfo = {};
 
   std::map<QString, AbstractFilter::Pointer> m_FilterCache;
   FloatVec3Type m_ReferenceDir = {0.0f, 0.0f, 1.0f};
