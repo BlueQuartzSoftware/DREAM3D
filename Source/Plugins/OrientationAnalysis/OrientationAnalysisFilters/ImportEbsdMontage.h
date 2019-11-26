@@ -117,12 +117,18 @@ public:
    * @return Value of DataContainerName
    */
   DataArrayPath getDataContainerName() const;
-
-  SIMPL_FILTER_PARAMETER(QString, MontageName)
-  Q_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
-
-  SIMPL_FILTER_PARAMETER(DataArrayPath, DataContainerName)
   Q_PROPERTY(DataArrayPath DataContainerName READ getDataContainerName WRITE setDataContainerName)
+
+  /**
+   * @brief Setter property for MontageName
+   */
+  void setMontageName(const QString& value);
+  /**
+   * @brief Getter property for MontageName
+   * @return Value of MontageName
+   */
+  QString getMontageName() const;
+  Q_PROPERTY(QString MontageName READ getMontageName WRITE setMontageName)
 
   /**
    * @brief Setter property for CellEnsembleAttributeMatrixName
@@ -311,7 +317,6 @@ protected:
   void initialize();
 
 private:
-  DataArrayPath m_DataContainerName = {};
   QString m_MontageName = {"Montage"};
   DataArrayPath m_DataContainerName = {"EBSD", "", ""};
   QString m_CellEnsembleAttributeMatrixName = {"Phase Data"};

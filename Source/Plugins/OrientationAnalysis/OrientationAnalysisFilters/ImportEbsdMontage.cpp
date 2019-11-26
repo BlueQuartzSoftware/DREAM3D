@@ -44,7 +44,7 @@
 #include "SIMPLib/Common/Constants.h"
 #include "SIMPLib/DataArrays/StringDataArray.h"
 #include "SIMPLib/FilterParameters/LinkedBooleanFilterParameter.h"
-#include "SIMPLib/DataContainers/GridMontage.h"
+#include "SIMPLib/Montages/GridMontage.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/FilterParameters/StringFilterParameter.h"
 #include "SIMPLib/FilterParameters/FloatVec2FilterParameter.h"
@@ -250,6 +250,7 @@ void ImportEbsdMontage::dataCheck()
     globalTileOrigin[0] = 0.0; // Reset the X Coord back to Zero for each row.
     for(const FilePathGenerator::TileRCIndex2D& tile2D : tileRow2D)
     {
+      tilesRead++;
       QFileInfo fi(tile2D.FileName);
       QString fname = fi.completeBaseName();
       if(!fi.exists())
@@ -269,24 +270,14 @@ void ImportEbsdMontage::dataCheck()
         notifyStatusMessage(msg);
       }
       GridTileIndex gridIndex = gridMontage->getTileIndex(tile2D.data[0], tile2D.data[1]);
-      QString phasesName;
-      QString eulersName;
-      QString xtalName;
-      GridTileIndex gridIndex = gridMontage->getTileIndex(tile2D.data[0], tile2D.data[1]);
 
       if(m_InputFileListInfo.FileExtension == Ebsd::Ang::FileExt)
       {
         readEbsdFile<ReadAngData>(this, tile2D.FileName, m_FilterCache, newFilterCache);
-        phasesName = Ebsd::AngFile::Phases;
-        eulersName = Ebsd::AngFile::EulerAngles;
-        xtalName = Ebsd::AngFile::CrystalStructures;
       }
       if(m_InputFileListInfo.FileExtension == Ebsd::Ctf::FileExt)
       {
         readEbsdFile<ReadCtfData>(this, tile2D.FileName, m_FilterCache, newFilterCache);
-        phasesName = Ebsd::CtfFile::Phases;
-        eulersName = Ebsd::CtfFile::EulerAngles;
-        xtalName = Ebsd::CtfFile::CrystalStructures;
       }
     }
   }
@@ -295,6 +286,8 @@ void ImportEbsdMontage::dataCheck()
   {
     return;
   }
+
+  tilesRead = 0;
 
   // Copy to local variable since we may be modifying the value.....
   IntVec2Type scanOverlapPixel = m_ScanOverlapPixel;

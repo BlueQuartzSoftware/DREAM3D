@@ -704,17 +704,13 @@ QString ModifiedLambertProjectionArray::getInfoString(SIMPL::InfoStringFormat fo
   {
     return getToolTipGenerator().generateHTML();
   }
-  else
-  {
-
-  }
   return QString();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ToolTipGenerator ModifiedLambertProjectionArray::getToolTipGenerator()
+ToolTipGenerator ModifiedLambertProjectionArray::getToolTipGenerator() const
 {
   ToolTipGenerator toolTipGen;
   QLocale usa(QLocale::English, QLocale::UnitedStates);
