@@ -380,7 +380,7 @@ class OrientationLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * with values populated to match the current DataArray.
      * @return
      */
-    ToolTipGenerator getToolTipGenerator() override;
+    ToolTipGenerator getToolTipGenerator() const override;
 
   protected:
     ModifiedLambertProjectionArray();
