@@ -14,22 +14,15 @@ build you would like: **Debug** or **Release**.
 
 The following example assumes that the DREAM3D_SDK is located in **/Users/[USER-NAME]/DREAM3D_SDK** and you have another directory **/Users/[USER-NAME]/Workspace/** that has the DREAM3D sources:
 
-    /Users/[USER-NAME]/Workspace/CMP
-    /Users/[USER-NAME]/Workspace/SIMPL
-    /Users/[USER-NAME]/Workspace/SIMPLib
-    /Users/[USER-NAME]/Workspace/DREAM3D
-    /Users/[USER-NAME]/Workspace/DREAM3D_Plugins/
-    /Users/[USER-NAME]/Workspace/DREAM3D_Plugins/Anisotropy
-    /Users/[USER-NAME]/Workspace/DREAM3D_Plugins/DDDAnalysisToolbox
-    /Users/[USER-NAME]/Workspace/DREAM3D_Plugins/DREAM3DReview
-    /Users/[USER-NAME]/Workspace/DREAM3D_Plugins/HEDMAnalysis
-    /Users/[USER-NAME]/Workspace/DREAM3D_Plugins/ImageProcessing
-    /Users/[USER-NAME]/Workspace/DREAM3D_Plugins/ITKImageProcessing
-    /Users/[USER-NAME]/Workspace/DREAM3D_Plugins/MASSIFUtilities
-    /Users/[USER-NAME]/Workspace/DREAM3D_Plugins/SimulationIO
-    /Users/[USER-NAME]/Workspace/DREAM3D_Plugins/TransformationPhase
-    /Users/[USER-NAME]/Workspace/DREAM3D_Plugins/UCSBUtilities
-    /Users/[USER-NAME]/Workspace/DREAM3D_Plugins/ZeissImport
+    /home/[USER-NAME]/Workspace/CMP
+    /home/[USER-NAME]/Workspace/SIMPL
+    /home/[USER-NAME]/Workspace/SIMPLib
+    /home/[USER-NAME]/Workspace/DREAM3D
+    /home/[USER-NAME]/Workspace/DREAM3D_Plugins/
+    /home/[USER-NAME]/Workspace/DREAM3D_Plugins/ITKImageProcessing
+    /home/[USER-NAME]/Workspace/DREAM3D_Plugins/SimulationIO
+    /home/[USER-NAME]/Workspace/DREAM3D_Plugins/UCSBUtilities
+    /home/[USER-NAME]/Workspace/DREAM3D_Plugins/DREAM3DReview
 
 ## Run CMake ##
 

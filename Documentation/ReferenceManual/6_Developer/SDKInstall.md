@@ -1,5 +1,4 @@
-# Installing the DREAM.3D SDK  #
-
+# Installing the DREAM.3D SDK #
 
 <a name="prerequisites">
 ## Prerequisites ##
@@ -17,7 +16,6 @@ A compatible compiler needs to be installed on your system to be able to build D
 
 For more information, please visit [Installing a Compiler Suite](@ref compiler_suite).
 
-
 ## Base DREAM3D_SDK Directory ##
 
 The develop will need to decide where they would like all the dependent libraries installed. We **highly** recommend a _sandboxed_ install instead of a system install unless you are an advanced system user.
@@ -28,10 +26,9 @@ The develop will need to decide where they would like all the dependent librarie
 | macOS  | /Users/Shared/DREAM3D_SDK |
 | linux  | /opt/DREAM3D_SDK |
 
-
 ## Base Applications - Git ##
 
-Version 2.x is required
+Version 2.7 is required
 
 | Operating System | Recommended Location |
 |------------------|----------------------|
@@ -41,7 +38,7 @@ Version 2.x is required
 
 ## Base Application - CMake ##
 
-Version 3.11 or greater is recommended
+Version 3.14 or greater is recommended
 
 | Operating System | Recommended Location |
 |------------------|----------------------|
@@ -74,8 +71,6 @@ Please visit the [DREAM.3D Superbuild](http://www.github.com/bluequartzsoftware/
 
 After downloading, open the Help documentation inside the Superbuild's directory for more information on how to build a DREAM.3D SDK using the Superbuild.  There are separate help documents for Windows, OS X, and Linux.
 
-
-
 <a name="downloading_dream3d">
 ### Download the Source Code for DREAM.3D ###
 </a>
@@ -91,16 +86,15 @@ For more information, please visit [Downloading the Source Code for DREAM.3D](@r
 DREAM.3D depends on several 3rd party libraries to be installed and ready to link against. This section will detail the needed libraries and utilities and where to obtain them or how to compile them.  This is the recommended order of installation.
 
 |  Package   | Minimum Version | Download Location |
-|  ------	| ------	| ------	|
+|  ------| ------| ------|
 | Git | 2.8.x | [http://www.git-scm.com](http://www.git-scm.com) |
-| CMake | 3.11.1 | [http://www.cmake.org/cmake/resources/software.html](http://www.cmake.org/cmake/resources/software.html) |
-| Doxygen | 1.8.11 | [http://www.stack.nl/~dimitri/doxygen/download.html](http://www.stack.nl/~dimitri/doxygen/download.html) |
-| HDF5 | 1.8.20 | [http://www.hdfgroup.org/HDF5/release/obtain5.html](http://www.hdfgroup.org/HDF5/release/obtain5.html) |
-| Eigen | 3.2.9 | [Eigen Home Page](http://eigen.tuxfamily.org/index.php?title=Main_Page) |
+| CMake | 3.14.1 | [http://www.cmake.org/cmake/resources/software.html](http://www.cmake.org/cmake/resources/software.html) |
+| HDF5 | 1.10.4 | [http://www.hdfgroup.org/HDF5/release/obtain5.html](http://www.hdfgroup.org/HDF5/release/obtain5.html) |
+| Eigen | 3.3.7 | [Eigen Home Page](http://eigen.tuxfamily.org/index.php?title=Main_Page) |
 | Intel Threading Building Blocks | tbb44\_2018 oss | [http://threadingbuildingblocks.org/download](http://threadingbuildingblocks.org/download) |
-| Qt | 5.10.1 (Qt 4.x will NOT work) |  The developer should obtain a precompiled package from [http://www.qt.io](http://www.qt.io) and install that version rather than trying to compile Qt itself. Visual Studio uses should get Qt 5.6.2 at the minimum.  |
+| Qt | 5.12.1 (Qt 4.x will NOT work) |  The developer should obtain a precompiled package from [http://www.qt.io](http://www.qt.io) and install that version rather than trying to compile Qt itself. Visual Studio uses should get Qt 5.6.2 at the minimum.  |
 | Qwt | 6.1.3 | Obtain from [https://sourceforge.net/projects/qwt/files](https://sourceforge.net/projects/qwt/files) |
-| ITK | 4.13.0 | [ITK.org](http://www.itk.org) 4.13.0 is the earliest version compatible with HDF5 1.8.20 |
+| ITK | 4.13.2| [ITK.org](http://www.itk.org) 4.13.2 is the earliest version compatible with HDF5 1.10.4 |
 
 ---
 **Next Page (Windows)**: [Configuring and Building DREAM.3D on Windows](@ref windows_configure_and_build_dream3d).

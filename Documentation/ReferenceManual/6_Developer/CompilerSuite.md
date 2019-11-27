@@ -1,4 +1,4 @@
-# Installing a Compiler Suite # 
+# Installing a Compiler Suite #
 
 ## Minimum Supported Compiler Versions ##
 
@@ -22,16 +22,17 @@ Mac OS X 10.10 (Yosemite), 10.11 (El Capitan), and 10.12 (Sierra) are supported
 
 | Compiler Version | Notes |
 | ---------------- | ----- |
-| Xcode 8.x | OS X 10.12 |
 | Xcode 9.x | OS X 10.13 |
+| Xcode 10.x | OS X 10.14 |
+| Xcode 11.x | OS X 10.15 |
 
 ## Linux ##
 
-There are many Linux distributions in use. Below is the list of the minimum compiler versions that are known to work on linux. DREAM.3D is commonly built on Ubuntu 14.04 LTS with GCC 4.8.5
+There are many Linux distributions in use. Below is the list of the minimum compiler versions that are known to work on linux. DREAM.3D is commonly built on Ubuntu 16.04 LTS with GCC 4.8.5
 
 | Compiler Version | Notes |
 | ---------------- | ----- |
-| GCC 4.8.5 | Minimum working version of GCC |
+| GCC 7.4.x | Minimum working version of GCC |
 | Clang 3.8 | Part of the LLVM 3.8 package. |
 
 ## Enterprise Linux Distributions ##

@@ -317,22 +317,15 @@ protected:
   void initialize();
 
 private:
-<<<<<<< HEAD
   QString m_MontageName = {"Montage"};
   DataArrayPath m_DataContainerName = {"EBSD", "", ""};
   QString m_CellEnsembleAttributeMatrixName = {"Phase Data"};
   QString m_CellAttributeMatrixName = {"Scan Data"};
 
-  EbsdMontageListInfo m_InputFileListInfo = {};
+  MontageFileListInfo m_InputFileListInfo = {};
   OverlapType m_DefineScanOverlap = OverlapType::None;
   FloatVec2Type m_ScanOverlapPercent = {0.0f, 0.0f};
   IntVec2Type m_ScanOverlapPixel = {0, 0};
-=======
-  DataArrayPath m_DataContainerName = {};
-  QString m_CellEnsembleAttributeMatrixName = {};
-  QString m_CellAttributeMatrixName = {};
-  MontageFileListInfo m_InputFileListInfo = {};
->>>>>>> develop
 
   std::map<QString, AbstractFilter::Pointer> m_FilterCache;
   FloatVec3Type m_ReferenceDir = {0.0f, 0.0f, 1.0f};
