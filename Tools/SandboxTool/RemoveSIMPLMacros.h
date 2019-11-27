@@ -464,7 +464,7 @@ public:
       pubCodeOut << "    using Pointer = std::shared_ptr<Self>;\n";
       pubCodeOut << "    using ConstPointer = std::shared_ptr<const Self>;\n";
       pubCodeOut << "    using WeakPointer = std::weak_ptr<Self>;\n";
-      pubCodeOut << "    using ConstWeakPointer = std::weak_ptr<Self>;\n\n\n";
+      pubCodeOut << "    using ConstWeakPointer = std::weak_ptr<const Self>;\n\n\n";
 
       pubCodeOut << "    static Pointer NullPointer();\n";
 

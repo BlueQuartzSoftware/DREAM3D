@@ -59,7 +59,7 @@ class EMMPMLib_EXPORT InitializationFunction
     using Pointer = std::shared_ptr<Self>;
     using ConstPointer = std::shared_ptr<const Self>;
     using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<const Self>;
     static Pointer NullPointer();
 
     static Pointer New();
@@ -101,7 +101,7 @@ class EMMPMLib_EXPORT BasicInitialization : public InitializationFunction
     using Pointer = std::shared_ptr<Self>;
     using ConstPointer = std::shared_ptr<const Self>;
     using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<const Self>;
     static Pointer NullPointer();
 
     static Pointer New();
@@ -143,7 +143,7 @@ class EMMPMLib_EXPORT UserDefinedAreasInitialization : public InitializationFunc
     using Pointer = std::shared_ptr<Self>;
     using ConstPointer = std::shared_ptr<const Self>;
     using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<const Self>;
     static Pointer NullPointer();
 
     static Pointer New();
@@ -185,7 +185,7 @@ class EMMPMLib_EXPORT XtArrayInitialization : public InitializationFunction
     using Pointer = std::shared_ptr<Self>;
     using ConstPointer = std::shared_ptr<const Self>;
     using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<const Self>;
     static Pointer NullPointer();
 
     static Pointer New();
@@ -227,7 +227,7 @@ class EMMPMLib_EXPORT GradientVariablesInitialization : public InitializationFun
     using Pointer = std::shared_ptr<Self>;
     using ConstPointer = std::shared_ptr<const Self>;
     using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<const Self>;
     static Pointer NullPointer();
 
     static Pointer New();
@@ -269,7 +269,7 @@ class EMMPMLib_EXPORT CurvatureInitialization : public InitializationFunction
     using Pointer = std::shared_ptr<Self>;
     using ConstPointer = std::shared_ptr<const Self>;
     using WeakPointer = std::weak_ptr<Self>;
-    using ConstWeakPointer = std::weak_ptr<Self>;
+    using ConstWeakPointer = std::weak_ptr<const Self>;
     static Pointer NullPointer();
 
     static Pointer New();
