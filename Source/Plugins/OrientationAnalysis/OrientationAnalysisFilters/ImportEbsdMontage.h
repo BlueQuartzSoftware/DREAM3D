@@ -41,9 +41,9 @@
 
 #include "SIMPLib/SIMPLib.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
+#include "SIMPLib/FilterParameters/MontageFileListInfo.h"
 
 #include "OrientationAnalysis/FilterParameters/EbsdMontageImportFilterParameter.h"
-#include "OrientationAnalysis/FilterParameters/EbsdMontageListInfo.h"
 
 #include "OrientationAnalysis/OrientationAnalysisDLLExport.h"
 
@@ -75,7 +75,7 @@ public:
   using Pointer = std::shared_ptr<Self>;
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
-  using ConstWeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr< const Self>;
 
   using EnumType = int32_t;
   enum class OverlapType : EnumType
@@ -157,13 +157,13 @@ public:
   /**
    * @brief Setter property for InputFileListInfo
    */
-  void setInputFileListInfo(const EbsdMontageListInfo& value);
+  void setInputFileListInfo(const MontageFileListInfo& value);
   /**
    * @brief Getter property for InputFileListInfo
    * @return Value of InputFileListInfo
    */
-  EbsdMontageListInfo getInputFileListInfo() const;
-  Q_PROPERTY(EbsdMontageListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
+  MontageFileListInfo getInputFileListInfo() const;
+  Q_PROPERTY(MontageFileListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
 
   /**
    * @brief Setter property for GenerateIPFColorMap
@@ -317,6 +317,7 @@ protected:
   void initialize();
 
 private:
+<<<<<<< HEAD
   QString m_MontageName = {"Montage"};
   DataArrayPath m_DataContainerName = {"EBSD", "", ""};
   QString m_CellEnsembleAttributeMatrixName = {"Phase Data"};
@@ -326,6 +327,12 @@ private:
   OverlapType m_DefineScanOverlap = OverlapType::None;
   FloatVec2Type m_ScanOverlapPercent = {0.0f, 0.0f};
   IntVec2Type m_ScanOverlapPixel = {0, 0};
+=======
+  DataArrayPath m_DataContainerName = {};
+  QString m_CellEnsembleAttributeMatrixName = {};
+  QString m_CellAttributeMatrixName = {};
+  MontageFileListInfo m_InputFileListInfo = {};
+>>>>>>> develop
 
   std::map<QString, AbstractFilter::Pointer> m_FilterCache;
   FloatVec3Type m_ReferenceDir = {0.0f, 0.0f, 1.0f};

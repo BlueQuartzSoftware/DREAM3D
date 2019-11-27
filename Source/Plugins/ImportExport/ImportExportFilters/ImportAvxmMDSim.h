@@ -7,6 +7,7 @@
 #include <memory>
 
 #include "SIMPLib/FilterParameters/FileListInfoFilterParameter.h"
+#include "SIMPLib/FilterParameters/StackFileListInfo.h"
 #include "SIMPLib/Filtering/AbstractFilter.h"
 #include "SIMPLib/SIMPLib.h"
 
@@ -24,7 +25,7 @@ public:
   using Pointer = std::shared_ptr<Self>;
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
-  using ConstWeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
   
   /**
    * @brief Returns a NullPointer wrapped by a shared_ptr<>
@@ -58,14 +59,14 @@ public:
   /**
    * @brief Setter property for InputFileListInfo
    */
-  void setInputFileListInfo(const FileListInfo_t& value);
+  void setInputFileListInfo(const StackFileListInfo& value);
   /**
    * @brief Getter property for InputFileListInfo
    * @return Value of InputFileListInfo
    */
-  FileListInfo_t getInputFileListInfo() const;
+  StackFileListInfo getInputFileListInfo() const;
 
-  Q_PROPERTY(FileListInfo_t InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
+  Q_PROPERTY(StackFileListInfo InputFileListInfo READ getInputFileListInfo WRITE setInputFileListInfo)
 
   /**
    * @brief Setter property for SeparatorChoice
@@ -176,7 +177,7 @@ protected:
   void initialize();
 
 private:
-  FileListInfo_t m_InputFileListInfo = {};
+  StackFileListInfo m_InputFileListInfo = {};
   int m_SeparatorChoice = {};
 
   QVector<QString> m_FilePathList;
