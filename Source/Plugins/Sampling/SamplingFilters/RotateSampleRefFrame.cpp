@@ -269,15 +269,7 @@ public:
   , m_params(args)
   {
     // We have to inline the 3x3 Maxtrix transpose here because of the "const" nature of the 'convert' function
-    rotMatrixInv[0][0] = rotMat[0][0];
-    rotMatrixInv[0][1] = rotMat[1][0];
-    rotMatrixInv[0][2] = rotMat[2][0];
-    rotMatrixInv[1][0] = rotMat[0][1];
-    rotMatrixInv[1][1] = rotMat[1][1];
-    rotMatrixInv[1][2] = rotMat[2][1];
-    rotMatrixInv[2][0] = rotMat[0][2];
-    rotMatrixInv[2][1] = rotMat[1][2];
-    rotMatrixInv[2][2] = rotMat[2][2];
+    MatrixMath::Transpose3x3(rotMat, rotMatrixInv);
   }
 
   ~SampleRefFrameRotator() = default;
@@ -300,13 +292,11 @@ public:
           float coords[3] = {0.0f, 0.0f, 0.0f};
           float coordsNew[3] = {0.0f, 0.0f, 0.0f};
 
-          coords[2] = (static_cast<float>(k) * m_params->zResNew) + m_params->zMinNew;
-          coords[1] = (static_cast<float>(j) * m_params->yResNew) + m_params->yMinNew;
           coords[0] = (static_cast<float>(i) * m_params->xResNew) + m_params->xMinNew;
+          coords[1] = (static_cast<float>(j) * m_params->yResNew) + m_params->yMinNew;
+          coords[2] = (static_cast<float>(k) * m_params->zResNew) + m_params->zMinNew;
 
-          coordsNew[0] = rotMatrixInv[0][0] * coords[0] + rotMatrixInv[0][1] * coords[1] + rotMatrixInv[0][2] * coords[2];
-          coordsNew[1] = rotMatrixInv[1][0] * coords[0] + rotMatrixInv[1][1] * coords[1] + rotMatrixInv[1][2] * coords[2];
-          coordsNew[2] = rotMatrixInv[2][0] * coords[0] + rotMatrixInv[2][1] * coords[1] + rotMatrixInv[2][2] * coords[2];
+          MatrixMath::Multiply3x3with3x1(rotMatrixInv, coords, coordsNew);
 
           int64_t colOld = static_cast<int64_t>(std::nearbyint(coordsNew[0] / m_params->xRes));
           int64_t rowOld = static_cast<int64_t>(std::nearbyint(coordsNew[1] / m_params->yRes));
@@ -345,7 +335,7 @@ struct RotateSampleRefFrame::Impl
   {
     float* ptr = &m_RotationMatrix[0][0];
 
-    std::fill(ptr, ptr + 9, 0);
+    std::fill(ptr, ptr + 9, 0.0f);
 
     m_Params = RotateArgs();
   }
