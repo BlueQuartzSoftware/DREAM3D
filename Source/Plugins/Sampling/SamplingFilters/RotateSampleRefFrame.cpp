@@ -110,6 +110,7 @@ Matrix3fR tableToMatrix(const std::vector<std::vector<double>>& table)
   return matrix;
 }
 
+// rotationAngle in degrees
 void axisAngleToRotationMatrix(float rotationAngle, const FloatVec3Type& rotationAxis, float rotMat[3][3])
 {
   float rotAngle = rotationAngle * SIMPLib::Constants::k_Pi / 180.0;
@@ -137,6 +138,25 @@ void determineMinMax(const float rotMat[3][3], const FloatVec3Type& spacing, siz
   zMax = std::max(newcoords[2], zMax);
 }
 
+float determineSpacing(const FloatVec3Type& spacing, const float axisNew[3])
+{
+  const float xAxis[3] = {1.0f, 0.0f, 0.0f};
+  const float yAxis[3] = {0.0f, 1.0f, 0.0f};
+  const float zAxis[3] = {0.0f, 0.0f, 1.0f};
+
+  float xAngle = std::abs(GeometryMath::CosThetaBetweenVectors(xAxis, axisNew));
+  float yAngle = std::abs(GeometryMath::CosThetaBetweenVectors(yAxis, axisNew));
+  float zAngle = std::abs(GeometryMath::CosThetaBetweenVectors(zAxis, axisNew));
+
+  std::array<float, 3> axes = {xAngle, yAngle, zAngle};
+
+  auto iter = std::max_element(axes.cbegin(), axes.cend());
+
+  size_t index = std::distance(axes.cbegin(), iter);
+
+  return spacing[index];
+}
+
 RotateArgs createRotateParams(const ImageGeom& imageGeom, const float rotMat[3][3])
 {
   const SizeVec3Type origDims = imageGeom.getDimensions();
@@ -149,15 +169,6 @@ RotateArgs createRotateParams(const ImageGeom& imageGeom, const float rotMat[3][
   float yMax = std::numeric_limits<float>::min();
   float zMin = std::numeric_limits<float>::max();
   float zMax = std::numeric_limits<float>::min();
-
-  RotateArgs params;
-
-  params.xp = origDims[0];
-  params.xRes = spacing[0];
-  params.yp = origDims[1];
-  params.yRes = spacing[1];
-  params.zp = origDims[2];
-  params.zRes = spacing[2];
 
   const std::vector<std::vector<size_t>> coords{{0, 0, 0},
                                                 {origDims[0] - 1, 0, 0},
@@ -173,9 +184,9 @@ RotateArgs createRotateParams(const ImageGeom& imageGeom, const float rotMat[3][
     determineMinMax(rotMat, spacing, item[0], item[1], item[2], xMin, xMax, yMin, yMax, zMin, zMax);
   }
 
-  const float xAxis[3] = {1, 0, 0};
-  const float yAxis[3] = {0, 1, 0};
-  const float zAxis[3] = {0, 0, 1};
+  const float xAxis[3] = {1.0f, 0.0f, 0.0f};
+  const float yAxis[3] = {0.0f, 1.0f, 0.0f};
+  const float zAxis[3] = {0.0f, 0.0f, 1.0f};
 
   float xAxisNew[3] = {0.0f, 0.0f, 0.0f};
   float yAxisNew[3] = {0.0f, 0.0f, 0.0f};
@@ -185,46 +196,22 @@ RotateArgs createRotateParams(const ImageGeom& imageGeom, const float rotMat[3][
   MatrixMath::Multiply3x3with3x1(rotMat, yAxis, yAxisNew);
   MatrixMath::Multiply3x3with3x1(rotMat, zAxis, zAxisNew);
 
-  float xResNew = spacing[0];
-  float closestAxis = std::abs(GeometryMath::CosThetaBetweenVectors(xAxis, xAxisNew));
-  if(std::abs(GeometryMath::CosThetaBetweenVectors(yAxis, xAxisNew)) > closestAxis)
-  {
-    xResNew = spacing[1];
-    closestAxis = std::abs(GeometryMath::CosThetaBetweenVectors(yAxis, xAxisNew));
-  }
-  if(std::abs(GeometryMath::CosThetaBetweenVectors(zAxis, xAxisNew)) > closestAxis)
-  {
-    xResNew = spacing[2];
-    closestAxis = std::abs(GeometryMath::CosThetaBetweenVectors(zAxis, xAxisNew));
-  }
-  float yResNew = spacing[1];
-  closestAxis = std::abs(GeometryMath::CosThetaBetweenVectors(yAxis, yAxisNew));
-  if(std::abs(GeometryMath::CosThetaBetweenVectors(xAxis, yAxisNew)) > closestAxis)
-  {
-    yResNew = spacing[0];
-    closestAxis = std::abs(GeometryMath::CosThetaBetweenVectors(xAxis, yAxisNew));
-  }
-  if(std::abs(GeometryMath::CosThetaBetweenVectors(zAxis, yAxisNew)) > closestAxis)
-  {
-    yResNew = spacing[2];
-    closestAxis = std::abs(GeometryMath::CosThetaBetweenVectors(zAxis, yAxisNew));
-  }
-  float zResNew = spacing[2];
-  closestAxis = std::abs(GeometryMath::CosThetaBetweenVectors(zAxis, zAxisNew));
-  if(std::abs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew)) > closestAxis)
-  {
-    zResNew = spacing[0];
-    closestAxis = std::abs(GeometryMath::CosThetaBetweenVectors(xAxis, zAxisNew));
-  }
-  if(std::abs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew)) > closestAxis)
-  {
-    zResNew = spacing[1];
-    closestAxis = std::abs(GeometryMath::CosThetaBetweenVectors(yAxis, zAxisNew));
-  }
+  float xResNew = determineSpacing(spacing, xAxisNew);
+  float yResNew = determineSpacing(spacing, yAxisNew);
+  float zResNew = determineSpacing(spacing, zAxisNew);
 
   MeshIndexType xpNew = static_cast<int64_t>(std::nearbyint((xMax - xMin) / xResNew) + 1);
   MeshIndexType ypNew = static_cast<int64_t>(std::nearbyint((yMax - yMin) / yResNew) + 1);
   MeshIndexType zpNew = static_cast<int64_t>(std::nearbyint((zMax - zMin) / zResNew) + 1);
+
+  RotateArgs params;
+
+  params.xp = origDims[0];
+  params.xRes = spacing[0];
+  params.yp = origDims[1];
+  params.yRes = spacing[1];
+  params.zp = origDims[2];
+  params.zRes = spacing[2];
 
   params.xpNew = xpNew;
   params.xResNew = xResNew;
@@ -478,9 +465,10 @@ void RotateSampleRefFrame::dataCheck()
   case RotationRepresentation::AxisAngle:
   {
     const Eigen::Vector3f rotationAxis(m_RotationAxis.data());
-    if(!SIMPLibMath::closeEnough(rotationAxis.norm(), 1.0f))
+    float norm = rotationAxis.norm();
+    if(!SIMPLibMath::closeEnough(rotationAxis.norm(), 1.0f, 0.00001f))
     {
-      QString ss = QObject::tr("Axis angle must be normalized");
+      QString ss = QObject::tr("Axis angle must be normalized (norm is %1)").arg(norm);
       setErrorCondition(-12006, ss);
       return;
     }
@@ -506,14 +494,19 @@ void RotateSampleRefFrame::dataCheck()
 
     Matrix3fR rotationMatrix = tableToMatrix(rotationMatrixTable);
 
-    if(!SIMPLibMath::closeEnough(rotationMatrix.determinant(), 1.0f))
+    float determinant = rotationMatrix.determinant();
+
+    if(!SIMPLibMath::closeEnough(determinant, 1.0f, 0.00001f))
     {
-      QString ss = QObject::tr("Rotation Matrix must have a determinant of 1");
+      QString ss = QObject::tr("Rotation Matrix must have a determinant of 1 (is %1)").arg(determinant);
       setErrorCondition(-12002, ss);
       return;
     }
 
-    if(rotationMatrix.transpose() != rotationMatrix.inverse())
+    Matrix3fR transpose = rotationMatrix.transpose();
+    Matrix3fR inverse = rotationMatrix.inverse();
+
+    if(!transpose.isApprox(inverse))
     {
       QString ss = QObject::tr("Rotation Matrix's inverse and transpose must be equal");
       setErrorCondition(-12003, ss);
