@@ -481,14 +481,18 @@ void RotateSampleRefFrame::dataCheck()
 
     if(rotationMatrixTable.size() != 3)
     {
-      for(const auto& row : rotationMatrixTable)
+      QString ss = QObject::tr("Rotation Matrix must be 3 x 3");
+      setErrorCondition(-12001, ss);
+      return;
+    }
+
+    for(const auto& row : rotationMatrixTable)
+    {
+      if(row.size() != 3)
       {
-        if(row.size() != 3)
-        {
-          QString ss = QObject::tr("Rotation Matrix must be 3 x 3");
-          setErrorCondition(-12001, ss);
-          return;
-        }
+        QString ss = QObject::tr("Rotation Matrix must be 3 x 3");
+        setErrorCondition(-12001, ss);
+        return;
       }
     }
 
