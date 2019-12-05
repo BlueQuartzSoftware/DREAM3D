@@ -66,7 +66,8 @@ class Sampling_EXPORT RotateSampleRefFrame : public AbstractFilter
   PYB11_PROPERTY(bool SliceBySlice READ getSliceBySlice WRITE setSliceBySlice)
   PYB11_PROPERTY(DynamicTableData RotationTable READ getRotationTable WRITE setRotationTable)
   PYB11_PROPERTY(int RotationRepresentation READ getRotationRepresentation WRITE setRotationRepresentation)
-  PYB11_METHOD(RotationRepresentation getCurrentRotationRepresentation)
+  PYB11_METHOD(RotationRepresentation getRotationRepresentationEnum)
+  PYB11_METHOD(void setRotationRepresentationEnum ARGS value)
   PYB11_METHOD(bool isRotationRepresentationValid ARGS value)
 #endif
 
@@ -76,7 +77,7 @@ public:
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
   using ConstWeakPointer = std::weak_ptr<const Self>;
-  
+
   /**
    * @brief Returns a NullPointer wrapped by a shared_ptr<>
    * @return
@@ -101,7 +102,7 @@ public:
 
   ~RotateSampleRefFrame() override;
 
-  enum class RotationRepresentation : int32_t
+  enum class RotationRepresentation : int
   {
     AxisAngle = 0,
     RotationMatrix = 1
@@ -111,7 +112,13 @@ public:
    * @brief Returns the current rotation representation in enum form.
    * @return
    */
-  RotationRepresentation getCurrentRotationRepresentation() const;
+  RotationRepresentation getRotationRepresentationEnum() const;
+
+  /**
+   * @brief Sets the rotation representation value to the given enum value
+   * @param value
+   */
+  void setRotationRepresentationEnum(RotationRepresentation value);
 
   /**
    * @brief Returns true if the selected index for the rotation representation choice widget is a valid enum value.

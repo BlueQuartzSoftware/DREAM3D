@@ -458,7 +458,7 @@ void RotateSampleRefFrame::dataCheck()
     return;
   }
 
-  const RotationRepresentation representation = getCurrentRotationRepresentation();
+  const RotationRepresentation representation = getRotationRepresentationEnum();
 
   switch(representation)
   {
@@ -808,9 +808,15 @@ int RotateSampleRefFrame::getRotationRepresentation() const
 }
 
 // -----------------------------------------------------------------------------
-RotateSampleRefFrame::RotationRepresentation RotateSampleRefFrame::getCurrentRotationRepresentation() const
+RotateSampleRefFrame::RotationRepresentation RotateSampleRefFrame::getRotationRepresentationEnum() const
 {
   return static_cast<RotationRepresentation>(m_RotationRepresentation);
+}
+
+// -----------------------------------------------------------------------------
+void RotateSampleRefFrame::setRotationRepresentationEnum(RotationRepresentation value)
+{
+  m_RotationRepresentation = static_cast<int>(value);
 }
 
 // -----------------------------------------------------------------------------
