@@ -384,13 +384,13 @@ QString ImportAvxmMDSim::ClassName()
 }
 
 // -----------------------------------------------------------------------------
-void ImportAvxmMDSim::setInputFileListInfo(const FileListInfo_t& value)
+void ImportAvxmMDSim::setInputFileListInfo(const StackFileListInfo& value)
 {
   m_InputFileListInfo = value;
 }
 
 // -----------------------------------------------------------------------------
-FileListInfo_t ImportAvxmMDSim::getInputFileListInfo() const
+StackFileListInfo ImportAvxmMDSim::getInputFileListInfo() const
 {
   return m_InputFileListInfo;
 }

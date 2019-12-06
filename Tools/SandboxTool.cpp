@@ -59,14 +59,15 @@
 #include "SandboxTool/RemoveSIMPLMacros.h"
 #include "SandboxTool/UpdateFilterHeaders.hpp"
 
-/**
- * @brief findPath
- * @param groupName
- * @param filtName
- * @param ext
- * @return
- */
-QString findPath(const QString& groupName, const QString& filtName, const QString& ext)
+    /**
+     * @brief findPath
+     * @param groupName
+     * @param filtName
+     * @param ext
+     * @return
+     */
+    QString
+    findPath(const QString& groupName, const QString& filtName, const QString& ext)
 {
   //  std::cout << groupName.toStdString() << "::" << filtName.toStdString() << std::endl;
   QString prefix = D3DTools::GetDREAM3DSourceDir() + "/";
@@ -116,7 +117,8 @@ QString findPath(const QString& groupName, const QString& filtName, const QStrin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template <typename T> void RecursiveFileSearch(const QDir& currentDir, const QStringList& filters)
+template <typename T>
+void RecursiveFileSearch(const QDir& currentDir, const QStringList& filters)
 {
 
   if(currentDir.dirName().compare("zRel") == 0 || currentDir.dirName().compare("Build") == 0)

@@ -40,10 +40,9 @@
 #include <QtCore/QJsonObject>
 #include <QtCore/QString>
 
+#include "SIMPLib/FilterParameters/MontageFileListInfo.h"
 #include "SIMPLib/FilterParameters/FilterParameter.h"
 #include "SIMPLib/SIMPLib.h"
-
-#include "OrientationAnalysis/FilterParameters/EbsdMontageListInfo.h"
 
 /**
  * @brief SIMPL_NEW_EbsdMontageListInfo_FP This macro is a short-form way of instantiating an instance of
@@ -70,7 +69,7 @@ public:
   using Pointer = std::shared_ptr<Self>;
   using ConstPointer = std::shared_ptr<const Self>;
   using WeakPointer = std::weak_ptr<Self>;
-  using ConstWeakPointer = std::weak_ptr<Self>;
+  using ConstWeakPointer = std::weak_ptr<const Self>;
   static Pointer NullPointer();
 
   static Pointer New();
@@ -84,8 +83,8 @@ public:
    */
   static QString ClassName();
 
-  using SetterCallbackType = std::function<void(EbsdMontageListInfo)>;
-  using GetterCallbackType = std::function<EbsdMontageListInfo(void)>;
+  using SetterCallbackType = std::function<void(MontageFileListInfo)>;
+  using GetterCallbackType = std::function<MontageFileListInfo(void)>;
 
   /**
    * @brief New This function instantiates an instance of the EbsdMontageImportFilterParameter. Although this
@@ -103,7 +102,7 @@ public:
   * that this FilterParameter subclass represents.
    * @return
    */
-  static Pointer New(const QString& humanLabel, const QString& propertyName, const EbsdMontageListInfo& defaultValue, Category category, SetterCallbackType setterCallback,
+  static Pointer New(const QString& humanLabel, const QString& propertyName, const MontageFileListInfo& defaultValue, Category category, SetterCallbackType setterCallback,
                      GetterCallbackType getterCallback);
 
   ~EbsdMontageImportFilterParameter() override;
