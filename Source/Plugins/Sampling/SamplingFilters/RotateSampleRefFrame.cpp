@@ -33,10 +33,10 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
+#include "RotateSampleRefFrame.h"
+
 #include <cmath>
 #include <memory>
-
-#include "RotateSampleRefFrame.h"
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
 #include <tbb/blocked_range3d.h>
@@ -51,6 +51,8 @@
 
 #include "SIMPLib/Common/Constants.h"
 
+#include "SIMPLib/DataContainers/DataContainerArray.h"
+#include "SIMPLib/DataContainers/DataContainer.h"
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/AttributeMatrixSelectionFilterParameter.h"
 #include "SIMPLib/FilterParameters/DynamicTableFilterParameter.h"
@@ -59,13 +61,7 @@
 #include "SIMPLIb/FilterParameters/LinkedChoicesFilterParameter.h"
 #include "SIMPLib/FilterParameters/SeparatorFilterParameter.h"
 #include "SIMPLib/Geometry/ImageGeom.h"
-#include "SIMPLib/Math/GeometryMath.h"
-#include "SIMPLib/DataContainers/DataContainerArray.h"
-#include "SIMPLib/DataContainers/DataContainer.h"
-
-#include "OrientationLib/Core/Orientation.hpp"
-#include "OrientationLib/Core/OrientationTransformation.hpp"
-#include "OrientationLib/Core/Quaternion.hpp"
+#include "SIMPLib/Math/MatrixMath.h"
 
 #include "Sampling/SamplingConstants.h"
 #include "Sampling/SamplingVersion.h"
@@ -93,6 +89,10 @@ struct RotateArgs
 
 using Matrix3fR = Eigen::Matrix<float, 3, 3, Eigen::RowMajor>;
 
+const Eigen::Vector3f k_XAxis = Eigen::Vector3f::UnitX();
+const Eigen::Vector3f k_YAxis = Eigen::Vector3f::UnitY();
+const Eigen::Vector3f k_ZAxis = Eigen::Vector3f::UnitZ();
+
 // Requires table to be 3 x 3
 Matrix3fR tableToMatrix(const std::vector<std::vector<double>>& table)
 {
@@ -110,43 +110,40 @@ Matrix3fR tableToMatrix(const std::vector<std::vector<double>>& table)
   return matrix;
 }
 
-// rotationAngle in degrees
-void axisAngleToRotationMatrix(float rotationAngle, const FloatVec3Type& rotationAxis, float rotMat[3][3])
+void determineMinMax(const Matrix3fR& rotationMatrix, const FloatVec3Type& spacing, size_t col, size_t row, size_t plane, float& xMin, float& xMax, float& yMin, float& yMax, float& zMin, float& zMax)
 {
-  float rotAngle = rotationAngle * SIMPLib::Constants::k_Pi / 180.0;
+  Eigen::Vector3f coords(static_cast<float>(col) * spacing[0], static_cast<float>(row) * spacing[1], static_cast<float>(plane) * spacing[2]);
 
-  OrientationTransformation::ax2om<OrientationF, OrientationF>(OrientationF(rotationAxis[0], rotationAxis[1], rotationAxis[2], rotAngle)).toGMatrix(rotMat);
+  Eigen::Vector3f newCoords = rotationMatrix * coords;
+
+  xMin = std::min(newCoords[0], xMin);
+  xMax = std::max(newCoords[0], xMax);
+
+  yMin = std::min(newCoords[1], yMin);
+  yMax = std::max(newCoords[1], yMax);
+
+  zMin = std::min(newCoords[2], zMin);
+  zMax = std::max(newCoords[2], zMax);
 }
 
-void determineMinMax(const float rotMat[3][3], const FloatVec3Type& spacing, size_t col, size_t row, size_t plane, float& xMin, float& xMax, float& yMin, float& yMax, float& zMin, float& zMax)
+float cosBetweenVectors(const Eigen::Vector3f& a, const Eigen::Vector3f& b)
 {
-  float coords[3] = {0.0f, 0.0f, 0.0f};
-  float newcoords[3] = {0.0f, 0.0f, 0.0f};
+  float normA = a.norm();
+  float normB = b.norm();
 
-  coords[0] = static_cast<float>(col * spacing[0]);
-  coords[1] = static_cast<float>(row * spacing[1]);
-  coords[2] = static_cast<float>(plane * spacing[2]);
-  MatrixMath::Multiply3x3with3x1(rotMat, coords, newcoords);
+  if(normA == 0.0f || normB == 0.0f)
+  {
+    return 1.0f;
+  }
 
-  xMin = std::min(newcoords[0], xMin);
-  xMax = std::max(newcoords[0], xMax);
-
-  yMin = std::min(newcoords[1], yMin);
-  yMax = std::max(newcoords[1], yMax);
-
-  zMin = std::min(newcoords[2], zMin);
-  zMax = std::max(newcoords[2], zMax);
+  return a.dot(b) / (normA * normB);
 }
 
-float determineSpacing(const FloatVec3Type& spacing, const float axisNew[3])
+float determineSpacing(const FloatVec3Type& spacing, const Eigen::Vector3f& axisNew)
 {
-  const float xAxis[3] = {1.0f, 0.0f, 0.0f};
-  const float yAxis[3] = {0.0f, 1.0f, 0.0f};
-  const float zAxis[3] = {0.0f, 0.0f, 1.0f};
-
-  float xAngle = std::abs(GeometryMath::CosThetaBetweenVectors(xAxis, axisNew));
-  float yAngle = std::abs(GeometryMath::CosThetaBetweenVectors(yAxis, axisNew));
-  float zAngle = std::abs(GeometryMath::CosThetaBetweenVectors(zAxis, axisNew));
+  float xAngle = std::abs(cosBetweenVectors(k_XAxis, axisNew));
+  float yAngle = std::abs(cosBetweenVectors(k_YAxis, axisNew));
+  float zAngle = std::abs(cosBetweenVectors(k_ZAxis, axisNew));
 
   std::array<float, 3> axes = {xAngle, yAngle, zAngle};
 
@@ -157,7 +154,7 @@ float determineSpacing(const FloatVec3Type& spacing, const float axisNew[3])
   return spacing[index];
 }
 
-RotateArgs createRotateParams(const ImageGeom& imageGeom, const float rotMat[3][3])
+RotateArgs createRotateParams(const ImageGeom& imageGeom, const Matrix3fR& rotationMatrix)
 {
   const SizeVec3Type origDims = imageGeom.getDimensions();
   const FloatVec3Type spacing = imageGeom.getSpacing();
@@ -181,20 +178,12 @@ RotateArgs createRotateParams(const ImageGeom& imageGeom, const float rotMat[3][
 
   for(const auto& item : coords)
   {
-    determineMinMax(rotMat, spacing, item[0], item[1], item[2], xMin, xMax, yMin, yMax, zMin, zMax);
+    determineMinMax(rotationMatrix, spacing, item[0], item[1], item[2], xMin, xMax, yMin, yMax, zMin, zMax);
   }
 
-  const float xAxis[3] = {1.0f, 0.0f, 0.0f};
-  const float yAxis[3] = {0.0f, 1.0f, 0.0f};
-  const float zAxis[3] = {0.0f, 0.0f, 1.0f};
-
-  float xAxisNew[3] = {0.0f, 0.0f, 0.0f};
-  float yAxisNew[3] = {0.0f, 0.0f, 0.0f};
-  float zAxisNew[3] = {0.0f, 0.0f, 0.0f};
-
-  MatrixMath::Multiply3x3with3x1(rotMat, xAxis, xAxisNew);
-  MatrixMath::Multiply3x3with3x1(rotMat, yAxis, yAxisNew);
-  MatrixMath::Multiply3x3with3x1(rotMat, zAxis, zAxisNew);
+  Eigen::Vector3f xAxisNew = rotationMatrix * k_XAxis;
+  Eigen::Vector3f yAxisNew = rotationMatrix * k_YAxis;
+  Eigen::Vector3f zAxisNew = rotationMatrix * k_ZAxis;
 
   float xResNew = determineSpacing(spacing, xAxisNew);
   float yResNew = determineSpacing(spacing, yAxisNew);
@@ -244,33 +233,36 @@ void updateGeometry(ImageGeom& imageGeom, const RotateArgs& params)
  */
 class SampleRefFrameRotator
 {
-  DataArray<int64_t>::Pointer newIndicesPtr;
-  float rotMatrixInv[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+  DataArray<int64_t>::Pointer m_NewIndicesPtr;
+  float m_RotMatrixInv[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
   bool m_SliceBySlice = false;
-  const RotateArgs* m_params;
+  RotateArgs m_Params;
 
 public:
-  SampleRefFrameRotator(DataArray<int64_t>::Pointer newindices, const RotateArgs* args, const float rotMat[3][3], bool sliceBySlice)
-  : newIndicesPtr(newindices)
+  SampleRefFrameRotator(DataArray<int64_t>::Pointer newindices, const RotateArgs& args, const Matrix3fR& rotationMatrix, bool sliceBySlice)
+  : m_NewIndicesPtr(newindices)
   , m_SliceBySlice(sliceBySlice)
-  , m_params(args)
+  , m_Params(args)
   {
     // We have to inline the 3x3 Maxtrix transpose here because of the "const" nature of the 'convert' function
-    MatrixMath::Transpose3x3(rotMat, rotMatrixInv);
+    Matrix3fR transpose = rotationMatrix.transpose();
+    // Need to use row based Eigen matrix so that the values get mapped to the right place in the raw array
+    // Raw array is faster than Eigen
+    Eigen::Map<Matrix3fR>(&m_RotMatrixInv[0][0], transpose.rows(), transpose.cols()) = transpose;
   }
 
   ~SampleRefFrameRotator() = default;
 
   void convert(int64_t zStart, int64_t zEnd, int64_t yStart, int64_t yEnd, int64_t xStart, int64_t xEnd) const
   {
-    int64_t* newindicies = newIndicesPtr->getPointer(0);
+    int64_t* newindicies = m_NewIndicesPtr->getPointer(0);
 
     for(int64_t k = zStart; k < zEnd; k++)
     {
-      int64_t ktot = (m_params->xpNew * m_params->ypNew) * k;
+      int64_t ktot = (m_Params.xpNew * m_Params.ypNew) * k;
       for(int64_t j = yStart; j < yEnd; j++)
       {
-        int64_t jtot = (m_params->xpNew) * j;
+        int64_t jtot = (m_Params.xpNew) * j;
         for(int64_t i = xStart; i < xEnd; i++)
         {
           int64_t index = ktot + jtot + i;
@@ -279,24 +271,24 @@ public:
           float coords[3] = {0.0f, 0.0f, 0.0f};
           float coordsNew[3] = {0.0f, 0.0f, 0.0f};
 
-          coords[0] = (static_cast<float>(i) * m_params->xResNew) + m_params->xMinNew;
-          coords[1] = (static_cast<float>(j) * m_params->yResNew) + m_params->yMinNew;
-          coords[2] = (static_cast<float>(k) * m_params->zResNew) + m_params->zMinNew;
+          coords[0] = (static_cast<float>(i) * m_Params.xResNew) + m_Params.xMinNew;
+          coords[1] = (static_cast<float>(j) * m_Params.yResNew) + m_Params.yMinNew;
+          coords[2] = (static_cast<float>(k) * m_Params.zResNew) + m_Params.zMinNew;
 
-          MatrixMath::Multiply3x3with3x1(rotMatrixInv, coords, coordsNew);
+          MatrixMath::Multiply3x3with3x1(m_RotMatrixInv, coords, coordsNew);
 
-          int64_t colOld = static_cast<int64_t>(std::nearbyint(coordsNew[0] / m_params->xRes));
-          int64_t rowOld = static_cast<int64_t>(std::nearbyint(coordsNew[1] / m_params->yRes));
-          int64_t planeOld = static_cast<int64_t>(std::nearbyint(coordsNew[2] / m_params->zRes));
+          int64_t colOld = static_cast<int64_t>(std::nearbyint(coordsNew[0] / m_Params.xRes));
+          int64_t rowOld = static_cast<int64_t>(std::nearbyint(coordsNew[1] / m_Params.yRes));
+          int64_t planeOld = static_cast<int64_t>(std::nearbyint(coordsNew[2] / m_Params.zRes));
 
           if(m_SliceBySlice)
           {
             planeOld = k;
           }
 
-          if(colOld >= 0 && colOld < m_params->xp && rowOld >= 0 && rowOld < m_params->yp && planeOld >= 0 && planeOld < m_params->zp)
+          if(colOld >= 0 && colOld < m_Params.xp && rowOld >= 0 && rowOld < m_Params.yp && planeOld >= 0 && planeOld < m_Params.zp)
           {
-            newindicies[index] = (m_params->xp * m_params->yp * planeOld) + (m_params->xp * rowOld) + colOld;
+            newindicies[index] = (m_Params.xp * m_Params.yp * planeOld) + (m_Params.xp * rowOld) + colOld;
           }
         }
       }
@@ -315,14 +307,12 @@ public:
 
 struct RotateSampleRefFrame::Impl
 {
-  float m_RotationMatrix[3][3] = {{0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}, {0.0f, 0.0f, 0.0f}};
+  Matrix3fR m_RotationMatrix = Matrix3fR::Zero();
   RotateArgs m_Params;
 
   void reset()
   {
-    float* ptr = &m_RotationMatrix[0][0];
-
-    std::fill(ptr, ptr + 9, 0.0f);
+    m_RotationMatrix.setZero();
 
     m_Params = RotateArgs();
   }
@@ -429,7 +419,7 @@ void RotateSampleRefFrame::dataCheck()
   if(!isRotationRepresentationValid(m_RotationRepresentation))
   {
     QString ss = QObject::tr("Invalid rotation representation");
-    setErrorCondition(-12005, ss);
+    setErrorCondition(-45001, ss);
     return;
   }
 
@@ -445,7 +435,7 @@ void RotateSampleRefFrame::dataCheck()
   if(m == nullptr)
   {
     QString ss = QObject::tr("Failed to get DataContainer '%1'").arg(getCellAttributeMatrixPath().getDataContainerName());
-    setErrorCondition(-12011, ss);
+    setErrorCondition(-45002, ss);
     return;
   }
 
@@ -454,7 +444,7 @@ void RotateSampleRefFrame::dataCheck()
   if(imageGeom == nullptr)
   {
     QString ss = QObject::tr("Failed to get Image Geometry from '%1'").arg(getCellAttributeMatrixPath().getDataContainerName());
-    setErrorCondition(-12012, ss);
+    setErrorCondition(-45002, ss);
     return;
   }
 
@@ -468,11 +458,15 @@ void RotateSampleRefFrame::dataCheck()
     float norm = rotationAxis.norm();
     if(!SIMPLibMath::closeEnough(rotationAxis.norm(), 1.0f, 0.00001f))
     {
-      QString ss = QObject::tr("Axis angle must be normalized (norm is %1)").arg(norm);
-      setErrorCondition(-12006, ss);
-      return;
+      QString ss = QObject::tr("Axis angle is not normalized (norm is %1). Filter will automatically normalize the value.").arg(norm);
+      setWarningCondition(-45003, ss);
     }
-    axisAngleToRotationMatrix(m_RotationAngle, m_RotationAxis, p_Impl->m_RotationMatrix);
+
+    float rotationAngleRadians = m_RotationAngle * SIMPLib::Constants::k_Pi / 180.0;
+
+    Eigen::AngleAxisf axisAngle(rotationAngleRadians, rotationAxis.normalized());
+
+    p_Impl->m_RotationMatrix = axisAngle.toRotationMatrix();
   }
   break;
   case RotationRepresentation::RotationMatrix:
@@ -482,7 +476,7 @@ void RotateSampleRefFrame::dataCheck()
     if(rotationMatrixTable.size() != 3)
     {
       QString ss = QObject::tr("Rotation Matrix must be 3 x 3");
-      setErrorCondition(-12001, ss);
+      setErrorCondition(-45004, ss);
       return;
     }
 
@@ -491,7 +485,7 @@ void RotateSampleRefFrame::dataCheck()
       if(row.size() != 3)
       {
         QString ss = QObject::tr("Rotation Matrix must be 3 x 3");
-        setErrorCondition(-12001, ss);
+        setErrorCondition(-45005, ss);
         return;
       }
     }
@@ -503,27 +497,27 @@ void RotateSampleRefFrame::dataCheck()
     if(!SIMPLibMath::closeEnough(determinant, 1.0f, 0.00001f))
     {
       QString ss = QObject::tr("Rotation Matrix must have a determinant of 1 (is %1)").arg(determinant);
-      setErrorCondition(-12002, ss);
+      setErrorCondition(-45006, ss);
       return;
     }
 
     Matrix3fR transpose = rotationMatrix.transpose();
     Matrix3fR inverse = rotationMatrix.inverse();
 
-    if(!transpose.isApprox(inverse))
+    if(!transpose.isApprox(inverse, 0.00001f))
     {
       QString ss = QObject::tr("Rotation Matrix's inverse and transpose must be equal");
-      setErrorCondition(-12003, ss);
+      setErrorCondition(-45007, ss);
       return;
     }
 
-    Eigen::Map<Matrix3fR>(&p_Impl->m_RotationMatrix[0][0], rotationMatrix.rows(), rotationMatrix.cols()) = rotationMatrix;
+    p_Impl->m_RotationMatrix = rotationMatrix;
   }
   break;
   default:
   {
     QString ss = QObject::tr("Invalid rotation representation");
-    setErrorCondition(-12004, ss);
+    setErrorCondition(-45008, ss);
     return;
   }
   }
@@ -574,7 +568,7 @@ void RotateSampleRefFrame::execute()
   if(m == nullptr)
   {
     QString ss = QObject::tr("Failed to get DataContainer '%1'").arg(getCellAttributeMatrixPath().getDataContainerName());
-    setErrorCondition(-12010, ss);
+    setErrorCondition(-45101, ss);
     return;
   }
 
@@ -586,10 +580,10 @@ void RotateSampleRefFrame::execute()
 
 #ifdef SIMPL_USE_PARALLEL_ALGORITHMS
   tbb::parallel_for(tbb::blocked_range3d<int64_t, int64_t, int64_t>(0, p_Impl->m_Params.zpNew, 0, p_Impl->m_Params.ypNew, 0, p_Impl->m_Params.xpNew),
-                    SampleRefFrameRotator(newIndiciesPtr, &p_Impl->m_Params, p_Impl->m_RotationMatrix, m_SliceBySlice), tbb::auto_partitioner());
+                    SampleRefFrameRotator(newIndiciesPtr, p_Impl->m_Params, p_Impl->m_RotationMatrix, m_SliceBySlice), tbb::auto_partitioner());
 #else
   {
-    SampleRefFrameRotator serial(newIndiciesPtr, &p_Impl->m_Params, p_Impl->m_RotationMatrix, m_SliceBySlice);
+    SampleRefFrameRotator serial(newIndiciesPtr, p_Impl->m_Params, p_Impl->m_RotationMatrix, m_SliceBySlice);
     serial.convert(0, p_Impl->m_Params.zpNew, 0, p_Impl->m_Params.ypNew, 0, p_Impl->m_Params.xpNew);
   }
 #endif
@@ -621,7 +615,7 @@ void RotateSampleRefFrame::execute()
           QTextStream out(&ss);
           out << "Source Array Name: " << p->getName() << " Source Tuple Index: " << newIndicies_I << "\n";
           out << "Dest Array Name: " << data->getName() << "  Dest. Tuple Index: " << i << "\n";
-          setErrorCondition(-11004, ss);
+          setErrorCondition(-45102, ss);
           return;
         }
       }
