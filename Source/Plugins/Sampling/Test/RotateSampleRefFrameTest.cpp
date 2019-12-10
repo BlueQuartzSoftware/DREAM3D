@@ -54,7 +54,15 @@
 class RotateSampleRefFrameTest
 {
 private:
-  const QString filterName = "RotateSampleRefFrame";
+  const QString m_FilterName = "RotateSampleRefFrame";
+
+  static void resetGeometry(AttributeMatrix::Pointer matrix, ImageGeom::Pointer imageGeom, const std::vector<size_t>& tDims)
+  {
+    matrix->resizeAttributeArrays(tDims);
+    imageGeom->setDimensions(tDims);
+    imageGeom->setOrigin(0.0f, 0.0f, 0.0f);
+    imageGeom->setSpacing(1.0f, 1.0f, 1.0f);
+  }
 
 public:
   RotateSampleRefFrameTest() = default;
@@ -81,12 +89,12 @@ public:
   int TestFilterAvailability()
   {
     // Now instantiate the SampleSurfaceMeshSpecifiedPointsTest Filter from the FilterManager
-    FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filterName);
-    if(nullptr == filterFactory)
+    FilterManager* filterManager = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = filterManager->getFactoryFromClassName(m_FilterName);
+    if(filterFactory == nullptr)
     {
       std::stringstream ss;
-      ss << "The RotateSampleRefFrameTest Requires the use of the " << filterName.toStdString() << " filter which is found in the Sampling Plugin";
+      ss << "The RotateSampleRefFrameTest Requires the use of the " << m_FilterName.toStdString() << " filter which is found in the Sampling Plugin";
       DREAM3D_TEST_THROW_EXCEPTION(ss.str())
     }
     return 0;
@@ -97,27 +105,25 @@ public:
   // -----------------------------------------------------------------------------
   void TestFilterParameters()
   {
-    DataContainerArray::Pointer dca = DataContainerArray::New();
+    const std::vector<size_t> tDims{10, 20, 30};
+    const DataArrayPath path("DataContainer", "AttributeMatrix", "DataArray");
 
-    DataArrayPath path("DataContainer", "AttributeMatrix", "DataArray");
+    DataContainerArray::Pointer dca = DataContainerArray::New();
 
     DataContainer::Pointer dc = DataContainer::New(path.getDataContainerName());
 
     ImageGeom::Pointer imageGeom = ImageGeom::New();
 
-    imageGeom->setDimensions(10, 20, 30);
+    imageGeom->setDimensions(tDims);
 
     dc->setGeometry(imageGeom);
 
     dca->addOrReplaceDataContainer(dc);
 
-    std::vector<size_t> tDims{10, 20, 30};
-    std::vector<size_t> cDims{1};
-
     AttributeMatrix::Pointer matrix = dc->createNonPrereqAttributeMatrix(nullptr, path.getAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
 
     FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(filterName);
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(m_FilterName);
     DREAM3D_REQUIRE_VALID_POINTER(filterFactory)
 
     AbstractFilter::Pointer rotateFilter = filterFactory->create();
@@ -147,6 +153,8 @@ public:
     int error = rotateFilter->getErrorCode();
     DREAM3D_REQUIRED(error, >=, 0)
 
+    resetGeometry(matrix, imageGeom, tDims);
+
     // Non-normalized rotation axis should generate a warning
 
     value.setValue(FloatVec3Type(1.0f, 1.0f, 0.0f));
@@ -156,6 +164,8 @@ public:
     rotateFilter->preflight();
     int warning = rotateFilter->getWarningCode();
     DREAM3D_REQUIRED(warning, <, 0)
+
+    resetGeometry(matrix, imageGeom, tDims);
 
     // Correct rotation matrix inputs
 
@@ -179,6 +189,8 @@ public:
     error = rotateFilter->getErrorCode();
     DREAM3D_REQUIRED(error, >=, 0)
 
+    resetGeometry(matrix, imageGeom, tDims);
+
     // Inverse != Transpose error
 
     // 1 0 1
@@ -197,6 +209,8 @@ public:
     error = rotateFilter->getErrorCode();
     DREAM3D_REQUIRED(error, <, 0)
 
+    resetGeometry(matrix, imageGeom, tDims);
+
     // Determinant != 1 error
 
     // 1 0 1
@@ -214,6 +228,8 @@ public:
     rotateFilter->preflight();
     error = rotateFilter->getErrorCode();
     DREAM3D_REQUIRED(error, <, 0)
+
+    resetGeometry(matrix, imageGeom, tDims);
   }
 
   // -----------------------------------------------------------------------------
@@ -232,8 +248,6 @@ public:
     // dataContainerReader->execute();
     // int error = dataContainerReader->getErrorCode();
     // DREAM3D_REQUIRED(error, >=, 0)
-
-    TestFilterParameters();
   }
 
   // -----------------------------------------------------------------------------
@@ -241,13 +255,16 @@ public:
   // -----------------------------------------------------------------------------
   void operator()()
   {
-    std::cout << "RotateSampleRefFrameTest\n";
+    std::cout << "----Start RotateSampleRefFrameTest----\n";
 
     int err = EXIT_SUCCESS;
     DREAM3D_REGISTER_TEST(TestFilterAvailability());
 
+    DREAM3D_REGISTER_TEST(TestFilterParameters())
     DREAM3D_REGISTER_TEST(TestRotateSampleRefFrameTest())
 
     DREAM3D_REGISTER_TEST(RemoveTestFiles())
+
+    std::cout << "----End RotateSampleRefFrameTest----\n";
   }
 };
