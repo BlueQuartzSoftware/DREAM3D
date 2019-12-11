@@ -77,6 +77,66 @@ private:
     return std::equal(a.begin(), a.end(), b.begin(), b.end());
   }
 
+  static bool imageGeomEqual(const ImageGeom& a, const ImageGeom& b)
+  {
+    SizeVec3Type dimsA = a.getDimensions();
+    FloatVec3Type originA = a.getOrigin();
+    FloatVec3Type spacingA = a.getSpacing();
+
+    SizeVec3Type dimsB = a.getDimensions();
+    FloatVec3Type originB = a.getOrigin();
+    FloatVec3Type spacingB = a.getSpacing();
+
+    return (dimsA == dimsB) && (originA == originB) && (spacingA == spacingB);
+  }
+
+  static bool matrixEqual(const AttributeMatrix& a, const AttributeMatrix& b)
+  {
+    return a.getTupleDimensions() == b.getTupleDimensions();
+  }
+
+  static void dataContainerEqual(const DataContainerArray& dca, const DataArrayPath& testPath, const DataArrayPath& expectedPath)
+  {
+    // Get test
+
+    DataContainer::Pointer testContainer = dca.getDataContainer(testPath);
+    DREAM3D_REQUIRE_VALID_POINTER(testContainer)
+
+    ImageGeom::Pointer testGeom = testContainer->getGeometryAs<ImageGeom>();
+    DREAM3D_REQUIRE_VALID_POINTER(testGeom)
+
+    AttributeMatrix::Pointer testMatrix = testContainer->getAttributeMatrix(testPath);
+    DREAM3D_REQUIRE_VALID_POINTER(testMatrix)
+
+    UInt8ArrayType::Pointer testArray = testMatrix->getAttributeArrayAs<UInt8ArrayType>(testPath.getDataArrayName());
+    DREAM3D_REQUIRE_VALID_POINTER(testArray)
+
+    // Get expected
+
+    DataContainer::Pointer expectedContainer = dca.getDataContainer(expectedPath);
+    DREAM3D_REQUIRE_VALID_POINTER(expectedContainer)
+
+    ImageGeom::Pointer expectedGeom = expectedContainer->getGeometryAs<ImageGeom>();
+    DREAM3D_REQUIRE_VALID_POINTER(expectedGeom)
+
+    AttributeMatrix::Pointer expectedMatrix = expectedContainer->getAttributeMatrix(expectedPath);
+    DREAM3D_REQUIRE_VALID_POINTER(expectedMatrix)
+
+    UInt8ArrayType::Pointer expectedArray = testMatrix->getAttributeArrayAs<UInt8ArrayType>(expectedPath.getDataArrayName());
+    DREAM3D_REQUIRE_VALID_POINTER(expectedArray)
+
+    // Compare
+
+    bool geometryEqual = imageGeomEqual(*testGeom, *expectedGeom);
+    DREAM3D_REQUIRE(geometryEqual)
+
+    bool attributeMatrixEqual = matrixEqual(*testMatrix, *expectedMatrix);
+    DREAM3D_REQUIRE(attributeMatrixEqual)
+
+    bool arraysEqual = dataArrayEqual(*testArray, *expectedArray);
+    DREAM3D_REQUIRE(arraysEqual)
+  }
+
   static void resetGeometry(AttributeMatrix::Pointer matrix, ImageGeom::Pointer imageGeom, const std::vector<size_t>& tDims)
   {
     matrix->resizeAttributeArrays(tDims);
@@ -120,8 +180,6 @@ public:
   void RemoveTestFiles()
   {
 #if REMOVE_TEST_FILES
-    QFile::remove(UnitTest::RotateSampleRefFrameTest::TestFile1);
-    QFile::remove(UnitTest::RotateSampleRefFrameTest::TestFile2);
 #endif
   }
 
@@ -254,7 +312,8 @@ public:
   void TestRotateSampleRefFrameTest()
   {
     const DataArrayPath basePath("", "CellData", "Data");
-    const std::vector<size_t> cDims{1};
+
+    // Read test file
 
     DataContainerArray::Pointer dca = DataContainerArray::New();
 
@@ -277,9 +336,10 @@ public:
     AbstractFilter::Pointer rotateFilter = createFilter();
     rotateFilter->setDataContainerArray(dca);
 
-    DataArrayPath path = basePath;
-    path.setDataContainerName("Original");
-    setProperty(rotateFilter, k_CellAttributeMatrixPathName, path);
+    DataArrayPath originalPath = basePath;
+    originalPath.setDataContainerName("Original");
+    DataContainer::Pointer dcOriginal = dca->getDataContainer(originalPath);
+    DREAM3D_REQUIRE_VALID_POINTER(dcOriginal)
 
     // Set to axis angle representation
     setProperty(rotateFilter, k_RotationRepresentationName, 0);
@@ -295,11 +355,21 @@ public:
         continue;
       }
 
-      DataArrayPath expectedArrayPath = basePath;
-      path.setDataContainerName(name);
+      // Copy original data for rotation
 
-      UInt8ArrayType::Pointer expectedArray = dca->getPrereqArrayFromPath<UInt8ArrayType, AbstractFilter>(nullptr, expectedArrayPath, cDims);
-      DREAM3D_REQUIRE_VALID_POINTER(expectedArray)
+      DataContainer::Pointer dcCopy = dcOriginal->deepCopy();
+      dcCopy->setName(name + "_Copy");
+      dca->addOrReplaceDataContainer(dcCopy);
+
+      DataArrayPath testPath = basePath;
+      testPath.setDataContainerName(dcCopy->getName());
+
+      setProperty(rotateFilter, k_CellAttributeMatrixPathName, testPath);
+
+      DataArrayPath expectedPath = basePath;
+      expectedPath.setDataContainerName(name);
+
+      // Set properties
 
       QStringList parts = name.split("_");
       int size = parts.size();
@@ -319,15 +389,15 @@ public:
       setProperty(rotateFilter, k_RotationAngleName, angle);
       setProperty(rotateFilter, k_RotationAxisName, FloatVec3Type(x, y, z));
 
+      // Execute
+
       rotateFilter->execute();
       int error = rotateFilter->getErrorCode();
       DREAM3D_REQUIRED(error, >=, 0)
 
-      UInt8ArrayType::Pointer testArray = dca->getPrereqArrayFromPath<UInt8ArrayType, AbstractFilter>(nullptr, path, cDims);
-      DREAM3D_REQUIRE_VALID_POINTER(testArray)
+      // Compare
 
-      bool arraysEqual = dataArrayEqual(*testArray, *expectedArray);
-      DREAM3D_REQUIRE(arraysEqual)
+      dataContainerEqual(*dca, testPath, expectedPath);
     }
 
     DREAM3D_REQUIRE(foundRotated)

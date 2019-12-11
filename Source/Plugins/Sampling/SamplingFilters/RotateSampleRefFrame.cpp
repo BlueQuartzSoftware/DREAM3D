@@ -464,7 +464,7 @@ void RotateSampleRefFrame::dataCheck()
       setWarningCondition(-45003, ss);
     }
 
-    float rotationAngleRadians = m_RotationAngle * SIMPLib::Constants::k_Pi / 180.0;
+    float rotationAngleRadians = m_RotationAngle * SIMPLib::Constants::k_DegToRad;
 
     Eigen::AngleAxisf axisAngle(rotationAngleRadians, rotationAxis.normalized());
 
