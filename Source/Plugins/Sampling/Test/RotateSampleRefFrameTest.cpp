@@ -54,7 +54,28 @@
 class RotateSampleRefFrameTest
 {
 private:
-  const QString m_FilterName = "RotateSampleRefFrame";
+  const QString k_FilterName = "RotateSampleRefFrame";
+  const QString k_RotationAngleName = "RotationAngle";
+  const QString k_RotationAxisName = "RotationAxis";
+  const QString k_RotationTableName = "RotationTable";
+  const QString k_RotationRepresentationName = "RotationRepresentation";
+  const QString k_CellAttributeMatrixPathName = "CellAttributeMatrixPath";
+
+  template <class T>
+  static bool dataArrayEqual(const DataArray<T>& a, const DataArray<T>& b)
+  {
+    if(a.getNumberOfComponents() != b.getNumberOfComponents())
+    {
+      return false;
+    }
+
+    if(a.getNumberOfTuples() != b.getNumberOfTuples())
+    {
+      return false;
+    }
+
+    return std::equal(a.begin(), a.end(), b.begin(), b.end());
+  }
 
   static void resetGeometry(AttributeMatrix::Pointer matrix, ImageGeom::Pointer imageGeom, const std::vector<size_t>& tDims)
   {
@@ -62,6 +83,27 @@ private:
     imageGeom->setDimensions(tDims);
     imageGeom->setOrigin(0.0f, 0.0f, 0.0f);
     imageGeom->setSpacing(1.0f, 1.0f, 1.0f);
+  }
+
+  AbstractFilter::Pointer createFilter() const
+  {
+    FilterManager* fm = FilterManager::Instance();
+    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(k_FilterName);
+    DREAM3D_REQUIRE_VALID_POINTER(filterFactory)
+
+    AbstractFilter::Pointer rotateFilter = filterFactory->create();
+    DREAM3D_REQUIRE_VALID_POINTER(rotateFilter)
+
+    return rotateFilter;
+  }
+
+  template <class T>
+  static void setProperty(AbstractFilter::Pointer filter, const QString& property, const T& value)
+  {
+    QVariant variant;
+    variant.setValue(value);
+    bool propWasSet = filter->setProperty(property.toStdString().c_str(), variant);
+    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
   }
 
 public:
@@ -90,11 +132,11 @@ public:
   {
     // Now instantiate the SampleSurfaceMeshSpecifiedPointsTest Filter from the FilterManager
     FilterManager* filterManager = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = filterManager->getFactoryFromClassName(m_FilterName);
+    IFilterFactory::Pointer filterFactory = filterManager->getFactoryFromClassName(k_FilterName);
     if(filterFactory == nullptr)
     {
       std::stringstream ss;
-      ss << "The RotateSampleRefFrameTest Requires the use of the " << m_FilterName.toStdString() << " filter which is found in the Sampling Plugin";
+      ss << "The RotateSampleRefFrameTest Requires the use of the " << k_FilterName.toStdString() << " filter which is found in the Sampling Plugin";
       DREAM3D_TEST_THROW_EXCEPTION(ss.str())
     }
     return 0;
@@ -122,32 +164,16 @@ public:
 
     AttributeMatrix::Pointer matrix = dc->createNonPrereqAttributeMatrix(nullptr, path.getAttributeMatrixName(), tDims, AttributeMatrix::Type::Cell);
 
-    FilterManager* fm = FilterManager::Instance();
-    IFilterFactory::Pointer filterFactory = fm->getFactoryFromClassName(m_FilterName);
-    DREAM3D_REQUIRE_VALID_POINTER(filterFactory)
-
-    AbstractFilter::Pointer rotateFilter = filterFactory->create();
-    DREAM3D_REQUIRE_VALID_POINTER(rotateFilter)
+    AbstractFilter::Pointer rotateFilter = createFilter();
     rotateFilter->setDataContainerArray(dca);
 
-    QVariant value;
-    value.setValue(path);
-    bool propWasSet = rotateFilter->setProperty("CellAttributeMatrixPath", value);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-
-    value.setValue(0);
-    propWasSet = rotateFilter->setProperty("RotationRepresentation", value);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+    setProperty(rotateFilter, k_CellAttributeMatrixPathName, path);
+    setProperty(rotateFilter, k_RotationRepresentationName, 0);
 
     // Correct axis angle inputs
 
-    value.setValue(FloatVec3Type(0.0f, 1.0f, 0.0f));
-    propWasSet = rotateFilter->setProperty("RotationAxis", value);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
-
-    value.setValue(90.0f);
-    propWasSet = rotateFilter->setProperty("RotationAngle", value);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+    setProperty(rotateFilter, k_RotationAxisName, FloatVec3Type(0.0f, 1.0f, 0.0f));
+    setProperty(rotateFilter, k_RotationAngleName, 90.0f);
 
     rotateFilter->preflight();
     int error = rotateFilter->getErrorCode();
@@ -157,9 +183,7 @@ public:
 
     // Non-normalized rotation axis should generate a warning
 
-    value.setValue(FloatVec3Type(1.0f, 1.0f, 0.0f));
-    propWasSet = rotateFilter->setProperty("RotationAxis", value);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+    setProperty(rotateFilter, k_RotationAxisName, FloatVec3Type(1.0f, 1.0f, 0.0f));
 
     rotateFilter->preflight();
     int warning = rotateFilter->getWarningCode();
@@ -169,9 +193,7 @@ public:
 
     // Correct rotation matrix inputs
 
-    value.setValue(1);
-    propWasSet = rotateFilter->setProperty("RotationRepresentation", value);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+    setProperty(rotateFilter, k_RotationRepresentationName, 1);
 
     //  0 0 1
     //  0 1 0
@@ -181,9 +203,7 @@ public:
 
     DynamicTableData tableData(table);
 
-    value.setValue(tableData);
-    propWasSet = rotateFilter->setProperty("RotationTable", value);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+    setProperty(rotateFilter, k_RotationTableName, tableData);
 
     rotateFilter->preflight();
     error = rotateFilter->getErrorCode();
@@ -201,9 +221,7 @@ public:
 
     tableData.setTableData(table);
 
-    value.setValue(tableData);
-    propWasSet = rotateFilter->setProperty("RotationTable", value);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+    setProperty(rotateFilter, k_RotationTableName, tableData);
 
     rotateFilter->preflight();
     error = rotateFilter->getErrorCode();
@@ -221,9 +239,7 @@ public:
 
     tableData.setTableData(table);
 
-    value.setValue(tableData);
-    propWasSet = rotateFilter->setProperty("RotationTable", value);
-    DREAM3D_REQUIRE_EQUAL(propWasSet, true)
+    setProperty(rotateFilter, k_RotationTableName, tableData);
 
     rotateFilter->preflight();
     error = rotateFilter->getErrorCode();
@@ -237,17 +253,84 @@ public:
   // -----------------------------------------------------------------------------
   void TestRotateSampleRefFrameTest()
   {
-    // DataContainerArray::Pointer dca = DataContainerArray::New();
+    const DataArrayPath basePath("", "CellData", "Data");
+    const std::vector<size_t> cDims{1};
 
-    // DataContainerReader::Pointer dataContainerReader = DataContainerReader::New();
-    // dataContainerReader->setDataContainerArray(dca);
-    // dataContainerReader->setInputFile(UnitTest::RotateSampleRefFrameTest::TestFile1);
-    // DataContainerArrayProxy proxy = dataContainerReader->readDataContainerArrayStructure(UnitTest::RotateSampleRefFrameTest::TestFile1);
-    // dataContainerReader->setInputFileDataContainerArrayProxy(proxy);
+    DataContainerArray::Pointer dca = DataContainerArray::New();
 
-    // dataContainerReader->execute();
-    // int error = dataContainerReader->getErrorCode();
-    // DREAM3D_REQUIRED(error, >=, 0)
+    DataContainerReader::Pointer dataContainerReader = DataContainerReader::New();
+    dataContainerReader->setDataContainerArray(dca);
+    dataContainerReader->setInputFile(UnitTest::RotateSampleRefFrameTest::TestFile1);
+    DataContainerArrayProxy proxy = dataContainerReader->readDataContainerArrayStructure(UnitTest::RotateSampleRefFrameTest::TestFile1);
+    dataContainerReader->setInputFileDataContainerArrayProxy(proxy);
+
+    dataContainerReader->execute();
+    int error = dataContainerReader->getErrorCode();
+    DREAM3D_REQUIRED(error, >=, 0)
+
+    QList<QString> dcNames = dca->getDataContainerNames();
+
+    bool hasOriginal = dcNames.contains("Original");
+
+    DREAM3D_REQUIRE(hasOriginal)
+
+    AbstractFilter::Pointer rotateFilter = createFilter();
+    rotateFilter->setDataContainerArray(dca);
+
+    DataArrayPath path = basePath;
+    path.setDataContainerName("Original");
+    setProperty(rotateFilter, k_CellAttributeMatrixPathName, path);
+
+    // Set to axis angle representation
+    setProperty(rotateFilter, k_RotationRepresentationName, 0);
+
+    bool foundRotated = false;
+
+    for(const auto& name : dcNames)
+    {
+      bool isRotated = name.startsWith("Rotate");
+      foundRotated = isRotated ? true : foundRotated;
+      if(!isRotated)
+      {
+        continue;
+      }
+
+      DataArrayPath expectedArrayPath = basePath;
+      path.setDataContainerName(name);
+
+      UInt8ArrayType::Pointer expectedArray = dca->getPrereqArrayFromPath<UInt8ArrayType, AbstractFilter>(nullptr, expectedArrayPath, cDims);
+      DREAM3D_REQUIRE_VALID_POINTER(expectedArray)
+
+      QStringList parts = name.split("_");
+      int size = parts.size();
+      DREAM3D_REQUIRED(size, ==, 5)
+
+      bool conversionSuccess = false;
+
+      float x = parts[1].toFloat(&conversionSuccess);
+      DREAM3D_REQUIRE(conversionSuccess)
+      float y = parts[2].toFloat(&conversionSuccess);
+      DREAM3D_REQUIRE(conversionSuccess)
+      float z = parts[3].toFloat(&conversionSuccess);
+      DREAM3D_REQUIRE(conversionSuccess)
+      float angle = parts[4].toFloat(&conversionSuccess);
+      DREAM3D_REQUIRE(conversionSuccess)
+
+      setProperty(rotateFilter, k_RotationAngleName, angle);
+      setProperty(rotateFilter, k_RotationAxisName, FloatVec3Type(x, y, z));
+
+      rotateFilter->execute();
+      int error = rotateFilter->getErrorCode();
+      DREAM3D_REQUIRED(error, >=, 0)
+
+      UInt8ArrayType::Pointer testArray = dca->getPrereqArrayFromPath<UInt8ArrayType, AbstractFilter>(nullptr, path, cDims);
+      DREAM3D_REQUIRE_VALID_POINTER(testArray)
+
+      bool arraysEqual = dataArrayEqual(*testArray, *expectedArray);
+      DREAM3D_REQUIRE(arraysEqual)
+    }
+
+    DREAM3D_REQUIRE(foundRotated)
   }
 
   // -----------------------------------------------------------------------------

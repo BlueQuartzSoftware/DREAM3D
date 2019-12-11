@@ -89,6 +89,8 @@ struct RotateArgs
 
 using Matrix3fR = Eigen::Matrix<float, 3, 3, Eigen::RowMajor>;
 
+constexpr float k_Threshold = 0.0001f;
+
 const Eigen::Vector3f k_XAxis = Eigen::Vector3f::UnitX();
 const Eigen::Vector3f k_YAxis = Eigen::Vector3f::UnitY();
 const Eigen::Vector3f k_ZAxis = Eigen::Vector3f::UnitZ();
@@ -456,7 +458,7 @@ void RotateSampleRefFrame::dataCheck()
   {
     const Eigen::Vector3f rotationAxis(m_RotationAxis.data());
     float norm = rotationAxis.norm();
-    if(!SIMPLibMath::closeEnough(rotationAxis.norm(), 1.0f, 0.00001f))
+    if(!SIMPLibMath::closeEnough(rotationAxis.norm(), 1.0f, k_Threshold))
     {
       QString ss = QObject::tr("Axis angle is not normalized (norm is %1). Filter will automatically normalize the value.").arg(norm);
       setWarningCondition(-45003, ss);
@@ -494,7 +496,7 @@ void RotateSampleRefFrame::dataCheck()
 
     float determinant = rotationMatrix.determinant();
 
-    if(!SIMPLibMath::closeEnough(determinant, 1.0f, 0.00001f))
+    if(!SIMPLibMath::closeEnough(determinant, 1.0f, k_Threshold))
     {
       QString ss = QObject::tr("Rotation Matrix must have a determinant of 1 (is %1)").arg(determinant);
       setErrorCondition(-45006, ss);
@@ -504,7 +506,7 @@ void RotateSampleRefFrame::dataCheck()
     Matrix3fR transpose = rotationMatrix.transpose();
     Matrix3fR inverse = rotationMatrix.inverse();
 
-    if(!transpose.isApprox(inverse, 0.00001f))
+    if(!transpose.isApprox(inverse, k_Threshold))
     {
       QString ss = QObject::tr("Rotation Matrix's inverse and transpose must be equal");
       setErrorCondition(-45007, ss);
