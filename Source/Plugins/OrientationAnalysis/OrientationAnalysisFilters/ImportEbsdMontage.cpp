@@ -229,8 +229,8 @@ void ImportEbsdMontage::dataCheck()
     return;
   }
 
-  int32_t numRows = tileLayout2d.size();
-  int32_t numCols = tileLayout2d[0].size();
+  int32_t numRows = static_cast<int32_t>(tileLayout2d.size());
+  int32_t numCols = static_cast<int32_t>(tileLayout2d[0].size());
   int32_t totalTiles = numRows * numCols;
   int32_t tilesRead = 0;
 
@@ -240,8 +240,8 @@ void ImportEbsdMontage::dataCheck()
 
   std::map<QString, AbstractFilter::Pointer> newFilterCache;
 
-  size_t rows = m_InputFileListInfo.RowEnd - m_InputFileListInfo.RowStart;
-  size_t cols = m_InputFileListInfo.ColEnd - m_InputFileListInfo.ColStart;
+  size_t rows = static_cast<size_t>(m_InputFileListInfo.RowEnd - m_InputFileListInfo.RowStart);
+  size_t cols = static_cast<size_t>(m_InputFileListInfo.ColEnd - m_InputFileListInfo.ColStart);
   GridMontage::Pointer gridMontage = GridMontage::New(getMontageName(), rows, cols);
 
   // Read all the files, caching the pertainent information....
@@ -295,9 +295,12 @@ void ImportEbsdMontage::dataCheck()
   // We are going to reuse the pixel overlap member variable when the user defines a percent overlap
   if(m_DefineScanOverlap == OverlapType::Percent)
   {
-    if(m_ScanOverlapPercent[0] > 1.0f)
+    if(m_ScanOverlapPercent[0] > 0.99f)
     {
       m_ScanOverlapPercent[0] = m_ScanOverlapPercent[0] / 100.0f;
+    }
+    if(m_ScanOverlapPercent[1] > 0.99f)
+    {
       m_ScanOverlapPercent[1] = m_ScanOverlapPercent[1] / 100.0f;
     }
     scanOverlapPixel = {0, 0};
@@ -319,7 +322,7 @@ void ImportEbsdMontage::dataCheck()
     FloatVec3Type spacing = imageGeom->getSpacing();
     FloatVec3Type origin = imageGeom->getOrigin();
 
-    scanOverlapPixel[0] = (static_cast<float>(dims[0]) * m_ScanOverlapPercent[0]);
+    scanOverlapPixel[0] = static_cast<int32_t>(static_cast<float>(dims[0]) * m_ScanOverlapPercent[0]);
 
     if(rows > 3) // 3 or more rows
     {
@@ -334,7 +337,7 @@ void ImportEbsdMontage::dataCheck()
     spacing = imageGeom->getSpacing();
     origin = imageGeom->getOrigin();
 
-    scanOverlapPixel[1] = (static_cast<float>(dims[1]) * m_ScanOverlapPercent[1]);
+    scanOverlapPixel[1] = static_cast<int32_t>(static_cast<float>(dims[1]) * m_ScanOverlapPercent[1]);
   }
 
   // Now roll back over all the input files and calculate the proper origins of each tile.
