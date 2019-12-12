@@ -35,6 +35,8 @@
 
 #include <QtCore/QFile>
 
+#include <Eigen/Dense>
+
 #include "SIMPLib/CoreFilters/DataContainerReader.h"
 #include "SIMPLib/DataArrays/DataArray.hpp"
 #include "SIMPLib/Filtering/FilterFactory.hpp"
@@ -50,6 +52,7 @@
 
 #include "SIMPLib/FilterParameters/DynamicTableData.h"
 #include "SIMPLib/FilterParameters/FloatVec3FilterParameter.h"
+#include "SIMPLib/Math/SIMPLibMath.h"
 
 class RotateSampleRefFrameTest
 {
@@ -60,6 +63,8 @@ private:
   const QString k_RotationTableName = "RotationTable";
   const QString k_RotationRepresentationName = "RotationRepresentation";
   const QString k_CellAttributeMatrixPathName = "CellAttributeMatrixPath";
+  static constexpr int k_AxisAngle = 0;
+  static constexpr int k_RotationMatrix = 1;
 
   template <class T>
   static bool dataArrayEqual(const DataArray<T>& a, const DataArray<T>& b)
@@ -226,7 +231,7 @@ public:
     rotateFilter->setDataContainerArray(dca);
 
     setProperty(rotateFilter, k_CellAttributeMatrixPathName, path);
-    setProperty(rotateFilter, k_RotationRepresentationName, 0);
+    setProperty(rotateFilter, k_RotationRepresentationName, k_AxisAngle);
 
     // Correct axis angle inputs
 
@@ -251,7 +256,7 @@ public:
 
     // Correct rotation matrix inputs
 
-    setProperty(rotateFilter, k_RotationRepresentationName, 1);
+    setProperty(rotateFilter, k_RotationRepresentationName, k_RotationMatrix);
 
     //  0 0 1
     //  0 1 0
@@ -341,9 +346,6 @@ public:
     DataContainer::Pointer dcOriginal = dca->getDataContainer(originalPath);
     DREAM3D_REQUIRE_VALID_POINTER(dcOriginal)
 
-    // Set to axis angle representation
-    setProperty(rotateFilter, k_RotationRepresentationName, 0);
-
     bool foundRotated = false;
 
     for(const auto& name : dcNames)
@@ -355,21 +357,8 @@ public:
         continue;
       }
 
-      // Copy original data for rotation
-
-      DataContainer::Pointer dcCopy = dcOriginal->deepCopy();
-      dcCopy->setName(name + "_Copy");
-      dca->addOrReplaceDataContainer(dcCopy);
-
-      DataArrayPath testPath = basePath;
-      testPath.setDataContainerName(dcCopy->getName());
-
-      setProperty(rotateFilter, k_CellAttributeMatrixPathName, testPath);
-
       DataArrayPath expectedPath = basePath;
       expectedPath.setDataContainerName(name);
-
-      // Set properties
 
       QStringList parts = name.split("_");
       int size = parts.size();
@@ -386,18 +375,86 @@ public:
       float angle = parts[4].toFloat(&conversionSuccess);
       DREAM3D_REQUIRE(conversionSuccess)
 
-      setProperty(rotateFilter, k_RotationAngleName, angle);
-      setProperty(rotateFilter, k_RotationAxisName, FloatVec3Type(x, y, z));
+      {
+        // Set to axis angle representation
+        setProperty(rotateFilter, k_RotationRepresentationName, k_AxisAngle);
 
-      // Execute
+        // Copy original data for rotation
 
-      rotateFilter->execute();
-      int error = rotateFilter->getErrorCode();
-      DREAM3D_REQUIRED(error, >=, 0)
+        DataContainer::Pointer dcCopy = dcOriginal->deepCopy();
+        dcCopy->setName(name + "_Copy");
+        dca->addOrReplaceDataContainer(dcCopy);
 
-      // Compare
+        DataArrayPath testPath = basePath;
+        testPath.setDataContainerName(dcCopy->getName());
 
-      dataContainerEqual(*dca, testPath, expectedPath);
+        setProperty(rotateFilter, k_CellAttributeMatrixPathName, testPath);
+
+        // Set properties
+
+        setProperty(rotateFilter, k_RotationAngleName, angle);
+        setProperty(rotateFilter, k_RotationAxisName, FloatVec3Type(x, y, z));
+
+        // Execute
+
+        rotateFilter->execute();
+        int error = rotateFilter->getErrorCode();
+        DREAM3D_REQUIRED(error, >=, 0)
+
+        // Compare
+
+        dataContainerEqual(*dca, testPath, expectedPath);
+      }
+
+      {
+        // Set to rotation matrix representation
+        setProperty(rotateFilter, k_RotationRepresentationName, k_RotationMatrix);
+
+        // Copy original data for rotation
+
+        DataContainer::Pointer dcCopy = dcOriginal->deepCopy();
+        dcCopy->setName(name + "_Copy_Matrix");
+        dca->addOrReplaceDataContainer(dcCopy);
+
+        DataArrayPath testPath = basePath;
+        testPath.setDataContainerName(dcCopy->getName());
+
+        setProperty(rotateFilter, k_CellAttributeMatrixPathName, testPath);
+
+        // Set properties
+
+        Eigen::Vector3f axis(x, y, z);
+        float angleRadians = angle * SIMPLib::Constants::k_DegToRad;
+        Eigen::AngleAxisf axisAngle(angleRadians, axis);
+
+        Eigen::Matrix3f rotationMatrix = axisAngle.toRotationMatrix();
+
+        std::vector<std::vector<double>> data;
+
+        for(int i = 0; i < rotationMatrix.rows(); i++)
+        {
+          std::vector<double> row;
+          for(int j = 0; j < rotationMatrix.cols(); j++)
+          {
+            row.push_back(rotationMatrix(i, j));
+          }
+          data.push_back(row);
+        }
+
+        DynamicTableData tableData(data);
+
+        setProperty(rotateFilter, k_RotationTableName, tableData);
+
+        // Execute
+
+        rotateFilter->execute();
+        int error = rotateFilter->getErrorCode();
+        DREAM3D_REQUIRED(error, >=, 0)
+
+        // Compare
+
+        dataContainerEqual(*dca, testPath, expectedPath);
+      }
     }
 
     DREAM3D_REQUIRE(foundRotated)
