@@ -1,5 +1,4 @@
-# Rotate Sample Reference Frame  #
-
+# Rotate Sample Reference Frame #
 
 ## Group (Subgroup) ##
 
@@ -7,7 +6,15 @@ Sampling (Rotating/Transforming)
 
 ## Description ##
 
-This **Filter** will rotate the *spatial reference frame* around a user defined axis, by a user defined angle.  The **Filter** will modify the (X, Y, Z) positions of each **Cell** to correctly represent where the **Cell** sits in the newly defined reference frame. For example, if a user selected a *rotation angle* of 90<sup>o</sup> and a *rotation axis* of (001), then a **Cell** sitting at (10, 0, 0) would be transformed to (0, -10, 0), since the new *reference frame* would have x'=y and y'=-x.   
+This **Filter** will ues an _active_ rotation to modify the physical location of data within the geometry. This is accomplished by using a user defined axis-angle to rotate the *spatial reference frame* around a user defined axis, by a user defined angle.  The **Filter** will modify the (X, Y, Z) positions of each **Cell** to correctly represent where the **Cell** sits in the newly defined reference frame.
+
+For example, if a user selected a *rotation angle* of 90<sup>o</sup> and a *rotation axis* of (001), then a **Cell** sitting at (10, 0, 0) would be transformed to (0, -10, 0), since the new *reference frame* would have x'=y and y'=-x.
+
+|  | |
+|------|------|
+|![180 degrees about the <010> direction](Images/SampleRotation.png)|![45 degress about the <001> direction](Images/SampleRotation2.png)|
+
+Note how the origin for the geometry may change. If you want to reset the origin to be back to (0,0,0) the user may use the **Set Origin and Spacing** ** filter.
 
 ## Parameters ##
 
@@ -46,5 +53,3 @@ Please see the description file distributed with this **Plugin**
 ## DREAM.3D Mailing Lists ##
 
 If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
-
-
