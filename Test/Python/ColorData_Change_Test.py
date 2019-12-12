@@ -31,8 +31,8 @@ def color_data_change_test():
         print("ReadAngData ErrorCondition: %d" % err)
 
     # Rotate Sample Reference Frame
-    err = samplingpy.rotate_sample_ref_frame(dca, simpl.DataArrayPath("EBSD Scan", "Scan Data", ""),
-                                             simpl.FloatVec3Type([0.0, 1.0, 0.0]), 180.0, False)
+    err = simplpy.rotate_sample_ref_frame(dca, simpl.DataArrayPath("EBSD Scan", "Scan Data", ""),
+                                             simpl.FloatVec3Type([0.0, 1.0, 0.0]), 180.0, False, sc.CreateDynamicTableData([[0.0 for x in range(3)] for y in range(3)]), 0)
     if err < 0:
         print("RotateSampleRefFrame ErrorCondition: %d" % err)
 
