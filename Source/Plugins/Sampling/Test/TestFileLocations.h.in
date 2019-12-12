@@ -38,11 +38,6 @@ namespace UnitTest
    const QString TestFile2("@TEST_TEMP_DIR@/TestFile2.txt");
   }
 
-  namespace RotateSampleRefFrameTest
-  {
-    const QString TestFile1("@DREAM3D_DATA_DIR@/Data/RotateSampleRefFrame/RotateSampleRefFrameTest.dream3d");
-  }
-
 }
 
 #endif
