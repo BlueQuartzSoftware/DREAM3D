@@ -8,6 +8,7 @@ import time
 
 from dream3d import simplpy
 from dream3d import simpl
+from dream3d import simpl_helpers as sc
 from dream3d import simpl_test_dirs as sd
 from dream3d import orientationanalysispy as orientationanalysis
 from dream3d import samplingpy as sampling
@@ -58,7 +59,7 @@ def pipeline_test(dca):
     # RotateSampleRefFrame
     #
     print("# --- RotateSampleRefFrame ")
-    rotate_sample_ref_frame = sampling.RotateSampleRefFrame.New()
+    rotate_sample_ref_frame = simpl.RotateSampleRefFrame.New()
     rotate_sample_ref_frame.setDataContainerArray(dca)
     rotate_sample_ref_frame.RotationAngle = 180.0
     rotate_sample_ref_frame.RotationAxis = simpl.FloatVec3Type([0.0, 1.0, 0.0])
@@ -148,9 +149,9 @@ def pythonic_test(dca):
     if err < 0:
         print("RotateEulerRefFrame ErrorCondition: %d" % err)
 
-    err = sampling.rotate_sample_ref_frame(dca,
+    err = simplpy.rotate_sample_ref_frame(dca,
                                            simpl.DataArrayPath("Small IN100 Slice 1", "EBSD Scan Data", ""),
-                                           simpl.FloatVec3Type([0.0, 1.0, 0.0]), 180.0, False)
+                                           simpl.FloatVec3Type([0.0, 1.0, 0.0]), 180.0, False, sc.CreateDynamicTableData([[0.0 for x in range(3)] for y in range(3)]), 0)
     if err < 0:
         print("RotateSampleRefFrame ErrorCondition: %d" % err)
 

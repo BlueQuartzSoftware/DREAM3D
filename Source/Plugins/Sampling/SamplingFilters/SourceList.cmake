@@ -23,7 +23,6 @@ set(_PublicFilters
   NearestPointFuseRegularGrids
   RegularGridSampleSurfaceMesh
   RegularizeZSpacing
-  RotateSampleRefFrame
   SampleSurfaceMeshSpecifiedPoints
   UncertainRegularGridSampleSurfaceMesh
   WarpRegularGrid

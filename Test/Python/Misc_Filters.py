@@ -4,6 +4,7 @@
 # These are the simpl_py python modules
 from dream3d import simplpy
 from dream3d import simpl
+from dream3d import simpl_helpers as sc
 from dream3d import simpl_test_dirs as sd
 from dream3d import orientationanalysispy
 from dream3d import samplingpy
@@ -43,8 +44,8 @@ def misc_filters_test():
                                           "EBSD_Data")
 
     # Rotate Sample Reference Frame
-    err = samplingpy.rotate_sample_ref_frame(dca, simpl.DataArrayPath("Small IN100 Slice 1", "EBSD_Data", ""),
-                                             simpl.FloatVec3Type([0.0, 1.0, 0.0]), 180.0, False)
+    err = simplpy.rotate_sample_ref_frame(dca, simpl.DataArrayPath("Small IN100 Slice 1", "EBSD_Data", ""),
+                                             simpl.FloatVec3Type([0.0, 1.0, 0.0]), 180.0, False, sc.CreateDynamicTableData([[0.0 for x in range(3)] for y in range(3)]), 0)
     if err < 0:
         print("RotateSampleRefFrame ErrorCondition: %d" % err)
 
