@@ -162,12 +162,6 @@ class SurfaceMeshing_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
     */
     void preflight() override;
 
-  signals:
-    void updateFilterParameters(AbstractFilter* filter);
-    void parametersChanged();
-    void preflightAboutToExecute();
-    void preflightExecuted();
-
   protected:
     VerifyTriangleWinding();
 
