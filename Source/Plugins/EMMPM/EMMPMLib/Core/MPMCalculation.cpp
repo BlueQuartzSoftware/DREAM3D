@@ -57,7 +57,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <chrono>
 
 #include "EMMPMLib/Common/EMMPM_Math.h"
-#include "EMMPMLib/Common/EMTime.h"
 #include "EMMPMLib/Common/MSVCDefines.h"
 #include "EMMPMLib/Core/EMMPM.h"
 #include "EMMPMLib/Core/EMMPMUtilities.h"

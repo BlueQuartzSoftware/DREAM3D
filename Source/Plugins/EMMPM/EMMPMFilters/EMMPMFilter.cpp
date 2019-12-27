@@ -38,21 +38,19 @@
 #include "EMMPMFilter.h"
 
 #include <QtGui/QColor>
+#include <QtCore/QTextStream>
 
 #include "EMMPM/EMMPMConstants.h"
 #include "EMMPM/EMMPMLib/Common/EMMPM_Math.h"
-#include "EMMPM/EMMPMLib/Common/EMTime.h"
 #include "EMMPM/EMMPMLib/Common/StatsDelegate.h"
 #include "EMMPM/EMMPMLib/Core/EMMPM.h"
 #include "EMMPM/EMMPMLib/Core/EMMPMUtilities.h"
 #include "EMMPM/EMMPMLib/Core/InitializationFunctions.h"
 #include "EMMPM/EMMPMLib/EMMPMLib.h"
 #include "EMMPM/FilterParameters/EMMPMFilterParameter.h"
-
-#include <QtCore/QTextStream>
+#include "EMMPM/EMMPMVersion.h"
 
 #include "SIMPLib/Common/Constants.h"
-
 #include "SIMPLib/FilterParameters/AbstractFilterParametersReader.h"
 #include "SIMPLib/FilterParameters/BooleanFilterParameter.h"
 #include "SIMPLib/FilterParameters/DataArrayCreationFilterParameter.h"
@@ -71,8 +69,6 @@
 #include "SIMPLib/Messages/GenericWarningMessage.h"
 #include "SIMPLib/SIMPLibVersion.h"
 #include "SIMPLib/DataContainers/DataContainerArray.h"
-
-#include "EMMPM/EMMPMVersion.h"
 
 /**
  * @brief This message handler is used by EMMPMFilter instances to re-emit incoming generic messages from the

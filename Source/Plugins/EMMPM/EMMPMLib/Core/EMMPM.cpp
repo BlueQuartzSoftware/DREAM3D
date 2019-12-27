@@ -44,7 +44,6 @@
 #include "SIMPLib/Messages/GenericWarningMessage.h"
 
 #include "EMMPMLib/Common/EMMPM_Math.h"
-#include "EMMPMLib/Common/EMTime.h"
 #include "EMMPMLib/Common/MSVCDefines.h"
 #include "EMMPMLib/Core/EMCalculation.h"
 #include "EMMPMLib/Core/EMMPMUtilities.h"
@@ -59,6 +58,7 @@ class EMMPMMessageHandler : public AbstractMessageHandler
 {
   public:
     explicit EMMPMMessageHandler(EMMPM* emmpmObj) : m_EmmpmObject(emmpmObj) {}
+    virtual ~EMMPMMessageHandler() = default;
 
     /**
      * @brief Re-emits incoming GenericProgressMessages as FilterProgressMessages.
@@ -94,6 +94,12 @@ class EMMPMMessageHandler : public AbstractMessageHandler
 
   private:
     EMMPM* m_EmmpmObject = nullptr;
+
+  public:
+    EMMPMMessageHandler(const EMMPMMessageHandler&) = delete;            // Copy Constructor Not Implemented
+    EMMPMMessageHandler(EMMPMMessageHandler&&) = delete;                 // Move Constructor Not Implemented
+    EMMPMMessageHandler& operator=(const EMMPMMessageHandler&) = delete; // Copy Assignment Not Implemented
+    EMMPMMessageHandler& operator=(EMMPMMessageHandler&&) = delete;      // Move Assignment Not Implemented
 };
 
 // -----------------------------------------------------------------------------
