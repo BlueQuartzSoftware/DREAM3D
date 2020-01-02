@@ -1,6 +1,5 @@
 # Pack Primary Phases #
 
-
 ## Group (Subgroup) ##
 
 Synthetic Building (Packing)
@@ -19,26 +18,39 @@ The user can specify if they want to use a *mask* when building the volume.  If 
 
 The user can also choose to read in a list of **Features** with their locations and size and shape descriptions already determined.  If this option is choosen, the **Filter** will skip the steps of generating the **Features** and iteratively placing them and will begin *growing* the **Features** defined in list.  The format of the *Feature Input File* is:
 
+    Number of Features
+    Phase X Y Z A B C O3 Phi1 PHI Phi2
+    Phase X Y Z A B C O3 Phi1 PHI Phi2
+    Phase X Y Z A B C O3 Phi1 PHI Phi2
+    .
+    .
+    .
+    Phase X Y Z A B C O3 Phi1 PHI Phi2
 
-	Number of Features
-	Phase X Y Z A B C O3 Phi1 PHI Phi2
-	Phase X Y Z A B C O3 Phi1 PHI Phi2
-	Phase X Y Z A B C O3 Phi1 PHI Phi2
-	.
-	.
-	.
-	Phase X Y Z A B C O3 Phi1 PHI Phi2
++ The file is a _SPACE_ delimited file
++ The first line of the file is an integer that is the number of features in the file.
++ All other lines contain 11 columns of data. *ALL* columns are required.
 
+| Column | Type | Description |
+| ------ | ---- | ----------- |
+|  X     | Float | X Coordinate |
+|  Y     | Float | Y Coordinate |
+|  Z     | Float | Z Coordinate |
+|  A     | Float | Major Pricipal Semi Axis Length |
+|  B     | Float | Mid Pricipal Semi Axis Length |
+|  C     | Float | Minor Pricipal Semi Axis Length |
+| O3 | Float | Omega 3 Value of the feature |
+| phi1 | Float | First Euler Angle |
+| PHI  | Float | Second Euler Angle |
+| phi2 | Float | Third Euler Angle |
 
 where (X,Y,Z) are the coordinates of the Feature's centroid, (A,B,C) are the major, mid and minor principal semiaxis lengths of the Feature, O3 is the Omega 3 value of the Feature and (Phi1,PHI,Phi2) are the Euler angles that describe the Features's crystal orientation in the sample reference frame. Note that the coordinates (for the centroid) must be given in the same units as was specified in Initialize Synthetic Volume.  For example, if you choose a volume 128x128x128 then the coordinates should correspond to that domain size in order to fill the volume as you expect.  Users are recommended to check the minimum and maximum values of their feature coordinates in order to make sure that the generated volume contains all the features as expected.
 
 For more information on synthetic building, visit the [tutorial](@ref tutorialsyntheticsingle).
 
-
 ### How to write out the Goal Attributes ##
 
 In previous versions of DREAM.3D for this filter there was an option to "Write Goal Attributes". This has been replaced with the feature that allows the user to save the Shape Parameters to another Attribute Matrix. To regain this functionality the user can enable this option from a drop down combo box in the Filter Parameter input widget, then add the "Export Feature Data as CSV File" later in the pipeline. In that added filter, the user can select the Feature Attribute Matrix where they saved the Shape Parameters.
-
 
 ## Parameters ##
 
@@ -51,9 +63,7 @@ In previous versions of DREAM.3D for this filter there was an option to "Write G
 | Save Shape Description Arrays | Int | 0=Do not Save, 1=Save to New Attribute Matrix, 2=Append to existing AttributeMatrix |
 | New AttributeMatrix | DataArrayPath | AttributeMatrix to save the Shape DescriptionArrays into |
 
-## Required Geometry ## [Header]
-
-Image
+## Required Geometry ##
 
 ## Required Objects ##
 
@@ -75,8 +85,7 @@ Image
 | **Attribute Matrix** | CellEnsembleData | Cell Ensemble | N/A | **Ensemble Attribute Matrix** for the created phases |
 | **Ensemble Attribute Array** | NumFeatures | int32_t | (1) |  Specifies the number of **Features** in each **Ensemble** |
 
-
-**Shape Description Arrays**
+## Shape Description Arrays ##
 
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
@@ -87,8 +96,6 @@ Image
 | **Cell Attribute Array** | Neighborhoods | int32_t | (1) |  |
 | **Cell Attribute Array** | Omega3s | float | (1) | The Shape Parameter |
 | **Cell Attribute Array** | Volumes | float | (1) | The Volume of the ellipsoid |
-
-
 
 ## Example Pipelines ##
 
@@ -106,5 +113,3 @@ Please see the description file distributed with this **Plugin**
 ## DREAM.3D Mailing Lists ##
 
 If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
-
-

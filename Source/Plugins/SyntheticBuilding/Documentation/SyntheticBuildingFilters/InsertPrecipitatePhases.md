@@ -1,5 +1,4 @@
-Insert Precipitate Phases 
-=============
+# Insert Precipitate Phases #
 
 ## Group (Subgroup) ##
 
@@ -9,18 +8,17 @@ Synthetic Building (Packing)
 
 If there are precipitate _Phase Types_ in the volume, then this **Filter** will place precipitate **Features** with the sizes, shapes, physical orientations and locations corresponding to the goal statistics. Precipitate **Features** are currently placed _one at a time_ and are _not allowed to overlap_. The precpitiate packing process is similar to that for [packing primary phases](@ref packprimaryphases).
 
-Currently, the parameters that are matched to target parameters include: 
+Currently, the parameters that are matched to target parameters include:
 
-<ul>
-<li>Fraction of precipitates on a grain boundary</li>
-<li>Size distribution of the precipitates</li>
-<li>Volume fraction of precipitates</li>
-<li>Omega 3 distribution of precipitates in each size bin</li>
-<li>b/a size distribution of precipitates in each size bin </li>
-<li>c/a size distribution of precipitates in each size bin </li>
-<li>Axis orientation distribution </li>
-<li>Normalized radial distribution function (if opted for by the user) </li>
-</ul>
++ Fraction of precipitates on a grain boundary
++ Size distribution of the precipitates
++ Volume fraction of precipitates
++ Omega 3 distribution of precipitates in each size bin
++ b/a size distribution of precipitates in each size bin 
++ c/a size distribution of precipitates in each size bin 
++ Axis orientation distribution 
++ Normalized radial distribution function (if opted for by the user) 
+
 
 Note that for an ellipsoid a > b > c.
 
@@ -30,16 +28,31 @@ The user can also specify if they want to write out the goal attributes of the g
 
 The user can also choose to read in a list of precipitate **Features** with their locations and size and shape descriptions already determined. If this option is choosen, the **Filter** will skip the steps of generating the **Features** and iteratively placing them and will begin *growing* the **Features** defined in list.  The format of the *Feature Input File* is:
 
+    Number of Features
+    Phase X Y Z A B C O3 Phi1 PHI Phi2
+    Phase X Y Z A B C O3 Phi1 PHI Phi2
+    Phase X Y Z A B C O3 Phi1 PHI Phi2
+    .
+    .
+    .
+    Phase X Y Z A B C O3 Phi1 PHI Phi2
 
-	Number of Features
-	Phase X Y Z A B C O3 Phi1 PHI Phi2
-	Phase X Y Z A B C O3 Phi1 PHI Phi2
-	Phase X Y Z A B C O3 Phi1 PHI Phi2
-	.
-	.
-	.
-	Phase X Y Z A B C O3 Phi1 PHI Phi2
++ The file is a _SPACE_ delimited file
++ The first line of the file is an integer that is the number of features in the file.
++ All other lines contain 11 columns of data. *ALL* columns are required.
 
+| Column | Type | Description |
+| ------ | ---- | ----------- |
+|  X     | Float | X Coordinate |
+|  Y     | Float | Y Coordinate |
+|  Z     | Float | Z Coordinate |
+|  A     | Float | Major Pricipal Semi Axis Length |
+|  B     | Float | Mid Pricipal Semi Axis Length |
+|  C     | Float | Minor Pricipal Semi Axis Length |
+| O3 | Float | Omega 3 Value of the feature |
+| phi1 | Float | First Euler Angle |
+| PHI  | Float | Second Euler Angle |
+| phi2 | Float | Third Euler Angle |
 
 where (X, Y, Z) are the coordinates of the **Feature's** centroid, (A, B, C) are the major, mid and minor principal semiaxis lengths of the **Feature**, O3 is the Omega 3 value of the **Feature** and (Phi1, PHI, Phi2) are the *Euler angles* that describe the **Features**'s orientation in the sample reference frame.
 
@@ -81,10 +94,7 @@ Image
 
 ## Created Objects ##
 
-
-
-
-**Shape Description Arrays**
+## Shape Description Arrays ##
 
 | Kind | Default Name | Type | Component Dimensions | Description |
 |------|--------------|------|----------------------|-------------|
@@ -95,9 +105,6 @@ Image
 | **Cell Attribute Array** | Neighborhoods | int32_t | (1) |  |
 | **Cell Attribute Array** | Omega3s | float | (1) | The Shape Parameter |
 | **Cell Attribute Array** | Volumes | float | (1) | The Volume of the ellipsoid |
-
-
-
 
 ## Example Pipelines ##
 
@@ -111,5 +118,3 @@ Please see the description file distributed with this **Plugin**
 ## DREAM.3D Mailing Lists ##
 
 If you need more help with a **Filter**, please consider asking your question on the [DREAM.3D Users Google group!](https://groups.google.com/forum/?hl=en#!forum/dream3d-users)
-
-
